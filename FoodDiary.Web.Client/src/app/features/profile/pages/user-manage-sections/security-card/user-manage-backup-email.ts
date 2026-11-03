@@ -15,6 +15,7 @@ const SECOND_MS = 1000;
     selector: 'fd-user-manage-backup-email',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiInputComponent, FdUiTextEnterDirective],
     templateUrl: './user-manage-backup-email.html',
+    styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageBackupEmailComponent {
@@ -22,9 +23,10 @@ export class UserManageBackupEmailComponent {
     protected readonly attempted = signal(false);
     protected readonly facade = inject(ProfileManageFacade);
     protected readonly email = signal(this.facade.backupEmailSentTo() ?? '');
-    protected readonly visible = computed(() => this.facade.user()?.hasTelegramIdentity === true);
+    protected readonly visible = computed(() => this.facade.user()?.hasTelegramIdentity === true || this.accountEmail() !== null);
     protected readonly accountEmail = computed(() => this.facade.user()?.email ?? null);
     protected readonly confirmed = computed(() => this.facade.user()?.isEmailConfirmed === true);
+    protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword === true);
     private readonly now = signal(Date.now());
     protected readonly resendSeconds = computed(() => Math.max(0, Math.ceil((this.facade.backupEmailResendAt() - this.now()) / SECOND_MS)));
 

@@ -15,6 +15,7 @@ import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { UpdateUserDto, type User } from '../../../shared/models/user.data';
 import { NotificationService } from '../../../shared/notifications/notification.service';
+import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { ProfileMeasurementsService } from '../api/profile-measurements.service';
@@ -70,6 +71,8 @@ let notificationService: {
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let authService: {
+    getUserId: ReturnType<typeof vi.fn>;
+    startTelegramUnlink: ReturnType<typeof vi.fn>;
     requestTelegramBackupEmail: ReturnType<typeof vi.fn>;
     unlinkTelegram: ReturnType<typeof vi.fn>;
     onLogoutAsync: ReturnType<typeof vi.fn>;
@@ -79,12 +82,26 @@ let authService: {
 let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
 let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
-const telegram = { initializeAsync: vi.fn() };
-const browser = { getTelegramInitData: vi.fn() };
+const telegram = { initializeAsync: vi.fn(), getInitData: vi.fn() };
 const backupEmailFlow = { startAsync: vi.fn(), markSent: vi.fn(), read: vi.fn().mockReturnValue(null), clear: vi.fn() };
+const browser = { open: vi.fn() };
+const STATE_LENGTH = 43;
+
+function createStorageMock(session: Map<string, unknown>): Pick<BrowserStorageService, 'getJson' | 'setJson' | 'removeItem'> {
+    return {
+        getJson: (_scope, key): unknown => session.get(key) ?? null,
+        setJson: (_scope, key, value): void => {
+            session.set(key, value);
+        },
+        removeItem: (_scope, key): void => {
+            session.delete(key);
+        },
+    };
+}
 
 beforeEach(() => {
     vi.useFakeTimers();
+    const session = new Map<string, unknown>();
     userService = {
         getOverview: vi.fn().mockReturnValue(of(overview)),
         update: vi.fn().mockReturnValue(of(user)),
@@ -103,10 +120,12 @@ beforeEach(() => {
         getWebPushSubscriptions: vi.fn().mockReturnValue(of(overview.webPushSubscriptions)),
         removeWebPushSubscription: vi.fn().mockReturnValue(of(void 0)),
     };
-    dialogService = {
-        open: vi.fn(),
-    };
+    dialogService = { open: vi.fn() };
     authService = {
+        getUserId: vi.fn().mockReturnValue(user.id),
+        startTelegramUnlink: vi
+            .fn()
+            .mockReturnValue(of({ authorizationUrl: `https://oauth.telegram.org/auth?state=${'s'.repeat(STATE_LENGTH)}` })),
         requestTelegramBackupEmail: vi.fn().mockReturnValue(of(void 0)),
         unlinkTelegram: vi.fn().mockReturnValue(of(void 0)),
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
@@ -126,11 +145,16 @@ beforeEach(() => {
 
     dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
     telegram.initializeAsync.mockResolvedValue(void 0);
-    browser.getTelegramInitData.mockReturnValue('signed-proof');
+    telegram.getInitData.mockReturnValue('signed-proof');
     backupEmailFlow.startAsync.mockResolvedValue(void 0);
 
     TestBed.configureTestingModule({
         providers: [
+            { provide: BrowserWindowService, useValue: browser },
+            {
+                provide: BrowserStorageService,
+                useValue: createStorageMock(session),
+            },
             ProfileManageFacade,
             { provide: TelegramBackupEmailFlowService, useValue: backupEmailFlow },
             { provide: ThemeService, useValue: { syncWithUserPreferences: vi.fn() } },
@@ -139,7 +163,6 @@ beforeEach(() => {
                 useValue: { getLatest: vi.fn().mockReturnValue(of({ weightKg: null, waistCm: null })) },
             },
             { provide: TelegramWebAppService, useValue: telegram },
-            { provide: BrowserWindowService, useValue: browser },
             { provide: UserService, useValue: userService },
             { provide: NotificationService, useValue: notificationService },
             { provide: FdUiDialogService, useValue: dialogService },
@@ -256,7 +279,7 @@ describe('ProfileManageFacade backup email', () => {
 
     it('starts browser reauthentication when Mini App proof is unavailable', async () => {
         facade.user.set({ ...user, email: null, hasTelegramIdentity: true });
-        browser.getTelegramInitData.mockReturnValue(null);
+        telegram.getInitData.mockReturnValue(null);
         await facade.requestBackupEmailAsync('backup@example.com');
         expect(authService.requestTelegramBackupEmail).not.toHaveBeenCalled();
         expect(facade.backupEmailSentTo()).toBeNull();
@@ -285,7 +308,7 @@ describe('ProfileManageFacade account actions', () => {
     it('does not unlink the last sign-in method', async () => {
         facade.user.set({ ...user, email: null, hasTelegramIdentity: true, hasGoogleIdentity: false });
         await facade.unlinkTelegramAsync();
-        expect(facade.globalError()).toBe('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
+        expect(facade.telegramUnlinkError()).toBe('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
         expect(dialogService.open).not.toHaveBeenCalled();
         expect(authService.unlinkTelegram).not.toHaveBeenCalled();
     });
@@ -297,32 +320,34 @@ describe('ProfileManageFacade account actions', () => {
         expect(facade.isUnlinkingTelegram()).toBe(false);
     });
 
-    it('requires Mini App proof before requesting unlink', async () => {
+    it('starts fresh Telegram verification from a browser without Mini App proof', async () => {
         facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
         dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
-        browser.getTelegramInitData.mockReturnValue(null);
+        telegram.getInitData.mockReturnValue(null);
         await facade.unlinkTelegramAsync();
         expect(authService.unlinkTelegram).not.toHaveBeenCalled();
-        expect(facade.globalError()).toBe('USER_MANAGE.TELEGRAM_REOPEN');
+        expect(authService.startTelegramUnlink, 'Disconnect must request fresh Telegram confirmation').toHaveBeenCalledOnce();
     });
 
-    it('unlinks with proof and ends the revoked session only after success', async () => {
+    it('requests fresh proof without reusing the Mini App assertion or ending the session early', async () => {
         facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
         dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
         await facade.unlinkTelegramAsync();
-        expect(authService.unlinkTelegram).toHaveBeenCalledWith('signed-proof');
-        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
-        expect(facade.user()?.hasTelegramIdentity).toBe(false);
+        expect(authService.startTelegramUnlink).toHaveBeenCalledOnce();
+        expect(authService.unlinkTelegram).not.toHaveBeenCalled();
+        expect(authService.onLogoutAsync).not.toHaveBeenCalled();
+        expect(facade.user()?.hasTelegramIdentity).toBe(true);
     });
 
     it('keeps the current binding and session when unlink fails', async () => {
         facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
         dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
-        authService.unlinkTelegram.mockReturnValue(throwError(() => new Error('stale proof')));
+        authService.startTelegramUnlink.mockReturnValue(throwError(() => new Error('provider unavailable')));
         await facade.unlinkTelegramAsync();
         expect(authService.onLogoutAsync).not.toHaveBeenCalled();
         expect(facade.user()?.hasTelegramIdentity).toBe(true);
-        expect(facade.globalError()).toBe('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+        expect(facade.telegramUnlinkError()).toBe('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+        expect(facade.globalError()).toBeNull();
     });
 });
 

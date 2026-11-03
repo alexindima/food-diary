@@ -121,12 +121,12 @@ class Deployment:
     def running(self, service):
         return self.compose("ps", "--status", "running", "--quiet", service).stdout.strip()
 
-    def request(self, url, data=None, headers=None):
+    def request(self, url, data=None, headers=None, timeout=5):
         request = Request(url, data=data, headers={"Connection": "close", **(headers or {})})
         try:
             # A probe must validate this loopback target, not a redirect or an
             # environment-configured HTTP proxy serving the previous release.
-            with build_opener(ProxyHandler({}), NoRedirect()).open(request, timeout=5) as response:
+            with build_opener(ProxyHandler({}), NoRedirect()).open(request, timeout=timeout) as response:
                 return response.status, response.read(4 * 1024 * 1024).decode("utf-8")
         except HTTPError as error:
             with error:
@@ -155,6 +155,16 @@ class Deployment:
             return False
         return bool(re.fullmatch(r"[0-9a-f]{40}", str(version.get("commitSha", "")))) and (
             sha is None or version.get("commitSha") == sha) and (tag is None or version.get("imageTag") == tag)
+
+    def warm_ssr(self, port):
+        started = time.monotonic()
+        # A listening Express server can still need a cold Angular render.
+        # Keep ordinary readiness probes short and give only this render longer.
+        self.wait(lambda: self.request(f"http://127.0.0.1:{port}/explore",
+                                      headers={"Host": "fooddiary.club", "X-Forwarded-Proto": "https"},
+                                      timeout=30)[0] == 200,
+                  90, "Candidate SSR warmup did not return HTTP 200 within its retry window.")
+        print(f"Candidate SSR /explore warmup ready in {time.monotonic() - started:.1f}s.")
 
     def memory_headroom(self):
         values = dict(re.findall(r"^(MemAvailable|SwapFree):\s+(\d+) kB$", Path("/proc/meminfo").read_text(), re.MULTILINE))
@@ -302,8 +312,7 @@ class Deployment:
             self.wait(lambda: self.healthy_api(api_port, plan["sha"], plan["tag"]), 180, "Candidate API readiness/revision did not match.")
         else:
             self.wait(lambda: self.request(f"http://127.0.0.1:{ssr_port}/health/ssr")[0] == 200, 45, "Candidate SSR is not ready.")
-            if self.request(f"http://127.0.0.1:{ssr_port}/explore", headers={"Host": "fooddiary.club", "X-Forwarded-Proto": "https"})[0] != 200:
-                raise DeploymentError("Candidate SSR warmup failed.")
+            self.warm_ssr(ssr_port)
         plan["phase"] = kind + "-ready"
         self.save(plan)
 
@@ -333,9 +342,9 @@ class Deployment:
             raise DeploymentError("Both candidate services must be ready before switching.")
         api_port, ssr_port = plan["ports"][plan["candidate"]]
         if (not self.healthy_api(api_port, plan["sha"], plan["tag"])
-                or self.request(f"http://127.0.0.1:{ssr_port}/health/ssr")[0] != 200
-                or self.request(f"http://127.0.0.1:{ssr_port}/explore", headers={"Host": "fooddiary.club", "X-Forwarded-Proto": "https"})[0] != 200):
+                or self.request(f"http://127.0.0.1:{ssr_port}/health/ssr")[0] != 200):
             raise DeploymentError("Both candidate services must be ready before switching.")
+        self.warm_ssr(ssr_port)
         plan["phase"] = "switching"
         plan["workers"] = sorted(set(plan["workers"]) | set(self.workers()))
         self.save(plan)

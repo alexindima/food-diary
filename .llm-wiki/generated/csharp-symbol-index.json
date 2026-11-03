@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4735,
-    "symbols": 4670,
+    "sourceFiles": 4741,
+    "symbols": 4676,
     "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2413,
+      "class": 2416,
       "enum": 74,
       "interface": 426,
-      "record": 1614,
+      "record": 1617,
       "record struct": 143
     },
     "roles": {
-      "Command": 243,
-      "CommandHandler": 237,
+      "Command": 245,
+      "CommandHandler": 239,
       "Configuration": 104,
-      "Controller": 115,
+      "Controller": 116,
       "Entity": 105,
       "Event": 20,
       "Factory": 15,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 75,
-      "Other": 1924,
+      "Other": 1925,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -1074,7 +1074,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetryServiceCollectionExtensions.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MarketingAttributionCleanupJob",
@@ -2467,7 +2467,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "BrowserRequestProtectionMiddleware",
@@ -16148,6 +16148,20 @@
       "line": 11
     },
     {
+      "name": "CompleteTelegramUnlinkCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "CompleteTelegramUnlinkCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommandHandler.cs",
+      "line": 12
+    },
+    {
       "name": "ConfirmPasswordResetCommand",
       "kind": "record",
       "role": "Command",
@@ -16526,6 +16540,20 @@
       "line": 24
     },
     {
+      "name": "StartTelegramUnlinkCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "StartTelegramUnlinkCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommandHandler.cs",
+      "line": 14
+    },
+    {
       "name": "TelegramBotAuthCommand",
       "kind": "record",
       "role": "Command",
@@ -16636,6 +16664,13 @@
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Common/TelegramOperationChecks.cs",
       "line": 8
+    },
+    {
+      "name": "TelegramUnlinkOidcAttempt",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Common/TelegramUnlinkOidcAttempt.cs",
+      "line": 2
     },
     {
       "name": "ActiveSessionModel",
@@ -17314,7 +17349,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "TelegramLoginWidgetValidator",
@@ -17534,6 +17569,13 @@
       "line": 29
     },
     {
+      "name": "AuthTelegramUnlinkController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramUnlinkController.cs",
+      "line": 31
+    },
+    {
       "name": "BrowserSessionController",
       "kind": "class",
       "role": "Controller",
@@ -17566,7 +17608,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "TelegramOperationHttpMappings",

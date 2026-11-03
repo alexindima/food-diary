@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 22,
     "agentGuides": 297,
-    "documentationPages": 250
+    "documentationPages": 251
   },
   "dotnet": {
     "projects": [
@@ -16098,6 +16098,7 @@
       "docs/backend/ADMIN_DASHBOARD.md",
       "docs/backend/ADMIN_REPORTING.md",
       "docs/backend/AI_RECOGNITION_JOBS.md",
+      "docs/backend/API_COLD_START.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
       "docs/backend/AUTHENTICATION_THROTTLING.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",

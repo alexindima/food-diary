@@ -57,7 +57,7 @@ export class TelegramAuthFacade {
         this.clearIntent();
         try {
             await this.telegram.initializeAsync();
-            const initData = this.browser.getTelegramInitData();
+            const initData = this.telegram.getInitData();
             if (initData !== null) {
                 this.saveIntent(await firstValueFrom(this.api.beginMiniApp(initData, link)));
             } else {

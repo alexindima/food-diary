@@ -116,6 +116,30 @@ async function createRenderedComponentAsync(): Promise<void> {
 
 describe('MainComponent deferred preview', () => {
     it(
+        'keeps auth actions eager while presentation sections wait for hydration',
+        async () => {
+            await createRenderedComponentAsync();
+            fixture.detectChanges();
+
+            const sections = ['fd-features', 'fd-landing-faq'];
+            for (const section of ['fd-hero', 'fd-dietologist-promo', 'fd-landing-steps']) {
+                expect(fixture.debugElement.query(By.css(section)), `${section} auth actions should be ready immediately`).not.toBeNull();
+            }
+            for (const section of sections) {
+                expect(fixture.debugElement.query(By.css(section)), `${section} should wait for hydration`).toBeNull();
+            }
+
+            const deferBlocks = await fixture.getDeferBlocks();
+            expect(deferBlocks).toHaveLength(sections.length + 1);
+            for (const [index, section] of sections.entries()) {
+                await deferBlocks[index + 1]?.render(DeferBlockState.Complete);
+                expect(fixture.debugElement.query(By.css(section))).not.toBeNull();
+            }
+        },
+        DEFER_TEST_TIMEOUT_MS,
+    );
+
+    it(
         'renders a stable fallback when the deferred preview fails to load',
         async () => {
             await createRenderedComponentAsync();

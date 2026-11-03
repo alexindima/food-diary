@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import threading
+import time
 import unittest
 from unittest.mock import patch
 
@@ -99,7 +100,7 @@ class Host(deployment.Deployment):
             raise AssertionError(f"Unexpected external command: {arguments}")
         return subprocess.CompletedProcess(arguments, 0, output, "")
 
-    def request(self, url, data=None, headers=None):
+    def request(self, url, data=None, headers=None, timeout=5):
         self.events.append(("http", url))
         port = int(url.split(":")[2].split("/")[0])
         port = self.active_port if port == deployment.PROBE_PORT else port
@@ -213,6 +214,86 @@ class BlueGreenTests(unittest.TestCase):
         self.host.abort()
         self.assertTrue({"api", "client-ssr"} <= self.host.services)
         self.assertFalse({"api-green", "client-ssr-green"} & self.host.services)
+
+    def test_cold_ssr_warmup_retries_timeout_before_marking_ready(self):
+        self.host.plan()
+        self.host.start("api")
+        request = self.host.request
+        attempts = []
+        def cold_render(url, data=None, headers=None, timeout=5):
+            if url.endswith("/explore"):
+                self.assertEqual("api-ready", self.host.load()["phase"])
+                self.assertEqual(5000, self.host.active_port)
+                self.assertEqual({"Host": "fooddiary.club", "X-Forwarded-Proto": "https"}, headers)
+                attempts.append(timeout)
+                if len(attempts) == 1:
+                    raise TimeoutError("cold SSR render exceeded request timeout")
+            return request(url, data, headers, timeout)
+        with patch.object(self.host, "request", side_effect=cold_render), \
+                patch.object(self.host, "wait", side_effect=lambda *args: deployment.Deployment.wait(self.host, *args)), \
+                patch.object(deployment.time, "sleep"):
+            try:
+                self.host.start("ssr")
+            except TimeoutError:
+                self.fail("Cold SSR timeout must be retried before marking the candidate ready")
+        self.assertEqual([30, 30], attempts)
+        self.assertEqual("ssr-ready", self.host.load()["phase"])
+        self.assertEqual(5000, self.host.active_port)
+        self.assertFalse(self.commands("stop"))
+
+    def test_switch_retries_transient_warmup_failure_before_changing_routes(self):
+        self.ready_candidate()
+        original = self.host.plan_path.read_bytes(), self.host.route_path.read_bytes()
+        request = self.host.request
+        attempts = []
+        def recovering_render(url, data=None, headers=None, timeout=5):
+            if url.endswith("/explore"):
+                self.assertEqual(original, (self.host.plan_path.read_bytes(), self.host.route_path.read_bytes()))
+                attempts.append(timeout)
+                if len(attempts) == 1:
+                    return 503, "warming up"
+            return request(url, data, headers, timeout)
+        with patch.object(self.host, "request", side_effect=recovering_render), \
+                patch.object(self.host, "wait", side_effect=lambda *args: deployment.Deployment.wait(self.host, *args)), \
+                patch.object(deployment.time, "sleep"):
+            try:
+                self.host.switch()
+            except deployment.DeploymentError:
+                self.fail("Transient SSR warmup failure must be retried before switching")
+        self.assertEqual([30, 30], attempts)
+        self.assertEqual("switched", self.host.load()["phase"])
+        self.assertEqual(5001, self.host.active_port)
+
+    def test_ssr_warmup_deadline_preserves_the_active_slot(self):
+        for failure in ("timeout", "http-503"):
+            with self.subTest(failure=failure):
+                self.host.plan()
+                self.host.start("api")
+                original_route = self.host.route_path.read_bytes()
+                elapsed = [0]
+                request = self.host.request
+                def unavailable_render(url, data=None, headers=None, timeout=5):
+                    if url.endswith("/explore"):
+                        elapsed[0] += 30
+                        if failure == "timeout":
+                            raise TimeoutError("SSR render remains unavailable")
+                        return 503, "unavailable"
+                    return request(url, data, headers, timeout)
+                with patch.object(self.host, "request", side_effect=unavailable_render), \
+                        patch.object(self.host, "wait", side_effect=lambda *args: deployment.Deployment.wait(self.host, *args)), \
+                        patch.object(deployment.time, "monotonic", side_effect=lambda: elapsed[0]), \
+                        patch.object(deployment.time, "sleep"):
+                    with self.assertRaisesRegex(deployment.DeploymentError, "SSR warmup"):
+                        self.host.start("ssr")
+                self.assertGreaterEqual(elapsed[0], 90)
+                self.assertLessEqual(elapsed[0], 120)
+                self.assertEqual("api-ready", self.host.load()["phase"])
+                self.assertEqual(original_route, self.host.route_path.read_bytes())
+                self.host.abort()
+                self.assertEqual(5000, self.host.active_port)
+                self.assertTrue({"api", "client-ssr"} <= self.host.services)
+                self.assertFalse({"api-green", "client-ssr-green"} & self.host.services)
+                self.assertEqual(OLD_SHA, json.loads(self.host.state_path.read_text())["sha"])
 
     def test_low_memory_and_nginx_image_change_fail_before_candidate_start(self):
         for option in ("no_memory", "nginx_mismatch"):
@@ -409,14 +490,14 @@ class BlueGreenTests(unittest.TestCase):
         for failure in ("api", "ssr", "warmup"):
             with self.subTest(failure=failure):
                 request = self.host.request
-                def unready(url, data=None, headers=None):
+                def unready(url, data=None, headers=None, timeout=5):
                     if (failure == "api" and url.endswith("/internal/version")
                             or failure == "ssr" and url.endswith("/health/ssr")
                             or failure == "warmup" and url.endswith("/explore")):
                         return 503, "unavailable"
-                    return request(url, data, headers)
+                    return request(url, data, headers, timeout)
                 with patch.object(self.host, "request", side_effect=unready):
-                    with self.assertRaisesRegex(deployment.DeploymentError, "candidate.*ready"):
+                    with self.assertRaisesRegex(deployment.DeploymentError, "candidate.*ready|SSR warmup"):
                         self.host.switch()
                 self.assertEqual(original, (self.host.plan_path.read_bytes(), self.host.route_path.read_bytes()))
                 self.assertFalse(self.commands("stop"))
@@ -434,6 +515,34 @@ class BlueGreenTests(unittest.TestCase):
 
 
 class BoundaryTests(unittest.TestCase):
+    def test_request_budget_can_allow_a_slow_render_without_changing_the_default(self):
+        class SlowBackend(BaseHTTPRequestHandler):
+            def do_GET(self):
+                time.sleep(0.1)
+                self.send_response(200)
+                self.end_headers()
+                try:
+                    self.wfile.write(b"SSR fixture")
+                except ConnectionError:
+                    pass
+
+            def log_message(self, *_):
+                pass
+        server = ThreadingHTTPServer(("127.0.0.1", 0), SlowBackend)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            host = deployment.Deployment("unused")
+            url = f"http://127.0.0.1:{server.server_port}/explore"
+            with self.assertRaises(TimeoutError):
+                host.request(url, timeout=0.01)
+            self.assertEqual((200, "SSR fixture"), host.request(url, timeout=2))
+            self.assertEqual((200, "SSR fixture"), host.request(url))
+        finally:
+            server.shutdown()
+            server.server_close()
+            worker.join(timeout=2)
+
     def test_readiness_probe_rejects_redirects_instead_of_checking_another_target(self):
         followed = []
         class RedirectingBackend(BaseHTTPRequestHandler):

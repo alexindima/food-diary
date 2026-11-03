@@ -280,7 +280,7 @@
                 />
             </div>
         </details>
-        <details class="profile-comparison__accordion">
+        <details class="profile-comparison__accordion" [open]="securityExpanded()">
             <summary>
                 <fd-ui-icon name="lock" />
                 <strong>{{ 'USER_MANAGE.SECURITY_SECTION' | translate }}</strong>

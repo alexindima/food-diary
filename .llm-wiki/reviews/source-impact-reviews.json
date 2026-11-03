@@ -5,13 +5,7 @@
       "pageId": "generated-context-evaluation-summary",
       "pagePath": ".llm-wiki/generated/context-evaluation-summary.md",
       "pageSha256": "5199e751921d6bd1b5ebfe1c31ca3a50d3008ba171740180cd13de6d8ef391b6",
-      "sources": [
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
-          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
-        }
-      ],
+      "sources": [],
       "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
       "baseRef": "HEAD",
       "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
@@ -26,18 +20,28 @@
           "path": "docs/README.md",
           "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
           "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
+        },
+        {
+          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "d10fef273ec7fcaece67a32aa6fa5a2f0e674c45428c2a65daaee2ca9649b28c",
+          "reviewReason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change."
         }
       ],
-      "reason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate.",
+      "reason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:33.2344027Z"
+      "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
+      "reviewedAtUtc": "2026-11-03T03:57:28.2531520Z"
     },
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
       "pageSha256": "3182313dda8be0f1aa50facced82e4e3246a102445c5bd3d8c403d35a1b69378",
       "sources": [
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
+          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
+        },
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
           "sha256": "da7af2c91c234af18d9c1ebeffde6975d5ed2dbf4e763c69076f983421b5df88",
@@ -47,11 +51,6 @@
           "path": "docs/frontend/WEB_QUALITY.md",
           "sha256": "22349e2a2eb861f1dd373b1ef5d58564490669469c5fc57f928225ce337c60f1",
           "reviewReason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass."
-        },
-        {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
-          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         }
       ],
       "reason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass.",
@@ -97,6 +96,11 @@
       "pageSha256": "b4f39f36ee825fcbf9753aab59e1c555dc22f5fce4cd6311378923e865ebe603",
       "sources": [
         {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "7e8621bc568d240165070a366b013edc40831aa6d22142fa52f1f55f26713b14",
+          "reviewReason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed."
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
           "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
           "reviewReason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate."
@@ -110,11 +114,6 @@
           "path": "docs/backend/BROWSER_SESSIONS.md",
           "sha256": "da7af2c91c234af18d9c1ebeffde6975d5ed2dbf4e763c69076f983421b5df88",
           "reviewReason": "Reviewed BROWSER_SESSIONS.md guest-probe clarification against BrowserSessionController and the HTTP tests. The additive anonymous 204 changes no component ownership, credential issuance, cookie transport or protected API authorization described by this architecture page."
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "7e8621bc568d240165070a366b013edc40831aa6d22142fa52f1f55f26713b14",
-          "reviewReason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed."
         }
       ],
       "reason": "Reviewed BROWSER_SESSIONS.md guest-probe clarification against BrowserSessionController and the HTTP tests. The additive anonymous 204 changes no component ownership, credential issuance, cookie transport or protected API authorization described by this architecture page.",
@@ -141,12 +140,17 @@
           "path": ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1",
           "sha256": "be70d9fb6f6e72ce0380e8b7c50f6cda598bf435d731d1f364ece80404a9cb11",
           "reviewReason": "Reviewed source byte hashing and required-file helper rename against symbol extraction and receipt contracts. Runtime, source-set and exact output validation remain; declaration and DI extraction and output schema are unchanged. Fingerprint and symbol cache fixtures cover raw LF/CRLF and load order."
+        },
+        {
+          "path": "Directory.Build.props",
+          "sha256": "9d93b49a25096acbdfb803343993efa840daeafa22ea1ce69872191eedd98760",
+          "reviewReason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate."
         }
       ],
-      "reason": "Reviewed source byte hashing and required-file helper rename against symbol extraction and receipt contracts. Runtime, source-set and exact output validation remain; declaration and DI extraction and output schema are unchanged. Fingerprint and symbol cache fixtures cover raw LF/CRLF and load order.",
+      "reason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "e19f1cf4dfb6fd888b372cc9c58c29b024e10d6b",
-      "reviewedAtUtc": "2026-10-24T13:40:53.3373193Z"
+      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
+      "reviewedAtUtc": "2026-11-03T11:37:34.7149469Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -190,13 +194,13 @@
           "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         },
         {
-          "path": "docs/adr/README.md",
-          "sha256": "ff6161ebff3af1977e036f5c1a20f396e4545ae1dc2d35250c7b363922d92acf",
+          "path": "docs/README.md",
+          "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
           "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0060 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
         },
         {
-          "path": "docs/README.md",
-          "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
+          "path": "docs/adr/README.md",
+          "sha256": "ff6161ebff3af1977e036f5c1a20f396e4545ae1dc2d35250c7b363922d92acf",
           "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0060 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
         }
       ],
@@ -226,6 +230,11 @@
           "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         },
         {
+          "path": "Directory.Build.props",
+          "sha256": "9d93b49a25096acbdfb803343993efa840daeafa22ea1ce69872191eedd98760",
+          "reviewReason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate."
+        },
+        {
           "path": "Directory.Packages.props",
           "sha256": "cf2203fd5b96c0b5c9f779ac5e985e8a1649049f43a85b4d114f9757e0be21c4",
           "reviewReason": "Reviewed Directory.Packages.props and API project reference: only Microsoft.AspNetCore.SignalR.StackExchangeRedis 10.0.14 was added. Regenerated catalog records this package; project inventory, module ownership and documented catalog generation/limitations remain correct."
@@ -246,10 +255,10 @@
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Regenerated catalog includes privacy controller, profile filter, DTOs, modules and project references. Literal route discovery remains navigation only; current exported OpenAPI and generated SDK establish the HTTP surface. No catalog algorithm or inventory semantics changed.",
+      "reason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T22:12:38.8817472Z"
+      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
+      "reviewedAtUtc": "2026-11-03T11:37:35.0188214Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -329,25 +338,25 @@
           "reviewReason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened."
         },
         {
-          "path": "docs/frontend/API_SDK.md",
-          "sha256": "cc1af610b6c9bebb2ebd8293b31d21e3dd14cf4fc95686a14ae25bb3b5d240a8",
-          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
-        },
-        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
           "sha256": "fba5ad464e6976a17c625076473cfde7f81b5902f5c4097076342f335135e29f",
           "reviewReason": "Reviewed the existing compatibility workflow against the final diff: PresentationBoundaryIntegrationTests only grants explicit current health consent in its positive registration fixture; contract generation, comparison baselines, acceptance policy and endpoint assertions are unchanged. All five real-host OpenAPI exports pass and user/admin/bot live SDK checks pass."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "7be8f243461268b7007e4dcc3728d2c51745c5c50c3e119471db78ff047c74d9",
-          "reviewReason": "Reviewed the full OpenAPI snapshot diff: POST auth/session adds only documented 204; existing 200 schema and rejection statuses remain. The generic compatibility workflow still correctly classifies response additions as additive and requires behavioral review. No policy or acceptance exception is changed."
+          "sha256": "0607dbe3204165a4e708cdb1a075abb3a17aeaa2f584d8dca13303aedd4dcf9f",
+          "reviewReason": "Reviewed the two additive authenticated /auth/telegram/unlink/oidc start/complete paths in openapi-full-contract.json and regenerated TelegramAuth SDK. Existing routes, request/response schemas and accepted ADR0058 browser-session transition are unchanged; api-compat reports two additions and zero breaks. The workflow still describes the actual comparison and no new compatibility exception is needed."
+        },
+        {
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "cc1af610b6c9bebb2ebd8293b31d21e3dd14cf4fc95686a14ae25bb3b5d240a8",
+          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
         }
       ],
-      "reason": "Reviewed final ci-tests.yml: added mandatory handover behavior and pinned Nginx tests; existing baseline selection, API compatibility and source-review gates are intact. Deployment snapshot equality is an additional conservative rollout gate, not a replacement for semantic API compatibility.",
+      "reason": "Reviewed the two additive authenticated /auth/telegram/unlink/oidc start/complete paths in openapi-full-contract.json and regenerated TelegramAuth SDK. Existing routes, request/response schemas and accepted ADR0058 browser-session transition are unchanged; api-compat reports two additions and zero breaks. The workflow still describes the actual comparison and no new compatibility exception is needed.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:33.7397773Z"
+      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
+      "reviewedAtUtc": "2026-11-03T08:44:50.3691955Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -356,8 +365,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "64bf99b383b3f76ec2cd83adfe381a2e8b7a1138b68977efdc3f9224901bcb7a",
-          "reviewReason": "Reviewed the generated delta: six existing critical symbols acquired direct references from added coverage tests; dependency edges, cycles, enforcement policy and removal guidance are unchanged. The page distinguishes syntactic test references from execution evidence and remains accurate."
+          "sha256": "3de2d507a11ccc3b33c39ce6b4ea1e13a238b6921706c8c82ff75adabee3ac66",
+          "reviewReason": "Reviewed the regenerated architecture health projection for the merge of ReadyToRun, deployed authentication changes and the preserved local coverage commit. Dependency violations, unused allowances, untracked production projects and module cycle nodes are zero. Inventory and test-reference candidates changed with the combined sources; the workflow still treats hotspots and unreferenced candidates as investigation leads. No dependency-matrix exception or module-boundary change was added."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -375,10 +384,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Reviewed the generated delta: six existing critical symbols acquired direct references from added coverage tests; dependency edges, cycles, enforcement policy and removal guidance are unchanged. The page distinguishes syntactic test references from execution evidence and remains accurate.",
+      "reason": "Reviewed the regenerated architecture health projection for the merge of ReadyToRun, deployed authentication changes and the preserved local coverage commit. Dependency violations, unused allowances, untracked production projects and module cycle nodes are zero. Inventory and test-reference candidates changed with the combined sources; the workflow still treats hotspots and unreferenced candidates as investigation leads. No dependency-matrix exception or module-boundary change was added.",
       "baseRef": "HEAD",
-      "gitHead": "43f3b644a17a22dd8cb6ce81ae79b58ec403110f",
-      "reviewedAtUtc": "2026-11-02T12:11:57.5430336Z"
+      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
+      "reviewedAtUtc": "2026-11-03T11:37:35.4279168Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -448,13 +457,13 @@
           "reviewReason": "Reviewed shared aggregate repository role and equivalent compile/compiles normalization factoring. Direct compile already includes itself, so the union adds no term or ordering change after deduplication. Combined rule count remains700 and context governance/operations pass. Corpus quality thresholds and frozen baselines are unchanged."
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
+          "sha256": "faf1cc8c45ace8bd39ff639dd9c5d27e886566f9547d0db79e4bdefe8c6708d1",
           "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-          "sha256": "faf1cc8c45ace8bd39ff639dd9c5d27e886566f9547d0db79e4bdefe8c6708d1",
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
           "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
         },
         {
@@ -637,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "717e707c5fcbd882a6f11b2c64c06530fd6bb9db402c0507c38c55452e33e2bd",
-          "reviewReason": "Reviewed the two generated observed cost hypotheses from the sealed consent task. Prior hash-chain events are untouched; no approval, application, calibration or durable-memory change occurs. The workflow still treats observations as hypotheses requiring independent evidence and review."
+          "sha256": "65e9c210d7dea24b3f93ba14995191f5fa7a14eeb14207b3696e586f9dc66477",
+          "reviewReason": "Reviewed task-finish output: five append-only observed cost-calibration hypotheses for the profile-sign-in task. No approval, apply, policy or durable guidance mutation occurred; the documented observation and separate promotion boundary remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -661,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the two generated observed cost hypotheses from the sealed consent task. Prior hash-chain events are untouched; no approval, application, calibration or durable-memory change occurs. The workflow still treats observations as hypotheses requiring independent evidence and review.",
+      "reason": "Reviewed task-finish output: five append-only observed cost-calibration hypotheses for the profile-sign-in task. No approval, apply, policy or durable guidance mutation occurred; the documented observation and separate promotion boundary remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
-      "reviewedAtUtc": "2026-11-02T06:55:01.2487958Z"
+      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
+      "reviewedAtUtc": "2026-11-03T09:28:36.4041114Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -913,14 +922,14 @@
       "pageSha256": "0cd6495e8bf721712da9279eb1eaa3ced3e3219eee93783274ad8ff8f8f8f2bb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
-          "reviewReason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups."
-        },
-        {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
           "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups."
         }
       ],
       "reason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups.",
@@ -991,6 +1000,11 @@
           "reviewReason": "Reviewed ci-tests.yml focused/Full Wiki partitions and required aggregate gate: unchanged; added deployment runtime tests run in the existing script job. Index pipeline commands, worker bounds, failure propagation and freshness guidance remain accurate."
         },
         {
+          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+          "sha256": "5ade8897c75359d80ed39cb7a2080da5d9d0fadc430893a8211c261138215be6",
+          "reviewReason": "Reviewed Linux proc stat ESRCH handling in Wait-LlmWikiProcessTermination. Only IOException after opening a disappearing proc entry is rechecked: confirmed process exit or absent proc directory returns true; errors for a live process are rethrown. Existing bounded waits, zombie-state recognition, process-tree ownership, native exit-code preservation, logging and index rollback remain unchanged. The index-pipeline documentation still accurately describes these guarantees."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
           "sha256": "43a2338fbc2f1c28d5b9ae159dfe5263000ee3cdd1bdaec9ceabefd366e73f96",
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
@@ -1001,10 +1015,10 @@
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         }
       ],
-      "reason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate.",
+      "reason": "Reviewed Linux proc stat ESRCH handling in Wait-LlmWikiProcessTermination. Only IOException after opening a disappearing proc entry is rechecked: confirmed process exit or absent proc directory returns true; errors for a live process are rethrown. Existing bounded waits, zombie-state recognition, process-tree ownership, native exit-code preservation, logging and index rollback remain unchanged. The index-pipeline documentation still accurately describes these guarantees.",
       "baseRef": "HEAD",
-      "gitHead": "2a8965bd8f8dc8020c804d82c1aa755dcb02fb1a",
-      "reviewedAtUtc": "2026-11-02T08:27:45.5197742Z"
+      "gitHead": "1d91054b9df75037a72d83989ea17af557230780",
+      "reviewedAtUtc": "2026-11-03T04:42:54.3603924Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1013,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "57ee18cd50d638fc2a24dc0a8808a1b49cc76f0039d0ef3e83e995ca0a361efa",
-          "reviewReason": "Reviewed the canonical task-finish observation for SSR runtime recovery: a completed task outcome is appended with exact instruction and completion fingerprints; existing registry events and the append-only chain are preserved. No learning thresholds, source authority, cohort attribution, experiments or promotion behavior changed. Generic instruction effectiveness guidance remains accurate."
+          "sha256": "afba0085c2f9564ec12cd914dde396977cb45a306afc5f5d19226b9ef40757a5",
+          "reviewReason": "Reviewed the single appended profile-sign-in outcome record with current scoped AGENTS fingerprints and sealed task provenance. It records correlation only and changes no instructions, thresholds or experiments; the workflow remains accurate."
         }
       ],
-      "reason": "Reviewed the canonical task-finish observation for SSR runtime recovery: a completed task outcome is appended with exact instruction and completion fingerprints; existing registry events and the append-only chain are preserved. No learning thresholds, source authority, cohort attribution, experiments or promotion behavior changed. Generic instruction effectiveness guidance remains accurate.",
+      "reason": "Reviewed the single appended profile-sign-in outcome record with current scoped AGENTS fingerprints and sealed task provenance. It records correlation only and changes no instructions, thresholds or experiments; the workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d8adb3e3cfc69ff7eb9b4be1ed49c4f5f24122de",
-      "reviewedAtUtc": "2026-11-02T09:43:14.4866598Z"
+      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
+      "reviewedAtUtc": "2026-11-03T09:28:37.4128123Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1045,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "6a6cf4797a81669842458d3655df1ef34db59b3544647dcf913c1bf319abde90",
-          "reviewReason": "Reviewed the generated observed candidate, source paths and cost signals. It remains unapproved/unapplied; active evals and expected policy behavior are unchanged. Prior event hashes and separate promotion boundaries are preserved."
+          "sha256": "a7cbefebcc2addc7c8314a4814ffb814e160ae18a08f80a86d24fdd8f60b48fe",
+          "reviewReason": "Reviewed the appended observed eval candidate learned-14ba19a46a424734: it binds this task paths, expected Identity module, rules and six checks. No approval or application event activates it; the documented candidate lifecycle and static baseline remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1059,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the generated observed candidate, source paths and cost signals. It remains unapproved/unapplied; active evals and expected policy behavior are unchanged. Prior event hashes and separate promotion boundaries are preserved.",
+      "reason": "Reviewed the appended observed eval candidate learned-14ba19a46a424734: it binds this task paths, expected Identity module, rules and six checks. No approval or application event activates it; the documented candidate lifecycle and static baseline remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
-      "reviewedAtUtc": "2026-11-02T06:55:01.7028797Z"
+      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
+      "reviewedAtUtc": "2026-11-03T09:28:38.3674798Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1110,12 +1124,17 @@
           "path": ".llm-wiki/policies/change-policies.json",
           "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
           "reviewReason": "Reviewed the policy delta: only context-ranking policy/reader paths acquire a focused .NET check. No persistence, query-cardinality, application telemetry or production provider behavior changed; the documented performance/observability obligations continue to apply at their existing boundaries."
+        },
+        {
+          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "d10fef273ec7fcaece67a32aa6fa5a2f0e674c45428c2a65daaee2ca9649b28c",
+          "reviewReason": "Verified the existing workflow requires stable low-cardinality measurements and exclusion of secrets and unbounded identifiers. Native Npgsql views retain only database system and connection state, explicitly disable exemplars, and are exercised by host exporter tests; the workflow guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the policy delta: only context-ranking policy/reader paths acquire a focused .NET check. No persistence, query-cardinality, application telemetry or production provider behavior changed; the documented performance/observability obligations continue to apply at their existing boundaries.",
+      "reason": "Verified the existing workflow requires stable low-cardinality measurements and exclusion of secrets and unbounded identifiers. Native Npgsql views retain only database system and connection state, explicitly disable exemplars, and are exercised by host exporter tests; the workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:22.660388Z"
+      "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
+      "reviewedAtUtc": "2026-11-03T03:57:30.2263079Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1354,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4fcd22d61a2c345e93050aeae07854b695bc69c6d88cb67cd5732d766b2928aa",
-          "reviewReason": "Reviewed runtime topology: added api-green/client-ssr-green reuse the same executable images, Redis and keyring; matching SSR origins and loopback bindings are represented. No extra workers or recurring jobs. Generic runtime discovery and source-freshness guidance remains accurate."
+          "sha256": "70345bbc005bd7840e4f391e79188e41e83b88f2d9620d9d985056043cb39c34",
+          "reviewReason": "Reviewed runtime-topology changes: existing Web API and Angular hosts own the new unlink handlers and client service. There is no new worker, recurring job, webhook, deployment setting or external client implementation. Existing Telegram OIDC provider and protected ticket store are reused; requests propagate cancellation, completion is single-use with no HTTP retry, and bot-operation cancellation remains post-commit."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1368,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime topology: added api-green/client-ssr-green reuse the same executable images, Redis and keyring; matching SSR origins and loopback bindings are represented. No extra workers or recurring jobs. Generic runtime discovery and source-freshness guidance remains accurate.",
+      "reason": "Reviewed runtime-topology changes: existing Web API and Angular hosts own the new unlink handlers and client service. There is no new worker, recurring job, webhook, deployment setting or external client implementation. Existing Telegram OIDC provider and protected ticket store are reused; requests propagate cancellation, completion is single-use with no HTTP retry, and bot-operation cancellation remains post-commit.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:35.0360096Z"
+      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
+      "reviewedAtUtc": "2026-11-03T08:44:52.1142146Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1530,13 +1549,13 @@
       "pageSha256": "afbc8fae001e1e78bcb6a4c7845cd17fed6e868aa90bd0f8fb1acdd61b41a8d2",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "bfa41aded85db1da2482e5c33e3794b57755cd96bd2458ba76a96849f71bbbc5",
+          "path": "FoodDiary.sln.DotSettings",
+          "sha256": "85e1054678472202caa2cc4a2e4d40c236f9209e2b325a5a1110c8f7b1dc9a65",
           "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
         },
         {
-          "path": "FoodDiary.sln.DotSettings",
-          "sha256": "85e1054678472202caa2cc4a2e4d40c236f9209e2b325a5a1110c8f7b1dc9a65",
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "bfa41aded85db1da2482e5c33e3794b57755cd96bd2458ba76a96849f71bbbc5",
           "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
         }
       ],
@@ -1694,8 +1713,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "7970e7656cc68781b2627c2f380b72c8d5e41a47a1717cab0cc92011ea177f4e",
-          "reviewReason": "Reviewed regenerated catalog:458 .NET projects,159 test projects and two new operational docs. No project or ownership boundary changed; compiled context provenance, scope and SQL query guidance remain accurate."
+          "sha256": "92fd62a1470722891726a0be32a610030d17725d49eebc97911d519ac48857d1",
+          "reviewReason": "Reviewed the regenerated catalog used by context discovery: it includes API_COLD_START.md and the combined existing project and endpoint inventory. The compiler publish option and new backend tests do not alter query ranking, budgets, parser policy or Sqlite reader behavior. The page remains accurate about bounded navigation and the distinction between index freshness and retrieval quality; no new retrieval-quality claim is made."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1703,10 +1722,10 @@
           "reviewReason": "Documented exact user aggregate repository role with related-data exclusions and equivalent compile/compiles factoring. The two spellings now share one normalization entry; direct compile term deduplicates identically, keeping combined budget700 with no threshold changes."
         }
       ],
-      "reason": "Reviewed regenerated catalog:458 .NET projects,159 test projects and two new operational docs. No project or ownership boundary changed; compiled context provenance, scope and SQL query guidance remain accurate.",
+      "reason": "Reviewed the regenerated catalog used by context discovery: it includes API_COLD_START.md and the combined existing project and endpoint inventory. The compiler publish option and new backend tests do not alter query ranking, budgets, parser policy or Sqlite reader behavior. The page remains accurate about bounded navigation and the distinction between index freshness and retrieval quality; no new retrieval-quality claim is made.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:35.4694211Z"
+      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
+      "reviewedAtUtc": "2026-11-03T11:37:36.1093946Z"
     },
     {
       "pageId": "workflow.review-diff",

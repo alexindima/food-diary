@@ -49,6 +49,18 @@ const ORIGINAL_SAVE_HEIGHT = 170;
 const SUBMITTED_SAVE_HEIGHT = 170.2;
 
 describe('UserManageComponent guided tour', () => {
+    it('reveals security feedback after a Telegram callback and keeps the section open for retry', async () => {
+        await createComponentAsync(null);
+        const section = (fixture.nativeElement as HTMLElement).querySelector('fd-user-manage-security-card')?.closest('details');
+        expect(section?.open).toBe(false);
+        facade.telegramUnlinkError.set('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+        fixture.detectChanges();
+        expect(section?.open).toBe(true);
+        facade.telegramUnlinkError.set(null);
+        fixture.detectChanges();
+        expect(section?.open).toBe(true);
+    });
+
     it('reveals every tour section before starting without opening unrelated accordions', async () => {
         await createComponentAsync(null);
         const host = fixture.nativeElement as HTMLElement;
@@ -876,6 +888,7 @@ type ProfileManageFacadeMock = {
     isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isLinkingGoogle: ReturnType<typeof signal<boolean>>;
     isUnlinkingTelegram: ReturnType<typeof signal<boolean>>;
+    telegramUnlinkError: ReturnType<typeof signal<string | null>>;
     backupEmailSentTo: WritableSignal<string | null>;
     backupEmailResendAt: WritableSignal<number>;
     isRequestingBackupEmail: WritableSignal<boolean>;
@@ -1081,6 +1094,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         isRevokingAiConsent: signal(false),
         isLinkingGoogle: signal(false),
         isUnlinkingTelegram: signal(false),
+        telegramUnlinkError: signal<string | null>(null),
         backupEmailSentTo: signal<string | null>(null),
         backupEmailResendAt: signal(0),
         isRequestingBackupEmail: signal(false),

@@ -169,6 +169,8 @@ export class UserManageComponent {
         return user !== null && (user.hasGoogleIdentity === true || (user.hasPassword && user.isEmailConfirmed && user.email !== null));
     });
     protected readonly isUnlinkingTelegram = this.facade.isUnlinkingTelegram;
+    protected readonly telegramUnlinkError = this.facade.telegramUnlinkError;
+    protected readonly securityExpanded = signal(false);
 
     protected unlinkTelegram(): void {
         void this.facade.unlinkTelegramAsync();
@@ -198,6 +200,11 @@ export class UserManageComponent {
     });
 
     public constructor() {
+        effect(() => {
+            if (this.telegramUnlinkError() !== null) {
+                this.securityExpanded.set(true);
+            }
+        });
         this.buildSelectOptions();
         this.watchUserFormElement();
         this.watchLanguageChanges();

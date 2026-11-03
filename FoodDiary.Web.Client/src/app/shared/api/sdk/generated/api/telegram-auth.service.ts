@@ -106,6 +106,15 @@ export interface PostAuthTelegramUnlinkRequestParams {
     telegramAuthHttpRequest?: TelegramAuthHttpRequest;
 }
 
+export interface PostAuthTelegramUnlinkOidcCompleteRequestParams {
+    version: string;
+    exchangeTelegramOidcHttpRequest?: ExchangeTelegramOidcHttpRequest;
+}
+
+export interface PostAuthTelegramUnlinkOidcStartRequestParams {
+    version: string;
+}
+
 export interface PostAuthTelegramVerifyRequestParams {
     version: string;
     telegramAuthHttpRequest?: TelegramAuthHttpRequest;
@@ -1259,6 +1268,169 @@ export class TelegramAuthSdk extends BaseService {
         return this.httpClient.request<any>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             body: telegramAuthHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/auth/telegram/unlink/oidc/complete
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAuthTelegramUnlinkOidcComplete(
+        requestParameters: PostAuthTelegramUnlinkOidcCompleteRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<void>;
+    public postAuthTelegramUnlinkOidcComplete(
+        requestParameters: PostAuthTelegramUnlinkOidcCompleteRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<void>>;
+    public postAuthTelegramUnlinkOidcComplete(
+        requestParameters: PostAuthTelegramUnlinkOidcCompleteRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<void>>;
+    public postAuthTelegramUnlinkOidcComplete(
+        requestParameters: PostAuthTelegramUnlinkOidcCompleteRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postAuthTelegramUnlinkOidcComplete.');
+        }
+        const exchangeTelegramOidcHttpRequest = requestParameters?.exchangeTelegramOidcHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/auth/telegram/unlink/oidc/complete`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: exchangeTelegramOidcHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/auth/telegram/unlink/oidc/start
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAuthTelegramUnlinkOidcStart(
+        requestParameters: PostAuthTelegramUnlinkOidcStartRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<TelegramOidcStartHttpResponse>;
+    public postAuthTelegramUnlinkOidcStart(
+        requestParameters: PostAuthTelegramUnlinkOidcStartRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<TelegramOidcStartHttpResponse>>;
+    public postAuthTelegramUnlinkOidcStart(
+        requestParameters: PostAuthTelegramUnlinkOidcStartRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<TelegramOidcStartHttpResponse>>;
+    public postAuthTelegramUnlinkOidcStart(
+        requestParameters: PostAuthTelegramUnlinkOidcStartRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postAuthTelegramUnlinkOidcStart.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/auth/telegram/unlink/oidc/start`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<TelegramOidcStartHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

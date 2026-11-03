@@ -2,18 +2,25 @@ import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, 
 import { form, FormField, required } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { TelegramBackupEmailFlowService } from '../../../../shared/auth/telegram-backup-email-flow.service';
 import { telegramMiniAppReturnUrl } from '../../../../shared/auth/telegram-mini-app-navigation';
-import { telegramOAuthCallbackFromRoute } from '../../../../shared/auth/telegram-oidc-values';
+import {
+    telegramOAuthCallbackFromRoute,
+    type TelegramOAuthCode,
+    type TelegramOAuthState,
+} from '../../../../shared/auth/telegram-oidc-values';
+import { TelegramUnlinkFlowService } from '../../../../shared/auth/telegram-unlink-flow.service';
 import { TelegramWebAppService } from '../../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
@@ -48,6 +55,9 @@ export class TelegramAuthComponent {
     private readonly browser = inject(BrowserWindowService);
     private readonly route = inject(ActivatedRoute);
     private readonly backupEmailFlow = inject(TelegramBackupEmailFlowService);
+    private readonly unlinkFlow = inject(TelegramUnlinkFlowService);
+    private readonly toast = inject(FdUiToastService);
+    private readonly translate = inject(TranslateService);
     private readonly telegram = inject(TelegramWebAppService);
     protected readonly ready = signal(false);
     protected readonly showExistingLogin = signal(false);
@@ -124,8 +134,7 @@ export class TelegramAuthComponent {
         const isCallback = code !== null || state !== null || denied;
         if (isCallback) {
             this.browser.replaceCurrentUrl('/auth/telegram');
-            if (await this.backupEmailFlow.handleCallbackAsync(code, state, denied)) {
-                await this.navigation.navigateToProfileAsync();
+            if (await this.handleAccountCallbackAsync(code, state, denied)) {
                 return;
             }
             if (code !== null && state !== null && !denied) {
@@ -144,6 +153,24 @@ export class TelegramAuthComponent {
         } finally {
             this.ready.set(true);
         }
+    }
+
+    private async handleAccountCallbackAsync(
+        code: TelegramOAuthCode | null,
+        state: TelegramOAuthState | null,
+        denied: boolean,
+    ): Promise<boolean> {
+        const unlink = await this.unlinkFlow.handleCallbackAsync(code, state, denied);
+        if (unlink === 'completed') {
+            this.toast.success(this.translate.instant('USER_MANAGE.TELEGRAM_UNLINK_SUCCESS'));
+            await this.auth.onLogoutAsync(true);
+            return true;
+        }
+        if (unlink === 'failed' || (await this.backupEmailFlow.handleCallbackAsync(code, state, denied))) {
+            await this.navigation.navigateToProfileAsync();
+            return true;
+        }
+        return false;
     }
 
     private async signInMiniAppAsync(): Promise<void> {

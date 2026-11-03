@@ -370,6 +370,56 @@
         font-weight: var(--fd-font-weight-bold);
     }
 
+    &__login-method--access {
+        align-items: flex-start;
+        padding: var(--fd-space-md);
+    }
+
+    &__method-heading,
+    &__method-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--fd-space-xs) var(--fd-space-sm);
+    }
+
+    &__login-method-info p,
+    &__email p,
+    &__email h3 {
+        margin: 0;
+    }
+
+    &__email {
+        margin-bottom: var(--fd-space-md);
+    }
+
+    &__email-address {
+        overflow-wrap: anywhere;
+    }
+
+    &__bot-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xxs);
+        min-height: var(--fd-size-control-touch);
+        color: var(--fd-color-primary-700);
+        font-weight: var(--fd-font-weight-semibold);
+        text-underline-offset: var(--fd-space-xxs);
+
+        &:focus-visible {
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
+        }
+    }
+
+    &__method-feedback {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__method-error {
+        color: var(--fd-color-danger);
+    }
+
     &__login-method-icon {
         width: var(--fd-size-control-md);
         flex: 0 0 var(--fd-size-control-md);
@@ -397,7 +447,7 @@
     }
 
     &__connection-status--connected {
-        color: var(--fd-color-emerald-300);
+        color: var(--fd-color-primary-700);
     }
 
     &__connection-status--unavailable {

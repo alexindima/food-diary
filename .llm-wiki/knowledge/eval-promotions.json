@@ -2533,6 +2533,209 @@
       },
       "reason": "",
       "eventHash": "717e616d19233516d57751e355aa337b1b916625805fa17b68f7974668e23bb6"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 15,
+      "kind": "observed",
+      "candidateId": "learned-cffd87a2f8467f52",
+      "createdAtUtc": "2026-11-02T14:12:55.7711333Z",
+      "previousHash": "717e616d19233516d57751e355aa337b1b916625805fa17b68f7974668e23bb6",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-auth-diagnostics",
+        "retrospectiveHash": "eeeff9bbc5ed1fcbaf1c4ff724d6316621773762ef3ad2515f2d7ea48257bc91",
+        "packetFingerprint": "243a26df63c59d7d5daf374438b690cbfe5117284f444db15f36228fda3efd4e",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=834.13%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-cffd87a2f8467f52",
+          "changedPaths": [
+            "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+            "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthDiagnosticsTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs"
+          ],
+          "expectedModules": [
+            "Identity"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "170505205d73fc521a6308d952881331fd75646af31964d1db4b1b7c8ee13d15"
+      },
+      "reason": "",
+      "eventHash": "c088abeea8acf8e667b620f186dc5b233bac88829d9ba8c57f0ccbdc0b3c0263"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 16,
+      "kind": "observed",
+      "candidateId": "learned-14ba19a46a424734",
+      "createdAtUtc": "2026-11-03T09:26:34.3159729Z",
+      "previousHash": "c088abeea8acf8e667b620f186dc5b233bac88829d9ba8c57f0ccbdc0b3c0263",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/profile-sign-in",
+        "retrospectiveHash": "7063346e565bca679e04ad9035a706e4a4b9b5e8d336d7cf282eecf8f204a1e2",
+        "packetFingerprint": "12d4c15fca2a0a1b5d420423862651a538329d4f3680e8ba3cecdbb8049cd50d",
+        "signals": [
+          {
+            "id": "cost-api-compatibility",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'api-compatibility'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "api-compatibility",
+              "error=4271.43%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1242.11%"
+            ]
+          },
+          {
+            "id": "cost-frontend-i18n",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'frontend-i18n'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=137900%",
+              "frontend-i18n"
+            ]
+          },
+          {
+            "id": "cost-frontend-verify",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'frontend-verify'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=69.74%",
+              "frontend-verify"
+            ]
+          },
+          {
+            "id": "cost-presentation-api-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'presentation-api-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=3757.14%",
+              "presentation-api-tests"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-14ba19a46a424734",
+          "changedPaths": [
+            "FoodDiary.Web.Client/api-sdk/scopes.json",
+            "FoodDiary.Web.Client/api-sdk/user.openapi.json",
+            "FoodDiary.Web.Client/assets/i18n/en.json",
+            "FoodDiary.Web.Client/assets/i18n/en/app.json",
+            "FoodDiary.Web.Client/assets/i18n/ru.json",
+            "FoodDiary.Web.Client/assets/i18n/ru/app.json",
+            "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.scss",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
+            "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.spec.ts",
+            "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
+            "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+            "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
+            "FoodDiary.Web.Client/src/app/shared/auth/telegram-unlink-flow.service.spec.ts",
+            "FoodDiary.Web.Client/src/app/shared/auth/telegram-unlink-flow.service.ts",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+            "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommand.cs",
+            "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommandHandler.cs",
+            "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommand.cs",
+            "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommandHandler.cs",
+            "Modules/Identity/Application/Authentication/Common/TelegramUnlinkOidcAttempt.cs",
+            "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramUnlinkController.cs",
+            "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramUnlinkHandlersTests.cs",
+            "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+          ],
+          "expectedModules": [
+            "Identity"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Contracts",
+            "Frontend",
+            "Localization",
+            "Tests"
+          ],
+          "expectedRules": [
+            "api-contract",
+            "backend-boundaries",
+            "backend-public-contract",
+            "frontend-component-contract",
+            "frontend-component-style",
+            "frontend-workspace",
+            "localization-pair",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "api-compatibility",
+            "api-integration-tests",
+            "architecture-tests",
+            "frontend-i18n",
+            "frontend-verify",
+            "presentation-api-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "634d5d0efd70695863a713e82b2ddae2387b21f31b7fc5a9ed20bf8e656a0a1f"
+      },
+      "reason": "",
+      "eventHash": "0ce58748453209e2062a4aeeda3e4e61e26e8be24c0a10561a1141e91c5f350f"
     }
   ]
 }

@@ -18,8 +18,8 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
 import { LocalizedNumberPipe } from '../../../shared/i18n/localized-number.pipe';
+import { getLocalizedNumberFormatter } from '../../../shared/i18n/localized-number-formatter';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
-import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboard-widget-frame';
 import type { NutrientBar } from '../nutrition-summary/nutrition-summary.types';
 import { buildDayNutrientContour, EXTREME_NUTRIENT_PERCENT, getDayNutrientAnchor } from './day-nutrition-contour.utils';
@@ -27,6 +27,7 @@ import { buildDayNutrientBarViewModels, calculateDaySummaryPercent } from './day
 import { DaySummaryMetricDirective } from './day-summary-metric.directive';
 
 const PERCENT = 100;
+const COMPARISON_MAXIMUM_FRACTION_DIGITS = 3;
 let uniqueId = 0;
 
 type DayNutritionSummaryData = {
@@ -215,7 +216,7 @@ export class DayNutritionSummaryComponent {
         }
 
         const key = current > target ? 'DASHBOARD.DAY_SUMMARY.EXCEEDED_BY' : 'DASHBOARD.DAY_SUMMARY.REMAINING';
-        const value = new Intl.NumberFormat(resolveAppLocale(this.language())).format(difference);
+        const value = getLocalizedNumberFormatter(this.language(), 0, COMPARISON_MAXIMUM_FRACTION_DIGITS).format(difference);
         return this.translateService.instant(key, { value, unit });
     }
 }

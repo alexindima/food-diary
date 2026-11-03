@@ -10,7 +10,10 @@ const RESEND_COOLDOWN_MS = 60_000;
 
 describe('UserManageBackupEmailComponent', () => {
     const facade = {
-        user: signal({ hasTelegramIdentity: true, email: null as string | null }),
+        user: signal<{ hasTelegramIdentity: boolean; email: string | null; hasPassword?: boolean; isEmailConfirmed?: boolean }>({
+            hasTelegramIdentity: true,
+            email: null,
+        }),
         isRequestingBackupEmail: signal(false),
         backupEmailSentTo: signal<string | null>(null),
         backupEmailResendAt: signal(0),
@@ -47,6 +50,15 @@ describe('UserManageBackupEmailComponent', () => {
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-ui-input')).toBeNull();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('confirmed@example.com');
+    });
+
+    it.each([false, true])('describes confirmed email according to password availability %s', hasPassword => {
+        facade.user.set({ hasTelegramIdentity: false, email: 'user@example.test', isEmailConfirmed: true, hasPassword });
+        const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="status"]')?.textContent).toContain(
+            hasPassword ? 'USER_MANAGE.EMAIL_PASSWORD_READY' : 'USER_MANAGE.EMAIL_PASSWORD_MISSING',
+        );
     });
 
     it('explains an invalid submit and focuses its field without sending a request', () => {

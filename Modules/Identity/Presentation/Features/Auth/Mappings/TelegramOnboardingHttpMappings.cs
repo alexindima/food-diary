@@ -6,6 +6,8 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegr
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramBackupEmail;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RequestTelegramBackupEmail;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.UnlinkTelegram;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramUnlink;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramUnlink;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -23,6 +25,11 @@ public static class TelegramOnboardingHttpMappings {
         new(userId, request.Email, request.InitData);
 
     public static UnlinkTelegramCommand ToUnlinkCommand(this TelegramAuthHttpRequest request, Guid userId) => new(userId, request.InitData);
+
+    public static StartTelegramUnlinkCommand ToUnlinkStartCommand(Guid userId, string binding) => new(userId, binding);
+
+    public static CompleteTelegramUnlinkCommand ToUnlinkCompleteCommand(this ExchangeTelegramOidcHttpRequest request, Guid userId, string binding) =>
+        new(userId, request.Code, request.State, binding);
 
     public static StartTelegramBackupEmailCommand ToBackupEmailStartCommand(this StartTelegramBackupEmailHttpRequest request, Guid userId, string binding) =>
         new(userId, request.Email, binding);

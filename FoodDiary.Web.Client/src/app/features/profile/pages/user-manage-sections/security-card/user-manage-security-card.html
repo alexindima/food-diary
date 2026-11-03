@@ -3,12 +3,18 @@
         [hasTelegramIdentity]="hasTelegramIdentity()"
         [canUnlinkTelegram]="canUnlinkTelegram()"
         [isUnlinkingTelegram]="isUnlinkingTelegram()"
+        [unlinkError]="telegramUnlinkError()"
         (telegramUnlink)="telegramUnlink.emit()"
     />
-    <div class="user-manage__login-method fd-row fd-gap-sm">
+    <div class="user-manage__login-method user-manage__login-method--access fd-row fd-gap-sm">
         <div class="user-manage__google-mark" aria-hidden="true">G</div>
         <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
-            <div class="user-manage__login-method-title">Google</div>
+            <div class="user-manage__method-heading">
+                <span class="user-manage__login-method-title">Google</span>
+                <span class="user-manage__connection-status" [class.user-manage__connection-status--connected]="hasGoogleIdentity()">
+                    {{ (hasGoogleIdentity() ? 'USER_MANAGE.METHOD_CONNECTED' : 'USER_MANAGE.METHOD_NOT_CONNECTED') | translate }}
+                </span>
+            </div>
             @if (hasGoogleIdentity()) {
                 <div class="user-manage__login-method-description fd-ui-body-sm">
                     {{ 'USER_MANAGE.GOOGLE_CONNECTED_AS' | translate: { email: email() } }}
@@ -17,30 +23,23 @@
                 <div class="user-manage__login-method-description fd-ui-body-sm">
                     {{ 'USER_MANAGE.GOOGLE_NOT_CONNECTED' | translate }}
                 </div>
-            }
-        </div>
-
-        <div class="user-manage__login-method-action">
-            @if (hasGoogleIdentity()) {
-                <span class="user-manage__connection-status user-manage__connection-status--connected" role="status">
-                    {{ 'USER_MANAGE.GOOGLE_CONNECTED' | translate }}
-                </span>
-            } @else {
-                <div
-                    #googleButton
-                    class="user-manage__google-button"
-                    [attr.aria-busy]="isLinkingGoogle()"
-                    [class.user-manage__google-button--busy]="isLinkingGoogle()"
-                ></div>
-                @if (isGoogleUnavailable()) {
-                    <span class="user-manage__connection-status" role="status">
-                        {{ 'USER_MANAGE.GOOGLE_UNAVAILABLE' | translate }}
-                    </span>
-                } @else if (!isGoogleReady()) {
-                    <span class="user-manage__connection-status" role="status">
-                        {{ 'USER_MANAGE.GOOGLE_LOADING' | translate }}
-                    </span>
-                }
+                <div class="user-manage__method-actions">
+                    <div
+                        #googleButton
+                        class="user-manage__google-button"
+                        [attr.aria-busy]="isLinkingGoogle()"
+                        [class.user-manage__google-button--busy]="isLinkingGoogle()"
+                    ></div>
+                    @if (isGoogleUnavailable()) {
+                        <span class="user-manage__connection-status" role="status">
+                            {{ 'USER_MANAGE.GOOGLE_UNAVAILABLE' | translate }}
+                        </span>
+                    } @else if (!isGoogleReady()) {
+                        <span class="user-manage__connection-status" role="status">
+                            {{ 'USER_MANAGE.GOOGLE_LOADING' | translate }}
+                        </span>
+                    }
+                </div>
             }
         </div>
     </div>
