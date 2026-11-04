@@ -35,28 +35,28 @@
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "3182313dda8be0f1aa50facced82e4e3246a102445c5bd3d8c403d35a1b69378",
+      "pageSha256": "c89338f2bc0598e95e2f451d80019bc1b45ba7ae49b15a8d5f890086ba3d94f6",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
-          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
+          "path": "docs/adr/0055-atomic-frontend-publication-and-asset-retention.md",
+          "sha256": "0f5a3c2fdd6dd13f3eb46e9816c32e20bd508415f25eb5247657385ea8897901",
+          "reviewReason": "The frontend navigation now links ADR 0061 and documents the seven-day full-release rule with both protected pointers. ADR 0055 and the runbook retain the separate asset fallback and rollback contract."
         },
         {
-          "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "da7af2c91c234af18d9c1ebeffde6975d5ed2dbf4e763c69076f983421b5df88",
-          "reviewReason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass."
+          "path": "docs/adr/0061-frontend-release-retention.md",
+          "sha256": "e17690f3819ce4cfe779db8bea905bcaa18e639959fb6982148c897c2894b48b",
+          "reviewReason": "The frontend navigation now links ADR 0061 and documents the seven-day full-release rule with both protected pointers. ADR 0055 and the runbook retain the separate asset fallback and rollback contract."
         },
         {
-          "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "22349e2a2eb861f1dd373b1ef5d58564490669469c5fc57f928225ce337c60f1",
-          "reviewReason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass."
+          "path": "docs/frontend/PUBLIC_RECIPES.md",
+          "sha256": "e166ffbeebf8fe62469752e3b678ce23bb42fa00b4be81dfd8b14087312ecb3e",
+          "reviewReason": "The frontend navigation now links ADR 0061 and documents the seven-day full-release rule with both protected pointers. ADR 0055 and the runbook retain the separate asset fallback and rollback contract."
         }
       ],
-      "reason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass.",
+      "reason": "The frontend navigation now links ADR 0061 and documents the seven-day full-release rule with both protected pointers. ADR 0055 and the runbook retain the separate asset fallback and rollback contract.",
       "baseRef": "HEAD",
-      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
-      "reviewedAtUtc": "2026-11-02T02:41:38.9090605Z"
+      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
+      "reviewedAtUtc": "2026-11-04T05:21:44.5855148Z"
     },
     {
       "pageId": "module.mail-services",
@@ -194,20 +194,20 @@
           "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         },
         {
+          "path": "docs/adr/README.md",
+          "sha256": "015bf5378170ae13f4535c308a446b005160cb23618e490a84e8110748d21946",
+          "reviewReason": "ADR 0061 adds a deployment retention decision to the existing ADR index. It uses the established ADR lifecycle and leaves the compiled knowledge model and authority rules intact."
+        },
+        {
           "path": "docs/README.md",
           "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
           "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0060 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "ff6161ebff3af1977e036f5c1a20f396e4545ae1dc2d35250c7b363922d92acf",
-          "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0060 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
         }
       ],
-      "reason": "Reviewed README and ADR catalog changes: accepted ADR0060 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate.",
+      "reason": "ADR 0061 adds a deployment retention decision to the existing ADR index. It uses the established ADR lifecycle and leaves the compiled knowledge model and authority rules intact.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:33.4693275Z"
+      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
+      "reviewedAtUtc": "2026-11-04T05:18:14.0904937Z"
     },
     {
       "pageId": "system.quality-index",
@@ -329,8 +329,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "5e1d107fd029b37e5cce9b2a0604b39fe4edd3d4517bf5b04b027fd0e6d8edb4",
-          "reviewReason": "Reviewed final ci-tests.yml: added mandatory handover behavior and pinned Nginx tests; existing baseline selection, API compatibility and source-review gates are intact. Deployment snapshot equality is an additional conservative rollout gate, not a replacement for semantic API compatibility."
+          "sha256": "a922b9ad355e3846c7bf47cac280abe62bdafc1a08e845037cb5e52de24dfa9c",
+          "reviewReason": "The new CI step runs post-deployment Docker image-retention tests. The existing API snapshot and compatibility gates keep the same commands, inputs and ordering."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -353,10 +353,10 @@
           "reviewReason": "The full OpenAPI snapshot adds a documented 502 for five Admin MailInbox and outgoing mail operations. Successful responses and existing documented responses retain their schema. Transport regressions reproduce the prior 500 and verify the dependency failure code and 200 after recovery."
         }
       ],
-      "reason": "The full OpenAPI snapshot adds a documented 502 for five Admin MailInbox and outgoing mail operations. Successful responses and existing documented responses retain their schema. Transport regressions reproduce the prior 500 and verify the dependency failure code and 200 after recovery.",
+      "reason": "The new CI step runs post-deployment Docker image-retention tests. The existing API snapshot and compatibility gates keep the same commands, inputs and ordering.",
       "baseRef": "HEAD",
-      "gitHead": "e1cc86fbd15b45495ff490c21702fb24f50e024a",
-      "reviewedAtUtc": "2026-11-03T22:18:24.2860747Z"
+      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
+      "reviewedAtUtc": "2026-11-04T05:02:49.0957338Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -724,14 +724,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "ff6161ebff3af1977e036f5c1a20f396e4545ae1dc2d35250c7b363922d92acf",
-          "reviewReason": "Reviewed ADR catalog and accepted ADR0060 against0055 atomic publication and0058 session ownership: new slot handover is documented without changing generic ADR trigger or decision lookup guidance."
+          "sha256": "015bf5378170ae13f4535c308a446b005160cb23618e490a84e8110748d21946",
+          "reviewReason": "The index adds ADR 0061 as a related operational decision for frontend release directories. Existing decision search, index inputs and ADR status semantics still apply."
         }
       ],
-      "reason": "Reviewed ADR catalog and accepted ADR0060 against0055 atomic publication and0058 session ownership: new slot handover is documented without changing generic ADR trigger or decision lookup guidance.",
+      "reason": "The index adds ADR 0061 as a related operational decision for frontend release directories. Existing decision search, index inputs and ADR status semantics still apply.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:34.018456Z"
+      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
+      "reviewedAtUtc": "2026-11-04T05:18:14.3668812Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -996,8 +996,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "5e1d107fd029b37e5cce9b2a0604b39fe4edd3d4517bf5b04b027fd0e6d8edb4",
-          "reviewReason": "Reviewed ci-tests.yml focused/Full Wiki partitions and required aggregate gate: unchanged; added deployment runtime tests run in the existing script job. Index pipeline commands, worker bounds, failure propagation and freshness guidance remain accurate."
+          "sha256": "a922b9ad355e3846c7bf47cac280abe62bdafc1a08e845037cb5e52de24dfa9c",
+          "reviewReason": "The new CI step runs a Python unit suite for image retention. It adds no index generator or dependency and leaves index pipeline invocation and stages intact."
         },
         {
           "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
@@ -1015,10 +1015,10 @@
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         }
       ],
-      "reason": "Reviewed Linux proc stat ESRCH handling in Wait-LlmWikiProcessTermination. Only IOException after opening a disappearing proc entry is rechecked: confirmed process exit or absent proc directory returns true; errors for a live process are rethrown. Existing bounded waits, zombie-state recognition, process-tree ownership, native exit-code preservation, logging and index rollback remain unchanged. The index-pipeline documentation still accurately describes these guarantees.",
+      "reason": "The new CI step runs a Python unit suite for image retention. It adds no index generator or dependency and leaves index pipeline invocation and stages intact.",
       "baseRef": "HEAD",
-      "gitHead": "1d91054b9df75037a72d83989ea17af557230780",
-      "reviewedAtUtc": "2026-11-03T04:42:54.3603924Z"
+      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
+      "reviewedAtUtc": "2026-11-04T05:02:50.1503208Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1326,8 +1326,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "5e1d107fd029b37e5cce9b2a0604b39fe4edd3d4517bf5b04b027fd0e6d8edb4",
-          "reviewReason": "Reviewed ci-tests.yml report publication and aggregate Wiki gate: unchanged; deployment tests add evidence without bypassing compatibility, dependency, report or audit requirements."
+          "sha256": "a922b9ad355e3846c7bf47cac280abe62bdafc1a08e845037cb5e52de24dfa9c",
+          "reviewReason": "The added CI test exercises Docker image retention after deployment. Review report generation, assessment provenance and readiness inputs retain their existing contracts."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
@@ -1345,10 +1345,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed ci-tests.yml report publication and aggregate Wiki gate: unchanged; deployment tests add evidence without bypassing compatibility, dependency, report or audit requirements.",
+      "reason": "The added CI test exercises Docker image retention after deployment. Review report generation, assessment provenance and readiness inputs retain their existing contracts.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:34.7023855Z"
+      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
+      "reviewedAtUtc": "2026-11-04T05:02:51.0708372Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1713,8 +1713,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "92fd62a1470722891726a0be32a610030d17725d49eebc97911d519ac48857d1",
-          "reviewReason": "Reviewed the regenerated catalog used by context discovery: it includes API_COLD_START.md and the combined existing project and endpoint inventory. The compiler publish option and new backend tests do not alter query ranking, budgets, parser policy or Sqlite reader behavior. The page remains accurate about bounded navigation and the distinction between index freshness and retrieval quality; no new retrieval-quality claim is made."
+          "sha256": "0928cce760ff2c7910aa1701dbe2edf9cea5c411407ace14cf2eeb32452a261d",
+          "reviewReason": "The catalog change adds only the frontend retention ADR to the documentation inventory. Context query inputs and ranking behavior retain their existing contract."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1722,10 +1722,10 @@
           "reviewReason": "Documented exact user aggregate repository role with related-data exclusions and equivalent compile/compiles factoring. The two spellings now share one normalization entry; direct compile term deduplicates identically, keeping combined budget700 with no threshold changes."
         }
       ],
-      "reason": "Reviewed the regenerated catalog used by context discovery: it includes API_COLD_START.md and the combined existing project and endpoint inventory. The compiler publish option and new backend tests do not alter query ranking, budgets, parser policy or Sqlite reader behavior. The page remains accurate about bounded navigation and the distinction between index freshness and retrieval quality; no new retrieval-quality claim is made.",
+      "reason": "The catalog change adds only the frontend retention ADR to the documentation inventory. Context query inputs and ranking behavior retain their existing contract.",
       "baseRef": "HEAD",
-      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
-      "reviewedAtUtc": "2026-11-03T11:37:36.1093946Z"
+      "gitHead": "4a11fad4eb07cf796bc87d393d2fa266966492c6",
+      "reviewedAtUtc": "2026-11-04T05:53:01.8971865Z"
     },
     {
       "pageId": "workflow.review-diff",

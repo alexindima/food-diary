@@ -18,6 +18,7 @@ sources:
   - docs/frontend/WEB_QUALITY.md
   - docs/adr/0055-atomic-frontend-publication-and-asset-retention.md
   - docs/adr/0056-shopping-list-content-revisions.md
+  - docs/adr/0061-frontend-release-retention.md
   - docs/frontend/PUBLIC_RECIPES.md
   - FoodDiary.Web.Client/src/app/shared/api/sdk/products-sdk.ts
   - FoodDiary.Web.Client/src/app/features/products/api/product.service.ts
@@ -140,5 +141,8 @@ manifests come from the selected release and never use that fallback. Publish
 static assets before the matching SSR image.
 [ADR 0055](../../docs/adr/0055-atomic-frontend-publication-and-asset-retention.md)
 and the [public-recipes runbook](../../docs/frontend/PUBLIC_RECIPES.md) define
-migration, coordinated rollback and the separate decision required before pruning
-retained data.
+migration and coordinated rollback.
+[ADR 0061](../../docs/adr/0061-frontend-release-retention.md) prunes full release
+directories older than seven days after successful deployment. The `current`
+and `previous` targets remain available regardless of age. Retained asset expiry
+requires a separate browser and service-worker policy.

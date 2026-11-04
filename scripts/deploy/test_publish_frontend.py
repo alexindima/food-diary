@@ -89,6 +89,65 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual((self.root / "current/ngsw.json").read_bytes(), (first / "ngsw.json").read_bytes())
         self.assertEqual((self.root / "retained-assets/chunk-bbbbbbbb.js").read_bytes(), b"lazy-b")
 
+    def test_prune_removes_only_expired_unreferenced_releases(self):
+        now = 1_800_000_000
+        cutoff = now - 7 * 86_400
+        for label, modified in (("a", cutoff - 1), ("b", cutoff), ("c", cutoff + 1),
+                                ("d", cutoff - 1), ("e", cutoff - 1)):
+            release = self.publish(self.build(label), label * 40)
+            os.utime(release, (modified, modified))
+        releases = self.root / "releases"
+        unrecognized = releases / "manual-backup"
+        unrecognized.mkdir()
+        os.utime(unrecognized, (cutoff - 1, cutoff - 1))
+        os.symlink(unrecognized, releases / ("f" * 40), target_is_directory=True)
+        retained = publication.tree(self.root / "retained-assets")
+
+        with patch.object(publication.time, "time", return_value=now):
+            self.assertEqual(1, publication.prune(self.root))
+            self.assertEqual(0, publication.prune(self.root))
+
+        self.assertEqual({label * 40 for label in "bcdef"} | {unrecognized.name},
+                         {release.name for release in releases.iterdir()})
+        self.assertTrue((releases / ("f" * 40)).is_symlink())
+        self.assertEqual("e" * 40, publication.pointer(self.root, "current"))
+        self.assertEqual("d" * 40, publication.pointer(self.root, "previous"))
+        self.assertEqual(retained, publication.tree(self.root / "retained-assets"))
+        self.assertEqual(b"lazy-a", (self.root / "chunk-aaaaaaaa.js").read_bytes())
+
+    def test_prune_aborts_when_previous_pointer_is_invalid(self):
+        old = self.publish(self.build("a"), self.a)
+        self.publish(self.build("b"), self.b)
+        os.utime(old, (0, 0))
+        previous = self.root / "previous"
+        previous.unlink()
+        os.symlink("../build-a", previous, target_is_directory=True)
+
+        with self.assertRaisesRegex(publication.PublicationError, "Unsafe previous"):
+            publication.prune(self.root)
+
+        self.assertTrue((old / "index.html").is_file())
+
+    def test_prune_retries_interrupted_removal_outside_rollback_namespace(self):
+        old = self.publish(self.build("a"), self.a)
+        self.publish(self.build("b"), self.b)
+        self.publish(self.build("c"), "c" * 40)
+        os.utime(old, (0, 0))
+
+        def interrupt(directory):
+            (directory / "index.html").unlink()
+            raise OSError("interrupted deletion")
+
+        with patch.object(publication.shutil, "rmtree", side_effect=interrupt):
+            with self.assertRaisesRegex(OSError, "interrupted deletion"):
+                publication.prune(self.root)
+
+        self.assertFalse(old.exists())
+        with self.assertRaisesRegex(publication.PublicationError, "Invalid directory"):
+            publication.rollback(self.root, self.a)
+        self.assertEqual(1, publication.prune(self.root))
+        self.assertEqual({self.b, "c" * 40}, {release.name for release in old.parent.iterdir()})
+
     def test_public_rollback_rejects_missing_manifest(self):
         first, second = self.build("A"), self.build("b")
         self.publish(first, self.a)
@@ -233,6 +292,14 @@ class PublicationTests(unittest.TestCase):
         self.assertNotIn("rm -rf /var/www/fooddiary.club", workflow)
         self.assertNotIn("rm -rf /var/www/admin.fooddiary.club", workflow)
         self.assertIn("--require-ngsw", workflow)
+
+    def test_workflow_prunes_both_sites_after_successful_handover(self):
+        workflow = (Path(__file__).resolve().parents[2] / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
+        finish = workflow.index("python3 scripts/deploy/blue_green.py finish")
+        cleanup = workflow.find("for site_root in /var/www/fooddiary.club /var/www/admin.fooddiary.club; do")
+        self.assertGreater(cleanup, finish, "frontend cleanup must run after the handover")
+        post_handover = workflow[cleanup:workflow.index('echo "Deploy completed!"')]
+        self.assertIn('python3 scripts/deploy/publish_frontend.py prune --root "$site_root"', post_handover)
 
     def test_actual_workflow_uses_immutable_image_digest_for_both_sites(self):
         workflow = (Path(__file__).resolve().parents[2] / ".github/workflows/deploy.yml").read_text(encoding="utf-8")

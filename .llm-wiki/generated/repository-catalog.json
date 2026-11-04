@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 22,
     "agentGuides": 297,
-    "documentationPages": 251
+    "documentationPages": 252
   },
   "dotnet": {
     "projects": [
@@ -15985,6 +15985,7 @@
       "docs/adr/0058-browser-sessions-in-the-existing-api.md",
       "docs/adr/0059-purpose-specific-privacy-controls.md",
       "docs/adr/0060-single-host-blue-green-deployment.md",
+      "docs/adr/0061-frontend-release-retention.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/AGENT_GUIDE_CATALOG.md",

@@ -5,6 +5,7 @@
 - Owners: Frontend and deployment
 - Related: ADR 0050
 - Supersedes: None
+- Follow-up: [ADR 0061](0061-frontend-release-retention.md) sets retention for full releases.
 
 ## Context
 

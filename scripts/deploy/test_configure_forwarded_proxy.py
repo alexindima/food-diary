@@ -30,7 +30,7 @@ class ForwardedProxyDeploymentTests(unittest.TestCase):
 
     def test_deployment_checks_admin_origin_after_nginx_is_ready(self):
         workflow = (ROOT / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
-        probe = workflow[workflow.index("admin_sso_status=$(curl"):workflow.index("docker image prune")]
+        probe = workflow[workflow.index("admin_sso_status=$(curl"):workflow.index("blue_green.py finish")]
         self.assertIn("--resolve admin.fooddiary.club:443:127.0.0.1", probe)
         self.assertIn("Origin: https://admin.fooddiary.club", probe)
         self.assertIn("X-FoodDiary-Client: admin", probe)
