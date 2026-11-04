@@ -461,6 +461,7 @@ jobs:
           $SCP_CMD scripts/deploy/publish_frontend.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/publish_frontend.py
           $SCP_CMD scripts/deploy/parallel_tasks.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/parallel_tasks.sh
           $SCP_CMD scripts/deploy/configure_forwarded_proxy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/configure_forwarded_proxy.py
+          $SCP_CMD scripts/deploy/prune_images.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/prune_images.py
           $SCP_CMD scripts/deploy/install_nginx_logrotate.py scripts/deploy/nginx-logrotate.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
@@ -694,7 +695,19 @@ jobs:
           # Retire the old slots only after public origin/proxy checks pass.
           python3 scripts/deploy/blue_green.py finish
 
-          docker image prune -a --force --filter "until=24h"
+          for site_root in /var/www/fooddiary.club /var/www/admin.fooddiary.club; do
+            python3 scripts/deploy/publish_frontend.py prune --root "$site_root" ||
+              echo "::warning::Frontend release cleanup did not complete for $site_root."
+          done
+
+          if deployed_image_refs=$(docker compose --profile backend --profile full --profile mail-inbox config --images); then
+            mapfile -t deployed_images <<< "$deployed_image_refs"
+            python3 scripts/deploy/prune_images.py '${{ env.IMAGE_PREFIX }}' \
+              "${deployed_images[@]}" '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.images.outputs.bugtriage }}' ||
+              echo '::warning::Obsolete FoodDiary image cleanup did not complete.'
+          else
+            echo '::warning::Could not resolve deployed images. FoodDiary image cleanup skipped.'
+          fi
 
           echo "Deploy completed!"
           SCRIPT_EOF

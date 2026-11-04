@@ -85,12 +85,18 @@ an older configuration continues serving its preserved flat legacy shell. Restor
 the corresponding SSR image before accepting the rollback as complete. This
 procedure does not roll back backend schema or API compatibility.
 
-There is no automatic release or asset pruning in this implementation. Full
-releases, retained hashes and the migration compatibility mirror consume disk
-space; inspect free space before publication and monitor its growth. Failed
-staging directories are kept for diagnosis. Garbage collection requires a
-separately agreed retention horizon that accounts for open tabs and old service
-workers; do not add an arbitrary age-based deletion to the deploy workflow.
+[ADR 0061](../adr/0061-frontend-release-retention.md) sets the cleanup policy.
+After the public probes and blue-green handover succeed, the workflow runs
+`publish_frontend.py prune --root <site-root>` for both sites. It removes full
+release directories whose modification time is more than seven days old and
+keeps the `current` and `previous` targets regardless of age. An interrupted
+cleanup can resume on the next successful deployment. A rollback to a pruned
+release requires restoring the matching build first.
+
+The cleanup scope is `releases/`. Keep `retained-assets` and the flat compatibility
+mirror for old clients. Keep failed staging directories for diagnosis. Monitor
+free space and choose any future asset expiry separately, accounting for open
+tabs and old service workers.
 
 Focused checks are `python3 -B -m unittest discover -s scripts/deploy -p
 'test_publish_frontend.py'` on Linux and `pwsh -File

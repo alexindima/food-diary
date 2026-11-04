@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Publish immutable Angular releases inside an existing, stable Nginx bind root.
 
-No release or retained asset is pruned. Call under the deployment lock when
-coordinating both sites and SSR; each site also has its own publication lock.
+Call under the deployment lock when coordinating both sites and SSR. Each site
+uses its publication lock for publishing, rollback, and release cleanup.
 """
 
 import argparse
@@ -15,10 +15,13 @@ import re
 import shutil
 import stat
 import sys
+import time
 import uuid
 
 
 RELEASE_ID = re.compile(r"(?:[0-9a-f]{40}|sha256-[0-9a-f]{64})\Z")
+RELEASE_RETENTION_SECONDS = 7 * 24 * 60 * 60
+PRUNING_PREFIX = ".prune-"
 # Angular/esbuild uses eight base64url characters; older webpack builds use hex.
 # Keep this expression aligned with both production Nginx hashed-asset locations.
 HASHED_ASSET = re.compile(
@@ -256,6 +259,30 @@ def rollback(root, identity=None, *, require_ngsw=False):
     return directory
 
 
+def prune(root):
+    root = absolute_directory(root)
+    removed = 0
+    with publication_lock(root):
+        current = pointer(root, "current")
+        if current is None:
+            raise PublicationError("No current release exists")
+        protected = {current, pointer(root, "previous")}
+        releases = absolute_directory(root / "releases")
+        cutoff = time.time() - RELEASE_RETENTION_SECONDS
+        for directory in sorted(releases.iterdir()):
+            identity = directory.name.removeprefix(PRUNING_PREFIX)
+            if not RELEASE_ID.fullmatch(identity) or is_link(directory) or not directory.is_dir():
+                continue
+            if directory.name == identity:
+                if identity in protected or directory.stat().st_mtime >= cutoff:
+                    continue
+                # Keep partially removed releases out of the rollback namespace.
+                directory = directory.rename(releases / f"{PRUNING_PREFIX}{identity}")
+            shutil.rmtree(directory)
+            removed += 1
+    return removed
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -268,12 +295,16 @@ def main():
     rollback_command.add_argument("--root", required=True, type=Path)
     rollback_command.add_argument("--release-id")
     rollback_command.add_argument("--require-ngsw", action="store_true")
+    prune_command = commands.add_parser("prune")
+    prune_command.add_argument("--root", required=True, type=Path)
     args = parser.parse_args()
     try:
         if args.command == "publish":
             result = publish(args.source, args.root, args.release_id, require_ngsw=args.require_ngsw)
-        else:
+        elif args.command == "rollback":
             result = rollback(args.root, args.release_id, require_ngsw=args.require_ngsw)
+        else:
+            result = f"{prune(args.root)} release directories removed"
     except (OSError, PublicationError) as error:
         print(f"Frontend publication failed: {error}", file=sys.stderr)
         return 1

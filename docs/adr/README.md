@@ -92,3 +92,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0057: Opt-in bounded native incident diagnostics](0057-opt-in-native-diagnostics.md)
 - [0058: Browser sessions in the existing API](0058-browser-sessions-in-the-existing-api.md)
 - [0060: Single-host blue-green API and SSR deployment](0060-single-host-blue-green-deployment.md)
+- [0061: Retain full frontend releases for seven days](0061-frontend-release-retention.md)
