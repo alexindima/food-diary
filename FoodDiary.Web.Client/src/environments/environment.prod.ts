@@ -55,4 +55,5 @@ export const environment: AppConfig = {
     russianDefaultHosts: [],
     enableGlobalErrorHandler: true,
     enableClientObservability: true,
+    enableMarketingAttribution: false,
 };

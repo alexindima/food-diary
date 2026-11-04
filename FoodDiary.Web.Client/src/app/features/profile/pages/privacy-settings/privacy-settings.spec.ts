@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { UserPrivacyState } from '../../../../shared/api/user.service';
+import { MARKETING_ATTRIBUTION_ENABLED } from '../../../../shared/marketing/marketing-attribution-enabled';
 import { MarketingConsentService } from '../../../../shared/marketing/marketing-consent.service';
 import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { PRIVACY_NOTICE_VERSION } from '../../../../shared/privacy/privacy-notice-version';
@@ -37,9 +38,14 @@ const marketing = {
 };
 let fixture: ComponentFixture<PrivacySettingsComponent>;
 
-beforeEach(async () => {
+async function setupAsync(marketingAttributionEnabled = true): Promise<void> {
     vi.resetAllMocks();
-    state.update(value => ({ ...value, healthAcceptedAtUtc: '2026-11-02T10:00:00Z', healthDeclinedAtUtc: null }));
+    state.update(value => ({
+        ...value,
+        healthAcceptedAtUtc: '2026-11-02T10:00:00Z',
+        healthDeclinedAtUtc: null,
+        marketingAcceptedAtUtc: null,
+    }));
     privacy.loadAsync.mockResolvedValue(state());
     privacy.chooseAsync.mockResolvedValue(true);
     marketing.currentDecision.set(null);
@@ -49,6 +55,7 @@ beforeEach(async () => {
         providers: [
             provideRouter([]),
             provideTranslateTesting(),
+            { provide: MARKETING_ATTRIBUTION_ENABLED, useValue: marketingAttributionEnabled },
             { provide: PrivacyConsentFacade, useValue: privacy },
             { provide: MarketingConsentService, useValue: marketing },
         ],
@@ -59,9 +66,11 @@ beforeEach(async () => {
         .compileComponents();
     fixture = TestBed.createComponent(PrivacySettingsComponent);
     fixture.detectChanges();
-});
+}
 
 describe('PrivacySettingsComponent marketing choices', () => {
+    beforeEach(async () => setupAsync());
+
     it('allows marketing after a previous refusal using the existing device and account synchronization entrypoint', () => {
         marketing.currentDecision.set({ allowed: false });
         fixture.detectChanges();
@@ -90,6 +99,19 @@ describe('PrivacySettingsComponent marketing choices', () => {
     });
 });
 
+it('allows withdrawal of existing marketing consent while the feature is disabled', async () => {
+    await setupAsync(false);
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.textContent).not.toContain('MARKETING_CONSENT.TITLE');
+
+    state.update(value => ({ ...value, marketingAcceptedAtUtc: '2026-11-02T10:00:00Z' }));
+    fixture.detectChanges();
+
+    expect(root.textContent).not.toContain('MARKETING_CONSENT.ALLOW');
+    click('MARKETING_CONSENT.REJECT');
+    expect(marketing.decide).toHaveBeenCalledExactlyOnceWith(false);
+});
+
 function click(label: string): void {
     const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'));
     const button = buttons.find(value => value.textContent.includes(label));
@@ -99,6 +121,8 @@ function click(label: string): void {
 }
 
 describe('PrivacySettingsComponent health withdrawal', () => {
+    beforeEach(async () => setupAsync());
+
     it('offers a copy and full account deletion after withdrawal without deleting automatically', () => {
         expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('PRIVACY_CHOICES.DELETE_OFFER_TITLE');
         click('PRIVACY_CHOICES.WITHDRAW');

@@ -5,27 +5,25 @@ import { FdUiButtonComponent, FdUiCardComponent } from 'fd-ui-kit';
 
 import { localizedPublicPath } from '../../../../config/public-site-paths';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
-import { MarketingConsentService } from '../../../../shared/marketing/marketing-consent.service';
 import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { AccountDeletionOfferComponent } from '../../components/account-deletion-offer/account-deletion-offer';
+import { PrivacyMarketingSettingsComponent } from '../../components/privacy-marketing-settings/privacy-marketing-settings';
 
 @Component({
     selector: 'fd-privacy-settings',
-    imports: [RouterLink, TranslatePipe, FdUiButtonComponent, FdUiCardComponent, AccountDeletionOfferComponent],
+    imports: [
+        RouterLink,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        AccountDeletionOfferComponent,
+        PrivacyMarketingSettingsComponent,
+    ],
     templateUrl: './privacy-settings.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacySettingsComponent {
     protected readonly privacy = inject(PrivacyConsentFacade);
-    protected readonly marketing = inject(MarketingConsentService);
-    protected readonly marketingStateKey = computed(() => {
-        const decision = this.marketing.currentDecision();
-        return decision === null
-            ? 'MARKETING_CONSENT.DEVICE_UNDECIDED'
-            : decision.allowed
-              ? 'MARKETING_CONSENT.DEVICE_ALLOWED'
-              : 'MARKETING_CONSENT.DEVICE_DECLINED';
-    });
     private readonly language = injectCurrentLanguage();
     protected readonly policyPath = computed(() => localizedPublicPath('/privacy-policy', this.language() === 'ru' ? 'ru' : 'en'));
 
@@ -43,8 +41,5 @@ export class PrivacySettingsComponent {
     }
     protected withdrawAi(): void {
         void this.privacy.chooseAsync(2, false);
-    }
-    protected chooseMarketing(allowed: boolean): void {
-        this.marketing.decide(allowed);
     }
 }

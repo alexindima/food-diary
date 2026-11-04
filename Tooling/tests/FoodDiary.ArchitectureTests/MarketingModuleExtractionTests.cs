@@ -30,13 +30,13 @@ public sealed class MarketingModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs")]
-    [InlineData("FoodDiary.JobManager/Program.cs")]
-    [InlineData("FoodDiary.Initializer/Program.cs")]
-    public void ExecutableCompositionRoots_RegisterMarketingModule(string relativePath) {
+    [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs", "AddMarketingModule(configuration.GetValue<bool>(\"MarketingAttribution:Enabled\"))")]
+    [InlineData("FoodDiary.JobManager/Program.cs", "AddMarketingModule()")]
+    [InlineData("FoodDiary.Initializer/Program.cs", "AddMarketingModule()")]
+    public void ExecutableCompositionRoots_RegisterMarketingModule(string relativePath, string registration) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath.Split('/')));
 
-        Assert.Contains("AddMarketingModule()", source, StringComparison.Ordinal);
+        Assert.Contains(registration, source, StringComparison.Ordinal);
     }
 
     [Fact]

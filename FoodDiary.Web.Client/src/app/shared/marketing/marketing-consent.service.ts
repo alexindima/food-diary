@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { PRIVACY_NOTICE_VERSION } from '../privacy/privacy-notice-version';
+import { MARKETING_ATTRIBUTION_ENABLED } from './marketing-attribution-enabled';
 
 export const MARKETING_NOTICE_VERSION = PRIVACY_NOTICE_VERSION;
 const STORAGE_KEY = 'fd_marketing_consent';
@@ -12,6 +13,7 @@ type ConsentDecision = { version: string; allowed: boolean; decidedAt: string };
 
 @Service()
 export class MarketingConsentService {
+    private readonly enabled = inject(MARKETING_ATTRIBUTION_ENABLED);
     private readonly storage = inject(BrowserStorageService);
     private readonly decision = signal<ConsentDecision | null>(this.readDecision());
     private deniedInThisSession = false;
@@ -24,6 +26,9 @@ export class MarketingConsentService {
     }
 
     public decide(allowed: boolean): void {
+        if (allowed && !this.enabled) {
+            return;
+        }
         this.deniedInThisSession = !allowed;
         if (!allowed) {
             this.storage.removeItem('local', STORAGE_KEY);
@@ -43,6 +48,9 @@ export class MarketingConsentService {
     }
 
     private readDecision(): ConsentDecision | null {
+        if (!this.enabled) {
+            return null;
+        }
         const value = this.storage.getJson('local', STORAGE_KEY);
         if (!isDecision(value)) {
             return null;

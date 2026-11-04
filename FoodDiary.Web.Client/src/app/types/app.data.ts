@@ -16,6 +16,7 @@ export type AppConfig = {
     russianDefaultHosts?: readonly string[];
     enableGlobalErrorHandler?: boolean;
     enableClientObservability?: boolean;
+    enableMarketingAttribution?: boolean;
 };
 
 export type AppConfigSiteUrls = {

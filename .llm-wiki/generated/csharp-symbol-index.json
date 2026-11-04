@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4744,
-    "symbols": 4679,
+    "sourceFiles": 4745,
+    "symbols": 4680,
     "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
       "class": 2418,
       "enum": 74,
       "interface": 426,
-      "record": 1618,
+      "record": 1619,
       "record struct": 143
     },
     "roles": {
@@ -31,7 +31,7 @@
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
-      "Options": 75,
+      "Options": 76,
       "Other": 1926,
       "Query": 308,
       "QueryHandler": 222,
@@ -18948,6 +18948,13 @@
       "line": 2
     },
     {
+      "name": "MarketingAttributionOptions",
+      "kind": "record",
+      "role": "Options",
+      "path": "Modules/Marketing/Application/Common/MarketingAttributionOptions.cs",
+      "line": 2
+    },
+    {
       "name": "MarketingLandingPath",
       "kind": "class",
       "role": "Other",
@@ -18959,7 +18966,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Application/DependencyInjection.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MarketingAttributionMappings",

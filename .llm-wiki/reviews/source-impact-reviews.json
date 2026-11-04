@@ -365,8 +365,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "b58ea677c5ced445d63c44f6964c6fdde5419b0877fab1605d453735ec262b46",
-          "reviewReason": "Regenerated architecture-health-index against master plus the consent UI change. MarketingConsentComponent now has a direct spec, reducing componentsWithoutDirectSpecs from 133 to 132, and PublicSiteFooter exposes marketingSettingsRequested. Dependency violations, module cycles and project edges are unchanged; selector and missing-spec reports remain investigation candidates as documented."
+          "sha256": "09d6b42e874c464515a3cec331fb04e9856bfacf4ffb3c9459adfb0496e989f6",
+          "reviewReason": "Reviewed the release index. PrivacyMarketingSettingsComponent is owned by the profile and exercised through privacy-settings.spec.ts. The inventory records one additional component without a same-name spec. Project edges, cycles and enforcement are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -384,10 +384,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Regenerated architecture-health-index against master plus the consent UI change. MarketingConsentComponent now has a direct spec, reducing componentsWithoutDirectSpecs from 133 to 132, and PublicSiteFooter exposes marketingSettingsRequested. Dependency violations, module cycles and project edges are unchanged; selector and missing-spec reports remain investigation candidates as documented.",
+      "reason": "Reviewed the release index. PrivacyMarketingSettingsComponent is owned by the profile and exercised through privacy-settings.spec.ts. The inventory records one additional component without a same-name spec. Project edges, cycles and enforcement are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
-      "reviewedAtUtc": "2026-11-03T13:51:13.4690968Z"
+      "gitHead": "cad49b9237895c6f5976e4f468d21159eb7f0721",
+      "reviewedAtUtc": "2026-11-04T09:29:00.5135619Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -740,8 +740,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "8b4aa25ed754569573217e32c0abf0897e5322cf52c5e993ea0e19ce5e1c1668",
-          "reviewReason": "Reviewed configuration index and direct project reference/lockfile changes: no package-version upgrades or new provider dependencies; consent schema, default-on health gate and matching client require coordinated rollout. Migration/provider verification remains blocked by local Docker and is recorded as pending."
+          "sha256": "23eb7ffffcbb2b680681b802f2582594c59900affeea67c976fae5d493ba8699",
+          "reviewReason": "Reviewed the only configuration inventory addition, MarketingAttribution:Enabled. API registration reads its false default and the production Angular build defaults its corresponding flag off. Dependency versions and provider inventory are unchanged."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -754,10 +754,10 @@
           "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
         }
       ],
-      "reason": "Reviewed configuration index and direct project reference/lockfile changes: no package-version upgrades or new provider dependencies; consent schema, default-on health gate and matching client require coordinated rollout. Migration/provider verification remains blocked by local Docker and is recorded as pending.",
+      "reason": "Reviewed the only configuration inventory addition, MarketingAttribution:Enabled. API registration reads its false default and the production Angular build defaults its corresponding flag off. Dependency versions and provider inventory are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:19.005332Z"
+      "gitHead": "cad49b9237895c6f5976e4f468d21159eb7f0721",
+      "reviewedAtUtc": "2026-11-04T09:29:01.0586334Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "976bdf0836ea560659f32640329ace2c3d14c100b4948f90b5d929d15ab284d0",
-          "reviewReason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit."
+          "sha256": "6b2f6fb12c84fc27fd5df4644907fffc97d879afd93f8a2f87750b66fe7bb372",
+          "reviewReason": "Reviewed the regenerated topology and Marketing registration. The topology adds one C# options source to its freshness fingerprint. Existing ingestion and conversion handlers short-circuit when disabled, while the host, workers, cleanup job and providers retain their existing wiring."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit.",
+      "reason": "Reviewed the regenerated topology and Marketing registration. The topology adds one C# options source to its freshness fingerprint. Existing ingestion and conversion handlers short-circuit when disabled, while the host, workers, cleanup job and providers retain their existing wiring.",
       "baseRef": "HEAD",
-      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
-      "reviewedAtUtc": "2026-11-03T12:09:04.6186664Z"
+      "gitHead": "cad49b9237895c6f5976e4f468d21159eb7f0721",
+      "reviewedAtUtc": "2026-11-04T09:29:01.6939552Z"
     },
     {
       "pageId": "workflow-security-review",

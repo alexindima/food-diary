@@ -327,7 +327,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_TruncatesPublicAttributionValues() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>(), new(Enabled: true));
         string longValue = new('x', 300);
 
         await handler.Handle(
@@ -359,7 +359,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_RejectsUnsupportedEventType() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>(), new(Enabled: true));
 
         Result result = await handler.Handle(
             CreateRecordCommand("premium_started", userId: Guid.NewGuid()),
@@ -372,7 +372,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_RejectsMissingEventId() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>(), new(Enabled: true));
 
         Result result = await handler.Handle(
             CreateRecordCommand("page_landing", userId: null) with { EventId = null },
@@ -385,7 +385,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_RejectsSignupWithoutAuthenticatedUser() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>(), new(Enabled: true));
 
         Result result = await handler.Handle(
             CreateRecordCommand("signup_completed", userId: null),
@@ -399,7 +399,7 @@ public sealed class MarketingAttributionTests {
     public async Task RecordAsync_RejectsTimestampOutsideIngestionWindow() {
         var repository = new InMemoryMarketingAttributionEventRepository();
         DateTime now = new(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc);
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(now), Substitute.For<IUserMarketingConsentRecorder>());
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(now), Substitute.For<IUserMarketingConsentRecorder>(), new(Enabled: true));
         RecordMarketingAttributionCommand command = CreateRecordCommand("page_landing", userId: null) with {
             Timestamp = now.AddDays(-2).ToString("O"),
         };
