@@ -14858,11 +14858,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
-      "nonBlankLines": 57,
-      "decisionPoints": 1,
+      "nonBlankLines": 70,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.64
+      "structuralRiskScore": 10.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/contracts/auth-dialog.ts",
@@ -20978,11 +20978,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/service-worker/pwa-install.service.ts",
-      "nonBlankLines": 119,
-      "decisionPoints": 26,
+      "nonBlankLines": 126,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.38
+      "structuralRiskScore": 44.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/service-worker/service-worker-diagnostics.service.ts",

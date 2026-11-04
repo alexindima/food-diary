@@ -7,7 +7,7 @@
     "outputs": 559,
     "apiCalls": 328,
     "templatesWithTranslations": 376,
-    "translationKeys": 2250,
+    "translationKeys": 2252,
     "consumerEdges": 1330,
     "consumedComponents": 329,
     "unconsumedComponents": 190
@@ -25018,10 +25018,11 @@
         "PUBLIC_SITE.LANGUAGE",
         "PUBLIC_SITE.LOGIN",
         "PUBLIC_SITE.NAV.LABEL",
+        "PWA.INSTALL.ANDROID_ADD",
+        "PWA.INSTALL.ANDROID_CHROME",
         "PWA.INSTALL.DESCRIPTION",
         "PWA.INSTALL.ERROR",
         "PWA.INSTALL.IOS_ADD",
-        "PWA.INSTALL.IOS_BUTTON",
         "PWA.INSTALL.IOS_SAFARI",
         "PWA.INSTALL.IOS_SHARE"
       ]

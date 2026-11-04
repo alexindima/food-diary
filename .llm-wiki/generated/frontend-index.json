@@ -5883,7 +5883,7 @@
       "role": "Component",
       "selector": "fd-public-site-header",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
-      "line": 35
+      "line": 37
     },
     {
       "name": "PublicAuthDialogService",
@@ -8387,16 +8387,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4199,
-      "russianProperties": 4199,
+      "englishProperties": 4190,
+      "russianProperties": 4190,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1390,
-      "russianProperties": 1390,
+      "englishProperties": 1403,
+      "russianProperties": 1403,
       "countsMatch": true
     },
     {

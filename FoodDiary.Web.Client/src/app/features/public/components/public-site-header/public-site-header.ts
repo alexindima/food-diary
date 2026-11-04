@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, type TemplateRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -18,6 +19,7 @@ import { PwaInstallPromotionService } from '../../../../shared/service-worker/pw
 @Component({
     selector: 'fd-public-site-header',
     imports: [
+        NgTemplateOutlet,
         RouterLink,
         RouterLinkActive,
         TranslatePipe,
@@ -36,6 +38,16 @@ export class PublicSiteHeaderComponent {
     private readonly dialogs = inject(FdUiDialogService);
     private readonly promotion = inject(PwaInstallPromotionService);
     protected readonly pwa = inject(PwaInstallService);
+    protected readonly manualInstallPlatform = computed(() => {
+        const mode = this.pwa.installMode();
+        if (mode === 'ios') {
+            return 'ios';
+        }
+        return mode === null && !this.pwa.isInstalling() && this.pwa.canShowAndroidInstallInstructions() ? 'android' : null;
+    });
+    protected readonly showInstallAction = computed(
+        () => this.pwa.installMode() !== null || this.manualInstallPlatform() !== null || this.pwa.isInstalling(),
+    );
     public readonly path = input('/');
     protected readonly locale = computed(() => publicSiteLocale(this.path()));
     protected readonly home = computed(() => localizedPublicPath('/', this.locale()));
@@ -51,8 +63,9 @@ export class PublicSiteHeaderComponent {
     ]);
 
     protected async installAsync(instructions: TemplateRef<unknown>): Promise<void> {
-        if (this.pwa.installMode() === 'ios') {
-            this.dialogs.open(instructions, { size: 'sm' });
+        const platform = this.manualInstallPlatform();
+        if (platform !== null) {
+            this.dialogs.open(instructions, { size: 'sm', data: platform });
             return;
         }
         await this.promotion.installAsync();

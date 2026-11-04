@@ -20,7 +20,7 @@ export class PwaInstallService {
     private readonly destroyRef = inject(DestroyRef);
     private readonly deferredPrompt = signal<InstallPromptEvent | null>(null);
     private readonly standalone = signal(false);
-    private readonly mobileDevice = signal(false);
+    private readonly mobilePlatform = signal<'android' | 'ios' | null>(null);
     private readonly installationAccepted = signal(false);
     private readonly supportsIosInstructions = signal(false);
     private initialized = false;
@@ -29,7 +29,10 @@ export class PwaInstallService {
     public readonly installError = signal(false);
     public readonly isStandalone = this.standalone.asReadonly();
     public readonly shouldRememberSession = computed(() => this.standalone() || this.installationAccepted());
-    public readonly isMobileDevice = this.mobileDevice.asReadonly();
+    public readonly isMobileDevice = computed(() => this.mobilePlatform() !== null);
+    public readonly canShowAndroidInstallInstructions = computed(
+        () => this.mobilePlatform() === 'android' && !this.standalone() && !this.installationAccepted(),
+    );
     public readonly installMode = computed(() => {
         if (this.standalone() || this.installationAccepted()) {
             return null;
@@ -59,7 +62,8 @@ export class PwaInstallService {
         if (this.browserWindow.getTelegramInitData() !== null || browserNavigator.userAgent.includes('Telegram')) {
             return;
         }
-        this.mobileDevice.set(browserNavigator.userAgent.includes('Android') || isIosBrowser(browserNavigator));
+        const mobilePlatform = getMobilePlatform(browserNavigator);
+        this.mobilePlatform.set(mobilePlatform);
 
         // Fullscreen also matches an ordinary browser tab and does not establish installation.
         const displayMode = view.matchMedia(
@@ -72,7 +76,7 @@ export class PwaInstallService {
         updateDisplayMode();
         fromEvent(displayMode, 'change').pipe(takeUntilDestroyed(this.destroyRef)).subscribe(updateDisplayMode);
 
-        this.supportsIosInstructions.set(supportsManualIosInstallation(browserNavigator));
+        this.supportsIosInstructions.set(mobilePlatform === 'ios' && browserNavigator.userAgent.includes('Safari'));
 
         fromEvent<Event>(view, 'beforeinstallprompt')
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -120,8 +124,11 @@ function isInstallPromptEvent(event: Event): event is InstallPromptEvent {
     return 'prompt' in event && typeof event.prompt === 'function';
 }
 
-function supportsManualIosInstallation(browserNavigator: Navigator): boolean {
-    return isIosBrowser(browserNavigator) && browserNavigator.userAgent.includes('Safari');
+function getMobilePlatform(browserNavigator: Navigator): 'android' | 'ios' | null {
+    if (browserNavigator.userAgent.includes('Android')) {
+        return 'android';
+    }
+    return isIosBrowser(browserNavigator) ? 'ios' : null;
 }
 
 function isIosBrowser(browserNavigator: Navigator): boolean {
