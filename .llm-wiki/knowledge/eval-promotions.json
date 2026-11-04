@@ -3215,6 +3215,65 @@
       },
       "reason": "",
       "eventHash": "6caef3f3cd51021126eb49d0ef4f8fa0f0f61cb94ff1203404d1ef47982c26f7"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 22,
+      "kind": "observed",
+      "candidateId": "learned-437a9e3bbd39f087",
+      "createdAtUtc": "2026-11-04T21:56:06.6664875Z",
+      "previousHash": "6caef3f3cd51021126eb49d0ef4f8fa0f0f61cb94ff1203404d1ef47982c26f7",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-photo-feedback",
+        "retrospectiveHash": "6547fb9f97cf8e805fd7faab15736d35798a422ee0bab56a10898153b5b34f49",
+        "packetFingerprint": "7ea01a733c9958556219814271e2f73e0ee956dc9bfcec6a4fb9582429c5aa32",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=2335%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-437a9e3bbd39f087",
+          "changedPaths": [
+            "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+            "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotOperationStateReader.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
+            "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+            "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramBotWorkerTests.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramIntakeDeliveryTests.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationRecoveryTests.cs"
+          ],
+          "expectedModules": [],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "privacy-data-lifecycle",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "eaaa49b462775624012f9d80f26e8933e424c08fdc9be1eacea34678c402fe43"
+      },
+      "reason": "",
+      "eventHash": "32ce30a3358071c906650e119c93fc1cb7237c32813c73a144c7b36661044976"
     }
   ]
 }

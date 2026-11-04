@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Net;
 using System.Text.Json;
 using FoodDiary.Telegram.Bot.Operations;
+using Telegram.Bot.Exceptions;
 
 namespace FoodDiary.Telegram.Bot.Tests;
 
@@ -14,9 +15,12 @@ public sealed class TelegramOperationRecoveryTests {
         using var scenario = new BotOperationScenario();
         scenario.State = new BotPhotoCheckpoint("recognizing", ImageAssetId: scenario.ImageId, RecognitionId: scenario.Id);
         scenario.BusinessResponse = _ => Task.FromResult(BotOperationScenario.Json(new { id = scenario.Id, imageAssetId = scenario.ImageId, status }));
+        DateTime before = DateTime.UtcNow;
         await scenario.ProcessAsync();
         Assert.Equal(expectedStage, scenario.State.Stage);
         Assert.False(scenario.Completed);
+        Assert.True(scenario.NextAttemptAtUtc < before.AddSeconds(4) == string.Equals(status, "Failed", StringComparison.Ordinal),
+            "Expected recognition polling to wait only when the result is still pending.");
     }
 
     [Fact]
@@ -40,11 +44,15 @@ public sealed class TelegramOperationRecoveryTests {
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("Гречка с курицей\nСоус отдельно")]
-    public async Task PremiumPhoto_AdvancesAcrossDurableCheckpointsAndDeliversSavedReceipt(string? caption) {
+    [InlineData(null, "ru", "Фото получено. Начинаю обработку.", false)]
+    [InlineData("Гречка с курицей\nСоус отдельно", "ru", "Фото получено. Начинаю обработку.", false)]
+    [InlineData(null, "en", "Photo received. I’ll start processing it now.", true)]
+    public async Task PremiumPhoto_AdvancesAcrossDurableCheckpointsAndDeliversSavedReceipt(
+        string? caption, string language, string progressNotice, bool rejectProgressNotice) {
         using var scenario = new BotOperationScenario();
-        scenario.Incoming = scenario.Incoming with { Caption = caption, Language = "ru" };
+        bool russian = string.Equals(language, "ru", StringComparison.Ordinal);
+        scenario.Incoming = scenario.Incoming with { Caption = caption, Language = language };
+        scenario.BlockedByUser = rejectProgressNotice;
         int uploads = 0;
         int recognitions = 0;
         int saves = 0;
@@ -75,7 +83,14 @@ public sealed class TelegramOperationRecoveryTests {
                     id = scenario.Id,
                     imageAssetId = scenario.ImageId,
                     status = "Succeeded",
-                    nutrition = new { calories = 400, protein = 10, fat = 20, carbs = 30, items = new[] { new { name = "Гречка" }, new { name = "Курица" } } },
+                    vision = new { items = new[] { new { nameEn = "Chicken", nameLocal = "Курица" }, new { nameEn = "Buckwheat", nameLocal = "Гречка" } } },
+                    nutrition = new {
+                        calories = 400,
+                        protein = 10,
+                        fat = 20,
+                        carbs = 30,
+                        items = new[] { new { name = "buckwheat", amount = 150, unit = "g", calories = 300 }, new { name = "Chicken", amount = 1, unit = "pcs", calories = 100 } },
+                    },
                 });
             }
             if (path.StartsWith("/api/v1/meals/recognitions/", StringComparison.Ordinal)) {
@@ -88,30 +103,64 @@ public sealed class TelegramOperationRecoveryTests {
         };
 
         foreach (string stage in new[] { "upload", "image-ready", "recognizing", "recognition-ready", "meal-saved" }) {
+            DateTime before = DateTime.UtcNow;
             await scenario.ProcessAsync();
             Assert.Equal(stage, scenario.State.Stage);
             Assert.False(scenario.Completed);
-            Assert.Empty(scenario.Notices);
+            Assert.True(scenario.Notices.Count == 1, "Expected one photo processing acknowledgement before recognition.");
+            Assert.Equal(progressNotice, scenario.Notices[0]);
+            Assert.True(Assert.Single(scenario.SilentNotices), "Expected the photo progress message to be silent.");
+            if (!string.Equals(stage, "recognizing", StringComparison.Ordinal)) {
+                Assert.True(scenario.NextAttemptAtUtc < before.AddSeconds(4), "Expected a ready stage without a polling delay.");
+            }
             if (string.Equals(stage, "upload", StringComparison.Ordinal)) {
+                scenario.BlockedByUser = false;
                 scenario.IsPremium = false;
             }
         }
         await scenario.ProcessAsync();
 
-        string notice = Assert.Single(scenario.Notices);
+        Assert.Equal(2, scenario.Notices.Count);
+        Assert.Equal(new[] { true, false }, scenario.SilentNotices);
+        string notice = scenario.Notices[1];
         JsonElement markup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
         JsonElement edit = Assert.Single(markup.GetProperty("inline_keyboard").EnumerateArray().SelectMany(row => row.EnumerateArray()),
-            button => string.Equals(button.GetProperty("text").GetString(), "Редактировать", StringComparison.Ordinal));
+            button => string.Equals(button.GetProperty("text").GetString(), russian ? "Редактировать" : "Edit", StringComparison.Ordinal));
+        Assert.True(notice.Contains(russian ? "• Гречка, 150 г, ~300 ккал\n• Курица, 1 шт., ~100 ккал" :
+            "• buckwheat, 150 g, ~300 kcal\n• Chicken, 1 pcs, ~100 kcal", StringComparison.Ordinal),
+            "Expected localized names and portions in the photo result.");
+        Assert.Empty(scenario.DeletedMessages);
+        if (!rejectProgressNotice) {
+            Assert.False(scenario.Completed);
+            scenario.FailProgressDeletion = true;
+            await Assert.ThrowsAsync<ApiRequestException>(scenario.ProcessAsync);
+            scenario.FailProgressDeletion = false;
+            await scenario.ProcessAsync();
+            Assert.Equal(new[] { 77, 77 }, scenario.DeletedMessages);
+        }
         Assert.Multiple(
             () => Assert.True(scenario.Completed),
             () => Assert.Equal(1, uploads),
             () => Assert.Equal(1, recognitions),
             () => Assert.Equal(1, saves),
             () => Assert.Single(scenario.BusinessPaths, path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal)),
-            () => Assert.Contains("Приём пищи сохранён", notice, StringComparison.Ordinal),
-            () => Assert.Contains("• Гречка\n• Курица", notice, StringComparison.Ordinal),
-            () => Assert.Contains("400 ккал", notice, StringComparison.Ordinal),
+            () => Assert.Contains(russian ? "Приём пищи сохранён" : "Meal saved to your diary", notice, StringComparison.Ordinal),
+            () => Assert.Equal(2, scenario.Notices.Count),
+            () => Assert.Contains(russian ? "400 ккал" : "400 kcal", notice, StringComparison.Ordinal),
             () => Assert.Equal($"https://diary.example/meals/{scenario.MealId:D}/edit", edit.GetProperty("web_app").GetProperty("url").GetString()));
+    }
+
+    [Fact]
+    public async Task FirstUploadCheckpointConflict_DoesNotSendProcessingNotice() {
+        using var scenario = new BotOperationScenario { CheckpointConflict = true };
+        scenario.BusinessResponse = _ => Task.FromResult(BotOperationScenario.Json(
+            new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(5), new BotImageAssetId(scenario.ImageId))));
+
+        await scenario.ProcessAsync();
+
+        Assert.Multiple(
+            () => Assert.Equal("received", scenario.State.Stage),
+            () => Assert.Empty(scenario.Notices));
     }
 
     [Theory]

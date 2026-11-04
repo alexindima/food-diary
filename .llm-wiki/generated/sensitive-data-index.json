@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1773,
+    "candidateFields": 1774,
     "credential": 172,
     "identity": 188,
-    "health": 830,
+    "health": 831,
     "financial": 156,
     "privateContent": 427,
     "boundaryFiles": 229,
@@ -2711,6 +2711,13 @@
       "type": "decimal",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
       "line": 6
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+      "line": 27
     },
     {
       "category": "health",
@@ -12568,7 +12575,7 @@
       "categories": [
         "health"
       ],
-      "fieldCount": 1
+      "fieldCount": 2
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionJob.cs",

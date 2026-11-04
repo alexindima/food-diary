@@ -646,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "d6cda6c446678526ae0c8bd5d975342650bfc8245b26191ec63eb318565f3878",
-          "reviewReason": "The sealed Telegram rate limit task appends cost observations only. The new events do not approve, apply or activate a promotion and the workflow still matches the registry."
+          "sha256": "9c64b8b15d5b3dbab780038d5cf4026dae459b1df6bd76b422b52566f0dc7cbe",
+          "reviewReason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "The sealed Telegram rate limit task appends cost observations only. The new events do not approve, apply or activate a promotion and the workflow still matches the registry.",
-      "baseRef": "origin/master",
-      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
-      "reviewedAtUtc": "2026-11-04T13:21:07.6144037Z"
+      "reason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
+      "reviewedAtUtc": "2026-11-04T21:56:42.4340571Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1027,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "2fea00e8c7db34c0f31498602bd571f328877cb69f99be80a171620a2853c802",
-          "reviewReason": "The registry appends the completed Telegram rate limit task observation for the applicable repository instructions. No instruction text or effectiveness policy changed."
+          "sha256": "a993bf215418478440e33d395c323a0a761ee87d7d39ec22376fe8de9852500c",
+          "reviewReason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate."
         }
       ],
-      "reason": "The registry appends the completed Telegram rate limit task observation for the applicable repository instructions. No instruction text or effectiveness policy changed.",
-      "baseRef": "origin/master",
-      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
-      "reviewedAtUtc": "2026-11-04T13:21:08.9824598Z"
+      "reason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
+      "reviewedAtUtc": "2026-11-04T21:56:42.6190871Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "5b3d050318ecc8595041e41ccf992aee5787cb6c4e8705c01d8e3cabde8549ad",
-          "reviewReason": "The Telegram rate limit task contributed a candidate observation. It does not activate an eval or alter the evidence thresholds and review lifecycle described by the page."
+          "sha256": "ef3e33f0fafe375e70af6d35dc5fda2a44b2ac1e6bddb96e31bf965ae0d9da21",
+          "reviewReason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "The Telegram rate limit task contributed a candidate observation. It does not activate an eval or alter the evidence thresholds and review lifecycle described by the page.",
-      "baseRef": "origin/master",
-      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
-      "reviewedAtUtc": "2026-11-04T13:21:09.6736368Z"
+      "reason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
+      "reviewedAtUtc": "2026-11-04T21:56:42.8084169Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1185,8 +1185,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "eadc5e36ff4de383e3701212ac76ca369748a303d9c938f67ae289a26da70866",
-          "reviewReason": "The additional identity candidate is the TelegramOperations rate-limit configuration record. It is not personal data. The runtime reuses the existing fixed-time secret verification and never stores credential values in the limiter key."
+          "sha256": "34623620c436b9979a5ad38a587028c8d79127f7b78e6fc2a5d89c0e1e09d512",
+          "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1195,14 +1195,14 @@
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "56cb819edb13c54534bca7155ca24b1ec03d2112dfc9e20fbaf02e4ee0f717d7",
-          "reviewReason": "Reviewed the generated Billing overview candidates and documented Telegram photo lifecycle. The bot uses the explicit Premium flag, stores retry content in protected operation state, and sends the bounded result to the same private chat. Existing AI consent and erasure apply."
+          "sha256": "a70c2e581b516984cf7ddd483db99db124344c9ab44166ce04d8c0f3621c3386",
+          "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "The additional identity candidate is the TelegramOperations rate-limit configuration record. It is not personal data. The runtime reuses the existing fixed-time secret verification and never stores credential values in the limiter key.",
-      "baseRef": "origin/master",
-      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
-      "reviewedAtUtc": "2026-11-04T13:21:10.4591750Z"
+      "reason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies.",
+      "baseRef": "HEAD",
+      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
+      "reviewedAtUtc": "2026-11-04T21:51:35.8706456Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e79d609afc8c2fe70917f004849963a4fbaf363d1fc4d0f606825a6b5076f7de",
-          "reviewReason": "The runtime topology diff updates the source fingerprint. The Telegram controller selects an API-host rate policy. The inventory of hosts, providers, queues and jobs stays the same."
+          "sha256": "3189e37db228dc2378501279f5c2b9dff9e4f49fea27274b5e5518df599417cb",
+          "reviewReason": "The topology records the timeout policy of the existing Telegram worker. Immediate stage progression retains lease acquisition and the existing pending AI cadence, while retries for status deletion resume without resending the result. No topology or workflow guidance change is needed."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "The runtime topology diff updates the source fingerprint. The Telegram controller selects an API-host rate policy. The inventory of hosts, providers, queues and jobs stays the same.",
-      "baseRef": "origin/master",
-      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
-      "reviewedAtUtc": "2026-11-04T13:21:11.2485559Z"
+      "reason": "The topology records the timeout policy of the existing Telegram worker. Immediate stage progression retains lease acquisition and the existing pending AI cadence, while retries for status deletion resume without resending the result. No topology or workflow guidance change is needed.",
+      "baseRef": "HEAD",
+      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
+      "reviewedAtUtc": "2026-11-04T21:51:36.2154402Z"
     },
     {
       "pageId": "workflow-security-review",

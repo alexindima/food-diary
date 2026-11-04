@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "1dee66fafcf6e577ce2d3e7755ad740afbeb66160a778a23a0c0b67de4544a01",
+    "sourceFingerprint": "68eb618c8ec1d20e003ab1807b724d8f803504f7e535860b1f19a5b6c8a2f95e",
     "sourceFileCount": 4752
   },
   "summary": {
@@ -1959,6 +1959,7 @@
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
       "securitySignals": [
         "ip-address-policy",
+        "timeout-policy",
         "uri-policy"
       ],
       "behaviorSignals": [

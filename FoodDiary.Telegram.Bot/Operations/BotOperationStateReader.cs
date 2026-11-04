@@ -20,6 +20,7 @@ internal static class BotOperationStateReader {
             ("photo", "image-ready") => checkpoint.ImageAssetId is not null,
             ("photo", "recognizing" or "recognition-ready") => checkpoint.RecognitionId is not null,
             ("photo", "meal-saved") => checkpoint.SavedMeal is not null,
+            ("photo", "photo-notified") => checkpoint.ProgressMessageId is > 0,
             ("water", "water-saved") => checkpoint.WaterEntryId is not null,
             ("meal-undo", "undo-complete") => checkpoint.ErrorCode is not null,
             ("statistics", "statistics-ready") => checkpoint.Statistics is { CalendarDays: 1 or 7 } statistics &&

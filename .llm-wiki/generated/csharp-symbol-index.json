@@ -9,14 +9,14 @@
   },
   "summary": {
     "sourceFiles": 4751,
-    "symbols": 4686,
+    "symbols": 4687,
     "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
       "class": 2421,
       "enum": 74,
       "interface": 427,
-      "record": 1621,
+      "record": 1622,
       "record struct": 143
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 76,
-      "Other": 1931,
+      "Other": 1932,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -2265,6 +2265,13 @@
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
       "line": 5
+    },
+    {
+      "name": "Item",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+      "line": 26
     },
     {
       "name": "BotOperationApiException",

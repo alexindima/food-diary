@@ -12,6 +12,8 @@ namespace FoodDiary.Telegram.Bot.Operations;
 
 internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptions<TelegramBotOptions> options,
     ITelegramBotClient bot, TimeProvider timeProvider, ILogger<TelegramOperationWorker> logger) : BackgroundService {
+    private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(5);
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         if (!options.Value.OperationsEnabled) {
             return;
@@ -25,7 +27,9 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                     try {
                         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                         deadline.CancelAfter(TimeSpan.FromSeconds(90));
-                        await ProcessAsync(operations, id, deadline.Token);
+                        while (await ProcessAsync(operations, id, deadline.Token)) {
+                            // Reacquire the committed checkpoint while the next step is ready.
+                        }
                     } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                         return;
                     } catch (Exception error) {
@@ -37,14 +41,14 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             } catch (Exception error) {
                 logger.LogWarning("Telegram work discovery failed with {ErrorType}.", error.GetType().Name);
             }
-            await Task.Delay(TimeSpan.FromSeconds(5), timeProvider, stoppingToken);
+            await Task.Delay(PollInterval, timeProvider, stoppingToken);
         }
     }
 
-    internal async Task ProcessAsync(BotOperationClient operations, BotOperationId id, CancellationToken cancellationToken) {
+    internal async Task<bool> ProcessAsync(BotOperationClient operations, BotOperationId id, CancellationToken cancellationToken) {
         BotOperationLease? lease = await operations.AcquireAsync(id, cancellationToken);
         if (lease is null) {
-            return;
+            return false;
         }
         BotIncomingOperation incoming;
         try {
@@ -53,7 +57,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             logger.LogWarning("Telegram operation {OperationId} rejected due to invalid input state.", id);
             await operations.CheckpointAsync(lease, "{\"ErrorCode\":\"OperationInputInvalid\"}", completed: true,
                 timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
-            return;
+            return false;
         }
         BotPhotoCheckpoint checkpoint;
         try {
@@ -61,18 +65,10 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         } catch (Exception error) when (error is JsonException or InvalidDataException) {
             checkpoint = new BotPhotoCheckpoint(Stage: "failed", ErrorCode: "OperationStateInvalid");
         }
-        if (string.Equals(checkpoint.Stage, "failed", StringComparison.Ordinal)) {
-            await SendFailureAsync(incoming, checkpoint.ErrorCode, cancellationToken);
-            await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: true,
-                timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
-            return;
+        if (checkpoint.Stage is "failed" or "meal-saved" or "undo-complete" or "water-saved" or "statistics-ready" or "photo-notified") {
+            return await FinishOperationAsync(operations, lease, incoming, checkpoint, cancellationToken);
         }
-        if (checkpoint.Stage is "meal-saved" or "undo-complete" or "water-saved" or "statistics-ready") {
-            await SendCompletionAsync(incoming, checkpoint, cancellationToken);
-            await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: true,
-                timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
-            return;
-        }
+        bool firstPhotoAttempt = incoming.Kind is "photo" && checkpoint is { Stage: "received", UploadAttempt: 0 };
         using HttpClient http = clients.CreateClient(BotDiaryClient.ClientName);
         var diary = new BotDiaryClient(http, options);
         try {
@@ -91,11 +87,72 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         } catch (InvalidDataException) {
             checkpoint = checkpoint with { Stage = "failed", Upload = null, ErrorCode = "InvalidImageOrIdentity" };
         }
-        await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: false,
-            timeProvider.GetUtcNow().UtcDateTime.AddSeconds(5), cancellationToken);
+        bool ready = checkpoint.Stage is not ("recognizing" or "received");
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        string state = JsonSerializer.Serialize(checkpoint);
+        if (!await operations.CheckpointAsync(lease, state, completed: false, ready ? now : now.Add(PollInterval), cancellationToken)) {
+            return false;
+        }
+        if (firstPhotoAttempt && checkpoint.Stage is "upload") {
+            return await SavePhotoProgressAsync(operations, id, incoming, checkpoint, state, cancellationToken);
+        }
+        return ready;
     }
 
-    private async Task SendFailureAsync(BotIncomingOperation incoming, string? errorCode, CancellationToken cancellationToken) {
+    private async Task<bool> FinishOperationAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
+        BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
+        bool cleanup = false;
+        if (checkpoint.Stage is "photo-notified") {
+            try {
+                await bot.DeleteMessage(incoming.ChatId, checkpoint.ProgressMessageId.GetValueOrDefault(), cancellationToken);
+            } catch (ApiRequestException error) when (error.ErrorCode is 400 or 403) {
+                // Telegram cannot delete a message that is already gone or inaccessible.
+            }
+        } else {
+            bool delivered = checkpoint.Stage is "failed"
+                ? await SendFailureAsync(incoming, checkpoint.ErrorCode, cancellationToken)
+                : await SendCompletionAsync(incoming, checkpoint, cancellationToken);
+            cleanup = delivered && incoming.Kind is "photo" && checkpoint.ProgressMessageId is > 0;
+            if (cleanup) {
+                checkpoint = new BotPhotoCheckpoint(Stage: "photo-notified", ProgressMessageId: checkpoint.ProgressMessageId);
+            }
+        }
+        return await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: !cleanup,
+            timeProvider.GetUtcNow().UtcDateTime, cancellationToken) && cleanup;
+    }
+
+    private async Task<bool> SavePhotoProgressAsync(BotOperationClient operations, BotOperationId id, BotIncomingOperation incoming,
+        BotPhotoCheckpoint checkpoint, string state, CancellationToken cancellationToken) {
+        // Only the worker that committed the first upload step attempts to send this notice.
+        BotOperationLease? lease = await operations.AcquireAsync(id, cancellationToken);
+        if (lease?.Checkpoint is not { } currentState) {
+            return false;
+        }
+        if (string.Equals(currentState, state, StringComparison.Ordinal)) {
+            int? messageId = await SendPhotoProgressAsync(incoming, id, cancellationToken);
+            currentState = JsonSerializer.Serialize(checkpoint with { ProgressMessageId = messageId });
+        }
+        return await operations.CheckpointAsync(lease, currentState, completed: false,
+            timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
+    }
+
+    private async Task<int?> SendPhotoProgressAsync(BotIncomingOperation incoming, BotOperationId id, CancellationToken cancellationToken) {
+        string message = BotMenu.IsRussian(incoming.Language)
+            ? "Фото получено. Начинаю обработку."
+            : "Photo received. I’ll start processing it now.";
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(4));
+        try {
+            Message sent = await bot.SendMessage(incoming.ChatId, message, disableNotification: true, cancellationToken: timeout.Token);
+            return sent.Id;
+        } catch (Exception error) when (error is RequestException ||
+            (error is OperationCanceledException && !cancellationToken.IsCancellationRequested)) {
+            logger.LogWarning("Telegram photo progress notice for {OperationId} could not be sent due to {ErrorType}.", id, error.GetType().Name);
+            return null;
+        }
+    }
+
+    private Task<bool> SendFailureAsync(BotIncomingOperation incoming, string? errorCode, CancellationToken cancellationToken) {
         bool russian = BotMenu.IsRussian(incoming.Language);
         string message = russian
             ? "Не удалось добавить еду по фото. Откройте дневник, чтобы проверить доступ к распознаванию или добавить еду вручную."
@@ -126,11 +183,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         InlineKeyboardMarkup? markup = errorCode is BotRecognitionFailure.PremiumRequired
             ? BotMenu.Open(options.Value, incoming.Language, BotMenu.MealPath, russian ? "Добавить вручную" : "Add manually")
             : null;
-        try {
-            await bot.SendMessage(incoming.ChatId, message, replyMarkup: markup, cancellationToken: cancellationToken);
-        } catch (ApiRequestException error) when (error.ErrorCode == 403) {
-            // A blocked bot cannot deliver the terminal notice; the operation must still stop.
-        }
+        return SendTerminalNoticeAsync(incoming.ChatId, message, markup, preview: null, cancellationToken);
     }
 
     private async Task<BotPhotoCheckpoint> AdvanceOperationAsync(BotDiaryClient diary, string token, BotOperationId operationId,
@@ -184,7 +237,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                     BotImageUpload upload = checkpoint.Upload ?? throw new InvalidDataException("Missing upload checkpoint.");
                     if (upload.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime) {
                         return new BotPhotoCheckpoint(UploadAttempt: checked(checkpoint.UploadAttempt + 1),
-                            PhotoPremiumApproved: checkpoint.PhotoPremiumApproved);
+                            PhotoPremiumApproved: checkpoint.PhotoPremiumApproved, ProgressMessageId: checkpoint.ProgressMessageId);
                     }
                     byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken);
                     await diary.UploadAsync(upload, incoming.ContentType!, content, cancellationToken);
@@ -213,7 +266,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         };
     }
 
-    private async Task SendCompletionAsync(BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
+    private Task<bool> SendCompletionAsync(BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         bool russian = incoming.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true;
         InlineKeyboardMarkup? keyboard = null;
         string message;
@@ -240,11 +293,18 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 _ => russian ? "Запись недоступна для отмены." : "This entry is not available to undo.",
             };
         }
+        LinkPreviewOptions? preview = checkpoint.Stage is "meal-saved" ? new LinkPreviewOptions { IsDisabled = true } : null;
+        return SendTerminalNoticeAsync(incoming.ChatId, message, keyboard, preview, cancellationToken);
+    }
+
+    private async Task<bool> SendTerminalNoticeAsync(long chatId, string message, InlineKeyboardMarkup? keyboard, LinkPreviewOptions? preview,
+        CancellationToken cancellationToken) {
         try {
-            LinkPreviewOptions? preview = checkpoint.Stage is "meal-saved" ? new LinkPreviewOptions { IsDisabled = true } : null;
-            await bot.SendMessage(incoming.ChatId, message, replyMarkup: keyboard, linkPreviewOptions: preview, cancellationToken: cancellationToken);
+            await bot.SendMessage(chatId, message, replyMarkup: keyboard, linkPreviewOptions: preview, cancellationToken: cancellationToken);
+            return true;
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // Business completion remains durable even if Telegram delivery is blocked.
+            return false;
         }
     }
 

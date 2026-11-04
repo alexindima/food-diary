@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1398,
     "ambiguousContracts": 30,
-    "consumerEdges": 11344,
-    "productionConsumerEdges": 6298,
+    "consumerEdges": 11345,
+    "productionConsumerEdges": 6299,
     "testConsumerEdges": 5046,
     "consumedContracts": 1398,
     "unconsumedContracts": 0
@@ -44966,6 +44966,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiHttpMappingsTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodVisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {

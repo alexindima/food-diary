@@ -82,7 +82,8 @@ public sealed class TelegramIntakeDeliveryTests {
     [InlineData("menu:food")]
     public async Task FallbackReply_BlockedRecipientDoesNotBlockNextUser(string command) {
         using var scenario = new IntakeScenario { TelegramErrorCode = 403 };
-        Update first = command.StartsWith("menu:", StringComparison.Ordinal)
+        bool menuCallback = command.StartsWith("menu:", StringComparison.Ordinal);
+        Update first = menuCallback
             ? CallbackUpdate(10, command)
             : MessageUpdate(10, 100, command);
 
@@ -91,7 +92,8 @@ public sealed class TelegramIntakeDeliveryTests {
         Assert.Multiple(
             () => Assert.Equal(12, scenario.Receiver.NextOffset),
             () => Assert.Equal(new long[] { 200 }, scenario.PersistedUsers),
-            () => Assert.Equal(new[] { "sendMessage" }, scenario.TelegramMethods, StringComparer.Ordinal));
+            () => Assert.Equal(menuCallback ? ["answerCallbackQuery", "sendMessage"] : new[] { "sendMessage" },
+                scenario.TelegramMethods, StringComparer.Ordinal));
     }
 
     [Theory]
@@ -193,6 +195,16 @@ public sealed class TelegramIntakeDeliveryTests {
             () => Assert.Equal(12, scenario.Receiver.NextOffset),
             () => Assert.Equal(new long[] { 100, 200 }, scenario.PersistedUsers),
             () => Assert.Equal(new[] { "register:100", "answerCallbackQuery", "register:200" }, scenario.Events, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task MenuCallback_AcknowledgesBeforeSendingChatResponse() {
+        using var scenario = new IntakeScenario();
+
+        await scenario.Receiver.ProcessBatchAsync([CallbackUpdate(10, "menu:food")], CancellationToken.None);
+
+        Assert.True(scenario.TelegramMethods.SequenceEqual(["answerCallbackQuery", "sendMessage"], StringComparer.Ordinal),
+            "Expected menu callback acknowledgement before the chat response.");
     }
 
     private static Update MessageUpdate(int id, long userId, string? text) => new() {

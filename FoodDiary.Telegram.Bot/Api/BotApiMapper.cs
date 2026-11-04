@@ -15,21 +15,36 @@ internal static class BotApiMapper {
 
     internal static BotRecognitionJob Recognition(FoodRecognitionJobHttpResponse value) => new(
         new BotRecognitionId(value.Id), new BotImageAssetId(value.ImageAssetId), value.Status, value.ErrorCode, value.NutritionErrorCode,
-        RecognitionNutrition(value.Nutrition));
+        RecognitionNutrition(value.Nutrition, value.Vision));
 
-    private static BotMealNutrition? RecognitionNutrition(FoodNutritionHttpResponse? nutrition) {
+    private static BotMealNutrition? RecognitionNutrition(FoodNutritionHttpResponse? nutrition, FoodVisionHttpResponse? vision) {
         if (nutrition is null) {
             return null;
         }
-        string[]? names = nutrition.Items?
-            .Select(item => item?.Name)
-            .OfType<string>()
-            .Select(name => name.Trim().ReplaceLineEndings(" "))
-            .Where(name => name.Length is > 0 and <= BotMealNutrition.MaxListedItemLength)
+        ILookup<string, string> localNames = (vision?.Items ?? [])
+            .Select(item => (English: DisplayName(item?.NameEn), Local: DisplayName(item?.NameLocal)))
+            .Where(item => item.English is not null && item.Local is not null)
+            .ToLookup(item => item.English!, item => item.Local!, StringComparer.OrdinalIgnoreCase);
+        BotMealNutrition.Item[]? items = nutrition.Items?
+            .Where(item => item is not null)
+            .Select(item => (Item: item, Name: DisplayName(item.Name)))
+            .Where(item => item.Name is not null)
             .Take(BotMealNutrition.MaxListedItems + 1)
+            .Select(item => new BotMealNutrition.Item(item.Name!, localNames[item.Name!].FirstOrDefault(), item.Item.Amount,
+                DisplayUnit(item.Item.Unit), item.Item.Calories))
             .ToArray();
         return new BotMealNutrition(nutrition.Calories, nutrition.Protein, nutrition.Fat, nutrition.Carbs,
-            names is { Length: > 0 } ? names : null);
+            Items: items is { Length: > 0 } ? items : null);
+    }
+
+    private static string? DisplayName(string? value) {
+        string? name = value?.Trim().ReplaceLineEndings(" ");
+        return name is { Length: > 0 and <= BotMealNutrition.MaxListedItemLength } ? name : null;
+    }
+
+    private static string? DisplayUnit(string? value) {
+        string? unit = value?.Trim().ReplaceLineEndings(" ");
+        return unit is { Length: > 0 and <= 16 } ? unit : null;
     }
 
     internal static BotRecognizedMeal Meal(RecognizedMealCreationHttpResponse value) => new(new BotOperationId(value.OperationId), new BotMealId(value.MealId), value.UndoUntilUtc, value.Undone);

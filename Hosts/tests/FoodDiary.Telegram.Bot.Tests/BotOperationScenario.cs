@@ -35,12 +35,17 @@ internal sealed class BotOperationScenario : IDisposable {
     public BotPhotoCheckpoint State { get; set; } = new();
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public bool LeaseConflict { get; set; }
+    public bool CheckpointConflict { get; set; }
     public bool BlockedByUser { get; set; }
+    public bool FailProgressDeletion { get; set; }
     public bool IsPremium { get; set; } = true;
     public HttpStatusCode BillingStatus { get; set; } = HttpStatusCode.OK;
     public bool Completed { get; private set; }
     public int Checkpoints { get; private set; }
+    public DateTime NextAttemptAtUtc { get; private set; }
     public List<string> Notices { get; } = [];
+    public List<bool> SilentNotices { get; } = [];
+    public List<int> DeletedMessages { get; } = [];
     public JsonElement? LastNoticeMarkup { get; private set; }
     public List<string> BusinessPaths { get; } = [];
     public Func<HttpRequestMessage, Task<HttpResponseMessage>>? BusinessResponse { get; set; }
@@ -64,19 +69,31 @@ internal sealed class BotOperationScenario : IDisposable {
             });
         }
         if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {
+            if (CheckpointConflict) {
+                return new HttpResponseMessage(HttpStatusCode.Conflict);
+            }
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
             State = JsonSerializer.Deserialize<BotPhotoCheckpoint>(body.RootElement.GetProperty("checkpoint").GetString()!)!;
             Completed = body.RootElement.GetProperty("completed").GetBoolean();
+            NextAttemptAtUtc = body.RootElement.GetProperty("nextAttemptAtUtc").GetDateTime();
             Checkpoints++;
             return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
         if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
             Notices.Add(body.RootElement.GetProperty("text").GetString()!);
+            SilentNotices.Add(body.RootElement.TryGetProperty("disable_notification", out JsonElement silent) && silent.GetBoolean());
             LastNoticeMarkup = body.RootElement.TryGetProperty("reply_markup", out JsonElement markup) ? markup.Clone() : null;
             return BlockedByUser
                 ? new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = JsonContent.Create(new { ok = false, error_code = 403, description = "Forbidden: bot was blocked" }) }
-                : Json(new { ok = true, result = new { message_id = 77, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Delivered" } });
+                : Json(new { ok = true, result = new { message_id = 76 + Notices.Count, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Delivered" } });
+        }
+        if (path.EndsWith("/deleteMessage", StringComparison.OrdinalIgnoreCase)) {
+            using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
+            DeletedMessages.Add(body.RootElement.GetProperty("message_id").GetInt32());
+            return FailProgressDeletion
+                ? new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = JsonContent.Create(new { ok = false, error_code = 500, description = "Temporary failure" }) }
+                : Json(new { ok = true, result = true });
         }
         BusinessPaths.Add(path);
         if (path.EndsWith("/bot/auth", StringComparison.Ordinal)) {

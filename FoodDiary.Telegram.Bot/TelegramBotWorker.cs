@@ -307,6 +307,7 @@ public sealed class TelegramBotWorker(
     private async Task HandleMenuCallbackAsync(CallbackQuery callback, CancellationToken cancellationToken) {
         string? language = callback.From.LanguageCode;
         long chatId = callback.Message!.Chat.Id;
+        await AnswerCallbackAsync(callback.Id, message: null, cancellationToken);
         if (string.Equals(callback.Data, "menu:water", StringComparison.Ordinal)) {
             await SendWaterMenuAsync(chatId, language, cancellationToken);
         } else if (string.Equals(callback.Data, "menu:food", StringComparison.Ordinal) && _options.OperationsEnabled) {
@@ -317,7 +318,6 @@ public sealed class TelegramBotWorker(
         } else {
             await SendHelpAsync(chatId, language, cancellationToken);
         }
-        await AnswerCallbackAsync(callback.Id, message: null, cancellationToken);
     }
 
     private async Task AnswerCallbackAsync(string callbackId, string? message, CancellationToken cancellationToken) {

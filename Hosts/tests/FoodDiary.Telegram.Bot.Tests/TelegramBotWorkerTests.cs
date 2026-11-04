@@ -429,7 +429,7 @@ public sealed class TelegramBotWorkerTests {
     [Theory]
     [InlineData("menu:water", "Сколько воды добавить?")]
     [InlineData("menu:help", "Доступные команды")]
-    public async Task HandleUpdateAsync_MenuCallbacks_SendMenuAndAcknowledge(string data, string expected) {
+    public async Task HandleUpdateAsync_MenuCallbacks_AcknowledgeThenSendMenu(string data, string expected) {
         var botClient = new RecordingTelegramBotClient();
         TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
         Update update = CreateCallbackUpdate(data);
@@ -438,8 +438,8 @@ public sealed class TelegramBotWorkerTests {
         await InvokeHandleUpdateAsync(worker, botClient, update);
 
         Assert.Equal(2, botClient.Requests.Count);
-        Assert.Contains(expected, GetPropertyValue<string>(botClient.Requests[0], "Text"), StringComparison.Ordinal);
-        Assert.Equal("AnswerCallbackQueryRequest", botClient.Requests[1].GetType().Name);
+        Assert.Equal("AnswerCallbackQueryRequest", botClient.Requests[0].GetType().Name);
+        Assert.Contains(expected, GetPropertyValue<string>(botClient.Requests[1], "Text"), StringComparison.Ordinal);
     }
 
     [Fact]

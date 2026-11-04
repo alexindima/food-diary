@@ -61,8 +61,10 @@ account's Premium access before downloading the image. The existing recognition
 API checks AI consent, and the caption is supplied as a recognition hint. The
 bot's saved-meal reply sends a short list of recognized foods and nutrition
 estimates back to the same chat. Pending checkpoints retain those details for
-delivery retry. Completion or cancellation clears the protected payload and
-checkpoint. Final account purge deletes the remaining operation metadata.
+delivery retry. The protected checkpoint also retains the temporary progress
+message ID so the bot can delete that message after Telegram accepts the final
+reply. Completion or cancellation clears the protected payload and checkpoint.
+Final account purge deletes the remaining operation metadata.
 Messages already delivered to Telegram follow Telegram's chat history lifecycle.
 See [ADR 0037](../adr/0037-telegram-client-identity-and-operation-boundaries.md).
 
