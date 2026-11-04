@@ -1487,6 +1487,21 @@
         "MANUAL_ACTION": "Manually",
         "HISTORY_ACTION": "History"
     },
+    "PWA": {
+        "INSTALL": {
+            "TITLE": "FoodDiary at your fingertips",
+            "DESCRIPTION": "Add FoodDiary to your home screen to open your diary faster in its own window.",
+            "BUTTON": "Install app",
+            "IOS_BUTTON": "How to install on iPhone or iPad",
+            "IOS_SAFARI": "Open FoodDiary in Safari.",
+            "IOS_SHARE": "Open the browser menu and choose Share.",
+            "IOS_ADD": "Choose Add to Home Screen, enable Open as Web App if shown, and tap Add.",
+            "ANDROID_TITLE": "How to install on Android",
+            "ANDROID_ADD": "Open the ⋮ menu in the browser toolbar. If you see Install and create shortcut or Add to Home screen, choose it and tap Install.",
+            "ANDROID_CHROME": "If there’s no install option, choose Open in Chrome or open fooddiary.club in a regular Chrome tab, then try the first step again.",
+            "ERROR": "The installation dialog could not be opened. Try installing from your browser menu."
+        }
+    },
     "PUBLIC_SITE": {
         "LANGUAGE": "Language",
         "LOGIN": "Sign in",

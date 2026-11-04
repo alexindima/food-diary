@@ -116,6 +116,7 @@ describe('PwaInstallService mobile promotion capability', () => {
         view.dispatchEvent(installEvent());
         expect(service.installMode()).toBe('prompt');
         expect(service.isMobileDevice()).toBe(false);
+        expect(service.canShowAndroidInstallInstructions()).toBe(false);
     });
 
     it('recognizes Android installation capability', () => {
@@ -123,17 +124,28 @@ describe('PwaInstallService mobile promotion capability', () => {
         const service = TestBed.inject(PwaInstallService);
         service.initialize();
         expect(service.isMobileDevice()).toBe(true);
+        expect(service.canShowAndroidInstallInstructions()).toBe(true);
+        expect(service.showInstallCard()).toBe(false);
+
+        media.matches = true;
+        media.dispatchEvent(new Event('change'));
+        expect(service.canShowAndroidInstallInstructions()).toBe(false);
+
+        media.matches = false;
+        media.dispatchEvent(new Event('change'));
+        view.dispatchEvent(new Event('appinstalled'));
+        expect(service.canShowAndroidInstallInstructions()).toBe(false);
     });
 });
 
 describe('PwaInstallService lifecycle', () => {
     it.each(['native', 'telegram', 'insecure', 'server'])('does not offer installation in %s contexts', context => {
-        navigator.userAgent = 'iPhone Safari';
+        navigator.userAgent = 'Android Chrome';
         if (context === 'native') {
             view.Capacitor.isNativePlatform = (): boolean => true;
         }
         if (context === 'telegram') {
-            navigator.userAgent = 'iPhone Safari Telegram';
+            navigator.userAgent = 'Android Chrome Telegram';
         }
         if (context === 'insecure') {
             view.isSecureContext = false;
@@ -145,6 +157,7 @@ describe('PwaInstallService lifecycle', () => {
         service.initialize();
         view.dispatchEvent(installEvent());
         expect(service.showInstallCard()).toBe(false);
+        expect(service.canShowAndroidInstallInstructions()).toBe(false);
     });
 
     it('releases event listeners when the application is destroyed', () => {

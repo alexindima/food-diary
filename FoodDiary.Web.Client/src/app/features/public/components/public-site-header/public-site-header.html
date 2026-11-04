@@ -18,13 +18,13 @@
             >
         }
     </nav>
-    @if (pwa.installMode() !== null || pwa.isInstalling()) {
+    @if (showInstallAction()) {
         <fd-ui-button
             class="public-header__install"
             icon="download"
             size="sm"
             [ariaLabel]="'PUBLIC_SITE.INSTALL' | translate"
-            [ariaHasPopup]="pwa.installMode() === 'ios' ? 'dialog' : null"
+            [ariaHasPopup]="manualInstallPlatform() !== null ? 'dialog' : null"
             [loading]="pwa.isInstalling()"
             (click)="installAsync(installInstructions)"
         >
@@ -51,12 +51,23 @@
         <fd-ui-menu-item [routerLink]="link.path">{{ link.label | translate }}</fd-ui-menu-item>
     }
 </fd-ui-menu>
-<ng-template #installInstructions>
-    <fd-ui-dialog size="sm" [title]="'PWA.INSTALL.IOS_BUTTON' | translate" [subtitle]="'PWA.INSTALL.DESCRIPTION' | translate">
+<ng-template #installInstructions let-platform>
+    <fd-ui-dialog
+        size="sm"
+        [title]="(platform === 'android' ? 'PWA.INSTALL.ANDROID_TITLE' : 'PWA.INSTALL.IOS_BUTTON') | translate"
+        [subtitle]="'PWA.INSTALL.DESCRIPTION' | translate"
+    >
         <ol class="fd-stack fd-gap-sm">
-            <li>{{ 'PWA.INSTALL.IOS_SAFARI' | translate }}</li>
-            <li>{{ 'PWA.INSTALL.IOS_SHARE' | translate }}</li>
-            <li>{{ 'PWA.INSTALL.IOS_ADD' | translate }}</li>
+            <ng-container [ngTemplateOutlet]="platform === 'android' ? androidInstallSteps : iosInstallSteps" />
         </ol>
     </fd-ui-dialog>
+</ng-template>
+<ng-template #androidInstallSteps>
+    <li>{{ 'PWA.INSTALL.ANDROID_ADD' | translate }}</li>
+    <li>{{ 'PWA.INSTALL.ANDROID_CHROME' | translate }}</li>
+</ng-template>
+<ng-template #iosInstallSteps>
+    <li>{{ 'PWA.INSTALL.IOS_SAFARI' | translate }}</li>
+    <li>{{ 'PWA.INSTALL.IOS_SHARE' | translate }}</li>
+    <li>{{ 'PWA.INSTALL.IOS_ADD' | translate }}</li>
 </ng-template>

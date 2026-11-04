@@ -9,19 +9,22 @@ import { PwaInstallService } from '../../../../shared/service-worker/pwa-install
 import { PwaInstallPromotionService } from '../../../../shared/service-worker/pwa-install-promotion.service';
 import { PublicSiteHeaderComponent } from './public-site-header';
 
+const pwa = {
+    installMode: signal<'prompt' | 'ios' | null>(null),
+    canShowAndroidInstallInstructions: signal(false),
+    isInstalling: signal(false),
+    installError: signal(false),
+};
+
 describe('Public site header installation', () => {
     let fixture: ComponentFixture<PublicSiteHeaderComponent>;
     let root: HTMLElement;
-    const pwa = {
-        installMode: signal<'prompt' | 'ios' | null>(null),
-        isInstalling: signal(false),
-        installError: signal(false),
-    };
     const installAsync = vi.fn<() => Promise<void>>();
     const open = vi.fn();
 
     beforeEach(async () => {
         pwa.installMode.set(null);
+        pwa.canShowAndroidInstallInstructions.set(false);
         pwa.isInstalling.set(false);
         pwa.installError.set(false);
         installAsync.mockReset().mockResolvedValue();
@@ -60,6 +63,7 @@ describe('Public site header installation', () => {
     });
 
     it('starts native installation directly in the click handler', async () => {
+        pwa.canShowAndroidInstallInstructions.set(true);
         pwa.installMode.set('prompt');
         fixture.detectChanges();
         installButton()?.click();
@@ -68,12 +72,21 @@ describe('Public site header installation', () => {
         await fixture.whenStable();
     });
 
+    it('offers Android installation instructions before the browser provides a native prompt', () => {
+        pwa.canShowAndroidInstallInstructions.set(true);
+        fixture.detectChanges();
+        expect(installButton()?.getAttribute('aria-haspopup'), 'Android install action opens instructions').toBe('dialog');
+        installButton()?.click();
+        expect(open).toHaveBeenCalledWith(expect.anything(), { size: 'sm', data: 'android' });
+        expect(installAsync).not.toHaveBeenCalled();
+    });
+
     it('opens iOS instructions as a dialog instead of requesting a native prompt', () => {
         pwa.installMode.set('ios');
         fixture.detectChanges();
         expect(installButton()?.getAttribute('aria-haspopup')).toBe('dialog');
         installButton()?.click();
-        expect(open).toHaveBeenCalledWith(expect.anything(), { size: 'sm' });
+        expect(open).toHaveBeenCalledWith(expect.anything(), { size: 'sm', data: 'ios' });
         expect(installAsync).not.toHaveBeenCalled();
     });
 

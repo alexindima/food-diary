@@ -5,16 +5,6 @@
         "TODAY_TOTAL": "Today: {{consumed}} kcal"
     },
     "PWA": {
-        "INSTALL": {
-            "TITLE": "FoodDiary at your fingertips",
-            "DESCRIPTION": "Add FoodDiary to your home screen to open your diary faster in its own window.",
-            "BUTTON": "Install app",
-            "IOS_BUTTON": "How to install on iPhone or iPad",
-            "IOS_SAFARI": "Open FoodDiary in Safari.",
-            "IOS_SHARE": "Open the browser menu and choose Share.",
-            "IOS_ADD": "Choose Add to Home Screen, enable Open as Web App if shown, and tap Add.",
-            "ERROR": "The installation dialog could not be opened. Try installing from your browser menu."
-        },
         "PROMOTION": {
             "NOT_NOW": "Not now",
             "NEVER": "Don't show again",
