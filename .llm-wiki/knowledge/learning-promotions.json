@@ -12188,6 +12188,206 @@
       "targetId": "",
       "reason": "",
       "eventHash": "47711142a9608b463dc66614047535de93842cf88c14beaf695fa5f20f049df4"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 91,
+      "kind": "observed",
+      "id": "learning-e4648757d7268d402408",
+      "createdAtUtc": "2026-11-04T13:19:50.3038341Z",
+      "previousHash": "47711142a9608b463dc66614047535de93842cf88c14beaf695fa5f20f049df4",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-ops-rate-limit",
+        "retrospectiveHash": "72679689d8cfb6f33030919857af3ce9bb5c76b5e28ed7c8630279b8e674dd73",
+        "completionFingerprint": "daa357a9df57b2e0832cb7ddc84a2a92b1cf0098239870466ddb59adcd932394",
+        "packetFingerprint": "b9520a0f497ff82a2ed8ba5375da2cbd56ea0742dc351046c70b47740f7ae06a",
+        "sourceCandidateId": "cost-api-compatibility",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'api-compatibility'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1422s versus 17s, error 8264.71%.",
+        "score": 70,
+        "evidence": [
+          "api-compatibility",
+          "error=8264.71%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "api-compatibility",
+          "recommendedSeconds": 17.0,
+          "expectedSeconds": 1422.0,
+          "errorPercent": 8264.71
+        },
+        "changedPaths": [
+          "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+          "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+          "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthRateLimitingIntegrationTests.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs"
+        ],
+        "subjectIds": [
+          "api-compatibility"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "6375594d2159140556e56d73b58234c2850962905023c9d0ec0775ef9d5d21dd"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 92,
+      "kind": "observed",
+      "id": "learning-b3771e08dbc9a591368e",
+      "createdAtUtc": "2026-11-04T13:19:50.3038341Z",
+      "previousHash": "6375594d2159140556e56d73b58234c2850962905023c9d0ec0775ef9d5d21dd",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-ops-rate-limit",
+        "retrospectiveHash": "72679689d8cfb6f33030919857af3ce9bb5c76b5e28ed7c8630279b8e674dd73",
+        "completionFingerprint": "daa357a9df57b2e0832cb7ddc84a2a92b1cf0098239870466ddb59adcd932394",
+        "packetFingerprint": "b9520a0f497ff82a2ed8ba5375da2cbd56ea0742dc351046c70b47740f7ae06a",
+        "sourceCandidateId": "cost-api-integration-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'api-integration-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1428s versus 380s, error 275.79%.",
+        "score": 70,
+        "evidence": [
+          "api-integration-tests",
+          "error=275.79%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "api-integration-tests",
+          "recommendedSeconds": 380.0,
+          "expectedSeconds": 1428.0,
+          "errorPercent": 275.79
+        },
+        "changedPaths": [
+          "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+          "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+          "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthRateLimitingIntegrationTests.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs"
+        ],
+        "subjectIds": [
+          "api-integration-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "82290daa2f77845536a3c8f9482dca8c00463d80e7eb9b58b7f955d2230bb893"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 93,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-04T13:19:50.3038341Z",
+      "previousHash": "82290daa2f77845536a3c8f9482dca8c00463d80e7eb9b58b7f955d2230bb893",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-ops-rate-limit",
+        "retrospectiveHash": "72679689d8cfb6f33030919857af3ce9bb5c76b5e28ed7c8630279b8e674dd73",
+        "completionFingerprint": "daa357a9df57b2e0832cb7ddc84a2a92b1cf0098239870466ddb59adcd932394",
+        "packetFingerprint": "b9520a0f497ff82a2ed8ba5375da2cbd56ea0742dc351046c70b47740f7ae06a",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 2020s versus 137s, error 1374.45%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1374.45%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 137.0,
+          "expectedSeconds": 2020.0,
+          "errorPercent": 1374.45
+        },
+        "changedPaths": [
+          "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+          "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+          "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthRateLimitingIntegrationTests.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "e6abd9801a3d4224d447b9a94ab85a92bd6a634063fcee8addb78d94bf0b5592"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 94,
+      "kind": "observed",
+      "id": "learning-4f0d2a0ad218ad3fcfad",
+      "createdAtUtc": "2026-11-04T13:19:50.3038341Z",
+      "previousHash": "e6abd9801a3d4224d447b9a94ab85a92bd6a634063fcee8addb78d94bf0b5592",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-ops-rate-limit",
+        "retrospectiveHash": "72679689d8cfb6f33030919857af3ce9bb5c76b5e28ed7c8630279b8e674dd73",
+        "completionFingerprint": "daa357a9df57b2e0832cb7ddc84a2a92b1cf0098239870466ddb59adcd932394",
+        "packetFingerprint": "b9520a0f497ff82a2ed8ba5375da2cbd56ea0742dc351046c70b47740f7ae06a",
+        "sourceCandidateId": "cost-presentation-api-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'presentation-api-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1008s versus 73s, error 1280.82%.",
+        "score": 70,
+        "evidence": [
+          "error=1280.82%",
+          "presentation-api-tests"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "presentation-api-tests",
+          "recommendedSeconds": 73.0,
+          "expectedSeconds": 1008.0,
+          "errorPercent": 1280.82
+        },
+        "changedPaths": [
+          "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+          "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+          "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthRateLimitingIntegrationTests.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs"
+        ],
+        "subjectIds": [
+          "presentation-api-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "fe7e0b978daa029a028d27c1b816860ee0fc0797a3f46926ed23e261b517c42b"
     }
   ],
   "hashSchemaVersion": 2

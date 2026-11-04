@@ -2635,7 +2635,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 117
+      "line": 120
     },
     {
       "name": "CorsOptionsSetup",
@@ -2691,7 +2691,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "line": 16
+      "line": 19
     },
     {
       "name": "Program",

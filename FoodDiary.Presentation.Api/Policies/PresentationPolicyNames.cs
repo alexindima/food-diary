@@ -5,6 +5,7 @@ public static class PresentationPolicyNames {
     public const string PasswordLoginRateLimitPolicyName = "PresentationPasswordLoginRateLimit";
     public const string GoogleLoginRateLimitPolicyName = "PresentationGoogleLoginRateLimit";
     public const string TelegramLoginRateLimitPolicyName = "PresentationTelegramLoginRateLimit";
+    public const string TelegramOperationsRateLimitPolicyName = "PresentationTelegramOperationsRateLimit";
     public const string AuthConfigurationRateLimitPolicyName = "PresentationAuthConfigurationRateLimit";
     public const string SessionRestoreRateLimitPolicyName = "PresentationSessionRestoreRateLimit";
     public const string SessionLogoutRateLimitPolicyName = "PresentationSessionLogoutRateLimit";

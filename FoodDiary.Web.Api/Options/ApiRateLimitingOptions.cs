@@ -21,9 +21,12 @@ public sealed class ApiRateLimitingOptions {
     public FixedWindowPolicyOptions PasswordLogin { get; init; } = new() { PermitLimit = 60, WindowSeconds = 60 };
     public FixedWindowPolicyOptions GoogleLogin { get; init; } = new() { PermitLimit = 60, WindowSeconds = 60 };
     public FixedWindowPolicyOptions TelegramLogin { get; init; } = new() { PermitLimit = 60, WindowSeconds = 60 };
+    public FixedWindowPolicyOptions TelegramOperations { get; init; } = new() { PermitLimit = 120, WindowSeconds = 60 };
 
     public static bool HasValidLoginPolicies(ApiRateLimitingOptions options) =>
         options.PasswordLogin.IsValid() && options.GoogleLogin.IsValid() && options.TelegramLogin.IsValid();
+
+    public static bool HasValidTelegramOperations(ApiRateLimitingOptions options) => options.TelegramOperations.IsValid();
 
     public FixedWindowPolicyOptions SessionLogout { get; init; } = new() {
         PermitLimit = 30,

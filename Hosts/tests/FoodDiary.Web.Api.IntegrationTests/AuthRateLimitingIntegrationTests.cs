@@ -10,6 +10,42 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class AuthRateLimitingIntegrationTests {
     [Fact]
+    public async Task TelegramQueue_OnlyVerifiedBotUsesDedicatedBudgetAsync() {
+        const string endpoint = "/api/v1/auth/telegram/bot/operations/ready";
+        const string botSecret = "telegram-queue-integration-test-secret";
+        const string secretHeader = "X-Telegram-Bot-Secret";
+        await using var factory = new TransportApiWebApplicationFactory();
+        await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(
+                new Dictionary<string, string?>(StringComparer.Ordinal) {
+                    ["TelegramBot:ApiSecret"] = botSecret,
+                    ["TelegramClient:OperationsEnabled"] = "false",
+                    ["RateLimiting:Auth:PermitLimit"] = "2",
+                    ["RateLimiting:TelegramOperations:PermitLimit"] = "6",
+                })));
+        using HttpClient client = app.CreateClient();
+        client.DefaultRequestHeaders.Add(secretHeader, "invalid-test-secret");
+
+        for (int attempt = 0; attempt < 3; attempt++) {
+            using HttpResponseMessage response = await client.GetAsync(endpoint);
+            Assert.Equal(attempt < 2 ? HttpStatusCode.Unauthorized : HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+
+        client.DefaultRequestHeaders.Remove(secretHeader);
+        client.DefaultRequestHeaders.Add(secretHeader, botSecret);
+        for (int attempt = 0; attempt < 7; attempt++) {
+            using HttpResponseMessage response = await client.GetAsync(endpoint);
+            Assert.Equal(attempt < 6 ? HttpStatusCode.Conflict : HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+
+        client.DefaultRequestHeaders.Remove(secretHeader);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            using HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/auth/register", new { });
+            Assert.Equal(attempt < 2 ? HttpStatusCode.BadRequest : HttpStatusCode.TooManyRequests, response.StatusCode);
+        }
+    }
+
+    [Fact]
     public async Task LoginMethodsAndRecovery_KeepIndependentHttpBudgetsAsync() {
         await using var factory = new TransportApiWebApplicationFactory();
         await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder =>

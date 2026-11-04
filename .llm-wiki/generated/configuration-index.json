@@ -105,6 +105,7 @@
         "SessionLogout",
         "SessionRestore",
         "TelegramLogin",
+        "TelegramOperations",
         "TestDelivery",
         "Wearable",
         "Webhook",

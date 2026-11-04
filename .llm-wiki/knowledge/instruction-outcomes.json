@@ -2665,6 +2665,59 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "f70ea9fe0600c124bd110d3359bcc01c79aa82609e5300edfbad0bcd6846b983",
       "eventHash": "dc4dd1d63903dfd7be5bda1ec7e27dec7aa70ce22b14965548f36221940cdb6d"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "197041c0f634447294ce8fa658b2dc02",
+      "workspace": ".artifacts/llm-wiki/tasks/telegram-ops-rate-limit",
+      "recordedAtUtc": "2026-11-04T13:19:54.9550822Z",
+      "completionFingerprint": "daa357a9df57b2e0832cb7ddc84a2a92b1cf0098239870466ddb59adcd932394",
+      "retrospectiveHash": "72679689d8cfb6f33030919857af3ce9bb5c76b5e28ed7c8630279b8e674dd73",
+      "instructionSetFingerprint": "2fe900ed2256d09c5ec9874aa1d4db79067ce659aaea4fba186c60b325af0fa1",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "FoodDiary.Presentation.Api/AGENTS.md",
+          "fingerprint": "6a0aadccdb87e464248f52be0ead10052ea3707acddc01f09b2003df241ccb98"
+        },
+        {
+          "path": "FoodDiary.Web.Api/AGENTS.md",
+          "fingerprint": "c267e33306f29bf924b58e3211e2237ee279f4aed5b0a181d9d5826683455a27"
+        },
+        {
+          "path": "Hosts/tests/AGENTS.md",
+          "fingerprint": "3430eb639acde7b34b2a978d180d7ec3236b8322793784d6392a2d6281afda5d"
+        },
+        {
+          "path": "Modules/Identity/AGENTS.md",
+          "fingerprint": "44a979e14c6c583d6cdfb38734b0678412e332eb89be46e7b766cd6978002346"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 95,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 71.25,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 95.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "dc4dd1d63903dfd7be5bda1ec7e27dec7aa70ce22b14965548f36221940cdb6d",
+      "eventHash": "e9fc6b9655600fca4a6419721f4a57044493736c70568f1199d73016f70180a9"
     }
   ]
 }

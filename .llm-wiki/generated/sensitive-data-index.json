@@ -6,9 +6,9 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1772,
+    "candidateFields": 1773,
     "credential": 172,
-    "identity": 187,
+    "identity": 188,
     "health": 830,
     "financial": 156,
     "privateContent": 427,
@@ -113,7 +113,7 @@
       "name": "SecretVerification",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 73
+      "line": 76
     },
     {
       "category": "credential",
@@ -1331,7 +1331,7 @@
       "name": "Billing",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 78
+      "line": 81
     },
     {
       "category": "financial",
@@ -8178,6 +8178,13 @@
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
       "line": 23
+    },
+    {
+      "category": "identity",
+      "name": "TelegramOperations",
+      "type": "FixedWindowPolicyOptions",
+      "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+      "line": 24
     },
     {
       "category": "identity",

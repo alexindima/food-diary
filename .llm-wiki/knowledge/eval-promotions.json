@@ -3120,6 +3120,101 @@
       },
       "reason": "",
       "eventHash": "99a2738c2e46d419d06ef68badaca4ea9f555b63a59a2f6984fa1f97c3e1a630"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 21,
+      "kind": "observed",
+      "candidateId": "learned-3b059bae05898733",
+      "createdAtUtc": "2026-11-04T13:19:51.8686768Z",
+      "previousHash": "99a2738c2e46d419d06ef68badaca4ea9f555b63a59a2f6984fa1f97c3e1a630",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-ops-rate-limit",
+        "retrospectiveHash": "72679689d8cfb6f33030919857af3ce9bb5c76b5e28ed7c8630279b8e674dd73",
+        "packetFingerprint": "b9520a0f497ff82a2ed8ba5375da2cbd56ea0742dc351046c70b47740f7ae06a",
+        "signals": [
+          {
+            "id": "cost-api-compatibility",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'api-compatibility'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "api-compatibility",
+              "error=8264.71%"
+            ]
+          },
+          {
+            "id": "cost-api-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'api-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "api-integration-tests",
+              "error=275.79%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1374.45%"
+            ]
+          },
+          {
+            "id": "cost-presentation-api-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'presentation-api-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1280.82%",
+              "presentation-api-tests"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-3b059bae05898733",
+          "changedPaths": [
+            "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
+            "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
+            "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+            "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthRateLimitingIntegrationTests.cs",
+            "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs"
+          ],
+          "expectedModules": [
+            "Identity"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Configuration",
+            "Contracts",
+            "Tests"
+          ],
+          "expectedRules": [
+            "api-contract",
+            "backend-boundaries",
+            "configuration-contract",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "api-compatibility",
+            "api-integration-tests",
+            "architecture-tests",
+            "presentation-api-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "f968abb397e07533342eb59e5f38aac5147b3d0732f55a70a3c6174c2bdb9746"
+      },
+      "reason": "",
+      "eventHash": "6caef3f3cd51021126eb49d0ef4f8fa0f0f61cb94ff1203404d1ef47982c26f7"
     }
   ]
 }

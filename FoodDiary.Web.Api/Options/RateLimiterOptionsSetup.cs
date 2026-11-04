@@ -4,8 +4,11 @@ using System.Net;
 using System.Threading.RateLimiting;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Modules.Billing.Presentation;
+using FoodDiary.Modules.Identity.Presentation.Options;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using FoodDiary.Web.Api.Extensions;
@@ -44,6 +47,8 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             CreatePartition(settings.GoogleLogin, $"google-login:{GetIpPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.TelegramLoginRateLimitPolicyName, context =>
             CreatePartition(settings.TelegramLogin, $"telegram-login:{GetIpPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.TelegramOperationsRateLimitPolicyName, context =>
+            CreateTelegramOperationsPartition(settings, context));
         options.AddPolicy<string>(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName, context =>
             CreatePartition(settings.Auth, $"auth-configuration:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.SessionRestoreRateLimitPolicyName, context =>
@@ -95,6 +100,15 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
         return BillingWebhookHttpProcessor.IsYooKassaProvider(provider)
             ? CreateYooKassaWebhookPartition(settings, context)
             : CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}");
+    }
+
+    private static RateLimitPartition<string> CreateTelegramOperationsPartition(ApiRateLimitingOptions settings, HttpContext context) {
+        string expectedSecret = context.RequestServices.GetRequiredService<IOptions<TelegramBotAuthOptions>>().Value.ApiSecret;
+        string providedSecret = context.Request.Headers[TelegramBotSecretAuthorizationFilter.SecretHeaderName].ToString();
+        bool verified = !string.IsNullOrWhiteSpace(expectedSecret) && SecretComparison.FixedTimeEquals(expectedSecret, providedSecret);
+        return CreatePartition(
+            verified ? settings.TelegramOperations : settings.Auth,
+            $"telegram-operations:{verified}:{context.GetEndpoint()?.DisplayName}:{GetIpPartitionKey(context)}");
     }
 
     private static RateLimitPartition<string> CreateYooKassaWebhookPartition(

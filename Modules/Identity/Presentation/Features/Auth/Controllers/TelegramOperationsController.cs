@@ -21,7 +21,7 @@ namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 [RequestSizeLimit(65536)]
 [RejectOversizedRequest(65536)]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-[EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+[EnableRateLimiting(PresentationPolicyNames.TelegramOperationsRateLimitPolicyName)]
 [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
 [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
 [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]

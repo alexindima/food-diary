@@ -646,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "303110f62f163656355cb17bf91cf979386ed4921c5d9d63226991c0bcb30378",
-          "reviewReason": "The outgoing marketing and Telegram task completions added pending verification-cost observations. The registry verifies successfully and these observations have not been applied to policy."
+          "sha256": "d6cda6c446678526ae0c8bd5d975342650bfc8245b26191ec63eb318565f3878",
+          "reviewReason": "The sealed Telegram rate limit task appends cost observations only. The new events do not approve, apply or activate a promotion and the workflow still matches the registry."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "The outgoing marketing and Telegram task completions added pending verification-cost observations. The registry verifies successfully and these observations have not been applied to policy.",
+      "reason": "The sealed Telegram rate limit task appends cost observations only. The new events do not approve, apply or activate a promotion and the workflow still matches the registry.",
       "baseRef": "origin/master",
-      "gitHead": "8e0cb67a4338498a54d163414753a8303b166c7e",
-      "reviewedAtUtc": "2026-11-04T11:08:02.9626889Z"
+      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
+      "reviewedAtUtc": "2026-11-04T13:21:07.6144037Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -740,8 +740,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "23eb7ffffcbb2b680681b802f2582594c59900affeea67c976fae5d493ba8699",
-          "reviewReason": "The configuration inventory adds MarketingAttribution:Enabled, default false. The API passes that value to the existing Marketing module registration, while the browser build defaults its corresponding flag off. No package or lockfile changed. Existing rollout guidance remains accurate."
+          "sha256": "b910bb79f4b31604d62cd72018b13d95bc5ce02a5cd51409b12134901f45b267",
+          "reviewReason": "The configuration inventory adds the TelegramOperations fixed-window option to the existing API rate limiting section. Its default and startup validation were reviewed. There is no package, schema or infrastructure change."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -754,10 +754,10 @@
           "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
         }
       ],
-      "reason": "The configuration inventory adds MarketingAttribution:Enabled, default false. The API passes that value to the existing Marketing module registration, while the browser build defaults its corresponding flag off. No package or lockfile changed. Existing rollout guidance remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "bdb0d7b2f61997db8ceece86a42b17366abd7fa1",
-      "reviewedAtUtc": "2026-11-04T07:00:13.7506662Z"
+      "reason": "The configuration inventory adds the TelegramOperations fixed-window option to the existing API rate limiting section. Its default and startup validation were reviewed. There is no package, schema or infrastructure change.",
+      "baseRef": "origin/master",
+      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
+      "reviewedAtUtc": "2026-11-04T13:21:08.3665265Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -1027,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "ff546d116e46392dcc4a7fc100ee8e16de2d296fbcc2a5a2c1c7cb72ecd6e9af",
-          "reviewReason": "The outgoing commits append task completion events for marketing attribution and Telegram photo processing. The instruction outcome ledger and source fingerprints verified."
+          "sha256": "2fea00e8c7db34c0f31498602bd571f328877cb69f99be80a171620a2853c802",
+          "reviewReason": "The registry appends the completed Telegram rate limit task observation for the applicable repository instructions. No instruction text or effectiveness policy changed."
         }
       ],
-      "reason": "The outgoing commits append task completion events for marketing attribution and Telegram photo processing. The instruction outcome ledger and source fingerprints verified.",
+      "reason": "The registry appends the completed Telegram rate limit task observation for the applicable repository instructions. No instruction text or effectiveness policy changed.",
       "baseRef": "origin/master",
-      "gitHead": "8e0cb67a4338498a54d163414753a8303b166c7e",
-      "reviewedAtUtc": "2026-11-04T11:08:03.4376091Z"
+      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
+      "reviewedAtUtc": "2026-11-04T13:21:08.9824598Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "b79534e12767c1dba70801099793935fa1106f8670d03e907db5354a6f1c21ba",
-          "reviewReason": "The new entries are observations from sealed task retrospectives. The eval registry verifies successfully and no observation was added to the active eval cases."
+          "sha256": "5b3d050318ecc8595041e41ccf992aee5787cb6c4e8705c01d8e3cabde8549ad",
+          "reviewReason": "The Telegram rate limit task contributed a candidate observation. It does not activate an eval or alter the evidence thresholds and review lifecycle described by the page."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "The new entries are observations from sealed task retrospectives. The eval registry verifies successfully and no observation was added to the active eval cases.",
+      "reason": "The Telegram rate limit task contributed a candidate observation. It does not activate an eval or alter the evidence thresholds and review lifecycle described by the page.",
       "baseRef": "origin/master",
-      "gitHead": "8e0cb67a4338498a54d163414753a8303b166c7e",
-      "reviewedAtUtc": "2026-11-04T11:08:03.9946118Z"
+      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
+      "reviewedAtUtc": "2026-11-04T13:21:09.6736368Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1185,8 +1185,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "80c9ed45770235178c43ad12b3c638721c120bbba13561ee623a4300ceea0d6c",
-          "reviewReason": "Reviewed the generated Billing overview candidates and documented Telegram photo lifecycle. The bot uses the explicit Premium flag, stores retry content in protected operation state, and sends the bounded result to the same private chat. Existing AI consent and erasure apply."
+          "sha256": "eadc5e36ff4de383e3701212ac76ca369748a303d9c938f67ae289a26da70866",
+          "reviewReason": "The additional identity candidate is the TelegramOperations rate-limit configuration record. It is not personal data. The runtime reuses the existing fixed-time secret verification and never stores credential values in the limiter key."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1199,10 +1199,10 @@
           "reviewReason": "Reviewed the generated Billing overview candidates and documented Telegram photo lifecycle. The bot uses the explicit Premium flag, stores retry content in protected operation state, and sends the bounded result to the same private chat. Existing AI consent and erasure apply."
         }
       ],
-      "reason": "Reviewed the generated Billing overview candidates and documented Telegram photo lifecycle. The bot uses the explicit Premium flag, stores retry content in protected operation state, and sends the bounded result to the same private chat. Existing AI consent and erasure apply.",
+      "reason": "The additional identity candidate is the TelegramOperations rate-limit configuration record. It is not personal data. The runtime reuses the existing fixed-time secret verification and never stores credential values in the limiter key.",
       "baseRef": "origin/master",
-      "gitHead": "8e0cb67a4338498a54d163414753a8303b166c7e",
-      "reviewedAtUtc": "2026-11-04T11:08:04.5339378Z"
+      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
+      "reviewedAtUtc": "2026-11-04T13:21:10.4591750Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b712a8da9871313c058a847b1e1d4f87e983621d3ed71554720db25bb55b082e",
-          "reviewReason": "The topology diff updates the source fingerprint and counts the two generated Telegram billing client files. The service, worker, and scheduled-job inventory stays the same."
+          "sha256": "e79d609afc8c2fe70917f004849963a4fbaf363d1fc4d0f606825a6b5076f7de",
+          "reviewReason": "The runtime topology diff updates the source fingerprint. The Telegram controller selects an API-host rate policy. The inventory of hosts, providers, queues and jobs stays the same."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "The topology diff updates the source fingerprint and counts the two generated Telegram billing client files. The service, worker, and scheduled-job inventory stays the same.",
+      "reason": "The runtime topology diff updates the source fingerprint. The Telegram controller selects an API-host rate policy. The inventory of hosts, providers, queues and jobs stays the same.",
       "baseRef": "origin/master",
-      "gitHead": "8e0cb67a4338498a54d163414753a8303b166c7e",
-      "reviewedAtUtc": "2026-11-04T11:08:18.7636113Z"
+      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
+      "reviewedAtUtc": "2026-11-04T13:21:11.2485559Z"
     },
     {
       "pageId": "workflow-security-review",

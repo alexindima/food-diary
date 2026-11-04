@@ -70,6 +70,8 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "RateLimiting:Auth requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidLoginPolicies,
                     "RateLimiting:PasswordLogin/GoogleLogin/TelegramLogin require positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidTelegramOperations,
+                    "RateLimiting:TelegramOperations requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidSessionRestore,
                     "RateLimiting:SessionRestore requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidSessionLogout,
