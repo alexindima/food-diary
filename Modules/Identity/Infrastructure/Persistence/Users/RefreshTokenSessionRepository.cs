@@ -16,7 +16,7 @@ public sealed class RefreshTokenSessionRepository(
     DatabaseFacade database,
     TimeProvider timeProvider,
     IOptions<JwtOptions> jwtOptions,
-    Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+    Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository, IAdminSsoSessionLock {
     public async Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken);
@@ -93,12 +93,12 @@ public sealed class RefreshTokenSessionRepository(
             .ExecuteDeleteAsync(cancellationToken);
     }
 
-    private IQueryable<UserRefreshTokenSession> GetUnexpiredSessions(UserId userId) {
+    private IQueryable<UserRefreshTokenSession> GetUnexpiredSessions(UserId userId, IQueryable<UserRefreshTokenSession>? source = null) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         JwtOptions options = jwtOptions.Value;
         DateTime regularCutoff = nowUtc.AddDays(-(options.RefreshTokenExpirationDays > 0 ? options.RefreshTokenExpirationDays : 7));
         DateTime rememberedCutoff = nowUtc.AddDays(-(options.RememberMeRefreshTokenExpirationDays > 0 ? options.RememberMeRefreshTokenExpirationDays : 90));
-        return sessions.Where(session => session.UserId == userId && session.RevokedAtUtc == null &&
+        return (source ?? sessions).Where(session => session.UserId == userId && session.RevokedAtUtc == null &&
             (session.ExpiresAtUtc > nowUtc || (session.ExpiresAtUtc == null &&
                 ((session.RememberMe && session.LastRotatedAtUtc > rememberedCutoff) ||
                  (!session.RememberMe && session.LastRotatedAtUtc > regularCutoff)))));
@@ -146,6 +146,22 @@ public sealed class RefreshTokenSessionRepository(
         return await GetUnexpiredSessions(userId).AsNoTracking().AnyAsync(
             session => session.Id == sessionId,
             cancellationToken);
+    }
+
+    public async Task<bool> LockActiveForAdminSsoAsync(UserId userId, RefreshTokenSessionId sessionId, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken);
+        }
+        if (!database.IsRelational()) {
+            return await GetUnexpiredSessions(userId).AnyAsync(session => session.Id == sessionId, cancellationToken);
+        }
+        if (database.CurrentTransaction is null) {
+            throw new InvalidOperationException("Admin SSO exchange requires an active transaction.");
+        }
+
+        IQueryable<UserRefreshTokenSession> locked = sessions.FromSqlInterpolated(
+            $"""SELECT *, xmin FROM "UserRefreshTokenSessions" WHERE "Id" = {sessionId.Value} AND "UserId" = {userId.Value} FOR UPDATE""");
+        return await GetUnexpiredSessions(userId, locked).AsNoTracking().AnyAsync(cancellationToken);
     }
 
     public async Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) {

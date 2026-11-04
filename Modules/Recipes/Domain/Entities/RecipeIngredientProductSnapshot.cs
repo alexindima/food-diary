@@ -17,4 +17,6 @@ public sealed record RecipeIngredientProductSnapshot(
     double FiberPerBase,
     double AlcoholPerBase,
     Visibility Visibility,
-    string? Category = null);
+    string? Category = null) {
+    public Guid OwnerUserId { get; init; }
+}

@@ -802,8 +802,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "24391b31033f525355c063910f8ede1d5c4383e9fc64d6d2f7cbd1931f1b5e4b",
-          "reviewReason": "Reviewed consent factory, purpose/version/UTC validation, event FK cascade, user repository event state tracking and paired EF migration. Domain and archive unit checks passed; real PostgreSQL migration, translation and rollback coverage remains pending. The workflow correctly requires real-provider evidence."
+          "sha256": "12e790a30270863f955bcc7a5460f89439165ce26c1b7e0e519aed0c4ef33280",
+          "reviewReason": "Compared the regenerated domain index with the tracked version. The diff refreshes the existing AiUsage guard line references. The SSO lock uses the existing refresh-session table and Recipe product ownership is transient projection metadata, so the persistence schema and the documented review workflow still match the source."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -816,10 +816,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed consent factory, purpose/version/UTC validation, event FK cascade, user repository event state tracking and paired EF migration. Domain and archive unit checks passed; real PostgreSQL migration, translation and rollback coverage remains pending. The workflow correctly requires real-provider evidence.",
+      "reason": "Compared the regenerated domain index with the tracked version. The diff refreshes the existing AiUsage guard line references. The SSO lock uses the existing refresh-session table and Recipe product ownership is transient projection metadata, so the persistence schema and the documented review workflow still match the source.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:20.139799Z"
+      "gitHead": "64910f382018cdb05da4898c7705f4929e381dfc",
+      "reviewedAtUtc": "2026-11-03T23:59:45.9333363Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "976bdf0836ea560659f32640329ace2c3d14c100b4948f90b5d929d15ab284d0",
-          "reviewReason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit."
+          "sha256": "5458d8a27ab6aa46cca9c8d9ff545fd45512927340d8a43c6d7d15458c84630f",
+          "reviewReason": "Reviewed the regenerated runtime topology against the changed Identity and Billing bindings. Admin SSO adds a scoped session lock using the existing persistence transaction, and webhook provider classification uses the existing rate limit policies. The service, job, client and integration inventory is still accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit.",
+      "reason": "Reviewed the regenerated runtime topology against the changed Identity and Billing bindings. Admin SSO adds a scoped session lock using the existing persistence transaction, and webhook provider classification uses the existing rate limit policies. The service, job, client and integration inventory is still accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
-      "reviewedAtUtc": "2026-11-03T12:09:04.6186664Z"
+      "gitHead": "64910f382018cdb05da4898c7705f4929e381dfc",
+      "reviewedAtUtc": "2026-11-03T23:58:49.0893581Z"
     },
     {
       "pageId": "workflow-security-review",

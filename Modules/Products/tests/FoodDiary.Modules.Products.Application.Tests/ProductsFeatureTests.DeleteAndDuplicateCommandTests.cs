@@ -5,6 +5,7 @@ using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Modules.Products.Application.Commands.DeleteProduct;
 using FoodDiary.Modules.Products.Application.Commands.DuplicateProduct;
+using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -193,6 +194,27 @@ public partial class ProductsFeatureTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task DuplicateProductCommandHandler_WhenCachedPublicProductIsNoLongerAccessible_DoesNotCopyIt() {
+        var user = User.Create("duplicate-product-cache@example.com", "hash");
+        IProductReadRepository reads = Substitute.For<IProductReadRepository>();
+        IProductWriteRepository writes = Substitute.For<IProductWriteRepository>();
+        var cached = Product.Create(UserId.New(), "Formerly public", MeasurementUnit.G, 100,
+            defaultPortionAmount: null, 100, 2, 3, 4, 0, 0, visibility: Visibility.Public);
+        ProductId productId = cached.Id;
+        Dictionary<ProductId, Product> noAccessibleProducts = [];
+        reads.GetByIdAsync(productId, user.Id, includePublic: true, Arg.Any<CancellationToken>()).Returns(cached);
+        reads.GetByIdsAsync(Arg.Is<IEnumerable<ProductId>>(ids => ids.Contains(productId)), user.Id, includePublic: true,
+            Arg.Any<CancellationToken>()).Returns(noAccessibleProducts);
+        var handler = new DuplicateProductCommandHandler(reads, writes, new StubUserRepository(user));
+
+        Result<ProductModel> result = await handler.Handle(new DuplicateProductCommand(user.Id.Value, productId.Value), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Product.NotAccessible", result.Error.Code);
+        await writes.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
     }
 
     [Fact]

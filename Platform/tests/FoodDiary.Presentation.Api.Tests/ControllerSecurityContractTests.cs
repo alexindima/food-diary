@@ -124,7 +124,7 @@ public sealed class ControllerSecurityContractTests {
         AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramLoginWidget), PresentationPolicyNames.TelegramLoginRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramVerify), PresentationPolicyNames.TelegramLoginRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Refresh), PresentationPolicyNames.AuthRateLimitPolicyName);
-        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.RestoreAccount), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.RestoreAccount), PresentationPolicyNames.PasswordLoginRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.VerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.ResendVerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange), PresentationPolicyNames.AuthRateLimitPolicyName);

@@ -11,6 +11,25 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class CookieAccountRevocationApiTests(ApiWebApplicationFactory factory) : IClassFixture<ApiWebApplicationFactory> {
     [RequiresDockerFact]
+    public async Task AdminSsoCode_CannotBeExchangedAfterIssuingBrowserLogsOut() {
+        using HttpClient administrator = CookieAuthenticationScenario.CreateBrowser(factory);
+        using HttpClient recipient = CookieAuthenticationScenario.CreateBrowser(factory);
+        await CookieAuthenticationScenario.CreateAdministratorAsync(factory, administrator);
+        using HttpResponseMessage start = await administrator.PostAsync("/api/v1/auth/admin-sso/start", content: null);
+        Assert.Equal(HttpStatusCode.OK, start.StatusCode);
+        JsonElement handoff = await start.Content.ReadFromJsonAsync<JsonElement>();
+
+        using HttpResponseMessage logout = await administrator.PostAsync("/api/v1/auth/logout", content: null);
+        Assert.Equal(HttpStatusCode.NoContent, logout.StatusCode);
+        using HttpResponseMessage exchange = await recipient.PostAsJsonAsync("/api/v1/auth/admin-sso/exchange",
+            new { Code = handoff.GetProperty("code").GetString() });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, exchange.StatusCode);
+        JsonElement error = await exchange.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Authentication.AdminSsoInvalidCode", error.GetProperty("error").GetString());
+    }
+
+    [RequiresDockerFact]
     public async Task RemovingAdminRole_RejectsExistingAdminCookieAndRestorationCannotRecoverTheRemovedPermission() {
         using HttpClient administrator = CookieAuthenticationScenario.CreateBrowser(factory);
         using HttpClient formerAdmin = CookieAuthenticationScenario.CreateBrowser(factory);

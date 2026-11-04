@@ -178,8 +178,8 @@ public static class AuthHttpMappings {
                 UserId: userId,
                 ClientOrigin: clientOrigin);
         }
-        public AdminSsoStartCommand ToAdminSsoStartCommand() {
-            return new AdminSsoStartCommand(UserId: userId);
+        public AdminSsoStartCommand ToAdminSsoStartCommand(Guid sessionId, long? securityVersion) {
+            return new AdminSsoStartCommand(userId, sessionId, securityVersion);
         }
     }
 

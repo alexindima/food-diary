@@ -216,8 +216,8 @@ public sealed class RateLimiterOptionsSetupTests {
         object policy = FindPolicy(options, PresentationPolicyNames.WebhookRateLimitPolicyName);
         Delegate factory = Assert.Single(GetDelegates(policy));
         DefaultHttpContext firstContext = CreateWebhookContext("YooKassa", "185.71.76.1");
-        DefaultHttpContext secondContext = CreateWebhookContext("yookassa", "77.75.156.11");
-        DefaultHttpContext untrustedContext = CreateWebhookContext("yookassa", "203.0.113.10");
+        DefaultHttpContext secondContext = CreateWebhookContext(" yookassa", "77.75.156.11");
+        DefaultHttpContext untrustedContext = CreateWebhookContext("YOOKASSA\t", "203.0.113.10");
         DefaultHttpContext stripeContext = CreateWebhookContext("stripe", "198.51.100.25");
 
         string firstPartitionKey = GetPartitionKey(factory.DynamicInvoke(firstContext));

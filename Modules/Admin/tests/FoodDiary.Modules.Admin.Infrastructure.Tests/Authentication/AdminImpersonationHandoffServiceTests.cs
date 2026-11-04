@@ -37,14 +37,14 @@ public sealed class AdminImpersonationHandoffServiceTests {
         var store = new InMemoryAdminSsoCodeStore(timeProvider);
         var handoffService = new AdminImpersonationHandoffService(store);
         var ssoService = new AdminSsoService(store, timeProvider);
-        var userId = UserId.New();
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
         string handoffCode = await handoffService.CreateCodeAsync("impersonation-token");
-        AdminSsoCode ssoCode = await ssoService.CreateCodeAsync(userId);
+        AdminSsoCode ssoCode = await ssoService.CreateCodeAsync(issuer);
 
         Assert.Null(await ssoService.ExchangeCodeAsync(handoffCode));
         Assert.Null(await handoffService.ConsumeCodeAsync(ssoCode.Code));
         Assert.Equal("impersonation-token", await handoffService.ConsumeCodeAsync(handoffCode));
-        Assert.Equal(userId, await ssoService.ExchangeCodeAsync(ssoCode.Code));
+        Assert.Equal(issuer, await ssoService.ExchangeCodeAsync(ssoCode.Code));
     }
 
     [ExcludeFromCodeCoverage]

@@ -105,7 +105,7 @@ public partial class DietologistFeatureTests {
 
         Assert.Equal(invitation.Id.Value, model.InvitationId);
         Assert.Equal(clientId.Value, model.ClientUserId);
-        Assert.Equal("client@example.com", model.ClientEmail);
+        Assert.Null(model.ClientEmail);
         Assert.Equal("Expired", model.Status);
         Assert.Equal(invitation.ExpiresAtUtc, model.ExpiresAtUtc);
     }

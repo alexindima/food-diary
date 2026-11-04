@@ -270,7 +270,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             dateTimeProvider,
             refreshSessions,
-            tokenService);
+            tokenService,
+            CreatePasswordLoginThrottle());
         var clientContext = new AuthenticationClientContext("password", "203.0.113.11", "test-agent");
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -297,7 +298,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository()),
             new StubDateTimeProvider(),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new StubAuthenticationTokenService());
+            new StubAuthenticationTokenService(),
+            CreatePasswordLoginThrottle());
 
         Result<AuthenticationModel> result = await handler.Handle(
             new RestoreAccountCommand("missing@example.com", "secret"),
@@ -307,20 +309,23 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
     }
 
-    [Fact]
-    public async Task RestoreAccountHandler_WithActiveUser_ReturnsAccountNotDeleted() {
+    [Theory]
+    [InlineData("secret")]
+    [InlineData("wrong-password")]
+    public async Task RestoreAccountHandler_WithActiveUser_ReturnsInvalidCredentials(string password) {
         var user = User.Create("active-restore@example.com", "secret");
         var handler = new RestoreAccountCommandHandler(
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new StubAuthenticationTokenService());
+            new StubAuthenticationTokenService(),
+            CreatePasswordLoginThrottle());
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new RestoreAccountCommand(Assert.IsType<string>(user.Email), "secret"),
+            new RestoreAccountCommand(Assert.IsType<string>(user.Email), password),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Authentication.AccountNotDeleted", result.Error.Code);
+        Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
     }
 }

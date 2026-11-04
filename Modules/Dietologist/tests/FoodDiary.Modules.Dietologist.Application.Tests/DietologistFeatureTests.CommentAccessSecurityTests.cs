@@ -14,6 +14,7 @@ namespace FoodDiary.Modules.Dietologist.Application.Tests;
 public partial class DietologistFeatureTests {
     [Theory]
     [InlineData("accepted", false)]
+    [InlineData("profile-revoked", false)]
     [InlineData("pending", false)]
     [InlineData("revoked", false)]
     [InlineData("declined", false)]
@@ -33,8 +34,11 @@ public partial class DietologistFeatureTests {
         var invitations = new InMemoryInvitationRepository();
         var invitation = DietologistInvitation.Create(client.Id, dietologist.Email!, "token-hash",
             DateTime.UtcNow.AddDays(1), DietologistPermissions.AllEnabled);
-        if (state is "accepted" or "revoked" or "other-provider") {
+        if (state is "accepted" or "profile-revoked" or "revoked" or "other-provider") {
             invitation.Accept(state is "other-provider" ? UserId.New() : dietologist.Id);
+        }
+        if (state is "profile-revoked") {
+            invitation.UpdatePermissions(new DietologistPermissions(ShareProfile: false));
         }
         if (state is "revoked") {
             invitation.Revoke();
@@ -60,8 +64,11 @@ public partial class DietologistFeatureTests {
         Result<PagedResponse<RecommendationCommentModel>> result = await handler.Handle(new GetRecommendationCommentsQuery(
             asClient ? client.Id.Value : dietologist.Id.Value, recommendation.Id.Value), CancellationToken.None);
 
-        if (asClient || state is "accepted") {
-            Assert.Equal("New private comment after relationship change", Assert.Single(ResultAssert.Success(result).Data).Text);
+        if (asClient || state is "accepted" or "profile-revoked") {
+            RecommendationCommentModel comment = Assert.Single(ResultAssert.Success(result).Data);
+            Assert.Equal("New private comment after relationship change", comment.Text);
+            Assert.Equal(state is "profile-revoked" ? null : "Current client", comment.AuthorFirstName);
+            Assert.Equal(state is "profile-revoked" ? null : client.Email, comment.AuthorEmail);
         } else {
             ResultAssert.Failure(result, "Dietologist.InvitationNotFound");
             await comments.DidNotReceiveWithAnyArgs().GetPageByRecommendationAsync(default, default, default, default);

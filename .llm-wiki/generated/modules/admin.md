@@ -91,6 +91,7 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminAiPromptWorkbenchIntegrationTests.cs`
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminMailTransportTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminNotificationTransportTests.cs`
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/AdminProxyOriginTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs`
@@ -119,7 +120,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/ImportAdminDailyAdvicesValidatorTests.cs`
-- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/SendBugAcknowledgementsCommandHandlerTests.cs`
 
 ## Working Rule
 

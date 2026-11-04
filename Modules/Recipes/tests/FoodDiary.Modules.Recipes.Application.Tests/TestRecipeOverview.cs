@@ -11,6 +11,9 @@ namespace FoodDiary.Modules.Recipes.Application.Tests;
 internal static class TestRecipeOverview {
     public static RecipeOverviewReadItem From(Recipe recipe, UserId currentUserId, int usageCount = 0) {
         RecipeModel model = recipe.ToModel(usageCount, recipe.UserId == currentUserId);
+        // Graph fixtures represent links even when their referenced entities are not loaded.
+        var links = recipe.Steps.SelectMany(step => step.Ingredients)
+            .ToDictionary(ingredient => ingredient.Id.Value);
         return new(
             recipe.Id,
             recipe.UserId,
@@ -52,7 +55,7 @@ internal static class TestRecipeOverview {
                 [.. step.Ingredients.Select(ingredient => new RecipeOverviewIngredientReadItem(
                     ingredient.Id,
                     ingredient.Amount,
-                    ingredient.ProductId,
+                    links[ingredient.Id].ProductId?.Value,
                     ingredient.ProductName,
                     ingredient.ProductBaseUnit,
                     ingredient.ProductBaseAmount,
@@ -62,7 +65,7 @@ internal static class TestRecipeOverview {
                     ingredient.ProductCarbsPerBase,
                     ingredient.ProductFiberPerBase,
                     ingredient.ProductAlcoholPerBase,
-                    ingredient.NestedRecipeId,
+                    links[ingredient.Id].NestedRecipeId?.Value,
                     ingredient.NestedRecipeName,
                     ingredient.NestedRecipeServings,
                     ingredient.NestedRecipeTotalCalories,

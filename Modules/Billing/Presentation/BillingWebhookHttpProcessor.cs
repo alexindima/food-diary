@@ -14,6 +14,7 @@ public sealed class BillingWebhookHttpProcessor {
         HttpRequest request,
         string provider,
         CancellationToken cancellationToken) {
+        provider = provider.Trim();
         EnsureTrustedYooKassaSource(request.HttpContext, provider);
         string payload = await ReadBoundedPayloadAsync(request, cancellationToken);
 
@@ -35,8 +36,11 @@ public sealed class BillingWebhookHttpProcessor {
         return YooKassaSourceNetworks.Any(network => network.Contains(normalizedAddress));
     }
 
+    public static bool IsYooKassaProvider(string? provider) =>
+        string.Equals(provider?.Trim(), "yookassa", StringComparison.OrdinalIgnoreCase);
+
     private static void EnsureTrustedYooKassaSource(HttpContext context, string provider) {
-        if (string.Equals(provider, "yookassa", StringComparison.OrdinalIgnoreCase) &&
+        if (IsYooKassaProvider(provider) &&
             !IsTrustedYooKassaSource(context.Connection.RemoteIpAddress)) {
             throw new BadHttpRequestException("YooKassa webhook source is not trusted.", StatusCodes.Status403Forbidden);
         }

@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Cryptography;
+using System.Globalization;
 using FoodDiary.Authentication.Contracts.Authentication.Abstractions;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -8,30 +9,34 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Authentication;
 public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider dateTimeProvider) : IAdminSsoService {
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);
 
-    public async Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
+    public async Task<AdminSsoCode> CreateCodeAsync(AdminSsoIssuer issuer, CancellationToken cancellationToken = default) {
         string code = GenerateCode();
         DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.Add(CodeTtl);
 
         await codeStore.StoreAsync(
             code,
-            userId.Value.ToString(),
+            FormattableString.Invariant($"{issuer.UserId.Value:D}:{issuer.SessionId:D}:{issuer.SecurityVersion}"),
             CodeTtl,
             cancellationToken);
 
         return new AdminSsoCode(code, expiresAt);
     }
 
-    public async Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
+    public async Task<AdminSsoIssuer?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
         if (!IsExpectedCode(code)) {
             return null;
         }
 
         string? value = await codeStore.ConsumeAsync(code, cancellationToken);
-        if (string.IsNullOrWhiteSpace(value)) {
+        string[]? fields = value?.Split(':');
+        if (fields is not { Length: 3 } ||
+            !Guid.TryParseExact(fields[0], "D", out Guid userId) || userId == Guid.Empty ||
+            !Guid.TryParseExact(fields[1], "D", out Guid sessionId) || sessionId == Guid.Empty ||
+            !long.TryParse(fields[2], NumberStyles.None, CultureInfo.InvariantCulture, out long securityVersion)) {
             return null;
         }
 
-        return Guid.TryParse(value, out Guid id) ? new UserId(id) : null;
+        return new AdminSsoIssuer(new UserId(userId), sessionId, securityVersion);
     }
 
     private static bool IsExpectedCode(string code) =>

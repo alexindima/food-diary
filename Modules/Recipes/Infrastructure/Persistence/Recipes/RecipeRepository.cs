@@ -111,7 +111,9 @@ public sealed class RecipeRepository(RecipesDbContext context, IProductSnapshotR
         var products = snapshots.ToDictionary(pair => pair.Key,
             pair => new RecipeIngredientProductSnapshot(pair.Value.Id, pair.Value.Name, pair.Value.BaseUnit,
                 pair.Value.BaseAmount, pair.Value.CaloriesPerBase, pair.Value.ProteinsPerBase, pair.Value.FatsPerBase,
-                pair.Value.CarbsPerBase, pair.Value.FiberPerBase, pair.Value.AlcoholPerBase, pair.Value.Visibility, pair.Value.Category));
+                pair.Value.CarbsPerBase, pair.Value.FiberPerBase, pair.Value.AlcoholPerBase, pair.Value.Visibility, pair.Value.Category) {
+                OwnerUserId = pair.Value.OwnerUserId,
+            });
         foreach (RecipeIngredient ingredient in ingredients) {
             ingredient.SetProductSnapshot(ingredient.ProductId is { } id ? products.GetValueOrDefault(id) : null);
         }

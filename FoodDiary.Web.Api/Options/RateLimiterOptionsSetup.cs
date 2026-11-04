@@ -92,7 +92,7 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
         ApiRateLimitingOptions settings,
         HttpContext context) {
         string? provider = context.Request.RouteValues["provider"]?.ToString();
-        return string.Equals(provider, "yookassa", StringComparison.OrdinalIgnoreCase)
+        return BillingWebhookHttpProcessor.IsYooKassaProvider(provider)
             ? CreateYooKassaWebhookPartition(settings, context)
             : CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}");
     }

@@ -6,25 +6,35 @@ using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Contracts.Models;
 using FoodDiary.Modules.Dietologist.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FoodDiary.ReadModel.Composition.Dietologist;
 
 internal sealed class DietologistInvitationReadService(ICompositionReadContext context) : IDietologistInvitationReadModelRepository {
+    private Expression<Func<DietologistInvitation, bool>> EligibleDelegatedClient() =>
+        invitation => invitation.Status == DietologistInvitationStatus.Accepted &&
+            context.Users.AsNoTracking().Any(client => client.Id == invitation.ClientUserId &&
+                client.IsActive && client.DeletedAt == null &&
+                client.HealthConsentAcceptedAtUtc != null &&
+                client.HealthConsentNoticeVersion == PrivacyNoticeVersions.Current);
+
     private IQueryable<DietologistInvitationReadModel> Project(IQueryable<DietologistInvitation> query) =>
         from invitation in query
         join client in context.Users.AsNoTracking() on invitation.ClientUserId equals client.Id
         join candidate in context.Users.AsNoTracking() on invitation.DietologistUserId equals (UserId?)candidate.Id into dietologists
         from dietologist in dietologists.DefaultIfEmpty()
+        let clientProfileAvailable = client.IsActive && client.DeletedAt == null
         select new DietologistInvitationReadModel(
             invitation.Id.Value,
             invitation.ClientUserId.Value,
-            invitation.DietologistUserId.HasValue ? invitation.DietologistUserId.Value.Value : null,
+            invitation.DietologistUserId.HasValue ? invitation.DietologistUserId!.Value.Value : null,
             invitation.DietologistEmail,
-            client.Email,
-            client.FirstName,
-            client.LastName,
-            client.ProfileImage,
+            clientProfileAvailable ? client.Email : null,
+            clientProfileAvailable ? client.FirstName : null,
+            clientProfileAvailable ? client.LastName : null,
+            clientProfileAvailable ? client.ProfileImage : null,
             client.NutritionProfile.BirthDate,
             client.NutritionProfile.Gender,
             client.NutritionProfile.HeightCm,
@@ -78,21 +88,18 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
         UserId clientUserId,
         UserId dietologistUserId,
         CancellationToken cancellationToken = default) {
-        return await Project(context.DietologistInvitations
-            .AsNoTracking()
-            .Where(i =>
-                i.ClientUserId == clientUserId
-                && i.DietologistUserId == dietologistUserId
-                && i.Status == DietologistInvitationStatus.Accepted))
+        return await Project(context.DietologistInvitations.AsNoTracking()
+            .Where(EligibleDelegatedClient())
+            .Where(i => i.ClientUserId == clientUserId && i.DietologistUserId == dietologistUserId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
         UserId dietologistUserId,
         CancellationToken cancellationToken = default) {
-        return await Project(context.DietologistInvitations
-            .AsNoTracking()
-            .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
+        return await Project(context.DietologistInvitations.AsNoTracking()
+            .Where(EligibleDelegatedClient())
+            .Where(i => i.DietologistUserId == dietologistUserId)
             .OrderByDescending(i => i.AcceptedAtUtc))
             .ToListAsync(cancellationToken);
     }
@@ -102,9 +109,9 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
         int page,
         int limit,
         CancellationToken cancellationToken = default) {
-        return await Project(context.DietologistInvitations
-            .AsNoTracking()
-            .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
+        return await Project(context.DietologistInvitations.AsNoTracking()
+            .Where(EligibleDelegatedClient())
+            .Where(i => i.DietologistUserId == dietologistUserId)
             .OrderByDescending(i => i.AcceptedAtUtc)
             .ThenBy(i => i.Id)
             .Skip((page - 1) * limit)

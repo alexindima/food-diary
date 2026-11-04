@@ -1,7 +1,9 @@
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -11,6 +13,22 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
+    [Fact]
+    public async Task PasswordThrottle_BlocksRestoreBeforePasswordVerificationAsync() {
+        const string email = "user@example.com";
+        IPasswordLoginThrottle throttle = CreatePasswordLoginThrottle();
+        throttle.TryBeginAsync(email, Arg.Any<CancellationToken>())
+            .Returns(new PasswordLoginAttempt("key", OwnerToken: null, RetryAfterSeconds: 30));
+        IUserAuthenticationIdentityService users = Substitute.For<IUserAuthenticationIdentityService>();
+        var handler = new RestoreAccountCommandHandler(users, new StubDateTimeProvider(),
+            Substitute.For<IRefreshTokenSessionWriteRepository>(), new StubAuthenticationTokenService(), throttle);
+
+        Result<AuthenticationModel> result = await handler.Handle(new RestoreAccountCommand(email, "wrong"), CancellationToken.None);
+
+        Assert.Equal(ErrorKind.RateLimited, result.Error.Kind);
+        await users.DidNotReceiveWithAnyArgs().RestoreAccountAsync(default!, default!, default, default);
+    }
+
     [Fact]
     public async Task PasswordThrottle_BlocksBeforePasswordVerificationAsync() {
         IPasswordLoginThrottle throttle = CreatePasswordLoginThrottle();

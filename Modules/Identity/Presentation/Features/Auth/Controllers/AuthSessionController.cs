@@ -81,11 +81,12 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
 
     [AllowAnonymous]
     [HttpPost("restore")]
+    [PasswordLoginRetryAfter]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.PasswordLoginRateLimitPolicyName)]
     public Task<IActionResult> RestoreAccount([FromBody] RestoreAccountHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 

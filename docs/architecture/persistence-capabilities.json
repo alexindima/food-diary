@@ -862,7 +862,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "a347f40e311dfeb111900371d25a22c7ed3f62e55f61ded33d5c604e4f70876d"
+      "technicalSourceSha256": "096d1c65a15616c2dc252982ea5aebb5638f3e4f43817fa0d97e9583a404bd13"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -902,8 +902,8 @@
         "tracked:UserRefreshTokenSession",
         "write:UserRefreshTokenSession"
       ],
-      "reason": "Identity owns session rotation/revocation, atomic browser revalidation, explicitly eligible browser renewal and bounded retention deletes. Retention deletes only terminal records before the validated past UTC cutoff. Revalidation updates security version and monotonic activity. Separate renewal compares owner, credential hash, exact security version, previous expiry and revocation, requires persisted eligibility and compares remembered state and changes only expiry plus modification time. Proved persistence promotion requires the same owner, hash, version, active expiry and eligibility, and only sets remember-me plus modification time. Application policy supplies the renewal deadline and absolute cap. No proof rotation, User aggregate writes or context escapes; transaction synchronization remains; ADR 0058.",
-      "technicalSourceSha256": "e4eb87ed29045ae5cee049feb0af1416b5e3f7a04ae43dbaf22c293721e462b9"
+      "reason": "Identity owns session rotation/revocation, atomic browser revalidation, explicitly eligible browser renewal and bounded retention deletes. Admin SSO locks the exact owner session for the duration of the exchange transaction and reuses the active expiry predicate. Retention deletes only terminal records before the validated past UTC cutoff. Revalidation updates security version and monotonic activity. Separate renewal compares owner, credential hash, exact security version, previous expiry and revocation, requires persisted eligibility and compares remembered state and changes only expiry plus modification time. Proved persistence promotion requires the same owner, hash, version, active expiry and eligibility, and only sets remember-me plus modification time. Application policy supplies the renewal deadline and absolute cap. No proof rotation or User aggregate writes; transaction synchronization remains; ADR 0058.",
+      "technicalSourceSha256": "3b20dfe6bec200ae04d73e776bd3ba87e5ed90aadb964c8b4d010d7514063b0e"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",
@@ -1244,7 +1244,7 @@
         "write:Recipe"
       ],
       "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. DetectChanges registers replacement owned steps/ingredients before nested recipe hydration and nutrition calculation. Usage counts delegate to IRecipeUsageQuery in host composition. Product snapshots remain transient immutable projections; no foreign aggregate tracking or writes.",
-      "technicalSourceSha256": "2c2fdda18f07eaff104ef2e0c51ad9620c5cba3874c510bd24b7cdb036a98d6a"
+      "technicalSourceSha256": "48b9c18aeddf227bf32c9601d5119d06bd19a8a1f4482782a5f857fb8a558baa"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",

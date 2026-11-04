@@ -26,13 +26,15 @@ public sealed class AdminSsoControllerTests {
         AdminSsoController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
-        IActionResult result = await controller.AdminSsoStart(userId);
+        var sessionId = Guid.NewGuid();
+        IActionResult result = await controller.AdminSsoStart(userId, sessionId);
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AdminSsoStartHttpResponse response = Assert.IsType<AdminSsoStartHttpResponse>(ok.Value);
         Assert.Equal("sso-code", response.Code);
         AdminSsoStartCommand command = Assert.IsType<AdminSsoStartCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
+        Assert.Equal(sessionId, command.SessionId);
     }
 
     [Fact]

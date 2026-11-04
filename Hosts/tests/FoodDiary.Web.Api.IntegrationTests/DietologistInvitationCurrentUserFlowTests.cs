@@ -9,6 +9,7 @@ using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -206,6 +207,16 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, accept);
         SetDietologistToken(dietologistUser);
 
+        await AssertGoalsOnlyPayloadAsync(dietologistUser.Client, clientUser.UserId);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, await clientUser.Client.PutAsJsonAsync("/api/v1/users/privacy", new {
+            Purpose = PrivacyConsentPurpose.HealthTracking,
+            Granted = false,
+            NoticeVersion = PrivacyNoticeVersions.Current,
+        }));
+        await AssertStatusCodeAsync(HttpStatusCode.Forbidden,
+            await dietologistUser.Client.GetAsync($"/api/v1/dietologist/clients/{clientUser.UserId}/goals"));
+        Assert.Empty((await dietologistUser.Client.GetFromJsonAsync<JsonElement[]>("/api/v1/dietologist/clients"))!);
+        await clientUser.Client.GrantHealthTrackingConsentAsync();
         await AssertGoalsOnlyPayloadAsync(dietologistUser.Client, clientUser.UserId);
         HttpResponseMessage unrelatedRead = await unrelatedUser.Client.GetAsync($"/api/v1/dietologist/clients/{clientUser.UserId}/goals");
         Assert.Equal(HttpStatusCode.Forbidden, unrelatedRead.StatusCode);

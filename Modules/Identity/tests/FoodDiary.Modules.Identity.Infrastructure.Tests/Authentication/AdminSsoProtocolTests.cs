@@ -16,10 +16,10 @@ public sealed class AdminSsoProtocolTests {
         var store = new RecordingStore();
         var time = new MutableTimeProvider();
         var service = new AdminSsoService(store, time);
-        var userId = UserId.New();
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
         using var cancellation = new CancellationTokenSource();
 
-        AdminSsoCode result = await service.CreateCodeAsync(userId, cancellation.Token);
+        AdminSsoCode result = await service.CreateCodeAsync(issuer, cancellation.Token);
         byte[] decoded = Convert.FromBase64String(result.Code.Replace('-', '+').Replace('_', '/') + "=");
 
         Assert.Multiple(
@@ -28,7 +28,7 @@ public sealed class AdminSsoProtocolTests {
             () => Assert.All(result.Code, character => Assert.True(char.IsAsciiLetterOrDigit(character) || character is '-' or '_')),
             () => Assert.Equal(time.UtcNow.UtcDateTime.AddMinutes(2), result.ExpiresAtUtc),
             () => Assert.Equal(result.Code, store.StoredCode),
-            () => Assert.Equal(userId.Value.ToString(), store.StoredValue),
+            () => Assert.Equal(FormattableString.Invariant($"{issuer.UserId.Value:D}:{issuer.SessionId:D}:{issuer.SecurityVersion}"), store.StoredValue),
             () => Assert.Equal(TimeSpan.FromMinutes(2), store.Lifetime),
             () => Assert.Equal(cancellation.Token, store.LastCancellationToken));
     }
@@ -45,7 +45,7 @@ public sealed class AdminSsoProtocolTests {
         var store = new RecordingStore();
         var service = new AdminSsoService(store, TimeProvider.System);
 
-        UserId? result = await service.ExchangeCodeAsync(new string(character, count));
+        AdminSsoIssuer? result = await service.ExchangeCodeAsync(new string(character, count));
 
         Assert.Multiple(() => Assert.Null(result), () => Assert.Equal(0, store.ConsumeCount));
     }
@@ -55,6 +55,7 @@ public sealed class AdminSsoProtocolTests {
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("not-a-guid")]
+    [InlineData("0abf7172-23ee-42d3-a794-56364b61796b")]
     [InlineData("impersonation:test-token")]
     public async Task ExchangeCodeAsync_RejectsMissingOrForeignPayload(string? payload) {
         var store = new RecordingStore { Payload = payload };
@@ -62,7 +63,7 @@ public sealed class AdminSsoProtocolTests {
         using var cancellation = new CancellationTokenSource();
         string code = new('a', 43);
 
-        UserId? result = await service.ExchangeCodeAsync(code, cancellation.Token);
+        AdminSsoIssuer? result = await service.ExchangeCodeAsync(code, cancellation.Token);
 
         Assert.Multiple(
             () => Assert.Null(result),
@@ -83,15 +84,15 @@ public sealed class AdminSsoProtocolTests {
         services.AddIdentityAuthenticationInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAdminSsoService service = provider.GetRequiredService<IAdminSsoService>();
-        var userId = UserId.New();
-        AdminSsoCode created = await service.CreateCodeAsync(userId);
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
+        AdminSsoCode created = await service.CreateCodeAsync(issuer);
         time.UtcNow = time.UtcNow.AddSeconds(seconds);
 
-        UserId? first = await service.ExchangeCodeAsync(created.Code);
-        UserId? second = await service.ExchangeCodeAsync(created.Code);
+        AdminSsoIssuer? first = await service.ExchangeCodeAsync(created.Code);
+        AdminSsoIssuer? second = await service.ExchangeCodeAsync(created.Code);
 
         Assert.Multiple(
-            () => Assert.Equal(expectedValid ? userId : (UserId?)null, first),
+            () => Assert.Equal(expectedValid ? issuer : null, first),
             () => Assert.Null(second));
     }
 
@@ -102,14 +103,14 @@ public sealed class AdminSsoProtocolTests {
         services.AddIdentityAuthenticationInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAdminSsoService service = provider.GetRequiredService<IAdminSsoService>();
-        var userId = UserId.New();
-        AdminSsoCode created = await service.CreateCodeAsync(userId);
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
+        AdminSsoCode created = await service.CreateCodeAsync(issuer);
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.CreateCodeAsync(userId, cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.CreateCodeAsync(issuer, cancellation.Token));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.ExchangeCodeAsync(created.Code, cancellation.Token));
-        Assert.Equal(userId, await service.ExchangeCodeAsync(created.Code));
+        Assert.Equal(issuer, await service.ExchangeCodeAsync(created.Code));
     }
 
     [Theory]
@@ -130,10 +131,10 @@ public sealed class AdminSsoProtocolTests {
 
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAdminSsoService service = provider.GetRequiredService<IAdminSsoService>();
-        var userId = UserId.New();
-        AdminSsoCode result = await service.CreateCodeAsync(userId);
-        store.Payload = userId.Value.ToString();
-        Assert.Equal(userId, await service.ExchangeCodeAsync(result.Code));
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
+        AdminSsoCode result = await service.CreateCodeAsync(issuer);
+        store.Payload = store.StoredValue;
+        Assert.Equal(issuer, await service.ExchangeCodeAsync(result.Code));
         Assert.Multiple(
             () => Assert.Same(store, provider.GetRequiredService<IAdminSsoCodeStore>()),
             () => Assert.Equal(result.Code, store.StoredCode),

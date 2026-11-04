@@ -186,15 +186,18 @@ public sealed class BillingWebhookControllerTests {
         Assert.Equal(string.Empty, command.SignatureHeader);
     }
 
-    [Fact]
-    public async Task HandleWebhook_WithYooKassaProviderFromUntrustedSource_RejectsBeforeReadingOrDispatch() {
+    [Theory]
+    [InlineData("YooKassa")]
+    [InlineData(" yookassa")]
+    [InlineData("YOOKASSA\t")]
+    public async Task HandleWebhook_WithYooKassaProviderFromUntrustedSource_RejectsBeforeReadingOrDispatch(string provider) {
         bool dispatched = false;
         ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
         BillingWebhookController controller = CreateController(sender, payload: "{\"event\":\"payment.succeeded\"}");
         controller.HttpContext.Connection.RemoteIpAddress = IPAddress.Parse("203.0.113.10");
 
         BadHttpRequestException exception = await Assert.ThrowsAsync<BadHttpRequestException>(() =>
-            controller.HandleWebhook("YooKassa"));
+            controller.HandleWebhook(provider));
 
         Assert.Multiple(
             () => Assert.Equal(StatusCodes.Status403Forbidden, exception.StatusCode),

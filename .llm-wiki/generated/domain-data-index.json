@@ -2117,28 +2117,28 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(tokens)",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
-      "line": 41
+      "line": 43
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
-      "line": 61
+      "line": 64
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
-      "line": 67
+      "line": 70
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
-      "line": 72
+      "line": 75
     },
     {
       "area": "FoodDiary",

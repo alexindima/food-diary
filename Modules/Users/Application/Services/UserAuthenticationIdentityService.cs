@@ -313,12 +313,8 @@ internal sealed class UserAuthenticationIdentityService(
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
             .GetByEmailIncludingDeletedAsync(email, cancellationToken);
-        if (user is null || !passwordHasher.Verify(password, user.Password)) {
+        if (user?.DeletedAt is null || !passwordHasher.Verify(password, user.Password)) {
             return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
-        }
-
-        if (user.DeletedAt is null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.AccountNotDeleted);
         }
 
         user.Restore(restoredAtUtc);

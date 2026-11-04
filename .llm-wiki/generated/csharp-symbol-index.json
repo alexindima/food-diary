@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4744,
-    "symbols": 4679,
+    "sourceFiles": 4748,
+    "symbols": 4683,
     "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2418,
+      "class": 2419,
       "enum": 74,
-      "interface": 426,
-      "record": 1618,
+      "interface": 427,
+      "record": 1620,
       "record struct": 143
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 75,
-      "Other": 1926,
+      "Other": 1930,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -1669,7 +1669,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/DietologistInvitationReadService.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "RecommendationCommentReadService",
@@ -4490,7 +4490,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs",
-      "line": 17
+      "line": 20
     },
     {
       "name": "AdminModerationController",
@@ -4504,7 +4504,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs",
-      "line": 18
+      "line": 21
     },
     {
       "name": "AdminRetentionController",
@@ -4547,6 +4547,13 @@
       "role": "Other",
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
       "line": 5
+    },
+    {
+      "name": "AdminMailDependencyFailureAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Filters/AdminMailDependencyFailureAttribute.cs",
+      "line": 9
     },
     {
       "name": "AdminAchievementDefinitionsHttpMappings",
@@ -5876,7 +5883,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GetUserAiUsageSummaryQueryValidator",
@@ -5905,6 +5912,13 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
       "line": 9
+    },
+    {
+      "name": "AiQuotaWindow",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Services/AiQuotaWindow.cs",
+      "line": 5
     },
     {
       "name": "ApplicationAiTelemetry",
@@ -11294,7 +11308,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "GetMyClientsQuery",
@@ -15651,6 +15665,13 @@
       "line": 2
     },
     {
+      "name": "AdminSsoIssuer",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/AdminSsoIssuer.cs",
+      "line": 4
+    },
+    {
       "name": "GoogleIdentityPayload",
       "kind": "record",
       "role": "Other",
@@ -15662,7 +15683,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
-      "line": 4
+      "line": 2
     },
     {
       "name": "IGoogleTokenValidator",
@@ -15796,6 +15817,13 @@
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/TelegramPkceVerifier.cs",
       "line": 2
+    },
+    {
+      "name": "IAdminSsoSessionLock",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IAdminSsoSessionLock.cs",
+      "line": 5
     },
     {
       "name": "IEmailVerificationNotifier",
@@ -16026,7 +16054,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "AdminSsoExchangeCommandValidator",
@@ -16467,7 +16495,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-      "line": 10
+      "line": 14
     },
     {
       "name": "RestoreAccountCommandValidator",
@@ -17181,7 +17209,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AuthenticationSessionLifetimePolicy",
@@ -17531,7 +17559,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
-      "line": 22
+      "line": 23
     },
     {
       "name": "AuthImpersonationController",
@@ -24300,7 +24328,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Mappings/RecipeMappings.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "RecipeOverviewReadMappings",

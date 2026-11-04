@@ -299,7 +299,7 @@ public sealed class AuthHttpMappingsTests {
     public void UserId_ToAdminSsoStartCommand_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var command = userId.ToAdminSsoStartCommand();
+        var command = userId.ToAdminSsoStartCommand(Guid.NewGuid(), 4);
 
         Assert.Equal(userId, command.UserId);
     }

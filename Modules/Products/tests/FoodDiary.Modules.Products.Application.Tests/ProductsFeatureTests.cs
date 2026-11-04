@@ -117,7 +117,11 @@ public partial class ProductsFeatureTests {
             IEnumerable<ProductId> ids,
             UserId userId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(
+                ids.Contains(product.Id) && (userId == product.UserId || (includePublic && product.Visibility == Visibility.Public))
+                    ? new Dictionary<ProductId, Product> { [product.Id] = product }
+                    : []);
 
         public Task<int> GetUsageCountAsync(
             ProductId id,

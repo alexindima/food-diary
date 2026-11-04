@@ -42,6 +42,7 @@ public static class IdentityModuleRegistration {
             provider.GetRequiredService<IOptions<JwtOptions>>(),
             CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserAccessTokenSessionReader, AccessTokenSessionReader>();
+        services.AddScoped<IAdminSsoSessionLock>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IUserSessionRevocationService>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadModelRepository>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());

@@ -42,14 +42,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
-- Public contract files: 55
+- Public contract files: 57
 - Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 55
-- Interfaces: 28
+- Public contract types: 57
+- Interfaces: 29
 - DTO/read-model/projection types: 2
 - Enums: 2
 - Exported repository-shaped contracts: 13
@@ -61,6 +61,7 @@ No literal attribute-routed controller was associated with this module.
 - `enum AuthenticationCredentialKind`
 - `enum PasswordLoginAttemptOutcome`
 - `interface IAdminSsoService`
+- `interface IAdminSsoSessionLock`
 - `interface IAuthenticationSessionLifetimePolicy`
 - `interface IAuthenticationTokenService`
 - `interface IEmailTemplateReadModelRepository`
@@ -83,8 +84,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface ITelegramOidcProvider`
 - `interface ITelegramOidcTokenValidator`
 - `interface ITelegramOperationPolicy`
-- `interface ITelegramOperationStore`
-- ... 25 more type(s)
+- ... 27 more type(s)
 
 ## Focused Tests
 

@@ -100,17 +100,20 @@ public static class DietologistMappings {
 
     public static DietologistInvitationForCurrentUserModel ToCurrentUserInvitationModel(
         this DietologistInvitationReadModel invitation,
-        TimeProvider timeProvider) =>
-        new(
+        TimeProvider timeProvider,
+        bool showAcceptedProfile = false) {
+        bool isExpired = invitation.Status == DietologistInvitationStatus.Pending &&
+            invitation.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime;
+        bool showProfile = (invitation.Status == DietologistInvitationStatus.Pending && !isExpired) ||
+            (invitation.Status == DietologistInvitationStatus.Accepted && showAcceptedProfile);
+        return new(
             invitation.InvitationId,
             invitation.ClientUserId,
-            invitation.ClientEmail,
-            invitation.ClientFirstName,
-            invitation.ClientLastName,
-            invitation.Status == DietologistInvitationStatus.Pending &&
-                invitation.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime
-                    ? "Expired"
-                    : invitation.Status.ToString(),
+            showProfile ? invitation.ClientEmail : null,
+            showProfile ? invitation.ClientFirstName : null,
+            showProfile ? invitation.ClientLastName : null,
+            isExpired ? "Expired" : invitation.Status.ToString(),
             invitation.CreatedAtUtc,
             invitation.ExpiresAtUtc);
+    }
 }

@@ -4,6 +4,8 @@ using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
 using FoodDiary.Modules.Recipes.Application.Models;
 using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Mappings;
 
@@ -16,7 +18,7 @@ public static class RecipeMappings {
         Guid? favoriteRecipeId = null) {
         var steps = recipe.Steps
             .OrderBy(s => s.StepNumber)
-            .Select(ToStepModel)
+            .Select(step => ToStepModel(step, recipe.UserId, isOwnedByCurrentUser))
             .ToList();
 
         RecipeNutritionSummary nutrition = BuildNutrition(recipe);
@@ -63,7 +65,7 @@ public static class RecipeMappings {
             favoriteRecipeId) { LanguageConfirmed = recipe.LanguageConfirmed, Language = recipe.Language, MissingIngredientCount = recipe.IsNutritionAutoCalculated ? recipe.MissingIngredientCount : 0, Images = recipe.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
     }
 
-    private static RecipeStepModel ToStepModel(RecipeStep step) {
+    private static RecipeStepModel ToStepModel(RecipeStep step, UserId ownerId, bool isOwnedByCurrentUser) {
         return new RecipeStepModel(
             step.Id.Value,
             step.StepNumber,
@@ -71,32 +73,44 @@ public static class RecipeMappings {
             step.Instruction,
             step.ImageUrl,
             step.ImageAssetId?.Value,
-            step.Ingredients.Select(ToIngredientModel).ToList()) { Images = step.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
+            step.Ingredients.Select(ingredient => ToIngredientModel(ingredient, ownerId, isOwnedByCurrentUser)).ToList()) { Images = step.Images.OrderBy(image => image.Position).Select(image => new RecipeImageModel(image.ImageAssetId.Value, image.ImageUrl)).ToList() };
     }
 
-    private static RecipeIngredientModel ToIngredientModel(RecipeIngredient ingredient) {
+    private static RecipeIngredientModel ToIngredientModel(RecipeIngredient ingredient, UserId ownerId, bool isOwnedByCurrentUser) {
+        RecipeIngredientProductSnapshot? product = ingredient.ProductSnapshot;
+        if (product is not null && product.Visibility != Visibility.Public &&
+            (!isOwnedByCurrentUser || product.OwnerUserId != ownerId.Value)) {
+            product = null;
+        }
+
+        Recipe? nestedRecipe = ingredient.NestedRecipe;
+        if (nestedRecipe is not null && nestedRecipe.Visibility != Visibility.Public &&
+            (!isOwnedByCurrentUser || nestedRecipe.UserId != ownerId)) {
+            nestedRecipe = null;
+        }
+
         return new RecipeIngredientModel(
             ingredient.Id.Value,
             ingredient.Amount,
-            ingredient.ProductId?.Value,
-            ingredient.ProductSnapshot?.Name,
-            ingredient.ProductSnapshot?.BaseUnit.ToString(),
-            ingredient.ProductSnapshot?.BaseAmount,
-            ingredient.ProductSnapshot?.CaloriesPerBase,
-            ingredient.ProductSnapshot?.ProteinsPerBase,
-            ingredient.ProductSnapshot?.FatsPerBase,
-            ingredient.ProductSnapshot?.CarbsPerBase,
-            ingredient.ProductSnapshot?.FiberPerBase,
-            ingredient.ProductSnapshot?.AlcoholPerBase,
-            ingredient.NestedRecipeId?.Value,
-            ingredient.NestedRecipe?.Name,
-            ingredient.NestedRecipe?.Servings,
-            ingredient.NestedRecipe?.TotalCalories,
-            ingredient.NestedRecipe?.TotalProteins,
-            ingredient.NestedRecipe?.TotalFats,
-            ingredient.NestedRecipe?.TotalCarbs,
-            ingredient.NestedRecipe?.TotalFiber,
-            ingredient.NestedRecipe?.TotalAlcohol) { TextName = ingredient.TextName, AmountText = ingredient.AmountText, NestedRecipeMissingIngredientCount = ingredient.NestedRecipe?.MissingIngredientCount ?? 0 };
+            product?.Id.Value,
+            product?.Name,
+            product?.BaseUnit.ToString(),
+            product?.BaseAmount,
+            product?.CaloriesPerBase,
+            product?.ProteinsPerBase,
+            product?.FatsPerBase,
+            product?.CarbsPerBase,
+            product?.FiberPerBase,
+            product?.AlcoholPerBase,
+            nestedRecipe?.Id.Value,
+            nestedRecipe?.Name,
+            nestedRecipe?.Servings,
+            nestedRecipe?.TotalCalories,
+            nestedRecipe?.TotalProteins,
+            nestedRecipe?.TotalFats,
+            nestedRecipe?.TotalCarbs,
+            nestedRecipe?.TotalFiber,
+            nestedRecipe?.TotalAlcohol) { TextName = ingredient.TextName, AmountText = ingredient.AmountText, NestedRecipeMissingIngredientCount = nestedRecipe?.MissingIngredientCount ?? 0 };
     }
 
     private static RecipeNutritionSummary BuildNutrition(Recipe recipe) {

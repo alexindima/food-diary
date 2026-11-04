@@ -45,12 +45,14 @@ public sealed class GetRecommendationCommentsQueryHandler(
             return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
         }
 
+        bool hideClientAuthorProfile = false;
         if (recommendation.ClientUserId != userId) {
             Result<DietologistPermissionsModel> access = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
                 invitationRepository, userId, recommendation.ClientUserId, cancellationToken);
             if (access.IsFailure) {
                 return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
             }
+            hideClientAuthorProfile = !access.Value.ShareProfile;
         }
 
         int page = PaginationPolicy.NormalizePage(query.Page);
@@ -59,18 +61,20 @@ public sealed class GetRecommendationCommentsQueryHandler(
             await commentRepository.GetPageByRecommendationAsync(recommendationIdResult.Value, page, limit, cancellationToken);
         int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)limit);
         return Result.Success(new PagedResponse<RecommendationCommentModel>(
-            comments.Select(ToModel).ToArray(), page, limit, totalPages, total));
+            comments.Select(comment => ToModel(
+                comment, hideClientAuthorProfile && comment.AuthorUserId == recommendation.ClientUserId.Value)).ToArray(),
+            page, limit, totalPages, total));
 
     }
 
-    private static RecommendationCommentModel ToModel(RecommendationCommentReadModel comment) =>
+    private static RecommendationCommentModel ToModel(RecommendationCommentReadModel comment, bool hideAuthorProfile) =>
         new(
             comment.Id,
             comment.RecommendationId,
             comment.AuthorUserId,
-            comment.AuthorFirstName,
-            comment.AuthorLastName,
-            comment.AuthorEmail,
+            hideAuthorProfile ? null : comment.AuthorFirstName,
+            hideAuthorProfile ? null : comment.AuthorLastName,
+            hideAuthorProfile ? null : comment.AuthorEmail,
             comment.Text,
             comment.CreatedAtUtc);
 }

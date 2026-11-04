@@ -932,6 +932,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var client = User.Create($"client-{Guid.NewGuid():N}@example.com", "hash");
         var dietologist = User.Create($"dietologist-{Guid.NewGuid():N}@example.com", "hash");
+        client.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking, granted: true, PrivacyNoticeVersions.Current, DateTime.UtcNow);
         context.Users.AddRange(client, dietologist);
         await context.SaveChangesAsync();
 

@@ -8,6 +8,8 @@ using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence;
 using FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.ReadModel.Composition.Dietologist;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +26,9 @@ public sealed class DietologistPagedInvitationReadIntegrationTests(PostgresDatab
         var coach = User.Create("paged-coach@example.test", "hash");
         var otherCoach = User.Create("other-coach@example.test", "hash");
         User[] clients = [.. Enumerable.Range(0, 6).Select(index => User.Create(FormattableString.Invariant($"paged-client-{index}@example.test"), "hash"))];
+        foreach (User client in clients) {
+            client.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking, granted: true, PrivacyNoticeVersions.Current, acceptedAt.AddDays(-1));
+        }
         context.Users.AddRange([coach, otherCoach, .. clients]);
         DietologistInvitation[] invitations = [.. clients.Select(client => DietologistInvitation.Create(client.Id, coach.Email!, "fixture-hash",
             acceptedAt.AddDays(7), new DietologistPermissions(ShareMeals: false, ShareWeight: false)))];

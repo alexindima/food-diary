@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2805,
+    "typescriptFiles": 2806,
     "symbols": 882,
     "routes": 111,
     "features": 46,
@@ -3195,7 +3195,7 @@
       "role": "Component",
       "selector": "fd-ai-input-action-bar",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.ts",
-      "line": 16
+      "line": 15
     },
     {
       "name": "AiInputBarFacade",
@@ -3601,7 +3601,7 @@
       "role": "Component",
       "selector": "fd-premium-required-dialog",
       "path": "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.ts",
-      "line": 24
+      "line": 30
     },
     {
       "name": "ProductCardComponent",
@@ -8387,8 +8387,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4199,
-      "russianProperties": 4199,
+      "englishProperties": 4198,
+      "russianProperties": 4198,
       "countsMatch": true
     },
     {

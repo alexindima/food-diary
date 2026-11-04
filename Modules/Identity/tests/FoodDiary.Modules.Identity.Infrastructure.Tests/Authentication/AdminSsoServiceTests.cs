@@ -19,9 +19,9 @@ public sealed class AdminSsoServiceTests : IDisposable {
     [Fact]
     public async Task CreateCodeAsync_ReturnsNonEmptyCode() {
         AdminSsoService service = CreateService();
-        var userId = UserId.New();
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
 
-        AdminSsoCode result = await service.CreateCodeAsync(userId, CancellationToken.None);
+        AdminSsoCode result = await service.CreateCodeAsync(issuer, CancellationToken.None);
 
         Assert.False(string.IsNullOrWhiteSpace(result.Code));
         Assert.True(result.ExpiresAtUtc > FixedUtcNow);
@@ -30,20 +30,20 @@ public sealed class AdminSsoServiceTests : IDisposable {
     [Fact]
     public async Task ExchangeCodeAsync_WithValidCode_ReturnsUserId() {
         AdminSsoService service = CreateService();
-        var userId = UserId.New();
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
 
-        AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
-        UserId? exchanged = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
+        AdminSsoCode created = await service.CreateCodeAsync(issuer, CancellationToken.None);
+        AdminSsoIssuer? exchanged = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
 
         Assert.NotNull(exchanged);
-        Assert.Equal(userId, exchanged.Value);
+        Assert.Equal(issuer, exchanged);
     }
 
     [Fact]
     public async Task ExchangeCodeAsync_WithInvalidCode_ReturnsNull() {
         AdminSsoService service = CreateService();
 
-        UserId? result = await service.ExchangeCodeAsync("invalid-code", CancellationToken.None);
+        AdminSsoIssuer? result = await service.ExchangeCodeAsync("invalid-code", CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -52,7 +52,7 @@ public sealed class AdminSsoServiceTests : IDisposable {
     public async Task ExchangeCodeAsync_WithEmptyCode_ReturnsNull() {
         AdminSsoService service = CreateService();
 
-        UserId? result = await service.ExchangeCodeAsync("", CancellationToken.None);
+        AdminSsoIssuer? result = await service.ExchangeCodeAsync("", CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -60,11 +60,11 @@ public sealed class AdminSsoServiceTests : IDisposable {
     [Fact]
     public async Task ExchangeCodeAsync_ConsumesCode_SecondExchangeFails() {
         AdminSsoService service = CreateService();
-        var userId = UserId.New();
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
 
-        AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
+        AdminSsoCode created = await service.CreateCodeAsync(issuer, CancellationToken.None);
         await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
-        UserId? secondExchange = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
+        AdminSsoIssuer? secondExchange = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
 
         Assert.Null(secondExchange);
     }
@@ -72,14 +72,14 @@ public sealed class AdminSsoServiceTests : IDisposable {
     [Fact]
     public async Task ExchangeCodeAsync_WithConcurrentConsumers_AllowsExactlyOneExchange() {
         AdminSsoService service = CreateService();
-        var userId = UserId.New();
-        AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
+        var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
+        AdminSsoCode created = await service.CreateCodeAsync(issuer, CancellationToken.None);
 
-        UserId?[] results = await Task.WhenAll(Enumerable.Range(0, 32)
+        AdminSsoIssuer?[] results = await Task.WhenAll(Enumerable.Range(0, 32)
             .Select(_ => service.ExchangeCodeAsync(created.Code, CancellationToken.None)));
 
-        UserId exchanged = Assert.Single(results.OfType<UserId>());
-        Assert.Equal(userId, exchanged);
+        AdminSsoIssuer exchanged = Assert.Single(results.OfType<AdminSsoIssuer>());
+        Assert.Equal(issuer, exchanged);
     }
 
     private AdminSsoService CreateService() => new(

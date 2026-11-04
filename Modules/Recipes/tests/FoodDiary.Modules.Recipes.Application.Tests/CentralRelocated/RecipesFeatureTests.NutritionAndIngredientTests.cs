@@ -1,10 +1,14 @@
 using System.Reflection;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Nutrition.Contracts.Nutrition.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
@@ -16,6 +20,29 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
+    [Theory]
+    [InlineData(false, Visibility.Private, false)]
+    [InlineData(false, Visibility.Public, true)]
+    [InlineData(true, Visibility.Private, true)]
+    public void RecipeMutationResponse_OnlyIncludesAccessibleProductFields(bool sameOwner, Visibility visibility, bool visible) {
+        var recipeOwner = UserId.New();
+        UserId productOwner = sameOwner ? recipeOwner : UserId.New();
+        var productId = ProductId.New();
+        var recipe = Recipe.Create(recipeOwner, "Recipe", servings: 1);
+        RecipeStep step = recipe.AddStep(1, "Mix");
+        step.AddProductIngredient(productId, ProductUnitQuantity.FromUnits(100));
+        Assert.Single(step.Ingredients).SetProductSnapshot(new RecipeIngredientProductSnapshot(
+            productId, "Ingredient", MeasurementUnit.G, 100, 200, 10, 5, 20, 4, 0, visibility) {
+            OwnerUserId = productOwner.Value,
+        });
+
+        RecipeIngredientModel response = Assert.Single(Assert.Single(recipe.ToModel(0, isOwnedByCurrentUser: true).Steps).Ingredients);
+
+        Assert.Equal(visible ? productId.Value : (Guid?)null, response.ProductId);
+        Assert.Equal(visible ? "Ingredient" : null, response.ProductName);
+        Assert.Equal(visible ? 200d : (double?)null, response.ProductCaloriesPerBase);
+        Assert.Equal(productId, Assert.Single(step.Ingredients).ProductId);
+    }
 
     [Fact]
     public async Task RecipeIngredientAccessValidator_WithMissingProduct_ReturnsValidationFailure() {

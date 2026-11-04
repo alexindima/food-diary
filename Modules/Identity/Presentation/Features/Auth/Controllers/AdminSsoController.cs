@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 using FoodDiary.Modules.Identity.Presentation.Filters;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -23,8 +24,9 @@ public sealed class AdminSsoController(ISender mediator) : BaseApiController(med
     [Authorize(Roles = PresentationRoleNames.Admin)]
     [HttpPost("start")]
     [ProducesResponseType<AdminSsoStartHttpResponse>(StatusCodes.Status200OK)]
-    public Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToAdminSsoStartCommand(), static value => value.ToHttpResponse());
+    public Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId, [FromCurrentRefreshSession] Guid sessionId) =>
+        HandleOk(userId.ToAdminSsoStartCommand(sessionId, TelegramAccountRequestContext.ReadSecurityVersion(HttpContext)),
+            static value => value.ToHttpResponse());
 
     [AllowAnonymous]
     [HttpPost("exchange")]

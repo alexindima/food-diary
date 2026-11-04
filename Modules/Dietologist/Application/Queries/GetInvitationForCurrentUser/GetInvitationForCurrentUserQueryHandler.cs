@@ -4,6 +4,7 @@ using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
 using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Dietologist.Application.Common;
@@ -57,7 +58,14 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
             return Result.Failure<DietologistInvitationForCurrentUserModel>(DietologistErrors.AccessDenied);
         }
 
-        return Result.Success(invitation.ToCurrentUserInvitationModel(timeProvider));
+        bool showAcceptedProfile = false;
+        if (invitation.Status == DietologistInvitationStatus.Accepted && invitation.DietologistUserId == userId.Value) {
+            DietologistInvitationReadModel? active = await invitationRepository.GetActiveByClientAndDietologistReadModelAsync(
+                new UserId(invitation.ClientUserId), userId, cancellationToken);
+            showAcceptedProfile = active?.InvitationId == invitation.InvitationId && active.Permissions.ShareProfile;
+        }
+
+        return Result.Success(invitation.ToCurrentUserInvitationModel(timeProvider, showAcceptedProfile));
 
     }
 

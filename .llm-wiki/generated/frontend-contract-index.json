@@ -6,8 +6,8 @@
     "inputs": 1674,
     "outputs": 559,
     "apiCalls": 328,
-    "templatesWithTranslations": 376,
-    "translationKeys": 2250,
+    "templatesWithTranslations": 375,
+    "translationKeys": 2249,
     "consumerEdges": 1330,
     "consumedComponents": 329,
     "unconsumedComponents": 190
@@ -25557,13 +25557,6 @@
     },
     {
       "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.html",
-      "keys": [
-        "AI_INPUT_BAR.PREMIUM_NOTICE"
-      ]
-    },
-    {
-      "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.html",
       "keys": [
         "AI_INPUT_BAR.ADD_ACTION",
@@ -25926,7 +25919,8 @@
         "AI.PREMIUM_DIALOG.ACTION",
         "AI.PREMIUM_DIALOG.CANCEL",
         "AI.PREMIUM_DIALOG.MESSAGE",
-        "AI.PREMIUM_DIALOG.TITLE"
+        "AI.PREMIUM_DIALOG.TITLE",
+        "PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION"
       ]
     },
     {
@@ -30875,9 +30869,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "fill",
+        "loading",
         "type",
         "variant"
       ],

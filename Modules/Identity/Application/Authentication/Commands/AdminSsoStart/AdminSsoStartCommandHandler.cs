@@ -45,7 +45,12 @@ public sealed class AdminSsoStartCommandHandler(
             return Result.Failure<AdminSsoStartModel>(IdentityErrors.AdminSsoForbidden);
         }
 
-        AdminSsoCode code = await adminSsoService.CreateCodeAsync(userId, cancellationToken);
+        if (command.SessionId == Guid.Empty || command.SecurityVersion != principalResult.Value.SecurityVersion) {
+            return Result.Failure<AdminSsoStartModel>(AuthenticationErrors.InvalidCredentials);
+        }
+
+        var issuer = new AdminSsoIssuer(userId, command.SessionId, principalResult.Value.SecurityVersion);
+        AdminSsoCode code = await adminSsoService.CreateCodeAsync(issuer, cancellationToken);
         var response = new AdminSsoStartModel(code.Code, code.ExpiresAtUtc);
         return Result.Success(response);
     }

@@ -1,4 +1,7 @@
 using FoodDiary.Modules.Identity.Contracts.Errors;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -7,7 +10,6 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
-using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 
@@ -15,19 +17,28 @@ public sealed class AdminSsoExchangeCommandHandler(
     IAdminSsoService adminSsoService,
     IUserAuthenticationIdentityService userIdentityService,
     TimeProvider dateTimeProvider,
-    IAuthenticationTokenService authenticationTokenService)
+    IAuthenticationTokenService authenticationTokenService,
+    IAdminSsoSessionLock sessions,
+    IAtomicCommandExecutor atomicExecutor,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<AdminSsoExchangeCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(
         AdminSsoExchangeCommand command,
         CancellationToken cancellationToken) {
-        UserId? userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken);
-        if (userId is null) {
+        AdminSsoIssuer? issuer = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken);
+        if (issuer is null) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoInvalidCode);
         }
 
+        return await atomicExecutor.ExecuteAsync(
+            token => ExchangeAsync(issuer, command, token), cancellationToken);
+    }
+
+    private async Task<Result<AuthenticationModel>> ExchangeAsync(
+        AdminSsoIssuer issuer, AdminSsoExchangeCommand command, CancellationToken cancellationToken) {
         Result<UserAuthenticationPrincipalModel> principalResult = await userIdentityService
             .RecordAuthenticationAsync(
-                userId.Value,
+                issuer.UserId,
                 dateTimeProvider.GetUtcNow().UtcDateTime,
                 cancellationToken);
         if (principalResult.IsFailure) {
@@ -38,8 +49,17 @@ public sealed class AdminSsoExchangeCommandHandler(
         }
 
         UserAuthenticationPrincipalModel principal = principalResult.Value;
+        if (principal.SecurityVersion != issuer.SecurityVersion) {
+            return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoInvalidCode);
+        }
         if (!principal.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoForbidden);
+        }
+
+        // Keep the same principal-before-session lock order as password changes.
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        if (!await sessions.LockActiveForAdminSsoAsync(issuer.UserId, new RefreshTokenSessionId(issuer.SessionId), cancellationToken)) {
+            return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoInvalidCode);
         }
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService

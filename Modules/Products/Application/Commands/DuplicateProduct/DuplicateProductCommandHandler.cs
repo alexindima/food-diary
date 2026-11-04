@@ -41,13 +41,13 @@ public sealed class DuplicateProductCommandHandler(
         UserId userId = userIdResult.Value;
         ProductId productId = productIdResult.Value;
 
-        Product? original = await productReadRepository.GetByIdAsync(
-            productId,
+        IReadOnlyDictionary<ProductId, Product> accessibleProducts = await productReadRepository.GetByIdsAsync(
+            [productId],
             userId,
             includePublic: true,
             cancellationToken: cancellationToken);
 
-        if (original is null) {
+        if (!accessibleProducts.TryGetValue(productId, out Product? original)) {
             return Result.Failure<ProductModel>(ProductErrors.NotAccessible(command.ProductId));
         }
 

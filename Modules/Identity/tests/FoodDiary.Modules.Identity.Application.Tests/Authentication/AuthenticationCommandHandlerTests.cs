@@ -44,16 +44,18 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubAdminSsoService(UserId? exchangeUserId = null) : IAdminSsoService {
+    private sealed class StubAdminSsoService(UserId? exchangeUserId = null, long securityVersion = 0) : IAdminSsoService {
         public int CreateCodeCallCount { get; private set; }
 
-        public Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
+        public Task<AdminSsoCode> CreateCodeAsync(AdminSsoIssuer issuer, CancellationToken cancellationToken = default) {
             CreateCodeCallCount++;
             return Task.FromResult(new AdminSsoCode("admin-sso-code", DateTime.UtcNow.AddMinutes(5)));
         }
 
-        public Task<UserId?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) =>
-            Task.FromResult(string.Equals(code, "admin-sso-code", StringComparison.Ordinal) ? exchangeUserId : null);
+        public Task<AdminSsoIssuer?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) =>
+            Task.FromResult(string.Equals(code, "admin-sso-code", StringComparison.Ordinal) && exchangeUserId is { } userId
+                ? new AdminSsoIssuer(userId, Guid.NewGuid(), securityVersion)
+                : null);
     }
 
     private static LinkTelegramCommandHandler CreateLinkTelegramHandler(

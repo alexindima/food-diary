@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Results;
@@ -33,7 +36,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider());
 
-        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value, Guid.NewGuid(), user.SecurityVersion), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
@@ -65,7 +68,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider());
 
-        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value, Guid.NewGuid(), user.SecurityVersion), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal("admin-sso-code", result.Value.Code);
@@ -78,7 +81,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubAdminSsoService(),
             CreateUserAuthenticationIdentityService(new StubUserRepository()),
             new StubDateTimeProvider(),
-            new StubAuthenticationTokenService());
+            new StubAuthenticationTokenService(), ActiveSsoSessions(), InlineSsoExecutor(), Substitute.For<IUnitOfWork>());
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("bad-code"), CancellationToken.None);
 
@@ -92,7 +95,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             new StubAdminSsoService(UserId.New()),
             CreateUserAuthenticationIdentityService(new StubUserRepository()),
             new StubDateTimeProvider(),
-            new StubAuthenticationTokenService());
+            new StubAuthenticationTokenService(), ActiveSsoSessions(), InlineSsoExecutor(), Substitute.For<IUnitOfWork>());
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
@@ -107,10 +110,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.DeleteAccount(DateTime.UtcNow);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new AdminSsoExchangeCommandHandler(
-            new StubAdminSsoService(user.Id),
+            new StubAdminSsoService(user.Id, user.SecurityVersion),
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
-            tokenService);
+            tokenService, ActiveSsoSessions(), InlineSsoExecutor(), Substitute.For<IUnitOfWork>());
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
@@ -123,10 +126,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task AdminSsoExchangeHandler_WithNonAdminUser_ReturnsForbidden() {
         var user = User.Create("client@example.com", "secret");
         var handler = new AdminSsoExchangeCommandHandler(
-            new StubAdminSsoService(user.Id),
+            new StubAdminSsoService(user.Id, user.SecurityVersion),
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
-            new StubAuthenticationTokenService());
+            new StubAuthenticationTokenService(), ActiveSsoSessions(), InlineSsoExecutor(), Substitute.For<IUnitOfWork>());
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
@@ -140,10 +143,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new AdminSsoExchangeCommandHandler(
-            new StubAdminSsoService(user.Id),
+            new StubAdminSsoService(user.Id, user.SecurityVersion),
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
-            tokenService);
+            tokenService, ActiveSsoSessions(), InlineSsoExecutor(), Substitute.For<IUnitOfWork>());
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
@@ -151,5 +154,36 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Null(tokenService.LastUser);
         Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
+    }
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(true, -1)]
+    public async Task AdminSsoExchangeHandler_RejectsRevokedSessionOrChangedSecurityVersion(bool sessionIsActive, int versionDelta) {
+        var user = User.Create("revoked-admin-sso@example.com", "secret");
+        user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
+        IAdminSsoSessionLock sessions = Substitute.For<IAdminSsoSessionLock>();
+        sessions.LockActiveForAdminSsoAsync(user.Id, Arg.Any<RefreshTokenSessionId>(), Arg.Any<CancellationToken>()).Returns(sessionIsActive);
+        var tokens = new StubAuthenticationTokenService();
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(user.Id, user.SecurityVersion + versionDelta),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(), tokens, sessions, InlineSsoExecutor(), Substitute.For<IUnitOfWork>());
+
+        ResultAssert.Failure(await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None),
+            "Authentication.AdminSsoInvalidCode");
+        Assert.Null(tokens.LastPrincipal);
+    }
+
+    private static IAdminSsoSessionLock ActiveSsoSessions() {
+        IAdminSsoSessionLock sessions = Substitute.For<IAdminSsoSessionLock>();
+        sessions.LockActiveForAdminSsoAsync(Arg.Any<UserId>(), Arg.Any<RefreshTokenSessionId>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        return sessions;
+    }
+
+    private static IAtomicCommandExecutor InlineSsoExecutor() {
+        IAtomicCommandExecutor executor = Substitute.For<IAtomicCommandExecutor>();
+        executor.ExecuteAsync(Arg.Any<Func<CancellationToken, Task<Result<AuthenticationModel>>>>(), Arg.Any<CancellationToken>())
+            .Returns(call => call.Arg<Func<CancellationToken, Task<Result<AuthenticationModel>>>>()(call.Arg<CancellationToken>()));
+        return executor;
     }
 }
