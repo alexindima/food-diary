@@ -55,6 +55,17 @@ Do not treat this draft as completed GDPR compliance.
 
 ## Account deletion and retention
 
+In the private Telegram bot chat, the photo file ID and optional caption are
+stored in the protected operation payload. The bot checks the linked Food Diary
+account's Premium access before downloading the image. The existing recognition
+API checks AI consent, and the caption is supplied as a recognition hint. The
+bot's saved-meal reply sends a short list of recognized foods and nutrition
+estimates back to the same chat. Pending checkpoints retain those details for
+delivery retry. Completion or cancellation clears the protected payload and
+checkpoint. Final account purge deletes the remaining operation metadata.
+Messages already delivered to Telegram follow Telegram's chat history lifecycle.
+See [ADR 0037](../adr/0037-telegram-client-identity-and-operation-boundaries.md).
+
 Account deletion is soft first. The recurring `UserCleanupJob` permanently purges accounts after `UserCleanup:RetentionDays` (30 days by default) in bounded batches. This delay provides a recovery window and prevents a large deletion from monopolizing the database.
 
 Independent operational retention applies to:

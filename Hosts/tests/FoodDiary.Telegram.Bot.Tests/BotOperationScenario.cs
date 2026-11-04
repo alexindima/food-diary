@@ -36,9 +36,12 @@ internal sealed class BotOperationScenario : IDisposable {
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public bool LeaseConflict { get; set; }
     public bool BlockedByUser { get; set; }
+    public bool IsPremium { get; set; } = true;
+    public HttpStatusCode BillingStatus { get; set; } = HttpStatusCode.OK;
     public bool Completed { get; private set; }
     public int Checkpoints { get; private set; }
     public List<string> Notices { get; } = [];
+    public JsonElement? LastNoticeMarkup { get; private set; }
     public List<string> BusinessPaths { get; } = [];
     public Func<HttpRequestMessage, Task<HttpResponseMessage>>? BusinessResponse { get; set; }
 
@@ -70,6 +73,7 @@ internal sealed class BotOperationScenario : IDisposable {
         if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
             Notices.Add(body.RootElement.GetProperty("text").GetString()!);
+            LastNoticeMarkup = body.RootElement.TryGetProperty("reply_markup", out JsonElement markup) ? markup.Clone() : null;
             return BlockedByUser
                 ? new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = JsonContent.Create(new { ok = false, error_code = 403, description = "Forbidden: bot was blocked" }) }
                 : Json(new { ok = true, result = new { message_id = 77, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Delivered" } });
@@ -78,6 +82,9 @@ internal sealed class BotOperationScenario : IDisposable {
         if (path.EndsWith("/bot/auth", StringComparison.Ordinal)) {
             string payload = Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"security_version\":\"1\"}")).TrimEnd('=').Replace('+', '-').Replace('/', '_');
             return Json(new { AccessToken = $"header.{payload}.signature", User = new { Id = UserId } });
+        }
+        if (string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal)) {
+            return BillingStatus == HttpStatusCode.OK ? Json(new { IsPremium }) : new HttpResponseMessage(BillingStatus);
         }
         if (path.EndsWith("/getFile", StringComparison.OrdinalIgnoreCase)) {
             return Json(new { ok = true, result = new { file_id = "food", file_unique_id = "unique", file_size = 3, file_path = "photos/food" } });

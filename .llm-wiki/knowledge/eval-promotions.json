@@ -3046,6 +3046,80 @@
       },
       "reason": "",
       "eventHash": "97d0114d51815ce0e79463c6b0de4d473cf132da9b063f3f9668d9f856caad18"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 20,
+      "kind": "observed",
+      "candidateId": "learned-3319c4849a289ce7",
+      "createdAtUtc": "2026-11-04T11:06:07.1692268Z",
+      "previousHash": "97d0114d51815ce0e79463c6b0de4d473cf132da9b063f3f9668d9f856caad18",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-photo-premium",
+        "retrospectiveHash": "179b9085e53acbb4b1a7c131ad6070467700edf1c278e4d253c9be111e925ba0",
+        "packetFingerprint": "6eeb1744dcacea8cb23c8a215d5050e0da63d78a2d7fe4c6b6d412a6a6f4341e",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1703.57%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-3319c4849a289ce7",
+          "changedPaths": [
+            "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+            "FoodDiary.Telegram.Bot/Api/bot.openapi.json",
+            "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
+            "FoodDiary.Telegram.Bot/Api/Generated/Api/BotBillingApi.cs",
+            "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+            "FoodDiary.Telegram.Bot/Api/scopes.json",
+            "FoodDiary.Telegram.Bot/Api/Templates/model.mustache",
+            "FoodDiary.Telegram.Bot/BotMenu.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
+            "FoodDiary.Telegram.Bot/Operations/BotRecognitionFailure.cs",
+            "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+            "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+            "FoodDiary.Web.Client/scripts/bot-api-contract.mjs",
+            "FoodDiary.Web.Client/scripts/bot-api-contract.test.mjs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotDiaryProtocolTests.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotMenuTests.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramBotWorkerTests.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramIntakeDeliveryTests.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationRecoveryTests.cs"
+          ],
+          "expectedModules": [
+            "Billing"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "privacy-data-lifecycle",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "8e6d7ed291930f31a4ebbbb6a822ea1ffdce6df0fc3ffef4eaa6d22fc904e196"
+      },
+      "reason": "",
+      "eventHash": "99a2738c2e46d419d06ef68badaca4ea9f555b63a59a2f6984fa1f97c3e1a630"
     }
   ]
 }

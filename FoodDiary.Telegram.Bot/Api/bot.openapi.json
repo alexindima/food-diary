@@ -66,6 +66,95 @@
                 },
                 "type": "object"
             },
+            "BillingOverviewHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "availableProviders": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "canStartPremiumTrial": {
+                        "type": "boolean"
+                    },
+                    "cancelAtPeriodEnd": {
+                        "type": "boolean"
+                    },
+                    "cancellationAvailable": {
+                        "type": "boolean"
+                    },
+                    "currentPeriodEndUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "currentPeriodStartUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "isPremium": {
+                        "type": "boolean",
+                        "x-bot-required": true
+                    },
+                    "manageBillingAvailable": {
+                        "type": "boolean"
+                    },
+                    "nextBillingAttemptUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "paddleClientToken": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "paddleMonthlyPriceId": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "paddleYearlyPriceId": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "plan": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "premiumTrialActive": {
+                        "type": "boolean"
+                    },
+                    "premiumTrialEndUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "premiumTrialStartUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "premiumTrialUsed": {
+                        "type": "boolean"
+                    },
+                    "provider": {
+                        "type": "string"
+                    },
+                    "renewalEnabled": {
+                        "type": "boolean"
+                    },
+                    "subscriptionProvider": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "subscriptionStatus": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "CheckpointTelegramOperationHttpRequest": {
                 "additionalProperties": false,
                 "properties": {
@@ -2087,6 +2176,94 @@
                 "security": [],
                 "tags": [
                     "BotOperations"
+                ]
+            }
+        },
+        "/api/v{version}/billing/overview": {
+            "get": {
+                "operationId": "GetOverview",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BillingOverviewHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BillingOverviewHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BillingOverviewHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
+                    }
+                ],
+                "tags": [
+                    "BotBilling"
                 ]
             }
         },

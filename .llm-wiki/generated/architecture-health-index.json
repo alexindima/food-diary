@@ -8,7 +8,7 @@
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 4,
-    "ambiguousBackendContracts": 29,
+    "ambiguousBackendContracts": 30,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
@@ -295,6 +295,25 @@
       "definitionPaths": [
         "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "BillingOverviewHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+        "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs"
       ],
       "ambiguous": true,
       "collisionClassification": "ambiguous"

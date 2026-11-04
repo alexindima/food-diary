@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1766,
-    "credential": 171,
+    "candidateFields": 1772,
+    "credential": 172,
     "identity": 187,
     "health": 830,
-    "financial": 151,
+    "financial": 156,
     "privateContent": 427,
-    "boundaryFiles": 228,
+    "boundaryFiles": 229,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -58,6 +58,13 @@
       "type": "string?",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
       "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "PaddleClientToken",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "line": 28
     },
     {
       "category": "credential",
@@ -1283,6 +1290,41 @@
       "type": "BillingRenewal,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
       "line": 29
+    },
+    {
+      "category": "financial",
+      "name": "ManageBillingAvailable",
+      "type": "bool",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "line": 24
+    },
+    {
+      "category": "financial",
+      "name": "NextBillingAttemptUtc",
+      "type": "DateTime?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "line": 26
+    },
+    {
+      "category": "financial",
+      "name": "PaddleMonthlyPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "line": 30
+    },
+    {
+      "category": "financial",
+      "name": "PaddleYearlyPriceId",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "line": 32
+    },
+    {
+      "category": "financial",
+      "name": "SubscriptionStatus",
+      "type": "string?",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "line": 50
     },
     {
       "category": "financial",
@@ -2668,7 +2710,7 @@
       "name": "Calories",
       "type": "decimal",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "line": 5
+      "line": 6
     },
     {
       "category": "health",
@@ -12394,6 +12436,14 @@
         "credential"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "categories": [
+        "credential",
+        "financial"
+      ],
+      "fieldCount": 6
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/DiaryStatisticsDayHttpResponse.cs",

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4749,
-    "symbols": 4684,
+    "sourceFiles": 4751,
+    "symbols": 4686,
     "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2419,
+      "class": 2421,
       "enum": 74,
       "interface": 427,
       "record": 1621,
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 76,
-      "Other": 1930,
+      "Other": 1931,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 104,
       "Request": 181,
-      "Response": 274,
+      "Response": 275,
       "Service": 177,
       "Validator": 238,
       "ValueObject": 183,
@@ -1868,6 +1868,13 @@
       "line": 7
     },
     {
+      "name": "BotBillingApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotBillingApi.cs",
+      "line": 7
+    },
+    {
       "name": "BotDiaryApi",
       "kind": "class",
       "role": "Other",
@@ -1921,6 +1928,13 @@
       "kind": "class",
       "role": "Response",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "BillingOverviewHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
       "line": 6
     },
     {
@@ -2250,7 +2264,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "BotOperationApiException",
@@ -2292,7 +2306,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "BotRecognitionAccessException",
@@ -2355,7 +2369,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "Program",

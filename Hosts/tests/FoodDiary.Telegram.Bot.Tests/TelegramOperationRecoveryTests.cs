@@ -39,9 +39,12 @@ public sealed class TelegramOperationRecoveryTests {
         Assert.Empty(scenario.BusinessPaths);
     }
 
-    [Fact]
-    public async Task Photo_AdvancesAcrossDurableCheckpointsAndDeliversSavedReceipt() {
+    [Theory]
+    [InlineData(null)]
+    [InlineData("Гречка с курицей\nСоус отдельно")]
+    public async Task PremiumPhoto_AdvancesAcrossDurableCheckpointsAndDeliversSavedReceipt(string? caption) {
         using var scenario = new BotOperationScenario();
+        scenario.Incoming = scenario.Incoming with { Caption = caption, Language = "ru" };
         int uploads = 0;
         int recognitions = 0;
         int saves = 0;
@@ -63,10 +66,15 @@ public sealed class TelegramOperationRecoveryTests {
             }
             if (string.Equals(path, "/api/v1/ai/food/recognitions", StringComparison.Ordinal)) {
                 recognitions++;
+                using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
+                Assert.Equal(caption, body.RootElement.GetProperty("description").GetString());
                 return BotOperationScenario.Json(new { id = scenario.Id, imageAssetId = scenario.ImageId, status = "Pending" });
             }
             if (path.StartsWith("/api/v1/ai/food/recognitions/", StringComparison.Ordinal)) {
-                return BotOperationScenario.Json(new { id = scenario.Id, imageAssetId = scenario.ImageId, status = "Succeeded", nutrition = new { calories = 400, protein = 10, fat = 20, carbs = 30 } });
+                return BotOperationScenario.Json(new {
+                    id = scenario.Id, imageAssetId = scenario.ImageId, status = "Succeeded",
+                    nutrition = new { calories = 400, protein = 10, fat = 20, carbs = 30, items = new[] { new { name = "Гречка" }, new { name = "Курица" } } },
+                });
             }
             if (path.StartsWith("/api/v1/meals/recognitions/", StringComparison.Ordinal)) {
                 saves++;
@@ -82,15 +90,94 @@ public sealed class TelegramOperationRecoveryTests {
             Assert.Equal(stage, scenario.State.Stage);
             Assert.False(scenario.Completed);
             Assert.Empty(scenario.Notices);
+            if (string.Equals(stage, "upload", StringComparison.Ordinal)) {
+                scenario.IsPremium = false;
+            }
         }
         await scenario.ProcessAsync();
 
+        string notice = Assert.Single(scenario.Notices);
+        JsonElement markup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
+        JsonElement edit = Assert.Single(markup.GetProperty("inline_keyboard").EnumerateArray().SelectMany(row => row.EnumerateArray()),
+            button => string.Equals(button.GetProperty("text").GetString(), "Редактировать", StringComparison.Ordinal));
         Assert.Multiple(
             () => Assert.True(scenario.Completed),
             () => Assert.Equal(1, uploads),
             () => Assert.Equal(1, recognitions),
             () => Assert.Equal(1, saves),
-            () => Assert.Contains("400", Assert.Single(scenario.Notices), StringComparison.Ordinal));
+            () => Assert.Single(scenario.BusinessPaths, path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal)),
+            () => Assert.Contains("Приём пищи сохранён", notice, StringComparison.Ordinal),
+            () => Assert.Contains("• Гречка\n• Курица", notice, StringComparison.Ordinal),
+            () => Assert.Contains("400 ккал", notice, StringComparison.Ordinal),
+            () => Assert.Equal($"https://diary.example/meals/{scenario.MealId:D}/edit", edit.GetProperty("web_app").GetProperty("url").GetString()));
+    }
+
+    [Theory]
+    [InlineData("received", "ru", "Добавить вручную")]
+    [InlineData("received", "en", "Add manually")]
+    [InlineData("upload", "ru", "Добавить вручную")]
+    [InlineData("image-ready", "en", "Add manually")]
+    public async Task PhotoWithoutPremium_StopsBeforePhotoWorkAndOffersManualEntry(string stage, string language, string buttonText) {
+        using var scenario = new BotOperationScenario { IsPremium = false };
+        scenario.Incoming = scenario.Incoming with { Language = language };
+        scenario.State = new BotPhotoCheckpoint(stage, Upload:
+            string.Equals(stage, "upload", StringComparison.Ordinal)
+                ? new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(5), new BotImageAssetId(scenario.ImageId))
+                : null, ImageAssetId: scenario.ImageId);
+
+        await scenario.ProcessAsync();
+
+        Assert.Multiple(
+            () => Assert.Equal("failed", scenario.State.Stage),
+            () => Assert.Equal(BotRecognitionFailure.PremiumRequired, scenario.State.ErrorCode),
+            () => Assert.Null(scenario.State.Upload),
+            () => Assert.Empty(scenario.Notices));
+
+        await scenario.ProcessAsync();
+
+        JsonElement markup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
+        JsonElement button = Assert.Single(Assert.Single(markup.GetProperty("inline_keyboard").EnumerateArray()).EnumerateArray());
+        Assert.Multiple(
+            () => Assert.True(scenario.Completed),
+            () => Assert.Contains("Food Diary Premium", Assert.Single(scenario.Notices), StringComparison.Ordinal),
+            () => Assert.Equal(buttonText, button.GetProperty("text").GetString()),
+            () => Assert.Equal("https://diary.example/meals/add", button.GetProperty("web_app").GetProperty("url").GetString()),
+            () => Assert.Equal(new[] { "/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview" }, scenario.BusinessPaths, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task UnavailablePremiumStatus_LeavesPhotoPendingWithoutSendingAPremiumNotice() {
+        using var scenario = new BotOperationScenario { BillingStatus = HttpStatusCode.ServiceUnavailable };
+
+        HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(scenario.ProcessAsync);
+
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.ServiceUnavailable, error.StatusCode),
+            () => Assert.Equal("received", scenario.State.Stage),
+            () => Assert.Equal(0, scenario.Checkpoints),
+            () => Assert.Empty(scenario.Notices),
+            () => Assert.Equal(new[] { "/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview" }, scenario.BusinessPaths, StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task LegacyPhoto_PersistsPremiumApprovalBeforeSubmittingRecognition() {
+        using var scenario = new BotOperationScenario();
+        scenario.State = new BotPhotoCheckpoint("image-ready", ImageAssetId: scenario.ImageId);
+
+        await scenario.ProcessAsync();
+
+        Assert.Equal(new BotPhotoCheckpoint("image-ready", ImageAssetId: scenario.ImageId, PhotoPremiumApproved: true), scenario.State);
+        Assert.Equal(new[] { "/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview" }, scenario.BusinessPaths, StringComparer.Ordinal);
+
+        scenario.IsPremium = false;
+        scenario.BusinessResponse = _ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+        await Assert.ThrowsAsync<HttpRequestException>(scenario.ProcessAsync);
+
+        scenario.BusinessResponse = _ => Task.FromResult(BotOperationScenario.Json(new { id = scenario.Id, imageAssetId = scenario.ImageId, status = "Pending" }));
+        await scenario.ProcessAsync();
+
+        Assert.Equal("recognizing", scenario.State.Stage);
+        Assert.Single(scenario.BusinessPaths, path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -99,8 +186,8 @@ public sealed class TelegramOperationRecoveryTests {
         scenario.State = new BotPhotoCheckpoint("upload", UploadAttempt: 2,
             Upload: new BotImageUpload("https://storage.example/expired", "food", DateTime.UtcNow.AddMinutes(-1), new BotImageAssetId(scenario.ImageId)));
         await scenario.ProcessAsync();
-        Assert.Equal(new BotPhotoCheckpoint(UploadAttempt: 3), scenario.State);
-        Assert.Single(scenario.BusinessPaths);
+        Assert.Equal(new BotPhotoCheckpoint(UploadAttempt: 3, PhotoPremiumApproved: true), scenario.State);
+        Assert.Equal(new[] { "/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview" }, scenario.BusinessPaths, StringComparer.Ordinal);
         Assert.False(scenario.Completed);
     }
 
@@ -119,7 +206,7 @@ public sealed class TelegramOperationRecoveryTests {
     [InlineData("NotFound", HttpStatusCode.NotFound)]
     public async Task PermanentFailure_IsCheckpointedBeforeSendingNotice(string code, HttpStatusCode status) {
         using var scenario = new BotOperationScenario();
-        scenario.State = new BotPhotoCheckpoint("image-ready", ImageAssetId: scenario.ImageId);
+        scenario.State = new BotPhotoCheckpoint("image-ready", ImageAssetId: scenario.ImageId, PhotoPremiumApproved: true);
         scenario.BusinessResponse = _ => Task.FromResult(new HttpResponseMessage(status) { Content = JsonContent.Create(new { error = code }) });
         await scenario.ProcessAsync();
         Assert.Equal("failed", scenario.State.Stage);
@@ -191,7 +278,7 @@ public sealed class TelegramOperationRecoveryTests {
     [InlineData("recognizing")]
     public async Task MismatchedRecognitionIdentity_FailsInsteadOfSavingSomeoneElsesResult(string stage) {
         using var scenario = new BotOperationScenario();
-        scenario.State = new BotPhotoCheckpoint(stage, ImageAssetId: scenario.ImageId, RecognitionId: scenario.Id);
+        scenario.State = new BotPhotoCheckpoint(stage, ImageAssetId: scenario.ImageId, RecognitionId: scenario.Id, PhotoPremiumApproved: true);
         scenario.BusinessResponse = _ => Task.FromResult(BotOperationScenario.Json(new { id = Guid.NewGuid(), imageAssetId = scenario.ImageId, status = "Succeeded" }));
         await scenario.ProcessAsync();
         Assert.Equal("failed", scenario.State.Stage);

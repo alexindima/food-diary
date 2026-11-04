@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6938,
+    "productionFiles": 6940,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1044,
@@ -775,6 +775,14 @@
       "structuralRiskScore": 104.62
     },
     {
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+      "nonBlankLines": 246,
+      "decisionPoints": 66,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 103.92
+    },
+    {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
       "nonBlankLines": 817,
       "decisionPoints": 57,
@@ -791,28 +799,20 @@
       "structuralRiskScore": 101.72
     },
     {
+      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "nonBlankLines": 347,
+      "decisionPoints": 63,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 101.44
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/lib/weight-history.facade.ts",
       "nonBlankLines": 511,
       "decisionPoints": 60,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 100.22
-    },
-    {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-      "nonBlankLines": 362,
-      "decisionPoints": 60,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 99.24
-    },
-    {
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-lessons.service.ts",
-      "nonBlankLines": 447,
-      "decisionPoints": 60,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 98.94
     }
   ],
   "files": [
@@ -4722,11 +4722,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/BotApiMapper.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
+      "nonBlankLines": 33,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 2.16
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/BotApiRequestContext.cs",
@@ -4751,6 +4751,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.34
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotBillingApi.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotDiaryApi.cs",
@@ -4815,6 +4823,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.98
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/CheckpointTelegramOperationHttpRequest.cs",
@@ -5042,11 +5058,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/BotMenu.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 3,
+      "nonBlankLines": 88,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.44
+      "structuralRiskScore": 15.26
     },
     {
       "path": "FoodDiary.Telegram.Bot/BotUriHelper.cs",
@@ -5090,11 +5106,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "nonBlankLines": 147,
+      "nonBlankLines": 152,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.44
+      "structuralRiskScore": 55.54
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
@@ -5186,11 +5202,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
+      "nonBlankLines": 21,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 4.92
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationApiException.cs",
@@ -5234,11 +5250,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
-      "nonBlankLines": 5,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionAccessException.cs",
@@ -5250,11 +5266,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionFailure.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 15,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.72
+      "structuralRiskScore": 1.8
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionId.cs",
@@ -5306,11 +5322,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 229,
-      "decisionPoints": 62,
+      "nonBlankLines": 246,
+      "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 97.58
+      "structuralRiskScore": 103.92
     },
     {
       "path": "FoodDiary.Telegram.Bot/Program.cs",
@@ -5338,11 +5354,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 320,
-      "decisionPoints": 57,
+      "nonBlankLines": 347,
+      "decisionPoints": 63,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 91.9
+      "structuralRiskScore": 101.44
     },
     {
       "path": "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",

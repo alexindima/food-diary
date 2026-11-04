@@ -64,3 +64,27 @@ test('fails when nutrition changes from a number representation', () => {
     source.components.schemas.FoodNutritionHttpResponse.properties.protein.type = 'string';
     assert.throws(() => botApiContract(source, scopes), /nutrition number contract changed/u);
 });
+test('requires an explicit boolean Premium flag in the billing overview consumed by the bot', () => {
+    const source = sourceDocument();
+    const billingPath = '/api/v{version}/billing/overview';
+    source.paths[billingPath] = {
+        get: {
+            responses: {
+                200: {
+                    description: 'OK',
+                    content: { 'application/json': { schema: { $ref: '#/components/schemas/BillingOverviewHttpResponse' } } },
+                },
+            },
+        },
+    };
+    const overview = { type: 'object', properties: { isPremium: { type: 'boolean' } } };
+    source.components.schemas.BillingOverviewHttpResponse = overview;
+    const billingScopes = [...scopes, { name: 'BotBilling', path: billingPath, method: 'GET', operationId: 'GetOverview' }];
+
+    const contract = botApiContract(source, billingScopes);
+    assert.equal(contract.components.schemas.BillingOverviewHttpResponse.properties.isPremium['x-bot-required'], true);
+    assert.deepEqual(overview.properties.isPremium, { type: 'boolean' });
+
+    delete overview.properties.isPremium;
+    assert.throws(() => botApiContract(source, billingScopes), /boolean isPremium/u);
+});

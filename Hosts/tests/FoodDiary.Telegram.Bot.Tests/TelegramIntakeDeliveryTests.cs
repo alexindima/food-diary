@@ -15,6 +15,42 @@ namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIntakeDeliveryTests {
+    [Fact]
+    public async Task PrivatePhoto_PreservesAttachedCaptionInTheDurableOperation() {
+        using var scenario = new IntakeScenario();
+        const string caption = "Гречка с курицей\nСоус отдельно";
+        Update photo = MessageUpdate(10, 100, text: null);
+        photo.Message!.Caption = caption;
+        photo.Message.Photo = [new PhotoSize { FileId = "food", FileUniqueId = "photo", Width = 400, Height = 400, FileSize = 1024 }];
+
+        await scenario.Receiver.ProcessBatchAsync([photo], CancellationToken.None);
+
+        BotIncomingOperation operation = Assert.Single(scenario.RegisteredOperations);
+        Assert.Multiple(
+            () => Assert.Equal("photo", operation.Kind),
+            () => Assert.Equal(caption, operation.Caption),
+            () => Assert.Equal("food", operation.FileId));
+    }
+
+    [Theory]
+    [InlineData("Today", 1)]
+    [InlineData("Сегодня", 1)]
+    [InlineData("7 days", 7)]
+    [InlineData("7 дней", 7)]
+    public async Task StatisticsShortcut_RegistersTheSelectedPeriod(string shortcut, int days) {
+        using var scenario = new IntakeScenario();
+
+        await scenario.Receiver.ProcessBatchAsync([MessageUpdate(10, 100, shortcut)], CancellationToken.None);
+
+        BotIncomingOperation operation = Assert.Single(scenario.RegisteredOperations);
+        Assert.Multiple(
+            () => Assert.Equal("statistics", operation.Kind),
+            () => Assert.Equal(days, operation.PeriodDays),
+            () => Assert.Equal(10, operation.MessageId),
+            () => Assert.Equal(100, operation.TelegramUserId),
+            () => Assert.Empty(scenario.TelegramMethods));
+    }
+
     [Theory]
     [InlineData("Authentication.TelegramNotLinked", false)]
     [InlineData("Authentication.InvalidToken", false)]
@@ -159,7 +195,7 @@ public sealed class TelegramIntakeDeliveryTests {
             () => Assert.Equal(new[] { "register:100", "answerCallbackQuery", "register:200" }, scenario.Events, StringComparer.Ordinal));
     }
 
-    private static Update MessageUpdate(int id, long userId, string text) => new() {
+    private static Update MessageUpdate(int id, long userId, string? text) => new() {
         Id = id,
         Message = new Message {
             Id = id,
@@ -195,6 +231,7 @@ public sealed class TelegramIntakeDeliveryTests {
         public CancellationTokenSource? CancelRegistration { get; init; }
         public List<long> RegistrationAttempts { get; } = [];
         public List<long> PersistedUsers { get; } = [];
+        public List<BotIncomingOperation> RegisteredOperations { get; } = [];
         public List<string> TelegramMethods { get; } = [];
         public List<string> Events { get; } = [];
         public DurableTelegramReceiver Receiver { get; }
@@ -233,6 +270,7 @@ public sealed class TelegramIntakeDeliveryTests {
                 }
             }
             PersistedUsers.Add(userId);
+            RegisteredOperations.Add(JsonSerializer.Deserialize<BotIncomingOperation>(body.RootElement.GetProperty("payload").GetString()!)!);
             Events.Add(string.Create(CultureInfo.InvariantCulture, $"register:{userId}"));
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { operationId = Guid.NewGuid() }) };
         }

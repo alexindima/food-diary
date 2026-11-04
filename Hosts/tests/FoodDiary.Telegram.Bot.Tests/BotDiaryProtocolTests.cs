@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using FoodDiary.Telegram.Bot.Operations;
 using Microsoft.Extensions.Options;
 
@@ -8,6 +9,29 @@ namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BotDiaryProtocolTests {
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task PremiumCheck_UsesTheAuthenticatedBillingOverview(bool premium) {
+        using var handler = new Handler(request => {
+            Assert.Equal(HttpMethod.Get, request.Method);
+            Assert.Equal("https://diary.example/api/v1/billing/overview", request.RequestUri?.AbsoluteUri);
+            Assert.Equal("Bearer token", request.Headers.Authorization?.ToString());
+            return Json(new { IsPremium = premium });
+        });
+        using var http = new HttpClient(handler);
+
+        Assert.Equal(premium, await Client(http).HasPremiumAsync("token", CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task PremiumCheck_MissingFlagDoesNotLookLikeAFreeAccount() {
+        using var handler = new Handler(_ => Json(new { premiumTrialActive = false }));
+        using var http = new HttpClient(handler);
+
+        await Assert.ThrowsAsync<JsonException>(() => Client(http).HasPremiumAsync("token", CancellationToken.None));
+    }
+
     [Theory]
     [InlineData("{}")]
     [InlineData("{\"accessToken\":null,\"user\":{\"id\":\"11111111-1111-1111-1111-111111111111\"}}")]
@@ -88,6 +112,28 @@ public sealed class BotDiaryProtocolTests {
         using var http = new HttpClient(handler);
         await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), CancellationToken.None));
         await Assert.ThrowsAsync<InvalidDataException>(() => Client(http).UndoRecognizedMealAsync("token", new BotOperationId(Guid.NewGuid()), CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task RecognitionSummary_UsesSavedFoodNamesAndKeepsTheTelegramMessageBounded() {
+        string longName = new('я', BotMealNutrition.MaxListedItemLength + 1);
+        string[] names = ["Гречка\nс овощами", longName, "", .. Enumerable.Repeat("Курица", BotMealNutrition.MaxListedItems + 2)];
+        using var handler = new Handler(_ => Json(new {
+            id = Guid.NewGuid(), imageAssetId = Guid.NewGuid(), status = "Succeeded",
+            nutrition = new { calories = 400, items = names.Select(name => new { name }) },
+        }));
+        using var http = new HttpClient(handler);
+
+        BotRecognitionJob recognition = await Client(http).GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.NotNull(recognition.Nutrition);
+        string text = recognition.Nutrition.Format(russian: true);
+        Assert.Multiple(
+            () => Assert.Equal(BotMealNutrition.MaxListedItems, text.Split('\n').Count(line => line.StartsWith("• ", StringComparison.Ordinal))),
+            () => Assert.Contains("Гречка с овощами", text, StringComparison.Ordinal),
+            () => Assert.DoesNotContain(longName, text, StringComparison.Ordinal),
+            () => Assert.Contains("Остальные позиции в записи", text, StringComparison.Ordinal),
+            () => Assert.Contains("400 ккал", text, StringComparison.Ordinal));
     }
 
     [Theory]

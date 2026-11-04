@@ -5,6 +5,7 @@ using FoodDiary.Telegram.Bot.Images;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoodDiary.Telegram.Bot.Operations;
@@ -95,11 +96,12 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
     }
 
     private async Task SendFailureAsync(BotIncomingOperation incoming, string? errorCode, CancellationToken cancellationToken) {
-        string message = incoming.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true
+        bool russian = BotMenu.IsRussian(incoming.Language);
+        string message = russian
             ? "Не удалось добавить еду по фото. Откройте дневник, чтобы проверить доступ к распознаванию или добавить еду вручную."
             : "Could not add food from this photo. Open your diary to check recognition access or add food manually.";
-        if (errorCode is "Ai.ConsentRequired" or "Ai.QuotaExceeded") {
-            message = BotRecognitionFailure.Format(errorCode, BotMenu.IsRussian(incoming.Language));
+        if (errorCode is "Ai.ConsentRequired" or "Ai.QuotaExceeded" or BotRecognitionFailure.PremiumRequired) {
+            message = BotRecognitionFailure.Format(errorCode, russian);
         }
         if (string.Equals(incoming.Kind, "meal-undo", StringComparison.Ordinal)) {
             message = incoming.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true
@@ -121,8 +123,11 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 ? "Не удалось продолжить обработку. Проверьте дневник перед повторной отправкой: запись могла уже сохраниться."
                 : "Processing could not continue. Check your diary before sending again: the entry may already have been saved.";
         }
+        InlineKeyboardMarkup? markup = errorCode is BotRecognitionFailure.PremiumRequired
+            ? BotMenu.Open(options.Value, incoming.Language, BotMenu.MealPath, russian ? "Добавить вручную" : "Add manually")
+            : null;
         try {
-            await bot.SendMessage(incoming.ChatId, message, cancellationToken: cancellationToken);
+            await bot.SendMessage(incoming.ChatId, message, replyMarkup: markup, cancellationToken: cancellationToken);
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // A blocked bot cannot deliver the terminal notice; the operation must still stop.
         }
@@ -151,6 +156,16 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
 
     private async Task<BotPhotoCheckpoint> AdvanceImageAsync(BotDiaryClient diary, string token, BotOperationId operationId,
         BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
+        if (!checkpoint.PhotoPremiumApproved && checkpoint.Stage is "received" or "upload" or "image-ready") {
+            if (!await diary.HasPremiumAsync(token, cancellationToken)) {
+                return checkpoint with { Stage = "failed", Upload = null, ErrorCode = BotRecognitionFailure.PremiumRequired };
+            }
+            checkpoint = checkpoint with { PhotoPremiumApproved = true };
+            if (checkpoint.Stage is "image-ready") {
+                // Older operations can resume here. Persist access before submitting an AI job that may outlive this attempt.
+                return checkpoint;
+            }
+        }
         var downloader = new TelegramImageDownloader(bot);
         switch (checkpoint.Stage) {
             case "recognition-ready": {
@@ -168,7 +183,8 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             case "upload": {
                     BotImageUpload upload = checkpoint.Upload ?? throw new InvalidDataException("Missing upload checkpoint.");
                     if (upload.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime) {
-                        return new BotPhotoCheckpoint(UploadAttempt: checked(checkpoint.UploadAttempt + 1));
+                        return new BotPhotoCheckpoint(UploadAttempt: checked(checkpoint.UploadAttempt + 1),
+                            PhotoPremiumApproved: checkpoint.PhotoPremiumApproved);
                     }
                     byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken);
                     await diary.UploadAsync(upload, incoming.ContentType!, content, cancellationToken);
@@ -208,7 +224,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 $"{(russian ? "Вода добавлена" : "Water added")}: {incoming.AmountMl} {(russian ? "мл" : "ml")}.");
         } else if (string.Equals(checkpoint.Stage, "meal-saved", StringComparison.Ordinal)) {
             BotRecognizedMeal meal = checkpoint.SavedMeal ?? throw new InvalidDataException("Missing saved meal receipt.");
-            message = russian ? "Еда добавлена в дневник." : "Food added to your diary.";
+            message = russian ? "Приём пищи сохранён в дневнике." : "Meal saved to your diary.";
             if (!meal.Undone && checkpoint.Nutrition is not null) {
                 message += "\n\n" + checkpoint.Nutrition.Format(russian);
             }
@@ -225,7 +241,8 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             };
         }
         try {
-            await bot.SendMessage(incoming.ChatId, message, replyMarkup: keyboard, cancellationToken: cancellationToken);
+            LinkPreviewOptions? preview = checkpoint.Stage is "meal-saved" ? new LinkPreviewOptions { IsDisabled = true } : null;
+            await bot.SendMessage(incoming.ChatId, message, replyMarkup: keyboard, linkPreviewOptions: preview, cancellationToken: cancellationToken);
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // Business completion remains durable even if Telegram delivery is blocked.
         }

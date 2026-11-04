@@ -16,6 +16,9 @@ internal enum {{classname}} {
 {{^isEnum}}
 internal sealed class {{classname}} {
 {{#vars}}
+{{#vendorExtensions.x-bot-required}}
+    [JsonRequired]
+{{/vendorExtensions.x-bot-required}}
     [JsonPropertyName("{{baseName}}")]
     public {{#vendorExtensions.x-bot-decimal}}decimal{{/vendorExtensions.x-bot-decimal}}{{^vendorExtensions.x-bot-decimal}}{{{dataType}}}{{/vendorExtensions.x-bot-decimal}}{{#isNullable}}?{{/isNullable}} {{name}} { get; init; } = default!;
 {{/vars}}

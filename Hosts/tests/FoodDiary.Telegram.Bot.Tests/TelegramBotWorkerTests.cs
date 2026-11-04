@@ -10,6 +10,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Requests.Abstractions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 using FoodDiary.Telegram.Bot.Operations;
 
 namespace FoodDiary.Telegram.Bot.Tests;
@@ -352,8 +353,10 @@ public sealed class TelegramBotWorkerTests {
         Assert.Empty(httpFactory.Requests);
     }
 
-    [Fact]
-    public async Task HandleUpdateAsync_StartWhenUserIsLinked_SendsQuickActions() {
+    [Theory]
+    [InlineData("en", "Quick actions:", "💧 Water")]
+    [InlineData("ru", "Быстрые действия:", "💧 Вода")]
+    public async Task HandleUpdateAsync_StartWhenUserIsLinked_SendsPersistentQuickActions(string language, string greeting, string waterLabel) {
         var botClient = new RecordingTelegramBotClient();
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new {
@@ -363,11 +366,45 @@ public sealed class TelegramBotWorkerTests {
         });
         TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
 
-        await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate("/start", telegramUserId: 100));
+        Update update = CreateMessageUpdate("/start", telegramUserId: 100);
+        update.Message!.From!.LanguageCode = language;
+        await InvokeHandleUpdateAsync(worker, botClient, update);
 
         object request = Assert.Single(botClient.Requests);
-        Assert.Equal("Quick actions:", GetPropertyValue<string>(request, "Text"));
-        Assert.NotNull(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        ReplyKeyboardMarkup keyboard = Assert.IsType<ReplyKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        Assert.Multiple(
+            () => Assert.Equal(greeting, GetPropertyValue<string>(request, "Text")),
+            () => Assert.True(keyboard.IsPersistent),
+            () => Assert.Contains(keyboard.Keyboard.SelectMany(row => row), button => string.Equals(button.Text, waterLabel, StringComparison.Ordinal)));
+    }
+
+    [Theory]
+    [InlineData("🍽 Добавить еду", "/meals/add")]
+    [InlineData("📊 Дашборд", "/dashboard")]
+    [InlineData("⚙️ Настройки", "/profile")]
+    public async Task HandleUpdateAsync_MiniAppShortcut_SendsInlineLaunchForTheDestination(string shortcut, string path) {
+        var botClient = new RecordingTelegramBotClient();
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+
+        await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate(shortcut, telegramUserId: 100));
+
+        object request = Assert.Single(botClient.Requests);
+        InlineKeyboardMarkup keyboard = Assert.IsType<InlineKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        InlineKeyboardButton button = Assert.Single(Assert.Single(keyboard.InlineKeyboard));
+        Assert.Equal("https://app.example.test" + path, button.WebApp?.Url);
+    }
+
+    [Fact]
+    public async Task HandleUpdateAsync_WaterShortcut_SendsTheExistingAmountChoices() {
+        var botClient = new RecordingTelegramBotClient();
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+
+        await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate("💧 Вода", telegramUserId: 100));
+
+        object request = Assert.Single(botClient.Requests);
+        InlineKeyboardMarkup keyboard = Assert.IsType<InlineKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        Assert.Equal(new[] { "water:250", "water:500" },
+            Assert.Single(keyboard.InlineKeyboard).Select(button => button.CallbackData), StringComparer.Ordinal);
     }
 
     [Theory]

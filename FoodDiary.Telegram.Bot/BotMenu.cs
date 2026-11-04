@@ -3,7 +3,48 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace FoodDiary.Telegram.Bot;
 
 internal static class BotMenu {
+    internal const string DashboardPath = "/dashboard";
+    internal const string MealPath = "/meals/add";
+    internal const string SettingsPath = "/profile";
+
+    private static readonly Shortcut WaterShortcut = new("/water", "💧 Water", "💧 Вода");
+    private static readonly Shortcut MealShortcut = new("/meal", "🍽 Add meal", "🍽 Добавить еду");
+    private static readonly Shortcut DashboardShortcut = new("/dashboard", "📊 Dashboard", "📊 Дашборд");
+    private static readonly Shortcut SettingsShortcut = new("/settings", "⚙️ Settings", "⚙️ Настройки");
+    private static readonly Shortcut TodayShortcut = new("/today", "Today", "Сегодня");
+    private static readonly Shortcut WeekShortcut = new("/week", "7 days", "7 дней");
+    private static readonly Shortcut HelpShortcut = new("/help", "Help", "Помощь");
+    private static readonly Shortcut[] Shortcuts = [
+        WaterShortcut, MealShortcut, DashboardShortcut, SettingsShortcut, TodayShortcut, WeekShortcut, HelpShortcut,
+    ];
+
     internal static bool IsRussian(string? language) => language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true;
+
+    internal static string? ResolveShortcut(string? text) {
+        foreach (Shortcut shortcut in Shortcuts) {
+            if (string.Equals(text, shortcut.English, StringComparison.Ordinal) ||
+                string.Equals(text, shortcut.Russian, StringComparison.Ordinal)) {
+                return shortcut.Command;
+            }
+        }
+        return null;
+    }
+
+    internal static ReplyKeyboardMarkup QuickActions(TelegramBotOptions options, string? language) {
+        bool russian = IsRussian(language);
+        var rows = new List<IEnumerable<KeyboardButton>>();
+        if (BotUriHelper.NormalizeWebAppUrl(options.WebAppUrl) is not null) {
+            rows.Add([MealShortcut.Button(russian), WaterShortcut.Button(russian)]);
+            rows.Add([DashboardShortcut.Button(russian), SettingsShortcut.Button(russian)]);
+        } else {
+            rows.Add([WaterShortcut.Button(russian)]);
+        }
+        if (options.OperationsEnabled) {
+            rows.Add([TodayShortcut.Button(russian), WeekShortcut.Button(russian)]);
+        }
+        rows.Add([HelpShortcut.Button(russian)]);
+        return new ReplyKeyboardMarkup(rows) { ResizeKeyboard = true, IsPersistent = true };
+    }
 
     internal static string Help(string? language, bool operationsEnabled) {
         bool ru = IsRussian(language);
@@ -14,8 +55,8 @@ internal static class BotMenu {
             return basic;
         }
         return basic + (ru
-            ? "\n/today — сегодня\n/week — 7 дней\n\nОтправьте одно фото еды. После успешного распознавания приём пищи сохранится автоматически; в ответе будет кнопка отмены. Подпись к фото поможет уточнить состав. Редактирование доступно в дневнике."
-            : "\n/today — today\n/week — 7 days\n\nSend one food photo. After successful recognition, the meal is saved automatically with an Undo button in the reply. Add a caption to describe the food. Edit entries in your diary.");
+            ? "\n/today — сегодня\n/week — 7 дней\n\nС подпиской Food Diary Premium можно отправить одно фото еды. После успешного распознавания приём пищи сохранится автоматически. В ответе будет кнопка отмены. Подпись к фото поможет уточнить состав. Редактирование доступно в дневнике."
+            : "\n/today — today\n/week — 7 days\n\nWith Food Diary Premium, send one food photo. After successful recognition, the meal is saved automatically with an Undo button in the reply. Add a caption to describe the food. Edit entries in your diary.");
     }
 
     internal static InlineKeyboardMarkup Water(string? language) => new(
@@ -37,17 +78,22 @@ internal static class BotMenu {
         string? url = BotUriHelper.NormalizeWebAppUrl(options.WebAppUrl);
         if (url is not null) {
             rows.Add([
-                InlineKeyboardButton.WithWebApp(ru ? "Открыть дневник" : "Open diary", url),
-                InlineKeyboardButton.WithWebApp(ru ? "Настройки" : "Settings", $"{url}/profile"),
+                InlineKeyboardButton.WithWebApp(ru ? "Дашборд" : "Dashboard", url + DashboardPath),
+                InlineKeyboardButton.WithWebApp(ru ? "Создать приём пищи" : "Create meal", url + MealPath),
             ]);
+            rows.Add([InlineKeyboardButton.WithWebApp(ru ? "Настройки" : "Settings", url + SettingsPath)]);
         }
         rows.Add([InlineKeyboardButton.WithCallbackData(ru ? "Помощь" : "Help", "menu:help")]);
         return new InlineKeyboardMarkup(rows);
     }
 
-    internal static InlineKeyboardMarkup? Open(TelegramBotOptions options, string? language, string path) {
+    internal static InlineKeyboardMarkup? Open(TelegramBotOptions options, string? language, string path, string? buttonText = null) {
         string? url = BotUriHelper.NormalizeWebAppUrl(options.WebAppUrl);
         return url is null ? null : new InlineKeyboardMarkup(
-            InlineKeyboardButton.WithWebApp(IsRussian(language) ? "Открыть FoodDiary" : "Open FoodDiary", url + path));
+            InlineKeyboardButton.WithWebApp(buttonText ?? (IsRussian(language) ? "Открыть FoodDiary" : "Open FoodDiary"), url + path));
+    }
+
+    private readonly record struct Shortcut(string Command, string English, string Russian) {
+        public KeyboardButton Button(bool russian) => new(russian ? Russian : English);
     }
 }

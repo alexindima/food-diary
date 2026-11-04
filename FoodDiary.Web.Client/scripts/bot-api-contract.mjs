@@ -20,5 +20,13 @@ export function botApiContract(source, operations) {
         if (property?.type !== 'number') throw new Error(`Bot nutrition number contract changed: ${key}`);
         property['x-bot-decimal'] = true;
     }
+    const billingOverview = contract.components.schemas.BillingOverviewHttpResponse;
+    if (billingOverview) {
+        const premium = billingOverview.properties?.isPremium;
+        if (premium?.type !== 'boolean' || premium.nullable === true) {
+            throw new Error('Bot billing contract must provide a boolean isPremium field.');
+        }
+        premium['x-bot-required'] = true;
+    }
     return contract;
 }

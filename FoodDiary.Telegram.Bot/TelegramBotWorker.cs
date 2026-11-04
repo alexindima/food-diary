@@ -115,9 +115,12 @@ public sealed class TelegramBotWorker(
             if (image is not null) {
                 operation = new BotIncomingOperation("photo", message.Chat.Id, sender.Id, message.Id, message.Date,
                     sender.LanguageCode, image.FileId, image.ContentType, message.Caption);
-            } else if (message.Text is "/today" or "/week") {
-                operation = new BotIncomingOperation("statistics", message.Chat.Id, sender.Id, message.Id, message.Date,
-                    sender.LanguageCode, PeriodDays: string.Equals(message.Text, "/today", StringComparison.Ordinal) ? 1 : 7);
+            } else {
+                string? command = BotMenu.ResolveShortcut(message.Text) ?? message.Text;
+                if (command is "/today" or "/week") {
+                    operation = new BotIncomingOperation("statistics", message.Chat.Id, sender.Id, message.Id, message.Date,
+                        sender.LanguageCode, PeriodDays: string.Equals(command, "/today", StringComparison.Ordinal) ? 1 : 7);
+                }
             }
         } else if (update.CallbackQuery is { From: { IsBot: false } actor, Message.Chat.Type: ChatType.Private } callback &&
             callback.Message.Chat.Id == actor.Id) {
@@ -171,9 +174,10 @@ public sealed class TelegramBotWorker(
         if (message?.Chat.Type != ChatType.Private) {
             return;
         }
+        string? language = message.From?.LanguageCode;
+        bool russian = BotMenu.IsRussian(language);
         _ = TelegramImageSelector.Select(message, out string? imageError);
         if (imageError is not null) {
-            bool russian = message.From?.LanguageCode?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true;
             string explanation = (imageError, russian) switch {
                 ("album", true) => "Отправьте одно фото отдельным сообщением. Альбомы пока не поддерживаются.",
                 ("album", false) => "Send one photo in a separate message. Albums are not supported yet.",
@@ -189,20 +193,34 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        switch (message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0]) {
+        switch (BotMenu.ResolveShortcut(message.Text) ?? message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0]) {
             case "/start":
-                await SendStartAsync(message.Chat.Id, message.From?.Id, message.From?.LanguageCode, cancellationToken);
+                await SendStartAsync(message.Chat.Id, message.From?.Id, language, cancellationToken);
                 return;
             case "/water":
-                await SendWaterMenuAsync(message.Chat.Id, message.From?.LanguageCode, cancellationToken);
+                await SendWaterMenuAsync(message.Chat.Id, language, cancellationToken);
+                return;
+            case "/dashboard":
+                await SendWebAppShortcutAsync(message.Chat.Id, language, BotMenu.DashboardPath,
+                    russian ? "Дашборд Food Diary" : "Food Diary dashboard",
+                    russian ? "Открыть дашборд" : "Open dashboard", cancellationToken);
+                return;
+            case "/meal":
+                string text = russian ? "Добавьте приём пищи в Food Diary." : "Add a meal in Food Diary.";
+                if (_options.OperationsEnabled) {
+                    text += russian ? " С Premium можно отправить фото еды для автоматического распознавания."
+                        : " With Premium, you can send a food photo for automatic recognition.";
+                }
+                await SendWebAppShortcutAsync(message.Chat.Id, language, BotMenu.MealPath, text,
+                    russian ? "Создать приём пищи" : "Create meal", cancellationToken);
                 return;
             case "/settings":
                 await botClient.SendMessage(message.Chat.Id,
-                    BotMenu.IsRussian(message.From?.LanguageCode) ? "Настройки аккаунта:" : "Account settings:",
-                    replyMarkup: BotMenu.Open(_options, message.From?.LanguageCode, "/profile"), cancellationToken: cancellationToken);
+                    russian ? "Настройки аккаунта:" : "Account settings:",
+                    replyMarkup: BotMenu.Open(_options, language, BotMenu.SettingsPath), cancellationToken: cancellationToken);
                 return;
             default:
-                await SendHelpAsync(message.Chat.Id, message.From?.LanguageCode, cancellationToken);
+                await SendHelpAsync(message.Chat.Id, language, cancellationToken);
                 return;
         }
     }
@@ -210,7 +228,9 @@ public sealed class TelegramBotWorker(
     private async Task SendStartAsync(long chatId, long? telegramUserId, string? language, CancellationToken cancellationToken) {
         bool isLinked = await IsLinkedAsync(telegramUserId, cancellationToken);
         if (!isLinked) {
-            string notLinkedText = BotMenu.IsRussian(language) ? "Откройте FoodDiary, чтобы войти или создать аккаунт через Telegram." : "To use the bot, open the WebApp once and log in or register.";
+            string notLinkedText = BotMenu.IsRussian(language)
+                ? "Откройте FoodDiary, чтобы войти или создать аккаунт через Telegram. После входа отправьте /start, чтобы открыть меню."
+                : "To use the bot, open the WebApp once and log in or register. After signing in, send /start to open the menu.";
             InlineKeyboardMarkup? markup = BotMenu.Open(_options, language, "/auth/telegram");
             await botClient.SendMessage(
                 chatId,
@@ -221,12 +241,20 @@ public sealed class TelegramBotWorker(
         }
 
         string text = BotMenu.IsRussian(language) ? "Быстрые действия:" : "Quick actions:";
-        InlineKeyboardMarkup keyboard = BotMenu.Actions(_options, language);
+        ReplyKeyboardMarkup keyboard = BotMenu.QuickActions(_options, language);
         await botClient.SendMessage(
             chatId,
             text,
             replyMarkup: keyboard,
             cancellationToken: cancellationToken);
+    }
+
+    private Task SendWebAppShortcutAsync(long chatId, string? language, string path, string text, string buttonText,
+        CancellationToken cancellationToken) {
+        InlineKeyboardMarkup? markup = BotMenu.Open(_options, language, path, buttonText);
+        return markup is null
+            ? SendHelpAsync(chatId, language, cancellationToken)
+            : botClient.SendMessage(chatId, text, replyMarkup: markup, cancellationToken: cancellationToken);
     }
 
     private Task SendHelpAsync(long chatId, string? language, CancellationToken cancellationToken) {
@@ -283,8 +311,8 @@ public sealed class TelegramBotWorker(
             await SendWaterMenuAsync(chatId, language, cancellationToken);
         } else if (string.Equals(callback.Data, "menu:food", StringComparison.Ordinal) && _options.OperationsEnabled) {
             await botClient.SendMessage(chatId, BotMenu.IsRussian(language)
-                ? "Отправьте одно фото еды. После распознавания запись сохранится автоматически. При необходимости нажмите «Отменить» в ответе."
-                : "Send one food photo. The entry will be saved automatically after recognition. Use Undo in the reply if needed.",
+                ? "С подпиской Food Diary Premium можно отправить одно фото еды. После распознавания запись сохранится автоматически. При необходимости нажмите «Отменить» в ответе."
+                : "With Food Diary Premium, send one food photo. The entry will be saved automatically after recognition. Use Undo in the reply if needed.",
                 cancellationToken: cancellationToken);
         } else {
             await SendHelpAsync(chatId, language, cancellationToken);

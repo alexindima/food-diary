@@ -39,6 +39,12 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         return reply.AccessToken;
     }
 
+    internal async Task<bool> HasPremiumAsync(string token, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotBillingApi(CreateTransport()).GetOverviewAsync("1",
+            new BotApiRequestContext(token), cancellationToken);
+        return (await ReadAsync<BillingOverviewHttpResponse>(response, cancellationToken)).IsPremium;
+    }
+
     internal async Task<BotImageUpload> RequestUploadAsync(string token, BotOperationId operationId, int attempt, string contentType,
         int sizeBytes, CancellationToken cancellationToken) {
         string extension = contentType switch { "image/png" => "png", "image/webp" => "webp", _ => "jpg" };

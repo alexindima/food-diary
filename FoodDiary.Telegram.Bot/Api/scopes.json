@@ -36,6 +36,12 @@
     "path": "/api/v{version}/statistics/diary-summary"
   },
   {
+    "method": "GET",
+    "name": "BotBilling",
+    "operationId": "GetOverview",
+    "path": "/api/v{version}/billing/overview"
+  },
+  {
     "method": "POST",
     "name": "BotImages",
     "operationId": "RequestUpload",

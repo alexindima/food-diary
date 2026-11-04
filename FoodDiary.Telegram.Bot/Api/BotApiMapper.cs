@@ -15,7 +15,22 @@ internal static class BotApiMapper {
 
     internal static BotRecognitionJob Recognition(FoodRecognitionJobHttpResponse value) => new(
         new BotRecognitionId(value.Id), new BotImageAssetId(value.ImageAssetId), value.Status, value.ErrorCode, value.NutritionErrorCode,
-        value.Nutrition is null ? null : new BotMealNutrition(value.Nutrition.Calories, value.Nutrition.Protein, value.Nutrition.Fat, value.Nutrition.Carbs));
+        RecognitionNutrition(value.Nutrition));
+
+    private static BotMealNutrition? RecognitionNutrition(FoodNutritionHttpResponse? nutrition) {
+        if (nutrition is null) {
+            return null;
+        }
+        string[]? names = nutrition.Items?
+            .Select(item => item?.Name)
+            .OfType<string>()
+            .Select(name => name.Trim().ReplaceLineEndings(" "))
+            .Where(name => name.Length is > 0 and <= BotMealNutrition.MaxListedItemLength)
+            .Take(BotMealNutrition.MaxListedItems + 1)
+            .ToArray();
+        return new BotMealNutrition(nutrition.Calories, nutrition.Protein, nutrition.Fat, nutrition.Carbs,
+            names is { Length: > 0 } ? names : null);
+    }
 
     internal static BotRecognizedMeal Meal(RecognizedMealCreationHttpResponse value) => new(new BotOperationId(value.OperationId), new BotMealId(value.MealId), value.UndoUntilUtc, value.Undone);
 

@@ -1184,25 +1184,20 @@
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c7cfdd930206610c1f69f00b5e8c204d53d0e74bf4d72f79b018e890ec423544",
-          "reviewReason": "Reviewed the lifecycle update recording the explicit owner choice to offer whole-account deletion after withdrawal, with archive and independent confirmation. It preserves the delayed soft-delete lifecycle and states that cancellation leaves consent withdrawn. Optional deletion does not justify retention: erasure/independent grounds, historical retained content and real PostgreSQL/operational/legal checks remain release blockers."
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
           "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
           "reviewReason": "Reviewed the Node runtime-owner diff and facade snapshot changes. No private payload, retention, transfer or telemetry surface was added; the graph remains a local derived reader/writer system with current source hashes. Explicit stale and mutation failures remain protected by isolation tests."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "8e62cb84cd1d024b79a5ab48f8da9be2ad10552906bd469bbc1807ed9ecb351a",
-          "reviewReason": "Reviewed the lifecycle update recording the explicit owner choice to offer whole-account deletion after withdrawal, with archive and independent confirmation. It preserves the delayed soft-delete lifecycle and states that cancellation leaves consent withdrawn. Optional deletion does not justify retention: erasure/independent grounds, historical retained content and real PostgreSQL/operational/legal checks remain release blockers."
+          "sha256": "56cb819edb13c54534bca7155ca24b1ec03d2112dfc9e20fbaf02e4ee0f717d7",
+          "reviewReason": "Verified private chat and linked-account scoping, the Premium check before image download, existing AI consent, the bounded reply contents, and protected operation cleanup against TelegramOperationWorker, TelegramOperationStore and ADR 0037."
         }
       ],
-      "reason": "Reviewed the lifecycle update recording the explicit owner choice to offer whole-account deletion after withdrawal, with archive and independent confirmation. It preserves the delayed soft-delete lifecycle and states that cancellation leaves consent withdrawn. Optional deletion does not justify retention: erasure/independent grounds, historical retained content and real PostgreSQL/operational/legal checks remain release blockers.",
+      "reason": "Verified private chat and linked-account scoping, the Premium check before image download, existing AI consent, the bounded reply contents, and protected operation cleanup against TelegramOperationWorker, TelegramOperationStore and ADR 0037.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-02T01:30:10.5830164Z"
+      "gitHead": "ff707fefdd12a9f35da330d58479e2b74adb6f68",
+      "reviewedAtUtc": "2026-11-04T11:00:42.0675176Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
