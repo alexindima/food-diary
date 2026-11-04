@@ -50,6 +50,7 @@ public sealed class SecurityAccessRegressionIntegrationTests(ApiWebApplicationFa
     [InlineData(true)]
     public async Task RecommendationComments_AfterEitherSideDisconnects_RejectProviderButPreserveClientHistory(bool providerDisconnects) {
         TestUser client = await RegisterAsync(verify: true);
+        await client.Client.GrantHealthTrackingConsentAsync();
         TestUser provider = await RegisterAsync(verify: true);
         using HttpResponseMessage invited = await client.Client.PostAsJsonAsync("/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(provider.Email, new DietologistPermissionsHttpRequest(ShareMeals: true)));
