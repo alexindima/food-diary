@@ -119,7 +119,9 @@ public sealed class BotDiaryProtocolTests {
         string longName = new('я', BotMealNutrition.MaxListedItemLength + 1);
         string[] names = ["Гречка\nс овощами", longName, "", .. Enumerable.Repeat("Курица", BotMealNutrition.MaxListedItems + 2)];
         using var handler = new Handler(_ => Json(new {
-            id = Guid.NewGuid(), imageAssetId = Guid.NewGuid(), status = "Succeeded",
+            id = Guid.NewGuid(),
+            imageAssetId = Guid.NewGuid(),
+            status = "Succeeded",
             nutrition = new { calories = 400, items = names.Select(name => new { name }) },
         }));
         using var http = new HttpClient(handler);

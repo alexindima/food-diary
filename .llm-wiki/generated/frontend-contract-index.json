@@ -7,7 +7,7 @@
     "outputs": 559,
     "apiCalls": 328,
     "templatesWithTranslations": 376,
-    "translationKeys": 2250,
+    "translationKeys": 2251,
     "consumerEdges": 1333,
     "consumedComponents": 330,
     "unconsumedComponents": 190
@@ -25780,6 +25780,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/health-consent-dialog/health-consent-dialog.html",
       "keys": [
+        "PRIVACY_CHOICES.ACCEPT",
         "PRIVACY_CHOICES.DECLINE",
         "PRIVACY_CHOICES.HEALTH_AGREEMENT",
         "PRIVACY_CHOICES.HEALTH_TEXT",

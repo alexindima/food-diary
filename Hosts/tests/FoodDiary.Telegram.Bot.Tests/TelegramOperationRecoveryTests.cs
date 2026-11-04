@@ -72,7 +72,9 @@ public sealed class TelegramOperationRecoveryTests {
             }
             if (path.StartsWith("/api/v1/ai/food/recognitions/", StringComparison.Ordinal)) {
                 return BotOperationScenario.Json(new {
-                    id = scenario.Id, imageAssetId = scenario.ImageId, status = "Succeeded",
+                    id = scenario.Id,
+                    imageAssetId = scenario.ImageId,
+                    status = "Succeeded",
                     nutrition = new { calories = 400, protein = 10, fat = 20, carbs = 30, items = new[] { new { name = "Гречка" }, new { name = "Курица" } } },
                 });
             }

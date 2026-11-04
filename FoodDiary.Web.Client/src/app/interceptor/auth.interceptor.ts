@@ -88,9 +88,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     const forceReview = req.method !== 'GET' || Boolean(privacy.state()?.healthAcceptedAtUtc);
                     // This rejection happens before the action is applied. Replay the same request at most once.
                     return from(privacy.ensureHealthConsentAsync(forceReview)).pipe(
-                        switchMap(allowed =>
-                            allowed && this.isCurrentSession(session) ? next.handle(request) : throwError(() => error),
-                        ),
+                        switchMap(allowed => (allowed && this.isCurrentSession(session) ? next.handle(request) : throwError(() => error))),
                     );
                 }
                 if (this.shouldRevalidatePermissions(error, req.url, session)) {

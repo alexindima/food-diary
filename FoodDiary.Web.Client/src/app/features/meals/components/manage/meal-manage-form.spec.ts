@@ -196,9 +196,11 @@ describe('MealManageFormComponent health consent', () => {
         const privacy = TestBed.inject(PrivacyConsentFacade);
         let grantConsent: (allowed: boolean) => void = () => {};
         const review = vi.spyOn(privacy, 'ensureHealthConsentAsync');
-        review.mockReturnValueOnce(new Promise(resolve => {
-            grantConsent = resolve;
-        }));
+        review.mockReturnValueOnce(
+            new Promise(resolve => {
+                grantConsent = resolve;
+            }),
+        );
 
         const submission = component['onSubmitAsync']();
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
