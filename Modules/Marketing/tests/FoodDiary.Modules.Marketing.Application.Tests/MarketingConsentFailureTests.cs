@@ -13,6 +13,38 @@ namespace FoodDiary.Modules.Marketing.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingConsentFailureTests {
+    [Theory]
+    [InlineData("page_landing")]
+    [InlineData("signup_completed")]
+    public async Task DisabledAttribution_DoesNotRecordClientEventOrConsent(string eventType) {
+        IMarketingAttributionEventRepository repository = Substitute.For<IMarketingAttributionEventRepository>();
+        IUserMarketingConsentRecorder recorder = Substitute.For<IUserMarketingConsentRecorder>();
+        DateTime now = DateTime.UtcNow;
+        var command = new RecordMarketingAttributionCommand(eventType, now.ToString("O"),
+            string.Equals(eventType, "signup_completed", StringComparison.Ordinal) ? UserId.New() : null,
+            new AnonymousVisitorId("owned-visitor"), new MarketingSessionId("owned-session"), "/",
+            ReferrerHost: null, UtmSource: "campaign", UtmMedium: null, UtmCampaign: null, UtmContent: null,
+            UtmTerm: null, BuildVersion: null, Guid.NewGuid(), PrivacyNoticeVersions.Current, now.AddMinutes(-1));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder, new(Enabled: false));
+
+        ResultAssert.Success(await handler.Handle(command, CancellationToken.None));
+
+        Assert.Empty(repository.ReceivedCalls());
+        Assert.Empty(recorder.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task DisabledAttribution_DoesNotReadConsentOrRecordPremiumConversion() {
+        IMarketingAttributionEventRepository repository = Substitute.For<IMarketingAttributionEventRepository>();
+        IUserPrivacyStateReader privacy = Substitute.For<IUserPrivacyStateReader>();
+        var handler = new RecordPremiumConversionCommandHandler(repository, repository, TimeProvider.System, privacy, new(Enabled: false));
+
+        await handler.Handle(new RecordPremiumConversionCommand(UserId.New().Value), CancellationToken.None);
+
+        Assert.Empty(repository.ReceivedCalls());
+        Assert.Empty(privacy.ReceivedCalls());
+    }
+
     [Fact]
     public async Task SignupConsentFailure_PropagatesToTheCallerOwnedTransaction() {
         var owner = UserId.New();
@@ -30,7 +62,7 @@ public sealed class MarketingConsentFailureTests {
             UtmCampaign: null, UtmContent: null, UtmTerm: null, BuildVersion: null,
             Guid.NewGuid(), PrivacyNoticeVersions.Current, now.AddMinutes(-1));
 
-        Result result = await new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder)
+        Result result = await new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder, new(Enabled: true))
             .Handle(command, CancellationToken.None);
 
         Assert.Equal(failure, ResultAssert.Failure(result));
@@ -47,7 +79,7 @@ public sealed class MarketingConsentFailureTests {
             PrivacyNoticeVersions.Current, DateTime.UtcNow, DateTime.UtcNow, MarketingAcceptedAtUtc: null));
         IMarketingAttributionEventRepository repository = Substitute.For<IMarketingAttributionEventRepository>();
 
-        await new RecordPremiumConversionCommandHandler(repository, repository, TimeProvider.System, privacy)
+        await new RecordPremiumConversionCommandHandler(repository, repository, TimeProvider.System, privacy, new(Enabled: true))
             .Handle(new RecordPremiumConversionCommand(owner.Value), CancellationToken.None);
 
         Assert.Empty(repository.ReceivedCalls());

@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2806,
-    "symbols": 882,
+    "typescriptFiles": 2811,
+    "symbols": 883,
     "routes": 111,
     "features": 46,
     "specs": 854,
     "localeFiles": 5,
     "roles": {
-      "Component": 510,
+      "Component": 511,
       "Directive": 20,
       "Facade": 91,
       "Other": 41,
@@ -1179,6 +1179,7 @@
         "ActiveSessionsService",
         "ChangePasswordDialogComponent",
         "PasswordSuccessDialogComponent",
+        "PrivacyMarketingSettingsComponent",
         "PrivacySettingsComponent",
         "ProfileDietologistFacade",
         "ProfileManageFacade",
@@ -3202,14 +3203,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.facade.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "AiInputBarComponent",
       "role": "Component",
       "selector": "fd-ai-input-bar",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-      "line": 70
+      "line": 71
     },
     {
       "name": "AiPhotoDetailsPanelComponent",
@@ -3440,7 +3441,7 @@
       "role": "Component",
       "selector": "fd-health-consent-dialog",
       "path": "FoodDiary.Web.Client/src/app/components/shared/health-consent-dialog/health-consent-dialog.ts",
-      "line": 14
+      "line": 17
     },
     {
       "name": "ImageGalleryEditorComponent",
@@ -3454,14 +3455,14 @@
       "role": "Component",
       "selector": "fd-image-upload-field",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "line": 72
+      "line": 74
     },
     {
       "name": "MarketingConsentComponent",
       "role": "Component",
       "selector": "fd-marketing-consent",
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
-      "line": 26
+      "line": 27
     },
     {
       "name": "MealCardComponent",
@@ -5057,7 +5058,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 105
+      "line": 107
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -5113,7 +5114,7 @@
       "role": "Component",
       "selector": "fd-meal-photo-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "line": 95
+      "line": 97
     },
     {
       "name": "MealPhotoResultActionsComponent",
@@ -5512,7 +5513,7 @@
       "role": "Component",
       "selector": "fd-product-ai-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.ts",
-      "line": 55
+      "line": 56
     },
     {
       "name": "ProductAiRecognitionResultComponent",
@@ -5676,6 +5677,13 @@
       "line": 15
     },
     {
+      "name": "PrivacyMarketingSettingsComponent",
+      "role": "Component",
+      "selector": "fd-privacy-marketing-settings",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
+      "line": 15
+    },
+    {
       "name": "ChangePasswordDialogComponent",
       "role": "Component",
       "selector": "fd-change-password-dialog",
@@ -5729,7 +5737,7 @@
       "role": "Component",
       "selector": "fd-privacy-settings",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
-      "line": 18
+      "line": 25
     },
     {
       "name": "UserManageComparisonWidgetsComponent",
@@ -5876,7 +5884,7 @@
       "role": "Component",
       "selector": "fd-public-site-footer",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "PublicSiteHeaderComponent",
@@ -6240,7 +6248,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "RecipeListFacade",
@@ -6800,7 +6808,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
-      "line": 20
+      "line": 22
     },
     {
       "name": "FrontendObservabilityInterceptor",
@@ -6926,7 +6934,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 42
+      "line": 43
     },
     {
       "name": "ImageUploadService",
@@ -7500,7 +7508,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-consent.service.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GoalHistoryPager",
@@ -7661,7 +7669,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/privacy/privacy-consent.facade.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "AppUpdateService",
@@ -8039,137 +8047,137 @@
     {
       "path": "privacy-settings",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 83
+      "line": 71
     },
     {
       "path": "",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 90
+      "line": 78
     },
     {
       "path": "ru",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 97
+      "line": 85
     },
     {
       "path": "dashboard",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 109
+      "line": 97
     },
     {
       "path": "products",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 115
+      "line": 103
     },
     {
       "path": "meals",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 121
+      "line": 109
     },
     {
       "path": "recipes",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 127
+      "line": 115
     },
     {
       "path": "explore",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 133
+      "line": 121
     },
     {
       "path": "shopping-lists",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 138
+      "line": 126
     },
     {
       "path": "goals",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 144
+      "line": 132
     },
     {
       "path": "statistics",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 150
+      "line": 138
     },
     {
       "path": "weight-history",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 156
+      "line": 144
     },
     {
       "path": "waist-history",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 162
+      "line": 150
     },
     {
       "path": "cycle-tracking",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 168
+      "line": 156
     },
     {
       "path": "meal-plans",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 174
+      "line": 162
     },
     {
       "path": "weekly-check-in",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 180
+      "line": 168
     },
     {
       "path": "lessons",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 186
+      "line": 174
     },
     {
       "path": "gamification",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 192
+      "line": 180
     },
     {
       "path": "fasting",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 198
+      "line": 186
     },
     {
       "path": "premium",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 204
+      "line": 192
     },
     {
       "path": "profile",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 210
+      "line": 198
     },
     {
       "path": "dietologist",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 216
+      "line": 204
     },
     {
       "path": "dietologist-invitations/:invitationId",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 222
+      "line": 210
     },
     {
       "path": "recommendations",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 229
+      "line": 217
     },
     {
       "path": "privacy-policy",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 235
+      "line": 223
     },
     {
       "path": "ru/privacy-policy",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 241
+      "line": 229
     },
     {
       "path": "**",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 247
+      "line": 235
     },
     {
       "path": "auth/telegram",
@@ -8274,22 +8282,22 @@
     {
       "path": "",
       "source": "FoodDiary.Web.Client/src/app/features/meals/meals.routes.ts",
-      "line": 9
+      "line": 10
     },
     {
       "path": "",
       "source": "FoodDiary.Web.Client/src/app/features/meals/meals.routes.ts",
-      "line": 12
+      "line": 14
     },
     {
       "path": "add",
       "source": "FoodDiary.Web.Client/src/app/features/meals/meals.routes.ts",
-      "line": 14
+      "line": 19
     },
     {
       "path": ":id/edit",
       "source": "FoodDiary.Web.Client/src/app/features/meals/meals.routes.ts",
-      "line": 19
+      "line": 24
     },
     {
       "path": "",
@@ -8387,16 +8395,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4198,
-      "russianProperties": 4198,
+      "englishProperties": 4199,
+      "russianProperties": 4199,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1390,
-      "russianProperties": 1390,
+      "englishProperties": 1391,
+      "russianProperties": 1391,
       "countsMatch": true
     },
     {

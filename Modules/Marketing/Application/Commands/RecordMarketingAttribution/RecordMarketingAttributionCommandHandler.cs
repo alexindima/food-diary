@@ -14,7 +14,8 @@ namespace FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttrib
 public sealed class RecordMarketingAttributionCommandHandler(
     IMarketingAttributionEventRepository repository,
     TimeProvider timeProvider,
-    IUserMarketingConsentRecorder consentRecorder)
+    IUserMarketingConsentRecorder consentRecorder,
+    MarketingAttributionOptions options)
     : IRequestHandler<RecordMarketingAttributionCommand, Result> {
     private const int EventTypeMaxLength = 32;
     private const int AnonymousIdMaxLength = 96;
@@ -26,6 +27,10 @@ public sealed class RecordMarketingAttributionCommandHandler(
     private static readonly TimeSpan MaximumFutureTimestampSkew = TimeSpan.FromMinutes(5);
 
     public async Task<Result> Handle(RecordMarketingAttributionCommand request, CancellationToken cancellationToken) {
+        if (!options.Enabled) {
+            return Result.Success();
+        }
+
         if (!MarketingAttributionEventTypes.IsClientIngestionSupported(request.EventType)) {
             return Result.Failure(Errors.Validation.Invalid(
                 nameof(request.EventType),

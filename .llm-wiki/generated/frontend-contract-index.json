@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 520,
-    "componentsWithoutDirectSpecs": 132,
-    "inputs": 1674,
+    "components": 521,
+    "componentsWithoutDirectSpecs": 133,
+    "inputs": 1675,
     "outputs": 559,
     "apiCalls": 328,
-    "templatesWithTranslations": 375,
-    "translationKeys": 2249,
-    "consumerEdges": 1330,
-    "consumedComponents": 329,
+    "templatesWithTranslations": 376,
+    "translationKeys": 2248,
+    "consumerEdges": 1333,
+    "consumedComponents": 330,
     "unconsumedComponents": 190
   },
   "components": [
@@ -11356,6 +11356,17 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.spec.ts"
     },
     {
+      "class": "PrivacyMarketingSettingsComponent",
+      "selector": "fd-privacy-marketing-settings",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
+      "stylePaths": [],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "PrivacySettingsComponent",
       "selector": "fd-privacy-settings",
       "feature": "profile",
@@ -14873,6 +14884,11 @@
         {
           "name": "description",
           "type": "string",
+          "required": false
+        },
+        {
+          "name": "requireHealthConsent",
+          "type": "",
           "required": false
         },
         {
@@ -20741,7 +20757,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 86,
+      "line": 87,
       "publicMethod": "submit",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20753,7 +20769,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 111,
+      "line": 112,
       "publicMethod": "deleteRecognition",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20765,7 +20781,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/page",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 115,
+      "line": 116,
       "publicMethod": "list",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20777,7 +20793,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 127,
+      "line": 128,
       "publicMethod": "waitForResult",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -24659,6 +24675,17 @@
     },
     {
       "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
+      "keys": [
+        "MARKETING_CONSENT.ALLOW",
+        "MARKETING_CONSENT.REJECT",
+        "MARKETING_CONSENT.SYNC_ERROR",
+        "MARKETING_CONSENT.TEXT",
+        "MARKETING_CONSENT.TITLE"
+      ]
+    },
+    {
+      "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.html",
       "keys": [
         "USER_MANAGE.CHANGE_PASSWORD_CANCEL",
@@ -24693,11 +24720,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
       "keys": [
         "AI_CONSENT.TITLE",
-        "MARKETING_CONSENT.ALLOW",
-        "MARKETING_CONSENT.REJECT",
-        "MARKETING_CONSENT.SYNC_ERROR",
-        "MARKETING_CONSENT.TEXT",
-        "MARKETING_CONSENT.TITLE",
         "PRIVACY_CHOICES.ACCOUNT",
         "PRIVACY_CHOICES.DOWNLOAD",
         "PRIVACY_CHOICES.DOWNLOAD_SCOPE",
@@ -25757,7 +25779,6 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/health-consent-dialog/health-consent-dialog.html",
       "keys": [
-        "PRIVACY_CHOICES.ACCEPT",
         "PRIVACY_CHOICES.DECLINE",
         "PRIVACY_CHOICES.HEALTH_AGREEMENT",
         "PRIVACY_CHOICES.HEALTH_TEXT",
@@ -32678,6 +32699,22 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -32719,10 +32756,8 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
-      "occurrences": 6,
+      "occurrences": 4,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "loading",
         "type",
         "variant"
@@ -34652,8 +34687,18 @@
       "selector": "fd-ui-card",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
-      "occurrences": 4,
+      "occurrences": 3,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -42795,6 +42840,7 @@
         "appearance",
         "cropEnabled",
         "deleteOnClear",
+        "requireHealthConsent",
         "resizeMaxDimension"
       ],
       "outputsHandled": [
@@ -42840,7 +42886,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
-        "description"
+        "description",
+        "requireHealthConsent"
       ],
       "outputsHandled": [
         "imageChanged",
@@ -42863,6 +42910,7 @@
         "initialSelection",
         "label",
         "recommendedSize",
+        "requireHealthConsent",
         "resizeMaxDimension",
         "value"
       ],
@@ -44721,6 +44769,16 @@
       "componentPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "PrivacyMarketingSettingsComponent",
+      "selector": "fd-privacy-marketing-settings",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []

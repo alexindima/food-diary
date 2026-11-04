@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 69,
     "configurationFiles": 8,
-    "configurationKeys": 301,
+    "configurationKeys": 302,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -954,6 +954,7 @@
         "MailInboxClient:StateApiKey",
         "MailRelayClient:ApiKey",
         "MailRelayClient:BaseUrl",
+        "MarketingAttribution:Enabled",
         "NotificationTestScheduler:MaxPending",
         "OpenAi:ApiKey",
         "OpenAi:MaxOutputTokens",

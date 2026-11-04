@@ -92647,7 +92647,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 8
     },
     {
       "contract": "IMarketingAttributionEventRepository",
@@ -134495,7 +134495,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserMarketingConsentRecorder",
@@ -134820,7 +134820,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserPrivacyStateReader",
@@ -154786,7 +154786,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RecordMarketingAttributionCommand",
@@ -154864,7 +154864,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "RecordPremiumConversionCommand",

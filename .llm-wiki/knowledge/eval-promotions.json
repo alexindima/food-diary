@@ -2949,6 +2949,103 @@
       },
       "reason": "",
       "eventHash": "c5b7200c713b98814e769652087d8e78474268a619500464879e8dbd1d0e5b20"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 19,
+      "kind": "observed",
+      "candidateId": "learned-141fde3da61327b2",
+      "createdAtUtc": "2026-11-04T07:28:04.0391848Z",
+      "previousHash": "c5b7200c713b98814e769652087d8e78474268a619500464879e8dbd1d0e5b20",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/marketing-attribution-pause",
+        "retrospectiveHash": "75b896b4d9d6c5b1f0c23f5b479cf4c3bc02cc18362890f76dbf2f82ed587c5b",
+        "packetFingerprint": "5fa8d0aa40e05b3e4d0f1c290aa8d34cee1a364c5c49134c2507c35605aae327",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1199.36%"
+            ]
+          },
+          {
+            "id": "cost-frontend-verify",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'frontend-verify'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=72.07%",
+              "frontend-verify"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-141fde3da61327b2",
+          "changedPaths": [
+            "docs/architecture/persistence-capabilities.json",
+            "docs/architecture/persistence-technical-sources.txt",
+            "FoodDiary.Web.Api/appsettings.json",
+            "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+            "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.spec.ts",
+            "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
+            "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
+            "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+            "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
+            "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution-enabled.ts",
+            "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.spec.ts",
+            "FoodDiary.Web.Client/src/app/shared/marketing/marketing-consent.service.spec.ts",
+            "FoodDiary.Web.Client/src/app/shared/marketing/marketing-consent.service.ts",
+            "FoodDiary.Web.Client/src/app/types/app.data.ts",
+            "FoodDiary.Web.Client/src/environments/environment.prod.ts",
+            "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+            "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
+            "Modules/Marketing/Application/Common/MarketingAttributionOptions.cs",
+            "Modules/Marketing/Application/DependencyInjection.cs",
+            "Modules/Marketing/Infrastructure/ModuleRegistration.cs",
+            "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs",
+            "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
+            "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConversionRecorderTests.cs",
+            "Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs",
+            "Tooling/tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs"
+          ],
+          "expectedModules": [
+            "Marketing"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Configuration",
+            "Documentation",
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-decision",
+            "backend-boundaries",
+            "configuration-contract",
+            "frontend-component-contract",
+            "frontend-workspace",
+            "quality-critical-path",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests",
+            "frontend-verify"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "29c19d8342a726c35c61ad306ae4c359c4d01cb9650e91218d95b30441bdedbb"
+      },
+      "reason": "",
+      "eventHash": "97d0114d51815ce0e79463c6b0de4d473cf132da9b063f3f9668d9f856caad18"
     }
   ]
 }

@@ -2547,6 +2547,75 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "631268209554af54ed4ed64b7f188f430b9ef37ac127d841481b90b96411a041",
       "eventHash": "bb08bf2b365370beff0f893ef524e04829e9887f8962d594f324838d9b113aaf"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "02da52c6dbf64561a62ef7a3c32a17e3",
+      "workspace": ".artifacts/llm-wiki/tasks/marketing-attribution-pause",
+      "recordedAtUtc": "2026-11-04T07:28:07.3434405Z",
+      "completionFingerprint": "b72d1b4db500e38be83371948c58e9557525674c7f39e1c39364cce9539dfb5c",
+      "retrospectiveHash": "75b896b4d9d6c5b1f0c23f5b479cf4c3bc02cc18362890f76dbf2f82ed587c5b",
+      "instructionSetFingerprint": "e5d96b3d2069abca64d3a3ff3eb28d2e4cc20cf14a25990a18ccfed0550ee6b6",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "FoodDiary.Web.Api/AGENTS.md",
+          "fingerprint": "c267e33306f29bf924b58e3211e2237ee279f4aed5b0a181d9d5826683455a27"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "fingerprint": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/AGENTS.md",
+          "fingerprint": "8b6385621170cecb815d041c32d0d9581767972c153d8395fa328a707c21e865"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        },
+        {
+          "path": "Modules/Marketing/AGENTS.md",
+          "fingerprint": "d71a0d57b8ef87925574bf8900f75b65c6e4329e525db93d2fbbd9cef8b8a332"
+        },
+        {
+          "path": "Modules/Marketing/Application/AGENTS.md",
+          "fingerprint": "9628b7dfe3d7734954cfddb5380f69a7b3b836322e753eaf432ad04e522a74ed"
+        },
+        {
+          "path": "Platform/tests/AGENTS.md",
+          "fingerprint": "c9d02dd67975643efed7054fb7ea1a0dcca9151f09fbf33b3bf41b96bd7ad575"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/AGENTS.md",
+          "fingerprint": "70e25f0fe797423ad97cc509559c70be3612b113ed3631d1b6b32085143f465a"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 100,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 71.25,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 95.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "bb08bf2b365370beff0f893ef524e04829e9887f8962d594f324838d9b113aaf",
+      "eventHash": "f70ea9fe0600c124bd110d3359bcc01c79aa82609e5300edfbad0bcd6846b983"
     }
   ]
 }

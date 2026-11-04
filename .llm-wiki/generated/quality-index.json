@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6935,
+    "productionFiles": 6938,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1044,
@@ -10370,11 +10370,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
-      "nonBlankLines": 45,
-      "decisionPoints": 3,
+      "nonBlankLines": 49,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.4
+      "structuralRiskScore": 6.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-card/meal-card.ts",
@@ -14521,6 +14521,14 @@
       "structuralRiskScore": 0.32
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.ts",
       "nonBlankLines": 163,
       "decisionPoints": 14,
@@ -14618,11 +14626,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
-      "nonBlankLines": 46,
+      "nonBlankLines": 41,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.42
+      "structuralRiskScore": 2.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
@@ -14858,11 +14866,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
-      "nonBlankLines": 31,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
@@ -20385,6 +20393,14 @@
       "structuralRiskScore": 17.66
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution-enabled.ts",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
       "nonBlankLines": 319,
       "decisionPoints": 49,
@@ -20394,11 +20410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-consent.service.ts",
-      "nonBlankLines": 51,
-      "decisionPoints": 13,
+      "nonBlankLines": 59,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.52
+      "structuralRiskScore": 25.18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-identity.ts",
@@ -21234,11 +21250,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/types/app.data.ts",
-      "nonBlankLines": 62,
+      "nonBlankLines": 63,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.24
+      "structuralRiskScore": 1.26
     },
     {
       "path": "FoodDiary.Web.Client/src/environments/environment.development.ts",
@@ -21250,11 +21266,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/environments/environment.prod.ts",
-      "nonBlankLines": 56,
+      "nonBlankLines": 57,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.12
+      "structuralRiskScore": 1.14
     },
     {
       "path": "FoodDiary.Web.Client/src/environments/environment.staging.ts",
@@ -40114,19 +40130,19 @@
     },
     {
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "nonBlankLines": 124,
-      "decisionPoints": 33,
+      "nonBlankLines": 128,
+      "decisionPoints": 34,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 53.98
+      "structuralRiskScore": 55.56
     },
     {
       "path": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 4,
+      "nonBlankLines": 60,
+      "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.12
+      "structuralRiskScore": 10.7
     },
     {
       "path": "Modules/Marketing/Application/Common/MarketingAttributionEventTypes.cs",
@@ -40135,6 +40151,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Marketing/Application/Common/MarketingAttributionOptions.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Marketing/Application/Common/MarketingLandingPath.cs",
@@ -40146,11 +40170,11 @@
     },
     {
       "path": "Modules/Marketing/Application/DependencyInjection.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Marketing/Application/Mappings/MarketingAttributionMappings.cs",

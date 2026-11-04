@@ -24,7 +24,7 @@ public sealed class MarketingConversionRecorderTests {
     [Fact]
     public async Task RecordPremiumStartedAsync_WithEmptyUserId_DoesNotReadOrWriteAttribution() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader(), new(Enabled: true)));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.Empty), CancellationToken.None);
 
@@ -37,7 +37,7 @@ public sealed class MarketingConversionRecorderTests {
     [Fact]
     public async Task RecordPremiumStartedAsync_WithoutUserAttribution_DoesNotRecordEvent() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader(), new(Enabled: true)));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.NewGuid()), CancellationToken.None);
 
@@ -65,7 +65,7 @@ public sealed class MarketingConversionRecorderTests {
                 "story",
                 "food",
                 "1.2.3"));
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader(), new(Enabled: true)));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
 
@@ -99,7 +99,7 @@ public sealed class MarketingConversionRecorderTests {
                 UtmContent: null,
                 UtmTerm: null,
                 BuildVersion: null));
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader(), new(Enabled: true)));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
 

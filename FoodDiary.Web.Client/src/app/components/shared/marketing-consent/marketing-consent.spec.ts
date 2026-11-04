@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import { MARKETING_ATTRIBUTION_ENABLED } from '../../../shared/marketing/marketing-attribution-enabled';
 import { MarketingConsentService } from '../../../shared/marketing/marketing-consent.service';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 import { MarketingConsentComponent } from './marketing-consent';
@@ -15,6 +16,7 @@ describe('MarketingConsentComponent choices', () => {
             imports: [MarketingConsentComponent],
             providers: [
                 provideTranslateTesting(),
+                { provide: MARKETING_ATTRIBUTION_ENABLED, useValue: true },
                 {
                     provide: BrowserStorageService,
                     useValue: {

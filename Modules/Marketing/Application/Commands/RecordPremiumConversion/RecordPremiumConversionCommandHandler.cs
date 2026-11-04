@@ -12,8 +12,13 @@ namespace FoodDiary.Modules.Marketing.Application.Commands.RecordPremiumConversi
 public sealed class RecordPremiumConversionCommandHandler(IMarketingAttributionEventReadRepository marketingAttributionEventReadRepository,
     IMarketingAttributionEventWriteRepository marketingAttributionEventWriteRepository,
     TimeProvider dateTimeProvider,
-    IUserPrivacyStateReader privacy) : IRequestHandler<RecordPremiumConversionCommand, Unit> {
+    IUserPrivacyStateReader privacy,
+    MarketingAttributionOptions options) : IRequestHandler<RecordPremiumConversionCommand, Unit> {
     public async Task<Unit> Handle(RecordPremiumConversionCommand request, CancellationToken cancellationToken) {
+        if (!options.Enabled) {
+            return Unit.Value;
+        }
+
         UserId userId = DecodeConsumerUserId(request.UserId);
         if (userId == UserId.Empty) {
             return Unit.Value;

@@ -150,7 +150,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddRecentItemsModule()
                 .AddUsersModule().AddReadModelComposition()
                 .AddBillingModule()
-                .AddMarketingModule()
+                .AddMarketingModule(configuration.GetValue<bool>("MarketingAttribution:Enabled"))
                 .AddModulePresentations()
                 .AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration)
                 .AddExportInfrastructure()

@@ -10,9 +10,26 @@ import { ClientTelemetrySessionService } from '../observability/client-telemetry
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { MarketingAttributionService } from './marketing-attribution.service';
+import { MARKETING_ATTRIBUTION_ENABLED } from './marketing-attribution-enabled';
 import { MARKETING_NOTICE_VERSION, MarketingConsentService } from './marketing-consent.service';
 
 describe('MarketingAttributionService', () => {
+    it('clears old campaign data and skips landing and signup even after prior consent when disabled', () => {
+        const { service, httpMock, storage } = setup({}, true, false);
+        storage.setItem('local', 'fd_marketing_anonymous_id', 'legacy-id');
+        storage.setJson('local', 'fd_marketing_first_touch', { utmCampaign: 'old-campaign' });
+        storage.setItem('session', 'fd_marketing_session_capture', 'legacy-capture');
+
+        service.initialize();
+        TestBed.inject(MarketingConsentService).decide(true);
+        service.recordSignupCompleted();
+
+        httpMock.expectNone(() => true);
+        expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toBeNull();
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toBeNull();
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).toBeNull();
+    });
+
     it('starts only after an explicit opt-in and stops after withdrawal', () => {
         const { service, httpMock, storage } = setup({}, false);
         service.initialize();
@@ -334,6 +351,7 @@ describe('MarketingAttributionService historical URL privacy', () => {
 function setup(
     overrides: Partial<BrowserWindowMock> = {},
     allowMarketing = true,
+    attributionEnabled = true,
 ): {
     service: MarketingAttributionService;
     httpMock: HttpTestingController;
@@ -357,6 +375,7 @@ function setup(
     TestBed.configureTestingModule({
         providers: [
             MarketingAttributionService,
+            { provide: MARKETING_ATTRIBUTION_ENABLED, useValue: attributionEnabled },
             provideHttpClient(),
             provideHttpClientTesting(),
             { provide: BrowserStorageService, useValue: storage },

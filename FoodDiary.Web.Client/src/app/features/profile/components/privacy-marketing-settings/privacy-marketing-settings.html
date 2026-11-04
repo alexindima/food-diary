@@ -1,0 +1,30 @@
+@if (marketingAttributionEnabled || privacy.state()?.marketingAcceptedAtUtc || marketing.accountSyncFailed()) {
+    <fd-ui-card>
+        <h2>{{ 'MARKETING_CONSENT.TITLE' | translate }}</h2>
+        @if (marketingAttributionEnabled) {
+            <p>{{ 'MARKETING_CONSENT.TEXT' | translate }}</p>
+            <p role="status">{{ marketingStateKey() | translate }}</p>
+        }
+        @if (marketing.accountSyncFailed()) {
+            <p role="alert">{{ 'MARKETING_CONSENT.SYNC_ERROR' | translate }}</p>
+        }
+        <div class="fd-row fd-wrap fd-gap-sm">
+            <fd-ui-button type="button" variant="secondary" [loading]="privacy.busy()" (click)="chooseMarketing(false)">{{
+                'MARKETING_CONSENT.REJECT' | translate
+            }}</fd-ui-button>
+            @if (marketingAttributionEnabled) {
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    [loading]="privacy.busy()"
+                    [disabled]="privacy.needsReload() || !privacy.state()"
+                    [disabledReason]="
+                        (privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'MARKETING_CONSENT.LOAD_BEFORE_ALLOW') | translate
+                    "
+                    (click)="chooseMarketing(true)"
+                    >{{ 'MARKETING_CONSENT.ALLOW' | translate }}</fd-ui-button
+                >
+            }
+        </div>
+    </fd-ui-card>
+}

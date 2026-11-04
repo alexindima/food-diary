@@ -9,8 +9,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace FoodDiary.Modules.Marketing.Infrastructure;
 
 public static class ModuleRegistration {
-    public static IServiceCollection AddMarketingModule(this IServiceCollection services) {
-        services.AddMarketingApplication();
+    public static IServiceCollection AddMarketingModule(this IServiceCollection services, bool attributionEnabled = false) {
+        services.AddMarketingApplication(attributionEnabled);
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, MarketingUserDataPurgeParticipant>());
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<MarketingDbContext>(static options => new MarketingDbContext(options)));

@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
-    "componentsWithoutDirectSpecs": 132,
+    "componentsWithoutDirectSpecs": 133,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -5275,6 +5275,17 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.html",
+      "stylePaths": [],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PrivacyMarketingSettingsComponent",
+      "selector": "fd-privacy-marketing-settings",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
       "stylePaths": [],
       "inputs": [],
       "outputs": [],
