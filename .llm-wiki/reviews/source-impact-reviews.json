@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fd90c16628610e069478cdca626c1da1b0a1ffd90338ee40d74b2f230ea7d79a",
-          "reviewReason": "Reviewed the final runtime projection after removing one trailing empty line from the Stars transport model. Financial recovery, bounded HTTP calls, durable intake and subscription handling are unchanged; only the model source fingerprint changed. Previously executed behavior suites remain applicable, with full CI checking the committed revision."
+          "sha256": "a76667ab81a6119d30fe4b36ee500aec4bc00bfac54373452d694172687d8150",
+          "reviewReason": "Scoped C# whitespace formatting for CI. Roslyn syntax-token comparison confirms unchanged code and string literals in all seven files; scoped full dotnet format verification passes. Regenerated projections update source fingerprints and locations only; ownership, privacy, runtime and architectural rules remain applicable."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the final runtime projection after removing one trailing empty line from the Stars transport model. Financial recovery, bounded HTTP calls, durable intake and subscription handling are unchanged; only the model source fingerprint changed. Previously executed behavior suites remain applicable, with full CI checking the committed revision.",
+      "reason": "Scoped C# whitespace formatting for CI. Roslyn syntax-token comparison confirms unchanged code and string literals in all seven files; scoped full dotnet format verification passes. Regenerated projections update source fingerprints and locations only; ownership, privacy, runtime and architectural rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
-      "reviewedAtUtc": "2026-11-05T19:58:39.6056243Z"
+      "gitHead": "79c29636b8b19b9e0ceb94dcc107526182f430a0",
+      "reviewedAtUtc": "2026-11-05T20:13:15.7648973Z"
     },
     {
       "pageId": "workflow-security-review",

@@ -57,8 +57,10 @@ public sealed class CreateCheckoutSessionCommandHandler(
             string.Equals(existingSubscription.ProviderMetadataJson, TelegramStarsBillingState.RefundCancellationPending, StringComparison.Ordinal)) {
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
         }
-        if (existingSubscription is { Provider: BillingProviderNames.TelegramStars, ExternalSubscriptionId: not null,
-            CancelAtPeriodEnd: false, Status: "active" or "past_due", }) {
+        if (existingSubscription is {
+            Provider: BillingProviderNames.TelegramStars, ExternalSubscriptionId: not null,
+            CancelAtPeriodEnd: false, Status: "active" or "past_due",
+        }) {
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
         }
         if (user.HasPaidPremium || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {

@@ -19,7 +19,10 @@ public partial class BillingGatewayTests {
         });
         using var client = new HttpClient(http);
         var gateway = new TelegramStarsBillingGateway(client, Options.Create(new TelegramStarsOptions {
-            CheckoutEnabled = true, PremiumPrice = 500, BotToken = "123:synthetic", BotApiSecret = new string('s', 32),
+            CheckoutEnabled = true,
+            PremiumPrice = 500,
+            BotToken = "123:synthetic",
+            BotApiSecret = new string('s', 32),
             UseTestEnvironment = testEnvironment,
         }), TimeProvider.System);
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(new BillingCheckoutSessionRequestModel(Guid.NewGuid(),
@@ -48,7 +51,9 @@ public partial class BillingGatewayTests {
         using var http = new RecordingHttpMessageHandler();
         using var client = new HttpClient(http);
         var gateway = new TelegramStarsBillingGateway(client, Options.Create(new TelegramStarsOptions {
-            CheckoutEnabled = enabled, BotToken = "123:synthetic", BotApiSecret = new string('s', 32),
+            CheckoutEnabled = enabled,
+            BotToken = "123:synthetic",
+            BotApiSecret = new string('s', 32),
         }), TimeProvider.System);
         Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(new BillingCheckoutSessionRequestModel(Guid.NewGuid(),
             string.Empty, plan, ExistingCustomerId: null, "order", actor));

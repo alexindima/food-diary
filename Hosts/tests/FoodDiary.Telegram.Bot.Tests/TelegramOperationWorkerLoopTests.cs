@@ -156,9 +156,14 @@ public sealed class TelegramOperationWorkerLoopTests {
             if (path.EndsWith("/lease", StringComparison.Ordinal)) {
                 leases++;
                 return BotOperationScenario.Json(new {
-                    OperationId = id, LeaseId = Guid.NewGuid(), UserId = userId, SecurityVersion = 1,
-                    Payload = JsonSerializer.Serialize(incoming), Checkpoint = JsonSerializer.Serialize(state),
-                    LeaseExpiresAtUtc = DateTime.UtcNow.AddMinutes(2), CreatedAtUtc = DateTime.UtcNow,
+                    OperationId = id,
+                    LeaseId = Guid.NewGuid(),
+                    UserId = userId,
+                    SecurityVersion = 1,
+                    Payload = JsonSerializer.Serialize(incoming),
+                    Checkpoint = JsonSerializer.Serialize(state),
+                    LeaseExpiresAtUtc = DateTime.UtcNow.AddMinutes(2),
+                    CreatedAtUtc = DateTime.UtcNow,
                 });
             }
             if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {
@@ -170,7 +175,8 @@ public sealed class TelegramOperationWorkerLoopTests {
             if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
                 notices++;
                 return BotOperationScenario.Json(new {
-                    ok = true, result = new { message_id = 90, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Delivered" },
+                    ok = true,
+                    result = new { message_id = 90, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Delivered" },
                 });
             }
             if (path.EndsWith("/deleteMessage", StringComparison.OrdinalIgnoreCase)) {

@@ -85,7 +85,9 @@ public partial class BillingFeatureTests {
     public async Task Stars_PreCheckoutRejectsWrongOwnerCurrencyOrAmount(long actor, string currency, int amount) {
         var fixture = new StarsFixture();
         Result<TelegramStarsUpdateResultModel> result = await fixture.SendAsync(fixture.PreCheckout() with {
-            TelegramUserId = actor, Currency = currency, TotalAmount = amount,
+            TelegramUserId = actor,
+            Currency = currency,
+            TotalAmount = amount,
         });
         ResultAssert.Success(result);
         Assert.Multiple(() => {
@@ -120,8 +122,12 @@ public partial class BillingFeatureTests {
         await fixture.SendAsync(fixture.PreCheckout());
         await fixture.SendAsync(fixture.Payment());
         await fixture.SendAsync(fixture.State(30, "canceled"));
-        await fixture.SendAsync(fixture.Payment() with { UpdateId = 40, PaymentChargeId = "renewal_charge",
-            IsFirstRecurring = false, SubscriptionExpirationUtc = fixture.Now.AddDays(60), });
+        await fixture.SendAsync(fixture.Payment() with {
+            UpdateId = 40,
+            PaymentChargeId = "renewal_charge",
+            IsFirstRecurring = false,
+            SubscriptionExpirationUtc = fixture.Now.AddDays(60),
+        });
         await fixture.SendAsync(fixture.Payment() with { UpdateId = 41, PaymentChargeId = "delayed_charge" });
         await fixture.SendAsync(fixture.State(29, "active"));
         Assert.Multiple(() => {
@@ -138,8 +144,12 @@ public partial class BillingFeatureTests {
         var fixture = new StarsFixture();
         await fixture.SendAsync(fixture.PreCheckout());
         await fixture.SendAsync(fixture.Payment());
-        await fixture.SendAsync(fixture.Payment() with { UpdateId = 30, PaymentChargeId = "renewal_charge",
-            IsFirstRecurring = false, SubscriptionExpirationUtc = fixture.Now.AddDays(60), });
+        await fixture.SendAsync(fixture.Payment() with {
+            UpdateId = 30,
+            PaymentChargeId = "renewal_charge",
+            IsFirstRecurring = false,
+            SubscriptionExpirationUtc = fixture.Now.AddDays(60),
+        });
         await fixture.SendAsync(fixture.Refund(40, "first_charge"));
         Assert.True(fixture.Profile.HasPaidPremium);
         Assert.Equal(fixture.Now.AddDays(60), fixture.Subscription.CurrentPeriodEndUtc);

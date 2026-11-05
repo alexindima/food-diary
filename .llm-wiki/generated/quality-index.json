@@ -5378,11 +5378,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.Stars.cs",
-      "nonBlankLines": 79,
+      "nonBlankLines": 106,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.58
+      "structuralRiskScore": 23.12
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
@@ -26306,11 +26306,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "nonBlankLines": 205,
+      "nonBlankLines": 207,
       "decisionPoints": 41,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.6
+      "structuralRiskScore": 67.64
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandValidator.cs",
@@ -26954,11 +26954,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
-      "nonBlankLines": 98,
+      "nonBlankLines": 103,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.46
+      "structuralRiskScore": 33.56
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBotAuthenticator.cs",

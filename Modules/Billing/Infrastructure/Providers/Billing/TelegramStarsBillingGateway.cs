@@ -34,7 +34,10 @@ public sealed class TelegramStarsBillingGateway(HttpClient client, IOptions<Tele
         Result<JsonElement> result = await CallAsync("createInvoiceLink", new {
             title = "FoodDiary Premium · 30 days",
             description = "Premium for your FoodDiary account. Renews every 30 days until canceled.",
-            payload, currency = "XTR", provider_token = "", subscription_period = 2592000,
+            payload,
+            currency = "XTR",
+            provider_token = "",
+            subscription_period = 2592000,
             prices = new[] { new { label = "Premium · 30 days", amount } },
         }, cancellationToken);
         if (result.IsFailure) {
@@ -58,7 +61,9 @@ public sealed class TelegramStarsBillingGateway(HttpClient client, IOptions<Tele
         }
         DateTime end = request.CurrentPeriodEndUtc ?? timeProvider.GetUtcNow().UtcDateTime;
         Result<JsonElement> response = await CallAsync("editUserStarSubscription", new {
-            user_id = userId, telegram_payment_charge_id = request.ExternalPaymentMethodId, is_canceled = true,
+            user_id = userId,
+            telegram_payment_charge_id = request.ExternalPaymentMethodId,
+            is_canceled = true,
         }, cancellationToken);
         if (response.IsSuccess && response.Value.ValueKind is not JsonValueKind.True) {
             return Result.Failure<BillingCancellationSnapshotModel>(BillingErrors.ProviderOperationFailed(Provider, "Cancellation was not confirmed."));

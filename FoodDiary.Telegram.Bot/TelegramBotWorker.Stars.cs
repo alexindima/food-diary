@@ -45,26 +45,53 @@ public sealed partial class TelegramBotWorker {
 
     internal static TelegramStarsUpdateHttpRequest? MapStarsUpdate(Update update) {
         if (update.PreCheckoutQuery is { } query) {
-            return new TelegramStarsUpdateHttpRequest { UpdateId = update.Id, TelegramUserId = query.From.Id,
-                Kind = "pre_checkout", InvoicePayload = query.InvoicePayload, Currency = query.Currency, TotalAmount = StarsAmount(query.TotalAmount), };
+            return new TelegramStarsUpdateHttpRequest {
+                UpdateId = update.Id,
+                TelegramUserId = query.From.Id,
+                Kind = "pre_checkout",
+                InvoicePayload = query.InvoicePayload,
+                Currency = query.Currency,
+                TotalAmount = StarsAmount(query.TotalAmount),
+            };
         }
         if (update.Subscription is { } subscription) {
-            return new TelegramStarsUpdateHttpRequest { UpdateId = update.Id, TelegramUserId = subscription.User.Id,
-                Kind = "subscription", InvoicePayload = subscription.InvoicePayload, SubscriptionState = subscription.State, };
+            return new TelegramStarsUpdateHttpRequest {
+                UpdateId = update.Id,
+                TelegramUserId = subscription.User.Id,
+                Kind = "subscription",
+                InvoicePayload = subscription.InvoicePayload,
+                SubscriptionState = subscription.State,
+            };
         }
         if (update.Message is not { Chat.Type: ChatType.Private } message) {
             return null;
         }
         if (message.SuccessfulPayment is { } payment) {
-            return new TelegramStarsUpdateHttpRequest { UpdateId = update.Id, TelegramUserId = message.Chat.Id,
-                Kind = "payment", InvoicePayload = payment.InvoicePayload, Currency = payment.Currency, TotalAmount = StarsAmount(payment.TotalAmount),
-                PaymentChargeId = payment.TelegramPaymentChargeId, SubscriptionExpirationUtc = payment.SubscriptionExpirationDate,
-                PaymentOccurredAtUtc = message.Date, IsRecurring = payment.IsRecurring, IsFirstRecurring = payment.IsFirstRecurring, };
+            return new TelegramStarsUpdateHttpRequest {
+                UpdateId = update.Id,
+                TelegramUserId = message.Chat.Id,
+                Kind = "payment",
+                InvoicePayload = payment.InvoicePayload,
+                Currency = payment.Currency,
+                TotalAmount = StarsAmount(payment.TotalAmount),
+                PaymentChargeId = payment.TelegramPaymentChargeId,
+                SubscriptionExpirationUtc = payment.SubscriptionExpirationDate,
+                PaymentOccurredAtUtc = message.Date,
+                IsRecurring = payment.IsRecurring,
+                IsFirstRecurring = payment.IsFirstRecurring,
+            };
         }
         return message.RefundedPayment is { } refund
-            ? new TelegramStarsUpdateHttpRequest { UpdateId = update.Id, TelegramUserId = message.Chat.Id,
-                Kind = "refund", InvoicePayload = refund.InvoicePayload, Currency = refund.Currency, TotalAmount = StarsAmount(refund.TotalAmount),
-                PaymentChargeId = refund.TelegramPaymentChargeId, PaymentOccurredAtUtc = message.Date, }
+            ? new TelegramStarsUpdateHttpRequest {
+                UpdateId = update.Id,
+                TelegramUserId = message.Chat.Id,
+                Kind = "refund",
+                InvoicePayload = refund.InvoicePayload,
+                Currency = refund.Currency,
+                TotalAmount = StarsAmount(refund.TotalAmount),
+                PaymentChargeId = refund.TelegramPaymentChargeId,
+                PaymentOccurredAtUtc = message.Date,
+            }
             : null;
     }
 
