@@ -126,8 +126,8 @@ public sealed class TelegramOperationRecoveryTests {
         JsonElement markup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
         JsonElement edit = Assert.Single(markup.GetProperty("inline_keyboard").EnumerateArray().SelectMany(row => row.EnumerateArray()),
             button => string.Equals(button.GetProperty("text").GetString(), russian ? "Редактировать" : "Edit", StringComparison.Ordinal));
-        Assert.True(notice.Contains(russian ? "• Гречка, 150 г, ~300 ккал\n• Курица, 1 шт., ~100 ккал" :
-            "• buckwheat, 150 g, ~300 kcal\n• Chicken, 1 pcs, ~100 kcal", StringComparison.Ordinal),
+        Assert.True(notice.Contains(russian ? "<b>~400 ккал</b>\nБ 10 г · Ж 20 г · У 30 г\n\n<b>Распознано:</b>\n• Гречка · 150 г · ~300 ккал\n• Курица · 1 шт. · ~100 ккал" :
+            "<b>~400 kcal</b>\nP 10 g · F 20 g · C 30 g\n\n<b>Recognized foods:</b>\n• buckwheat · 150 g · ~300 kcal\n• Chicken · 1 pcs · ~100 kcal", StringComparison.Ordinal),
             "Expected localized names and portions in the photo result.");
         Assert.Empty(scenario.DeletedMessages);
         if (!rejectProgressNotice) {

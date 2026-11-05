@@ -87,7 +87,10 @@ public sealed class BotPhotoPipelineTests {
             }
             if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
                 notices++;
-                Assert.Contains("1234 / 2100", await request.Content!.ReadAsStringAsync(), StringComparison.Ordinal);
+                using JsonDocument message = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
+                string? text = message.RootElement.GetProperty("text").GetString();
+                Assert.Contains("1,234 / 2,100 kcal", text, StringComparison.Ordinal);
+                Assert.Contains("Remaining: 866 kcal", text, StringComparison.Ordinal);
                 return Json(new { ok = true, result = new { message_id = 77, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Statistics" } });
             }
             if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {
@@ -273,8 +276,10 @@ public sealed class BotPhotoPipelineTests {
                 notices++;
                 string body = await request.Content!.ReadAsStringAsync();
                 Assert.Contains($"meal:undo:{operationId:N}", body, StringComparison.Ordinal);
-                Assert.Contains("432.1", body, StringComparison.Ordinal);
                 Assert.Contains("stats:today", body, StringComparison.Ordinal);
+                using var message = JsonDocument.Parse(body);
+                Assert.Equal("HTML", message.RootElement.GetProperty("parse_mode").GetString(), ignoreCase: true);
+                Assert.Contains("<b>~432,1 ккал</b>", message.RootElement.GetProperty("text").GetString(), StringComparison.Ordinal);
                 return Json(new { ok = true, result = new { message_id = 77, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Saved" } });
             }
             if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {

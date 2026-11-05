@@ -43,7 +43,7 @@ internal static class BotMenu {
             rows.Add([TodayShortcut.Button(russian), WeekShortcut.Button(russian)]);
         }
         rows.Add([HelpShortcut.Button(russian)]);
-        return new ReplyKeyboardMarkup(rows) { ResizeKeyboard = true, IsPersistent = true };
+        return new ReplyKeyboardMarkup(rows) { ResizeKeyboard = true, OneTimeKeyboard = true };
     }
 
     internal static string Help(string? language, bool operationsEnabled) {

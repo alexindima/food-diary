@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
     "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithoutTestReferences": 42,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -6319,16 +6319,6 @@
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "MealAiItemInputValidator",
-      "role": "Validator",
-      "path": "Modules/Meals/Application/Common/Validators/MealAiItemInputValidator.cs",
-      "line": 6,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

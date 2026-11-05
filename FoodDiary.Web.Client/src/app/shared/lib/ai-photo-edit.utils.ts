@@ -1,4 +1,4 @@
-import type { FoodNutritionResponse, FoodVisionItem } from '../models/ai.data';
+import type { FoodNutritionItem, FoodNutritionResponse, FoodVisionItem } from '../models/ai.data';
 import { normalizeAiNutritionItemName } from './ai-nutrition-edit.utils';
 
 export type AiEditableFoodItem = {
@@ -54,6 +54,35 @@ export function resolveAiPhotoUnitKey(unit?: string | null): string | null {
     }
 
     return AI_PHOTO_UNIT_TRANSLATION_KEYS[unit.trim().toLowerCase()] ?? null;
+}
+
+export function alignAiPhotoNutrition<T extends Pick<FoodVisionItem, 'nameEn' | 'nameLocal' | 'amount' | 'unit'>>(
+    results: readonly T[],
+    nutrition: FoodNutritionResponse | null,
+): Array<{ item: T; index: number; nutrition: FoodNutritionItem | null }> {
+    const unmatched = results.map((item, index) => ({
+        item,
+        index,
+        english: normalizeAiNutritionItemName(item.nameEn),
+        local: normalizeAiNutritionItemName(item.nameLocal),
+    }));
+    const matched = (nutrition?.items ?? []).flatMap(portion => {
+        const name = normalizeAiNutritionItemName(portion.name);
+        const sameName = (entry: (typeof unmatched)[number]): boolean => entry.english === name || entry.local === name;
+        const exact = unmatched.findIndex(
+            entry =>
+                sameName(entry) &&
+                entry.item.amount === portion.amount &&
+                normalizeAiPhotoUnit(entry.item.unit) === normalizeAiPhotoUnit(portion.unit),
+        );
+        const matchIndex = exact !== -1 ? exact : unmatched.findIndex(sameName);
+        if (matchIndex === -1) {
+            return [];
+        }
+        const [{ item, index }] = unmatched.splice(matchIndex, 1);
+        return [{ item, index, nutrition: portion }];
+    });
+    return [...matched, ...unmatched.map(({ item, index }) => ({ item, index, nutrition: null }))];
 }
 
 export function buildAiEditableItems(

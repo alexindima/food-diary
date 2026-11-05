@@ -103,6 +103,22 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
         expect(component['annotationsVisible']()).toBe(false);
     });
 
+    it('shows the nutrition order and keeps localized names and coordinates with the right calories', async () => {
+        const tea = { ...visionItem, nameEn: 'Tea', nameLocal: 'Чай', amount: 250, unit: 'ml', centerX: 0.2 };
+        aiFoodService.analyzeFoodImage.mockReturnValue(of({ items: [tea, visionItem] }));
+        aiFoodService.calculateNutrition.mockReturnValue(
+            of({ ...nutrition, items: [nutrition.items[0], { ...nutrition.items[0], name: 'Tea', amount: 250, unit: 'ml', calories: 1 }] }),
+        );
+        const { component } = await setupComponentAsync();
+        await component['onImageChangedAsync'](imageSelection('https://example.test/photo.jpg', 'asset-1'));
+
+        expect(component['resultViews']().map(item => item.displayName)).toEqual(['Яблоко', 'Чай']);
+        expect(component['annotations']()).toEqual([
+            expect.objectContaining({ name: 'Яблоко', centerX: 42, calories: BASE_CALORIES }),
+            expect.objectContaining({ name: 'Чай', centerX: 20, calories: 1 }),
+        ]);
+    });
+
     it('should set premium error when image analysis is forbidden', async () => {
         aiFoodService.analyzeFoodImage.mockReturnValue(throwError(() => ({ status: HttpStatusCode.Forbidden })));
         const { component } = await setupComponentAsync();

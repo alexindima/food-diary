@@ -9,6 +9,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
     aiEditableItemError,
+    alignAiPhotoNutrition,
     buildAiEditableItems,
     createEmptyAiEditableItem,
     normalizeAiEditableItems,
@@ -123,25 +124,23 @@ export class AiPhotoResultComponent {
     protected readonly postMealSatietyLevel = signal<number | null>(null);
     protected readonly editItems = signal<EditableAiItem[]>([]);
     protected readonly editAttempted = signal(false);
-    protected readonly resultRows = computed<AiResultRow[]>(() => {
-        const nutritionItems = this.resolvedNutrition()?.items ?? [];
-        return this.resolvedResults().map((item, index) => ({
+    private readonly recognizedPortions = computed(() => alignAiPhotoNutrition(this.resolvedResults(), this.resolvedNutrition()));
+    protected readonly resultRows = computed<AiResultRow[]>(() =>
+        this.recognizedPortions().map(({ item, index, nutrition }) => ({
             key: item.nameEn,
-            annotationId: hasReliableLocation(item) ? `${item.nameEn}-${index}` : null,
+            annotationId: nutrition !== null && hasReliableLocation(item) ? `${item.nameEn}-${index}` : null,
             displayName: this.resolveDisplayName(item),
             amountLabel: this.resolveAmountLabel(item),
-            calories: nutritionItems[index]?.calories ?? null,
-        }));
-    });
+            calories: nutrition?.calories ?? null,
+        })),
+    );
     protected readonly annotations = computed<AiPhotoAnnotation[]>(() => {
-        const nutritionItems = this.resolvedNutrition()?.items ?? [];
-        const annotations = this.resolvedResults().flatMap((item, index) => {
-            if (!hasReliableLocation(item) || index >= nutritionItems.length) {
+        const annotations = this.recognizedPortions().flatMap(({ item, index, nutrition }) => {
+            if (nutrition === null || !hasReliableLocation(item)) {
                 return [];
             }
             const centerX = item.centerX * PERCENT_SCALE;
             const centerY = item.centerY * PERCENT_SCALE;
-            const nutrition = nutritionItems[index];
             return [
                 {
                     id: `${item.nameEn}-${index}`,

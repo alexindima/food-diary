@@ -356,7 +356,7 @@ public sealed class TelegramBotWorkerTests {
     [Theory]
     [InlineData("en", "Quick actions:", "💧 Water")]
     [InlineData("ru", "Быстрые действия:", "💧 Вода")]
-    public async Task HandleUpdateAsync_StartWhenUserIsLinked_SendsPersistentQuickActions(string language, string greeting, string waterLabel) {
+    public async Task HandleUpdateAsync_StartWhenUserIsLinked_SendsCollapsibleQuickActions(string language, string greeting, string waterLabel) {
         var botClient = new RecordingTelegramBotClient();
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new {
@@ -374,7 +374,8 @@ public sealed class TelegramBotWorkerTests {
         ReplyKeyboardMarkup keyboard = Assert.IsType<ReplyKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
         Assert.Multiple(
             () => Assert.Equal(greeting, GetPropertyValue<string>(request, "Text")),
-            () => Assert.True(keyboard.IsPersistent),
+            () => Assert.True(keyboard.OneTimeKeyboard, "Expected Telegram quick actions to collapse after use."),
+            () => Assert.False(keyboard.IsPersistent),
             () => Assert.Contains(keyboard.Keyboard.SelectMany(row => row), button => string.Equals(button.Text, waterLabel, StringComparison.Ordinal)));
     }
 

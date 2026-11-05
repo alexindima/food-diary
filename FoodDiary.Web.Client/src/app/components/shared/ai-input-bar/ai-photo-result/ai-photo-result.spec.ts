@@ -163,6 +163,29 @@ describe('AiPhotoResultComponent view models', () => {
         ]);
     });
 
+    it('uses the nutrition order without moving calories or image markers to another food', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const egg = { ...VISION_ITEMS[0], centerX: 0.25, centerY: 0.3, locationConfidence: 0.9 };
+        const toast = { ...egg, nameEn: 'toast', nameLocal: null, amount: 45, centerX: 0.75 };
+        const tea = { ...egg, nameEn: 'tea', nameLocal: null, amount: 250, unit: 'ml' };
+        fixture.componentRef.setInput('results', [toast, tea, egg]);
+        fixture.componentRef.setInput('nutrition', {
+            ...NUTRITION,
+            items: [NUTRITION.items[0], { ...NUTRITION.items[0], name: ' Toast ', amount: 45, calories: 100 }],
+        });
+        fixture.detectChanges();
+
+        expect(component['resultRows']().map(({ key, calories, annotationId }) => ({ key, calories, annotationId }))).toEqual([
+            { key: 'egg', calories: 155, annotationId: 'egg-2' },
+            { key: 'toast', calories: 100, annotationId: 'toast-0' },
+            { key: 'tea', calories: null, annotationId: null },
+        ]);
+        expect(component['annotations']()).toEqual([
+            expect.objectContaining({ id: 'egg-2', centerX: 25, calories: 155 }),
+            expect.objectContaining({ id: 'toast-0', centerX: 75, calories: 100 }),
+        ]);
+    });
+
     it('switches edit action and details toggle views from component state', async () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         fixture.detectChanges();

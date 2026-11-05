@@ -2264,14 +2264,14 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "Item",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "line": 26
+      "line": 29
     },
     {
       "name": "BotOperationApiException",
@@ -2376,7 +2376,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "Program",
@@ -20471,7 +20471,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "DeleteMealCommand",

@@ -2710,14 +2710,14 @@
       "name": "Calories",
       "type": "decimal",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "health",
       "name": "Calories",
       "type": "double",
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "line": 27
+      "line": 30
     },
     {
       "category": "health",

@@ -3259,7 +3259,7 @@
       "role": "Component",
       "selector": "fd-ai-photo-result",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-      "line": 76
+      "line": 77
     },
     {
       "name": "PhotoUploadDialogComponent",
@@ -5114,7 +5114,7 @@
       "role": "Component",
       "selector": "fd-meal-photo-recognition-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "line": 97
+      "line": 98
     },
     {
       "name": "MealPhotoResultActionsComponent",

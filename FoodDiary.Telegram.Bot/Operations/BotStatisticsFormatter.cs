@@ -13,8 +13,20 @@ internal static class BotStatisticsFormatter {
         var lines = new List<string>();
         if (summary.CalendarDays == 1) {
             lines.Add($"{(russian ? "Сегодня" : "Today")}: {Date(summary.Days[0].Date)}");
-            string goal = summary.Days[0].CalorieGoal is { } target ? $" / {Number(target)}" : string.Empty;
-            lines.Add($"{(russian ? "Калории" : "Calories")}: {Number(summary.TotalCalories)}{goal} {(russian ? "ккал" : "kcal")}");
+            string DailyCalories(double value) => value.ToString("#,0.#", culture);
+            string unit = russian ? "ккал" : "kcal";
+            string calories = $"{(russian ? "Калории" : "Calories")}: {DailyCalories(summary.TotalCalories)}";
+            if (summary.Days[0].CalorieGoal is > 0 and { } target) {
+                double ratio = summary.TotalCalories / target;
+                lines.Add($"{calories} / {DailyCalories(target)} {unit} ({ratio.ToString("P0", culture)})");
+                double remaining = target - summary.TotalCalories;
+                string remainingLabel = russian ? "Осталось" : "Remaining";
+                string overGoalLabel = russian ? "Сверх цели" : "Over goal";
+                string progress = remaining < 0 ? overGoalLabel : remainingLabel;
+                lines.Add($"{progress}: {DailyCalories(Math.Abs(remaining))} {unit}");
+            } else {
+                lines.Add($"{calories} {unit}");
+            }
         } else {
             lines.Add($"{Date(summary.Days[0].Date)} – {Date(summary.Days[^1].Date)}");
             lines.Add($"{(russian ? "Всего калорий" : "Total calories")}: {Number(summary.TotalCalories)} {(russian ? "ккал" : "kcal")}");

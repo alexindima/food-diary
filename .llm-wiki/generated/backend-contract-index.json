@@ -35779,7 +35779,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/CreateMealFromRecognitionTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 16
     },
     {
       "contract": "CreateMealCommand",
@@ -147570,7 +147570,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 17
+      "referenceCount": 18
     },
     {
       "contract": "OpenAiFoodClientResponse",

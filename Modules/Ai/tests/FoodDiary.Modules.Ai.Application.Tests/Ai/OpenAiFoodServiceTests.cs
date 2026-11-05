@@ -204,6 +204,26 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
+    public async Task CalculateNutritionAsync_ReturnsHighestCaloriePortionsFirstWithoutChangingTheirValues() {
+        var tea = new FoodNutritionItemModel("Tea", 250m, "ml", 1m, 0m, 0m, 0m, 0m, 0m);
+        var toast = new FoodNutritionItemModel("Toast", 45m, "g", 120m, 4m, 2m, 21m, 1m, 0m);
+        var salmon = new FoodNutritionItemModel("Salmon", 60m, "g", 120m, 12m, 7m, 0m, 0m, 0m);
+        var providerResult = new FoodNutritionModel(241m, 16m, 9m, 21m, 1m, 0m, [tea, toast, salmon]);
+        var client = new RecordingOpenAiFoodClient {
+            CalculateNutritionResult = Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(
+                providerResult, "nutrition", "test-model", AiTokenUsage.FromCounts(11, 7, 18))),
+        };
+        OpenAiFoodService service = CreateService(client, new RecordingAiQuotaRepository());
+
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(CreateItems(), UserId.New(), RequestId, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(new[] { salmon, toast, tea }, result.Value.Items);
+        Assert.Equal(providerResult.Calories, result.Value.Calories);
+        Assert.Equal(1, client.CalculateNutritionCalls);
+    }
+
+    [Fact]
     public async Task CalculateNutritionAsync_WhenClientFailureCostIsUnknown_KeepsReservationPending() {
         var quotaRepository = new RecordingAiQuotaRepository();
         var client = new RecordingOpenAiFoodClient {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoodDiary.Telegram.Bot.Operations;
@@ -269,6 +270,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
     private Task<bool> SendCompletionAsync(BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         bool russian = incoming.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true;
         InlineKeyboardMarkup? keyboard = null;
+        ParseMode parseMode = default;
         string message;
         if (string.Equals(checkpoint.Stage, "statistics-ready", StringComparison.Ordinal)) {
             message = BotStatisticsFormatter.Format(checkpoint.Statistics ?? throw new InvalidDataException("Missing statistics checkpoint."), russian);
@@ -280,6 +282,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             message = russian ? "Приём пищи сохранён в дневнике." : "Meal saved to your diary.";
             if (!meal.Undone && checkpoint.Nutrition is not null) {
                 message += "\n\n" + checkpoint.Nutrition.Format(russian);
+                parseMode = ParseMode.Html;
             }
             if (meal.Undone) {
                 message = russian ? "Эта запись уже отменена или удалена из дневника." : "This entry has already been undone or deleted from your diary.";
@@ -294,13 +297,13 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             };
         }
         LinkPreviewOptions? preview = checkpoint.Stage is "meal-saved" ? new LinkPreviewOptions { IsDisabled = true } : null;
-        return SendTerminalNoticeAsync(incoming.ChatId, message, keyboard, preview, cancellationToken);
+        return SendTerminalNoticeAsync(incoming.ChatId, message, keyboard, preview, cancellationToken, parseMode);
     }
 
     private async Task<bool> SendTerminalNoticeAsync(long chatId, string message, InlineKeyboardMarkup? keyboard, LinkPreviewOptions? preview,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, ParseMode parseMode = default) {
         try {
-            await bot.SendMessage(chatId, message, replyMarkup: keyboard, linkPreviewOptions: preview, cancellationToken: cancellationToken);
+            await bot.SendMessage(chatId, message, parseMode: parseMode, replyMarkup: keyboard, linkPreviewOptions: preview, cancellationToken: cancellationToken);
             return true;
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // Business completion remains durable even if Telegram delivery is blocked.

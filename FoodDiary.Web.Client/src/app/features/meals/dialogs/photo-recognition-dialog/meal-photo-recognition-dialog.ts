@@ -14,6 +14,7 @@ import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
     aiEditableItemError,
+    alignAiPhotoNutrition,
     buildAiEditableItems,
     createEmptyAiEditableItem,
     normalizeAiEditableItems,
@@ -124,8 +125,9 @@ export class MealPhotoRecognitionDialogComponent {
     private readonly sourceItems = signal<EditableAiItem[]>([]);
     protected readonly unitOptions = UNIT_OPTIONS;
     protected readonly resolutionOptions = RESOLUTION_OPTIONS;
+    private readonly recognizedPortions = computed(() => alignAiPhotoNutrition(this.results(), this.nutrition()));
     protected readonly resultViews = computed<RecognizedItemView[]>(() =>
-        this.results().map(item => ({
+        this.recognizedPortions().map(({ item }) => ({
             item,
             displayName: this.toDisplayName(item),
             amount: item.amount,
@@ -171,14 +173,13 @@ export class MealPhotoRecognitionDialogComponent {
         return null;
     });
     protected readonly hasSelectionAsset = computed(() => this.selection()?.assetId !== null && this.selection()?.assetId !== undefined);
-    protected readonly annotations = computed(() => {
-        const nutritionItems = this.nutrition()?.items ?? [];
-        return this.results().flatMap((item, index) =>
-            hasReliableLocation(item) && index < nutritionItems.length
-                ? [buildMealPhotoAnnotation(item, nutritionItems[index], index, this.toDisplayName(item))]
+    protected readonly annotations = computed(() =>
+        this.recognizedPortions().flatMap(({ item, index, nutrition }) =>
+            nutrition !== null && hasReliableLocation(item)
+                ? [buildMealPhotoAnnotation(item, nutrition, index, this.toDisplayName(item))]
                 : [],
-        );
-    });
+        ),
+    );
 
     public constructor() {
         this.destroyRef.onDestroy(() => {

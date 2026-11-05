@@ -71,4 +71,20 @@ public partial class MealsFeatureTests {
         Assert.Equal("Candidate", item.Resolution);
     }
 
+    [Fact]
+    public void MealMappings_ToModel_ReadsRecognizedPortionsByCaloriesRatherThanId() {
+        MealProjectionReadModel meal = CreateReadModelWithAiItem(Guid.NewGuid(), Guid.NewGuid(), Guid.Empty);
+        MealAiSessionProjectionReadModel session = Assert.Single(meal.AiSessions);
+        MealAiItemProjectionReadModel source = Assert.Single(session.Items);
+        MealAiItemProjectionReadModel tea = source with { NameEn = "Tea", Amount = 250, Unit = "ml", Calories = 1 };
+        MealAiItemProjectionReadModel toast = source with { Id = Guid.NewGuid(), NameEn = "Toast", Amount = 45, Calories = 120 };
+        MealAiItemProjectionReadModel salmon = source with { Id = Guid.NewGuid(), NameEn = "Salmon", Amount = 60, Calories = 120 };
+        meal = meal with { AiSessions = [session with { Items = [tea, toast, salmon] }] };
+
+        MealAiSessionModel mapped = Assert.Single(meal.ToModel().AiSessions);
+
+        Assert.Equal(new[] { (salmon.NameEn, 60d, 120d), (toast.NameEn, 45d, 120d), (tea.NameEn, 250d, 1d) },
+            mapped.Items.Select(item => (item.NameEn, item.Amount, item.Calories)));
+    }
+
 }

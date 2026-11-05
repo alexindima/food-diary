@@ -365,8 +365,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "76ad11cf51bbc79a3673167815a772acd570ca7dd2cf7fa1849ee9022ae47737",
-          "reviewReason": "The new ambiguous name is the generated Telegram BillingOverviewHttpResponse alongside the server response. They compile in separate assemblies, and the generated API client and architecture checks passed."
+          "sha256": "270edbcb0e3ef60573d4e0cd68618e952116fa96f9363429ed8287844bb7e428",
+          "reviewReason": "The regenerated index no longer lists MealAiItemInputValidator as lacking a test reference. The recognition save tests now exercise its name limit through the handler, and project edges and dependency violations are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -384,10 +384,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "The new ambiguous name is the generated Telegram BillingOverviewHttpResponse alongside the server response. They compile in separate assemblies, and the generated API client and architecture checks passed.",
-      "baseRef": "origin/master",
-      "gitHead": "8e0cb67a4338498a54d163414753a8303b166c7e",
-      "reviewedAtUtc": "2026-11-04T11:08:02.4277728Z"
+      "reason": "The regenerated index no longer lists MealAiItemInputValidator as lacking a test reference. The recognition save tests now exercise its name limit through the handler, and project edges and dependency violations are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "1c81e1dc7ce7094f636e70b0142a5823134b744d",
+      "reviewedAtUtc": "2026-11-04T22:42:36.7127107Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1185,8 +1185,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "34623620c436b9979a5ad38a587028c8d79127f7b78e6fc2a5d89c0e1e09d512",
-          "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
+          "sha256": "32e89761aac5782f6d1c98af2060e6e056b2126b06cb6a243b2d2c1da7e45894",
+          "reviewReason": "The generated sensitive-data diff moves only the source line numbers of two existing calorie fields. The authenticated delivery destination, stored values, retention and logging are unchanged; interpolated food labels are HTML encoded."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1199,10 +1199,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies.",
+      "reason": "The generated sensitive-data diff moves only the source line numbers of two existing calorie fields. The authenticated delivery destination, stored values, retention and logging are unchanged; interpolated food labels are HTML encoded.",
       "baseRef": "HEAD",
-      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
-      "reviewedAtUtc": "2026-11-04T21:51:35.8706456Z"
+      "gitHead": "1c81e1dc7ce7094f636e70b0142a5823134b744d",
+      "reviewedAtUtc": "2026-11-04T23:50:07.6832914Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3189e37db228dc2378501279f5c2b9dff9e4f49fea27274b5e5518df599417cb",
-          "reviewReason": "The topology records the timeout policy of the existing Telegram worker. Immediate stage progression retains lease acquisition and the existing pending AI cadence, while retries for status deletion resume without resending the result. No topology or workflow guidance change is needed."
+          "sha256": "67b58cb4274ef3d09b9ad5d750303110a7e2f00a83017a1ec7aad6f81b0c9bf8",
+          "reviewReason": "Regenerated topology changes only the input fingerprint. The existing Telegram worker changes terminal text and markup only; recognition still uses the same provider call, host wiring, and retry, idempotency and checkpoint semantics."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "The topology records the timeout policy of the existing Telegram worker. Immediate stage progression retains lease acquisition and the existing pending AI cadence, while retries for status deletion resume without resending the result. No topology or workflow guidance change is needed.",
+      "reason": "Regenerated topology changes only the input fingerprint. The existing Telegram worker changes terminal text and markup only; recognition still uses the same provider call, host wiring, and retry, idempotency and checkpoint semantics.",
       "baseRef": "HEAD",
-      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
-      "reviewedAtUtc": "2026-11-04T21:51:36.2154402Z"
+      "gitHead": "1c81e1dc7ce7094f636e70b0142a5823134b744d",
+      "reviewedAtUtc": "2026-11-04T23:49:29.0809267Z"
     },
     {
       "pageId": "workflow-security-review",

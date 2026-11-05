@@ -7,6 +7,7 @@ using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMealFromRecognition;
+using FoodDiary.Modules.Meals.Application.Common;
 
 using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
@@ -56,17 +57,23 @@ public sealed class CreateMealFromRecognitionTests {
         await create.Received(Is("create-failure") ? 1 : 0).Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>());
     }
 
-    [Fact]
-    public async Task CompletedRecognition_UsesExistingCreateHandlerAndPersistsReceipt() {
+    [Theory]
+    [InlineData("matching", "Яблоко")]
+    [InlineData("missing-vision", null)]
+    [InlineData("unmatched", null)]
+    [InlineData("whitespace", null)]
+    [InlineData("overlong", null)]
+    public async Task CompletedRecognition_UsesExistingCreateHandlerAndPersistsReceipt(string scenario, string? expectedLocalName) {
         var owner = new UserId(Guid.NewGuid());
         DateTime now = new(2026, 9, 12, 12, 0, 0, DateTimeKind.Utc);
-        FoodRecognitionJobModel job = CreateJob(owner, now);
+        FoodRecognitionJobModel job = CreateJob(owner, now) with { Vision = CreateVision(scenario) };
         var meal = Meal.Create(owner, now);
         IMealRecognitionReceiptRepository receipts = Substitute.For<IMealRecognitionReceiptRepository>();
         ISender reader = Substitute.For<ISender>();
         reader.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value, JobId: job.Id), Arg.Any<CancellationToken>()).Returns(Result.Success(job));
         IRequestHandler<CreateMealCommand, Result<MealModel>> create = Substitute.For<IRequestHandler<CreateMealCommand, Result<MealModel>>>();
-        create.Handle(Arg.Any<CreateMealCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(meal.ToModel()));
+        CreateMealCommand? input = null;
+        create.Handle(Arg.Do<CreateMealCommand>(command => input = command), Arg.Any<CancellationToken>()).Returns(Result.Success(meal.ToModel()));
         var handler = new CreateMealFromRecognitionCommandHandler(new InlineTransactions(), receipts, reader, create,
             Substitute.For<ICurrentUserAccessService>(), TimeProvider.System);
 
@@ -75,11 +82,32 @@ public sealed class CreateMealFromRecognitionTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(meal.Id.Value, result.Value.MealId);
         Assert.Equal(job.Id, result.Value.OperationId);
+        Assert.NotNull(input);
+        MealAiItemInput item = Assert.Single(Assert.Single(input.AiSessions).Items);
+        Assert.Equal("Apple", item.NameEn);
+        Assert.True(string.Equals(expectedLocalName, item.NameLocal, StringComparison.Ordinal),
+            $"Expected recognized meal save to retain the matched local label. Actual value: '{item.NameLocal}'.");
         await create.Received(1).Handle(Arg.Is<CreateMealCommand>(command => command.UserId == owner.Value && command.Date == now &&
             command.ImageAssetId == job.ImageAssetId && command.IsNutritionAutoCalculated && command.AiSessions.Count == 1 &&
             command.AiSessions[0].Items[0].Calories == 52 && command.AiSessions[0].Items[0].Amount == 100), Arg.Any<CancellationToken>());
         await receipts.Received(1).AddAsync(Arg.Is<MealRecognitionReceipt>(receipt => receipt.MealId == meal.Id &&
             receipt.MealVersion == 7 && receipt.RecognitionId == job.Id), Arg.Any<CancellationToken>());
+    }
+
+    private static FoodVisionModel? CreateVision(string scenario) {
+        if (string.Equals(scenario, "missing-vision", StringComparison.Ordinal)) {
+            return null;
+        }
+        var unrelated = new FoodVisionItemModel("Pear", "Груша", 100, "g", 0.9m);
+        if (string.Equals(scenario, "unmatched", StringComparison.Ordinal)) {
+            return new FoodVisionModel([unrelated]);
+        }
+        string localName = scenario switch {
+            "whitespace" => " ",
+            "overlong" => new string('я', 257),
+            _ => "  Яблоко  ",
+        };
+        return new FoodVisionModel([unrelated, new FoodVisionItemModel(" apple ", localName, 150, "g", 0.9m)]);
     }
 
     [Theory]

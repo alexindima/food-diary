@@ -159,7 +159,15 @@ public sealed partial class OpenAiFoodService(
             }
 
             await ReconcileAsync(requestId, response.Value, budgetResult.Value);
-            return Result.Success(response.Value.Value);
+            FoodNutritionModel nutrition = response.Value.Value;
+            return Result.Success(nutrition with {
+                Items = nutrition.Items
+                    .OrderByDescending(item => item.Calories)
+                    .ThenBy(item => item.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                    .ThenBy(item => item.Amount)
+                    .ThenBy(item => item.Unit, StringComparer.OrdinalIgnoreCase)
+                    .ToArray(),
+            });
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
             return Result.Failure<FoodNutritionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
         }

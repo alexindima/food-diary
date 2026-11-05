@@ -5,7 +5,7 @@ using FoodDiary.Modules.Meals.Application.Common.Validation;
 namespace FoodDiary.Modules.Meals.Application.Common.Validators;
 
 public sealed class MealAiItemInputValidator : AbstractValidator<MealAiItemInput> {
-    private const int NameMaxLength = 256;
+    internal const int NameMaxLength = 256;
     private const int UnitMaxLength = 32;
 
     public MealAiItemInputValidator() {

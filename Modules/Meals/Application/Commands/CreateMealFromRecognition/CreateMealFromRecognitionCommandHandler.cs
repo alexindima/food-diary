@@ -8,6 +8,7 @@ using FoodDiary.Modules.Meals.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
 using FoodDiary.Modules.Meals.Application.Common;
+using FoodDiary.Modules.Meals.Application.Common.Validators;
 using FoodDiary.Modules.Meals.Application.Models;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
@@ -87,8 +88,13 @@ public sealed class CreateMealFromRecognitionCommandHandler(
 
     private static CreateMealCommand ToCreateCommand(UserId owner, DateTime occurredAt, FoodRecognitionJobModel job) {
         // Nutrition owns the quantities and nutrients. Preserve those pairs even if vision order differs.
+        ILookup<string, string?> localNames = (job.Vision?.Items ?? [])
+            .Where(item => !string.IsNullOrWhiteSpace(item?.NameEn))
+            .ToLookup(item => item.NameEn.Trim(), item => item.NameLocal?.Trim(), StringComparer.OrdinalIgnoreCase);
         MealAiItemInput[] items = [.. job.Nutrition!.Items.Select(item => new MealAiItemInput(
-            item.Name, NameLocal: null, (double)item.Amount, item.Unit, (double)item.Calories, (double)item.Protein,
+            item.Name, localNames[item.Name?.Trim() ?? string.Empty]
+                .FirstOrDefault(name => name is { Length: > 0 and <= MealAiItemInputValidator.NameMaxLength }),
+            (double)item.Amount, item.Unit, (double)item.Calories, (double)item.Protein,
             (double)item.Fat, (double)item.Carbs, (double)item.Fiber, (double)item.Alcohol))];
         return new CreateMealCommand(owner.Value, occurredAt, MealType: null, Comment: job.Description,
             ImageUrl: null, job.ImageAssetId, Items: [],

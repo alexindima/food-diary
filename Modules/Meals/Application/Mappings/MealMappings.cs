@@ -213,7 +213,7 @@ public static class MealMappings {
             session.Status.ToString(),
             session.RecognizedAtUtc,
             session.Notes,
-            session.Items.OrderBy(i => i.Id.Value).Select(ToAiItemModel).ToList());
+            OrderAiItems(session.Items.Select(ToAiItemModel)));
     }
 
     private static MealAiSessionModel ToAiSessionModel(MealAiSessionProjectionReadModel session) {
@@ -226,8 +226,15 @@ public static class MealMappings {
             session.Status.ToString(),
             session.RecognizedAtUtc,
             session.Notes,
-            session.Items.OrderBy(static i => i.Id).Select(ToAiItemModel).ToList());
+            OrderAiItems(session.Items.Select(ToAiItemModel)));
     }
+
+    private static List<MealAiItemModel> OrderAiItems(IEnumerable<MealAiItemModel> items) =>
+        [.. items.OrderByDescending(item => item.Calories)
+            .ThenBy(item => item.NameEn, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(item => item.Amount)
+            .ThenBy(item => item.Unit, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(item => item.Id)];
 
     private static MealAiItemModel ToAiItemModel(MealAiItem aiItem) {
         return new MealAiItemModel(

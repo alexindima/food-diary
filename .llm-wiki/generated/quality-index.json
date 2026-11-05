@@ -9,8 +9,8 @@
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1044,
-    "criticalSymbolsWithTestReferences": 1001,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithTestReferences": 1002,
+    "criticalSymbolsWithoutTestReferences": 42,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -375,20 +375,20 @@
       "structuralRiskScore": 140.82
     },
     {
-      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "nonBlankLines": 627,
-      "decisionPoints": 85,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 140.04
-    },
-    {
       "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
       "nonBlankLines": 563,
       "decisionPoints": 84,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 139.26
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
+      "nonBlankLines": 628,
+      "decisionPoints": 84,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 138.56
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
@@ -448,11 +448,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 301,
+      "nonBlankLines": 304,
       "decisionPoints": 82,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 129.02
+      "structuralRiskScore": 129.08
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
@@ -5202,11 +5202,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotMealNutrition.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 8,
+      "nonBlankLines": 44,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.82
+      "structuralRiskScore": 14.38
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationApiException.cs",
@@ -5298,11 +5298,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotStatisticsFormatter.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 7,
+      "nonBlankLines": 44,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.14
+      "structuralRiskScore": 12.88
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotUserId.cs",
@@ -5322,11 +5322,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 301,
+      "nonBlankLines": 304,
       "decisionPoints": 82,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 129.02
+      "structuralRiskScore": 129.08
     },
     {
       "path": "FoodDiary.Telegram.Bot/Program.cs",
@@ -10090,11 +10090,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
-      "nonBlankLines": 344,
-      "decisionPoints": 41,
+      "nonBlankLines": 343,
+      "decisionPoints": 40,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.38
+      "structuralRiskScore": 66.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.ts",
@@ -13466,11 +13466,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
-      "nonBlankLines": 627,
-      "decisionPoints": 85,
+      "nonBlankLines": 628,
+      "decisionPoints": 84,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 140.04
+      "structuralRiskScore": 138.56
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-result-actions/meal-photo-result-actions.ts",
@@ -20066,11 +20066,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/lib/ai-photo-edit.utils.ts",
-      "nonBlankLines": 152,
-      "decisionPoints": 24,
+      "nonBlankLines": 180,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.04
+      "structuralRiskScore": 47.1
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/lib/ai-quota-error.utils.ts",
@@ -25098,11 +25098,11 @@
     },
     {
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "nonBlankLines": 221,
+      "nonBlankLines": 229,
       "decisionPoints": 32,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 52.42
+      "structuralRiskScore": 52.58
     },
     {
       "path": "Modules/Ai/Contracts/Commands/ProcessNextFoodRecognition/ProcessNextFoodRecognitionCommand.cs",
@@ -41882,11 +41882,11 @@
     },
     {
       "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
-      "nonBlankLines": 99,
-      "decisionPoints": 16,
+      "nonBlankLines": 105,
+      "decisionPoints": 18,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.98
+      "structuralRiskScore": 31.1
     },
     {
       "path": "Modules/Meals/Application/Commands/DeleteMeal/DeleteMealCommand.cs",
@@ -42093,8 +42093,8 @@
       "nonBlankLines": 53,
       "decisionPoints": 7,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 18.56
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.56
     },
     {
       "path": "Modules/Meals/Application/Common/Validators/MealAiSessionInputValidator.cs",
@@ -42114,11 +42114,11 @@
     },
     {
       "path": "Modules/Meals/Application/Mappings/MealMappings.cs",
-      "nonBlankLines": 251,
+      "nonBlankLines": 257,
       "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.02
+      "structuralRiskScore": 32.14
     },
     {
       "path": "Modules/Meals/Application/Models/MealOverviewModel.cs",
@@ -56996,7 +56996,7 @@
       "name": "CreateMealFromRecognitionCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
-      "line": 18,
+      "line": 19,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/CreateMealFromRecognitionTests.cs"
@@ -65828,10 +65828,17 @@
       "role": "Validator",
       "path": "Modules/Meals/Application/Common/Validators/MealAiItemInputValidator.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/CreateMealFromRecognitionTests.cs"
+      ],
+      "coverageKind": "tested-consumer-reference",
+      "coveredThrough": [
+        {
+          "symbol": "CreateMealFromRecognitionCommandHandler",
+          "path": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs"
+        }
+      ]
     },
     {
       "name": "MealAiSessionInputValidator",
