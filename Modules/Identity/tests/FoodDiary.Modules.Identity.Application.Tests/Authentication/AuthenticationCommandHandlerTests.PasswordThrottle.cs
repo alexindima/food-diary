@@ -14,6 +14,50 @@ namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
+    public async Task RestoreAccount_WithExpiredThrottleLease_DoesNotRevokeSessionsOrIssueTokens() {
+        IPasswordLoginThrottle throttle = CreatePasswordLoginThrottle();
+        throttle.CompleteAsync(Arg.Any<PasswordLoginAttempt>(), PasswordLoginAttemptOutcome.Succeeded, Arg.Any<CancellationToken>())
+            .Returns(returnThis: false);
+        var user = User.Create("deleted@example.com", "secret");
+        user.DeleteAccount(new StubDateTimeProvider().GetUtcNow().UtcDateTime.AddDays(-2));
+        IRefreshTokenSessionWriteRepository sessions = Substitute.For<IRefreshTokenSessionWriteRepository>();
+        var tokens = new StubAuthenticationTokenService();
+        var handler = new RestoreAccountCommandHandler(CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(), sessions, tokens, throttle);
+
+        Result<AuthenticationModel> result = await handler.Handle(new RestoreAccountCommand("deleted@example.com", "secret"), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(ErrorKind.RateLimited, result.Error.Kind);
+        Assert.Equal("1", result.Error.Details!["retryAfterSeconds"][0]);
+        Assert.Null(tokens.LastPrincipal);
+        Assert.Empty(sessions.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task RestoreAccount_WhenVerificationIsCancelled_ReleasesThrottleLease() {
+        using var cancellation = new CancellationTokenSource();
+        IPasswordLoginThrottle throttle = CreatePasswordLoginThrottle();
+        IUserAuthenticationIdentityService users = Substitute.For<IUserAuthenticationIdentityService>();
+        users.RestoreAccountAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), cancellation.Token)
+            .Returns(async _ => {
+                await cancellation.CancelAsync();
+                return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
+            });
+        IRefreshTokenSessionWriteRepository sessions = Substitute.For<IRefreshTokenSessionWriteRepository>();
+        var tokens = new StubAuthenticationTokenService();
+        var handler = new RestoreAccountCommandHandler(users, new StubDateTimeProvider(), sessions, tokens, throttle);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            handler.Handle(new RestoreAccountCommand("deleted@example.com", "secret"), cancellation.Token));
+
+        await throttle.Received(1).CompleteAsync(Arg.Any<PasswordLoginAttempt>(), PasswordLoginAttemptOutcome.Abandoned,
+            Arg.Is<CancellationToken>(token => token.CanBeCanceled && !token.IsCancellationRequested));
+        Assert.Empty(sessions.ReceivedCalls());
+        Assert.Null(tokens.LastPrincipal);
+    }
+
+    [Fact]
     public async Task PasswordThrottle_BlocksRestoreBeforePasswordVerificationAsync() {
         const string email = "user@example.com";
         IPasswordLoginThrottle throttle = CreatePasswordLoginThrottle();

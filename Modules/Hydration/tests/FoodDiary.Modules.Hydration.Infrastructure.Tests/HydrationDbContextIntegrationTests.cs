@@ -149,8 +149,8 @@ public sealed class HydrationDbContextIntegrationTests(PostgresDatabaseFixture d
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync(cancellation.Token));
 
-        Assert.False(await context.Users.AsNoTracking().AnyAsync(item => item.Id == user.Id));
-        Assert.False(await hydration.HydrationEntries.AsNoTracking().AnyAsync(item => item.Id == entry.Id));
+        Assert.False(await context.Users.AsNoTracking().AnyAsync(item => item.Id == user.Id, CancellationToken.None));
+        Assert.False(await hydration.HydrationEntries.AsNoTracking().AnyAsync(item => item.Id == entry.Id, CancellationToken.None));
         Assert.Null(hydration.Database.CurrentTransaction);
     }
 

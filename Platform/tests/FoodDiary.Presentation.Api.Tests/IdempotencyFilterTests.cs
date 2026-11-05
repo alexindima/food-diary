@@ -572,7 +572,8 @@ public sealed class IdempotencyFilterTests {
             "cancelled-key",
             "hash",
             responseTtl: TimeSpan.FromMinutes(10),
-            processingTtl: TimeSpan.FromMinutes(1));
+            processingTtl: TimeSpan.FromMinutes(1),
+            cancellationToken: CancellationToken.None);
 
         Assert.Equal(IdempotencyReservationStatus.Acquired, reservation.Status);
     }
@@ -706,7 +707,7 @@ public sealed class IdempotencyFilterTests {
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, async () => {
-            await store.FirstRenewal.WaitAsync(TimeSpan.FromSeconds(2));
+            await store.FirstRenewal.WaitAsync(TimeSpan.FromSeconds(2), CancellationToken.None);
             return new ActionExecutedContext(context, [], new object()) {
                 Result = new StatusCodeResult(StatusCodes.Status202Accepted),
             };
@@ -747,7 +748,7 @@ public sealed class IdempotencyFilterTests {
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, async () => {
-            await store.SecondRenewal.WaitAsync(TimeSpan.FromSeconds(2));
+            await store.SecondRenewal.WaitAsync(TimeSpan.FromSeconds(2), CancellationToken.None);
             return new ActionExecutedContext(context, [], new object()) {
                 Result = new StatusCodeResult(StatusCodes.Status202Accepted),
             };
@@ -785,7 +786,7 @@ public sealed class IdempotencyFilterTests {
         };
 
         await filter.OnActionExecutionAsync(context, async () => {
-            await store.FirstRenewal.WaitAsync(TimeSpan.FromSeconds(2));
+            await store.FirstRenewal.WaitAsync(TimeSpan.FromSeconds(2), CancellationToken.None);
             return executedContext;
         });
 

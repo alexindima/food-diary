@@ -21,10 +21,12 @@ namespace FoodDiary.Modules.Recipes.Application.Tests.CentralRelocated;
 
 public partial class RecipesFeatureTests {
     [Theory]
-    [InlineData(false, Visibility.Private, false)]
-    [InlineData(false, Visibility.Public, true)]
-    [InlineData(true, Visibility.Private, true)]
-    public void RecipeMutationResponse_OnlyIncludesAccessibleProductFields(bool sameOwner, Visibility visibility, bool visible) {
+    [InlineData(false, Visibility.Private, false, true)]
+    [InlineData(false, Visibility.Public, true, true)]
+    [InlineData(true, Visibility.Private, true, true)]
+    [InlineData(true, Visibility.Private, false, false)]
+    public void RecipeMutationResponse_OnlyIncludesAccessibleProductFields(
+        bool sameOwner, Visibility visibility, bool visible, bool isOwnedByCurrentUser) {
         var recipeOwner = UserId.New();
         UserId productOwner = sameOwner ? recipeOwner : UserId.New();
         var productId = ProductId.New();
@@ -36,12 +38,33 @@ public partial class RecipesFeatureTests {
             OwnerUserId = productOwner.Value,
         });
 
-        RecipeIngredientModel response = Assert.Single(Assert.Single(recipe.ToModel(0, isOwnedByCurrentUser: true).Steps).Ingredients);
+        RecipeIngredientModel response = Assert.Single(Assert.Single(recipe.ToModel(0, isOwnedByCurrentUser).Steps).Ingredients);
 
         Assert.Equal(visible ? productId.Value : (Guid?)null, response.ProductId);
         Assert.Equal(visible ? "Ingredient" : null, response.ProductName);
         Assert.Equal(visible ? 200d : (double?)null, response.ProductCaloriesPerBase);
         Assert.Equal(productId, Assert.Single(step.Ingredients).ProductId);
+    }
+
+    [Theory]
+    [InlineData(Visibility.Private, false)]
+    [InlineData(Visibility.Public, true)]
+    public void RecipeMutationResponse_HidesPrivateNestedRecipeFromOtherViewers(Visibility visibility, bool visible) {
+        var recipeOwner = UserId.New();
+        var recipe = Recipe.Create(recipeOwner, "Recipe", servings: 1, visibility: Visibility.Public);
+        var nested = Recipe.Create(recipeOwner, "Nested recipe", servings: 4, visibility: visibility);
+        RecipeStep step = recipe.AddStep(1, "Mix");
+        step.AddNestedRecipeIngredient(nested.Id, RecipeServingQuantity.FromServings(2));
+        RecipeIngredient ingredient = Assert.Single(step.Ingredients);
+        typeof(RecipeIngredient).GetProperty(nameof(RecipeIngredient.NestedRecipe))!.SetValue(ingredient, nested);
+
+        RecipeIngredientModel owner = Assert.Single(Assert.Single(recipe.ToModel(0, isOwnedByCurrentUser: true).Steps).Ingredients);
+        RecipeIngredientModel viewer = Assert.Single(Assert.Single(recipe.ToModel(0, isOwnedByCurrentUser: false).Steps).Ingredients);
+
+        Assert.Equal(nested.Id.Value, owner.NestedRecipeId);
+        Assert.Equal(visible ? nested.Id.Value : (Guid?)null, viewer.NestedRecipeId);
+        Assert.Equal(visible ? nested.Name : null, viewer.NestedRecipeName);
+        Assert.Equal(2d, viewer.Amount);
     }
 
     [Fact]

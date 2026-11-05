@@ -20,7 +20,7 @@ public sealed class RedisPasswordLoginThrottleIntegrationTests {
     public async Task SharedStore_RejectsConcurrentOwners_TracksFailures_AndClearsAfterSuccessAsync() {
         await using RedisContainer container = CreateContainer();
         await container.StartAsync();
-        await using ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(container.GetConnectionString());
+        await using IConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(container.GetConnectionString());
         IOptions<PasswordLoginThrottleOptions> settings = MsOptions.Create(new PasswordLoginThrottleOptions { FailureThreshold = 2 });
         var firstInstance = new RedisPasswordLoginThrottle(connection, settings);
         var secondInstance = new RedisPasswordLoginThrottle(connection, settings);
@@ -80,7 +80,7 @@ public sealed class RedisPasswordLoginThrottleIntegrationTests {
     public async Task RedisExpiry_ReleasesAbandonedLeases_AndRemovesIdleFailuresAsync() {
         await using RedisContainer container = CreateContainer();
         await container.StartAsync();
-        await using ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(container.GetConnectionString());
+        await using IConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(container.GetConnectionString());
         var throttle = new RedisPasswordLoginThrottle(connection, MsOptions.Create(new PasswordLoginThrottleOptions {
             FailureThreshold = 1,
             FailureWindowSeconds = 2,
@@ -110,7 +110,7 @@ public sealed class RedisPasswordLoginThrottleIntegrationTests {
     public async Task ExpiryAndStaleCompletion_CannotEraseSuccessorStateAsync() {
         await using RedisContainer container = CreateContainer();
         await container.StartAsync();
-        await using ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(container.GetConnectionString());
+        await using IConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(container.GetConnectionString());
         var throttle = new RedisPasswordLoginThrottle(connection, MsOptions.Create(new PasswordLoginThrottleOptions { FailureThreshold = 1 }));
         PasswordLoginAttempt stale = await throttle.TryBeginAsync("user@example.com");
         IDatabase database = connection.GetDatabase();

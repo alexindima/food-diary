@@ -125,6 +125,42 @@ public sealed class TelegramUnlinkHandlersTests {
         Assert.Empty(_stored);
     }
 
+    [Fact]
+    public async Task StartWithoutLinkedIdentity_RejectsProofBeforeCreatingState() {
+        var user = User.Create("unlinked@example.com", "hash");
+        _identities.GetAuthenticationPrincipalAsync(user.Id, _now, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, _now)));
+
+        ResultAssert.Failure(await Create().Send(new StartTelegramUnlinkCommand(user.Id.Value, _browser), CancellationToken.None),
+            TelegramIdentityErrors.InvalidProof.Code);
+
+        Assert.Empty(_stored);
+        _provider.DidNotReceive().CreateAuthorizationUrl(Arg.Any<TelegramOidcAuthorizationRequest>());
+    }
+
+    [Fact]
+    public async Task FailedAuthorizationUrl_PreservesProviderError() {
+        _provider.CreateAuthorizationUrl(Arg.Any<TelegramOidcAuthorizationRequest>())
+            .Returns(Result.Failure<string>(TelegramIdentityErrors.NotConfigured));
+
+        ResultAssert.Failure(await Create().Send(new StartTelegramUnlinkCommand(_user.Id.Value, _browser), CancellationToken.None),
+            TelegramIdentityErrors.NotConfigured.Code);
+    }
+
+    [Fact]
+    public async Task DisabledProvider_RejectsCompletionBeforeConsumingState() {
+        ISender sender = Create();
+        ResultAssert.Success(await sender.Send(new StartTelegramUnlinkCommand(_user.Id.Value, _browser), CancellationToken.None));
+        _provider.IsEnabled.Returns(returnThis: false);
+
+        ResultAssert.Failure(await sender.Send(Complete(), CancellationToken.None), TelegramIdentityErrors.InvalidProof.Code);
+
+        Assert.Single(_stored);
+        await _provider.DidNotReceive().ExchangeAsync(Arg.Any<TelegramOidcTokenExchange>(), Arg.Any<CancellationToken>());
+        Assert.Empty(_accounts.ReceivedCalls());
+        Assert.Null(_afterCommit);
+    }
+
     private UserAuthenticationPrincipalModel Principal() => UserAuthenticationIdentityService.ToAuthenticationPrincipal(_user, _now);
     private CompleteTelegramUnlinkCommand Complete() => new(_user.Id.Value, "code", "state", _browser);
     private ISender Create() => RequestTestSender.Create(

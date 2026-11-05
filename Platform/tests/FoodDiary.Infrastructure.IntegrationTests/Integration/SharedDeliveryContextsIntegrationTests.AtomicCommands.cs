@@ -45,8 +45,8 @@ public sealed partial class SharedDeliveryContextsIntegrationTests {
         using var cancellation = new CancellationTokenSource();
         bool postCommitRan = false;
         var command = new AtomicMealProbe(user.Id, outcome, async () => {
-            Assert.Empty(await observer.AchievementEvaluationOutbox.AsNoTracking().ToListAsync());
-            Assert.Empty(await observer.Meals.AsNoTracking().ToListAsync());
+            Assert.Empty(await observer.AchievementEvaluationOutbox.AsNoTracking().ToListAsync(cancellation.Token));
+            Assert.Empty(await observer.Meals.AsNoTracking().ToListAsync(cancellation.Token));
             if (string.Equals(outcome, "cancel", StringComparison.Ordinal)) {
                 await cancellation.CancelAsync();
             }
@@ -67,8 +67,8 @@ public sealed partial class SharedDeliveryContextsIntegrationTests {
                 Assert.Equal(string.Equals(outcome, "commit", StringComparison.Ordinal), result.IsSuccess);
                 break;
         }
-        Assert.Equal(string.Equals(outcome, "commit", StringComparison.Ordinal), await observer.Meals.AnyAsync());
-        Assert.Equal(string.Equals(outcome, "commit", StringComparison.Ordinal), await observer.AchievementEvaluationOutbox.AnyAsync());
+        Assert.Equal(string.Equals(outcome, "commit", StringComparison.Ordinal), await observer.Meals.AnyAsync(CancellationToken.None));
+        Assert.Equal(string.Equals(outcome, "commit", StringComparison.Ordinal), await observer.AchievementEvaluationOutbox.AnyAsync(CancellationToken.None));
         Assert.Equal(string.Equals(outcome, "commit", StringComparison.Ordinal), postCommitRan);
         Assert.False(provider.GetRequiredService<IUnitOfWork>().HasPendingChanges);
         Assert.False(provider.GetRequiredService<IPostCommitActionQueue>().HasActions);

@@ -93,13 +93,13 @@ public sealed class CatalogMealPlanRepositoryIntegrationTests(PostgresDatabaseFi
         Assert.All(context.ChangeTracker.Entries(), entry => Assert.Equal(EntityState.Unchanged, entry.State));
         Assert.Same(loaded, await repository.GetForUpdateAsync(catalog.Id, cancellation.Token));
         loaded.AddDay(2);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellation.Token);
         context.ChangeTracker.Clear();
 
         int[] storedDays = await context.Set<MealPlanDay>().Where(value => value.MealPlanId == catalog.Id)
-            .OrderBy(value => value.DayNumber).Select(value => value.DayNumber).ToArrayAsync();
+            .OrderBy(value => value.DayNumber).Select(value => value.DayNumber).ToArrayAsync(cancellation.Token);
         Assert.Equal([1, 2], storedDays);
-        Assert.True(await context.MealPlans.AsNoTracking().AnyAsync(plan => plan.Id == personal.Id && plan.UserId == user.Id));
+        Assert.True(await context.MealPlans.AsNoTracking().AnyAsync(plan => plan.Id == personal.Id && plan.UserId == user.Id, cancellation.Token));
         await cancellation.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.GetForUpdateAsync(catalog.Id, cancellation.Token));
     }

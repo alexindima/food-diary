@@ -285,12 +285,12 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         Assert.Multiple(() => Assert.Empty(owned.ChangeTracker.Entries()),
             () => Assert.Empty(context.ChangeTracker.Entries()),
             () => Assert.Null(context.Database.CurrentTransaction));
-        Assert.False(await context.Meals.AnyAsync(meal => meal.UserId == user.Id));
+        Assert.False(await context.Meals.AnyAsync(meal => meal.UserId == user.Id, CancellationToken.None));
         await runner.ExecuteSerializedAsync(user.Id, _ => {
             owned.Add(Meal.Create(user.Id, DateTime.UtcNow));
             return Task.FromResult(true);
-        });
-        Assert.Equal(1, await context.Meals.CountAsync(meal => meal.UserId == user.Id));
+        }, CancellationToken.None);
+        Assert.Equal(1, await context.Meals.CountAsync(meal => meal.UserId == user.Id, CancellationToken.None));
     }
 
     [RequiresDockerFact]

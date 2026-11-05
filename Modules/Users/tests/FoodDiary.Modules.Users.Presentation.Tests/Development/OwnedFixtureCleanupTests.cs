@@ -20,7 +20,7 @@ public sealed class OwnedFixtureCleanupTests {
         using var fixture = new CleanupFixture();
         await using WebApplication app = fixture.CreateApp();
 
-        Assert.False(await app.TryRunOwnedFixtureCleanupAsync([]));
+        Assert.False(await app.TryRunOwnedFixtureCleanupAsync([], CancellationToken.None));
         Assert.Empty(fixture.Sender.ReceivedCalls());
     }
 
@@ -36,7 +36,7 @@ public sealed class OwnedFixtureCleanupTests {
         await using WebApplication app = fixture.CreateApp(environment: string.Equals(failure, "production", StringComparison.Ordinal) ? Environments.Production : Environments.Development);
         string[] args = string.Equals(failure, "missing-manifest-argument", StringComparison.Ordinal) ? ["--purge-owned-fixtures"] : fixture.Args;
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => app.TryRunOwnedFixtureCleanupAsync(args));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => app.TryRunOwnedFixtureCleanupAsync(args, CancellationToken.None));
 
         Assert.Empty(fixture.Sender.ReceivedCalls());
     }
@@ -68,7 +68,7 @@ public sealed class OwnedFixtureCleanupTests {
         }
         await using WebApplication app = fixture.CreateApp(connection: connection);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => app.TryRunOwnedFixtureCleanupAsync(args));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => app.TryRunOwnedFixtureCleanupAsync(args, CancellationToken.None));
 
         Assert.Empty(fixture.Sender.ReceivedCalls());
     }
@@ -93,7 +93,7 @@ public sealed class OwnedFixtureCleanupTests {
         fixture.WriteManifest(fixture.Manifest(keys));
         await using WebApplication app = fixture.CreateApp();
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => app.TryRunOwnedFixtureCleanupAsync(fixture.Args));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => app.TryRunOwnedFixtureCleanupAsync(fixture.Args, CancellationToken.None));
 
         Assert.Empty(fixture.Sender.ReceivedCalls());
     }

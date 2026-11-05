@@ -102,10 +102,10 @@ public sealed class PasswordLoginThrottleTests {
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => throttle.TryBeginAsync("user@example.com", cancellation.Token));
-        PasswordLoginAttempt attempt = await throttle.TryBeginAsync("user@example.com");
+        PasswordLoginAttempt attempt = await throttle.TryBeginAsync("user@example.com", CancellationToken.None);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             throttle.CompleteAsync(attempt, PasswordLoginAttemptOutcome.InvalidCredentials, cancellation.Token));
-        Assert.True(await throttle.CompleteAsync(attempt, PasswordLoginAttemptOutcome.Abandoned));
+        Assert.True(await throttle.CompleteAsync(attempt, PasswordLoginAttemptOutcome.Abandoned, CancellationToken.None));
     }
 
     [Fact]

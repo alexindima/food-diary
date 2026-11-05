@@ -147,7 +147,7 @@ public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture
                 second.GetRequiredService<IRecipeMutationTransactionRunner>().ExecuteAsync(async secondToken => {
                     await second.GetRequiredService<FoodDiaryDbContext>().Database.ExecuteSqlRawAsync("SET LOCAL lock_timeout = '200ms'", secondToken);
                     return await second.GetRequiredService<IRecipeRepository>().GetByIdForUpdateAsync(recipe.Id, user.Id, includePublic: false, cancellationToken: secondToken);
-                }));
+                }, token));
             PostgresException exception = Assert.IsType<PostgresException>(failure.InnerException);
             Assert.Equal(PostgresErrorCodes.LockNotAvailable, exception.SqlState);
             return Result.Success();

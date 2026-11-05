@@ -203,7 +203,7 @@ public sealed class UserAccessTokenSecurityReaderIntegrationTests(PostgresDataba
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             reader.IsCurrentAsync(user.Id.Value, user.SecurityVersion, cancellation.Token));
 
-        Assert.True(await reader.IsCurrentAsync(user.Id.Value, user.SecurityVersion));
+        Assert.True(await reader.IsCurrentAsync(user.Id.Value, user.SecurityVersion, CancellationToken.None));
         Assert.Empty(context.ChangeTracker.Entries());
     }
     [ExcludeFromCodeCoverage]

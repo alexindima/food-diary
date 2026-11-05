@@ -4,6 +4,7 @@ using System.Reflection;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
+using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
@@ -99,6 +100,35 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         Assert.Empty(emptySummary.ByDay);
         Assert.Equal(0, emptyTotals.InputTokens);
         Assert.Equal(0, emptyTotals.OutputTokens);
+    }
+
+    [RequiresDockerFact]
+    public async Task Totals_SeparatePaidAndTrialUsageAndIncludeLegacyRows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("ai-trial-usage@example.com", "hash");
+        var from = new DateTime(2026, 11, 1, 0, 0, 0, DateTimeKind.Utc);
+        var legacy = AiUsage.Create(user.Id, "vision", "model", 2, 3, 5);
+        var paid = AiUsage.CreateWithTokens(user.Id, "vision", "model", AiTokenUsage.FromCounts(5, 7, 12), isTrial: false);
+        var trial = AiUsage.CreateWithTokens(user.Id, "vision", "model", AiTokenUsage.FromCounts(11, 13, 24), isTrial: true);
+        foreach (AiUsage usage in new[] { legacy, paid, trial }) {
+            SetCreatedOnUtc(usage, from);
+        }
+        context.Users.Add(user);
+        context.AiUsages.AddRange(legacy, paid, trial);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new AiUsageQuery(context);
+
+        AiUsageTotals paidTotals = await repository.GetUserTotalsAsync(user.Id, from, from.AddDays(1), isTrial: false, CancellationToken.None);
+        AiUsageTotals trialTotals = await repository.GetUserTotalsAsync(user.Id, from, from.AddDays(1), isTrial: true, CancellationToken.None);
+        AiUsage persistedTrial = await context.AiUsages.SingleAsync(usage => usage.Id == trial.Id);
+
+        Assert.Multiple(
+            () => Assert.Equal(7, paidTotals.InputTokens),
+            () => Assert.Equal(10, paidTotals.OutputTokens),
+            () => Assert.Equal(13, trialTotals.InputTokens),
+            () => Assert.Equal(16, trialTotals.OutputTokens),
+            () => Assert.True(persistedTrial.IsTrial));
     }
 
     [RequiresDockerFact]

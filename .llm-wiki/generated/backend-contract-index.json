@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1398,
     "ambiguousContracts": 30,
-    "consumerEdges": 11346,
+    "consumerEdges": 11348,
     "productionConsumerEdges": 6299,
-    "testConsumerEdges": 5047,
+    "testConsumerEdges": 5049,
     "consumedContracts": 1398,
     "unconsumedContracts": 0
   },
@@ -27596,7 +27596,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "AdminSsoStartCommand",
@@ -28519,7 +28519,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "AnalyzeFoodImageCommand",
@@ -61979,6 +61979,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "IAdminSsoSessionLock",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IAdminSsoSessionLock.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAdminUserRoleAuditQuery",
@@ -104268,7 +104281,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "IPersonalDataArchiveReader",
@@ -115474,7 +115487,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 5
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -115513,7 +115526,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedIdentityContextIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -124431,7 +124444,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramUnlinkHandlersTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "ISender",
@@ -127642,7 +127655,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TelegramOidcPostgresTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ITelegramOidcProvider",
@@ -130918,7 +130931,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 9
     },
     {
       "contract": "IUserAiProfileReadService",
@@ -131371,9 +131384,22 @@
         "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserAuthenticationIdentityService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 12
     },
     {
       "contract": "IUserAuthenticationIdentityService",
@@ -157948,7 +157974,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "RestoreAccountCommand",
@@ -162007,7 +162033,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramUnlinkHandlersTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "StartUserPremiumTrialCommand",
@@ -163226,7 +163252,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramUnlinkHandlersTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "TelegramOidcAuthorizationRequest",

@@ -133,9 +133,9 @@ public sealed class TelegramOperationRecoveryTests {
         Assert.Empty(scenario.DeletedMessages);
         if (!rejectProgressNotice) {
             Assert.False(scenario.Completed);
-            scenario.FailProgressDeletion = true;
+            scenario.ProgressDeletionStatus = HttpStatusCode.InternalServerError;
             await Assert.ThrowsAsync<ApiRequestException>(scenario.ProcessAsync);
-            scenario.FailProgressDeletion = false;
+            scenario.ProgressDeletionStatus = HttpStatusCode.OK;
             await scenario.ProcessAsync();
             Assert.Equal(new[] { 77, 77 }, scenario.DeletedMessages);
         }
@@ -149,6 +149,23 @@ public sealed class TelegramOperationRecoveryTests {
             () => Assert.Equal(2, scenario.Notices.Count),
             () => Assert.Contains(russian ? "400 ккал" : "400 kcal", notice, StringComparison.Ordinal),
             () => Assert.Equal($"https://diary.example/meals/{scenario.MealId:D}/edit", edit.GetProperty("web_app").GetProperty("url").GetString()));
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.BadRequest)]
+    [InlineData(HttpStatusCode.Forbidden)]
+    public async Task ProgressMessageAlreadyGoneOrInaccessible_CompletesWithoutResendingReceipt(HttpStatusCode status) {
+        using var scenario = new BotOperationScenario {
+            State = new BotPhotoCheckpoint("photo-notified", ProgressMessageId: 77),
+            ProgressDeletionStatus = status,
+        };
+
+        await scenario.ProcessAsync();
+
+        Assert.True(scenario.Completed);
+        Assert.Equal(77, Assert.Single(scenario.DeletedMessages));
+        Assert.Empty(scenario.Notices);
+        Assert.Empty(scenario.BusinessPaths);
     }
 
     [Fact]

@@ -237,14 +237,15 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
         using var waitingScope = new OutboxReplayTestScope(waiting, Clock);
         using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         Task<OutboxReplayAuditModel> replay = waitingScope.Service.ReplayAsync("image_object_deletion", image.Id, "operator", "retry", 1, cancellation.Token);
-        await capture.Reached.Task.WaitAsync(TimeSpan.FromSeconds(30), TimeProvider.System);
+        await capture.Reached.Task.WaitAsync(TimeSpan.FromSeconds(30), TimeProvider.System, cancellation.Token);
         await cancellation.CancelAsync();
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => replay.WaitAsync(TimeSpan.FromSeconds(30), TimeProvider.System));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            replay.WaitAsync(TimeSpan.FromSeconds(30), TimeProvider.System, CancellationToken.None));
         Assert.Null(waiting.Database.CurrentTransaction);
-        await transaction.RollbackAsync();
+        await transaction.RollbackAsync(CancellationToken.None);
         seed.ChangeTracker.Clear();
-        Assert.NotNull((await seed.ImageObjectDeletionOutbox.SingleAsync()).DeadLetteredOnUtc);
-        Assert.Empty(await seed.OutboxReplayAudits.ToListAsync());
+        Assert.NotNull((await seed.ImageObjectDeletionOutbox.SingleAsync(CancellationToken.None)).DeadLetteredOnUtc);
+        Assert.Empty(await seed.OutboxReplayAudits.ToListAsync(CancellationToken.None));
     }
 
     [RequiresDockerFact]

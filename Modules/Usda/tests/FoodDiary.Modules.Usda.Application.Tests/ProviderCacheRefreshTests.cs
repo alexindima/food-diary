@@ -63,7 +63,7 @@ public sealed class ProviderCacheRefreshTests {
             await meals.Received(1).GetForDateAsync(user, date, 1001, timeout.Token);
         } finally {
             await timeout.CancelAsync();
-            try { await refresh.WaitAsync(TimeSpan.FromSeconds(5)); } catch (OperationCanceledException) { }
+            try { await refresh.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None); } catch (OperationCanceledException) { }
         }
     }
 

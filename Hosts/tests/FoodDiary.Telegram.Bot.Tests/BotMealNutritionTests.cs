@@ -24,4 +24,28 @@ public sealed class BotMealNutritionTests {
         Assert.Contains("&lt;b&gt;Apple&lt;/b&gt; · 1 a&amp;b · ~10 kcal", nutrition.Format(russian: false), StringComparison.Ordinal);
         Assert.Contains("&lt;i&gt;Apple&lt;/i&gt;", legacy.Format(russian: false), StringComparison.Ordinal);
     }
+
+    [Theory]
+    [InlineData("g", "г")]
+    [InlineData("KG", "кг")]
+    [InlineData("ml", "мл")]
+    [InlineData("l", "л")]
+    [InlineData("pcs", "шт.")]
+    [InlineData("portion", "portion")]
+    public void Format_UsesLocalizedItemNameAmountAndUnit(string unit, string localizedUnit) {
+        var nutrition = new BotMealNutrition(20, 1, 1, 1,
+            Items: [new BotMealNutrition.Item("Apple", "Яблоко", 1.25, unit, 20)]);
+
+        Assert.Contains($"• Яблоко · 1,25 {localizedUnit} · ~20 ккал", nutrition.Format(russian: true), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData(0, "g")]
+    [InlineData(1, null)]
+    public void Format_OmitsUnavailablePortion(double amount, string? unit) {
+        var nutrition = new BotMealNutrition(20, 1, 1, 1,
+            Items: [new BotMealNutrition.Item("Apple", NameLocal: null, amount, unit, 20)]);
+
+        Assert.Contains("• Apple · ~20 ккал", nutrition.Format(russian: true), StringComparison.Ordinal);
+    }
 }

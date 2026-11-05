@@ -22,7 +22,7 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
     protected async Task<IActionResult> HandleOk<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
-        Result<TResponse> result = await Send(request);
+        Result<TResponse> result = await Send(request, HttpContext.RequestAborted);
         return result.ToOkActionResult(this, map);
     }
 
@@ -35,7 +35,7 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
     }
 
     protected async Task<IActionResult> HandleOk(IRequest<Result> request, object response) {
-        Result result = await Send(request);
+        Result result = await Send(request, HttpContext.RequestAborted);
         return result.ToOkActionResult(this, response);
     }
 
@@ -48,7 +48,7 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
     }
 
     protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
-        Result result = await Send(request);
+        Result result = await Send(request, HttpContext.RequestAborted);
         return result.ToNoContentActionResult(this);
     }
 

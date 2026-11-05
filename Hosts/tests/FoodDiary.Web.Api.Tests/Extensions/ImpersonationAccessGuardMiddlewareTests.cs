@@ -36,7 +36,8 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
         context.Response.Body.Position = 0;
         ApiErrorHttpResponse? payload = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
             context.Response.Body,
-            CaseInsensitiveJsonOptions);
+            CaseInsensitiveJsonOptions,
+            CancellationToken.None);
         Assert.NotNull(payload);
         Assert.Equal("Authentication.ImpersonationActionForbidden", payload.Error);
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));

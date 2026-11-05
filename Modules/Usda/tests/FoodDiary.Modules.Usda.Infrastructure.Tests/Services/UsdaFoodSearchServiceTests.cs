@@ -229,13 +229,13 @@ public sealed class UsdaFoodSearchServiceTests {
         using var creatorCancellation = new CancellationTokenSource();
 
         Task<UsdaFoodDetailModel?> creator = service.GetFoodDetailAsync(539789, creatorCancellation.Token);
-        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
-        Task<UsdaFoodDetailModel?> waiter = service.GetFoodDetailAsync(539789);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System, creatorCancellation.Token);
+        Task<UsdaFoodDetailModel?> waiter = service.GetFoodDetailAsync(539789, CancellationToken.None);
 
         await creatorCancellation.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => creator);
         handler.Release.TrySetResult();
-        UsdaFoodDetailModel? result = await waiter.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+        UsdaFoodDetailModel? result = await waiter.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System, CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.NotNull(result),
@@ -270,8 +270,9 @@ public sealed class UsdaFoodSearchServiceTests {
         Assert.Equal(1, handler.RequestCount);
 
         handler.Release.TrySetResult();
-        Assert.NotNull(await first.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System));
-        Assert.NotNull(await service.GetFoodDetailAsync(539790).WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System));
+        Assert.NotNull(await first.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System, CancellationToken.None));
+        Assert.NotNull(await service.GetFoodDetailAsync(539790, CancellationToken.None)
+            .WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System, CancellationToken.None));
         Assert.Equal(2, handler.RequestCount);
     }
 

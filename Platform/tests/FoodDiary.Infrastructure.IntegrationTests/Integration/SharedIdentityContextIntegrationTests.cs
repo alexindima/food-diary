@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
@@ -29,6 +30,24 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task AdminSsoSessionLock_RequiresSharedTransactionAndRejectsRevokedSession() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!);
+        (User user, UserRefreshTokenSession session) = await SeedAsync(provider);
+        IAdminSsoSessionLock sessionLock = provider.GetRequiredService<IAdminSsoSessionLock>();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sessionLock.LockActiveForAdminSsoAsync(user.Id, session.Id));
+
+        await using IDbContextTransaction transaction = await provider.GetRequiredService<SharedPersistenceDbContext>()
+            .Database.BeginTransactionAsync();
+        Assert.False(await sessionLock.LockActiveForAdminSsoAsync(UserId.New(), session.Id));
+        Assert.True(await sessionLock.LockActiveForAdminSsoAsync(user.Id, session.Id));
+
+        await provider.GetRequiredService<IRefreshTokenSessionWriteRepository>().RevokeByIdAsync(session.Id, user.Id, DateTime.UtcNow);
+        Assert.False(await sessionLock.LockActiveForAdminSsoAsync(user.Id, session.Id));
+    }
+
     [RequiresDockerFact]
     public async Task SharedSavePersistsOwnerRecordsAndTemplateRevisionsAsync() {
         await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();

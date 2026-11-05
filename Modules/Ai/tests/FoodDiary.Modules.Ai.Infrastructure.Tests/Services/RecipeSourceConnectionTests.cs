@@ -44,7 +44,7 @@ public sealed class RecipeSourceConnectionTests {
             Task server = RespondOnceAsync(listener, harness.Token);
             Task<string> response = client.GetStringAsync(new UriBuilder("http", address.ToString(), Port(listener)).Uri, harness.Token);
 
-            await Task.WhenAll(server, response).WaitAsync(TimeSpan.FromSeconds(12));
+            await Task.WhenAll(server, response).WaitAsync(TimeSpan.FromSeconds(12), CancellationToken.None);
 
             Assert.Equal("owned-socket", await response);
             Assert.False(harness.IsCancellationRequested);

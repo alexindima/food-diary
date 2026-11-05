@@ -58,7 +58,7 @@ public sealed class RecipeVideoImportTests {
         Task firstRequest = filter.OnResourceExecutionAsync(first, () => HoldAsync(first));
         Task secondRequest = filter.OnResourceExecutionAsync(second, () => HoldAsync(second));
         try {
-            await entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            await entered.Task.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
             ResourceExecutingContext third = CreateResourceContext();
             bool bound = false;
             await filter.OnResourceExecutionAsync(third, () => {

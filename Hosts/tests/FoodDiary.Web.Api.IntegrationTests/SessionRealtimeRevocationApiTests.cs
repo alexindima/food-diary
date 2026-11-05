@@ -27,7 +27,7 @@ public sealed class SessionRealtimeRevocationApiTests(ApiWebApplicationFactory f
         byte[] buffer = new byte[1024];
         WebSocketReceiveResult handshake = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), timeout.Token);
         Assert.StartsWith("{}", Encoding.UTF8.GetString(buffer, 0, handshake.Count), StringComparison.Ordinal);
-        using HttpResponseMessage logout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { });
+        using HttpResponseMessage logout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { }, timeout.Token);
         Assert.Equal(HttpStatusCode.NoContent, logout.StatusCode);
         bool closed = false;
         try {

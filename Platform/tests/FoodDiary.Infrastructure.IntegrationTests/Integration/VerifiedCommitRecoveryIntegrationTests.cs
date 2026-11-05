@@ -89,7 +89,7 @@ public sealed class VerifiedCommitRecoveryIntegrationTests(PostgresDatabaseFixtu
         Assert.Equal(2, failures.InnerExceptions.Count);
         Assert.Same(commitFailure, failures.InnerExceptions[0]);
         Assert.IsAssignableFrom<NpgsqlException>(failures.InnerExceptions[1]);
-        await rejectConnection.WaitAsync(TimeSpan.FromSeconds(5));
+        await rejectConnection.WaitAsync(TimeSpan.FromSeconds(5), cancellation.Token);
         _ = transaction.Received(1).CommitAsync(cancellation.Token);
 
         async Task DisposeAndReplaceEndpointAsync() {

@@ -27,7 +27,7 @@ public sealed class AuthenticationRegistrationTests {
         using var cancelled = new CancellationTokenSource();
         await cancelled.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => store.StoreAsync("cancelled", "user", TimeSpan.FromMinutes(1), cancelled.Token));
-        Assert.Null(await store.ConsumeAsync("cancelled"));
+        Assert.Null(await store.ConsumeAsync("cancelled", CancellationToken.None));
     }
 
     [Fact]

@@ -55,14 +55,14 @@ public sealed class SessionSecurityHubFilterTests {
         Assert.False(aborted.Task.IsCompleted);
         clock.Tick(TimeSpan.FromSeconds(15));
         if (string.Equals(scenario, "timeout", StringComparison.Ordinal)) {
-            await clock.TimeoutCreated.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+            await clock.TimeoutCreated.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System, CancellationToken.None);
             clock.Tick(TimeSpan.FromSeconds(5));
         }
         if (string.Equals(scenario, "healthy", StringComparison.Ordinal)) {
-            await checkedSession.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+            await checkedSession.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System, CancellationToken.None);
             Assert.False(aborted.Task.IsCompleted);
         } else {
-            await aborted.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+            await aborted.Task.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System, CancellationToken.None);
         }
         await filter.OnDisconnectedAsync(lifetime, exception: null, (_, _) => Task.CompletedTask);
         Assert.Empty(caller.Items);

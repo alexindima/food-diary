@@ -141,10 +141,10 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         await cancellation.CancelAsync();
 
         foreach (IUserDataPurgeParticipant participant in participants) {
-            await using IDbContextTransaction transaction = await central.Database.BeginTransactionAsync();
+            await using IDbContextTransaction transaction = await central.Database.BeginTransactionAsync(CancellationToken.None);
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
                 participant.PurgeAsync(target.User.Id, reassignTarget: null, cancellation.Token));
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(CancellationToken.None);
         }
 
         await using FoodDiaryDbContext verification = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);

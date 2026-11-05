@@ -76,19 +76,19 @@ public sealed class WeeklyGoalTransactionIntegrationTests(PostgresDatabaseFixtur
             () => Assert.Empty(owner.ChangeTracker.Entries()),
             () => Assert.Null(coordinator.CurrentTransaction),
             () => Assert.False(queue.HasActions));
-        Assert.False(await context.Users.AnyAsync(candidate => candidate.Id == uncommitted.Id));
-        Assert.Null(await repository.GetAsync(user.Id, Week));
-        await queue.FlushAsync();
+        Assert.False(await context.Users.AnyAsync(candidate => candidate.Id == uncommitted.Id, CancellationToken.None));
+        Assert.Null(await repository.GetAsync(user.Id, Week, cancellationToken: CancellationToken.None));
+        await queue.FlushAsync(CancellationToken.None);
         Assert.Equal(0, delivered);
 
         await runner.ExecuteSerializedAsync(user.Id, Week, async token => {
             await repository.AddAsync(CreateGoal(user.Id), token);
             queue.Enqueue("notification", _ => { delivered++; return Task.CompletedTask; });
             return true;
-        });
-        Assert.NotNull(await repository.GetAsync(user.Id, Week));
+        }, CancellationToken.None);
+        Assert.NotNull(await repository.GetAsync(user.Id, Week, cancellationToken: CancellationToken.None));
         Assert.Equal(0, delivered);
-        await queue.FlushAsync();
+        await queue.FlushAsync(CancellationToken.None);
         Assert.Equal(1, delivered);
     }
 

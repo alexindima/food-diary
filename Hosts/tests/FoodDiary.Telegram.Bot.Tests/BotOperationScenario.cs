@@ -37,7 +37,7 @@ internal sealed class BotOperationScenario : IDisposable {
     public bool LeaseConflict { get; set; }
     public bool CheckpointConflict { get; set; }
     public bool BlockedByUser { get; set; }
-    public bool FailProgressDeletion { get; set; }
+    public HttpStatusCode ProgressDeletionStatus { get; set; } = HttpStatusCode.OK;
     public bool IsPremium { get; set; } = true;
     public HttpStatusCode BillingStatus { get; set; } = HttpStatusCode.OK;
     public bool Completed { get; private set; }
@@ -91,9 +91,11 @@ internal sealed class BotOperationScenario : IDisposable {
         if (path.EndsWith("/deleteMessage", StringComparison.OrdinalIgnoreCase)) {
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
             DeletedMessages.Add(body.RootElement.GetProperty("message_id").GetInt32());
-            return FailProgressDeletion
-                ? new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = JsonContent.Create(new { ok = false, error_code = 500, description = "Temporary failure" }) }
-                : Json(new { ok = true, result = true });
+            return ProgressDeletionStatus == HttpStatusCode.OK
+                ? Json(new { ok = true, result = true })
+                : new HttpResponseMessage(ProgressDeletionStatus) {
+                    Content = JsonContent.Create(new { ok = false, error_code = (int)ProgressDeletionStatus, description = "Message deletion failed" }),
+                };
         }
         BusinessPaths.Add(path);
         if (path.EndsWith("/bot/auth", StringComparison.Ordinal)) {

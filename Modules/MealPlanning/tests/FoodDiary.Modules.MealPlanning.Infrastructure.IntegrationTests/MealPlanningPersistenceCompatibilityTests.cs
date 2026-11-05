@@ -143,7 +143,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => repository.DeletePersonalAsync(foreign.Id, other.Id, cancellation.Token));
-        Assert.False(await repository.DeletePersonalAsync(personal.Id, owner.Id));
+        Assert.False(await repository.DeletePersonalAsync(personal.Id, owner.Id, CancellationToken.None));
     }
 
     [RequiresDockerFact]

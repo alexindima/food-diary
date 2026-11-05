@@ -8,6 +8,8 @@ using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
@@ -55,6 +57,40 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
+        Assert.Equal(0, adminSsoService.CreateCodeCallCount);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task AdminSsoStartHandler_WithMissingOrStaleSession_DoesNotCreateCode(bool missingSession) {
+        var user = User.Create("admin@example.com", "secret");
+        user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
+        var adminSsoService = new StubAdminSsoService();
+        var handler = new AdminSsoStartCommandHandler(
+            adminSsoService, CreateUserAuthenticationIdentityService(new StubUserRepository(user)), new StubDateTimeProvider());
+        var command = new AdminSsoStartCommand(user.Id.Value,
+            missingSession ? Guid.Empty : Guid.NewGuid(), missingSession ? user.SecurityVersion : user.SecurityVersion - 1);
+
+        Result<AdminSsoStartModel> result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidCredentials");
+        Assert.Equal(0, adminSsoService.CreateCodeCallCount);
+    }
+
+    [Fact]
+    public async Task AdminSsoStartHandler_WhenPrincipalLookupFails_PreservesDependencyError() {
+        IUserAuthenticationIdentityService identities = Substitute.For<IUserAuthenticationIdentityService>();
+        var error = new Error("Dependency.Unavailable", "Principal lookup failed.");
+        identities.GetAuthenticationPrincipalAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserAuthenticationPrincipalModel>(error));
+        var adminSsoService = new StubAdminSsoService();
+        var handler = new AdminSsoStartCommandHandler(adminSsoService, identities, new StubDateTimeProvider());
+
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
         Assert.Equal(0, adminSsoService.CreateCodeCallCount);
     }
 

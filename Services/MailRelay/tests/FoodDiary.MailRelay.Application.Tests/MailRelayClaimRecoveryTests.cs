@@ -106,7 +106,7 @@ public sealed class MailRelayClaimRecoveryTests {
         });
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            CreateProcessor(store, transport).ProcessAsync(CreateMessage(), caller.Token).WaitAsync(TimeSpan.FromSeconds(10)));
+            CreateProcessor(store, transport).ProcessAsync(CreateMessage(), caller.Token).WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None));
 
         Assert.True(caller.IsCancellationRequested);
         Assert.True(entered.Task.IsCompletedSuccessfully);

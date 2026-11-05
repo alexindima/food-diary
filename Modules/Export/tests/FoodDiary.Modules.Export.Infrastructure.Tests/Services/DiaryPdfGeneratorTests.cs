@@ -885,7 +885,7 @@ public sealed class DiaryPdfGeneratorTests {
                 "https://93.184.216.34/stalled.png",
                 cancellation.Token));
 
-        await handler.CancellationObserved.WaitAsync(TimeSpan.FromSeconds(2));
+        await handler.CancellationObserved.WaitAsync(TimeSpan.FromSeconds(2), CancellationToken.None);
     }
 
     [Fact]

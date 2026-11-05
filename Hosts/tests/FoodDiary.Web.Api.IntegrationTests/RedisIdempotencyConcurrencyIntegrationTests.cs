@@ -15,7 +15,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
     public async Task ReserveAsync_ConcurrentCallers_AcquireExactlyOneLeaseAndThenReplay() {
         await using RedisContainer container = CreateRedisContainer();
         await container.StartAsync().ConfigureAwait(false);
-        ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
+        IConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
         await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
         var store = new RedisIdempotencyStore(connection);
@@ -55,7 +55,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
     public async Task CompleteAsync_WhenLeaseWasReacquired_RejectsStaleOwnerCompletion() {
         await using RedisContainer container = CreateRedisContainer();
         await container.StartAsync().ConfigureAwait(false);
-        ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
+        IConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
         await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
         var store = new RedisIdempotencyStore(connection);
@@ -145,7 +145,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
     public async Task RenewAsync_KeepsDuplicateInProgressBeyondOriginalLease() {
         await using RedisContainer container = CreateRedisContainer();
         await container.StartAsync().ConfigureAwait(false);
-        ConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
+        IConnectionMultiplexer connection = await ConnectionMultiplexer.ConnectAsync(
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
         await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
         var store = new RedisIdempotencyStore(connection);

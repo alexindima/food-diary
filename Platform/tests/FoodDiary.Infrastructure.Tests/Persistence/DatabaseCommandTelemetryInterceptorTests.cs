@@ -174,9 +174,9 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
 
     [Fact]
     public void ResolveErrorType_WhenExceptionIsDbException_ReturnsConcreteTypeName() {
-        string result = InvokePrivateStatic<string>("ResolveErrorType", new TestDbException());
+        string result = InvokePrivateStatic<string>("ResolveErrorType", new NpgsqlException("Database command failed."));
 
-        Assert.Equal(nameof(TestDbException), result);
+        Assert.Equal(nameof(NpgsqlException), result);
     }
 
     [Fact]
@@ -248,7 +248,4 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
             startTime: DateTimeOffset.UtcNow,
             duration: TimeSpan.FromMilliseconds(1),
             commandSource);
-
-    [ExcludeFromCodeCoverage]
-    private sealed class TestDbException : DbException;
 }

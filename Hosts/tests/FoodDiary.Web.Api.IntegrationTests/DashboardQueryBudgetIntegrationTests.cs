@@ -31,7 +31,6 @@ public sealed class DashboardQueryBudgetIntegrationTests(PostgresApiWebApplicati
     [InlineData(true, true, 11, true, "ru")]
     public async Task Dashboard_AfterCreatingAMeal_StaysWithinTheSnapshotQueryBudget(
         bool includeCycle, bool includeAiSession, int mealCount, bool includeFasting, string locale) {
-        IHttpContextAccessor httpContext = factory.Services.GetRequiredService<IHttpContextAccessor>();
         string requestMarker = Guid.NewGuid().ToString("N");
         int snapshotQueries = 0;
         using var listener = new MeterListener();
@@ -40,11 +39,14 @@ public sealed class DashboardQueryBudgetIntegrationTests(PostgresApiWebApplicati
                 meterListener.EnableMeasurementEvents(instrument);
             }
         };
-        listener.SetMeasurementEventCallback<int>((_, count, _, _) => {
-            if (string.Equals(httpContext.HttpContext?.Request.Headers["X-Dashboard-Budget-Test"].ToString(), requestMarker, StringComparison.Ordinal)) {
-                Volatile.Write(ref snapshotQueries, count);
-            }
-        });
+        {
+            IHttpContextAccessor httpContext = factory.Services.GetRequiredService<IHttpContextAccessor>();
+            listener.SetMeasurementEventCallback<int>((_, count, _, _) => {
+                if (string.Equals(httpContext.HttpContext?.Request.Headers["X-Dashboard-Budget-Test"].ToString(), requestMarker, StringComparison.Ordinal)) {
+                    Volatile.Write(ref snapshotQueries, count);
+                }
+            });
+        }
         listener.Start();
         using HttpClient client = factory.CreateClient();
         client.DefaultRequestHeaders.Add("X-Dashboard-Budget-Test", requestMarker);

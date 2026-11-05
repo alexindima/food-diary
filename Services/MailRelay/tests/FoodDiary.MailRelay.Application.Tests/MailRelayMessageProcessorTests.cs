@@ -28,7 +28,7 @@ public sealed class MailRelayMessageProcessorTests {
         using var caller = new CancellationTokenSource(TimeSpan.FromSeconds(10));
 
         MailRelayProcessResult result = await CreateProcessor(store, transport, logger).ProcessAsync(CreateMessage(), caller.Token)
-            .WaitAsync(TimeSpan.FromSeconds(15));
+            .WaitAsync(TimeSpan.FromSeconds(15), CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.False(result.Succeeded),
@@ -62,7 +62,7 @@ public sealed class MailRelayMessageProcessorTests {
             },
         };
         MailRelayProcessResult result = await CreateProcessor(store, transport).ProcessAsync(CreateMessage(), CancellationToken.None)
-            .WaitAsync(TimeSpan.FromSeconds(10));
+            .WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
         Assert.Equal(!loseClaim, result.Succeeded);
         Assert.False(result.IsTerminalFailure);
         Assert.Null(store.FailureDecision);

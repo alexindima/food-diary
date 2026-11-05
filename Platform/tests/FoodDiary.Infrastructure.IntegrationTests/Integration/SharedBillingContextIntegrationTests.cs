@@ -124,16 +124,18 @@ public sealed partial class SharedBillingContextIntegrationTests(PostgresDatabas
             if (canceled) { await cancellation.CancelAsync(); }
             throw failure;
         }, cancellation.Token));
-        User[] users = await context.Users.AsNoTracking().ToArrayAsync();
-        BillingWebhookEvent[] events = await context.BillingWebhookEvents.AsNoTracking().ToArrayAsync();
+        User[] users = await context.Users.AsNoTracking().ToArrayAsync(CancellationToken.None);
+        BillingWebhookEvent[] events = await context.BillingWebhookEvents.AsNoTracking().ToArrayAsync(CancellationToken.None);
         Assert.Multiple(
             () => Assert.Same(failure, actual),
             () => Assert.Empty(context.ChangeTracker.Entries()),
             () => Assert.Empty(owned.ChangeTracker.Entries()),
             () => Assert.Empty(users),
             () => Assert.Empty(events));
-        await runner.ExecuteAsync(async token => await provider.GetRequiredService<IBillingWebhookEventWriteRepository>().AddAsync(CreateWebhook("next-attempt"), token));
-        Assert.Single(await context.BillingWebhookEvents.ToListAsync());
+        await runner.ExecuteAsync(
+            async token => await provider.GetRequiredService<IBillingWebhookEventWriteRepository>().AddAsync(CreateWebhook("next-attempt"), token),
+            CancellationToken.None);
+        Assert.Single(await context.BillingWebhookEvents.ToListAsync(CancellationToken.None));
     }
 
     [RequiresDockerFact]

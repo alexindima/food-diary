@@ -48,7 +48,7 @@ public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fi
 
         await cancellation.CancelAsync();
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => reading.WaitAsync(TimeSpan.FromSeconds(3)));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => reading.WaitAsync(TimeSpan.FromSeconds(3), CancellationToken.None));
     }
 
     [Theory]
@@ -132,7 +132,7 @@ public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fi
             Assert.NotNull(state.ChildPid);
             child = Process.GetProcessById(state.ChildPid.Value);
 
-            ResultAssert.Failure(await extraction.WaitAsync(TimeSpan.FromSeconds(55)), "Ai.RecipeVideoUnavailable");
+            ResultAssert.Failure(await extraction.WaitAsync(TimeSpan.FromSeconds(55), CancellationToken.None), "Ai.RecipeVideoUnavailable");
 
             Assert.False(harness.IsCancellationRequested);
             await AssertExitedAsync(parent, CancellationToken.None);
@@ -144,7 +144,7 @@ public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fi
             await harness.CancelAsync();
             await StopOwnedProcessAsync(parent, CancellationToken.None);
             await StopOwnedProcessAsync(child, CancellationToken.None);
-            try { await extraction.WaitAsync(TimeSpan.FromSeconds(10)); } catch (OperationCanceledException) { }
+            try { await extraction.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None); } catch (OperationCanceledException) { }
             parent?.Dispose();
             child?.Dispose();
         }
@@ -176,7 +176,8 @@ public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fi
 
             await cancellation.CancelAsync().ConfigureAwait(false);
 
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => extraction.WaitAsync(TimeSpan.FromSeconds(10))).ConfigureAwait(false);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+                extraction.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None)).ConfigureAwait(false);
             await AssertExitedAsync(parent, CancellationToken.None).ConfigureAwait(false);
             await AssertExitedAsync(child, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(lockInput, Directory.Exists(RecipeVideoProcessFixture.MediaDirectory(state)));
@@ -191,7 +192,7 @@ public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fi
             await cancellation.CancelAsync().ConfigureAwait(false);
             await StopOwnedProcessAsync(parent, CancellationToken.None).ConfigureAwait(false);
             await StopOwnedProcessAsync(child, CancellationToken.None).ConfigureAwait(false);
-            try { await extraction.WaitAsync(TimeSpan.FromSeconds(10)).ConfigureAwait(false); } catch (OperationCanceledException) { }
+            try { await extraction.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None).ConfigureAwait(false); } catch (OperationCanceledException) { }
             if (inputLock is not null) { await inputLock.DisposeAsync().ConfigureAwait(false); }
             if (state is not null) {
                 string directory = RecipeVideoProcessFixture.MediaDirectory(state);

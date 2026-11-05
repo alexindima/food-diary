@@ -81,8 +81,8 @@ public sealed class LessonReadTransactionIntegrationTests(PostgresDatabaseFixtur
 
         Assert.All(results, result => Assert.True(result.IsSuccess));
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
-        Assert.Equal(1, await read.UserLessonProgress.CountAsync(row => row.UserId == user.Id && row.LessonId == lesson.Id));
-        Assert.Equal(1, (await read.AchievementEvaluationOutbox.SingleAsync(row => row.UserId == user.Id)).Revision);
+        Assert.Equal(1, await read.UserLessonProgress.CountAsync(row => row.UserId == user.Id && row.LessonId == lesson.Id, timeout.Token));
+        Assert.Equal(1, (await read.AchievementEvaluationOutbox.SingleAsync(row => row.UserId == user.Id, timeout.Token)).Revision);
     }
 
     private static MarkLessonReadCommandHandler CreateHandler(IServiceProvider provider, IAchievementEvaluationOutbox outbox) =>

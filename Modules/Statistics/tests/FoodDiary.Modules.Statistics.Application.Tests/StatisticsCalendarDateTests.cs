@@ -56,7 +56,7 @@ public sealed class StatisticsCalendarDateTests {
         await sender.Received(1).Send(Arg.Is<ReadWeightSummariesQuery>(q => q.UserId == userId && q.DateFrom == calendarDate && q.DateTo == calendarDate), cancellation.Token);
         await sender.Received(1).Send(Arg.Is<ReadWaistSummariesQuery>(q => q.UserId == userId && q.DateFrom == calendarDate && q.DateTo == calendarDate), cancellation.Token);
         await sender.Received(1).Send(Arg.Is<ReadMealNutritionStatisticsQuery>(q => q.UserId == userId && q.DateFrom == from && q.DateTo == to && q.TimeZoneId == zoneId), cancellation.Token);
-        Assert.True((await new GetStatisticsSummaryQueryValidator().ValidateAsync(query)).IsValid);
+        Assert.True((await new GetStatisticsSummaryQueryValidator().ValidateAsync(query, cancellation.Token)).IsValid);
     }
 
     [Theory]

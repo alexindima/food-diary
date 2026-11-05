@@ -10,6 +10,8 @@ namespace FoodDiary.Development.Mcp.Tests;
 [Collection("PowerShell Wiki process")]
 [ExcludeFromCodeCoverage]
 public sealed class NodeTaskProcessBoundaryTests {
+    private static readonly TimeSpan TestWaitTimeout = TimeSpan.FromSeconds(5);
+
     [Fact]
     public async Task MissingNodeExecutable_PropagatesTheNativeLaunchFailure() {
         using var repository = new NodeRepository("process.stdout.write('{}');");
@@ -47,21 +49,22 @@ public sealed class NodeTaskProcessBoundaryTests {
 
             await cancellation.CancelAsync();
 
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => execution.WaitAsync(TimeSpan.FromSeconds(5)));
-            await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
-            await grandchild.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => WaitForExecutionAsync(execution));
+            Assert.True(execution.IsCanceled);
+            await WaitForProcessExitAsync(child);
+            await WaitForProcessExitAsync(grandchild);
             Assert.True(child.HasExited);
             Assert.True(grandchild.HasExited);
         } finally {
             await cancellation.CancelAsync();
-            foreach (Process? owned in new[] { child, grandchild }) {
+            foreach (Process? owned in (Process?[])[child, grandchild]) {
                 if (owned is { HasExited: false }) {
                     owned.Kill(entireProcessTree: true);
-                    await owned.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+                    await WaitForProcessExitAsync(owned);
                 }
                 owned?.Dispose();
             }
-            try { await execution.WaitAsync(TimeSpan.FromSeconds(5)); } catch (OperationCanceledException) { }
+            try { await WaitForExecutionAsync(execution); } catch (OperationCanceledException) { }
         }
 
         static string PublishIdentity(string path) => "const { writeFileSync, renameSync } = await import('node:fs'); "
@@ -91,15 +94,15 @@ public sealed class NodeTaskProcessBoundaryTests {
             Assert.Equal(DevelopmentMcpErrorCodes.Timeout, failure.ErrorCode);
             Assert.Contains("bounded timeout", failure.Message, StringComparison.Ordinal);
             Assert.False(harness.IsCancellationRequested);
-            await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            await WaitForProcessExitAsync(child);
             Assert.True(child.HasExited);
         } finally {
             await harness.CancelAsync();
             if (child is { HasExited: false }) {
                 child.Kill(entireProcessTree: true);
-                await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+                await WaitForProcessExitAsync(child);
             }
-            try { await execution.WaitAsync(TimeSpan.FromSeconds(5)); } catch (OperationCanceledException) { } catch (DevelopmentMcpException) { }
+            try { await WaitForExecutionAsync(execution); } catch (OperationCanceledException) { } catch (DevelopmentMcpException) { }
             child?.Dispose();
         }
     }
@@ -165,23 +168,33 @@ public sealed class NodeTaskProcessBoundaryTests {
 
             await cancellation.CancelAsync();
 
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => execution.WaitAsync(TimeSpan.FromSeconds(5)));
-            await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => WaitForExecutionAsync(execution));
+            Assert.True(execution.IsCanceled);
+            await WaitForProcessExitAsync(child);
             Assert.True(child.HasExited);
         } finally {
             await cancellation.CancelAsync();
             if (child is { HasExited: false }) {
                 child.Kill(entireProcessTree: true);
-                await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+                await WaitForProcessExitAsync(child);
             }
-            try { await execution.WaitAsync(TimeSpan.FromSeconds(5)); } catch (OperationCanceledException) { }
+            try { await WaitForExecutionAsync(execution); } catch (OperationCanceledException) { }
             child?.Dispose();
         }
     }
 
+    // Only the execution task may supply the cancellation observed by the assertion.
+    private static Task WaitForExecutionAsync(Task execution) =>
+        execution.WaitAsync(TestWaitTimeout, CancellationToken.None);
+
+    private static async Task WaitForProcessExitAsync(Process process) {
+        using var timeout = new CancellationTokenSource(TestWaitTimeout);
+        await process.WaitForExitAsync(timeout.Token);
+    }
+
     private static async Task<Process> ReadOwnedProcessAsync(string identityPath) {
         var timeout = Stopwatch.StartNew();
-        while (timeout.Elapsed < TimeSpan.FromSeconds(5)) {
+        while (timeout.Elapsed < TestWaitTimeout) {
             if (File.Exists(identityPath)) {
                 string identity = await File.ReadAllTextAsync(identityPath);
                 return Process.GetProcessById(int.Parse(identity, CultureInfo.InvariantCulture));

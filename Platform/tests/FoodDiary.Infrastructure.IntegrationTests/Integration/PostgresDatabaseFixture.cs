@@ -50,9 +50,17 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     }
 
     public async Task<FoodDiaryDbContext> CreateDbContextAsync() {
-        FoodDiaryDbContext context = CreateDbContext(await CreateIsolatedDatabaseAsync().ConfigureAwait(false));
-        await context.Database.MigrateAsync().ConfigureAwait(false);
-        return context;
+        string connectionString = await CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+
+        // A slow container connection can fail during migration setup under the profiler.
+        // Use the provider's transient retry strategy only for schema initialization.
+        DbContextOptions<FoodDiaryDbContext> migrationOptions = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString, options => options.EnableRetryOnFailure(
+                maxRetryCount: 2, maxRetryDelay: TimeSpan.FromSeconds(2), errorCodesToAdd: null))
+            .Options;
+        await using var migrationContext = new FoodDiaryDbContext(migrationOptions);
+        await migrationContext.Database.MigrateAsync().ConfigureAwait(false);
+        return CreateDbContext(connectionString);
     }
 
     public async Task<string> CreateIsolatedDatabaseAsync() {

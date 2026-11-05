@@ -45,7 +45,7 @@ public sealed class EfModuleTransactionCoordinatorTests {
         }
         bool succeeded = outcome.Equals("success", StringComparison.Ordinal);
         Assert.Equal(1, attempts);
-        Assert.Equal(succeeded, await context.Users.AsNoTracking().AnyAsync());
+        Assert.Equal(succeeded, await context.Users.AsNoTracking().AnyAsync(CancellationToken.None));
         Assert.False(context.ChangeTracker.HasChanges());
         if (!succeeded) { Assert.Empty(context.ChangeTracker.Entries()); }
         queue.Received(succeeded ? 1 : 2).Discard();

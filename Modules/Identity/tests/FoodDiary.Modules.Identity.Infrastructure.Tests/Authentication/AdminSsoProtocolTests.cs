@@ -45,7 +45,7 @@ public sealed class AdminSsoProtocolTests {
         var store = new RecordingStore();
         var service = new AdminSsoService(store, TimeProvider.System);
 
-        AdminSsoIssuer? result = await service.ExchangeCodeAsync(new string(character, count));
+        AdminSsoIssuer? result = await service.ExchangeCodeAsync(new string(character, count), CancellationToken.None);
 
         Assert.Multiple(() => Assert.Null(result), () => Assert.Equal(0, store.ConsumeCount));
     }
@@ -110,7 +110,7 @@ public sealed class AdminSsoProtocolTests {
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.CreateCodeAsync(issuer, cancellation.Token));
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.ExchangeCodeAsync(created.Code, cancellation.Token));
-        Assert.Equal(issuer, await service.ExchangeCodeAsync(created.Code));
+        Assert.Equal(issuer, await service.ExchangeCodeAsync(created.Code, CancellationToken.None));
     }
 
     [Theory]
@@ -132,9 +132,9 @@ public sealed class AdminSsoProtocolTests {
         await using ServiceProvider provider = services.BuildServiceProvider();
         IAdminSsoService service = provider.GetRequiredService<IAdminSsoService>();
         var issuer = new AdminSsoIssuer(UserId.New(), Guid.NewGuid(), 7);
-        AdminSsoCode result = await service.CreateCodeAsync(issuer);
+        AdminSsoCode result = await service.CreateCodeAsync(issuer, CancellationToken.None);
         store.Payload = store.StoredValue;
-        Assert.Equal(issuer, await service.ExchangeCodeAsync(result.Code));
+        Assert.Equal(issuer, await service.ExchangeCodeAsync(result.Code, CancellationToken.None));
         Assert.Multiple(
             () => Assert.Same(store, provider.GetRequiredService<IAdminSsoCodeStore>()),
             () => Assert.Equal(result.Code, store.StoredCode),

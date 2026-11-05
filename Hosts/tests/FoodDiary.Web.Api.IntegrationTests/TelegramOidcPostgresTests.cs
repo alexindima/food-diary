@@ -54,7 +54,26 @@ public sealed class TelegramOidcPostgresTests(PostgresApiWebApplicationFactory f
         Guid loggedIn = await CompleteAsync(client, foreignBrowser, "login");
         Assert.Equal(registered, loggedIn);
         await provider.Received(2).ExchangeAsync(Arg.Is<TelegramOidcTokenExchange>(exchange => exchange.Code.Value == "test-code"), Arg.Any<CancellationToken>());
+        await VerifyUnlinkRefusesLastSignInMethodAsync(client, foreignBrowser, provider);
         await VerifyBrowserBackupEmailAsync(client, foreignBrowser, registered);
+    }
+
+    private static async Task VerifyUnlinkRefusesLastSignInMethodAsync(
+        HttpClient client, HttpClient foreignBrowser, ITelegramOidcProvider provider) {
+        const string path = "/api/v1/auth/telegram/unlink/oidc";
+        using HttpResponseMessage start = await client.PostAsync(path + "/start", content: null);
+        Assert.Equal(HttpStatusCode.OK, start.StatusCode);
+        using var authorization = JsonDocument.Parse(await start.Content.ReadAsStringAsync());
+        string state = new Uri(authorization.RootElement.GetProperty("authorizationUrl").GetString()!).Query["?state=".Length..];
+        var request = new { Code = "test-code", State = state };
+
+        using HttpResponseMessage foreign = await foreignBrowser.PostAsJsonAsync(path + "/complete", request);
+        Assert.Equal(HttpStatusCode.Unauthorized, foreign.StatusCode);
+        using HttpResponseMessage complete = await client.PostAsJsonAsync(path + "/complete", request);
+        Assert.Equal(HttpStatusCode.Conflict, complete.StatusCode);
+        using var error = JsonDocument.Parse(await complete.Content.ReadAsStringAsync());
+        Assert.Equal("User.LastSignInMethod", error.RootElement.GetProperty("error").GetString());
+        await provider.Received(3).ExchangeAsync(Arg.Any<TelegramOidcTokenExchange>(), Arg.Any<CancellationToken>());
     }
 
     private async Task VerifyBrowserBackupEmailAsync(HttpClient client, HttpClient foreignBrowser, Guid userId) {

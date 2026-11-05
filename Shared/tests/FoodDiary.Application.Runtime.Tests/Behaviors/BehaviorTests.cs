@@ -374,7 +374,7 @@ public class BehaviorTests {
             flushTimeout: TimeSpan.FromMilliseconds(10),
             maxActions: 3);
         bool secondActionExecuted = false;
-        queue.Enqueue("test.ignores-cancellation", static _ => Task.Delay(TimeSpan.FromMilliseconds(50)));
+        queue.Enqueue("test.ignores-cancellation", static _ => Task.Delay(TimeSpan.FromMilliseconds(50), CancellationToken.None));
         queue.Enqueue("test.must-be-dropped", _ => {
             secondActionExecuted = true;
             return Task.CompletedTask;

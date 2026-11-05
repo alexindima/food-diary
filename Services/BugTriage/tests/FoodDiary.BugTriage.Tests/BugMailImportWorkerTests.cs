@@ -55,7 +55,7 @@ public sealed class BugMailImportWorkerTests {
 
         // BackgroundService short-circuits canceled startup before invoking the worker's entrypoint.
         MethodInfo execute = typeof(BugMailImportWorker).GetMethod("ExecuteAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
-        await ((Task)execute.Invoke(worker, [cancellation.Token])!).WaitAsync(TimeSpan.FromSeconds(10));
+        await ((Task)execute.Invoke(worker, [cancellation.Token])!).WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
 
         Assert.Empty(store.ReceivedCalls());
     }

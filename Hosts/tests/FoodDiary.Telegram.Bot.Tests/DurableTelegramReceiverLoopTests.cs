@@ -40,7 +40,7 @@ public sealed class DurableTelegramReceiverLoopTests {
         Assert.Equal(new[] { 10 }, persisted);
         Assert.Equal(11, receiver.NextOffset);
         await stopping.CancelAsync();
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => run.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => run.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None));
     }
 
     [Fact]
@@ -56,9 +56,9 @@ public sealed class DurableTelegramReceiverLoopTests {
             TimeProvider.System, NullLogger.Instance);
         using var stopping = new CancellationTokenSource();
         Task run = receiver.RunAsync(stopping.Token);
-        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, stopping.Token);
         await stopping.CancelAsync();
-        await run.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+        await run.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None);
         Assert.Null(receiver.NextOffset);
     }
 

@@ -132,9 +132,37 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Empty(quota.Reservations);
     }
 
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenTrialEndsDuringTokenEstimation_DoesNotReserveOrGenerate() {
+        var userId = UserId.New();
+        var start = new DateTime(2026, 8, 29, 12, 0, 0, DateTimeKind.Utc);
+        DateTime end = start.AddDays(7);
+        var clock = new TrialClock(end.AddSeconds(-1));
+        IUserAiProfileReadService profiles = Substitute.For<IUserAiProfileReadService>();
+        profiles.GetAiProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserAiProfileModel(userId, "ru", 5_000_000, 1_000_000, HasAcceptedAiConsent: true,
+                PremiumTrialStartedAtUtc: start, PremiumTrialEndsAtUtc: end)));
+        var client = new RecordingOpenAiFoodClient {
+            BeforeCalculateNutritionBudgetAsync = _ => {
+                clock.UtcNow = end;
+                return Task.CompletedTask;
+            },
+        };
+        var quota = new RecordingAiQuotaRepository();
+        var service = new OpenAiFoodService(client, quota, profiles, clock, CreateAiPromptProvider());
+
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(CreateItems(), userId, RequestId, CancellationToken.None);
+
+        ResultAssert.Failure(result, "Ai.TrialEnded");
+        Assert.Equal(1, client.CalculateNutritionBudgetCalls);
+        Assert.Empty(quota.Reservations);
+        Assert.Equal(0, client.ProviderCalls);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class TrialClock(DateTime nowUtc) : TimeProvider {
-        public override DateTimeOffset GetUtcNow() => new(nowUtc);
+        public DateTime UtcNow { get; set; } = nowUtc;
+        public override DateTimeOffset GetUtcNow() => new(UtcNow);
     }
 
     [Fact]

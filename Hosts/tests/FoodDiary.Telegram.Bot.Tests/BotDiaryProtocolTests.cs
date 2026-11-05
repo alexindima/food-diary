@@ -17,7 +17,29 @@ public sealed class BotDiaryProtocolTests {
             Assert.Equal(HttpMethod.Get, request.Method);
             Assert.Equal("https://diary.example/api/v1/billing/overview", request.RequestUri?.AbsoluteUri);
             Assert.Equal("Bearer token", request.Headers.Authorization?.ToString());
-            return Json(new { IsPremium = premium });
+            return Json(new {
+                IsPremium = premium,
+                Plan = premium ? "monthly" : null,
+                Provider = "paddle",
+                AvailableProviders = new[] { "paddle" },
+                SubscriptionProvider = premium ? "paddle" : null,
+                SubscriptionStatus = premium ? "active" : null,
+                ManageBillingAvailable = premium,
+                CancellationAvailable = premium,
+                RenewalEnabled = premium,
+                CancelAtPeriodEnd = false,
+                CurrentPeriodStartUtc = premium ? new DateTime(2026, 11, 1, 0, 0, 0, DateTimeKind.Utc) : (DateTime?)null,
+                CurrentPeriodEndUtc = premium ? new DateTime(2026, 12, 1, 0, 0, 0, DateTimeKind.Utc) : (DateTime?)null,
+                NextBillingAttemptUtc = (DateTime?)null,
+                PaddleClientToken = (string?)null,
+                PaddleMonthlyPriceId = "pri_monthly",
+                PaddleYearlyPriceId = "pri_yearly",
+                CanStartPremiumTrial = !premium,
+                PremiumTrialActive = false,
+                PremiumTrialUsed = premium,
+                PremiumTrialStartUtc = (DateTime?)null,
+                PremiumTrialEndUtc = (DateTime?)null,
+            });
         });
         using var http = new HttpClient(handler);
 

@@ -74,7 +74,7 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
         } else {
             Assert.Equal("Hydration.OperationConflict", results[1].Error.Code);
         }
-        Assert.Equal(1, await firstContext.HydrationEntries.AsNoTracking().CountAsync(entry => entry.UserId == user.Id));
+        Assert.Equal(1, await firstContext.HydrationEntries.AsNoTracking().CountAsync(entry => entry.UserId == user.Id, timeout.Token));
     }
 
     [RequiresDockerFact]
@@ -106,7 +106,7 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
         Assert.All(results, result => Assert.True(result.IsSuccess));
         await storage.Received(1).ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), Arg.Any<CancellationToken>());
         await storage.DidNotReceive().DeleteAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
-        Assert.True((await firstContext.ImageAssets.AsNoTracking().SingleAsync(row => row.Id == asset.Id)).IsConfirmed);
+        Assert.True((await firstContext.ImageAssets.AsNoTracking().SingleAsync(row => row.Id == asset.Id, timeout.Token)).IsConfirmed);
     }
 
     private static ConfirmImageUploadCommandHandler ImageHandler(IServiceProvider provider, IImageStorageService storage) =>

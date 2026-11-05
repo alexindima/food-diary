@@ -47,15 +47,15 @@ public sealed class WearableRetryIntegrationTests(PostgresDatabaseFixture databa
             () => Assert.Equal(1, calls),
             () => Assert.Empty(owned.ChangeTracker.Entries()),
             () => Assert.Empty(context.ChangeTracker.Entries()));
-        Assert.False(await owned.WearableSyncEntries.AsNoTracking().AnyAsync());
+        Assert.False(await owned.WearableSyncEntries.AsNoTracking().AnyAsync(CancellationToken.None));
 
         bool recovered = await runner.ExecuteSerializedAsync(key, _ => {
             owned.WearableSyncEntries.Add(WearableSyncEntry.Create(user.Id, WearableProvider.Fitbit,
                 WearableDataType.Steps, new DateTime(2026, 9, 7, 0, 0, 0, DateTimeKind.Utc), 200));
             return Task.FromResult(true);
-        }).WaitAsync(TimeSpan.FromSeconds(10));
+        }, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
         Assert.True(recovered);
-        Assert.Equal(200, (await owned.WearableSyncEntries.AsNoTracking().SingleAsync()).Value);
+        Assert.Equal(200, (await owned.WearableSyncEntries.AsNoTracking().SingleAsync(CancellationToken.None)).Value);
     }
 
     [RequiresDockerFact]

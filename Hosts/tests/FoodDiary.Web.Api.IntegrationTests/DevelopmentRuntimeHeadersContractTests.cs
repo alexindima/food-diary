@@ -35,9 +35,9 @@ public sealed class DevelopmentRuntimeHeadersContractTests {
             });
             app.MapGet("/api/probe", () => HttpResults.NoContent());
             app.MapGet("/health/probe", () => HttpResults.NoContent());
-            await app.StartAsync();
+            await app.StartAsync(CancellationToken.None);
             using HttpClient client = app.GetTestClient();
-            using HttpResponseMessage response = await client.GetAsync(example.GetProperty("path").GetString());
+            using HttpResponseMessage response = await client.GetAsync(example.GetProperty("path").GetString(), CancellationToken.None);
             bool expected = example.GetProperty("diagnostics").GetBoolean();
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.NoContent, response.StatusCode),

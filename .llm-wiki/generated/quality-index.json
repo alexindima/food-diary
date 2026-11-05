@@ -25594,11 +25594,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "nonBlankLines": 215,
+      "nonBlankLines": 216,
       "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 82.3
+      "structuralRiskScore": 82.32
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeHttpHandler.cs",
@@ -53770,11 +53770,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayClaimLostException.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",

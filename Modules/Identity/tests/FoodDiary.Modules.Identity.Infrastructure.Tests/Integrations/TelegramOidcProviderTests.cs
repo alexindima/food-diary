@@ -90,7 +90,7 @@ public sealed class TelegramOidcProviderTests {
         };
         Task<Result<TelegramOidcIdentity>> exchange = CreateProvider(http, validator)
             .ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode("code"), new TelegramPkceVerifier(Verifier), new TelegramOidcNonce("nonce")), cancellation.Token);
-        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10), cancellation.Token);
         Assert.False(exchange.IsCompleted);
         await cancellation.CancelAsync();
         validation.SetCanceled(cancellation.Token);

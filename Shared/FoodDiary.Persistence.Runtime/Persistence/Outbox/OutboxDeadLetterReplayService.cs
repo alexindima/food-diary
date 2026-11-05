@@ -144,7 +144,7 @@ internal sealed class OutboxDeadLetterReplayService(
                 return ToModel(audit);
             } finally {
                 if (transaction is not null) {
-                    await ReleaseOwnerTransactionAsync(transaction);
+                    await ReleaseOwnerTransactionAsync(transaction, CancellationToken.None);
                 }
             }
         }, cancellationToken));

@@ -178,7 +178,8 @@ public sealed partial class RecipeVideoProcessor(
             start.ArgumentList.Add(argument);
         }
         using Process process = Process.Start(start) ?? throw new IOException("Audio processor did not start.");
-        Task drain = process.StandardError.BaseStream.CopyToAsync(Stream.Null);
+        // Keep draining stderr until the process exits, including during cancellation cleanup.
+        Task drain = process.StandardError.BaseStream.CopyToAsync(Stream.Null, CancellationToken.None);
         try {
             await process.WaitForExitAsync(deadline.Token);
             await drain;

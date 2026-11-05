@@ -87,12 +87,12 @@ public sealed class BugReportsHttpTests {
         client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.Key);
         using var cancellation = new CancellationTokenSource();
         Task<HttpResponseMessage> request = client.GetAsync("/api/bug-reports", cancellation.Token);
-        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10), cancellation.Token);
 
         await cancellation.CancelAsync();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => request);
-        await canceled.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        await canceled.Task.WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
     }
     [Fact]
     public async Task RecentReports_ReturnsStoreResultsWithoutCaching() {

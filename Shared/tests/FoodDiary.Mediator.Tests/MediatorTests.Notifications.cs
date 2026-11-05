@@ -47,7 +47,7 @@ public sealed partial class MediatorTests {
         IPublisher publisher = provider.GetRequiredService<IPublisher>();
         NotificationExecutionProbe probe = provider.GetRequiredService<NotificationExecutionProbe>();
 
-        await publisher.Publish((object)new SequentialNotification());
+        await publisher.Publish((object)new SequentialNotification(), CancellationToken.None);
 
         Assert.Equal(1, probe.MaxConcurrency);
         Assert.Equal(["first:start", "first:end", "second:start", "second:end"], probe.Entries);

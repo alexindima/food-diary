@@ -13,6 +13,7 @@ public sealed class ClientTelemetryRouteTests {
     [InlineData("relative/route", "/unknown")]
     [InlineData("https://example.test/users/user%40example.test?code=private#fragment", "/users/:id")]
     [InlineData("/users/123;proof=private/meals/456", "/users/:id/meals/:id")]
+    [InlineData("/meals/99887a71-c1cd-4afa-9da1-25c96f52845b/edit#session=private", "/meals/:id/edit")]
     public async Task LoggedRoute_RemovesIdentifiersCredentialsAndMatrixParameters(string? route, string? expected) {
         ISender sender = Substitute.For<ISender>();
         ILogger<LogsController> logger = Substitute.For<ILogger<LogsController>>();

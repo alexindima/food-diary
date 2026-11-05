@@ -531,7 +531,7 @@ public sealed class WebPushNotificationSenderTests {
         Task sendTask = sender.SendAsync(
             Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
             cancellationTokenSource.Token);
-        await webPushClient.Started.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System);
+        await webPushClient.Started.Task.WaitAsync(TimeSpan.FromSeconds(2), TimeProvider.System, cancellationTokenSource.Token);
         await cancellationTokenSource.CancelAsync();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => sendTask);

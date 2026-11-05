@@ -75,7 +75,7 @@ public sealed class BotGeneratedClientTests {
         using var http = new HttpClient(handler);
         using var cancellation = new CancellationTokenSource();
         Task<BotRecognitionJob> pending = Client(http).GetRecognitionAsync("token", new BotRecognitionId(Guid.NewGuid()), cancellation.Token);
-        await entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(5), cancellation.Token);
         await cancellation.CancelAsync();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
     }

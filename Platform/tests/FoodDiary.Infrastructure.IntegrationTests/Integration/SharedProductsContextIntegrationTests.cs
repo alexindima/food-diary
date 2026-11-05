@@ -64,8 +64,13 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
             IReadOnlyDictionary<ProductId, ProductSnapshotReadModel> snapshots = await provider.GetRequiredService<IProductSnapshotReadService>().GetByIdsAsync([product.Id], token);
             Assert.Equal("Updated owner product", snapshots[product.Id].Name);
             Assert.NotNull(await writes.GetByIdForUpdateAsync(product.Id, user.Id, includePublic: false, token));
-            Assert.Equal(0, await provider.GetRequiredService<IProductReadRepository>().GetUsageCountAsync(product.Id, user.Id, includePublic: false, token));
-            Assert.True((await provider.GetRequiredService<IProductReadRepository>().GetByIdsAsync([product.Id], user.Id, includePublic: false, token)).ContainsKey(product.Id));
+            IProductReadRepository reads = provider.GetRequiredService<IProductReadRepository>();
+            Assert.Equal(0, await reads.GetUsageCountAsync(product.Id, user.Id, includePublic: false, token));
+            Assert.True((await reads.GetByIdsAsync([product.Id], user.Id, includePublic: false, token)).ContainsKey(product.Id));
+            Product? readBack = await reads.GetByIdAsync(product.Id, user.Id, includePublic: false, token);
+            Assert.NotNull(readBack);
+            Assert.Equal("Updated owner product", readBack.Name);
+            Assert.NotSame(locked, readBack);
             return Result.Success();
         });
         Assert.Equal("Updated owner product", (await database.Products.AsNoTracking().SingleAsync()).Name);
@@ -115,7 +120,7 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
                 second.GetRequiredService<IProductMutationTransactionRunner>().ExecuteAsync(async secondToken => {
                     await second.GetRequiredService<FoodDiaryDbContext>().Database.ExecuteSqlRawAsync("SET LOCAL lock_timeout = '200ms'", secondToken);
                     return await second.GetRequiredService<IProductWriteRepository>().GetByIdForUpdateAsync(product.Id, user.Id, includePublic: false, secondToken);
-                }));
+                }, token));
             PostgresException exception = Assert.IsType<PostgresException>(failure.InnerException);
             Assert.Equal(PostgresErrorCodes.LockNotAvailable, exception.SqlState);
             return Result.Success();

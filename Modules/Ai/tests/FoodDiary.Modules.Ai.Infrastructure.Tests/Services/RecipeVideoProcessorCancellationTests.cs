@@ -36,10 +36,10 @@ public sealed class RecipeVideoProcessorCancellationTests {
         await using var video = new WaitingReadStream();
 
         Task<Result<RecipeAudio>> extraction = processor.ExtractAudioAsync(video, sourceUrl: null, cancellation.Token);
-        await video.Entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        await video.Entered.Task.WaitAsync(TimeSpan.FromSeconds(5), cancellation.Token);
         await cancellation.CancelAsync();
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => extraction.WaitAsync(TimeSpan.FromSeconds(5)));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => extraction.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None));
         Assert.Multiple(
             () => Assert.True(video.ReadToken.IsCancellationRequested),
             () => Assert.True(video.CanRead));

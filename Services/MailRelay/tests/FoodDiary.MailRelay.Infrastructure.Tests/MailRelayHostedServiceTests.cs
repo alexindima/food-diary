@@ -235,7 +235,7 @@ public sealed class MailRelayHostedServiceTests {
         using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
 
         await service.StartAsync(cancellationTokenSource.Token);
-        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5));
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
     }
 
     [Fact]
@@ -267,7 +267,7 @@ public sealed class MailRelayHostedServiceTests {
             });
 
         await service.StartAsync(cancellationTokenSource.Token);
-        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5));
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public sealed class MailRelayHostedServiceTests {
             });
 
         await service.StartAsync(cancellationTokenSource.Token);
-        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5));
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
 
         Assert.Equal(2, attempts);
     }
@@ -515,7 +515,7 @@ public sealed class MailRelayHostedServiceTests {
         Task runTask = InvokeRunConsumerAsync(service, channelProxy.Channel, cancellationTokenSource.Token);
         await channelProxy.WaitForConsumeAsync();
         await cancellationTokenSource.CancelAsync();
-        await runTask.WaitAsync(TimeSpan.FromSeconds(5));
+        await runTask.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
 
         Assert.True(channelProxy.QosConfigured);
         Assert.True(channelProxy.Consumed);
@@ -764,7 +764,7 @@ public sealed class MailRelayHostedServiceTests {
             return channelProxy;
         }
 
-        public Task WaitForConsumeAsync() => _consumed.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        public Task WaitForConsumeAsync() => _consumed.Task.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
 
         protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) {
             ArgumentNullException.ThrowIfNull(targetMethod);

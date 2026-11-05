@@ -323,7 +323,7 @@ public sealed class WearableClientTests {
             "access",
             DateTime.UtcNow,
             cancellationTokenSource.Token);
-        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(1), TimeProvider.System);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(1), TimeProvider.System, cancellationTokenSource.Token);
         await cancellationTokenSource.CancelAsync();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);

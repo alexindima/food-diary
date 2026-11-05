@@ -100,7 +100,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
         Assert.Multiple(
             () => Assert.Equal(1, results.Count(result => result)),
             () => Assert.Equal(3, results.Count(result => !result)));
-        ConsumedTelegramAssertion stored = Assert.Single(await setup.Set<ConsumedTelegramAssertion>().AsNoTracking().ToArrayAsync());
+        ConsumedTelegramAssertion stored = Assert.Single(await setup.Set<ConsumedTelegramAssertion>().AsNoTracking().ToArrayAsync(deadline.Token));
         Assert.Multiple(
             () => Assert.Equal(SignedAssertionFingerprint, stored.Fingerprint),
             () => Assert.Equal(UtcNow.AddMinutes(5), stored.ExpiresAtUtc));
@@ -152,8 +152,8 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
             guard.TryConsumeAsync("signed-assertion", UtcNow.AddMinutes(5), UtcNow, cancellation.Token));
 
-        Assert.Empty(await context.Set<ConsumedTelegramAssertion>().ToArrayAsync());
-        Assert.True(await guard.TryConsumeAsync("signed-assertion", UtcNow.AddMinutes(5), UtcNow));
+        Assert.Empty(await context.Set<ConsumedTelegramAssertion>().ToArrayAsync(CancellationToken.None));
+        Assert.True(await guard.TryConsumeAsync("signed-assertion", UtcNow.AddMinutes(5), UtcNow, CancellationToken.None));
     }
 
     [ExcludeFromCodeCoverage]

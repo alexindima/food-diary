@@ -158,7 +158,8 @@ public sealed class ApiExceptionHandlerTests {
         context.Response.Body.Position = 0;
         ApiErrorHttpResponse? response = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
             context.Response.Body,
-            WebJsonOptions).ConfigureAwait(false);
+            WebJsonOptions,
+            CancellationToken.None).ConfigureAwait(false);
 
         Assert.NotNull(response);
         return response!;

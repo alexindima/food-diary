@@ -52,10 +52,10 @@ public sealed partial class SharedBillingContextIntegrationTests {
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => checkoutLock.AcquireAsync(userId, canceledWait.Token));
 
             await using var probe = new NpgsqlConnection(context.Database.GetConnectionString());
-            await probe.OpenAsync();
+            await probe.OpenAsync(CancellationToken.None);
             await using var command = new NpgsqlCommand("SELECT pg_try_advisory_lock(@key)", probe);
             command.Parameters.AddWithValue("key", BitConverter.ToInt64(userId.ToByteArray(), 0));
-            Assert.Equal(false, await command.ExecuteScalarAsync());
+            Assert.Equal(false, await command.ExecuteScalarAsync(CancellationToken.None));
         }
 
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));

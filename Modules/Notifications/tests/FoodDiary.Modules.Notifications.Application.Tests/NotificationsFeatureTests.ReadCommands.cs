@@ -28,7 +28,7 @@ public partial class NotificationsFeatureTests {
         Assert.Null(pusher.UnreadCountUserId);
         Assert.True(postCommitActionQueue.HasActions);
 
-        await postCommitActionQueue.FlushAsync();
+        await postCommitActionQueue.FlushAsync(CancellationToken.None);
 
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
@@ -145,7 +145,7 @@ public partial class NotificationsFeatureTests {
         Assert.Null(pusher.UnreadCountUserId);
         Assert.True(postCommitActionQueue.HasActions);
 
-        await postCommitActionQueue.FlushAsync();
+        await postCommitActionQueue.FlushAsync(CancellationToken.None);
 
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
