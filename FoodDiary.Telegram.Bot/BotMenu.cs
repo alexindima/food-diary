@@ -18,6 +18,9 @@ internal static class BotMenu {
         WaterShortcut, MealShortcut, DashboardShortcut, SettingsShortcut, TodayShortcut, WeekShortcut, HelpShortcut,
     ];
 
+    internal static string? ResolveLanguage(string? profileLanguage, string? telegramLanguage) =>
+        profileLanguage is "en" or "ru" ? profileLanguage : telegramLanguage;
+
     internal static bool IsRussian(string? language) => language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true;
 
     internal static string? ResolveShortcut(string? text) {
@@ -44,6 +47,41 @@ internal static class BotMenu {
         }
         rows.Add([HelpShortcut.Button(russian)]);
         return new ReplyKeyboardMarkup(rows) { ResizeKeyboard = true, OneTimeKeyboard = true };
+    }
+
+    internal static string Welcome(TelegramBotOptions options, string? language, bool linked) {
+        bool russian = IsRussian(language);
+        bool hasWebApp = BotUriHelper.NormalizeWebAppUrl(options.WebAppUrl) is not null;
+        var sections = new List<string> {
+            russian ? "👋 <b>Добро пожаловать в Food Diary!</b>" : "👋 <b>Welcome to Food Diary!</b>",
+        };
+        if (linked) {
+            if (hasWebApp) {
+                sections.Add(russian
+                    ? "📱 <b>Дневник</b>\nНажмите Food Diary слева от поля сообщения или выберите «Дашборд» в быстрых действиях."
+                    : "📱 <b>Diary</b>\nTap Food Diary to the left of the message field or choose Dashboard in quick actions.");
+            }
+            sections.Add(russian
+                ? "⚡ <b>Быстрые действия</b>\nКнопки под чатом. Если они скрыты, нажмите значок клавиатуры рядом с полем сообщения."
+                : "⚡ <b>Quick actions</b>\nUse the buttons below the chat. If they’re hidden, tap the keyboard icon next to the message field.");
+        } else {
+            if (hasWebApp) {
+                sections.Add(russian
+                    ? "📱 Нажмите «Открыть FoodDiary», чтобы войти или создать аккаунт через Telegram."
+                    : "📱 Tap Open FoodDiary to sign in or create an account with Telegram.");
+            } else {
+                sections.Add(russian ? "📱 Войдите в Food Diary через Telegram." : "📱 Sign in to Food Diary with Telegram.");
+            }
+            sections.Add(russian
+                ? "После входа отправьте /start, чтобы увидеть быстрые действия."
+                : "After signing in, send /start to see the quick actions.");
+        }
+        if (options.OperationsEnabled) {
+            sections.Add(russian
+                ? "📷 <b>Фото еды</b>\nС Food Diary Premium отправьте фото прямо в чат. После распознавания бот сохранит приём пищи. Подпись к фото поможет уточнить состав."
+                : "📷 <b>Food photos</b>\nWith Food Diary Premium, send a photo in this chat. After recognition, the bot saves the meal. Add a caption to clarify what’s in the photo.");
+        }
+        return string.Join("\n\n", sections);
     }
 
     internal static string Help(string? language, bool operationsEnabled) {

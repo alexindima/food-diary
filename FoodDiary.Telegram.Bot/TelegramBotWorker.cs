@@ -225,26 +225,19 @@ public sealed class TelegramBotWorker(
         }
     }
 
-    private async Task SendStartAsync(long chatId, long? telegramUserId, string? language, CancellationToken cancellationToken) {
-        bool isLinked = await IsLinkedAsync(telegramUserId, cancellationToken);
-        if (!isLinked) {
-            string notLinkedText = BotMenu.IsRussian(language)
-                ? "Откройте FoodDiary, чтобы войти или создать аккаунт через Telegram. После входа отправьте /start, чтобы открыть меню."
-                : "To use the bot, open the WebApp once and log in or register. After signing in, send /start to open the menu.";
-            InlineKeyboardMarkup? markup = BotMenu.Open(_options, language, "/auth/telegram");
-            await botClient.SendMessage(
-                chatId,
-                notLinkedText,
-                replyMarkup: markup,
-                cancellationToken: cancellationToken);
-            return;
-        }
-
-        string text = BotMenu.IsRussian(language) ? "Быстрые действия:" : "Quick actions:";
-        ReplyKeyboardMarkup keyboard = BotMenu.QuickActions(_options, language);
+    private async Task SendStartAsync(long chatId, long? telegramUserId, string? telegramLanguage, CancellationToken cancellationToken) {
+        AuthenticationHttpResponse? authentication = telegramUserId is > 0
+            ? await TryAuthenticateAsync(telegramUserId.Value, cancellationToken)
+            : null;
+        string? language = BotMenu.ResolveLanguage(authentication?.User?.Language, telegramLanguage);
+        bool linked = authentication is not null;
+        ReplyMarkup? keyboard = linked
+            ? BotMenu.QuickActions(_options, language)
+            : BotMenu.Open(_options, language, "/auth/telegram");
         await botClient.SendMessage(
             chatId,
-            text,
+            BotMenu.Welcome(_options, language, linked),
+            parseMode: ParseMode.Html,
             replyMarkup: keyboard,
             cancellationToken: cancellationToken);
     }
@@ -288,7 +281,8 @@ public sealed class TelegramBotWorker(
                 return;
             }
 
-            string? accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken);
+            AuthenticationHttpResponse? authentication = await TryAuthenticateAsync(callbackQuery.From.Id, cancellationToken);
+            string? accessToken = authentication?.AccessToken;
             if (accessToken is null) {
                 await AnswerCallbackAsync(callbackQuery.Id, russian ? "Откройте FoodDiary и войдите в аккаунт." : "Please open the WebApp and log in once.", cancellationToken);
                 return;
@@ -328,16 +322,7 @@ public sealed class TelegramBotWorker(
         }
     }
 
-    private async Task<bool> IsLinkedAsync(long? telegramUserId, CancellationToken cancellationToken) {
-        if (telegramUserId is not > 0) {
-            return false;
-        }
-
-        string? token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken);
-        return token is not null;
-    }
-
-    private async Task<string?> TryGetAccessTokenAsync(long telegramUserId, CancellationToken cancellationToken) {
+    private async Task<AuthenticationHttpResponse?> TryAuthenticateAsync(long telegramUserId, CancellationToken cancellationToken) {
         if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out Uri? baseUri) ||
             string.IsNullOrWhiteSpace(_options.ApiSecret)) {
             logger.LogWarning("Telegram bot API settings are missing.");
@@ -356,7 +341,7 @@ public sealed class TelegramBotWorker(
 
         await response.Content.LoadIntoBufferAsync(262144, cancellationToken);
         AuthenticationHttpResponse? authResponse = await response.Content.ReadFromJsonAsync<AuthenticationHttpResponse>(cancellationToken: cancellationToken);
-        return authResponse?.AccessToken;
+        return string.IsNullOrWhiteSpace(authResponse?.AccessToken) ? null : authResponse;
     }
 
     private async Task<bool> CreateHydrationAsync(string accessToken, int amountMl, CancellationToken cancellationToken) {

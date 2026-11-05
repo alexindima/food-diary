@@ -11,6 +11,7 @@ using Telegram.Bot.Requests.Abstractions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using FoodDiary.Telegram.Bot.Api.Generated.Model;
 using FoodDiary.Telegram.Bot.Operations;
 
 namespace FoodDiary.Telegram.Bot.Tests;
@@ -305,18 +306,29 @@ public sealed class TelegramBotWorkerTests {
         Assert.Empty(botClient.Requests);
     }
 
-    [Fact]
-    public async Task HandleUpdateAsync_StartWhenUserIsNotLinked_SendsWebAppMessage() {
+    [Theory]
+    [InlineData(null, "Tap Open FoodDiary", "Open FoodDiary")]
+    [InlineData("ru-RU", "Нажмите «Открыть FoodDiary»", "Открыть FoodDiary")]
+    public async Task HandleUpdateAsync_StartWhenUserIsNotLinked_UsesTelegramLanguageForSignIn(string? language, string instruction, string buttonLabel) {
         var botClient = new RecordingTelegramBotClient();
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.Unauthorized));
         TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
 
-        await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate("/start", telegramUserId: 100));
+        Update update = CreateMessageUpdate("/start", telegramUserId: 100);
+        update.Message!.From!.LanguageCode = language;
+        await InvokeHandleUpdateAsync(worker, botClient, update);
 
         object request = Assert.Single(botClient.Requests);
         Assert.Equal("SendMessageRequest", request.GetType().Name);
-        Assert.Contains("open the WebApp", GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
-        Assert.NotNull(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        string text = GetPropertyValue<string>(request, "Text");
+        InlineKeyboardMarkup keyboard = Assert.IsType<InlineKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        InlineKeyboardButton signIn = Assert.Single(Assert.Single(keyboard.InlineKeyboard));
+        Assert.Multiple(
+            () => Assert.Contains(instruction, text, StringComparison.Ordinal),
+            () => Assert.Contains("/start", text, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("Premium", text, StringComparison.Ordinal),
+            () => Assert.Equal(buttonLabel, signIn.Text),
+            () => Assert.Equal("https://app.example.test/auth/telegram", signIn.WebApp?.Url));
         Assert.Equal("https://api.example.test/api/v1/auth/telegram/bot/auth", httpFactory.Requests.Single().RequestUri?.ToString());
     }
 
@@ -334,7 +346,7 @@ public sealed class TelegramBotWorkerTests {
         await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate("/start", telegramUserId: 100));
 
         object request = Assert.Single(botClient.Requests);
-        Assert.Contains("open the WebApp", GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
+        Assert.Contains("Sign in to Food Diary with Telegram.", GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
         Assert.Null(GetPropertyValue<object?>(request, "ReplyMarkup"));
     }
 
@@ -349,33 +361,46 @@ public sealed class TelegramBotWorkerTests {
         await InvokeHandleUpdateAsync(worker, botClient, update);
 
         object request = Assert.Single(botClient.Requests);
-        Assert.Contains("open the WebApp", GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
+        Assert.Contains("Tap Open FoodDiary", GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal);
         Assert.Empty(httpFactory.Requests);
     }
 
     [Theory]
-    [InlineData("en", "Quick actions:", "💧 Water")]
-    [InlineData("ru", "Быстрые действия:", "💧 Вода")]
-    public async Task HandleUpdateAsync_StartWhenUserIsLinked_SendsCollapsibleQuickActions(string language, string greeting, string waterLabel) {
+    [InlineData("ru", "en", true)]
+    [InlineData("ru", null, true)]
+    [InlineData("en", "ru", false)]
+    [InlineData(null, "ru-RU", true)]
+    [InlineData("de", "ru", true)]
+    [InlineData(null, null, false)]
+    public async Task HandleUpdateAsync_StartWhenUserIsLinked_LocalizesWelcomeAndQuickActions(
+        string? profileLanguage, string? telegramLanguage, bool russian) {
         var botClient = new RecordingTelegramBotClient();
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new {
                 accessToken = "access-token",
                 refreshToken = "refresh-token",
+                user = new { language = profileLanguage },
             }),
         });
-        TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions());
+        TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions(operationsEnabled: true));
 
         Update update = CreateMessageUpdate("/start", telegramUserId: 100);
-        update.Message!.From!.LanguageCode = language;
+        update.Message!.From!.LanguageCode = telegramLanguage;
         await InvokeHandleUpdateAsync(worker, botClient, update);
 
         object request = Assert.Single(botClient.Requests);
         ReplyKeyboardMarkup keyboard = Assert.IsType<ReplyKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        string text = GetPropertyValue<string>(request, "Text");
+        string waterLabel = russian ? "💧 Вода" : "💧 Water";
         Assert.Multiple(
-            () => Assert.Equal(greeting, GetPropertyValue<string>(request, "Text")),
+            () => Assert.Equal(ParseMode.Html, GetPropertyValue<ParseMode>(request, "ParseMode")),
+            () => Assert.StartsWith(russian ? "👋 <b>Добро пожаловать в Food Diary!</b>" : "👋 <b>Welcome to Food Diary!</b>", text, StringComparison.Ordinal),
+            () => Assert.Contains(russian ? "Food Diary слева от поля сообщения" : "Food Diary to the left of the message field", text, StringComparison.Ordinal),
+            () => Assert.Contains(russian ? "значок клавиатуры" : "keyboard icon", text, StringComparison.Ordinal),
+            () => Assert.Contains(russian ? "С Food Diary Premium отправьте фото прямо в чат." : "With Food Diary Premium, send a photo in this chat.", text, StringComparison.Ordinal),
             () => Assert.True(keyboard.OneTimeKeyboard, "Expected Telegram quick actions to collapse after use."),
             () => Assert.False(keyboard.IsPersistent),
+            () => Assert.Single(httpFactory.Requests),
             () => Assert.Contains(keyboard.Keyboard.SelectMany(row => row), button => string.Equals(button.Text, waterLabel, StringComparison.Ordinal)));
     }
 
@@ -543,7 +568,7 @@ public sealed class TelegramBotWorkerTests {
     }
 
     [Fact]
-    public async Task TryGetAccessTokenAsync_WhenApiSettingsAreInvalid_ReturnsNullAndDoesNotCallBackend() {
+    public async Task TryAuthenticateAsync_WhenApiSettingsAreInvalid_ReturnsNullAndDoesNotCallBackend() {
         var httpFactory = new RecordingHttpClientFactory();
         TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), httpFactory, new TelegramBotOptions {
             Token = "telegram-token",
@@ -551,22 +576,22 @@ public sealed class TelegramBotWorkerTests {
             ApiSecret = "",
         });
 
-        string? token = await InvokeTryGetAccessTokenAsync(worker, telegramUserId: 100);
+        AuthenticationHttpResponse? authentication = await InvokeTryAuthenticateAsync(worker, telegramUserId: 100);
 
-        Assert.Null(token);
+        Assert.Null(authentication);
         Assert.Empty(httpFactory.Requests);
     }
 
     [Fact]
-    public async Task TryGetAccessTokenAsync_WhenResponsePayloadIsNull_ReturnsNull() {
+    public async Task TryAuthenticateAsync_WhenResponsePayloadIsNull_ReturnsNull() {
         var httpFactory = new RecordingHttpClientFactory(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = new StringContent("null"),
         });
         TelegramBotWorker worker = CreateWorker(new RecordingTelegramBotClient(), httpFactory, CreateOptions());
 
-        string? token = await InvokeTryGetAccessTokenAsync(worker, telegramUserId: 100);
+        AuthenticationHttpResponse? authentication = await InvokeTryAuthenticateAsync(worker, telegramUserId: 100);
 
-        Assert.Null(token);
+        Assert.Null(authentication);
     }
 
     [Fact]
@@ -625,12 +650,13 @@ public sealed class TelegramBotWorkerTests {
         await InvokeHandleErrorAsync(worker, new InvalidOperationException("boom"));
     }
 
-    private static TelegramBotOptions CreateOptions() =>
+    private static TelegramBotOptions CreateOptions(bool operationsEnabled = false) =>
         new() {
             Token = "telegram-token",
             WebAppUrl = "https://app.example.test/",
             ApiBaseUrl = "https://api.example.test/",
             ApiSecret = "telegram-api-secret-123",
+            OperationsEnabled = operationsEnabled,
         };
 
     private static TelegramBotWorker CreateWorker(
@@ -715,11 +741,11 @@ public sealed class TelegramBotWorkerTests {
         return (Task)method!.Invoke(worker, [new RecordingTelegramBotClient(), exception, cancellationToken])!;
     }
 
-    private static async Task<string?> InvokeTryGetAccessTokenAsync(TelegramBotWorker worker, long telegramUserId) {
+    private static async Task<AuthenticationHttpResponse?> InvokeTryAuthenticateAsync(TelegramBotWorker worker, long telegramUserId) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
-            "TryGetAccessTokenAsync",
+            "TryAuthenticateAsync",
             BindingFlags.Instance | BindingFlags.NonPublic);
-        var task = (Task<string?>)method!.Invoke(worker, [telegramUserId, CancellationToken.None])!;
+        var task = (Task<AuthenticationHttpResponse?>)method!.Invoke(worker, [telegramUserId, CancellationToken.None])!;
         return await task.ConfigureAwait(false);
     }
 

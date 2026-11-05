@@ -55,17 +55,22 @@ public sealed class BotPhotoPipelineTests {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task Statistics_ResumesSavedSummaryWithoutReadingAgain(bool notificationOnly) {
+    [InlineData(1, false, "ru", "en", "Сегодня")]
+    [InlineData(7, false, "ru", "en", "7 дней")]
+    [InlineData(7, false, "en", "ru", "7 days")]
+    [InlineData(7, true, null, "en", "7 days")]
+    public async Task Statistics_ResumesSavedSummaryInTheExpectedLanguageWithoutReadingAgain(int days, bool notificationOnly,
+        string? profileLanguage, string telegramLanguage, string expectedHeading) {
         var operationId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var incoming = new BotIncomingOperation("statistics", 123, 123, 10, OccurredAtUtc: null, "en", PeriodDays: 1);
-        var summary = new BotDiaryStatistics("UTC", 1, 1, 1234, 10, 20, 30, 4, 250, 1, 1234, 2000,
-            [new BotDiaryStatisticsDay(new DateOnly(2026, 9, 12), 1234, 10, 20, 30, 4, 250, 1, 2100)]);
+        var incoming = new BotIncomingOperation("statistics", 123, 123, 10, OccurredAtUtc: null, telegramLanguage, PeriodDays: days);
+        BotDiaryStatisticsDay[] dates = [.. Enumerable.Range(0, days).Select(offset => new BotDiaryStatisticsDay(
+            new DateOnly(2026, 9, 12).AddDays(offset), 1234, 10, 20, 30, 4, 250, 1, 2100))];
+        var summary = new BotDiaryStatistics("UTC", days, 1, 1234, 10, 20, 30, 4, 250, 1, 1234.0 / days, 2000, dates);
         var checkpoint = new BotPhotoCheckpoint(notificationOnly ? "statistics-ready" : "received", Statistics: notificationOnly ? summary : null);
         var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2));
+        int authentications = 0;
         int reads = 0;
         int notices = 0;
         bool? completed = null;
@@ -75,13 +80,14 @@ public sealed class BotPhotoPipelineTests {
                 return Json(lease);
             }
             if (path.EndsWith("/bot/auth", StringComparison.Ordinal)) {
+                authentications++;
                 string payload = Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"security_version\":\"1\"}")).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-                return Json(new { AccessToken = $"header.{payload}.signature", User = new { Id = userId } });
+                return Json(new { AccessToken = $"header.{payload}.signature", User = new { Id = userId, Language = profileLanguage } });
             }
             if (string.Equals(path, "/api/v1/statistics/diary-summary", StringComparison.Ordinal)) {
                 reads++;
                 Assert.Equal(HttpMethod.Get, request.Method);
-                Assert.Equal("?days=1", request.RequestUri.Query);
+                Assert.Equal(days == 1 ? "?days=1" : "?days=7", request.RequestUri.Query);
                 Assert.Equal("Bearer", request.Headers.Authorization?.Scheme);
                 return Json(summary);
             }
@@ -89,16 +95,19 @@ public sealed class BotPhotoPipelineTests {
                 notices++;
                 using JsonDocument message = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
                 string? text = message.RootElement.GetProperty("text").GetString();
-                Assert.Contains("1,234 / 2,100 kcal", text, StringComparison.Ordinal);
-                Assert.Contains("Remaining: 866 kcal", text, StringComparison.Ordinal);
+                Assert.Equal("HTML", message.RootElement.GetProperty("parse_mode").GetString(), ignoreCase: true);
+                Assert.StartsWith($"📊 <b>{expectedHeading} · ", text, StringComparison.Ordinal);
                 return Json(new { ok = true, result = new { message_id = 77, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Statistics" } });
             }
             if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {
                 using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
                 completed = body.RootElement.GetProperty("completed").GetBoolean();
-                BotPhotoCheckpoint? saved = JsonSerializer.Deserialize<BotPhotoCheckpoint>(body.RootElement.GetProperty("checkpoint").GetString()!);
+                string state = body.RootElement.GetProperty("checkpoint").GetString()!;
+                BotPhotoCheckpoint? saved = JsonSerializer.Deserialize<BotPhotoCheckpoint>(state);
                 Assert.Equal("statistics-ready", saved?.Stage);
                 Assert.Equal(1234, saved?.Statistics?.TotalCalories);
+                Assert.Equal(profileLanguage, saved?.StatisticsLanguage);
+                lease = lease with { Checkpoint = state };
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
             }
             throw new InvalidOperationException("Unexpected statistics request.");
@@ -109,11 +118,18 @@ public sealed class BotPhotoPipelineTests {
         var worker = new TelegramOperationWorker(factory, options, new TelegramBotClient("123:test", telegramHttp), TimeProvider.System,
             NullLogger<TelegramOperationWorker>.Instance);
         using HttpClient operationHttp = factory.CreateClient(BotOperationClient.ClientName);
-        await worker.ProcessAsync(new BotOperationClient(operationHttp, options), new BotOperationId(operationId), CancellationToken.None);
+        var operations = new BotOperationClient(operationHttp, options);
+        if (!notificationOnly) {
+            Assert.True(await worker.ProcessAsync(operations, new BotOperationId(operationId), CancellationToken.None));
+            Assert.Equal(false, completed);
+            Assert.Equal(0, notices);
+        }
+        await worker.ProcessAsync(operations, new BotOperationId(operationId), CancellationToken.None);
         Assert.Multiple(
+            () => Assert.Equal(notificationOnly ? 0 : 1, authentications),
             () => Assert.Equal(notificationOnly ? 0 : 1, reads),
-            () => Assert.Equal(notificationOnly ? 1 : 0, notices),
-            () => Assert.Equal(notificationOnly, completed));
+            () => Assert.Equal(1, notices),
+            () => Assert.Equal(true, completed));
     }
 
     [Theory]

@@ -1185,8 +1185,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "32e89761aac5782f6d1c98af2060e6e056b2126b06cb6a243b2d2c1da7e45894",
-          "reviewReason": "The generated sensitive-data diff moves only the source line numbers of two existing calorie fields. The authenticated delivery destination, stored values, retention and logging are unchanged; interpolated food labels are HTML encoded."
+          "sha256": "6926b1f1b6edf7ec1744b4fc788b8fd3e5d419e8ded507b0ba6bbdf5a04b4c49",
+          "reviewReason": "The sole new index lead is the named return tuple element for the existing access token. The token remains in memory and authorizes the same API calls; the statistics checkpoint adds only the profile language, with no new log or provider transfer."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1199,10 +1199,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "The generated sensitive-data diff moves only the source line numbers of two existing calorie fields. The authenticated delivery destination, stored values, retention and logging are unchanged; interpolated food labels are HTML encoded.",
+      "reason": "The sole new index lead is the named return tuple element for the existing access token. The token remains in memory and authorizes the same API calls; the statistics checkpoint adds only the profile language, with no new log or provider transfer.",
       "baseRef": "HEAD",
-      "gitHead": "1c81e1dc7ce7094f636e70b0142a5823134b744d",
-      "reviewedAtUtc": "2026-11-04T23:50:07.6832914Z"
+      "gitHead": "41f643981d26011a2c5589feae490e2f713c4f2e",
+      "reviewedAtUtc": "2026-11-05T02:28:10.5712093Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "67b58cb4274ef3d09b9ad5d750303110a7e2f00a83017a1ec7aad6f81b0c9bf8",
-          "reviewReason": "Regenerated topology changes only the input fingerprint. The existing Telegram worker changes terminal text and markup only; recognition still uses the same provider call, host wiring, and retry, idempotency and checkpoint semantics."
+          "sha256": "8d9be08e2b4270d1ecc4abe90048094f81d8d30d7d4d989a8f581b31aef49011",
+          "reviewReason": "Compared the topology diff and the statistics worker. Service bindings, API calls and retry topology are unchanged; both periods use the existing authenticated diary lookup and deliver HTML through the same Telegram path."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Regenerated topology changes only the input fingerprint. The existing Telegram worker changes terminal text and markup only; recognition still uses the same provider call, host wiring, and retry, idempotency and checkpoint semantics.",
+      "reason": "Compared the topology diff and the statistics worker. Service bindings, API calls and retry topology are unchanged; both periods use the existing authenticated diary lookup and deliver HTML through the same Telegram path.",
       "baseRef": "HEAD",
-      "gitHead": "1c81e1dc7ce7094f636e70b0142a5823134b744d",
-      "reviewedAtUtc": "2026-11-04T23:49:29.0809267Z"
+      "gitHead": "41f643981d26011a2c5589feae490e2f713c4f2e",
+      "reviewedAtUtc": "2026-11-05T02:28:10.8487473Z"
     },
     {
       "pageId": "workflow-security-review",

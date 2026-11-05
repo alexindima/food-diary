@@ -73,7 +73,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         using HttpClient http = clients.CreateClient(BotDiaryClient.ClientName);
         var diary = new BotDiaryClient(http, options);
         try {
-            string token = await diary.AuthenticateAsync(incoming.TelegramUserId, lease, cancellationToken);
+            (string token, string? profileLanguage) = await diary.AuthenticateAsync(incoming.TelegramUserId, lease, cancellationToken);
             if (string.Equals(incoming.Kind, "water", StringComparison.Ordinal)) {
                 if (lease.CreatedAtUtc == default || lease.CreatedAtUtc.Kind != DateTimeKind.Utc) {
                     throw new InvalidDataException("A durable water operation timestamp is required.");
@@ -81,6 +81,9 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 incoming = incoming with { OccurredAtUtc = lease.CreatedAtUtc };
             }
             checkpoint = await AdvanceOperationAsync(diary, token, lease.OperationId, incoming, checkpoint, cancellationToken);
+            if (checkpoint.Stage is "statistics-ready") {
+                checkpoint = checkpoint with { StatisticsLanguage = profileLanguage };
+            }
         } catch (BotRecognitionAccessException error) {
             checkpoint = checkpoint with { Stage = "failed", Upload = null, ErrorCode = error.Code };
         } catch (HttpRequestException error) when (error.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.Forbidden or HttpStatusCode.NotFound or HttpStatusCode.Conflict) {
@@ -139,8 +142,8 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
 
     private async Task<int?> SendPhotoProgressAsync(BotIncomingOperation incoming, BotOperationId id, CancellationToken cancellationToken) {
         string message = BotMenu.IsRussian(incoming.Language)
-            ? "Фото получено. Начинаю обработку."
-            : "Photo received. I’ll start processing it now.";
+            ? "🔍 Распознаю продукты на фото…"
+            : "🔍 Identifying foods in the photo…";
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(4));
         try {
@@ -268,20 +271,23 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
     }
 
     private Task<bool> SendCompletionAsync(BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
-        bool russian = incoming.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true;
+        bool russian = BotMenu.IsRussian(incoming.Language);
         InlineKeyboardMarkup? keyboard = null;
         ParseMode parseMode = default;
         string message;
         if (string.Equals(checkpoint.Stage, "statistics-ready", StringComparison.Ordinal)) {
-            message = BotStatisticsFormatter.Format(checkpoint.Statistics ?? throw new InvalidDataException("Missing statistics checkpoint."), russian);
+            BotDiaryStatistics statistics = checkpoint.Statistics ?? throw new InvalidDataException("Missing statistics checkpoint.");
+            string? language = BotMenu.ResolveLanguage(checkpoint.StatisticsLanguage, incoming.Language);
+            message = BotStatisticsFormatter.Format(statistics, BotMenu.IsRussian(language));
+            parseMode = ParseMode.Html;
         } else if (string.Equals(checkpoint.Stage, "water-saved", StringComparison.Ordinal)) {
             message = string.Create(CultureInfo.InvariantCulture,
                 $"{(russian ? "Вода добавлена" : "Water added")}: {incoming.AmountMl} {(russian ? "мл" : "ml")}.");
         } else if (string.Equals(checkpoint.Stage, "meal-saved", StringComparison.Ordinal)) {
             BotRecognizedMeal meal = checkpoint.SavedMeal ?? throw new InvalidDataException("Missing saved meal receipt.");
-            message = russian ? "Приём пищи сохранён в дневнике." : "Meal saved to your diary.";
+            message = russian ? "✅ Приём пищи сохранён" : "✅ Meal saved to your diary";
             if (!meal.Undone && checkpoint.Nutrition is not null) {
-                message += "\n\n" + checkpoint.Nutrition.Format(russian);
+                message += "\n" + checkpoint.Nutrition.Format(russian);
                 parseMode = ParseMode.Html;
             }
             if (meal.Undone) {

@@ -13,8 +13,8 @@ internal sealed record BotMealNutrition(decimal Calories, decimal Protein, decim
     internal string Format(bool russian) {
         var culture = CultureInfo.GetCultureInfo(russian ? "ru-RU" : "en-US");
         string totals = russian
-            ? string.Create(culture, $"<b>~{Calories:0.#} ккал</b>\nБ {Protein:0.#} г · Ж {Fat:0.#} г · У {Carbs:0.#} г")
-            : string.Create(culture, $"<b>~{Calories:0.#} kcal</b>\nP {Protein:0.#} g · F {Fat:0.#} g · C {Carbs:0.#} g");
+            ? string.Create(culture, $"🔥 <b>~{Calories:0.#} ккал</b>\nБ {Protein:0.#} г · Ж {Fat:0.#} г · У {Carbs:0.#} г")
+            : string.Create(culture, $"🔥 <b>~{Calories:0.#} kcal</b>\nP {Protein:0.#} g · F {Fat:0.#} g · C {Carbs:0.#} g");
         IReadOnlyList<string>? lines = Items?.Select(item => item.FormatHtml(russian, culture)).ToArray()
             ?? ItemNames?.Select(name => WebUtility.HtmlEncode(name) ?? string.Empty).ToArray();
         if (lines is not { Count: > 0 }) {
@@ -24,7 +24,7 @@ internal sealed record BotMealNutrition(decimal Calories, decimal Protein, decim
         if (lines.Count > MaxListedItems) {
             items += russian ? "\n… Остальные позиции в записи." : "\n… See the entry for the remaining items.";
         }
-        return $"{totals}\n\n<b>{(russian ? "Распознано" : "Recognized foods")}:</b>\n{items}";
+        return $"{totals}\n<b>{(russian ? "Распознано" : "Recognized foods")}:</b>\n{items}";
     }
 
     internal sealed record Item(string Name, string? NameLocal, double Amount, string? Unit, double Calories) {

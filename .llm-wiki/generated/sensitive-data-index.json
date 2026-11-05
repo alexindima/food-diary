@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1774,
-    "credential": 172,
+    "candidateFields": 1775,
+    "credential": 173,
     "identity": 188,
     "health": 831,
     "financial": 156,
     "privateContent": 427,
-    "boundaryFiles": 229,
+    "boundaryFiles": 230,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -79,6 +79,13 @@
       "type": "bool",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
       "line": 63
+    },
+    {
+      "category": "credential",
+      "name": "Token",
+      "type": "string",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "line": 30
     },
     {
       "category": "credential",
@@ -12548,6 +12555,13 @@
         "privateContent"
       ],
       "fieldCount": 17
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",

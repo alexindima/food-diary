@@ -7,7 +7,7 @@ internal static class BotMealActions {
         var actions = new List<InlineKeyboardButton>();
         string? url = BotUriHelper.NormalizeWebAppUrl(webAppUrl);
         if (url is not null) {
-            string label = russian ? "Редактировать" : "Edit";
+            string label = russian ? "✏️ Редактировать" : "✏️ Edit";
             if (meal.Undone) {
                 label = russian ? "Открыть дневник" : "Open diary";
             }
@@ -16,9 +16,9 @@ internal static class BotMealActions {
                 meal.Undone ? $"{url}/meals" : $"{url}/meals/{meal.MealId.Value:D}/edit"));
         }
         if (!meal.Undone && meal.UndoUntilUtc > nowUtc) {
-            actions.Add(InlineKeyboardButton.WithCallbackData(russian ? "Отменить" : "Undo", $"meal:undo:{meal.OperationId.Value:N}"));
+            actions.Add(InlineKeyboardButton.WithCallbackData(russian ? "↩️ Отменить" : "↩️ Undo", $"meal:undo:{meal.OperationId.Value:N}"));
         }
-        InlineKeyboardButton[] summary = [InlineKeyboardButton.WithCallbackData(russian ? "Сводка дня" : "Daily summary", "stats:today")];
+        InlineKeyboardButton[] summary = [InlineKeyboardButton.WithCallbackData(russian ? "📊 Сводка дня" : "📊 Daily summary", "stats:today")];
         return new InlineKeyboardMarkup(actions.Count > 0 ? [actions, summary] : [summary]);
     }
 }

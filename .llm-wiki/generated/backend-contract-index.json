@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1398,
     "ambiguousContracts": 30,
-    "consumerEdges": 11345,
+    "consumerEdges": 11346,
     "productionConsumerEdges": 6299,
-    "testConsumerEdges": 5046,
+    "testConsumerEdges": 5047,
     "consumedContracts": 1398,
     "unconsumedContracts": 0
   },
@@ -29366,7 +29366,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 5
     },
     {
       "contract": "AuthenticationHttpResponse",
@@ -29491,6 +29491,20 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/GeneratedAuthenticationContractTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "AuthenticationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
+        "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramBotWorkerTests.cs",
       "isTest": true,
       "referenceCount": 4
     },

@@ -27,7 +27,8 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         return BotApiMapper.Statistics(result);
     }
 
-    internal async Task<string> AuthenticateAsync(long telegramUserId, BotOperationLease lease, CancellationToken cancellationToken) {
+    internal async Task<(string Token, string? ProfileLanguage)> AuthenticateAsync(long telegramUserId, BotOperationLease lease,
+        CancellationToken cancellationToken) {
         using HttpResponseMessage response = await new BotAuthApi(CreateTransport()).AuthenticateAsync("1",
             new TelegramBotAuthHttpRequest { TelegramUserId = telegramUserId }, new BotApiRequestContext(ApiSecret: options.Value.ApiSecret),
             cancellationToken);
@@ -36,7 +37,7 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
             !MatchesSecurityVersion(reply.AccessToken, lease.SecurityVersion)) {
             throw new InvalidDataException("Telegram authentication no longer matches the operation owner.");
         }
-        return reply.AccessToken;
+        return (reply.AccessToken, reply.User.Language);
     }
 
     internal async Task<bool> HasPremiumAsync(string token, CancellationToken cancellationToken) {

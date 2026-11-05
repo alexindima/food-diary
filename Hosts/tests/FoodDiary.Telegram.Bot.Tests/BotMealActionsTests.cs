@@ -16,12 +16,14 @@ public sealed class BotMealActionsTests {
             .InlineKeyboard.Select(row => row.ToArray())];
         Assert.Equal(2, rows.Length);
         Assert.Equal(hasUndo ? 2 : 1, rows[0].Length);
+        Assert.Equal(undone ? "Открыть дневник" : "✏️ Редактировать", rows[0][0].Text);
         Assert.Equal(undone ? "https://diary.example/meals" : $"https://diary.example/meals/{meal.MealId.Value:D}/edit", rows[0][0].WebApp?.Url);
         if (hasUndo) {
+            Assert.Equal("↩️ Отменить", rows[0][1].Text);
             Assert.Equal($"meal:undo:{meal.OperationId.Value:N}", rows[0][1].CallbackData);
         }
         InlineKeyboardButton summary = Assert.Single(rows[1]);
-        Assert.Equal("Сводка дня", summary.Text);
+        Assert.Equal("📊 Сводка дня", summary.Text);
         Assert.Equal("stats:today", summary.CallbackData);
     }
 }

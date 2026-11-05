@@ -13,7 +13,7 @@ public sealed class BotMealNutritionTests {
         BotPhotoCheckpoint? restored = JsonSerializer.Deserialize<BotPhotoCheckpoint>(JsonSerializer.Serialize(original));
         Assert.NotNull(restored?.Nutrition);
         string text = restored.Nutrition.Format(russian);
-        Assert.StartsWith($"<b>{calories}</b>\n", text, StringComparison.Ordinal);
+        Assert.StartsWith($"🔥 <b>{calories}</b>\n", text, StringComparison.Ordinal);
     }
 
     [Fact]

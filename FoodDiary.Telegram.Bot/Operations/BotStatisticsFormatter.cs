@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net;
 
 namespace FoodDiary.Telegram.Bot.Operations;
 
@@ -8,39 +9,60 @@ internal static class BotStatisticsFormatter {
             throw new InvalidDataException("Invalid statistics period.");
         }
         var culture = CultureInfo.GetCultureInfo(russian ? "ru-RU" : "en-US");
-        string Number(double value) => value.ToString("0.#", culture);
-        string Date(DateOnly value) => value.ToString("dd.MM.yyyy", culture);
-        var lines = new List<string>();
-        if (summary.CalendarDays == 1) {
-            lines.Add($"{(russian ? "Сегодня" : "Today")}: {Date(summary.Days[0].Date)}");
-            string DailyCalories(double value) => value.ToString("#,0.#", culture);
-            string unit = russian ? "ккал" : "kcal";
-            string calories = $"{(russian ? "Калории" : "Calories")}: {DailyCalories(summary.TotalCalories)}";
-            if (summary.Days[0].CalorieGoal is > 0 and { } target) {
-                double ratio = summary.TotalCalories / target;
-                lines.Add($"{calories} / {DailyCalories(target)} {unit} ({ratio.ToString("P0", culture)})");
-                double remaining = target - summary.TotalCalories;
-                string remainingLabel = russian ? "Осталось" : "Remaining";
-                string overGoalLabel = russian ? "Сверх цели" : "Over goal";
-                string progress = remaining < 0 ? overGoalLabel : remainingLabel;
-                lines.Add($"{progress}: {DailyCalories(Math.Abs(remaining))} {unit}");
-            } else {
-                lines.Add($"{calories} {unit}");
-            }
-        } else {
-            lines.Add($"{Date(summary.Days[0].Date)} – {Date(summary.Days[^1].Date)}");
-            lines.Add($"{(russian ? "Всего калорий" : "Total calories")}: {Number(summary.TotalCalories)} {(russian ? "ккал" : "kcal")}");
-            lines.Add($"{(russian ? "В среднем за 7 календарных дней" : "Average over 7 calendar days")}: {Number(summary.AverageCaloriesPerCalendarDay)} {(russian ? "ккал/день" : "kcal/day")}");
-            lines.Add($"{(russian ? "Дней с приёмами пищи" : "Days with meals")}: {summary.DaysWithMeals.ToString(culture)}/7");
+        string Number(double value) => value.ToString("#,0.#", culture);
+        string Date(DateOnly value) => value.ToString(russian ? "d MMMM" : "MMMM d", culture);
+
+        bool today = summary.CalendarDays == 1;
+        BotDiaryStatisticsDay firstDay = summary.Days[0];
+        string date = Date(firstDay.Date);
+        string period = russian ? "Сегодня" : "Today";
+        if (!today) {
+            date += $" – {Date(summary.Days[^1].Date)}";
+            period = russian ? "7 дней" : "7 days";
         }
-        lines.Add($"{(russian ? "Белки / жиры / углеводы" : "Protein / fat / carbs")}: {Number(summary.TotalProteins)} / {Number(summary.TotalFats)} / {Number(summary.TotalCarbs)} {(russian ? "г" : "g")}");
-        string waterGoal = summary.CalendarDays == 1 && summary.DailyWaterGoalMl is { } water ? $" / {Number(water)}" : string.Empty;
-        lines.Add($"{(russian ? "Вода" : "Water")}: {summary.TotalWaterMl.ToString(culture)}{waterGoal} {(russian ? "мл" : "ml")}");
-        lines.Add($"{(russian ? "Приёмов пищи" : "Meals")}: {summary.MealCount.ToString(culture)}");
+        string unit = russian ? "ккал" : "kcal";
+        string calories = Number(summary.TotalCalories);
+        var lines = new List<string> {
+            $"📊 <b>{period} · {date}</b> ({WebUtility.HtmlEncode(summary.TimeZoneId)})",
+        };
+        if (today && firstDay.CalorieGoal is > 0 and { } target) {
+            lines.Add($"🔥 <b>{calories} / {Number(target)} {unit}</b>");
+            string percent = (summary.TotalCalories / target).ToString("0%", culture);
+            double remaining = target - summary.TotalCalories;
+            string remainingLabel = russian ? "Осталось" : "Remaining";
+            string overGoalLabel = russian ? "Сверх цели" : "Over goal";
+            lines.Add($"{percent} · {(remaining < 0 ? overGoalLabel : remainingLabel)} {Number(Math.Abs(remaining))} {unit}");
+        } else {
+            lines.Add($"🔥 <b>{calories} {unit}</b>");
+        }
+        if (!today) {
+            string average = Number(summary.AverageCaloriesPerCalendarDay);
+            string daysWithMeals = summary.DaysWithMeals.ToString(culture);
+            string days = summary.CalendarDays.ToString(culture);
+            lines.Add(russian ? $"В среднем {average} ккал/день" : $"Average {average} kcal/day");
+            lines.Add(russian ? $"Дней с приёмами пищи: {daysWithMeals} из {days}" : $"Days with meals: {daysWithMeals} of {days}");
+        }
+        lines.Add(string.Empty);
+        lines.AddRange(russian
+            ? [
+                "<b>Нутриенты</b>",
+                $"🥩 Белки: {Number(summary.TotalProteins)} г",
+                $"🥑 Жиры: {Number(summary.TotalFats)} г",
+                $"🍞 Углеводы: {Number(summary.TotalCarbs)} г",
+            ]
+            : [
+                "<b>Nutrients</b>",
+                $"🥩 Protein: {Number(summary.TotalProteins)} g",
+                $"🥑 Fat: {Number(summary.TotalFats)} g",
+                $"🍞 Carbs: {Number(summary.TotalCarbs)} g",
+            ]);
+        lines.Add(string.Empty);
+        string waterGoal = today && summary.DailyWaterGoalMl is { } water ? $" / {Number(water)}" : string.Empty;
+        lines.Add($"💧 {(russian ? "Вода" : "Water")}: {summary.TotalWaterMl.ToString("#,0", culture)}{waterGoal} {(russian ? "мл" : "ml")}");
+        lines.Add($"🍽️ {(russian ? "Приёмов пищи" : "Meals")}: {summary.MealCount.ToString(culture)}");
         if (summary.MealCount == 0 && summary.TotalWaterMl == 0) {
             lines.Add(russian ? "За этот период записей еды и воды нет." : "No food or water entries in this period.");
         }
-        lines.Add($"{(russian ? "Часовой пояс" : "Time zone")}: {summary.TimeZoneId}");
         return string.Join('\n', lines);
     }
 }
