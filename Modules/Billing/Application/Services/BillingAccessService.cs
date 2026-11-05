@@ -22,6 +22,9 @@ public sealed class BillingAccessService(
             if (shouldHavePremium && !subscription.PremiumRoleManagedByBilling) {
                 return;
             }
+            if (shouldHavePremium) {
+                await EnsureRoleAsync(user, subscription, cancellationToken);
+            }
 
             bool wasManagedByBilling = subscription.PremiumRoleManagedByBilling;
             subscription.MarkPremiumRoleManagedByBilling(shouldHavePremium, dateTimeProvider.GetUtcNow().UtcDateTime);
@@ -34,7 +37,7 @@ public sealed class BillingAccessService(
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (shouldHavePremium) {
-            await billingUserContextService.Send(new EnsureUserPremiumRoleCommand(UserId: user.UserId), cancellationToken);
+            await EnsureRoleAsync(user, subscription, cancellationToken);
             subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
         } else {
@@ -52,6 +55,10 @@ public sealed class BillingAccessService(
         await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
     }
 
-    public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) =>
-        BillingPremiumAccessPolicy.GrantsPremiumAccess(status, currentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime);
+    private Task<Unit> EnsureRoleAsync(UserBillingProfileModel user, BillingSubscription subscription, CancellationToken cancellationToken) =>
+        billingUserContextService.Send(new EnsureUserPremiumRoleCommand(user.UserId,
+            subscription.Provider is BillingProviderNames.TelegramStars ? subscription.CurrentPeriodEndUtc : null), cancellationToken);
+
+    public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc, string? provider = null) =>
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(status, currentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime, provider);
 }

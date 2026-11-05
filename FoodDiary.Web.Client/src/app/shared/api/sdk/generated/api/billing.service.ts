@@ -25,6 +25,10 @@ import { PortalSessionHttpResponse } from '../model/portal-session-http-response
 
 import { SubmitCancellationFeedbackHttpRequest } from '../model/submit-cancellation-feedback-http-request';
 
+import { TelegramStarsUpdateHttpRequest } from '../model/telegram-stars-update-http-request';
+
+import { TelegramStarsUpdateHttpResponse } from '../model/telegram-stars-update-http-response';
+
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
@@ -58,6 +62,11 @@ export interface PostBillingPortalSessionRequestParams {
     version: string;
     /** Deduplicates retries of this POST request for 24 hours. */
     idempotencyKey?: string;
+}
+
+export interface PostBillingTelegramStarsUpdatesRequestParams {
+    version: string;
+    telegramStarsUpdateHttpRequest?: TelegramStarsUpdateHttpRequest;
 }
 
 export interface PostBillingTrialRequestParams {
@@ -502,6 +511,87 @@ export class BillingSdk extends BaseService {
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<PortalSessionHttpResponse>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/billing/telegram-stars/updates
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postBillingTelegramStarsUpdates(
+        requestParameters: PostBillingTelegramStarsUpdatesRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<TelegramStarsUpdateHttpResponse>;
+    public postBillingTelegramStarsUpdates(
+        requestParameters: PostBillingTelegramStarsUpdatesRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<TelegramStarsUpdateHttpResponse>>;
+    public postBillingTelegramStarsUpdates(
+        requestParameters: PostBillingTelegramStarsUpdatesRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<TelegramStarsUpdateHttpResponse>>;
+    public postBillingTelegramStarsUpdates(
+        requestParameters: PostBillingTelegramStarsUpdatesRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postBillingTelegramStarsUpdates.');
+        }
+        const telegramStarsUpdateHttpRequest = requestParameters?.telegramStarsUpdateHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/billing/telegram-stars/updates`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<TelegramStarsUpdateHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: telegramStarsUpdateHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

@@ -4613,6 +4613,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<string>("PasswordResetTokenHash")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("PremiumAccessEndsAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime?>("PremiumTrialEndsAtUtc")
                         .HasColumnType("timestamp with time zone");
 

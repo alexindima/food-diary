@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "7792ba13b7a82b11ebade48d7feae0913c4b49967ee87851da54eb13138a7c7e",
-    "sourceFileCount": 4752
+    "sourceFingerprint": "b3dbbf9b15da490582c327c0950038754216dd5c9b287296b67d3ea13e48f50b",
+    "sourceFileCount": 4771
   },
   "summary": {
     "composeServices": 20,
     "hostedServices": 16,
-    "httpClients": 22,
+    "httpClients": 23,
     "webhooks": 22,
     "recurringJobRegistrations": 19,
-    "networkPolicies": 43
+    "networkPolicies": 44
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -883,6 +883,16 @@
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "registration-window"
+    },
+    {
+      "contract": null,
+      "implementation": "TelegramStarsBillingGateway",
+      "registrationPath": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "idempotency"
+      ],
+      "behaviorSignalScope": "class-window"
     },
     {
       "contract": "IUsdaFoodSearchService",
@@ -1965,6 +1975,24 @@
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "TelegramStarsBillingGateway",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "idempotency"
       ],
       "behaviorSignalScope": "policy-file",
       "evidenceStatus": "inferred-from-code",

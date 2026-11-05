@@ -221,6 +221,8 @@ export * from './telegram-login-widget-http-request';
 export * from './telegram-oidc-start-http-response';
 export * from './telegram-operation-lease-http-response';
 export * from './telegram-operation-registered-http-response';
+export * from './telegram-stars-update-http-request';
+export * from './telegram-stars-update-http-response';
 export * from './unread-count-http-response';
 export * from './update-cycle-consent-http-request';
 export * from './update-cycle-settings-http-request';

@@ -79,11 +79,13 @@ public sealed class StartPremiumTrialCommandHandler(
             CanStartPremiumTrial: false,
             publicConfig.Provider,
             publicConfig.PaddleClientToken,
-            publicConfig.AvailableProviders,
+            [.. publicConfig.AvailableProviders.Where(provider =>
+                provider is not BillingProviderNames.TelegramStars || updatedUser.TelegramUserId is > 0)],
             publicConfig.PaddleMonthlyPriceId,
-            publicConfig.PaddleYearlyPriceId));
+            publicConfig.PaddleYearlyPriceId,
+            TelegramStarsPrice: updatedUser.TelegramUserId is > 0 ? publicConfig.TelegramStarsPrice : null));
     }
 
     private bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription) =>
-        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime);
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime, subscription?.Provider);
 }

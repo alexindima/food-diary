@@ -8,7 +8,7 @@
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 4,
-    "ambiguousBackendContracts": 30,
+    "ambiguousBackendContracts": 32,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
@@ -806,6 +806,44 @@
       "definitionPaths": [
         "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
         "Modules/Identity/Presentation/Features/Auth/Responses/TelegramOperationRegisteredHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "TelegramStarsUpdateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramStarsUpdateHttpRequest.cs",
+        "Modules/Billing/Presentation/Requests/TelegramStarsUpdateHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "TelegramStarsUpdateHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramStarsUpdateHttpResponse.cs",
+        "Modules/Billing/Presentation/Responses/TelegramStarsUpdateHttpResponse.cs"
       ],
       "ambiguous": true,
       "collisionClassification": "ambiguous"

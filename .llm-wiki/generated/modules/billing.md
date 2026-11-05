@@ -38,15 +38,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent, BillingCancellation
-- Public contract files: 30
+- Public contract files: 33
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 30
-- Interfaces: 14
-- DTO/read-model/projection types: 12
+- Public contract types: 33
+- Interfaces: 15
+- DTO/read-model/projection types: 14
 - Enums: 0
 - Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 0
@@ -68,6 +68,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IBillingWebhookEventReadRepository`
 - `interface IBillingWebhookEventWriteRepository`
 - `interface IPaddleNotificationRecoveryGateway`
+- `interface ITelegramStarsBotAuthenticator`
 - `record BillingCancellationEmailCandidateModel`
 - `record BillingCancellationRequestModel`
 - `record BillingCancellationSnapshotModel`
@@ -79,7 +80,7 @@ No literal attribute-routed controller was associated with this module.
 - `record BillingRecurringPaymentModel`
 - `record BillingRecurringPaymentRequestModel`
 - `record BillingSubscriptionOverviewReadModel`
-- `record BillingWebhookEventModel`
+- ... 3 more type(s)
 
 ## Focused Tests
 
@@ -107,6 +108,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalConsistencyTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalMetadataTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalSchedulingTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs`
@@ -114,7 +116,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/WebhookDeduplicationMetadataTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/BillingPaymentAlreadyExistsExceptionTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FeatureErrorContractTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingCancellationBoundaryTests.cs`
 
 ## Working Rule
 

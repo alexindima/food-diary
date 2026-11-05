@@ -21,4 +21,5 @@ public sealed record BillingOverviewHttpResponse(
     IReadOnlyList<string> AvailableProviders,
     string? PaddleMonthlyPriceId = null,
     string? PaddleYearlyPriceId = null,
-    bool CancellationAvailable = false);
+    bool CancellationAvailable = false,
+    int? TelegramStarsPrice = null);

@@ -30,4 +30,5 @@ export interface BillingOverviewHttpResponse {
     renewalEnabled?: boolean;
     subscriptionProvider?: string | null;
     subscriptionStatus?: string | null;
+    telegramStarsPrice?: number | null;
 }

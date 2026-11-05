@@ -17,7 +17,7 @@ public sealed class BillingWebhookPremiumRoleSyncer(
         CancellationToken cancellationToken) {
         bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
             subscription.Status,
-            subscription.CurrentPeriodEndUtc);
+            subscription.CurrentPeriodEndUtc, subscription.Provider);
         bool canAccess = user.IsActive && !user.IsDeleted;
         if (canAccess) {
             await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken);

@@ -19,6 +19,8 @@ builder.Services.AddOptions<TelegramBotOptions>()
     .ValidateOnStart();
 
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("TelegramBilling", client => client.Timeout = TimeSpan.FromSeconds(7))
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 builder.Services.AddHttpClient(BotOperationClient.ClientName, client => client.Timeout = TimeSpan.FromSeconds(30))
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 builder.Services.AddHttpClient(BotDiaryClient.ClientName, client => client.Timeout = TimeSpan.FromSeconds(60))
@@ -27,7 +29,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.AddSingleton<ITelegramBotClient>(sp => {
     TelegramBotOptions options = sp.GetRequiredService<IOptions<TelegramBotOptions>>().Value;
-    return new TelegramBotClient(options.Token);
+    return new TelegramBotClient(new TelegramBotClientOptions(options.Token, useTestEnvironment: options.UseTestEnvironment));
 });
 
 builder.Services.AddHostedService<TelegramBotWorker>();

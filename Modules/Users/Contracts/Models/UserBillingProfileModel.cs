@@ -12,4 +12,5 @@ public sealed record UserBillingProfileModel(
     DateTime? PremiumTrialEndsAtUtc,
     bool IsEmailConfirmed = false,
     string? Language = null,
-    string? TimeZoneId = null);
+    string? TimeZoneId = null,
+    long? TelegramUserId = null);

@@ -236,8 +236,8 @@
         },
         {
           "path": "Directory.Packages.props",
-          "sha256": "cf2203fd5b96c0b5c9f779ac5e985e8a1649049f43a85b4d114f9757e0be21c4",
-          "reviewReason": "Reviewed Directory.Packages.props and API project reference: only Microsoft.AspNetCore.SignalR.StackExchangeRedis 10.0.14 was added. Regenerated catalog records this package; project inventory, module ownership and documented catalog generation/limitations remain correct."
+          "sha256": "148499c806b9fd8261cdfe85d911e51576619e3b2f291f437f5c16bde410ab36",
+          "reviewReason": "Reviewed Telegram.Bot upgrade 22.10.0.1 to 22.10.3.3 for subscription state updates. Central package references, project inventory and catalog extraction contracts are unchanged; regenerated catalog includes the new owned controller and rollout document."
         },
         {
           "path": "docs/architecture/backend-modules.json",
@@ -255,10 +255,10 @@
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate.",
+      "reason": "Reviewed Telegram.Bot upgrade 22.10.0.1 to 22.10.3.3 for subscription state updates. Central package references, project inventory and catalog extraction contracts are unchanged; regenerated catalog includes the new owned controller and rollout document.",
       "baseRef": "HEAD",
-      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
-      "reviewedAtUtc": "2026-11-03T11:37:35.0188214Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:05:06.6078596Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -349,14 +349,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ab2986ae89895994ec9257ea943643b5f018f07ca95dd32ea92e8536323ff903",
-          "reviewReason": "The full OpenAPI snapshot adds a documented 502 for five Admin MailInbox and outgoing mail operations. Successful responses and existing documented responses retain their schema. Transport regressions reproduce the prior 500 and verify the dependency failure code and 200 after recovery."
+          "sha256": "323547d20ca607df85431774d5314ad664a7f7caf73eba95e9661801baffa505",
+          "reviewReason": "Reviewed additive TelegramStars update POST and optional telegramStarsPrice response field. Existing routes and required fields are preserved; bot/user clients and full OpenAPI snapshot were regenerated from the API. The compatibility guard and its documented baseline rules remain unchanged."
         }
       ],
-      "reason": "The new CI step runs post-deployment Docker image-retention tests. The existing API snapshot and compatibility gates keep the same commands, inputs and ordering.",
+      "reason": "Reviewed additive TelegramStars update POST and optional telegramStarsPrice response field. Existing routes and required fields are preserved; bot/user clients and full OpenAPI snapshot were regenerated from the API. The compatibility guard and its documented baseline rules remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
-      "reviewedAtUtc": "2026-11-04T05:02:49.0957338Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:05:07.3864596Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -365,8 +365,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "270edbcb0e3ef60573d4e0cd68618e952116fa96f9363429ed8287844bb7e428",
-          "reviewReason": "The regenerated index no longer lists MealAiItemInputValidator as lacking a test reference. The recognition save tests now exercise its name limit through the handler, and project edges and dependency violations are unchanged."
+          "sha256": "3d20f111f815755a3043fe9cb06d668f7c24c6b2ef9d2cdf7bf2e832bf164680",
+          "reviewReason": "Regenerated architecture projection for the new Billing gateway, Users expiry contract and bot update flow. Reviewed owner boundaries and the explicit persistence adapter SQL hashes; no project dependency edge or module cycle was added. Architecture suite passed all 2284 checks."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -384,10 +384,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "The regenerated index no longer lists MealAiItemInputValidator as lacking a test reference. The recognition save tests now exercise its name limit through the handler, and project edges and dependency violations are unchanged.",
+      "reason": "Regenerated architecture projection for the new Billing gateway, Users expiry contract and bot update flow. Reviewed owner boundaries and the explicit persistence adapter SQL hashes; no project dependency edge or module cycle was added. Architecture suite passed all 2284 checks.",
       "baseRef": "HEAD",
-      "gitHead": "1c81e1dc7ce7094f636e70b0142a5823134b744d",
-      "reviewedAtUtc": "2026-11-04T22:42:36.7127107Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:33:23.3790314Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -740,8 +740,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "b910bb79f4b31604d62cd72018b13d95bc5ce02a5cd51409b12134901f45b267",
-          "reviewReason": "The configuration inventory adds the TelegramOperations fixed-window option to the existing API rate limiting section. Its default and startup validation were reviewed. There is no package, schema or infrastructure change."
+          "sha256": "27c11477759c0adf796c8864b22bb9d3f19a0e27462295a5b4dd3f4281ca26ba",
+          "reviewReason": "Reviewed the new disabled TelegramStars settings and Telegram.Bot 22.10.3.3 lock updates. The Stars runbook documents API/migration/bot/frontend order, matched test environment flags, continued intake when checkout is off, and a forward-fix rollback strategy. Workflow mechanics remain applicable."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -754,10 +754,10 @@
           "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
         }
       ],
-      "reason": "The configuration inventory adds the TelegramOperations fixed-window option to the existing API rate limiting section. Its default and startup validation were reviewed. There is no package, schema or infrastructure change.",
-      "baseRef": "origin/master",
-      "gitHead": "d46ed99138ed813e97c6183eec4d25e951334532",
-      "reviewedAtUtc": "2026-11-04T13:21:08.3665265Z"
+      "reason": "Reviewed the new disabled TelegramStars settings and Telegram.Bot 22.10.3.3 lock updates. The Stars runbook documents API/migration/bot/frontend order, matched test environment flags, continued intake when checkout is off, and a forward-fix rollback strategy. Workflow mechanics remain applicable.",
+      "baseRef": "HEAD",
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:09:32.8903085Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -802,8 +802,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "301d9d1b53efd2a89b89aec4cbbfe05dc92991ac9f8dd4b430dae5984f06df38",
-          "reviewReason": "Reviewed the regenerated domain index against final User consent and profile projection code. The enum factory still rejects undefined purposes before mutation; the original range guard runs after access checks. Entity schema, EF mappings, persistence ownership and query shapes are unchanged, so the generic review workflow remains current."
+          "sha256": "7d54e937184c32bdf5c33cc4510b995d10f1600d01d9fc0de87f9053517239a6",
+          "reviewReason": "Reviewed nullable Users PremiumAccessEndsAtUtc, owner-only role SQL, additive migration pair and model snapshot. Null preserves permanent access; exact provider expiration bounds Stars. PostgreSQL concurrency and exact-end principal assertions passed; the workflow still describes the required invariant review."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -816,10 +816,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed the regenerated domain index against final User consent and profile projection code. The enum factory still rejects undefined purposes before mutation; the original range guard runs after access checks. Entity schema, EF mappings, persistence ownership and query shapes are unchanged, so the generic review workflow remains current.",
+      "reason": "Reviewed nullable Users PremiumAccessEndsAtUtc, owner-only role SQL, additive migration pair and model snapshot. Null preserves permanent access; exact provider expiration bounds Stars. PostgreSQL concurrency and exact-end principal assertions passed; the workflow still describes the required invariant review.",
       "baseRef": "HEAD",
-      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
-      "reviewedAtUtc": "2026-11-05T14:12:28.1096755Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:09:32.4257032Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1185,8 +1185,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "6926b1f1b6edf7ec1744b4fc788b8fd3e5d419e8ded507b0ba6bbdf5a04b4c49",
-          "reviewReason": "The sole new index lead is the named return tuple element for the existing access token. The token remains in memory and authorizes the same API calls; the statistics checkpoint adds only the profile language, with no new log or provider transfer."
+          "sha256": "de2938be1f707c78dc0664838664e03a9260982167056f95f8fc781fee332199",
+          "reviewReason": "Reviewed opaque invoice payloads, saved payer/account binding, minimized financial envelope and bot shared-secret authentication. Provider HTTP logging is disabled to prevent bot-token URL leaks. No diary content is sent to Telegram billing; protected financial records retain existing lifecycle rules. Navigation guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1199,10 +1199,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "The sole new index lead is the named return tuple element for the existing access token. The token remains in memory and authorizes the same API calls; the statistics checkpoint adds only the profile language, with no new log or provider transfer.",
+      "reason": "Reviewed opaque invoice payloads, saved payer/account binding, minimized financial envelope and bot shared-secret authentication. Provider HTTP logging is disabled to prevent bot-token URL leaks. No diary content is sent to Telegram billing; protected financial records retain existing lifecycle rules. Navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "41f643981d26011a2c5589feae490e2f713c4f2e",
-      "reviewedAtUtc": "2026-11-05T02:28:10.5712093Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:09:31.8727173Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "aa20e2907f317905b0347f97254f72be58fd391e7e725fece755807f89dea7d0",
-          "reviewReason": "Reviewed runtime-topology.json: only sourceFingerprint changed; sourceFileCount remains 4752 and all topology records are identical. This task adds no deployable host, worker, provider, webhook or registration. Existing timeout, cancellation, replay and rollback review guidance remains accurate."
+          "sha256": "fd90c16628610e069478cdca626c1da1b0a1ffd90338ee40d74b2f230ea7d79a",
+          "reviewReason": "Reviewed the final runtime projection after removing one trailing empty line from the Stars transport model. Financial recovery, bounded HTTP calls, durable intake and subscription handling are unchanged; only the model source fingerprint changed. Previously executed behavior suites remain applicable, with full CI checking the committed revision."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime-topology.json: only sourceFingerprint changed; sourceFileCount remains 4752 and all topology records are identical. This task adds no deployable host, worker, provider, webhook or registration. Existing timeout, cancellation, replay and rollback review guidance remains accurate.",
+      "reason": "Reviewed the final runtime projection after removing one trailing empty line from the Stars transport model. Financial recovery, bounded HTTP calls, durable intake and subscription handling are unchanged; only the model source fingerprint changed. Previously executed behavior suites remain applicable, with full CI checking the committed revision.",
       "baseRef": "HEAD",
-      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
-      "reviewedAtUtc": "2026-11-05T14:12:27.4769778Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T19:58:39.6056243Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1713,8 +1713,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0928cce760ff2c7910aa1701dbe2edf9cea5c411407ace14cf2eeb32452a261d",
-          "reviewReason": "The catalog change adds only the frontend retention ADR to the documentation inventory. Context query inputs and ranking behavior retain their existing contract."
+          "sha256": "ac386e028f38feb7d9962c565c0ad1d2fe81566ce7be48e41d3d11346b76693d",
+          "reviewReason": "Catalog additions are an owned Stars controller, DTOs, tests and rollout document. Query ranking, source authority, provider selection and graph freshness rules were not changed. Inspected the regenerated inventory against source; the context workflow remains accurate."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1722,10 +1722,10 @@
           "reviewReason": "Documented exact user aggregate repository role with related-data exclusions and equivalent compile/compiles factoring. The two spellings now share one normalization entry; direct compile term deduplicates identically, keeping combined budget700 with no threshold changes."
         }
       ],
-      "reason": "The catalog change adds only the frontend retention ADR to the documentation inventory. Context query inputs and ranking behavior retain their existing contract.",
+      "reason": "Catalog additions are an owned Stars controller, DTOs, tests and rollout document. Query ranking, source authority, provider selection and graph freshness rules were not changed. Inspected the regenerated inventory against source; the context workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4a11fad4eb07cf796bc87d393d2fa266966492c6",
-      "reviewedAtUtc": "2026-11-04T05:53:01.8971865Z"
+      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
+      "reviewedAtUtc": "2026-11-05T16:09:30.7009698Z"
     },
     {
       "pageId": "workflow.review-diff",

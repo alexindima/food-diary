@@ -40,7 +40,7 @@ public sealed class DurableTelegramReceiverLoopTests {
         Assert.Equal(new[] { 10 }, persisted);
         Assert.Equal(11, receiver.NextOffset);
         await stopping.CancelAsync();
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => run.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None));
+        await run.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None);
     }
 
     [Fact]

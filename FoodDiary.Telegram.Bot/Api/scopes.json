@@ -88,5 +88,11 @@
     "name": "BotHydration",
     "operationId": "AddWater",
     "path": "/api/v{version}/hydrations"
+  },
+  {
+    "method": "POST",
+    "name": "BotStars",
+    "operationId": "ProcessUpdate",
+    "path": "/api/v{version}/billing/telegram-stars/updates"
   }
 ]

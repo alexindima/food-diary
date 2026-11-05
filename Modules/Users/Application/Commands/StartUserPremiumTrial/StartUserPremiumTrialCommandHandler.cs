@@ -42,6 +42,7 @@ public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository us
             user.HasRole(RoleNames.Premium),
             user.PremiumTrialStartedAtUtc,
             user.PremiumTrialEndsAtUtc,
-            user.IsEmailConfirmed);
+            user.IsEmailConfirmed,
+            TelegramUserId: user.TelegramUserId);
 
 }

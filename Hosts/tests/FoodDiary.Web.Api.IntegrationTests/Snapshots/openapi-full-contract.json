@@ -8236,6 +8236,71 @@
       ]
     },
     {
+      "Path": "/api/v{version}/billing/telegram-stars/updates",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/TelegramStarsUpdateHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/TelegramStarsUpdateHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/TelegramStarsUpdateHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "413",
+            "429",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/TelegramStarsUpdateHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/TelegramStarsUpdateHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/TelegramStarsUpdateHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/billing/trial",
       "Operations": [
         {
@@ -25402,6 +25467,13 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "telegramStarsPrice",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
         }
       ]
     },
@@ -36604,6 +36676,105 @@
           "Type": "string",
           "Format": "uuid",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "TelegramStarsUpdateHttpRequest",
+      "Properties": [
+        {
+          "Name": "currency",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "invoicePayload",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "isFirstRecurring",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "isRecurring",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "kind",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "paymentChargeId",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "paymentOccurredAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "subscriptionExpirationUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "subscriptionState",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "telegramUserId",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
+        },
+        {
+          "Name": "totalAmount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "updateId",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "TelegramStarsUpdateHttpResponse",
+      "Properties": [
+        {
+          "Name": "checkoutApproved",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "error",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         }
       ]
     },

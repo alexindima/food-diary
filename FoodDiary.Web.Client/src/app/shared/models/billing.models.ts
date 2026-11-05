@@ -23,6 +23,7 @@ export type BillingOverview = {
     paddleMonthlyPriceId?: string | null;
     paddleYearlyPriceId?: string | null;
     availableProviders: BillingProvider[];
+    telegramStarsPrice?: number | null;
 };
 
 export type CheckoutSessionResponse = {

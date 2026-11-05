@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2811,
+    "typescriptFiles": 2813,
     "symbols": 883,
     "routes": 111,
     "features": 46,
@@ -5268,7 +5268,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 22
+      "line": 24
     },
     {
       "name": "PremiumCancellationActionsComponent",
@@ -5352,7 +5352,7 @@
       "role": "Component",
       "selector": "fd-premium-access-page",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "line": 59
+      "line": 60
     },
     {
       "name": "FavoriteProductService",
@@ -6990,7 +6990,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/billing.service.ts",
-      "line": 75
+      "line": 84
     },
     {
       "name": "ClientTasksSdk",
@@ -7641,7 +7641,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-window.service.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "CurrentLocalDayService",
@@ -8395,8 +8395,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4190,
-      "russianProperties": 4190,
+      "englishProperties": 4199,
+      "russianProperties": 4199,
       "countsMatch": true
     },
     {

@@ -7565,7 +7565,7 @@
         },
         "PLANS": {
             "TITLE": "Choose a plan",
-            "SUBTITLE": "Both plans unlock the same Premium features. Billing and renewals are handled by the payment provider.",
+            "SUBTITLE": "All plans unlock the same Premium features. Billing and renewals are handled by the payment provider.",
             "PAY_WITH": "Pay with {{provider}}",
             "PRICE_LOADING": "Loading current prices…",
             "PRICE_UNAVAILABLE": "Current prices could not be loaded. Try again, or review the final price at checkout before paying.",
@@ -7598,7 +7598,7 @@
         },
         "SUPPORT": {
             "TITLE": "Need help with payments or your subscription?",
-            "PAYMENT_HELP": "If Paddle payments are unavailable in your country or your card is declined, email us. We can help you find out which options are available for getting Premium.",
+            "PAYMENT_HELP": "Questions about Paddle or Telegram Stars payments? Email us with the payment date and receipt ID. Never send passwords or sign-in codes.",
             "MANAGEMENT_HELP": "If you cannot open subscription management or cancel your subscription, we can help."
         },
         "TOUR": {
@@ -7638,6 +7638,16 @@
                 "other": "Other reason"
             },
             "PERIOD_MESSAGE": "Auto-renewal will be turned off. Premium and AI features will remain available until the end of the current period. We will show the exact date after Paddle confirms cancellation."
+        },
+        "STARS": {
+            "SUBSCRIBE": "Subscribe for {{stars}} Stars / 30 days",
+            "TERMS": "Stars renew automatically every 30 days. You can cancel renewal in Telegram or here; access remains until the paid period ends. By subscribing you accept the subscription terms.",
+            "TERMS_LINK": "Read the terms",
+            "PENDING": "Payment is being confirmed. Premium will appear after server confirmation; refresh this page if needed.",
+            "TERMS_TITLE": "Telegram Stars subscription terms",
+            "TERMS_DETAIL": "Premium applies to the FoodDiary account used for checkout. Telegram charges the displayed Stars amount automatically every 30 days while renewal is enabled and sufficient Stars are available. Cancel renewal here or in Telegram to stop future charges; access remains until the paid period ends. Contact payment support below about refunds. A refund of the current payment removes access for that period and cancels future renewal. Refunds are returned in Stars. Telegram support does not handle FoodDiary purchases.",
+            "TITLE": "Premium for 30 days",
+            "ACCESS_HINT": "Access lasts until the end of the paid period. Manage automatic renewal here or in Telegram."
         }
     },
     "LESSONS": {

@@ -345,7 +345,8 @@
             "POST /api/v{version}/billing/portal-session": "postBillingPortalSession",
             "POST /api/v{version}/billing/webhooks/{provider}": "postBillingWebhooksByProvider",
             "POST /api/v{version}/billing/cancel": "postBillingCancel",
-            "POST /api/v{version}/billing/cancellations/{cancellationId}/feedback": "postBillingCancellationsByCancellationIdFeedback"
+            "POST /api/v{version}/billing/cancellations/{cancellationId}/feedback": "postBillingCancellationsByCancellationIdFeedback",
+            "POST /api/v{version}/billing/telegram-stars/updates": "postBillingTelegramStarsUpdates"
         }
     },
     {

@@ -48,4 +48,6 @@ internal sealed class BillingOverviewHttpResponse {
     public string? SubscriptionProvider { get; init; } = default!;
     [JsonPropertyName("subscriptionStatus")]
     public string? SubscriptionStatus { get; init; } = default!;
+    [JsonPropertyName("telegramStarsPrice")]
+    public int? TelegramStarsPrice { get; init; } = default!;
 }

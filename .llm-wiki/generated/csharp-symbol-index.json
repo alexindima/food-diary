@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4751,
-    "symbols": 4687,
-    "interfaceImplementationLinks": 211,
-    "dependencyInjectionRegistrations": 74,
+    "sourceFiles": 4770,
+    "symbols": 4706,
+    "interfaceImplementationLinks": 212,
+    "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2421,
+      "class": 2433,
       "enum": 74,
-      "interface": 427,
-      "record": 1622,
+      "interface": 428,
+      "record": 1628,
       "record struct": 143
     },
     "roles": {
-      "Command": 246,
-      "CommandHandler": 240,
+      "Command": 248,
+      "CommandHandler": 242,
       "Configuration": 104,
-      "Controller": 116,
+      "Controller": 117,
       "Entity": 105,
       "Event": 20,
       "Factory": 15,
@@ -31,15 +31,15 @@
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
-      "Options": 76,
-      "Other": 1932,
+      "Options": 77,
+      "Other": 1941,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 104,
-      "Request": 181,
-      "Response": 275,
+      "Request": 183,
+      "Response": 277,
       "Service": 177,
       "Validator": 238,
       "ValueObject": 183,
@@ -1917,6 +1917,13 @@
       "line": 7
     },
     {
+      "name": "BotStarsApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotStarsApi.cs",
+      "line": 7
+    },
+    {
       "name": "ApiErrorHttpResponse",
       "kind": "class",
       "role": "Response",
@@ -2117,6 +2124,20 @@
       "kind": "class",
       "role": "Response",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramOperationRegisteredHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramStarsUpdateHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramStarsUpdateHttpRequest.cs",
+      "line": 6
+    },
+    {
+      "name": "TelegramStarsUpdateHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramStarsUpdateHttpResponse.cs",
       "line": 6
     },
     {
@@ -2383,7 +2404,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Program.cs",
-      "line": 41
+      "line": 43
     },
     {
       "name": "TelegramBotOptions",
@@ -2397,7 +2418,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 21
+      "line": 20
+    },
+    {
+      "name": "TelegramBotWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.Stars.cs",
+      "line": 11
     },
     {
       "name": "ApiBuildInfo",
@@ -6831,6 +6859,13 @@
       "line": 4
     },
     {
+      "name": "ITelegramStarsBotAuthenticator",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Common/ITelegramStarsBotAuthenticator.cs",
+      "line": 2
+    },
+    {
       "name": "BillingCancellationEmailCandidateModel",
       "kind": "record",
       "role": "Other",
@@ -6912,6 +6947,20 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramStarsUpdateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateModel.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramStarsUpdateResultModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
       "line": 2
     },
     {
@@ -7055,6 +7104,34 @@
       "line": 12
     },
     {
+      "name": "ProcessTelegramStarsUpdateCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/ProcessTelegramStarsUpdate/ProcessTelegramStarsUpdateCommand.cs",
+      "line": 8
+    },
+    {
+      "name": "ProcessTelegramStarsUpdateCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/ProcessTelegramStarsUpdate/ProcessTelegramStarsUpdateCommandHandler.cs",
+      "line": 19
+    },
+    {
+      "name": "RecoverStarsRefundCancellationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/RecoverStarsRefundCancellation/RecoverStarsRefundCancellationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "RecoverStarsRefundCancellationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/RecoverStarsRefundCancellation/RecoverStarsRefundCancellationCommandHandler.cs",
+      "line": 13
+    },
+    {
       "name": "RenewDueSubscriptionsCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
@@ -7115,6 +7192,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Common/BillingOperationLockKeys.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramStarsBillingState",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Common/TelegramStarsBillingState.cs",
       "line": 2
     },
     {
@@ -7461,6 +7545,20 @@
       "line": 20
     },
     {
+      "name": "TelegramStarsBillingGateway",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
+      "line": 14
+    },
+    {
+      "name": "TelegramStarsBotAuthenticator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBotAuthenticator.cs",
+      "line": 8
+    },
+    {
       "name": "YooKassaApiClient",
       "kind": "class",
       "role": "Other",
@@ -7508,6 +7606,13 @@
       "role": "Options",
       "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
       "line": 4
+    },
+    {
+      "name": "TelegramStarsOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/TelegramStarsOptions.cs",
+      "line": 2
     },
     {
       "name": "YooKassaOptions",
@@ -7580,18 +7685,25 @@
       "line": 17
     },
     {
+      "name": "TelegramStarsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Billing/Presentation/Controllers/TelegramStarsController.cs",
+      "line": 21
+    },
+    {
       "name": "BillingPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Presentation/Extensions/BillingPresentationServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "BillingHttpMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "BillingHttpResponseMappings",
@@ -7612,6 +7724,13 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Billing/Presentation/Requests/SubmitCancellationFeedbackHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramStarsUpdateHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Billing/Presentation/Requests/TelegramStarsUpdateHttpRequest.cs",
       "line": 4
     },
     {
@@ -7641,6 +7760,20 @@
       "role": "Response",
       "path": "Modules/Billing/Presentation/Responses/PortalSessionHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "TelegramStarsUpdateHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Billing/Presentation/Responses/TelegramStarsUpdateHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramStarsBotAuthorizationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Presentation/Security/TelegramStarsBotAuthorizationFilter.cs",
+      "line": 8
     },
     {
       "name": "IWaistEntryReadModelRepository",
@@ -34105,6 +34238,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "ITelegramStarsBotAuthenticator",
+      "interfacePath": "Modules/Billing/Application.Abstractions/Common/ITelegramStarsBotAuthenticator.cs",
+      "implementation": "TelegramStarsBotAuthenticator",
+      "implementationPath": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBotAuthenticator.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "ITestNotificationDeliveryDispatcher",
       "interfacePath": "Modules/Notifications/Application.Abstractions/Common/ITestNotificationDeliveryDispatcher.cs",
       "implementation": "TestNotificationDeliveryDispatcher",
@@ -34464,25 +34604,32 @@
       "line": 14
     },
     {
+      "service": "ITelegramStarsBotAuthenticator",
+      "implementation": "TelegramStarsBotAuthenticator",
+      "lifetime": "Singleton",
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "line": 16
+    },
+    {
       "service": "IBillingPublicConfigProvider",
       "implementation": "BillingPublicConfigProvider",
       "lifetime": "Singleton",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 16
+      "line": 19
     },
     {
       "service": "IBillingProviderGateway",
       "implementation": "StripeBillingGateway",
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 24
+      "line": 27
     },
     {
       "service": "IBillingProviderGatewayAccessor",
       "implementation": "ConfigurableBillingProviderGatewayAccessor",
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 35
+      "line": 38
     },
     {
       "service": "IDashboardBodyReadService",

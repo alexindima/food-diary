@@ -5,6 +5,7 @@ type TelegramCapableWindow = Window & {
     Telegram?: {
         WebApp?: {
             initData?: string;
+            openInvoice?: (url: string, callback: (status: string) => void) => void;
         };
     };
 };
@@ -14,6 +15,18 @@ export class BrowserWindowService {
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
+
+    public async openTelegramInvoiceAsync(url: string): Promise<string> {
+        const windowRef = this.getWindow();
+        const app = windowRef !== null && isTelegramCapableWindow(windowRef) ? windowRef.Telegram?.WebApp : undefined;
+        const openInvoice = app?.openInvoice;
+        if (openInvoice === undefined) {
+            throw new Error('Telegram invoice interface unavailable');
+        }
+        return new Promise(resolve => {
+            openInvoice.call(app, url, resolve);
+        });
+    }
 
     public isAvailable(): boolean {
         return this.getWindow() !== null;

@@ -47,6 +47,9 @@ public sealed class GetBillingOverviewQueryHandler(
         DateTime? currentPeriodStartUtc = ResolveCurrentPeriodStartUtc(subscription, userProfile, isTrialActive, providerTrialExpired);
         DateTime? currentPeriodEndUtc = ResolveCurrentPeriodEndUtc(subscription, userProfile, isTrialActive, providerTrialExpired);
         BillingPublicConfigModel publicConfig = billingPublicConfigProvider.GetPublicConfig();
+        bool stars = subscription?.Provider is BillingProviderNames.TelegramStars;
+        string[] providers = [.. publicConfig.AvailableProviders.Where(provider =>
+            provider is not BillingProviderNames.TelegramStars || userProfile.TelegramUserId is > 0)];
         bool renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
         bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !hasUsedTrial &&
@@ -64,6 +67,7 @@ public sealed class GetBillingOverviewQueryHandler(
             renewalEnabled,
             subscription is not null &&
                 !string.Equals(subscription.Provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) &&
+                !stars &&
                 !string.IsNullOrWhiteSpace(subscription.ExternalCustomerId),
             userProfile.PremiumTrialStartedAtUtc,
             userProfile.PremiumTrialEndsAtUtc,
@@ -72,17 +76,18 @@ public sealed class GetBillingOverviewQueryHandler(
             canStartTrial,
             publicConfig.Provider,
             publicConfig.PaddleClientToken,
-            publicConfig.AvailableProviders,
+            providers,
             publicConfig.PaddleMonthlyPriceId,
             publicConfig.PaddleYearlyPriceId,
             subscription is {
-                Provider: BillingProviderNames.Paddle, CancelAtPeriodEnd: false,
+                Provider: BillingProviderNames.Paddle or BillingProviderNames.TelegramStars, CancelAtPeriodEnd: false,
                 ExternalSubscriptionId: not null, Status: "active" or "trialing" or "past_due" or "paused",
-            }));
+            },
+            userProfile.TelegramUserId is > 0 ? publicConfig.TelegramStarsPrice : null));
     }
 
     private static bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription, DateTime nowUtc) =>
-        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, nowUtc);
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, nowUtc, subscription?.Provider);
 
     private static bool IsExpiredProviderTrial(BillingSubscriptionOverviewReadModel? subscription, DateTime nowUtc) {
         if (subscription is null ||

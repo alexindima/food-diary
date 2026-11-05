@@ -23,7 +23,7 @@ public static class UsersModuleRegistration {
         });
         services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, TelegramIdentityConflictInterceptor>());
         services.AddScoped<UserProfileProjectionService>(provider => new UserProfileProjectionService(
-            provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
+            provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider), provider.GetService<TimeProvider>()));
         services.AddScoped<UserRelatedDataReadService>(provider => new UserRelatedDataReadService(
             provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserFastingReminderReadService>(static provider => provider.GetRequiredService<UserRelatedDataReadService>());

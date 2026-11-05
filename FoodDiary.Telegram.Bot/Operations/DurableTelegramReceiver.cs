@@ -13,14 +13,18 @@ internal sealed class DurableTelegramReceiver(ITelegramBotClient botClient,
         while (!cancellationToken.IsCancellationRequested) {
             try {
                 Update[] updates = await botClient.GetUpdates(offset: NextOffset, timeout: 30,
-                    allowedUpdates: [UpdateType.Message, UpdateType.CallbackQuery], cancellationToken: cancellationToken);
+                    allowedUpdates: [UpdateType.Message, UpdateType.CallbackQuery, UpdateType.PreCheckoutQuery, UpdateType.Subscription], cancellationToken: cancellationToken);
                 await ProcessBatchAsync(updates, cancellationToken);
                 retrySeconds = 2;
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 return;
             } catch (Exception error) {
                 logger.LogWarning("Telegram intake paused after {ErrorType}; the unpersisted update remains unacknowledged.", error.GetType().Name);
-                await Task.Delay(TimeSpan.FromSeconds(retrySeconds), timeProvider, cancellationToken);
+                try {
+                    await Task.Delay(TimeSpan.FromSeconds(retrySeconds), timeProvider, cancellationToken);
+                } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                    return;
+                }
                 retrySeconds = Math.Min(retrySeconds * 2, 30);
             }
         }

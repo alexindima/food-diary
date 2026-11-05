@@ -5,4 +5,5 @@ public sealed record BillingPublicConfigModel(
     string? PaddleClientToken,
     IReadOnlyList<string> AvailableProviders,
     string? PaddleMonthlyPriceId = null,
-    string? PaddleYearlyPriceId = null);
+    string? PaddleYearlyPriceId = null,
+    int? TelegramStarsPrice = null);

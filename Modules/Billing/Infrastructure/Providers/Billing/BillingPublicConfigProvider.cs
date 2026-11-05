@@ -10,7 +10,8 @@ public sealed class BillingPublicConfigProvider(
     IOptions<BillingOptions> billingOptions,
     IOptions<StripeOptions> stripeOptions,
     IOptions<PaddleOptions> paddleOptions,
-    IOptions<YooKassaOptions> yooKassaOptions)
+    IOptions<YooKassaOptions> yooKassaOptions,
+    IOptions<TelegramStarsOptions>? telegramStarsOptions = null)
     : IBillingPublicConfigProvider {
     public BillingPublicConfigModel GetPublicConfig() {
         string provider = billingOptions.Value.Provider?.Trim() ?? string.Empty;
@@ -24,11 +25,15 @@ public sealed class BillingPublicConfigProvider(
                 : null,
             availableProviders,
             paddleAvailable ? NullIfEmpty(paddleOptions.Value.PremiumMonthlyPriceId) : null,
-            paddleAvailable ? NullIfEmpty(paddleOptions.Value.PremiumYearlyPriceId) : null);
+            paddleAvailable ? NullIfEmpty(paddleOptions.Value.PremiumYearlyPriceId) : null,
+            telegramStarsOptions?.Value.CanCheckout == true ? telegramStarsOptions.Value.PremiumPrice : null);
     }
 
     private string[] ResolveAvailableProviders(string provider) {
         var providers = new List<string>();
+        if (telegramStarsOptions?.Value.CanCheckout == true) {
+            AddProvider(providers, BillingProviderNames.TelegramStars);
+        }
 
         if (HasValidCheckoutConfiguration(provider)) {
             AddProvider(providers, provider);
@@ -50,6 +55,9 @@ public sealed class BillingPublicConfigProvider(
     }
 
     private bool HasValidCheckoutConfiguration(string provider) {
+        if (string.Equals(provider, BillingProviderNames.TelegramStars, StringComparison.OrdinalIgnoreCase)) {
+            return telegramStarsOptions?.Value.CanCheckout == true;
+        }
         if (string.Equals(provider, BillingProviderNames.Paddle, StringComparison.OrdinalIgnoreCase)) {
             return HasValidPaddleCheckoutConfiguration(paddleOptions.Value);
         }
@@ -71,6 +79,9 @@ public sealed class BillingPublicConfigProvider(
     }
 
     private static string NormalizeProvider(string provider) {
+        if (string.Equals(provider, BillingProviderNames.TelegramStars, StringComparison.OrdinalIgnoreCase)) {
+            return BillingProviderNames.TelegramStars;
+        }
         if (string.Equals(provider, BillingProviderNames.Paddle, StringComparison.OrdinalIgnoreCase)) {
             return BillingProviderNames.Paddle;
         }

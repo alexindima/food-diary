@@ -41,10 +41,26 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         UserBillingProfileModel user = userResult.Value;
-        if (string.IsNullOrWhiteSpace(user.Email) || !user.IsEmailConfirmed) {
+        IBillingProviderGateway? billingProvider = ResolveBillingProvider(request.Provider);
+        if (billingProvider is null) {
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.ProviderNotConfigured(request.Provider ?? string.Empty));
+        }
+        bool stars = string.Equals(billingProvider.Provider, BillingProviderNames.TelegramStars, StringComparison.OrdinalIgnoreCase);
+        if (stars && user.TelegramUserId is not > 0) {
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.TelegramNotLinked);
+        }
+        if (!stars && (string.IsNullOrWhiteSpace(user.Email) || !user.IsEmailConfirmed)) {
             return Result.Failure<BillingCheckoutSessionModel>(UserErrors.EmailRequired);
         }
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
+        if (existingSubscription is { Provider: BillingProviderNames.TelegramStars } &&
+            string.Equals(existingSubscription.ProviderMetadataJson, TelegramStarsBillingState.RefundCancellationPending, StringComparison.Ordinal)) {
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
+        }
+        if (existingSubscription is { Provider: BillingProviderNames.TelegramStars, ExternalSubscriptionId: not null,
+            CancelAtPeriodEnd: false, Status: "active" or "past_due", }) {
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
+        }
         if (user.HasPaidPremium || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
         }
@@ -53,23 +69,17 @@ public sealed class CreateCheckoutSessionCommandHandler(
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
         }
 
-        IBillingProviderGateway? billingProvider = ResolveBillingProvider(request.Provider);
-        if (billingProvider is null) {
-            return Result.Failure<BillingCheckoutSessionModel>(
-                BillingErrors.ProviderNotConfigured(request.Provider ?? string.Empty));
-        }
-
         string plan = request.Plan.Trim().ToLowerInvariant();
         CheckoutVersion? originalVersion = CaptureVersion(existingSubscription);
         Result<BillingCheckoutSessionModel> sessionResult = await billingProvider.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(
                 userId.Value,
-                user.Email,
+                user.Email ?? string.Empty,
                 plan,
                 string.Equals(existingSubscription?.Provider, billingProvider.Provider, StringComparison.OrdinalIgnoreCase)
                     ? existingSubscription?.ExternalCustomerId
                     : null,
-                ResolveIdempotencyKey(request.IdempotencyKey, userId, plan)),
+                ResolveIdempotencyKey(request.IdempotencyKey, userId, plan), user.TelegramUserId),
             cancellationToken);
         if (sessionResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(sessionResult.Error);
@@ -83,6 +93,10 @@ public sealed class CreateCheckoutSessionCommandHandler(
             Result<UserBillingProfileModel> currentUser = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), token);
             if (currentUser.IsFailure) {
                 result = Result.Failure<BillingCheckoutSessionModel>(currentUser.Error);
+                return;
+            }
+            if (stars && currentUser.Value.TelegramUserId != user.TelegramUserId) {
+                result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.TelegramNotLinked);
                 return;
             }
             BillingSubscription? current = await billingSubscriptionRepository.GetByUserIdAsync(userId, token);
@@ -162,7 +176,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
     }
 
     private static bool IsPaidPremiumActive(BillingSubscription? subscription, DateTime nowUtc) =>
-        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, nowUtc);
+        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, nowUtc, subscription?.Provider);
 
     private static bool IsCheckoutInProgress(BillingSubscription? subscription, DateTime nowUtc) {
         if (subscription is null ||
@@ -192,8 +206,8 @@ public sealed class CreateCheckoutSessionCommandHandler(
             status: BillingSubscription.PendingCheckoutStatus,
             kind: BillingPaymentKinds.Checkout,
             financials: BillingPaymentFinancials.FromFields(
-            amount: null,
-            currency: null,
+            amount: session.Amount,
+            currency: session.Currency,
             tax: null,
             fee: null,
             earnings: null,

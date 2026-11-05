@@ -29,7 +29,8 @@ public sealed class BillingOverviewContractTests {
               "provider": "paddle",
               "renewalEnabled": true,
               "subscriptionProvider": "paddle",
-              "subscriptionStatus": "active"
+              "subscriptionStatus": "active",
+              "telegramStarsPrice": 500
             }
             """;
         BillingOverviewHttpResponse response = Assert.IsType<BillingOverviewHttpResponse>(

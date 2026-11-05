@@ -6,7 +6,7 @@ namespace FoodDiary.Modules.Billing.Application.Services;
 
 public sealed class BillingCancellationRecorder(IBillingCancellationRepository cancellations, TimeProvider timeProvider) {
     public async Task<BillingCancellation?> SynchronizeAsync(BillingSubscription subscription, string source, CancellationToken cancellationToken) {
-        if (!string.Equals(subscription.Provider, BillingProviderNames.Paddle, StringComparison.Ordinal) || subscription.ExternalSubscriptionId is not { } externalId) {
+        if (subscription.Provider is not (BillingProviderNames.Paddle or BillingProviderNames.TelegramStars) || subscription.ExternalSubscriptionId is not { } externalId) {
             return null;
         }
         BillingCancellation? latest = await cancellations.GetLatestAsync(subscription.UserId, subscription.Provider, externalId, cancellationToken);

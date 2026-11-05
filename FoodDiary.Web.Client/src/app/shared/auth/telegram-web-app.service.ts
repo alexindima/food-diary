@@ -86,6 +86,14 @@ export class TelegramWebAppService {
         return href !== null && new URLSearchParams(new URL(href).hash.slice(1)).has('tgWebAppData');
     }
 
+    public async openInvoiceAsync(url: string): Promise<string> {
+        if (!this.isMiniAppLaunch() || !url.startsWith('https://t.me/')) {
+            throw new Error('Invalid Telegram invoice context');
+        }
+        await this.initializeAsync();
+        return this.browser.openTelegramInvoiceAsync(url);
+    }
+
     public async initializeAsync(): Promise<void> {
         if (this.browser.getTelegramInitData() !== null || !this.isMiniAppLaunch()) {
             return;

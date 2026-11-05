@@ -60,11 +60,11 @@
       },
       "Telegram.Bot": {
         "type": "Direct",
-        "requested": "[22.10.0.1, )",
-        "resolved": "22.10.0.1",
-        "contentHash": "/1Wn3WOkf1U0/dH+DOLcD/ZtFKtgIR5pO5N1TiSf132U3dTxfJlJMr2J+L60ooDfT8tu0deQNH/0WnHfkyUKyg==",
+        "requested": "[22.10.3.3, )",
+        "resolved": "22.10.3.3",
+        "contentHash": "PccInJPmpOabaRnAJp9Dz04qWBQ03AW7ImT0+SBaCDXkuhOazkKVvpXFpKpuyx3qzz4Ul2PqRitgeHcR1ko8zA==",
         "dependencies": {
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "8.0.0"
+          "Microsoft.Extensions.Options": "8.0.0"
         }
       },
       "Microsoft.Extensions.Configuration.Abstractions": {

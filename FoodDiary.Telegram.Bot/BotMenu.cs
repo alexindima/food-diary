@@ -87,8 +87,8 @@ internal static class BotMenu {
     internal static string Help(string? language, bool operationsEnabled) {
         bool ru = IsRussian(language);
         string basic = ru
-            ? "Доступные команды:\n/start — меню\n/water — добавить воду\n/settings — настройки\n/help — помощь"
-            : "Available commands:\n/start — menu\n/water — add water\n/settings — settings\n/help — help";
+            ? "Доступные команды:\n/start — меню\n/water — добавить воду\n/settings — настройки\n/premium — подписка за Stars\n/paysupport — помощь с оплатой\n/terms — условия подписки\n/help — помощь"
+            : "Available commands:\n/start — menu\n/water — add water\n/settings — settings\n/premium — subscribe with Stars\n/paysupport — payment support\n/terms — subscription terms\n/help — help";
         if (!operationsEnabled) {
             return basic;
         }

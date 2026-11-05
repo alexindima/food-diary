@@ -11,6 +11,7 @@ describe('TelegramWebAppService', () => {
         getHref: vi.fn(),
         setTimeout: vi.fn(),
         clearTimeout: vi.fn(),
+        openTelegramInvoiceAsync: vi.fn(),
     };
     let service: TelegramWebAppService;
     let document: Document;
@@ -30,6 +31,20 @@ describe('TelegramWebAppService', () => {
     it('does not load the provider script for ordinary website visits', async () => {
         await service.initializeAsync();
         expect(document.head.querySelector('script[src*="telegram-web-app"]')).toBeNull();
+    });
+
+    it('opens a Telegram invoice through the native Mini App interface', async () => {
+        browser.getTelegramInitData.mockReturnValue('sdk-only-proof');
+        browser.openTelegramInvoiceAsync.mockResolvedValue('paid');
+        expect(await service.openInvoiceAsync('https://t.me/$owned')).toBe('paid');
+        expect(browser.openTelegramInvoiceAsync).toHaveBeenCalledWith('https://t.me/$owned');
+    });
+
+    it('rejects invoices outside Telegram or on a foreign payment origin', async () => {
+        await expect(service.openInvoiceAsync('https://t.me/$owned')).rejects.toThrow('Invalid Telegram invoice context');
+        browser.getTelegramInitData.mockReturnValue('sdk-only-proof');
+        await expect(service.openInvoiceAsync('https://t.me.evil.example/invoice')).rejects.toThrow('Invalid Telegram invoice context');
+        expect(browser.openTelegramInvoiceAsync).not.toHaveBeenCalled();
     });
 
     it('preserves the original nested launch data when routing changes the fragment and the SDK reads a truncated value', () => {

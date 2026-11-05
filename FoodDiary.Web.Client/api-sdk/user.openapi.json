@@ -415,6 +415,11 @@
                     "subscriptionStatus": {
                         "nullable": true,
                         "type": "string"
+                    },
+                    "telegramStarsPrice": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -7460,6 +7465,72 @@
                 "properties": {
                     "operationId": {
                         "format": "uuid",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TelegramStarsUpdateHttpRequest": {
+                "additionalProperties": false,
+                "properties": {
+                    "currency": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "invoicePayload": {
+                        "type": "string"
+                    },
+                    "isFirstRecurring": {
+                        "type": "boolean"
+                    },
+                    "isRecurring": {
+                        "type": "boolean"
+                    },
+                    "kind": {
+                        "type": "string"
+                    },
+                    "paymentChargeId": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "paymentOccurredAtUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "subscriptionExpirationUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "subscriptionState": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "telegramUserId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalAmount": {
+                        "format": "int32",
+                        "nullable": true,
+                        "type": "integer"
+                    },
+                    "updateId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TelegramStarsUpdateHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "checkoutApproved": {
+                        "type": "boolean"
+                    },
+                    "error": {
+                        "nullable": true,
                         "type": "string"
                     }
                 },
@@ -18438,6 +18509,146 @@
                         "BrowserSession": []
                     }
                 ],
+                "tags": ["Billing"]
+            }
+        },
+        "/api/v{version}/billing/telegram-stars/updates": {
+            "post": {
+                "operationId": "postBillingTelegramStarsUpdates",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/*+json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/TelegramStarsUpdateHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/TelegramStarsUpdateHttpRequest"
+                                    }
+                                ]
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/TelegramStarsUpdateHttpRequest"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TelegramStarsUpdateHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TelegramStarsUpdateHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TelegramStarsUpdateHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Payload Too Large"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [],
                 "tags": ["Billing"]
             }
         },

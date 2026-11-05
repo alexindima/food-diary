@@ -7,6 +7,29 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 internal sealed class UserRoleMembershipService(DatabaseFacade database, DbSet<User> users, DbSet<Role> roles, DbSet<UserRole> userRoles, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserRoleMembershipService {
+    public async Task SetPremiumAccessEndAsync(UserId userId, DateTime? endsAtUtc, CancellationToken cancellationToken = default) {
+        EnsureValidInput(userId, "Premium");
+        if (endsAtUtc is { Kind: not DateTimeKind.Utc }) {
+            throw new ArgumentException("Premium expiration must be UTC.", nameof(endsAtUtc));
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken);
+        }
+        if (!database.IsRelational()) {
+            User? user = await users.FirstOrDefaultAsync(candidate => candidate.Id == userId, cancellationToken);
+            user?.SetPremiumAccessEnd(endsAtUtc);
+            return;
+        }
+        await database.ExecuteSqlInterpolatedAsync($"""
+            UPDATE "Users"
+            SET "PremiumAccessEndsAtUtc" = {endsAtUtc},
+                "SecurityVersion" = "SecurityVersion" + CASE
+                    WHEN CAST({endsAtUtc} AS timestamptz) IS NOT NULL AND ("PremiumAccessEndsAtUtc" IS NULL OR "PremiumAccessEndsAtUtc" > {endsAtUtc}) THEN 1 ELSE 0 END
+            WHERE "Id" = {userId.Value} AND "DeletedAt" IS NULL
+              AND "PremiumAccessEndsAtUtc" IS DISTINCT FROM {endsAtUtc}
+            """, cancellationToken);
+    }
+
     public async Task EnsureRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {
         EnsureValidInput(userId, roleName);
         if (synchronizeTransactionAsync is not null) {

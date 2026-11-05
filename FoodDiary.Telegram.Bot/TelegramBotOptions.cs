@@ -11,6 +11,7 @@ public sealed class TelegramBotOptions {
     public string ApiBaseUrl { get; init; } = string.Empty;
     public string ApiSecret { get; init; } = string.Empty;
     public bool OperationsEnabled { get; init; }
+    public bool UseTestEnvironment { get; init; }
 
     public static bool HasOperationConfiguration(TelegramBotOptions options) {
         return !options.OperationsEnabled ||

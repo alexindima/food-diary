@@ -39,7 +39,7 @@
                                 [disabledReason]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
                                 (click)="checkout.emit({ plan: card.plan, provider: provider.provider })"
                             >
-                                {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: provider.label } }}
+                                {{ provider.actionKey | translate: { provider: provider.label, stars: starsPrice() } }}
                             </fd-ui-button>
                         }
                     </div>
@@ -49,14 +49,18 @@
                         [loading]="card.isLoading"
                         [disabled]="checkoutDisabled()"
                         [disabledReason]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
-                        (click)="checkout.emit({ plan: card.plan })"
+                        (click)="checkout.emit({ plan: card.plan, provider: card.providerOptions[0]?.provider })"
                     >
-                        {{ card.actionKey | translate }}
+                        {{ card.actionKey | translate: { stars: starsPrice() } }}
                     </fd-ui-button>
                 }
             </article>
         }
     </div>
+    <p class="fd-ui-body-sm" [hidden]="starsPrice() === null">
+        {{ 'PREMIUM_PAGE.STARS.TERMS' | translate }}
+        <a href="#stars-subscription-terms">{{ 'PREMIUM_PAGE.STARS.TERMS_LINK' | translate }}</a>
+    </p>
     <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm" [hidden]="!hasPrices()">
         {{ 'PREMIUM_PAGE.PLANS.PRICE_NOTE' | translate }}
     </p>

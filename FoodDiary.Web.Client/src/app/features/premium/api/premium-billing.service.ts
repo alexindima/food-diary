@@ -18,6 +18,8 @@ import type {
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { CancellationConfirmation, CancellationFeedback, CancellationId } from '../models/cancellation.models';
 
+const MAX_STARS_SUBSCRIPTION_PRICE = 10000;
+
 @Service()
 export class PremiumBillingService {
     protected readonly baseUrl = environment.apiUrls.billing;
@@ -97,6 +99,7 @@ function billingOverviewFromSdk(response: BillingOverviewHttpResponse): BillingO
     return {
         ...value,
         cancellationAvailable: value.cancellationAvailable ?? false,
+        telegramStarsPrice: telegramStarsPriceFromSdk(value.telegramStarsPrice, value.availableProviders),
         plan: billingPlanFromSdk(value.plan),
         subscriptionStatus: value.subscriptionStatus ?? null,
         subscriptionProvider: value.subscriptionProvider ?? null,
@@ -107,6 +110,16 @@ function billingOverviewFromSdk(response: BillingOverviewHttpResponse): BillingO
         premiumTrialEndUtc: value.premiumTrialEndUtc ?? null,
         paddleClientToken: value.paddleClientToken ?? null,
     };
+}
+
+function telegramStarsPriceFromSdk(price: number | null | undefined, providers: string[]): number | null {
+    if (!providers.some(provider => provider.toLowerCase() === 'telegramstars')) {
+        return null;
+    }
+    if (typeof price !== 'number' || !Number.isInteger(price) || price < 1 || price > MAX_STARS_SUBSCRIPTION_PRICE) {
+        throw new Error('Invalid Telegram Stars tariff');
+    }
+    return price;
 }
 
 function billingPlanFromSdk(value: string | null | undefined): BillingPlan | null {

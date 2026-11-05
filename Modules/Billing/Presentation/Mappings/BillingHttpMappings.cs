@@ -1,4 +1,6 @@
 using FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
+using FoodDiary.Modules.Billing.Application.Commands.ProcessTelegramStarsUpdate;
+using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Application.Commands.CancelSubscription;
 using FoodDiary.Modules.Billing.Application.Commands.SubmitCancellationFeedback;
 using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
@@ -11,6 +13,14 @@ using FoodDiary.Modules.Billing.Presentation.Requests;
 namespace FoodDiary.Modules.Billing.Presentation.Mappings;
 
 public static class BillingHttpMappings {
+    extension(TelegramStarsUpdateHttpRequest request) {
+        public ProcessTelegramStarsUpdateCommand ToCommand() => new(
+            new TelegramStarsUpdateModel(request.UpdateId, request.TelegramUserId,
+                request.Kind, request.InvoicePayload, request.Currency, request.TotalAmount, request.PaymentChargeId,
+                request.SubscriptionExpirationUtc, request.PaymentOccurredAtUtc, request.IsRecurring, request.IsFirstRecurring,
+                request.SubscriptionState));
+    }
+
     extension(CreateCheckoutSessionHttpRequest request) {
         public CreateCheckoutSessionCommand ToCommand(Guid userId, string idempotencyKey) =>
                 new(userId, request.Plan, request.Provider, idempotencyKey);

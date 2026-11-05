@@ -31,7 +31,7 @@ public sealed class CancelSubscriptionCommandHandler(
         UserId userId = owner.Value;
         await using IAsyncDisposable lease = await checkoutLock.AcquireAsync(userId.Value, cancellationToken);
         BillingSubscription? before = await subscriptions.GetByUserIdAsync(userId, cancellationToken);
-        if (before is not { Provider: BillingProviderNames.Paddle, ExternalSubscriptionId: { } externalId } ||
+        if (before is not { Provider: BillingProviderNames.Paddle or BillingProviderNames.TelegramStars, ExternalSubscriptionId: { } externalId } ||
             !IsCancellationStateKnown(before.Status) ||
             string.IsNullOrWhiteSpace(externalId) || string.IsNullOrWhiteSpace(before.ExternalCustomerId)) {
             return Result.Failure<BillingCancellationModel>(BillingErrors.CancellationUnavailable);
@@ -44,7 +44,8 @@ public sealed class CancelSubscriptionCommandHandler(
         string? eventBeforeRequest = before.LastWebhookEventId;
         string customerId = before.ExternalCustomerId;
         Result<BillingCancellationSnapshotModel> provider = await gateway.CancelSubscriptionAsync(
-            new BillingCancellationRequestModel(externalId, customerId), cancellationToken);
+            new BillingCancellationRequestModel(externalId, customerId, before.ExternalPaymentMethodId,
+                before.CurrentPeriodStartUtc, before.CurrentPeriodEndUtc), cancellationToken);
         if (provider.IsFailure) {
             return Result.Failure<BillingCancellationModel>(provider.Error);
         }
@@ -59,12 +60,15 @@ public sealed class CancelSubscriptionCommandHandler(
                 error = user.Error;
                 return;
             }
-            if (current is null || !IsCancellationStateKnown(current.Status) || current.Id != subscriptionId || !string.Equals(current.Provider, BillingProviderNames.Paddle, StringComparison.Ordinal) ||
+            if (current is null || !IsCancellationStateKnown(current.Status) || current.Id != subscriptionId || !string.Equals(current.Provider, before.Provider, StringComparison.Ordinal) ||
                 !string.Equals(current.ExternalSubscriptionId, externalId, StringComparison.Ordinal) || !string.Equals(current.ExternalCustomerId, customerId, StringComparison.Ordinal)) {
                 error = BillingErrors.CancellationUnavailable;
                 return;
             }
             BillingCancellationSnapshotModel snapshot = provider.Value;
+            if (current.Provider is BillingProviderNames.TelegramStars && current.Status is "refunded") {
+                snapshot = snapshot with { Status = "canceled", CanceledAtUtc = snapshot.ObservedAtUtc, EffectiveAtUtc = snapshot.ObservedAtUtc };
+            }
             if (current.LastWebhookOccurredAtUtc > snapshot.ObservedAtUtc ||
                 (current.LastWebhookOccurredAtUtc == snapshot.ObservedAtUtc &&
                  !string.Equals(current.LastWebhookEventId, eventBeforeRequest, StringComparison.Ordinal))) {
@@ -78,10 +82,10 @@ public sealed class CancelSubscriptionCommandHandler(
                     current.Plan, snapshot.Status, snapshot.CurrentPeriodStartUtc, snapshot.CurrentPeriodEndUtc,
                     snapshot.CancelAtPeriodEnd, snapshot.CanceledAtUtc, current.TrialStartUtc, current.TrialEndUtc,
                     "api-cancel:" + snapshot.ObservedAtUtc.Ticks, timeProvider.GetUtcNow().UtcDateTime,
-                    current.ProviderMetadataJson, snapshot.ObservedAtUtc);
+                    current.Provider is BillingProviderNames.TelegramStars ? null : current.ProviderMetadataJson, snapshot.ObservedAtUtc);
                 await subscriptions.UpdateAsync(current, token);
                 await access.EnsurePremiumRoleAsync(user.Value, current,
-                    access.ShouldHavePremiumAccess(current.Status, current.CurrentPeriodEndUtc), token);
+                    access.ShouldHavePremiumAccess(current.Status, current.CurrentPeriodEndUtc, current.Provider), token);
             }
             BillingCancellation? cancellation = await recorder.SynchronizeAsync(current, "fooddiary", token);
             cancellationId = cancellation?.Id;
@@ -96,6 +100,6 @@ public sealed class CancelSubscriptionCommandHandler(
     }
 
     private static bool IsCancellationStateKnown(string status) =>
-        status is "active" or "trialing" or "past_due" or "paused" or "canceled";
+        status is "active" or "trialing" or "past_due" or "paused" or "canceled" or "refunded";
 
 }

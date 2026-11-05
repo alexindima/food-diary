@@ -94,6 +94,7 @@ function createPlanCard(
         providerOptions: Array.from({ length: providerCount }, (_, index) => ({
             provider: `provider-${index + 1}`,
             label: `Provider ${index + 1}`,
+            actionKey: 'PREMIUM_PAGE.PLANS.PAY_WITH',
         })),
     };
 }

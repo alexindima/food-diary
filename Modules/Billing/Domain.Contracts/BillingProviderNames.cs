@@ -1,11 +1,13 @@
 namespace FoodDiary.Modules.Billing.Domain.Contracts;
 
 public static class BillingProviderNames {
+    public const string TelegramStars = "TelegramStars";
     public const string Stripe = "Stripe";
     public const string Paddle = "Paddle";
     public const string YooKassa = "YooKassa";
 
     public static bool IsSupported(string provider) =>
+        string.Equals(provider, TelegramStars, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(provider, Stripe, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(provider, Paddle, StringComparison.OrdinalIgnoreCase) ||
         string.Equals(provider, YooKassa, StringComparison.OrdinalIgnoreCase);

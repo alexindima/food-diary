@@ -13,6 +13,7 @@ import { environment } from '../../../../../environments/environment';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { AuthService } from '../../../../services/auth.service';
+import { TelegramWebAppService } from '../../../../shared/auth/telegram-web-app.service';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../../../shared/models/billing.models';
@@ -61,6 +62,7 @@ export class PremiumAccessPageComponent {
     private static readonly CheckoutActivationPollDelayMs = 1500;
 
     private readonly billingService = inject(PremiumBillingFacade);
+    private readonly telegram = inject(TelegramWebAppService);
     private readonly paddleCheckoutService = inject(PaddleCheckoutService);
     protected readonly pricing = inject(PremiumPlanPricingFacade);
     private readonly authService = inject(AuthService);
@@ -88,7 +90,11 @@ export class PremiumAccessPageComponent {
     protected readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
     protected readonly availableProviders = computed(() => {
         const overview = this.overview();
-        return overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
+        return (
+            overview?.availableProviders.filter(
+                provider => provider.trim().length > 0 && (!this.telegram.isMiniAppLaunch() || provider.toLowerCase() === 'telegramstars'),
+            ) ?? []
+        );
     });
     protected readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
     private readonly hasOngoingSubscription = computed(() => {
@@ -131,22 +137,47 @@ export class PremiumAccessPageComponent {
         if (!this.isBrowser || this.checkoutLoadingPlan() !== null) {
             return;
         }
+        const selectedProvider = provider ?? this.availableProviders().at(0);
+        if (selectedProvider === undefined || !this.availableProviders().includes(selectedProvider)) {
+            this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
+            return;
+        }
 
         this.errorMessage.set(null);
         this.checkoutLoadingPlan.set(plan);
 
         try {
-            const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, provider));
+            const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, selectedProvider));
             if (session.url.length === 0) {
                 this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
                 return;
             }
 
-            this.document.location.href = session.url;
+            if (selectedProvider.toLowerCase() === 'telegramstars' && this.telegram.isMiniAppLaunch()) {
+                await this.handleStarsInvoiceAsync(session.url);
+            } else {
+                this.document.location.href = session.url;
+            }
         } catch (error) {
             this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
         } finally {
             this.checkoutLoadingPlan.set(null);
+        }
+    }
+
+    private async handleStarsInvoiceAsync(url: string): Promise<void> {
+        const state = await this.telegram.openInvoiceAsync(url);
+        if (state === 'paid' || state === 'pending') {
+            await this.refreshTokenWhenPremiumEntitlementVisibleAsync();
+            const confirmed = this.overview()?.isPremium === true;
+            this.checkoutReturnState.set(confirmed ? 'success' : null);
+            if (!confirmed) {
+                this.toastService.info(this.translateService.instant('PREMIUM_PAGE.STARS.PENDING'));
+            }
+        } else if (state === 'cancelled') {
+            this.checkoutReturnState.set('canceled');
+        } else {
+            this.errorMessage.set(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
         }
     }
 
@@ -165,7 +196,7 @@ export class PremiumAccessPageComponent {
         try {
             const overview = await firstValueFrom(this.billingService.startPremiumTrial());
             this.overview.set(overview);
-            void this.pricing.loadPricesAsync(overview, this.resolveCheckoutLocale());
+            void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
             if (!(await this.refreshAccountAccessAsync())) {
                 return;
             }
@@ -262,7 +293,7 @@ export class PremiumAccessPageComponent {
 
         const overview = this.overview();
         if (overview !== null && this.showPlans() && this.errorMessage() === null) {
-            void this.pricing.loadPricesAsync(overview, this.resolveCheckoutLocale());
+            void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
         }
     }
 

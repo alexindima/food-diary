@@ -32,6 +32,16 @@ const overview: BillingOverview = {
 };
 
 describe('premium access view mapper', () => {
+    it('explains Stars renewal controls without requiring a provider portal', () => {
+        const result = buildPremiumOverviewCardViewModel(
+            { ...overview, subscriptionProvider: 'TelegramStars', manageBillingAvailable: false },
+            true,
+            true,
+            { periodEnd: null, periodStart: null, nextBillingAttempt: null },
+        );
+        expect(result.hintKey).toBe('PREMIUM_PAGE.STARS.ACCESS_HINT');
+    });
+
     it('builds overview badges for premium subscription', () => {
         expect(buildPremiumOverviewBadges(overview, true)).toEqual({
             planLabelKey: 'PREMIUM_PAGE.PLANS.YEARLY.TITLE',
@@ -105,8 +115,8 @@ describe('premium plan choices', () => {
                 isFeatured: false,
                 isLoading: false,
                 providerOptions: [
-                    { provider: 'paddle', label: 'Paddle' },
-                    { provider: 'stripe', label: 'Stripe' },
+                    { provider: 'paddle', label: 'Paddle', actionKey: 'PREMIUM_PAGE.PLANS.PAY_WITH' },
+                    { provider: 'stripe', label: 'Stripe', actionKey: 'PREMIUM_PAGE.PLANS.PAY_WITH' },
                 ],
             },
             {
@@ -114,8 +124,8 @@ describe('premium plan choices', () => {
                 isFeatured: true,
                 isLoading: true,
                 providerOptions: [
-                    { provider: 'paddle', label: 'Paddle' },
-                    { provider: 'stripe', label: 'Stripe' },
+                    { provider: 'paddle', label: 'Paddle', actionKey: 'PREMIUM_PAGE.PLANS.PAY_WITH' },
+                    { provider: 'stripe', label: 'Stripe', actionKey: 'PREMIUM_PAGE.PLANS.PAY_WITH' },
                 ],
             },
         ]);

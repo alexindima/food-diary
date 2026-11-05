@@ -5,4 +5,6 @@ public sealed record BillingCheckoutSessionModel(
     string Url,
     string CustomerId,
     string PriceId,
-    string Plan);
+    string Plan,
+    decimal? Amount = null,
+    string? Currency = null);

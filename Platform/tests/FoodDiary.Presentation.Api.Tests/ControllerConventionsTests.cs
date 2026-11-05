@@ -2,6 +2,8 @@ using FoodDiary.Presentation.Api.Controllers;
 using System.Reflection;
 using System.Diagnostics;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Modules.Billing.Presentation.Controllers;
+using FoodDiary.Modules.Billing.Presentation.Security;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,6 +17,14 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ControllerConventionsTests {
+    [Fact]
+    public void StarsTransport_RequiresItsReviewedBotAuthenticationFilter() {
+        Type controller = typeof(TelegramStarsController);
+        Assert.NotNull(controller.GetCustomAttribute<AllowAnonymousAttribute>());
+        Assert.Equal(typeof(TelegramStarsBotAuthorizationFilter), Assert.Single(controller.GetCustomAttributes<ServiceFilterAttribute>()).ServiceType);
+        Assert.Equal("api/v{version:apiVersion}/billing/telegram-stars/updates", controller.GetCustomAttribute<RouteAttribute>()?.Template);
+    }
+
     [Fact]
     public void FeatureControllers_HaveApiControllerAttribute() {
         string?[] violations = [.. GetFeatureControllerTypes()
@@ -154,6 +164,7 @@ public sealed class ControllerConventionsTests {
         string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
             .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers", StringComparison.Ordinal))
+            .Where(method => !IsStarsBotController(method.DeclaringType))
             .Where(DeclaresProtectedResponses)
             .Select(FormatMethodName)];
 
@@ -201,6 +212,7 @@ public sealed class ControllerConventionsTests {
             "PublicProductsController",
             "PublicRecipesController",
             "TelegramOperationsController",
+            "TelegramStarsController",
             "VersionController",
         ];
         string[] actual = [.. GetControllerSyntaxTrees()
@@ -456,6 +468,7 @@ public sealed class ControllerConventionsTests {
     }
 
     private static bool IsAnonymousInfrastructureController(Type? type) =>
+        IsStarsBotController(type) ||
         type?.FullName is
             "FoodDiary.Modules.Billing.Presentation.Controllers.BillingWebhookController" or
             "FoodDiary.Modules.Fasting.Presentation.Features.Logs.LogsController" or
@@ -463,6 +476,9 @@ public sealed class ControllerConventionsTests {
             "FoodDiary.Modules.Products.Presentation.Controllers.PublicProductsController" or
             "FoodDiary.Modules.Recipes.Presentation.Controllers.PublicRecipesController" or
             "FoodDiary.Presentation.Api.Features.Version.VersionController";
+
+    private static bool IsStarsBotController(Type? type) => type == typeof(TelegramStarsController) &&
+        type.GetCustomAttributes<ServiceFilterAttribute>().Any(filter => filter.ServiceType == typeof(TelegramStarsBotAuthorizationFilter));
 
     private static bool IsNonStandardInfrastructureController(Type? type) =>
         type?.FullName is "FoodDiary.Presentation.Api.Features.Version.VersionController";

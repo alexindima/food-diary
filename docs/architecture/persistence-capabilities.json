@@ -1391,8 +1391,8 @@
         "tracked:UserRole",
         "write:UserRole"
       ],
-      "reason": "Users owns atomic role changes and security-version updates; SQL is restricted to UserRoles/Roles/Users.",
-      "technicalSourceSha256": "6fec8690b3cc946dc5a4bb54a61d4d9f610d9a70b225b6272e99639b57e0966a"
+      "reason": "Users owns atomic role changes, a nullable paid Premium expiration, and security-version updates. Expiration SQL updates only the selected undeleted Users row; shortening access invalidates prior tokens, while extension preserves sessions. SQL remains restricted to UserRoles/Roles/Users; no commit or foreign aggregate write is introduced.",
+      "technicalSourceSha256": "120af3930ffa0a21ae0320c4dacae9ae88f114f09eccb1571bf90a564f5d7314"
     },
     "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
       "module": "Wearables",
@@ -1839,7 +1839,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "53bfeeb9cc9a905b6df79332f726c46925c3693cbc9046fce4ceda37e7104d3e"
+      "technicalSourceSha256": "4c8c36fa826cb61592845eb098c05956b24b54b2351744d4975e1611b79f8852"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",

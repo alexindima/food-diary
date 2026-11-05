@@ -33,7 +33,8 @@ public static class BillingHttpResponseMappings {
                     model.AvailableProviders,
                     model.PaddleMonthlyPriceId,
                     model.PaddleYearlyPriceId,
-                    model.CancellationAvailable);
+                    model.CancellationAvailable,
+                    model.TelegramStarsPrice);
     }
 
     extension(BillingCheckoutSessionModel model) {

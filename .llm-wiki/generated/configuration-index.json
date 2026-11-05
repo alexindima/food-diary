@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 69,
+    "optionTypes": 70,
     "configurationFiles": 8,
-    "configurationKeys": 302,
+    "configurationKeys": 305,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -719,6 +719,7 @@
         "ApiSecret",
         "OperationsEnabled",
         "Token",
+        "UseTestEnvironment",
         "WebAppUrl"
       ],
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs"
@@ -744,6 +745,18 @@
         "RedirectUri"
       ],
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs"
+    },
+    {
+      "type": "TelegramStarsOptions",
+      "section": "TelegramStars",
+      "properties": [
+        "BotApiSecret",
+        "BotToken",
+        "CheckoutEnabled",
+        "PremiumPrice",
+        "UseTestEnvironment"
+      ],
+      "path": "Modules/Billing/Infrastructure/Providers/Options/TelegramStarsOptions.cs"
     },
     {
       "type": "UsdaApiOptions",
@@ -1055,6 +1068,9 @@
         "TelegramAuth:AuthTtlSeconds",
         "TelegramAuth:BotToken",
         "TelegramBot:ApiSecret",
+        "TelegramStars:CheckoutEnabled",
+        "TelegramStars:PremiumPrice",
+        "TelegramStars:UseTestEnvironment",
         "WebPush:DefaultUrl",
         "WebPush:Enabled",
         "WebPush:PrivateKey",

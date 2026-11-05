@@ -13,6 +13,9 @@ public static partial class DependencyInjection {
         this IServiceCollection services,
         IConfiguration configuration) {
         services.AddBillingIntegrationOptions(configuration);
+        services.AddSingleton<ITelegramStarsBotAuthenticator, TelegramStarsBotAuthenticator>();
+        services.AddHttpClient<TelegramStarsBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(8)).RemoveAllLoggers();
+        services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<TelegramStarsBillingGateway>());
         services.AddSingleton<IBillingPublicConfigProvider, BillingPublicConfigProvider>();
         services.AddScoped<IStripeClient>(static sp => {
             StripeOptions options = sp.GetRequiredService<IOptions<StripeOptions>>().Value;

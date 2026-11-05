@@ -80,6 +80,13 @@ public sealed partial class User : AggregateRoot<UserId> {
     public DateTime? AiConsentAcceptedAt { get; private set; }
     public DateTime? PremiumTrialStartedAtUtc { get; private set; }
     public DateTime? PremiumTrialEndsAtUtc { get; private set; }
+    public DateTime? PremiumAccessEndsAtUtc { get; private set; }
+
+    public void SetPremiumAccessEnd(DateTime? endsAtUtc) {
+        EnsureNotDeleted();
+        PremiumAccessEndsAtUtc = endsAtUtc is { } end ? NormalizeUtcTimestamp(end, nameof(endsAtUtc)) : null;
+        SetModified();
+    }
     public bool IsActive { get; private set; } = true;
     public DateTime? DeletedAt { get; private set; }
     public long SecurityVersion { get; private set; }

@@ -39,6 +39,7 @@
                 [prices]="pricing.prices()"
                 [pricesLoading]="pricing.loading()"
                 [pricesUnavailable]="pricing.unavailable()"
+                [starsPrice]="overview()?.telegramStarsPrice ?? null"
                 (retryPrices)="reloadOverviewAsync()"
                 (checkout)="startCheckoutFromViewAsync($event)"
             />

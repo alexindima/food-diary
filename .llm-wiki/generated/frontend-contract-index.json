@@ -3,11 +3,11 @@
   "summary": {
     "components": 521,
     "componentsWithoutDirectSpecs": 133,
-    "inputs": 1675,
+    "inputs": 1676,
     "outputs": 559,
     "apiCalls": 328,
     "templatesWithTranslations": 376,
-    "translationKeys": 2251,
+    "translationKeys": 2254,
     "consumerEdges": 1333,
     "consumedComponents": 330,
     "unconsumedComponents": 190
@@ -10459,6 +10459,11 @@
           "name": "pricesUnavailable",
           "type": "",
           "required": false
+        },
+        {
+          "name": "starsPrice",
+          "type": "number | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -19797,7 +19802,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/cancel",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 27,
+      "line": 29,
       "publicMethod": "cancelSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -19809,7 +19814,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/cancellations/{cancellationId}/feedback",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 39,
+      "line": 41,
       "publicMethod": "submitCancellationFeedback",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -19821,7 +19826,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/overview",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 47,
+      "line": 49,
       "publicMethod": "getOverview",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -19833,7 +19838,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/trial",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 54,
+      "line": 56,
       "publicMethod": "startPremiumTrial",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -19845,7 +19850,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/checkout-session",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 62,
+      "line": 64,
       "publicMethod": "createCheckoutSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -19857,7 +19862,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/portal-session",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 78,
+      "line": 80,
       "publicMethod": "createPortalSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -24374,18 +24379,21 @@
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.html",
       "keys": [
         "DISABLED_HINTS.CHECKOUT_IN_PROGRESS",
-        "PREMIUM_PAGE.PLANS.PAY_WITH",
         "PREMIUM_PAGE.PLANS.PRICE_NOTE",
         "PREMIUM_PAGE.PLANS.PRICE_RETRY",
         "PREMIUM_PAGE.PLANS.PRICE_UNAVAILABLE",
         "PREMIUM_PAGE.PLANS.SUBTITLE",
-        "PREMIUM_PAGE.PLANS.TITLE"
+        "PREMIUM_PAGE.PLANS.TITLE",
+        "PREMIUM_PAGE.STARS.TERMS",
+        "PREMIUM_PAGE.STARS.TERMS_LINK"
       ]
     },
     {
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
       "keys": [
+        "PREMIUM_PAGE.STARS.TERMS_DETAIL",
+        "PREMIUM_PAGE.STARS.TERMS_TITLE",
         "PREMIUM_PAGE.SUPPORT.MANAGEMENT_HELP",
         "PREMIUM_PAGE.SUPPORT.PAYMENT_HELP",
         "PREMIUM_PAGE.SUPPORT.TITLE"
@@ -44759,7 +44767,8 @@
         "cards",
         "prices",
         "pricesLoading",
-        "pricesUnavailable"
+        "pricesUnavailable",
+        "starsPrice"
       ],
       "outputsHandled": [
         "checkout",

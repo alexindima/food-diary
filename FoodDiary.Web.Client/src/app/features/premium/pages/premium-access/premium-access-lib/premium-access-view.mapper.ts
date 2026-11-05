@@ -55,6 +55,9 @@ export function buildPremiumOverviewCopyState(overview: BillingOverview | null, 
 }
 
 function getAccessHintKey(overview: BillingOverview | null): string {
+    if (overview?.subscriptionProvider?.toLowerCase() === 'telegramstars') {
+        return 'PREMIUM_PAGE.STARS.ACCESS_HINT';
+    }
     if ((overview?.subscriptionStatus ?? null) === null || overview?.premiumTrialActive === true) {
         return 'PREMIUM_PAGE.OVERVIEW.ACCESS_HINT';
     }
@@ -107,13 +110,14 @@ function getRenewalLabelKey(overview: BillingOverview): string {
 
 export function buildPremiumPlanCards(providers: BillingProvider[], loadingPlan: BillingPlan | null): PremiumPlanCardViewModel[] {
     const providerOptions = providers.map(buildPremiumProviderOption);
+    const onlyStars = providers.length === 1 && providers[0].toLowerCase() === 'telegramstars';
 
-    return [
+    const cards: PremiumPlanCardViewModel[] = [
         {
             plan: 'monthly',
-            titleKey: 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE',
+            titleKey: onlyStars ? 'PREMIUM_PAGE.STARS.TITLE' : 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE',
             descriptionKey: 'PREMIUM_PAGE.PLANS.MONTHLY.DESCRIPTION',
-            actionKey: 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION',
+            actionKey: onlyStars ? 'PREMIUM_PAGE.STARS.SUBSCRIBE' : 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION',
             isFeatured: false,
             kickerKey: null,
             isLoading: loadingPlan === 'monthly',
@@ -127,15 +131,17 @@ export function buildPremiumPlanCards(providers: BillingProvider[], loadingPlan:
             isFeatured: true,
             kickerKey: 'PREMIUM_PAGE.PLANS.YEARLY.KICKER',
             isLoading: loadingPlan === 'yearly',
-            providerOptions,
+            providerOptions: providerOptions.filter(option => option.provider.toLowerCase() !== 'telegramstars'),
         },
     ];
+    return cards.filter(card => card.providerOptions.length > 0);
 }
 
 export function buildPremiumProviderOption(provider: BillingProvider): PremiumProviderOptionViewModel {
     return {
         provider,
         label: getPremiumProviderLabel(provider),
+        actionKey: provider.toLowerCase() === 'telegramstars' ? 'PREMIUM_PAGE.STARS.SUBSCRIBE' : 'PREMIUM_PAGE.PLANS.PAY_WITH',
     };
 }
 
@@ -174,6 +180,9 @@ export function getPremiumStatusLabelKey(status: string | null): string {
 
 export function getPremiumProviderLabel(provider: BillingProvider): string {
     switch (provider.toLowerCase()) {
+        case 'telegramstars': {
+            return 'Telegram Stars';
+        }
         case 'yookassa': {
             return 'YooKassa';
         }

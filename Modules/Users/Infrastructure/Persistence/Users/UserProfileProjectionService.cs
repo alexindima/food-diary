@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
-public sealed partial class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) :
+public sealed partial class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null, TimeProvider? timeProvider = null) :
     ICurrentUserAccessService, IUserAiProfileReadService, IUserDashboardProfileReadService,
     IUserDietologistProfileReadService, IUserGamificationProfileReadService,
     IUserHydrationProfileReadService, IUserTdeeProfileReadService, IUserWeeklyCheckInProfileReadService,
@@ -24,14 +24,16 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
 
     public async Task<UserBillingProfileModel?> GetBillingProfileIncludingDeletedAsync(
         UserId userId, CancellationToken cancellationToken = default) {
+        DateTime now = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken);
         }
         return await users.AsNoTracking().Where(user => user.Id == userId)
             .Select(user => new UserBillingProfileModel(user.Id, user.Email, user.IsActive,
-                user.DeletedAt != null, user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium),
+                user.DeletedAt != null, user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium) &&
+                    (user.PremiumAccessEndsAtUtc == null || user.PremiumAccessEndsAtUtc > now),
                 user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed,
-                user.Preferences.Language, user.Preferences.TimeZoneId))
+                user.Preferences.Language, user.Preferences.TimeZoneId, user.TelegramUserId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -44,6 +46,7 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
     }
 
     public async Task<Result<UserAiProfileModel>> GetAiProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+        DateTime now = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken);
         }
@@ -52,7 +55,8 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
                 (user.AiConsentNoticeVersion == PrivacyNoticeVersions.Current
                  || (PrivacyNoticeVersions.Current == PrivacyNoticeVersions.LegacyCompatibleAiNotice &&
                      (user.AiConsentNoticeVersion == null || user.AiConsentNoticeVersion == PrivacyNoticeVersions.LegacyUnversioned))),
-            user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium),
+            user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium) &&
+                (user.PremiumAccessEndsAtUtc == null || user.PremiumAccessEndsAtUtc > now),
             user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc), cancellationToken);
     }
 

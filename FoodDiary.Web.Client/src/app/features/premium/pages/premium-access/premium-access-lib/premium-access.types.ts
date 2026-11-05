@@ -47,6 +47,7 @@ export type PremiumPlanCardViewModel = {
 export type PremiumProviderOptionViewModel = {
     provider: BillingProvider;
     label: string;
+    actionKey: string;
 };
 
 export type PremiumCheckoutRequest = {

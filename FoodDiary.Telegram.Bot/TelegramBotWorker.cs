@@ -10,7 +10,6 @@ using System.Globalization;
 using System.Net.Http.Json;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -18,7 +17,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace FoodDiary.Telegram.Bot;
 
 [ExcludeFromCodeCoverage]
-public sealed class TelegramBotWorker(
+public sealed partial class TelegramBotWorker(
     ITelegramBotClient botClient,
     IOptions<TelegramBotOptions> options,
     ILogger<TelegramBotWorker> logger,
@@ -39,23 +38,8 @@ public sealed class TelegramBotWorker(
         User me = await GetMeWithRetryAsync(stoppingToken);
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
-        if (_options.OperationsEnabled) {
-            var receiver = new DurableTelegramReceiver(botClient, PersistOrHandleUpdateAsync, timeProvider, logger);
-            await receiver.RunAsync(stoppingToken);
-            return;
-        }
-
-        var receiverOptions = new ReceiverOptions {
-            AllowedUpdates = [],
-        };
-
-        botClient.StartReceiving(
-            HandleUpdateAsync,
-            HandleErrorAsync,
-            receiverOptions,
-            cancellationToken: stoppingToken);
-
-        await WaitForStopAsync(stoppingToken);
+        var receiver = new DurableTelegramReceiver(botClient, PersistOrHandleUpdateAsync, timeProvider, logger);
+        await receiver.RunAsync(stoppingToken);
         logger.LogInformation("Telegram bot stopping.");
     }
 
@@ -109,6 +93,10 @@ public sealed class TelegramBotWorker(
     }
 
     private async Task PersistOrHandleUpdateCoreAsync(Update update, CancellationToken cancellationToken) {
+        if (!_options.OperationsEnabled) {
+            await HandleUpdateAsync(botClient, update, cancellationToken);
+            return;
+        }
         BotIncomingOperation? operation = null;
         if (update.Message is { Chat.Type: ChatType.Private, From: { IsBot: false } sender } message && message.Chat.Id == sender.Id) {
             TelegramImageSelection? image = TelegramImageSelector.Select(message, out _);
@@ -161,6 +149,9 @@ public sealed class TelegramBotWorker(
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {
+        if (await TryHandleStarsUpdateAsync(update, cancellationToken)) {
+            return;
+        }
         if (update is { Type: UpdateType.CallbackQuery, CallbackQuery: not null }) {
             await HandleCallbackAsync(update.CallbackQuery, cancellationToken);
             return;
@@ -194,6 +185,24 @@ public sealed class TelegramBotWorker(
         }
 
         switch (BotMenu.ResolveShortcut(message.Text) ?? message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0]) {
+            case "/premium":
+                await SendWebAppShortcutAsync(message.Chat.Id, language, "/premium",
+                    russian ? "Подписка и помощь с оплатой — в разделе Premium вашего аккаунта."
+                        : "Manage your subscription and contact payment support in your account's Premium section.",
+                    russian ? "Premium и поддержка" : "Premium and support", cancellationToken);
+                return;
+            case "/terms":
+                await SendWebAppShortcutAsync(message.Chat.Id, language, "/premium",
+                    russian ? "Условия использования FoodDiary. Перед оплатой ознакомьтесь с условиями подписки."
+                        : "FoodDiary terms. Please review the subscription terms before payment.",
+                    russian ? "Условия" : "Terms", cancellationToken);
+                return;
+            case "/paysupport":
+                await botClient.SendMessage(message.Chat.Id,
+                    russian ? "Помощь с оплатой: admin@fooddiary.club. Укажите дату платежа и номер квитанции Telegram. Не отправляйте пароли или коды входа."
+                        : "Payment support: admin@fooddiary.club. Include the payment date and Telegram receipt ID. Never send passwords or sign-in codes.",
+                    cancellationToken: cancellationToken);
+                return;
             case "/start":
                 await SendStartAsync(message.Chat.Id, message.From?.Id, language, cancellationToken);
                 return;

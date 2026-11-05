@@ -48,8 +48,7 @@ export class PremiumCancellationActionsComponent {
                                 resolveAppLocale(resolveTranslateLanguage(this.translate)),
                                 { dateStyle: 'medium', timeStyle: 'short' },
                             ),
-                            immediate:
-                                this.overview()?.subscriptionStatus === 'past_due' || this.overview()?.subscriptionStatus === 'paused',
+                            immediate: this.isImmediateCancellation(),
                         },
                     })
                     .afterClosed(),
@@ -70,6 +69,14 @@ export class PremiumCancellationActionsComponent {
         } finally {
             this.loading.set(false);
         }
+    }
+
+    private isImmediateCancellation(): boolean {
+        const overview = this.overview();
+        return (
+            overview?.subscriptionProvider?.toLowerCase() !== 'telegramstars' &&
+            (overview?.subscriptionStatus === 'past_due' || overview?.subscriptionStatus === 'paused')
+        );
     }
 
     private saveFeedback(cancellationId: CancellationId, feedback: CancellationFeedback): void {

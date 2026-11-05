@@ -83,7 +83,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.17.0" />
 
     <!-- Telegram -->
-    <PackageVersion Include="Telegram.Bot" Version="22.10.0.1" />
+    <PackageVersion Include="Telegram.Bot" Version="22.10.3.3" />
 
     <!-- Roslyn -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.9.0" />

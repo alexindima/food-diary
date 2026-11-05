@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 22,
     "agentGuides": 297,
-    "documentationPages": 252
+    "documentationPages": 253
   },
   "dotnet": {
     "projects": [
@@ -16126,6 +16126,7 @@
       "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
       "docs/backend/PRODUCTION_RUNTIME_DIAGNOSTICS.md",
       "docs/backend/TELEGRAM_CLIENT_RUNBOOK.md",
+      "docs/backend/TELEGRAM_STARS.md",
       "docs/backend/TELEGRAM_TEST_STAND.md",
       "docs/dependencies/overrides.md",
       "docs/experiments/content-reports-wiki-first-extraction.md",

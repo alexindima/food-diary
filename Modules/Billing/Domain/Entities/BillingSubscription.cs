@@ -72,7 +72,7 @@ public sealed class BillingSubscription : Entity<Guid> {
         string? normalizedPriceId = NormalizeOptional(externalPriceId, ExternalIdMaxLength, nameof(externalPriceId));
         string? normalizedPlan = NormalizeOptional(plan, PlanMaxLength, nameof(plan));
 
-        if (!string.Equals(Provider, normalizedProvider, StringComparison.Ordinal)) {
+        if (!string.Equals(Provider, normalizedProvider, StringComparison.Ordinal) || normalizedProvider is BillingProviderNames.TelegramStars) {
             ExternalSubscriptionId = null;
             ExternalPaymentMethodId = null;
             CurrentPeriodStartUtc = null;
@@ -198,6 +198,9 @@ public sealed class BillingSubscription : Entity<Guid> {
 
     private static string NormalizeProvider(string provider) {
         string normalized = NormalizeRequired(provider, ProviderMaxLength, nameof(provider));
+        if (string.Equals(normalized, BillingProviderNames.TelegramStars, StringComparison.OrdinalIgnoreCase)) {
+            return BillingProviderNames.TelegramStars;
+        }
         if (!BillingProviderNames.IsSupported(normalized)) {
             throw new ArgumentException("Unsupported billing provider.", nameof(provider));
         }

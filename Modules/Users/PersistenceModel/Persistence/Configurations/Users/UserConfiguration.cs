@@ -117,6 +117,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasColumnType("timestamp with time zone");
         builder.Property(e => e.PremiumTrialEndsAtUtc)
             .HasColumnType("timestamp with time zone");
+        builder.Property(e => e.PremiumAccessEndsAtUtc)
+            .HasColumnType("timestamp with time zone");
     }
 
     private static void ConfigureRelationships(EntityTypeBuilder<User> builder) {

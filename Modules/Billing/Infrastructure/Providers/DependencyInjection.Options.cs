@@ -17,6 +17,15 @@ public static partial class DependencyInjection {
             .Validate(static options => BillingProviderNames.IsSupported(options.Provider),
                 "Billing:Provider must be a supported billing provider.")
             .ValidateOnStart();
+        services.AddOptions<TelegramStarsOptions>()
+            .Bind(configuration.GetSection(TelegramStarsOptions.SectionName))
+            .Configure(options => {
+                options.BotToken = configuration["TelegramAuth:BotToken"] ?? string.Empty;
+                options.BotApiSecret = configuration["TelegramBot:ApiSecret"] ?? string.Empty;
+            })
+            .Validate(options => !options.CheckoutEnabled || options.CanCheckout,
+                "Telegram Stars checkout requires a bot token, bot API secret and price from 1 to 10000 Stars.")
+            .ValidateOnStart();
         services.AddOptions<StripeOptions>()
             .Bind(configuration.GetSection(StripeOptions.SectionName))
             .Validate<IOptions<BillingOptions>>(static (options, billingOptions) =>

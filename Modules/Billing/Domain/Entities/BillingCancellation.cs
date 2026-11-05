@@ -26,7 +26,7 @@ public sealed class BillingCancellation : Entity<Guid> {
         if (subscription.ExternalSubscriptionId is null || !IsCancellation(subscription)) {
             throw new ArgumentException("A confirmed cancellation is required.", nameof(subscription));
         }
-        if (source is not ("fooddiary" or "paddle")) {
+        if (source is not ("fooddiary" or "paddle" or "telegram")) {
             throw new ArgumentException("Unknown cancellation source.", nameof(source));
         }
         var cancellation = new BillingCancellation {

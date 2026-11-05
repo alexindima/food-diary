@@ -376,7 +376,7 @@ internal sealed class UserAuthenticationIdentityService(
 
     internal static UserAuthenticationPrincipalModel ToAuthenticationPrincipal(User user, DateTime authenticatedAtUtc) {
         (IReadOnlyCollection<string> roles, DateTime? accessTokenCapUtc) = UserAuthenticationPrivileges.Evaluate(
-            user.GetRoleNames(), user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, authenticatedAtUtc);
+            user.GetRoleNames(), user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, authenticatedAtUtc, user.PremiumAccessEndsAtUtc);
         return new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,

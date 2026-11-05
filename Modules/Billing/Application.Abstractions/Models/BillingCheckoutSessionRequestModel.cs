@@ -5,4 +5,5 @@ public sealed record BillingCheckoutSessionRequestModel(
     string Email,
     string Plan,
     string? ExistingCustomerId,
-    string? IdempotencyKey = null);
+    string? IdempotencyKey = null,
+    long? TelegramUserId = null);

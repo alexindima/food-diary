@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { AuthService } from '../../../../services/auth.service';
+import { TelegramWebAppService } from '../../../../shared/auth/telegram-web-app.service';
 import type {
     BillingOverview,
     BillingPlan,
@@ -68,6 +69,69 @@ let queryParams: Record<string, string>;
 let paddlePreview: ReturnType<typeof vi.fn<PaddleCheckoutService['previewPlanPricesAsync']>>;
 let paddleOpen: ReturnType<typeof vi.fn<PaddleCheckoutService['openTransactionCheckoutAsync']>>;
 let currentLanguage: string;
+let miniApp: boolean;
+let openInvoice: ReturnType<typeof vi.fn<(url: string) => Promise<string>>>;
+
+describe('Premium Telegram Stars', () => {
+    beforeEach(resetMocks);
+
+    function offerStars(): void {
+        billingService.getOverview.mockReturnValue(
+            of({ ...createOverview(), availableProviders: ['paddle', 'TelegramStars'], telegramStarsPrice: 500 }),
+        );
+        billingService.createCheckoutSession.mockReturnValue(of({ sessionId: 'stars-owned', url: 'https://t.me/$owned', plan: 'monthly' }));
+    }
+
+    it('keeps website Paddle and opens the Stars invoice for a linked account', async () => {
+        offerStars();
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(component['availableProviders']()).toEqual(['paddle', 'TelegramStars']);
+        await component['startCheckoutAsync']('monthly', 'TelegramStars');
+        expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'TelegramStars');
+        expect(fakeDocument.location.href).toBe('https://t.me/$owned');
+        expect(openInvoice).not.toHaveBeenCalled();
+    });
+
+    it('offers only the 30-day Stars plan in Telegram and never loads Paddle pricing', async () => {
+        miniApp = true;
+        offerStars();
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(component['availableProviders']()).toEqual(['TelegramStars']);
+        expect(component['planCards']().map(card => card.plan)).toEqual(['monthly']);
+        expect(paddlePreview).not.toHaveBeenCalled();
+        expect(component['pricing'].unavailable()).toBe(false);
+        await component['startCheckoutAsync']('monthly', 'paddle');
+        expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
+    });
+
+    it('refreshes shared account access only after the API confirms the paid entitlement', async () => {
+        miniApp = true;
+        offerStars();
+        const { component } = setupComponent();
+        await settleAsync();
+        billingService.getOverview.mockReturnValue(of({ ...createOverview(), isPremium: true, availableProviders: ['TelegramStars'] }));
+        openInvoice.mockResolvedValue('paid');
+        await component['startCheckoutAsync']('monthly', 'TelegramStars');
+        expect(openInvoice).toHaveBeenCalledWith('https://t.me/$owned');
+        expect(authService.refreshSession).toHaveBeenCalledOnce();
+        expect(component['checkoutReturnState']()).toBe('success');
+        expect(component['isPremium']()).toBe(true);
+    });
+
+    it('does not activate or refresh Premium when the Telegram invoice is canceled', async () => {
+        miniApp = true;
+        offerStars();
+        openInvoice.mockResolvedValue('cancelled');
+        const { component } = setupComponent();
+        await settleAsync();
+        await component['startCheckoutAsync']('monthly', 'TelegramStars');
+        expect(component['isPremium']()).toBe(false);
+        expect(component['checkoutReturnState']()).toBe('canceled');
+        expect(authService.refreshSession).not.toHaveBeenCalled();
+    });
+});
 
 describe('PremiumAccessPageComponent checkout', () => {
     beforeEach(resetMocks);
@@ -535,6 +599,8 @@ describe('PremiumAccessPageComponent Paddle transaction failures and SSR', () =>
 });
 
 function resetMocks(): void {
+    miniApp = false;
+    openInvoice = vi.fn().mockResolvedValue('cancelled');
     currentLanguage = 'en';
     paddlePreview = vi.fn().mockResolvedValue({
         monthly: { formattedTotal: '$8.00', currencyCode: 'USD' },
@@ -595,6 +661,7 @@ function getPremiumAccessPageProviders(platformId: 'browser' | 'server'): unknow
     return [
         PremiumPlanPricingFacade,
         { provide: PremiumBillingFacade, useValue: billingService },
+        { provide: TelegramWebAppService, useValue: { isMiniAppLaunch: () => miniApp, openInvoiceAsync: openInvoice } },
         {
             provide: PaddleCheckoutService,
             useValue: {
