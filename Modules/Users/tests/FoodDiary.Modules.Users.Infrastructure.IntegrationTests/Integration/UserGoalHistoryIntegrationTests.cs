@@ -16,6 +16,31 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class UserGoalHistoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerTheory]
+    [InlineData(-1)]
+    [InlineData(367)]
+    public async Task InvalidDashboardRange_PreservesAccessFailurePrecedence(int endOffset) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("history-range@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        var service = new UserProfileProjectionService(context.Users);
+        DateOnly from = new(2026, 11, 5);
+        DateOnly to = from.AddDays(endOffset);
+
+        ArgumentOutOfRangeException error = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            service.GetDashboardProfileAsync(user.Id, CancellationToken.None, from, to));
+        Assert.Equal("to", error.ParamName);
+        Assert.StartsWith("Goal history requires an ordered calendar range of at most 367 days.", error.Message, StringComparison.Ordinal);
+
+        user.Deactivate();
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        ResultAssert.Failure(await service.GetDashboardProfileAsync(user.Id, CancellationToken.None, from, to),
+            "Authentication.InvalidToken");
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
     [RequiresDockerFact]
     public async Task SavedHistory_UsesLocalDateAndLastSameDayChange_WithoutTrackingOrLoadingFullHistory() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

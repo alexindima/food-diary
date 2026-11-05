@@ -16,6 +16,7 @@ internal sealed class BotOperationScenario : IDisposable {
     private readonly HttpClient _operationHttp;
     private readonly TelegramOperationWorker _worker;
     private readonly BotOperationClient _operations;
+    private int _acquisitions;
 
     public BotOperationScenario() {
         _handler = new ScenarioHandler(RespondAsync);
@@ -49,6 +50,7 @@ internal sealed class BotOperationScenario : IDisposable {
     public JsonElement? LastNoticeMarkup { get; private set; }
     public List<string> BusinessPaths { get; } = [];
     public Func<HttpRequestMessage, Task<HttpResponseMessage>>? BusinessResponse { get; set; }
+    public Action<int>? BeforeAcquire { get; set; }
 
     public Task ProcessAsync() => _worker.ProcessAsync(_operations, new BotOperationId(Id), CancellationToken.None);
     public static HttpResponseMessage Json<T>(T body) => new(HttpStatusCode.OK) { Content = JsonContent.Create(body) };
@@ -56,6 +58,7 @@ internal sealed class BotOperationScenario : IDisposable {
     private async Task<HttpResponseMessage> RespondAsync(HttpRequestMessage request) {
         string path = request.RequestUri!.AbsolutePath;
         if (path.EndsWith("/lease", StringComparison.Ordinal)) {
+            BeforeAcquire?.Invoke(++_acquisitions);
             return LeaseConflict ? new HttpResponseMessage(HttpStatusCode.Conflict) : Json(new {
                 OperationId = Id,
                 LeaseId = Guid.NewGuid(),

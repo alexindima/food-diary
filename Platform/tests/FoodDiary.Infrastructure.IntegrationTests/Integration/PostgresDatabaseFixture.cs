@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Docker.DotNet.Models;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;
 using Testcontainers.PostgreSql;
 
@@ -49,17 +50,23 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
         }
     }
 
-    public async Task<FoodDiaryDbContext> CreateDbContextAsync() {
+    public Task<FoodDiaryDbContext> CreateDbContextAsync() => CreateDbContextAsync([]);
+
+    public async Task<FoodDiaryDbContext> CreateDbContextAsync(params IInterceptor[] migrationInterceptors) {
         string connectionString = await CreateIsolatedDatabaseAsync().ConfigureAwait(false);
 
-        // A slow container connection can fail during migration setup under the profiler.
-        // Use the provider's transient retry strategy only for schema initialization.
+        // Npgsql accesses migration history before EF's internal retry boundary.
+        // Retry the entire schema bootstrap with a fresh context, never test operations.
         DbContextOptions<FoodDiaryDbContext> migrationOptions = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .AddInterceptors(migrationInterceptors)
             .UseNpgsql(connectionString, options => options.EnableRetryOnFailure(
                 maxRetryCount: 2, maxRetryDelay: TimeSpan.FromSeconds(2), errorCodesToAdd: null))
             .Options;
         await using var migrationContext = new FoodDiaryDbContext(migrationOptions);
-        await migrationContext.Database.MigrateAsync().ConfigureAwait(false);
+        await migrationContext.Database.CreateExecutionStrategy().ExecuteAsync(async () => {
+            await using var attempt = new FoodDiaryDbContext(migrationOptions);
+            await attempt.Database.MigrateAsync().ConfigureAwait(false);
+        }).ConfigureAwait(false);
         return CreateDbContext(connectionString);
     }
 

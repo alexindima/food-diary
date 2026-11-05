@@ -73,11 +73,9 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
             if (result.IsFailure || goalsFrom is null) {
                 return result;
             }
-            // Preserve access-failure precedence and the existing invalid-range exception.
-            UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsEnd, cancellationToken);
-            return Result.Success(result.Value with { GoalHistory = history });
         }
 
+        // Validate the range after preserving access-failure precedence above.
         IQueryable<UserGoalRevision> revisions = GetGoalHistoryQuery(userId, goalsFrom.Value, goalsEnd);
         // One collection join keeps the scalar profile and its bounded timeline in one SQL command.
         var row = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId).Select(projection)

@@ -26,25 +26,22 @@ public sealed class NamespaceQualifiedTypeAnalyzer : DiagnosticAnalyzer {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
         context.RegisterSyntaxNodeAction(
-            AnalyzeName,
-            SyntaxKind.QualifiedName,
-            SyntaxKind.AliasQualifiedName,
+            static context => AnalyzeName(context, ((QualifiedNameSyntax)context.Node).Left),
+            SyntaxKind.QualifiedName);
+        context.RegisterSyntaxNodeAction(
+            static context => AnalyzeName(context, ((AliasQualifiedNameSyntax)context.Node).Alias),
+            SyntaxKind.AliasQualifiedName);
+        context.RegisterSyntaxNodeAction(
+            static context => AnalyzeName(context, ((MemberAccessExpressionSyntax)context.Node).Expression),
             SyntaxKind.SimpleMemberAccessExpression);
     }
 
-    private static void AnalyzeName(SyntaxNodeAnalysisContext context) {
+    private static void AnalyzeName(SyntaxNodeAnalysisContext context, SyntaxNode qualifier) {
         SyntaxNode node = context.Node;
         if (node.Ancestors().Any(ancestor => ancestor is UsingDirectiveSyntax or DocumentationCommentTriviaSyntax ||
                 (ancestor is BaseNamespaceDeclarationSyntax declaration && declaration.Name.Span.Contains(node.Span)))) {
             return;
         }
-
-        SyntaxNode qualifier = node switch {
-            QualifiedNameSyntax name => name.Left,
-            AliasQualifiedNameSyntax name => name.Alias,
-            MemberAccessExpressionSyntax member => member.Expression,
-            _ => node,
-        };
 
         ISymbol? symbol = context.SemanticModel.GetSymbolInfo(node, context.CancellationToken).Symbol;
         INamedTypeSymbol? type = symbol switch {

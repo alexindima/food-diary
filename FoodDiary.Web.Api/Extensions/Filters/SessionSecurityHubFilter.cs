@@ -31,7 +31,8 @@ public sealed class SessionSecurityHubFilter(
     private async Task MonitorAsync(HubCallerContext caller, CancellationToken cancellationToken) {
         try {
             using var timer = new PeriodicTimer(CheckInterval, clock);
-            while (await timer.WaitForNextTickAsync(cancellationToken)) {
+            while (true) {
+                await timer.WaitForNextTickAsync(cancellationToken);
                 using var timeout = new CancellationTokenSource(CheckTimeout, clock);
                 using var check = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
                 AsyncServiceScope scope = scopes.CreateAsyncScope();

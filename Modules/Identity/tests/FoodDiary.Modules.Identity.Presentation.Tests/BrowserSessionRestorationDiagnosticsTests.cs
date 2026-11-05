@@ -5,6 +5,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Presentation.Api.Tests;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,31 @@ namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BrowserSessionRestorationDiagnosticsTests {
+    [Fact]
+    public async Task Restore_UnauthenticatedImpersonation_PreservesInvalidProofAndErrorEnvelope() {
+        using var cancellation = new CancellationTokenSource();
+        RestoreBrowserSessionCommand? sent = null;
+        ISender sender = SubstituteSender.Create(Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken),
+            request => sent = Assert.IsType<RestoreBrowserSessionCommand>(request));
+        var context = new DefaultHttpContext { RequestAborted = cancellation.Token, TraceIdentifier = "invalid-impersonation-trace" };
+        context.Request.Headers[BrowserSessionCookieService.ContextHeader] = Guid.NewGuid().ToString("N");
+        var controller = new BrowserSessionController(sender) {
+            ControllerContext = new ControllerContext { HttpContext = context },
+        };
+
+        ObjectResult response = Assert.IsType<ObjectResult>(await controller.Restore());
+        ApiErrorHttpResponse error = Assert.IsType<ApiErrorHttpResponse>(response.Value);
+
+        Assert.NotNull(sent);
+        Assert.Multiple(
+            () => Assert.Null(sent.Credential),
+            () => Assert.Equal(StatusCodes.Status401Unauthorized, response.StatusCode),
+            () => Assert.Equal(AuthenticationErrors.InvalidToken.Code, error.Error),
+            () => Assert.Equal(context.TraceIdentifier, error.TraceId),
+            () => Assert.Equal(0, context.Response.Headers.SetCookie.Count));
+        await sender.Received(1).Send(Arg.Any<IRequest<Result<BrowserSessionModel>>>(), cancellation.Token);
+    }
+
     public static TheoryData<bool, bool, bool, bool> CookieCases {
         get {
             var cases = new TheoryData<bool, bool, bool, bool>();

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using FoodDiary.Telegram.Bot.Operations;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -15,6 +16,21 @@ public sealed class TelegramOperationWorkerLoopTests {
         using TelegramOperationWorker worker = CreateWorker(handler, telegramHttp, TimeProvider.System, enabled: false);
         await worker.StartAsync(CancellationToken.None);
         await worker.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+    }
+
+    [Fact]
+    public async Task ShutdownDuringOptionsResolution_CompletesWithoutPollingTheApi() {
+        using var cancellation = new CancellationTokenSource();
+        var options = new CancellingOptions(cancellation);
+        using var handler = new Handler((_, _) => throw new InvalidOperationException("Shutdown must prevent API polling."));
+        using var telegramHttp = new HttpClient(handler);
+        using var worker = new TelegramOperationWorker(new Factory(handler), options,
+            new TelegramBotClient("123:test", telegramHttp), TimeProvider.System, NullLogger<TelegramOperationWorker>.Instance);
+
+        await worker.StartAsync(cancellation.Token);
+        await worker.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None);
+
+        Assert.True(worker.ExecuteTask.IsCompletedSuccessfully);
     }
 
     [Fact]
@@ -86,9 +102,110 @@ public sealed class TelegramOperationWorkerLoopTests {
         Assert.Equal(2, leases);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task DependencyCancellation_DoesNotStopTheWorkerOrLoseTheNextOperation(bool duringDiscovery) {
+        var clock = new ControlledBotTimeProvider();
+        int discoveries = 0;
+        int leases = 0;
+        using var handler = new Handler((request, token) => {
+            Assert.False(token.IsCancellationRequested);
+            if (request.RequestUri!.AbsolutePath.EndsWith("/ready", StringComparison.Ordinal)) {
+                if (Interlocked.Increment(ref discoveries) == 1 && duringDiscovery) {
+                    throw new OperationCanceledException("Synthetic dependency timeout.");
+                }
+                return Task.FromResult(BotOperationScenario.Json(new[] { Guid.NewGuid(), Guid.NewGuid() }));
+            }
+            if (Interlocked.Increment(ref leases) == 1 && !duringDiscovery) {
+                throw new OperationCanceledException("Synthetic dependency timeout.");
+            }
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Conflict));
+        });
+        using var telegramHttp = new HttpClient(handler);
+        using TelegramOperationWorker worker = CreateWorker(handler, telegramHttp, clock);
+
+        await worker.StartAsync(CancellationToken.None);
+        ControlledBotTimeProvider.ScheduledDelay delay = await clock.NextDelayAsync();
+        if (duringDiscovery) {
+            delay.Fire();
+            await clock.NextDelayAsync();
+        }
+        await worker.StopAsync(CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+
+        Assert.Equal(duringDiscovery ? 2 : 1, discoveries);
+        Assert.Equal(2, leases);
+    }
+
+    [Fact]
+    public async Task ReadyCheckpoint_ContinuesImmediatelyUntilTheTerminalNoticeIsCleanedUp() {
+        var clock = new ControlledBotTimeProvider();
+        var id = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var incoming = new BotIncomingOperation("photo", 123, 123, 10, DateTime.UtcNow, "en", "food", "image/jpeg");
+        var state = new BotPhotoCheckpoint("failed", ErrorCode: BotRecognitionFailure.PremiumRequired, ProgressMessageId: 77);
+        var committed = new List<(string Stage, bool Completed)>();
+        int leases = 0;
+        int notices = 0;
+        int deletions = 0;
+        using var handler = new Handler(async (request, token) => {
+            string path = request.RequestUri!.AbsolutePath;
+            if (path.EndsWith("/ready", StringComparison.Ordinal)) {
+                return BotOperationScenario.Json(new[] { id });
+            }
+            if (path.EndsWith("/lease", StringComparison.Ordinal)) {
+                leases++;
+                return BotOperationScenario.Json(new {
+                    OperationId = id, LeaseId = Guid.NewGuid(), UserId = userId, SecurityVersion = 1,
+                    Payload = JsonSerializer.Serialize(incoming), Checkpoint = JsonSerializer.Serialize(state),
+                    LeaseExpiresAtUtc = DateTime.UtcNow.AddMinutes(2), CreatedAtUtc = DateTime.UtcNow,
+                });
+            }
+            if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {
+                using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync(token), cancellationToken: token);
+                state = JsonSerializer.Deserialize<BotPhotoCheckpoint>(body.RootElement.GetProperty("checkpoint").GetString()!)!;
+                committed.Add((state.Stage, body.RootElement.GetProperty("completed").GetBoolean()));
+                return new HttpResponseMessage(HttpStatusCode.NoContent);
+            }
+            if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
+                notices++;
+                return BotOperationScenario.Json(new {
+                    ok = true, result = new { message_id = 90, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Delivered" },
+                });
+            }
+            if (path.EndsWith("/deleteMessage", StringComparison.OrdinalIgnoreCase)) {
+                deletions++;
+                return BotOperationScenario.Json(new { ok = true, result = true });
+            }
+            throw new InvalidOperationException($"Unexpected business work during terminal delivery: {path}");
+        });
+        using var telegramHttp = new HttpClient(handler);
+        using TelegramOperationWorker worker = CreateWorker(handler, telegramHttp, clock);
+
+        await worker.StartAsync(CancellationToken.None);
+        await clock.NextDelayAsync();
+        await worker.StopAsync(CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+
+        Assert.Multiple(
+            () => Assert.Equal(2, leases),
+            () => Assert.Equal(1, notices),
+            () => Assert.Equal(1, deletions),
+            () => Assert.Equal(new[] { ("photo-notified", false), ("photo-notified", true) }, committed));
+    }
+
     private static TelegramOperationWorker CreateWorker(HttpMessageHandler handler, HttpClient telegramHttp, TimeProvider clock, bool enabled = true) =>
         new(new Factory(handler), Options.Create(new TelegramBotOptions { OperationsEnabled = enabled, ApiBaseUrl = "https://diary.example", ApiSecret = "test-secret" }),
             new TelegramBotClient("123:test", telegramHttp), clock, NullLogger<TelegramOperationWorker>.Instance);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CancellingOptions(CancellationTokenSource cancellation) : IOptions<TelegramBotOptions> {
+        public TelegramBotOptions Value {
+            get {
+                cancellation.Cancel();
+                return new TelegramBotOptions { OperationsEnabled = true };
+            }
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class Factory(HttpMessageHandler handler) : IHttpClientFactory {

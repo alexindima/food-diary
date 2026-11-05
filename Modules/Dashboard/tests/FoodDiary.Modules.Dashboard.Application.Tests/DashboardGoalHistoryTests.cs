@@ -15,6 +15,20 @@ namespace FoodDiary.Modules.Dashboard.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class DashboardGoalHistoryTests {
     [Theory]
+    [InlineData(false, 2000d, 14000d)]
+    [InlineData(true, 2000d, 15000d)]
+    [InlineData(true, null, 5000d)]
+    public void WeeklyTarget_UsesDailyFallbackForUnspecifiedCyclingDays(bool cycling, double? daily, double expected) {
+        var schedule = new UserCalorieSchedule(daily, cycling, MondayCalories: 3000, TuesdayCalories: null,
+            WednesdayCalories: null, ThursdayCalories: null, FridayCalories: 2000, SaturdayCalories: null, SundayCalories: null);
+        var context = new DashboardUserContextModel(Guid.NewGuid(), Email: null, Language: null, DashboardLayoutJson: null,
+            DesiredWeightKg: null, DesiredWaistCm: null, HydrationGoal: null, WaterGoal: null,
+            ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, schedule);
+
+        Assert.Equal(expected, context.GetWeeklyCalorieTarget());
+    }
+
+    [Theory]
     [InlineData(29, 29, 3000, 21000, 150, 2000)]
     [InlineData(30, 30, 2500, 20500, 120, 2500)]
     [InlineData(29, 30, 3000, 5500, 135, 4500)]

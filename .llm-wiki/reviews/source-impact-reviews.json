@@ -646,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "9c64b8b15d5b3dbab780038d5cf4026dae459b1df6bd76b422b52566f0dc7cbe",
-          "reviewReason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate."
+          "sha256": "399375bf586e84904a45c884b2ea9eedf8b864519b42e88c04370243addd9d26",
+          "reviewReason": "Reviewed the five new task-finish cost-calibration observations. They remain observed hypotheses with no approval, application or policy change; candidate/event-chain and separate human promotion boundaries in this workflow remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate.",
+      "reason": "Reviewed the five new task-finish cost-calibration observations. They remain observed hypotheses with no approval, application or policy change; candidate/event-chain and separate human promotion boundaries in this workflow remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
-      "reviewedAtUtc": "2026-11-04T21:56:42.4340571Z"
+      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
+      "reviewedAtUtc": "2026-11-05T14:12:26.7127663Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -802,8 +802,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "12e790a30270863f955bcc7a5460f89439165ce26c1b7e0e519aed0c4ef33280",
-          "reviewReason": "Compared the regenerated domain index with the tracked version. The diff refreshes the existing AiUsage guard line references. The SSO lock uses the existing refresh-session table and Recipe product ownership is transient projection metadata, so the persistence schema and the documented review workflow still match the source."
+          "sha256": "301d9d1b53efd2a89b89aec4cbbfe05dc92991ac9f8dd4b430dae5984f06df38",
+          "reviewReason": "Reviewed the regenerated domain index against final User consent and profile projection code. The enum factory still rejects undefined purposes before mutation; the original range guard runs after access checks. Entity schema, EF mappings, persistence ownership and query shapes are unchanged, so the generic review workflow remains current."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -816,10 +816,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Compared the regenerated domain index with the tracked version. The diff refreshes the existing AiUsage guard line references. The SSO lock uses the existing refresh-session table and Recipe product ownership is transient projection metadata, so the persistence schema and the documented review workflow still match the source.",
+      "reason": "Reviewed the regenerated domain index against final User consent and profile projection code. The enum factory still rejects undefined purposes before mutation; the original range guard runs after access checks. Entity schema, EF mappings, persistence ownership and query shapes are unchanged, so the generic review workflow remains current.",
       "baseRef": "HEAD",
-      "gitHead": "64910f382018cdb05da4898c7705f4929e381dfc",
-      "reviewedAtUtc": "2026-11-03T23:59:45.9333363Z"
+      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
+      "reviewedAtUtc": "2026-11-05T14:12:28.1096755Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1027,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "a993bf215418478440e33d395c323a0a761ee87d7d39ec22376fe8de9852500c",
-          "reviewReason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate."
+          "sha256": "eda794e76026425f96d91527d3394d3eaf2da435e6ddc38c15119fd36880cbbd",
+          "reviewReason": "Reviewed the new schema-v2 sealed-task observation: it binds the root/scoped instruction file hashes, cohort, policy fingerprint, retrospective and measured outcome without editing AGENTS.md or promoting any instruction revision. The workflow still accurately describes append-only observations, cohort analysis and separately authorized experiments."
         }
       ],
-      "reason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate.",
+      "reason": "Reviewed the new schema-v2 sealed-task observation: it binds the root/scoped instruction file hashes, cohort, policy fingerprint, retrospective and measured outcome without editing AGENTS.md or promoting any instruction revision. The workflow still accurately describes append-only observations, cohort analysis and separately authorized experiments.",
       "baseRef": "HEAD",
-      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
-      "reviewedAtUtc": "2026-11-04T21:56:42.6190871Z"
+      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
+      "reviewedAtUtc": "2026-11-05T14:14:01.9194384Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "ef3e33f0fafe375e70af6d35dc5fda2a44b2ac1e6bddb96e31bf965ae0d9da21",
-          "reviewReason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate."
+          "sha256": "c8a43ccfc24cfd452266eef334e4dd7e06390309c47be11b716dd74070e9ecc3",
+          "reviewReason": "Reviewed the new sealed-task observation in eval-promotions.json. It records a candidate only; no eval approval/application or active case change occurred. The documented observe/review/apply lifecycle and safety boundaries remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended task completion observation. This append-only evidence records the local verification cost and readiness. The workflow instructions and registry behavior remain accurate.",
+      "reason": "Reviewed the new sealed-task observation in eval-promotions.json. It records a candidate only; no eval approval/application or active case change occurred. The documented observe/review/apply lifecycle and safety boundaries remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "258bf1868ab524aeb7bf4159e70e8334ff3e7b6d",
-      "reviewedAtUtc": "2026-11-04T21:56:42.8084169Z"
+      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
+      "reviewedAtUtc": "2026-11-05T14:12:28.8149683Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56205afbfa82f09845a52d8faf40bfe169776e52bb9ee55dce748e3286843ef3",
-          "reviewReason": "The runtime topology diff updates only the source fingerprint. Verified cancellation cleanup for FFmpeg and outbox, RequestAborted forwarding in MailInbox, and the parameterless constructor and fixed message of the MailRelay claim-loss exception. The topology inventory and behavior signals still match the workflow guidance."
+          "sha256": "aa20e2907f317905b0347f97254f72be58fd391e7e725fece755807f89dea7d0",
+          "reviewReason": "Reviewed runtime-topology.json: only sourceFingerprint changed; sourceFileCount remains 4752 and all topology records are identical. This task adds no deployable host, worker, provider, webhook or registration. Existing timeout, cancellation, replay and rollback review guidance remains accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "The runtime topology diff updates only the source fingerprint. Verified cancellation cleanup for FFmpeg and outbox, RequestAborted forwarding in MailInbox, and the parameterless constructor and fixed message of the MailRelay claim-loss exception. The topology inventory and behavior signals still match the workflow guidance.",
+      "reason": "Reviewed runtime-topology.json: only sourceFingerprint changed; sourceFileCount remains 4752 and all topology records are identical. This task adds no deployable host, worker, provider, webhook or registration. Existing timeout, cancellation, replay and rollback review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "184cf93d6e52e5c3d6a6c008b36cccf7bd618a2e",
-      "reviewedAtUtc": "2026-11-05T04:42:16.6285798Z"
+      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
+      "reviewedAtUtc": "2026-11-05T14:12:27.4769778Z"
     },
     {
       "pageId": "workflow-security-review",

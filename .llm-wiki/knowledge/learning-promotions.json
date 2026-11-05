@@ -12443,6 +12443,356 @@
       "targetId": "",
       "reason": "",
       "eventHash": "8fec64085e196c643b6fe6b631065df92f5c123ce0af87f493cf5eebf1529468"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 96,
+      "kind": "observed",
+      "id": "learning-e4648757d7268d402408",
+      "createdAtUtc": "2026-11-05T14:06:44.7831723Z",
+      "previousHash": "8fec64085e196c643b6fe6b631065df92f5c123ce0af87f493cf5eebf1529468",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-dead-code-502",
+        "retrospectiveHash": "e9db2a5e168ded1a5c6d9a7f1de2fa79352a2b75d28084273cdcbc789d69d088",
+        "completionFingerprint": "2e0dd15b722df9d2165f3d4c8cea28cf1424a3084d4f33eea46b28420238d594",
+        "packetFingerprint": "33c2f6ab7f1ed7ec2d048abc7821ed778525cb555b429d0f027337c7578be7ad",
+        "sourceCandidateId": "cost-api-compatibility",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'api-compatibility'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1530s versus 26s, error 5784.62%.",
+        "score": 70,
+        "evidence": [
+          "api-compatibility",
+          "error=5784.62%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "api-compatibility",
+          "recommendedSeconds": 26.0,
+          "expectedSeconds": 1530.0,
+          "errorPercent": 5784.62
+        },
+        "changedPaths": [
+          "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
+          "FoodDiary.Telegram.Bot/BotMenu.cs",
+          "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BillingOverviewContractTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationWorkerLoopTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramPhotoProgressLeaseTests.cs",
+          "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs",
+          "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+          "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
+          "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
+          "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/RefreshTokenSessionFallbackTests.Guards.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+          "Modules/Users/Domain/Entities/User.Privacy.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserPrivacyConsentTests.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserGoalHistoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresBootstrapRetryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserCleanupServiceIntegrationTests.ParticipantReassignment.cs",
+          "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayInfrastructureOptionsTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/RabbitMqBootstrapHostedServiceTests.cs"
+        ],
+        "subjectIds": [
+          "api-compatibility"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "16a1d1be69a718d67fdc8dfbe6058a750fdd0f499486700cd5cb5e091095ac08"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 97,
+      "kind": "observed",
+      "id": "learning-b3771e08dbc9a591368e",
+      "createdAtUtc": "2026-11-05T14:06:44.7831723Z",
+      "previousHash": "16a1d1be69a718d67fdc8dfbe6058a750fdd0f499486700cd5cb5e091095ac08",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-dead-code-502",
+        "retrospectiveHash": "e9db2a5e168ded1a5c6d9a7f1de2fa79352a2b75d28084273cdcbc789d69d088",
+        "completionFingerprint": "2e0dd15b722df9d2165f3d4c8cea28cf1424a3084d4f33eea46b28420238d594",
+        "packetFingerprint": "33c2f6ab7f1ed7ec2d048abc7821ed778525cb555b429d0f027337c7578be7ad",
+        "sourceCandidateId": "cost-api-integration-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'api-integration-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1500s versus 604s, error 148.34%.",
+        "score": 70,
+        "evidence": [
+          "api-integration-tests",
+          "error=148.34%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "api-integration-tests",
+          "recommendedSeconds": 604.0,
+          "expectedSeconds": 1500.0,
+          "errorPercent": 148.34
+        },
+        "changedPaths": [
+          "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
+          "FoodDiary.Telegram.Bot/BotMenu.cs",
+          "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BillingOverviewContractTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationWorkerLoopTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramPhotoProgressLeaseTests.cs",
+          "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs",
+          "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+          "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
+          "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
+          "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/RefreshTokenSessionFallbackTests.Guards.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+          "Modules/Users/Domain/Entities/User.Privacy.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserPrivacyConsentTests.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserGoalHistoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresBootstrapRetryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserCleanupServiceIntegrationTests.ParticipantReassignment.cs",
+          "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayInfrastructureOptionsTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/RabbitMqBootstrapHostedServiceTests.cs"
+        ],
+        "subjectIds": [
+          "api-integration-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "8d88a1b75fa7d0a04447b3974af8c695c5423dcebbc85e85d7764f951b6eebce"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 98,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-05T14:06:44.7831723Z",
+      "previousHash": "8d88a1b75fa7d0a04447b3974af8c695c5423dcebbc85e85d7764f951b6eebce",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-dead-code-502",
+        "retrospectiveHash": "e9db2a5e168ded1a5c6d9a7f1de2fa79352a2b75d28084273cdcbc789d69d088",
+        "completionFingerprint": "2e0dd15b722df9d2165f3d4c8cea28cf1424a3084d4f33eea46b28420238d594",
+        "packetFingerprint": "33c2f6ab7f1ed7ec2d048abc7821ed778525cb555b429d0f027337c7578be7ad",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 2164s versus 103s, error 2000.97%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=2000.97%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 103.0,
+          "expectedSeconds": 2164.0,
+          "errorPercent": 2000.97
+        },
+        "changedPaths": [
+          "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
+          "FoodDiary.Telegram.Bot/BotMenu.cs",
+          "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BillingOverviewContractTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationWorkerLoopTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramPhotoProgressLeaseTests.cs",
+          "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs",
+          "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+          "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
+          "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
+          "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/RefreshTokenSessionFallbackTests.Guards.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+          "Modules/Users/Domain/Entities/User.Privacy.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserPrivacyConsentTests.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserGoalHistoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresBootstrapRetryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserCleanupServiceIntegrationTests.ParticipantReassignment.cs",
+          "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayInfrastructureOptionsTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/RabbitMqBootstrapHostedServiceTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "87bc3b49b04c3073f934d86d2d97b84ee92f3ac7a3e54e7eeee8629e44989f66"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 99,
+      "kind": "observed",
+      "id": "learning-87a774099f7ac8b15aa1",
+      "createdAtUtc": "2026-11-05T14:06:44.7831723Z",
+      "previousHash": "87bc3b49b04c3073f934d86d2d97b84ee92f3ac7a3e54e7eeee8629e44989f66",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-dead-code-502",
+        "retrospectiveHash": "e9db2a5e168ded1a5c6d9a7f1de2fa79352a2b75d28084273cdcbc789d69d088",
+        "completionFingerprint": "2e0dd15b722df9d2165f3d4c8cea28cf1424a3084d4f33eea46b28420238d594",
+        "packetFingerprint": "33c2f6ab7f1ed7ec2d048abc7821ed778525cb555b429d0f027337c7578be7ad",
+        "sourceCandidateId": "cost-data-access-integration-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'data-access-integration-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1500s versus 788s, error 90.36%.",
+        "score": 70,
+        "evidence": [
+          "data-access-integration-tests",
+          "error=90.36%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "data-access-integration-tests",
+          "recommendedSeconds": 788.0,
+          "expectedSeconds": 1500.0,
+          "errorPercent": 90.36
+        },
+        "changedPaths": [
+          "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
+          "FoodDiary.Telegram.Bot/BotMenu.cs",
+          "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BillingOverviewContractTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationWorkerLoopTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramPhotoProgressLeaseTests.cs",
+          "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs",
+          "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+          "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
+          "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
+          "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/RefreshTokenSessionFallbackTests.Guards.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+          "Modules/Users/Domain/Entities/User.Privacy.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserPrivacyConsentTests.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserGoalHistoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresBootstrapRetryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserCleanupServiceIntegrationTests.ParticipantReassignment.cs",
+          "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayInfrastructureOptionsTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/RabbitMqBootstrapHostedServiceTests.cs"
+        ],
+        "subjectIds": [
+          "data-access-integration-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "63195a5f1b9e61c7644317597acba7910fb9743e233d6c4f79091ee72182747d"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 100,
+      "kind": "observed",
+      "id": "learning-4f0d2a0ad218ad3fcfad",
+      "createdAtUtc": "2026-11-05T14:06:44.7831723Z",
+      "previousHash": "63195a5f1b9e61c7644317597acba7910fb9743e233d6c4f79091ee72182747d",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-dead-code-502",
+        "retrospectiveHash": "e9db2a5e168ded1a5c6d9a7f1de2fa79352a2b75d28084273cdcbc789d69d088",
+        "completionFingerprint": "2e0dd15b722df9d2165f3d4c8cea28cf1424a3084d4f33eea46b28420238d594",
+        "packetFingerprint": "33c2f6ab7f1ed7ec2d048abc7821ed778525cb555b429d0f027337c7578be7ad",
+        "sourceCandidateId": "cost-presentation-api-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'presentation-api-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1080s versus 79s, error 1267.09%.",
+        "score": 70,
+        "evidence": [
+          "error=1267.09%",
+          "presentation-api-tests"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "presentation-api-tests",
+          "recommendedSeconds": 79.0,
+          "expectedSeconds": 1080.0,
+          "errorPercent": 1267.09
+        },
+        "changedPaths": [
+          "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
+          "FoodDiary.Telegram.Bot/BotMenu.cs",
+          "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BillingOverviewContractTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotOperationScenario.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramOperationWorkerLoopTests.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramPhotoProgressLeaseTests.cs",
+          "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs",
+          "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+          "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
+          "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
+          "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
+          "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/RefreshTokenSessionFallbackTests.Guards.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+          "Modules/Users/Domain/Entities/User.Privacy.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/UserPrivacyConsentTests.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserGoalHistoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresBootstrapRetryIntegrationTests.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PostgresDatabaseFixture.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserCleanupServiceIntegrationTests.ParticipantReassignment.cs",
+          "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/MailRelayInfrastructureOptionsTests.cs",
+          "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/RabbitMqBootstrapHostedServiceTests.cs"
+        ],
+        "subjectIds": [
+          "presentation-api-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "bd1c2b8af777a8a87627442d885e25975ad74b2db0c00a106094fb4bc53c01e6"
     }
   ],
   "hashSchemaVersion": 2

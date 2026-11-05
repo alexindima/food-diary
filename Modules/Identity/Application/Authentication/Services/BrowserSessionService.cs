@@ -52,7 +52,7 @@ public sealed class BrowserSessionService(
         RestoreAsync(credential, rememberMe: false, cancellationToken);
 
     public async Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, bool rememberMe, CancellationToken cancellationToken) {
-        Result<BrowserSessionModel> result = await AuthenticateCoreAsync(credential, allowStaleVersion: true, cancellationToken);
+        Result<BrowserSessionModel> result = await ReadRestorableSessionAsync(credential, cancellationToken);
         if (result.IsFailure) {
             return result;
         }
@@ -92,7 +92,7 @@ public sealed class BrowserSessionService(
         return RejectRestoration("renewal_conflict");
     }
 
-    private async Task<Result<BrowserSessionModel>> AuthenticateCoreAsync(string? credential, bool allowStaleVersion, CancellationToken cancellationToken) {
+    private async Task<Result<BrowserSessionModel>> ReadRestorableSessionAsync(string? credential, CancellationToken cancellationToken) {
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid sessionId)) {
             return RejectRestoration(string.IsNullOrEmpty(credential) ? "missing_credential" : "malformed_credential");
         }
@@ -120,9 +120,6 @@ public sealed class BrowserSessionService(
         }
         if (principal.IsFailure) {
             return RejectRestoration("principal_unavailable");
-        }
-        if (!allowStaleVersion && principal.Value.SecurityVersion != session.BrowserSecurityVersion.Value) {
-            return RejectRestoration("security_version_mismatch");
         }
         return Result.Success(new BrowserSessionModel(credential!, sessionId, expires, session.RememberMe, principal.Value,
             session.BrowserSlidingExpirationEnabled, session.CreatedAtUtc));

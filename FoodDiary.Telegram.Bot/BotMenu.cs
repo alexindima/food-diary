@@ -131,7 +131,11 @@ internal static class BotMenu {
             InlineKeyboardButton.WithWebApp(buttonText ?? (IsRussian(language) ? "Открыть FoodDiary" : "Open FoodDiary"), url + path));
     }
 
-    private readonly record struct Shortcut(string Command, string English, string Russian) {
+    private readonly struct Shortcut(string command, string english, string russian) {
+        public string Command { get; } = command;
+        public string English { get; } = english;
+        public string Russian { get; } = russian;
+
         public KeyboardButton Button(bool russian) => new(russian ? Russian : English);
     }
 }

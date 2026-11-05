@@ -347,13 +347,11 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
     }
 
     private async Task<(DbContextOptions<AiDbContext> Options, UserId UserId)> CreateDatabaseAsync() {
-        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        string connectionString = context.Database.GetDbConnection().ConnectionString;
         DbContextOptions<AiDbContext> options = new DbContextOptionsBuilder<AiDbContext>()
             .UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.EnableRetryOnFailure())
             .Options;
-        await using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseNpgsql(connectionString).Options);
-        await context.Database.MigrateAsync();
         var user = User.Create($"ai-quota-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();

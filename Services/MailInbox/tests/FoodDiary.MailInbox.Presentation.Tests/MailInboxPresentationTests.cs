@@ -375,14 +375,35 @@ public sealed partial class MailInboxPresentationTests {
 
     [Fact]
     public async Task MailInboxControllerBase_SendRequest_UsesHttpRequestAbortedToken() {
+        using var cancellation = new CancellationTokenSource();
         var sender = new StubSender();
         var controller = new TestMailInboxController(sender) {
             ControllerContext = CreateControllerContext(),
         };
+        controller.HttpContext.RequestAborted = cancellation.Token;
 
         await controller.SendCommand(new TestPlainCommand());
 
         Assert.IsType<TestPlainCommand>(sender.LastRequest);
+        Assert.Equal(cancellation.Token, sender.LastCancellationToken);
+    }
+
+    [Fact]
+    public async Task MailInboxControllerBase_SendQuery_ForwardsRequestAbortedTokenAndReturnsResponse() {
+        using var cancellation = new CancellationTokenSource();
+        var request = new TestMailInboxQuery();
+        StubSender sender = new StubSender().Register(request, Result.Success("response"));
+        var controller = new TestMailInboxController(sender) {
+            ControllerContext = CreateControllerContext(),
+        };
+        controller.HttpContext.RequestAborted = cancellation.Token;
+
+        Result<string> result = await controller.SendQuery(request);
+
+        Assert.Multiple(
+            () => Assert.Equal("response", result.Value),
+            () => Assert.Same(request, sender.LastRequest),
+            () => Assert.Equal(cancellation.Token, sender.LastCancellationToken));
     }
 
     [Fact]
@@ -604,6 +625,7 @@ public sealed partial class MailInboxPresentationTests {
         private readonly Dictionary<object, object> _responses = [];
 
         public object? LastRequest { get; private set; }
+        public CancellationToken LastCancellationToken { get; private set; }
 
         public StubSender Register<TResponse>(IRequest<TResponse> request, TResponse response) {
             _responses[request] = response!;
@@ -612,17 +634,20 @@ public sealed partial class MailInboxPresentationTests {
 
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
             LastRequest = request;
+            LastCancellationToken = cancellationToken;
             return Task.FromResult((TResponse)_responses[request]!);
         }
 
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : IRequest {
             LastRequest = request;
+            LastCancellationToken = cancellationToken;
             return Task.CompletedTask;
         }
 
         public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
             LastRequest = request;
+            LastCancellationToken = cancellationToken;
             return Task.FromResult<object?>(_responses[request]);
         }
 
@@ -652,6 +677,10 @@ public sealed partial class MailInboxPresentationTests {
         }
 
         public Task SendCommand(IRequest request) {
+            return Send(request);
+        }
+
+        public Task<TResponse> SendQuery<TResponse>(IRequest<TResponse> request) {
             return Send(request);
         }
     }

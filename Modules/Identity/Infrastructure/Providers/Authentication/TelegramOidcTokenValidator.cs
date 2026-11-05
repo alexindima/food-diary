@@ -117,13 +117,9 @@ public sealed class TelegramOidcTokenValidator : ITelegramOidcTokenValidator {
             return Invalid(stage, "signing_key_not_found", ex);
         } catch (Exception ex) when (ex is SecurityTokenException or ArgumentException or InvalidOperationException or HttpRequestException or OperationCanceledException) {
             string reason = string.Equals(stage, "metadata", StringComparison.Ordinal) ? "metadata_unavailable" : ex switch {
-                SecurityTokenExpiredException => "token_expired",
-                SecurityTokenNotYetValidException => "token_not_yet_valid",
                 SecurityTokenInvalidIssuerException => "issuer_invalid",
                 SecurityTokenInvalidAudienceException => "audience_invalid",
                 SecurityTokenInvalidSignatureException => "signature_invalid",
-                SecurityTokenInvalidAlgorithmException => "algorithm_invalid",
-                SecurityTokenNoExpirationException => "expiration_missing",
                 SecurityTokenInvalidLifetimeException lifetime when lifetime.Expires <= _timeProvider.GetUtcNow().UtcDateTime => "token_expired",
                 SecurityTokenInvalidLifetimeException lifetime when lifetime.NotBefore > _timeProvider.GetUtcNow().UtcDateTime => "token_not_yet_valid",
                 SecurityTokenInvalidLifetimeException => "lifetime_invalid",

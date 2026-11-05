@@ -94,13 +94,7 @@ public sealed class ClientTelemetryHttpProcessor(ISender sender, ILogger<LogsCon
         for (int index = 0; index < segments.Length; index++) {
             int matrix = segments[index].IndexOf(';', StringComparison.Ordinal);
             string segment = matrix >= 0 ? segments[index][..matrix] : segments[index];
-            string decoded;
-            try {
-                decoded = Uri.UnescapeDataString(segment);
-            } catch (UriFormatException) {
-                segments[index] = ":invalid";
-                continue;
-            }
+            string decoded = Uri.UnescapeDataString(segment);
             segments[index] = Guid.TryParse(decoded, out _) ||
                 (decoded.Length > 0 && decoded.All(char.IsAsciiDigit)) || decoded.Contains('@', StringComparison.Ordinal)
                 ? ":id" : segment;

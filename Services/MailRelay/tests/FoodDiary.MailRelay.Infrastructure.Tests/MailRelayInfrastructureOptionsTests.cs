@@ -183,6 +183,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5), CancellationToken.None);
         await service.StopAsync(CancellationToken.None);
     }
 

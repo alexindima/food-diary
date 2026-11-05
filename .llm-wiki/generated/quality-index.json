@@ -2658,11 +2658,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
-      "nonBlankLines": 77,
-      "decisionPoints": 18,
+      "nonBlankLines": 75,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.54
+      "structuralRiskScore": 27
     },
     {
       "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
@@ -5058,11 +5058,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/BotMenu.cs",
-      "nonBlankLines": 124,
+      "nonBlankLines": 127,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.98
+      "structuralRiskScore": 22.04
     },
     {
       "path": "FoodDiary.Telegram.Bot/BotUriHelper.cs",
@@ -5482,11 +5482,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 52,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.02
+      "structuralRiskScore": 10.04
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/HealthConsentMiddleware.cs",
@@ -34130,11 +34130,11 @@
     },
     {
       "path": "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
-      "nonBlankLines": 113,
-      "decisionPoints": 26,
+      "nonBlankLines": 107,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.26
+      "structuralRiskScore": 39.64
     },
     {
       "path": "Modules/Fasting/Presentation/Features/Logs/LogsController.cs",
@@ -37738,11 +37738,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
-      "nonBlankLines": 175,
-      "decisionPoints": 54,
+      "nonBlankLines": 172,
+      "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 84.5
+      "structuralRiskScore": 81.44
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
@@ -38354,11 +38354,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
-      "nonBlankLines": 138,
+      "nonBlankLines": 134,
       "decisionPoints": 24,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.76
+      "structuralRiskScore": 40.68
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Options/GoogleAuthOptions.cs",
@@ -50242,11 +50242,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Privacy.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 41,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.84
+      "structuralRiskScore": 15.82
     },
     {
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
@@ -50698,11 +50698,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "nonBlankLines": 162,
+      "nonBlankLines": 160,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.74
+      "structuralRiskScore": 55.7
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs",
@@ -59623,10 +59623,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs",
       "line": 20,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -59672,9 +59673,10 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs",
       "line": 21,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminMailDependencyFailureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

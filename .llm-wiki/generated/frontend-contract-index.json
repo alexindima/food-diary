@@ -29702,6 +29702,7 @@
         "axisUnit",
         "axisValueFormatter",
         "categories",
+        "horizontalEdgeInset",
         "layout",
         "referenceLines",
         "scaleMaximum",

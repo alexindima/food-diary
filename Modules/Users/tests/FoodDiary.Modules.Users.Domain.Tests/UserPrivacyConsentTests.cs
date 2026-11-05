@@ -6,6 +6,27 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserPrivacyConsentTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void UndefinedPurpose_DoesNotChangeConsentOrCreateAnEvent(bool granted) {
+        var user = User.Create("privacy@example.test", "hash");
+        DateTime? modified = user.ModifiedOnUtc;
+
+        ArgumentOutOfRangeException error = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            user.RecordPrivacyConsent((PrivacyConsentPurpose)int.MaxValue, granted, PrivacyNoticeVersions.Current,
+                new DateTime(2026, 11, 5, 12, 0, 0, DateTimeKind.Utc)));
+
+        Assert.Multiple(
+            () => Assert.Equal("purpose", error.ParamName),
+            () => Assert.Empty(user.PrivacyConsentEvents),
+            () => Assert.Null(user.HealthConsentAcceptedAtUtc),
+            () => Assert.Null(user.HealthConsentDeclinedAtUtc),
+            () => Assert.Null(user.MarketingConsentAcceptedAtUtc),
+            () => Assert.Null(user.AiConsentAcceptedAt),
+            () => Assert.Equal(modified, user.ModifiedOnUtc));
+    }
+
     [Fact]
     public void GrantAndWithdrawal_PreserveBothDecisionsAndTheirNotice() {
         var user = User.Create("privacy@example.test", "hash");

@@ -32,7 +32,7 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
     private Task<IActionResult> HandleRestoreAsync(bool rememberMe) {
         if (ImpersonationCookieService.HasContext(HttpContext)) {
             if (!ImpersonationCookieService.TryReadAuthenticatedUserId(HttpContext, out Guid userId)) {
-                return HandleOk(AuthHttpMappings.InvalidBrowserSessionRestoration(), static value => value.ToHttpResponse());
+                return HandleOk(AuthHttpMappings.InvalidBrowserSessionRestoration(), AuthHttpResponseMappings.ToHttpResponse);
             }
             return HandleOk(userId.ToBrowserSessionProfileQuery(), value => value.ToImpersonationHttpResponse(HttpContext));
         }

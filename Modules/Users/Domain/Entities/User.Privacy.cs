@@ -38,7 +38,6 @@ public sealed partial class User {
                 MarketingConsentAcceptedAtUtc = granted ? nowUtc : null;
                 MarketingConsentNoticeVersion = noticeVersion;
                 break;
-            default: throw new ArgumentOutOfRangeException(nameof(purpose));
         }
         _privacyConsentEvents.Add(item);
         SetModified();

@@ -12,6 +12,26 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Tests;
 
 public sealed partial class RefreshTokenSessionFallbackTests {
     [Fact]
+    public async Task AdminSsoFallback_RequiresTheActiveOwnerSessionAfterTransactionSynchronization() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var owner = UserId.New();
+        var session = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), owner, "synthetic-hash", rememberMe: false,
+            authProvider: "password", ipAddress: null, userAgent: null, Now.AddDays(-1), Now.AddDays(1));
+        context.UserRefreshTokenSessions.Add(session);
+        await context.SaveChangesAsync();
+        int synchronizations = 0;
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, new RetentionClock(),
+            Options.Create(new JwtOptions()), _ => { synchronizations++; return Task.CompletedTask; });
+
+        Assert.True(await repository.LockActiveForAdminSsoAsync(owner, session.Id));
+        Assert.False(await repository.LockActiveForAdminSsoAsync(UserId.New(), session.Id));
+        session.Revoke(Now);
+        await context.SaveChangesAsync();
+        Assert.False(await repository.LockActiveForAdminSsoAsync(owner, session.Id));
+        Assert.Equal(3, synchronizations);
+    }
+
+    [Fact]
     public async Task MissingSecurityVersion_CannotRecordActivityOrRememberABrowserSession() {
         await using FoodDiaryDbContext context = CreateContext();
         int synchronizations = 0;
