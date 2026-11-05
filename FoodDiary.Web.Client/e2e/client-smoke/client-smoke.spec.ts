@@ -1079,6 +1079,10 @@ const DASHBOARD_DESKTOP_WIDTH = 1440;
 const DASHBOARD_TEST_WIDTHS = [DASHBOARD_NARROW_WIDTH, DASHBOARD_MOBILE_WIDTH, DASHBOARD_DESKTOP_WIDTH] as const;
 const DASHBOARD_WATER_ACTIONS = 3;
 const DASHBOARD_WEEK_DAYS = 7;
+const DASHBOARD_SHORT_TREND_DAYS = 3;
+const DASHBOARD_TABLET_WIDTH = 1024;
+const DASHBOARD_TREND_SIDEBAR_BREAKPOINT = 720;
+const DASHBOARD_TREND_MAX_COLUMN_WIDTH = 56;
 const DASHBOARD_WEEK_START_DAY = 13;
 const DASHBOARD_RECORDED_CALORIES = 1800;
 const DASHBOARD_PREVIOUS_DAY_INDEX = 5;
@@ -1498,7 +1502,7 @@ test.describe('dashboard regression interactions', () => {
         await expect(page.locator('fd-tdee-insight-card')).toContainText('current', { ignoreCase: true });
     });
 
-    test('the weekly chart preserves its plot with a full-width summary below it and opens the selected date', async ({ page }) => {
+    test('the weekly chart preserves its plot with a responsive day summary and opens the selected date', async ({ page }) => {
         await page.setViewportSize({ width: 1440, height: 1000 });
         await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
             route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
@@ -1520,13 +1524,55 @@ test.describe('dashboard regression interactions', () => {
         expect(Math.abs(populatedPlot.height - emptyPlot.height)).toBeLessThanOrEqual(2);
         expect(Math.abs(populatedPlot.width - emptyPlot.width)).toBeLessThanOrEqual(2);
         expect(Math.abs(original.width - empty.width)).toBeLessThanOrEqual(2);
-        await expectFullWidthDaySummaryAsync(chart);
+        await expectResponsiveDaySummaryAsync(chart);
         await chart.locator('.nutrition-trend__open-day').click();
         await expect(page).toHaveURL(/date=2026-04-13/);
         await expect(page.locator('fd-dashboard-quick-add')).toHaveCount(0);
         await page.goBack();
         await expect(page.locator('fd-dashboard-quick-add')).toBeVisible();
     });
+});
+
+test.describe('dashboard nutrition trend geometry', () => {
+    test.use({ timezoneId: 'UTC' });
+    test.beforeEach(async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+    });
+
+    for (const width of [MINIMUM_MOBILE_WIDTH, DASHBOARD_MOBILE_WIDTH, DASHBOARD_TABLET_WIDTH, DASHBOARD_DESKTOP_WIDTH]) {
+        test(`nutrition trend centers labels beneath bounded columns at ${width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize({ width, height: 1000 });
+            const errors: string[] = [];
+            page.on('pageerror', error => errors.push(error.message));
+            await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+                route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
+            );
+            await page.goto('/dashboard');
+            const chart = page.locator('fd-nutrition-weekly-trend-card');
+            await chart.scrollIntoViewIfNeeded();
+            for (const days of [DASHBOARD_WEEK_DAYS, DASHBOARD_SHORT_TREND_DAYS]) {
+                await chart.getByRole('radio', { name: `${days} days`, exact: true }).click();
+                const bars = chart.locator('.fd-ui-bar-chart__categorical-bar');
+                const labels = chart.locator('.fd-ui-bar-chart__categorical-labels span');
+                await expect(bars).toHaveCount(days);
+                for (let index = 0; index < days; index++) {
+                    const bar = await dashboardBoundsAsync(bars.nth(index));
+                    const label = await dashboardBoundsAsync(labels.nth(index));
+                    expect(
+                        Math.abs(bar.x + bar.width / 2 - label.x - label.width / 2),
+                        'date label stays centered on its column',
+                    ).toBeLessThanOrEqual(1);
+                    expect(bar.width, 'three-day columns retain a readable width').toBeLessThanOrEqual(DASHBOARD_TREND_MAX_COLUMN_WIDTH);
+                }
+                await expectResponsiveDaySummaryAsync(chart);
+                await expectNoHorizontalOverflowAsync(page);
+                await chart.screenshot({ path: testInfo.outputPath(`trend-${days}-days.png`) });
+            }
+            expect(errors).toEqual([]);
+        });
+    }
 });
 
 test.describe('dashboard regression measurement charts', () => {
@@ -2542,12 +2588,18 @@ async function mealPreviewHeaderGapAsync(preview: Locator): Promise<number> {
     });
 }
 
-async function expectFullWidthDaySummaryAsync(chart: Locator): Promise<void> {
+async function expectResponsiveDaySummaryAsync(chart: Locator): Promise<void> {
     const detail = await dashboardBoundsAsync(chart.locator('.nutrition-trend__day'));
     const bars = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
-    expect(detail.y).toBeGreaterThanOrEqual(bars.y + bars.height);
-    expect(Math.abs(detail.x - bars.x)).toBeLessThanOrEqual(2);
-    expect(Math.abs(detail.width - bars.width)).toBeLessThanOrEqual(2);
+    const container = await dashboardBoundsAsync(chart);
+    if (container.width > DASHBOARD_TREND_SIDEBAR_BREAKPOINT) {
+        expect(detail.x, 'wide cards place the day summary beside the chart').toBeGreaterThanOrEqual(bars.x + bars.width);
+        expect(detail.y).toBeLessThan(bars.y + bars.height);
+    } else {
+        expect(detail.y).toBeGreaterThanOrEqual(bars.y + bars.height);
+        expect(Math.abs(detail.x - bars.x)).toBeLessThanOrEqual(2);
+        expect(Math.abs(detail.width - bars.width)).toBeLessThanOrEqual(2);
+    }
 }
 
 async function expectCompactMealFooterAsync(card: Locator): Promise<void> {

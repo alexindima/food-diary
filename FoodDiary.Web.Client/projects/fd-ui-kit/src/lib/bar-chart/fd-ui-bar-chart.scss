@@ -322,16 +322,6 @@
     justify-self: end;
 }
 
-:where(.fd-ui-bar-chart--edge-inset-none) .fd-ui-bar-chart__categorical-label-cell:first-child span {
-    justify-self: start;
-    text-align: left;
-}
-
-:where(.fd-ui-bar-chart--edge-inset-none) .fd-ui-bar-chart__categorical-label-cell:last-child span {
-    justify-self: end;
-    text-align: right;
-}
-
 .fd-ui-bar-chart__categorical-bar[role='button'] {
     cursor: pointer;
 }

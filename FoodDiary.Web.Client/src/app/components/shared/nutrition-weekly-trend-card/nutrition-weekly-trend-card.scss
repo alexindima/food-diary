@@ -37,6 +37,7 @@
         --fd-bar-chart-unit-weight: var(--fd-font-weight-regular);
         --fd-bar-chart-unit-opacity: 0.75;
         --fd-bar-chart-height: 270px;
+        --fd-bar-chart-bar-width: min(72%, 56px);
         --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
         --fd-bar-chart-label-height: var(--nutrition-trend-date-space);
         margin-top: var(--fd-space-lg);
@@ -137,7 +138,7 @@
         color: var(--fd-color-text-muted);
     }
 
-    @container (max-width: 760px) {
+    @container (max-width: 720px) {
         &__content {
             grid-template-columns: 1fr;
             gap: var(--fd-space-lg);
@@ -186,8 +187,7 @@
     }
 }
 
-.nutrition-trend__content--empty,
-.nutrition-trend__content--interactive {
+.nutrition-trend__content--empty {
     grid-template-columns: minmax(0, 1fr);
 }
 
@@ -318,7 +318,26 @@
     color: var(--fd-color-nutrition-fiber-text);
 }
 
-@container (max-width: 760px) {
+@container (min-width: 721px) {
+    .nutrition-trend__day {
+        align-self: center;
+        gap: var(--fd-space-md);
+        padding: var(--fd-space-lg);
+    }
+
+    .nutrition-trend__day-header,
+    .nutrition-trend__day-goal {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--fd-space-sm);
+    }
+
+    .nutrition-trend__day-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding-top: var(--fd-space-md);
+    }
+}
+
+@container (max-width: 720px) {
     .nutrition-trend__day-metrics {
         gap: var(--fd-space-sm);
     }
