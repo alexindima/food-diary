@@ -1226,8 +1226,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "de2938be1f707c78dc0664838664e03a9260982167056f95f8fc781fee332199",
-          "reviewReason": "Reviewed opaque invoice payloads, saved payer/account binding, minimized financial envelope and bot shared-secret authentication. Provider HTTP logging is disabled to prevent bot-token URL leaks. No diary content is sent to Telegram billing; protected financial records retain existing lifecycle rules. Navigation guidance remains accurate."
+          "sha256": "93789a4cf84c09b6b34a68d77be78660ce6735e706d1902d5e438270474d18b0",
+          "reviewReason": "Reviewed the sensitive-data index delta against RecipeVideoAdmissionAttribute and the notification outbox model: admitted identity state is bounded to two active GUIDs and released in finally; LastAttemptOnUtc remains owner outbox metadata with existing cascade/retention. No new secret, payload transfer, logging field or privacy-query behavior. Generic workflow guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1240,10 +1240,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed opaque invoice payloads, saved payer/account binding, minimized financial envelope and bot shared-secret authentication. Provider HTTP logging is disabled to prevent bot-token URL leaks. No diary content is sent to Telegram billing; protected financial records retain existing lifecycle rules. Navigation guidance remains accurate.",
+      "reason": "Reviewed the sensitive-data index delta against RecipeVideoAdmissionAttribute and the notification outbox model: admitted identity state is bounded to two active GUIDs and released in finally; LastAttemptOnUtc remains owner outbox metadata with existing cascade/retention. No new secret, payload transfer, logging field or privacy-query behavior. Generic workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
-      "reviewedAtUtc": "2026-11-05T16:09:31.8727173Z"
+      "gitHead": "4c084d763e9d01bcfd4d34142fc2e5495f996187",
+      "reviewedAtUtc": "2026-11-06T13:21:05.7111360Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1414,8 +1414,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5912af223b18e99e57f72cd4fbb0bd6b2aee15dfbd9ecc385a4701d349231923",
-          "reviewReason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate."
+          "sha256": "2d92b2ad1faf760be0ca52f755eba951c9566bf0ed9bc99aedf7eb3f1e2ecf6b",
+          "reviewReason": "Reviewed the topology index delta against NotificationWebPushOutboxProcessor, OutboxProcessingEngine and RecipeVideoAdmissionAttribute: no host, worker, provider, recurring job or registration was introduced. Existing engine leases, retries, replay, telemetry and shutdown remain; notification-owned fair selection and an upload-only cancellation deadline fit the existing runtime-review guidance."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1428,10 +1428,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate.",
+      "reason": "Reviewed the topology index delta against NotificationWebPushOutboxProcessor, OutboxProcessingEngine and RecipeVideoAdmissionAttribute: no host, worker, provider, recurring job or registration was introduced. Existing engine leases, retries, replay, telemetry and shutdown remain; notification-owned fair selection and an upload-only cancellation deadline fit the existing runtime-review guidance.",
       "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:05.03507Z"
+      "gitHead": "4c084d763e9d01bcfd4d34142fc2e5495f996187",
+      "reviewedAtUtc": "2026-11-06T13:21:06.5229191Z"
     },
     {
       "pageId": "workflow-security-review",

@@ -18,6 +18,49 @@ namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationWebPushOutboxTests {
+    [Theory]
+    [InlineData(false, 1)]
+    [InlineData(true, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 2)]
+    public async Task ProcessDueAsync_OldBacklogDoesNotStarveAnotherUser(bool failFirst, int batchSize) {
+        await using FoodDiaryDbContext context = CreateContext();
+        Notification first = await SeedNotificationAsync(context, "noisy@example.com");
+        var second = Notification.Create(first.UserId, "info", "{}");
+        var third = Notification.Create(first.UserId, "info", "{}");
+        Notification other = await SeedNotificationAsync(context, "other@example.com");
+        context.Notifications.AddRange(second, third);
+        DateTime now = DateTime.UtcNow;
+        context.NotificationWebPushOutbox.AddRange(
+            NotificationWebPushOutboxMessage.Create(first.Id, now.AddMinutes(-4)),
+            NotificationWebPushOutboxMessage.Create(second.Id, now.AddMinutes(-3)),
+            NotificationWebPushOutboxMessage.Create(third.Id, now.AddMinutes(-2)),
+            NotificationWebPushOutboxMessage.Create(other.Id, now.AddMinutes(-1)));
+        await context.SaveChangesAsync();
+        var delivered = new List<NotificationId>();
+        IWebPushNotificationSender sender = Substitute.For<IWebPushNotificationSender>();
+        sender.SendBatchAsync(Arg.Any<Notification>(), Arg.Any<IReadOnlySet<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                Notification notification = call.Arg<Notification>();
+                delivered.Add(notification.Id);
+                return failFirst && notification.Id == first.Id
+                    ? Task.FromException<WebPushDeliveryOutcome>(new HttpRequestException("Slow endpoint"))
+                    : Task.FromResult(WebPushDeliveryOutcome.Skipped);
+            });
+        var processor = new NotificationWebPushOutboxProcessor(context, context.NotificationWebPushOutbox, sender,
+            MsOptions.Create(new OutboxProcessingOptions()), TimeProvider.System, NullLogger<NotificationWebPushOutboxProcessor>.Instance);
+
+        await processor.ProcessDueAsync(batchSize);
+        if (batchSize == 1) {
+            await processor.ProcessDueAsync(1);
+        }
+
+        Assert.Equal(new[] { first.Id, other.Id }, delivered);
+        // A single user's remaining work still drains in the same configured batch.
+        await processor.ProcessDueAsync(10);
+        Assert.Equal(new[] { first.Id, other.Id, second.Id, third.Id }, delivered);
+    }
+
     [Fact]
     public async Task ActualSender_WhenAudienceDisappears_CompletesRetriedMessageWithoutAnotherDelivery() {
         await using FoodDiaryDbContext context = CreateContext();

@@ -83,6 +83,65 @@ public sealed class DmarcReportParserTests {
     }
 
     [Fact]
+    public void TryParse_WhenCommentContainsConflictingEndRecord_RejectsArchive() {
+        byte[] bytes = CreateZipBytes([.. Enumerable.Range(0, 33)
+            .Select(index => (string.Create(CultureInfo.InvariantCulture, $"report-{index}.xml"), CreateDmarcXml()))]);
+        byte[] innerEnd = bytes[^22..];
+        int outerOffset = bytes.Length;
+        Array.Resize(ref bytes, bytes.Length + 22 + 22 + 25);
+        BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(outerOffset), 0x06054b50);
+        BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(outerOffset + 20), 47);
+        innerEnd.CopyTo(bytes, outerOffset + 22);
+
+        Assert.Null(new DmarcReportParser().TryParse(CreateRawMessage(CreateZipAttachment(bytes))));
+    }
+
+    [Fact]
+    public void TryParse_WhenDirectoryContainsUndeclaredEntries_RejectsArchive() {
+        byte[] bytes = CreateZipBytes(("report.xml", CreateDmarcXml()), ("hidden.xml", CreateDmarcXml()));
+        int endOffset = bytes.Length - 22;
+        int directoryOffset = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(endOffset + 16)));
+        int firstEntryLength = 46 + BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(directoryOffset + 28));
+        BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOffset + 8), 1);
+        BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOffset + 10), 1);
+        BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(endOffset + 12), (uint)firstEntryLength);
+
+        Assert.Null(new DmarcReportParser().TryParse(CreateRawMessage(CreateZipAttachment(bytes))));
+    }
+
+    [Theory]
+    [InlineData(4)]
+    [InlineData(16)]
+    [InlineData(21)]
+    public void TryParse_WhenCommentEndsWithTruncatedEndRecord_RejectsArchive(int suffixLength) {
+        byte[] bytes = CreateZipBytes(("report.xml", CreateDmarcXml()));
+        int endOffset = bytes.Length - 22;
+        int originalLength = bytes.Length;
+        Array.Resize(ref bytes, originalLength + suffixLength);
+        BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOffset + 20), (ushort)suffixLength);
+        BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(originalLength), 0x06054b50);
+
+        Assert.Null(new DmarcReportParser().TryParse(CreateRawMessage(CreateZipAttachment(bytes))));
+    }
+
+    [Theory]
+    [InlineData(20)]
+    [InlineData(65535)]
+    public void TryParse_WhenZipHasOrdinaryComment_ReturnsPreview(int commentLength) {
+        byte[] bytes = CreateZipBytes(("report.xml", CreateDmarcXml()));
+        int endOffset = bytes.Length - 22;
+        int originalLength = bytes.Length;
+        Array.Resize(ref bytes, originalLength + commentLength);
+        bytes.AsSpan(originalLength).Fill((byte)'a');
+        BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOffset + 20), (ushort)commentLength);
+
+        DmarcReportPreview? report = new DmarcReportParser().TryParse(CreateRawMessage(CreateZipAttachment(bytes)));
+
+        Assert.NotNull(report);
+        Assert.Equal("fooddiary.club", report.Domain);
+    }
+
+    [Fact]
     public void TryParse_WhenZipEntryNameExceedsMetadataBudget_RejectsBeforeArchiveMaterialization() {
         string oversizedEntryName = string.Concat(new string('a', 1021), ".xml");
         string rawMime = CreateRawMessage(CreateZipAttachment(oversizedEntryName, CreateDmarcXml()));

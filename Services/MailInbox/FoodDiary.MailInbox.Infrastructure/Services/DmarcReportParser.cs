@@ -120,15 +120,20 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
         const int centralDirectoryEntryLength = 46;
         int minimumOffset = Math.Max(0, bytes.Length - (ushort.MaxValue + endOfCentralDirectoryLength));
 
-        for (int offset = bytes.Length - endOfCentralDirectoryLength; offset >= minimumOffset; offset--) {
+        for (int offset = bytes.Length - sizeof(uint); offset >= minimumOffset; offset--) {
             ReadOnlySpan<byte> candidate = bytes[offset..];
             if (BinaryPrimitives.ReadUInt32LittleEndian(candidate) != endOfCentralDirectorySignature) {
                 continue;
             }
 
+            // ZipArchive selects the last signature, even inside a comment. Never validate
+            // an earlier record while the consumer can select this one instead.
+            if (candidate.Length < endOfCentralDirectoryLength) {
+                throw new InvalidDataException("ZIP end-of-central-directory record is truncated.");
+            }
             ushort commentLength = BinaryPrimitives.ReadUInt16LittleEndian(candidate[20..]);
             if (offset + endOfCentralDirectoryLength + commentLength != bytes.Length) {
-                continue;
+                throw new InvalidDataException("ZIP end-of-central-directory record is ambiguous.");
             }
 
             ValidateCentralDirectory(bytes, candidate, offset, centralDirectoryEntrySignature, centralDirectoryEntryLength);
@@ -158,7 +163,7 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
         }
 
         if (totalEntries > MaxZipEntries || centralDirectorySize > MaxZipCentralDirectoryBytes ||
-            (ulong)centralDirectoryOffset + centralDirectorySize > (ulong)endOfCentralDirectoryOffset ||
+            (ulong)centralDirectoryOffset + centralDirectorySize != (ulong)endOfCentralDirectoryOffset ||
             (ulong)centralDirectoryOffset + centralDirectorySize > (ulong)bytes.Length) {
             throw new InvalidDataException("ZIP central directory exceeds the allowed metadata budget.");
         }

@@ -12,6 +12,7 @@ public sealed class NotificationWebPushOutboxMessage : IOutboxMessage {
     public NotificationId NotificationId { get; private set; }
     public DateTime CreatedOnUtc { get; private set; }
     public DateTime NextAttemptOnUtc { get; private set; }
+    public DateTime? LastAttemptOnUtc { get; private set; }
     public int AttemptCount { get; private set; }
     public DateTime? ProcessedOnUtc { get; private set; }
     public DateTime? DeadLetteredOnUtc { get; private set; }
@@ -30,6 +31,8 @@ public sealed class NotificationWebPushOutboxMessage : IOutboxMessage {
     }
 
     public Notification Notification { get; } = null!;
+
+    public void RecordDeliveryAttempt(DateTime attemptedOnUtc) => LastAttemptOnUtc = NormalizeUtc(attemptedOnUtc);
 
     private NotificationWebPushOutboxMessage() {
     }

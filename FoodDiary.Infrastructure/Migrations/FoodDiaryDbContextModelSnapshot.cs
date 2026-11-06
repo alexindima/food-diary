@@ -3701,6 +3701,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("DeadLetteredOnUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("LastAttemptOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("LastError")
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");

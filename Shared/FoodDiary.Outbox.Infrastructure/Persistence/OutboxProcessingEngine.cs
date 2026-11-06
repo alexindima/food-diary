@@ -23,7 +23,8 @@ public static class OutboxProcessingEngine {
         CancellationToken cancellationToken = default,
         Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync = null,
         Action? ensureCleanEntry = null,
-        IReadOnlyCollection<Guid>? allowedMessageIds = null)
+        IReadOnlyCollection<Guid>? allowedMessageIds = null,
+        Func<DateTime, CancellationToken, Task<IReadOnlyCollection<Guid>>>? selectMessageIdsAsync = null)
         where TMessage : class, IOutboxMessage {
         if (batchSize <= 0 || allowedMessageIds is { Count: 0 }) {
             return 0;
@@ -31,6 +32,9 @@ public static class OutboxProcessingEngine {
 
         if (!OutboxProcessingOptions.HasValidConfiguration(options)) {
             throw new ArgumentException("Outbox processing durations are invalid.", nameof(options));
+        }
+        if (allowedMessageIds is not null && selectMessageIdsAsync is not null) {
+            throw new ArgumentException("Static and dynamic outbox message scopes cannot be combined.", nameof(selectMessageIdsAsync));
         }
 
         var stopwatch = Stopwatch.StartNew();
@@ -40,6 +44,14 @@ public static class OutboxProcessingEngine {
                 cancellationToken.ThrowIfCancellationRequested();
                 ensureCleanEntry?.Invoke();
                 DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+                IReadOnlyCollection<Guid>? selectedMessageIds = allowedMessageIds;
+                if (selectMessageIdsAsync is not null) {
+                    selectedMessageIds = await selectMessageIdsAsync(nowUtc, cancellationToken).ConfigureAwait(false)
+                        ?? throw new InvalidOperationException("Outbox selection must return an explicit message scope.");
+                    if (selectedMessageIds.Count == 0) {
+                        break;
+                    }
+                }
                 OutboxClaimBatch<TMessage> claim = await OutboxMessageClaimer
                     .ClaimDueAsync(
                         context,
@@ -50,7 +62,7 @@ public static class OutboxProcessingEngine {
                         options.LeaseDuration,
                         claimedQuery,
                         cancellationToken,
-                        allowedMessageIds)
+                        selectedMessageIds)
                     .ConfigureAwait(false);
                 if (claim.Messages.Count == 0) {
                     break;

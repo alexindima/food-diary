@@ -25866,11 +25866,11 @@
     },
     {
       "path": "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
+      "nonBlankLines": 83,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.98
+      "structuralRiskScore": 10.66
     },
     {
       "path": "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs",
@@ -44106,11 +44106,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 1,
+      "nonBlankLines": 59,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 11.68
     },
     {
       "path": "Modules/Notifications/Infrastructure/Persistence/NotificationsDbContext.cs",
@@ -44194,11 +44194,11 @@
     },
     {
       "path": "Modules/Notifications/PersistenceModel/NotificationWebPushOutboxMessage.cs",
-      "nonBlankLines": 83,
+      "nonBlankLines": 85,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.16
+      "structuralRiskScore": 6.2
     },
     {
       "path": "Modules/Notifications/PersistenceModel/NotificationWebPushOutboxMessageConfiguration.cs",
@@ -53106,11 +53106,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "nonBlankLines": 292,
-      "decisionPoints": 51,
+      "nonBlankLines": 297,
+      "decisionPoints": 53,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 82.34
+      "structuralRiskScore": 85.44
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
@@ -56010,11 +56010,11 @@
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingEngine.cs",
-      "nonBlankLines": 188,
-      "decisionPoints": 23,
+      "nonBlankLines": 200,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.26
+      "structuralRiskScore": 46
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxProcessingPolicy.cs",

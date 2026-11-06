@@ -1114,11 +1114,12 @@
       "capabilities": [
         "call:NotificationWebPushOutboxMessage.GetCompletedSubscriptionIds",
         "call:NotificationWebPushOutboxMessage.RecordCompletedSubscriptions",
+        "call:NotificationWebPushOutboxMessage.RecordDeliveryAttempt",
         "entity:Notification",
         "entity:NotificationWebPushOutboxMessage",
         "tracked:NotificationWebPushOutboxMessage"
       ],
-      "reason": "Owner dispatcher records completed subscriptions on its claimed outbox record and reports retryable provider failures. The shared engine saves progress and retry together under claim fencing; no foreign mutation."
+      "reason": "Owner dispatcher records the actual delivery-attempt time and completed subscriptions on its claimed outbox record and reports retryable provider failures. Its no-tracking fair selection reads only Notifications-owned records. The shared engine saves attempt history, progress and retry together under claim fencing; no foreign mutation."
     },
     "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs": {
       "module": "Notifications",
