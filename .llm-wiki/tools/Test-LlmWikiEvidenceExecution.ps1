@@ -11,7 +11,7 @@ try {
     foreach ($name in @('Invoke-LlmWikiTaskChecks','Manage-LlmWikiEvidence','Manage-LlmWikiVerificationReceipts','Test-LlmWikiEvidenceLineage','LlmWikiCollections','LlmWikiEvidenceCommands','LlmWikiVerificationReceipts','LlmWikiSubstantiveReview','LlmWikiJson','LlmWikiGitPaths','Get-LlmWikiContentFingerprint','New-LlmWikiEvidenceLineage')) {
         Copy-Item (Join-Path $PSScriptRoot "$name.ps1") $tools
     }
-    [IO.File]::WriteAllText((Join-Path $fixture '.gitignore'), '.artifacts/')
+    [IO.File]::WriteAllText((Join-Path $fixture '.gitignore'), ".artifacts/`n__pycache__/`n")
     [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), 'source')
     [IO.File]::WriteAllText((Join-Path $fixture 'src/probe.test.mjs'), "import {test} from 'node:test'; test('actual node check', () => {});")
     [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/wiki.ps1'), '[IO.File]::WriteAllText((Join-Path $PSScriptRoot "../.artifacts/check-ran"),"executed"); Write-Output passed')
@@ -62,6 +62,60 @@ param($BaseRef,$ChangedPath,$Format)
     try { & $manager run -Path $validPath -Id injected -Command 'node --test src/probe.test.mjs; echo injected' -NoExitOnFailure | Out-Null } catch { $blocked = $_.Exception.Message -match 'allowlist' }
     if (-not $blocked) { throw 'Supplemental execution accepted shell syntax outside the allowlist.' }
     . (Join-Path $tools 'LlmWikiEvidenceCommands.ps1')
+    $frontendCommand = 'npm --prefix FoodDiary.Web.Client run test:ci:app -- --include=src/app/probe.spec.ts --watch=false'
+    if (-not (Test-LlmWikiSupplementalExecutionCommand $frontendCommand)) { throw 'Focused frontend npm execution was rejected.' }
+    $frontendRoot = Join-Path $fixture 'FoodDiary.Web.Client'
+    $null = New-Item -ItemType Directory -Path $frontendRoot -Force
+    [IO.File]::WriteAllText((Join-Path $frontendRoot 'package.json'), '{"scripts":{"test:ci:app":"node probe.mjs"}}')
+    [IO.File]::WriteAllText((Join-Path $frontendRoot 'probe.mjs'), @'
+import assert from 'node:assert/strict';
+assert.deepEqual(process.argv.slice(2), ['--include=src/app/probe.spec.ts', '--watch=false']);
+console.log('focused npm arguments executed');
+'@)
+    & $manager run -Path $validPath -Id focused-frontend -Command $frontendCommand -NoExitOnFailure | Out-Null
+    $npmEvidence = Get-Content -LiteralPath (Join-Path $fixture $validPath) -Raw | ConvertFrom-Json
+    $npmCheck = @($npmEvidence.supplementalChecks | Where-Object id -eq 'focused-frontend')[0]
+    if ($npmCheck.status -ne 'passed' -or $npmCheck.lineage.execution.runtime -ne 'npm' -or
+        -not ([IO.File]::ReadAllText((Join-Path $fixture $npmCheck.lineage.artifact.path))).Contains('focused npm arguments executed')) {
+        throw 'Focused frontend execution did not preserve its real npm runtime and argument receipt.'
+    }
+    foreach ($command in @(
+        'python -m unittest discover -s .agents/skills/fixture/scripts -p test_*.py',
+        'cd FoodDiary.Web.Client && npm run test:ci:webmcp -- --include=projects/fd-webmcp/src/lib/webmcp-browser.spec.ts',
+        'npm --prefix FoodDiary.Web.Client run test:e2e:client:smoke -- e2e/client-smoke/diary.spec.ts --project=chromium --workers=1',
+        'pwsh -NoProfile -File scripts/Test-ExcludeFromWindowsCoverage.ps1'
+    )) {
+        if (-not (Test-LlmWikiSupplementalExecutionCommand $command)) { throw "A supported focused check was rejected: $command" }
+    }
+    $pythonRoot = Join-Path $fixture '.agents/skills/fixture/scripts'
+    $null = New-Item -ItemType Directory -Path $pythonRoot -Force
+    [IO.File]::WriteAllText((Join-Path $pythonRoot 'test_probe.py'), @'
+import unittest
+class Probe(unittest.TestCase):
+    def test_execution(self):
+        print('python unittest evidence executed')
+        self.assertTrue(True)
+'@)
+    & $manager run -Path $validPath -Id python-validation -Command 'python -m unittest discover -s .agents/skills/fixture/scripts -p test_*.py' -NoExitOnFailure | Out-Null
+    $pythonEvidence = Get-Content -LiteralPath (Join-Path $fixture $validPath) -Raw | ConvertFrom-Json
+    $pythonCheck = @($pythonEvidence.supplementalChecks | Where-Object id -eq 'python-validation')[0]
+    if ($pythonCheck.status -ne 'passed' -or $pythonCheck.lineage.execution.runtime -ne 'python' -or
+        -not ([IO.File]::ReadAllText((Join-Path $fixture $pythonCheck.lineage.artifact.path))).Contains('python unittest evidence executed')) {
+        throw 'Python validation did not preserve its actual runtime and execution receipt.'
+    }
+    foreach ($command in @(
+        'npm --prefix ../other run test:ci:app',
+        'npm --prefix FoodDiary.Web.Client run install',
+        'npm --prefix FoodDiary.Web.Client --script-shell=evil run test:ci:app',
+        'npm --prefix FoodDiary.Web.Client run test:ci:app -- --include=../../foreign.spec.ts',
+        'npm --prefix FoodDiary.Web.Client run test:ci:app -- --include=src/a.spec.ts,../../foreign.spec.ts',
+        'npm --prefix FoodDiary.Web.Client run test:ci:app -- --require=evil',
+        'npm --prefix FoodDiary.Web.Client run test:ci:app --  ',
+        'npm --prefix FoodDiary.Web.Client run test:ci:app -- --watch=false && echo injected',
+        'pwsh -NoProfile -File scripts/Start-FoodDiaryTask.ps1'
+    )) {
+        if (Test-LlmWikiSupplementalExecutionCommand $command) { throw "A non-validation command was accepted: $command" }
+    }
     foreach ($command in @('docker compose config --quiet','docker compose -f docker-compose.yml config -q','docker build --check .','pwsh -NoProfile -File .llm-wiki/tools/Test-Probe.ps1')) {
         if (-not (Test-LlmWikiSupplementalExecutionCommand $command)) { throw "A supported validation command was rejected: $command" }
     }

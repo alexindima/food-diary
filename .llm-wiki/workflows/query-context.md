@@ -5,6 +5,7 @@ status: current
 sources:
   - .llm-wiki/policies/change-policies.json
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
   - .llm-wiki/tools/LlmWikiQueryCache.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
@@ -36,6 +37,12 @@ sources:
 ---
 
 # Query Repository Context
+
+An explicit `-BackendOnlyRefresh` read-only route retains that mode during nested
+generic context lookup, including backend design/topology preparation. Explicit
+frontend lookup still requires TypeScript. The scoped mode is restored after the
+snapshot call and participates in context-cache identity; it does not change the
+caller checkout or silently authorize a partial frontend projection.
 
 For an existing provider operation include the known provider and operation name
 or pass its confirmed module/path scope. A query such as `billing portal session

@@ -34,6 +34,10 @@ sources:
 
 # Generate a change-aware test plan
 
+Specs under `projects/fd-webmcp` use the library's `test:ci:webmcp` script and
+`fd-webmcp` test builder. A mixed frontend plan keeps the separate owner commands
+and unique check IDs instead of assigning those specs to the main app runner.
+
 An explicitly frontend-only slice omits unrelated .NET test candidates. For a
 stylesheet-only iteration the complete frontend verify command is marked as a
 publication regression check; focused local checks do not replace that gate.

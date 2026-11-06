@@ -33,6 +33,8 @@ try {
             $sourceRepositoryRoot = $leaseFixture; $snapshotParent = $leaseFixture; $snapshotFingerprint = 'owned-probe'
             $previousSnapshotRoot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
             $previousSourceRoot = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
+            $previousBackendOnlyRefresh = $env:LLM_WIKI_BACKEND_ONLY_REFRESH
+            $env:LLM_WIKI_BACKEND_ONLY_REFRESH = '1'
             $removeSnapshot = $true
             $probeState = [pscustomobject]@{ checks = 0; available = $false }
             $snapshotLock = [IO.File]::Open($snapshotLockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
@@ -57,9 +59,10 @@ try {
                 if ($probeState.checks -ne 2 -or $probeState.available) { throw 'Snapshot lease became available while contaminated artifacts were being removed.' }
                 if ($injectFailure -and $cleanupFailure -cne 'Injected snapshot cleanup failure.') { throw 'Snapshot cleanup fault was lost.' }
                 if (-not $injectFailure -and $cleanupFailure) { throw $cleanupFailure }
+                if ([string]$env:LLM_WIKI_BACKEND_ONLY_REFRESH -cne [string]$previousBackendOnlyRefresh) { throw 'Snapshot cleanup leaked its backend-only mode into the caller.' }
                 $peerLease = [IO.File]::Open($snapshotLockPath, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
                 $peerLease.Dispose()
-            } finally { $snapshotLock.Dispose() }
+            } finally { $snapshotLock.Dispose(); $env:LLM_WIKI_BACKEND_ONLY_REFRESH = $previousBackendOnlyRefresh }
         }
     }
 } finally {

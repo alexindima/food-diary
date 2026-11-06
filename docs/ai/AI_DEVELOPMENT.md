@@ -566,6 +566,27 @@ the existing corpus when a failure needs a new behavioral scenario.
 
 ## Task completion tools through MCP
 
+The project `.codex/config.toml` sets `mcp_optional_startup_grace_ms = 0` so
+optional servers can finish within their configured startup timeout before a
+new chat's tool catalog is selected. This avoids racing the default one-second
+grace with the Development MCP's launcher/build. Keep the server optional; a
+missing SDK must not make unrelated project work unavailable.
+
+When tools are absent, run `node scripts/ai/development-mcp-diagnostics.mjs`
+once. It reports standalone connection success, catalog timing, native chat
+catalog observation (unknown to the probe), executable-source identity and index
+freshness separately. A different build commit can still contain the current
+executable sources; use the source fingerprint, not the commit comparison alone.
+An index receipt warning is a separate condition; inspect `wiki.ps1 verify-status`.
+See [official MCP configuration](https://developers.openai.com/codex/mcp/).
+
+A successful probe cannot inject tools into an existing chat. Check that Codex
+opened/trusts this repository, that its MCP server is enabled, then reconnect or
+start a fresh project chat. Continue with Wiki CLI until native tools are actually
+available. If a separately installed CLI rejects a setting accepted by the desktop
+app (for example `service_tier`), use the matching client/runtime instead of
+rewriting global preferences merely to inspect MCP configuration.
+
 The Development MCP now has ten tools. Existing discovery tools retain their
 contracts. `get_next_task_action(evidencePath)` selects unresolved verification,
 active jobs or stale proof, then points to remaining review/acceptance validation.

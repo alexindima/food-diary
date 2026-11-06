@@ -69,6 +69,14 @@ DOM when the catalog is empty. Its JSON distinguishes browser API, host, build,
 authentication, registration progress/failure and tool count, without account
 IDs or tokens. Production and remote hosts publish no such metadata.
 
+The metadata's `nextAction` provides the next bounded step: `use-supported-browser`
+means this tab lacks the actual `document.modelContext.registerTool` contract;
+use the documented built-in Browser helper, not guessed Chrome flags.
+`sign-in` refers to this tab's real local session. `wait-for-registration` means
+re-read after the page settles; `reload-and-inspect-registration` means record
+the failure and retry one owned reload. `fetch-tool-catalog` means discovery may
+proceed; it is not itself proof that any tool was called successfully.
+
 Fresh screen context includes provenance: capture time, per-context identity,
 session revision, live data source and a reason for an absent published screen.
 `not-compared-to-worktree` does not prove that a build matches current files.

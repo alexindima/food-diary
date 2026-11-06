@@ -709,6 +709,7 @@ foreach ($frontendProjectGroup in @($frontendFocusedTests | Group-Object {
     if ($_ -match '^FoodDiary\.Web\.Client/projects/fooddiary-admin/') { 'admin' }
     elseif ($_ -match '^FoodDiary\.Web\.Client/projects/fd-ui-kit/') { 'ui-kit' }
     elseif ($_ -match '^FoodDiary\.Web\.Client/projects/fd-tour/') { 'tour' }
+    elseif ($_ -match '^FoodDiary\.Web\.Client/projects/fd-webmcp/') { 'webmcp' }
     else { 'app' }
 })) {
     $testPaths = @($frontendProjectGroup.Group)
@@ -720,6 +721,8 @@ foreach ($frontendProjectGroup in @($frontendFocusedTests | Group-Object {
         @('test:ci:ui-kit', 'fd-ui-kit')
     } elseif ($workspacePath -match '^projects/fd-tour/') {
         @('test:ci:tour', 'fd-tour')
+    } elseif ($workspacePath -match '^projects/fd-webmcp/') {
+        @('test:ci:webmcp', 'fd-webmcp')
     } else {
         @('test:ci:app', 'food-diary-web-client')
     }

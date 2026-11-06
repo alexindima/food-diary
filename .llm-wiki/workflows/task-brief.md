@@ -10,6 +10,7 @@ tags:
   - risk
 sources:
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
+  - .llm-wiki/tools/Ensure-LlmWikiSqliteProjection.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiOwnershipImpact.ps1
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
@@ -19,6 +20,11 @@ sources:
 ---
 
 # Build a task brief
+
+When scoped impact detects a missing or stale published-source projection, the
+brief uses the existing SQLite query recovery to refresh it once and retry.
+Facade queries do this inside their private snapshot. A failed recovery remains
+an explicit error; it does not fall back to JSON or widen the task's path set.
 
 Intent-inferred paths are low-confidence navigation evidence. For UI work,
 confirm the runtime owner with `ui-trace` and supply `-PlannedPath` before risk

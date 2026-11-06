@@ -23,6 +23,8 @@ Use [the reusable collector](references/collector.md) for bounded Grafana/Loki
 aggregation and a sanitized coverage manifest instead of rewriting collection
 loops each run. Keep the existing authenticated transport and supplement its
 result with host, interval-metric and incident evidence required below.
+Its `run_audit.py` entrypoint binds the original `run.json` window and generates
+numerical report tables from the collected aggregates, avoiding manual recounts.
 
 Fix the analysis end once in UTC and use the preceding 24 hours unless the task specifies otherwise. Keep that same window across Loki, Prometheus and host logs. State `[start, end)` precisely and show Asia/Tbilisi time in the report. Separate current health snapshots from observations inside the historical window.
 

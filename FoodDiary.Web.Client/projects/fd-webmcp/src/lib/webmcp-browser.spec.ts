@@ -55,6 +55,8 @@ describe('local WebMCP browser boundary', () => {
         const meta = page.querySelector<HTMLMetaElement>('meta[name="fooddiary-webmcp"]');
         expect(JSON.parse(meta?.content ?? '{}')).toMatchObject({
             reason: 'browser-api-unavailable',
+            nextAction: 'use-supported-browser',
+            browserApiContract: 'document.modelContext.registerTool',
             authenticated: false,
             registeredToolCount: 0,
         });
@@ -69,5 +71,22 @@ describe('local WebMCP browser boundary', () => {
             registeredToolCount: 4,
         });
         expect(production.querySelector('meta[name="fooddiary-webmcp"]')).toBeNull();
+    });
+
+    it.each([
+        ['signed-out', false, 'sign-in'],
+        ['registering', true, 'wait-for-registration'],
+        ['failed', true, 'reload-and-inspect-registration'],
+        ['ready', true, 'fetch-tool-catalog'],
+    ])('gives a recovery action for %s without guessing an account or browser flag', (registration, authenticated, nextAction) => {
+        const page = document.implementation.createHTMLDocument();
+        const toolCounts = { ready: 4 };
+        publishWebmcpDiagnostics(page, inspectWebmcpAvailability(pageDocument('localhost'), true), {
+            authenticated,
+            registration,
+            registeredToolCount: registration === 'ready' ? toolCounts.ready : 0,
+        });
+        const meta = page.querySelector<HTMLMetaElement>('meta[name="fooddiary-webmcp"]');
+        expect(JSON.parse(meta?.content ?? '{}')).toMatchObject({ nextAction });
     });
 });

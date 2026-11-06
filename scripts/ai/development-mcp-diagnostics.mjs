@@ -15,7 +15,18 @@ export function readDevelopmentMcpConfiguration(repositoryRoot) {
   const launcherPath = fileIndex >= 0 ? resolve(cwd, values.args[fileIndex + 1]) : null;
   return { configPath, cwd, command: values.command, args: values.args, enabled: values.enabled !== false,
     launcherPath, launcherExists: launcherPath === null || existsSync(launcherPath),
-    enabledTools: values.enabled_tools ?? [] };
+    enabledTools: values.enabled_tools ?? [], required: values.required === true,
+    startupTimeoutSeconds: values.startup_timeout_sec ?? 10,
+    optionalStartupGraceMilliseconds: Number(text.split(/^\[/m)[0].match(/^mcp_optional_startup_grace_ms\s*=\s*(\d+)\s*(?:#.*)?$/m)?.[1] ?? 1000) };
+}
+
+function readStatusPayload(status) {
+  if (status.structuredContent) return status.structuredContent;
+  for (const item of status.content ?? []) {
+    if (item.type !== 'text') continue;
+    try { return JSON.parse(item.text); } catch { /* Other content is not a status envelope. */ }
+  }
+  return null;
 }
 
 export async function diagnoseDevelopmentMcp(repositoryRoot, timeoutMilliseconds = 120000) {
@@ -56,12 +67,34 @@ export async function diagnoseDevelopmentMcp(repositoryRoot, timeoutMilliseconds
     const startupMilliseconds = Math.round(performance.now() - started);
     child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })}\n`);
     const catalog = await request('tools/list', {});
+    const catalogReadyMilliseconds = Math.round(performance.now() - started);
     const toolNames = catalog.tools.map(tool => tool.name).sort();
     const missingTools = configuration.enabledTools.filter(name => !toolNames.includes(name));
     const status = await request('tools/call', { name: 'get_server_status', arguments: {} });
-    return { ok: status.isError !== true && missingTools.length === 0, configuration,
+    const payload = readStatusPayload(status);
+    const ok = status.isError !== true && payload?.success === true && missingTools.length === 0;
+    const runtime = payload?.success === true ? payload.data : null;
+    const mayMissOptionalStartupWindow = !configuration.required && configuration.optionalStartupGraceMilliseconds > 0
+      && catalogReadyMilliseconds >= configuration.optionalStartupGraceMilliseconds;
+    const connectionAssessment = {
+      standalone: ok ? 'healthy' : 'failed', nativeChatCatalog: 'not-observed',
+      catalogReadyMilliseconds, mayMissOptionalStartupWindow,
+      runtimeCode: runtime?.runningCodeIncludesWorktreeChanges === true ? 'current-sources'
+        : runtime?.runningCodeIncludesWorktreeChanges === false ? 'stale' : 'unknown',
+      revisionMatches: runtime?.runningCodeMatchesRepositoryHead ?? null,
+      indexes: runtime?.indexesMatchWorktree === true ? 'current'
+        : runtime?.indexesMatchWorktree === false ? 'stale' : 'unknown',
+    };
+    const recoveryActions = [
+      'For missing native tools, open the trusted repository in Codex, verify its MCP server is enabled, then reconnect or start a new chat. This probe cannot refresh an existing chat catalog.',
+    ];
+    if (mayMissOptionalStartupWindow) recoveryActions.push('Set top-level mcp_optional_startup_grace_ms = 0 in the project .codex/config.toml so a new chat waits for startup_timeout_sec.');
+    if (connectionAssessment.runtimeCode === 'stale') recoveryActions.push('Restart the configured --build-if-stale launcher; the running source fingerprint differs from the checkout.');
+    if (connectionAssessment.indexes === 'stale') recoveryActions.push('Inspect ./.llm-wiki/wiki.ps1 verify-status before choosing the affected index refresh or verification. An old commit alone does not prove stale executable sources.');
+    return { ok, configuration,
       serverInfo: initialization.serverInfo, startupMilliseconds, toolNames, missingTools,
       serverStatus: status.structuredContent ?? status.content, stderrBytes,
+      connectionAssessment, recoveryActions,
       nativeChatCatalog: 'A healthy standalone connection does not prove that an existing chat refreshed its tools.' };
   };
   try { return await Promise.race([probe(), timeout]); }

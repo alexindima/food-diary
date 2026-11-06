@@ -36,6 +36,18 @@ Playwright runner, rather than Angular `--include`. `coverage-plan` returns that
 focused browser command with no fabricated coverage command when no browser
 coverage collector is configured. Ask for Angular source coverage separately.
 
+Focused Angular evidence can use the owning `test:ci:app`, `test:ci:admin`,
+`test:ci:ui-kit`, `test:ci:tour` or `test:ci:webmcp` script with explicit include
+paths. `evidence-run` accepts the repository's `cd ... && npm run ...` form and
+`npm --prefix FoodDiary.Web.Client run ...`; supported runner arguments remain
+data, without an arbitrary shell suffix or npm lifecycle override. Policy-required
+checks still require their canonical full command.
+
+`-BackendOnlyRefresh` on an isolated read-only Wiki route also applies to its
+nested generic context lookup. Explicit frontend context still requires locked
+TypeScript dependencies. Backend `design` and `topology` are covered by the cold
+checkout fixture without frontend `node_modules`.
+
 Pass distinct observable outcomes with `start -Criterion` when defects or audit
 scenarios are already known. For a visual assessment without implementation,
 use the scoped browser guide and `node scripts/ai/task-runtime.mjs list` to find

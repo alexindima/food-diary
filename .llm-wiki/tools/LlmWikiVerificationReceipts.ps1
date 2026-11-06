@@ -7,6 +7,7 @@ function Get-LlmWikiEvidenceRuntimeVersion([string]$Runtime) {
         'dotnet' { [string](& dotnet --version) }
         'npm' { [string](& npm --version) }
         'node' { [string](& node --version) }
+        'python' { [string](& python --version) }
         'docker' { [string](& docker --version) }
         default { [string]$PSVersionTable.PSVersion }
     }

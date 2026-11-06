@@ -24,7 +24,31 @@ publication retries. Compare deployed revision and current resource hashes befor
 classifying historical PWA failures; an untested device installation remains
 untested even when current hashes match.
 
-Run `python -m unittest discover -s .agents/skills/fooddiary-production-audit/scripts -p test_collect_grafana.py`.
+For the full repeated collection entrypoint, import `run_audit` from
+`scripts/run_audit.py` in this skill, in the same authenticated process:
+
+```python
+result = run_audit(get_json, original_run_path, {
+    "selector": verified_selector,
+    "service_names": verified_service_names,
+    "metrics": verified_metric_expressions,
+})
+```
+
+It reads the original run UUID/window, delegates bounded collection and returns
+`collection` plus a report whose service/level totals come directly from the
+aggregates. Save those sanitized results in the existing run's artifact directory;
+the helper neither publishes nor reads credentials. Supply the current verified
+transport; do not copy a credential-bearing wrapper from an old temporary script.
+The generated report is a numerical starting point. Add deployed-version,
+host/interval correlation and reasoned incident conclusions separately.
+
+Read only the current active block of automation memory first: last run/window,
+open signals, pending publication and report path. Keep completed empty runs in
+a separate history instead of appending their full text to the active block.
+Retain an unpublished result and its original run for identical publication retry.
+
+Run `python -m unittest discover -s .agents/skills/fooddiary-production-audit/scripts -p test_*.py`.
 Fixtures cover saturation, repeated rows, privacy, budgets, missing sources and
 snapshot boundaries. They do not establish access to production.
 

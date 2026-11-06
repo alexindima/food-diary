@@ -95,12 +95,14 @@ $graphStatus = & $graphManager `
     -Action status `
     -SkipRefresh `
     -Format Json | ConvertFrom-Json
-$requiresTypeScriptProjection = $ChangeType -in @('Any', 'Frontend')
+$backendOnlyRefresh = $ChangeType -in @('Api', 'Backend', 'Database', 'Tests') -or
+    ($ChangeType -eq 'Any' -and $env:LLM_WIKI_BACKEND_ONLY_REFRESH -eq '1' -and
+        -not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT))
+$requiresTypeScriptProjection = $ChangeType -in @('Any', 'Frontend') -and -not $backendOnlyRefresh
 $typescriptProjectionComplete = $null -ne $graphStatus.typescriptProjectionComplete -and [bool]$graphStatus.typescriptProjectionComplete
 if (-not [bool]$graphStatus.changeSetFresh -or
     [int]$graphStatus.searchDocuments -eq 0 -or
     ($requiresTypeScriptProjection -and -not $typescriptProjectionComplete)) {
-    $backendOnlyRefresh = $ChangeType -in @('Api', 'Backend', 'Database', 'Tests')
     try {
         & $graphManager -Action build -BackendOnlyRefresh:$backendOnlyRefresh -Format Json | Out-Null
     } catch {
@@ -114,6 +116,7 @@ $indexFresh = [bool]$graphStatus.changeSetFresh
 if ($indexFresh -and $Format -eq 'Json' -and -not $SkipQueryCache) {
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context-sqlite' -Arguments @{
         Module = $Module; Query = $Query; ScopePath = $scopePaths; ChangeType = $ChangeType
+        BackendOnlyRefresh = [bool]$backendOnlyRefresh
         Limit = $Limit; Compact = [bool]$Compact; Fingerprint = [string]$graphStatus.changeSetFingerprint
     } -VerifiedWorkspace $graphStatus.currentWorkspace -DependencyPath @(
         '.artifacts/llm-wiki/code-graph/code-graph.fingerprint',

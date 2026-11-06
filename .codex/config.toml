@@ -1,3 +1,7 @@
+# Optional servers may need a build before publishing their tools. Wait for their
+# configured startup timeout instead of omitting them after the default 1s grace.
+mcp_optional_startup_grace_ms = 0
+
 [mcp_servers.fooddiary_development]
 command = "powershell.exe"
 args = ["-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts\\Start-FoodDiaryDevelopmentMcp.ps1", "-BuildMode", "--build-if-stale"]

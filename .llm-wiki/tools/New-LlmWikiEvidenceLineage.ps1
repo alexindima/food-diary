@@ -57,7 +57,7 @@ $definitionValue = if ($null -ne $requirement) {
     if ($Kind -eq 'review-attestation') { [string]$requirement.description } else { [string]$requirement.command }
 } elseif (-not [string]::IsNullOrWhiteSpace($Definition)) { $Definition } else { '' }
 if ($null -ne $requirement -and $Kind -ne 'review-attestation' -and -not (Test-LlmWikiEvidenceExecutionCommand $definitionValue $Command $repositoryRoot)) { throw "Execution command is incompatible with required check '$Id'." }
-$runtimeName = if ($Command -match '^dotnet ') { 'dotnet' } elseif ($Command -match '(?:^|&& )npm ') { 'npm' } elseif ($Command -match '^node ') { 'node' } elseif ($Command -match '^docker ') { 'docker' } else { 'powershell' }
+$runtimeName = if ($Command -match '^dotnet ') { 'dotnet' } elseif ($Command -match '(?:^|&& )npm ') { 'npm' } elseif ($Command -match '^node ') { 'node' } elseif ($Command -match '^python ') { 'python' } elseif ($Command -match '^docker ') { 'docker' } else { 'powershell' }
 $runtimeVersion = Get-LlmWikiEvidenceRuntimeVersion $runtimeName
 $platform = "$([System.Runtime.InteropServices.RuntimeInformation]::OSDescription.Trim())/$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)"
 function Get-Hash([object]$Value) {

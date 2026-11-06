@@ -22,10 +22,32 @@ function Get-LlmWikiEvidenceExecutionLocation {
     [pscustomobject]@{ evidencePath = $absolute; relativePath = $relative; logsDirectory = $logs; logPrefix = $logs + [IO.Path]::DirectorySeparatorChar }
 }
 
+function Test-LlmWikiFrontendExecutionCommand([string]$Command) {
+    if ($Command -notmatch '^(?:npm --prefix FoodDiary\.Web\.Client run |cd FoodDiary\.Web\.Client && npm run )(?<script>test:ci:(?:app|admin|ui-kit|tour|webmcp)|test:e2e:(?:client|admin):smoke|test:guidance:[a-z0-9:-]+)(?<arguments>(?: -- [A-Za-z0-9_./\\:=,* -]+)?)$') { return $false }
+    $scriptName = $Matches['script']
+    $arguments = $Matches['arguments']
+    if ($arguments -match '(?:^|[=,/\\ ])\.\.(?:[/\\]|$)') { return $false }
+    if (-not $arguments) { return $true }
+    if ($arguments.Trim().Length -le 3) { return $false }
+    $tokens = @($arguments.Trim().Substring(3) -split '\s+')
+    for ($index = 0; $index -lt $tokens.Count; $index++) {
+        $token = $tokens[$index]
+        if ($scriptName.StartsWith('test:ci:')) {
+            if ($token -eq '--include') {
+                $index++
+                if ($index -ge $tokens.Count -or $tokens[$index] -notmatch '^(?:src|projects)/[A-Za-z0-9_./*,-]+\.spec\.ts$') { return $false }
+            } elseif ($token -notmatch '^--include=(?:src|projects)/[A-Za-z0-9_./*,-]+\.spec\.ts$|^--watch=false$|^--coverage(?:=(?:true|false))?$') { return $false }
+        } elseif ($token -notmatch '^e2e/[A-Za-z0-9_./*-]+\.spec\.ts$|^--project=[A-Za-z0-9_-]+$|^--(?:workers|timeout|repeat-each)=[1-9][0-9]*$|^--retries=[0-9]+$|^--headed$') { return $false }
+    }
+    return $true
+}
+
 function Test-LlmWikiSupplementalExecutionCommand([string]$Command) {
     # These are test/validation commands, not a general shell escape hatch.
-    return $Command -match '^node (?:--test(?: [A-Za-z0-9_./\\:=,-]+)*|[A-Za-z0-9_./\\-]+\.(?:mjs|cjs|js)(?: [A-Za-z0-9_./\\:=,-]+)*)$' -or
-        $Command -match '^pwsh -NoProfile -File \.llm-wiki/tools/Test-[A-Za-z0-9_.-]+\.ps1(?: -[A-Za-z0-9_-]+ [A-Za-z0-9_./\\:,-]+)*$' -or
+    return (Test-LlmWikiFrontendExecutionCommand $Command) -or
+        $Command -match '^node (?:--test(?: [A-Za-z0-9_./\\:=,-]+)*|[A-Za-z0-9_./\\-]+\.(?:mjs|cjs|js)(?: [A-Za-z0-9_./\\:=,-]+)*)$' -or
+        $Command -match '^pwsh -NoProfile -File (?:\.llm-wiki/tools/|scripts/)Test-[A-Za-z0-9_.-]+\.ps1(?: -[A-Za-z0-9_-]+ [A-Za-z0-9_./\\:,-]+)*$' -or
+        $Command -match '^python -m unittest discover -s \.agents/skills/[a-z0-9-]+/scripts -p test_[A-Za-z0-9_*]+\.py$' -or
         $Command -match '^docker compose(?: -f [A-Za-z0-9_./\\-]+)? config(?: (?:--quiet|-q))?$' -or
         $Command -match '^docker build --check(?: -f [A-Za-z0-9_./\\-]+)? [A-Za-z0-9_./\\-]+$'
 }

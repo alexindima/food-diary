@@ -25,6 +25,19 @@ Use the root guide's standard frontend build, frontend start, and backend run co
 
 ## Prove readiness
 
+For Telegram work, inspect `docs/backend/TELEGRAM_TEST_STAND.md` and the existing
+owned runtime before proposing a new bot, tunnel or stack. Revalidate bot
+identity, API/bot environment flags and frontend origin; the runbook's historical
+checkpoint is not current readiness. Stars additionally uses
+`docs/backend/TELEGRAM_STARS.md` and the dedicated Telegram test environment.
+An ordinary test-named bot does not by itself establish a test-backend account.
+
+On Windows worktrees across drives, do not assume a junction to another
+checkout's `node_modules` is compatible with Angular's asset resolution. A
+reported build produced a combined C:/.../D:/... font path. If that reproduces,
+use the worktree's own lockfile installation, preserving shared dependencies;
+do not change production asset paths to compensate for the junction.
+
 After interruption, discover existing owned runtimes with
 `node scripts/ai/task-runtime.mjs list`. Reconcile each process PID and start
 identity, checkout, lease and fixture ownership against live state before

@@ -60,6 +60,11 @@ authorization. Revalidate affected contracts when cleanup is authorized.
 
 ## Measure the final inputs
 
+Finish formatting and relevant source checks before the final build, then freeze
+the source/DLL/PDB inputs before coverage. Check current platform filters,
+including `ExcludeFromWindowsCoverageAttribute`; a platform exclusion is not
+evidence that the same behavior ran on the other platform.
+
 Build affected binaries before freezing a run. `scripts/run_tests.ps1` accepts
 explicit already-built test DLLs, creates a fresh directory under root `.artifacts/`,
 and can run ordinary tests and dotCover over identical inputs. It hashes test inputs
@@ -81,3 +86,13 @@ Retain raw snapshots, reports, TRX, command/filter receipts and input hashes. St
 covered/total statements, measured scope, test outcomes, unresolved skips and which
 platforms produced the result. Claim full coverage only when all these agree. Apply
 the existing delivery skill only when the user asks for Git delivery.
+
+For a large measurement, use independent owning groups with separate execution
+directories. Preserve each successful group's TRX, snapshots and input hashes.
+After a single failure, rerun only the affected group if the other groups' source
+and binary identities still match; otherwise rerun the changed inputs. Before
+combining results, compare the complete expected test-identity multiset and
+production assembly scope, not just percentages or a sum of test counts.
+See the delivery recovery reference for `evidence-recover` and
+`task-evidence-import`; import only supported executed receipts whose current
+fingerprints validate, never an arbitrary external exit-code declaration.

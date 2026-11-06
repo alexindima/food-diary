@@ -284,43 +284,33 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "629d3cdfca928a90470db20910b7f9da2f6f1f6fc8c68bcbedaa04e65256127f",
+      "pageSha256": "7b90f0435e77f2049f68c7eef6ba736263bcaeeb413bfc733d2ba16368e42b1f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
-          "sha256": "584fbc3879088d174993ebe99d7e441e2753069ba76ad7bee55562a7604edd31",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed the adaptive routing and snapshot claims against the final diff. Nested backend-only mode stays inside the private read-only snapshot and restores the caller environment; no new route, workspace requirement or stage is added. Cold design/topology and explicit frontend dependency failure passed."
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "e9a7a2acbdbb65d9335343a44b6ccd838f002e264e0a2e315eba13d7ce551e55",
-          "reviewReason": "Reviewed read-only lifecycle: snapshot storage is now checkout-local on the repository volume; standalone clones, mutation rejection, scoped overlay isolation, ref synchronization and concurrent-reader leases retain the documented behavior. Location and disposable legacy caches are documented in index-pipeline."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "eda2d66aeb3bc6dfafa27a3157eadc3884a427d1806606dc81d051856591d029",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "sha256": "5527b956023466bb19a703afed65d0aa4f1f06e5fa638759b66212301b08bd37",
+          "reviewReason": "Reviewed the adaptive routing and snapshot claims against the final diff. Nested backend-only mode stays inside the private read-only snapshot and restores the caller environment; no new route, workspace requirement or stage is added. Cold design/topology and explicit frontend dependency failure passed."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "e3cfbf6b44824535e12b14110cf31d4252be7b010c304853f6229eae434d0f0b",
-          "reviewReason": "Reviewed read-only lifecycle: snapshot storage is now checkout-local on the repository volume; standalone clones, mutation rejection, scoped overlay isolation, ref synchronization and concurrent-reader leases retain the documented behavior. Location and disposable legacy caches are documented in index-pipeline."
+          "sha256": "9032e4ddbcb19f9c945a4439e9118a1d8b917b489520d43db05e2fce18c63e61",
+          "reviewReason": "Reviewed the adaptive routing and snapshot claims against the final diff. Nested backend-only mode stays inside the private read-only snapshot and restores the caller environment; no new route, workspace requirement or stage is added. Cold design/topology and explicit frontend dependency failure passed."
         },
         {
           "path": "docs/ai/AI_WORKFLOW.md",
-          "sha256": "9fd866dc6e1dedad145f62bed769fc85a54c970fc8b898fa50243a5de3ec9441",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
-        },
-        {
-          "path": "scripts/ai/task-runtime.mjs",
-          "sha256": "2d7c2ee9c29804e4331d6f801fd8af70a6d5c9b33f23af685e3b0813f5f312fb",
-          "reviewReason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed."
+          "sha256": "7f2de430cf50d5b4578d422169f98a4dd6a768c2a91be8a425559a172a64873b",
+          "reviewReason": "Reviewed the adaptive routing and snapshot claims against the final diff. Nested backend-only mode stays inside the private read-only snapshot and restores the caller environment; no new route, workspace requirement or stage is added. Cold design/topology and explicit frontend dependency failure passed."
         }
       ],
-      "reason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed.",
+      "reason": "Reviewed the adaptive routing and snapshot claims against the final diff. Nested backend-only mode stays inside the private read-only snapshot and restores the caller environment; no new route, workspace requirement or stage is added. Cold design/topology and explicit frontend dependency failure passed.",
       "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:51.891226Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:25:18.0627387Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -412,8 +402,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2",
-          "reviewReason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply."
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed manifest scope and plan-fingerprint guidance. Task-brief recovery changes derived SQLite preparation only and retains the original explicit paths, risk/check shape and manifest inputs. Existing governed-delivery scope/replan/lineage fixture passed; no manifest procedure change is required."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
@@ -421,25 +411,26 @@
           "reviewReason": "Reviewed manifest evidence integration after supplemental execution changes. Required policy command equality and source-bound lineage remain enforced; a required ID missing from the bundle is now rejected before execution. Manifest scope and readiness semantics remain intact."
         }
       ],
-      "reason": "Reviewed manifest evidence integration after supplemental execution changes. Required policy command equality and source-bound lineage remain enforced; a required ID missing from the bundle is now rejected before execution. Manifest scope and readiness semantics remain intact.",
+      "reason": "Reviewed manifest scope and plan-fingerprint guidance. Task-brief recovery changes derived SQLite preparation only and retains the original explicit paths, risk/check shape and manifest inputs. Existing governed-delivery scope/replan/lineage fixture passed; no manifest procedure change is required.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:21.4162605Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:13.9382762Z"
     },
     {
       "pageId": "workflow-change-packet",
       "pagePath": ".llm-wiki/workflows/change-packet.md",
-      "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
+      "pageSha256": "10d9c661a0d0a6f7aad4524e1d8db67eb35549d6d1716fe76b0b64067bfaf24e",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed shared packet/brief reuse and path/HEAD/objective fingerprint claims. The brief still returns one scoped impact result, with one bounded writer retry on stale projection. Packet fields and ownership/test-plan forwarding remain compatible; cold planning and test-plan precision passed."
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed shared packet/brief reuse and path/HEAD/objective fingerprint claims. The brief still returns one scoped impact result, with one bounded writer retry on stale projection. Packet fields and ownership/test-plan forwarding remain compatible; cold planning and test-plan precision passed.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:33.2649986Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:14.3674524Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -457,14 +448,29 @@
           "reviewReason": "Reviewed shared aggregate repository role and equivalent compile/compiles normalization factoring. Direct compile already includes itself, so the union adds no term or ordering change after deduplication. Combined rule count remains700 and context governance/operations pass. Corpus quality thresholds and frozen baselines are unchanged."
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "27c76c1319e4bc64aae797fc1cbde89bb1076055316453c8d99913723d8b8ac5",
+          "reviewReason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
           "sha256": "faf1cc8c45ace8bd39ff639dd9c5d27e886566f9547d0db79e4bdefe8c6708d1",
           "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
-          "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
+          "sha256": "5f68043130793ad3268eaf03c48bf94f7ea72d7ac3114dba0fc4f8667192a468",
+          "reviewReason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
@@ -497,10 +503,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed shared aggregate repository role and equivalent compile/compiles normalization factoring. Direct compile already includes itself, so the union adds no term or ordering change after deduplication. Combined rule count remains700 and context governance/operations pass. Corpus quality thresholds and frozen baselines are unchanged.",
+      "reason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads.",
       "baseRef": "HEAD",
-      "gitHead": "40f3e0a7a8610c47d5cc832391205e937a30a1f1",
-      "reviewedAtUtc": "2026-11-02T05:28:55.1855013Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:14.9286779Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -552,18 +558,18 @@
     {
       "pageId": "workflow-context-bundles",
       "pagePath": ".llm-wiki/workflows/context-bundles.md",
-      "pageSha256": "6905a9cfcb2c8ed64f714f760c972c46d47fa98b70bb6db940780fa6be0b34e0",
+      "pageSha256": "592c63a21bb6acb06f5ca9568146f4bd5e371bd7c1f5256433c21515828d90d9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78",
-          "reviewReason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries."
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "27c76c1319e4bc64aae797fc1cbde89bb1076055316453c8d99913723d8b8ac5",
+          "reviewReason": "Reviewed shared resolver freshness and cache reuse. Backend-only mode is explicit in the context cache key and scoped to the snapshot invocation; explicit Frontend still requires TypeScript. Bundle integrity/security and ranking contracts are untouched, and retrieval/cache smoke remains part of final verify."
         }
       ],
-      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
+      "reason": "Reviewed shared resolver freshness and cache reuse. Backend-only mode is explicit in the context cache key and scoped to the snapshot invocation; explicit Frontend still requires TypeScript. Bundle integrity/security and ranking contracts are untouched, and retrieval/cache smoke remains part of final verify.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:37.6811595Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:15.5844485Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -891,14 +897,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "bf9457b3f5408e8a565667c17be130cac3766939a6369096f4b53631526bfa10",
-          "reviewReason": "Reviewed dependency updates incorporated from current origin/master: package scripts, Playwright smoke commands and visual-qa entrypoints are unchanged; the updates change Angular, tooling, translation-loader and quality-tool dependency versions. The page describes browser identity, interaction, console and screenshot evidence rather than pinning package versions, so its guidance remains accurate. Full browser/build validation remains in CI and this receipt does not claim a new visual browser pass."
+          "sha256": "421059963f23e393df9c5482cf59079f10ca14c0a28c33c2fa03c09726725d2b",
+          "reviewReason": "Reviewed visual evidence requirements against the package script change. The existing build, unit/library and browser verification scripts remain intact; test:ai-development now also runs MCP diagnostics and controlled-runner orchestration tests. Those unit tests do not replace real UI evidence. The new reusable helper was separately exercised in real Chrome over four owned synthetic RU/EN viewport cases, with screenshots inspected for Russian rendering."
         }
       ],
-      "reason": "Reviewed dependency updates incorporated from current origin/master: package scripts, Playwright smoke commands and visual-qa entrypoints are unchanged; the updates change Angular, tooling, translation-loader and quality-tool dependency versions. The page describes browser identity, interaction, console and screenshot evidence rather than pinning package versions, so its guidance remains accurate. Full browser/build validation remains in CI and this receipt does not claim a new visual browser pass.",
+      "reason": "Reviewed visual evidence requirements against the package script change. The existing build, unit/library and browser verification scripts remain intact; test:ai-development now also runs MCP diagnostics and controlled-runner orchestration tests. Those unit tests do not replace real UI evidence. The new reusable helper was separately exercised in real Chrome over four owned synthetic RU/EN viewport cases, with screenshots inspected for Russian rendering.",
       "baseRef": "HEAD",
-      "gitHead": "93a9413470268df9c4d2e886cb4240afd26ec704",
-      "reviewedAtUtc": "2026-11-02T08:11:06.2911491Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:25:54.6977071Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -922,20 +928,25 @@
       "pageSha256": "0cd6495e8bf721712da9279eb1eaa3ced3e3219eee93783274ad8ff8f8f8f2bb",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups."
+        },
+        {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
           "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
-          "reviewReason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups."
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed scoped blast-radius and compiled packet usage. Repairing the current derived projection does not infer more paths, alter consumer scoring or replace authoritative sources. The same impact result groups feed existing planners after at most one refresh; cold planning and source isolation passed."
         }
       ],
-      "reason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups.",
+      "reason": "Reviewed scoped blast-radius and compiled packet usage. Repairing the current derived projection does not infer more paths, alter consumer scoring or replace authoritative sources. The same impact result groups feed existing planners after at most one refresh; cold planning and source isolation passed.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:22.1504562Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:16.9798519Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -944,8 +955,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2",
-          "reviewReason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply."
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed phase ordering, brief reuse and heterogeneous metadata normalization. The final changes preserve those contracts. WebMCP specs now select their actual Angular library runner, while the existing command deduplication retains unique IDs for mixed owners; precision fixtures passed."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
@@ -953,10 +964,10 @@
           "reviewReason": "Reviewed the strict-mode readiness regression appended to the implementation-plan suite. Planner normalization and phase generation remain unchanged; supplied scalar privacy impact, complete empty impact, and abbreviated summaries now have explicit consumer assertions."
         }
       ],
-      "reason": "Reviewed the strict-mode readiness regression appended to the implementation-plan suite. Planner normalization and phase generation remain unchanged; supplied scalar privacy impact, complete empty impact, and abbreviated summaries now have explicit consumer assertions.",
-      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
-      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
-      "reviewedAtUtc": "2026-10-28T01:52:59.2052474Z"
+      "reason": "Reviewed phase ordering, brief reuse and heterogeneous metadata normalization. The final changes preserve those contracts. WebMCP specs now select their actual Angular library runner, while the existing command deduplication retains unique IDs for mixed owners; precision fixtures passed.",
+      "baseRef": "HEAD",
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:17.637306Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -1000,9 +1011,29 @@
           "reviewReason": "The new CI step runs a Python unit suite for image retention. It adds no index generator or dependency and leaves index pipeline invocation and stages intact."
         },
         {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "27c76c1319e4bc64aae797fc1cbde89bb1076055316453c8d99913723d8b8ac5",
+          "reviewReason": "Reviewed snapshot location, source hashes, isolated preparation and verification-receipt claims. Mode propagation restores environment state; source isolation and stale private projection recovery passed. Python execution versions are now recorded accurately without changing cache/fingerprint proof requirements. Affected generators were refreshed against the final sources."
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "b31131e39823a55de2243cf0be2f18152ef1c99b65ff3eb685a5b10725dcfbba",
+          "reviewReason": "Reviewed snapshot location, source hashes, isolated preparation and verification-receipt claims. Mode propagation restores environment state; source isolation and stale private projection recovery passed. Python execution versions are now recorded accurately without changing cache/fingerprint proof requirements. Affected generators were refreshed against the final sources."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "5527b956023466bb19a703afed65d0aa4f1f06e5fa638759b66212301b08bd37",
+          "reviewReason": "Reviewed snapshot location, source hashes, isolated preparation and verification-receipt claims. Mode propagation restores environment state; source isolation and stale private projection recovery passed. Python execution versions are now recorded accurately without changing cache/fingerprint proof requirements. Affected generators were refreshed against the final sources."
+        },
+        {
           "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
           "sha256": "5ade8897c75359d80ed39cb7a2080da5d9d0fadc430893a8211c261138215be6",
           "reviewReason": "Reviewed Linux proc stat ESRCH handling in Wait-LlmWikiProcessTermination. Only IOException after opening a disappearing proc entry is rechecked: confirmed process exit or absent proc directory returns true; errors for a live process are rethrown. Existing bounded waits, zombie-state recognition, process-tree ownership, native exit-code preservation, logging and index rollback remain unchanged. The index-pipeline documentation still accurately describes these guarantees."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "2625b2a11de6c98cd2bfa3dc283ddac8151d85196375d4c438755d536943f774",
+          "reviewReason": "Reviewed snapshot location, source hashes, isolated preparation and verification-receipt claims. Mode propagation restores environment state; source isolation and stale private projection recovery passed. Python execution versions are now recorded accurately without changing cache/fingerprint proof requirements. Affected generators were refreshed against the final sources."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
@@ -1010,15 +1041,20 @@
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         },
         {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "9032e4ddbcb19f9c945a4439e9118a1d8b917b489520d43db05e2fce18c63e61",
+          "reviewReason": "Reviewed snapshot location, source hashes, isolated preparation and verification-receipt claims. Mode propagation restores environment state; source isolation and stale private projection recovery passed. Python execution versions are now recorded accurately without changing cache/fingerprint proof requirements. Affected generators were refreshed against the final sources."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
           "sha256": "022a7fceb635873cc33c06a7ed990cac61884d36c74eb7eab5b0e9f916c88bd1",
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         }
       ],
-      "reason": "The new CI step runs a Python unit suite for image retention. It adds no index generator or dependency and leaves index pipeline invocation and stages intact.",
+      "reason": "Reviewed snapshot location, source hashes, isolated preparation and verification-receipt claims. Mode propagation restores environment state; source isolation and stale private projection recovery passed. Python execution versions are now recorded accurately without changing cache/fingerprint proof requirements. Affected generators were refreshed against the final sources.",
       "baseRef": "HEAD",
-      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
-      "reviewedAtUtc": "2026-11-04T05:02:50.1503208Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:25:55.2788747Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1045,12 +1081,17 @@
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
           "sha256": "523a4ef66069c0576f6620ed9f9c5901233503d17b5d85b376a45819726db653",
           "reviewReason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Reviewed bounded integration navigation and non-authoritative edge claims. Task-brief recovery preserves the scanner packet shape and scoped sources, adds no persisted index or external provider call, and retains explicit recovery failure rather than widening results."
         }
       ],
-      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
+      "reason": "Reviewed bounded integration navigation and non-authoritative edge claims. Task-brief recovery preserves the scanner packet shape and scoped sources, adds no persisted index or external provider call, and retains explicit recovery failure rather than widening results.",
       "baseRef": "HEAD",
-      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:42.4440746Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:18.8776152Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -1390,7 +1431,7 @@
       "reason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate.",
       "baseRef": "HEAD",
       "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:05.0350700Z"
+      "reviewedAtUtc": "2026-11-06T09:16:05.03507Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1432,23 +1473,28 @@
     {
       "pageId": "workflow-task-brief",
       "pagePath": ".llm-wiki/workflows/task-brief.md",
-      "pageSha256": "0aeb5c8441f0b52d5c88049225ca59f0ddeb1ca37fc524cfd7fb194543796dd8",
+      "pageSha256": "f2d3b3b0c262c9b10eefe33654524cc6b4c9d41c8bbdf7a5bfcde32bac938c42",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Updated the brief recovery paragraph and declared its existing SQLite query helper as a source. A stale risk projection is reproduced before the fix; one private backend writer refresh now recovers it without JSON fallback or a broader path set. Compiled impact fields and reuse into ownership/planners are preserved."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "14ee62700e53e914e4f708a12513880976e77e435cb30c8d5fed4ebcbe3eadb0",
-          "reviewReason": "Reviewed planner selection and actual assertions: an explicit frontend-only change omits unrelated .NET tests, styles label full verify as publication regression, and browser specs use the verified Playwright runner. Existing scoped compiled-input reuse, explicit absence states and scenario/evidence separation remain intact."
+          "sha256": "b31131e39823a55de2243cf0be2f18152ef1c99b65ff3eb685a5b10725dcfbba",
+          "reviewReason": "Updated the brief recovery paragraph and declared its existing SQLite query helper as a source. A stale risk projection is reproduced before the fix; one private backend writer refresh now recovers it without JSON fallback or a broader path set. Compiled impact fields and reuse into ownership/planners are preserved."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
-          "sha256": "fa5dff5dd61d08c68f29859a090e76bd58f4230d59798352573a6f7cb105fbc2",
-          "reviewReason": "Reviewed planner selection and actual assertions: an explicit frontend-only change omits unrelated .NET tests, styles label full verify as publication regression, and browser specs use the verified Playwright runner. Existing scoped compiled-input reuse, explicit absence states and scenario/evidence separation remain intact."
+          "sha256": "4816e16271763e781f0d7437126f0c6dd30671b3cddc076446ab89576064023d",
+          "reviewReason": "Updated the brief recovery paragraph and declared its existing SQLite query helper as a source. A stale risk projection is reproduced before the fix; one private backend writer refresh now recovers it without JSON fallback or a broader path set. Compiled impact fields and reuse into ownership/planners are preserved."
         }
       ],
-      "reason": "Reviewed planner selection and actual assertions: an explicit frontend-only change omits unrelated .NET tests, styles label full verify as publication regression, and browser specs use the verified Playwright runner. Existing scoped compiled-input reuse, explicit absence states and scenario/evidence separation remain intact.",
+      "reason": "Updated the brief recovery paragraph and declared its existing SQLite query helper as a source. A stale risk projection is reproduced before the fix; one private backend writer refresh now recovers it without JSON fallback or a broader path set. Compiled impact fields and reuse into ownership/planners are preserved.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:24.5439603Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:19.8597186Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1546,23 +1592,33 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "afbc8fae001e1e78bcb6a4c7845cd17fed6e868aa90bd0f8fb1acdd61b41a8d2",
+      "pageSha256": "a062b62c47eb51e07caf5f3c33d04ff496c0302779653cd1f11d29e7c9806949",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "8215e3b9978d35e132e4a8748ba7c11f1f31277db11ffd8937734695d83dbac4",
-          "reviewReason": "Reviewed the Windows-only dotCover marker section against the current runner, OS filter helper, personal Rider setup and fresh Windows/Linux reports. The page describes focused test selection and risk scenarios; those claims and commands remain accurate. The documentation addition explains collector exclusions without changing test-plan command semantics."
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "b31131e39823a55de2243cf0be2f18152ef1c99b65ff3eb685a5b10725dcfbba",
+          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
         },
         {
-          "path": "FoodDiary.sln.DotSettings",
-          "sha256": "85e1054678472202caa2cc4a2e4d40c236f9209e2b325a5a1110c8f7b1dc9a65",
-          "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "2625b2a11de6c98cd2bfa3dc283ddac8151d85196375d4c438755d536943f774",
+          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
+          "sha256": "4816e16271763e781f0d7437126f0c6dd30671b3cddc076446ab89576064023d",
+          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
+        },
+        {
+          "path": "docs/ai/AI_WORKFLOW.md",
+          "sha256": "7f2de430cf50d5b4578d422169f98a4dd6a768c2a91be8a425559a172a64873b",
+          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
         }
       ],
-      "reason": "Reviewed the Windows-only dotCover marker section against the current runner, OS filter helper, personal Rider setup and fresh Windows/Linux reports. The page describes focused test selection and risk scenarios; those claims and commands remain accurate. The documentation addition explains collector exclusions without changing test-plan command semantics.",
+      "reason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass.",
       "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T07:41:09.4248230Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:20.3503318Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1667,23 +1723,38 @@
     {
       "pageId": "workflow.evidence-bundle",
       "pagePath": ".llm-wiki/workflows/evidence-bundle.md",
-      "pageSha256": "75bfad8f245ea0fa9617ddff5ae268d54347223f66689cb822db15e79962b896",
+      "pageSha256": "33fbf8c660ea2dcbc80c6b30b494d6345e367a4b2e6c59e039b8e7f6b7247278",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "path": ".llm-wiki/tools/LlmWikiEvidenceCommands.ps1",
+          "sha256": "43fa2bad9767c6312390429fad956bc7eefb19c4d78c76ef2d6e3b3f9a7ef202",
+          "reviewReason": "Reviewed execution, recovery and required-check proof claims. Added bounded focused Angular/Playwright forms, repository Test scripts and skill unittest discovery; shell suffixes, foreign prefixes and lifecycle overrides are rejected. Real npm/Python fixture execution retained logs, exits and runtime identity; canonical required checks and execution seals are unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "2625b2a11de6c98cd2bfa3dc283ddac8151d85196375d4c438755d536943f774",
+          "reviewReason": "Reviewed execution, recovery and required-check proof claims. Added bounded focused Angular/Playwright forms, repository Test scripts and skill unittest discovery; shell suffixes, foreign prefixes and lifecycle overrides are rejected. Real npm/Python fixture execution retained logs, exits and runtime identity; canonical required checks and execution seals are unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "2625b2a11de6c98cd2bfa3dc283ddac8151d85196375d4c438755d536943f774",
+          "reviewReason": "Reviewed execution, recovery and required-check proof claims. Added bounded focused Angular/Playwright forms, repository Test scripts and skill unittest discovery; shell suffixes, foreign prefixes and lifecycle overrides are rejected. Real npm/Python fixture execution retained logs, exits and runtime identity; canonical required checks and execution seals are unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
+          "sha256": "88bddf549e86685cd5b33521982d59492ddfa418aa0e10c5d3208c01146e91af",
+          "reviewReason": "Reviewed execution, recovery and required-check proof claims. Added bounded focused Angular/Playwright forms, repository Test scripts and skill unittest discovery; shell suffixes, foreign prefixes and lifecycle overrides are rejected. Real npm/Python fixture execution retained logs, exits and runtime identity; canonical required checks and execution seals are unchanged."
         },
         {
           "path": "docs/ai/AI_WORKFLOW.md",
-          "sha256": "9fd866dc6e1dedad145f62bed769fc85a54c970fc8b898fa50243a5de3ec9441",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "sha256": "7f2de430cf50d5b4578d422169f98a4dd6a768c2a91be8a425559a172a64873b",
+          "reviewReason": "Reviewed execution, recovery and required-check proof claims. Added bounded focused Angular/Playwright forms, repository Test scripts and skill unittest discovery; shell suffixes, foreign prefixes and lifecycle overrides are rejected. Real npm/Python fixture execution retained logs, exits and runtime identity; canonical required checks and execution seals are unchanged."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed execution, recovery and required-check proof claims. Added bounded focused Angular/Playwright forms, repository Test scripts and skill unittest discovery; shell suffixes, foreign prefixes and lifecycle overrides are rejected. Real npm/Python fixture execution retained logs, exits and runtime identity; canonical required checks and execution seals are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:47.8318982Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:16.2949388Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1709,23 +1780,28 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "38bd1a39b9f849fee5129875ce4fc65bbaf1428d873f6cafb5ba6a2fa195783e",
+      "pageSha256": "102735042edf1a9568331b8d86d23e006f4d4649c39d401f231351591829325a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ac386e028f38feb7d9962c565c0ad1d2fe81566ce7be48e41d3d11346b76693d",
-          "reviewReason": "Catalog additions are an owned Stars controller, DTOs, tests and rollout document. Query ranking, source authority, provider selection and graph freshness rules were not changed. Inspected the regenerated inventory against source; the context workflow remains accurate."
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "27c76c1319e4bc64aae797fc1cbde89bb1076055316453c8d99913723d8b8ac5",
+          "reviewReason": "Updated and reviewed the backend-only context contract: nested generic lookup honors the scoped mode, explicit frontend lookup retains TypeScript prerequisites, and cache identity distinguishes the modes. The cold fixture verifies successful backend design/topology and rejected unsupported frontend preparation without changing caller files."
         },
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ee1b89f981b1da635cb2eff2843ff133b2782313ea5b20a5bca8b693a6d2cadb",
-          "reviewReason": "Documented exact user aggregate repository role with related-data exclusions and equivalent compile/compiles factoring. The two spellings now share one normalization entry; direct compile term deduplicates identically, keeping combined budget700 with no threshold changes."
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "c09ffcd5fad116825440053d01fe71f90ea060992ba98fdaabf64239ab240385",
+          "reviewReason": "Updated and reviewed the backend-only context contract: nested generic lookup honors the scoped mode, explicit frontend lookup retains TypeScript prerequisites, and cache identity distinguishes the modes. The cold fixture verifies successful backend design/topology and rejected unsupported frontend preparation without changing caller files."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "5527b956023466bb19a703afed65d0aa4f1f06e5fa638759b66212301b08bd37",
+          "reviewReason": "Updated and reviewed the backend-only context contract: nested generic lookup honors the scoped mode, explicit frontend lookup retains TypeScript prerequisites, and cache identity distinguishes the modes. The cold fixture verifies successful backend design/topology and rejected unsupported frontend preparation without changing caller files."
         }
       ],
-      "reason": "Catalog additions are an owned Stars controller, DTOs, tests and rollout document. Query ranking, source authority, provider selection and graph freshness rules were not changed. Inspected the regenerated inventory against source; the context workflow remains accurate.",
+      "reason": "Updated and reviewed the backend-only context contract: nested generic lookup honors the scoped mode, explicit frontend lookup retains TypeScript prerequisites, and cache identity distinguishes the modes. The cold fixture verifies successful backend design/topology and rejected unsupported frontend preparation without changing caller files.",
       "baseRef": "HEAD",
-      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
-      "reviewedAtUtc": "2026-11-05T16:09:30.7009698Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-06T10:11:19.4114236Z"
     },
     {
       "pageId": "workflow.review-diff",

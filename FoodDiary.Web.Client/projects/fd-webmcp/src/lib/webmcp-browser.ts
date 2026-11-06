@@ -38,7 +38,23 @@ export function publishWebmcpDiagnostics(
         meta.name = 'fooddiary-webmcp';
         pageDocument.head.append(meta);
     }
-    meta.content = JSON.stringify({ schemaVersion: 1, ...availability, ...state, updatedAtUtc: new Date().toISOString() });
+    const nextAction = !availability.browserApi
+        ? 'use-supported-browser'
+        : !state.authenticated
+          ? 'sign-in'
+          : state.registration === 'failed'
+            ? 'reload-and-inspect-registration'
+            : state.registration === 'ready' && state.registeredToolCount > 0
+              ? 'fetch-tool-catalog'
+              : 'wait-for-registration';
+    meta.content = JSON.stringify({
+        schemaVersion: 1,
+        ...availability,
+        ...state,
+        browserApiContract: 'document.modelContext.registerTool',
+        nextAction,
+        updatedAtUtc: new Date().toISOString(),
+    });
 }
 
 /** The caller supplies its injected DOCUMENT and development mode; no browser globals or polyfill. */

@@ -10,6 +10,12 @@ $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
 $styleOnlyPlan = & $tool -ChangedPath 'FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.scss' -Intent 'Fix spacing in the existing statistics card' -NoBaseline -Format Json | ConvertFrom-Json
 if (@($styleOnlyPlan.focusedTestFiles | Where-Object { $_ -match '\.cs$' }).Count -gt 0) { throw 'A stylesheet-only plan included unrelated backend tests.' }
 if (@($styleOnlyPlan.commands | Where-Object { $_.id -eq 'frontend-verify' -and $_.priority -eq 'required' }).Count -gt 0) { throw 'Stylesheet iteration required the full publication frontend suite.' }
+$webmcpPlan = & $tool -ChangedPath 'FoodDiary.Web.Client/projects/fd-webmcp/src/lib/webmcp-browser.spec.ts' -NoBaseline -Format Json | ConvertFrom-Json
+if (@($webmcpPlan.commands | Where-Object { $_.source -eq 'focused-test' -and $_.command -match 'npm run test:ci:webmcp -- --include=projects/fd-webmcp/' }).Count -ne 1 -or
+    @($webmcpPlan.commands | Where-Object { $_.command -match 'test:ci:app.*projects/fd-webmcp/' }).Count -gt 0) { throw 'WebMCP library tests were assigned to the application test runner.' }
+$mixedFrontendPlan = & $tool -ChangedPath @('FoodDiary.Web.Client/projects/fd-webmcp/src/lib/webmcp-browser.spec.ts','FoodDiary.Web.Client/src/app/theme/app-theme.config.spec.ts') -NoBaseline -Format Json | ConvertFrom-Json
+$mixedFocused = @($mixedFrontendPlan.commands | Where-Object source -eq 'focused-test')
+if ($mixedFocused.Count -lt 2 -or @($mixedFocused.id | Sort-Object -Unique).Count -ne $mixedFocused.Count) { throw 'Distinct frontend owners received duplicate focused check IDs.' }
 $browserPlan = & $tool -ChangedPath 'FoodDiary.Web.Client/e2e/client-smoke/auth-recovery.spec.ts' -NoBaseline -Format Json | ConvertFrom-Json
 if (@($browserPlan.commands | Where-Object { $_.command -match 'test:e2e:client:smoke -- e2e/client-smoke/auth-recovery.spec.ts' }).Count -ne 1 -or
     @($browserPlan.commands | Where-Object { $_.command -match 'test:ci:app.*e2e/' }).Count -gt 0) { throw 'Playwright tests were assigned to the Angular component runner.' }

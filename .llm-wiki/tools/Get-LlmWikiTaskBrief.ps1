@@ -23,6 +23,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Ensure-LlmWikiSqliteProjection.ps1')
 $taskBriefTiming = [pscustomobject]@{ stopwatch = [Diagnostics.Stopwatch]::StartNew(); previousMs = 0.0 }
 function Write-TaskBriefTiming([string]$Phase) {
     $elapsedMs = $taskBriefTiming.stopwatch.Elapsed.TotalMilliseconds
@@ -324,11 +325,10 @@ Write-TaskBriefTiming 'ownership'
 $changedPathsForQuality = @($diff.changedPaths)
 $impactStopwatch = [Diagnostics.Stopwatch]::StartNew()
 $impactIndexDiagnostics = $null
-$impactResult = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
-    -Action task-brief-impact `
-    -ChangedPath $changedPathsForQuality `
-    -SkipRefresh `
-    -Format Json | ConvertFrom-Json
+$impactResult = Invoke-LlmWikiSqliteQuery -Arguments @{
+    Action = 'task-brief-impact'
+    ChangedPath = $changedPathsForQuality
+}
 $impactStopwatch.Stop()
 Write-TaskBriefTiming 'compiled-impact'
 if (-not [bool]$impactResult.ready) {

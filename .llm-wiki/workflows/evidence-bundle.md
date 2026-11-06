@@ -25,6 +25,16 @@ sources:
 
 # Development Evidence Bundle
 
+Focused Angular/npm checks can use the owning `test:ci:*` runner with supported
+include/watch/coverage arguments. Playwright smoke checks retain their explicit
+browser spec and project/worker arguments. Both `npm --prefix FoodDiary.Web.Client
+run ...` and the existing `cd ... && npm run ...` form are supported; arbitrary
+shell suffixes, foreign prefixes and npm lifecycle overrides are rejected.
+Skill Python unittest discovery and repository `scripts/Test-*.ps1` checks can
+also run directly. Python receipts retain the actual Python runtime/version.
+These are supplemental checks; required policy checks still need their exact
+canonical command and current execution proof.
+
 Evidence bundles record what a change required, what was verified, and which
 review decisions remain unresolved. They live under ignored `.artifacts/` and
 are not committed.

@@ -443,6 +443,7 @@ $requiredSnapshotFiles = @(
 )
 $previousSnapshotRoot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
 $previousSourceRoot = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
+$previousBackendOnlyRefresh = $env:LLM_WIKI_BACKEND_ONLY_REFRESH
 try {
     $null = New-Item -ItemType Directory -Path $snapshotParent -Force
     $lockDeadline = [DateTime]::UtcNow.AddMinutes(2)
@@ -540,6 +541,7 @@ try {
     }
     $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $snapshotRoot
     $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $sourceRepositoryRoot
+    $env:LLM_WIKI_BACKEND_ONLY_REFRESH = if ($BackendOnlyRefresh) { '1' } else { '0' }
     try {
         & (Join-Path $snapshotRoot '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') `
             -ToolPath $snapshotToolPath `
@@ -556,6 +558,8 @@ try {
     else { $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $previousSnapshotRoot }
     if ($null -eq $previousSourceRoot) { Remove-Item Env:LLM_WIKI_READ_ONLY_SOURCE_ROOT -ErrorAction SilentlyContinue }
     else { $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $previousSourceRoot }
+    if ($null -eq $previousBackendOnlyRefresh) { Remove-Item Env:LLM_WIKI_BACKEND_ONLY_REFRESH -ErrorAction SilentlyContinue }
+    else { $env:LLM_WIKI_BACKEND_ONLY_REFRESH = $previousBackendOnlyRefresh }
     try {
         # A waiting reader must not acquire this slot during poisoned-clone removal.
         if ($removeSnapshot) {

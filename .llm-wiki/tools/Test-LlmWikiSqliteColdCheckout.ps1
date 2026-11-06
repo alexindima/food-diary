@@ -44,10 +44,31 @@ try {
     Assert-ColdCheckout (-not (Test-Path $databasePath)) 'Read-only facade wrote a SQLite database in the source checkout.'
     $brief = & $shellPath -NoLogo -NoProfile -File $facade brief -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Compact -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout ($brief.analysis.mode -eq 'planned-paths' -and $brief.analysis.impactIndex.source -eq 'sqlite-task-brief-impact') 'Cold backend brief lost SQLite evidence.'
+    # Damage only this fixture's disposable SQL projection while leaving its
+    # source/change-set fingerprint current. Planning must repair that projection.
+    $privateDatabases = @(Get-ChildItem -LiteralPath (Join-Path $checkoutRoot '.artifacts/llm-wiki/read-only-snapshots') -Filter code-graph.sqlite -Recurse -File | ForEach-Object FullName)
+    Assert-ColdCheckout ($privateDatabases.Count -gt 0) 'Backend brief did not prepare a private projection.'
+    $damageScript = Join-Path $checkoutRoot '.artifacts/stale-projection.mjs'
+    [IO.File]::WriteAllText($damageScript, @'
+import { DatabaseSync } from 'node:sqlite';
+for (const path of process.argv.slice(2)) {
+  const database = new DatabaseSync(path);
+  database.prepare('UPDATE metadata SET value = ? WHERE key = ?').run('fixture-stale', 'query_source:risks');
+  database.close();
+}
+'@)
+    & node $damageScript @privateDatabases
+    Assert-ColdCheckout ($LASTEXITCODE -eq 0) 'Unable to prepare the stale projection fixture.'
+    $recoveredBrief = & $shellPath -NoLogo -NoProfile -File $facade brief -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Compact -Format Json -Limit 2 | ConvertFrom-Json
+    Assert-ColdCheckout ($recoveredBrief.analysis.impactIndex.source -eq 'sqlite-task-brief-impact') 'Backend planning did not recover the stale private projection.'
     $journeys = & $shellPath -NoLogo -NoProfile -File $facade journeys -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout (@($journeys.journeys.id) -contains 'FD-BILLING') 'Cold journeys lost billing scenarios.'
     $plan = & $shellPath -NoLogo -NoProfile -File $facade test-plan -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
     Assert-ColdCheckout (@($plan.scenarios).Count -gt 0) 'Cold SQLite test-plan omitted scenarios.'
+    $design = & $shellPath -NoLogo -NoProfile -File $facade design -Intent 'Review billing webhook idempotency' -ProposedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
+    Assert-ColdCheckout ($null -ne $design.behaviorSpecification) 'Cold backend design did not complete its assessment.'
+    $topology = & $shellPath -NoLogo -NoProfile -File $facade topology -ChangedPath $backendPath -BackendOnlyRefresh -ChangeType Backend -Format Json -Limit 3 | ConvertFrom-Json
+    Assert-ColdCheckout ($null -ne $topology) 'Cold backend topology did not complete.'
     foreach ($index in @('catalog','symbols','frontend','frontend-contract','backend-contract','architecture-health','domain-data','configuration','quality','runtime','sensitive-data','modules')) {
         $result = & $shellPath -NoLogo -NoProfile -File $facade $index -BackendOnlyRefresh -Format Json -Limit 2 | ConvertFrom-Json
         Assert-ColdCheckout ($result.compiledIndex.source -eq 'sqlite-standalone-index' -and $result.compiledIndex.fresh) "Cold index '$index' lost SQLite or freshness."
