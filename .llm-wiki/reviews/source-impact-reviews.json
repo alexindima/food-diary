@@ -646,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "399375bf586e84904a45c884b2ea9eedf8b864519b42e88c04370243addd9d26",
-          "reviewReason": "Reviewed the five new task-finish cost-calibration observations. They remain observed hypotheses with no approval, application or policy change; candidate/event-chain and separate human promotion boundaries in this workflow remain accurate."
+          "sha256": "343fc6fa1100307f460e29dfa221911675340e4980b48fafe2035bdd265606d9",
+          "reviewReason": "Reviewed the appended sealed-task observations for windows-marker-503. They add retrospective candidates and hash-chain provenance only; approval, experiments, application and rollback behavior described on this page is unchanged."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the five new task-finish cost-calibration observations. They remain observed hypotheses with no approval, application or policy change; candidate/event-chain and separate human promotion boundaries in this workflow remain accurate.",
+      "reason": "Reviewed the appended sealed-task observations for windows-marker-503. They add retrospective candidates and hash-chain provenance only; approval, experiments, application and rollback behavior described on this page is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
-      "reviewedAtUtc": "2026-11-05T14:12:26.7127663Z"
+      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
+      "reviewedAtUtc": "2026-11-06T09:16:04.2015506Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1027,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "eda794e76026425f96d91527d3394d3eaf2da435e6ddc38c15119fd36880cbbd",
-          "reviewReason": "Reviewed the new schema-v2 sealed-task observation: it binds the root/scoped instruction file hashes, cohort, policy fingerprint, retrospective and measured outcome without editing AGENTS.md or promoting any instruction revision. The workflow still accurately describes append-only observations, cohort analysis and separately authorized experiments."
+          "sha256": "467ddf7d897d843d97bfbb33c4d9e37bb8141e8c4c61ebcbd185dd3ab32c9fa6",
+          "reviewReason": "Reviewed the new windows-marker-503 outcome and instruction fingerprints. This is an append-only completed-task observation; fingerprint-bound profiles and governed instruction experiment rules remain accurately documented."
         }
       ],
-      "reason": "Reviewed the new schema-v2 sealed-task observation: it binds the root/scoped instruction file hashes, cohort, policy fingerprint, retrospective and measured outcome without editing AGENTS.md or promoting any instruction revision. The workflow still accurately describes append-only observations, cohort analysis and separately authorized experiments.",
+      "reason": "Reviewed the new windows-marker-503 outcome and instruction fingerprints. This is an append-only completed-task observation; fingerprint-bound profiles and governed instruction experiment rules remain accurately documented.",
       "baseRef": "HEAD",
-      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
-      "reviewedAtUtc": "2026-11-05T14:14:01.9194384Z"
+      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
+      "reviewedAtUtc": "2026-11-06T09:16:04.5254629Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "c8a43ccfc24cfd452266eef334e4dd7e06390309c47be11b716dd74070e9ecc3",
-          "reviewReason": "Reviewed the new sealed-task observation in eval-promotions.json. It records a candidate only; no eval approval/application or active case change occurred. The documented observe/review/apply lifecycle and safety boundaries remain accurate."
+          "sha256": "af739def604be882ab2279c484d3888e1dd294c157e5440bd2a809d1989d37b9",
+          "reviewReason": "Reviewed the appended windows-marker-503 retrospective candidate and expected change profile. No eval was approved or applied and no lifecycle algorithm changed; the page still correctly requires separate review and application."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the new sealed-task observation in eval-promotions.json. It records a candidate only; no eval approval/application or active case change occurred. The documented observe/review/apply lifecycle and safety boundaries remain accurate.",
+      "reason": "Reviewed the appended windows-marker-503 retrospective candidate and expected change profile. No eval was approved or applied and no lifecycle algorithm changed; the page still correctly requires separate review and application.",
       "baseRef": "HEAD",
-      "gitHead": "3ba96778aac96f07a820ff81d265b10021d18283",
-      "reviewedAtUtc": "2026-11-05T14:12:28.8149683Z"
+      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
+      "reviewedAtUtc": "2026-11-06T09:16:04.7673273Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a76667ab81a6119d30fe4b36ee500aec4bc00bfac54373452d694172687d8150",
-          "reviewReason": "Scoped C# whitespace formatting for CI. Roslyn syntax-token comparison confirms unchanged code and string literals in all seven files; scoped full dotnet format verification passes. Regenerated projections update source fingerprints and locations only; ownership, privacy, runtime and architectural rules remain applicable."
+          "sha256": "5912af223b18e99e57f72cd4fbb0bd6b2aee15dfbd9ecc385a4701d349231923",
+          "reviewReason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Scoped C# whitespace formatting for CI. Roslyn syntax-token comparison confirms unchanged code and string literals in all seven files; scoped full dotnet format verification passes. Regenerated projections update source fingerprints and locations only; ownership, privacy, runtime and architectural rules remain applicable.",
+      "reason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "79c29636b8b19b9e0ceb94dcc107526182f430a0",
-      "reviewedAtUtc": "2026-11-05T20:13:15.7648973Z"
+      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
+      "reviewedAtUtc": "2026-11-06T09:16:05.0350700Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1549,20 +1549,20 @@
       "pageSha256": "afbc8fae001e1e78bcb6a4c7845cd17fed6e868aa90bd0f8fb1acdd61b41a8d2",
       "sources": [
         {
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "8215e3b9978d35e132e4a8748ba7c11f1f31277db11ffd8937734695d83dbac4",
+          "reviewReason": "Reviewed the Windows-only dotCover marker section against the current runner, OS filter helper, personal Rider setup and fresh Windows/Linux reports. The page describes focused test selection and risk scenarios; those claims and commands remain accurate. The documentation addition explains collector exclusions without changing test-plan command semantics."
+        },
+        {
           "path": "FoodDiary.sln.DotSettings",
           "sha256": "85e1054678472202caa2cc4a2e4d40c236f9209e2b325a5a1110c8f7b1dc9a65",
           "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
-        },
-        {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "bfa41aded85db1da2482e5c33e3794b57755cd96bd2458ba76a96849f71bbbc5",
-          "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
         }
       ],
-      "reason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged.",
+      "reason": "Reviewed the Windows-only dotCover marker section against the current runner, OS filter helper, personal Rider setup and fresh Windows/Linux reports. The page describes focused test selection and risk scenarios; those claims and commands remain accurate. The documentation addition explains collector exclusions without changing test-plan command semantics.",
       "baseRef": "HEAD",
-      "gitHead": "43f3b644a17a22dd8cb6ce81ae79b58ec403110f",
-      "reviewedAtUtc": "2026-11-02T12:05:27.2248786Z"
+      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
+      "reviewedAtUtc": "2026-11-06T07:41:09.4248230Z"
     },
     {
       "pageId": "workflow-trace-feature",

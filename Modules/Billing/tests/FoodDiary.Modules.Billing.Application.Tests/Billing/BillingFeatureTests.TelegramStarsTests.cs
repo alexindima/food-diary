@@ -215,17 +215,24 @@ public partial class BillingFeatureTests {
         public UserBillingProfileModel Profile { get; set; }
         public BillingSubscription Subscription { get; }
         public RecordingBillingPaymentRepository Payments { get; } = new();
+        public ISender Sender { get; } = Substitute.For<ISender>();
+        public IBillingProviderGateway Gateway { get; } = Substitute.For<IBillingProviderGateway>();
+        public InMemoryBillingSubscriptionRepository Subscriptions { get; }
+        public RecordingBillingWebhookEventRepository Events { get; }
         private readonly ProcessTelegramStarsUpdateCommandHandler _handler;
 
-        public StarsFixture(bool stale = false, int cancellationFailures = 0) {
+        public StarsFixture(bool stale = false, int cancellationFailures = 0,
+            RecordingBillingWebhookEventRepository? events = null) {
             Now = DateTime.UtcNow.AddMinutes(stale ? 16 : 0);
             var clock = new FixedDateTimeProvider(Now);
             Profile = new UserBillingProfileModel(UserId.New(), Email: null, IsActive: true, IsDeleted: false,
                 HasPaidPremium: false, PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, TelegramUserId: 123);
             Subscription = BillingSubscription.CreatePending(Profile.UserId, BillingProviderNames.TelegramStars, CustomerId, "stars_30d_500", "monthly");
             var subscriptions = new InMemoryBillingSubscriptionRepository(Subscription);
+            Subscriptions = subscriptions;
+            Events = events ?? new RecordingBillingWebhookEventRepository();
             Payments.Payments.Add(Order("invoice_owned"));
-            ISender sender = Substitute.For<ISender>();
+            ISender sender = Sender;
             sender.Send(Arg.Any<GetUserBillingProfileIncludingDeletedQuery>(), Arg.Any<CancellationToken>()).Returns(_ => Profile);
             sender.Send(Arg.Any<GetUserBillingProfileQuery>(), Arg.Any<CancellationToken>()).Returns(_ =>
                 Profile.IsActive && !Profile.IsDeleted ? Result.Success(Profile) : Result.Failure<UserBillingProfileModel>(new Error("User.Inactive", "Account is inactive.")));
@@ -245,7 +252,7 @@ public partial class BillingFeatureTests {
                 [BillingProviderNames.Paddle, BillingProviderNames.TelegramStars], TelegramStarsPrice: 500));
             var access = new BillingAccessService(sender, subscriptions, clock);
             var recorder = new BillingCancellationRecorder(Substitute.For<IBillingCancellationRepository>(), clock);
-            IBillingProviderGateway gateway = Substitute.For<IBillingProviderGateway>();
+            IBillingProviderGateway gateway = Gateway;
             gateway.CancelSubscriptionAsync(Arg.Any<BillingCancellationRequestModel>(), Arg.Any<CancellationToken>()).Returns(call => {
                 if (cancellationFailures-- > 0) {
                     return Result.Failure<BillingCancellationSnapshotModel>(BillingErrors.ProviderOperationFailed(BillingProviderNames.TelegramStars, "Temporary provider failure"));
@@ -268,7 +275,7 @@ public partial class BillingFeatureTests {
             var overview = new GetBillingOverviewQueryHandler(sender, subscriptions, config, clock);
             sender.Send(Arg.Any<GetBillingOverviewQuery>(), Arg.Any<CancellationToken>())
                 .Returns(call => overview.Handle(call.Arg<GetBillingOverviewQuery>(), call.Arg<CancellationToken>()));
-            _handler = new ProcessTelegramStarsUpdateCommandHandler(Payments, subscriptions, new RecordingBillingWebhookEventRepository(),
+            _handler = new ProcessTelegramStarsUpdateCommandHandler(Payments, subscriptions, Events,
                 new NoOpBillingTransactionRunner(), sender, access, config, recorder, clock);
         }
 

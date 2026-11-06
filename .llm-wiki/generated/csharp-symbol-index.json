@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4770,
-    "symbols": 4706,
+    "sourceFiles": 4771,
+    "symbols": 4707,
     "interfaceImplementationLinks": 212,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2433,
+      "class": 2434,
       "enum": 74,
       "interface": 428,
       "record": 1628,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1941,
+      "Other": 1942,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -6278,6 +6278,13 @@
       "line": 4
     },
     {
+      "name": "ExcludeFromWindowsCoverageAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Diagnostics/ExcludeFromWindowsCoverageAttribute.cs",
+      "line": 5
+    },
+    {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -6408,7 +6415,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RecipeSourceTextExtractor",
@@ -6422,7 +6429,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "RecipeYouTubeHttpHandler",

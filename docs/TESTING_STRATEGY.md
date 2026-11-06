@@ -221,6 +221,42 @@ settings or copy them wholesale into the shared file. For command-line dotCover,
 pass `--exclude-assemblies FsCheck*` alongside the other intended runtime filters;
 the CLI does not infer Rider's solution settings.
 
+### Windows-only coverage exclusions
+
+`FoodDiary.Modules.Ai.Infrastructure.Diagnostics.ExcludeFromWindowsCoverageAttribute`
+marks two recipe-import methods: the DNS-validated public socket connection and
+restricting Unix permissions on a temporary media directory. Attribute filters
+omit the whole marked method. The `IsPublicAddress` classifier remains measured
+on every platform, and private-destination rejection tests still execute on Windows.
+The marker does not change runtime behavior and is present in the same DLL on all
+platforms. It is not an unconditional `ExcludeFromCodeCoverage` attribute.
+
+The backend coverage helper at
+`.agents/skills/fooddiary-backend-coverage/scripts/run_tests.ps1` adds this marker
+to dotCover's effective attribute exclusions only on Windows. On other platforms
+it removes this exact marker from the requested exclusions, preserving all other
+filters. Both requested and effective filters are recorded in `execution.json`.
+
+For Rider, run `pwsh -NoProfile -File scripts/Configure-CoveragePlatform.ps1` on
+the machine where coverage is collected. This reconciles only the coverage
+attribute list in the ignored `FoodDiary.sln.DotSettings.user` personal layer,
+preserves other personal settings and exclusions, and supports `-WhatIf`.
+Windows adds the marker; Linux removes it. Keep this exclusion out of the shared
+`FoodDiary.sln.DotSettings`, which would otherwise also exclude the methods on
+Linux. Start a new coverage session after changing the filters; existing snapshots
+do not acquire the new policy.
+
+Direct dotCover invocations must likewise add
+`--exclude-attributes FoodDiary.Modules.Ai.Infrastructure.Diagnostics.ExcludeFromWindowsCoverageAttribute`
+only on Windows, alongside the normal attribute exclusions. Linux's owned
+network-none fixture still runs and measures the marked methods. Windows and
+Linux coverage denominators intentionally differ for these explicit exclusions;
+do not present the Windows result as proof that the excluded bodies ran.
+
+Run `pwsh -NoProfile -File scripts/Test-CoveragePlatform.ps1` for deterministic
+filter-selection and personal-settings preservation checks. The architecture
+suite runs this check as well.
+
 ## Backend Test Projects
 
 | Project | Purpose |

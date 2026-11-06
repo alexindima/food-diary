@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Infrastructure.Diagnostics;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Results;
 using Microsoft.Extensions.Logging;
@@ -34,9 +35,7 @@ public sealed partial class RecipeVideoProcessor(
         string directory = Path.Combine(Path.GetTempPath(), "fooddiary-recipe-" + Guid.NewGuid().ToString("N"));
         try {
             Directory.CreateDirectory(directory);
-            if (!OperatingSystem.IsWindows()) {
-                File.SetUnixFileMode(directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
-            }
+            RestrictUnixDirectoryPermissions(directory);
             string videoPath = Path.Combine(directory, "video.bin");
             FileStream destination = File.Create(videoPath);
             await using (destination) {
@@ -90,6 +89,13 @@ public sealed partial class RecipeVideoProcessor(
                 logger.LogWarning("Recipe media temporary directory cleanup failed.");
             }
             ProcessingSlots.Release();
+        }
+    }
+
+    [ExcludeFromWindowsCoverage]
+    private static void RestrictUnixDirectoryPermissions(string directory) {
+        if (!OperatingSystem.IsWindows()) {
+            File.SetUnixFileMode(directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
         }
     }
 

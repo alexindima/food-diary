@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1403,
     "ambiguousContracts": 32,
-    "consumerEdges": 11421,
+    "consumerEdges": 11430,
     "productionConsumerEdges": 6331,
-    "testConsumerEdges": 5090,
+    "testConsumerEdges": 5099,
     "consumedContracts": 1403,
     "unconsumedContracts": 0
   },
@@ -31052,6 +31052,19 @@
         "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CancelSubscriptionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -34624,6 +34637,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalMetadataTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "CreateCheckoutSessionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "CreateCheckoutSessionCommand",
@@ -64746,6 +64772,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingCancellationRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -65409,9 +65448,22 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingProviderGateway",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IBillingProviderGateway",
@@ -65594,6 +65646,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IBillingProviderGatewayAccessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "IBillingProviderGatewayAccessor",
@@ -124510,7 +124575,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "ISender",
@@ -139357,6 +139422,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "IUserRoleMembershipService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/PremiumAccessEndPersistenceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUserRoleMembershipService",
@@ -155940,6 +156018,19 @@
         "Modules/Billing/Application/Commands/RecoverStarsRefundCancellation/RecoverStarsRefundCancellationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecoverStarsRefundCancellationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Commands/RecoverStarsRefundCancellation/RecoverStarsRefundCancellationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -164419,6 +164510,20 @@
         "Modules/Billing/Presentation/Requests/TelegramStarsUpdateHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotStarsApiTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "TelegramStarsUpdateHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramStarsUpdateHttpRequest.cs",
+        "Modules/Billing/Presentation/Requests/TelegramStarsUpdateHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramStarsTransportTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -164463,6 +164568,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Presentation/Controllers/TelegramStarsController.cs",
       "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "TelegramStarsUpdateHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramStarsUpdateHttpResponse.cs",
+        "Modules/Billing/Presentation/Responses/TelegramStarsUpdateHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotStarsApiTests.cs",
+      "isTest": true,
       "referenceCount": 2
     },
     {

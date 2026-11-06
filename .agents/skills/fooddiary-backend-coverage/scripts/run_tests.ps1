@@ -17,6 +17,9 @@ $PSNativeCommandUseErrorActionPreference = $false
 $repo = (& git rev-parse --show-toplevel).Trim()
 if ($LASTEXITCODE -ne 0) { throw 'Run from the intended Git checkout.' }
 $repo = [IO.Path]::GetFullPath($repo)
+. (Join-Path $repo 'scripts/coverage/CoverageAttributeFilters.ps1')
+$requestedExcludeAttributes = $ExcludeAttribute
+$ExcludeAttribute = @(Get-FoodDiaryCoverageAttributeFilters -WindowsPlatform $IsWindows -ExcludeAttribute $ExcludeAttribute)
 $output = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
 $artifactRoot = [IO.Path]::GetFullPath((Join-Path $repo '.artifacts')) + [IO.Path]::DirectorySeparatorChar
 $comparison = if ($IsWindows) { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
@@ -100,6 +103,7 @@ $execution = [ordered]@{
     sourceBuildProvenance = 'Not inferred; retain the preceding build command and source evidence.'
     inputHashes = $initialHashes; inputDriftDetected = $false
     excludeAssemblies = $ExcludeAssembly; excludeAttributes = $ExcludeAttribute
+    requestedExcludeAttributes = $requestedExcludeAttributes; windowsCoverageFiltering = $IsWindows
     ffmpegPathOverride = $FfmpegPath
     generatedRunSettings = -not [bool]$RunSettings
     runSettingsSha256 = (Get-FileHash -LiteralPath $settings -Algorithm SHA256).Hash.ToLowerInvariant()

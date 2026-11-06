@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6961,
+    "productionFiles": 6962,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1047,
@@ -25481,6 +25481,14 @@
       "structuralRiskScore": 1.74
     },
     {
+      "path": "Modules/Ai/Infrastructure/Diagnostics/ExcludeFromWindowsCoverageAttribute.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "nonBlankLines": 46,
       "decisionPoints": 1,
@@ -25626,11 +25634,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
-      "nonBlankLines": 106,
+      "nonBlankLines": 109,
       "decisionPoints": 61,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 93.62
+      "structuralRiskScore": 93.68
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceTextExtractor.cs",
@@ -25642,11 +25650,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "nonBlankLines": 216,
+      "nonBlankLines": 221,
       "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 82.32
+      "structuralRiskScore": 82.42
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeHttpHandler.cs",
@@ -57036,12 +57044,13 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "line": 17,
-      "testReferenceCount": 6,
+      "testReferenceCount": 7,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutWebhookConsistencyTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalConsistencyTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalMetadataTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs"
       ],
@@ -58330,8 +58339,9 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/RecoverStarsRefundCancellation/RecoverStarsRefundCancellationCommandHandler.cs",
       "line": 13,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

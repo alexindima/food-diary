@@ -3407,6 +3407,77 @@
       },
       "reason": "",
       "eventHash": "0a620c7a3b1a94b487b14ebf1eaa5c726a10bac6dddcd42a880000d48f499410"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 24,
+      "kind": "observed",
+      "candidateId": "learned-c8e1f0d439761a9c",
+      "createdAtUtc": "2026-11-06T08:06:18.1905498Z",
+      "previousHash": "0a620c7a3b1a94b487b14ebf1eaa5c726a10bac6dddcd42a880000d48f499410",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/windows-marker-503",
+        "retrospectiveHash": "ac1ae57e4a77a5139433fe5d4b381d2ba60c352d1e87994080bc9fee6cd6eaac",
+        "packetFingerprint": "24f5292d14c2f3f061a0f28564f993c234d680827e2bee25ebd2cde3382c6761",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1410.08%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-c8e1f0d439761a9c",
+          "changedPaths": [
+            ".agents/skills/fooddiary-backend-coverage/references/diagnostics.md",
+            ".agents/skills/fooddiary-backend-coverage/scripts/run_tests.ps1",
+            "docs/TESTING_STRATEGY.md",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotStarsApiTests.cs",
+            "Modules/Ai/Infrastructure/Diagnostics/ExcludeFromWindowsCoverageAttribute.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+            "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/WindowsCoverageMarkerTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/TelegramStarsPublicConfigTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.TelegramStarsFailureTests.cs",
+            "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/PremiumAccessEndTests.cs",
+            "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/PremiumAccessEndPersistenceTests.cs",
+            "scripts/Configure-CoveragePlatform.ps1",
+            "scripts/coverage/CoverageAttributeFilters.ps1",
+            "scripts/Test-CoveragePlatform.ps1",
+            "Tooling/tests/FoodDiary.ArchitectureTests/CoveragePlatformPolicyTests.cs"
+          ],
+          "expectedModules": [
+            "Ai",
+            "Billing",
+            "Recipes",
+            "Users"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "observability-critical-flow",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "97cd2c64c12a8ad241d4daa422b3644656875942c181bf9de7ba29a2f08658ef"
+      },
+      "reason": "",
+      "eventHash": "b4698d9e2d1d7d5f55652e5b7269fc0ac7487a33035de1e05bb6677fa434c4e0"
     }
   ]
 }

@@ -37,6 +37,13 @@ $tests = @('absolute/path/to/Owner.Tests.dll')
 ```
 
 Pass the current approved runtime filters, not just the abbreviated example.
+The runner applies the explicitly approved `ExcludeFromWindowsCoverageAttribute`
+policy from `scripts/coverage/CoverageAttributeFilters.ps1`: the recipe socket and
+Unix-permissions helpers are excluded only on Windows. Linux retains them, even
+when that exact marker is present in the caller's requested filter list. Receipts
+record both lists. Do not add the marker to Linux dotCover invocations or shared
+Rider settings. Use `scripts/Configure-CoveragePlatform.ps1` to reconcile the
+ignored personal Rider layer for the current OS, and start a new coverage session.
 `-FfmpegPath` sets `FOODDIARY_TEST_FFMPEG` for this script's child processes and
 restores its prior value. Other prerequisites are inherited; verify Docker and
 PowerShell availability only for suites that require them. The runner does not

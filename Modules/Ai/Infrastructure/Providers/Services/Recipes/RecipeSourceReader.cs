@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Infrastructure.Diagnostics;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;
@@ -70,6 +71,8 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
 
     // DNS is checked at connection time and the validated address is used for the actual socket,
     // preventing redirects or DNS rebinding from reaching private infrastructure.
+    // Safe socket coverage uses an owned public-formatted address in a network-none Linux container.
+    [ExcludeFromWindowsCoverage]
     public static async ValueTask<Stream> ConnectPublicAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken) {
         IPAddress[] addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
         if (addresses.Length == 0 || addresses.Any(x => !IsPublicAddress(x))) {
