@@ -1,5 +1,7 @@
 {
-  "annotations": { "list": [] },
+  "annotations": {
+    "list": []
+  },
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -7,33 +9,60 @@
   "links": [],
   "panels": [
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
       "id": 1,
       "targets": [
         {
-          "expr": "sum(rate(fooddiary_api_requests_total{http_response_status_code=~\"5..\"}[5m])) / clamp_min(sum(rate(fooddiary_api_requests_total[5m])), 0.001)",
+          "expr": "fooddiary:api_error_ratio_5m",
           "legendFormat": "5xx ratio",
           "refId": "A"
         }
       ],
       "title": "API 5xx ratio",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "User API requests only; health, telemetry and internal bot polling excluded. No traffic remains No data."
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
       "id": 2,
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(fooddiary_api_request_duration_milliseconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(fooddiary_api_request_duration_milliseconds_bucket{exported_job=\"FoodDiary.Web.Api\",http_response_status_code!~\"4..\",url_path=~\"/api/.*\",url_path!~\"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs\"}[5m])))",
           "legendFormat": "p95",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(fooddiary_api_request_duration_milliseconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(fooddiary_api_request_duration_milliseconds_bucket{exported_job=\"FoodDiary.Web.Api\",http_response_status_code!~\"4..\",url_path=~\"/api/.*\",url_path!~\"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs\"}[5m])))",
           "legendFormat": "p99",
           "refId": "B"
         }
@@ -42,9 +71,20 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-      "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
       "id": 3,
       "targets": [
         {
@@ -57,9 +97,22 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
       "id": 4,
       "targets": [
         {
@@ -72,9 +125,20 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-      "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
       "id": 5,
       "targets": [
         {
@@ -288,7 +352,11 @@
   ],
   "refresh": "30s",
   "schemaVersion": 41,
-  "tags": ["fooddiary", "backend", "reliability"],
+  "tags": [
+    "fooddiary",
+    "backend",
+    "reliability"
+  ],
   "templating": {
     "list": [
       {
@@ -304,7 +372,10 @@
       }
     ]
   },
-  "time": { "from": "now-6h", "to": "now" },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
   "timezone": "browser",
   "title": "FoodDiary Backend Reliability",
   "uid": "fooddiary-backend-reliability",

@@ -31,7 +31,7 @@ scrape_configs:
           selector: '{log_source="backend"} |~ "(Client telemetry event|FoodDiary\\.Presentation\\.Api\\.Features\\.Logs\\.LogsController)"'
           stages:
             - regex:
-                expression: '.*Client telemetry event (?P<client_telemetry_category>[^/]+)/(?P<client_telemetry_name>[^:]+):'
+                expression: '.*Client telemetry event (?P<client_telemetry_category>client_error|http_request|route_timing|web_vital)/(?P<client_telemetry_name>[a-zA-Z0-9_.-]+)[.:] Outcome='
             - template:
                 source: log_source
                 template: 'frontend'

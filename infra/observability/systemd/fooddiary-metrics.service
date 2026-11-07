@@ -1,0 +1,18 @@
+[Unit]
+Description=FoodDiary bounded infrastructure metric collection
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/fooddiary-observability/host_collector.py
+TimeoutStartSec=55
+MemoryMax=128M
+Nice=10
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/prometheus/node-exporter
+StandardOutput=null
+StandardError=journal

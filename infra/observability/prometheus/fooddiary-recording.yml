@@ -1,0 +1,31 @@
+groups:
+- name: fooddiary-user-api
+  interval: 30s
+  rules:
+  - record: fooddiary:api_error_ratio_5m
+    expr: (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code=~"5.."}[5m]))
+      or (0 * sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[5m]))))
+      / (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[5m]))
+      > 0)
+  - record: fooddiary:api_error_ratio_30m
+    expr: (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code=~"5.."}[30m]))
+      or (0 * sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[30m]))))
+      / (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[30m]))
+      > 0)
+  - record: fooddiary:api_error_ratio_1h
+    expr: (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code=~"5.."}[1h]))
+      or (0 * sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[1h]))))
+      / (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[1h]))
+      > 0)
+  - record: fooddiary:api_error_ratio_6h
+    expr: (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code=~"5.."}[6h]))
+      or (0 * sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[6h]))))
+      / (sum(rate(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[6h]))
+      > 0)
+  - record: fooddiary:api_eligible_requests_5m
+    expr: sum(increase(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[5m]))
+  - record: fooddiary:job_success_deadline_exceeded
+    expr: (fooddiary_job_last_success_age_seconds > on(fooddiary_job_name) (2*fooddiary_job_expected_interval_seconds+300))
+      or ((fooddiary_job_expected_interval_seconds unless on(fooddiary_job_name) fooddiary_job_last_success_age_seconds)
+      and on(fooddiary_job_name) ((time()-scalar(max(fooddiary_container_started_timestamp_seconds{service="job-manager"})))
+      > fooddiary_job_expected_interval_seconds*2+300))

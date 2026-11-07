@@ -1,0 +1,11 @@
+[Unit]
+Description=Collect FoodDiary infrastructure metrics every minute
+
+[Timer]
+OnBootSec=90s
+OnUnitInactiveSec=60s
+AccuracySec=5s
+Unit=fooddiary-metrics.service
+
+[Install]
+WantedBy=timers.target

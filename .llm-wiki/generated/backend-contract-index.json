@@ -148521,7 +148521,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
-      "referenceCount": 36
+      "referenceCount": 37
     },
     {
       "contract": "OpenAiFoodClientResponse",

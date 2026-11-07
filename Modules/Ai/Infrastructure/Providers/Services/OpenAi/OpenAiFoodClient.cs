@@ -282,6 +282,31 @@ public sealed partial class OpenAiFoodClient(
         string operation,
         string model,
         CancellationToken cancellationToken) {
+        long started = _timeProvider.GetTimestamp();
+        string outcome = "failure";
+        try {
+            (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) result =
+                await SendRequestCoreAsync(payload, operation, model, cancellationToken);
+            outcome = result.IsSuccess ? "success" : "failure";
+            return result;
+        } catch (OperationCanceledException) {
+            outcome = "canceled";
+            throw;
+        } finally {
+            IntegrationsTelemetry.AiRequestDuration.Record(
+                _timeProvider.GetElapsedTime(started).TotalMilliseconds,
+                new KeyValuePair<string, object?>("fooddiary.ai.operation", operation),
+                new KeyValuePair<string, object?>("fooddiary.ai.model", model),
+                new KeyValuePair<string, object?>("fooddiary.ai.outcome", outcome));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private async Task<(bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback)> SendRequestCoreAsync(
+        object payload,
+        string operation,
+        string model,
+        CancellationToken cancellationToken) {
         string requestBody = JsonSerializer.Serialize(payload);
         using var overallDeadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         overallDeadline.CancelAfter(_overallRequestTimeout);
@@ -407,6 +432,17 @@ public sealed partial class OpenAiFoodClient(
                 MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
             });
             RecordAiRequest(operation, model, "success");
+            AiTokenUsage? usage = ExtractUsage(json);
+            if (usage is not null) {
+                IntegrationsTelemetry.AiTokenCounter.Add(usage.InputTokens,
+                    new KeyValuePair<string, object?>("fooddiary.ai.operation", operation),
+                    new KeyValuePair<string, object?>("fooddiary.ai.model", model),
+                    new KeyValuePair<string, object?>("fooddiary.ai.token_type", "input"));
+                IntegrationsTelemetry.AiTokenCounter.Add(usage.OutputTokens,
+                    new KeyValuePair<string, object?>("fooddiary.ai.operation", operation),
+                    new KeyValuePair<string, object?>("fooddiary.ai.model", model),
+                    new KeyValuePair<string, object?>("fooddiary.ai.token_type", "output"));
+            }
             return (true, json, Error.None, false);
         } catch (JsonException) {
             RecordAiRequest(operation, model, "invalid_json");

@@ -1,0 +1,9 @@
+{
+  "verifiedOn": "2026-11-07",
+  "source": "https://developers.openai.com/api/docs/pricing",
+  "basis": "Standard processing, short context, uncached input/output USD per million tokens",
+  "models": {
+    "gpt-6-luna": { "input": 0.1, "output": 0.5 },
+    "gpt-4o": { "input": 2.5, "output": 10 }
+  }
+}

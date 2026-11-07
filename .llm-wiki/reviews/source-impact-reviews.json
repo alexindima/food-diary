@@ -17,20 +17,25 @@
       "pageSha256": "ac438aaaad818deaa15b0fd448a206e8368be2799344b5461d15327be74da8f1",
       "sources": [
         {
+          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "0f183567205b14463b0e5e33d4be70c38cfd6f4d341bc69b28eb74c9be1fa7b2",
+          "reviewReason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed."
+        },
+        {
+          "path": "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "237282689f12f8aacd68690871d47fedf5bdac98f2d5672136f8850ecc614c06",
+          "reviewReason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed."
+        },
+        {
           "path": "docs/README.md",
           "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
           "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
-        },
-        {
-          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "d10fef273ec7fcaece67a32aa6fa5a2f0e674c45428c2a65daaee2ca9649b28c",
-          "reviewReason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change."
         }
       ],
-      "reason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change.",
+      "reason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed.",
       "baseRef": "HEAD",
-      "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
-      "reviewedAtUtc": "2026-11-03T03:57:28.253152Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-07T18:02:00.6988537Z"
     },
     {
       "pageId": "module.frontend",
@@ -646,8 +651,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "343fc6fa1100307f460e29dfa221911675340e4980b48fafe2035bdd265606d9",
-          "reviewReason": "Reviewed the appended sealed-task observations for windows-marker-503. They add retrospective candidates and hash-chain provenance only; approval, experiments, application and rollback behavior described on this page is unchanged."
+          "sha256": "8a32accaf7aedd81add342f370b73f3dc4755c2371b193df45c2b7239eab8594",
+          "reviewReason": "Reviewed the appended observation from the sealed observability task: it records a 70-second architecture check versus a 1608-second forecast as a calibration hypothesis. No approval, application, policy or durable memory changed; the governed promotion workflow remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +675,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the appended sealed-task observations for windows-marker-503. They add retrospective candidates and hash-chain provenance only; approval, experiments, application and rollback behavior described on this page is unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:04.2015506Z"
+      "reason": "Reviewed the appended observation from the sealed observability task: it records a 70-second architecture check versus a 1608-second forecast as a calibration hypothesis. No approval, application, policy or durable memory changed; the governed promotion workflow remains accurate.",
+      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
+      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
+      "reviewedAtUtc": "2026-11-07T18:35:36.5822779Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1027,14 +1032,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "467ddf7d897d843d97bfbb33c4d9e37bb8141e8c4c61ebcbd185dd3ab32c9fa6",
-          "reviewReason": "Reviewed the new windows-marker-503 outcome and instruction fingerprints. This is an append-only completed-task observation; fingerprint-bound profiles and governed instruction experiment rules remain accurately documented."
+          "sha256": "ed7e857bdc819ee445a5eb9f4b061cee5eed223ad2e01eaf0f24a900cac24b2a",
+          "reviewReason": "Reviewed the new completed observability-task event and source instruction fingerprints. It appends outcome attribution only; no instruction revision, experiment decision or adoption was performed. The existing cohort and integrity guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the new windows-marker-503 outcome and instruction fingerprints. This is an append-only completed-task observation; fingerprint-bound profiles and governed instruction experiment rules remain accurately documented.",
-      "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:04.5254629Z"
+      "reason": "Reviewed the new completed observability-task event and source instruction fingerprints. It appends outcome attribution only; no instruction revision, experiment decision or adoption was performed. The existing cohort and integrity guidance remains accurate.",
+      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
+      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
+      "reviewedAtUtc": "2026-11-07T18:35:37.3438582Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1064,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "af739def604be882ab2279c484d3888e1dd294c157e5440bd2a809d1989d37b9",
-          "reviewReason": "Reviewed the appended windows-marker-503 retrospective candidate and expected change profile. No eval was approved or applied and no lifecycle algorithm changed; the page still correctly requires separate review and application."
+          "sha256": "9f2c9ac790dcec05471e1514d261c7d91f489751de621a4c8551c3ba9df59532",
+          "reviewReason": "Reviewed the new unapproved cost-miss candidate from the sealed observability retrospective. Its expected Ai module, scopes and checks match the task; no case was approved or applied to active evals. Lifecycle and activation boundaries remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1078,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended windows-marker-503 retrospective candidate and expected change profile. No eval was approved or applied and no lifecycle algorithm changed; the page still correctly requires separate review and application.",
-      "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:04.7673273Z"
+      "reason": "Reviewed the new unapproved cost-miss candidate from the sealed observability retrospective. Its expected Ai module, scopes and checks match the task; no case was approved or applied to active evals. Lifecycle and activation boundaries remain unchanged.",
+      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
+      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
+      "reviewedAtUtc": "2026-11-07T18:35:38.0974382Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1127,14 +1132,14 @@
         },
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "d10fef273ec7fcaece67a32aa6fa5a2f0e674c45428c2a65daaee2ca9649b28c",
-          "reviewReason": "Verified the existing workflow requires stable low-cardinality measurements and exclusion of secrets and unbounded identifiers. Native Npgsql views retain only database system and connection state, explicitly disable exemplars, and are exercised by host exporter tests; the workflow guidance remains accurate."
+          "sha256": "0f183567205b14463b0e5e33d4be70c38cfd6f4d341bc69b28eb74c9be1fa7b2",
+          "reviewReason": "Reviewed telemetry review guardrails against implementation: outcomes, useful duration, bounded dimensions, absence handling and exclusion of private payloads are preserved; workflow guidance remains current."
         }
       ],
-      "reason": "Verified the existing workflow requires stable low-cardinality measurements and exclusion of secrets and unbounded identifiers. Native Npgsql views retain only database system and connection state, explicitly disable exemplars, and are exercised by host exporter tests; the workflow guidance remains accurate.",
+      "reason": "Reviewed telemetry review guardrails against implementation: outcomes, useful duration, bounded dimensions, absence handling and exclusion of private payloads are preserved; workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
-      "reviewedAtUtc": "2026-11-03T03:57:30.2263079Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-07T18:02:01.6220472Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1185,8 +1190,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "de2938be1f707c78dc0664838664e03a9260982167056f95f8fc781fee332199",
-          "reviewReason": "Reviewed opaque invoice payloads, saved payer/account binding, minimized financial envelope and bot shared-secret authentication. Provider HTTP logging is disabled to prevent bot-token URL leaks. No diary content is sent to Telegram billing; protected financial records retain existing lifecycle rules. Navigation guidance remains accurate."
+          "sha256": "0af1e0a3205d3ebb0c413d04d57e28c042fd47791d1e1723d5b33e1d5402c135",
+          "reviewReason": "Reviewed current source against the sensitive-data navigation: new instruments contain bounded operation/model/outcome/token-type fields only; host probes expose numeric aggregates, not SQL, rows, keys, mail or identities. Existing trace sanitizers, access contract and disabled ingestion remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1199,10 +1204,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed opaque invoice payloads, saved payer/account binding, minimized financial envelope and bot shared-secret authentication. Provider HTTP logging is disabled to prevent bot-token URL leaks. No diary content is sent to Telegram billing; protected financial records retain existing lifecycle rules. Navigation guidance remains accurate.",
+      "reason": "Reviewed current source against the sensitive-data navigation: new instruments contain bounded operation/model/outcome/token-type fields only; host probes expose numeric aggregates, not SQL, rows, keys, mail or identities. Existing trace sanitizers, access contract and disabled ingestion remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
-      "reviewedAtUtc": "2026-11-05T16:09:31.8727173Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-07T18:02:35.6826925Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1373,8 +1378,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5912af223b18e99e57f72cd4fbb0bd6b2aee15dfbd9ecc385a4701d349231923",
-          "reviewReason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate."
+          "sha256": "fb9a0731778e7423716a94db3582759be45c5b87ede13f04e85a59f183609223",
+          "reviewReason": "Reviewed runtime navigation against the regenerated topology: existing OpenAI endpoints, module ownership and app composition remain unchanged; the request timing wrapper and host-only numeric probes do not add foreign aggregate writes."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1392,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the generated topology diff: only sourceFingerprint and sourceFileCount changed after adding the coverage attribute source. No host, worker, integration or recurring-job inventory changed; runtime review guidance remains accurate.",
+      "reason": "Reviewed runtime navigation against the regenerated topology: existing OpenAI endpoints, module ownership and app composition remain unchanged; the request timing wrapper and host-only numeric probes do not add foreign aggregate writes.",
       "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:05.0350700Z"
+      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
+      "reviewedAtUtc": "2026-11-07T18:02:36.4390262Z"
     },
     {
       "pageId": "workflow-security-review",
