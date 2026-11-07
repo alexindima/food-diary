@@ -1,0 +1,209 @@
+{
+  "uid": "fooddiary-ai-operations",
+  "title": "FoodDiary AI Provider Operations",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "tags": [
+    "fooddiary",
+    "observability"
+  ],
+  "timezone": "browser",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "model",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cfhlwwx2t4w00a"
+        },
+        "query": "label_values(fooddiary_ai_tokens_total, fooddiary_ai_model)",
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "Provider request p95 including retries / body",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95,sum by(le,fooddiary_ai_operation,fooddiary_ai_model)(rate(fooddiary_ai_request_duration_milliseconds_bucket[5m])))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 1,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Provider request outcomes",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "sum by(fooddiary_ai_operation,fooddiary_ai_outcome)(increase(fooddiary_ai_requests_total[1h]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 2,
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Measured provider tokens",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "sum by(fooddiary_ai_model,fooddiary_ai_token_type)(increase(fooddiary_ai_tokens_total[1h]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 3,
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Estimated token cost by model over range",
+      "type": "timeseries",
+      "description": "Verified 2026-11-07 against https://developers.openai.com/api/docs/pricing. Standard short-context uncached rates are mapped separately for gpt-6-luna and gpt-4o. Unknown models stay absent. Excludes cache discounts/writes, long-context/premium/regional adjustments, audio, token-count calls and missing usage; this is a baseline estimate, not an invoice.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "((sum by(fooddiary_ai_model)(increase(fooddiary_ai_tokens_total{fooddiary_ai_model=~\"$model\",fooddiary_ai_token_type=\"input\"}[$__range])) * on(fooddiary_ai_model) (label_replace(vector(0.1), \"fooddiary_ai_model\", \"gpt-6-luna\", \"__name__\", \".*\") or label_replace(vector(2.5), \"fooddiary_ai_model\", \"gpt-4o\", \"__name__\", \".*\"))) + on(fooddiary_ai_model) (sum by(fooddiary_ai_model)(increase(fooddiary_ai_tokens_total{fooddiary_ai_model=~\"$model\",fooddiary_ai_token_type=\"output\"}[$__range])) * on(fooddiary_ai_model) (label_replace(vector(0.5), \"fooddiary_ai_model\", \"gpt-6-luna\", \"__name__\", \".*\") or label_replace(vector(10), \"fooddiary_ai_model\", \"gpt-4o\", \"__name__\", \".*\")))) / 1000000",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 4,
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Token usage without a configured model price",
+      "type": "timeseries",
+      "description": "Missing price coverage is shown as usage, never as a zero-cost estimate.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "sum by(fooddiary_ai_model)(increase(fooddiary_ai_tokens_total[$__range])) unless on(fooddiary_ai_model) (label_replace(vector(0.1), \"fooddiary_ai_model\", \"gpt-6-luna\", \"__name__\", \".*\") or label_replace(vector(2.5), \"fooddiary_ai_model\", \"gpt-4o\", \"__name__\", \".*\"))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 5,
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      }
+    }
+  ]
+}

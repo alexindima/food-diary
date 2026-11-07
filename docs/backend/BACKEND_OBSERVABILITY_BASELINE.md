@@ -543,3 +543,30 @@ When an alert fires, jump to these runbooks first:
 
 - database retry counters
 - output-cache hit ratio for admin and user-scoped cached endpoints
+
+## Production operational coverage
+
+The source-controlled host collector, Grafana rules and independent public
+probes are described in `infra/observability/README.md`. User API availability
+uses eligible application traffic; health, telemetry ingestion and internal
+Telegram bot polling are excluded so they cannot dilute user failures. Missing
+runtime metrics and missed job success deadlines have separate alerts.
+
+AI Responses requests additionally emit `fooddiary.ai.request.duration` (ms,
+including retries/body reading) and validated `fooddiary.ai.tokens` with bounded
+operation/model/outcome or token-type dimensions. Token-based cost estimation
+uses the explicitly dated model-specific Standard short-context rates in
+`infra/observability/ai-model-prices.json`, with separate unpriced usage coverage.
+It remains separate from provider billing and cache/context/tier adjustments.
+Transcription and token-count requests are outside these new instruments.
+
+Infrastructure probes export numeric Docker/PostgreSQL/Redis/RabbitMQ aggregates
+and verified backup age through Node Exporter's textfile collector. They never
+export query text, rows, keys, message content or identities. Failed probes omit
+their measurements and report failure explicitly; collector age also protects
+against serving a stale file. Backup checksum validation is distinct from a
+complete restore rehearsal.
+
+Trace ingestion remains disabled following the operator's decision on
+7 November 2026. Adding operational metrics does not authorize retaining traces
+or weaken the privacy/access/retention requirements above.

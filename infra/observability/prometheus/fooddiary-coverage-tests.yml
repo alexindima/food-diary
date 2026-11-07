@@ -1,0 +1,68 @@
+rule_files:
+  - fooddiary-recording.yml
+evaluation_interval: 30s
+tests:
+  - name: internal polling and client errors cannot hide user failures
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="200"}'
+        values: '0+95x20'
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="503"}'
+        values: '0+5x20'
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/auth/telegram/bot/operations/ready",http_response_status_code="200"}'
+        values: '0+10000x20'
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="400"}'
+        values: '0+10000x20'
+    promql_expr_test:
+      - expr: fooddiary:api_error_ratio_5m
+        eval_time: 15m
+        exp_samples:
+          - labels: 'fooddiary:api_error_ratio_5m'
+            value: 0.05
+  - name: healthy observations do not require a previously emitted error series
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/meals",http_response_status_code="200"}'
+        values: '0+100x20'
+    promql_expr_test:
+      - expr: fooddiary:api_error_ratio_5m
+        eval_time: 15m
+        exp_samples:
+          - labels: 'fooddiary:api_error_ratio_5m'
+            value: 0
+  - name: missing and idle API data remain absent
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/meals",http_response_status_code="200"}'
+        values: '0+0x20'
+    promql_expr_test:
+      - expr: fooddiary:api_error_ratio_5m
+        eval_time: 15m
+        exp_samples: []
+  - name: never-started minute job is tolerated during startup then detected
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_job_expected_interval_seconds{fooddiary_job_name="email.outbox"}'
+        values: '60+0x20'
+      - series: 'fooddiary_container_started_timestamp_seconds{service="job-manager"}'
+        values: '0+0x20'
+    promql_expr_test:
+      - expr: fooddiary:job_success_deadline_exceeded
+        eval_time: 5m
+        exp_samples: []
+      - expr: fooddiary:job_success_deadline_exceeded
+        eval_time: 10m
+        exp_samples:
+          - labels: 'fooddiary:job_success_deadline_exceeded{fooddiary_job_name="email.outbox"}'
+            value: 60
+  - name: daily job does not page before its first scheduled execution
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_job_expected_interval_seconds{fooddiary_job_name="users.cleanup"}'
+        values: '86400+0x20'
+      - series: 'fooddiary_container_started_timestamp_seconds{service="job-manager"}'
+        values: '0+0x20'
+    promql_expr_test:
+      - expr: fooddiary:job_success_deadline_exceeded
+        eval_time: 15m
+        exp_samples: []

@@ -407,6 +407,14 @@
       "structuralRiskScore": 135.82
     },
     {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "nonBlankLines": 540,
+      "decisionPoints": 82,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 133.8
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
       "nonBlankLines": 361,
       "decisionPoints": 83,
@@ -445,14 +453,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 130.2
-    },
-    {
-      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 505,
-      "decisionPoints": 80,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.1
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipe.cs",
@@ -25594,11 +25594,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 505,
-      "decisionPoints": 80,
+      "nonBlankLines": 540,
+      "decisionPoints": 82,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.1
+      "structuralRiskScore": 133.8
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodResponseDecoder.cs",
@@ -55802,11 +55802,11 @@
     },
     {
       "path": "Shared/FoodDiary.Integrations.Http/Services/IntegrationsTelemetry.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 60,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.06
+      "structuralRiskScore": 1.2
     },
     {
       "path": "Shared/FoodDiary.Mediator/DefaultMediator.cs",

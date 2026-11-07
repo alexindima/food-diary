@@ -1,0 +1,191 @@
+{
+  "uid": "fooddiary-frontend-reliability",
+  "title": "FoodDiary Frontend Reliability",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "tags": [
+    "fooddiary",
+    "observability"
+  ],
+  "timezone": "browser",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "templating": {
+    "list": []
+  },
+  "panels": [
+    {
+      "title": "Client exceptions by build",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "sum by(build_version) (count_over_time({log_source=\"frontend\"} | regexp \"Client telemetry event (?P<category>client_error|http_request|route_timing|web_vital)/\" | category=\"client_error\" | regexp \"BuildVersion=(?P<build_version>[a-zA-Z0-9.+_-]{1,64})\"[$__interval]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 1,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "API errors from browsers by build",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "sum by(build_version) (count_over_time({log_source=\"frontend\"} | regexp \"Client telemetry event (?P<category>client_error|http_request|route_timing|web_vital)/\" | category=\"http_request\" |~ \"Outcome=(server_error|network_error)\" | regexp \"BuildVersion=(?P<build_version>[a-zA-Z0-9.+_-]{1,64})\"[$__interval]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 2,
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Navigation duration p95 by build",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "quantile_over_time(0.95, {log_source=\"frontend\"} | regexp \"Client telemetry event (?P<category>client_error|http_request|route_timing|web_vital)/\" | category=\"route_timing\" | regexp \"BuildVersion=(?P<build_version>[a-zA-Z0-9.+_-]{1,64})\" | regexp \"DurationMs=(?P<duration>[0-9.]+)\" | unwrap duration | __error__=\"\" [$__interval]) by(build_version)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 3,
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Web vital p75 by name / build",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "quantile_over_time(0.75, {log_source=\"frontend\"} | regexp \"Client telemetry event (?P<category>client_error|http_request|route_timing|web_vital)/\" | category=\"web_vital\" | regexp \"web_vital/(?P<vital>[a-z_]+)\" | regexp \"BuildVersion=(?P<build_version>[a-zA-Z0-9.+_-]{1,64})\" | regexp \"Value=(?P<value>[0-9.]+)\" | unwrap value | __error__=\"\" [$__interval]) by(vital,build_version)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 4,
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Frontend telemetry coverage",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "sum by(category) (count_over_time({log_source=\"frontend\"} | regexp \"Client telemetry event (?P<category>client_error|http_request|route_timing|web_vital)/\"[$__interval]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 5,
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      }
+    }
+  ]
+}

@@ -13,6 +13,15 @@ internal static class IntegrationsTelemetry {
     public static readonly Counter<long> AiFallbackCounter = Meter.CreateCounter<long>(
         "fooddiary.ai.fallbacks");
 
+    public static readonly Histogram<double> AiRequestDuration = Meter.CreateHistogram<double>(
+        "fooddiary.ai.request.duration", unit: "ms",
+        advice: new InstrumentAdvice<double> {
+            HistogramBucketBoundaries = [100, 250, 500, 1000, 2500, 5000, 10000, 15000, 30000, 60000, 120000],
+        });
+
+    public static readonly Counter<long> AiTokenCounter = Meter.CreateCounter<long>(
+        "fooddiary.ai.tokens");
+
     public static readonly Counter<long> StorageOperationCounter = Meter.CreateCounter<long>(
         "fooddiary.storage.operations");
 

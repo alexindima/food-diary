@@ -14334,7 +14334,7 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 360,
+      "line": 385,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

@@ -116,3 +116,132 @@ process CPU, working set, GC and API latency against similar-load periods; a
 quiet production smoke check alone is not an overhead benchmark. Roll back the
 application release to stop instrumentation; remove only these two dashboard
 files to roll back their provisioning, preserving other dashboards.
+
+## Operational coverage
+
+`host_collector.py` runs as the short-lived `fooddiary-metrics.service`, scheduled
+by its timer about once per minute after completion. It atomically replaces
+`/var/lib/prometheus/node-exporter/fooddiary.prom`. Node Exporter reads that file;
+its HTTP listener remains on loopback. The service has a 128 MiB memory limit,
+a 55-second deadline and a fixed inventory of service/database labels.
+
+The collector observes Docker state/resources, four PostgreSQL servers, Redis
+INFO counters, RabbitMQ queue totals in the application's default vhost, public
+HTTP/TLS availability and the three existing scheduled PostgreSQL backups.
+PostgreSQL probes use fixed aggregate SQL, read-only transactions and a three
+second statement timeout through each container's existing local maintenance
+identity. They never return SQL text, parameters, users, messages or row data.
+RabbitMQ probes never read message contents. Redis probes never enumerate keys.
+No database schema, authentication or application-container configuration changes
+are required. The collector needs root/Docker access and is an operator service.
+
+Each probe exports `fooddiary_collector_component_success`; a failed probe omits
+its measurements. The separate last-run timestamp detects an abandoned/stuck
+collector even while Node Exporter continues serving its previous file. Container
+restarts are a snapshot gauge that resets on replacement; they are not a global
+cumulative counter. Linux's OOM counter supplements the instantaneous container
+OOM flag, which can clear after restart. CPU values are process time, memory is
+working set with reclaimable inactive cache excluded, and unlimited containers
+report the host memory limit supplied by Docker.
+
+Backup verification checks the newest completed set's SHA256 manifest and size.
+A corrupt newest dump never falls back to a healthy older set. This supplements
+the scheduled backup script's `pg_restore --list` check; it does not claim that
+a complete restore rehearsal succeeded. The age alert uses a 26-hour deadline.
+
+`fooddiary-recording.yml` is the canonical user API recording-rule source. It
+excludes health, client telemetry and internal Telegram bot-operation endpoints;
+availability excludes 4xx responses. Successful observed traffic produces a zero
+error ratio even before the first 5xx series exists; no eligible traffic remains
+absent. Optional Prometheus paging files share these definitions. Production
+notifications use the Grafana-managed rules, avoiding a second paging route.
+
+Recurring-job deadlines use twice the configured schedule interval plus five
+minutes. `JOB_INTERVALS` follows `RecurringJobsHostedService` and must be updated
+when a production cron override changes. Missing first-run series get the same
+startup grace, measured from the JobManager container start time. Daily jobs do
+not become false failures immediately after a deployment. Existing job/outbox
+gauges retain No Data as an alert condition rather than a fabricated zero.
+
+New dashboards are **Operational Coverage**, **Frontend Reliability** and **AI
+Provider Operations**. The Product Usage dashboard parses categories at query
+time too, so old events without indexed category labels remain visible. It counts
+observed navigation events, not unique users/sessions. Frontend latency/errors
+can be grouped by logged build version; missing telemetry remains missing.
+
+AI Responses requests expose `fooddiary.ai.request.duration` in milliseconds,
+including retries and body reading, with bounded operation/model/outcome tags.
+Validated provider usage exposes `fooddiary.ai.tokens` by input/output type.
+Histogram advice covers 100 ms through 120 seconds. `ai-model-prices.json`
+records the source/date and separate confirmed rates for the configured
+`gpt-6-luna` and fallback `gpt-4o` models. The cost panel joins usage to each
+model's own price; unknown models remain absent and have a separate unpriced
+usage panel. Rates were verified on 7 November 2026 against
+[official OpenAI pricing](https://developers.openai.com/api/docs/pricing).
+The estimate uses Standard short-context, uncached input/output rates. Cache
+discounts/writes, long-context, premium/regional adjustments, transcription,
+token-count calls and missing usage are outside it. It is not a provider invoice.
+Tests use mocked providers; no paid calls are required. The pricing fixture
+checks model matching, unknown models and USD-per-million units independently.
+
+### Independent availability
+
+`.github/workflows/external-monitoring.yml` runs the same public probes from a
+GitHub-hosted runner on the default branch. It checks the site, admin site,
+Grafana health and the expected unauthorized JSON response on the public API.
+Public readiness stays private at ingress. This verifies API transport/auth
+response handling; PostgreSQL readiness is covered by the internal probes.
+No test account or user data is required. State is cached between serialized
+runs, with notification after two consecutive failures and measured recovery.
+TLS expiry below 14 days is actionable immediately. Existing GitHub Telegram
+secrets supply the receiver; successful checks send no routine messages.
+
+The five-minute GitHub schedule is best-effort: scheduler delays or dropped runs
+can extend detection time. Cache loss restarts the two-observation grace period.
+The workflow remains independent of the VPS and can report a complete VPS outage.
+The VPS dashboard shows its own additional probe measurements, not the remote
+runner's results. Remote observations are retained as GitHub artifacts for seven
+days. This public repository uses standard public-repository hosted runners.
+
+### Validate, install and recover
+
+Generate configuration with Python and `PyYAML==6.0.3`:
+
+```text
+python infra/observability/build_config.py
+python -m unittest discover -s infra/observability -p 'test_*.py'
+node infra/observability/verify.mjs
+promtool check rules infra/observability/prometheus/fooddiary-recording.yml
+promtool test rules infra/observability/prometheus/fooddiary-alert-tests.yml infra/observability/prometheus/fooddiary-coverage-tests.yml
+promtool test rules infra/observability/prometheus/fooddiary-pricing-tests.yml
+```
+
+`verify.mjs --frontend-only` runs the focused parser regression; `--prometheus`
+runs all PromQL fixtures with the pinned production-compatible Prometheus 3.3.0
+image after Docker readiness. `--pricing-only` adds just the cost fixture to the
+Python contracts. The wrapper lets the existing Wiki evidence runner capture
+real Python/Docker executions without adding those runtimes to its shell parser.
+
+Upload this directory to an owned staging directory on `fooddiary-prod`. Run
+`python3 <staging>/install.py` to validate PromQL, Promtail syntax and dashboard
+structure. Run the same command with `--apply` for the authorized rollout. The
+installer preserves unrelated Prometheus jobs/rule files and the existing
+Grafana contact-point/policy configuration. It adds self-monitoring scrape jobs
+only for existing reachable monitoring endpoints. It restarts only Node Exporter,
+Promtail and Grafana, and reloads Prometheus; application containers and databases
+continue running. No trace pipeline or trace destination is enabled.
+
+Every overwritten target has a private copy under
+`/var/backups/fooddiary-observability/<UTC timestamp>/`; `manifest.json` records
+the exact targets and which ones existed. To recover, stop the owned metrics
+timer, restore only those recorded files (remove only newly created owned
+targets), reload systemd, then reload/restart the same monitoring services.
+Preserve unrelated configuration changes made after that backup. Keep the
+backup private because existing operator configuration may contain credentials.
+After rollout, verify all probe-success series, last-run age, Prometheus target
+health, recording-rule health, Grafana rule evaluation, frontend historical
+counts and application readiness separately.
+
+Trace ingestion remains deliberately disabled by the user's decision on
+7 November 2026. A future external backend must satisfy the existing trace
+privacy, operator-access and maximum 14-day retention contract before ingestion.
