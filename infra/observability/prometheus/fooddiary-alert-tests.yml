@@ -8,14 +8,14 @@ tests:
   interval: 1m
   input_series:
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="200"}
-    values: 0+100x420
+    values: 0+100x20
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="500"}
-    values: 0+0x420
+    values: 0+0x20
   alert_rule_test:
-  - eval_time: 7h
+  - eval_time: 15m
     alertname: FoodDiaryApiAvailabilityBudgetFastBurn
     exp_alerts: []
-  - eval_time: 7h
+  - eval_time: 15m
     alertname: FoodDiaryApiAvailabilityBudgetSlowBurn
     exp_alerts: []
 - name: missing metrics stay absent rather than becoming healthy zero
@@ -29,13 +29,13 @@ tests:
   interval: 1m
   input_series:
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="200"}
-    values: 0+95x420
+    values: 0+95x20
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="503"}
-    values: 0+5x420
+    values: 0+5x20
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="400"}
-    values: 0+10000x420
+    values: 0+10000x20
   alert_rule_test:
-  - eval_time: 2h
+  - eval_time: 15m
     alertname: FoodDiaryApiAvailabilityBudgetFastBurn
     exp_alerts:
     - exp_labels:
@@ -68,14 +68,14 @@ tests:
   interval: 1m
   input_series:
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="200"}
-    values: 0+0.001x420
+    values: 0+0.001x20
   - series: fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="500"}
-    values: 0+0.001x420
+    values: 0+0.001x20
   alert_rule_test:
-  - eval_time: 7h
+  - eval_time: 15m
     alertname: FoodDiaryApiAvailabilityBudgetFastBurn
     exp_alerts: []
-  - eval_time: 7h
+  - eval_time: 15m
     alertname: FoodDiaryApiAvailabilityBudgetSlowBurn
     exp_alerts: []
 - name: outbox backlog fires and clears after recovery

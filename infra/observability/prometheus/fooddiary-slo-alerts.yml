@@ -4,8 +4,7 @@ groups:
   rules:
   - alert: FoodDiaryApiAvailabilityBudgetFastBurn
     expr: (fooddiary:api_error_ratio_1h > 14.4 * 0.001) and (fooddiary:api_error_ratio_5m
-      > 14.4 * 0.001) and (sum(increase(fooddiary_api_requests_total{http_response_status_code!~"4.."}[5m]))
-      > 10)
+      > 14.4 * 0.001) and on() (fooddiary:api_eligible_requests_5m > 10)
     labels:
       severity: critical
       service: api
@@ -14,7 +13,7 @@ groups:
       runbook: docs/backend/BACKEND_RUNBOOKS.md
   - alert: FoodDiaryApiAvailabilityBudgetSlowBurn
     expr: (fooddiary:api_error_ratio_6h > 6 * 0.001) and (fooddiary:api_error_ratio_30m
-      > 6 * 0.001) and (sum(increase(fooddiary_api_requests_total{http_response_status_code!~"4.."}[30m]))
+      > 6 * 0.001) and on() (sum(increase(fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs",http_response_status_code!~"4.."}[30m]))
       > 50)
     labels:
       severity: warning

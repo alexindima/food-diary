@@ -221,6 +221,11 @@ runs all PromQL fixtures with the pinned production-compatible Prometheus 3.3.0
 image after Docker readiness. `--pricing-only` adds just the cost fixture to the
 Python contracts. The wrapper lets the existing Wiki evidence runner capture
 real Python/Docker executions without adding those runtimes to its shell parser.
+`--slo-only` isolates the low-user-volume regression: heavy internal polling
+must not satisfy either SLO alert's volume gate. The CI rule runner checks all
+14 scenarios with the same pinned image and a bounded four-minute limit.
+The long-window case still evaluates seven hours of traffic; short-window cases
+stop after their asserted observation to avoid redundant historical evaluation.
 
 Upload this directory to an owned staging directory on `fooddiary-prod`. Run
 `python3 <staging>/install.py` to validate PromQL, Promtail syntax and dashboard

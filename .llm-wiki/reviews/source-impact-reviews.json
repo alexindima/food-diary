@@ -651,8 +651,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "343fc6fa1100307f460e29dfa221911675340e4980b48fafe2035bdd265606d9",
-          "reviewReason": "Reviewed the appended sealed-task observations for windows-marker-503. They add retrospective candidates and hash-chain provenance only; approval, experiments, application and rollback behavior described on this page is unchanged."
+          "sha256": "8a32accaf7aedd81add342f370b73f3dc4755c2371b193df45c2b7239eab8594",
+          "reviewReason": "Reviewed the appended observation from the sealed observability task: it records a 70-second architecture check versus a 1608-second forecast as a calibration hypothesis. No approval, application, policy or durable memory changed; the governed promotion workflow remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -675,10 +675,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the appended sealed-task observations for windows-marker-503. They add retrospective candidates and hash-chain provenance only; approval, experiments, application and rollback behavior described on this page is unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:04.2015506Z"
+      "reason": "Reviewed the appended observation from the sealed observability task: it records a 70-second architecture check versus a 1608-second forecast as a calibration hypothesis. No approval, application, policy or durable memory changed; the governed promotion workflow remains accurate.",
+      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
+      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
+      "reviewedAtUtc": "2026-11-07T18:35:36.5822779Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1032,14 +1032,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "467ddf7d897d843d97bfbb33c4d9e37bb8141e8c4c61ebcbd185dd3ab32c9fa6",
-          "reviewReason": "Reviewed the new windows-marker-503 outcome and instruction fingerprints. This is an append-only completed-task observation; fingerprint-bound profiles and governed instruction experiment rules remain accurately documented."
+          "sha256": "ed7e857bdc819ee445a5eb9f4b061cee5eed223ad2e01eaf0f24a900cac24b2a",
+          "reviewReason": "Reviewed the new completed observability-task event and source instruction fingerprints. It appends outcome attribution only; no instruction revision, experiment decision or adoption was performed. The existing cohort and integrity guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the new windows-marker-503 outcome and instruction fingerprints. This is an append-only completed-task observation; fingerprint-bound profiles and governed instruction experiment rules remain accurately documented.",
-      "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:04.5254629Z"
+      "reason": "Reviewed the new completed observability-task event and source instruction fingerprints. It appends outcome attribution only; no instruction revision, experiment decision or adoption was performed. The existing cohort and integrity guidance remains accurate.",
+      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
+      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
+      "reviewedAtUtc": "2026-11-07T18:35:37.3438582Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1064,8 +1064,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "af739def604be882ab2279c484d3888e1dd294c157e5440bd2a809d1989d37b9",
-          "reviewReason": "Reviewed the appended windows-marker-503 retrospective candidate and expected change profile. No eval was approved or applied and no lifecycle algorithm changed; the page still correctly requires separate review and application."
+          "sha256": "9f2c9ac790dcec05471e1514d261c7d91f489751de621a4c8551c3ba9df59532",
+          "reviewReason": "Reviewed the new unapproved cost-miss candidate from the sealed observability retrospective. Its expected Ai module, scopes and checks match the task; no case was approved or applied to active evals. Lifecycle and activation boundaries remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1078,10 +1078,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended windows-marker-503 retrospective candidate and expected change profile. No eval was approved or applied and no lifecycle algorithm changed; the page still correctly requires separate review and application.",
-      "baseRef": "HEAD",
-      "gitHead": "491fb28b26c9075c2bb47da6f82e155dbce1a490",
-      "reviewedAtUtc": "2026-11-06T09:16:04.7673273Z"
+      "reason": "Reviewed the new unapproved cost-miss candidate from the sealed observability retrospective. Its expected Ai module, scopes and checks match the task; no case was approved or applied to active evals. Lifecycle and activation boundaries remain unchanged.",
+      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
+      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
+      "reviewedAtUtc": "2026-11-07T18:35:38.0974382Z"
     },
     {
       "pageId": "workflow-model-routing",

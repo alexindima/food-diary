@@ -98,6 +98,11 @@ def generate():
     slo = yaml.safe_load(slo_path.read_text())
     for group in slo["groups"]:
         group["rules"] = [rule for rule in group["rules"] if "record" not in rule]
+        for rule in group["rules"]:
+            if rule.get("alert") == "FoodDiaryApiAvailabilityBudgetFastBurn":
+                rule["expr"] = '(fooddiary:api_error_ratio_1h > 14.4 * 0.001) and (fooddiary:api_error_ratio_5m > 14.4 * 0.001) and on() (fooddiary:api_eligible_requests_5m > 10)'
+            elif rule.get("alert") == "FoodDiaryApiAvailabilityBudgetSlowBurn":
+                rule["expr"] = f'(fooddiary:api_error_ratio_6h > 6 * 0.001) and (fooddiary:api_error_ratio_30m > 6 * 0.001) and on() (sum(increase(fooddiary_api_requests_total{{{API},http_response_status_code!~"4.."}}[30m])) > 50)'
     slo_path.write_text(yaml.safe_dump(slo, sort_keys=False), encoding="utf-8", newline="\n")
     backend_rules_path = ROOT / "prometheus/fooddiary-backend-alerts.yml"
     backend_rules = yaml.safe_load(backend_rules_path.read_text())

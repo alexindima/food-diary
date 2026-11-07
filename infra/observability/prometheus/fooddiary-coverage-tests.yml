@@ -1,7 +1,24 @@
 rule_files:
   - fooddiary-recording.yml
+  - fooddiary-slo-alerts.yml
 evaluation_interval: 30s
 tests:
+  - name: internal polling must not qualify low-volume user errors
+    interval: 1m
+    input_series:
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="200"}'
+        values: '0+0.001x20'
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/products",http_response_status_code="503"}'
+        values: '0+0.001x20'
+      - series: 'fooddiary_api_requests_total{exported_job="FoodDiary.Web.Api",url_path="/api/v1/auth/telegram/bot/operations/ready",http_response_status_code="200"}'
+        values: '0+10000x20'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: FoodDiaryApiAvailabilityBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: FoodDiaryApiAvailabilityBudgetSlowBurn
+        exp_alerts: []
   - name: internal polling and client errors cannot hide user failures
     interval: 1m
     input_series:

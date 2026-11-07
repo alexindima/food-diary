@@ -10,7 +10,7 @@ const directory = dirname(fileURLToPath(import.meta.url));
 const root = resolve(directory, '../..');
 const args = new Set(process.argv.slice(2));
 for (const argument of args) {
-    if (!['--frontend-only', '--prometheus', '--pricing-only'].includes(argument)) {
+    if (!['--frontend-only', '--prometheus', '--pricing-only', '--slo-only'].includes(argument)) {
         throw new Error(`Unknown verification option: ${argument}`);
     }
 }
@@ -28,12 +28,13 @@ if (args.has('--frontend-only')) {
 } else {
     run(python, ['-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py']);
 }
-if (args.has('--prometheus') || args.has('--pricing-only')) {
-    const files = args.has('--pricing-only') ? ['fooddiary-pricing-tests.yml'] : [
+if (args.has('--prometheus') || args.has('--pricing-only') || args.has('--slo-only')) {
+    const files = args.has('--slo-only') ? ['fooddiary-coverage-tests.yml'] : args.has('--pricing-only') ? ['fooddiary-pricing-tests.yml'] : [
         'fooddiary-alert-tests.yml', 'fooddiary-coverage-tests.yml', 'fooddiary-pricing-tests.yml',
     ];
     run('docker', ['run', '--rm', '--mount', `type=bind,source=${join(directory, 'prometheus')},target=/rules,readonly`,
         '--entrypoint', '/bin/promtool',
         'prom/prometheus@sha256:339ce86a59413be18d0e445472891d022725b4803fab609069110205e79fb2f1',
-        'test', 'rules', ...files.map(file => `/rules/${file}`)], root);
+        'test', 'rules', ...(args.has('--slo-only') ? ['--run=internal polling must not qualify low-volume user errors'] : []),
+        ...files.map(file => `/rules/${file}`)], root);
 }

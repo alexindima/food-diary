@@ -2929,6 +2929,55 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "68a14bc71773e6bdce1fac26351e4b260d6545a6700485bef74d6ea760ade80d",
       "eventHash": "44f1b01d84bd83ac7ab525e0a0dd4fa0a21f4bb88f5d512f9e5acc73102fe838"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "257f4b5efa314c918fb833aa91a7e7c1",
+      "workspace": ".artifacts/llm-wiki/tasks/observability-completion",
+      "recordedAtUtc": "2026-11-07T18:34:25.1033523Z",
+      "completionFingerprint": "9fe824ad4c37d19e039accc935da5e38b9ce21c9c8b14ad1bbb40334988176b5",
+      "retrospectiveHash": "c358d06f1f56a3ca7da204d44ca128e48e88414b875b0d23d274c86a91064026",
+      "instructionSetFingerprint": "5400e414a29409ff77b59af28f5922dd745e09154680fa305d7848781350b2e3",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "Modules/Ai/Infrastructure/AGENTS.md",
+          "fingerprint": "fa2545bdefd04e92bc36b9fed8e8f1ea9c41e9fa950c4f44c8a0267f41693655"
+        },
+        {
+          "path": "Modules/Ai/tests/AGENTS.md",
+          "fingerprint": "be1def975dace667a9b8efd302859fd00ccbc496e240860ed92e9f72d190a2d2"
+        },
+        {
+          "path": "Shared/FoodDiary.Integrations.Http/AGENTS.md",
+          "fingerprint": "7c8a1edbf55a3b5f7c7abd24c6c11527469eb852caffa141a889d8500bf3533e"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "high",
+        "complexityScore": 70,
+        "complexityBandUpperBound": 79,
+        "cohortKey": "high|complexity<=79",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 68.75,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 85.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "44f1b01d84bd83ac7ab525e0a0dd4fa0a21f4bb88f5d512f9e5acc73102fe838",
+      "eventHash": "c1f620db98e5e86d6d09826dc85fccce5a23cee100a99d2ad4653b0a77ad8743"
     }
   ]
 }
