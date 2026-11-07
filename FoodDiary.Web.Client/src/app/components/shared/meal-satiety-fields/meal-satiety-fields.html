@@ -4,7 +4,19 @@
     [class.meal-satiety-fields--compact-columns]="layout() === 'compactColumns'"
 >
     <div class="meal-satiety-fields__field fd-grid fd-gap-xxs">
-        <p class="meal-satiety-fields__label fd-ui-field-label fd-ui-field-label--floating">{{ labelBeforeKey() | translate }}</p>
+        <div class="fd-row fd-wrap fd-align-center fd-justify-between fd-gap-xs">
+            <p class="meal-satiety-fields__label fd-ui-field-label fd-ui-field-label--floating">{{ labelBeforeKey() | translate }}</p>
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                size="sm"
+                [disabled]="preMealSatietyLevel() === null"
+                [disabledReason]="'MEAL_DETAILS.SATIETY_UNANSWERED' | translate"
+                (click)="onSatietyLevelChange('before', null)"
+            >
+                {{ 'MEAL_DETAILS.CLEAR_HUNGER' | translate }}
+            </fd-ui-button>
+        </div>
         <fd-ui-emoji-picker
             [size]="pickerSize()"
             [options]="hungerEmojiOptions"
@@ -15,7 +27,19 @@
     </div>
 
     <div class="meal-satiety-fields__field fd-grid fd-gap-xxs">
-        <p class="meal-satiety-fields__label fd-ui-field-label fd-ui-field-label--floating">{{ labelAfterKey() | translate }}</p>
+        <div class="fd-row fd-wrap fd-align-center fd-justify-between fd-gap-xs">
+            <p class="meal-satiety-fields__label fd-ui-field-label fd-ui-field-label--floating">{{ labelAfterKey() | translate }}</p>
+            <fd-ui-button
+                variant="secondary"
+                fill="text"
+                size="sm"
+                [disabled]="postMealSatietyLevel() === null"
+                [disabledReason]="'MEAL_DETAILS.SATIETY_UNANSWERED' | translate"
+                (click)="onSatietyLevelChange('after', null)"
+            >
+                {{ 'MEAL_DETAILS.CLEAR_SATIETY' | translate }}
+            </fd-ui-button>
+        </div>
         <fd-ui-emoji-picker
             [size]="pickerSize()"
             [options]="satietyEmojiOptions"

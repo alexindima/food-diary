@@ -9,6 +9,18 @@ const CHART_VALUE = 74.2;
 const DESIRED_WEIGHT = 70;
 
 describe('WeightHistoryChartCardComponent', () => {
+    it.each(['2026-11-07', '2026-11-07T00:00:00', '2026-11-07T00:00:00.000Z'])(
+        'preserves the latest calendar day from %s when the period is empty',
+        async latestDate => {
+            const { fixture } = await setupComponentAsync([]);
+            fixture.componentRef.setInput('latestValue', CHART_VALUE);
+            fixture.componentRef.setInput('latestDate', latestDate);
+            fixture.detectChanges();
+
+            expect(getText(fixture), 'Calendar date must remain November 7').toContain('7 November 2026');
+        },
+    );
+
     it('hides the empty-data message when chart loading failed', async () => {
         const { fixture } = await setupComponentAsync([]);
         fixture.componentRef.setInput('hasError', true);

@@ -11,6 +11,7 @@ import {
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
+import { parseCalendarDateUtc } from '../../../../shared/lib/local-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.mapper';
@@ -36,6 +37,7 @@ export class WeightHistoryChartCardComponent {
     protected readonly locale = injectCurrentLanguage();
     public readonly latestValue = input<number | null>(null);
     public readonly latestDate = input<string | null>(null);
+    protected readonly latestCalendarDate = computed(() => parseCalendarDateUtc(this.latestDate()));
     public readonly addEntry = output();
     public readonly showLatest = output();
     protected readonly measurements = inject(MeasurementSystemService);

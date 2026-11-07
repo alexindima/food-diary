@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, model, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit';
 import { FdUiEmojiPickerComponent, type FdUiEmojiPickerOption, type FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
 import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS, type FdUiSatietyScaleLevel } from 'fd-ui-kit/satiety-scale/fd-ui-satiety-scale';
 
@@ -8,7 +9,7 @@ import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 
 @Component({
     selector: 'fd-meal-satiety-fields',
-    imports: [TranslatePipe, FdUiEmojiPickerComponent],
+    imports: [TranslatePipe, FdUiEmojiPickerComponent, FdUiButtonComponent],
     templateUrl: './meal-satiety-fields.html',
     styleUrls: ['./meal-satiety-fields.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

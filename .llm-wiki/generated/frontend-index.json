@@ -3483,7 +3483,7 @@
       "role": "Component",
       "selector": "fd-meal-satiety-fields",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "MealsPreviewEntryComponent",
@@ -6556,7 +6556,7 @@
       "role": "Component",
       "selector": "fd-waist-history-chart-card",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "WaistHistoryEntriesCardComponent",
@@ -6738,7 +6738,7 @@
       "role": "Component",
       "selector": "fd-weight-history-chart-card",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "WeightHistoryEntriesCardComponent",
@@ -8403,8 +8403,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1404,
-      "russianProperties": 1404,
+      "englishProperties": 1406,
+      "russianProperties": 1406,
       "countsMatch": true
     },
     {

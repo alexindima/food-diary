@@ -9,7 +9,7 @@ import { map } from 'rxjs';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
-import { compareDatesAsc, formatDateValue, parseDateValue } from '../../../../shared/lib/local-date.utils';
+import { compareDatesAsc, formatDateValue, parseCalendarDateUtc, parseDateValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import {
     WEIGHT_TREND_CHART_MINIMUM_PADDING,
@@ -96,7 +96,12 @@ export class WeightTrendCardComponent {
         return this.measurementCount() === 1 ? this.firstMeasurementKey() : this.twoMeasurementsKey();
     });
     protected readonly measurementDateLabel = computed(() =>
-        formatDateValue(this.currentDate(), this.locale(), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }),
+        formatDateValue(parseCalendarDateUtc(this.currentDate()), this.locale(), {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            timeZone: 'UTC',
+        }),
     );
     protected readonly chartBounds = computed(() => {
         const values = this.measurementPoints().map(point => point.value);
@@ -160,7 +165,7 @@ export class WeightTrendCardComponent {
 
     private formatPointLabel(date: string | Date): string {
         return (
-            formatDateValue(date, this.locale(), {
+            formatDateValue(typeof date === 'string' ? parseCalendarDateUtc(date) : date, this.locale(), {
                 day: 'numeric',
                 month: 'long',
                 timeZone: 'UTC',
@@ -169,7 +174,7 @@ export class WeightTrendCardComponent {
     }
 
     private toTimestamp(date: string | Date): number {
-        return parseDateValue(date)?.getTime() ?? 0;
+        return (typeof date === 'string' ? parseCalendarDateUtc(date) : parseDateValue(date))?.getTime() ?? 0;
     }
 
     private displayValue(value: number): number {

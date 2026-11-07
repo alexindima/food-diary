@@ -407,6 +407,14 @@
       "structuralRiskScore": 135.82
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
+      "nonBlankLines": 435,
+      "decisionPoints": 83,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 135.2
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
       "nonBlankLines": 361,
       "decisionPoints": 83,
@@ -487,20 +495,20 @@
       "structuralRiskScore": 126.2
     },
     {
-      "path": ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
-      "nonBlankLines": 423,
-      "decisionPoints": 77,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 125.96
-    },
-    {
       "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
       "nonBlankLines": 334,
       "decisionPoints": 78,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 125.68
+    },
+    {
+      "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
+      "nonBlankLines": 340,
+      "decisionPoints": 77,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 124.3
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/waist-entries.service.ts",
@@ -637,14 +645,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 115.1
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
-      "nonBlankLines": 328,
-      "decisionPoints": 71,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 115.06
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
@@ -2082,11 +2082,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextOutcome.ps1",
-      "nonBlankLines": 423,
-      "decisionPoints": 77,
+      "nonBlankLines": 435,
+      "decisionPoints": 83,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 125.96
+      "structuralRiskScore": 135.2
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextSecurity.ps1",
@@ -2178,11 +2178,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
-      "nonBlankLines": 328,
-      "decisionPoints": 71,
+      "nonBlankLines": 340,
+      "decisionPoints": 77,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 115.06
+      "structuralRiskScore": 124.3
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
@@ -2226,11 +2226,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
-      "nonBlankLines": 319,
-      "decisionPoints": 56,
+      "nonBlankLines": 331,
+      "decisionPoints": 62,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.38
+      "structuralRiskScore": 101.62
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiOrchestrationCycle.ps1",
@@ -10442,11 +10442,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.ts",
-      "nonBlankLines": 80,
+      "nonBlankLines": 81,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.6
+      "structuralRiskScore": 10.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.ts",
@@ -11570,11 +11570,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-      "nonBlankLines": 166,
+      "nonBlankLines": 171,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.32
+      "structuralRiskScore": 21.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/contracts/dashboard-date.ts",
@@ -16026,11 +16026,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-dashboard-card.mapper.ts",
-      "nonBlankLines": 320,
-      "decisionPoints": 46,
+      "nonBlankLines": 324,
+      "decisionPoints": 45,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.4
+      "structuralRiskScore": 73.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-data-mapper.ts",
@@ -16250,11 +16250,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.ts",
-      "nonBlankLines": 56,
+      "nonBlankLines": 58,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.12
+      "structuralRiskScore": 1.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.ts",
@@ -16618,11 +16618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts",
-      "nonBlankLines": 56,
+      "nonBlankLines": 58,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.12
+      "structuralRiskScore": 1.16
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.ts",
@@ -68971,10 +68971,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
       "line": 1,
-      "testReferenceCount": 16,
+      "testReferenceCount": 17,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
+        ".llm-wiki/tools/Test-LlmWikiAuditContinuity.ps1",
         ".llm-wiki/tools/Test-LlmWikiAuditRegression.ps1",
         ".llm-wiki/tools/Test-LlmWikiAuditSystem.ps1",
         ".llm-wiki/tools/Test-LlmWikiCatalogControllers.ps1",

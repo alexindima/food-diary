@@ -35,7 +35,7 @@
                             >{{ latestValue() | measurementValue: 'weight' | localizedNumber: locale() : 0 : 2 }}
                             {{ 'weight' | measurementUnit | translate }}</strong
                         >
-                        · {{ latestDate() | localizedDate: 'd MMMM y' : 'UTC' }}
+                        · {{ latestCalendarDate() | localizedDate: 'd MMMM y' : 'UTC' }}
                     </p>
                     <fd-ui-button variant="primary" fill="text" (click)="showLatest.emit()"
                         >{{ 'WEIGHT_HISTORY.SHOW_LATEST' | translate }} <span aria-hidden="true">→</span></fd-ui-button

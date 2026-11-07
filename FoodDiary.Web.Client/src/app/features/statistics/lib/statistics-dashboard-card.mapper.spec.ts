@@ -52,6 +52,32 @@ it('uses totals and recorded days for averages instead of averaging chart bucket
     expect(view.overview.nutrients.map(item => item.current)).toEqual([8, 4, 13, 0]);
 });
 
+describe('statistics calorie interval goals', () => {
+    it.each([
+        { periodDays: 25, quantizationDays: 2 },
+        { periodDays: 31, quantizationDays: 3 },
+        { periodDays: 365, quantizationDays: 30 },
+        { periodDays: 28, quantizationDays: 7 },
+    ])('uses the included days in each calorie interval: $periodDays days / $quantizationDays', input => {
+        const view = buildIntervalView(input.periodDays, input.quantizationDays);
+
+        expect(view.stability.stableCount, 'Every included day matches its calorie goal').toBe(view.stability.totalCount);
+        expect(view.stability.averageDeviationPercent).toBe(0);
+    });
+
+    it('keeps missing intervals separate from deviations in a partial final interval', () => {
+        const view = buildIntervalView(25, 2, calories => {
+            calories[0] = 0;
+            calories[calories.length - 1] = 77;
+        });
+
+        expect(view.stability.stableCount).toBe(11);
+        expect(view.stability.days[0]?.status).toBe('missing');
+        expect(view.stability.days.at(-1)?.status).toBe('deviation');
+        expect(view.stability.averageDeviationPercent).toBe(4);
+    });
+});
+
 describe('statistics dashboard card mapper', () => {
     it('does not interpret missing records as a calorie reduction', () => {
         const result = buildStatisticsDashboardCardsView({
@@ -134,6 +160,36 @@ describe('statistics dashboard card mapper', () => {
         ]);
     });
 });
+
+function buildIntervalView(
+    periodDays: number,
+    quantizationDays: number,
+    adjust?: (calories: number[]) => void,
+): ReturnType<typeof buildStatisticsDashboardCardsView> {
+    const date = Array.from(
+        { length: Math.ceil(periodDays / quantizationDays) },
+        (_, index) => new Date(Date.UTC(2025, 0, 1 + index * quantizationDays)),
+    );
+    const calories = date.map((_, index) => 154 * Math.min(quantizationDays, periodDays - index * quantizationDays));
+    adjust?.(calories);
+    const zeros = date.map(() => 0);
+    return buildStatisticsDashboardCardsView({
+        statistics: {
+            date,
+            calories,
+            nutrientsStatistic: { proteins: zeros, fats: zeros, carbs: zeros, fiber: zeros },
+            aggregatedNutrients: { proteins: 0, fats: 0, carbs: 0, fiber: 0 },
+        },
+        user: { ...USER, dailyCalorieTarget: 154 },
+        weightPoints: [],
+        waistPoints: [],
+        weightMeasurements: { first: null, last: null, count: 0 },
+        waistMeasurements: { first: null, last: null, count: 0 },
+        quantizationDays,
+        periodDays,
+        formatDate: value => value.toISOString(),
+    });
+}
 
 describe('statistics meal structure mapper', () => {
     it('includes Other meals in total calories and meal shares', () => {

@@ -6,9 +6,9 @@
     "inputs": 1676,
     "outputs": 559,
     "apiCalls": 328,
-    "templatesWithTranslations": 376,
-    "translationKeys": 2254,
-    "consumerEdges": 1333,
+    "templatesWithTranslations": 377,
+    "translationKeys": 2257,
+    "consumerEdges": 1334,
     "consumedComponents": 330,
     "unconsumedComponents": 190
   },
@@ -25859,6 +25859,15 @@
     },
     {
       "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.html",
+      "keys": [
+        "MEAL_DETAILS.CLEAR_HUNGER",
+        "MEAL_DETAILS.CLEAR_SATIETY",
+        "MEAL_DETAILS.SATIETY_UNANSWERED"
+      ]
+    },
+    {
+      "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
       "keys": [
         "MEALS_PREVIEW.MANUAL_ACTION",
@@ -30793,6 +30802,22 @@
       "occurrences": 2,
       "inputsUsed": [
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meal-satiety-fields/meal-satiety-fields.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "fill",
+        "size",
         "variant"
       ],
       "outputsHandled": []

@@ -49,7 +49,7 @@ test('water added in the dashboard survives reload and appears in the real API',
     expect(deleted.status()).toBe(HTTP_NO_CONTENT);
 });
 
-test('editing a meal quantity recalculates nutrition and persists through reopen', async ({ page, request, owned }) => {
+test('editing a meal quantity and clearing optional ratings persist through reopen', async ({ page, request, owned }) => {
     const headers = owned.headers;
     const productResponse = await request.post(`${owned.frontendUrl}/api/v1/products`, {
         headers,
@@ -77,6 +77,8 @@ test('editing a meal quantity recalculates nutrition and persists through reopen
             date: new Date().toISOString(),
             mealType: 'Lunch',
             comment: 'Owned live journey',
+            preMealSatietyLevel: 2,
+            postMealSatietyLevel: 4,
             isNutritionAutoCalculated: true,
             items: [{ productId, amount: 100, origin: 'Manual' }],
         } satisfies CreateMealHttpRequest,
@@ -91,6 +93,8 @@ test('editing a meal quantity recalculates nutrition and persists through reopen
         await dialog.getByRole('button', { name: 'Add to meal', exact: true }).click();
         await expect(dialog).toHaveCount(0);
         await expect(page.getByRole('textbox', { name: 'Calories, kcal', exact: true })).toHaveValue('210.6');
+        await page.getByRole('button', { name: 'Clear hunger', exact: true }).click();
+        await page.getByRole('button', { name: 'Clear satiety', exact: true }).click();
         const saved = page.waitForResponse(
             response => new URL(response.url()).pathname === `/api/v1/meals/${mealId}` && response.request().method() === 'PATCH',
         );
@@ -103,9 +107,13 @@ test('editing a meal quantity recalculates nutrition and persists through reopen
         const value = wireRecord(await persisted.json());
         expect(value['totalCalories']).toBeCloseTo(EXPECTED_CALORIES, 2);
         expect(wireRecords(value['items'])[0]?.['amount']).toBe(EDITED_AMOUNT_G);
+        expect(value['preMealSatietyLevel']).toBe(0);
+        expect(value['postMealSatietyLevel']).toBe(0);
         await page.goto(`${owned.frontendUrl}/meals/${mealId}/edit`);
         await page.reload();
         await expect(page.getByRole('textbox', { name: 'Calories, kcal', exact: true })).toHaveValue('210.6');
+        await expect(page.getByRole('button', { name: 'Clear hunger', exact: true })).toBeDisabled();
+        await expect(page.getByRole('button', { name: 'Clear satiety', exact: true })).toBeDisabled();
         await page.getByRole('button', { name: /Edit manual item/u }).click();
         await expect(page.getByRole('dialog').getByRole('spinbutton', { name: /Amount/u })).toHaveValue('175.5');
     } finally {

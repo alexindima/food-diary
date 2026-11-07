@@ -58,6 +58,18 @@ test('ordinary-user login, cookie refresh and reload reach the same owned profil
         await page.getByLabel('Email', { exact: true }).fill(email);
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByRole('button', { name: 'Login', exact: true }).click();
+        const consent = page.getByRole('dialog', { name: 'Processing your health and tracking data', exact: true });
+        await expect(consent).toBeVisible();
+        const accept = consent.getByRole('button', { name: 'Consent and continue', exact: true });
+        await expect(accept).toBeDisabled();
+        await consent.getByRole('checkbox').press('Space');
+        const consentSaved = page.waitForResponse(
+            response => new URL(response.url()).pathname === '/api/v1/users/privacy' && response.request().method() === 'PUT',
+        );
+        await accept.click();
+        const consentResponse = await consentSaved;
+        expect(consentResponse.status()).toBe(HTTP_NO_CONTENT);
+        await expect(consent).toBeHidden();
         await expect(page).toHaveURL(/\/dashboard/u);
         const restored = await context.request.post('/api/v1/auth/session', {
             headers: { origin: owned.frontendUrl, 'X-Requested-With': 'XMLHttpRequest' },
@@ -212,14 +224,22 @@ test('ordinary-user account deletion schedules removal and revokes existing acce
     });
     expect(login.status()).toBe(HTTP_OK);
     const oldCookie = readSessionCookie(login);
+    const privacy = await context.request.get('/api/v1/users/privacy');
+    expect(privacy.status()).toBe(HTTP_OK);
+    const noticeVersion = wireString(wireRecord(await privacy.json())['noticeVersion']);
+    const declined = await context.request.put('/api/v1/users/privacy', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        data: { purpose: 1, granted: false, noticeVersion },
+    });
+    expect(declined.status()).toBe(HTTP_NO_CONTENT);
     const page = await context.newPage();
     try {
         await page.goto('/profile');
         await page
-            .locator('details')
-            .filter({ has: page.locator('fd-user-manage-privacy-card') })
             .locator('summary')
+            .filter({ has: page.getByText('Privacy & Data', { exact: true }) })
             .click();
+        await expect(page.locator('fd-user-manage-privacy-card')).toBeVisible();
         await page.locator('fd-user-manage-privacy-card').getByRole('button', { name: 'Delete', exact: true }).click();
         const deleted = page.waitForResponse(
             response => new URL(response.url()).pathname === '/api/v1/users' && response.request().method() === 'DELETE',

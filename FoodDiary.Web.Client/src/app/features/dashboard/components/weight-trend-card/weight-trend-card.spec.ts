@@ -21,6 +21,35 @@ const MINIMUM_CHART_BOUND_OFFSET = 1;
 const MAXIMUM_CHART_BOUND_OFFSET = 2;
 const TARGET_WEIGHT = 72;
 
+describe('WeightTrendCardComponent calendar encoding', () => {
+    it.each(['2026-11-07', '2026-11-07T00:00:00', '2026-11-07T00:00:00.000Z'])(
+        'preserves the calendar day in the API encoding %s',
+        async currentDate => {
+            const { fixture } = await setupComponentAsync();
+            fixture.componentRef.setInput('currentDate', currentDate);
+            fixture.detectChanges();
+
+            expect(
+                (fixture.nativeElement as HTMLElement).querySelector('time')?.textContent,
+                'Calendar date must remain November 7',
+            ).toContain('Nov 7, 2026');
+        },
+    );
+
+    it('preserves calendar dates without a timezone in chart labels', async () => {
+        const { component, fixture } = await setupComponentAsync({
+            points: [
+                { date: '2026-11-05T00:00:00', value: CURRENT_WEIGHT },
+                { date: '2026-11-06T00:00:00', value: CURRENT_WEIGHT },
+                { date: '2026-11-07T00:00:00', value: CURRENT_WEIGHT },
+            ],
+        });
+        fixture.detectChanges();
+
+        expect(component['measurementPoints']().map(point => point.label)).toEqual(['November 5', 'November 6', 'November 7']);
+    });
+});
+
 describe('WeightTrendCardComponent', () => {
     it('formats the change value', async () => {
         const { component, fixture } = await setupComponentAsync({ change: WEIGHT_CHANGE });

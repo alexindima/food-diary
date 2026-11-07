@@ -65,7 +65,7 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
                 : [],
         balance: nutrients,
         mealStructure: buildMealStructure(statistics),
-        stability: buildDietStability(days, calorieGoal, quantizationDays),
+        stability: buildDietStability(days, calorieGoal, quantizationDays, periodDays),
         body: {
             weight: buildBodyMetric('weight', weightPoints, input.weightMeasurements, {
                 goal: user?.desiredWeightKg ?? null,
@@ -163,20 +163,24 @@ function buildDietStability(
     days: readonly StatisticsNutritionDay[],
     dailyCalorieGoal: number,
     quantizationDays: number,
+    periodDays: number,
 ): StatisticsDietStabilityData {
     const hasGoal = dailyCalorieGoal > 0;
-    const intervalGoal = dailyCalorieGoal * quantizationDays;
-    const trackedDays = days.filter(day => day.calories !== null);
-    const deviations = hasGoal ? trackedDays.map(day => Math.abs(((day.calories ?? 0) - intervalGoal) / intervalGoal) * PERCENT) : [];
-    const statuses = days.map(day => ({
-        label: day.label,
-        status:
-            !hasGoal || day.calories === null
-                ? ('missing' as const)
-                : (deviations[trackedDays.indexOf(day)] ?? PERCENT) <= STABILITY_DEVIATION_TOLERANCE_PERCENT
-                  ? ('stable' as const)
-                  : ('deviation' as const),
-    }));
+    const deviations: number[] = [];
+    const statuses = days.map((day, index) => {
+        if (!hasGoal || day.calories === null) {
+            return { label: day.label, status: 'missing' as const };
+        }
+        // The API includes contiguous calendar buckets, with a possibly shorter final bucket.
+        const intervalDays = Math.min(quantizationDays, Math.max(1, periodDays - index * quantizationDays));
+        const intervalGoal = dailyCalorieGoal * intervalDays;
+        const deviation = Math.abs((day.calories - intervalGoal) / intervalGoal) * PERCENT;
+        deviations.push(deviation);
+        return {
+            label: day.label,
+            status: deviation <= STABILITY_DEVIATION_TOLERANCE_PERCENT ? ('stable' as const) : ('deviation' as const),
+        };
+    });
 
     return {
         stableCount: statuses.filter(day => day.status === 'stable').length,

@@ -786,6 +786,8 @@
         "HOURS": "Hours",
         "MINUTES": "Minutes",
         "SATIETY_UNANSWERED": "Not recorded",
+        "CLEAR_HUNGER": "Clear hunger",
+        "CLEAR_SATIETY": "Clear satiety",
         "ADD": "Add details",
         "HIDE": "Hide details",
         "DATE": "Date",
