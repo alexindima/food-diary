@@ -167,6 +167,16 @@ function Get-Profiles([object]$Registry) {
 function Write-Registry([object]$Registry) {
     [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
+function Write-WorkspaceOutcome([object]$Event, [string]$Fingerprint) {
+    if ([string]$Event.workspace -cne $workspace) { throw 'Outcome event belongs to a different task workspace.' }
+    $target = Join-Path $absoluteWorkspace 'instruction-outcome.json'
+    $temporary = "$target.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        $receipt = [pscustomobject][ordered]@{ schemaVersion = 1; registryEvent = $Event; registryFingerprint = $Fingerprint }
+        [IO.File]::WriteAllText($temporary, (($receipt | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if ([IO.File]::Exists($target)) { [IO.File]::Replace($temporary, $target, [NullString]::Value) } else { [IO.File]::Move($temporary, $target) }
+    } finally { if ([IO.File]::Exists($temporary)) { [IO.File]::Delete($temporary) } }
+}
 function Get-Candidates([object[]]$Profiles, [object]$Validation) {
     $candidates = @($Profiles | Where-Object health -eq 'degraded' | ForEach-Object {
         $profile = $_
@@ -200,6 +210,8 @@ if ($Action -eq 'observe') {
     $completion = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'completion.json') -Raw)
     $observedCompletionFingerprints = @($registry.events | ForEach-Object { [string]$_.completionFingerprint })
     if ([string]$completion.completionFingerprint -in $observedCompletionFingerprints) {
+        $existingEvent = $registry.events | Where-Object completionFingerprint -eq $completion.completionFingerprint | Select-Object -First 1
+        Write-WorkspaceOutcome $existingEvent ([string]$validation.registryFingerprint)
         $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 0; eventHash = ''; reason = 'Completion outcome was already observed.' }
     } else {
         $packet = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw)
@@ -268,11 +280,7 @@ if ($Action -eq 'observe') {
         $post = Test-Registry $registry
         if (-not $post.valid) { throw "New instruction outcome is invalid: $(@($post.issues) -join ' ')" }
         Write-Registry $registry
-        [IO.File]::WriteAllText(
-            (Join-Path $absoluteWorkspace 'instruction-outcome.json'),
-            (([pscustomobject][ordered]@{ schemaVersion = 1; registryEvent = $event; registryFingerprint = $post.registryFingerprint } | ConvertTo-Json -Depth 30) + [Environment]::NewLine),
-            [Text.UTF8Encoding]::new($false)
-        )
+        Write-WorkspaceOutcome $event ([string]$post.registryFingerprint)
         $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 1; eventHash = $event.eventHash; outcome = $event }
     }
 } elseif ($Action -eq 'verify') {
@@ -286,6 +294,7 @@ if ($Action -eq 'observe') {
             $issues.Add('instruction-outcome.json is absent.')
         } else {
             $workspaceReceipt = ConvertFrom-LlmWikiJson (Get-Content -LiteralPath $receiptPath -Raw)
+            if ([string]$workspaceReceipt.registryEvent.workspace -cne $workspace) { $issues.Add('Workspace instruction outcome path does not match.') }
             $matching = $registry.events | Where-Object eventHash -eq $workspaceReceipt.registryEvent.eventHash | Select-Object -First 1
             if ($null -eq $matching -or (Get-Hash (Get-EventPayload $matching)) -cne (Get-Hash (Get-EventPayload $workspaceReceipt.registryEvent))) { $issues.Add('Workspace instruction outcome does not match the registry.') }
         }

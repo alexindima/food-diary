@@ -161,7 +161,10 @@ export async function probeRenderedRuntime(
             diagnostics: [...events],
         };
     } finally {
-        onDiagnostics(events);
-        await browser.close();
+        try {
+            onDiagnostics(events);
+        } finally {
+            await browser.close();
+        }
     }
 }

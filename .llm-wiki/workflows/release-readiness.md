@@ -53,6 +53,11 @@ Verdicts are:
 
 The numeric score is informational. A failed dimension always blocks release and cannot be compensated by points elsewhere. Synthetic `-ChangedPath` inputs cannot prove an OpenAPI diff, so API compatibility remains unassessed until run against a real Git diff.
 
+The API checker compares `BaseRef` with the current worktree. An explicit
+`HeadRef` remains unassessed unless matching API comparison evidence is supplied
+to the readiness tool. Reports preserve the requested refs and synthetic scope
+instead of silently assessing a different comparison.
+
 The result also exposes `engineeringReadiness` for policy, architecture, API
 compatibility, and executed checks, plus `governanceCompleteness` for scope,
 acceptance, review, privacy, and rollout records. This preserves the strict

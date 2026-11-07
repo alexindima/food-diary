@@ -35,7 +35,38 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AdminMealPlansController
+
+Source: `Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/meal-plans`
+- `GET /api/v{version:apiVersion}/admin/meal-plans/recipes`
+- `GET /api/v{version:apiVersion}/admin/meal-plans/{id:guid}`
+- `POST /api/v{version:apiVersion}/admin/meal-plans`
+- `PUT /api/v{version:apiVersion}/admin/meal-plans/{id:guid}`
+
+### MealPlansController
+
+Source: `Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs`
+
+- `DELETE /api/v{version:apiVersion}/meal-plans/{id:guid}`
+- `GET /api/v{version:apiVersion}/meal-plans`
+- `GET /api/v{version:apiVersion}/meal-plans/{id:guid}`
+- `POST /api/v{version:apiVersion}/meal-plans/{id:guid}/adopt`
+- `POST /api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list`
+
+### ShoppingListsController
+
+Source: `Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs`
+
+- `GET /api/v{version:apiVersion}/shopping-lists/overview`
+- `GET /api/v{version:apiVersion}/shopping-lists/current`
+- `GET /api/v{version:apiVersion}/shopping-lists/page`
+- `GET /api/v{version:apiVersion}/shopping-lists/{id:guid}`
+- `POST /api/v{version:apiVersion}/shopping-lists`
+- `PATCH /api/v{version:apiVersion}/shopping-lists/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/shopping-lists/{id:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

@@ -35,7 +35,35 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### FavoriteMealsController
+
+Source: `Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs`
+
+- `GET /api/v{version:apiVersion}/favorite-meals/page`
+- `GET /api/v{version:apiVersion}/favorite-meals/check/{mealId:guid}`
+- `POST /api/v{version:apiVersion}/favorite-meals`
+- `POST /api/v{version:apiVersion}/favorite-meals/{id:guid}/restore`
+- `DELETE /api/v{version:apiVersion}/favorite-meals/{id:guid}`
+
+### FavoriteProductsController
+
+Source: `Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs`
+
+- `GET /api/v{version:apiVersion}/favorite-products/page`
+- `GET /api/v{version:apiVersion}/favorite-products/check/{productId:guid}`
+- `POST /api/v{version:apiVersion}/favorite-products`
+- `PUT /api/v{version:apiVersion}/favorite-products/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/favorite-products/{id:guid}`
+
+### FavoriteRecipesController
+
+Source: `Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs`
+
+- `GET /api/v{version:apiVersion}/favorite-recipes/page`
+- `GET /api/v{version:apiVersion}/favorite-recipes/check/{recipeId:guid}`
+- `POST /api/v{version:apiVersion}/favorite-recipes`
+- `DELETE /api/v{version:apiVersion}/favorite-recipes/{id:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

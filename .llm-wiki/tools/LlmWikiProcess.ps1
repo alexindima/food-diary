@@ -38,6 +38,7 @@ function Invoke-LlmWikiProcessBatch {
                     $stderrFile = [IO.File]::Open($stderrPath, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
                     if (-not $process.Start()) { throw "Unable to start Wiki check '$($check.name)'." }
                     $started = $true
+                    $null = $process.StartTime
                     $workers.Add([pscustomobject]@{
                         check = $check; process = $process; stopwatch = [Diagnostics.Stopwatch]::StartNew()
                         stdoutPath = $stdoutPath; stderrPath = $stderrPath; stdoutFile = $stdoutFile; stderrFile = $stderrFile
@@ -91,7 +92,7 @@ function Invoke-LlmWikiProcessBatch {
         if ($failures.Count -gt 0) { throw "Wiki process batch failed: $($failures -join ', ')" }
     } finally {
         foreach ($worker in $workers) {
-            try { if (-not $worker.process.HasExited) { Stop-LlmWikiProcessTree $worker.process } }
+            try { Stop-LlmWikiProcessTree $worker.process }
             catch { Write-Warning "Unable to stop owned Wiki check '$($worker.check.name)': $_" }
             finally { $worker.stdoutFile.Dispose(); $worker.stderrFile.Dispose(); $worker.process.Dispose() }
         }
@@ -146,49 +147,49 @@ function Stop-LlmWikiProcessTree {
         [int]$WaitMilliseconds = 5000
     )
 
-    if ($Process.HasExited) { return }
-    $exitCodeVariable = Get-Variable -Name LASTEXITCODE -Scope Global -ErrorAction SilentlyContinue
-    $hadExitCode = $null -ne $exitCodeVariable
-    $previousExitCode = if ($hadExitCode) { $exitCodeVariable.Value } else { $null }
     $runningOnWindows = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
-    try {
+    if (-not $runningOnWindows) {
+        if (-not $Process.HasExited) { $Process.Kill($true) }
+    } else {
+        # A PID alone is not an ownership identity. A reused parent PID can
+        # appear in WMI as the parent of a much older unrelated application.
+        $owned = [Collections.Generic.List[Diagnostics.Process]]::new()
+        $pending = [Collections.Generic.Queue[Diagnostics.Process]]::new()
+        $seen = [Collections.Generic.HashSet[int]]::new()
+        $pending.Enqueue($Process)
+        $null = $seen.Add($Process.Id)
         try {
-            if ($runningOnWindows) {
-                $descendants = [Collections.Generic.List[int]]::new()
-                $pending = [Collections.Generic.Queue[int]]::new()
-                $pending.Enqueue($Process.Id)
-                while ($pending.Count -gt 0) {
-                    $parentId = $pending.Dequeue()
-                    foreach ($child in @(Get-CimInstance Win32_Process -Filter "ParentProcessId = $parentId" -ErrorAction SilentlyContinue)) {
-                        $childId = [int]$child.ProcessId
-                        $descendants.Add($childId)
-                        $pending.Enqueue($childId)
-                    }
+            while ($pending.Count) {
+                $parent = $pending.Dequeue()
+                try {
+                    $born = $parent.StartTime.ToUniversalTime()
+                    $ended = if ($parent.HasExited) { $parent.ExitTime.ToUniversalTime() } else { [DateTime]::MaxValue }
+                } catch { continue }
+                foreach ($child in @(Get-CimInstance Win32_Process -Filter "ParentProcessId = $($parent.Id)" -ErrorAction SilentlyContinue)) {
+                    $created = ([DateTime]$child.CreationDate).ToUniversalTime()
+                    if ($created -lt $born -or $created -gt $ended -or -not $seen.Add([int]$child.ProcessId)) { continue }
+                    $handle = $null
+                    try {
+                        $handle = [Diagnostics.Process]::GetProcessById([int]$child.ProcessId)
+                        # WMI creation dates have microsecond precision. Retain
+                        # this handle only when it still identifies that child.
+                        if ($handle.HasExited -or [Math]::Abs(($handle.StartTime.ToUniversalTime() - $created).TotalMilliseconds) -ge 1) { $handle.Dispose(); continue }
+                        $owned.Add($handle)
+                        $pending.Enqueue($handle)
+                    } catch [ArgumentException] { if ($null -ne $handle) { $handle.Dispose() } }
+                      catch [InvalidOperationException] { if ($null -ne $handle) { $handle.Dispose() } }
                 }
-                foreach ($childId in @($descendants | Select-Object -Last $descendants.Count)) {
-                    Stop-Process -Id $childId -Force -ErrorAction SilentlyContinue
-                }
-                & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
-            } else {
-                $Process.Kill($true)
             }
-        } catch {
-            if ($runningOnWindows) {
-                & taskkill.exe /PID $Process.Id /T /F 2>$null | Out-Null
-            } else {
-                $Process.Kill()
+            for ($index = $owned.Count - 1; $index -ge 0; $index--) {
+                try { if (-not $owned[$index].HasExited) { $owned[$index].Kill() } }
+                catch [InvalidOperationException] { }
             }
-        }
-        if (-not $Process.WaitForExit($WaitMilliseconds)) {
-            throw "Unable to stop Wiki process tree rooted at PID $($Process.Id)."
-        }
-    } finally {
-        # Cleanup must not replace the result of the caller's native command,
-        # including a taskkill race against an already-terminating owned process.
-        if ($hadExitCode) {
-            Set-Variable -Name LASTEXITCODE -Scope Global -Value $previousExitCode
-        } else {
-            Remove-Variable -Name LASTEXITCODE -Scope Global -ErrorAction SilentlyContinue
+        } finally {
+            foreach ($handle in $owned) { $handle.Dispose() }
+            # Kill through the original handle, never through taskkill /T or a
+            # freshly resolved root PID that may now belong to somebody else.
+            try { if (-not $Process.HasExited) { $Process.Kill() } } catch [InvalidOperationException] { if (-not $Process.HasExited) { throw } }
         }
     }
+    if (-not $Process.WaitForExit($WaitMilliseconds)) { throw "Unable to stop Wiki process tree rooted at PID $($Process.Id)." }
 }

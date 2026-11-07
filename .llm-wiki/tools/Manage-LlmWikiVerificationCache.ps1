@@ -5,7 +5,8 @@ param(
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path,
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath = @(),
-    [string]$Mode = 'default'
+    [string]$Mode = 'default',
+    [string]$ExpectedFingerprint
 )
 
 $ErrorActionPreference = 'Stop'
@@ -87,6 +88,9 @@ if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
 }
 
 if ($Action -eq 'Record') {
+    if ($ExpectedFingerprint -and $ExpectedFingerprint -cne $fingerprint) {
+        throw 'Verification inputs changed during execution; no fast-verification receipt was recorded.'
+    }
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $receiptPath) -Force
     $receipt = [ordered]@{
         schemaVersion = 3

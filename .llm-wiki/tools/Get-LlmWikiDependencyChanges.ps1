@@ -52,10 +52,10 @@ function Convert-ToComparableText([string]$Value) {
 
 $manifestPaths = @(
     @(
-        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', '*.csproj', 'Directory.Build.props', ':(glob)**/package.json')
-        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard', '--', '*.csproj', 'Directory.Build.props', ':(glob)**/package.json')
+        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', '*.csproj', 'Directory.Build.props', 'Directory.Packages.props', ':(glob)**/Directory.Packages.props', ':(glob)**/package.json')
+        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard', '--', '*.csproj', 'Directory.Build.props', 'Directory.Packages.props', ':(glob)**/Directory.Packages.props', ':(glob)**/package.json')
         # Committed deletions are absent from ls-files but still carry baseline dependencies.
-        $changedPaths | Where-Object { $_ -cmatch '(\.csproj$|(^|/)Directory\.Build\.props$|(^|/)package\.json$)' }
+        $changedPaths | Where-Object { $_ -cmatch '(\.csproj$|(^|/)Directory\.(Build|Packages)\.props$|(^|/)package\.json$)' }
     ) | Where-Object { $_ } | Sort-Object -Unique
 )
 $inventory = [System.Collections.Generic.List[object]]::new()
@@ -80,10 +80,10 @@ foreach ($path in $manifestPaths) {
     $beforePackages = @{}
     $afterPackages = @{}
     if ($extension -in @('.csproj', '.props')) {
-        foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $beforeText)) {
+        foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $beforeText -IncludeCentralVersions)) {
             if ($item.Include) { $beforePackages[[string]$item.Include] = [string]$item.Version }
         }
-        foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $afterText)) {
+        foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $afterText -IncludeCentralVersions)) {
             if ($item.Include) { $afterPackages[[string]$item.Include] = [string]$item.Version }
         }
         $ecosystem = 'nuget'

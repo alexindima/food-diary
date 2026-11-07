@@ -29,6 +29,7 @@ $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $pipelineCacheState = $null
+$script:deferredIndexChecks = $false
 
 function Remove-IndexTransactionDirectory([string]$Path, [string]$Root) {
     $absolute = [IO.Path]::GetFullPath($Path)
@@ -403,7 +404,7 @@ if ($AffectedOnly) {
             Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'
             Add-IndexTool 'Build-LlmWikiSensitiveDataIndex.ps1'
         }
-        if ('.llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1' -in $normalizedChangedPaths) {
+        if (@($normalizedChangedPaths | Where-Object { $_ -in @('.llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1', '.llm-wiki/tools/LlmWikiRuntimeTopologyScanner.cs') }).Count -gt 0) {
             Add-IndexTool 'Build-LlmWikiRuntimeTopology.ps1'
         }
 
@@ -652,6 +653,7 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
             -WorkspaceChangedPath $workspaceChangedPaths
         $canDefer = $CheckMode -and $DeferPossiblyConcurrentStale -and [bool]$disposition.canDefer
         if ($canDefer) {
+            $script:deferredIndexChecks = $true
             Write-Warning "Fast verification deferred $(@($disposition.artifacts).Count) stale index check(s) because every affected generated artifact is already modified in the working tree. This can indicate parallel Wiki work; do not overwrite those artifacts from this session."
             foreach ($artifact in @($disposition.artifacts)) { Write-Host " - deferred: $artifact" }
             Write-Host 'Run strict ./.llm-wiki/wiki.ps1 verify in the integration session before commit, push, or final handoff.'
@@ -780,11 +782,11 @@ try {
 }
 $pipelineStopwatch.Stop()
 Add-LlmWikiIndexTimings -RepositoryRoot $repositoryRoot -Mode $timingMode -Timings @($script:completedToolTimings)
-if (-not $pipelineReceiptRecorded -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+if (-not $script:deferredIndexChecks -and -not $pipelineReceiptRecorded -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     Write-PipelineCacheReceipt $finalPipelineCacheState
 }
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."
-if ($Check -and -not $AffectedOnly -and -not $RequiredOnly -and $Area -eq 'All') {
+if ($Check -and -not $script:deferredIndexChecks -and -not $AffectedOnly -and -not $RequiredOnly -and $Area -eq 'All') {
     & (Join-Path $toolsRoot 'Write-LlmWikiIndexVerificationReceipt.ps1') -ReceiptKind Generation
 }
 if ($AffectedOnly) {

@@ -30,7 +30,17 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### HydrationEntriesController
+
+Source: `Modules/Hydration/Presentation/Controllers/HydrationEntriesController.cs`
+
+- `GET /api/v{version:apiVersion}/hydrations`
+- `GET /api/v{version:apiVersion}/hydrations/daily`
+- `POST /api/v{version:apiVersion}/hydrations`
+- `PUT /api/v{version:apiVersion}/hydrations/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/hydrations/{id:guid}`
+- `POST /api/v{version:apiVersion}/hydrations/operations/{operationId:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

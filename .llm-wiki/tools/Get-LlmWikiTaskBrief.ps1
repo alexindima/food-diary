@@ -94,7 +94,10 @@ $broadAssessmentDimensionCount = @(
 $explicitRepositoryWideIntent = $normalizedIntent -match '\b(entire|whole)\s+(project|repository|codebase)\b|\brepository-wide\b|всего\s+проекта|всей\s+кодовой\s+базы'
 $broadAssessmentIntent = $normalizedIntent -match '\b(audit|assessment|evaluate|review)\b|аудит|оцен' -and
     ($broadAssessmentDimensionCount -ge 3 -or ($explicitRepositoryWideIntent -and $broadAssessmentDimensionCount -ge 2))
-$wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
+$wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki(?:\.ps1| tooling)?|development mcp|вики)\b'
+$wikiOnlyScope = $callerPathCount -gt 0 -and @($effectivePaths | Where-Object { $_.Replace('\','/') -notmatch '^(?:\.llm-wiki/|scripts/ai/)' }).Count -eq 0
+$explicitDatabaseIntent = $normalizedIntent -match '\b(database|postgres|postgresql|ef\s*core|migration|query plan)\b|баз.{0,4}\s+данн|миграц|план\s+запрос'
+if (($wikiOnlyScope -or ($callerPathCount -eq 0 -and $wikiInternalIntent)) -and -not $explicitDatabaseIntent) { $databaseIntent = $false }
 if ($effectivePaths.Count -eq 0 -and $wikiInternalIntent) {
     # Tooling objectives use a dedicated Wiki code/workflow index instead of
     # coincidental product-symbol matches such as "registry" or "metrics".

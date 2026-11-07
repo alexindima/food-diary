@@ -19,11 +19,7 @@ $registryPath = Join-Path $stateDirectory 'registry.json'
 
 function Write-Registry([object]$Value) {
     $null = New-Item -ItemType Directory -Path $stateDirectory -Force
-    [IO.File]::WriteAllText(
-        $registryPath,
-        (($Value | ConvertTo-Json -Depth 8) + [Environment]::NewLine),
-        [Text.UTF8Encoding]::new($false)
-    )
+    Write-LlmWikiTextFileAtomically -Path $registryPath -Content (($Value | ConvertTo-Json -Depth 8) + [Environment]::NewLine)
 }
 
 function Get-ExternalHint {
@@ -35,6 +31,19 @@ function Get-ExternalHint {
     return $null
 }
 
+$registryLock = $null
+if (-not $ReadOnly) {
+    $null = [IO.Directory]::CreateDirectory($stateDirectory)
+    $lockTimer = [Diagnostics.Stopwatch]::StartNew()
+    while ($null -eq $registryLock) {
+        try { $registryLock = [IO.File]::Open((Join-Path $stateDirectory 'registry.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None) }
+        catch [IO.IOException] {
+            if ($lockTimer.Elapsed.TotalSeconds -ge 30) { throw 'Timed out waiting for the Wiki session registry.' }
+            Start-Sleep -Milliseconds 25
+        }
+    }
+}
+try {
 $registry = try {
     if (Test-Path -LiteralPath $registryPath -PathType Leaf) {
         Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
@@ -61,8 +70,15 @@ $sessions = @($registry.sessions)
 # sessions untouched for a while are treated as plausibly abandoned.
 $reconciliationAgeThreshold = [TimeSpan]::FromHours(1)
 $reconciledCount = 0
+$externalHint = Get-ExternalHint
 foreach ($session in $sessions) {
     if ([string]$session.state -ne 'active') { continue }
+    # A nominal workspace is optional. A returning caller or saved bounded task
+    # is positive evidence that this session still owns useful state.
+    if ($externalHint -and [string]$session.externalHint -ceq $externalHint) { continue }
+    $sessionKey = ([string]$session.id -replace '[^a-zA-Z0-9_.-]', '-')
+    if ($sessionKey.Length -gt 80) { $sessionKey = $sessionKey.Substring(0, 80) }
+    if (Test-Path -LiteralPath (Join-Path $gitDirectory "llm-wiki/task-baseline-$sessionKey.json") -PathType Leaf) { continue }
     $lastActivityValue = $(if ($null -ne $session.lastSeenAtUtc) { $session.lastSeenAtUtc } else { $session.createdAtUtc })
     try {
         $lastActivity = if ($lastActivityValue -is [DateTime]) {
@@ -89,7 +105,6 @@ if ($reconciledCount -gt 0 -and -not $ReadOnly) {
     Write-Registry ([pscustomobject][ordered]@{ schemaVersion = 1; sessions = @($sessions) })
 }
 
-$externalHint = Get-ExternalHint
 $resolved = $null
 
 if ($externalHint) {
@@ -134,3 +149,4 @@ switch ($Format) {
     'Text' { Write-Host "LLM Wiki session: $($result.id) ($($result.workspacePath))" }
     default { return $result }
 }
+} finally { if ($null -ne $registryLock) { $registryLock.Dispose() } }

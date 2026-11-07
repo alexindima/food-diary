@@ -34,7 +34,15 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### ExercisesController
+
+Source: `Modules/Exercises/Presentation/Controllers/ExercisesController.cs`
+
+- `GET /api/v{version:apiVersion}/exercises`
+- `POST /api/v{version:apiVersion}/exercises`
+- `PUT /api/v{version:apiVersion}/exercises/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/exercises/{id:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

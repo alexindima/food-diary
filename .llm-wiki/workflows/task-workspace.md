@@ -271,6 +271,10 @@ Anchors use context-bundle lines when available and otherwise identify the
 changed path honestly as a path-only anchor. Full handoff remains the audit and
 automation view; compact handoff is the bounded session-resume view.
 
+Compact journal selection prioritizes unresolved blockers before recent notes
+and closed decisions. If the display limit omits further open blockers, JSON
+reports their count and Markdown directs the reader to the full journal.
+
 Export a portable, privacy-filtered handoff contract:
 
 ```powershell
@@ -545,3 +549,10 @@ resolves; and detects when repository HEAD moved after the current packet was
 compiled. Results include exact remediation commands. `-AsOfUtc` makes SLA
 evaluation deterministic for automation and tests, while `-FailOnAttention`
 turns every non-healthy, non-sealed state into a CI failure.
+
+Completion publication keeps `completion-pending.json` until retrospective and
+all required observations have been written. If an observation write fails,
+retry `task-finish`: it validates the original seal, preserves its fingerprint
+and retrospective, and retries the idempotent observations. `task-verify`
+reports the pending state as incomplete. A fully published seal still rejects
+another finish attempt.

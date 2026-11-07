@@ -4,6 +4,23 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $null = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action build -Format Json
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+function Assert-MeasurementResponse([string]$Json, [hashtable]$Case) {
+    try { $response = $Json | ConvertFrom-Json } catch { throw "Invalid measurement response for $($Case.name): expected JSON." }
+    $diagnostics = if ($null -ne $response -and $response.PSObject.Properties['_diagnostics']) { $response._diagnostics } else { $null }
+    $hasDiagnostics = $null -ne $diagnostics -and @('reader', 'source', 'sourceHash' | Where-Object { -not $diagnostics.PSObject.Properties[$_] }).Count -eq 0
+    $fresh = $Case.name -ne 'runtime-topology' -or ($null -ne $response -and
+        $response.PSObject.Properties['_freshness'] -and $null -ne $response._freshness -and
+        $response._freshness.PSObject.Properties['verified'] -and $response._freshness.verified)
+    $sourcePath = Join-Path $repositoryRoot ('.llm-wiki/generated/' + $Case.source)
+    $text = [IO.File]::ReadAllText($sourcePath).Replace("`r`n", "`n")
+    $sourceHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($text))).ToLowerInvariant()
+    if ($null -eq $response -or ($response.PSObject.Properties['ready'] -and -not $response.ready) -or
+        -not $hasDiagnostics -or $diagnostics.reader -cne 'microsoft-data-sqlite' -or
+        $diagnostics.source -cne $Case.diagnosticSource -or $diagnostics.sourceHash -cne $sourceHash -or
+        -not $fresh) {
+        throw "Unverified measurement response for $($Case.name): expected the current, complete in-process SQLite projection."
+    }
+}
 function Get-Percentile([double[]]$Values,[double]$Percentile) {
     $ordered = @($Values | Sort-Object)
     $rank = ($ordered.Count-1)*$Percentile
@@ -12,9 +29,9 @@ function Get-Percentile([double[]]$Values,[double]$Percentile) {
     return [Math]::Round($ordered[$lower]*(1-($rank-$lower))+$ordered[$upper]*($rank-$lower),2)
 }
 $cases = @(
-    @{name='runtime-topology';source='runtime-topology.json';tool='Find-LlmWikiRuntimeTopology.ps1';arguments=@{Query='MailRelay';Format='Json'}}
-    @{name='domain-data';source='domain-data-index.json';tool='Find-LlmWikiDomainData.ps1';arguments=@{View='invariants';Query='weight';Format='Json'}}
-    @{name='architecture-health';source='architecture-health-index.json';tool='Find-LlmWikiArchitectureHealth.ps1';arguments=@{View='spec-gaps';Query='component';Format='Json'}}
+    @{name='runtime-topology';source='runtime-topology.json';diagnosticSource='sqlite-runtime-in-process';tool='Find-LlmWikiRuntimeTopology.ps1';arguments=@{Query='MailRelay';Format='Json';IncludeDiagnostics=$true}}
+    @{name='domain-data';source='domain-data-index.json';diagnosticSource='sqlite-domain-data-in-process';tool='Find-LlmWikiDomainData.ps1';arguments=@{View='invariants';Query='weight';Format='Json';IncludeDiagnostics=$true}}
+    @{name='architecture-health';source='architecture-health-index.json';diagnosticSource='sqlite-architecture-health-in-process';tool='Find-LlmWikiArchitectureHealth.ps1';arguments=@{View='spec-gaps';Query='component';Format='Json';IncludeDiagnostics=$true}}
 )
 $measurements = @(foreach ($case in $cases) {
     $tool = Join-Path $PSScriptRoot $case.tool
@@ -22,20 +39,28 @@ $measurements = @(foreach ($case in $cases) {
     $coldDurations = [Collections.Generic.List[double]]::new()
     $warmDurations = [Collections.Generic.List[double]]::new()
     $nativeArguments = @('-NoLogo','-NoProfile','-File',$tool)
-    foreach ($entry in $arguments.GetEnumerator()) { $nativeArguments += @("-$($entry.Key)",[string]$entry.Value) }
+    foreach ($entry in $arguments.GetEnumerator()) {
+        $nativeArguments += "-$($entry.Key)"
+        if ($entry.Value -isnot [bool]) { $nativeArguments += [string]$entry.Value }
+    }
     $coldCount = [Math]::Min(3,$Iterations)
     for ($round=0;$round -lt $coldCount;$round++) {
         $clock = [Diagnostics.Stopwatch]::StartNew()
-        & $shellPath @nativeArguments | Out-Null
+        $response = & $shellPath @nativeArguments
         if ($LASTEXITCODE) { throw "Cold SQLite invocation failed: $($case.name)" }
-        $clock.Stop(); $coldDurations.Add($clock.Elapsed.TotalMilliseconds)
+        $clock.Stop()
+        Assert-MeasurementResponse ($response -join "`n") $case
+        $coldDurations.Add($clock.Elapsed.TotalMilliseconds)
     }
-    & $tool @arguments | Out-Null
+    $response = & $tool @arguments
+    Assert-MeasurementResponse ($response -join "`n") $case
     for ($round=0;$round -lt $Iterations;$round++) {
         $clock = [Diagnostics.Stopwatch]::StartNew()
-        & $tool @arguments | Out-Null
+        $response = & $tool @arguments
         if (-not $?) { throw "Warm SQLite invocation failed: $($case.name)" }
-        $clock.Stop(); $warmDurations.Add($clock.Elapsed.TotalMilliseconds)
+        $clock.Stop()
+        Assert-MeasurementResponse ($response -join "`n") $case
+        $warmDurations.Add($clock.Elapsed.TotalMilliseconds)
     }
     [pscustomobject][ordered]@{
         index=$case.name;sourceBytes=(Get-Item (Join-Path $repositoryRoot ('.llm-wiki/generated/'+$case.source))).Length

@@ -198,6 +198,16 @@ function Get-Metrics([object]$Registry, [object]$Validation) {
 function Write-Registry([object]$Registry) {
     [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
+function Write-WorkspaceOutcome([object]$Event, [string]$Fingerprint) {
+    if ([string]$Event.workspace -cne $workspace) { throw 'Outcome event belongs to a different task workspace.' }
+    $target = Join-Path $absoluteWorkspace 'model-routing-outcome.json'
+    $temporary = "$target.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        $receipt = [pscustomobject][ordered]@{ schemaVersion = 1; registryEvent = $Event; registryFingerprint = $Fingerprint }
+        [IO.File]::WriteAllText($temporary, (($receipt | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if ([IO.File]::Exists($target)) { [IO.File]::Replace($temporary, $target, [NullString]::Value) } else { [IO.File]::Move($temporary, $target) }
+    } finally { if ([IO.File]::Exists($temporary)) { [IO.File]::Delete($temporary) } }
+}
 function Get-Health([object]$Metrics, [object]$Validation) {
     $eligibleProfileCount = @($Metrics.profiles | Where-Object health -ne 'insufficient-data').Count
     [pscustomobject][ordered]@{
@@ -230,6 +240,8 @@ if ($Action -eq 'observe') {
     $retrospectiveValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     if (-not $retrospectiveValidation.valid) { throw "Task retrospective is invalid: $(@($retrospectiveValidation.issues) -join ' ')" }
     if ([string]$completion.completionFingerprint -in @($registry.events | ForEach-Object { [string]$_.completionFingerprint })) {
+        $existingEvent = $registry.events | Where-Object completionFingerprint -eq $completion.completionFingerprint | Select-Object -First 1
+        Write-WorkspaceOutcome $existingEvent ([string]$validation.registryFingerprint)
         $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 0; eventHash = ''; reason = 'Completion outcome was already observed.' }
     } else {
         $route = $routeValidation.route
@@ -261,11 +273,7 @@ if ($Action -eq 'observe') {
         $postValidation = Test-Registry $registry
         if (-not $postValidation.valid) { throw "New model outcome is invalid: $(@($postValidation.issues) -join ' ')" }
         Write-Registry $registry
-        [IO.File]::WriteAllText(
-            (Join-Path $absoluteWorkspace 'model-routing-outcome.json'),
-            (([pscustomobject][ordered]@{ schemaVersion = 1; registryEvent = $event; registryFingerprint = $postValidation.registryFingerprint } | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
-            [Text.UTF8Encoding]::new($false)
-        )
+        Write-WorkspaceOutcome $event ([string]$postValidation.registryFingerprint)
         $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 1; eventHash = $event.eventHash; outcome = $event }
     }
     }
@@ -287,6 +295,7 @@ if ($Action -eq 'observe') {
             $verifyIssues.Add('model-routing-outcome.json is absent.')
         } else {
             $workspaceOutcome = Get-Content -LiteralPath $workspaceReceiptPath -Raw | ConvertFrom-Json
+            if ([string]$workspaceOutcome.registryEvent.workspace -cne $workspace) { $verifyIssues.Add('Workspace model outcome path does not match.') }
             $matching = $registry.events | Where-Object eventHash -eq $workspaceOutcome.registryEvent.eventHash | Select-Object -First 1
             if ($null -eq $matching -or (Get-Hash (Get-EventPayload $matching)) -cne (Get-Hash (Get-EventPayload $workspaceOutcome.registryEvent))) {
                 $verifyIssues.Add('Workspace model outcome does not match the registry.')

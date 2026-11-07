@@ -36,7 +36,14 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### ImagesController
+
+Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
+
+- `POST /api/v{version:apiVersion}/images/upload-url`
+- `POST /api/v{version:apiVersion}/images/{assetId:guid}/confirm`
+- `DELETE /api/v{version:apiVersion}/images/{assetId:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

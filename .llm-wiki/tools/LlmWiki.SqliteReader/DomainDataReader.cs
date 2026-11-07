@@ -55,8 +55,11 @@ public static class DomainDataReader {
         }.ToString();
         using SqliteConnection connection = new(connectionString);
         connection.Open();
+        // Metadata, payloads and counts must describe the same WAL generation.
+        using SqliteTransaction transaction = connection.BeginTransaction(deferred: true);
         string? projectedHash = ReadScalarString(
             connection,
+            transaction,
             "SELECT value FROM metadata WHERE key = 'query_source:domain';");
         if (string.IsNullOrWhiteSpace(projectedHash)) {
             throw new InvalidOperationException("SQLite domain-data projection is missing. Run ./.llm-wiki/wiki.ps1 graph-build and retry.");
@@ -73,14 +76,15 @@ public static class DomainDataReader {
         int returnedRecords = 0;
         long sourceBytesMaterialized = 0;
         foreach (GroupSpec group in groups) {
-            candidateRecords += CountCandidates(connection, group);
-            List<string> payloads = ReadPayloads(connection, group, queryText, queryPattern, limit);
+            candidateRecords += CountCandidates(connection, transaction, group);
+            List<string> payloads = ReadPayloads(connection, transaction, group, queryText, queryPattern, limit);
             payloadsByGroup.Add((group.Name, payloads));
             returnedRecords += payloads.Count;
             sourceBytesMaterialized += payloads.Sum(payload => Encoding.UTF8.GetByteCount(payload));
         }
         int scannedRecords = Convert.ToInt32(ReadScalarInt64(
             connection,
+            transaction,
             "SELECT COUNT(*) FROM query_documents WHERE category = 'domain';"),
             CultureInfo.InvariantCulture);
         stopwatch.Stop();
@@ -138,8 +142,9 @@ public static class DomainDataReader {
         return [.. groups];
     }
 
-    private static int CountCandidates(SqliteConnection connection, GroupSpec group) {
+    private static int CountCandidates(SqliteConnection connection, SqliteTransaction transaction, GroupSpec group) {
         using SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         command.CommandText = $"""
             SELECT COUNT(*)
@@ -152,11 +157,13 @@ public static class DomainDataReader {
 
     private static List<string> ReadPayloads(
         SqliteConnection connection,
+        SqliteTransaction transaction,
         GroupSpec group,
         string query,
         string queryPattern,
         int limit) {
         using SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         command.CommandText = $"""
             SELECT payload_json
@@ -183,15 +190,17 @@ public static class DomainDataReader {
             ? string.Empty
             : $" AND {group.AdditionalPredicate}";
 
-    private static string? ReadScalarString(SqliteConnection connection, string commandText) {
+    private static string? ReadScalarString(SqliteConnection connection, SqliteTransaction transaction, string commandText) {
         using SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         command.CommandText = commandText;
         return command.ExecuteScalar() as string;
     }
 
-    private static long ReadScalarInt64(SqliteConnection connection, string commandText) {
+    private static long ReadScalarInt64(SqliteConnection connection, SqliteTransaction transaction, string commandText) {
         using SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         command.CommandText = commandText;
         return Convert.ToInt64(command.ExecuteScalar(), CultureInfo.InvariantCulture);

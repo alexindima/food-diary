@@ -34,7 +34,6 @@ Generate a Markdown summary for a pull request, task handoff, or CI job:
 ```powershell
 ./.llm-wiki/wiki.ps1 report `
   -BaseRef origin/master `
-  -HeadRef HEAD `
   -Objective "Describe the intended outcome" `
   -OutputPath .artifacts/llm-wiki/review-report.md
 ```
@@ -44,6 +43,11 @@ fingerprint, change scope, risk, every readiness dimension, concrete findings,
 required checks, review obligations, and suggested test scenarios.
 Module values are normalized to stable names rather than serializing internal
 objects, so malformed placeholders cannot enter the generated report.
+The example compares the baseline with the current worktree. An explicit
+`-HeadRef` selects the report's Git comparison, but API compatibility remains
+unassessed without matching API comparison evidence; the API checker itself
+currently reads the worktree. Synthetic `-ChangedPath` scope also remains
+unassessed for API compatibility.
 Objective metadata uses the shared current/legacy packet reader, keeping reports
 and governed delivery commands compatible with the same workspace formats.
 

@@ -32,7 +32,65 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### UserAiConsentController
+
+Source: `Modules/Users/Presentation/Controllers/UserAiConsentController.cs`
+
+- `POST /api/v{version:apiVersion}/users/ai-consent`
+- `DELETE /api/v{version:apiVersion}/users/ai-consent`
+
+### UserOverviewController
+
+Source: `Modules/Users/Presentation/Controllers/UserOverviewController.cs`
+
+- `GET /api/v{version:apiVersion}/users/overview`
+
+### UserPrivacyController
+
+Source: `Modules/Users/Presentation/Controllers/UserPrivacyController.cs`
+
+- `GET /api/v{version:apiVersion}/users/privacy`
+- `PUT /api/v{version:apiVersion}/users/privacy`
+
+### UsersController
+
+Source: `Modules/Users/Presentation/Controllers/UsersController.cs`
+
+- `GET /api/v{version:apiVersion}/users/info`
+- `PATCH /api/v{version:apiVersion}/users/info`
+- `PATCH /api/v{version:apiVersion}/users/preferences/appearance`
+- `GET /api/v{version:apiVersion}/users/desired-weight`
+- `PUT /api/v{version:apiVersion}/users/desired-weight`
+- `GET /api/v{version:apiVersion}/users/desired-waist`
+- `PUT /api/v{version:apiVersion}/users/desired-waist`
+- `DELETE /api/v{version:apiVersion}/users`
+
+### UsersPasswordController
+
+Source: `Modules/Users/Presentation/Controllers/UsersPasswordController.cs`
+
+- `PATCH /api/v{version:apiVersion}/users/password`
+- `PATCH /api/v{version:apiVersion}/users/password/set`
+
+### WaistGoalsController
+
+Source: `Modules/Users/Presentation/Controllers/WaistGoalsController.cs`
+
+- `GET /api/v{version:apiVersion}/users/waist-goals/page`
+
+### WeightGoalsController
+
+Source: `Modules/Users/Presentation/Controllers/WeightGoalsController.cs`
+
+- `GET /api/v{version:apiVersion}/users/weight-goals/page`
+
+### GoalsController
+
+Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
+
+- `GET /api/v{version:apiVersion}/goals`
+- `PATCH /api/v{version:apiVersion}/goals`
+
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -95,7 +153,7 @@ No literal attribute-routed controller was associated with this module.
 
 | Consumer | Contract | Owning assembly | Methods/data | Access | Extraction |
 | --- | --- | --- | --- | --- | --- |
-| Users | IUserContextService | Modules | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |
+| Users | IUserContextService | FoodDiary.Modules.Users.Application | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |
 
 ## Focused Tests
 

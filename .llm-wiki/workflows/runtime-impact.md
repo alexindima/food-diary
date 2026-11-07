@@ -12,6 +12,8 @@ tags:
 sources:
   - .llm-wiki/generated/runtime-topology.json
   - .llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1
+  - .llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1
+  - .llm-wiki/tools/LlmWikiRuntimeTopologyScanner.cs
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
   - .llm-wiki/policies/change-policies.json
@@ -20,6 +22,12 @@ sources:
 # Review runtime and integration impact
 
 The refreshed topology includes the shared local ranking reader without introducing a host, worker, provider, or recurring job. Graph snapshot freshness, projection generation, and full verification remain independent evidence when interpreting this runtime inventory.
+
+Topology freshness reads and hashes the current source contents on every request.
+The native scanner reduces per-file PowerShell overhead while preserving source
+selection, newline normalization and the existing culture-aware path ordering.
+Equal-size edits with unchanged timestamps, additions and deletions still
+invalidate freshness. A loaded scanner or reader is not a cached source snapshot.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 topology
@@ -52,3 +60,10 @@ validate exact source hashes, select bounded records in SQL, and report explicit
 recovery errors when preparation fails. Backend-only preparation works without
 TypeScript; frontend code-graph discovery requires the locked npm dependencies.
 Direct behavior tests cover identity, selection, scope, freshness and output bounds.
+
+Task runtime freshness includes API project references transitively and uses
+NUL-delimited Git paths for untracked Unicode source names. Runtime verification
+holds a stable SQLite OS write lock while recovering stale lock metadata;
+recovery never relies on an unlink/create race. Cleanup reports `cleanup-failed`
+when Docker is unavailable and records `stopped` only after owned containers
+were removed or a successful Engine query confirmed their absence.

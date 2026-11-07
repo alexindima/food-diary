@@ -7,6 +7,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 
 function Get-CurrentRuntimeIdentifier {
     $runtimeInformationType = [Runtime.InteropServices.RuntimeInformation]
@@ -72,6 +73,7 @@ $buildArtifactRoot = Join-Path $artifactRepositoryRoot '.artifacts/dotnet/llm-wi
 $runtimeIdentifier = Get-CurrentRuntimeIdentifier
 $runtimeFramework = [Runtime.InteropServices.RuntimeInformation]::FrameworkDescription
 $inputPaths = @(
+    $PSCommandPath
     $projectPath
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/DomainDataReader.cs')
     (Join-Path $PSScriptRoot 'LlmWiki.SqliteReader/CompiledIndexReader.cs')
@@ -89,7 +91,15 @@ $null = $fingerprintMaterial.AppendLine("rid=$runtimeIdentifier")
 foreach ($path in $inputPaths) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "SQLite reader input is missing: $path" }
     $relativePath = (Get-RelativePathPortable -BasePath $repositoryRoot -Path $path).Replace('\', '/')
-    $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+    $hash = if ([IO.Path]::GetExtension($path) -in @('.props', '.csproj')) {
+        # XML normalizes line endings when MSBuild reads it. Git's detached
+        # read-only checkout may use LF while the live workspace still has CRLF.
+        $xmlText = [IO.File]::ReadAllText($path).Replace("`r`n", "`n").Replace("`r", "`n")
+        Get-Sha256Hex ([Text.Encoding]::UTF8.GetBytes($xmlText))
+    } else {
+        # Keep exact C# bytes: verbatim/raw string literals can contain newlines.
+        (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
     $null = $fingerprintMaterial.AppendLine("$relativePath=$hash")
 }
 $fingerprint = Get-Sha256Hex -Bytes ([Text.Encoding]::UTF8.GetBytes($fingerprintMaterial.ToString()))
@@ -97,20 +107,53 @@ $outputPath = Join-Path $artifactRoot $fingerprint
 $assemblyPath = Join-Path $outputPath 'LlmWiki.SqliteReader.dll'
 $manifestPath = Join-Path $outputPath 'build-manifest.json'
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
-$reused = -not $Force -and (Test-Path -LiteralPath $assemblyPath -PathType Leaf) -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)
+function Test-ReaderBuild {
+    try {
+        $saved = [IO.File]::ReadAllText($manifestPath) | ConvertFrom-Json
+        if ($saved.schemaVersion -ne 2 -or $saved.fingerprint -cne $fingerprint -or $saved.runtimeIdentifier -cne $runtimeIdentifier -or $saved.runtimeFramework -cne $runtimeFramework) { return $false }
+        $files = @($saved.outputs)
+        foreach ($required in @('LlmWiki.SqliteReader.dll','Microsoft.Data.Sqlite.dll','SQLitePCLRaw.core.dll','SQLitePCLRaw.provider.e_sqlite3.dll','SQLitePCLRaw.batteries_v2.dll')) {
+            if (@($files | Where-Object path -CEQ $required).Count -ne 1) { return $false }
+        }
+        if (@($files | Where-Object { $_.path -in @('e_sqlite3.dll','libe_sqlite3.so','libe_sqlite3.dylib') }).Count -ne 1) { return $false }
+        $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($file in $files) {
+            if (-not $seen.Add([string]$file.path) -or [IO.Path]::IsPathRooted($file.path) -or $file.path -match '(?:^|[\\/])\.\.(?:[\\/]|$)' -or $file.sha256 -notmatch '^[a-f0-9]{64}$') { return $false }
+            if ((Get-FileHash -LiteralPath (Join-Path $outputPath $file.path) -Algorithm SHA256 -ErrorAction Stop).Hash.ToLowerInvariant() -cne $file.sha256) { return $false }
+        }
+        $null = [Reflection.AssemblyName]::GetAssemblyName($assemblyPath)
+        return $true
+    } catch { return $false }
+}
+$reused = -not $Force -and (Test-ReaderBuild)
+$buildLock = $null
+$pendingOutput = $null
+try {
 if (-not $reused -and -not $CheckOnly) {
-    $null = New-Item -ItemType Directory -Path $outputPath -Force
+    $null = [IO.Directory]::CreateDirectory($artifactRoot)
+    $lockTimer = [Diagnostics.Stopwatch]::StartNew()
+    while ($null -eq $buildLock) {
+        try { $buildLock = [IO.File]::Open((Join-Path $artifactRoot 'build.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None) }
+        catch [IO.IOException] {
+            if ($lockTimer.Elapsed.TotalSeconds -ge 120) { throw 'Timed out waiting for the SQLite reader build.' }
+            Start-Sleep -Milliseconds 50
+        }
+    }
+    $reused = -not $Force -and (Test-ReaderBuild)
+    if (-not $reused) {
+    $pendingOutput = "$outputPath.pending-$([guid]::NewGuid().ToString('N'))"
+    $null = [IO.Directory]::CreateDirectory($pendingOutput)
     $publishOutput = & dotnet publish $projectPath `
         --configuration Release `
         --artifacts-path $buildArtifactRoot `
-        --output $outputPath `
+        --output $pendingOutput `
         --nologo 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "In-process SQLite reader publish failed:`n$($publishOutput -join "`n")"
     }
-    $nativeDirectory = Join-Path $outputPath "runtimes/$runtimeIdentifier/native"
+    $nativeDirectory = Join-Path $pendingOutput "runtimes/$runtimeIdentifier/native"
     if (-not (Test-Path -LiteralPath $nativeDirectory -PathType Container)) {
-        $nativeDirectory = Get-ChildItem -LiteralPath (Join-Path $outputPath 'runtimes') -Directory -ErrorAction SilentlyContinue |
+        $nativeDirectory = Get-ChildItem -LiteralPath (Join-Path $pendingOutput 'runtimes') -Directory -ErrorAction SilentlyContinue |
             Where-Object { $_.Name -eq $runtimeIdentifier -or $runtimeIdentifier.StartsWith("$($_.Name)-", [StringComparison]::OrdinalIgnoreCase) } |
             ForEach-Object { Join-Path $_.FullName 'native' } |
             Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
@@ -120,20 +163,41 @@ if (-not $reused -and -not $CheckOnly) {
         throw "Published SQLite reader does not contain native assets for '$runtimeIdentifier'."
     }
     foreach ($nativeFile in Get-ChildItem -LiteralPath $nativeDirectory -File) {
-        Copy-Item -LiteralPath $nativeFile.FullName -Destination (Join-Path $outputPath $nativeFile.Name) -Force
+        Copy-Item -LiteralPath $nativeFile.FullName -Destination (Join-Path $pendingOutput $nativeFile.Name) -Force
     }
     $manifest = [pscustomobject][ordered]@{
-        schemaVersion = 1
+        schemaVersion = 2
         fingerprint = $fingerprint
         runtimeIdentifier = $runtimeIdentifier
         runtimeFramework = $runtimeFramework
         assemblyPath = $assemblyPath
+        outputs = @(Get-ChildItem -LiteralPath $pendingOutput -Recurse -File | Sort-Object FullName | ForEach-Object {
+            [ordered]@{ path = (Get-RelativePathPortable $pendingOutput $_.FullName).Replace('\','/'); sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() }
+        })
     }
-    $manifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $manifestPath -Encoding utf8
+    Write-LlmWikiTextFileAtomically -Path (Join-Path $pendingOutput 'build-manifest.json') -Content ($manifest | ConvertTo-Json -Depth 6)
+    if ([IO.Directory]::Exists($outputPath)) {
+        # Preserve the invalid generation for diagnosis; never modify DLLs that
+        # an existing reader may have loaded into its process.
+        [IO.Directory]::Move($outputPath, "$outputPath.invalid-$([guid]::NewGuid().ToString('N'))")
+    }
+    [IO.Directory]::Move($pendingOutput, $outputPath)
+    $pendingOutput = $null
+    if (-not (Test-ReaderBuild)) { throw 'Published SQLite reader failed output validation.' }
+    }
+}
+} finally {
+    try {
+    if ($null -ne $pendingOutput -and [IO.Directory]::Exists($pendingOutput)) {
+        $ownedPrefix = $outputPath + '.pending-'
+        if (-not $pendingOutput.StartsWith($ownedPrefix, [StringComparison]::Ordinal)) { throw 'Invalid owned SQLite reader staging path.' }
+        Remove-Item -LiteralPath $pendingOutput -Recurse -Force
+    }
+    } finally { if ($null -ne $buildLock) { $buildLock.Dispose() } }
 }
 $stopwatch.Stop()
 $result = [pscustomobject][ordered]@{
-    ready = (Test-Path -LiteralPath $assemblyPath -PathType Leaf) -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)
+    ready = Test-ReaderBuild
     reused = $reused
     fingerprint = $fingerprint
     runtimeIdentifier = $runtimeIdentifier

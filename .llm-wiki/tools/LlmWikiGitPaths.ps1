@@ -1,5 +1,24 @@
 Set-StrictMode -Version Latest
 
+function Wait-LlmWikiGitProcess {
+    param([Diagnostics.Process]$Process, [Threading.Tasks.Task]$OutputTask, [Threading.Tasks.Task]$ErrorTask, [int]$TimeoutSeconds = 120)
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    $null = $Process.StartTime
+    while (-not $Process.HasExited -or -not $OutputTask.IsCompleted -or -not $ErrorTask.IsCompleted) {
+        if ($timer.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+            if (-not (Test-Path Function:Stop-LlmWikiProcessTree) -and [IO.File]::Exists((Join-Path $PSScriptRoot 'LlmWikiProcess.ps1'))) { . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1') }
+            try {
+                if (Test-Path Function:Stop-LlmWikiProcessTree) { Stop-LlmWikiProcessTree $Process }
+                elseif (-not $Process.HasExited) {
+                    if ($PSVersionTable.PSVersion.Major -ge 7) { $Process.Kill($true) } else { $Process.Kill() }
+                }
+            } finally { $Process.StandardOutput.Dispose(); $Process.StandardError.Dispose() }
+            throw "Git command timed out after ${TimeoutSeconds}s (including output drain)."
+        }
+        if ($Process.HasExited) { Start-Sleep -Milliseconds 1 } else { $null = $Process.WaitForExit(20) }
+    }
+}
+
 function Clear-LlmWikiGitRepositoryEnvironment([Diagnostics.ProcessStartInfo]$StartInfo) {
     # A caller such as a Git hook may target another checkout. Scope isolation
     # belongs to the child process; preserve the caller's environment and config.
@@ -113,7 +132,8 @@ function Invoke-LlmWikiGitPathList {
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][string[]]$Arguments,
         [string]$FailureMessage = 'Git path enumeration failed.',
-        [int[]]$AllowedExitCode = @(0)
+        [int[]]$AllowedExitCode = @(0),
+        [ValidateRange(1, 3600)][int]$TimeoutSeconds = 120
     )
 
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
@@ -142,7 +162,7 @@ function Invoke-LlmWikiGitPathList {
         if (-not $process.Start()) { throw "$FailureMessage Git did not start." }
         $stdoutTask = $process.StandardOutput.ReadToEndAsync()
         $stderrTask = $process.StandardError.ReadToEndAsync()
-        $process.WaitForExit()
+        Wait-LlmWikiGitProcess $process $stdoutTask $stderrTask $TimeoutSeconds
         $stdout = [string]$stdoutTask.GetAwaiter().GetResult()
         $stderr = [string]$stderrTask.GetAwaiter().GetResult()
         if ($process.ExitCode -notin $AllowedExitCode) {
@@ -172,7 +192,8 @@ function Invoke-LlmWikiGitCommand {
         [Parameter(Mandatory)][string]$RepositoryRoot,
         [Parameter(Mandatory)][string[]]$Arguments,
         [string]$FailureMessage = 'Git command failed.',
-        [int[]]$AllowedExitCode = @(0)
+        [int[]]$AllowedExitCode = @(0),
+        [ValidateRange(1, 3600)][int]$TimeoutSeconds = 120
     )
 
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
@@ -191,7 +212,7 @@ function Invoke-LlmWikiGitCommand {
         if (-not $process.Start()) { throw "$FailureMessage Git did not start." }
         $stdoutTask = $process.StandardOutput.ReadToEndAsync()
         $stderrTask = $process.StandardError.ReadToEndAsync()
-        $process.WaitForExit()
+        Wait-LlmWikiGitProcess $process $stdoutTask $stderrTask $TimeoutSeconds
         $stdout = [string]$stdoutTask.GetAwaiter().GetResult()
         $stderr = [string]$stderrTask.GetAwaiter().GetResult()
         if ($process.ExitCode -notin $AllowedExitCode) {

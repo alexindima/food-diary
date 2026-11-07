@@ -31,7 +31,13 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### MarketingAttributionController
+
+Source: `Modules/Marketing/Presentation/Controllers/MarketingAttributionController.cs`
+
+- `POST /api/v{version:apiVersion}/marketing/attribution-events`
+- `POST /api/v{version:apiVersion}/marketing/attribution-events/signup`
+
 ## Boundary Health
 
 - Role: aggregate-owner

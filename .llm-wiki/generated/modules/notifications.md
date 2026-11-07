@@ -33,7 +33,34 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AdminNotificationsController
+
+Source: `Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs`
+
+- `POST /api/v{version:apiVersion}/admin/users/{id:guid}/notifications/test`
+
+### NotificationPushController
+
+Source: `Modules/Notifications/Presentation/Controllers/NotificationPushController.cs`
+
+- `GET /api/v{version:apiVersion}/notifications/push/config`
+- `GET /api/v{version:apiVersion}/notifications/push/subscriptions`
+- `PUT /api/v{version:apiVersion}/notifications/push/subscription`
+- `DELETE /api/v{version:apiVersion}/notifications/push/subscription`
+
+### NotificationsController
+
+Source: `Modules/Notifications/Presentation/Controllers/NotificationsController.cs`
+
+- `GET /api/v{version:apiVersion}/notifications`
+- `GET /api/v{version:apiVersion}/notifications/unread-count`
+- `POST /api/v{version:apiVersion}/notifications/read-status`
+- `PUT /api/v{version:apiVersion}/notifications/{notificationId:guid}/read`
+- `PUT /api/v{version:apiVersion}/notifications/read-all`
+- `POST /api/v{version:apiVersion}/notifications/test/schedule`
+- `GET /api/v{version:apiVersion}/notifications/preferences`
+- `PUT /api/v{version:apiVersion}/notifications/preferences`
+
 ## Boundary Health
 
 - Role: aggregate-owner

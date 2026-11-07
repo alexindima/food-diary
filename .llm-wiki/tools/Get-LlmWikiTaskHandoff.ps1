@@ -502,7 +502,18 @@ $handoff = [pscustomobject][ordered]@{
     )
 }
 
-$compactJournalEntries = @($handoff.journal.entries | Where-Object { $_.status -eq 'open' -or $_.type -in @('decision', 'blocker') } | Select-Object -Last $Limit)
+# Select from the complete journal before applying the display limit. An old
+# unresolved blocker takes priority over recent notes and closed decisions.
+$openJournalBlockers = @($journal.entries | Where-Object { $_.status -eq 'open' -and $_.type -eq 'blocker' })
+$selectedJournalBlockers = @($openJournalBlockers | Select-Object -Last $Limit)
+$otherJournalLimit = $Limit - $selectedJournalBlockers.Count
+$otherJournalEntries = @(if ($otherJournalLimit -gt 0) {
+    $journal.entries | Where-Object {
+        -not ($_.status -eq 'open' -and $_.type -eq 'blocker') -and
+        ($_.status -eq 'open' -or $_.type -in @('decision', 'blocker'))
+    } | Select-Object -Last $otherJournalLimit
+})
+$compactJournalEntries = @($selectedJournalBlockers) + @($otherJournalEntries)
 $compactHandoff = [pscustomobject][ordered]@{
     schemaVersion = $handoff.schemaVersion
     view = 'compact'
@@ -525,6 +536,7 @@ $compactHandoff = [pscustomobject][ordered]@{
     journal = [pscustomobject][ordered]@{
         openCount = $handoff.journal.openCount
         openBlockerCount = $handoff.journal.openBlockerCount
+        omittedOpenBlockerCount = [Math]::Max(0, $openJournalBlockers.Count - $selectedJournalBlockers.Count)
         entries = $compactJournalEntries
     }
     nextActions = @($handoff.nextActions)
@@ -563,7 +575,8 @@ if ($Format -eq 'Json') {
     $lines.Add('## Decisions and blockers')
     $lines.Add('')
     foreach ($entry in $compactHandoff.journal.entries) { $lines.Add("- **$($entry.id) [$($entry.status)/$($entry.type)]:** $(ConvertTo-MarkdownText $entry.text)") }
-    if (@($compactHandoff.journal.entries).Count -eq 0) { $lines.Add('- None.') }
+    if ($compactHandoff.journal.omittedOpenBlockerCount -gt 0) { $lines.Add("- Additional unresolved blockers omitted by the display limit: $($compactHandoff.journal.omittedOpenBlockerCount). Read the full task journal.") }
+    if (@($compactHandoff.journal.entries).Count -eq 0 -and $compactHandoff.journal.openBlockerCount -eq 0) { $lines.Add('- None.') }
     $lines.Add('')
     $lines.Add('## Next actions')
     $lines.Add('')

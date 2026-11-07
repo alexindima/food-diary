@@ -30,7 +30,14 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### StatisticsController
+
+Source: `Modules/Statistics/Presentation/Controllers/StatisticsController.cs`
+
+- `GET /api/v{version:apiVersion}/statistics`
+- `GET /api/v{version:apiVersion}/statistics/summary`
+- `GET /api/v{version:apiVersion}/statistics/diary-summary`
+
 ## Boundary Health
 
 - Role: read-composer

@@ -34,7 +34,37 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AiFoodController
+
+Source: `Modules/Ai/Presentation/Controllers/AiFoodController.cs`
+
+- `POST /api/v{version:apiVersion}/ai/food/recipe-import`
+- `POST /api/v{version:apiVersion}/ai/food/vision`
+- `POST /api/v{version:apiVersion}/ai/food/text`
+- `POST /api/v{version:apiVersion}/ai/food/nutrition`
+
+### AiUsageController
+
+Source: `Modules/Ai/Presentation/Controllers/AiUsageController.cs`
+
+- `GET /api/v{version:apiVersion}/ai/usage/me`
+
+### FoodRecognitionController
+
+Source: `Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs`
+
+- `POST /api/v{version:apiVersion}/ai/food/recognitions`
+- `GET /api/v{version:apiVersion}/ai/food/recognitions/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/ai/food/recognitions/{id:guid}`
+- `GET /api/v{version:apiVersion}/ai/food/recognitions`
+- `GET /api/v{version:apiVersion}/ai/food/recognitions/page`
+
+### RecipeVideoImportController
+
+Source: `Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs`
+
+- `POST /api/v{version:apiVersion}/ai/food/recipe-import/video`
+
 ## Boundary Health
 
 - Role: aggregate-owner

@@ -43,7 +43,7 @@ if ($Group -in @('Pure', 'All')) {
         $tools = Join-Path $fixture '.llm-wiki/tools'
         $workspace = '.artifacts/llm-wiki/tasks/cache'
         $null = New-Item -ItemType Directory -Path $tools,(Join-Path $fixture "$workspace/logs"),(Join-Path $fixture 'src'),(Join-Path $fixture '.llm-wiki/policies') -Force
-        foreach ($name in @('LlmWikiAssessmentRunner', 'LlmWikiQueryCache', 'LlmWikiChangeSetSnapshot', 'LlmWikiGitPaths', 'Invoke-LlmWikiObservedStage', 'LlmWikiNavigationSemantics', 'LlmWikiJson', 'Get-LlmWikiImpact', 'Add-LlmWikiSourceReview')) {
+        foreach ($name in @('LlmWikiAssessmentRunner', 'LlmWikiProcess', 'LlmWikiQueryCache', 'LlmWikiChangeSetSnapshot', 'LlmWikiGitPaths', 'Invoke-LlmWikiObservedStage', 'LlmWikiNavigationSemantics', 'LlmWikiJson', 'Get-LlmWikiImpact', 'Add-LlmWikiSourceReview')) {
             Copy-Item -LiteralPath (Join-Path $PSScriptRoot "$name.ps1") -Destination $tools
         }
         [IO.File]::WriteAllText((Join-Path $fixture '.gitignore'), '.artifacts/')

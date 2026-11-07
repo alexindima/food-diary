@@ -219,7 +219,7 @@ function ConvertTo-ComparableOpenApi {
 }
 
 function Get-SchemaShapeText {
-    param($Schema)
+    param($Schema, [bool]$IncludeProperties = $true)
 
     if ($null -eq $Schema) { return '' }
     $shape = [ordered]@{}
@@ -227,9 +227,21 @@ function Get-SchemaShapeText {
         'type', 'format', '$ref', 'nullable', 'default',
         'minLength', 'maxLength', 'minimum', 'maximum',
         'exclusiveMinimum', 'exclusiveMaximum', 'minItems', 'maxItems',
-        'pattern', 'enum')) {
+        'pattern', 'enum', 'uniqueItems', 'minProperties', 'maxProperties', 'multipleOf')) {
         $value = Get-PropertyValue $Schema $name
+        if ($name -eq 'enum' -and $null -ne $value) { $value = @($value | Sort-Object -CaseSensitive -Unique) }
         if ($null -ne $value) { $shape[$name] = $value }
+    }
+    if ($IncludeProperties) {
+        $properties = Get-PropertyValue $Schema 'properties'
+        if ($null -ne $properties) {
+            $shape['properties'] = [ordered]@{}
+            foreach ($property in @(Get-Properties $properties | Sort-Object Name)) {
+                $shape['properties'][$property.Name] = Get-SchemaShapeText $property.Value
+            }
+        }
+        $required = Get-PropertyValue $Schema 'required'
+        if ($null -ne $required) { $shape['required'] = @($required | Sort-Object -Unique) }
     }
     $items = Get-PropertyValue $Schema 'items'
     if ($null -ne $items) { $shape['items'] = Get-SchemaShapeText $items }
@@ -600,16 +612,17 @@ foreach ($schemaProperty in Get-Properties $beforeSchemas) {
     }
     $beforeSchema = $schemaProperty.Value
     $afterSchema = $afterSchemaProperty.Value
+    if ((Get-SchemaShapeText $beforeSchema -IncludeProperties $false) -cne (Get-SchemaShapeText $afterSchema -IncludeProperties $false)) {
+        Add-Change $changes 'breaking' 'changed-schema-shape' $schemaName 'Public component schema shape or restrictions changed.'
+    }
     foreach ($property in Get-Properties $beforeSchema.properties) {
         $afterProperty = Get-NamedProperty $afterSchema.properties $property.Name
         if ($null -eq $afterProperty) {
             Add-Change $changes 'breaking' 'removed-schema-property' "$schemaName.$($property.Name)" 'Schema property was removed.'
             continue
         }
-        $beforeItems = Get-PropertyValue $property.Value 'items'
-        $afterItems = Get-PropertyValue $afterProperty.Value 'items'
-        $beforeShape = "$(Get-PropertyValue $property.Value 'type')|$(Get-PropertyValue $property.Value 'format')|$(Get-PropertyValue $property.Value '$ref')|nullable=$(Get-PropertyValue $property.Value 'nullable')|items=$(Get-PropertyValue $beforeItems 'type'):$(Get-PropertyValue $beforeItems '$ref')"
-        $afterShape = "$(Get-PropertyValue $afterProperty.Value 'type')|$(Get-PropertyValue $afterProperty.Value 'format')|$(Get-PropertyValue $afterProperty.Value '$ref')|nullable=$(Get-PropertyValue $afterProperty.Value 'nullable')|items=$(Get-PropertyValue $afterItems 'type'):$(Get-PropertyValue $afterItems '$ref')"
+        $beforeShape = Get-SchemaShapeText $property.Value
+        $afterShape = Get-SchemaShapeText $afterProperty.Value
         if ($beforeShape -ne $afterShape) {
             Add-Change $changes 'breaking' 'changed-schema-property' "$schemaName.$($property.Name)" "Property shape changed from '$beforeShape' to '$afterShape'."
         }

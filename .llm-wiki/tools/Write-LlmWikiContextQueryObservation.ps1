@@ -37,7 +37,8 @@ $mutexName = 'Local\LlmWikiContextObservation-' + [Convert]::ToHexString($pathHa
 $mutex = [Threading.Mutex]::new($false, $mutexName)
 $lockTaken = $false
 try {
-    $lockTaken = $mutex.WaitOne([TimeSpan]::FromSeconds(10))
+    try { $lockTaken = $mutex.WaitOne([TimeSpan]::FromSeconds(10)) }
+    catch [Threading.AbandonedMutexException] { $lockTaken = $true }
     if (-not $lockTaken) {
         throw "Timed out waiting to append context query observation to '$path'."
     }

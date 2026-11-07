@@ -31,7 +31,29 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### BillingController
+
+Source: `Modules/Billing/Presentation/Controllers/BillingController.cs`
+
+- `GET /api/v{version:apiVersion}/billing/overview`
+- `POST /api/v{version:apiVersion}/billing/trial`
+- `POST /api/v{version:apiVersion}/billing/checkout-session`
+- `POST /api/v{version:apiVersion}/billing/portal-session`
+- `POST /api/v{version:apiVersion}/billing/cancel`
+- `POST /api/v{version:apiVersion}/billing/cancellations/{cancellationId:guid}/feedback`
+
+### BillingWebhookController
+
+Source: `Modules/Billing/Presentation/Controllers/BillingWebhookController.cs`
+
+- `POST /api/v{version:apiVersion}/billing/webhooks/{provider}`
+
+### TelegramStarsController
+
+Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
+
+- `POST /api/v{version:apiVersion}/billing/telegram-stars/updates`
+
 ## Boundary Health
 
 - Role: aggregate-owner

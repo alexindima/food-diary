@@ -32,7 +32,41 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AdminCatalogRecipesController
+
+Source: `Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/catalog/recipes/export`
+- `POST /api/v{version:apiVersion}/admin/catalog/recipes/preview`
+- `POST /api/v{version:apiVersion}/admin/catalog/recipes/import`
+
+### PublicRecipesController
+
+Source: `Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs`
+
+- `GET /api/v{version:apiVersion}/recipes/public`
+- `GET /api/v{version:apiVersion}/recipes/public/categories`
+- `GET /api/v{version:apiVersion}/recipes/public/{id:guid}`
+
+### RecipeExploreController
+
+Source: `Modules/Recipes/Presentation/Controllers/RecipeExploreController.cs`
+
+- `GET /api/v{version:apiVersion}/recipes/explore`
+
+### RecipesController
+
+Source: `Modules/Recipes/Presentation/Controllers/RecipesController.cs`
+
+- `GET /api/v{version:apiVersion}/recipes`
+- `GET /api/v{version:apiVersion}/recipes/overview`
+- `GET /api/v{version:apiVersion}/recipes/recent`
+- `GET /api/v{version:apiVersion}/recipes/{id:guid}`
+- `POST /api/v{version:apiVersion}/recipes`
+- `PATCH /api/v{version:apiVersion}/recipes/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/recipes/{id:guid}`
+- `POST /api/v{version:apiVersion}/recipes/{id:guid}/duplicate`
+
 ## Boundary Health
 
 - Role: aggregate-owner

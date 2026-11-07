@@ -12,10 +12,11 @@ try {
     [IO.File]::WriteAllText($tool, "param([string]`$Value) if (`$Value -cne 'Проверка ёжика') { throw 'UTF-8 round-trip failed' }; `$Value | & node -e 'process.stdin.setEncoding(""utf8""); process.stdin.on(""data"", value => process.stdout.write(value));'", [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($argumentsPath, '{"Value":"Проверка ёжика"}', [Text.UTF8Encoding]::new($false))
     $unicodeOutput = Join-Path $root 'utf8-output.txt'
-    & (Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1') -ToolPath $tool -ArgumentsPath $argumentsPath -StageName sample -ResultPath $resultPath -Fingerprint abc -PassedReceiptPath $receiptPath -OutputPath $unicodeOutput
+    $fingerprint = & (Join-Path $PSScriptRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage sample -Arguments @{Value='Проверка ёжика'}
+    & (Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1') -ToolPath $tool -ArgumentsPath $argumentsPath -StageName sample -ResultPath $resultPath -Fingerprint $fingerprint -PassedReceiptPath $receiptPath -OutputPath $unicodeOutput
     if ([IO.File]::ReadAllText($unicodeOutput).Trim() -cne 'Проверка ёжика') { throw 'PowerShell/Node UTF-8 output changed Cyrillic text.' }
     $result = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json
-    if ($result.status -ne 'passed' -or $result.fingerprint -ne 'abc' -or -not (Test-Path -LiteralPath $receiptPath)) {
+    if ($result.status -ne 'passed' -or $result.fingerprint -ne $fingerprint -or -not (Test-Path -LiteralPath $receiptPath)) {
         throw 'Observed stage did not persist its own durable success receipt.'
     }
     # Run the actual facade stage function against owned child tools. Retention

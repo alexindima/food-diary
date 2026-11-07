@@ -34,7 +34,14 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### LessonsController
+
+Source: `Modules/Lessons/Presentation/Controllers/LessonsController.cs`
+
+- `GET /api/v{version:apiVersion}/lessons`
+- `GET /api/v{version:apiVersion}/lessons/{id:guid}`
+- `POST /api/v{version:apiVersion}/lessons/{id:guid}/read`
+
 ## Boundary Health
 
 - Role: aggregate-owner

@@ -19,8 +19,8 @@
     "applicationModules": 0,
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
-    "controllers": 10,
-    "endpoints": 22,
+    "controllers": 114,
+    "endpoints": 374,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -15445,6 +15445,2494 @@
             "verb": "GET",
             "route": "/internal/version",
             "line": 19
+          }
+        ]
+      },
+      {
+        "name": "AdminAchievementDefinitionsController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/achievement-definitions",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/achievement-definitions",
+            "line": 20
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/achievement-definitions",
+            "line": 26
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/achievement-definitions/{id:guid}",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "name": "AdminAcquisitionController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminAcquisitionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/acquisition",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/acquisition/range",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/acquisition/summary",
+            "line": 25
+          }
+        ]
+      },
+      {
+        "name": "AdminAiPromptsController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/ai-prompts",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/ai-prompts/scenarios",
+            "line": 22
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/ai-prompts/preview",
+            "line": 28
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/ai-prompts/test",
+            "line": 36
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/ai-prompts",
+            "line": 49
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/ai-prompts/{key:maxlength(64)}/{locale:maxlength(10)}/revisions",
+            "line": 54
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/ai-prompts/{key:maxlength(64)}/{locale:maxlength(10)}",
+            "line": 62
+          }
+        ]
+      },
+      {
+        "name": "AdminAiUsageController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/ai-usage",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/ai-usage/summary",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "name": "AdminAuditController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminAuditController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/audit",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/audit",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "name": "AdminBillingController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminBillingController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/billing",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/billing/cancellations",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/billing/revenue-summary",
+            "line": 24
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/billing/subscriptions",
+            "line": 30
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/billing/payments",
+            "line": 36
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/billing/webhook-events",
+            "line": 42
+          }
+        ]
+      },
+      {
+        "name": "AdminBugReportsController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/bugs",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/bugs",
+            "line": 19
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/bugs/journal",
+            "line": 25
+          }
+        ]
+      },
+      {
+        "name": "AdminCollaborationAuditController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminCollaborationAuditController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/users/collaboration-audit",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/collaboration-audit",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "AdminDailyAdvicesController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/daily-advices",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/daily-advices",
+            "line": 21
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/daily-advices/import",
+            "line": 27
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/daily-advices/groups",
+            "line": 38
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/daily-advices/groups/import",
+            "line": 44
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/daily-advices/groups/{id:guid}",
+            "line": 55
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/admin/daily-advices/groups/{id:guid}",
+            "line": 62
+          }
+        ]
+      },
+      {
+        "name": "AdminDashboardController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/dashboard",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/dashboard/overview",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/dashboard",
+            "line": 25
+          }
+        ]
+      },
+      {
+        "name": "AdminEmailTemplatesController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/email-templates",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/email-templates",
+            "line": 22
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}/revisions",
+            "line": 27
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}",
+            "line": 35
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/email-templates/test",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "AdminLessonsController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminLessonsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/lessons",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/lessons",
+            "line": 21
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/lessons",
+            "line": 27
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/lessons/import",
+            "line": 34
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
+            "line": 45
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
+            "line": 52
+          }
+        ]
+      },
+      {
+        "name": "AdminMailInboxController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/mail-inbox/messages",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages/page",
+            "line": 21
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages",
+            "line": 28
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages/{id:guid}",
+            "line": 34
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages/{id:guid}/read",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "AdminModerationController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminModerationController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/moderation",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/moderation",
+            "line": 18
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/review",
+            "line": 24
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/dismiss",
+            "line": 33
+          }
+        ]
+      },
+      {
+        "name": "AdminOutgoingEmailsController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/outgoing-emails",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/outgoing-emails",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "name": "AdminRetentionController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/analytics/retention",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/analytics/retention",
+            "line": 19
+          }
+        ]
+      },
+      {
+        "name": "AdminTelemetryController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminTelemetryController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/telemetry",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/telemetry/fasting",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "AdminUserCreationController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminUserCreationController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/users",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/users",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "AdminUserPasswordController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminUserPasswordController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/users/{id:guid}/password",
+        "endpoints": [
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/password",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "AdminUsersController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/users",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
+            "line": 24
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/role-audit",
+            "line": 31
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/impersonation-sessions",
+            "line": 38
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/login-events",
+            "line": 44
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/login-summary",
+            "line": 50
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
+            "line": 56
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/impersonation",
+            "line": 66
+          }
+        ]
+      },
+      {
+        "name": "AiFoodController",
+        "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
+        "routePrefix": "api/v{version:apiVersion}/ai/food",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/ai/food/recipe-import",
+            "line": 26
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/ai/food/vision",
+            "line": 35
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/ai/food/text",
+            "line": 44
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/ai/food/nutrition",
+            "line": 53
+          }
+        ]
+      },
+      {
+        "name": "AiUsageController",
+        "path": "Modules/Ai/Presentation/Controllers/AiUsageController.cs",
+        "routePrefix": "api/v{version:apiVersion}/ai/usage",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/ai/usage/me",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "name": "FoodRecognitionController",
+        "path": "Modules/Ai/Presentation/Controllers/FoodRecognitionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/ai/food/recognitions",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/ai/food/recognitions",
+            "line": 21
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/ai/food/recognitions/{id:guid}",
+            "line": 34
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/ai/food/recognitions/{id:guid}",
+            "line": 40
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/ai/food/recognitions",
+            "line": 47
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/ai/food/recognitions/page",
+            "line": 53
+          }
+        ]
+      },
+      {
+        "name": "RecipeVideoImportController",
+        "path": "Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController.cs",
+        "routePrefix": "api/v{version:apiVersion}/ai/food/recipe-import",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/ai/food/recipe-import/video",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "BillingController",
+        "path": "Modules/Billing/Presentation/Controllers/BillingController.cs",
+        "routePrefix": "api/v{version:apiVersion}/billing",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/billing/overview",
+            "line": 21
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/trial",
+            "line": 27
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/checkout-session",
+            "line": 35
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/portal-session",
+            "line": 49
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/cancel",
+            "line": 60
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/cancellations/{cancellationId:guid}/feedback",
+            "line": 70
+          }
+        ]
+      },
+      {
+        "name": "BillingWebhookController",
+        "path": "Modules/Billing/Presentation/Controllers/BillingWebhookController.cs",
+        "routePrefix": "api/v{version:apiVersion}/billing/webhooks/{provider}",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/webhooks/{provider}",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "TelegramStarsController",
+        "path": "Modules/Billing/Presentation/Controllers/TelegramStarsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/billing/telegram-stars/updates",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/billing/telegram-stars/updates",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "name": "WaistEntriesController",
+        "path": "Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/waist-entries",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/waist-entries",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/waist-entries/latest",
+            "line": 24
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/waist-entries/summary",
+            "line": 30
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/waist-entries/page-summary",
+            "line": 36
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/waist-entries",
+            "line": 44
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/waist-entries/{id:guid}",
+            "line": 52
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/waist-entries/{id:guid}",
+            "line": 60
+          }
+        ]
+      },
+      {
+        "name": "WeightEntriesController",
+        "path": "Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/weight-entries",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/weight-entries",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/weight-entries/latest",
+            "line": 24
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/weight-entries/summary",
+            "line": 30
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/weight-entries/page-summary",
+            "line": 36
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/weight-entries",
+            "line": 44
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/weight-entries/{id:guid}",
+            "line": 52
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/weight-entries/{id:guid}",
+            "line": 60
+          }
+        ]
+      },
+      {
+        "name": "ContentReportsController",
+        "path": "Modules/ContentReports/Presentation/Controllers/ContentReportsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/reports",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/reports",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "CycleLogsController",
+        "path": "Modules/Cycles/Presentation/Controllers/CycleLogsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/cycles",
+        "endpoints": [
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "line": 16
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "line": 23
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
+            "line": 30
+          }
+        ]
+      },
+      {
+        "name": "CyclesController",
+        "path": "Modules/Cycles/Presentation/Controllers/CyclesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/cycles",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/cycles/current",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/cycles/current/nutrition-summary",
+            "line": 24
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/cycles",
+            "line": 35
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}",
+            "line": 42
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/settings",
+            "line": 49
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/consents/{purpose:int}",
+            "line": 59
+          }
+        ]
+      },
+      {
+        "name": "MenstrualEpisodesController",
+        "path": "Modules/Cycles/Presentation/Controllers/MenstrualEpisodesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/cycles",
+        "endpoints": [
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start",
+            "line": 16
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
+            "line": 26
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
+            "line": 37
+          }
+        ]
+      },
+      {
+        "name": "DashboardController",
+        "path": "Modules/Dashboard/Presentation/Controllers/DashboardController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dashboard",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dashboard",
+            "line": 20
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dashboard/advice",
+            "line": 27
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dashboard/test-email",
+            "line": 33
+          }
+        ]
+      },
+      {
+        "name": "BulkRecommendationsController",
+        "path": "Modules/Dietologist/Presentation/Controllers/BulkRecommendationsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist/recommendations/bulk",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/recommendations/bulk",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "name": "ClientTasksController",
+        "path": "Modules/Dietologist/Presentation/Controllers/ClientTasksController.cs",
+        "routePrefix": "api/v{version:apiVersion}/client-tasks",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/client-tasks",
+            "line": 16
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/client-tasks/{taskId:guid}/status",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "DietologistAttentionController",
+        "path": "Modules/Dietologist/Presentation/Controllers/DietologistAttentionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist/clients/attention",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/attention",
+            "line": 19
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/attention/{signalId}/state",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "DietologistClientsController",
+        "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist/clients",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/clients",
+            "line": 23
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}",
+            "line": 30
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/dashboard",
+            "line": 36
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals",
+            "line": 48
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
+            "line": 54
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
+            "line": 66
+          }
+        ]
+      },
+      {
+        "name": "DietologistClientTasksController",
+        "path": "Modules/Dietologist/Presentation/Controllers/DietologistClientTasksController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist/clients",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks",
+            "line": 20
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks",
+            "line": 28
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel",
+            "line": 41
+          }
+        ]
+      },
+      {
+        "name": "DietologistController",
+        "path": "Modules/Dietologist/Presentation/Controllers/DietologistController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/invite",
+            "line": 18
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/dietologist/relationship",
+            "line": 27
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/dietologist/permissions",
+            "line": 34
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/my-dietologist",
+            "line": 41
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/relationship",
+            "line": 47
+          }
+        ]
+      },
+      {
+        "name": "DietologistInvitationsController",
+        "path": "Modules/Dietologist/Presentation/Controllers/DietologistInvitationsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/accept",
+            "line": 18
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/decline",
+            "line": 28
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/current-user",
+            "line": 37
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/accept-current-user",
+            "line": 43
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/decline-current-user",
+            "line": 51
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/invitation/{invitationId:guid}",
+            "line": 59
+          }
+        ]
+      },
+      {
+        "name": "RecommendationsController",
+        "path": "Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/recommendations",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recommendations",
+            "line": 17
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read",
+            "line": 24
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments",
+            "line": 30
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments",
+            "line": 42
+          }
+        ]
+      },
+      {
+        "name": "RecommendationTemplatesController",
+        "path": "Modules/Dietologist/Presentation/Controllers/RecommendationTemplatesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/dietologist/recommendation-templates",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
+            "line": 21
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
+            "line": 33
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
+            "line": 42
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
+            "line": 51
+          }
+        ]
+      },
+      {
+        "name": "ExercisesController",
+        "path": "Modules/Exercises/Presentation/Controllers/ExercisesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/exercises",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/exercises",
+            "line": 16
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/exercises",
+            "line": 25
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
+            "line": 34
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "ExportController",
+        "path": "Modules/Export/Presentation/Controllers/ExportController.cs",
+        "routePrefix": "api/v{version:apiVersion}/export",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/export/personal-data",
+            "line": 19
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/export/diary",
+            "line": 28
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/export/cycle",
+            "line": 44
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/export/cycle/sensitive",
+            "line": 57
+          }
+        ]
+      },
+      {
+        "name": "FastingController",
+        "path": "Modules/Fasting/Presentation/Controllers/FastingController.cs",
+        "routePrefix": "api/v{version:apiVersion}/fasting",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/fasting/start",
+            "line": 16
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/fasting/end",
+            "line": 23
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/fasting/current/duration",
+            "line": 29
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/fasting/current/duration/reduce",
+            "line": 36
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/fasting/current/check-in",
+            "line": 43
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/fasting/current/skip-day",
+            "line": 50
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/fasting/current/postpone-day",
+            "line": 57
+          }
+        ]
+      },
+      {
+        "name": "FastingInsightsController",
+        "path": "Modules/Fasting/Presentation/Controllers/FastingInsightsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/fasting",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/fasting/stats",
+            "line": 13
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/fasting/insights",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "FastingReadController",
+        "path": "Modules/Fasting/Presentation/Controllers/FastingReadController.cs",
+        "routePrefix": "api/v{version:apiVersion}/fasting",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/fasting/current",
+            "line": 17
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/fasting/overview",
+            "line": 23
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/fasting/history",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "LogsController",
+        "path": "Modules/Fasting/Presentation/Features/Logs/LogsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/logs",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/logs",
+            "line": 25
+          }
+        ]
+      },
+      {
+        "name": "FavoriteMealsController",
+        "path": "Modules/Favorites/Presentation/Features/FavoriteMeals/Controllers/FavoriteMealsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/favorite-meals",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/favorite-meals/page",
+            "line": 15
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/favorite-meals/check/{mealId:guid}",
+            "line": 23
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/favorite-meals",
+            "line": 28
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/favorite-meals/{id:guid}/restore",
+            "line": 35
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/favorite-meals/{id:guid}",
+            "line": 43
+          }
+        ]
+      },
+      {
+        "name": "FavoriteProductsController",
+        "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/favorite-products",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/favorite-products/page",
+            "line": 16
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/favorite-products/check/{productId:guid}",
+            "line": 23
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/favorite-products",
+            "line": 28
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/favorite-products/{id:guid}",
+            "line": 35
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/favorite-products/{id:guid}",
+            "line": 42
+          }
+        ]
+      },
+      {
+        "name": "FavoriteRecipesController",
+        "path": "Modules/Favorites/Presentation/Features/FavoriteRecipes/Controllers/FavoriteRecipesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/favorite-recipes",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/favorite-recipes/page",
+            "line": 16
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/favorite-recipes/check/{recipeId:guid}",
+            "line": 23
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/favorite-recipes",
+            "line": 28
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/favorite-recipes/{id:guid}",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "GamificationController",
+        "path": "Modules/Gamification/Presentation/Controllers/GamificationController.cs",
+        "routePrefix": "api/v{version:apiVersion}/gamification",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/gamification",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "name": "HydrationEntriesController",
+        "path": "Modules/Hydration/Presentation/Controllers/HydrationEntriesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/hydrations",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/hydrations",
+            "line": 19
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/hydrations/daily",
+            "line": 25
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/hydrations",
+            "line": 31
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/hydrations/{id:guid}",
+            "line": 39
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/hydrations/{id:guid}",
+            "line": 47
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/hydrations/operations/{operationId:guid}",
+            "line": 53
+          }
+        ]
+      },
+      {
+        "name": "AdminSsoController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/admin-sso",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/admin-sso/start",
+            "line": 25
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
+            "line": 32
+          }
+        ]
+      },
+      {
+        "name": "AuthImpersonationController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthImpersonationController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/impersonation",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/impersonation/exchange",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "AuthPasswordController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthPasswordController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/password-reset",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/password-reset/request",
+            "line": 26
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/password-reset/confirm",
+            "line": 33
+          }
+        ]
+      },
+      {
+        "name": "AuthSessionController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/register",
+            "line": 31
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/login",
+            "line": 41
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/google",
+            "line": 51
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/google/link",
+            "line": 62
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/refresh",
+            "line": 74
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/restore",
+            "line": 83
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/verify-email",
+            "line": 94
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/verify-email/resend",
+            "line": 106
+          }
+        ]
+      },
+      {
+        "name": "AuthSessionLifecycleController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/auth/sessions",
+            "line": 30
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/auth/sessions/{sessionId:guid}",
+            "line": 43
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/auth/sessions",
+            "line": 54
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/logout",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "name": "AuthTelegramBackupEmailController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramBackupEmailController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/telegram",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/backup-email/oidc/start",
+            "line": 33
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/backup-email/oidc/complete",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "AuthTelegramController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/telegram",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/disconnect",
+            "line": 29
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/backup-email",
+            "line": 39
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/unlink",
+            "line": 49
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/verify",
+            "line": 59
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/login-widget",
+            "line": 70
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/link",
+            "line": 81
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
+            "line": 93
+          }
+        ]
+      },
+      {
+        "name": "AuthTelegramOnboardingController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramOnboardingController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/telegram",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/auth/telegram/configuration",
+            "line": 31
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/oidc/start",
+            "line": 37
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/oidc/start-link",
+            "line": 44
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/oidc/exchange",
+            "line": 50
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/mini-app/begin",
+            "line": 56
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/mini-app/begin-link",
+            "line": 63
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/complete",
+            "line": 69
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/complete-link",
+            "line": 76
+          }
+        ]
+      },
+      {
+        "name": "AuthTelegramUnlinkController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramUnlinkController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/telegram/unlink/oidc",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/unlink/oidc/start",
+            "line": 32
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/unlink/oidc/complete",
+            "line": 37
+          }
+        ]
+      },
+      {
+        "name": "BrowserSessionController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/session",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/session",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "TelegramOperationsController",
+        "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/auth/telegram/bot/operations",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/bot/operations",
+            "line": 31
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/auth/telegram/bot/operations/ready",
+            "line": 37
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/lease",
+            "line": 41
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/checkpoint",
+            "line": 47
+          }
+        ]
+      },
+      {
+        "name": "ImagesController",
+        "path": "Modules/Images/Presentation/Controllers/ImagesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/images",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/images/upload-url",
+            "line": 19
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/images/{assetId:guid}/confirm",
+            "line": 29
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/images/{assetId:guid}",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "LessonsController",
+        "path": "Modules/Lessons/Presentation/Controllers/LessonsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/lessons",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/lessons",
+            "line": 16
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/lessons/{id:guid}",
+            "line": 24
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/lessons/{id:guid}/read",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "name": "MarketingAttributionController",
+        "path": "Modules/Marketing/Presentation/Controllers/MarketingAttributionController.cs",
+        "routePrefix": "api/v{version:apiVersion}/marketing/attribution-events",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/marketing/attribution-events",
+            "line": 26
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/marketing/attribution-events/signup",
+            "line": 40
+          }
+        ]
+      },
+      {
+        "name": "AdminMealPlansController",
+        "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/meal-plans",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/meal-plans",
+            "line": 21
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/meal-plans/recipes",
+            "line": 26
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/meal-plans/{id:guid}",
+            "line": 31
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/meal-plans",
+            "line": 37
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/meal-plans/{id:guid}",
+            "line": 44
+          }
+        ]
+      },
+      {
+        "name": "MealPlansController",
+        "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
+        "routePrefix": "api/v{version:apiVersion}/meal-plans",
+        "endpoints": [
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}",
+            "line": 22
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/meal-plans",
+            "line": 29
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}",
+            "line": 40
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/adopt",
+            "line": 47
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list",
+            "line": 55
+          }
+        ]
+      },
+      {
+        "name": "ShoppingListsController",
+        "path": "Modules/MealPlanning/Presentation/ShoppingLists/Controllers/ShoppingListsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/shopping-lists",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/shopping-lists/overview",
+            "line": 19
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/shopping-lists/current",
+            "line": 26
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/shopping-lists/page",
+            "line": 31
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
+            "line": 40
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/shopping-lists",
+            "line": 46
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
+            "line": 60
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
+            "line": 71
+          }
+        ]
+      },
+      {
+        "name": "MealRecognitionsController",
+        "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/meals",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/meals/recognitions/{operationId:guid}/undo",
+            "line": 18
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/meals/recognitions/{recognitionId:guid}",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "MealsController",
+        "path": "Modules/Meals/Presentation/Controllers/MealsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/meals",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/meals/overview",
+            "line": 20
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/meals",
+            "line": 26
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/meals/{id:guid}",
+            "line": 32
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/meals",
+            "line": 38
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/meals/{id:guid}",
+            "line": 52
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/meals/{id:guid}/repeat",
+            "line": 62
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/meals/{id:guid}",
+            "line": 73
+          }
+        ]
+      },
+      {
+        "name": "AdminNotificationsController",
+        "path": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/users/{id:guid}/notifications",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/notifications/test",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "name": "NotificationPushController",
+        "path": "Modules/Notifications/Presentation/Controllers/NotificationPushController.cs",
+        "routePrefix": "api/v{version:apiVersion}/notifications/push",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/notifications/push/config",
+            "line": 17
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/notifications/push/subscriptions",
+            "line": 22
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/notifications/push/subscription",
+            "line": 27
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/notifications/push/subscription",
+            "line": 36
+          }
+        ]
+      },
+      {
+        "name": "NotificationsController",
+        "path": "Modules/Notifications/Presentation/Controllers/NotificationsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/notifications",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/notifications",
+            "line": 20
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/notifications/unread-count",
+            "line": 25
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/notifications/read-status",
+            "line": 30
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/notifications/{notificationId:guid}/read",
+            "line": 36
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/notifications/read-all",
+            "line": 42
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/notifications/test/schedule",
+            "line": 47
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/notifications/preferences",
+            "line": 57
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/notifications/preferences",
+            "line": 63
+          }
+        ]
+      },
+      {
+        "name": "OpenFoodFactsController",
+        "path": "Modules/OpenFoodFacts/Presentation/Controllers/OpenFoodFactsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/open-food-facts",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/open-food-facts/products/{barcode}",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/open-food-facts/products",
+            "line": 25
+          }
+        ]
+      },
+      {
+        "name": "AdminCatalogProductsController",
+        "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/catalog/products",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/catalog/products/export",
+            "line": 20
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/catalog/products/preview",
+            "line": 26
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/catalog/products/import",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "ProductsController",
+        "path": "Modules/Products/Presentation/Controllers/ProductsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/products",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/products",
+            "line": 17
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/products/overview",
+            "line": 23
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/products/recent",
+            "line": 29
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/products/{id:guid}",
+            "line": 35
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/products",
+            "line": 41
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/products/{id:guid}",
+            "line": 53
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/products/{id:guid}",
+            "line": 61
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/products/{id:guid}/duplicate",
+            "line": 67
+          }
+        ]
+      },
+      {
+        "name": "ProductSuggestionsController",
+        "path": "Modules/Products/Presentation/Controllers/ProductSuggestionsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/products/suggestions",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/products/suggestions",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "PublicProductsController",
+        "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/products/public",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/products/public/{id:guid}",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "RecipeCommentsController",
+        "path": "Modules/RecipeCommunity/Presentation/RecipeComments/Controllers/RecipeCommentsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
+            "line": 17
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
+            "line": 26
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}",
+            "line": 35
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}",
+            "line": 45
+          }
+        ]
+      },
+      {
+        "name": "RecipeLikesController",
+        "path": "Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/recipes/{recipeId:guid}/likes",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/likes/toggle",
+            "line": 16
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/likes",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "name": "AdminCatalogRecipesController",
+        "path": "Modules/Recipes/Presentation/Controllers/AdminCatalogRecipesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/catalog/recipes",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/catalog/recipes/export",
+            "line": 20
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/catalog/recipes/preview",
+            "line": 26
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/catalog/recipes/import",
+            "line": 35
+          }
+        ]
+      },
+      {
+        "name": "PublicRecipesController",
+        "path": "Modules/Recipes/Presentation/Controllers/PublicRecipesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/recipes/public",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/public",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/public/categories",
+            "line": 25
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/public/{id:guid}",
+            "line": 31
+          }
+        ]
+      },
+      {
+        "name": "RecipeExploreController",
+        "path": "Modules/Recipes/Presentation/Controllers/RecipeExploreController.cs",
+        "routePrefix": "api/v{version:apiVersion}/recipes/explore",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/explore",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "RecipesController",
+        "path": "Modules/Recipes/Presentation/Controllers/RecipesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/recipes",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/overview",
+            "line": 24
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/recent",
+            "line": 30
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
+            "line": 36
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/recipes",
+            "line": 42
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
+            "line": 57
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
+            "line": 68
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/recipes/{id:guid}/duplicate",
+            "line": 74
+          }
+        ]
+      },
+      {
+        "name": "StatisticsController",
+        "path": "Modules/Statistics/Presentation/Controllers/StatisticsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/statistics",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/statistics",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/statistics/summary",
+            "line": 25
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/statistics/diary-summary",
+            "line": 32
+          }
+        ]
+      },
+      {
+        "name": "TdeeController",
+        "path": "Modules/Tdee/Presentation/Controllers/TdeeController.cs",
+        "routePrefix": "api/v{version:apiVersion}/tdee",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/tdee",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "name": "UsdaController",
+        "path": "Modules/Usda/Presentation/Controllers/UsdaController.cs",
+        "routePrefix": "api/v{version:apiVersion}/usda",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/usda/foods",
+            "line": 18
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/usda/foods/{fdcId:int}",
+            "line": 27
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
+            "line": 33
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
+            "line": 42
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/usda/daily-micronutrients",
+            "line": 49
+          }
+        ]
+      },
+      {
+        "name": "UserAiConsentController",
+        "path": "Modules/Users/Presentation/Controllers/UserAiConsentController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users/ai-consent",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/users/ai-consent",
+            "line": 15
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/users/ai-consent",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "name": "UserOverviewController",
+        "path": "Modules/Users/Presentation/Controllers/UserOverviewController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/overview",
+            "line": 16
+          }
+        ]
+      },
+      {
+        "name": "UserPrivacyController",
+        "path": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users/privacy",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/privacy",
+            "line": 17
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/users/privacy",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "UsersController",
+        "path": "Modules/Users/Presentation/Controllers/UsersController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/info",
+            "line": 19
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/users/info",
+            "line": 25
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/users/preferences/appearance",
+            "line": 33
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/desired-weight",
+            "line": 42
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/users/desired-weight",
+            "line": 48
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/desired-waist",
+            "line": 55
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/users/desired-waist",
+            "line": 61
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/users",
+            "line": 68
+          }
+        ]
+      },
+      {
+        "name": "UsersPasswordController",
+        "path": "Modules/Users/Presentation/Controllers/UsersPasswordController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users/password",
+        "endpoints": [
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/users/password",
+            "line": 18
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/users/password/set",
+            "line": 28
+          }
+        ]
+      },
+      {
+        "name": "WaistGoalsController",
+        "path": "Modules/Users/Presentation/Controllers/WaistGoalsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users/waist-goals",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/waist-goals/page",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "WeightGoalsController",
+        "path": "Modules/Users/Presentation/Controllers/WeightGoalsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users/weight-goals",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/users/weight-goals/page",
+            "line": 17
+          }
+        ]
+      },
+      {
+        "name": "GoalsController",
+        "path": "Modules/Users/Presentation/Goals/Controllers/GoalsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/goals",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/goals",
+            "line": 16
+          },
+          {
+            "verb": "PATCH",
+            "route": "/api/v{version:apiVersion}/goals",
+            "line": 22
+          }
+        ]
+      },
+      {
+        "name": "WearablesController",
+        "path": "Modules/Wearables/Presentation/Controllers/WearablesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/wearables",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/wearables/connections",
+            "line": 20
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/wearables/{provider}/auth-url",
+            "line": 25
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/wearables/{provider}/connect",
+            "line": 38
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/wearables/{provider}/disconnect",
+            "line": 52
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/wearables/{provider}/sync",
+            "line": 62
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/wearables/daily-summary",
+            "line": 75
+          }
+        ]
+      },
+      {
+        "name": "WeeklyCheckInController",
+        "path": "Modules/WeeklyCheckIn/Presentation/Controllers/WeeklyCheckInController.cs",
+        "routePrefix": "api/v{version:apiVersion}/weekly-check-in",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/weekly-check-in",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "name": "WeeklyGoalsController",
+        "path": "Modules/WeeklyGoals/Presentation/Controllers/WeeklyGoalsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/weekly-goals",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/weekly-goals",
+            "line": 16
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/weekly-goals",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "name": "AuditRunsController",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
+        "routePrefix": "api/audit-runs",
+        "endpoints": [
+          {
+            "verb": "PUT",
+            "route": "/api/audit-runs/{id:guid}/start",
+            "line": 16
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/audit-runs/{id:guid}/complete",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "name": "BugReportJournalController",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
+        "routePrefix": "api/report-journal",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/report-journal",
+            "line": 15
+          },
+          {
+            "verb": "GET",
+            "route": "/api/report-journal/all",
+            "line": 20
+          }
+        ]
+      },
+      {
+        "name": "BugReportsController",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+        "routePrefix": "api/bug-reports",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/bug-reports",
+            "line": 20
+          },
+          {
+            "verb": "POST",
+            "route": "/api/bug-reports/claim",
+            "line": 24
+          },
+          {
+            "verb": "POST",
+            "route": "/api/bug-reports/{id:guid}/renew",
+            "line": 31
+          },
+          {
+            "verb": "POST",
+            "route": "/api/bug-reports/{id:guid}/complete",
+            "line": 36
+          },
+          {
+            "verb": "GET",
+            "route": "/api/bug-reports/{id:guid}/mime",
+            "line": 49
           }
         ]
       },

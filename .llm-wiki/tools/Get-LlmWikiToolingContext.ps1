@@ -10,7 +10,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
 $ignored = @('wiki', 'llm', 'tooling', 'change', 'improve', 'harden', 'simplify', 'with', 'from', 'that', 'this', 'and')
 $tokens = @(
-    [regex]::Matches($Query.ToLowerInvariant(), '[a-z0-9][a-z0-9-]{2,}') |
+    [regex]::Matches($Query.ToLowerInvariant(), '[\p{L}\p{N}][\p{L}\p{M}\p{N}-]{2,}') |
         ForEach-Object Value |
         Where-Object { $_ -notin $ignored } |
         Sort-Object -Unique

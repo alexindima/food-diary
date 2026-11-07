@@ -95,6 +95,8 @@ if (-not $apiScope) {
     Add-Dimension 'api-compatibility' 15 'not-applicable' 'No backend HTTP API scope was inferred.'
 } elseif ($PSBoundParameters.ContainsKey('ChangedPath')) {
     Add-Dimension 'api-compatibility' 15 'not-assessed' 'Synthetic path input cannot prove an OpenAPI diff; run against the real Git change set.'
+} elseif ($PSBoundParameters.ContainsKey('HeadRef') -and $null -eq $ApiCompatibilityInput) {
+    Add-Dimension 'api-compatibility' 15 'not-assessed' 'API compatibility currently compares BaseRef to the worktree; an explicit HeadRef requires matching API comparison evidence.'
 } else {
     $apiArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
     $api = if ($null -ne $ApiCompatibilityInput) {

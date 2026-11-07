@@ -32,7 +32,39 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AdminCatalogProductsController
+
+Source: `Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/catalog/products/export`
+- `POST /api/v{version:apiVersion}/admin/catalog/products/preview`
+- `POST /api/v{version:apiVersion}/admin/catalog/products/import`
+
+### ProductSuggestionsController
+
+Source: `Modules/Products/Presentation/Controllers/ProductSuggestionsController.cs`
+
+- `GET /api/v{version:apiVersion}/products/suggestions`
+
+### ProductsController
+
+Source: `Modules/Products/Presentation/Controllers/ProductsController.cs`
+
+- `GET /api/v{version:apiVersion}/products`
+- `GET /api/v{version:apiVersion}/products/overview`
+- `GET /api/v{version:apiVersion}/products/recent`
+- `GET /api/v{version:apiVersion}/products/{id:guid}`
+- `POST /api/v{version:apiVersion}/products`
+- `PATCH /api/v{version:apiVersion}/products/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/products/{id:guid}`
+- `POST /api/v{version:apiVersion}/products/{id:guid}/duplicate`
+
+### PublicProductsController
+
+Source: `Modules/Products/Presentation/Controllers/PublicProductsController.cs`
+
+- `GET /api/v{version:apiVersion}/products/public/{id:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

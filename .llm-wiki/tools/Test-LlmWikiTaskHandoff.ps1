@@ -23,10 +23,10 @@ function Get-Calls {
         foreach ($line in [IO.File]::ReadAllLines($callLog)) { $line | ConvertFrom-Json }
     }
 }
-function Invoke-Handoff([switch]$Compact, [string]$Format = 'Json', [object]$PacketInput, [object]$StatusInput, [string]$OutputPath) {
+function Invoke-Handoff([switch]$Compact, [string]$Format = 'Json', [object]$PacketInput, [object]$StatusInput, [string]$OutputPath, [int]$Limit) {
     if (Test-Path -LiteralPath $callLog) { Remove-Item -LiteralPath $callLog }
     $arguments = @{WorkspacePath=$workspace; Compact=$Compact; Format=$Format}
-    foreach ($key in @('PacketInput','StatusInput','OutputPath')) {
+    foreach ($key in @('PacketInput','StatusInput','OutputPath','Limit')) {
         if ($PSBoundParameters.ContainsKey($key)) { $arguments[$key] = $PSBoundParameters[$key] }
     }
     $content = & (Join-Path $tools 'Get-LlmWikiTaskHandoff.ps1') @arguments
@@ -137,6 +137,23 @@ if ($IncludeDispatchRegistry -or $IncludeHealth -or $IncludeCandidates) {
     Assert-Handoff ($compact.readiness.verdict -eq 'blocked' -and $compact.readiness.score -eq 37 -and $compact.continuity.fingerprintChanged) 'Compact handoff hid readiness or continuity drift.'
     Assert-Handoff ($compact.acceptanceCriteria.Count -eq 1 -and $compact.acceptanceCriteria[0].id -eq 'pending' -and $compact.checks.Count -eq 1 -and $compact.reviews.Count -eq 1) 'Compact handoff lost unresolved requirements.'
     Assert-Handoff (($compact.journal.entries.id -join ',') -eq 'open,decision') 'Compact handoff changed journal selection.'
+    try {
+        Write-Json (Join-Path $fixture 'journal.json') @{entryCount=3;openCount=1;openBlockerCount=1;entries=@(
+            @{id='old-blocker';status='open';type='blocker';text='Keep the unresolved blocker.'}
+            @{id='recent-resolved';status='resolved';type='note';text='Recent resolved note.'}
+            @{id='recent-decision';status='closed';type='decision';text='Latest decision.'}
+        )}
+        $bounded = Invoke-Handoff -Compact -Limit 1
+        Assert-Handoff (@($bounded.journal.entries).Count -eq 1 -and $bounded.journal.entries[0].id -eq 'old-blocker') 'Compact handoff must retain an older unresolved blocker before recent decisions.'
+        $boundedMarkdown = (Invoke-Handoff -Compact -Limit 1 -Format Markdown) -join [Environment]::NewLine
+        Assert-Handoff ($boundedMarkdown.Contains('Keep the unresolved blocker.') -and -not $boundedMarkdown.Contains('- None.')) 'Compact Markdown hid a known unresolved blocker.'
+        Write-Json (Join-Path $fixture 'journal.json') @{entryCount=2;openCount=2;openBlockerCount=2;entries=@(
+            @{id='older-blocker';status='open';type='blocker';text='Older blocker.'}
+            @{id='newer-blocker';status='open';type='blocker';text='Newer blocker.'}
+        )}
+        $bounded = Invoke-Handoff -Compact -Limit 1
+        Assert-Handoff ($bounded.journal.entries[0].id -eq 'newer-blocker' -and $bounded.journal.omittedOpenBlockerCount -eq 1) 'Compact handoff must disclose blockers omitted by its item limit.'
+    } finally { Write-Json (Join-Path $fixture 'journal.json') $journal }
     foreach ($receipt in $receipts) {
         $path = Join-Path $workspaceDirectory $receipt
         [IO.File]::WriteAllText($path,'{}')

@@ -32,7 +32,30 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### WaistEntriesController
+
+Source: `Modules/BodyMetrics/Presentation/Features/WaistEntries/WaistEntriesController.cs`
+
+- `GET /api/v{version:apiVersion}/waist-entries`
+- `GET /api/v{version:apiVersion}/waist-entries/latest`
+- `GET /api/v{version:apiVersion}/waist-entries/summary`
+- `GET /api/v{version:apiVersion}/waist-entries/page-summary`
+- `POST /api/v{version:apiVersion}/waist-entries`
+- `PUT /api/v{version:apiVersion}/waist-entries/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/waist-entries/{id:guid}`
+
+### WeightEntriesController
+
+Source: `Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs`
+
+- `GET /api/v{version:apiVersion}/weight-entries`
+- `GET /api/v{version:apiVersion}/weight-entries/latest`
+- `GET /api/v{version:apiVersion}/weight-entries/summary`
+- `GET /api/v{version:apiVersion}/weight-entries/page-summary`
+- `POST /api/v{version:apiVersion}/weight-entries`
+- `PUT /api/v{version:apiVersion}/weight-entries/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/weight-entries/{id:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

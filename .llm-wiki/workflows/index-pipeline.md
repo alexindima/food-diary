@@ -10,6 +10,9 @@ tags:
   - ci
   - indexes
 sources:
+  - .llm-wiki/tools/Test-LlmWikiAuditSystem.ps1
+  - .llm-wiki/tools/Test-LlmWikiProjectionSnapshot.cs
+  - .llm-wiki/tools/wiki-system-audit.test.mjs
   - .llm-wiki/tools/Test-LlmWiki.ps1
   - .llm-wiki/tools/Test-LlmWikiLint.ps1
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
@@ -185,6 +188,10 @@ Older receipts are regenerated once. Check mode retains its architecture-drift
 guard, and strict affected verification still bypasses reuse. Call the pipeline
 without `-ReuseUnchangedChecks` to force all selected generators; the `update`
 facade enables this opt-in automatically.
+
+When a stale check is explicitly deferred as possibly concurrent work, that run
+publishes neither a reusable pipeline success receipt nor a generation receipt.
+A subsequent strict check must evaluate the stale output again.
 
 Index hashing uses `Get-LlmWikiRequiredFileSha256`, which throws for missing
 files. Query/verification dependency hashing retains its optional `<missing>`
@@ -865,3 +872,11 @@ An explicit SQLite `CROSS JOIN` keeps that pool outside the FTS content reader;
 otherwise the planner can scan and hydrate the complete document table before
 joining the limited results. The candidate regression checks the actual query
 plan as well as records, ranking ties, path diversity and missing-feature rows.
+
+## Verification source stability
+
+Fast verification records only the fingerprint captured before its checks.
+Full verification and observed Wiki stages reject source drift before publishing
+reusable success receipts. Switch arguments are normalized identically in the
+parent and worker. Verify progress includes process start identity; a stale PID
+alone never proves that a previous worker is active or that verification passed.

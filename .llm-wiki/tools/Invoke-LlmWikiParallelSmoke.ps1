@@ -12,6 +12,10 @@ param(
     [int]$MaxConcurrency = 4,
     [ValidateRange(30, 3600)]
     [int]$CodeGraphTimeoutSeconds = 600,
+    [ValidateRange(1, 3600)]
+    [int]$GroupTimeoutSeconds = 1800,
+    [ValidateRange(1024, 134217728)]
+    [long]$MaximumOutputBytes = 67108864,
     [ValidateRange(5, 120)]
     [int]$HeartbeatSeconds = 15,
     [ValidateRange(1, 30)]
@@ -114,6 +118,7 @@ $cancelPath = Join-Path $runRoot 'cancel.requested.json'
 $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $groupTimings = [Collections.Generic.List[object]]::new()
 $groupFailures = [Collections.Generic.List[object]]::new()
+$activeSmokeWorkers = [Collections.Generic.List[object]]::new()
 $prewarmSeconds = 0.0
 $worktreeBaseline = @((Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('status', '--porcelain=v1', '--untracked-files=all') -FailureMessage 'Unable to capture the pre-smoke worktree state.').Lines)
 
@@ -126,13 +131,13 @@ function Request-SmokeCancellation([object[]]$Items, [string]$Reason) {
         if ($null -eq $item.Process -or $item.Process.HasExited) { continue }
         try { $null = $item.Process.CloseMainWindow() } catch { }
     }
-    $deadline = [DateTime]::UtcNow.AddSeconds($CancellationGraceSeconds)
+    $graceTimer = [Diagnostics.Stopwatch]::StartNew()
     do {
-        if (@($Items | Where-Object { $null -ne $_.Process -and -not $_.Process.HasExited }).Count -eq 0) { return }
+        if (@($Items | Where-Object { $null -ne $_.Process -and -not $_.Process.HasExited }).Count -eq 0) { break }
         Start-Sleep -Milliseconds 200
-    } while ([DateTime]::UtcNow -lt $deadline)
+    } while ($graceTimer.Elapsed.TotalSeconds -lt $CancellationGraceSeconds)
     foreach ($item in @($Items)) {
-        if ($null -eq $item.Process -or $item.Process.HasExited) { continue }
+        if ($null -eq $item.Process) { continue }
         try { Stop-LlmWikiProcessTree -Process $item.Process } catch { }
     }
 }
@@ -160,15 +165,18 @@ if (@($groups | Where-Object { $_ -in $graphDependentGroups }).Count -gt 0) {
     $graphErrorTask = $graphProcess.StandardError.ReadToEndAsync()
     $graphStopwatch = [Diagnostics.Stopwatch]::StartNew()
     $nextHeartbeat = $HeartbeatSeconds
-    while (-not $graphProcess.WaitForExit(500)) {
+    $null = $graphProcess.StartTime
+    while (-not $graphProcess.HasExited -or -not $graphOutputTask.IsCompleted -or -not $graphErrorTask.IsCompleted) {
         if ($graphStopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
             Write-Host "Code graph prewarm still running: $([Math]::Round($graphStopwatch.Elapsed.TotalSeconds))s elapsed; estimate=$($graphPlan.estimatedSeconds)s; log=$graphLogPath"
             $nextHeartbeat += $HeartbeatSeconds
         }
         if ($graphStopwatch.Elapsed.TotalSeconds -ge $CodeGraphTimeoutSeconds) {
             Request-SmokeCancellation @([pscustomobject]@{ Process = $graphProcess }) 'code-graph-prewarm-timeout'
+            $graphProcess.StandardOutput.Dispose(); $graphProcess.StandardError.Dispose(); $graphProcess.Dispose()
             throw "Code graph prewarm timed out after ${CodeGraphTimeoutSeconds}s. Diagnostic log: $graphLogPath"
         }
+        Start-Sleep -Milliseconds 100
     }
     $graphOutput = [string]$graphOutputTask.GetAwaiter().GetResult()
     $graphError = [string]$graphErrorTask.GetAwaiter().GetResult()
@@ -236,15 +244,31 @@ function Start-SmokeGroup([string]$Group) {
     $process.StartInfo.Environment['TMP'] = $temporaryGroupPath
     $process.StartInfo.Environment['TMPDIR'] = $temporaryGroupPath
     $process.StartInfo.Environment['NUGET_SCRATCH'] = $nugetScratchPath
+    $stdoutFile = $null; $stderrFile = $null; $started = $false
+    try {
+    $stdoutFile = [IO.File]::Open((Join-Path $runRoot "$Group.stdout.log"), [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
+    $stderrFile = [IO.File]::Open((Join-Path $runRoot "$Group.stderr.log"), [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
     if (-not $process.Start()) { throw "Unable to start focused smoke group '$Group'." }
-    [pscustomobject]@{
+    $started = $true
+    $null = $process.StartTime
+    $item = [pscustomobject]@{
         Group = $Group
         Process = $process
         ArgumentsPath = $argumentsPath
         LogPath = $logPath
-        StartedAt = [DateTime]::UtcNow
-        StandardOutput = $process.StandardOutput.ReadToEndAsync()
-        StandardError = $process.StandardError.ReadToEndAsync()
+        Stopwatch = [Diagnostics.Stopwatch]::StartNew()
+        OutputFile = $stdoutFile; ErrorFile = $stderrFile
+        OutputEncoding = $process.StandardOutput.CurrentEncoding; ErrorEncoding = $process.StandardError.CurrentEncoding
+        StandardOutput = $process.StandardOutput.BaseStream.CopyToAsync($stdoutFile)
+        StandardError = $process.StandardError.BaseStream.CopyToAsync($stderrFile)
+    }
+    $activeSmokeWorkers.Add($item)
+    return $item
+    } catch {
+        if ($started) { Stop-LlmWikiProcessTree $process }
+        if ($stdoutFile) { $stdoutFile.Dispose() }; if ($stderrFile) { $stderrFile.Dispose() }
+        $process.Dispose()
+        throw
     }
 }
 
@@ -259,15 +283,28 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
             $running.Add((Start-SmokeGroup $group))
         }
         foreach ($item in @($running.ToArray())) {
-            if (-not $item.Process.HasExited) { continue }
-            $exitCode = $item.Process.ExitCode
-            $standardOutput = [string]$item.StandardOutput.GetAwaiter().GetResult()
-            $standardError = [string]$item.StandardError.GetAwaiter().GetResult()
-            $duration = [Math]::Round(([DateTime]::UtcNow - $item.StartedAt).TotalSeconds, 2)
+            $drained = $item.StandardOutput.IsCompleted -and $item.StandardError.IsCompleted
+            $timedOut = (-not $item.Process.HasExited -or -not $drained) -and $item.Stopwatch.Elapsed.TotalSeconds -ge $GroupTimeoutSeconds
+            $overflow = $item.OutputFile.Length + $item.ErrorFile.Length -gt $MaximumOutputBytes
+            if ($timedOut -or $overflow) {
+                Request-SmokeCancellation @($item) $(if ($timedOut) { 'group-timeout' } else { 'group-output-limit' })
+                $item.Process.StandardOutput.Dispose(); $item.Process.StandardError.Dispose()
+            } elseif (-not $item.Process.HasExited -or -not $drained) { continue }
+            if (-not $timedOut -and -not $overflow) {
+                $null = $item.StandardOutput.GetAwaiter().GetResult(); $null = $item.StandardError.GetAwaiter().GetResult()
+            }
+            $exitCode = if ($timedOut -or $overflow) { 1 } else { $item.Process.ExitCode }
+            $item.OutputFile.Dispose(); $item.ErrorFile.Dispose()
+            $standardOutput = [IO.File]::ReadAllText((Join-Path $runRoot "$($item.Group).stdout.log"), $item.OutputEncoding)
+            $standardError = [IO.File]::ReadAllText((Join-Path $runRoot "$($item.Group).stderr.log"), $item.ErrorEncoding)
+            if ($timedOut) { $standardError += "`nFocused smoke group timed out after ${GroupTimeoutSeconds}s." }
+            if ($overflow) { $standardError += "`nFocused smoke output exceeded $MaximumOutputBytes bytes." }
+            $duration = [Math]::Round($item.Stopwatch.Elapsed.TotalSeconds, 2)
             $executed = -not $standardOutput.Contains('Affected tools smoke group cached:')
             $groupTimings.Add([pscustomobject]@{ group = $item.Group; durationSeconds = $duration; exitCode = $exitCode; executed = $executed })
             $item.Process.Dispose()
             $running.Remove($item) | Out-Null
+            $activeSmokeWorkers.Remove($item) | Out-Null
             Remove-Item -LiteralPath $item.ArgumentsPath -Force -ErrorAction SilentlyContinue
             if ($exitCode -ne 0) {
                 # Transcripts can omit native child output. Preserve both complete
@@ -284,7 +321,6 @@ function Wait-SmokeBatch([string[]]$BatchGroups, [int]$Concurrency) {
                     continue
                 }
                 Request-SmokeCancellation @($running.ToArray()) "group-failed:$($item.Group)"
-                foreach ($active in @($running.ToArray())) { $active.Process.Dispose() }
                 throw $failureMessage
             }
             Write-Host "Parallel affected smoke passed: $($item.Group) (${duration}s)"
@@ -310,6 +346,13 @@ try {
     }
     $completed = $true
 } finally {
+    if ($activeSmokeWorkers.Count) {
+        Request-SmokeCancellation @($activeSmokeWorkers.ToArray()) 'supervisor-exit'
+        foreach ($active in $activeSmokeWorkers) {
+            $active.Process.StandardOutput.Dispose(); $active.Process.StandardError.Dispose()
+            $active.OutputFile.Dispose(); $active.ErrorFile.Dispose(); $active.Process.Dispose()
+        }
+    }
     $timingPath = Join-Path (Split-Path -Parent $runRoot) "$runId.timings.json"
     [IO.File]::WriteAllText($timingPath, (([ordered]@{
         schemaVersion = 1; completed = $completed
@@ -334,7 +377,7 @@ try {
     if (Test-Path -LiteralPath $taskSandboxRoot -PathType Container) {
         foreach ($taskSandbox in Get-ChildItem -LiteralPath $taskSandboxRoot -Directory -Filter ".smoke-$runId-*" -ErrorAction SilentlyContinue) {
             $resolvedTaskSandbox = [IO.Path]::GetFullPath($taskSandbox.FullName)
-            if (-not $resolvedTaskSandbox.StartsWith(($taskSandboxRoot.TrimEnd('\') + '\'), [StringComparison]::OrdinalIgnoreCase)) {
+            if (-not $resolvedTaskSandbox.StartsWith(($taskSandboxRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
                 throw "Refusing to clean smoke task sandbox outside task root: $resolvedTaskSandbox"
             }
             Remove-Item -LiteralPath $resolvedTaskSandbox -Recurse -Force -ErrorAction SilentlyContinue

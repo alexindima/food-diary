@@ -134,7 +134,9 @@ export function runtimeDiagnosticState(name, root = repositoryRoot) {
         throw new Error("Runtime endpoints do not match owned loopback ports");
     const processes = state.processes.map((process) => ({
         role: process.role,
-        alive: processIdentity(process.pid) === process.identity,
+        alive: Number.isInteger(process.pid) && process.pid > 0 &&
+            typeof process.identity === "string" && process.identity.length > 0 &&
+            processIdentity(process.pid) === process.identity,
     }));
     const browserPath = containedPath(
         root,

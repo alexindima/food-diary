@@ -19,7 +19,7 @@ $sourceRepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $activeSnapshotRoot = [string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
-foreach ($variableName in @(
+$gitEnvironmentNames = @(
     'GIT_ALTERNATE_OBJECT_DIRECTORIES'
     'GIT_COMMON_DIR'
     'GIT_CONFIG'
@@ -36,7 +36,16 @@ foreach ($variableName in @(
     'GIT_REPLACE_REF_BASE'
     'GIT_SHALLOW_FILE'
     'GIT_WORK_TREE'
-)) {
+)
+$savedGitEnvironment = @{}
+foreach ($variableName in $gitEnvironmentNames) {
+    $savedGitEnvironment[$variableName] = @{
+        exists = Test-Path -LiteralPath "Env:$variableName"
+        value = [Environment]::GetEnvironmentVariable($variableName)
+    }
+}
+try {
+foreach ($variableName in $gitEnvironmentNames) {
     Remove-Item -LiteralPath "Env:$variableName" -ErrorAction SilentlyContinue
 }
 
@@ -291,7 +300,8 @@ function Get-GuardState {
         $relativePath = ConvertTo-LlmWikiRepositoryPath $record.Substring(3)
         $hashes[$relativePath] = Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath)
     }
-    return [pscustomobject]@{ status = $status; hashes = $hashes }
+    $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to capture read-only snapshot HEAD.').StandardOutput.Trim()
+    return [pscustomobject]@{ head = $head; status = $status; hashes = $hashes }
 }
 
 function Compare-GuardState {
@@ -302,6 +312,7 @@ function Compare-GuardState {
     )
 
     $mutated = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    if ($Before.head -cne $After.head) { $null = $mutated.Add('<HEAD>') }
     $allHashPaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($path in @($Before.hashes.Keys) + @($After.hashes.Keys)) { $null = $allHashPaths.Add([string]$path) }
     if (($Before.status -join [char]0) -cne ($After.status -join [char]0)) {
@@ -578,4 +589,11 @@ try {
     Write-ReadOnlyTiming -Stage 'outer-before-prune'
     Remove-StaleReadOnlySnapshots -RepositoryRoot $sourceRepositoryRoot -SnapshotParent $snapshotParent -CurrentFingerprint $snapshotFingerprint
     Write-ReadOnlyTiming -Stage 'outer-complete'
+}
+} finally {
+    foreach ($variableName in $gitEnvironmentNames) {
+        $savedVariable = $savedGitEnvironment[$variableName]
+        if ($savedVariable.exists) { Set-Item -LiteralPath "Env:$variableName" -Value $savedVariable.value }
+        else { Remove-Item -LiteralPath "Env:$variableName" -ErrorAction SilentlyContinue }
+    }
 }

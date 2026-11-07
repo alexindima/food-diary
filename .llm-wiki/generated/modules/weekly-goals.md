@@ -31,7 +31,13 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### WeeklyGoalsController
+
+Source: `Modules/WeeklyGoals/Presentation/Controllers/WeeklyGoalsController.cs`
+
+- `GET /api/v{version:apiVersion}/weekly-goals`
+- `PUT /api/v{version:apiVersion}/weekly-goals`
+
 ## Boundary Health
 
 - Role: aggregate-owner

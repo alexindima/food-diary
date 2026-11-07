@@ -35,7 +35,102 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AdminSsoController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/admin-sso/start`
+- `POST /api/v{version:apiVersion}/auth/admin-sso/exchange`
+
+### AuthImpersonationController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthImpersonationController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/impersonation/exchange`
+
+### AuthPasswordController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthPasswordController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/password-reset/request`
+- `POST /api/v{version:apiVersion}/auth/password-reset/confirm`
+
+### AuthSessionController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/register`
+- `POST /api/v{version:apiVersion}/auth/login`
+- `POST /api/v{version:apiVersion}/auth/google`
+- `POST /api/v{version:apiVersion}/auth/google/link`
+- `POST /api/v{version:apiVersion}/auth/refresh`
+- `POST /api/v{version:apiVersion}/auth/restore`
+- `POST /api/v{version:apiVersion}/auth/verify-email`
+- `POST /api/v{version:apiVersion}/auth/verify-email/resend`
+
+### AuthSessionLifecycleController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs`
+
+- `GET /api/v{version:apiVersion}/auth/sessions`
+- `DELETE /api/v{version:apiVersion}/auth/sessions/{sessionId:guid}`
+- `DELETE /api/v{version:apiVersion}/auth/sessions`
+- `POST /api/v{version:apiVersion}/auth/logout`
+
+### AuthTelegramBackupEmailController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramBackupEmailController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/telegram/backup-email/oidc/start`
+- `POST /api/v{version:apiVersion}/auth/telegram/backup-email/oidc/complete`
+
+### AuthTelegramController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/telegram/disconnect`
+- `POST /api/v{version:apiVersion}/auth/telegram/backup-email`
+- `POST /api/v{version:apiVersion}/auth/telegram/unlink`
+- `POST /api/v{version:apiVersion}/auth/telegram/verify`
+- `POST /api/v{version:apiVersion}/auth/telegram/login-widget`
+- `POST /api/v{version:apiVersion}/auth/telegram/link`
+- `POST /api/v{version:apiVersion}/auth/telegram/bot/auth`
+
+### AuthTelegramOnboardingController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramOnboardingController.cs`
+
+- `GET /api/v{version:apiVersion}/auth/telegram/configuration`
+- `POST /api/v{version:apiVersion}/auth/telegram/oidc/start`
+- `POST /api/v{version:apiVersion}/auth/telegram/oidc/start-link`
+- `POST /api/v{version:apiVersion}/auth/telegram/oidc/exchange`
+- `POST /api/v{version:apiVersion}/auth/telegram/mini-app/begin`
+- `POST /api/v{version:apiVersion}/auth/telegram/mini-app/begin-link`
+- `POST /api/v{version:apiVersion}/auth/telegram/complete`
+- `POST /api/v{version:apiVersion}/auth/telegram/complete-link`
+
+### AuthTelegramUnlinkController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramUnlinkController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/telegram/unlink/oidc/start`
+- `POST /api/v{version:apiVersion}/auth/telegram/unlink/oidc/complete`
+
+### BrowserSessionController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/session`
+
+### TelegramOperationsController
+
+Source: `Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs`
+
+- `POST /api/v{version:apiVersion}/auth/telegram/bot/operations`
+- `GET /api/v{version:apiVersion}/auth/telegram/bot/operations/ready`
+- `POST /api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/lease`
+- `POST /api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/checkpoint`
+
 ## Boundary Health
 
 - Role: aggregate-owner

@@ -31,6 +31,15 @@ sources:
 
 ## HTTP Surface
 
+### ExportController
+
+Source: `Modules/Export/Presentation/Controllers/ExportController.cs`
+
+- `GET /api/v{version:apiVersion}/export/personal-data`
+- `GET /api/v{version:apiVersion}/export/diary`
+- `GET /api/v{version:apiVersion}/export/cycle`
+- `POST /api/v{version:apiVersion}/export/cycle/sensitive`
+
 ### MailInboxExportController
 
 Source: `Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs`

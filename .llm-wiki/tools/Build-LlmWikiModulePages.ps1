@@ -377,11 +377,21 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
             ForEach-Object { $_.name } |
             Sort-Object { Get-LlmWikiOrdinalSortKey $_ }
     )
+    $presentationPrefixes = @(Get-BoundaryMappingValues $boundary 'logicalRoot' @("Modules/$moduleName") | ForEach-Object {
+        ([string]$_).Replace('\', '/').TrimEnd('/') + '/Presentation/'
+    })
     $controllers = @(
         $catalog.http.controllers |
             Where-Object {
-                $_.path -match "/Features/$([regex]::Escape($moduleName))/" -or
-                $_.name -like "$moduleName*Controller"
+                $controllerPath = [string]$_.path
+                if (@($presentationPrefixes | Where-Object { $controllerPath.StartsWith($_, [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0) {
+                    $true
+                } elseif ($controllerPath.StartsWith('Modules/', [StringComparison]::OrdinalIgnoreCase)) {
+                    $false
+                } else {
+                    $controllerPath -match "/Features/$([regex]::Escape($moduleName))/" -or
+                        $_.name -like "$moduleName*Controller"
+                }
             } |
             Sort-Object { Get-LlmWikiOrdinalSortKey $_.path }
     )

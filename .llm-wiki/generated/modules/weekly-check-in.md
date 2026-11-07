@@ -29,7 +29,12 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### WeeklyCheckInController
+
+Source: `Modules/WeeklyCheckIn/Presentation/Controllers/WeeklyCheckInController.cs`
+
+- `GET /api/v{version:apiVersion}/weekly-check-in`
+
 ## Boundary Health
 
 - Role: read-composer

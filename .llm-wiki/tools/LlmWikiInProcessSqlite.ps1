@@ -18,13 +18,14 @@ function Initialize-LlmWikiInProcessSqlite {
     }
 
     $cachedState = [AppDomain]::CurrentDomain.GetData($llmWikiInProcessSqliteCacheKey)
-    if ($null -ne $cachedState -and
-        $null -ne ('LlmWiki.SqliteReader.DomainDataReader' -as [type])) {
-        return $cachedState
-    }
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
     $build = & (Join-Path $PSScriptRoot 'Build-LlmWikiInProcessSqliteReader.ps1') -CheckOnly:$RequireExistingBuild -Format Json | ConvertFrom-Json
     if (-not [bool]$build.ready) { throw 'In-process SQLite reader build did not become ready.' }
+    if ($null -ne $cachedState -and
+        $null -ne ('LlmWiki.SqliteReader.DomainDataReader' -as [type])) {
+        if ($cachedState.fingerprint -cne $build.fingerprint) { throw 'In-process SQLite reader sources changed; restart this PowerShell process before reusing its loaded assembly.' }
+        return [pscustomobject]@{ ready=$true; reusedBuild=$true; fingerprint=$build.fingerprint; runtimeIdentifier=$build.runtimeIdentifier; outputPath=$build.outputPath; loadDurationMs=0 }
+    }
     $outputPath = [string]$build.outputPath
     foreach ($assemblyName in @(
         'SQLitePCLRaw.core.dll'

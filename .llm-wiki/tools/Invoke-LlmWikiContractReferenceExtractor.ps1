@@ -71,15 +71,27 @@ $stdinPath = [IO.Path]::GetTempFileName()
 $stdoutPath = [IO.Path]::GetTempFileName()
 $stderrPath = [IO.Path]::GetTempFileName()
 $exitCodePath = [IO.Path]::GetTempFileName()
-$shellPath = [IO.Path]::GetTempFileName()
+$shellPath = Join-Path ([IO.Path]::GetTempPath()) ('llm-wiki-extractor-' + [guid]::NewGuid().ToString('N') + '.cmd')
+$process = $null
 try {
     [IO.File]::WriteAllText($stdinPath, $payload, [Text.UTF8Encoding]::new($false))
     $extractorMode = $(if ($BuildBackendIndex) { '--backend-index' } else { '--stdin' })
     $runningOnWindows = [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT
     if ($runningOnWindows) {
-        $inner = "dotnet `"$extractorDllPath`" $extractorMode < `"$stdinPath`" > `"$stdoutPath`" 2> `"$stderrPath`" & echo %ERRORLEVEL% > `"$exitCodePath`""
-        $process = Start-Process -FilePath 'cmd.exe' -ArgumentList @('/d', '/s', '/c', "`"$inner`"") `
-            -WorkingDirectory $RepositoryRoot -NoNewWindow -PassThru
+        # Separate batch lines expand ERRORLEVEL after dotnet completes. Keep
+        # Unicode and shell metacharacters in child-only environment values.
+        $inner = "@echo off`r`ndotnet `"%FD_WIKI_EXTRACTOR_DLL%`" %FD_WIKI_EXTRACTOR_MODE% <`"%FD_WIKI_EXTRACTOR_INPUT%`" >`"%FD_WIKI_EXTRACTOR_OUTPUT%`" 2>`"%FD_WIKI_EXTRACTOR_ERROR%`"`r`necho %ERRORLEVEL% >`"%FD_WIKI_EXTRACTOR_EXIT%`"`r`n"
+        [IO.File]::WriteAllText($shellPath, $inner, [Text.ASCIIEncoding]::new())
+        $startInfo = [Diagnostics.ProcessStartInfo]::new()
+        $startInfo.FileName = 'cmd.exe'; $startInfo.WorkingDirectory = $RepositoryRoot
+        $startInfo.UseShellExecute = $false; $startInfo.CreateNoWindow = $true
+        $startInfo.Arguments = "/d /s /v:off /c `"`"$shellPath`"`""
+        foreach ($entry in @{
+            FD_WIKI_EXTRACTOR_DLL=$extractorDllPath; FD_WIKI_EXTRACTOR_MODE=$extractorMode
+            FD_WIKI_EXTRACTOR_INPUT=$stdinPath; FD_WIKI_EXTRACTOR_OUTPUT=$stdoutPath
+            FD_WIKI_EXTRACTOR_ERROR=$stderrPath; FD_WIKI_EXTRACTOR_EXIT=$exitCodePath
+        }.GetEnumerator()) { $startInfo.EnvironmentVariables[$entry.Key] = $entry.Value }
+        $process = [Diagnostics.Process]::Start($startInfo)
     } else {
         $inner = "dotnet '$extractorDllPath' $extractorMode < '$stdinPath' > '$stdoutPath' 2> '$stderrPath'; echo `$? > '$exitCodePath'"
         # Start-Process flattens ArgumentList into a single command line. On Unix,
@@ -116,6 +128,10 @@ try {
         throw "Contract-reference extractor failed with exit code $extractorExitCode.$(if ($errorText) { " $errorText" })"
     }
 } finally {
+    if ($null -ne $process) {
+        try { if (-not $process.HasExited) { Stop-LlmWikiProcessTree $process } }
+        finally { $process.Dispose() }
+    }
     Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath, $exitCodePath, $shellPath -Force -ErrorAction SilentlyContinue
 }
 

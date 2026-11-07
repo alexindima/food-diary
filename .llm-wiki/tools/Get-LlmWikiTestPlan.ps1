@@ -72,6 +72,10 @@ $callerPathCount = $effectivePaths.Count
 $normalizedIntent = ([string]$Intent).ToLowerInvariant()
 $databaseIntent = $normalizedIntent -match '\b(database|migration|index|indexes|indices|postgres|postgresql|sql|schema|query plan)\b|\u0431\u0430\u0437(?:\u0430|\u044b|\u0435|\u0443|\u043e\u0439)\s+\u0434\u0430\u043d\u043d|\u043c\u0438\u0433\u0440\u0430\u0446|\u0438\u043d\u0434\u0435\u043a\u0441|\u0441\u0445\u0435\u043c(?:\u0430|\u044b)|\u043f\u043b\u0430\u043d\s+\u0437\u0430\u043f\u0440\u043e\u0441'
 $dashboardIntent = $normalizedIntent -match '\bdashboard\b|\u0434\u0430\u0448\u0431\u043e\u0440\u0434'
+$wikiInternalIntent = $normalizedIntent -match '\b(llm[- ]?wiki|wiki(?:\.ps1| tooling)?|development mcp|вики)\b'
+$wikiOnlyScope = $callerPathCount -gt 0 -and @($effectivePaths | Where-Object { $_.Replace('\','/') -notmatch '^(?:\.llm-wiki/|scripts/ai/)' }).Count -eq 0
+$explicitDatabaseIntent = $normalizedIntent -match '\b(database|postgres|postgresql|ef\s*core|migration|query plan)\b|баз.{0,4}\s+данн|миграц|план\s+запрос'
+if (($wikiOnlyScope -or ($callerPathCount -eq 0 -and $wikiInternalIntent)) -and -not $explicitDatabaseIntent) { $databaseIntent = $false }
 $identitySessionIntent = $normalizedIntent -match '\b(active\s+sessions?|session\s+management|device\s+sessions?|refresh[- ]?tokens?|revoke\s+(?:a\s+)?session|logout\s+all\s+others)\b|\u0441\u0435\u0441\u0441\u0438|\u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432|\u043e\u0442\u0437\u044b\u0432.{0,24}\u0441\u0435\u0441\u0441|\u0437\u0430\u0432\u0435\u0440\u0448.{0,24}\u0441\u0435\u0441\u0441'
 $assessmentDimensionCount = @(
     [regex]::Matches($normalizedIntent, '\b(correctness|reliability|concurrency|architecture|privacy|security|ci|operations|operational|project|repository|cross-layer|system-wide)\b|корректност|над[её]жност|конкурент|архитектур|приватност|конфиденциальност|безопасност|уязвимост|операц|проект|репозитор') |

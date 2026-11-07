@@ -22,7 +22,7 @@ $arguments = @{
     Format = 'Json'
 }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments.Module = $Module }
-if (@($ScopePath).Count -gt 0) { $arguments.Path = @($ScopePath) -join ';' }
+if (@($ScopePath).Count -gt 0) { $arguments.ChangedPath = @($ScopePath) }
 $search = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') @arguments | ConvertFrom-Json
 $records = @($search.records | ForEach-Object {
     [pscustomobject][ordered]@{

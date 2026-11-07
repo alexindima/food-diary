@@ -35,7 +35,164 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### AdminAchievementDefinitionsController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminAchievementDefinitionsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/achievement-definitions`
+- `POST /api/v{version:apiVersion}/admin/achievement-definitions`
+- `PUT /api/v{version:apiVersion}/admin/achievement-definitions/{id:guid}`
+
+### AdminAcquisitionController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminAcquisitionController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/acquisition/range`
+- `GET /api/v{version:apiVersion}/admin/acquisition/summary`
+
+### AdminAiPromptsController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminAiPromptsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/ai-prompts/scenarios`
+- `POST /api/v{version:apiVersion}/admin/ai-prompts/preview`
+- `POST /api/v{version:apiVersion}/admin/ai-prompts/test`
+- `GET /api/v{version:apiVersion}/admin/ai-prompts`
+- `GET /api/v{version:apiVersion}/admin/ai-prompts/{key:maxlength(64)}/{locale:maxlength(10)}/revisions`
+- `PUT /api/v{version:apiVersion}/admin/ai-prompts/{key:maxlength(64)}/{locale:maxlength(10)}`
+
+### AdminAiUsageController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminAiUsageController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/ai-usage/summary`
+
+### AdminAuditController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminAuditController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/audit`
+
+### AdminBillingController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminBillingController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/billing/cancellations`
+- `GET /api/v{version:apiVersion}/admin/billing/revenue-summary`
+- `GET /api/v{version:apiVersion}/admin/billing/subscriptions`
+- `GET /api/v{version:apiVersion}/admin/billing/payments`
+- `GET /api/v{version:apiVersion}/admin/billing/webhook-events`
+
+### AdminBugReportsController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/bugs`
+- `GET /api/v{version:apiVersion}/admin/bugs/journal`
+
+### AdminCollaborationAuditController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminCollaborationAuditController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/users/collaboration-audit`
+
+### AdminDailyAdvicesController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/daily-advices`
+- `POST /api/v{version:apiVersion}/admin/daily-advices/import`
+- `GET /api/v{version:apiVersion}/admin/daily-advices/groups`
+- `POST /api/v{version:apiVersion}/admin/daily-advices/groups/import`
+- `PUT /api/v{version:apiVersion}/admin/daily-advices/groups/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/admin/daily-advices/groups/{id:guid}`
+
+### AdminDashboardController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminDashboardController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/dashboard/overview`
+- `GET /api/v{version:apiVersion}/admin/dashboard`
+
+### AdminEmailTemplatesController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminEmailTemplatesController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/email-templates`
+- `GET /api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}/revisions`
+- `PUT /api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}`
+- `POST /api/v{version:apiVersion}/admin/email-templates/test`
+
+### AdminLessonsController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminLessonsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/lessons`
+- `POST /api/v{version:apiVersion}/admin/lessons`
+- `POST /api/v{version:apiVersion}/admin/lessons/import`
+- `PUT /api/v{version:apiVersion}/admin/lessons/{id:guid}`
+- `DELETE /api/v{version:apiVersion}/admin/lessons/{id:guid}`
+
+### AdminMailInboxController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminMailInboxController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/mail-inbox/messages/page`
+- `GET /api/v{version:apiVersion}/admin/mail-inbox/messages`
+- `GET /api/v{version:apiVersion}/admin/mail-inbox/messages/{id:guid}`
+- `POST /api/v{version:apiVersion}/admin/mail-inbox/messages/{id:guid}/read`
+
+### AdminModerationController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminModerationController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/moderation`
+- `POST /api/v{version:apiVersion}/admin/moderation/{id:guid}/review`
+- `POST /api/v{version:apiVersion}/admin/moderation/{id:guid}/dismiss`
+
+### AdminOutgoingEmailsController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/outgoing-emails`
+
+### AdminRetentionController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminRetentionController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/analytics/retention`
+
+### AdminTelemetryController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminTelemetryController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/telemetry/fasting`
+
+### AdminUserCreationController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminUserCreationController.cs`
+
+- `POST /api/v{version:apiVersion}/admin/users`
+
+### AdminUserPasswordController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminUserPasswordController.cs`
+
+- `PATCH /api/v{version:apiVersion}/admin/users/{id:guid}/password`
+
+### AdminUsersController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminUsersController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/users`
+- `GET /api/v{version:apiVersion}/admin/users/{id:guid}`
+- `GET /api/v{version:apiVersion}/admin/users/{id:guid}/role-audit`
+- `GET /api/v{version:apiVersion}/admin/users/impersonation-sessions`
+- `GET /api/v{version:apiVersion}/admin/users/login-events`
+- `GET /api/v{version:apiVersion}/admin/users/login-summary`
+- `PATCH /api/v{version:apiVersion}/admin/users/{id:guid}`
+- `POST /api/v{version:apiVersion}/admin/users/{id:guid}/impersonation`
+
 ## Boundary Health
 
 - Role: orchestrator

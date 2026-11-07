@@ -30,7 +30,11 @@ task brief or change packet, so deployment flags and obligations stay aligned.
 ```
 
 Dependency review reports added, removed, and version-changed direct NuGet/npm
-references and changed npm lockfile graphs. Manifest discovery and Git baseline
+references and changed npm lockfile graphs. Comparisons also include central `PackageVersion` entries in
+`Directory.Packages.props`, including nested central manifests. Repository-wide
+reference counts include those version declarations as separate manifest entries;
+the unique-package count deduplicates package names.
+Manifest discovery and Git baseline
 reads are anchored to the repository root, so invoking the command from
 `FoodDiary.Web.Client` produces the same result as invoking it from the root.
 One Git diff identifies changed paths, including staged and working-tree edits;

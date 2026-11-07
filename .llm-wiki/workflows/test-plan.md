@@ -34,6 +34,10 @@ sources:
 
 # Generate a change-aware test plan
 
+Wiki-only index maintenance does not infer product EF checks from ambiguous
+index vocabulary. Explicit database intent and mixed product/Wiki paths retain
+the required database checks.
+
 Specs under `projects/fd-webmcp` use the library's `test:ci:webmcp` script and
 `fd-webmcp` test builder. A mixed frontend plan keeps the separate owner commands
 and unique check IDs instead of assigning those specs to the main app runner.

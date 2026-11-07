@@ -31,7 +31,12 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### GamificationController
+
+Source: `Modules/Gamification/Presentation/Controllers/GamificationController.cs`
+
+- `GET /api/v{version:apiVersion}/gamification`
+
 ## Boundary Health
 
 - Role: aggregate-owner

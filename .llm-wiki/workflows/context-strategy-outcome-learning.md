@@ -50,6 +50,10 @@ When `blockDegradedAdoption` is enabled, experiments still benchmark a degraded 
 
 `context-outcome-observe` is idempotent per completion fingerprint and is normally invoked automatically by `task-finish`.
 
+If receipt publication fails after the registry event is committed, repeating
+observation recreates the workspace receipt without adding another event. A
+task profile may have an empty module set, including under strict PowerShell.
+
 ## Integrity
 
 The governed registry is an append-only hash chain in `.llm-wiki/knowledge/context-strategy-outcomes.json`. Every event binds the completion, retrospective, strategy application, applied limits, synthetic score, actual score, task cohort, policy, and previous event hash. A completed workspace keeps a matching `context-strategy-outcome.json` receipt for handoff and audit.

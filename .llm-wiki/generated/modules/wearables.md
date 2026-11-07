@@ -32,7 +32,17 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### WearablesController
+
+Source: `Modules/Wearables/Presentation/Controllers/WearablesController.cs`
+
+- `GET /api/v{version:apiVersion}/wearables/connections`
+- `GET /api/v{version:apiVersion}/wearables/{provider}/auth-url`
+- `POST /api/v{version:apiVersion}/wearables/{provider}/connect`
+- `DELETE /api/v{version:apiVersion}/wearables/{provider}/disconnect`
+- `POST /api/v{version:apiVersion}/wearables/{provider}/sync`
+- `GET /api/v{version:apiVersion}/wearables/daily-summary`
+
 ## Boundary Health
 
 - Role: aggregate-owner

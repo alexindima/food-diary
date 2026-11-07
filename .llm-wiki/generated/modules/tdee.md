@@ -30,7 +30,12 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### TdeeController
+
+Source: `Modules/Tdee/Presentation/Controllers/TdeeController.cs`
+
+- `GET /api/v{version:apiVersion}/tdee`
+
 ## Boundary Health
 
 - Role: read-composer

@@ -39,6 +39,7 @@ $sealedArtifactNames = @(
 )
 $completionPath = Join-Path $absoluteWorkspacePath 'completion.json'
 $completionMarkdownPath = Join-Path $absoluteWorkspacePath 'completion.md'
+$completionPendingPath = Join-Path $absoluteWorkspacePath 'completion-pending.json'
 $plannedTrackedWrites = @(
     '.llm-wiki/knowledge/learning-promotions.json', '.llm-wiki/knowledge/eval-promotions.json',
     '.llm-wiki/knowledge/learning-health.json', '.llm-wiki/knowledge/context-strategy-outcomes.json',
@@ -71,6 +72,7 @@ function Write-Result([object]$Result) {
 
 if ($Action -eq 'verify') {
     $issues = [System.Collections.Generic.List[string]]::new()
+    if (Test-Path -LiteralPath $completionPendingPath) { $issues.Add('Completion observations are pending; retry finish.') }
     $completion = $null
     $storedPolicyFingerprint = ''
     $policyDrift = $false
@@ -137,9 +139,23 @@ if ($Action -eq 'verify') {
     return
 }
 
-if (Test-Path -LiteralPath $completionPath -PathType Leaf) {
-    throw "Task workspace is already sealed: $normalizedWorkspacePath/completion.json"
-}
+$resumingCompletion = Test-Path -LiteralPath $completionPath -PathType Leaf
+if ($resumingCompletion) {
+    if (-not (Test-Path -LiteralPath $completionPendingPath -PathType Leaf)) {
+        throw "Task workspace is already sealed: $normalizedWorkspacePath/completion.json"
+    }
+    $validation = & $PSCommandPath verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
+    $recoveryIssues = @($validation.issues | Where-Object { $_ -cne 'Completion observations are pending; retry finish.' })
+    if ($recoveryIssues.Count -gt 0 -or $validation.policyDrift) { throw "Cannot recover a changed completion seal: $($recoveryIssues -join ' ')" }
+    $completion = Get-Content -LiteralPath $completionPath -Raw | ConvertFrom-Json
+    $pending = Get-Content -LiteralPath $completionPendingPath -Raw | ConvertFrom-Json
+    if ([string]$pending.completionFingerprint -cne [string]$completion.completionFingerprint) { throw 'Pending completion fingerprint does not match its seal.' }
+    $status = [pscustomobject]@{ score = $completion.readiness.score }
+    if ($DryRun) {
+        Write-Result ([pscustomobject]@{valid=$true;workspace=$normalizedWorkspacePath;dryRun=$true;issues=@();completionFingerprint=$completion.completionFingerprint})
+        return
+    }
+} else {
 foreach ($artifactName in $sealedArtifactNames) {
     if (-not (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath $artifactName) -PathType Leaf)) {
         throw "Task workspace is incomplete; missing $artifactName."
@@ -321,6 +337,7 @@ $temporaryId = [guid]::NewGuid().ToString('N')
 $temporaryJsonPath = Join-Path $absoluteWorkspacePath ".completion-$temporaryId.json"
 $temporaryMarkdownPath = Join-Path $absoluteWorkspacePath ".completion-$temporaryId.md"
 try {
+    [IO.File]::WriteAllText($completionPendingPath, (([ordered]@{ completionFingerprint = $completion.completionFingerprint } | ConvertTo-Json -Compress) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     [System.IO.File]::WriteAllText(
         $temporaryJsonPath,
         (($completion | ConvertTo-Json -Depth 12) + [Environment]::NewLine),
@@ -335,35 +352,27 @@ try {
     if (Test-Path -LiteralPath $temporaryJsonPath) { [System.IO.File]::Delete($temporaryJsonPath) }
     if (Test-Path -LiteralPath $temporaryMarkdownPath) { [System.IO.File]::Delete($temporaryMarkdownPath) }
 }
+}
 
-$retrospective = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') create `
+# Reuse the original retrospective so its timestamp/hash remains the key used
+# by idempotent learning observations already committed before an I/O failure.
+$retrospectiveAction = if (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'retrospective.json') -PathType Leaf) { 'verify' } else { 'create' }
+$retrospective = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRetrospective.ps1') $retrospectiveAction `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 if (-not $retrospective.valid) {
-    if (Test-Path -LiteralPath $completionPath) { [System.IO.File]::Delete($completionPath) }
-    if (Test-Path -LiteralPath $completionMarkdownPath) { [System.IO.File]::Delete($completionMarkdownPath) }
     throw "Task retrospective could not be sealed: $(@($retrospective.issues) -join ' ')"
 }
 $learningObservation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningPromotion.ps1') observe `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 if (-not $learningObservation.valid) {
-    if (Test-Path -LiteralPath $completionPath) { [System.IO.File]::Delete($completionPath) }
-    if (Test-Path -LiteralPath $completionMarkdownPath) { [System.IO.File]::Delete($completionMarkdownPath) }
-    if (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'retrospective.json')) {
-        [System.IO.File]::Delete((Join-Path $absoluteWorkspacePath 'retrospective.json'))
-    }
     throw "Task learning observations could not be recorded: $(@($learningObservation.issues) -join ' ')"
 }
 $evalObservation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvalPromotion.ps1') observe `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 if (-not $evalObservation.valid) {
-    if (Test-Path -LiteralPath $completionPath) { [System.IO.File]::Delete($completionPath) }
-    if (Test-Path -LiteralPath $completionMarkdownPath) { [System.IO.File]::Delete($completionMarkdownPath) }
-    if (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'retrospective.json')) {
-        [System.IO.File]::Delete((Join-Path $absoluteWorkspacePath 'retrospective.json'))
-    }
     throw "Task eval observation could not be recorded: $(@($evalObservation.issues) -join ' ')"
 }
 $learningHealthObservation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningHealth.ps1') observe `
@@ -393,6 +402,7 @@ if (-not $instructionOutcome.valid) {
 $workspaceOutcome = & (Join-Path $PSScriptRoot 'Write-LlmWikiWorkspaceOutcome.ps1') `
     -WorkspacePath $normalizedWorkspacePath `
     -Completion ([pscustomobject]$completion)
+[IO.File]::Delete($completionPendingPath)
 
 Write-Result ([pscustomobject][ordered]@{
     schemaVersion = 1

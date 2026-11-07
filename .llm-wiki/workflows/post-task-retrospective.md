@@ -47,3 +47,7 @@ The receipt hashes the completion, task artifacts, forecast receipts, outcome,
 telemetry snapshot, and candidate set. Verification recomputes the outcome and
 lessons from the sealed evidence, detecting removed failures, rewritten
 rationales, or inflated learning scores.
+
+An interrupted completion retries observations against its original seal and
+verified retrospective. Keeping that retrospective hash stable lets observation
+owners recognize events already recorded before the failure.

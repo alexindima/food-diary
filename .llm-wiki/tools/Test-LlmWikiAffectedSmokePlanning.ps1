@@ -6,6 +6,14 @@ $ErrorActionPreference = 'Stop'
 if (-not $?) { throw 'Smoke scheduling regression failed.' }
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $planner = Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1'
+$auditOverlayPlan = & $planner -ChangedPath '.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1' -Plan -Format Json | ConvertFrom-Json
+foreach ($expected in @('audit-regressions', 'read-only-isolation', 'read-only-retrieval', 'sqlite-cold-checkout')) {
+    if ($expected -notin $auditOverlayPlan.groups) { throw "Audit regressions replaced existing smoke coverage: $expected" }
+}
+$auditDependencyPlan = & $planner -ChangedPath '.llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1' -Plan -Format Json | ConvertFrom-Json
+foreach ($expected in @('audit-regressions', 'dependency-analysis')) {
+    if ($expected -notin $auditDependencyPlan.groups) { throw "Audit regressions replaced existing smoke coverage: $expected" }
+}
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $dispatchFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -Name 'smoke-dispatch' -IndependentRepository
 try {

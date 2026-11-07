@@ -184,7 +184,27 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             }
             Write-Host "Dependency analysis smoke passed: $($rootResult.changeCount) current change(s), cwd-independent."
         }
+        'audit-system' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiAuditSystem.ps1')
+            if (-not $?) { exit 1 }
+            & node --test (Join-Path $toolsRoot 'wiki-system-audit.test.mjs') (Join-Path $repositoryRoot 'scripts/ai/runtime-check-lease.test.mjs')
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
+        'audit-regressions' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiAuditRegression.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiAuditHealth.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiAuditContinuity.ps1')
+            if (-not $?) { exit 1 }
+            & node --test (Join-Path $toolsRoot 'wiki-runtime-audit.test.mjs')
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
         'facade-contract' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiProcessBounds.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiReliability.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiProcess.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSchedulerLocks.ps1')
@@ -269,6 +289,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'standalone-index-migration' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiReaderFingerprint.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiTopologyFingerprint.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiStandaloneIndexRead.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSourceInventory.ps1')
@@ -289,6 +313,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'index-selection' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiCatalogControllers.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiModulePageCache.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSymbolIndexCache.ps1')

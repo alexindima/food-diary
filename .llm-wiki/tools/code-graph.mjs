@@ -2972,6 +2972,9 @@ try {
     }, duration => { if (graphProfileDirectory) graphPhaseMs.lockWait = duration; }, graphCancellation.signal);
   } else {
     database = openDatabase(databasePath);
+    // Batch search already owns its transaction. Other read commands also need
+    // one snapshot across metadata validation, payloads and diagnostics.
+    if (action !== 'search-batch') database.exec('BEGIN');
   }
   if (action === 'build') { /* result was produced while holding the build lock */ }
   else if (action === 'ownership-audit') result = inspectProjectionOwnership(database, discoverProjectOwnership(repositoryPaths()));
@@ -3046,6 +3049,7 @@ try {
     compiledIndexes: database.prepare('SELECT index_name indexName, source_path sourcePath, content_hash contentHash FROM compiled_indexes ORDER BY index_name').all(),
     };
   }
+  if (action !== 'build' && action !== 'search-batch') database.exec('COMMIT');
   process.stdout.write(`${JSON.stringify(result)}\n`);
   graphProfileSucceeded = true;
 } finally {

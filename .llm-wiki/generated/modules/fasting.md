@@ -34,7 +34,39 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### FastingController
+
+Source: `Modules/Fasting/Presentation/Controllers/FastingController.cs`
+
+- `POST /api/v{version:apiVersion}/fasting/start`
+- `PUT /api/v{version:apiVersion}/fasting/end`
+- `PUT /api/v{version:apiVersion}/fasting/current/duration`
+- `PUT /api/v{version:apiVersion}/fasting/current/duration/reduce`
+- `PUT /api/v{version:apiVersion}/fasting/current/check-in`
+- `PUT /api/v{version:apiVersion}/fasting/current/skip-day`
+- `PUT /api/v{version:apiVersion}/fasting/current/postpone-day`
+
+### FastingInsightsController
+
+Source: `Modules/Fasting/Presentation/Controllers/FastingInsightsController.cs`
+
+- `GET /api/v{version:apiVersion}/fasting/stats`
+- `GET /api/v{version:apiVersion}/fasting/insights`
+
+### FastingReadController
+
+Source: `Modules/Fasting/Presentation/Controllers/FastingReadController.cs`
+
+- `GET /api/v{version:apiVersion}/fasting/current`
+- `GET /api/v{version:apiVersion}/fasting/overview`
+- `GET /api/v{version:apiVersion}/fasting/history`
+
+### LogsController
+
+Source: `Modules/Fasting/Presentation/Features/Logs/LogsController.cs`
+
+- `POST /api/v{version:apiVersion}/logs`
+
 ## Boundary Health
 
 - Role: aggregate-owner

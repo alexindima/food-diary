@@ -123,3 +123,7 @@ Each event binds the completion fingerprint, retrospective hash, ordered
 instruction source set, individual file hashes, measured outcome, policy
 fingerprint, and previous event hash. Workspace receipts can be verified against
 the global registry.
+
+Observation retries recreate a missing workspace receipt from the existing
+canonical event. The event must belong to the requested workspace; copying a
+receipt from another task does not satisfy verification.

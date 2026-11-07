@@ -30,7 +30,12 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### ContentReportsController
+
+Source: `Modules/ContentReports/Presentation/Controllers/ContentReportsController.cs`
+
+- `POST /api/v{version:apiVersion}/reports`
+
 ## Boundary Health
 
 - Role: aggregate-owner

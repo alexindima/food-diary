@@ -114,8 +114,10 @@ public static class CompiledIndexReader {
         }.ToString();
         using SqliteConnection connection = new(connectionString);
         connection.Open();
+        using SqliteTransaction transaction = connection.BeginTransaction(deferred: true);
         string? projectedHash = ReadScalarString(
             connection,
+            transaction,
             "SELECT value FROM metadata WHERE key = $key;",
             ("$key", $"query_source:{category}"));
         if (string.IsNullOrWhiteSpace(projectedHash) || !string.Equals(projectedHash, sourceHash, StringComparison.Ordinal)) {
@@ -127,13 +129,14 @@ public static class CompiledIndexReader {
         string[] recordKinds = [.. groups.Select(group => group.RecordKind)];
         Dictionary<string, List<string>> payloadsByKind = ReadPayloads(
             connection,
+            transaction,
             category,
             recordKinds,
             queryText,
             queryPattern,
             limit);
         List<(string Name, List<string> Payloads)> payloadsByGroup = [];
-        int candidateRecords = includeDiagnostics ? CountCandidates(connection, category, recordKinds) : 0;
+        int candidateRecords = includeDiagnostics ? CountCandidates(connection, transaction, category, recordKinds) : 0;
         int returnedRecords = 0;
         long sourceBytesMaterialized = 0;
         foreach (GroupSpec group in groups) {
@@ -146,7 +149,7 @@ public static class CompiledIndexReader {
         }
         int scannedRecords = includeDiagnostics
             ? Convert.ToInt32(
-                ReadScalarInt64(connection, "SELECT COUNT(*) FROM query_documents WHERE category = $category;", ("$category", category)),
+                ReadScalarInt64(connection, transaction, "SELECT COUNT(*) FROM query_documents WHERE category = $category;", ("$category", category)),
                 CultureInfo.InvariantCulture)
             : 0;
         stopwatch.Stop();
@@ -184,8 +187,9 @@ public static class CompiledIndexReader {
         return Encoding.UTF8.GetString(buffer.WrittenSpan);
     }
 
-    private static int CountCandidates(SqliteConnection connection, string category, string[] recordKinds) {
+    private static int CountCandidates(SqliteConnection connection, SqliteTransaction transaction, string category, string[] recordKinds) {
         using SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         string kindParameters = string.Join(", ", recordKinds.Select((_, index) => "$recordKind" + index.ToString(CultureInfo.InvariantCulture)));
         command.CommandText = $"SELECT COUNT(*) FROM query_documents WHERE category = $category AND record_kind IN ({kindParameters});";
@@ -198,12 +202,14 @@ public static class CompiledIndexReader {
 
     private static Dictionary<string, List<string>> ReadPayloads(
         SqliteConnection connection,
+        SqliteTransaction transaction,
         string category,
         string[] recordKinds,
         string query,
         string queryPattern,
         int limit) {
         using SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         string kindParameters = string.Join(", ", recordKinds.Select((_, index) => "$recordKind" + index.ToString(CultureInfo.InvariantCulture)));
         command.CommandText = $"""
@@ -230,18 +236,19 @@ public static class CompiledIndexReader {
         return payloads;
     }
 
-    private static string? ReadScalarString(SqliteConnection connection, string commandText, params (string Name, object Value)[] parameters) {
-        using SqliteCommand command = CreateCommand(connection, commandText, parameters);
+    private static string? ReadScalarString(SqliteConnection connection, SqliteTransaction transaction, string commandText, params (string Name, object Value)[] parameters) {
+        using SqliteCommand command = CreateCommand(connection, transaction, commandText, parameters);
         return command.ExecuteScalar() as string;
     }
 
-    private static long ReadScalarInt64(SqliteConnection connection, string commandText, params (string Name, object Value)[] parameters) {
-        using SqliteCommand command = CreateCommand(connection, commandText, parameters);
+    private static long ReadScalarInt64(SqliteConnection connection, SqliteTransaction transaction, string commandText, params (string Name, object Value)[] parameters) {
+        using SqliteCommand command = CreateCommand(connection, transaction, commandText, parameters);
         return Convert.ToInt64(command.ExecuteScalar(), CultureInfo.InvariantCulture);
     }
 
-    private static SqliteCommand CreateCommand(SqliteConnection connection, string commandText, params (string Name, object Value)[] parameters) {
+    private static SqliteCommand CreateCommand(SqliteConnection connection, SqliteTransaction transaction, string commandText, params (string Name, object Value)[] parameters) {
         SqliteCommand command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandTimeout = 2;
         command.CommandText = commandText;
         foreach ((string name, object value) in parameters) {

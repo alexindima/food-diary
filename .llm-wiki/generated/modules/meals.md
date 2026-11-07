@@ -36,7 +36,25 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### MealRecognitionsController
+
+Source: `Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs`
+
+- `POST /api/v{version:apiVersion}/meals/recognitions/{operationId:guid}/undo`
+- `POST /api/v{version:apiVersion}/meals/recognitions/{recognitionId:guid}`
+
+### MealsController
+
+Source: `Modules/Meals/Presentation/Controllers/MealsController.cs`
+
+- `GET /api/v{version:apiVersion}/meals/overview`
+- `GET /api/v{version:apiVersion}/meals`
+- `GET /api/v{version:apiVersion}/meals/{id:guid}`
+- `POST /api/v{version:apiVersion}/meals`
+- `PATCH /api/v{version:apiVersion}/meals/{id:guid}`
+- `POST /api/v{version:apiVersion}/meals/{id:guid}/repeat`
+- `DELETE /api/v{version:apiVersion}/meals/{id:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

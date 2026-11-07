@@ -21,6 +21,10 @@ sources:
 
 # Build a task brief
 
+Wiki-only index maintenance uses the tooling scope without adding product EF
+paths from the word `indexes`. Explicit database intent and mixed product/Wiki
+paths retain their database planning obligations.
+
 When scoped impact detects a missing or stale published-source projection, the
 brief uses the existing SQLite query recovery to refresh it once and retry.
 Facade queries do this inside their private snapshot. A failed recovery remains

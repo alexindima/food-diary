@@ -33,7 +33,84 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### BulkRecommendationsController
+
+Source: `Modules/Dietologist/Presentation/Controllers/BulkRecommendationsController.cs`
+
+- `POST /api/v{version:apiVersion}/dietologist/recommendations/bulk`
+
+### ClientTasksController
+
+Source: `Modules/Dietologist/Presentation/Controllers/ClientTasksController.cs`
+
+- `GET /api/v{version:apiVersion}/client-tasks`
+- `PUT /api/v{version:apiVersion}/client-tasks/{taskId:guid}/status`
+
+### DietologistAttentionController
+
+Source: `Modules/Dietologist/Presentation/Controllers/DietologistAttentionController.cs`
+
+- `GET /api/v{version:apiVersion}/dietologist/clients/attention`
+- `PUT /api/v{version:apiVersion}/dietologist/clients/attention/{signalId}/state`
+
+### DietologistClientTasksController
+
+Source: `Modules/Dietologist/Presentation/Controllers/DietologistClientTasksController.cs`
+
+- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
+- `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
+- `PUT /api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel`
+
+### DietologistClientsController
+
+Source: `Modules/Dietologist/Presentation/Controllers/DietologistClientsController.cs`
+
+- `GET /api/v{version:apiVersion}/dietologist/clients`
+- `DELETE /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}`
+- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/dashboard`
+- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals`
+- `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations`
+- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations`
+
+### DietologistController
+
+Source: `Modules/Dietologist/Presentation/Controllers/DietologistController.cs`
+
+- `POST /api/v{version:apiVersion}/dietologist/invite`
+- `DELETE /api/v{version:apiVersion}/dietologist/relationship`
+- `PUT /api/v{version:apiVersion}/dietologist/permissions`
+- `GET /api/v{version:apiVersion}/dietologist/my-dietologist`
+- `GET /api/v{version:apiVersion}/dietologist/relationship`
+
+### DietologistInvitationsController
+
+Source: `Modules/Dietologist/Presentation/Controllers/DietologistInvitationsController.cs`
+
+- `POST /api/v{version:apiVersion}/dietologist/accept`
+- `POST /api/v{version:apiVersion}/dietologist/decline`
+- `GET /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/current-user`
+- `POST /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/accept-current-user`
+- `POST /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/decline-current-user`
+- `GET /api/v{version:apiVersion}/dietologist/invitation/{invitationId:guid}`
+
+### RecommendationTemplatesController
+
+Source: `Modules/Dietologist/Presentation/Controllers/RecommendationTemplatesController.cs`
+
+- `GET /api/v{version:apiVersion}/dietologist/recommendation-templates`
+- `POST /api/v{version:apiVersion}/dietologist/recommendation-templates`
+- `PUT /api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}`
+- `DELETE /api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}`
+
+### RecommendationsController
+
+Source: `Modules/Dietologist/Presentation/Controllers/RecommendationsController.cs`
+
+- `GET /api/v{version:apiVersion}/recommendations`
+- `PUT /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read`
+- `GET /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
+- `POST /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
+
 ## Boundary Health
 
 - Role: aggregate-owner

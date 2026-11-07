@@ -31,7 +31,14 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### DashboardController
+
+Source: `Modules/Dashboard/Presentation/Controllers/DashboardController.cs`
+
+- `GET /api/v{version:apiVersion}/dashboard`
+- `GET /api/v{version:apiVersion}/dashboard/advice`
+- `POST /api/v{version:apiVersion}/dashboard/test-email`
+
 ## Boundary Health
 
 - Role: read-composer

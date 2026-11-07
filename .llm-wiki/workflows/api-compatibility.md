@@ -105,7 +105,9 @@ and updated focused/full OpenAPI snapshots.
 
 Raw OpenAPI schema comparison classifies optional properties as additive and
 removed properties, newly required properties, type/format/reference changes,
-array item changes, and nullability changes as breaking.
+array item changes, and nullability changes as breaking. Component schemas and
+their properties also include enum, numeric, string and container restrictions,
+including nested property/item shapes. Enum order does not change the contract.
 
 For legacy compact snapshots without component schemas, the guard also compares
 changed `*HttpModel.cs`, `*HttpRequest.cs`, and `*HttpResponse.cs`

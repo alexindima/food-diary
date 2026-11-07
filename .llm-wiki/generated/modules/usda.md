@@ -34,7 +34,16 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### UsdaController
+
+Source: `Modules/Usda/Presentation/Controllers/UsdaController.cs`
+
+- `GET /api/v{version:apiVersion}/usda/foods`
+- `GET /api/v{version:apiVersion}/usda/foods/{fdcId:int}`
+- `PUT /api/v{version:apiVersion}/usda/products/{productId:guid}/link`
+- `DELETE /api/v{version:apiVersion}/usda/products/{productId:guid}/link`
+- `GET /api/v{version:apiVersion}/usda/daily-micronutrients`
+
 ## Boundary Health
 
 - Role: reference-data-owner

@@ -14,6 +14,11 @@ function Get-AgeDays([DateTime]$Timestamp) {
 }
 
 function Convert-ToUtc([object]$Value, [DateTime]$Fallback) {
+    if ($Value -is [DateTimeOffset]) { return $Value.UtcDateTime }
+    if ($Value -is [DateTime]) {
+        if ($Value.Kind -eq [DateTimeKind]::Unspecified) { return [DateTime]::SpecifyKind($Value, [DateTimeKind]::Utc) }
+        return $Value.ToUniversalTime()
+    }
     $parsed = [DateTime]::MinValue
     if ($null -ne $Value -and [DateTime]::TryParse(
         [string]$Value,

@@ -28,7 +28,8 @@
         "reporting",
         "workflow-improvements",
         "knowledge-isolation",
-        "strict-shapes"
+        "strict-shapes",
+        "audit-system"
       ]
     },
     {
@@ -43,7 +44,8 @@
         "verification-receipts",
         "git-paths",
         "dependency-analysis",
-        "context-feedback"
+        "context-feedback",
+        "audit-regressions"
       ]
     },
     {

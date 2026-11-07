@@ -169,11 +169,11 @@ foreach ($moduleProperty in @($moduleGraph.modules.PSObject.Properties | Sort-Ob
     })
 }
 
-$presentationRoots = @(
-    'FoodDiary.Presentation.Api',
-    'Services/MailRelay/FoodDiary.MailRelay.Presentation',
-    'Services/MailInbox/FoodDiary.MailInbox.Presentation'
-)
+# Project identity survives physical module/service moves. Include production
+# presentation projects from the same live inventory used by the project map.
+$presentationRoots = @($dotnetProjects | Where-Object {
+    -not $_.isTestProject -and $_.name -match '\.Presentation(?:\.Api)?$'
+} | ForEach-Object { (Split-Path -Parent $_.path).Replace('\', '/') } | Sort-Object -Unique)
 $controllerFiles = @(
     $sourceInventory | Where-Object {
         $path = $_

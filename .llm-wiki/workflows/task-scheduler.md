@@ -89,6 +89,10 @@ cover.
 
 ## Automatic task decomposition
 
+Current `Modules/<owner>/` paths form separate owner buckets, as do individual
+services and shared projects. Changes in Users and Meals can therefore be split
+without treating the entire `Modules` tree as one indivisible task.
+
 Large workspaces can be split into graph-native child tasks without immediately
 changing scheduler state. `task-decompose-plan` groups changed paths by project
 and architectural boundary, merges small groups within the configured shard

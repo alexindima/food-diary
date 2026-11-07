@@ -30,34 +30,43 @@ function Add-Text([Security.Cryptography.IncrementalHash]$Hash, [string]$Value) 
 
 $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the Wiki index verification receipt.').Lines[0].Trim()
 function Get-GitBlobHashes([string[]]$Paths) {
-    # A live redirected pipe needs an explicit BOM-free StandardInputEncoding to stay
-    # stable, but that ProcessStartInfo property exists only on .NET 5+ (PowerShell 7+);
-    # on Windows PowerShell 5.1 the default StreamWriter encoding can also inject a stray
-    # UTF-8 preamble into the stream once its internal buffer first flushes, corrupting the
-    # path git reads at that boundary. Use a BOM-free file without a trailing newline
-    # so Unix Start-Process redirection cannot append an extra empty path record.
+    # Native file redirection avoids Windows PowerShell's stdin BOM. Both
+    # output streams and the complete process lifetime have a bounded wait.
     $stdinPath = [IO.Path]::GetTempFileName()
-    $stdoutPath = [IO.Path]::GetTempFileName()
-    $stderrPath = [IO.Path]::GetTempFileName()
+    $process = $null
+    $started = $false
     try {
         [IO.File]::WriteAllText($stdinPath, ($Paths -join "`n"), [Text.UTF8Encoding]::new($false))
-        $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `
-            -WorkingDirectory $repositoryRoot -RedirectStandardInput $stdinPath `
-            -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `
-            -NoNewWindow -PassThru -Wait
-        if ($process.ExitCode -ne 0) {
-            # Get-Content -Raw on a genuinely empty file emits no pipeline output at all on
-            # Windows PowerShell 5.1 (captured as PowerShell's internal AutomationNull, which
-            # still fools `-eq $null` but throws on any method call, unlike PowerShell 7+
-            # which returns ''); `-join ''` reliably collapses either case to a real string.
-            # -Encoding UTF8 matches the BOM-free UTF-8 git wrote, instead of Get-Content's
-            # system-codepage default for a BOM-less file on Windows PowerShell 5.1.
-            $errorOutput = (Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join ''
-            throw "Git source hashing failed: $($errorOutput.Trim())"
+        $start = [Diagnostics.ProcessStartInfo]::new()
+        $start.WorkingDirectory = $repositoryRoot
+        $start.UseShellExecute = $false; $start.CreateNoWindow = $true
+        $start.RedirectStandardOutput = $true; $start.RedirectStandardError = $true
+        $start.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
+        $start.StandardErrorEncoding = [Text.UTF8Encoding]::new($false)
+        Clear-LlmWikiGitRepositoryEnvironment $start
+        $start.EnvironmentVariables['FD_WIKI_HASH_INPUT'] = $stdinPath
+        if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+            $start.FileName = 'cmd.exe'
+            $start.EnvironmentVariables['FD_WIKI_HASH_GIT'] = (Get-Command git.exe -CommandType Application | Select-Object -First 1).Source
+            $start.Arguments = '/d /s /v:off /c ""%FD_WIKI_HASH_GIT%" hash-object --stdin-paths <"%FD_WIKI_HASH_INPUT%""'
+        } else {
+            $start.FileName = '/bin/sh'
+            $start.ArgumentList.Add('-c')
+            $start.ArgumentList.Add('git hash-object --stdin-paths < "$FD_WIKI_HASH_INPUT"')
         }
-        return @(Get-Content -LiteralPath $stdoutPath -Encoding UTF8 | Where-Object { $_ })
+        $process = [Diagnostics.Process]::new(); $process.StartInfo = $start
+        if (-not $process.Start()) { throw 'Unable to start Git source hashing.' }
+        $started = $true
+        $stdout = $process.StandardOutput.ReadToEndAsync(); $stderr = $process.StandardError.ReadToEndAsync()
+        Wait-LlmWikiGitProcess $process $stdout $stderr 30
+        $output = [string]$stdout.GetAwaiter().GetResult()
+        $errorOutput = [string]$stderr.GetAwaiter().GetResult()
+        if ($process.ExitCode -ne 0) { throw "Git source hashing failed: $($errorOutput.Trim())" }
+        return @($output -split '\r?\n' | Where-Object { $_ })
     } finally {
-        Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+        if ($started -and -not $process.HasExited) { $process.Kill() }
+        if ($null -ne $process) { $process.Dispose() }
+        [IO.File]::Delete($stdinPath)
     }
 }
 

@@ -35,7 +35,22 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### RecipeCommentsController
+
+Source: `Modules/RecipeCommunity/Presentation/RecipeComments/Controllers/RecipeCommentsController.cs`
+
+- `GET /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments`
+- `POST /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments`
+- `PATCH /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}`
+- `DELETE /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}`
+
+### RecipeLikesController
+
+Source: `Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs`
+
+- `POST /api/v{version:apiVersion}/recipes/{recipeId:guid}/likes/toggle`
+- `GET /api/v{version:apiVersion}/recipes/{recipeId:guid}/likes`
+
 ## Boundary Health
 
 - Role: aggregate-owner

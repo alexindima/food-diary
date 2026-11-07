@@ -58,6 +58,10 @@ accuracy, repair count, and failure penalties for the route that was used.
 Events form an append-only hash chain in
 `.llm-wiki/knowledge/model-routing-outcomes.json`.
 
+Observation retries recreate a missing workspace outcome receipt from its
+existing canonical event without appending a duplicate. Verification rejects a
+receipt whose event belongs to a different workspace.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 model-route-outcome-metrics
 ./.llm-wiki/wiki.ps1 model-route-outcome-health

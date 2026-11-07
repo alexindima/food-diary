@@ -90,7 +90,7 @@ try {
     Write-Fixture '.gitignore' ".artifacts/`n"
     [void][IO.Directory]::CreateDirectory((Join-Path $fixture '.artifacts'))
     [void][IO.Directory]::CreateDirectory((Join-Path $fixture '.llm-wiki/generated'))
-    foreach ($name in @('Invoke-LlmWikiIndexPipeline.ps1','LlmWikiChangeSemantics.ps1','LlmWikiProcess.ps1','LlmWikiJson.ps1','LlmWikiGeneratedArtifacts.ps1','LlmWikiIndexCache.ps1','LlmWikiGitPaths.ps1','LlmWikiIndexTiming.ps1')) {
+    foreach ($name in @('Invoke-LlmWikiIndexPipeline.ps1','LlmWikiChangeSemantics.ps1','LlmWikiProcess.ps1','LlmWikiJson.ps1','LlmWikiGeneratedArtifacts.ps1','LlmWikiIndexCache.ps1','LlmWikiGitPaths.ps1','LlmWikiIndexTiming.ps1','Get-LlmWikiStaleDisposition.ps1')) {
         Write-Fixture ".llm-wiki/tools/$name" ([IO.File]::ReadAllText((Join-Path $PSScriptRoot $name)))
     }
     $stub = @'
@@ -130,6 +130,24 @@ if ($name -eq 'Build-LlmWikiSymbolIndex' -and [IO.File]::Exists((Join-Path $root
     if ($LASTEXITCODE -ne 0) { throw 'Unable to stage the tracked source fixture.' }
     Assert-Update $false 4
     Assert-Update $true 0
+    & git -C $fixture add -- .
+    & git -C $fixture -c user.name=WikiFixture -c user.email=wiki-fixture@example.invalid commit --quiet -m baseline
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to commit the private stale-check fixture.' }
+    $staleSymbol = Join-Path $fixture '.llm-wiki/generated/csharp-symbol-index.json'
+    $goodSymbolBytes = [IO.File]::ReadAllBytes($staleSymbol)
+    [IO.File]::WriteAllText($staleSymbol, '{"stale":true}')
+    $deferred = Invoke-Pipeline @('-Check','-ReuseUnchangedChecks','-DeferPossiblyConcurrentStale')
+    if (-not $deferred.Contains('Fast verification deferred')) { throw 'Stale-check fixture did not exercise deferral.' }
+    $strictChild = Start-Pipeline @('-Check','-ReuseUnchangedChecks')
+    if (-not $strictChild.process.WaitForExit(60000)) {
+        Stop-LlmWikiProcessTree -Process $strictChild.process
+        try { Complete-Pipeline $strictChild | Out-Null } catch { }
+        throw 'Strict deferred-check fixture timed out.'
+    }
+    $strictExit = $strictChild.process.ExitCode
+    $strictOutput = Complete-Pipeline $strictChild $strictExit
+    if ($strictExit -eq 0 -or $strictOutput.Contains('affected pipeline cache hit')) { throw 'Deferred stale checks must not create a reusable success receipt.' }
+    [IO.File]::WriteAllBytes($staleSymbol, $goodSymbolBytes)
     $generated = Join-Path $fixture '.llm-wiki/generated'
     $symbol = Join-Path $generated 'csharp-symbol-index.json'
     $originalOutput = [IO.File]::ReadAllBytes($symbol)

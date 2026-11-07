@@ -102,7 +102,10 @@ function Get-TaskProfile([string]$Workspace) {
     if (-not (Test-Path -LiteralPath $packetPath -PathType Leaf)) { throw "Context outcome profile input is absent: $Workspace/change-packet.json" }
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
     $scopes = @($packet.diff.scopes | Where-Object { $_ } | Sort-Object -Unique)
-    $modules = @($packet.diff.modules.name | Where-Object { $_ } | Sort-Object -Unique)
+    $modules = @($packet.diff.modules | ForEach-Object {
+        if ($_ -is [string]) { $_ }
+        elseif ($null -ne $_ -and $_.PSObject.Properties['name']) { [string]$_.name }
+    } | Where-Object { $_ } | Sort-Object -Unique)
     $changeClass = if ($scopes -contains 'Frontend') { 'frontend' } elseif ($scopes -contains 'Api') { 'api' } elseif ($scopes -contains 'Database') { 'database' } else { 'backend' }
     $riskPath = Join-Path $absoluteWorkspace 'risk-calibration.json'
     $riskLevel = if (Test-Path -LiteralPath $riskPath -PathType Leaf) {
@@ -281,6 +284,16 @@ function Get-Health([object]$Metrics, [object]$Validation) {
 function Write-Registry([object]$Registry) {
     [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }
+function Write-WorkspaceOutcome([object]$Event, [string]$Fingerprint) {
+    if ([string]$Event.workspace -cne $workspace) { throw 'Outcome event belongs to a different task workspace.' }
+    $target = Join-Path $absoluteWorkspace 'context-strategy-outcome.json'
+    $temporary = "$target.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        $receipt = [pscustomobject][ordered]@{ schemaVersion = 1; registryEvent = $Event; registryFingerprint = $Fingerprint }
+        [IO.File]::WriteAllText($temporary, (($receipt | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if ([IO.File]::Exists($target)) { [IO.File]::Replace($temporary, $target, [NullString]::Value) } else { [IO.File]::Move($temporary, $target) }
+    } finally { if ([IO.File]::Exists($temporary)) { [IO.File]::Delete($temporary) } }
+}
 
 $registry = Read-Registry
 $validation = Test-Registry $registry
@@ -303,6 +316,8 @@ if ($Action -eq 'observe') {
         if (-not $retrospectiveValidation.valid) { throw "Task retrospective is invalid: $(@($retrospectiveValidation.issues) -join ' ')" }
         $observedCompletionFingerprints = @($registry.events | ForEach-Object { [string]$_.completionFingerprint })
         if ([string]$completion.completionFingerprint -in $observedCompletionFingerprints) {
+            $existingEvent = $registry.events | Where-Object completionFingerprint -eq $completion.completionFingerprint | Select-Object -First 1
+            Write-WorkspaceOutcome $existingEvent ([string]$validation.registryFingerprint)
             $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 0; eventHash = ''; reason = 'Completion outcome was already observed.' }
         } else {
             $strategy = $strategyValidation.strategy
@@ -333,12 +348,7 @@ if ($Action -eq 'observe') {
             $postValidation = Test-Registry $registry
             if (-not $postValidation.valid) { throw "New context outcome is invalid: $(@($postValidation.issues) -join ' ')" }
             Write-Registry $registry
-            $workspaceReceipt = [pscustomobject][ordered]@{
-                schemaVersion = 1
-                registryEvent = $event
-                registryFingerprint = $postValidation.registryFingerprint
-            }
-            [IO.File]::WriteAllText((Join-Path $absoluteWorkspace 'context-strategy-outcome.json'), (($workspaceReceipt | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+            Write-WorkspaceOutcome $event ([string]$postValidation.registryFingerprint)
             $result = [pscustomobject][ordered]@{ action = 'observe'; valid = $true; addedCount = 1; eventHash = $event.eventHash; outcome = $event }
         }
     }

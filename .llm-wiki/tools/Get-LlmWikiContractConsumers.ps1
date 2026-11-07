@@ -51,7 +51,24 @@ $searchMatches = @(
 
 $declaration = @($searchMatches | Where-Object { $_ -match "\b(interface|class|record)\s+$escapedContract\b" } | Select-Object -First 1)
 $declarationPath = if ($declaration) { ($declaration -split ':', 3)[0].Replace('\', '/') } else { $null }
-$owningAssembly = if ($declarationPath) { ($declarationPath -split '/')[0] } else { 'not-found' }
+$owningAssembly = 'not-found'
+if ($declarationPath) {
+    $directory = [IO.Path]::GetDirectoryName((Join-Path $repositoryRoot $declarationPath))
+    while ($directory) {
+        $projects = @(Get-ChildItem -LiteralPath $directory -Filter '*.csproj' -File | Sort-Object Name)
+        if ($projects.Count -gt 1) { throw "Contract project ownership is ambiguous: $declarationPath" }
+        if ($projects.Count -eq 1) {
+            $project = [xml][IO.File]::ReadAllText($projects[0].FullName)
+            $assemblyNames = @($project.SelectNodes('//*[local-name()="AssemblyName"]') | ForEach-Object InnerText | Where-Object { $_ } | Sort-Object -Unique)
+            if ($assemblyNames.Count -gt 1) { throw "Contract assembly ownership is conditional: $declarationPath" }
+            $owningAssembly = if ($assemblyNames.Count -eq 1) { $assemblyNames[0] } else { $projects[0].BaseName }
+            break
+        }
+        if ($directory -eq $repositoryRoot) { break }
+        $directory = [IO.Path]::GetDirectoryName($directory)
+    }
+}
+$abstractionOwned = $owningAssembly -match '\.(Abstractions|Contracts)$'
 $declarationText = if ($declarationPath) { $matchingSourceText[$declarationPath] } else { '' }
 $methodDefinitions = @([regex]::Matches($declarationText, '(?m)^\s*(?<return>[^\r\n;()]+?)\s+(?<method>[A-Za-z_]\w*)\s*\(') | ForEach-Object {
     [pscustomobject]@{ name = $_.Groups['method'].Value; returns = $_.Groups['return'].Value.Trim() }
@@ -95,7 +112,7 @@ $consumers = foreach ($path in $consumerPaths) {
         returnedData = $returnedData
         owningAssembly = $owningAssembly
         access = if ($mutation) { 'mutation' } elseif ($usesAggregate) { 'aggregate-read' } else { 'narrow-read-or-access' }
-        extractionSafe = $owningAssembly -match '\.Abstractions$' -and -not $usesAggregate -and -not $mutation
+        extractionSafe = $abstractionOwned -and -not $usesAggregate -and -not $mutation
         replacementContract = Get-Replacement $module $methodList
         compositionRegistration = $composition
     }
@@ -116,12 +133,12 @@ $result = [pscustomobject][ordered]@{
         internalOwnerConsumers = @($consumers | Where-Object { $_.consumer -eq 'Users' -and -not $_.compositionRegistration }).Count
         externalModuleConsumers = @($consumers | Where-Object { $_.consumer -ne 'Users' -and -not $_.compositionRegistration -and @($_.methods).Count -gt 0 }).Count
         emptyReferenceMatches = @($consumers | Where-Object { -not $_.compositionRegistration -and @($_.methods).Count -eq 0 }).Count
-        abstractionOwned = $owningAssembly -match '\.Abstractions$'
+        abstractionOwned = $abstractionOwned
         aggregateConsumers = @($consumers | Where-Object access -eq 'aggregate-read').Count
         mutationConsumers = @($consumers | Where-Object access -eq 'mutation').Count
         extractionSafeConsumers = @($consumers | Where-Object extractionSafe).Count
         blockers = @(
-            if ($owningAssembly -notmatch '\.Abstractions$') { "Contract is owned by implementation assembly $owningAssembly." }
+            if (-not $abstractionOwned) { "Contract is owned by implementation assembly $owningAssembly." }
             if (@($consumers | Where-Object { $_.access -in @('aggregate-read', 'mutation') }).Count) { 'Consumers depend on the User aggregate or aggregate mutation.' }
         )
     }

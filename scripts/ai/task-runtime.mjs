@@ -11,7 +11,7 @@ import {
     writeFileSync,
 } from "node:fs";
 import { createServer } from "node:net";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { containedPath, repositoryRoot } from "./generate-feature.mjs";
 import { browserSessionCookie, probeRenderedRuntime } from "./task-runtime-browser.mjs";
@@ -36,7 +36,7 @@ const save = (path, value) =>
         mode: 0o600,
     });
 
-function command(file, args, cwd = repositoryRoot) {
+function command(file, args, cwd = repositoryRoot, preserveOutput = false) {
     const result = spawnSync(file, args, {
         cwd,
         encoding: "utf8",
@@ -47,7 +47,31 @@ function command(file, args, cwd = repositoryRoot) {
         throw new Error(
             `${file} failed (${result.status ?? result.error?.code}); ${result.stderr?.trim() ?? ""}`,
         );
-    return result.stdout.trim();
+    return preserveOutput ? result.stdout : result.stdout.trim();
+}
+
+function referencedProjectScopes(root, entryScopes) {
+    const projects = command('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard', '--', '*.csproj'], root, true)
+        .split('\0').filter(Boolean);
+    const pending = projects.filter(path => entryScopes.some(scope => path.startsWith(`${scope}/`)));
+    const visited = new Set();
+    const scopes = new Set();
+    while (pending.length) {
+        const project = pending.pop();
+        if (visited.has(project)) continue;
+        visited.add(project);
+        const absolute = containedPath(root, project);
+        if (!existsSync(absolute)) continue;
+        scopes.add(dirname(project).replaceAll('\\', '/'));
+        const xml = readFileSync(absolute, 'utf8').replace(/<!--[\s\S]*?-->/gu, '');
+        for (const match of xml.matchAll(/<ProjectReference\b[^>]*\bInclude\s*=\s*(["'])(.*?)\1/giu)) {
+            const include = match[2].replaceAll('\\', '/').replaceAll('&amp;', '&');
+            const path = relative(root, resolve(dirname(absolute), include)).replaceAll('\\', '/');
+            containedPath(root, path);
+            pending.push(path);
+        }
+    }
+    return [...scopes].sort();
 }
 
 export function sourceFingerprint(root = repositoryRoot) {
@@ -81,13 +105,17 @@ export function sourceFingerprint(root = repositoryRoot) {
         ":(exclude)**/tests/**",
         ":(exclude)**/*.spec.ts",
     ];
+    sourceScope.push(...referencedProjectScopes(root, [
+        'FoodDiary.Web.Api', 'FoodDiary.Initializer', 'FoodDiary.Infrastructure', 'FoodDiary.ReadModel.Composition',
+    ]));
     digest.update(command("git", ["diff", "HEAD", "--", ...sourceScope], root));
     for (const path of command(
         "git",
-        ["ls-files", "--others", "--exclude-standard", "--", ...sourceScope],
+        ["ls-files", "-z", "--others", "--exclude-standard", "--", ...sourceScope],
         root,
+        true,
     )
-        .split("\n")
+        .split("\0")
         .filter(Boolean)
         .sort()) {
         digest.update(path);
@@ -387,7 +415,14 @@ export function stopRuntime(name, root = repositoryRoot) {
                 ],
                 { encoding: "utf8", windowsHide: true },
             );
-            if (inspect.status !== 0) continue;
+            if (inspect.error) throw new Error(`docker inspect failed: ${inspect.error.code ?? inspect.error.message}`);
+            if (inspect.status !== 0) {
+                // Only a successful Engine query can establish absence. A CLI,
+                // connection or permission failure does not prove cleanup.
+                const remaining = command('docker', ['container', 'ls', '-aq', '--no-trunc', '--filter', `id=${owner.id}`]);
+                if (!remaining) continue;
+                throw new Error(`docker inspect failed for owned container ${owner.name}`);
+            }
             if (inspect.stdout.trim() !== state.id)
                 throw new Error(
                     `Refusing to remove foreign container ${owner.name}`,

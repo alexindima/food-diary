@@ -34,7 +34,13 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### OpenFoodFactsController
+
+Source: `Modules/OpenFoodFacts/Presentation/Controllers/OpenFoodFactsController.cs`
+
+- `GET /api/v{version:apiVersion}/open-food-facts/products/{barcode}`
+- `GET /api/v{version:apiVersion}/open-food-facts/products`
+
 ## Boundary Health
 
 - Role: aggregate-owner

@@ -52,6 +52,7 @@ $packet = if ($null -ne $PacketInput) {
 }
 
 $readinessArguments = @{
+    BaseRef = $BaseRef
     PacketInput = $packet
     ManifestPath = $ManifestPath
     AcceptancePath = $AcceptancePath
@@ -61,6 +62,8 @@ $readinessArguments = @{
     RequireEvidence = $RequireEvidence
     Format = 'Json'
 }
+if ($PSBoundParameters.ContainsKey('HeadRef')) { $readinessArguments.HeadRef = $HeadRef }
+if ($PSBoundParameters.ContainsKey('ChangedPath')) { $readinessArguments.ChangedPath = $ChangedPath }
 $readiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') @readinessArguments | ConvertFrom-Json
 $evidenceAbsolute = Resolve-OutputPath $EvidencePath
 $evidence = if (Test-Path -LiteralPath $evidenceAbsolute -PathType Leaf) { Get-Content -LiteralPath $evidenceAbsolute -Raw | ConvertFrom-Json } else { $null }

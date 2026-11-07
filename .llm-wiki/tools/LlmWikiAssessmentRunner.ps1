@@ -1,5 +1,6 @@
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 Enable-LlmWikiStringDateJsonParsing
 
 function Invoke-LlmWikiAssessment {
@@ -9,7 +10,8 @@ function Invoke-LlmWikiAssessment {
         [Parameter(Mandatory)][hashtable]$Arguments,
         [string]$Label = $ToolName,
         [ValidateRange(1, 60)][int]$HeartbeatSeconds = 10,
-        [ValidateRange(1, 7200)][int]$TimeoutSeconds = 1800
+        [ValidateRange(1, 7200)][int]$TimeoutSeconds = 1800,
+        [ValidateRange(1024, 134217728)][long]$MaximumOutputBytes = 67108864
     )
     $repository = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
     if ($ToolName -notmatch '^[A-Za-z0-9-]+\.ps1$') { throw 'Assessment tool must be a Wiki tool filename.' }
@@ -106,21 +108,40 @@ function Invoke-LlmWikiAssessment {
     $process = [Diagnostics.Process]::new()
     $process.StartInfo = $startInfo
     $stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $started = $false
+    $stdout = $null; $stderr = $null
+    $stdoutFile = $null; $stderrFile = $null
+    $outputFiles = @('stdout.log', 'stderr.log', 'output.json', 'result.json', 'stage.log') | ForEach-Object { Join-Path $runRoot $_ }
+    function Assert-AssessmentOutputBudget {
+        $totalBytes = 0L
+        foreach ($path in $outputFiles) {
+            if ([IO.File]::Exists($path)) { $totalBytes += [IO.FileInfo]::new($path).Length }
+        }
+        if ($totalBytes -gt $MaximumOutputBytes) { throw "Task stage output exceeded $MaximumOutputBytes bytes: $Label. Log: $logPath" }
+    }
     try {
+        $stdoutFile = [IO.File]::Open((Join-Path $runRoot 'stdout.log'), [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
+        $stderrFile = [IO.File]::Open((Join-Path $runRoot 'stderr.log'), [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::ReadWrite)
         if (-not $process.Start()) { throw "Unable to start $Label." }
-        $stdout = $process.StandardOutput.ReadToEndAsync()
-        $stderr = $process.StandardError.ReadToEndAsync()
+        $started = $true
+        $stdout = $process.StandardOutput.BaseStream.CopyToAsync($stdoutFile)
+        $stderr = $process.StandardError.BaseStream.CopyToAsync($stderrFile)
         $nextHeartbeat = $HeartbeatSeconds
-        while (-not $process.WaitForExit(250)) {
+        $null = $process.StartTime
+        while (-not $process.HasExited -or -not $stdout.IsCompleted -or -not $stderr.IsCompleted) {
             if ($stopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
                 $lastProgress = @(Get-Content -LiteralPath $logPath -Tail 8 -ErrorAction SilentlyContinue | Where-Object { $_ -match '^Task stage:' } | Select-Object -Last 1) -join ''
                 Write-Host "Task stage: $Label — running, $([int]$stopwatch.Elapsed.TotalSeconds)s elapsed; waiting for worker. $lastProgress Log: $logPath"
                 $nextHeartbeat += $HeartbeatSeconds
             }
             if ($stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) { throw "Task stage timed out: $Label after ${TimeoutSeconds}s. Log: $logPath" }
+            Assert-AssessmentOutputBudget
+            Start-Sleep -Milliseconds 100
         }
-        $outputText = $stdout.GetAwaiter().GetResult()
-        $errorText = $stderr.GetAwaiter().GetResult()
+        $null = $stdout.GetAwaiter().GetResult(); $null = $stderr.GetAwaiter().GetResult()
+        Assert-AssessmentOutputBudget
+        $stdoutFile.Dispose(); $stderrFile.Dispose()
+        $errorText = [IO.File]::ReadAllText((Join-Path $runRoot 'stderr.log'))
         $stageResult = if (Test-Path -LiteralPath $resultPath) { Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json } else { $null }
         if ($process.ExitCode -ne 0 -or $null -eq $stageResult -or $stageResult.status -ne 'passed' -or -not (Test-Path -LiteralPath $outputPath)) {
             throw "Task stage failed: $Label. $($stageResult.detail) $errorText Log: $logPath"
@@ -141,10 +162,12 @@ function Invoke-LlmWikiAssessment {
         Write-Host "Task stage: $Label — completed in $([Math]::Round($stopwatch.Elapsed.TotalSeconds, 1))s; successful=$successful."
         return $result
     } finally {
-        if ($null -ne $process -and $process.Id -gt 0 -and -not $process.HasExited) {
-            if ($PSVersionTable.PSVersion.Major -ge 7) { $process.Kill($true) } else { $process.Kill() }
+        if ($started -and (-not $process.HasExited -or $null -eq $stdout -or $null -eq $stderr -or -not $stdout.IsCompleted -or -not $stderr.IsCompleted)) {
+            Stop-LlmWikiProcessTree $process
+            $process.StandardOutput.Dispose(); $process.StandardError.Dispose()
         }
         $process.Dispose()
+        if ($stdoutFile) { $stdoutFile.Dispose() }; if ($stderrFile) { $stderrFile.Dispose() }
         [IO.File]::Delete($argumentsPath)
     }
 }

@@ -24,7 +24,7 @@ function Get-VerificationFingerprint {
     & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage 'full verification' -Format Text
 }
 
-$verificationFingerprint = if ($ResumePassedStages) { Get-VerificationFingerprint } else { $null }
+$verificationFingerprint = Get-VerificationFingerprint
 $receiptRoot = if ($ResumePassedStages) {
     $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for verification resume.').Lines[0].Trim()
     Join-Path $gitDirectory "llm-wiki/verification-stages/$verificationFingerprint"
@@ -67,6 +67,9 @@ if ($FullTools -or $CoreTools) {
 }
 
 foreach ($check in $checks) {
+    if ((Get-VerificationFingerprint) -cne $verificationFingerprint) {
+        throw 'Verification inputs changed during execution; restart full verification on stable sources.'
+    }
     $receiptPath = if ($receiptRoot) { Join-Path $receiptRoot (($check.name -replace '[^a-zA-Z0-9_.-]', '-') + '.passed') } else { $null }
     if ($receiptPath -and (Test-Path -LiteralPath $receiptPath -PathType Leaf)) {
         Write-Host "Resuming LLM Wiki full verification: $($check.name) already passed for unchanged inputs."
@@ -105,6 +108,9 @@ foreach ($check in $checks) {
             $groupOutcome = 'failed'
             $failureCategory = 'nonzero-exit'
             throw "LLM Wiki full verification failed: $($check.name) (exit=$($process.ExitCode))"
+        }
+        if ((Get-VerificationFingerprint) -cne $verificationFingerprint) {
+            throw 'Verification inputs changed during execution; no successful group receipt was recorded.'
         }
     } catch {
         if ($groupOutcome -eq 'passed') {

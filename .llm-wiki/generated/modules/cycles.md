@@ -31,7 +31,33 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### CycleLogsController
+
+Source: `Modules/Cycles/Presentation/Controllers/CycleLogsController.cs`
+
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
+- `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
+
+### CyclesController
+
+Source: `Modules/Cycles/Presentation/Controllers/CyclesController.cs`
+
+- `GET /api/v{version:apiVersion}/cycles/current`
+- `GET /api/v{version:apiVersion}/cycles/current/nutrition-summary`
+- `POST /api/v{version:apiVersion}/cycles`
+- `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/settings`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/consents/{purpose:int}`
+
+### MenstrualEpisodesController
+
+Source: `Modules/Cycles/Presentation/Controllers/MenstrualEpisodesController.cs`
+
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}`
+- `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}`
+
 ## Boundary Health
 
 - Role: aggregate-owner

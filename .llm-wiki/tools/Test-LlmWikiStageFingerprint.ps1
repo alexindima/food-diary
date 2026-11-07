@@ -44,7 +44,7 @@ try {
         [IO.File]::SetLastWriteTimeUtc($jsonHelper, $jsonTime)
         if ($jsonBefore -ceq (& $tool -Stage $stage)) { throw "$stage ignored its changed shared JSON helper." }
     }
-    foreach ($name in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion', 'Test-LlmWikiSymbolIndexCache', 'Test-LlmWikiIndexFingerprint', 'Test-LlmWikiIndexPipelineCache')) {
+    foreach ($name in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion', 'Test-LlmWikiSymbolIndexCache', 'Test-LlmWikiIndexFingerprint', 'Test-LlmWikiIndexPipelineCache', 'Test-LlmWikiCatalogControllers')) {
         $indexSource = Join-Path $fixtureTools "$name.ps1"
         [IO.File]::WriteAllText($indexSource, 'first')
         $indexBefore = & $tool -Stage 'affected smoke:index-selection'
@@ -67,7 +67,7 @@ try {
         [IO.File]::WriteAllText($managerPath, 'other')
         if ($beforeManager -ceq (& $tool -Stage 'affected smoke:facade-contract')) { throw "Scheduler manager '$name' did not invalidate its regression receipt." }
     }
-    $facadeTests = @('Process', 'SchedulerLocks', 'DispatchMetricsReuse', 'FullAuditShards', 'FacadeCommandCatalog', 'CriticalToolContracts', 'StrictAffected', 'AffectedSmokePlanning', 'ObservedStageReceipt', 'ConcurrentVerify')
+    $facadeTests = @('Process', 'ProcessBounds', 'Reliability', 'SchedulerLocks', 'DispatchMetricsReuse', 'FullAuditShards', 'FacadeCommandCatalog', 'CriticalToolContracts', 'StrictAffected', 'AffectedSmokePlanning', 'ObservedStageReceipt', 'ConcurrentVerify')
     foreach ($name in $facadeTests) {
         [IO.File]::WriteAllText((Join-Path $fixtureTools "Test-LlmWiki$name.ps1"), '# stable facade fixture')
     }

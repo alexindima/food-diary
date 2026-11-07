@@ -50,3 +50,9 @@ results, source lineage, missing-source failure, payload reduction, and both
 cold first-load and warm complete-command latency. Graph build publishes the
 fingerprinted reader under repository `.artifacts`; identical tooling inputs
 reuse that build.
+
+Projection readers keep source-hash metadata, selected rows and diagnostic
+counts in one SQLite read transaction. An independent WAL writer may publish
+the next generation while the reader continues to return its validated
+snapshot. The dedicated system regression exercises this boundary in Node and
+the in-process .NET domain and runtime readers.

@@ -1,4 +1,5 @@
 Set-StrictMode -Version Latest
+if (-not (Test-Path Function:Invoke-LlmWikiGitCommand)) { . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1') }
 
 function ConvertFrom-LlmWikiGitNameStatus {
     param([string[]]$Lines)
@@ -52,7 +53,7 @@ function Get-LlmWikiGitRenames {
         if (-not $process.Start()) { throw "Unable to start git rename discovery for base '$BaseRef' and head '$HeadRef'." }
         $stdoutTask = $process.StandardOutput.ReadToEndAsync()
         $stderrTask = $process.StandardError.ReadToEndAsync()
-        $process.WaitForExit()
+        Wait-LlmWikiGitProcess $process $stdoutTask $stderrTask
         $stdout = [string]$stdoutTask.GetAwaiter().GetResult()
         $stderr = [string]$stderrTask.GetAwaiter().GetResult()
         $exitCode = $process.ExitCode

@@ -57,6 +57,9 @@ if ($LogPath) {
 }
 try {
     Write-Host "Observed stage '$StageName' started. Live log: $LogPath"
+    if ($Fingerprint -and (& (Join-Path $PSScriptRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $StageName -Arguments $arguments) -cne $Fingerprint) {
+        throw 'Verification inputs changed during worker startup; no check was executed.'
+    }
     $global:LASTEXITCODE = 0
     if ($OutputPath) {
         $output = & $ToolPath @arguments
@@ -66,6 +69,9 @@ try {
     }
     if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
         throw "Observed Wiki tool failed with exit code $LASTEXITCODE."
+    }
+    if ($Fingerprint -and (& (Join-Path $PSScriptRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $StageName -Arguments $arguments) -cne $Fingerprint) {
+        throw 'Verification inputs changed during execution; no successful stage receipt was recorded.'
     }
     if (-not [string]::IsNullOrWhiteSpace($PassedReceiptPath)) {
         $null = New-Item -ItemType Directory -Path (Split-Path -Parent $PassedReceiptPath) -Force

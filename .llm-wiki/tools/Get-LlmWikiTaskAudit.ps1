@@ -763,6 +763,7 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
 }
 
 $attentionStates = @('attention', 'stale', 'conflict', 'invalid', 'migration-required', 'policy-drift', 'orphaned-dispatch', 'dispatch-drift', 'circuit-open')
+$attentionCount = @($items | Where-Object status -in $attentionStates).Count + [int]$taskDispatches.invalidCount + [int]$dispatchMetrics.slo.violationCount + [int]$orchestrationLineage.summary.issueCount + [int]$circuitRegistry.invalidReceiptCount + [int]$decompositionRegistry.invalidCount + [int]$contextFeedback.metrics.invalidReceiptCount + [int]$contextFeedback.metrics.invalidQualityAdjustmentCount + [int]$contextOutcomeHealth.degradedProfileCount + [int]$contextOutcomeHealth.degradedCohortProfileCount + @($durableMemory.issues).Count + [int]$durableMemory.staleCount + @($repairLearning.issues).Count + @($learningPromotion.issues).Count + @($learningExperiments.issues).Count + @($learningHealth.issues).Count + [int]$learningHealth.rollbackRecommendationCount + @($evalPromotion.issues).Count + @($verificationTelemetry.issues).Count
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     tasksPath = $normalizedTasksPath
@@ -776,7 +777,7 @@ $result = [pscustomobject][ordered]@{
     runningCount = @($items | Where-Object status -eq 'running').Count
     sealedCount = @($items | Where-Object status -eq 'sealed').Count
     decomposedCount = @($items | Where-Object status -eq 'decomposed').Count
-    attentionCount = @($items | Where-Object status -in $attentionStates).Count + [int]$taskDispatches.invalidCount + [int]$dispatchMetrics.slo.violationCount + [int]$orchestrationLineage.summary.issueCount + [int]$circuitRegistry.invalidReceiptCount + [int]$decompositionRegistry.invalidCount + [int]$contextFeedback.metrics.invalidReceiptCount + [int]$contextFeedback.metrics.invalidQualityAdjustmentCount + [int]$contextOutcomeHealth.degradedProfileCount + [int]$contextOutcomeHealth.degradedCohortProfileCount + @($durableMemory.issues).Count + [int]$durableMemory.staleCount + @($repairLearning.issues).Count + @($learningPromotion.issues).Count + @($learningExperiments.issues).Count + @($learningHealth.issues).Count + [int]$learningHealth.rollbackRecommendationCount + @($evalPromotion.issues).Count + @($verificationTelemetry.issues).Count
+    attentionCount = $attentionCount
     staleCount = @($items | Where-Object status -eq 'stale').Count
     invalidCount = @($items | Where-Object status -eq 'invalid').Count
     migrationRequiredCount = @($items | Where-Object status -eq 'migration-required').Count
@@ -826,7 +827,7 @@ $result = [pscustomobject][ordered]@{
     evalPromotion = $evalPromotion
     verificationTelemetry = $verificationTelemetry
     orchestrationLineage = $orchestrationLineage
-    valid = @($items | Where-Object status -in $attentionStates).Count -eq 0 -and [int]$taskDispatches.invalidCount -eq 0 -and [int]$dispatchMetrics.slo.violationCount -eq 0 -and [int]$circuitRegistry.invalidReceiptCount -eq 0 -and [int]$decompositionRegistry.invalidCount -eq 0 -and [int]$contextFeedback.metrics.invalidReceiptCount -eq 0 -and [int]$contextFeedback.metrics.invalidQualityAdjustmentCount -eq 0 -and @($durableMemory.issues).Count -eq 0 -and [int]$durableMemory.staleCount -eq 0 -and @($repairLearning.issues).Count -eq 0 -and @($learningPromotion.issues).Count -eq 0 -and @($learningExperiments.issues).Count -eq 0 -and @($learningHealth.issues).Count -eq 0 -and [int]$learningHealth.rollbackRecommendationCount -eq 0 -and @($evalPromotion.issues).Count -eq 0 -and @($verificationTelemetry.issues).Count -eq 0 -and $orchestrationLineage.valid
+    valid = $attentionCount -eq 0 -and $orchestrationLineage.valid
     workspaces = @($items)
 }
 

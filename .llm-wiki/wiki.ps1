@@ -301,6 +301,7 @@ if ($Limit -lt 1 -or $Limit -gt 50) {
     $global:LASTEXITCODE = 2
     throw "Limit must be between 1 and 50; received $Limit."
 }
+$previousGitConfigCount = [Environment]::GetEnvironmentVariable('GIT_CONFIG_COUNT')
 $gitConfigCount = 0
 if (-not [string]::IsNullOrWhiteSpace($env:GIT_CONFIG_COUNT)) {
     $parsedGitConfigCount = 0
@@ -308,6 +309,9 @@ if (-not [string]::IsNullOrWhiteSpace($env:GIT_CONFIG_COUNT)) {
         $gitConfigCount = $parsedGitConfigCount
     }
 }
+$previousGitConfigKey = [Environment]::GetEnvironmentVariable("GIT_CONFIG_KEY_$gitConfigCount")
+$previousGitConfigValue = [Environment]::GetEnvironmentVariable("GIT_CONFIG_VALUE_$gitConfigCount")
+try {
 Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf'
 Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
 $env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
@@ -542,7 +546,9 @@ function Invoke-ObservedWikiStage {
             schemaVersion = 2; runId = $runId; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = $script:verifyStageTotal
             elapsedSeconds = $ElapsedSeconds; expectedSeconds = $expectedSeconds; timeoutSeconds = $TimeoutSeconds
             detail = $Detail; resumeCommand = "./.llm-wiki/wiki.ps1 verify -Stage '$Name'"
-            ownerProcessId = $PID; childProcessId = if ($null -ne $process -and -not $process.HasExited) { $process.Id } else { $null }
+            ownerProcessId = $PID; childProcessId = if ($Status -eq 'running' -and $null -ne $process -and -not $process.HasExited) { $process.Id } else { $null }
+            ownerProcessStartTimeUtc = (Get-Process -Id $PID).StartTime.ToUniversalTime().ToString('o')
+            childProcessStartTimeUtc = if ($Status -eq 'running' -and $null -ne $process -and -not $process.HasExited) { $process.StartTime.ToUniversalTime().ToString('o') } else { $null }
             logPath = $logPath.Replace($repositoryRoot + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
             runProgressPath = $progressPath.Replace($repositoryRoot + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
             updatedAtUtc = [DateTime]::UtcNow.ToString('o')
@@ -617,6 +623,10 @@ function Invoke-ObservedWikiStage {
         if ($process.ExitCode -ne 0) {
             Write-VerifyProgress 'failed' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds)) "Run separately: $StandaloneCommand"
             throw "Wiki verify stage failed: $Name (exit=$($process.ExitCode)). Run separately: $StandaloneCommand"
+        }
+        if ((& (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $Name -Arguments $ToolArguments) -cne $fingerprint) {
+            Write-VerifyProgress 'failed' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds)) 'Sources changed during stage execution.'
+            throw 'Verification inputs changed during execution; restart the stage on stable sources.'
         }
         $stageTelemetryStatus = 'passed'
     } finally {
@@ -788,31 +798,35 @@ switch ($Command) {
             break
         }
         $progressPath = Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path '.artifacts/llm-wiki/verify-progress.json'
+        $verifiedOrphanWorker = $false
         if (Test-Path -LiteralPath $progressPath -PathType Leaf) {
             try {
                 $previousProgress = Get-Content -LiteralPath $progressPath -Raw | ConvertFrom-Json
                 if ($previousProgress.status -eq 'running') {
                     $ownerAlive = $false
-                    if ($previousProgress.ownerProcessId) {
-                        $ownerAlive = $null -ne (Get-Process -Id ([int]$previousProgress.ownerProcessId) -ErrorAction SilentlyContinue)
+                    if ($previousProgress.ownerProcessId -and $previousProgress.PSObject.Properties['ownerProcessStartTimeUtc']) {
+                        $priorOwner = Get-Process -Id ([int]$previousProgress.ownerProcessId) -ErrorAction SilentlyContinue
+                        $ownerAlive = $null -ne $priorOwner -and $priorOwner.StartTime.ToUniversalTime().ToString('o') -ceq [string]$previousProgress.ownerProcessStartTimeUtc
                     }
                     if (-not $ownerAlive) {
-                        if ($previousProgress.childProcessId) {
+                        if ($previousProgress.childProcessId -and $previousProgress.PSObject.Properties['childProcessStartTimeUtc']) {
                             $orphanedChild = Get-Process -Id ([int]$previousProgress.childProcessId) -ErrorAction SilentlyContinue
-                            if ($orphanedChild) {
-                                Write-Warning "Previous verify owner exited, but stage worker $($orphanedChild.Id) is still running. It owns the durable result receipt; inspect it with verify-status instead of replaying the stage."
-                                break
+                            if ($orphanedChild -and $orphanedChild.StartTime.ToUniversalTime().ToString('o') -ceq [string]$previousProgress.childProcessStartTimeUtc) {
+                                $verifiedOrphanWorker = $true
                             }
                         }
+                        if (-not $verifiedOrphanWorker) {
                         $previousProgress.status = 'interrupted'
-                        $previousProgress.detail = 'Previous verify owner is no longer running. Its recorded child tree was cleaned up; resume only the unfinished stage.'
+                        $previousProgress | Add-Member -NotePropertyName detail -NotePropertyValue 'Previous verify owner identity is no longer active. Start a fresh verification; unrelated processes are left untouched.' -Force
                         $previousProgress.updatedAtUtc = [DateTime]::UtcNow.ToString('o')
                         [IO.File]::WriteAllText($progressPath, (($previousProgress | ConvertTo-Json -Depth 6) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
                         Write-Warning "Recovered stale Wiki verify receipt at stage '$($previousProgress.stage)'. Resume: $($previousProgress.resumeCommand)"
+                        }
                     }
                 }
             } catch { Write-Warning "Unable to inspect prior Wiki verify progress: $($_.Exception.Message)" }
         }
+        if ($verifiedOrphanWorker) { throw 'Previous verify worker is still running with its recorded process identity. Inspect verify-status before restarting verification.' }
         $script:verifyRunId = if (-not [string]::IsNullOrWhiteSpace($VerifyRunId)) {
             $VerifyRunId
         } else {
@@ -947,6 +961,7 @@ switch ($Command) {
             Write-Warning 'Fast source-impact enforcement was deferred with the possibly concurrent stale indexes. Strict verify remains required in the integration session.'
         } else {
             $verificationCacheArguments.Action = 'Record'
+            $verificationCacheArguments.ExpectedFingerprint = $verificationCache.fingerprint
             $null = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments
         }
         if ($VisualUiCompletion) {
@@ -3025,5 +3040,16 @@ if ($Format -ne 'Json') {
             }
             [pscustomobject]@{ schemaVersion = 1; command = $Command; completed = $true; results = @($wikiResults); messages = @($wikiMessages) } | ConvertTo-Json -Depth 100
         }
+    }
+}
+
+} finally {
+    foreach ($savedGitVariable in @(
+        @{ name='GIT_CONFIG_COUNT'; value=$previousGitConfigCount }
+        @{ name="GIT_CONFIG_KEY_$gitConfigCount"; value=$previousGitConfigKey }
+        @{ name="GIT_CONFIG_VALUE_$gitConfigCount"; value=$previousGitConfigValue }
+    )) {
+        if ($null -eq $savedGitVariable.value) { Remove-Item -LiteralPath "Env:$($savedGitVariable.name)" -ErrorAction SilentlyContinue }
+        else { Set-Item -LiteralPath "Env:$($savedGitVariable.name)" -Value $savedGitVariable.value }
     }
 }
