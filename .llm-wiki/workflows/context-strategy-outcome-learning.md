@@ -54,6 +54,11 @@ If receipt publication fails after the registry event is committed, repeating
 observation recreates the workspace receipt without adding another event. A
 task profile may have an empty module set, including under strict PowerShell.
 
+Observe and applied prune hold the registry's stable `.lock` OS lease before
+reading its event chain. A competing writer receives an explicit retry error;
+process exit releases ownership. Registry JSON is replaced atomically, so readers
+see one complete generation. Sidecar leases and temporary files are local metadata.
+
 ## Integrity
 
 The governed registry is an append-only hash chain in `.llm-wiki/knowledge/context-strategy-outcomes.json`. Every event binds the completion, retrospective, strategy application, applied limits, synthetic score, actual score, task cohort, policy, and previous event hash. A completed workspace keeps a matching `context-strategy-outcome.json` receipt for handoff and audit.

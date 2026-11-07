@@ -1,11 +1,113 @@
 [CmdletBinding()]
-param([ValidateSet('All','ContextRecovery','ModelRecovery','InstructionRecovery','ModelForeign','InstructionForeign','Decomposition','ContextProfile')][string]$Case='All')
+param([ValidateSet('All','ContextRecovery','ModelRecovery','InstructionRecovery','ModelForeign','InstructionForeign','Decomposition','ContextProfile','ContextConcurrent','ModelConcurrent','InstructionConcurrent')][string]$Case='All')
 $ErrorActionPreference='Stop'
 $repositoryRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 function Assert-Continuity([bool]$Condition,[string]$Message) { if(-not $Condition) { throw "Wiki continuity regression: $Message" } }
 function Write-ContinuityJson([string]$Path,[object]$Value) { [IO.File]::WriteAllText($Path,($Value | ConvertTo-Json -Depth 30),[Text.UTF8Encoding]::new($false)) }
-$cases=if($Case -eq 'All') { @('ContextRecovery','ModelRecovery','InstructionRecovery','ModelForeign','InstructionForeign','Decomposition','ContextProfile') } else { @($Case) }
+function Test-ConcurrentOutcome([string]$Tools,[string]$Manager,[string]$Registry,[string]$Workspace,[string]$AbsoluteWorkspace,[string]$Fixture,[string]$Owner) {
+    . (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
+    $otherWorkspace="$Workspace-other"
+    $otherAbsolute=Join-Path $Fixture $otherWorkspace
+    $null=New-Item -ItemType Directory -Path $otherAbsolute -Force
+    Get-ChildItem -LiteralPath $AbsoluteWorkspace -File | Copy-Item -Destination $otherAbsolute
+    Write-ContinuityJson (Join-Path $otherAbsolute 'completion.json') @{completionFingerprint=('e'*64);readiness=@{verdict='ready'}}
+    Write-ContinuityJson $Registry @{schemaVersion=$(if($Owner -eq 'Instruction'){2}else{1});events=@()}
+    $workerPath=Join-Path $Fixture 'concurrent-observe.ps1'
+    [IO.File]::WriteAllText($workerPath,@'
+param($Manager,$Registry,$Workspace,$Control,$Label)
+$ErrorActionPreference='Stop'
+$script:capturedRegistry=$false
+function Get-Content {
+    param([Parameter(Position=0)][string]$Path,[string]$LiteralPath,[switch]$Raw)
+    $value=Microsoft.PowerShell.Management\Get-Content @PSBoundParameters
+    $target=if($LiteralPath){$LiteralPath}else{$Path}
+    if(-not $script:capturedRegistry -and [IO.Path]::GetFullPath($target) -eq $Registry -and $Label -in @('a','b')){
+        $script:capturedRegistry=$true
+        [IO.File]::WriteAllText((Join-Path $Control "$Label.read"),'captured original registry bytes')
+        $watch=[Diagnostics.Stopwatch]::StartNew()
+        while(-not [IO.File]::Exists((Join-Path $Control "$Label.go"))){
+            if($watch.Elapsed.TotalSeconds -gt 15){throw 'Owned registry-read barrier timed out.'}
+            Start-Sleep -Milliseconds 10
+        }
+    }
+    return $value
+}
+try {
+    $result=& $Manager observe -WorkspacePath $Workspace -Format Json | ConvertFrom-Json
+    $report=@{valid=$result.valid;addedCount=$result.addedCount;error=''}
+} catch {$report=@{valid=$false;error=$_.Exception.Message}}
+[IO.File]::WriteAllText((Join-Path $Control "$Label.result"),($report | ConvertTo-Json -Compress))
+'@,[Text.UTF8Encoding]::new($false))
+    $workers=[Collections.Generic.List[Diagnostics.Process]]::new()
+    function Start-OutcomeWorker([string]$Label,[string]$TargetWorkspace) {
+        $info=[Diagnostics.ProcessStartInfo]::new((Get-Process -Id $PID).Path)
+        $info.UseShellExecute=$false;$info.CreateNoWindow=$true
+        foreach($argument in @('-NoLogo','-NoProfile','-File',$workerPath,'-Manager',(Join-Path $Tools $Manager),'-Registry',$Registry,'-Workspace',$TargetWorkspace,'-Control',$Fixture,'-Label',$Label)){$info.ArgumentList.Add($argument)}
+        $process=[Diagnostics.Process]::new();$process.StartInfo=$info
+        if(-not $process.Start()){throw 'Unable to start owned outcome observer.'}
+        $null=$process.StartTime
+        $workers.Add($process)
+        return $process
+    }
+    function Wait-OutcomeMarker([string[]]$Names) {
+        $watch=[Diagnostics.Stopwatch]::StartNew()
+        while(@($Names | Where-Object {[IO.File]::Exists((Join-Path $Fixture $_))}).Count -eq 0){
+            if($watch.Elapsed.TotalSeconds -gt 12){throw "Owned outcome marker timed out: $($Names -join ',')."}
+            Start-Sleep -Milliseconds 10
+        }
+    }
+    function Complete-OutcomeWorker([Diagnostics.Process]$Process,[string]$Label) {
+        if(-not $Process.WaitForExit(12000)){throw 'Owned outcome observer did not exit.'}
+        Assert-Continuity ($Process.ExitCode -eq 0) 'Owned outcome observer failed outside its result protocol.'
+        return Get-Content -LiteralPath (Join-Path $Fixture "$Label.result") -Raw | ConvertFrom-Json
+    }
+    try {
+        $first=Start-OutcomeWorker a $Workspace
+        Wait-OutcomeMarker @('a.read')
+        $second=Start-OutcomeWorker b $otherWorkspace
+        Wait-OutcomeMarker @('b.read','b.result')
+        [IO.File]::WriteAllText((Join-Path $Fixture 'a.go'),'continue')
+        $firstResult=Complete-OutcomeWorker $first a
+        Assert-Continuity $firstResult.valid 'First actual outcome observer must succeed.'
+        [IO.File]::WriteAllText((Join-Path $Fixture 'b.go'),'continue')
+        $secondResult=Complete-OutcomeWorker $second b
+        if(-not $secondResult.valid){
+            Assert-Continuity ($secondResult.error -match 'busy|retry') 'Contention must return an explicit retryable ownership failure.'
+            $retry=Start-OutcomeWorker retry $otherWorkspace
+            $secondResult=Complete-OutcomeWorker $retry retry
+        }
+        Assert-Continuity $secondResult.valid 'Second actual outcome observer must succeed after retry.'
+        $saved=Get-Content -LiteralPath $Registry -Raw | ConvertFrom-Json
+        Assert-Continuity (@($saved.events).Count -eq 2) "$Owner concurrent successful observers silently lost a canonical outcome."
+        foreach($targetWorkspace in @($Workspace,$otherWorkspace)){
+            $verification=& (Join-Path $Tools $Manager) verify -WorkspacePath $targetWorkspace -Format Json | ConvertFrom-Json
+            Assert-Continuity $verification.valid "$Owner successful receipt must remain linked to a canonical event."
+        }
+        $beforeRepeat=[IO.File]::ReadAllText($Registry)
+        $repeat=& (Join-Path $Tools $Manager) observe -WorkspacePath $Workspace -Format Json | ConvertFrom-Json
+        Assert-Continuity ($repeat.valid -and $repeat.addedCount -eq 0 -and [IO.File]::ReadAllText($Registry) -ceq $beforeRepeat) 'Concurrent recovery must retain duplicate-observe idempotence.'
+        foreach($name in @('a.read','a.go','a.result')){[IO.File]::Delete((Join-Path $Fixture $name))}
+        $crashed=Start-OutcomeWorker a $Workspace
+        Wait-OutcomeMarker @('a.read')
+        if($Owner -eq 'Context'){
+            $preview=& (Join-Path $Tools $Manager) prune -Format Json | ConvertFrom-Json
+            Assert-Continuity $preview.valid 'Read-only prune preview must remain available during an observation.'
+            $pruneBlocked=$false
+            try {& (Join-Path $Tools $Manager) prune -Apply -Format Json | Out-Null}
+            catch {$pruneBlocked=$_.Exception.Message -match 'lease.*retry'}
+            Assert-Continuity $pruneBlocked 'Applied prune must share the observer registry lease.'
+        }
+        Stop-LlmWikiProcessTree $crashed
+        Assert-Continuity ([IO.File]::Exists("$Registry.lock")) 'Outcome recovery must retain a stable lease file.'
+        $afterCrash=& (Join-Path $Tools $Manager) observe -WorkspacePath $Workspace -Format Json | ConvertFrom-Json
+        Assert-Continuity ($afterCrash.valid -and $afterCrash.addedCount -eq 0 -and [IO.File]::ReadAllText($Registry) -ceq $beforeRepeat) 'A dead observer must release OS ownership without changing canonical events.'
+    } finally {
+        foreach($label in @('a','b')){[IO.File]::WriteAllText((Join-Path $Fixture "$label.go"),'release owned barrier')}
+        foreach($process in $workers){try{if(-not $process.HasExited){Stop-LlmWikiProcessTree $process}}finally{$process.Dispose()}}
+    }
+}
+$cases=if($Case -eq 'All') { @('ContextRecovery','ModelRecovery','InstructionRecovery','ModelForeign','InstructionForeign','Decomposition','ContextProfile','ContextConcurrent','ModelConcurrent','InstructionConcurrent') } else { @($Case) }
 foreach($scenario in $cases) {
     $sandbox=Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot
     $fixture=New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'audit-continuity'
@@ -53,6 +155,10 @@ foreach($scenario in $cases) {
         Write-ContinuityJson (Join-Path $absoluteWorkspace 'model-routing.json') $controlData.route
         Write-ContinuityJson (Join-Path $absoluteWorkspace 'context-strategy-application.json') $controlData.strategy
         Write-ContinuityJson (Join-Path $absoluteWorkspace 'change-packet.json') @{diff=@{scopes=@('Backend');modules=@()};brief=@{instructions=@();risk=@{level='low'}}}
+        if($scenario.EndsWith('Concurrent')) {
+            Test-ConcurrentOutcome -Tools $tools -Manager $manager -Registry $registry -Workspace $workspace -AbsoluteWorkspace $absoluteWorkspace -Fixture $fixture -Owner $owner
+            continue
+        }
         if($scenario -eq 'ContextProfile') {
             Set-StrictMode -Version Latest
             try { $profile=& (Join-Path $tools $manager) profile -WorkspacePath $workspace -Format Json | ConvertFrom-Json }

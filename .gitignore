@@ -67,6 +67,8 @@ Thumbs.db
 /FoodDiary.Web.Client/dist-admin/
 /coverage-results/
 /.artifacts/
+/.llm-wiki/knowledge/*.json.lock
+/.llm-wiki/knowledge/*.json.*.tmp
 __pycache__/
 .playwright-cli/
 /.codex-attachments/

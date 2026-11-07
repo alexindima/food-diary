@@ -127,3 +127,8 @@ the global registry.
 Observation retries recreate a missing workspace receipt from the existing
 canonical event. The event must belong to the requested workspace; copying a
 receipt from another task does not satisfy verification.
+
+Observation holds a stable registry `.lock` OS lease before reading the event
+chain. Competing writers receive an explicit retry error. Atomic JSON replacement
+keeps readers on a complete generation, and process exit releases ownership
+without removing the stable lease file.

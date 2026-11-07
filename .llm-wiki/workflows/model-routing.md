@@ -93,3 +93,8 @@ Optimization is deliberately bounded:
 This keeps the cold-start behavior deterministic and least-cost, while allowing
 real project evidence to spend more only where the measured quality gain supports
 it.
+
+Outcome observation holds a stable registry `.lock` OS lease across reading,
+validation, event append and receipt publication. Contention returns an explicit
+retry error. JSON replacement is atomic and process exit releases the lease;
+retry preserves every prior canonical outcome and remains idempotent.

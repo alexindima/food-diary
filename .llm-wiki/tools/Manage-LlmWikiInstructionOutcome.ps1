@@ -165,7 +165,11 @@ function Get-Profiles([object]$Registry) {
     } | Sort-Object path, fingerprint)
 }
 function Write-Registry([object]$Registry) {
-    [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    $temporary = "$registryPath.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        [IO.File]::WriteAllText($temporary, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if ([IO.File]::Exists($registryPath)) { [IO.File]::Replace($temporary, $registryPath, [NullString]::Value) } else { [IO.File]::Move($temporary, $registryPath) }
+    } finally { if ([IO.File]::Exists($temporary)) { [IO.File]::Delete($temporary) } }
 }
 function Write-WorkspaceOutcome([object]$Event, [string]$Fingerprint) {
     if ([string]$Event.workspace -cne $workspace) { throw 'Outcome event belongs to a different task workspace.' }
@@ -198,6 +202,13 @@ function Get-Candidates([object[]]$Profiles, [object]$Validation) {
     [pscustomobject][ordered]@{ action = 'candidates'; valid = $Validation.valid; issues = @($Validation.issues); registryFingerprint = $Validation.registryFingerprint; eligibleCount = @($candidates | Where-Object current).Count; candidates = $candidates }
 }
 
+$registryLease = $null
+if ($Action -eq 'observe') {
+    $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($registryPath))
+    try { $registryLease = [IO.File]::Open("$registryPath.lock", [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::Write, [IO.FileShare]::None) }
+    catch [IO.IOException] { throw "Outcome registry lease could not be acquired; retry if another writer is active. $($_.Exception.Message)" }
+}
+try {
 $registry = Read-Registry
 $validation = Test-Registry $registry
 if ($Action -eq 'observe') {
@@ -321,6 +332,7 @@ if ($Action -eq 'observe') {
     $result = [pscustomobject][ordered]@{ action = 'list'; valid = $validation.valid; issues = @($validation.issues); registryFingerprint = $validation.registryFingerprint; events = @($registry.events) }
 }
 
+} finally { if ($null -ne $registryLease) { $registryLease.Dispose() } }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Instruction outcomes: action=$Action, valid=$($result.valid), registry=$($validation.registryFingerprint)"
     if ($result.PSObject.Properties['metrics']) {
