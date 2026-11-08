@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4782,
-    "symbols": 4718,
+    "sourceFiles": 4792,
+    "symbols": 4728,
     "interfaceImplementationLinks": 213,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2442,
-      "enum": 75,
-      "interface": 429,
-      "record": 1629,
+      "class": 2446,
+      "enum": 76,
+      "interface": 430,
+      "record": 1633,
       "record struct": 143
     },
     "roles": {
-      "Command": 249,
-      "CommandHandler": 243,
+      "Command": 250,
+      "CommandHandler": 244,
       "Configuration": 105,
       "Controller": 118,
       "Entity": 106,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1946,
+      "Other": 1954,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -899,6 +899,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/BillingCancellationEmailJob.cs",
+      "line": 8
+    },
+    {
+      "name": "BillingCancellationTelegramJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/BillingCancellationTelegramJob.cs",
       "line": 8
     },
     {
@@ -6852,6 +6859,13 @@
       "line": 5
     },
     {
+      "name": "IBillingTelegramMessageSender",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs",
+      "line": 4
+    },
+    {
       "name": "IBillingTransactionRunner",
       "kind": "interface",
       "role": "Other",
@@ -6905,6 +6919,20 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationSnapshotModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingCancellationTelegramCandidateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramCandidateModel.cs",
+      "line": 5
+    },
+    {
+      "name": "BillingCancellationTelegramSnapshotModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramSnapshotModel.cs",
       "line": 2
     },
     {
@@ -6968,6 +6996,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramMessageDeliveryResult",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramMessageDeliveryResult.cs",
       "line": 2
     },
     {
@@ -7174,6 +7209,20 @@
       "line": 15
     },
     {
+      "name": "SendTelegramCancellationConfirmationsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "TelegramCancellationConfirmationContent",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/TelegramCancellationConfirmationContent.cs",
+      "line": 4
+    },
+    {
       "name": "StartPremiumTrialCommand",
       "kind": "record",
       "role": "Command",
@@ -7307,10 +7356,24 @@
       "line": 5
     },
     {
+      "name": "SendTelegramCancellationConfirmationsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs",
+      "line": 5
+    },
+    {
       "name": "BillingCancellationEmailRunResult",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Contracts/Models/BillingCancellationEmailRunResult.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingCancellationTelegramRunResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Contracts/Models/BillingCancellationTelegramRunResult.cs",
       "line": 2
     },
     {
@@ -7465,7 +7528,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "BillingDbContext",
@@ -7571,6 +7634,13 @@
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs",
       "line": 20
+    },
+    {
+      "name": "TelegramBillingMessageSender",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
+      "line": 10
     },
     {
       "name": "TelegramStarsBillingGateway",
@@ -34650,7 +34720,7 @@
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 134
+      "line": 135
     },
     {
       "service": "IIdempotencyStore",
@@ -34706,21 +34776,21 @@
       "implementation": "BillingPublicConfigProvider",
       "lifetime": "Singleton",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 19
+      "line": 21
     },
     {
       "service": "IBillingProviderGateway",
       "implementation": "StripeBillingGateway",
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 27
+      "line": 29
     },
     {
       "service": "IBillingProviderGatewayAccessor",
       "implementation": "ConfigurableBillingProviderGatewayAccessor",
       "lifetime": "Scoped",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "line": 38
+      "line": 40
     },
     {
       "service": "IDashboardBodyReadService",

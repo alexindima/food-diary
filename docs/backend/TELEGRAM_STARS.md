@@ -71,6 +71,22 @@ Cancellation uses the first recurring charge ID with
 period. The bot also accepts Telegram's subscription state updates. Cancellation
 and confirmed-payment intake continue when new checkout is disabled.
 
+The bot confirms disabled auto-renewal in a separate chat message with the paid
+Premium expiry, rendered in the account language (Russian or English) and profile
+time zone. An invalid or missing zone falls back to UTC; the displayed offset is
+explicit. The dedicated `billing-cancellation-telegram` job checks pending
+cancellations every minute, independently of email. A transient Telegram failure
+retains the intent for retry without changing cancellation or access. Completed
+notices and permanently unavailable recipients are marked handled separately
+from email. Telegram provides no sendMessage idempotency key, so a crash or an
+ambiguous response after actual delivery can still cause a repeated message.
+
+Before sending, the job checks the current active account, linked original payer,
+current Stars subscription, disabled renewal and matching unexpired paid period.
+Expired, resumed or superseded cancellations are skipped. This also applies to
+existing cancellation history when the nullable delivery marker is introduced;
+only still-current eligible cancellations can receive a confirmation on rollout.
+
 ## Refunds and support
 
 `/premium` opens subscription settings; `/terms` opens the page containing the

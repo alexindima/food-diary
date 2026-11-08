@@ -22,6 +22,10 @@ internal sealed class BillingCancellationConfiguration : IEntityTypeConfiguratio
         builder.Property(item => item.EffectiveAtUtc).HasColumnType("timestamp with time zone");
         builder.Property(item => item.FeedbackSubmittedAtUtc).HasColumnType("timestamp with time zone");
         builder.Property(item => item.ConfirmationEmailHandledAtUtc).HasColumnType("timestamp with time zone");
+        builder.Property(item => item.ConfirmationTelegramHandledAtUtc).HasColumnType("timestamp with time zone");
+        builder.HasIndex(item => new { item.ConfirmationTelegramHandledAtUtc, item.RequestedAtUtc })
+            .HasDatabaseName("IX_BillingCancellations_TelegramPending")
+            .HasFilter("\"ConfirmationTelegramHandledAtUtc\" IS NULL AND \"Provider\" = 'TelegramStars'");
         builder.HasIndex(item => new { item.ConfirmationEmailHandledAtUtc, item.RequestedAtUtc })
             .HasFilter("\"ConfirmationEmailHandledAtUtc\" IS NULL");
         builder.HasIndex(item => new { item.UserId, item.Provider, item.ExternalSubscriptionId, item.RequestedAtUtc });

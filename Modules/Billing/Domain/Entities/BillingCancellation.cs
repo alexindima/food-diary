@@ -18,6 +18,7 @@ public sealed class BillingCancellation : Entity<Guid> {
     public string? Comment { get; private set; }
     public DateTime? FeedbackSubmittedAtUtc { get; private set; }
     public DateTime? ConfirmationEmailHandledAtUtc { get; private set; }
+    public DateTime? ConfirmationTelegramHandledAtUtc { get; private set; }
 
     private BillingCancellation() { }
 

@@ -6,15 +6,15 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1795,
+    "candidateFields": 1801,
     "credential": 175,
-    "identity": 193,
-    "health": 831,
-    "financial": 169,
+    "identity": 196,
+    "health": 833,
+    "financial": 170,
     "privateContent": 427,
-    "boundaryFiles": 237,
+    "boundaryFiles": 238,
     "potentialLoggingLeads": 1,
-    "externalTransferLeads": 2
+    "externalTransferLeads": 3
   },
   "fields": [
     {
@@ -1310,7 +1310,7 @@
       "name": "BillingWebhookInbox",
       "type": "BillingRenewal,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 29
+      "line": 30
     },
     {
       "category": "financial",
@@ -1720,6 +1720,13 @@
     },
     {
       "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramSnapshotModel.cs",
+      "line": 5
+    },
+    {
+      "category": "financial",
       "name": "CustomerId",
       "type": "string",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
@@ -1954,7 +1961,7 @@
       "name": "ExternalSubscriptionId",
       "type": "subscription.ExternalSubscriptionId,",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 49
+      "line": 50
     },
     {
       "category": "financial",
@@ -2564,6 +2571,20 @@
       "type": "IQueryable<CycleConsent>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
       "line": 125
+    },
+    {
+      "category": "health",
+      "name": "FastingNotifications",
+      "type": "PaddleNotificationRecovery,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 34
+    },
+    {
+      "category": "health",
+      "name": "FastingTelemetryCleanup",
+      "type": "MarketingAttributionCleanup,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 42
     },
     {
       "category": "health",
@@ -8251,6 +8272,20 @@
     },
     {
       "category": "identity",
+      "name": "BillingCancellationTelegram",
+      "type": "BillingCancellationEmail,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 32
+    },
+    {
+      "category": "identity",
+      "name": "EmailOutbox",
+      "type": "ImageObjectDeletionOutbox,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 36
+    },
+    {
+      "category": "identity",
       "name": "TelegramStarsPrice",
       "type": "int?",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/BillingOverviewHttpResponse.cs",
@@ -8654,6 +8689,13 @@
       "type": "DateTime?",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
       "line": 20
+    },
+    {
+      "category": "identity",
+      "name": "ConfirmationTelegramHandledAtUtc",
+      "type": "DateTime?",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 21
     },
     {
       "category": "identity",
@@ -13011,6 +13053,13 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramSnapshotModel.cs",
+      "categories": [
+        "financial"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateModel.cs",
       "categories": [
         "financial",
@@ -14340,6 +14389,18 @@
         "description",
         "imageUrl",
         "promptTemplate",
+        "text"
+      ],
+      "categories": [
+        "privateContent"
+      ],
+      "evidence": "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
+      "line": 19,
+      "providerHost": "api.telegram.org",
+      "dataNames": [
         "text"
       ],
       "categories": [

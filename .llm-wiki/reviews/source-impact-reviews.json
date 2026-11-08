@@ -697,8 +697,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "55834d947be036028bea4a40d01ab4c03572ce3808d770dce093b3a2464c56aa",
-          "reviewReason": "Inspected task-finish registry additions: observed retrospective cost hypotheses only, in the append-only chain. No approval, experiment, materialization, durable memory or policy change occurred. The human review/apply boundary remains accurate; knowledge-isolation smoke passed."
+          "sha256": "ca08486b9ee4b7b4ff76ed8b2e00da6fac8f94ee6dfefcc25964895a85d5fcc4",
+          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -731,10 +731,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Inspected task-finish registry additions: observed retrospective cost hypotheses only, in the append-only chain. No approval, experiment, materialization, durable memory or policy change occurred. The human review/apply boundary remains accurate; knowledge-isolation smoke passed.",
+      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:34.2963611Z"
+      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
+      "reviewedAtUtc": "2026-11-08T14:00:40.1830373Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -853,14 +853,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d453a2487da3bb162d1ee60e9f8609e599bfda5b80261943ed606bba0093ad11",
-          "reviewReason": "Compared current workflow and new UserActivity index records with the owner factory, UTC/key/index/FK-cascade mapping, generated migration and atomic SQL. Real provider suites cover composition, concurrency, throttle and purge. No reader/ranking change occurred; the existing source-first checklist remains accurate."
+          "sha256": "c4a17e0c0f87f9f4ac9d6513507ba89aff6d7736f0b2d6da2b086f30a198300e",
+          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
         }
       ],
-      "reason": "Compared current workflow and new UserActivity index records with the owner factory, UTC/key/index/FK-cascade mapping, generated migration and atomic SQL. Real provider suites cover composition, concurrency, throttle and purge. No reader/ranking change occurred; the existing source-first checklist remains accurate.",
+      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:34.6394858Z"
+      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
+      "reviewedAtUtc": "2026-11-08T14:00:40.4377878Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1103,14 +1103,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "35fb408ccdcbc0b0e713b54082c3ddceaf3db4a27d5c55527966de4882c60eeb",
-          "reviewReason": "Inspected appended sealed-task outcome binding existing instruction fingerprints. No AGENTS edits, revision experiment, adoption or policy change occurred. Append-only attribution and explicit matched-cohort experiment rules remain accurate."
+          "sha256": "666fe4733f9d99aaf0a0c0c70d5de749e65c0dae28a3140be370ef06062d96cc",
+          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
         }
       ],
-      "reason": "Inspected appended sealed-task outcome binding existing instruction fingerprints. No AGENTS edits, revision experiment, adoption or policy change occurred. Append-only attribution and explicit matched-cohort experiment rules remain accurate.",
+      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:35.5668185Z"
+      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
+      "reviewedAtUtc": "2026-11-08T14:00:40.7458461Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1140,8 +1140,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "799810093eeabbc50ef0504ebd1f2a35bc12ed35d13a7ca411be38cb65e3587a",
-          "reviewReason": "Inspected the new observed eval candidate from retrospective cost signals. No approve/apply event or active/frozen case change occurred. The documented candidate lifecycle and nonautomatic activation guarantee remain accurate; knowledge-isolation smoke passed."
+          "sha256": "6d1c9788b8e2fb68ac63eedd78fc74ebb2dd970458619f8061a888d78d32f2f6",
+          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1164,10 +1164,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Inspected the new observed eval candidate from retrospective cost signals. No approve/apply event or active/frozen case change occurred. The documented candidate lifecycle and nonautomatic activation guarantee remain accurate; knowledge-isolation smoke passed.",
+      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:36.0514157Z"
+      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
+      "reviewedAtUtc": "2026-11-08T14:00:41.0581544Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1291,8 +1291,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3152a51b994560c446f9e8cfa1b151eb05742b61969dc66e0cbe75cbcf4696dd",
-          "reviewReason": "Reviewed refreshed candidates and actual lifecycle: one server UTC instant, claims-scoped writes, existing privileged admin access, nullable owner-only export and account-purge cascade. No action/content history, external transfer or sensitive payload logging was added. The minimization and lifecycle review guidance remains accurate."
+          "sha256": "01b39c866c6b53a0dff4f05ec643cfa6359a4eb5e377cedb397afb6a37a8728e",
+          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1305,10 +1305,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed refreshed candidates and actual lifecycle: one server UTC instant, claims-scoped writes, existing privileged admin access, nullable owner-only export and account-purge cascade. No action/content history, external transfer or sensitive payload logging was added. The minimization and lifecycle review guidance remains accurate.",
+      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:36.5668939Z"
+      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
+      "reviewedAtUtc": "2026-11-08T14:00:41.3822108Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1505,18 +1505,18 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "dc19a28adee0959a37cfa489ead8e0aceaa31ef2dd04ddac10c4a05e489a7918",
+      "pageSha256": "dcc4e6b4b00519a2985eaf6a13da4ab8992df26c6887f543bc6d37a36e8f9884",
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0eda44ef1acb416304e9c87f35d7c2a5ce49e25e186c522084a4108919e90dae",
-          "reviewReason": "Reviewed updated topology: existing API/frontend, with no added host, worker, external provider, webhook or job. Activity has cancellation, atomic upsert and bounded foreground attempts; migration-first rollout is documented. Existing freshness, behavior-signal and owned cleanup guidance remains accurate."
+          "sha256": "13ae6b91f9abb64ed23c1311c7568ea97766ee62254654a22cdb8314f14cba52",
+          "reviewReason": "Reviewed the new independent minute BillingCancellationTelegramJob and typed Telegram message sender, per-user lease, short retryable transactions, terminal403 vs retryable transport/configuration outcomes, marker-only commit and aggregate telemetry. Replaced the old change-specific no-new-worker wording with durable inventory guidance. The topology and direct code/tests agree; ambiguous sendMessage acknowledgement remains documented at-least-once delivery."
         }
       ],
-      "reason": "Reviewed updated topology: existing API/frontend, with no added host, worker, external provider, webhook or job. Activity has cancellation, atomic upsert and bounded foreground attempts; migration-first rollout is documented. Existing freshness, behavior-signal and owned cleanup guidance remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:37.7497887Z"
+      "reason": "Reviewed the new independent minute BillingCancellationTelegramJob and typed Telegram message sender, per-user lease, short retryable transactions, terminal403 vs retryable transport/configuration outcomes, marker-only commit and aggregate telemetry. Replaced the old change-specific no-new-worker wording with durable inventory guidance. The topology and direct code/tests agree; ambiguous sendMessage acknowledgement remains documented at-least-once delivery.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:44.6265964Z"
     },
     {
       "pageId": "workflow-security-review",

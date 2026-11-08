@@ -105,6 +105,8 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "AtomicCommandReceiptMaintenance.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Persistence", "NotificationRepository.cs"),
+            // Mark only Telegram delivery after HTTP, without saving stale cancellation/feedback/email state.
+            ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "BillingCancellationRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Infrastructure", "Persistence", "FastingTelemetryEventRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingAttributionEventRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingUserDataPurgeParticipant.cs"),

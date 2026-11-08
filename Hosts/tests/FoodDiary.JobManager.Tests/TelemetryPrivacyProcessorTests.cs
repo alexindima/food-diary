@@ -7,6 +7,18 @@ namespace FoodDiary.JobManager.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelemetryPrivacyProcessorTests {
+    [Theory]
+    [InlineData("https://api.telegram.org/bot123:synthetic/sendMessage")]
+    [InlineData("https://api.telegram.org/bot123:synthetic/test/sendMessage?token=secret")]
+    public void TelegramBotUrl_RemovesCredentialBearingPath(string url) {
+        using Activity activity = new Activity("telegram-notice-test").Start();
+        activity.SetTag("url.full", url);
+
+        CreateProcessor().OnEnd(activity);
+
+        Assert.Equal("https://api.telegram.org", activity.GetTagItem("url.full"));
+    }
+
     private static readonly Type ProcessorType = typeof(JobManagerTelemetryServiceCollectionExtensions).Assembly.GetType(
         "FoodDiary.JobManager.Services.TelemetryPrivacyProcessor",
         throwOnError: true)!;

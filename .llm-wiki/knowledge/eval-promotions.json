@@ -986,7 +986,7 @@
       "sequence": 5,
       "kind": "observed",
       "candidateId": "learned-4bf290068948a374",
-      "createdAtUtc": "2026-10-23T20:05:10.7218780Z",
+      "createdAtUtc": "2026-10-23T20:05:10.721878Z",
       "previousHash": "d4edf57d72271018bce04573a4724c4c0de6093d196804b789aa2708a2cb96ed",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/session-lifecycle",
@@ -1240,7 +1240,7 @@
       "sequence": 7,
       "kind": "observed",
       "candidateId": "learned-06ed3ff3c2f9e542",
-      "createdAtUtc": "2026-10-26T20:25:15.2695400Z",
+      "createdAtUtc": "2026-10-26T20:25:15.26954Z",
       "previousHash": "487df5e41b1f6e6e437bec9bdb3f9faf4b939d683b919ec364c306a661a3da3a",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/authentication-throttling",
@@ -2887,7 +2887,7 @@
       "sequence": 18,
       "kind": "observed",
       "candidateId": "learned-e3a5135769a8d1b7",
-      "createdAtUtc": "2026-11-03T13:56:32.9246160Z",
+      "createdAtUtc": "2026-11-03T13:56:32.924616Z",
       "previousHash": "99e3adfe01c30a6fc9ae78978f6e034908b1b5a969b53ef8cc32bb0a7eb03507",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/marketing-consent-card",
@@ -3790,7 +3790,7 @@
       "sequence": 28,
       "kind": "observed",
       "candidateId": "learned-626d089e8d62b1cc",
-      "createdAtUtc": "2026-11-08T10:43:23.1250490Z",
+      "createdAtUtc": "2026-11-08T10:43:23.125049Z",
       "previousHash": "6da1c594c8a5cc52c614e439bb23762e3a4b1120e4043a3037b879aa7b4365ca",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/admin-last-active",
@@ -4006,6 +4006,132 @@
       },
       "reason": "",
       "eventHash": "d19df4d3e68f6583415d4b19541e54f7aeb3ed798543ee7889abb4486ef7674f"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 29,
+      "kind": "observed",
+      "candidateId": "learned-28f06a566533a46a",
+      "createdAtUtc": "2026-11-08T12:39:45.3815743Z",
+      "previousHash": "d19df4d3e68f6583415d4b19541e54f7aeb3ed798543ee7889abb4486ef7674f",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/stars-cancellation-notice",
+        "retrospectiveHash": "c85a786195fd3cab5eca79d1b9e607c5a5d96674616c1ce7d25e52b8f6f31bbd",
+        "packetFingerprint": "d84515e691ed574e85599bc8fbbc8be7c935f9abdb87d93ab09bdf4e2e81538a",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=2814.29%"
+            ]
+          },
+          {
+            "id": "cost-data-access-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'data-access-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "data-access-integration-tests",
+              "error=68.16%"
+            ]
+          },
+          {
+            "id": "cost-infrastructure-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'infrastructure-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=118.61%",
+              "infrastructure-integration-tests"
+            ]
+          },
+          {
+            "id": "cost-migration-format",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'migration-format'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1925%",
+              "migration-format"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-28f06a566533a46a",
+          "changedPaths": [
+            "docs/backend/TELEGRAM_STARS.md",
+            "FoodDiary.Infrastructure/Migrations/20261108115006_AddBillingCancellationTelegramConfirmation.cs",
+            "FoodDiary.Infrastructure/Migrations/20261108115006_AddBillingCancellationTelegramConfirmation.Designer.cs",
+            "FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs",
+            "FoodDiary.JobManager/Services/BillingCancellationTelegramJob.cs",
+            "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
+            "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+            "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+            "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
+            "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
+            "Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationTelegramJobTests.cs",
+            "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+            "Hosts/tests/FoodDiary.JobManager.Tests/TelemetryPrivacyProcessorTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/TelemetryPrivacyProcessorTests.cs",
+            "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs",
+            "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs",
+            "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramCandidateModel.cs",
+            "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramSnapshotModel.cs",
+            "Modules/Billing/Application.Abstractions/Models/TelegramMessageDeliveryResult.cs",
+            "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+            "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/TelegramCancellationConfirmationContent.cs",
+            "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs",
+            "Modules/Billing/Contracts/Models/BillingCancellationTelegramRunResult.cs",
+            "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+            "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
+            "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
+            "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+            "Modules/Billing/PersistenceModel/BillingCancellationConfiguration.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.TelegramMessages.cs",
+            "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BillingCancellationTelegramRepositoryTests.cs",
+            "Tooling/tests/FoodDiary.ArchitectureTests/PersistenceTransactionGuardrailTests.cs"
+          ],
+          "expectedModules": [
+            "Billing"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Database",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-decision",
+            "backend-boundaries",
+            "backend-public-contract",
+            "deployment-rollout",
+            "domain-invariant",
+            "ef-migration",
+            "observability-critical-flow",
+            "performance-data-access",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests",
+            "data-access-integration-tests",
+            "infrastructure-integration-tests",
+            "migration-format"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "58bec859e7493f72238d223b8a081dbe022dbe1cfcbcd4bfb7e802061467e833"
+      },
+      "reason": "",
+      "eventHash": "e90cd8ebc9440bda48a133d756922e3f1fce0f9259e34b0a31c463afe5c058e1"
     }
   ]
 }

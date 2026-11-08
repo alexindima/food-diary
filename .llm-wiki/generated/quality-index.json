@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6975,
+    "productionFiles": 6985,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
-    "criticalSymbols": 1049,
-    "criticalSymbolsWithTestReferences": 1005,
+    "criticalSymbols": 1050,
+    "criticalSymbolsWithTestReferences": 1006,
     "criticalSymbolsWithoutTestReferences": 44,
     "debtMarkers": 12
   },
@@ -3633,6 +3633,14 @@
       "structuralRiskScore": 6.64
     },
     {
+      "path": "FoodDiary.JobManager/Services/BillingCancellationTelegramJob.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.64
+    },
+    {
       "path": "FoodDiary.JobManager/Services/BillingRenewalJob.cs",
       "nonBlankLines": 49,
       "decisionPoints": 5,
@@ -3810,11 +3818,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "nonBlankLines": 129,
+      "nonBlankLines": 130,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.58
+      "structuralRiskScore": 2.6
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetry.cs",
@@ -3914,27 +3922,27 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "nonBlankLines": 43,
+      "nonBlankLines": 45,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.86
+      "structuralRiskScore": 0.9
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-      "nonBlankLines": 159,
+      "nonBlankLines": 163,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.18
+      "structuralRiskScore": 12.26
     },
     {
       "path": "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 55,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.54
+      "structuralRiskScore": 17.6
     },
     {
       "path": "FoodDiary.JobManager/Services/UnavailableNotificationTestScheduler.cs",
@@ -5586,11 +5594,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
-      "nonBlankLines": 84,
+      "nonBlankLines": 87,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.68
+      "structuralRiskScore": 19.74
     },
     {
       "path": "FoodDiary.Web.Api/HealthChecks/DistributedCacheHealthCheck.cs",
@@ -26082,11 +26090,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs",
@@ -26161,6 +26169,14 @@
       "structuralRiskScore": 0.38
     },
     {
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -26223,6 +26239,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramCandidateModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramSnapshotModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
@@ -26295,6 +26327,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.66
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramMessageDeliveryResult.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateModel.cs",
@@ -26537,6 +26577,22 @@
       "structuralRiskScore": 18.4
     },
     {
+      "path": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "nonBlankLines": 92,
+      "decisionPoints": 19,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 32.34
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/TelegramCancellationConfirmationContent.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5
+    },
+    {
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -26689,7 +26745,23 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Billing/Contracts/Models/BillingCancellationEmailRunResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Contracts/Models/BillingCancellationTelegramRunResult.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -26770,11 +26842,11 @@
     },
     {
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "nonBlankLines": 86,
+      "nonBlankLines": 87,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.22
+      "structuralRiskScore": 27.24
     },
     {
       "path": "Modules/Billing/Domain/Entities/BillingDomainGuard.cs",
@@ -26866,11 +26938,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 4,
+      "nonBlankLines": 65,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.76
+      "structuralRiskScore": 16.3
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
@@ -27001,6 +27073,14 @@
       "structuralRiskScore": 72
     },
     {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 21.76
+    },
+    {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
       "nonBlankLines": 107,
       "decisionPoints": 21,
@@ -27034,11 +27114,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.78
+      "structuralRiskScore": 0.82
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Options.cs",
@@ -27090,11 +27170,11 @@
     },
     {
       "path": "Modules/Billing/PersistenceModel/BillingCancellationConfiguration.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
+      "structuralRiskScore": 0.64
     },
     {
       "path": "Modules/Billing/PersistenceModel/BillingPaymentConfiguration.cs",
@@ -58899,6 +58979,18 @@
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/FastingReminderSemanticBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "SendTelegramCancellationConfirmationsCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "line": 14,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
