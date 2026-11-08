@@ -30,6 +30,21 @@ class FrontendPipelineTests(unittest.TestCase):
 
 
 class HostCollectorTests(unittest.TestCase):
+    def test_rabbit_probe_allows_healthy_cli_startup_before_rpc(self):
+        def delayed_cli(args, **options):
+            # The broker is responsive, but starting its separate Erlang CLI VM
+            # can exceed ten seconds on the shared VPS during deployment.
+            if options["timeout"] < 12:
+                raise collector.subprocess.TimeoutExpired(args, options["timeout"])
+            return collector.subprocess.CompletedProcess(args, 0,
+                '[{"messages_ready":3,"messages_unacknowledged":2,"consumers":1}]')
+
+        metrics = collector.Metrics()
+        with patch.object(collector.subprocess, "run", side_effect=delayed_cli):
+            collector.collect_rabbitmq(metrics)
+        self.assertIn('fooddiary_rabbitmq_messages_ready 3', metrics.render())
+        self.assertIn('fooddiary_rabbitmq_consumers 1', metrics.render())
+
     def test_failed_probe_records_type_without_command_or_secret(self):
         def fail(_):
             raise collector.subprocess.TimeoutExpired(["private-command", "sensitive-value"], 10, output="private-response")

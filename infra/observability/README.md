@@ -76,6 +76,13 @@ they do not establish that the measured service is down. The collector records
 only the fixed component and exception class in the systemd journal, never the
 exception message, command or response. Correlate failures during deployment
 with container health and a subsequent successful measurement.
+
+The RabbitMQ probe gives its separate diagnostic CLI VM a 20-second total
+budget, including startup, while retaining the five-second broker RPC timeout.
+Only that short-lived VM uses one scheduler and one async thread via
+[`RABBITMQ_CTL_ERL_ARGS`](https://www.rabbitmq.com/docs/runtime#configuring-flags);
+the broker runtime is unchanged. A failed or timed-out measurement still emits
+`component="rabbitmq"` success zero rather than invented queue values.
 Grouped notifications show at most three active and two resolved alerts and
 explicitly report omitted entries to keep Telegram messages bounded. Recipients,
 evaluation, grouping and repeat intervals belong to the existing configuration.

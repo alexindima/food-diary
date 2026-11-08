@@ -226,8 +226,11 @@ def collect_redis(metrics):
 
 
 def collect_rabbitmq(metrics):
-    queues = json.loads(run(["docker", "exec", "fooddiary-rabbitmq-1", "rabbitmqctl", "-q", "--timeout", "5",
-                             "list_queues", "--formatter", "json", "messages_ready", "messages_unacknowledged", "consumers"], timeout=10))
+    # The short-lived Erlang CLI has its own startup cost before the five-second
+    # broker RPC deadline. Keep its VM small and allow startup on the shared VPS.
+    queues = json.loads(run(["docker", "exec", "-e", "RABBITMQ_CTL_ERL_ARGS=+S 1:1 +A 1",
+                             "fooddiary-rabbitmq-1", "rabbitmqctl", "-q", "--timeout", "5",
+                             "list_queues", "--formatter", "json", "messages_ready", "messages_unacknowledged", "consumers"], timeout=20))
     metrics.add("rabbitmq_queues", len(queues))
     for key in ["messages_ready", "messages_unacknowledged", "consumers"]:
         metrics.add("rabbitmq_" + key, sum(int(q[key]) for q in queues))
