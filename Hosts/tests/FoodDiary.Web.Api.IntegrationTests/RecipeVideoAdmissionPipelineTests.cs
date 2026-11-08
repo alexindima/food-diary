@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -18,10 +20,12 @@ public sealed class RecipeVideoAdmissionPipelineTests {
     [InlineData(false)]
     public async Task StalledMultipartUpload_AbortsAndReleasesAdmissionAsync(bool knownLength) {
         var clock = new UploadTimeProvider();
+        var pipelineCompleted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         await using var original = new TransportApiWebApplicationFactory();
         await using WebApplicationFactory<Program> factory = original.WithWebHostBuilder(builder => builder.ConfigureTestServices(services => {
             services.RemoveAll<TimeProvider>();
             services.AddSingleton<TimeProvider>(clock);
+            services.AddSingleton<IStartupFilter>(new UploadCompletionFilter(pipelineCompleted));
         }));
         using HttpClient client = factory.CreateClient();
         var userId = Guid.NewGuid();
@@ -39,6 +43,7 @@ public sealed class RecipeVideoAdmissionPipelineTests {
             context.Request.Headers[TestAuthenticationHandler.UserIdHeader] = userId.ToString("D");
             context.Request.Headers[TestAuthenticationHandler.RoleHeader] = "Premium";
             context.Request.Headers.XRequestedWith = "XMLHttpRequest";
+            context.Request.Headers[UploadCompletionFilter.Header] = "true";
         }, CancellationToken.None);
         try {
             await body.Started.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None);
@@ -55,6 +60,8 @@ public sealed class RecipeVideoAdmissionPipelineTests {
         } finally {
             body.Release();
             _ = await Record.ExceptionAsync(async () => _ = await request);
+            // Client cancellation can complete before the resource filter releases admission.
+            await pipelineCompleted.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, CancellationToken.None);
         }
         // The same identity can enter again; missing idempotency is rejected after binding.
         using var retry = new MultipartFormDataContent { { new StringContent("Salad"), "text" } };
@@ -98,6 +105,24 @@ public sealed class RecipeVideoAdmissionPipelineTests {
 
         response.EnsureSuccessStatusCode();
         Assert.Contains("Salad", await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class UploadCompletionFilter(TaskCompletionSource completion) : IStartupFilter {
+        public const string Header = "X-Test-Stalled-Upload";
+
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next) => app => {
+            app.Use(async (HttpContext context, RequestDelegate nextMiddleware) => {
+                try {
+                    await nextMiddleware(context);
+                } finally {
+                    if (context.Request.Headers.ContainsKey(Header)) {
+                        completion.TrySetResult();
+                    }
+                }
+            });
+            next(app);
+        };
     }
 
     [ExcludeFromCodeCoverage]
