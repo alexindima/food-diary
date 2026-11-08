@@ -100,8 +100,11 @@ public partial class BillingFeatureTests {
         DateTime renewalStart = fixture.Now.AddSeconds(periodSeconds);
         DateTime renewalEnd = renewalStart.AddSeconds(periodSeconds);
         ResultAssert.Success(await fixture.SendAsync(paid with {
-            UpdateId = 40, PaymentChargeId = "short_renewal", IsFirstRecurring = false,
-            SubscriptionExpirationUtc = renewalEnd, PaymentOccurredAtUtc = renewalStart,
+            UpdateId = 40,
+            PaymentChargeId = "short_renewal",
+            IsFirstRecurring = false,
+            SubscriptionExpirationUtc = renewalEnd,
+            PaymentOccurredAtUtc = renewalStart,
         }));
         Assert.Multiple(() => {
             Assert.Equal(renewalStart, fixture.Subscription.CurrentPeriodStartUtc);
