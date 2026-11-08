@@ -63,7 +63,9 @@ internal sealed record CodexMcpTestConfiguration(
             command,
             arguments,
             configuredArguments,
-            Path.GetFullPath(Path.Combine(repositoryRoot, configuredWorkingDirectory)),
+            usesConfiguredLauncher
+                ? Path.GetFullPath(Path.Combine(repositoryRoot, configuredWorkingDirectory))
+                : Path.GetFullPath(repositoryRoot),
             enabledTools,
             required,
             usesConfiguredLauncher);

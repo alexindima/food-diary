@@ -1782,7 +1782,13 @@ test.describe('dashboard regression writes', () => {
     test('layout mode toggles a measurement card without navigating to history or saving prematurely', async ({ page }) => {
         const writes: string[] = [];
         page.on('request', request => {
-            if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method()) && request.url().includes('/api/v1/users/')) {
+            const path = new URL(request.url()).pathname;
+            // The foreground heartbeat can run while the layout editor is open.
+            if (
+                path !== '/api/v1/users/activity' &&
+                path.startsWith('/api/v1/users/') &&
+                ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method())
+            ) {
                 writes.push(request.url());
             }
         });

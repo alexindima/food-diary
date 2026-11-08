@@ -12,10 +12,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    [Migration("20261108081027_AddUserForegroundActivity")]
+    [Migration("20261108141136_AddUserForegroundActivity")]
     partial class AddUserForegroundActivity
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -501,6 +500,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("ConfirmationEmailHandledAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("ConfirmationTelegramHandledAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -553,6 +555,10 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasIndex("ConfirmationEmailHandledAtUtc", "RequestedAtUtc")
                         .HasFilter("\"ConfirmationEmailHandledAtUtc\" IS NULL");
+
+                    b.HasIndex("ConfirmationTelegramHandledAtUtc", "RequestedAtUtc")
+                        .HasDatabaseName("IX_BillingCancellations_TelegramPending")
+                        .HasFilter("\"ConfirmationTelegramHandledAtUtc\" IS NULL AND \"Provider\" = 'TelegramStars'");
 
                     b.HasIndex("UserId", "Provider", "ExternalSubscriptionId", "RequestedAtUtc");
 

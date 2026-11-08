@@ -1509,14 +1509,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "13ae6b91f9abb64ed23c1311c7568ea97766ee62254654a22cdb8314f14cba52",
-          "reviewReason": "Reviewed the new independent minute BillingCancellationTelegramJob and typed Telegram message sender, per-user lease, short retryable transactions, terminal403 vs retryable transport/configuration outcomes, marker-only commit and aggregate telemetry. Replaced the old change-specific no-new-worker wording with durable inventory guidance. The topology and direct code/tests agree; ambiguous sendMessage acknowledgement remains documented at-least-once delivery."
+          "sha256": "1c6ad708bf709a11d91944e43088a92e4a18b75c5160411627696eca7fac7385",
+          "reviewReason": "Reviewed the merged runtime inventory against blue_green.py, the Users activity and Billing Telegram cancellation sources. The incoming Billing cancellation job is explicitly inventoried as a hosted/recurring boundary and the existing page still requires opening the implementation for cancellation, delivery and recovery guarantees. Local pre-push accepted the already-Reviewed page state, while CI compared the full published source delta and requires an explicit current source-hash receipt. No runtime workflow guidance or delivery behavior was changed."
         }
       ],
-      "reason": "Reviewed the new independent minute BillingCancellationTelegramJob and typed Telegram message sender, per-user lease, short retryable transactions, terminal403 vs retryable transport/configuration outcomes, marker-only commit and aggregate telemetry. Replaced the old change-specific no-new-worker wording with durable inventory guidance. The topology and direct code/tests agree; ambiguous sendMessage acknowledgement remains documented at-least-once delivery.",
-      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
-      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
-      "reviewedAtUtc": "2026-11-08T12:45:44.6265964Z"
+      "reason": "Reviewed the merged runtime inventory against blue_green.py, the Users activity and Billing Telegram cancellation sources. The incoming Billing cancellation job is explicitly inventoried as a hosted/recurring boundary and the existing page still requires opening the implementation for cancellation, delivery and recovery guarantees. Local pre-push accepted the already-Reviewed page state, while CI compared the full published source delta and requires an explicit current source-hash receipt. No runtime workflow guidance or delivery behavior was changed.",
+      "baseRef": "380bb1248dcada0947c566079643b460e89a90b5",
+      "gitHead": "378b8bb17b29bad907b91abbc5edb8bae9a249eb",
+      "reviewedAtUtc": "2026-11-08T14:13:12.6746654Z"
     },
     {
       "pageId": "workflow-security-review",

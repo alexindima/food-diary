@@ -45,6 +45,30 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         Assert.False(context.Database.HasPendingModelChanges());
     }
 
+    [RequiresDockerFact]
+    public async Task BillingCancellationSchema_UpgradeAddsUserActivityWithoutChangingExistingUsers() {
+        await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
+        await context.GetService<IMigrator>().MigrateAsync("20261108115006_AddBillingCancellationTelegramDelivery");
+        Assert.False(await context.Database.SqlQuery<bool>($"""
+            SELECT to_regclass('"UserActivities"') IS NOT NULL AS "Value"
+            """).SingleAsync());
+        string[] appliedBefore = [.. await context.Database.GetAppliedMigrationsAsync()];
+        UserId userId = await InitialBaselineUserFixture.InsertAsync(context, "activity-upgrade@example.com", "ru");
+
+        await context.Database.MigrateAsync();
+
+        string[] appliedAfter = [.. await context.Database.GetAppliedMigrationsAsync()];
+        Assert.Equal(appliedBefore, appliedAfter.Take(appliedBefore.Length), StringComparer.Ordinal);
+        Assert.Single(appliedAfter.Skip(appliedBefore.Length));
+        Assert.Equal(0, await context.Database.SqlQuery<int>($"""
+            SELECT count(*)::integer AS "Value" FROM "UserActivities"
+            """).SingleAsync());
+        User preservedUser = await context.Users.AsNoTracking().SingleAsync(user => user.Id == userId);
+        Assert.Equal("ru", preservedUser.Language);
+        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        Assert.False(context.Database.HasPendingModelChanges());
+    }
+
     [RequiresDockerTheory]
     [InlineData(false)]
     [InlineData(true)]
