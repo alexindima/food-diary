@@ -1691,3 +1691,130 @@ groups:
     annotations:
       summary: User API availability budget burns steadily
       runbook: infra/observability/README.md
+  - uid: fd-telegram-intake-stalled
+    title: Telegram has no successful intake heartbeat
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: cfhlezxl8fdvka
+      relativeTimeRange:
+        from: 900
+        to: 0
+      model:
+        datasource:
+          type: loki
+          uid: cfhlezxl8fdvka
+        expr: sum(absent_over_time({compose_service="telegram-bot"} |= "Telegram loop
+          telemetry intake." |~ "SuccessfulPolls=[1-9][0-9]*;" [5m])) or vector(0)
+        instant: true
+        range: false
+        refId: A
+        editorMode: code
+        queryType: instant
+    - refId: B
+      datasourceUid: __expr__
+      relativeTimeRange:
+        from: 0
+        to: 0
+      model:
+        type: reduce
+        expression: A
+        reducer: last
+        refId: B
+    - refId: C
+      datasourceUid: __expr__
+      relativeTimeRange:
+        from: 0
+        to: 0
+      model:
+        type: threshold
+        expression: B
+        refId: C
+        conditions:
+        - evaluator:
+            type: gt
+            params:
+            - 0
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            type: last
+            params: []
+          type: query
+    noDataState: Alerting
+    execErrState: Error
+    for: 2m
+    isPaused: false
+    labels:
+      severity: critical
+      service: telegram-bot
+    annotations:
+      summary: Telegram has no successful intake heartbeat
+      runbook: infra/observability/README.md
+  - uid: fd-telegram-errors
+    title: Telegram transport repeatedly fails
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: cfhlezxl8fdvka
+      relativeTimeRange:
+        from: 900
+        to: 0
+      model:
+        datasource:
+          type: loki
+          uid: cfhlezxl8fdvka
+        expr: sum(count_over_time({compose_service="telegram-bot"} |~ "Telegram (intake
+          paused|work discovery failed|operation .* will resume|bot error|API error)"
+          [10m])) or vector(0)
+        instant: true
+        range: false
+        refId: A
+        editorMode: code
+        queryType: instant
+    - refId: B
+      datasourceUid: __expr__
+      relativeTimeRange:
+        from: 0
+        to: 0
+      model:
+        type: reduce
+        expression: A
+        reducer: last
+        refId: B
+    - refId: C
+      datasourceUid: __expr__
+      relativeTimeRange:
+        from: 0
+        to: 0
+      model:
+        type: threshold
+        expression: B
+        refId: C
+        conditions:
+        - evaluator:
+            type: gt
+            params:
+            - 5
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            type: last
+            params: []
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 2m
+    isPaused: false
+    labels:
+      severity: warning
+      service: telegram-bot
+    annotations:
+      summary: Telegram transport repeatedly fails
+      runbook: infra/observability/README.md

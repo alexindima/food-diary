@@ -150,6 +150,10 @@ def generate():
         alert("fd-api-budget-fast", "User API availability budget burns rapidly", '(fooddiary:api_error_ratio_1h > bool 0.0144) * (fooddiary:api_error_ratio_5m > bool 0.0144) and on() (fooddiary:api_eligible_requests_5m > 10)', pending="0m", severity="critical", service="api"),
         alert("fd-api-budget-slow", "User API availability budget burns steadily", '(fooddiary:api_error_ratio_6h > bool 0.006) * (fooddiary:api_error_ratio_30m > bool 0.006) and on() (fooddiary:api_eligible_requests_5m > 10)', pending="0m", service="api"),
     ]
+    rules.extend([
+        alert("fd-telegram-intake-stalled", "Telegram has no successful intake heartbeat", 'sum(absent_over_time({compose_service="telegram-bot"} |= "Telegram loop telemetry intake." |~ "SuccessfulPolls=[1-9][0-9]*;" [5m])) or vector(0)', pending="2m", severity="critical", service="telegram-bot", no_data="Alerting", datasource=LOKI),
+        alert("fd-telegram-errors", "Telegram transport repeatedly fails", 'sum(count_over_time({compose_service="telegram-bot"} |~ "Telegram (intake paused|work discovery failed|operation .* will resume|bot error|API error)" [10m])) or vector(0)', 5, "2m", service="telegram-bot", datasource=LOKI),
+    ])
     (ROOT / "grafana/fooddiary-operational-alerting.yml").write_text(yaml.safe_dump({"apiVersion": 1, "groups": [{"orgId": 1, "name": "FoodDiary Operational Coverage", "folder": "Infrastructure", "interval": "1m", "rules": rules}]}, sort_keys=False, allow_unicode=True), encoding="utf-8", newline="\n")
 
     original_path = ROOT / "grafana/fooddiary-backend-alerting.yml"
@@ -199,6 +203,22 @@ def generate():
         panel("Free inode fraction", 'node_filesystem_files_free{mountpoint="/"}/node_filesystem_files{mountpoint="/"}', "percentunit"),
     ]
     write_json(ROOT / "grafana/fooddiary-operations.json", dashboard("fooddiary-operations", "FoodDiary Operational Coverage", infra_panels))
+
+    telegram = '{compose_service="telegram-bot"} |= "Telegram loop telemetry " | regexp "Telegram loop telemetry (?P<loop>intake|discovery)\\\\." | loop!=""'
+    def loop_sum(field):
+        return f'sum by(loop)(sum_over_time({telegram} | regexp "{field}=(?P<value>[0-9]+)" | unwrap value | __error__="" [5m]))'
+    telegram_panels = [
+        panel("Bot container running", 'fooddiary_container_running{service="telegram-bot"}'),
+        panel("Bot working set", 'fooddiary_container_memory_working_set_bytes{service="telegram-bot"}', "bytes"),
+        panel("Bot restart snapshot", 'fooddiary_container_restarts{service="telegram-bot"}'),
+        panel("Successful polls reported over 5 minutes", loop_sum("SuccessfulPolls"), datasource=LOKI),
+        panel("Failed polls reported over 5 minutes", loop_sum("FailedPolls"), datasource=LOKI),
+        panel("Last successful poll", f'max by(loop)(last_over_time({telegram} | regexp "LastSuccessUnixSeconds=(?P<value>[0-9]+)" | unwrap value | __error__="" [5m])) * 1000', "dateTimeAsIso", LOKI),
+        panel("Reported mean poll duration", f'avg by(loop)(avg_over_time({telegram} | regexp "AverageDurationMs=(?P<value>[0-9]+)" | unwrap value | __error__="" [5m]))', "ms", LOKI, description="Mean of minute summaries. Intake includes Telegram long polling and persistence; discovery measures the ready-work request, not user operation latency."),
+        panel("Operational failures over 10 minutes", 'sum(count_over_time({compose_service="telegram-bot"} |~ "Telegram (intake paused|work discovery failed|operation .* will resume|bot error|API error)" [10m])) or vector(0)', datasource=LOKI),
+        {"title": "Recent operational diagnostics", "type": "logs", "datasource": {"type": "loki", "uid": LOKI}, "targets": [{"expr": '{compose_service="telegram-bot"} |~ "Telegram (intake paused|work discovery failed|operation .* (resume|invalid)|API error|bot error|photo progress notice)"', "refId": "A", "maxLines": 100}], "options": {"showTime": True, "wrapLogMessage": True}},
+    ]
+    write_json(ROOT / "grafana/fooddiary-telegram.json", dashboard("fooddiary-telegram", "FoodDiary Telegram Operations", telegram_panels))
 
     prefix = '{log_source="frontend"} | regexp "Client telemetry event (?P<category>client_error|http_request|route_timing|web_vital)/"'
     build = ' | regexp "BuildVersion=(?P<build_version>[a-zA-Z0-9.+_-]{1,64})"'

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6962,
+    "productionFiles": 6964,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1047,
@@ -448,11 +448,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 310,
+      "nonBlankLines": 314,
       "decisionPoints": 83,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.7
+      "structuralRiskScore": 130.78
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
@@ -5338,19 +5338,35 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/DurableTelegramReceiver.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 42,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.26
+      "structuralRiskScore": 11.34
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramLoopKind.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramLoopTelemetry.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.7
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 310,
+      "nonBlankLines": 314,
       "decisionPoints": 83,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.7
+      "structuralRiskScore": 130.78
     },
     {
       "path": "FoodDiary.Telegram.Bot/Program.cs",

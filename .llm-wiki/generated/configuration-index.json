@@ -909,6 +909,7 @@
       "keys": [
         "Logging:LogLevel:Default",
         "Logging:LogLevel:Microsoft.Hosting.Lifetime",
+        "Logging:LogLevel:System.Net.Http.HttpClient",
         "TelegramBot:ApiBaseUrl",
         "TelegramBot:ApiSecret",
         "TelegramBot:Token",

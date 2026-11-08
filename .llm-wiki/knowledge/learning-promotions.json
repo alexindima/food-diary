@@ -12930,6 +12930,71 @@
       "targetId": "",
       "reason": "",
       "eventHash": "b0444ff5086504570cf563b7faddfddfffef6df3299050ebdb7e204e1452c966"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 103,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-08T04:09:35.1880217Z",
+      "previousHash": "b0444ff5086504570cf563b7faddfddfffef6df3299050ebdb7e204e1452c966",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/minio-telegram-runtime",
+        "retrospectiveHash": "6fa9e779634d815a19db4937429b9e01e0d1f775a0cd13fb7913ef7d3ca7d310",
+        "completionFingerprint": "e9a08620665e2e2739b1a82655d67f32505f4bef73a3aa8a1d93001e63ba7061",
+        "packetFingerprint": "09edab01b2dc14b3e77548d42efec59ca67e6b4c352e8eeccaa07331fcb483ce",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1680s versus 292s, error 475.34%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=475.34%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 292.0,
+          "expectedSeconds": 1680.0,
+          "errorPercent": 475.34
+        },
+        "changedPaths": [
+          ".github/workflows/ai-behavior-verification.yml",
+          "docs/ai/RELIABILITY_VERIFICATION.md",
+          "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "FoodDiary.Telegram.Bot/appsettings.json",
+          "FoodDiary.Telegram.Bot/Operations/DurableTelegramReceiver.cs",
+          "FoodDiary.Telegram.Bot/Operations/TelegramLoopKind.cs",
+          "FoodDiary.Telegram.Bot/Operations/TelegramLoopTelemetry.cs",
+          "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramLoopTelemetryTests.cs",
+          "infra/observability/build_config.py",
+          "infra/observability/grafana/fooddiary-operational-alerting.yml",
+          "infra/observability/grafana/fooddiary-telegram.json",
+          "infra/observability/install.py",
+          "infra/observability/README.md",
+          "scripts/ai/owned-fixture-evidence.mjs",
+          "scripts/ai/storage-images.mjs",
+          "scripts/ai/task-runtime-browser.mjs",
+          "scripts/ai/task-runtime-browser.test.mjs",
+          "scripts/ai/task-runtime.mjs",
+          "scripts/ai/task-runtime.test.mjs",
+          "scripts/ai/verify-storage-images.mjs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "db718de85117986808066de664bb1e99fe109d49f7e3c8148fa33407259d1fb8"
     }
   ],
   "hashSchemaVersion": 2

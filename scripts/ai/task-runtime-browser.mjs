@@ -126,6 +126,23 @@ export async function probeRenderedRuntime(
             throw new Error(
                 "Rendered app did not reach its owned API through the task proxy",
             );
+        // A fresh synthetic account must complete the same health consent gate as a user.
+        // Keep the dashboard readiness check and the application's consent enforcement intact.
+        await page.locator("fd-dashboard, fd-health-consent-dialog").first()
+            .waitFor({ state: "visible", timeout: 20_000 });
+        const consent = page.locator("fd-health-consent-dialog");
+        if (await consent.isVisible()) {
+            await consent.locator("#health-consent-agreement").check();
+            const saved = page.waitForResponse(response =>
+                new URL(response.url()).origin === frontendUrl &&
+                new URL(response.url()).pathname === "/api/v1/users/privacy" &&
+                response.request().method() === "PUT", { timeout: 30_000 });
+            void saved.catch(() => {});
+            await consent.locator("fd-ui-button").last().getByRole("button").click();
+            if ((await saved).status() !== 204)
+                throw new Error("Owned runtime health consent was not saved");
+            await consent.waitFor({ state: "hidden", timeout: 20_000 });
+        }
         await page
             .locator("fd-dashboard")
             .waitFor({ state: "visible", timeout: 20_000 });

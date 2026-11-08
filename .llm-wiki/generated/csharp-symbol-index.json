@@ -8,13 +8,13 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4771,
-    "symbols": 4707,
+    "sourceFiles": 4773,
+    "symbols": 4709,
     "interfaceImplementationLinks": 212,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2434,
-      "enum": 74,
+      "class": 2435,
+      "enum": 75,
       "interface": 428,
       "record": 1628,
       "record struct": 143
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1942,
+      "Other": 1944,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -2391,6 +2391,20 @@
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/DurableTelegramReceiver.cs",
       "line": 6
+    },
+    {
+      "name": "TelegramLoopKind",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramLoopKind.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramLoopTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramLoopTelemetry.cs",
+      "line": 2
     },
     {
       "name": "TelegramOperationWorker",

@@ -2978,6 +2978,51 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "44f1b01d84bd83ac7ab525e0a0dd4fa0a21f4bb88f5d512f9e5acc73102fe838",
       "eventHash": "c1f620db98e5e86d6d09826dc85fccce5a23cee100a99d2ad4653b0a77ad8743"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "690f7a18c8e7492baf1e699bccbc7b17",
+      "workspace": ".artifacts/llm-wiki/tasks/minio-telegram-runtime",
+      "recordedAtUtc": "2026-11-08T04:09:40.0335886Z",
+      "completionFingerprint": "e9a08620665e2e2739b1a82655d67f32505f4bef73a3aa8a1d93001e63ba7061",
+      "retrospectiveHash": "6fa9e779634d815a19db4937429b9e01e0d1f775a0cd13fb7913ef7d3ca7d310",
+      "instructionSetFingerprint": "069fadadab51656a0aecfe95c03bfed94f0d5b5375d73d017b9c19bd6fbf4c6b",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "FoodDiary.Telegram.Bot/AGENTS.md",
+          "fingerprint": "7a8a38d4d6848b15c577d1a2b62e4f0454655858f1089ad32470ee4f9dc52ab9"
+        },
+        {
+          "path": "Hosts/tests/AGENTS.md",
+          "fingerprint": "3430eb639acde7b34b2a978d180d7ec3236b8322793784d6392a2d6281afda5d"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "high",
+        "complexityScore": 75,
+        "complexityBandUpperBound": 79,
+        "cohortKey": "high|complexity<=79",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 70.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "c1f620db98e5e86d6d09826dc85fccce5a23cee100a99d2ad4653b0a77ad8743",
+      "eventHash": "00a5e5cc4c5a4d1ae54c30d5869f53fa31f0be3b16529a6b72b723d53fb675af"
     }
   ]
 }

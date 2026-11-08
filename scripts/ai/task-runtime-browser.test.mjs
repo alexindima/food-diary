@@ -106,3 +106,77 @@ test("credentialed runtime probe rejects another account before browser storage 
 
     await probe.expectFailure("Rendered runtime sign-in did not match the owned account");
 });
+
+for (const initialConsent of [true, false]) {
+    test(`owned dashboard probe completes the real consent gate (required=${initialConsent})`, async t => {
+        let consentVisible = initialConsent;
+        let checked = false;
+        let saved = false;
+        const close = t.mock.fn(async () => {});
+        const consentResponse = {
+            url: () => `${frontendUrl}/api/v1/users/privacy`,
+            status: () => 204,
+            request: () => ({ method: () => "PUT" }),
+        };
+        const userResponse = {
+            url: () => `${frontendUrl}/api/v1/users/info`,
+            status: () => 200,
+            json: async () => ({ id: expectedUserId }),
+        };
+        const consent = {
+            isVisible: async () => consentVisible,
+            waitFor: async ({ state }) => {
+                assert.equal(state, "hidden");
+                assert.equal(consentVisible, false);
+                assert.equal(saved, true);
+            },
+            locator: selector => {
+                if (selector === "#health-consent-agreement")
+                    return { check: async () => { checked = true; } };
+                assert.equal(selector, "fd-ui-button");
+                return { last: () => ({ getByRole: role => {
+                    assert.equal(role, "button");
+                    return { click: async () => {
+                        assert.equal(checked, true);
+                        saved = true;
+                        consentVisible = false;
+                    } };
+                } }) };
+            },
+        };
+        const page = {
+            on: () => {},
+            waitForResponse: async predicate => {
+                if (predicate(userResponse)) return userResponse;
+                assert.equal(predicate(consentResponse), true);
+                assert.equal(predicate({ ...consentResponse, url: () => "https://other.example/api/v1/users/privacy" }), false);
+                return consentResponse;
+            },
+            goto: async () => {},
+            locator: selector => {
+                if (selector === "fd-health-consent-dialog") return consent;
+                if (selector === "fd-dashboard, fd-health-consent-dialog")
+                    return { first: () => ({ waitFor: async () => {} }) };
+                if (selector === "fd-dashboard") return { waitFor: async () => {
+                    assert.equal(consentVisible, false, "Dashboard remains gated until consent is saved");
+                } };
+                assert.equal(selector, "body");
+                return { waitFor: async () => {}, innerText: async () => "Synthetic dashboard successfully rendered" };
+            },
+            waitForLoadState: async () => {},
+            url: () => `${frontendUrl}/dashboard`,
+            title: async () => "Dashboard",
+        };
+        t.mock.method(chromium, "launch", async () => ({
+            newContext: async () => ({
+                request: { post: async () => ({ status: () => 200, json: async () => ({ user: { id: expectedUserId } }) }) },
+                newPage: async () => page,
+            }),
+            close,
+        }));
+        const result = await probeRenderedRuntime(repositoryRoot, frontendUrl, expectedUserId, { credentials });
+        assert.equal(result.ownedIdentityMatches, true);
+        assert.equal(saved, initialConsent);
+        assert.equal(close.mock.callCount(), 1);
+    });
+}

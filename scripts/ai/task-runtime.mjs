@@ -17,15 +17,14 @@ import { containedPath, repositoryRoot } from "./generate-feature.mjs";
 import { browserSessionCookie, probeRenderedRuntime } from "./task-runtime-browser.mjs";
 import { recordBuildScope, requireDiskBudget } from "./resource-budget.mjs";
 import { prepareTaskFrontendWorkspace } from "./task-frontend-workspace.mjs";
+import { storageImages } from "./storage-images.mjs";
 
 const images = {
     postgres:
         "postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73",
     redis: "redis:7-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
-    storage:
-        "quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
-    storageClient:
-        "quay.io/minio/mc@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727",
+    storage: storageImages.server,
+    storageClient: storageImages.client,
 };
 
 const sleep = (milliseconds) =>
@@ -95,6 +94,7 @@ export function sourceFingerprint(root = repositoryRoot) {
         "Directory.Build.targets",
         "Directory.Packages.props",
         "scripts/ai/task-runtime.mjs",
+        "scripts/ai/storage-images.mjs",
         "scripts/ai/task-frontend-workspace.mjs",
         "scripts/ai/task-frontend-identity.mjs",
         "scripts/ai/task-runtime-browser.mjs",

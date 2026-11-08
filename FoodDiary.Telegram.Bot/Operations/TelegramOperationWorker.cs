@@ -19,11 +19,14 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         if (!options.Value.OperationsEnabled) {
             return;
         }
+        var telemetry = new TelegramLoopTelemetry(TelegramLoopKind.Discovery, timeProvider, logger);
         while (!stoppingToken.IsCancellationRequested) {
+            long started = timeProvider.GetTimestamp();
             try {
                 using HttpClient http = clients.CreateClient(BotOperationClient.ClientName);
                 var operations = new BotOperationClient(http, options);
                 IReadOnlyList<BotOperationId> ready = await operations.ListReadyAsync(stoppingToken);
+                telemetry.Observe(success: true, timeProvider.GetElapsedTime(started));
                 foreach (BotOperationId id in ready) {
                     try {
                         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
@@ -40,6 +43,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception error) {
+                telemetry.Observe(success: false, timeProvider.GetElapsedTime(started));
                 logger.LogWarning("Telegram work discovery failed with {ErrorType}.", error.GetType().Name);
             }
             await Task.Delay(PollInterval, timeProvider, stoppingToken);

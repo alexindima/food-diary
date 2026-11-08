@@ -250,3 +250,23 @@ counts and application readiness separately.
 Trace ingestion remains deliberately disabled by the user's decision on
 7 November 2026. A future external backend must satisfy the existing trace
 privacy, operator-access and maximum 14-day retention contract before ingestion.
+
+### Telegram bot diagnostics
+
+Promtail already collects the bot's stdout/stderr under
+`compose_service="telegram-bot"`. Successful named-HttpClient poll noise is
+filtered to Warning; application warnings/errors remain enabled. Intake and
+ready-work discovery emit numeric summaries after their first completed poll,
+then at most once per minute using monotonic time. Summaries contain a fixed
+loop name, success/failure counts, mean duration and last-success Unix time.
+They contain no message/photo payload, user/chat ID, token or signed URL.
+Counters reset after each summary; missing summaries remain missing data.
+
+`FoodDiary Telegram Operations` shows loop progress and selected safe diagnostic
+templates. Intake duration includes Telegram long polling and persistence;
+discovery duration is the API work-list request, not operation completion time.
+Five minutes without a successful intake summary raises an alert after a further
+two minutes. More than five operational failures over ten minutes raises a
+warning after two minutes. An intentionally disabled discovery loop does not
+trigger absence alerts. Install these rules only after the updated bot emits
+its first successful intake heartbeat. Existing notification routing is retained.

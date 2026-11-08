@@ -3560,6 +3560,78 @@
       },
       "reason": "",
       "eventHash": "22ec46a25252fe9f0ffb7458c73bdc0028c1362335beb53f524f0aef5feb6fe0"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 26,
+      "kind": "observed",
+      "candidateId": "learned-0c6b7de16795fecd",
+      "createdAtUtc": "2026-11-08T04:09:36.8170675Z",
+      "previousHash": "22ec46a25252fe9f0ffb7458c73bdc0028c1362335beb53f524f0aef5feb6fe0",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/minio-telegram-runtime",
+        "retrospectiveHash": "6fa9e779634d815a19db4937429b9e01e0d1f775a0cd13fb7913ef7d3ca7d310",
+        "packetFingerprint": "09edab01b2dc14b3e77548d42efec59ca67e6b4c352e8eeccaa07331fcb483ce",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=475.34%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-0c6b7de16795fecd",
+          "changedPaths": [
+            ".github/workflows/ai-behavior-verification.yml",
+            "docs/ai/RELIABILITY_VERIFICATION.md",
+            "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+            "FoodDiary.Telegram.Bot/appsettings.json",
+            "FoodDiary.Telegram.Bot/Operations/DurableTelegramReceiver.cs",
+            "FoodDiary.Telegram.Bot/Operations/TelegramLoopKind.cs",
+            "FoodDiary.Telegram.Bot/Operations/TelegramLoopTelemetry.cs",
+            "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramLoopTelemetryTests.cs",
+            "infra/observability/build_config.py",
+            "infra/observability/grafana/fooddiary-operational-alerting.yml",
+            "infra/observability/grafana/fooddiary-telegram.json",
+            "infra/observability/install.py",
+            "infra/observability/README.md",
+            "scripts/ai/owned-fixture-evidence.mjs",
+            "scripts/ai/storage-images.mjs",
+            "scripts/ai/task-runtime-browser.mjs",
+            "scripts/ai/task-runtime-browser.test.mjs",
+            "scripts/ai/task-runtime.mjs",
+            "scripts/ai/task-runtime.test.mjs",
+            "scripts/ai/verify-storage-images.mjs"
+          ],
+          "expectedModules": [
+            "Ai"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Configuration",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "configuration-contract",
+            "observability-critical-flow"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "a3cc645f392c0285ab24b03a9d46daa071d18d4fa23e8ca5cd4cad7f1a0aadb6"
+      },
+      "reason": "",
+      "eventHash": "9ca4a8d79cd817d81d45e4b331c1c0f1978da9e8556ac91c8d8cbc45eb361c61"
     }
   ]
 }

@@ -71,8 +71,10 @@ def validate():
     rules = yaml.safe_load((ROOT / "grafana/fooddiary-operational-alerting.yml").read_text())
     for group in rules["groups"]:
         for rule in group["rules"]:
-            expr = rule["data"][0]["model"]["expr"]
-            result = get_json("http://127.0.0.1:9090/api/v1/query?" + urllib.parse.urlencode({"query": expr}))
+            model = rule["data"][0]["model"]
+            expr = model["expr"]
+            endpoint = "http://127.0.0.1:3100/loki/api/v1/query?" if model["datasource"]["type"] == "loki" else "http://127.0.0.1:9090/api/v1/query?"
+            result = get_json(endpoint + urllib.parse.urlencode({"query": expr}))
             if result["status"] != "success":
                 raise RuntimeError("Invalid operational expression: " + rule["uid"])
     for path in (ROOT / "grafana").glob("*.json"):

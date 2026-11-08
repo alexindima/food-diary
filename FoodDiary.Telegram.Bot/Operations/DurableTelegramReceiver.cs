@@ -10,15 +10,19 @@ internal sealed class DurableTelegramReceiver(ITelegramBotClient botClient,
 
     internal async Task RunAsync(CancellationToken cancellationToken) {
         int retrySeconds = 2;
+        var telemetry = new TelegramLoopTelemetry(TelegramLoopKind.Intake, timeProvider, logger);
         while (!cancellationToken.IsCancellationRequested) {
+            long started = timeProvider.GetTimestamp();
             try {
                 Update[] updates = await botClient.GetUpdates(offset: NextOffset, timeout: 30,
                     allowedUpdates: [UpdateType.Message, UpdateType.CallbackQuery, UpdateType.PreCheckoutQuery, UpdateType.Subscription], cancellationToken: cancellationToken);
                 await ProcessBatchAsync(updates, cancellationToken);
+                telemetry.Observe(success: true, timeProvider.GetElapsedTime(started));
                 retrySeconds = 2;
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 return;
             } catch (Exception error) {
+                telemetry.Observe(success: false, timeProvider.GetElapsedTime(started));
                 logger.LogWarning("Telegram intake paused after {ErrorType}; the unpersisted update remains unacknowledged.", error.GetType().Name);
                 try {
                     await Task.Delay(TimeSpan.FromSeconds(retrySeconds), timeProvider, cancellationToken);

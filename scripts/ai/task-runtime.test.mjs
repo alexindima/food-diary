@@ -59,6 +59,25 @@ test("runtime freshness includes extracted WebMCP library source", () => {
     }
 });
 
+test("runtime freshness includes the shared storage image inventory", () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-storage-fingerprint-"));
+    try {
+        const git = (...args) => execFileSync("git", ["-C", root, ...args], { encoding: "utf8", windowsHide: true });
+        git("init", "-q");
+        git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "commit", "--allow-empty", "-qm", "fixture");
+        const directory = join(root, "scripts", "ai");
+        mkdirSync(directory, { recursive: true });
+        const baseline = sourceFingerprint(root);
+        writeFileSync(join(directory, "storage-images.mjs"), "export const server = 'first';\n");
+        const created = sourceFingerprint(root);
+        assert.notEqual(created, baseline);
+        writeFileSync(join(directory, "storage-images.mjs"), "export const server = 'replacement';\n");
+        assert.notEqual(sourceFingerprint(root), created);
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
 test("runtime discovery returns safe metadata and never claims dead or unprobed owners are ready", async () => {
     const root = mkdtempSync(join(tmpdir(), "fd-runtime-discovery-"));
     try {

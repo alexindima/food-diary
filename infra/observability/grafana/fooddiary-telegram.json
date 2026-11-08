@@ -1,0 +1,319 @@
+{
+  "uid": "fooddiary-telegram",
+  "title": "FoodDiary Telegram Operations",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "tags": [
+    "fooddiary",
+    "observability"
+  ],
+  "timezone": "browser",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": []
+  },
+  "panels": [
+    {
+      "title": "Bot container running",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "fooddiary_container_running{service=\"telegram-bot\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 1,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Bot working set",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "fooddiary_container_memory_working_set_bytes{service=\"telegram-bot\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 2,
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Bot restart snapshot",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "fooddiary_container_restarts{service=\"telegram-bot\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 3,
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Successful polls reported over 5 minutes",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "sum by(loop)(sum_over_time({compose_service=\"telegram-bot\"} |= \"Telegram loop telemetry \" | regexp \"Telegram loop telemetry (?P<loop>intake|discovery)\\\\.\" | loop!=\"\" | regexp \"SuccessfulPolls=(?P<value>[0-9]+)\" | unwrap value | __error__=\"\" [5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 4,
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Failed polls reported over 5 minutes",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "sum by(loop)(sum_over_time({compose_service=\"telegram-bot\"} |= \"Telegram loop telemetry \" | regexp \"Telegram loop telemetry (?P<loop>intake|discovery)\\\\.\" | loop!=\"\" | regexp \"FailedPolls=(?P<value>[0-9]+)\" | unwrap value | __error__=\"\" [5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 5,
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Last successful poll",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "max by(loop)(last_over_time({compose_service=\"telegram-bot\"} |= \"Telegram loop telemetry \" | regexp \"Telegram loop telemetry (?P<loop>intake|discovery)\\\\.\" | loop!=\"\" | regexp \"LastSuccessUnixSeconds=(?P<value>[0-9]+)\" | unwrap value | __error__=\"\" [5m])) * 1000",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dateTimeAsIso"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 6,
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Reported mean poll duration",
+      "type": "timeseries",
+      "description": "Mean of minute summaries. Intake includes Telegram long polling and persistence; discovery measures the ready-work request, not user operation latency.",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "avg by(loop)(avg_over_time({compose_service=\"telegram-bot\"} |= \"Telegram loop telemetry \" | regexp \"Telegram loop telemetry (?P<loop>intake|discovery)\\\\.\" | loop!=\"\" | regexp \"AverageDurationMs=(?P<value>[0-9]+)\" | unwrap value | __error__=\"\" [5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 7,
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Operational failures over 10 minutes",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({compose_service=\"telegram-bot\"} |~ \"Telegram (intake paused|work discovery failed|operation .* will resume|bot error|API error)\" [10m])) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 8,
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Recent operational diagnostics",
+      "type": "logs",
+      "datasource": {
+        "type": "loki",
+        "uid": "cfhlezxl8fdvka"
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"telegram-bot\"} |~ \"Telegram (intake paused|work discovery failed|operation .* (resume|invalid)|API error|bot error|photo progress notice)\"",
+          "refId": "A",
+          "maxLines": 100
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true
+      },
+      "id": 9,
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      }
+    }
+  ]
+}

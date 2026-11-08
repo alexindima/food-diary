@@ -77,6 +77,8 @@ jobs:
         working-directory: FoodDiary.Web.Client
       - run: npm run test:ai-development
         working-directory: FoodDiary.Web.Client
+      - name: Verify cold S3 image pulls and object cleanup semantics
+        run: node scripts/ai/verify-storage-images.mjs
       - run: node scripts/ai/reliability-round.mjs
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: always()

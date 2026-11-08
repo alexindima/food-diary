@@ -1,9 +1,9 @@
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { ownedContainer } from './owned-runtime-client.mjs';
+import { storageImages } from './storage-images.mjs';
 
 export const UUID = /^(?!00000000-0000-0000-0000-000000000000$)[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/u;
-const storageClient = 'quay.io/minio/mc@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727';
 const literal = value => `'${String(value).replaceAll("'", "''")}'`;
 const identifier = value => `"${String(value).replaceAll('"', '""')}"`;
 
@@ -54,7 +54,7 @@ export function observeFixtureObjects(state, manifest) {
         if (!['fooddiary-public', 'fooddiary-staging'].includes(object.bucket) || !Object.values(manifest.accounts).some(account => object.key.startsWith(`users/${account.id}/images/`)) || /[\r\n\0]/u.test(object.key)) {
             throw new Error('Storage object is outside the fixture manifest scope');
         }
-        const result = spawnSync('docker', ['run', '--rm', '--network', `container:${storage}`, '--env-file', join(state.directory, 'storage.env'), '--entrypoint', '/bin/sh', storageClient, '-c', 'mc alias set local http://127.0.0.1:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null && mc stat --json "$1"', 'fixture-stat', `local/${object.bucket}/${object.key}`], {
+        const result = spawnSync('docker', ['run', '--rm', '--network', `container:${storage}`, '--env-file', join(state.directory, 'storage.env'), '--entrypoint', '/bin/sh', storageImages.client, '-c', 'mc alias set local http://127.0.0.1:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null && mc stat --json "$1"', 'fixture-stat', `local/${object.bucket}/${object.key}`], {
             encoding: 'utf8', windowsHide: true, timeout: 30_000, maxBuffer: 64 * 1024,
         });
         let status = 'unknown';

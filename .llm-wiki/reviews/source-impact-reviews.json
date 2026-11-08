@@ -17,25 +17,25 @@
       "pageSha256": "ac438aaaad818deaa15b0fd448a206e8368be2799344b5461d15327be74da8f1",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
-          "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
-        },
-        {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "0f183567205b14463b0e5e33d4be70c38cfd6f4d341bc69b28eb74c9be1fa7b2",
-          "reviewReason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed."
+          "sha256": "4c88657f30d20a3b98c73d9d8d81ff59694d7fca304edd6a555922913f9fe9be",
+          "reviewReason": "Read navigation and updated baseline: bounded numeric Telegram loop summaries reuse Loki, with a dedicated dashboard and intake/failure alerts; original monitoring, tracing-off decision and safe logging constraints remain accurate."
         },
         {
           "path": "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
           "sha256": "237282689f12f8aacd68690871d47fedf5bdac98f2d5672136f8850ecc614c06",
           "reviewReason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed."
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
+          "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
         }
       ],
-      "reason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed.",
+      "reason": "Read navigation and updated baseline: bounded numeric Telegram loop summaries reuse Loki, with a dedicated dashboard and intake/failure alerts; original monitoring, tracing-off decision and safe logging constraints remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
-      "reviewedAtUtc": "2026-11-07T18:02:00.6988537Z"
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T03:47:28.4292724Z"
     },
     {
       "pageId": "module.frontend",
@@ -338,14 +338,14 @@
         },
         {
           "path": "scripts/ai/task-runtime.mjs",
-          "sha256": "76b0724a8202b11e8251623efbaf2b45ad8471adb4b0c10380f88ea179426466",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/adaptive-development.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Runtime source hashing uses NUL-delimited Unicode Git names and transitive project reference scope. Unavailable Docker leaves cleanup-failed instead of false stopped; an Engine query must establish container absence. Separate stable SQLite OS locking serializes runtime stale lock recovery, proven with two real processes. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "5e61817cf5d985ceceb1f5184fab0363d64c7475c8ff6756e5f305ab49808d37",
+          "reviewReason": "Read the workflow and verified current owned-runtime consumers. One shared immutable storage inventory now feeds initialization and cleanup; its changes invalidate runtime freshness. Rendered preparation explicitly completes the synthetic-account consent dialog while retaining identity, proxy, dashboard and owned cleanup checks. The workflow remains accurate."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/adaptive-development.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Runtime source hashing uses NUL-delimited Unicode Git names and transitive project reference scope. Unavailable Docker leaves cleanup-failed instead of false stopped; an Engine query must establish container absence. Separate stable SQLite OS locking serializes runtime stale lock recovery, proven with two real processes. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read the workflow and verified current owned-runtime consumers. One shared immutable storage inventory now feeds initialization and cleanup; its changes invalidate runtime freshness. Rendered preparation explicitly completes the synthetic-account consent dialog while retaining identity, proxy, dashboard and owned cleanup checks. The workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:41.9440542Z"
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T03:45:32.2523976Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -727,8 +727,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "8a32accaf7aedd81add342f370b73f3dc4755c2371b193df45c2b7239eab8594",
-          "reviewReason": "Reviewed the appended observation from the sealed observability task: it records a 70-second architecture check versus a 1608-second forecast as a calibration hypothesis. No approval, application, policy or durable memory changed; the governed promotion workflow remains accurate."
+          "sha256": "1858def41874e5121def26ee1bd1fba25ff012de22e421b3ce903ba320992906",
+          "reviewReason": "Read the workflow and final append-only registry delta. Task finish observed one bounded maintenance hypothesis from the sealed MinIO/Telegram retrospective. No candidate was approved, applied, promoted to durable memory, or used to change calibration; review and experiment boundaries remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -761,10 +761,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the appended observation from the sealed observability task: it records a 70-second architecture check versus a 1608-second forecast as a calibration hypothesis. No approval, application, policy or durable memory changed; the governed promotion workflow remains accurate.",
-      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
-      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
-      "reviewedAtUtc": "2026-11-07T18:35:36.5822779Z"
+      "reason": "Read the workflow and final append-only registry delta. Task finish observed one bounded maintenance hypothesis from the sealed MinIO/Telegram retrospective. No candidate was approved, applied, promoted to durable memory, or used to change calibration; review and experiment boundaries remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T04:10:04.8858445Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -837,28 +837,18 @@
     {
       "pageId": "workflow-dependency-rollout",
       "pagePath": ".llm-wiki/workflows/dependency-rollout.md",
-      "pageSha256": "7b325c5dd1cee36772c8e9d61fe14324f25f78f5f320e5521ca050f4080667a6",
+      "pageSha256": "4e21172fb60095d2851a1fc37fba641743bc99b26c83665268ae55d1c34b5ae1",
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "27c11477759c0adf796c8864b22bb9d3f19a0e27462295a5b4dd3f4281ca26ba",
-          "reviewReason": "Reviewed the new disabled TelegramStars settings and Telegram.Bot 22.10.3.3 lock updates. The Stars runbook documents API/migration/bot/frontend order, matched test environment flags, continued intake when checkout is off, and a forward-fix rollback strategy. Workflow mechanics remain applicable."
-        },
-        {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
-          "reviewReason": "Reviewed the new exact ranking-reader policy requirement. It adds a filtered local .NET check and no project/package/provider or production rollout change. Existing manifest/lockfile comparison and compiled helper publication guidance remains valid."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
-          "sha256": "5f81ba7d58bbe1c40dd1e867ff6e3fa035847eac805f80b4363112712e4ef466",
-          "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
+          "sha256": "dd0364ad00c3a105a305d7bdcf0e693fad5a669f8c9fbc696d69a6c99878105b",
+          "reviewReason": "Read rollout workflow and generated configuration. Bot logging adds one Warning category; S3 pins affect isolated CI/local fixtures only. Grafana installer validates Loki separately, retains private rollback backups and receivers; apply follows deployed heartbeat. Guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the new disabled TelegramStars settings and Telegram.Bot 22.10.3.3 lock updates. The Stars runbook documents API/migration/bot/frontend order, matched test environment flags, continued intake when checkout is off, and a forward-fix rollback strategy. Workflow mechanics remain applicable.",
+      "reason": "Read rollout workflow and generated configuration. Bot logging adds one Warning category; S3 pins affect isolated CI/local fixtures only. Grafana installer validates Loki separately, retains private rollback backups and receivers; apply follows deployed heartbeat. Guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "936fb9006e4eeedfcb6703523c21030c028de97d",
-      "reviewedAtUtc": "2026-11-05T16:09:32.8903085Z"
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T03:47:35.4877855Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -1279,23 +1269,23 @@
       "reason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass.",
       "baseRef": "HEAD",
       "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-07T04:04:30.4039390Z"
+      "reviewedAtUtc": "2026-11-07T04:04:30.403939Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
       "pagePath": ".llm-wiki/workflows/instruction-effectiveness.md",
-      "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
+      "pageSha256": "42befb67571b33eaf499dfed9f6a4f5d8e25e92dda138431551027e04fb1f9b4",
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "ed7e857bdc819ee445a5eb9f4b061cee5eed223ad2e01eaf0f24a900cac24b2a",
-          "reviewReason": "Reviewed the new completed observability-task event and source instruction fingerprints. It appends outcome attribution only; no instruction revision, experiment decision or adoption was performed. The existing cohort and integrity guidance remains accurate."
+          "sha256": "975852a95e34d73e8ac0ca979517926f0180d53165b4b140ef90c3d351bda61a",
+          "reviewReason": "Read the instruction-effectiveness workflow and automatic observation. The record retains exact governing instruction hashes and task evidence/quality scores, including the historical failed wrapper attempt; no instruction experiment, guide edit or automatic approval occurred."
         }
       ],
-      "reason": "Reviewed the new completed observability-task event and source instruction fingerprints. It appends outcome attribution only; no instruction revision, experiment decision or adoption was performed. The existing cohort and integrity guidance remains accurate.",
-      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
-      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
-      "reviewedAtUtc": "2026-11-07T18:35:37.3438582Z"
+      "reason": "Read the instruction-effectiveness workflow and automatic observation. The record retains exact governing instruction hashes and task evidence/quality scores, including the historical failed wrapper attempt; no instruction experiment, guide edit or automatic approval occurred.",
+      "baseRef": "HEAD",
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T04:10:05.6750294Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1325,8 +1315,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "9f2c9ac790dcec05471e1514d261c7d91f489751de621a4c8551c3ba9df59532",
-          "reviewReason": "Reviewed the new unapproved cost-miss candidate from the sealed observability retrospective. Its expected Ai module, scopes and checks match the task; no case was approved or applied to active evals. Lifecycle and activation boundaries remain unchanged."
+          "sha256": "424eeeefe7f4e6aa44aea813c900304b0f2edea09353e5a4c73d9aa1a4770abd",
+          "reviewReason": "Read the workflow and sealed-task eval observation. The task added a candidate based on actual registry/runtime failures and recovered verification, not an active regression case. Approval/application remain explicit separate operations and no policy expectation changed."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1349,10 +1339,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the new unapproved cost-miss candidate from the sealed observability retrospective. Its expected Ai module, scopes and checks match the task; no case was approved or applied to active evals. Lifecycle and activation boundaries remain unchanged.",
-      "baseRef": "1f4193c968d1d4995954d93c1c83e9e7964bd002",
-      "gitHead": "70d4f06f7f85af393d97b14c65299342a876e532",
-      "reviewedAtUtc": "2026-11-07T18:35:38.0974382Z"
+      "reason": "Read the workflow and sealed-task eval observation. The task added a candidate based on actual registry/runtime failures and recovered verification, not an active regression case. Approval/application remain explicit separate operations and no policy expectation changed.",
+      "baseRef": "HEAD",
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T04:10:05.3256887Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1403,14 +1393,14 @@
         },
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "0f183567205b14463b0e5e33d4be70c38cfd6f4d341bc69b28eb74c9be1fa7b2",
-          "reviewReason": "Reviewed telemetry review guardrails against implementation: outcomes, useful duration, bounded dimensions, absence handling and exclusion of private payloads are preserved; workflow guidance remains current."
+          "sha256": "4c88657f30d20a3b98c73d9d8d81ff59694d7fca304edd6a555922913f9fe9be",
+          "reviewReason": "Read the observability workflow and baseline. Reviewed fixed loop names, monotonic one-minute reporting, success after persistence, failure semantics, no payload fields, meaningful poll-duration limits, and reduced HTTP information noise. Existing workflow guardrails remain accurate."
         }
       ],
-      "reason": "Reviewed telemetry review guardrails against implementation: outcomes, useful duration, bounded dimensions, absence handling and exclusion of private payloads are preserved; workflow guidance remains current.",
+      "reason": "Read the observability workflow and baseline. Reviewed fixed loop names, monotonic one-minute reporting, success after persistence, failure semantics, no payload fields, meaningful poll-duration limits, and reduced HTTP information noise. Existing workflow guardrails remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
-      "reviewedAtUtc": "2026-11-07T18:02:01.6220472Z"
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T03:47:32.2332826Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1690,28 +1680,18 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "afc7b952845f0c1daab7be359147c5d79cf308618972038ea92bee91adf411c7",
+      "pageSha256": "dc19a28adee0959a37cfa489ead8e0aceaa31ef2dd04ddac10c4a05e489a7918",
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2d92b2ad1faf760be0ca52f755eba951c9566bf0ed9bc99aedf7eb3f1e2ecf6b",
-          "reviewReason": "Reviewed the topology index delta against NotificationWebPushOutboxProcessor, OutboxProcessingEngine and RecipeVideoAdmissionAttribute: no host, worker, provider, recurring job or registration was introduced. Existing engine leases, retries, replay, telemetry and shutdown remain; notification-owned fair selection and an upload-only cancellation deadline fit the existing runtime-review guidance."
-        },
-        {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
-          "reviewReason": "Reviewed exact policy paths for the ranking-reader test obligation. This creates no host, worker, external provider, job or product runtime change; the regenerated topology remains current and the publication-state distinctions remain valid."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "4b953d81c7099333bc0fd1ada8692cfebd8a631857e690fabbaf10d43540fa8e",
-          "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
+          "sha256": "cdd9d74b17030a319aa17a841e86613b7616e71c38cc4c50642e617ecd4d3d59",
+          "reviewReason": "Read runtime workflow and current topology. No new runtime host or provider is added. Intake/discovery retain cancellation, persistence ordering, retries and leases, with bounded logger summaries. Shared S3 inventory participates in owned-runtime freshness. Runtime guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime navigation against the regenerated topology: existing OpenAI endpoints, module ownership and app composition remain unchanged; the request timing wrapper and host-only numeric probes do not add foreign aggregate writes.",
+      "reason": "Read runtime workflow and current topology. No new runtime host or provider is added. Intake/discovery retain cancellation, persistence ordering, retries and leases, with bounded logger summaries. Shared S3 inventory participates in owned-runtime freshness. Runtime guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
-      "reviewedAtUtc": "2026-11-07T18:02:36.4390262Z"
+      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
+      "reviewedAtUtc": "2026-11-08T03:47:39.3777082Z"
     },
     {
       "pageId": "workflow-security-review",

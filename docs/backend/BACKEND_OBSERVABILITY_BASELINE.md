@@ -570,3 +570,12 @@ complete restore rehearsal.
 Trace ingestion remains disabled following the operator's decision on
 7 November 2026. Adding operational metrics does not authorize retaining traces
 or weaken the privacy/access/retention requirements above.
+
+The Telegram bot already ships console logs to Loki through Promtail. Named
+HttpClient success chatter is filtered to Warning, while application diagnostic
+warnings/errors remain. Intake and work discovery report fixed-name numeric
+progress summaries at most once per minute: successful/failed polls, reported
+mean duration and last success time. They omit messages, photos, user/chat IDs,
+tokens and URLs. Intake success is reported only after persistence completes.
+The Telegram dashboard and intake-stall/repeated-failure alerts use these
+existing log streams; intentionally disabled discovery does not page.

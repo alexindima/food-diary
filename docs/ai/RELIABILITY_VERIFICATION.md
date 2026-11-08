@@ -40,6 +40,24 @@ runs. Credentials and bearer tokens remain in memory or ignored private runtime
 files; stdout and reports redact literal fixture secrets as well as token/email
 patterns. Traces and login screenshots are disabled.
 
+## Owned S3 test storage
+
+Upstream MinIO's old Docker Hub and Quay images no longer allow public pulls.
+The owned test runtime uses the maintained PGSTY Silo/MC 2026-10-26 release,
+pinned by immutable multi-architecture digests in
+`scripts/ai/storage-images.mjs`. Both initialization and fixture cleanup import
+that inventory. Production storage configuration is unchanged.
+
+`node scripts/ai/verify-storage-images.mjs` explicitly pulls both images so a
+cached old image cannot hide CI breakage. It starts an isolated, labelled server
+on a loopback-only ephemeral port and verifies readiness, object write/stat,
+anonymous fixture read, deletion and the existing absent-object classifier.
+The verifier cleans only its own container/anonymous volume and generated
+credential file; it never prints the credentials or client initialization output.
+GitHub's AI verification runs this check before the complete reliability round.
+Image provenance is recorded in the inventory and can be checked against
+[the maintained release](https://github.com/pgsty/silo/releases/tag/RELEASE.2026-10-26T00-00-00Z).
+
 ## Recognition reference corpus
 
 `Tooling/ai-development/recognition-evals/cases.json` contains 12 explicit-quantity
@@ -110,6 +128,11 @@ delivery. Load the additional rule file and verify the deployed metric/version
 contract through the normal authorized operational workflow.
 
 ## Development resource and index ownership
+
+The rendered owned-runtime probe completes the required health-consent dialog
+for its synthetic account through the real checkbox and save flow. It requires
+a successful same-origin privacy update and then a visible dashboard. This keeps
+fresh-account readiness compatible with the consent gate without bypassing it.
 
 Task startup measures free workspace space before allocating containers and
 requires at least 3 GiB. API/initializer builds use at most two MSBuild nodes.
