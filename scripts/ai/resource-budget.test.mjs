@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { repositoryRoot } from "./generate-feature.mjs";
 import {
@@ -9,7 +10,52 @@ import {
     diskBudget,
     ownedBuildScope,
     recordBuildScope,
+    waitForStoppedProcesses,
 } from "./resource-budget.mjs";
+
+test("cleanup waits for actual process exit and refuses live or invalid records", async () => {
+    const state = { status: "stopped", processes: [{ pid: process.pid }] };
+    await assert.rejects(waitForStoppedProcesses(state, { timeoutMilliseconds: 20 }), /did not exit/u);
+    await assert.rejects(waitForStoppedProcesses({ ...state, status: "ready" }), /fully stopped/u);
+    await assert.rejects(waitForStoppedProcesses({ ...state, processes: [{ pid: 0 }] }), /identity/u);
+    await assert.rejects(waitForStoppedProcesses(state, { timeoutMilliseconds: 0 }), /timeout/u);
+});
+
+test("Linux children are reaped before owned native build cleanup", { skip: process.platform !== "linux" }, async () => {
+    const child = spawn(process.execPath, ["-e", "process.exit(0)"], { stdio: "ignore", windowsHide: true });
+    child.unref();
+    const id = randomUUID();
+    const name = `resource-${id.slice(0, 8)}`;
+    const state = {
+        id, name, checkout: repositoryRoot,
+        directory: join(repositoryRoot, ".artifacts/task-runtime", name),
+        status: "stopped", failures: [], processes: [{ pid: child.pid }],
+    };
+    const receipt = join(repositoryRoot, ".artifacts/resource-scopes", `${id}.json`);
+    try {
+        const deadline = performance.now() + 5000;
+        let zombie = false;
+        // Deliberately hold this parent event loop to reproduce the wrapper's
+        // synchronous stop/clean sequence, not a mocked liveness classifier.
+        while (performance.now() < deadline) {
+            const stat = readFileSync(`/proc/${child.pid}/stat`, "utf8");
+            zombie = stat.slice(stat.lastIndexOf(") ") + 2).startsWith("Z ");
+            if (zombie) break;
+            Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
+        }
+        assert.equal(zombie, true, "Fixture must expose an exited child awaiting parent reaping");
+        recordBuildScope(state);
+        assert.throws(() => cleanStoppedBuild(state), /still alive/u);
+        await waitForStoppedProcesses(state);
+        const calls = [];
+        cleanStoppedBuild(state, repositoryRoot, (command, args) => { calls.push({ command, args }); return { status: 0 }; });
+        assert.equal(calls.length, 2);
+        assert.ok(calls.every(call => call.command === "dotnet" && call.args[0] === "clean"));
+    } finally {
+        if (existsSync(receipt)) unlinkSync(receipt);
+        child.kill();
+    }
+});
 
 test("low disk is reported before expensive runtime allocation", () => {
     assert.equal(

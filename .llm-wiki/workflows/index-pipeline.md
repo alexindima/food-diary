@@ -880,3 +880,8 @@ Full verification and observed Wiki stages reject source drift before publishing
 reusable success receipts. Switch arguments are normalized identically in the
 parent and worker. Verify progress includes process start identity; a stale PID
 alone never proves that a previous worker is active or that verification passed.
+On Linux, new progress records bind the kernel boot ID and `/proc` process start
+ticks. This avoids cross-process drift in .NET's reconstructed wall-clock start
+time. Other platforms retain the exact UTC start identity. A recorded token
+mismatch never falls back to a matching legacy timestamp; old records without
+tokens retain exact legacy matching.

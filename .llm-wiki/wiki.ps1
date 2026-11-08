@@ -543,12 +543,14 @@ function Invoke-ObservedWikiStage {
     function Write-VerifyProgress([string]$Status, [int]$ElapsedSeconds, [string]$Detail = '') {
         $null = New-Item -ItemType Directory -Path (Split-Path -Parent $progressPath) -Force
         $payload = [ordered]@{
-            schemaVersion = 2; runId = $runId; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = $script:verifyStageTotal
+            schemaVersion = 3; runId = $runId; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = $script:verifyStageTotal
             elapsedSeconds = $ElapsedSeconds; expectedSeconds = $expectedSeconds; timeoutSeconds = $TimeoutSeconds
             detail = $Detail; resumeCommand = "./.llm-wiki/wiki.ps1 verify -Stage '$Name'"
             ownerProcessId = $PID; childProcessId = if ($Status -eq 'running' -and $null -ne $process -and -not $process.HasExited) { $process.Id } else { $null }
             ownerProcessStartTimeUtc = (Get-Process -Id $PID).StartTime.ToUniversalTime().ToString('o')
             childProcessStartTimeUtc = if ($Status -eq 'running' -and $null -ne $process -and -not $process.HasExited) { $process.StartTime.ToUniversalTime().ToString('o') } else { $null }
+            ownerProcessIdentityToken = Get-LlmWikiProcessIdentityToken -ProcessId $PID
+            childProcessIdentityToken = if ($Status -eq 'running' -and $null -ne $process -and -not $process.HasExited) { Get-LlmWikiProcessIdentityToken -ProcessId $process.Id } else { $null }
             logPath = $logPath.Replace($repositoryRoot + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
             runProgressPath = $progressPath.Replace($repositoryRoot + [IO.Path]::DirectorySeparatorChar, '').Replace('\', '/')
             updatedAtUtc = [DateTime]::UtcNow.ToString('o')
@@ -803,18 +805,9 @@ switch ($Command) {
             try {
                 $previousProgress = Get-Content -LiteralPath $progressPath -Raw | ConvertFrom-Json
                 if ($previousProgress.status -eq 'running') {
-                    $ownerAlive = $false
-                    if ($previousProgress.ownerProcessId -and $previousProgress.PSObject.Properties['ownerProcessStartTimeUtc']) {
-                        $priorOwner = Get-Process -Id ([int]$previousProgress.ownerProcessId) -ErrorAction SilentlyContinue
-                        $ownerAlive = $null -ne $priorOwner -and $priorOwner.StartTime.ToUniversalTime().ToString('o') -ceq [string]$previousProgress.ownerProcessStartTimeUtc
-                    }
+                    $ownerAlive = Test-LlmWikiRecordedProcessIdentity -Record $previousProgress -Role owner
                     if (-not $ownerAlive) {
-                        if ($previousProgress.childProcessId -and $previousProgress.PSObject.Properties['childProcessStartTimeUtc']) {
-                            $orphanedChild = Get-Process -Id ([int]$previousProgress.childProcessId) -ErrorAction SilentlyContinue
-                            if ($orphanedChild -and $orphanedChild.StartTime.ToUniversalTime().ToString('o') -ceq [string]$previousProgress.childProcessStartTimeUtc) {
-                                $verifiedOrphanWorker = $true
-                            }
-                        }
+                        $verifiedOrphanWorker = Test-LlmWikiRecordedProcessIdentity -Record $previousProgress -Role child
                         if (-not $verifiedOrphanWorker) {
                         $previousProgress.status = 'interrupted'
                         $previousProgress | Add-Member -NotePropertyName detail -NotePropertyValue 'Previous verify owner identity is no longer active. Start a fresh verification; unrelated processes are left untouched.' -Force

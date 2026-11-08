@@ -24,11 +24,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 3039,
-      "decisionPoints": 417,
+      "nonBlankLines": 3032,
+      "decisionPoints": 415,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 688.28
+      "structuralRiskScore": 685.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/dietologist.service.ts",
@@ -735,6 +735,14 @@
       "structuralRiskScore": 109.54
     },
     {
+      "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+      "nonBlankLines": 233,
+      "decisionPoints": 68,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 108.66
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
       "nonBlankLines": 218,
       "decisionPoints": 68,
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 101.84
-    },
-    {
-      "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-      "nonBlankLines": 416,
-      "decisionPoints": 61,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 101.82
     }
   ],
   "files": [
@@ -1858,11 +1858,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-      "nonBlankLines": 191,
-      "decisionPoints": 54,
+      "nonBlankLines": 233,
+      "decisionPoints": 68,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 86.82
+      "structuralRiskScore": 108.66
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProjectLookup.ps1",
@@ -2626,11 +2626,11 @@
     },
     {
       "path": ".llm-wiki/wiki.ps1",
-      "nonBlankLines": 3039,
-      "decisionPoints": 417,
+      "nonBlankLines": 3032,
+      "decisionPoints": 415,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 688.28
+      "structuralRiskScore": 685.14
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",

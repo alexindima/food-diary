@@ -10,6 +10,22 @@ $windowArgument = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32N
 $startOptions = if ($windowArgument) { @{ WindowStyle = 'Hidden' } } else { @{} }
 try {
     $null = New-Item -ItemType Directory -Path $tempRoot -Force
+    $identity = Get-LlmWikiProcessIdentityToken -ProcessId $PID
+    if ([string]::IsNullOrWhiteSpace($identity)) { throw 'Current process has no stable identity.' }
+    $identityProbe = Join-Path $tempRoot 'identity.ps1'
+    [IO.File]::WriteAllText($identityProbe, ". '$($PSScriptRoot.Replace("'", "''"))/LlmWikiProcess.ps1'`nGet-LlmWikiProcessIdentityToken -ProcessId $PID`n")
+    foreach ($attempt in 1..3) {
+        $observed = @(& $shellPath -NoProfile -File $identityProbe)
+        if ($LASTEXITCODE -ne 0 -or $observed.Count -ne 1 -or $observed[0] -cne $identity) { throw 'Process identity changed when observed by another process.' }
+    }
+    $record = [pscustomobject]@{ childProcessId=$PID; childProcessIdentityToken=$identity; childProcessStartTimeUtc=[DateTime]::UtcNow.AddDays(-1).ToString('o') }
+    if (-not (Test-LlmWikiRecordedProcessIdentity -Record $record -Role child)) { throw 'Stable process token did not identify its live owner.' }
+    $record.childProcessIdentityToken = 'different-lifetime'
+    $record.childProcessStartTimeUtc = (Get-Process -Id $PID).StartTime.ToUniversalTime().ToString('o')
+    if (Test-LlmWikiRecordedProcessIdentity -Record $record -Role child) { throw 'Mismatching token fell back to a matching legacy timestamp.' }
+    $record.PSObject.Properties.Remove('childProcessIdentityToken')
+    $record.PSObject.Properties.Remove('childProcessStartTimeUtc')
+    if (Test-LlmWikiRecordedProcessIdentity -Record $record -Role child) { throw 'PID without ownership evidence was accepted.' }
     @"
 `$grandchild = Start-Process -FilePath '$($shellPath.Replace("'", "''"))' -ArgumentList '-NoLogo','-NoProfile','-Command','Start-Sleep -Seconds 120' -PassThru $windowArgument
 [IO.File]::WriteAllText('$($pidPath.Replace("'", "''"))', [string]`$grandchild.Id)

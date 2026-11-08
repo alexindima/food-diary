@@ -46,7 +46,9 @@ try {
     Assert-ColdCheckout ($brief.analysis.mode -eq 'planned-paths' -and $brief.analysis.impactIndex.source -eq 'sqlite-task-brief-impact') 'Cold backend brief lost SQLite evidence.'
     # Damage only this fixture's disposable SQL projection while leaving its
     # source/change-set fingerprint current. Planning must repair that projection.
-    $privateDatabases = @(Get-ChildItem -LiteralPath (Join-Path $checkoutRoot '.artifacts/llm-wiki/read-only-snapshots') -Filter code-graph.sqlite -Recurse -File | ForEach-Object FullName)
+    # Each private checkout stores its database under the dot-prefixed .artifacts
+    # directory. PowerShell must include hidden directories when recursing on Unix.
+    $privateDatabases = @(Get-ChildItem -LiteralPath (Join-Path $checkoutRoot '.artifacts/llm-wiki/read-only-snapshots') -Filter code-graph.sqlite -Recurse -File -Force | ForEach-Object FullName)
     Assert-ColdCheckout ($privateDatabases.Count -gt 0) 'Backend brief did not prepare a private projection.'
     $damageScript = Join-Path $checkoutRoot '.artifacts/stale-projection.mjs'
     [IO.File]::WriteAllText($damageScript, @'

@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { repositoryRoot } from "./generate-feature.mjs";
 import { startRuntime, stopRuntime } from "./task-runtime.mjs";
-import { cleanStoppedBuild } from "./resource-budget.mjs";
+import { cleanStoppedBuild, waitForStoppedProcesses } from "./resource-budget.mjs";
 import { safeJourneyOutput } from "./journey-evidence.mjs";
 
 const name = `reliability-${randomUUID().slice(0, 8)}`;
@@ -76,6 +76,7 @@ try {
     if (started) {
         try {
             const stopped = stopRuntime(name);
+            await waitForStoppedProcesses(stopped);
             cleanStoppedBuild(stopped);
             report.ownedRuntimeStopped = true;
             report.ownedBuildCleaned = true;

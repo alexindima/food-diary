@@ -80,6 +80,32 @@ export function recordBuildScope(state, root = repositoryRoot) {
     return scope;
 }
 
+export async function waitForStoppedProcesses(state, { timeoutMilliseconds = 10_000 } = {}) {
+    if (state.status !== "stopped" || state.failures?.length)
+        throw new Error("Process exit observation requires a fully stopped runtime");
+    if (!Number.isInteger(timeoutMilliseconds) || timeoutMilliseconds < 1 || timeoutMilliseconds > 30_000)
+        throw new Error("Invalid process exit timeout");
+    const owners = state.processes ?? [];
+    if (owners.some(owner => !Number.isInteger(owner.pid) || owner.pid <= 0))
+        throw new Error("Invalid recorded process identity");
+    const deadline = performance.now() + timeoutMilliseconds;
+    while (true) {
+        const alive = owners.some(owner => {
+            try { process.kill(owner.pid, 0); return true; }
+            catch (error) {
+                if (error.code === "ESRCH") return false;
+                throw new Error("Cannot confirm recorded runtime process termination");
+            }
+        });
+        if (!alive) return;
+        if (performance.now() >= deadline)
+            throw new Error("Recorded runtime processes did not exit within the cleanup deadline");
+        // Signal delivery and Docker removal are synchronous. Yield so Node can
+        // reap exited children before the unchanged native-clean safety check.
+        await new Promise(resolveWait => setTimeout(resolveWait, 25));
+    }
+}
+
 export function cleanStoppedBuild(
     state,
     root = repositoryRoot,

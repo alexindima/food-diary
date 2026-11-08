@@ -6,6 +6,7 @@ $repositoryRoot=(Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $toolsRoot=$PSScriptRoot
 $shell=(Get-Process -Id $PID).Path
 . (Join-Path $toolsRoot 'LlmWikiSmokeSandbox.ps1')
+. (Join-Path $toolsRoot 'LlmWikiProcess.ps1')
 function Assert-System([bool]$Condition,[string]$Message) { if(-not $Condition){throw $Message} }
 function New-SystemFixture([string]$Name,[string[]]$Owners) {
  $root=New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name "system-$Name" -IndependentRepository
@@ -98,7 +99,7 @@ if($env:LLM_WIKI_SYSTEM_DRIFT -eq '1'){[IO.File]::WriteAllText((Join-Path $root 
     $output=& $shell -NoProfile -File (Join-Path $fixture '.llm-wiki/wiki.ps1') verify -Stage 'page contracts' -ChangedPath '.llm-wiki/index.md' -ResumePassedStages:$false 2>&1
     Assert-System ($LASTEXITCODE -eq 0 -and (Test-Path (Join-Path $fixture '.artifacts/checked.txt'))) "Orphan progress with an unrelated live PID produced success without executing the requested check. Output: $($output -join ' | ')"
     $progressPath=Join-Path $fixture '.artifacts/llm-wiki/verify-progress.json'
-    @{status='running';stage='page contracts';ownerProcessId=1073741824;ownerProcessStartTimeUtc=[DateTime]::UtcNow.AddDays(-1).ToString('o');childProcessId=$PID;childProcessStartTimeUtc=(Get-Process -Id $PID).StartTime.ToUniversalTime().ToString('o');updatedAtUtc=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json | Set-Content $progressPath
+    @{status='running';stage='page contracts';ownerProcessId=1073741824;ownerProcessIdentityToken='missing-owner';childProcessId=$PID;childProcessIdentityToken=(Get-LlmWikiProcessIdentityToken -ProcessId $PID);updatedAtUtc=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json | Set-Content $progressPath
     $countBefore=[IO.File]::ReadAllLines((Join-Path $fixture '.artifacts/checked.txt')).Count
     foreach($attempt in 1..2){
      $output=& $shell -NoProfile -File (Join-Path $fixture '.llm-wiki/wiki.ps1') verify -Stage 'page contracts' -ChangedPath '.llm-wiki/index.md' 2>&1

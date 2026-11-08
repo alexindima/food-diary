@@ -1,3 +1,49 @@
+function Get-LlmWikiProcessIdentityToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][int]$ProcessId)
+
+    $candidate = Get-Process -Id $ProcessId -ErrorAction SilentlyContinue
+    if ($null -eq $candidate) { return $null }
+    try {
+        if ($candidate.HasExited) { return $null }
+        if ([IO.File]::Exists('/proc/sys/kernel/random/boot_id')) {
+            try { $stat = [IO.File]::ReadAllText("/proc/$ProcessId/stat") }
+            catch [IO.FileNotFoundException] { return $null }
+            catch [IO.DirectoryNotFoundException] { return $null }
+            # comm can contain spaces and parentheses. Fields after its final
+            # delimiter start at field 3; starttime is field 22 (index 19).
+            $commandEnd = $stat.LastIndexOf(') ', [StringComparison]::Ordinal)
+            if ($commandEnd -lt 0) { throw "Cannot read Wiki process identity for PID $ProcessId." }
+            $fields = $stat.Substring($commandEnd + 2).Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            if ($fields.Length -le 19 -or $fields[19] -notmatch '^\d+$') { throw "Cannot read Wiki process start ticks for PID $ProcessId." }
+            if ($fields[0] -in @('Z', 'X', 'x')) { return $null }
+            $boot = [IO.File]::ReadAllText('/proc/sys/kernel/random/boot_id').Trim()
+            return "linux:$($boot):$($fields[19])"
+        }
+        return 'start-time-utc:' + $candidate.StartTime.ToUniversalTime().Ticks
+    } finally { $candidate.Dispose() }
+}
+
+function Test-LlmWikiRecordedProcessIdentity {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][object]$Record, [Parameter(Mandatory)][ValidateSet('owner','child')][string]$Role)
+
+    $id = $Record.PSObject.Properties["${Role}ProcessId"]
+    if ($null -eq $id -or -not $id.Value) { return $false }
+    $token = $Record.PSObject.Properties["${Role}ProcessIdentityToken"]
+    if ($null -ne $token -and -not [string]::IsNullOrWhiteSpace([string]$token.Value)) {
+        $actual = Get-LlmWikiProcessIdentityToken -ProcessId ([int]$id.Value)
+        return -not [string]::IsNullOrWhiteSpace($actual) -and $actual -ceq [string]$token.Value
+    }
+    # Preserve exact legacy receipt matching; do not guess using a time tolerance.
+    $started = $Record.PSObject.Properties["${Role}ProcessStartTimeUtc"]
+    if ($null -eq $started) { return $false }
+    $candidate = Get-Process -Id ([int]$id.Value) -ErrorAction SilentlyContinue
+    if ($null -eq $candidate) { return $false }
+    try { return -not $candidate.HasExited -and $candidate.StartTime.ToUniversalTime().ToString('o') -ceq [string]$started.Value }
+    finally { $candidate.Dispose() }
+}
+
 function Invoke-LlmWikiProcessBatch {
     [CmdletBinding()]
     param(

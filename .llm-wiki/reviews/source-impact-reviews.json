@@ -174,8 +174,8 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/system/frontend-index.md against the final script diff and relevant workflow claims. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read frontend index guidance. The facade change only stabilizes verify worker identity and retains exact legacy matching; frontend inventory, standalone routes, cache keys and strict affected contracts remain unchanged."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -188,10 +188,10 @@
           "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/system/frontend-index.md against the final script diff and relevant workflow claims. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read frontend index guidance. The facade change only stabilizes verify worker identity and retains exact legacy matching; frontend inventory, standalone routes, cache keys and strict affected contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:41.4877063Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:01.7669099Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -498,6 +498,11 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
+          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+        },
+        {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
           "sha256": "27c76c1319e4bc64aae797fc1cbde89bb1076055316453c8d99913723d8b8ac5",
           "reviewReason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads."
@@ -529,18 +534,13 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
-          "sha256": "5f68043130793ad3268eaf03c48bf94f7ea72d7ac3114dba0fc4f8667192a468",
-          "reviewReason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "7f038882909d4211e5acaff5b3b6c545ca49d6c35c67b9fbb1b54189337df5a6",
+          "reviewReason": "Read SQLite projection and cold-checkout guidance. Reproduced original failure and fixed hidden-directory discovery in Linux without weakening any assertion; all twelve cold indexes, stale projection recovery and source isolation pass. The facade identity change does not alter graph preparation or query contracts."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read SQLite projection and cold-checkout guidance. Reproduced original failure and fixed hidden-directory discovery in Linux without weakening any assertion; all twelve cold indexes, stale projection recovery and source isolation pass. The facade identity change does not alter graph preparation or query contracts."
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
@@ -568,10 +568,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read SQLite projection and cold-checkout guidance. Reproduced original failure and fixed hidden-directory discovery in Linux without weakening any assertion; all twelve cold indexes, stale projection recovery and source isolation pass. The facade identity change does not alter graph preparation or query contracts.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:43.7834477Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:02.0625744Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -856,25 +856,25 @@
       "pageSha256": "d3390a6828507add3b19041e12116cea10b03611d5ce4314b96b6e202474cace",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
-          "sha256": "db690abfb5e48a52152ae591b77af69189e93933b0c2d2c425b9c9efefbf8798",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/developer-experience.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
           "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/developer-experience.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         },
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
+          "path": ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
+          "sha256": "db690abfb5e48a52152ae591b77af69189e93933b0c2d2c425b9c9efefbf8798",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/developer-experience.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read compact development flow guidance. New verify progress identity tokens do not change routing, scope selection, five-stage experience, backend bootstrap, or completion contracts. Existing guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/developer-experience.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read compact development flow guidance. New verify progress identity tokens do not change routing, scope selection, five-stage experience, backend bootstrap, or completion contracts. Existing guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:45.6619192Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:02.7676237Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -1123,153 +1123,33 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "88fcdefe12d1402f55e2066de1df0072bf396d0207cd06a37b84f90ac4f1310a",
+      "pageSha256": "96add9c4d777b77071ddf1fd39b846fb6d6aef8e34fdacc812d94fc61a8e13c6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "dd9f54c56bac884a920f787cfc5ca9e06a33131d678cf042af478c503e4b1870",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
-          "sha256": "6d5d35b47c460b7366c8841b7748c19c9c65e378c2d193e98d8611e324276886",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-          "sha256": "820cc73337f1a2b1aa7cd7b4c958c95b3ae400302ab173f1dcd5091f20629fc9",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
-          "sha256": "d22dcba90343dc08b91b41877fca9515e8ee8c8de5a920dd904d4104563b5282",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "b564419abc7e8012b9e71b2fc9af7dac04394387d4e329bdbdcf9f87753c2412",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "0407ecbc3c6027bef0979a426c8d1f97b1b52c32d0b92c04d4f2ae9792c4a3c4",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "8c2540a10bd4c5679ae9ba029f1e8c64ae54f586a9c197ff6432bfe031d0c0a0",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
-          "sha256": "79003eae0687ae59d530d24c032d0a3e5c755f6989f7004aa06809753a88a23a",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1",
-          "sha256": "381d1752eab988b9d3fdb40240a49f11e03a16674fa98f30ceb33077bc266564",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-          "sha256": "33f579e962d343e5da4e517b099b3778b277ea63113effd5cb61a6543b3ebf95",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
-          "sha256": "f6b772ba6554931453edabdfbfcee484e52b1288e93804dbcc39a4249b72abe6",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-          "sha256": "8d453b21c9df1a052c58d9c2c11e6ea1ca07dc0ab7821256088d7e904c4eea48",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "00b74abe76753eddc75a312ceb70e29e0bf5a3da2a697a4d448741ff47739858",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
-          "sha256": "b5dd3498175c728915e93651e4c8df56358fe53904b0858cc723924ce900e5a9",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
-          "sha256": "7d87b2549d57a98f699be491cc302a98d3e4a09a4ea9b4e8bea8bf37ef523cf0",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
-          "sha256": "378f213ccca6d703cfa777af58a386a1c505ff608c7bc031bf9632008665d53a",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
           "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-          "sha256": "4de312a8f1341bcc894cfbe35b196cb61057c5ce8d30c3602856beb892a9018a",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
-          "sha256": "d0f4f96637232d987501adbf8fce762ce8a33154c11417f31de00ca36e69de8b",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-          "sha256": "18a1968151fb1e40a8e064943fd7d8c39c51aedb08ab961cc846961e055f14f4",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "3074acfbc5fb9b1083d812ae7b2fc6d47f1130ba29e65134f158430c2cfbc18d",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "6d7330d9168e31666ba7b5ca8b61702587b00971a15c434591a0a3b0db05df0d",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
+          "sha256": "ed224d3efa33fb151f418d8d4d908082678f029b72bb11c841289ba52e073298",
+          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAuditSystem.ps1",
-          "sha256": "0671317086c41722fc17b05ecf408812e0be9fa02bebfde0d6db5ebbb60aa730",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
+          "sha256": "99fb800c674f5fb5d298a76d0cc454067c3e522f78d435fa98034d2c8677687d",
+          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiIndexPipelineCache.ps1",
-          "sha256": "b02b86b53e7760c58a36afe26dc189246a985c907a01320b15fb532b11f0d374",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiProjectionSnapshot.cs",
-          "sha256": "da9970c6029dd8b44c17b173d020acd65448f8a6ea0b4efd9da6a38956b3af0e",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
-          "sha256": "50dcbd9746503dcae1798bb56bf01f7d7eccfe82b391dcaa9f82785ea7c039a6",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": ".llm-wiki/tools/wiki-system-audit.test.mjs",
-          "sha256": "5c7d0ee0ea5ad5d87a766542e3d6cb5576582d0d0dadf211dc0cac9991abb0f3",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
+          "path": ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
+          "sha256": "89ca381db6f49ddf24e57355e88922ae1e70da142be938f0b50611a5f0a10092",
+          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
-        },
-        {
-          "path": "scripts/ci/wiki-smoke-shards.json",
-          "sha256": "1502291f7dcec2706464271b4851c155e5e5932836cdda3a01e04274382d244f",
-          "reviewReason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass."
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         }
       ],
-      "reason": "Reviewed the CI partition against the IncludeInAll catalog. The prior plan omitted audit-system and audit-regressions and the unchanged completeness test rejected both omissions. Added audit-system to smoke-2 and audit-regressions to smoke-3; every existing group and four-worker layout remain unchanged. The source page already requires every IncludeInAll group exactly once and needs no narrative change. The original completeness, exact planner selection and all seven rejection checks now pass; seven CI parallelism tests and Wiki aggregate result checks also pass.",
+      "reason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-07T04:04:30.403939Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:01.1360858Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1810,14 +1690,14 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/task-dispatch-receipts.md against the final script diff and relevant workflow claims. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read dispatch receipts guidance. New observed-verify identity tokens and hidden-directory test discovery do not enter task dispatch payloads, leases, receipt hashes or full verification status. Scoped versus complete verification and timestamp parsing contracts remain accurate."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/task-dispatch-receipts.md against the final script diff and relevant workflow claims. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read dispatch receipts guidance. New observed-verify identity tokens and hidden-directory test discovery do not enter task dispatch payloads, leases, receipt hashes or full verification status. Scoped versus complete verification and timestamp parsing contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:51.5209938Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:02.4902941Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -2117,14 +1997,14 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/review-diff.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read diff/review receipt guidance. Verify progress identity fields are independent of Git scope and page/source review hashes. Hidden projection discovery affects only the cold-checkout assertion; source review and diff contracts remain accurate."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/review-diff.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read diff/review receipt guidance. Verify progress identity fields are independent of Git scope and page/source review hashes. Hidden projection discovery affects only the cold-checkout assertion; source review and diff contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:50.2534693Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:01.5521555Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -2138,14 +2018,14 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "d8e0a1b87e370dc291fde52ce07020a54584a9c58eea1e68b4bccbce5dd41c02",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/self-maintenance.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
+          "reviewReason": "Read reader/recovery and source-stability guidance. Stable kernel process identity repairs Linux orphan protection without altering cache repair, source ownership checks, projection validation or housekeeping. Cold-checkout isolation and all standalone indexes pass."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/self-maintenance.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Read reader/recovery and source-stability guidance. Stable kernel process identity repairs Linux orphan protection without altering cache repair, source ownership checks, projection validation or housekeeping. Cold-checkout isolation and all standalone indexes pass.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:50.6658983Z"
+      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
+      "reviewedAtUtc": "2026-11-08T04:24:03.1446166Z"
     }
   ]
 }
