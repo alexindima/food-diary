@@ -185,13 +185,15 @@ test('Mini App SDK failure exposes an error without sending unverified identity'
     expect(calls.complete).toBe(0);
 });
 
-test('Mini App preserves a restored session without consuming the launch proof again', async ({ page }) => {
-    const { calls } = await installMiniAppAsync(page, { restored: true });
+test('Mini App initializes the SDK for a restored session without authorizing again', async ({ page }) => {
+    const { calls, errors } = await installMiniAppAsync(page, { restored: true });
     await page.goto(`/#tgWebAppData=${PROOF}`);
     await expect(page.locator('fd-dashboard')).toBeVisible();
     expect(calls.begin).toBe(0);
     expect(calls.complete).toBe(0);
-    expect(calls.sdk).toBe(0);
+    expect(calls.sdk).toBe(1);
+    expect(calls.refresh).toBe(1);
+    expect(errors).toEqual([]);
 });
 
 test('Mini App respects explicit logout across reload and allows a genuinely new launch', async ({ page }) => {

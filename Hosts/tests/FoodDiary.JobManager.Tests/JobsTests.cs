@@ -28,6 +28,7 @@ using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Gamification.Application.Abstractions.Achievements.Common;
 using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
@@ -1778,6 +1779,14 @@ public sealed class JobsTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingBillingPaymentRepository : IBillingPaymentReadRepository, IBillingPaymentWriteRepository {
         public List<BillingPayment> Payments { get; } = [];
+
+        public Task<BillingPayment?> GetLatestCheckoutAsync(UserId userId, BillingSubscriptionId subscriptionId,
+            string provider, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Payments.Where(payment => payment.UserId == userId &&
+                    payment.BillingSubscriptionId == subscriptionId.Value && string.Equals(payment.Provider, provider, StringComparison.Ordinal) &&
+                    string.Equals(payment.Kind, BillingPaymentKinds.Checkout, StringComparison.Ordinal) &&
+                    string.Equals(payment.Status, BillingSubscription.PendingCheckoutStatus, StringComparison.Ordinal))
+                .OrderByDescending(payment => payment.CreatedOnUtc).ThenByDescending(payment => payment.Id).FirstOrDefault());
 
         public Task<BillingPayment?> GetByExternalPaymentIdAsync(
             string provider,
