@@ -66,7 +66,8 @@ groups:
       severity: critical
       service: api
     annotations:
-      summary: User API errors exceed 2%
+      notification_title: Ошибки пользовательского API превышают 2%
+      summary: Ошибки пользовательского API превышают 2%
       runbook: infra/observability/README.md
   - uid: fd-api-user-slow
     title: User read API p95 exceeds 1500 ms
@@ -130,7 +131,8 @@ groups:
       severity: warning
       service: api
     annotations:
-      summary: User read API p95 exceeds 1500 ms
+      notification_title: p95 чтения пользовательского API превышает 1500 мс
+      summary: p95 чтения пользовательского API превышает 1500 мс
       runbook: infra/observability/README.md
   - uid: fd-otel-unavailable
     title: Application metric collector unavailable
@@ -192,7 +194,8 @@ groups:
       severity: critical
       service: telemetry
     annotations:
-      summary: Application metric collector unavailable
+      notification_title: Недоступен сборщик метрик приложения
+      summary: Недоступен сборщик метрик приложения
       runbook: infra/observability/README.md
   - uid: fd-monitoring-service-down
     title: Monitoring service scrape is failing
@@ -254,7 +257,8 @@ groups:
       severity: critical
       service: telemetry
     annotations:
-      summary: Monitoring service scrape is failing
+      notification_title: Не удаётся получить метрики службы мониторинга
+      summary: Не удаётся получить метрики службы мониторинга
       runbook: infra/observability/README.md
   - uid: fd-api-metrics-missing
     title: API runtime metrics stopped
@@ -317,7 +321,8 @@ groups:
       severity: critical
       service: telemetry
     annotations:
-      summary: API runtime metrics stopped
+      notification_title: Перестали поступать метрики API
+      summary: Перестали поступать метрики API
       runbook: infra/observability/README.md
   - uid: fd-job-metrics-missing
     title: JobManager metrics stopped
@@ -379,7 +384,8 @@ groups:
       severity: critical
       service: telemetry
     annotations:
-      summary: JobManager metrics stopped
+      notification_title: Перестали поступать метрики фоновых заданий
+      summary: Перестали поступать метрики фоновых заданий
       runbook: infra/observability/README.md
   - uid: fd-host-probes-stale
     title: Infrastructure probes have not completed for 3 minutes
@@ -441,7 +447,8 @@ groups:
       severity: critical
       service: telemetry
     annotations:
-      summary: Infrastructure probes have not completed for 3 minutes
+      notification_title: Инфраструктурные проверки не завершались более 3 минут
+      summary: Инфраструктурные проверки не завершались более 3 минут
       runbook: infra/observability/README.md
   - uid: fd-host-probe-failed
     title: An infrastructure probe is failing
@@ -503,7 +510,9 @@ groups:
       severity: critical
       service: telemetry
     annotations:
-      summary: 'An infrastructure probe is failing: {{ $labels.component }}'
+      notification_title: Не удалось выполнить инфраструктурную проверку
+      summary: 'Не удалось выполнить инфраструктурную проверку: {{ $labels.component
+        }}'
       runbook: infra/observability/README.md
   - uid: fd-job-schedule-missed
     title: Recurring job missed its success deadline
@@ -565,7 +574,8 @@ groups:
       severity: critical
       service: job-manager
     annotations:
-      summary: 'Recurring job missed its success deadline: {{ $labels.fooddiary_job_name
+      notification_title: Фоновое задание пропустило срок успешного выполнения
+      summary: 'Фоновое задание пропустило срок успешного выполнения: {{ $labels.fooddiary_job_name
         }}'
       runbook: infra/observability/README.md
   - uid: fd-container-missing
@@ -628,8 +638,8 @@ groups:
       severity: critical
       scope: containers
     annotations:
-      summary: 'Required application container is not running: {{ $labels.service
-        }}'
+      notification_title: Обязательный контейнер приложения не запущен
+      summary: 'Обязательный контейнер приложения не запущен: {{ $labels.service }}'
       runbook: infra/observability/README.md
   - uid: fd-container-unhealthy
     title: Application container health check is failing
@@ -691,7 +701,8 @@ groups:
       severity: critical
       scope: containers
     annotations:
-      summary: 'Application container health check is failing: {{ $labels.service
+      notification_title: Проверка здоровья контейнера завершилась ошибкой
+      summary: 'Проверка здоровья контейнера завершилась ошибкой: {{ $labels.service
         }}'
       runbook: infra/observability/README.md
   - uid: fd-container-restarted
@@ -754,7 +765,8 @@ groups:
       severity: warning
       scope: containers
     annotations:
-      summary: 'Application container restarted recently: {{ $labels.service }}'
+      notification_title: Контейнер приложения недавно перезапустился
+      summary: 'Контейнер приложения недавно перезапустился: {{ $labels.service }}'
       runbook: infra/observability/README.md
   - uid: fd-container-oom
     title: Container was killed by the memory limit
@@ -816,7 +828,9 @@ groups:
       severity: critical
       scope: containers
     annotations:
-      summary: 'Container was killed by the memory limit: {{ $labels.service }}'
+      notification_title: Контейнер остановлен из-за ограничения памяти
+      summary: 'Контейнер остановлен из-за ограничения памяти: {{ $labels.service
+        }}'
       runbook: infra/observability/README.md
   - uid: fd-kernel-oom
     title: Linux OOM killer terminated a process
@@ -878,7 +892,8 @@ groups:
       severity: critical
       service: infrastructure
     annotations:
-      summary: Linux OOM killer terminated a process
+      notification_title: Linux завершил процесс из-за нехватки памяти
+      summary: Linux завершил процесс из-за нехватки памяти
       runbook: infra/observability/README.md
   - uid: fd-db-command-errors
     title: Database commands are failing
@@ -940,7 +955,8 @@ groups:
       severity: warning
       service: postgresql
     annotations:
-      summary: Database commands are failing
+      notification_title: Ошибки выполнения команд базы данных
+      summary: Ошибки выполнения команд базы данных
       runbook: infra/observability/README.md
   - uid: fd-backup-old
     title: Verified PostgreSQL backup is older than 26 hours
@@ -1002,7 +1018,8 @@ groups:
       severity: critical
       service: backup
     annotations:
-      summary: 'Verified PostgreSQL backup is older than 26 hours: {{ $labels.database
+      notification_title: Проверенной резервной копии PostgreSQL более 26 часов
+      summary: 'Проверенной резервной копии PostgreSQL более 26 часов: {{ $labels.database
         }}'
       runbook: infra/observability/README.md
   - uid: fd-backup-corrupt
@@ -1065,7 +1082,8 @@ groups:
       severity: critical
       service: backup
     annotations:
-      summary: 'PostgreSQL backup checksum verification failed: {{ $labels.database
+      notification_title: Не совпала контрольная сумма резервной копии PostgreSQL
+      summary: 'Не совпала контрольная сумма резервной копии PostgreSQL: {{ $labels.database
         }}'
       runbook: infra/observability/README.md
   - uid: fd-pg-locks
@@ -1128,7 +1146,8 @@ groups:
       severity: warning
       service: postgresql
     annotations:
-      summary: 'PostgreSQL sessions are waiting for locks: {{ $labels.database }}'
+      notification_title: Сеансы PostgreSQL ожидают блокировки
+      summary: 'Сеансы PostgreSQL ожидают блокировки: {{ $labels.database }}'
       runbook: infra/observability/README.md
   - uid: fd-pg-long-transaction
     title: PostgreSQL transaction is older than 120 seconds
@@ -1190,7 +1209,8 @@ groups:
       severity: warning
       service: postgresql
     annotations:
-      summary: 'PostgreSQL transaction is older than 120 seconds: {{ $labels.database
+      notification_title: Транзакция PostgreSQL длится более 120 секунд
+      summary: 'Транзакция PostgreSQL длится более 120 секунд: {{ $labels.database
         }}'
       runbook: infra/observability/README.md
   - uid: fd-pg-connections
@@ -1253,7 +1273,9 @@ groups:
       severity: warning
       service: postgresql
     annotations:
-      summary: 'PostgreSQL connection usage exceeds 80%: {{ $labels.database }}'
+      notification_title: Использовано более 80% подключений PostgreSQL
+      summary: 'Использовано более 80% подключений PostgreSQL: {{ $labels.database
+        }}'
       runbook: infra/observability/README.md
   - uid: fd-redis-evictions
     title: Redis is evicting keys
@@ -1315,7 +1337,8 @@ groups:
       severity: warning
       service: redis
     annotations:
-      summary: Redis is evicting keys
+      notification_title: Redis удаляет ключи из-за ограничения памяти
+      summary: Redis удаляет ключи из-за ограничения памяти
       runbook: infra/observability/README.md
   - uid: fd-rabbit-no-consumers
     title: RabbitMQ has queued messages without consumers
@@ -1377,7 +1400,8 @@ groups:
       severity: critical
       service: rabbitmq
     annotations:
-      summary: RabbitMQ has queued messages without consumers
+      notification_title: В RabbitMQ есть сообщения без обработчиков
+      summary: В RabbitMQ есть сообщения без обработчиков
       runbook: infra/observability/README.md
   - uid: fd-rabbit-backlog
     title: RabbitMQ ready queue exceeds 100 messages
@@ -1439,7 +1463,8 @@ groups:
       severity: warning
       service: rabbitmq
     annotations:
-      summary: RabbitMQ ready queue exceeds 100 messages
+      notification_title: В очереди RabbitMQ более 100 готовых сообщений
+      summary: В очереди RabbitMQ более 100 готовых сообщений
       runbook: infra/observability/README.md
   - uid: fd-tls-expiry
     title: Public TLS certificate expires within 14 days
@@ -1501,7 +1526,9 @@ groups:
       severity: warning
       service: tls
     annotations:
-      summary: 'Public TLS certificate expires within 14 days: {{ $labels.target }}'
+      notification_title: Сертификат TLS истекает менее чем через 14 дней
+      summary: 'Сертификат TLS истекает менее чем через 14 дней: {{ $labels.target
+        }}'
       runbook: infra/observability/README.md
   - uid: fd-public-probe-down
     title: Public HTTP probe fails from production
@@ -1563,7 +1590,9 @@ groups:
       severity: warning
       service: availability
     annotations:
-      summary: 'Public HTTP probe fails from production: {{ $labels.target }}'
+      notification_title: Публичный HTTP-адрес недоступен с production-сервера
+      summary: 'Публичный HTTP-адрес недоступен с production-сервера: {{ $labels.target
+        }}'
       runbook: infra/observability/README.md
   - uid: fd-api-budget-fast
     title: User API availability budget burns rapidly
@@ -1626,7 +1655,9 @@ groups:
       severity: critical
       service: api
     annotations:
-      summary: User API availability budget burns rapidly
+      notification_title: Быстро расходуется бюджет доступности пользовательского
+        API
+      summary: Быстро расходуется бюджет доступности пользовательского API
       runbook: infra/observability/README.md
   - uid: fd-api-budget-slow
     title: User API availability budget burns steadily
@@ -1689,7 +1720,9 @@ groups:
       severity: warning
       service: api
     annotations:
-      summary: User API availability budget burns steadily
+      notification_title: Устойчиво расходуется бюджет доступности пользовательского
+        API
+      summary: Устойчиво расходуется бюджет доступности пользовательского API
       runbook: infra/observability/README.md
   - uid: fd-telegram-intake-stalled
     title: Telegram has no successful intake heartbeat
@@ -1752,7 +1785,8 @@ groups:
       severity: critical
       service: telegram-bot
     annotations:
-      summary: Telegram has no successful intake heartbeat
+      notification_title: Нет подтверждений успешного опроса Telegram
+      summary: Нет подтверждений успешного опроса Telegram
       runbook: infra/observability/README.md
   - uid: fd-telegram-errors
     title: Telegram transport repeatedly fails
@@ -1816,5 +1850,6 @@ groups:
       severity: warning
       service: telegram-bot
     annotations:
-      summary: Telegram transport repeatedly fails
+      notification_title: Повторные ошибки транспорта Telegram
+      summary: Повторные ошибки транспорта Telegram
       runbook: infra/observability/README.md

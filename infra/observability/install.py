@@ -113,6 +113,13 @@ def apply(config):
         install(ROOT / "systemd" / name, "/etc/systemd/system/" + name)
     with tempfile.TemporaryDirectory(prefix="fooddiary-observability-") as directory:
         temporary = pathlib.Path(directory)
+        template = temporary / "fooddiary-telegram-notifications.yml"
+        template_config = {"apiVersion": 1, "templates": [{
+            "orgId": 1, "name": "fooddiary.telegram",
+            "template": (ROOT / "grafana/fooddiary-telegram-notifications.tmpl").read_text(encoding="utf-8"),
+        }]}
+        template.write_text(yaml.safe_dump(template_config, sort_keys=False, allow_unicode=True), encoding="utf-8")
+        install(template, PROVISION / template.name)
         prometheus = temporary / "prometheus.yml"
         prometheus.write_text(yaml.safe_dump(config, sort_keys=False))
         command(["/opt/prometheus/promtool", "check", "config", str(prometheus)])

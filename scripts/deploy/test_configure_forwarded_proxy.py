@@ -17,6 +17,53 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class ForwardedProxyDeploymentTests(unittest.TestCase):
+    @unittest.skipIf(os.name == "nt", "The production probe runs in Linux Bash")
+    def test_admin_probe_recovers_from_http2_transport_failure(self):
+        result, calls = self.run_admin_probe([("000", 16), ("401", 0)])
+        self.assertEqual(0, result.returncode, "A transient HTTP2 framing error must not abort a healthy handover: " + result.stdout)
+        self.assertEqual(2, calls)
+
+    @unittest.skipIf(os.name == "nt", "The production probe runs in Linux Bash")
+    def test_admin_probe_waits_for_upstream_startup(self):
+        result, calls = self.run_admin_probe([("503", 0), ("401", 0)])
+        self.assertEqual(0, result.returncode, result.stdout)
+        self.assertEqual(2, calls)
+
+    @unittest.skipIf(os.name == "nt", "The production probe runs in Linux Bash")
+    def test_admin_probe_rejects_wrong_origin_without_retry(self):
+        result, calls = self.run_admin_probe([("403", 0), ("401", 0)])
+        self.assertNotEqual(0, result.returncode)
+        self.assertEqual(1, calls, "A definitive origin rejection must remain a deployment failure")
+
+    @unittest.skipIf(os.name == "nt", "The production probe runs in Linux Bash")
+    def test_admin_probe_bounds_persistent_transport_errors(self):
+        result, calls = self.run_admin_probe([("000", 16)] * 10)
+        self.assertNotEqual(0, result.returncode)
+        self.assertEqual(6, calls, "Transport failure must exhaust exactly the bounded six attempts")
+
+    def run_admin_probe(self, responses):
+        workflow = (ROOT / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
+        probe = workflow[workflow.index("# An invalid code must reach SSO validation"):workflow.index("# Retire the old slots")]
+        with tempfile.TemporaryDirectory() as directory:
+            count = Path(directory) / "calls"
+            count.write_text("0")
+            cases = "\n".join(f"{i}) printf '%s' '{status}'; return {code};;" for i, (status, code) in enumerate(responses, 1))
+            fixture = '''set -euo pipefail
+curl() {
+  local attempt
+  attempt=$(cat "$PROBE_CALLS")
+  attempt=$((attempt + 1))
+  printf '%s' "$attempt" > "$PROBE_CALLS"
+  case "$attempt" in
+''' + cases + '''
+    *) return 99;;
+  esac
+}
+sleep() { :; }
+''' + probe
+            result = subprocess.run(["bash", "-c", fixture], env={**os.environ, "PROBE_CALLS": str(count)}, capture_output=True, text=True, timeout=5)
+            return result, int(count.read_text())
+
     def test_api_loads_discovered_proxy_before_recreation(self):
         compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
         # Inspect the complete service, including its indented children.

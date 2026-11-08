@@ -11,6 +11,40 @@ LOKI = "cfhlezxl8fdvka"
 API = 'exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs"'
 JOB_DEADLINE = '(fooddiary_job_last_success_age_seconds > on(fooddiary_job_name) (2*fooddiary_job_expected_interval_seconds+300)) or ((fooddiary_job_expected_interval_seconds unless on(fooddiary_job_name) fooddiary_job_last_success_age_seconds) and on(fooddiary_job_name) ((time()-scalar(max(fooddiary_container_started_timestamp_seconds{service="job-manager"}))) > fooddiary_job_expected_interval_seconds*2+300))'
 
+# Keep internal rule titles stable for routing and existing alert identities.
+# Operator-facing Telegram text comes from these Russian annotations.
+NOTIFICATION_TITLES = {
+    "fd-api-user-errors": "Ошибки пользовательского API превышают 2%",
+    "fd-api-user-slow": "p95 чтения пользовательского API превышает 1500 мс",
+    "fd-otel-unavailable": "Недоступен сборщик метрик приложения",
+    "fd-monitoring-service-down": "Не удаётся получить метрики службы мониторинга",
+    "fd-api-metrics-missing": "Перестали поступать метрики API",
+    "fd-job-metrics-missing": "Перестали поступать метрики фоновых заданий",
+    "fd-host-probes-stale": "Инфраструктурные проверки не завершались более 3 минут",
+    "fd-host-probe-failed": "Не удалось выполнить инфраструктурную проверку",
+    "fd-job-schedule-missed": "Фоновое задание пропустило срок успешного выполнения",
+    "fd-container-missing": "Обязательный контейнер приложения не запущен",
+    "fd-container-unhealthy": "Проверка здоровья контейнера завершилась ошибкой",
+    "fd-container-restarted": "Контейнер приложения недавно перезапустился",
+    "fd-container-oom": "Контейнер остановлен из-за ограничения памяти",
+    "fd-kernel-oom": "Linux завершил процесс из-за нехватки памяти",
+    "fd-db-command-errors": "Ошибки выполнения команд базы данных",
+    "fd-backup-old": "Проверенной резервной копии PostgreSQL более 26 часов",
+    "fd-backup-corrupt": "Не совпала контрольная сумма резервной копии PostgreSQL",
+    "fd-pg-locks": "Сеансы PostgreSQL ожидают блокировки",
+    "fd-pg-long-transaction": "Транзакция PostgreSQL длится более 120 секунд",
+    "fd-pg-connections": "Использовано более 80% подключений PostgreSQL",
+    "fd-redis-evictions": "Redis удаляет ключи из-за ограничения памяти",
+    "fd-rabbit-no-consumers": "В RabbitMQ есть сообщения без обработчиков",
+    "fd-rabbit-backlog": "В очереди RabbitMQ более 100 готовых сообщений",
+    "fd-tls-expiry": "Сертификат TLS истекает менее чем через 14 дней",
+    "fd-public-probe-down": "Публичный HTTP-адрес недоступен с production-сервера",
+    "fd-api-budget-fast": "Быстро расходуется бюджет доступности пользовательского API",
+    "fd-api-budget-slow": "Устойчиво расходуется бюджет доступности пользовательского API",
+    "fd-telegram-intake-stalled": "Нет подтверждений успешного опроса Telegram",
+    "fd-telegram-errors": "Повторные ошибки транспорта Telegram",
+}
+
 
 def write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
@@ -51,7 +85,8 @@ def alert(uid, title, expr, threshold=0, pending="5m", severity="warning", servi
                  "target" if service in {"tls", "availability"} else
                  "component" if uid == "fd-host-probe-failed" else
                  "fooddiary_job_name" if uid == "fd-job-schedule-missed" else None)
-    summary = title + (": {{ $labels." + dimension + " }}" if dimension else "")
+    notification_title = NOTIFICATION_TITLES[uid]
+    summary = notification_title + (": {{ $labels." + dimension + " }}" if dimension else "")
     return {
         "uid": uid, "title": title, "condition": "C",
         "data": [
@@ -67,7 +102,7 @@ def alert(uid, title, expr, threshold=0, pending="5m", severity="warning", servi
         ],
         "noDataState": no_data, "execErrState": "Error", "for": pending, "isPaused": False,
         "labels": labels,
-        "annotations": {"summary": summary, "runbook": "infra/observability/README.md"},
+        "annotations": {"notification_title": notification_title, "summary": summary, "runbook": "infra/observability/README.md"},
     }
 
 

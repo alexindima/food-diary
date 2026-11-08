@@ -1158,14 +1158,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "975852a95e34d73e8ac0ca979517926f0180d53165b4b140ef90c3d351bda61a",
-          "reviewReason": "Read the instruction-effectiveness workflow and automatic observation. The record retains exact governing instruction hashes and task evidence/quality scores, including the historical failed wrapper attempt; no instruction experiment, guide edit or automatic approval occurred."
+          "sha256": "115e0719827b18601049ad469d63dd458610476a834afbef98315940b5ec9402",
+          "reviewReason": "Reviewed one task-finish append-only observation binding this completed task, root AGENTS fingerprint and sealed score. Existing events and policy are preserved. The guide describes mechanisms rather than record counts and remains accurate."
         }
       ],
-      "reason": "Read the instruction-effectiveness workflow and automatic observation. The record retains exact governing instruction hashes and task evidence/quality scores, including the historical failed wrapper attempt; no instruction experiment, guide edit or automatic approval occurred.",
+      "reason": "Reviewed one task-finish append-only observation binding this completed task, root AGENTS fingerprint and sealed score. Existing events and policy are preserved. The guide describes mechanisms rather than record counts and remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
-      "reviewedAtUtc": "2026-11-08T04:10:05.6750294Z"
+      "gitHead": "e1dbc25898c6b106b0bd32171bc2b31f66b604cf",
+      "reviewedAtUtc": "2026-11-08T06:02:37.0808801Z"
     },
     {
       "pageId": "workflow-integration-scan",

@@ -679,14 +679,28 @@ jobs:
           fi
 
           # An invalid code must reach SSO validation (401), not fail origin validation (403).
-          admin_sso_status=$(curl -sS --output /dev/null --write-out '%{http_code}' \
+          # A graceful Nginx reload can close a new HTTP/2 stream. Retry transport
+          # and upstream-startup failures; an origin rejection must still fail.
+          admin_sso_status=000
+          for attempt in $(seq 1 6); do
+            if admin_sso_status=$(curl -sS --connect-timeout 3 --max-time 10 --output /dev/null --write-out '%{http_code}' \
             --resolve admin.fooddiary.club:443:127.0.0.1 \
             --header 'Origin: https://admin.fooddiary.club' \
             --header 'X-FoodDiary-Client: admin' \
             --header 'X-Requested-With: XMLHttpRequest' \
             --header 'Content-Type: application/json' \
             --data '{"code":"deployment-origin-probe"}' \
-            https://admin.fooddiary.club/api/v1/auth/admin-sso/exchange)
+            https://admin.fooddiary.club/api/v1/auth/admin-sso/exchange); then
+              case "$admin_sso_status" in
+                401) break ;;
+                5??) ;;
+                *) break ;;
+              esac
+            else
+              admin_sso_status=000
+            fi
+            if [ "$attempt" -lt 6 ]; then sleep 2; fi
+          done
           if [ "$admin_sso_status" != "401" ]; then
             echo "Admin HTTPS SSO origin check failed (HTTP $admin_sso_status; expected invalid-code HTTP 401)."
             exit 1

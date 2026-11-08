@@ -1,6 +1,6 @@
 {{ define "fooddiary.telegram.alert" -}}
 {{- $name := .Labels.alertname -}}
-{{- $title := $name -}}
+{{- $title := or .Annotations.notification_title $name -}}
 {{- $problem := .Annotations.summary -}}
 {{- $recovery := "Условие этого предупреждения больше не выполняется." -}}
 {{- $metric := "" -}}

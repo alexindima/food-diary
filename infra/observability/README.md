@@ -62,12 +62,20 @@ measurement rather than a live reading. Clearing the CPU >70% rule does not
 assert that the >60% warning is also clear. Clearing a dead-letter notification
 does not assert that previously failed messages have been processed.
 
-The template maps the eight current production alert titles to Russian text,
-units and threshold descriptions. Keep those descriptions synchronized when
+The template maps the original eight production alert titles to Russian text,
+units and threshold descriptions. Generated operational rules supply Russian
+`notification_title` and `summary` annotations while retaining stable internal
+titles, UIDs and routing labels. Keep those descriptions synchronized when
 renaming rules or changing their thresholds/pending periods. Unknown alerts
 fall back to their title and summary, with a neutral recovery description.
 Dynamic text is HTML-escaped. Public links are built from the alert's Grafana
 path, avoiding `localhost` links without changing the server's root URL.
+
+Infrastructure probe failures mean that a measurement could not be obtained;
+they do not establish that the measured service is down. The collector records
+only the fixed component and exception class in the systemd journal, never the
+exception message, command or response. Correlate failures during deployment
+with container health and a subsequent successful measurement.
 Grouped notifications show at most three active and two resolved alerts and
 explicitly report omitted entries to keep Telegram messages bounded. Recipients,
 evaluation, grouping and repeat intervals belong to the existing configuration.

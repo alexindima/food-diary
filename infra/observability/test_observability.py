@@ -1,10 +1,13 @@
 """Production regressions and collector boundary tests; no live services required."""
 import importlib.util
+import contextlib
+import io
 import json
 import pathlib
 import re
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import host_collector as collector
 import external_monitor as external
@@ -27,6 +30,21 @@ class FrontendPipelineTests(unittest.TestCase):
 
 
 class HostCollectorTests(unittest.TestCase):
+    def test_failed_probe_records_type_without_command_or_secret(self):
+        def fail(_):
+            raise collector.subprocess.TimeoutExpired(["private-command", "sensitive-value"], 10, output="private-response")
+
+        errors = io.StringIO()
+        with patch.object(collector, "collect_containers"), patch.object(collector, "collect_redis"), patch.object(
+            collector, "collect_public"
+        ), patch.object(collector, "collect_rabbitmq", side_effect=fail), patch.object(
+            collector, "DATABASES", {}
+        ), patch.object(collector, "BACKUPS", []), contextlib.redirect_stderr(errors):
+            text = collector.collect(pathlib.Path("unused"))
+        self.assertIn('component="rabbitmq"} 0', text)
+        self.assertIn('component="redis"} 1', text)
+        self.assertEqual("FoodDiary metric probe failed: component=rabbitmq; error=TimeoutExpired\n", errors.getvalue())
+
     def test_multiple_databases_emit_one_type_declaration(self):
         metrics = collector.Metrics()
         for database in ["main", "mailrelay", "mailinbox"]:

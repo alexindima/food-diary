@@ -19,6 +19,7 @@ import pathlib
 import re
 import socket
 import subprocess
+import sys
 import tempfile
 import time
 import urllib.parse
@@ -292,7 +293,10 @@ def collect(root):
         partial = Metrics()
         try:
             probe(partial)
-        except (OSError, ValueError, RuntimeError, KeyError, subprocess.SubprocessError, http.client.HTTPException):
+        except (OSError, ValueError, RuntimeError, KeyError, subprocess.SubprocessError, http.client.HTTPException) as error:
+            # Never stringify exceptions: commands, response bodies and private
+            # diagnostics can be embedded in their message or subprocess output.
+            print(f"FoodDiary metric probe failed: component={component}; error={type(error).__name__}", file=sys.stderr)
             return component, None
         else:
             return component, partial
