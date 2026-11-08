@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2815,
+    "typescriptFiles": 2816,
     "symbols": 884,
     "routes": 111,
     "features": 46,
@@ -2678,7 +2678,7 @@
       "role": "Component",
       "selector": "fd-admin-mail-message-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
-      "line": 31
+      "line": 33
     },
     {
       "name": "AdminMailInboxFacade",
@@ -8410,8 +8410,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1407,
-      "russianProperties": 1407,
+      "englishProperties": 1422,
+      "russianProperties": 1422,
       "countsMatch": true
     },
     {

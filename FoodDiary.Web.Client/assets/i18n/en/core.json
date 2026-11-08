@@ -966,7 +966,22 @@
         "READ_FILTER": "Read state",
         "LOAD_ERROR": "Unable to load the message. Close and try again.",
         "NO_SUBJECT": "No subject",
-        "READ_ERROR": "Could not mark the message as read. Please try again."
+        "READ_ERROR": "Could not mark the message as read. Please try again.",
+        "MESSAGE_DETAILS": "Message details",
+        "LOADING_MESSAGE": "Loading message…",
+        "UNKNOWN_SENDER": "Unknown sender",
+        "TO": "To",
+        "MESSAGE_ID": "Message ID",
+        "TECHNICAL_DETAILS": "Technical details",
+        "BODY_VIEW": "Message view",
+        "VIEW_MESSAGE": "Message",
+        "VIEW_TEXT": "Text",
+        "VIEW_HTML": "HTML source",
+        "VIEW_RAW": "Original",
+        "NO_BODY": "No message content.",
+        "MESSAGE_READ": "Read",
+        "MESSAGE_UNREAD": "Unread",
+        "MESSAGE_MAIL": "Mail"
     },
     "ADMIN_ACHIEVEMENTS": {
         "AWARDED_USERS": "Recipients (retained history)",

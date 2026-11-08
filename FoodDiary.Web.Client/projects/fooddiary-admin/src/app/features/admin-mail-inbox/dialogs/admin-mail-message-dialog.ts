@@ -6,10 +6,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
 import { type AdminId, type AdminUtcInstant, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails } from '../models/admin-mail-inbox.data';
+import { mailMessageContent } from './mail-message-content';
 
 type AdminMailInboxMessageDetailsViewModel = AdminMailInboxMessageDetails & {
     categoryLabel: string;
@@ -23,7 +25,7 @@ export type AdminMailMessageDialogData = {
 };
 @Component({
     selector: 'fd-admin-mail-message-dialog',
-    imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent],
+    imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent, FdUiSegmentedToggleComponent],
     templateUrl: './admin-mail-message-dialog.html',
     styleUrl: './admin-mail-message-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +38,17 @@ export class AdminMailMessageDialogComponent {
     protected readonly isDetailsLoading = signal(true);
     protected readonly readFailed = signal(false);
     protected readonly markingRead = signal(false);
-    protected readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
+    protected readonly selectedBodyMode = signal('preview');
+    protected readonly bodyModes = [
+        { value: 'preview', labelKey: 'ADMIN_MAIL_INBOX.VIEW_MESSAGE' },
+        { value: 'text', labelKey: 'ADMIN_MAIL_INBOX.VIEW_TEXT' },
+        { value: 'html', labelKey: 'ADMIN_MAIL_INBOX.VIEW_HTML' },
+        { value: 'raw', labelKey: 'ADMIN_MAIL_INBOX.VIEW_RAW' },
+    ];
+    protected readonly content = computed(() => {
+        const message = this.selectedMessage();
+        return mailMessageContent(message?.htmlBody, message?.textBody);
+    });
     protected readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
         const message = this.selectedMessage();
         if (message === null) {
@@ -46,7 +58,10 @@ export class AdminMailMessageDialogComponent {
         return {
             ...message,
             categoryLabel: this.formatCategory(message.category),
-            readStateLabel: this.formatReadState(message.readAtUtc),
+            readStateLabel:
+                message.readAtUtc !== null && message.readAtUtc !== undefined
+                    ? 'ADMIN_MAIL_INBOX.MESSAGE_READ'
+                    : 'ADMIN_MAIL_INBOX.MESSAGE_UNREAD',
             toRecipientsLabel: this.formatRecipients(message.toRecipients),
         };
     });
@@ -64,12 +79,12 @@ export class AdminMailMessageDialogComponent {
             return message.rawMime ?? '';
         }
 
-        return message.textBody ?? '';
+        return this.content().textBody;
     });
     public constructor() {
         this.loadMessage();
     }
-    protected setBodyMode(mode: 'text' | 'html' | 'raw'): void {
+    protected setBodyMode(mode: string): void {
         this.selectedBodyMode.set(mode);
     }
 
@@ -81,7 +96,7 @@ export class AdminMailMessageDialogComponent {
     }
     private loadMessage(): void {
         this.isDetailsLoading.set(true);
-        this.selectedBodyMode.set('text');
+        this.selectedBodyMode.set('preview');
         this.mailInboxFacade
             .getMessage(this.data.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -106,11 +121,7 @@ export class AdminMailMessageDialogComponent {
     }
 
     private formatCategory(category: string): string {
-        return category === 'dmarc-report' ? 'DMARC' : 'Mail';
-    }
-
-    private formatReadState(readAtUtc: AdminUtcInstant | null | undefined): string {
-        return readAtUtc === null || readAtUtc === undefined ? 'Unread' : 'Read';
+        return category === 'dmarc-report' ? 'DMARC' : 'ADMIN_MAIL_INBOX.MESSAGE_MAIL';
     }
 
     private markMessageRead(id: AdminId<'mail-inbox-message'>): void {

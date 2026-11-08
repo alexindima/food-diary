@@ -1,25 +1,33 @@
 <fd-ui-dialog size="xl" [title]="data.subject || ('ADMIN_MAIL_INBOX.NO_SUBJECT' | translate)">
-    <section class="mail-details fd-grid fd-gap-md" aria-label="Inbound mail message details">
-        <a target="_blank" rel="noopener noreferrer" routerLink="/outgoing-emails" [queryParams]="{ correlationId: data.id }">{{
-            'ADMIN_MAIL_INBOX.RELATED_OUTGOING' | translate
-        }}</a>
+    <section class="mail-details fd-grid fd-gap-md" [attr.aria-label]="'ADMIN_MAIL_INBOX.MESSAGE_DETAILS' | translate">
         @if (isDetailsLoading()) {
-            <p>Loading message...</p>
+            <p role="status">{{ 'ADMIN_MAIL_INBOX.LOADING_MESSAGE' | translate }}</p>
         } @else if (selectedMessageDetails(); as message) {
             <div class="mail-details__header fd-row fd-align-start fd-justify-between fd-gap-md">
-                <div>
-                    <div class="mail-details__subject fd-ui-title-sm">{{ message.subject || '(no subject)' }}</div>
-                    <div class="mail-details__meta fd-ui-body-xs">{{ message.receivedAtUtc | date: 'medium' }}</div>
+                <div class="mail-details__sender fd-row fd-align-start fd-gap-sm">
+                    <span class="mail-details__avatar fd-ui-title-sm" aria-hidden="true">{{
+                        (message.fromAddress || '?').slice(0, 1) | uppercase
+                    }}</span>
+                    <div class="mail-details__identity fd-grid fd-gap-xxs">
+                        <div class="mail-details__from fd-ui-body">
+                            {{ message.fromAddress || ('ADMIN_MAIL_INBOX.UNKNOWN_SENDER' | translate) }}
+                        </div>
+                        <div class="mail-details__meta fd-ui-body-xs">
+                            {{ 'ADMIN_MAIL_INBOX.TO' | translate }}: {{ message.toRecipientsLabel }}
+                        </div>
+                        <div class="mail-details__meta fd-ui-body-xs">{{ message.receivedAtUtc | date: 'medium' }}</div>
+                        <div class="mail-details__meta fd-ui-body-xs">{{ 'ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED' | translate }}</div>
+                    </div>
                 </div>
                 <div class="mail-details__badges fd-row fd-align-start fd-justify-end fd-gap-xs fd-wrap">
                     <span class="mail-badge fd-ui-helper-strong" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
-                        {{ message.categoryLabel }}
+                        {{ message.categoryLabel | translate }}
                     </span>
                     <span
                         class="mail-read-state fd-ui-helper-strong"
                         [class.mail-read-state--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
                     >
-                        {{ message.readStateLabel }}
+                        {{ message.readStateLabel | translate }}
                     </span>
                     <span class="mail-details__status fd-ui-helper-strong">{{ message.status }}</span>
                 </div>
@@ -32,31 +40,40 @@
                 }}</fd-ui-button>
             }
 
-            <dl class="mail-fields fd-grid fd-gap-sm">
-                <div class="fd-grid fd-gap-xxs">
-                    <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.HEADER_FROM' | translate }}</dt>
-                    <dd>{{ message.fromAddress || '-' }}</dd>
-                </div>
-                <div class="fd-grid fd-gap-xxs">
-                    <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.ENVELOPE_FROM' | translate }}</dt>
-                    <dd>{{ message.envelopeFromAddress || '-' }}</dd>
-                </div>
-                <div class="fd-grid fd-gap-xxs">
-                    <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.PROVENANCE' | translate }}</dt>
-                    <dd>
-                        {{ (message.isTrustedRelay ? 'ADMIN_MAIL_INBOX.TRUSTED_RELAY' : 'ADMIN_MAIL_INBOX.UNTRUSTED_RELAY') | translate }};
-                        {{ 'ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED' | translate }}
-                    </dd>
-                </div>
-                <div class="fd-grid fd-gap-xxs">
-                    <dt class="fd-ui-helper-strong">To</dt>
-                    <dd>{{ message.toRecipientsLabel }}</dd>
-                </div>
-                <div class="fd-grid fd-gap-xxs">
-                    <dt class="fd-ui-helper-strong">Message ID</dt>
-                    <dd>{{ message.messageId || '-' }}</dd>
-                </div>
-            </dl>
+            <details class="mail-technical">
+                <summary class="fd-ui-body-sm">{{ 'ADMIN_MAIL_INBOX.TECHNICAL_DETAILS' | translate }}</summary>
+                <dl class="mail-fields fd-grid fd-gap-sm">
+                    <div class="fd-grid fd-gap-xxs">
+                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.HEADER_FROM' | translate }}</dt>
+                        <dd>{{ message.fromAddress || '-' }}</dd>
+                    </div>
+                    <div class="fd-grid fd-gap-xxs">
+                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.ENVELOPE_FROM' | translate }}</dt>
+                        <dd>{{ message.envelopeFromAddress || '-' }}</dd>
+                    </div>
+                    <div class="fd-grid fd-gap-xxs">
+                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.PROVENANCE' | translate }}</dt>
+                        <dd>
+                            {{
+                                (message.isTrustedRelay ? 'ADMIN_MAIL_INBOX.TRUSTED_RELAY' : 'ADMIN_MAIL_INBOX.UNTRUSTED_RELAY')
+                                    | translate
+                            }};
+                            {{ 'ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED' | translate }}
+                        </dd>
+                    </div>
+                    <div class="fd-grid fd-gap-xxs">
+                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.TO' | translate }}</dt>
+                        <dd>{{ message.toRecipientsLabel }}</dd>
+                    </div>
+                    <div class="fd-grid fd-gap-xxs">
+                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.MESSAGE_ID' | translate }}</dt>
+                        <dd>{{ message.messageId || '-' }}</dd>
+                    </div>
+                </dl>
+                <a target="_blank" rel="noopener noreferrer" routerLink="/outgoing-emails" [queryParams]="{ correlationId: data.id }">{{
+                    'ADMIN_MAIL_INBOX.RELATED_OUTGOING' | translate
+                }}</a>
+            </details>
 
             @if (message.dmarcReport; as report) {
                 <section class="dmarc-report fd-grid fd-gap-sm" aria-label="DMARC report summary">
@@ -106,27 +123,29 @@
                 </section>
             }
 
-            <div class="body-switcher fd-row fd-gap-xs fd-wrap" role="group" aria-label="Message body view">
-                <fd-ui-button
-                    type="button"
-                    [variant]="selectedBodyMode() === 'text' ? 'primary' : 'secondary'"
-                    (click)="setBodyMode('text')"
-                >
-                    Text
-                </fd-ui-button>
-                <fd-ui-button
-                    type="button"
-                    [variant]="selectedBodyMode() === 'html' ? 'primary' : 'secondary'"
-                    (click)="setBodyMode('html')"
-                >
-                    HTML
-                </fd-ui-button>
-                <fd-ui-button type="button" [variant]="selectedBodyMode() === 'raw' ? 'primary' : 'secondary'" (click)="setBodyMode('raw')">
-                    Raw
-                </fd-ui-button>
-            </div>
+            <fd-ui-segmented-toggle
+                class="body-switcher"
+                size="sm"
+                [options]="bodyModes"
+                [selectedValue]="selectedBodyMode()"
+                [ariaLabel]="'ADMIN_MAIL_INBOX.BODY_VIEW' | translate"
+                [shrinkItems]="true"
+                [stackOnNarrow]="false"
+                [wrapOnNarrow]="true"
+                (selectedValueChange)="setBodyMode($event)"
+            />
 
-            <pre class="mail-body">{{ selectedBody() || 'No body content.' }}</pre>
+            @if (selectedBodyMode() === 'preview' && content().previewHtml) {
+                <article class="mail-body mail-body--formatted" dir="auto" [innerHTML]="content().previewHtml"></article>
+            } @else if (selectedBodyMode() === 'html' || selectedBodyMode() === 'raw') {
+                <pre class="mail-body mail-body--source">{{ selectedBody() || ('ADMIN_MAIL_INBOX.NO_BODY' | translate) }}</pre>
+            } @else {
+                <article
+                    class="mail-body mail-body--text"
+                    dir="auto"
+                    [textContent]="content().textBody || ('ADMIN_MAIL_INBOX.NO_BODY' | translate)"
+                ></article>
+            }
         } @else {
             <p role="alert">{{ 'ADMIN_MAIL_INBOX.LOAD_ERROR' | translate }}</p>
         }

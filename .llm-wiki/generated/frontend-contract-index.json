@@ -7,8 +7,8 @@
     "outputs": 559,
     "apiCalls": 329,
     "templatesWithTranslations": 377,
-    "translationKeys": 2259,
-    "consumerEdges": 1334,
+    "translationKeys": 2267,
+    "consumerEdges": 1335,
     "consumedComponents": 330,
     "unconsumedComponents": 190
   },
@@ -22241,15 +22241,23 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "keys": [
         "ADMIN_COMMON.RETRY",
+        "ADMIN_MAIL_INBOX.BODY_VIEW",
         "ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING",
         "ADMIN_MAIL_INBOX.ENVELOPE_FROM",
         "ADMIN_MAIL_INBOX.HEADER_FROM",
         "ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED",
+        "ADMIN_MAIL_INBOX.LOADING_MESSAGE",
         "ADMIN_MAIL_INBOX.LOAD_ERROR",
+        "ADMIN_MAIL_INBOX.MESSAGE_DETAILS",
+        "ADMIN_MAIL_INBOX.MESSAGE_ID",
+        "ADMIN_MAIL_INBOX.NO_BODY",
         "ADMIN_MAIL_INBOX.NO_SUBJECT",
         "ADMIN_MAIL_INBOX.PROVENANCE",
         "ADMIN_MAIL_INBOX.READ_ERROR",
-        "ADMIN_MAIL_INBOX.RELATED_OUTGOING"
+        "ADMIN_MAIL_INBOX.RELATED_OUTGOING",
+        "ADMIN_MAIL_INBOX.TECHNICAL_DETAILS",
+        "ADMIN_MAIL_INBOX.TO",
+        "ADMIN_MAIL_INBOX.UNKNOWN_SENDER"
       ]
     },
     {
@@ -30170,11 +30178,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-mail-inbox",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
-      "occurrences": 4,
+      "occurrences": 1,
       "inputsUsed": [
         "loading",
-        "type",
-        "variant"
+        "type"
       ],
       "outputsHandled": []
     },
@@ -40880,6 +40887,26 @@
         "state"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiSegmentedToggleComponent",
+      "selector": "fd-ui-segmented-toggle",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+      "consumerFeature": "admin-mail-inbox",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "options",
+        "selectedValue",
+        "shrinkItems",
+        "size",
+        "stackOnNarrow",
+        "wrapOnNarrow"
+      ],
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
     },
     {
       "component": "FdUiSegmentedToggleComponent",
