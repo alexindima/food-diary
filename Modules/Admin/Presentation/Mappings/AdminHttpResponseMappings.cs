@@ -88,7 +88,8 @@ public static class AdminHttpResponseMappings {
                 model.AiInputTokenLimit,
                 model.AiOutputTokenLimit,
                 model.AiConsentAcceptedAt,
-                model.MustChangePassword
+                model.MustChangePassword,
+                model.LastActiveAtUtc
             ) {
                 LatestWeightKg = model.LatestWeightKg,
                 LatestWeightDate = model.LatestWeightDate,

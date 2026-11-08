@@ -1,9 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import ruCore from '../../../../../../../assets/i18n/ru/core.json';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
@@ -34,7 +36,7 @@ const pagedUsers: PagedResponse<AdminUser> = {
             isActive: true,
             isEmailConfirmed: true,
             createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
-            lastLoginAtUtc: adminUtcInstant('2026-05-23T02:06:10Z'),
+            lastActiveAtUtc: adminUtcInstant('2026-05-23T02:06:10Z'),
             roles: ['Admin'],
         },
     ],
@@ -58,8 +60,8 @@ describe('AdminUsersComponent', () => {
             status: 'active',
             role: '',
             emailConfirmed: '',
-            lastLoginFrom: '',
-            lastLoginTo: '',
+            lastActiveFrom: '',
+            lastActiveTo: '',
         });
         expect(component['users']()).toEqual(pagedUsers.items);
         expect(component['totalPages']()).toBe(SECOND_PAGE);
@@ -93,8 +95,8 @@ describe('AdminUsersComponent', () => {
             status: 'active',
             role: '',
             emailConfirmed: '',
-            lastLoginFrom: '',
-            lastLoginTo: '',
+            lastActiveFrom: '',
+            lastActiveTo: '',
         });
     });
 
@@ -108,8 +110,8 @@ describe('AdminUsersComponent', () => {
             status: 'inactive',
             role: '',
             emailConfirmed: '',
-            lastLoginFrom: '',
-            lastLoginTo: '',
+            lastActiveFrom: '',
+            lastActiveTo: '',
         });
     });
 
@@ -121,8 +123,8 @@ describe('AdminUsersComponent', () => {
             status: 'active',
             role: '',
             emailConfirmed: '',
-            lastLoginFrom: '',
-            lastLoginTo: '',
+            lastActiveFrom: '',
+            lastActiveTo: '',
         });
 
         const callCount = usersService.getUsers.mock.calls.length;
@@ -131,6 +133,45 @@ describe('AdminUsersComponent', () => {
         component['goToPage'](OUT_OF_RANGE_PAGE);
         await fixture.whenStable();
         expect(usersService.getUsers.mock.calls.length).toBe(callCount);
+    });
+});
+
+describe('AdminUsersComponent activity', () => {
+    beforeEach(async () => {
+        await setupComponentAsync();
+    });
+
+    it('renders Russian activity labels and an explicit unknown value without a login fallback', async () => {
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('ru', ruCore);
+        await firstValueFrom(translate.use('ru'));
+        component['users'].set([{ ...pagedUsers.items[0], lastActiveAtUtc: null }]);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelectorAll('th')[3].textContent).toBe('Был активен');
+        expect(element.querySelectorAll('tbody td')[3].textContent.trim()).toBe('Нет данных');
+        expect(element.textContent).toContain('Был активен с');
+        expect(element.textContent).toContain('Был активен по');
+        expect(element.textContent).not.toContain('\uFFFD');
+    });
+
+    it('restores activity filters from the URL and preserves them when applying filters', async () => {
+        const router = TestBed.inject(Router);
+        await router.navigate([], { queryParams: { lastActiveFrom: '2030-01-02', lastActiveTo: '2030-01-03' } });
+        await fixture.whenStable();
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(
+            FIRST_PAGE,
+            PAGE_SIZE,
+            null,
+            expect.objectContaining({
+                lastActiveFrom: '2030-01-02',
+                lastActiveTo: '2030-01-03',
+            }),
+        );
+        component['applyFilters']();
+        await fixture.whenStable();
+        expect(router.url).toContain('lastActiveFrom=2030-01-02');
+        expect(router.url).not.toContain('lastLogin');
     });
 });
 

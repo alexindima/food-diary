@@ -16,21 +16,25 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task FilteredPage_RestrictsLastLoginToInclusiveCalendarDates() {
+    public async Task FilteredPage_RestrictsLastActivityToInclusiveUtcCalendarDates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var inside = User.Create("login-inside@example.com", "hash");
         var outside = User.Create("login-outside@example.com", "hash");
-        context.Users.AddRange(inside, outside);
+        var unknown = User.Create("unknown-activity@example.com", "hash");
+        context.Users.AddRange(inside, outside, unknown);
         var date = new DateTime(2030, 1, 2, 0, 0, 0, DateTimeKind.Utc);
-        context.Entry(inside).Property(x => x.LastLoginAtUtc).CurrentValue = date.AddHours(23);
-        context.Entry(outside).Property(x => x.LastLoginAtUtc).CurrentValue = date.AddDays(1);
+        unknown.RecordAuthenticationActivity(date);
+        context.Set<UserActivity>().AddRange(
+            UserActivity.Create(inside.Id, date.AddDays(1).AddTicks(-10)),
+            UserActivity.Create(outside.Id, date.AddDays(1)));
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
-        var filter = new UserAdministrationFilter(LastLoginFrom: new DateOnly(2030, 1, 2), LastLoginTo: new DateOnly(2030, 1, 2));
+        var filter = new UserAdministrationFilter(LastActiveFrom: new DateOnly(2030, 1, 2), LastActiveTo: new DateOnly(2030, 1, 2));
         (IReadOnlyList<UserAdminReadModel> items, int total) = await repository.GetFilteredPagedReadModelsAsync(search: null, 1, 10, UserAccountStatusFilter.All, filter, CancellationToken.None);
         Assert.Equal(inside.Id.Value, Assert.Single(items).Id);
         Assert.Equal(1, total);
+        Assert.Equal(date.AddDays(1).AddTicks(-10), items[0].LastActiveAtUtc);
         Assert.Empty(context.ChangeTracker.Entries());
     }
 

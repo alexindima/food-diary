@@ -38,6 +38,7 @@ export interface AdminUserHttpResponse {
     isActive?: boolean;
     isEmailConfirmed?: boolean;
     language?: string | null;
+    lastActiveAtUtc?: string | null;
     lastLoginAtUtc?: string | null;
     lastName?: string | null;
     latestWeightDate?: string | null;

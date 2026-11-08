@@ -48,7 +48,7 @@ export type AdminUser = {
     isEmailConfirmed: boolean;
     createdOnUtc: AdminUtcInstant;
     deletedAt?: AdminUtcInstant | null;
-    lastLoginAtUtc?: AdminUtcInstant | null;
+    lastActiveAtUtc?: AdminUtcInstant | null;
     roles: string[];
     aiInputTokenLimit?: number;
     aiOutputTokenLimit?: number;

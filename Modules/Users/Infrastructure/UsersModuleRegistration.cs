@@ -46,6 +46,8 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserGoogleIdentityRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<UserRepository>());
+        services.AddScoped<IUserActivityRepository>(provider => new UserActivityRepository(
+            provider.GetRequiredService<UsersDbContext>().Database, CreateTransactionSynchronizer(provider)));
         services.AddScoped<UserAdministrationReadRepository>(provider => new UserAdministrationReadRepository(
             provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().UserRoles, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserAdminReadRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());

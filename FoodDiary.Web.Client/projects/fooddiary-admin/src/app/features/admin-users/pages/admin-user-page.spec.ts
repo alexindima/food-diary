@@ -82,7 +82,7 @@ const baseUser: AdminUser = {
     hasPassword: true,
     createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
     deletedAt: null,
-    lastLoginAtUtc: adminUtcInstant('2026-02-01T00:00:00Z'),
+    lastActiveAtUtc: adminUtcInstant('2026-02-01T00:00:00Z'),
     roles: ['User'],
     aiInputTokenLimit: 1000,
     aiOutputTokenLimit: 2000,

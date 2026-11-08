@@ -61,6 +61,8 @@ export interface GetAdminUsersRequestParams {
     emailConfirmed?: boolean;
     lastLoginFrom?: string;
     lastLoginTo?: string;
+    lastActiveFrom?: string;
+    lastActiveTo?: string;
 }
 
 export interface GetAdminUsersByIdRequestParams {
@@ -196,6 +198,8 @@ export class AdminUsersSdk extends BaseService {
         const emailConfirmed = requestParameters?.emailConfirmed;
         const lastLoginFrom = requestParameters?.lastLoginFrom;
         const lastLoginTo = requestParameters?.lastLoginTo;
+        const lastActiveFrom = requestParameters?.lastActiveFrom;
+        const lastActiveTo = requestParameters?.lastActiveTo;
 
         let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
 
@@ -241,6 +245,22 @@ export class AdminUsersSdk extends BaseService {
             localVarQueryParameters,
             'LastLoginTo',
             <any>lastLoginTo,
+            QueryParamStyle.Form,
+            true,
+        );
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'LastActiveFrom',
+            <any>lastActiveFrom,
+            QueryParamStyle.Form,
+            true,
+        );
+
+        localVarQueryParameters = this.addToHttpParams(
+            localVarQueryParameters,
+            'LastActiveTo',
+            <any>lastActiveTo,
             QueryParamStyle.Form,
             true,
         );

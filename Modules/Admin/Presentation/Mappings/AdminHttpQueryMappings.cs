@@ -83,8 +83,8 @@ public static class AdminHttpQueryMappings {
     extension(GetAdminUsersHttpQuery query) {
         public GetAdminUsersQuery ToQuery() {
             UserAdministrationFilter? filter = query.From.HasValue || query.To.HasValue || query.Role is not null ||
-                query.EmailConfirmed.HasValue || query.LastLoginFrom.HasValue || query.LastLoginTo.HasValue
-                ? new UserAdministrationFilter(query.From, query.To, query.Role, query.EmailConfirmed, query.LastLoginFrom, query.LastLoginTo)
+                query.EmailConfirmed.HasValue || query.LastLoginFrom.HasValue || query.LastLoginTo.HasValue || query.LastActiveFrom.HasValue || query.LastActiveTo.HasValue
+                ? new UserAdministrationFilter(query.From, query.To, query.Role, query.EmailConfirmed, query.LastLoginFrom, query.LastLoginTo, query.LastActiveFrom, query.LastActiveTo)
                 : null;
             return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query), filter);
         }

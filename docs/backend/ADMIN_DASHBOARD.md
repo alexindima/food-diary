@@ -13,3 +13,13 @@ Admin Infrastructure owns the no-tracking aggregate reader, consistent with the 
 Verification: overview query date validation/comparison tests, PostgreSQL currency/deduplication/boundary/empty-bucket tests, actual OpenAPI snapshots, admin build/unit tests, and synthetic browser checks. Deploy the API before the new admin bundle. Rollback the bundle first if the overview endpoint is unavailable. Existing billing and legacy dashboard contracts remain usable.
 
 Mail moderation statuses and sender suspension remain a separate unfinished feature; the overview links to the inbox without presenting invented queue counts. Login activity and fasting telemetry are no longer fetched by the dashboard.
+
+## Account activity
+
+Accounts show `lastActiveAtUtc` ("Last active" / "Был активен") and accept inclusive UTC calendar filters `lastActiveFrom` and `lastActiveTo`. This replaces the account list's last-login field and filters. Login events remain available in Login activity; authentication timestamps and session lifetimes keep their existing meaning.
+
+The user application records opening an authenticated visible session, returning to a visible tab, and pointer, keyboard or wheel interactions through `POST /api/v1/users/activity`. Both client attempts and persisted updates are throttled to five minutes. There is no heartbeat timer: idle tabs, hidden tabs, token renewal, HTTP polling and realtime traffic do not record activity. The endpoint derives the user from authentication and the instant from the server clock, and rejects impersonation. Administrative browsing never updates the selected account's activity.
+
+Users owns an optional `UserActivities` row, updated atomically and independently of account/profile concurrency and security state. Account purge cascades the row; session logout and session retention do not remove it. Accounts without a recorded foreground event show "No data" / "Нет данных". The migration deliberately does not backfill login timestamps. The timestamp is included in the user's personal-data archive.
+
+Apply the additive `AddUserForegroundActivity` migration and deploy the API before the new user/admin bundles. The API retains its original last-login field and filters for existing clients; the updated admin UI exclusively uses activity. Old user bundles remain usable but do not report foreground activity. Rolling back the bundles/API does not require dropping the activity table.

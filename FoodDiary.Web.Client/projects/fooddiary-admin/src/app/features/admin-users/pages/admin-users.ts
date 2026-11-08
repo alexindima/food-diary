@@ -50,8 +50,8 @@ export class AdminUsersComponent {
     private request?: Subscription;
     protected readonly role = signal('');
     protected readonly confirmed = signal('');
-    protected readonly lastLoginFrom = signal('');
-    protected readonly lastLoginTo = signal('');
+    protected readonly lastActiveFrom = signal('');
+    protected readonly lastActiveTo = signal('');
 
     protected readonly users = signal<AdminUser[]>([]);
     protected readonly totalPages = signal(1);
@@ -68,7 +68,7 @@ export class AdminUsersComponent {
     ];
 
     public constructor() {
-        const fields = ['page', 'search', 'status', 'role', 'emailConfirmed', 'lastLoginFrom', 'lastLoginTo'];
+        const fields = ['page', 'search', 'status', 'role', 'emailConfirmed', 'lastActiveFrom', 'lastActiveTo'];
         connectAdminDevelopmentScreen({
             kind: 'admin-users',
             filterFields: fields,
@@ -96,8 +96,8 @@ export class AdminUsersComponent {
             this.status.set(params.get('status') === 'deleted' ? 'deleted' : params.get('status') === 'inactive' ? 'inactive' : 'active');
             this.role.set(params.get('role') ?? '');
             this.confirmed.set(params.get('emailConfirmed') ?? '');
-            this.lastLoginFrom.set(params.get('lastLoginFrom') ?? '');
-            this.lastLoginTo.set(params.get('lastLoginTo') ?? '');
+            this.lastActiveFrom.set(params.get('lastActiveFrom') ?? '');
+            this.lastActiveTo.set(params.get('lastActiveTo') ?? '');
             this.page.set(adminPage(params.get('page')));
             this.loadUsers();
         });
@@ -112,8 +112,8 @@ export class AdminUsersComponent {
                 status: this.status(),
                 role: adminQueryValue(this.role()),
                 emailConfirmed: adminQueryValue(this.confirmed()),
-                lastLoginFrom: adminQueryValue(this.lastLoginFrom()),
-                lastLoginTo: adminQueryValue(this.lastLoginTo()),
+                lastActiveFrom: adminQueryValue(this.lastActiveFrom()),
+                lastActiveTo: adminQueryValue(this.lastActiveTo()),
                 page: this.page(),
             },
         });
@@ -138,8 +138,8 @@ export class AdminUsersComponent {
                 ...range,
                 role: this.role(),
                 emailConfirmed: this.confirmed(),
-                lastLoginFrom: this.lastLoginFrom(),
-                lastLoginTo: this.lastLoginTo(),
+                lastActiveFrom: this.lastActiveFrom(),
+                lastActiveTo: this.lastActiveTo(),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

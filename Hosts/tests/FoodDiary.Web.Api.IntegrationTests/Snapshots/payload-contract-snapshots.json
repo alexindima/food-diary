@@ -38,6 +38,7 @@
       "isActive",
       "isEmailConfirmed",
       "language",
+      "lastActiveAtUtc",
       "lastLoginAtUtc",
       "lastName",
       "latestWeightDate",

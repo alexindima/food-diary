@@ -7,6 +7,7 @@ import { UserService } from '../api/user.service';
 import { AuthRecoveryStateService } from '../auth/auth-recovery-state.service';
 import { telegramMiniAppEntryUrl } from '../auth/telegram-mini-app-navigation';
 import { TelegramWebAppService } from '../auth/telegram-web-app.service';
+import { UserActivityService } from '../auth/user-activity.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { MarketingAttributionService } from '../marketing/marketing-attribution.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
@@ -25,6 +26,7 @@ export class AppBootstrapService {
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly telegram = inject(TelegramWebAppService);
     private readonly recovery = inject(AuthRecoveryStateService);
+    private readonly activity = inject(UserActivityService);
 
     public initializeTheme(): void {
         this.themeService.initializeTheme();
@@ -72,6 +74,7 @@ export class AppBootstrapService {
     }
 
     public initializeObservability(): void {
+        this.activity.initialize();
         this.marketingAttribution.initialize();
         this.frontendObservability.initialize();
     }

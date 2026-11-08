@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4774,
-    "symbols": 4710,
-    "interfaceImplementationLinks": 212,
+    "sourceFiles": 4782,
+    "symbols": 4718,
+    "interfaceImplementationLinks": 213,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2436,
+      "class": 2442,
       "enum": 75,
-      "interface": 428,
-      "record": 1628,
+      "interface": 429,
+      "record": 1629,
       "record struct": 143
     },
     "roles": {
-      "Command": 248,
-      "CommandHandler": 242,
-      "Configuration": 104,
-      "Controller": 117,
-      "Entity": 105,
+      "Command": 249,
+      "CommandHandler": 243,
+      "Configuration": 105,
+      "Controller": 118,
+      "Entity": 106,
       "Event": 20,
       "Factory": 15,
       "Handler": 10,
@@ -32,12 +32,12 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1945,
+      "Other": 1946,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
-      "Repository": 104,
+      "Repository": 106,
       "Request": 183,
       "Response": 277,
       "Service": 177,
@@ -26249,6 +26249,13 @@
       "line": 4
     },
     {
+      "name": "IUserActivityRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Users/Application.Abstractions/Common/IUserActivityRepository.cs",
+      "line": 4
+    },
+    {
       "name": "IUserAdminReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -26415,6 +26422,20 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommandHandler.cs",
       "line": 6
+    },
+    {
+      "name": "RecordUserActivityCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RecordUserActivityCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
+      "line": 8
     },
     {
       "name": "RemoveUserPremiumRoleCommandHandler",
@@ -27810,6 +27831,13 @@
       "line": 6
     },
     {
+      "name": "UserActivity",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/UserActivity.cs",
+      "line": 4
+    },
+    {
       "name": "UserGoalRevision",
       "kind": "class",
       "role": "Entity",
@@ -28132,6 +28160,13 @@
       "line": 8
     },
     {
+      "name": "UserActivityRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserActivityRepository.cs",
+      "line": 7
+    },
+    {
       "name": "UserAdministrationReadRepository",
       "kind": "class",
       "role": "ReadRepository",
@@ -28255,6 +28290,13 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/RoleConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserActivityConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserActivityConfiguration.cs",
       "line": 7
     },
     {
@@ -28384,6 +28426,13 @@
       "line": 6
     },
     {
+      "name": "UserActivityController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Users/Presentation/Controllers/UserActivityController.cs",
+      "line": 14
+    },
+    {
       "name": "UserAiConsentController",
       "kind": "class",
       "role": "Controller",
@@ -28487,6 +28536,13 @@
       "role": "Response",
       "path": "Modules/Users/Presentation/Goals/Responses/GoalsHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "UserActivityHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Presentation/Mappings/UserActivityHttpMappings.cs",
+      "line": 4
     },
     {
       "name": "UserHttpMappings",
@@ -34305,6 +34361,13 @@
       "interfacePath": "Modules/Gamification/Application.Abstractions/Achievements/Common/IUserAchievementStore.cs",
       "implementation": "UserAchievementStore",
       "implementationPath": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserActivityRepository",
+      "interfacePath": "Modules/Users/Application.Abstractions/Common/IUserActivityRepository.cs",
+      "implementation": "UserActivityRepository",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserActivityRepository.cs",
       "confidence": "naming-convention"
     },
     {

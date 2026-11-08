@@ -32,6 +32,12 @@ sources:
 
 ## HTTP Surface
 
+### UserActivityController
+
+Source: `Modules/Users/Presentation/Controllers/UserActivityController.cs`
+
+- `POST /api/v{version:apiVersion}/users/activity`
+
 ### UserAiConsentController
 
 Source: `Modules/Users/Presentation/Controllers/UserAiConsentController.cs`
@@ -97,17 +103,17 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 105
+- Public contract files: 106
 - Observed external consumer groups: 34
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 105
-- Interfaces: 40
+- Public contract types: 106
+- Interfaces: 41
 - DTO/read-model/projection types: 39
 - Enums: 2
-- Exported repository-shaped contracts: 7
+- Exported repository-shaped contracts: 8
 - Contracts referencing domain entities: 0
 - `class CurrentUserAccessResolver`
 - `class PersonalDataArchiveLimitException`
@@ -121,6 +127,7 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - `interface IProfileDietologistReadService`
 - `interface IProfileNotificationReadService`
 - `interface IUserAccessTokenSecurityReader`
+- `interface IUserActivityRepository`
 - `interface IUserAdminReadModelRepository`
 - `interface IUserAdminReadRepository`
 - `interface IUserAiProfileReadService`
@@ -138,8 +145,7 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - `interface IUserDataPurgeParticipant`
 - `interface IUserDietologistProfileReadService`
 - `interface IUserFastingReminderReadService`
-- `interface IUserGamificationProfileReadService`
-- ... 75 more type(s)
+- ... 76 more type(s)
 
 ## Extraction Readiness
 

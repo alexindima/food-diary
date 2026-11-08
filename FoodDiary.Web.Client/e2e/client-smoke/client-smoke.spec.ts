@@ -2008,7 +2008,10 @@ async function toggleDashboardSettingsAsync(page: Page): Promise<void> {
 
 async function fulfillClientApiRouteAsync(route: Route): Promise<void> {
     const { pathname } = new URL(route.request().url());
-    if (route.request().method() === 'POST' && pathname.endsWith('/marketing/attribution-events')) {
+    if (
+        route.request().method() === 'POST' &&
+        (pathname.endsWith('/marketing/attribution-events') || pathname.endsWith('/users/activity'))
+    ) {
         fixtureContract.assertResponse('POST', pathname, HTTP_NO_CONTENT_STATUS, undefined);
         await route.fulfill({ status: 204 });
         return;

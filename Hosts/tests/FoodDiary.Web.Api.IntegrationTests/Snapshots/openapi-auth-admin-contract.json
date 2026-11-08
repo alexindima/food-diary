@@ -878,6 +878,20 @@
               "Default": "false"
             },
             {
+              "Name": "LastActiveFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "LastActiveTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
               "Name": "LastLoginFrom",
               "Location": "query",
               "Required": false,

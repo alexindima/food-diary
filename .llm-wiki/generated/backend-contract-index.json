@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1403,
+    "contracts": 1405,
     "ambiguousContracts": 32,
-    "consumerEdges": 11449,
-    "productionConsumerEdges": 6331,
+    "consumerEdges": 11459,
+    "productionConsumerEdges": 6341,
     "testConsumerEdges": 5118,
-    "consumedContracts": 1403,
+    "consumedContracts": 1405,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -16238,6 +16238,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IUserActivityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserActivityRepository.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IUserAdminReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -20150,6 +20167,23 @@
       ],
       "definitionPaths": [
         "Modules/Marketing/Contracts/Commands/RecordPremiumConversion/RecordPremiumConversionCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RecordUserActivityCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -70128,6 +70162,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -72534,6 +72581,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75914,6 +75974,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -123975,6 +124048,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Controllers/UserActivityController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Controllers/UserAiConsentController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -131637,6 +131723,45 @@
       "referenceCount": 2
     },
     {
+      "contract": "IUserActivityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserActivityRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserActivityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserActivityRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserActivityRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserActivityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserActivityRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "IUserAdminReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -138939,6 +139064,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -156228,6 +156366,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/UsersIdentityContractOwnershipTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecordUserActivityCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecordUserActivityCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserActivityHttpMappings.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {

@@ -4680,6 +4680,21 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserActivity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("LastActiveAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("LastActiveAtUtc");
+
+                    b.ToTable("UserActivities", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserGoalRevision", b =>
                 {
                     b.Property<Guid>("Id")
@@ -6280,6 +6295,15 @@ namespace FoodDiary.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.ClientNoAction);
                 });
 
+            modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserActivity", b =>
+                {
+                    b.HasOne("FoodDiary.Modules.Users.Domain.Entities.User", null)
+                        .WithOne("Activity")
+                        .HasForeignKey("FoodDiary.Modules.Users.Domain.Entities.UserActivity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserGoalRevision", b =>
                 {
                     b.HasOne("FoodDiary.Modules.Users.Domain.Entities.UserNutritionProfile", null)
@@ -6458,6 +6482,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Activity");
+
                     b.Navigation("NutritionProfile")
                         .IsRequired();
 

@@ -99,6 +99,7 @@ public sealed class UserDataLifecycleGuardrailTests {
             "RecommendationTemplate(DietologistUserId):Cascade",
             "ShoppingList(UserId):Cascade",
             "UserAchievement(UserId):Cascade",
+            "UserActivity(UserId):Cascade",
             "UserLessonProgress(UserId):Cascade",
             "UserPreferences(Id):Cascade",
             "UserPrivacyConsentEvent(UserId):Cascade",

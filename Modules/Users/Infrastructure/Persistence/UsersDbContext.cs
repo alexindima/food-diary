@@ -9,6 +9,7 @@ public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options) : D
     public DbSet<WeightGoal> WeightGoals => Set<WeightGoal>();
     public DbSet<WaistGoal> WaistGoals => Set<WaistGoal>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<UserActivity> UserActivities => Set<UserActivity>();
     public DbSet<UserPrivacyConsentEvent> UserPrivacyConsentEvents => Set<UserPrivacyConsentEvent>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();

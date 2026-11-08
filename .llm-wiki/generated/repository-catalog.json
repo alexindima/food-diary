@@ -19,8 +19,8 @@
     "applicationModules": 0,
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
-    "controllers": 114,
-    "endpoints": 374,
+    "controllers": 115,
+    "endpoints": 375,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -17651,6 +17651,18 @@
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/usda/daily-micronutrients",
             "line": 49
+          }
+        ]
+      },
+      {
+        "name": "UserActivityController",
+        "path": "Modules/Users/Presentation/Controllers/UserActivityController.cs",
+        "routePrefix": "api/v{version:apiVersion}/users/activity",
+        "endpoints": [
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/users/activity",
+            "line": 15
           }
         ]
       },

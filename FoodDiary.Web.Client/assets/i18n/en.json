@@ -1562,7 +1562,8 @@
         "IMPERSONATE_UNAVAILABLE": "This user cannot be impersonated.",
         "PASSWORD_CHANGE_REQUIRED": "Password change required",
         "ROLES": "Role",
-        "LAST_LOGIN": "Last login",
+        "LAST_ACTIVE": "Last active",
+        "ACTIVITY_UNKNOWN": "No data",
         "PROFILE": "Full profile",
         "EDIT": "Edit account",
         "RELATED": "Related records",
@@ -1570,8 +1571,8 @@
         "CONFIRMED": "Email confirmed",
         "YES": "Yes",
         "NO": "No",
-        "LOGIN_FROM": "Last login from",
-        "LOGIN_TO": "Last login to",
+        "ACTIVE_FROM": "Last active from",
+        "ACTIVE_TO": "Last active to",
         "SAVE_ERROR": "Could not save the account. Your edits are preserved. Try again."
     },
     "ADMIN_NOTIFICATION": {

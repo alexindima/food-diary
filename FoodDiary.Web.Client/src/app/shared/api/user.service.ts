@@ -63,6 +63,10 @@ export class UserService {
     private sessionVersion = 0;
     public readonly user = this.userSignal.asReadonly();
 
+    public recordActivity(): Observable<void> {
+        return this.sdk.client.postUsersActivity({ version: this.sdk.version }, 'body', false, { context: this.silentLoadingContext });
+    }
+
     public constructor() {
         this.sessionEvents.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => {
             this.clearUser();

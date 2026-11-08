@@ -34,7 +34,7 @@ export function adminUserFromSdk(response: AdminUserHttpResponse): AdminUser {
         profileImageAssetId: optionalAdminId<'image-asset'>(value.profileImageAssetId),
         createdOnUtc: adminUtcInstant(value.createdOnUtc),
         deletedAt: optionalAdminUtcInstant(value.deletedAt),
-        lastLoginAtUtc: optionalAdminUtcInstant(value.lastLoginAtUtc),
+        lastActiveAtUtc: optionalAdminUtcInstant(value.lastActiveAtUtc),
     };
 }
 

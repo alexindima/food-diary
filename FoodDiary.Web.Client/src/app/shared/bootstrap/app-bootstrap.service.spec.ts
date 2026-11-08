@@ -7,6 +7,7 @@ import { FrontendObservabilityService } from '../../services/frontend-observabil
 import { UserService } from '../api/user.service';
 import { AuthRecoveryStateService } from '../auth/auth-recovery-state.service';
 import { TelegramWebAppService } from '../auth/telegram-web-app.service';
+import { UserActivityService } from '../auth/user-activity.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { PrivacyConsentFacade } from '../privacy/privacy-consent.facade';
@@ -89,6 +90,7 @@ beforeEach(() => {
             { provide: BrowserWindowService, useValue: browserWindow },
             { provide: TelegramWebAppService, useValue: telegram },
             { provide: AuthRecoveryStateService, useValue: recovery },
+            { provide: UserActivityService, useValue: { initialize: vi.fn() } },
         ],
     });
 

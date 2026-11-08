@@ -50,9 +50,18 @@ export class AdminUserPageComponent {
     protected readonly loginEvents = signal<AdminUserLoginEvent[]>([]);
     protected readonly roleAuditEvents = signal<AdminUserRoleAuditEvent[]>([]);
     private readonly passwordChangeLabel = toSignal(this.translate.stream('ADMIN_USER.PASSWORD_CHANGE_REQUIRED'), { initialValue: '' });
+    private readonly lastActiveLabel = toSignal(this.translate.stream('ADMIN_USER.LAST_ACTIVE'), { initialValue: '' });
+    private readonly unknownActivityLabel = toSignal(this.translate.stream('ADMIN_USER.ACTIVITY_UNKNOWN'), { initialValue: '' });
     protected readonly sections = computed(() => {
         const user = this.user();
-        return user === null ? [] : buildAdminUserSections(user, String(this.passwordChangeLabel()));
+        return user === null
+            ? []
+            : buildAdminUserSections(
+                  user,
+                  String(this.passwordChangeLabel()),
+                  String(this.lastActiveLabel()),
+                  String(this.unknownActivityLabel()),
+              );
     });
     protected readonly initials = computed(() => {
         const user = this.user();

@@ -97,6 +97,7 @@ public sealed class CookieImpersonationBoundaryApiTests(ApiWebApplicationFactory
     [InlineData("/api/v1/users/password", "PATCH")]
     [InlineData("/api/v1/auth/sessions", "DELETE")]
     [InlineData("/api/v1/auth/admin-sso/start", "POST")]
+    [InlineData("/api/v1/users/activity", "POST")]
     public async Task SelectedContext_CannotChangeCredentialsRevokeSessionsOrStartAdministrativeSso(string path, string method) {
         ContextProof proof = await CreateContextAsync();
         using HttpClient browser = CreateSelectedBrowser(proof);

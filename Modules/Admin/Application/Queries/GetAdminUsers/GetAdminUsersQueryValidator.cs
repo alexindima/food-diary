@@ -6,7 +6,8 @@ public sealed class GetAdminUsersQueryValidator : AbstractValidator<GetAdminUser
     public GetAdminUsersQueryValidator() {
         RuleFor(query => query.Filter).Must(filter => filter is null ||
             ((!filter.RegisteredFrom.HasValue || !filter.RegisteredTo.HasValue || filter.RegisteredFrom <= filter.RegisteredTo) &&
-            (!filter.LastLoginFrom.HasValue || !filter.LastLoginTo.HasValue || filter.LastLoginFrom <= filter.LastLoginTo)))
+            (!filter.LastLoginFrom.HasValue || !filter.LastLoginTo.HasValue || filter.LastLoginFrom <= filter.LastLoginTo) &&
+            (!filter.LastActiveFrom.HasValue || !filter.LastActiveTo.HasValue || filter.LastActiveFrom <= filter.LastActiveTo)))
             .WithMessage("The start date must not follow the end date.");
     }
 }

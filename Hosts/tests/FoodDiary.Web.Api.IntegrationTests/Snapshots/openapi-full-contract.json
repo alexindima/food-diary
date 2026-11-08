@@ -4200,6 +4200,20 @@
               "Default": "false"
             },
             {
+              "Name": "LastActiveFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "LastActiveTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
               "Name": "LastLoginFrom",
               "Location": "query",
               "Required": false,
@@ -18505,6 +18519,30 @@
       ]
     },
     {
+      "Path": "/api/v{version}/users/activity",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "404",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/users/ai-consent",
       "Operations": [
         {
@@ -24559,6 +24597,13 @@
           "Name": "language",
           "Required": false,
           "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "lastActiveAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
           "Nullable": true
         },
         {

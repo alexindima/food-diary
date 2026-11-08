@@ -11,7 +11,12 @@ export type DetailSection = {
 };
 
 // eslint-disable-next-line max-lines-per-function -- Static account field metadata is kept together for review.
-export function buildAdminUserSections(currentUser: AdminUser, passwordChangeLabel: string): DetailSection[] {
+export function buildAdminUserSections(
+    currentUser: AdminUser,
+    passwordChangeLabel: string,
+    lastActiveLabel: string,
+    unknownActivityLabel: string,
+): DetailSection[] {
     return [
         {
             title: 'Account',
@@ -96,7 +101,13 @@ export function buildAdminUserSections(currentUser: AdminUser, passwordChangeLab
             fields: [
                 { label: 'Created', value: dateTime(currentUser.createdOnUtc) },
                 { label: 'Deleted', value: dateTime(currentUser.deletedAt) },
-                { label: 'Last login', value: dateTime(currentUser.lastLoginAtUtc) },
+                {
+                    label: lastActiveLabel,
+                    value:
+                        currentUser.lastActiveAtUtc !== null && currentUser.lastActiveAtUtc !== undefined
+                            ? dateTime(currentUser.lastActiveAtUtc)
+                            : unknownActivityLabel,
+                },
                 { label: 'Profile image asset ID', value: text(currentUser.profileImageAssetId) },
             ],
         },

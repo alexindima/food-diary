@@ -32,6 +32,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public DateTime? PasswordResetTokenExpiresAtUtc { get; private set; }
     public DateTime? PasswordResetSentAtUtc { get; private set; }
     public DateTime? LastLoginAtUtc { get; private set; }
+    public UserActivity? Activity { get; private set; }
     public string? Username { get; private set; }
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }

@@ -6,4 +6,6 @@ public sealed record UserAdministrationFilter(
     string? Role = null,
     bool? EmailConfirmed = null,
     DateOnly? LastLoginFrom = null,
-    DateOnly? LastLoginTo = null);
+    DateOnly? LastLoginTo = null,
+    DateOnly? LastActiveFrom = null,
+    DateOnly? LastActiveTo = null);

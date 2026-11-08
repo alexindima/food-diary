@@ -2530,6 +2530,11 @@
                         "nullable": true,
                         "type": "string"
                     },
+                    "lastActiveAtUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
                     "lastLoginAtUtc": {
                         "format": "date-time",
                         "nullable": true,
@@ -12762,6 +12767,22 @@
                     {
                         "in": "query",
                         "name": "LastLoginTo",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "LastActiveFrom",
+                        "schema": {
+                            "format": "date",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "LastActiveTo",
                         "schema": {
                             "format": "date",
                             "type": "string"

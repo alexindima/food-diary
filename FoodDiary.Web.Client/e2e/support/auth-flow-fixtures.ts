@@ -65,7 +65,10 @@ export async function installClientAuthApiAsync(
             );
             return;
         }
-        if (method === 'POST' && ['/api/v1/marketing/attribution-events', '/api/v1/auth/logout', '/api/v1/logs'].includes(pathname)) {
+        if (
+            method === 'POST' &&
+            ['/api/v1/marketing/attribution-events', '/api/v1/auth/logout', '/api/v1/logs', '/api/v1/users/activity'].includes(pathname)
+        ) {
             contract.assertResponse(method, pathname, HTTP_NO_CONTENT, undefined);
             await route.fulfill({ status: HTTP_NO_CONTENT });
             return;

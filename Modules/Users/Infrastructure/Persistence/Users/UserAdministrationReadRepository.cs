@@ -16,6 +16,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         users
             .Where(user => user.Id != SystemContentOwner.Id)
             .AsSplitQuery()
+            .Include(u => u.Activity)
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
 
@@ -87,6 +88,14 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         if (filter.LastLoginTo is { } loginTo) {
             var end = loginTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
             filteredQuery = filteredQuery.Where(user => user.LastLoginAtUtc <= end);
+        }
+        if (filter.LastActiveFrom is { } activeFrom) {
+            var start = activeFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+            filteredQuery = filteredQuery.Where(user => user.Activity != null && user.Activity.LastActiveAtUtc >= start);
+        }
+        if (filter.LastActiveTo is { } activeTo) {
+            var end = activeTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+            filteredQuery = filteredQuery.Where(user => user.Activity != null && user.Activity.LastActiveAtUtc <= end);
         }
         if (filter.EmailConfirmed is { } confirmed) {
             filteredQuery = filteredQuery.Where(user => user.IsEmailConfirmed == confirmed);
@@ -260,5 +269,6 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
             user.AiConsentAcceptedAt,
-            user.MustChangePassword);
+            user.MustChangePassword,
+            user.Activity == null ? null : user.Activity.LastActiveAtUtc);
 }

@@ -855,21 +855,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 408
+      "line": 409
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 414
+      "line": 415
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 416
+      "line": 417
     },
     {
       "category": "credential",
@@ -2990,14 +2990,14 @@
       "name": "LatestWeightKg",
       "type": "double?",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
-      "line": 58
+      "line": 59
     },
     {
       "category": "health",
       "name": "LatestWeightDate",
       "type": "DateTime?",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
-      "line": 59
+      "line": 60
     },
     {
       "category": "health",
@@ -3144,14 +3144,14 @@
       "name": "LatestWeightKg",
       "type": "double?",
       "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
-      "line": 55
+      "line": 56
     },
     {
       "category": "health",
       "name": "LatestWeightDate",
       "type": "DateTime?",
       "path": "Modules/Admin/Presentation/Responses/AdminUserHttpResponse.cs",
-      "line": 56
+      "line": 57
     },
     {
       "category": "health",
@@ -7029,231 +7029,231 @@
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 38
+      "line": 39
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 39
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 40
     },
     {
       "category": "health",
-      "name": "DesiredWeightKg",
+      "name": "WeightKg",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 41
     },
     {
       "category": "health",
-      "name": "DesiredWaistCm",
+      "name": "DesiredWeightKg",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 42
     },
     {
       "category": "health",
-      "name": "HeightCm",
+      "name": "DesiredWaistCm",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 43
     },
     {
       "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/User.cs",
+      "line": 44
+    },
+    {
+      "category": "health",
       "name": "ActivityLevel",
       "type": "ActivityLevel",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 44
+      "line": 45
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 52
+      "line": 53
     },
     {
       "category": "health",
       "name": "MondayCalories",
-      "type": "double?",
-      "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 54
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 55
     },
     {
       "category": "health",
-      "name": "WednesdayCalories",
+      "name": "TuesdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 56
     },
     {
       "category": "health",
-      "name": "ThursdayCalories",
+      "name": "WednesdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 57
     },
     {
       "category": "health",
-      "name": "FridayCalories",
+      "name": "ThursdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 58
     },
     {
       "category": "health",
-      "name": "SaturdayCalories",
+      "name": "FridayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 59
     },
     {
       "category": "health",
-      "name": "SundayCalories",
+      "name": "SaturdayCalories",
       "type": "double?",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 60
     },
     {
       "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Domain/Entities/User.cs",
+      "line": 61
+    },
+    {
+      "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 69
+      "line": 70
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 71
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
       "type": "int",
       "path": "Modules/Users/Domain/Entities/User.cs",
       "line": 72
     },
     {
       "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Domain/Entities/User.cs",
+      "line": 73
+    },
+    {
+      "category": "health",
       "name": "NutritionProfile",
       "type": "UserNutritionProfile",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 102
+      "line": 103
     },
     {
       "category": "health",
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 273
+      "line": 274
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 275
+      "line": 276
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 277
+      "line": 278
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 290
+      "line": 291
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 292
+      "line": 293
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 294
+      "line": 295
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 296
+      "line": 297
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 298
+      "line": 299
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 333
+      "line": 334
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 345
+      "line": 346
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 347
+      "line": 348
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 349
+      "line": 350
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 357
+      "line": 358
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 359
+      "line": 360
     },
     {
       "category": "health",
@@ -9395,42 +9395,42 @@
       "name": "TelegramUserId",
       "type": "long?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 73
+      "line": 74
     },
     {
       "category": "identity",
       "name": "TelegramLinkVerifiedForRecovery",
       "type": "bool",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 74
+      "line": 75
     },
     {
       "category": "identity",
       "name": "TelegramOidcIssuer",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 75
+      "line": 76
     },
     {
       "category": "identity",
       "name": "TelegramOidcSubject",
       "type": "string?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 76
+      "line": 77
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 410
+      "line": 411
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 412
+      "line": 413
     },
     {
       "category": "identity",
@@ -12531,14 +12531,14 @@
       "name": "ProfileImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 62
+      "line": 63
     },
     {
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 351
+      "line": 352
     },
     {
       "category": "privateContent",

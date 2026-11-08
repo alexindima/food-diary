@@ -56,5 +56,6 @@ public static class AdminUserMappings {
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
             user.AiConsentAcceptedAt,
-            user.MustChangePassword);
+            user.MustChangePassword,
+            user.LastActiveAtUtc);
 }

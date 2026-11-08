@@ -67,7 +67,7 @@ does not certify every guide or every application screen.
 ## API SDK
 
 The user API has an OpenAPI-generated Angular SDK under `src/app/shared/api/sdk/`.
-The generated contract covers 41 groups and 263 operations. Forty-six user frontend
+The generated contract covers 41 groups and 274 operations. Forty-six user frontend
 services use generated clients, including meals/recipes, dashboard/statistics,
 cycles, the dietologist workspace, user profiles, notifications, auth/session,
 AI, image coordination, exports, telemetry and marketing. Feature
@@ -78,7 +78,7 @@ and preserve request identity across retries. Swagger retains C# nullable refere
 metadata in the isolated client schema; direct storage uploads and SignalR stay in their owning adapters.
 
 The admin app has a separate generated client under
-`projects/fooddiary-admin/src/app/shared/api/sdk/`. Its 22 groups and 73 operations
+`projects/fooddiary-admin/src/app/shared/api/sdk/`. Its 22 groups and 76 operations
 serve 21 existing admin adapters; generator tooling and schema selection are
 shared with the user app, while application imports and session ownership stay
 separate. Admin paging, dynamic filters, SSO cookie policy and import idempotency

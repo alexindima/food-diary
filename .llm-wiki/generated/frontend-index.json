@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2813,
-    "symbols": 883,
+    "typescriptFiles": 2815,
+    "symbols": 884,
     "routes": 111,
     "features": 46,
-    "specs": 854,
+    "specs": 855,
     "localeFiles": 5,
     "roles": {
       "Component": 511,
@@ -20,7 +20,7 @@
       "Facade": 91,
       "Other": 41,
       "Pipe": 5,
-      "Service": 215
+      "Service": 216
     }
   },
   "features": [
@@ -3112,7 +3112,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-users.service.ts",
-      "line": 144
+      "line": 146
     },
     {
       "name": "Configuration",
@@ -7214,7 +7214,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/users.service.ts",
-      "line": 129
+      "line": 133
     },
     {
       "name": "WaistEntriesSdk",
@@ -7392,11 +7392,18 @@
       "line": 13
     },
     {
+      "name": "UserActivityService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/user-activity.service.ts",
+      "line": 13
+    },
+    {
       "name": "AppBootstrapService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "DevelopmentToolError",
@@ -8403,8 +8410,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1406,
-      "russianProperties": 1406,
+      "englishProperties": 1407,
+      "russianProperties": 1407,
       "countsMatch": true
     },
     {

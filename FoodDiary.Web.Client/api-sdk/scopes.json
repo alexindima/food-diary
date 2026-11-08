@@ -240,6 +240,7 @@
             "DELETE /api/v{version}/users/ai-consent": "deleteUsersAiConsent",
             "GET /api/v{version}/users/overview": "getUsersOverview",
             "GET /api/v{version}/users/info": "getUsersInfo",
+            "POST /api/v{version}/users/activity": "postUsersActivity",
             "PATCH /api/v{version}/users/info": "patchUsersInfo",
             "PATCH /api/v{version}/users/preferences/appearance": "patchUsersPreferencesAppearance",
             "GET /api/v{version}/users/desired-weight": "getUsersDesiredWeight",

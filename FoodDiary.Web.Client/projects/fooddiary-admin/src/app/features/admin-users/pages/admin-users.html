@@ -27,17 +27,17 @@
         />
         <fd-ui-date-input
             [id]="'admin-users-field-2'"
-            [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.LOGIN_FROM' | translate)}`"
-            [label]="'ADMIN_USER.LOGIN_FROM' | translate"
-            [value]="lastLoginFrom()"
-            (valueChange)="lastLoginFrom.set($event?.toString() ?? '')"
+            [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.ACTIVE_FROM' | translate)}`"
+            [label]="'ADMIN_USER.ACTIVE_FROM' | translate"
+            [value]="lastActiveFrom()"
+            (valueChange)="lastActiveFrom.set($event?.toString() ?? '')"
         />
         <fd-ui-date-input
             [id]="'admin-users-field-3'"
-            [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.LOGIN_TO' | translate)}`"
-            [label]="'ADMIN_USER.LOGIN_TO' | translate"
-            [value]="lastLoginTo()"
-            (valueChange)="lastLoginTo.set($event?.toString() ?? '')"
+            [clearAriaLabel]="`${('COMMON.CLEAR' | translate)}: ${('ADMIN_USER.ACTIVE_TO' | translate)}`"
+            [label]="'ADMIN_USER.ACTIVE_TO' | translate"
+            [value]="lastActiveTo()"
+            (valueChange)="lastActiveTo.set($event?.toString() ?? '')"
         />
         <fd-ui-button (click)="page.set(1); applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
     </div>

@@ -1,7 +1,7 @@
 # Generated API clients
 
 FoodDiary generates an Angular `HttpClient` SDK from the actual host's OpenAPI
-document. The user API client covers 41 API groups and 263 operations. Generated transport contracts
+document. The user API client covers 41 API groups and 274 operations. Generated transport contracts
 live in `FoodDiary.Web.Client/src/app/shared/api/sdk/generated/`; application
 models, UI state and response normalization remain in the existing feature
 adapters. This keeps auth/refresh/retry interceptors and cookie behavior in the
@@ -73,7 +73,7 @@ a review of the frozen scope manifest. New modules can be
 added as separate slices instead of generating unrelated Admin APIs into
 the user app. The admin client has its own contract and frozen scope manifest:
 `api-sdk/admin.openapi.json` and `api-sdk/admin.scopes.json`. Its 22 groups and
-73 operations are generated into
+76 operations are generated into
 `projects/fooddiary-admin/src/app/shared/api/sdk/generated/` and consumed by
 21 existing admin services. Both applications reuse the pinned generator and
 contract selector while retaining their existing import boundary.

@@ -51,7 +51,8 @@ public sealed record AdminUserHttpResponse(
     long AiInputTokenLimit,
     long AiOutputTokenLimit,
     DateTime? AiConsentAcceptedAt,
-    bool MustChangePassword) {
+    bool MustChangePassword,
+    DateTime? LastActiveAtUtc = null) {
     public double? LatestWeightKg { get; init; }
     public DateTime? LatestWeightDate { get; init; }
 }

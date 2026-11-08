@@ -9,6 +9,7 @@ public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> 
     private IQueryable<User> UsersWithRoles() =>
         users
             .AsSplitQuery()
+            .Include(u => u.Activity)
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
 
@@ -113,6 +114,9 @@ public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> 
             .Where(account => account.Id == user.Id).SelectMany(account => account.PrivacyConsentEvents)
             .Where(item => Enumerable.Contains(eventIds, item.Id)).Select(item => item.Id).ToListAsync(cancellationToken);
         users.Update(user);
+        if (user.Activity is not null) {
+            users.Entry(user).Reference(account => account.Activity).TargetEntry!.State = EntityState.Unchanged;
+        }
         foreach (UserPrivacyConsentEvent item in user.PrivacyConsentEvents) {
             users.Entry(user).Collection(account => account.PrivacyConsentEvents).FindEntry(item)!.State = persistedEventIds.Contains(item.Id)
                 ? EntityState.Unchanged : EntityState.Added;

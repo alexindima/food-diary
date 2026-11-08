@@ -57,7 +57,8 @@ public static class UserMappings {
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
             user.HasCurrentAiConsent() ? user.AiConsentAcceptedAt : null,
-            user.MustChangePassword);
+            user.MustChangePassword,
+            user.Activity == null ? null : user.Activity.LastActiveAtUtc);
 
     public static UserModel ToModel(this User user) {
         const string defaultLanguage = "en";

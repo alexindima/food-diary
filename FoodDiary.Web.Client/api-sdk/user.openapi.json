@@ -40795,6 +40795,85 @@
                 "tags": ["Users"]
             }
         },
+        "/api/v{version}/users/activity": {
+            "post": {
+                "operationId": "postUsersActivity",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
+                    }
+                ],
+                "tags": ["Users"]
+            }
+        },
         "/api/v{version}/users/ai-consent": {
             "delete": {
                 "operationId": "deleteUsersAiConsent",

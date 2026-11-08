@@ -7,7 +7,7 @@
                 <th>Email</th>
                 <th>Username</th>
                 <th>Roles</th>
-                <th>Last login</th>
+                <th>{{ 'ADMIN_USER.LAST_ACTIVE' | translate }}</th>
                 <th>Confirmed</th>
                 <th>{{ 'ADMIN_COMMON.REGISTERED' | translate }}</th>
             </tr>
@@ -18,7 +18,9 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.username || '-' }}</td>
                     <td>{{ user.roles.join(', ') || '-' }}</td>
-                    <td>{{ user.lastLoginAtUtc ? (user.lastLoginAtUtc | date: 'medium') : '-' }}</td>
+                    <td>
+                        {{ user.lastActiveAtUtc ? (user.lastActiveAtUtc | date: 'medium') : ('ADMIN_USER.ACTIVITY_UNKNOWN' | translate) }}
+                    </td>
                     <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
                     <td>{{ user.createdOnUtc | date: 'mediumDate' }}</td>
                 </tr>

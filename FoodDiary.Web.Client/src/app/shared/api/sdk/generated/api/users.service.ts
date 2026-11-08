@@ -106,6 +106,10 @@ export interface PatchUsersPreferencesAppearanceRequestParams {
     updateUserAppearanceHttpRequest?: UpdateUserAppearanceHttpRequest;
 }
 
+export interface PostUsersActivityRequestParams {
+    version: string;
+}
+
 export interface PostUsersAiConsentRequestParams {
     version: string;
 }
@@ -1181,6 +1185,83 @@ export class UsersSdk extends BaseService {
         return this.httpClient.request<UserHttpResponse>('patch', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             body: updateUserAppearanceHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/users/activity
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postUsersActivity(
+        requestParameters: PostUsersActivityRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<void>;
+    public postUsersActivity(
+        requestParameters: PostUsersActivityRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<void>>;
+    public postUsersActivity(
+        requestParameters: PostUsersActivityRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<void>>;
+    public postUsersActivity(
+        requestParameters: PostUsersActivityRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postUsersActivity.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/users/activity`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

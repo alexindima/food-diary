@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
     "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 42,
+    "criticalSymbolsWithoutTestReferences": 44,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -6063,6 +6063,16 @@
       "coveredThrough": []
     },
     {
+      "name": "RecordUserActivityCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
+      "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "RequestTelegramBackupEmailCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
@@ -6137,6 +6147,16 @@
       "role": "Controller",
       "path": "Modules/Meals/Presentation/Controllers/MealRecognitionsController.cs",
       "line": 17,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "UserActivityController",
+      "role": "Controller",
+      "path": "Modules/Users/Presentation/Controllers/UserActivityController.cs",
+      "line": 14,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

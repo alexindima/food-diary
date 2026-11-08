@@ -54,7 +54,8 @@ public sealed record AdminUserModel(
     long AiInputTokenLimit,
     long AiOutputTokenLimit,
     DateTime? AiConsentAcceptedAt,
-    bool MustChangePassword = false) {
+    bool MustChangePassword = false,
+    DateTime? LastActiveAtUtc = null) {
     public double? LatestWeightKg { get; init; }
     public DateTime? LatestWeightDate { get; init; }
 }

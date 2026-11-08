@@ -54,4 +54,5 @@ public sealed record UserAdminReadModel(
     long AiInputTokenLimit,
     long AiOutputTokenLimit,
     DateTime? AiConsentAcceptedAt,
-    bool MustChangePassword = false);
+    bool MustChangePassword = false,
+    DateTime? LastActiveAtUtc = null);

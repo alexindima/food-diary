@@ -1300,6 +1300,7 @@
         "call:User.GetRoleNames",
         "entity:Role",
         "entity:User",
+        "entity:UserActivity",
         "entity:UserNutritionProfile",
         "entity:UserPreferences",
         "entity:UserRole",
@@ -1360,6 +1361,7 @@
       "capabilities": [
         "entity:Role",
         "entity:User",
+        "entity:UserActivity",
         "entity:UserNutritionProfile",
         "entity:UserPrivacyConsentEvent",
         "entity:UserRoleAuditEvent",
@@ -1368,8 +1370,8 @@
         "write:User",
         "write:UserRoleAuditEvent"
       ],
-      "reason": "Users owns tracked account/profile/role-audit attachment. Detached goal updates read the persisted profile revision, insert only new history and retain immutable snapshots via owner navigation entries. No context escape, SaveChanges or commit; original profile xmin checks and caller unit of work remain authoritative.",
-      "technicalSourceSha256": "500317718f917e6d1afa9a1eb6c0c317af54735c2b03e213d6aa20156902c87a"
+      "reason": "Users owns tracked account/profile/role-audit attachment. Detached goal updates read the persisted profile revision, insert only new history and retain immutable snapshots via owner navigation entries. No context escape, SaveChanges or commit; original profile xmin checks and caller unit of work remain authoritative. Activity is read as an optional owner state; detached graph attachment explicitly keeps the activity snapshot unchanged so concurrent pings cannot be overwritten.",
+      "technicalSourceSha256": "e030ad933c2b17086493bf9b3c5402d7af5f3f683a7c098fad941afd1a258fc7"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs": {
       "module": "Users",
@@ -1840,7 +1842,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "4c8c36fa826cb61592845eb098c05956b24b54b2351744d4975e1611b79f8852"
+      "technicalSourceSha256": "c9e4b7aa67ac7d3633b22aa99b0e595c6b638be165a04b6ef04ac4746ebfd794"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -1995,6 +1997,7 @@
         "entity:ShoppingList",
         "entity:User",
         "entity:UserAchievement",
+        "entity:UserActivity",
         "entity:UserGoalRevision",
         "entity:UserLessonProgress",
         "entity:UserLoginEvent",
@@ -2020,6 +2023,12 @@
       "capabilities": [
         "entity:User"
       ]
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserActivityRepository.cs": {
+      "module": "Users",
+      "capabilities": [],
+      "reason": "Reviewed owner-only parameterized atomic upsert of UserActivities, selected from an active non-deleted Users row. Uses server UTC time with a five-minute monotonic cutoff. No account, credential, audit or security-version writes; joins the caller transaction through the owner synchronizer.",
+      "technicalSourceSha256": "d8a1035b1e07ea369615af5692af3e61b1a5b48eb354abbdf91da7839efe5128"
     }
   }
 }
