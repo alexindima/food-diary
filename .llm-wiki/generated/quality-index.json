@@ -68987,7 +68987,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
       "line": 1,
-      "testReferenceCount": 17,
+      "testReferenceCount": 18,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
@@ -69000,6 +69000,7 @@
         ".llm-wiki/tools/Test-LlmWikiGitPaths.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexCheckpoint.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexPipelineCache.ps1",
+        ".llm-wiki/tools/Test-LlmWikiObservedStageReceipt.ps1",
         ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
         ".llm-wiki/tools/Test-LlmWikiProcessBounds.ps1",
         ".llm-wiki/tools/Test-LlmWikiReliability.ps1",

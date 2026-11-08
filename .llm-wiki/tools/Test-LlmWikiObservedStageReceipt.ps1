@@ -2,6 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 $root = Join-Path ([IO.Path]::GetTempPath()) "llm-wiki-observed-stage-$PID"
 $null = New-Item -ItemType Directory -Path $root -Force
 try {
