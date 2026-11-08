@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1403,
+    "contracts": 1405,
     "ambiguousContracts": 32,
-    "consumerEdges": 11449,
-    "productionConsumerEdges": 6331,
-    "testConsumerEdges": 5118,
-    "consumedContracts": 1403,
+    "consumerEdges": 11473,
+    "productionConsumerEdges": 6345,
+    "testConsumerEdges": 5128,
+    "consumedContracts": 1405,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -10466,6 +10466,23 @@
       ],
       "definitionPaths": [
         "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IBillingTelegramMessageSender",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -21088,6 +21105,23 @@
       ],
       "definitionPaths": [
         "Modules/Fasting/Contracts/Commands/SendFastingNotifications/SendFastingNotificationsCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "SendTelegramCancellationConfirmationsCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -57715,6 +57749,19 @@
         "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetUserBillingProfileIncludingDeletedQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
@@ -57744,6 +57791,19 @@
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "GetUserBillingProfileIncludingDeletedQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserBillingProfileIncludingDeleted/GetUserBillingProfileIncludingDeletedQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetUserBillingProfileIncludingDeletedQuery",
@@ -64720,6 +64780,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingCancellationRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -64786,6 +64859,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBillingCancellationRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -64941,6 +65027,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingCheckoutLock",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -64956,6 +65055,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingCheckoutLock",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -66137,6 +66249,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -66192,6 +66317,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IBillingSubscriptionReadModelRepository",
@@ -66506,6 +66644,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "IBillingTelegramMessageSender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTelegramMessageSender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTelegramMessageSender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTelegramMessageSender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IBillingTransactionRunner",
       "roles": [
         "Other"
@@ -66631,6 +66821,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -66671,6 +66874,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -116929,6 +117145,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Contracts/WaistEntries/Queries/ReadLatestWaistEntry/ReadLatestWaistEntryQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -119620,6 +119849,19 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -121219,6 +121461,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/BillingCancellationTelegramJob.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.JobManager/Services/BillingRenewalJob.cs",
       "isTest": false,
       "referenceCount": 1
@@ -122351,6 +122606,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -124365,6 +124633,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationTelegramJobTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -124691,6 +124972,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -161325,6 +161619,58 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SendTelegramCancellationConfirmationsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.JobManager/Services/BillingCancellationTelegramJob.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SendTelegramCancellationConfirmationsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SendTelegramCancellationConfirmationsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationTelegramJobTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "SendTelegramCancellationConfirmationsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

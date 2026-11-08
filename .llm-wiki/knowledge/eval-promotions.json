@@ -3784,6 +3784,132 @@
       },
       "reason": "",
       "eventHash": "6da1c594c8a5cc52c614e439bb23762e3a4b1120e4043a3037b879aa7b4365ca"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 28,
+      "kind": "observed",
+      "candidateId": "learned-28f06a566533a46a",
+      "createdAtUtc": "2026-11-08T12:39:45.3815743Z",
+      "previousHash": "6da1c594c8a5cc52c614e439bb23762e3a4b1120e4043a3037b879aa7b4365ca",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/stars-cancellation-notice",
+        "retrospectiveHash": "c85a786195fd3cab5eca79d1b9e607c5a5d96674616c1ce7d25e52b8f6f31bbd",
+        "packetFingerprint": "d84515e691ed574e85599bc8fbbc8be7c935f9abdb87d93ab09bdf4e2e81538a",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=2814.29%"
+            ]
+          },
+          {
+            "id": "cost-data-access-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'data-access-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "data-access-integration-tests",
+              "error=68.16%"
+            ]
+          },
+          {
+            "id": "cost-infrastructure-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'infrastructure-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=118.61%",
+              "infrastructure-integration-tests"
+            ]
+          },
+          {
+            "id": "cost-migration-format",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'migration-format'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1925%",
+              "migration-format"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-28f06a566533a46a",
+          "changedPaths": [
+            "docs/backend/TELEGRAM_STARS.md",
+            "FoodDiary.Infrastructure/Migrations/20261108115006_AddBillingCancellationTelegramConfirmation.cs",
+            "FoodDiary.Infrastructure/Migrations/20261108115006_AddBillingCancellationTelegramConfirmation.Designer.cs",
+            "FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs",
+            "FoodDiary.JobManager/Services/BillingCancellationTelegramJob.cs",
+            "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
+            "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+            "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+            "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
+            "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
+            "Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationTelegramJobTests.cs",
+            "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+            "Hosts/tests/FoodDiary.JobManager.Tests/TelemetryPrivacyProcessorTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/TelemetryPrivacyProcessorTests.cs",
+            "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs",
+            "Modules/Billing/Application.Abstractions/Common/IBillingTelegramMessageSender.cs",
+            "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramCandidateModel.cs",
+            "Modules/Billing/Application.Abstractions/Models/BillingCancellationTelegramSnapshotModel.cs",
+            "Modules/Billing/Application.Abstractions/Models/TelegramMessageDeliveryResult.cs",
+            "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommandHandler.cs",
+            "Modules/Billing/Application/Commands/SendTelegramCancellationConfirmations/TelegramCancellationConfirmationContent.cs",
+            "Modules/Billing/Contracts/Commands/SendTelegramCancellationConfirmations/SendTelegramCancellationConfirmationsCommand.cs",
+            "Modules/Billing/Contracts/Models/BillingCancellationTelegramRunResult.cs",
+            "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+            "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
+            "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
+            "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+            "Modules/Billing/PersistenceModel/BillingCancellationConfiguration.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.TelegramMessages.cs",
+            "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/BillingCancellationTelegramRepositoryTests.cs",
+            "Tooling/tests/FoodDiary.ArchitectureTests/PersistenceTransactionGuardrailTests.cs"
+          ],
+          "expectedModules": [
+            "Billing"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Database",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-decision",
+            "backend-boundaries",
+            "backend-public-contract",
+            "deployment-rollout",
+            "domain-invariant",
+            "ef-migration",
+            "observability-critical-flow",
+            "performance-data-access",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests",
+            "data-access-integration-tests",
+            "infrastructure-integration-tests",
+            "migration-format"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "58bec859e7493f72238d223b8a081dbe022dbe1cfcbcd4bfb7e802061467e833"
+      },
+      "reason": "",
+      "eventHash": "ca9bd8e9bc7cf2b15883953b91d39d6a637748264f71b4643e0f73a1d3cda38f"
     }
   ]
 }

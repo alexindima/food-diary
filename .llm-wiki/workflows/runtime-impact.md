@@ -21,7 +21,7 @@ sources:
 
 # Review runtime and integration impact
 
-The refreshed topology includes the shared local ranking reader without introducing a host, worker, provider, or recurring job. Graph snapshot freshness, projection generation, and full verification remain independent evidence when interpreting this runtime inventory.
+The topology inventories deployable hosts, workers, provider clients, and recurring jobs. Use it to find affected runtime boundaries, then inspect their owning implementations. Graph snapshot freshness, projection generation, and full verification remain independent evidence when interpreting this inventory.
 
 Topology freshness reads and hashes the current source contents on every request.
 The native scanner reduces per-file PowerShell overhead while preserving source

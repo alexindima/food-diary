@@ -500,6 +500,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("ConfirmationEmailHandledAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("ConfirmationTelegramHandledAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -552,6 +555,10 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.HasIndex("ConfirmationEmailHandledAtUtc", "RequestedAtUtc")
                         .HasFilter("\"ConfirmationEmailHandledAtUtc\" IS NULL");
+
+                    b.HasIndex("ConfirmationTelegramHandledAtUtc", "RequestedAtUtc")
+                        .HasDatabaseName("IX_BillingCancellations_TelegramPending")
+                        .HasFilter("\"ConfirmationTelegramHandledAtUtc\" IS NULL AND \"Provider\" = 'TelegramStars'");
 
                     b.HasIndex("UserId", "Provider", "ExternalSubscriptionId", "RequestedAtUtc");
 

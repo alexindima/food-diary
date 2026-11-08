@@ -60,22 +60,23 @@ Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent, BillingCancellation
-- Public contract files: 33
+- Public contract files: 37
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 33
-- Interfaces: 15
-- DTO/read-model/projection types: 14
-- Enums: 0
+- Public contract types: 37
+- Interfaces: 16
+- DTO/read-model/projection types: 16
+- Enums: 1
 - Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 0
 - `class BillingErrors`
 - `class BillingInputLimits`
 - `class BillingPaymentAlreadyExistsException`
 - `class BillingWebhookEventAlreadyProcessedException`
+- `enum TelegramMessageDeliveryResult`
 - `interface IBillingCancellationRepository`
 - `interface IBillingCheckoutLock`
 - `interface IBillingPaymentReadRepository`
@@ -86,6 +87,7 @@ Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
 - `interface IBillingRecurringProviderGateway`
 - `interface IBillingSubscriptionReadModelRepository`
 - `interface IBillingSubscriptionWriteRepository`
+- `interface IBillingTelegramMessageSender`
 - `interface IBillingTransactionRunner`
 - `interface IBillingWebhookEventReadRepository`
 - `interface IBillingWebhookEventWriteRepository`
@@ -94,21 +96,20 @@ Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
 - `record BillingCancellationEmailCandidateModel`
 - `record BillingCancellationRequestModel`
 - `record BillingCancellationSnapshotModel`
+- `record BillingCancellationTelegramCandidateModel`
+- `record BillingCancellationTelegramSnapshotModel`
 - `record BillingCheckoutSessionModel`
 - `record BillingCheckoutSessionRequestModel`
 - `record BillingPortalSessionModel`
 - `record BillingPortalSessionRequestModel`
-- `record BillingPublicConfigModel`
-- `record BillingRecurringPaymentModel`
-- `record BillingRecurringPaymentRequestModel`
-- `record BillingSubscriptionOverviewReadModel`
-- ... 3 more type(s)
+- ... 7 more type(s)
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationEmailJobTests.cs`
+- [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationTelegramJobTests.cs`
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.Telegram.Bot.Tests/BillingOverviewContractTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BillingCancellationTransportTests.cs`
@@ -118,6 +119,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailBoundaries.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTelegramTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationWebhookOrdering.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
@@ -136,8 +138,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/NoopBillingCheckoutLock.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/WebhookDeduplicationMetadataTests.cs`
 
 ## Working Rule
 

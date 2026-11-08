@@ -727,8 +727,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "0f096b5be9f06e1794dd38f8bdb6a1f8c3e7b52ee0046f84f3286c871c1fc5d6",
-          "reviewReason": "Reviewed the final task-finish registry delta: five append-only cost-calibration observations from the sealed Stars retrospective, with previous/event hashes and task provenance. No candidate is approved, applied or made active. Existing idempotent observation and separate review/experiment/application boundaries remain accurate; no workflow prose changes are required."
+          "sha256": "9e51777aafbc61f14a2b7cc027e690d960f3835ec31f2ec488dc793399c34c00",
+          "reviewReason": "Reviewed the four task-finish observation events for stars-cancellation-notice. They remain observed hypotheses tied to the sealed task; no learning approval/application, memory, policy, experiment or verification calibration was changed. The page still describes the actual guarded append-only lifecycle."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -761,10 +761,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the final task-finish registry delta: five append-only cost-calibration observations from the sealed Stars retrospective, with previous/event hashes and task provenance. No candidate is approved, applied or made active. Existing idempotent observation and separate review/experiment/application boundaries remain accurate; no workflow prose changes are required.",
-      "baseRef": "origin/master",
-      "gitHead": "57401a8d6fdc8923fca6d1f54241e872164e4165",
-      "reviewedAtUtc": "2026-11-08T07:58:55.3081311Z"
+      "reason": "Reviewed the four task-finish observation events for stars-cancellation-notice. They remain observed hypotheses tied to the sealed task; no learning approval/application, memory, policy, experiment or verification calibration was changed. The page still describes the actual guarded append-only lifecycle.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:40.9055395Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -879,43 +879,18 @@
     {
       "pageId": "workflow-domain-data-review",
       "pagePath": ".llm-wiki/workflows/domain-data-review.md",
-      "pageSha256": "3e6c8653055b940700866104a57be1c900a5ae74cd666d7eb0eda5d0109942fd",
+      "pageSha256": "2431fb9cb9f3e9d241b942fdaafc6acbba02e3ea42476245e8ebc7f8e68c3464",
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "7d54e937184c32bdf5c33cc4510b995d10f1600d01d9fc0de87f9053517239a6",
-          "reviewReason": "Reviewed nullable Users PremiumAccessEndsAtUtc, owner-only role SQL, additive migration pair and model snapshot. Null preserves permanent access; exact provider expiration bounds Stars. PostgreSQL concurrency and exact-end principal assertions passed; the workflow still describes the required invariant review."
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
-          "sha256": "6d5d35b47c460b7366c8841b7748c19c9c65e378c2d193e98d8611e324276886",
-          "reviewReason": "Reviewed actual DomainDataReader diagnostic contract used by the measurement validator and retained existing helper manifest/linked-source rules. Current source hash must match before a latency sample is accepted; this does not claim the separate open concurrent reader issue is fixed."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "4b953d81c7099333bc0fd1ada8692cfebd8a631857e690fabbaf10d43540fa8e",
-          "reviewReason": "Reviewed migration diagnostic only: retained raw JSON sources remain available to projection and lineage checks. Domain readers, persistence rules, source hashes, cold/warm query checks and SQLite contracts described here are unchanged."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
-          "sha256": "6921367dcf92ea78c645b911053059913f2f1dd3f167239206afe9fc04fbca87",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
-          "sha256": "378f213ccca6d703cfa777af58a386a1c505ff608c7bc031bf9632008665d53a",
-          "reviewReason": "Reviewed actual DomainDataReader diagnostic contract used by the measurement validator and retained existing helper manifest/linked-source rules. Current source hash must match before a latency sample is accepted; this does not claim the separate open concurrent reader issue is fixed."
-        },
-        {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "3074acfbc5fb9b1083d812ae7b2fc6d47f1130ba29e65134f158430c2cfbc18d",
-          "reviewReason": "Reviewed actual DomainDataReader diagnostic contract used by the measurement validator and retained existing helper manifest/linked-source rules. Current source hash must match before a latency sample is accepted; this does not claim the separate open concurrent reader issue is fixed."
+          "sha256": "b7b0eec96578b327fab1bca128d60937f8ede82ee99a344c99136ba1ef171462",
+          "reviewReason": "Reviewed the new Billing cancellation Telegram handled timestamp, filtered pending index, owner projections and marker-only update. The nullable implementation/Designer/snapshot agree, UTC semantics and email independence are preserved, and 449 PostgreSQL tests including owner scoping/rollback/concurrent-state preservation passed. The generic mapping/provider guidance remains current."
         }
       ],
-      "reason": "Reviewed actual DomainDataReader diagnostic contract used by the measurement validator and retained existing helper manifest/linked-source rules. Current source hash must match before a latency sample is accepted; this does not claim the separate open concurrent reader issue is fixed.",
-      "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T20:45:59.9820723Z"
+      "reason": "Reviewed the new Billing cancellation Telegram handled timestamp, filtered pending index, owner projections and marker-only update. The nullable implementation/Designer/snapshot agree, UTC semantics and email independence are preserved, and 449 PostgreSQL tests including owner scoping/rollback/concurrent-state preservation passed. The generic mapping/provider guidance remains current.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:41.6752927Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1158,14 +1133,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "b5428177967b58807f2531972046e4e8e679eafbb4da8e44c66d61b8f7e2a00a",
-          "reviewReason": "Reviewed the new append-only instruction-outcome record for the sealed Stars task. It records applicable guide fingerprints and actual ready outcome without changing AGENTS files, policy, experiment decisions or scoring rules. The documented task-finish attribution and review-only candidate boundary remain accurate."
+          "sha256": "e0425096a50016d6230c2ef8edc0435ebe916c87d720b1aeb0eed89dbc5dce09",
+          "reviewReason": "Reviewed the single instruction-outcome event from the sealed Stars notice task. It records applicable AGENTS fingerprints, risk and completion observations; no AGENTS content, risk floor, policy, experiment or adoption threshold changed. The page correctly treats this as correlated evidence requiring separate reviewed experiments."
         }
       ],
-      "reason": "Reviewed the new append-only instruction-outcome record for the sealed Stars task. It records applicable guide fingerprints and actual ready outcome without changing AGENTS files, policy, experiment decisions or scoring rules. The documented task-finish attribution and review-only candidate boundary remain accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "57401a8d6fdc8923fca6d1f54241e872164e4165",
-      "reviewedAtUtc": "2026-11-08T07:58:55.7061147Z"
+      "reason": "Reviewed the single instruction-outcome event from the sealed Stars notice task. It records applicable AGENTS fingerprints, risk and completion observations; no AGENTS content, risk floor, policy, experiment or adoption threshold changed. The page correctly treats this as correlated evidence requiring separate reviewed experiments.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:42.3968756Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1195,8 +1170,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "64a4d7ee4fe3368692634cd5100c5a3f028237320ea9df7ce03892e1c73973b7",
-          "reviewReason": "Reviewed the new observed eval candidate generated by final task-finish from cost-forecast signals and the final Stars change profile. It captures the sealed retrospective, expected paths/modules/checks and chain hashes; no approval or application event activates an eval. The documented observation/approval/application lifecycle and safeguards remain accurate."
+          "sha256": "3e89341adeb15611fa78383ab7686f2f8d1a5671aab920874a4a5d69ed9f591d",
+          "reviewReason": "Reviewed the task-finish observed eval candidate for stars-cancellation-notice. Observation only: no approval, apply event or active eval case was introduced. The existing independent review/application and append-only safety rules in this page remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1219,10 +1194,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the new observed eval candidate generated by final task-finish from cost-forecast signals and the final Stars change profile. It captures the sealed retrospective, expected paths/modules/checks and chain hashes; no approval or application event activates an eval. The documented observation/approval/application lifecycle and safeguards remain accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "57401a8d6fdc8923fca6d1f54241e872164e4165",
-      "reviewedAtUtc": "2026-11-08T07:58:56.1555615Z"
+      "reason": "Reviewed the task-finish observed eval candidate for stars-cancellation-notice. Observation only: no approval, apply event or active eval case was introduced. The existing independent review/application and append-only safety rules in this page remain accurate.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:43.1460645Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1346,8 +1321,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "27676a28fbbb38c02adb16c328662f905b03bc1629b025df3ecac3717ba56b1c",
-          "reviewReason": "Reviewed regenerated sensitive-data navigation after combining the approved master commits with production observability. Existing logging/provider boundaries remain; AI additions export numeric durations and validated token counts with bounded model/operation attributes, while telemetry payload and credential exclusions remain documented. The page instructions still match the merged scanner and index sources."
+          "sha256": "1de7fde5d219f2f89238dc04919981f22bfb001cd71bd37229cb7de4f30b80f4",
+          "reviewReason": "Reviewed current sensitive-data entries and the new Telegram sendMessage transfer: linked original payer receives only localized cancellation and confirmed expiry; the persisted addition is a technical handled timestamp. No chat/charge/message-body copies are logged or stored. HTTP logging is off and both host traces now remove Telegram token paths, confirmed by failing-before/passing-after tests. The page still correctly requires source-semantic review of candidates and external transfers."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1360,10 +1335,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed regenerated sensitive-data navigation after combining the approved master commits with production observability. Existing logging/provider boundaries remain; AI additions export numeric durations and validated token counts with bounded model/operation attributes, while telemetry payload and credential exclusions remain documented. The page instructions still match the merged scanner and index sources.",
-      "baseRef": "origin/master",
-      "gitHead": "8eea70ff5213cecfc44e7f236ddd0f8bf766b771",
-      "reviewedAtUtc": "2026-11-08T03:00:12.4867857Z"
+      "reason": "Reviewed current sensitive-data entries and the new Telegram sendMessage transfer: linked original payer receives only localized cancellation and confirmed expiry; the persisted addition is a technical handled timestamp. No chat/charge/message-body copies are logged or stored. HTTP logging is off and both host traces now remove Telegram token paths, confirmed by failing-before/passing-after tests. The page still correctly requires source-semantic review of candidates and external transfers.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:43.9189254Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1560,18 +1535,18 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "dc19a28adee0959a37cfa489ead8e0aceaa31ef2dd04ddac10c4a05e489a7918",
+      "pageSha256": "dcc4e6b4b00519a2985eaf6a13da4ab8992df26c6887f543bc6d37a36e8f9884",
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "188e26d0aa376107d3647f98781b61c8e458f62cfaf1908af33e3635bb477762",
-          "reviewReason": "Inspected the exact runtime-topology delta: only source freshness fingerprint and source file count change for the added Billing metadata helper. Service, worker, job, client and webhook records are unchanged. Invoice resume reuses existing serialized owner transaction and lease, performs no provider call, and preserves replay and approval age checks. Existing runtime inventory interpretation, freshness and resilience guidance remain accurate."
+          "sha256": "13ae6b91f9abb64ed23c1311c7568ea97766ee62254654a22cdb8314f14cba52",
+          "reviewReason": "Reviewed the new independent minute BillingCancellationTelegramJob and typed Telegram message sender, per-user lease, short retryable transactions, terminal403 vs retryable transport/configuration outcomes, marker-only commit and aggregate telemetry. Replaced the old change-specific no-new-worker wording with durable inventory guidance. The topology and direct code/tests agree; ambiguous sendMessage acknowledgement remains documented at-least-once delivery."
         }
       ],
-      "reason": "Inspected the exact runtime-topology delta: only source freshness fingerprint and source file count change for the added Billing metadata helper. Service, worker, job, client and webhook records are unchanged. Invoice resume reuses existing serialized owner transaction and lease, performs no provider call, and preserves replay and approval age checks. Existing runtime inventory interpretation, freshness and resilience guidance remain accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "c44b73666eab8655f4e8fb342b2ad1c4dcf40905",
-      "reviewedAtUtc": "2026-11-08T07:50:38.9010086Z"
+      "reason": "Reviewed the new independent minute BillingCancellationTelegramJob and typed Telegram message sender, per-user lease, short retryable transactions, terminal403 vs retryable transport/configuration outcomes, marker-only commit and aggregate telemetry. Replaced the old change-specific no-new-worker wording with durable inventory guidance. The topology and direct code/tests agree; ambiguous sendMessage acknowledgement remains documented at-least-once delivery.",
+      "baseRef": "401608bbdb53f2194fb1d0563cc8072be93627db",
+      "gitHead": "3f6349a8fc0cabc7330f035afc021d3f8141e287",
+      "reviewedAtUtc": "2026-11-08T12:45:44.6265964Z"
     },
     {
       "pageId": "workflow-security-review",

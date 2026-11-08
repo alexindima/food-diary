@@ -6,7 +6,7 @@
     "valueObjects": 143,
     "invariants": 654,
     "persistenceMappings": 100,
-    "indexes": 183,
+    "indexes": 184,
     "relationships": 41
   },
   "domainTypes": [
@@ -2166,42 +2166,42 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A confirmed cancellation is required.\", nameof(subscription))",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 27
+      "line": 28
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Unknown cancellation source.\", nameof(source))",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 30
+      "line": 31
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Cancellation owner does not match.\", nameof(subscription))",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 50
+      "line": 51
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Unknown cancellation reason.\", nameof(reasonCode))",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 70
+      "line": 71
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Feedback must not exceed 2000 characters.\", nameof(comment))",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 73
+      "line": 74
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A UTC instant is required.\", nameof(value))",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 94
+      "line": 95
     },
     {
       "area": "FoodDiary",
@@ -6747,6 +6747,7 @@
       "indexes": [
         "item => item.RequestedAtUtc)",
         "item => new { item.ConfirmationEmailHandledAtUtc, item.RequestedAtUtc })",
+        "item => new { item.ConfirmationTelegramHandledAtUtc, item.RequestedAtUtc })",
         "item => new { item.UserId, item.Provider, item.ExternalSubscriptionId, item.RequestedAtUtc })"
       ],
       "relationships": [],

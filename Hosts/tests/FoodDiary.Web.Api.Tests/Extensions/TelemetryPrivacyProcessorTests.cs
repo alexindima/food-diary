@@ -9,6 +9,18 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 [ExcludeFromCodeCoverage]
 public sealed class TelemetryPrivacyProcessorTests {
     [Theory]
+    [InlineData("https://api.telegram.org/bot123:synthetic/sendMessage")]
+    [InlineData("https://api.telegram.org/bot123:synthetic/test/sendMessage?token=secret")]
+    public void TelegramBotUrl_RemovesCredentialBearingPath(string url) {
+        using Activity activity = new Activity("telegram-notice-test").Start();
+        activity.SetTag("url.full", url);
+
+        TelemetryPrivacyProcessor.Sanitize(activity);
+
+        Assert.Equal("https://api.telegram.org", activity.GetTagItem("url.full"));
+    }
+
+    [Theory]
     [InlineData("/health", false)]
     [InlineData("/health/live", false)]
     [InlineData("/health/ready", false)]

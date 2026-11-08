@@ -80,7 +80,10 @@ public sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
 
     private static string? SanitizeUrl(Uri? uri) =>
         uri is { IsAbsoluteUri: true }
-            ? uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.UriEscaped)
+            // Telegram Bot API credentials are in the path, not in the query string.
+            ? uri.GetComponents(string.Equals(uri.Host, "api.telegram.org", StringComparison.OrdinalIgnoreCase)
+                ? UriComponents.SchemeAndServer
+                : UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.UriEscaped)
             : null;
 
     private static string? SanitizeUrl(string value) =>
