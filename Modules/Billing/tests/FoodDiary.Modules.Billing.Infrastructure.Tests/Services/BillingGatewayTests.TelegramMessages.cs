@@ -17,7 +17,9 @@ public partial class BillingGatewayTests {
         });
         using var client = new HttpClient(http);
         var sender = new TelegramBillingMessageSender(client, Options.Create(new TelegramStarsOptions {
-            BotToken = "123:synthetic", UseTestEnvironment = test, CheckoutEnabled = false,
+            BotToken = "123:synthetic",
+            UseTestEnvironment = test,
+            CheckoutEnabled = false,
         }));
         const string text = "Автопродление отключено.\nPremium действует до 08.12.2026.";
 

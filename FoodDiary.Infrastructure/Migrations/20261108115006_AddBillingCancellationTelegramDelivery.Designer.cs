@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    [Migration("20261108115006_AddBillingCancellationTelegramConfirmation")]
-    partial class AddBillingCancellationTelegramConfirmation
+    [Migration("20261108115006_AddBillingCancellationTelegramDelivery")]
+    partial class AddBillingCancellationTelegramDelivery
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

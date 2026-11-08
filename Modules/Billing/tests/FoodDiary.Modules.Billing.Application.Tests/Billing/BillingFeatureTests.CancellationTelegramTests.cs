@@ -40,7 +40,7 @@ public partial class BillingFeatureTests {
         var fixture = new TelegramCancellationFixture();
         fixture.Profile = fixture.Profile with { Language = language, TimeZoneId = zone };
         await fixture.RunAsync();
-        Assert.Contains(expected, Assert.Single(fixture.Delivered), StringComparison.Ordinal);
+        Assert.Contains(expected, NormalizeDateSpaces(Assert.Single(fixture.Delivered)), StringComparison.Ordinal);
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public partial class BillingFeatureTests {
         fixture.End = new DateTime(2027, 3, 28, hour, 30, 0, DateTimeKind.Utc);
         fixture.Profile = fixture.Profile with { Language = "en", TimeZoneId = "Europe/Berlin" };
         await fixture.RunAsync();
-        Assert.Contains(expected, Assert.Single(fixture.Delivered), StringComparison.Ordinal);
+        Assert.Contains(expected, NormalizeDateSpaces(Assert.Single(fixture.Delivered)), StringComparison.Ordinal);
     }
 
     [Theory]
@@ -153,6 +153,9 @@ public partial class BillingFeatureTests {
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => fixture.RunAsync(cancellation.Token));
         Assert.Null(fixture.HandledAt);
     }
+
+    // ICU uses a narrow no-break space before AM/PM; Windows NLS uses a regular space.
+    private static string NormalizeDateSpaces(string value) => value.Replace('\u202f', ' ').Replace('\u00a0', ' ');
 
     private sealed class TelegramCancellationFixture {
         public static readonly DateTime Instant = new(2026, 11, 8, 11, 12, 45, DateTimeKind.Utc);
