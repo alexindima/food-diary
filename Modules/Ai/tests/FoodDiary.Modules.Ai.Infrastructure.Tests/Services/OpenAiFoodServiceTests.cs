@@ -26,6 +26,48 @@ public sealed class OpenAiFoodServiceTests {
     private const string NutritionPrompt = "Estimate nutrition for {{itemsJson}}.";
 
     [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ParseFoodTextAsync_RecordsProviderLatencyAndOnlyValidatedUsage(bool success) {
+        var durations = new List<(double Duration, string? Outcome)>();
+        var tokens = new List<(long Count, string? Type)>();
+        using var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (string.Equals(instrument.Meter.Name, IntegrationsMeterName, StringComparison.Ordinal) &&
+                instrument.Name is "fooddiary.ai.request.duration" or "fooddiary.ai.tokens") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<double>((_, value, tags, _) => {
+            Assert.Equal(3, tags.Length);
+            durations.Add((value, GetTagValue(tags, "fooddiary.ai.outcome")));
+        });
+        listener.SetMeasurementEventCallback<long>((_, value, tags, _) => {
+            Assert.Equal(3, tags.Length);
+            tokens.Add((value, GetTagValue(tags, "fooddiary.ai.token_type")));
+        });
+        listener.Start();
+        using var httpClient = new HttpClient(new CapturingHttpMessageHandler(_ => success
+            ? CreateVisionSuccessResponse()
+            : new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent("{}") }));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "fixture", TextModel = "fixture-model" });
+
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result =
+            await client.ParseFoodTextAsync("private fixture text", "en", TextPrompt, CancellationToken.None);
+
+        Assert.Equal(success, result.IsSuccess);
+        (double duration, string? outcome) = Assert.Single(durations);
+        Assert.True(duration >= 0);
+        Assert.Equal(success ? "success" : "failure", outcome);
+        if (success) {
+            (long Count, string? Type)[] expectedTokens = [(11L, "input"), (7L, "output")];
+            Assert.Equal(expectedTokens, tokens);
+        } else {
+            Assert.Empty(tokens);
+        }
+    }
+
+    [Theory]
     [InlineData("vision")]
     [InlineData("text")]
     [InlineData("nutrition")]

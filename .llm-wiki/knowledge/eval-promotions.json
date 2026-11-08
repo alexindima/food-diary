@@ -3478,6 +3478,88 @@
       },
       "reason": "",
       "eventHash": "b4698d9e2d1d7d5f55652e5b7269fc0ac7487a33035de1e05bb6677fa434c4e0"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 25,
+      "kind": "observed",
+      "candidateId": "learned-34143d3293716fac",
+      "createdAtUtc": "2026-11-07T18:34:22.8817025Z",
+      "previousHash": "b4698d9e2d1d7d5f55652e5b7269fc0ac7487a33035de1e05bb6677fa434c4e0",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/observability-completion",
+        "retrospectiveHash": "c358d06f1f56a3ca7da204d44ca128e48e88414b875b0d23d274c86a91064026",
+        "packetFingerprint": "1abf82dee21b28fbaa26dc4418ab0345b89a9393e06dd4c526aec653ad63ddfb",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=2197.14%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-34143d3293716fac",
+          "changedPaths": [
+            ".github/workflows/external-monitoring.yml",
+            "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+            "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
+            "infra/observability/ai-model-prices.json",
+            "infra/observability/build_config.py",
+            "infra/observability/external_monitor.py",
+            "infra/observability/grafana/fooddiary-ai-operations.json",
+            "infra/observability/grafana/fooddiary-backend-alerting.yml",
+            "infra/observability/grafana/fooddiary-backend-reliability.json",
+            "infra/observability/grafana/fooddiary-frontend-reliability.json",
+            "infra/observability/grafana/fooddiary-operational-alerting.yml",
+            "infra/observability/grafana/fooddiary-operations.json",
+            "infra/observability/grafana/fooddiary-product-usage.json",
+            "infra/observability/host_collector.py",
+            "infra/observability/install.py",
+            "infra/observability/prometheus/fooddiary-alert-tests.yml",
+            "infra/observability/prometheus/fooddiary-backend-alerts.yml",
+            "infra/observability/prometheus/fooddiary-coverage-tests.yml",
+            "infra/observability/prometheus/fooddiary-pricing-tests.yml",
+            "infra/observability/prometheus/fooddiary-recording.yml",
+            "infra/observability/prometheus/fooddiary-slo-alerts.yml",
+            "infra/observability/promtail-config.yaml",
+            "infra/observability/README.md",
+            "infra/observability/systemd/fooddiary-metrics.service",
+            "infra/observability/systemd/fooddiary-metrics.timer",
+            "infra/observability/test_observability.py",
+            "infra/observability/verify.mjs",
+            "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+            "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
+            "scripts/ai/verify-alert-rules.mjs",
+            "Shared/FoodDiary.Integrations.Http/Services/IntegrationsTelemetry.cs"
+          ],
+          "expectedModules": [
+            "Ai"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "backend-public-contract",
+            "observability-critical-flow",
+            "runtime-resilience"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "20225bf05390ec5b0f472fa1207cd8e04ac0b07d88e7aea5cd9edaaadcf32b23"
+      },
+      "reason": "",
+      "eventHash": "22ec46a25252fe9f0ffb7458c73bdc0028c1362335beb53f524f0aef5feb6fe0"
     }
   ]
 }

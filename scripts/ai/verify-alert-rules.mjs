@@ -4,16 +4,17 @@ import { join } from "node:path";
 import { repositoryRoot } from "./generate-feature.mjs";
 
 const image =
-    "prom/prometheus@sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996";
+    "prom/prometheus@sha256:339ce86a59413be18d0e445472891d022725b4803fab609069110205e79fb2f1";
 const mount = `${join(repositoryRoot, "infra/observability/prometheus")}:/rules:ro`;
 const checks = [
     [
         "check",
         "rules",
+        "fooddiary-recording.yml",
         "fooddiary-backend-alerts.yml",
         "fooddiary-slo-alerts.yml",
     ],
-    ["test", "rules", "fooddiary-alert-tests.yml"],
+    ["test", "rules", "fooddiary-alert-tests.yml", "fooddiary-coverage-tests.yml", "fooddiary-pricing-tests.yml"],
 ];
 const results = [];
 for (const check of checks) {
@@ -38,7 +39,7 @@ for (const check of checks) {
         {
             encoding: "utf8",
             windowsHide: true,
-            timeout: 120_000,
+            timeout: 240_000,
             maxBuffer: 1024 * 1024,
         },
     );
@@ -60,7 +61,7 @@ writeFileSync(
             schemaVersion: 1,
             image,
             scope: "deterministic local rule evaluation; production loading, scraping and notification delivery unverified",
-            scenarios: 7,
+            scenarios: 14,
             results,
         },
         null,

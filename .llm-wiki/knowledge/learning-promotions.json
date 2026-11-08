@@ -12855,6 +12855,81 @@
       "targetId": "",
       "reason": "",
       "eventHash": "ac2bf5e40da2dbe6d3c1655725f1c24310e0719a776fa41ee00daac9f3a5b7f6"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 102,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-07T18:34:21.9726909Z",
+      "previousHash": "ac2bf5e40da2dbe6d3c1655725f1c24310e0719a776fa41ee00daac9f3a5b7f6",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/observability-completion",
+        "retrospectiveHash": "c358d06f1f56a3ca7da204d44ca128e48e88414b875b0d23d274c86a91064026",
+        "completionFingerprint": "9fe824ad4c37d19e039accc935da5e38b9ce21c9c8b14ad1bbb40334988176b5",
+        "packetFingerprint": "1abf82dee21b28fbaa26dc4418ab0345b89a9393e06dd4c526aec653ad63ddfb",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1608s versus 70s, error 2197.14%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=2197.14%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 70.0,
+          "expectedSeconds": 1608.0,
+          "errorPercent": 2197.14
+        },
+        "changedPaths": [
+          ".github/workflows/external-monitoring.yml",
+          "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
+          "infra/observability/ai-model-prices.json",
+          "infra/observability/build_config.py",
+          "infra/observability/external_monitor.py",
+          "infra/observability/grafana/fooddiary-ai-operations.json",
+          "infra/observability/grafana/fooddiary-backend-alerting.yml",
+          "infra/observability/grafana/fooddiary-backend-reliability.json",
+          "infra/observability/grafana/fooddiary-frontend-reliability.json",
+          "infra/observability/grafana/fooddiary-operational-alerting.yml",
+          "infra/observability/grafana/fooddiary-operations.json",
+          "infra/observability/grafana/fooddiary-product-usage.json",
+          "infra/observability/host_collector.py",
+          "infra/observability/install.py",
+          "infra/observability/prometheus/fooddiary-alert-tests.yml",
+          "infra/observability/prometheus/fooddiary-backend-alerts.yml",
+          "infra/observability/prometheus/fooddiary-coverage-tests.yml",
+          "infra/observability/prometheus/fooddiary-pricing-tests.yml",
+          "infra/observability/prometheus/fooddiary-recording.yml",
+          "infra/observability/prometheus/fooddiary-slo-alerts.yml",
+          "infra/observability/promtail-config.yaml",
+          "infra/observability/README.md",
+          "infra/observability/systemd/fooddiary-metrics.service",
+          "infra/observability/systemd/fooddiary-metrics.timer",
+          "infra/observability/test_observability.py",
+          "infra/observability/verify.mjs",
+          "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+          "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
+          "scripts/ai/verify-alert-rules.mjs",
+          "Shared/FoodDiary.Integrations.Http/Services/IntegrationsTelemetry.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "b0444ff5086504570cf563b7faddfddfffef6df3299050ebdb7e204e1452c966"
     }
   ],
   "hashSchemaVersion": 2

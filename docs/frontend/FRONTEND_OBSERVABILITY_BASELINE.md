@@ -69,3 +69,17 @@ Use this baseline to answer:
 - add admin-app coverage to the same telemetry path
 - aggregate client events into dedicated backend metrics if volume justifies it
 - add CLS or INP only if the simpler baseline proves useful and stable
+
+## Production log/dashboard contract
+
+`ClientTelemetryHttpProcessor` emits `Client telemetry event <category>/<name>.
+Outcome=...`; Promtail must accept the period delimiter and retain the bounded
+`client_telemetry_category` label. The supported categories are `client_error`,
+`route_timing`, `http_request` and `web_vital`. A fixture regression protects the
+current emitter format in `infra/observability/test_observability.py`.
+
+Product Usage and Frontend Reliability queries also parse the category from
+historical lines so earlier events without indexed category labels remain
+visible. Reliability panels group errors, navigation latency and vitals by the
+logged build version. Navigation counts describe observed events, not unique
+users or sessions. Missing samples must not be presented as a healthy zero.

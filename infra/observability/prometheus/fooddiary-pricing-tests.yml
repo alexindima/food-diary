@@ -1,0 +1,32 @@
+rule_files: []
+evaluation_interval: 1m
+tests:
+- name: model-specific prices preserve units and omit unknown models
+  interval: 1m
+  input_series:
+  - series: fooddiary_ai_tokens_total{fooddiary_ai_model="gpt-6-luna",fooddiary_ai_token_type="input"}
+    values: 0+11x10
+  - series: fooddiary_ai_tokens_total{fooddiary_ai_model="gpt-6-luna",fooddiary_ai_token_type="output"}
+    values: 0+7x10
+  - series: fooddiary_ai_tokens_total{fooddiary_ai_model="gpt-4o",fooddiary_ai_token_type="input"}
+    values: 0+11x10
+  - series: fooddiary_ai_tokens_total{fooddiary_ai_model="gpt-4o",fooddiary_ai_token_type="output"}
+    values: 0+7x10
+  - series: fooddiary_ai_tokens_total{fooddiary_ai_model="unpriced-fixture-model",fooddiary_ai_token_type="input"}
+    values: 0+11x10
+  - series: fooddiary_ai_tokens_total{fooddiary_ai_model="unpriced-fixture-model",fooddiary_ai_token_type="output"}
+    values: 0+7x10
+  promql_expr_test:
+  - expr: ((sum by(fooddiary_ai_model)(increase(fooddiary_ai_tokens_total{fooddiary_ai_model=~".*",fooddiary_ai_token_type="input"}[5m]))
+      * on(fooddiary_ai_model) (label_replace(vector(0.1), "fooddiary_ai_model", "gpt-6-luna",
+      "__name__", ".*") or label_replace(vector(2.5), "fooddiary_ai_model", "gpt-4o",
+      "__name__", ".*"))) + on(fooddiary_ai_model) (sum by(fooddiary_ai_model)(increase(fooddiary_ai_tokens_total{fooddiary_ai_model=~".*",fooddiary_ai_token_type="output"}[5m]))
+      * on(fooddiary_ai_model) (label_replace(vector(0.5), "fooddiary_ai_model", "gpt-6-luna",
+      "__name__", ".*") or label_replace(vector(10), "fooddiary_ai_model", "gpt-4o",
+      "__name__", ".*")))) / 1000000
+    eval_time: 5m
+    exp_samples:
+    - labels: '{fooddiary_ai_model="gpt-6-luna"}'
+      value: 2.3e-05
+    - labels: '{fooddiary_ai_model="gpt-4o"}'
+      value: 0.0004875
