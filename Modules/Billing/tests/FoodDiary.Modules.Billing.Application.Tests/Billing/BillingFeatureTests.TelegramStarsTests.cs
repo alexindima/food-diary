@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
@@ -37,7 +38,7 @@ public partial class BillingFeatureTests {
         gateway.Provider.Returns(BillingProviderNames.TelegramStars);
         gateway.CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>())
             .Returns(Result.Success(new BillingCheckoutSessionModel("stars_invoice", "https://t.me/$owned",
-                "123:" + userId.Value.ToString("N", CultureInfo.InvariantCulture), "stars_30d_500", "monthly", 500, "XTR")));
+                "123:" + userId.Value.ToString("N", CultureInfo.InvariantCulture), "stars_test_5m_500", "monthly", 500, "XTR", SubscriptionPeriodSeconds: 300)));
         IBillingProviderGatewayAccessor gateways = Substitute.For<IBillingProviderGatewayAccessor>();
         gateways.GetProviderOrDefault(BillingProviderNames.TelegramStars).Returns(gateway);
         var payments = new RecordingBillingPaymentRepository();
@@ -50,6 +51,9 @@ public partial class BillingFeatureTests {
             BillingPayment order = Assert.Single(payments.Payments);
             Assert.Equal(500, order.Amount);
             Assert.Equal("XTR", order.Currency);
+            Assert.NotNull(order.ProviderMetadataJson);
+            using var metadata = JsonDocument.Parse(order.ProviderMetadataJson);
+            Assert.Equal(300, metadata.RootElement.GetProperty("subscriptionPeriodSeconds").GetInt32());
             await gateway.Received(1).CreateCheckoutSessionAsync(Arg.Is<BillingCheckoutSessionRequestModel>(request =>
                 request.TelegramUserId == 123 && request.Email == string.Empty), Arg.Any<CancellationToken>());
         } else {
@@ -68,6 +72,7 @@ public partial class BillingFeatureTests {
         ResultAssert.Success(await fixture.SendAsync(paid));
         ResultAssert.Success(await fixture.SendAsync(paid with { UpdateId = 21 }));
         Assert.Multiple(() => {
+            Assert.Equal(fixture.Now, fixture.Subscription.CurrentPeriodStartUtc);
             Assert.Equal(fixture.Now.AddDays(30), fixture.Subscription.CurrentPeriodEndUtc);
             Assert.Equal("first_charge", fixture.Subscription.ExternalPaymentMethodId);
             Assert.Equal(2, fixture.Payments.Payments.Count);
@@ -76,6 +81,53 @@ public partial class BillingFeatureTests {
             Assert.True(fixture.Profile.HasPaidPremium);
             Assert.Equal(fixture.Now.AddDays(30), fixture.AccessEnd);
         });
+    }
+
+    [Theory]
+    [InlineData(300)]
+    [InlineData(2592000)]
+    public async Task Stars_SavedQuotePeriodDrivesPurchaseRenewalAndRefund(int periodSeconds) {
+        var fixture = new StarsFixture(orderMetadata: "{\"subscriptionPeriodSeconds\":" + periodSeconds.ToString(CultureInfo.InvariantCulture) + "}");
+        Assert.True(ResultAssert.Success(await fixture.SendAsync(fixture.PreCheckout())).CheckoutApproved);
+        TelegramStarsUpdateModel paid = fixture.Payment() with { SubscriptionExpirationUtc = fixture.Now.AddSeconds(periodSeconds) };
+        ResultAssert.Success(await fixture.SendAsync(paid));
+        Assert.Multiple(() => {
+            Assert.Equal(TimeSpan.FromSeconds(periodSeconds), fixture.Subscription.CurrentPeriodEndUtc - fixture.Subscription.CurrentPeriodStartUtc);
+            Assert.Equal(fixture.Now, fixture.Subscription.CurrentPeriodStartUtc);
+            Assert.Equal(fixture.Now.AddSeconds(periodSeconds), fixture.AccessEnd);
+            Assert.Equal(fixture.Now, fixture.Payments.Payments.Last().CurrentPeriodStartUtc);
+        });
+        DateTime renewalStart = fixture.Now.AddSeconds(periodSeconds);
+        DateTime renewalEnd = renewalStart.AddSeconds(periodSeconds);
+        ResultAssert.Success(await fixture.SendAsync(paid with {
+            UpdateId = 40, PaymentChargeId = "short_renewal", IsFirstRecurring = false,
+            SubscriptionExpirationUtc = renewalEnd, PaymentOccurredAtUtc = renewalStart,
+        }));
+        Assert.Multiple(() => {
+            Assert.Equal(renewalStart, fixture.Subscription.CurrentPeriodStartUtc);
+            Assert.Equal(renewalEnd, fixture.AccessEnd);
+        });
+        ResultAssert.Success(await fixture.SendAsync(fixture.Refund(50, "short_renewal")));
+        Assert.Multiple(() => {
+            Assert.Equal(renewalStart, fixture.Payments.Payments.Last().CurrentPeriodStartUtc);
+            Assert.Equal(renewalEnd, fixture.Payments.Payments.Last().CurrentPeriodEndUtc);
+            Assert.False(fixture.Profile.HasPaidPremium);
+        });
+    }
+
+    [Theory]
+    [InlineData("{\"subscriptionPeriodSeconds\":0}")]
+    [InlineData("{\"subscriptionPeriodSeconds\":60}")]
+    [InlineData("{\"subscriptionPeriodSeconds\":\"300\"}")]
+    [InlineData("{}")]
+    [InlineData("null")]
+    [InlineData("[]")]
+    public async Task Stars_InvalidSavedPeriodCannotApproveCheckoutOrGrantPremium(string metadata) {
+        var fixture = new StarsFixture(orderMetadata: metadata);
+        Assert.False(ResultAssert.Success(await fixture.SendAsync(fixture.PreCheckout())).CheckoutApproved);
+        ResultAssert.Failure(await fixture.SendAsync(fixture.Payment()));
+        Assert.False(fixture.Profile.HasPaidPremium);
+        Assert.Single(fixture.Payments.Payments);
     }
 
     [Theory]
@@ -220,9 +272,11 @@ public partial class BillingFeatureTests {
         public InMemoryBillingSubscriptionRepository Subscriptions { get; }
         public RecordingBillingWebhookEventRepository Events { get; }
         private readonly ProcessTelegramStarsUpdateCommandHandler _handler;
+        private readonly string? _orderMetadata;
 
         public StarsFixture(bool stale = false, int cancellationFailures = 0,
-            RecordingBillingWebhookEventRepository? events = null) {
+            RecordingBillingWebhookEventRepository? events = null, string? orderMetadata = null) {
+            _orderMetadata = orderMetadata;
             Now = DateTime.UtcNow.AddMinutes(stale ? 16 : 0);
             var clock = new FixedDateTimeProvider(Now);
             Profile = new UserBillingProfileModel(UserId.New(), Email: null, IsActive: true, IsDeleted: false,
@@ -283,7 +337,7 @@ public partial class BillingFeatureTests {
             BillingProviderNames.TelegramStars, payload, CustomerId, externalSubscriptionId: null, externalPaymentMethodId: null,
             "stars_30d_500", "monthly", BillingSubscription.PendingCheckoutStatus, BillingPaymentKinds.Checkout,
             BillingPaymentFinancials.FromFields(500, "XTR"), currentPeriodStartUtc: null, currentPeriodEndUtc: null,
-            webhookEventId: null, providerMetadataJson: null);
+            webhookEventId: null, providerMetadataJson: _orderMetadata);
 
         private string CustomerId => "123:" + Profile.UserId.Value.ToString("N", CultureInfo.InvariantCulture);
 

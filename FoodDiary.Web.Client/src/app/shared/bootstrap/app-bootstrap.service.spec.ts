@@ -39,7 +39,10 @@ let browserWindow: {
     getHref: ReturnType<typeof vi.fn>;
     replaceCurrentUrl: ReturnType<typeof vi.fn>;
 };
-let telegram: { isAutomaticSignInAllowedAsync: ReturnType<typeof vi.fn> };
+let telegram: {
+    isAutomaticSignInAllowedAsync: ReturnType<typeof vi.fn>;
+    initializeAsync: ReturnType<typeof vi.fn<TelegramWebAppService['initializeAsync']>>;
+};
 let recovery: { pendingLogout: ReturnType<typeof vi.fn>; issue: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
@@ -68,7 +71,10 @@ beforeEach(() => {
         getHref: vi.fn().mockReturnValue('https://fooddiary.example/'),
         replaceCurrentUrl: vi.fn(),
     };
-    telegram = { isAutomaticSignInAllowedAsync: vi.fn().mockResolvedValue(false) };
+    telegram = {
+        isAutomaticSignInAllowedAsync: vi.fn().mockResolvedValue(false),
+        initializeAsync: vi.fn<TelegramWebAppService['initializeAsync']>().mockResolvedValue(undefined),
+    };
     recovery = { pendingLogout: vi.fn().mockReturnValue(null), issue: vi.fn().mockReturnValue(null) };
 
     TestBed.configureTestingModule({
@@ -87,6 +93,34 @@ beforeEach(() => {
     });
 
     service = TestBed.inject(AppBootstrapService);
+});
+
+describe('Telegram native SDK bootstrap', () => {
+    it('initializes the native SDK before an authenticated session can navigate away from launch parameters', async () => {
+        let finishSdk: (() => void) | undefined;
+        telegram.initializeAsync.mockImplementation(
+            async () =>
+                new Promise<void>(resolve => {
+                    finishSdk = resolve;
+                }),
+        );
+        const bootstrap = service.initializeSessionAsync();
+
+        expect(telegram.initializeAsync, 'Native SDK must initialize before navigation').toHaveBeenCalledOnce();
+        expect(browserWindow.yieldToBrowserAsync).not.toHaveBeenCalled();
+        expect(authService.restoreSessionAsync).not.toHaveBeenCalled();
+        finishSdk?.();
+        await bootstrap;
+        expect(userService.getInfoSilently).toHaveBeenCalledOnce();
+        expect(browserWindow.replaceCurrentUrl).not.toHaveBeenCalled();
+    });
+
+    it('keeps an existing account usable when the native SDK is unavailable', async () => {
+        telegram.initializeAsync.mockRejectedValue(new Error('Telegram Mini App SDK unavailable'));
+        await service.initializeSessionAsync();
+        expect(telegram.initializeAsync).toHaveBeenCalledOnce();
+        expect(userService.getInfoSilently).toHaveBeenCalledOnce();
+    });
 });
 
 describe('Telegram Mini App bootstrap', () => {

@@ -49,6 +49,9 @@ beforeEach(() => {
         ],
     });
     const browser = TestBed.inject(BrowserWindowService);
+    // These scenarios exercise session restoration with an initialized native SDK.
+    // SDK loading and its ordering are covered by the bootstrap/service tests.
+    vi.spyOn(browser, 'getTelegramInitData').mockReturnValue(proof);
     vi.spyOn(browser, 'yieldToBrowserAsync').mockResolvedValue(undefined);
     replaceUrl = vi.spyOn(browser, 'replaceCurrentUrl').mockImplementation(() => {});
     auth = TestBed.inject(AuthService);

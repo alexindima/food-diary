@@ -104,7 +104,8 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
 
     private async Task<Result<TelegramStarsUpdateResultModel>> ApproveAsync(TelegramStarsUpdateModel update, BillingPayment order,
         BillingSubscription? current, UserBillingProfileModel? user, string eventId, DateTime now, CancellationToken token) {
-        if (user is not { IsActive: true, IsDeleted: false } || user.TelegramUserId != update.TelegramUserId || user.HasPaidPremium ||
+        if (!TelegramStarsInvoiceMetadata.TryReadPeriod(order.ProviderMetadataJson, out _) ||
+            user is not { IsActive: true, IsDeleted: false } || user.TelegramUserId != update.TelegramUserId || user.HasPaidPremium ||
             current is not { Provider: Provider, Status: BillingSubscription.PendingCheckoutStatus } ||
             (current.ExternalSubscriptionId is { } selected && !string.Equals(selected, update.InvoicePayload, StringComparison.Ordinal)) ||
             (current.ExternalSubscriptionId is not null && !string.Equals(current.LastWebhookEventId, eventId, StringComparison.Ordinal)) ||
@@ -122,6 +123,9 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
 
     private async Task<Result<TelegramStarsUpdateResultModel>> RecordPaymentAsync(TelegramStarsUpdateModel update, BillingPayment order,
         BillingSubscription? current, UserBillingProfileModel? user, string eventId, DateTime now, CancellationToken token) {
+        if (!TelegramStarsInvoiceMetadata.TryReadPeriod(order.ProviderMetadataJson, out int periodSeconds)) {
+            return Failure("Invalid saved Telegram subscription period.");
+        }
         string charge = update.PaymentChargeId!;
         string refundId = "refund:" + Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(charge)));
         string paymentId = update.Kind is "refund" ? refundId : charge;
@@ -132,10 +136,11 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
         BillingPayment? refund = await payments.GetByExternalPaymentIdAsync(Provider, refundId, token);
         DateTime? end = update.Kind is "payment" ? update.SubscriptionExpirationUtc : original?.CurrentPeriodEndUtc;
         if (update.Kind is "payment" && (!update.IsRecurring || end is not { Kind: DateTimeKind.Utc } ||
-            end <= DateTime.UnixEpoch.AddDays(30) || end <= update.PaymentOccurredAtUtc)) {
+            end <= DateTime.UnixEpoch.AddSeconds(periodSeconds) || end <= update.PaymentOccurredAtUtc)) {
             return Failure("A confirmed recurring payment and expiration are required.");
         }
-        DateTime? start = end?.AddDays(-30);
+        DateTime? start = update.Kind is "refund" ? original?.CurrentPeriodStartUtc : null;
+        start ??= end?.AddSeconds(-periodSeconds);
         string transactionKind = update.IsFirstRecurring ? BillingPaymentKinds.Transaction : BillingPaymentKinds.Renewal;
         var payment = BillingPayment.CreateWithFinancials(order.UserId, order.SubscriptionReference, Provider, paymentId,
             order.ExternalCustomerId, update.InvoicePayload, externalPaymentMethodId: null, order.ExternalPriceId, "monthly",

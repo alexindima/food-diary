@@ -31,6 +31,13 @@ export class AppBootstrapService {
     }
 
     public async initializeSessionAsync(): Promise<void> {
+        try {
+            // The SDK must read launch parameters before initial navigation removes them,
+            // including when an existing FoodDiary session skips Telegram sign-in.
+            await this.telegram.initializeAsync();
+        } catch {
+            // Keep an existing account usable; sign-in and checkout retry the SDK on use.
+        }
         const hadPendingLogout = this.recovery.pendingLogout() !== null;
         // Transferred state can resolve entirely in microtasks. Split the work
         // at phase boundaries so input and paint can run between them.

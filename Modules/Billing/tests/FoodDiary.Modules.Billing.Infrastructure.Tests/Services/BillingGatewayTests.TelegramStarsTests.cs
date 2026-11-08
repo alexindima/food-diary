@@ -11,9 +11,9 @@ namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 public partial class BillingGatewayTests {
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task StarsInvoice_UsesIntegerXtrAndThirtyDaySubscription(bool testEnvironment) {
+    [InlineData(false, 2592000, "30 days")]
+    [InlineData(true, 300, "5 minutes")]
+    public async Task StarsInvoice_UsesIntegerXtrAndEnvironmentPeriod(bool testEnvironment, int periodSeconds, string periodLabel) {
         using var http = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent("{\"ok\":true,\"result\":\"https://t.me/$invoice-owned\"}"),
         });
@@ -32,7 +32,13 @@ public partial class BillingGatewayTests {
         JsonElement root = payload.RootElement;
         Assert.Multiple(() => {
             Assert.Equal("XTR", root.GetProperty("currency").GetString());
-            Assert.Equal(2592000, root.GetProperty("subscription_period").GetInt32());
+            Assert.Equal(periodSeconds, root.GetProperty("subscription_period").GetInt32());
+            Assert.Equal(periodSeconds, result.Value.SubscriptionPeriodSeconds);
+            Assert.Contains(periodLabel, root.GetProperty("title").GetString(), StringComparison.Ordinal);
+            Assert.Contains(periodLabel, root.GetProperty("description").GetString(), StringComparison.Ordinal);
+            if (testEnvironment) {
+                Assert.Contains("Test", root.GetProperty("title").GetString(), StringComparison.Ordinal);
+            }
             Assert.Equal(500, Assert.Single(root.GetProperty("prices").EnumerateArray()).GetProperty("amount").GetInt32());
             Assert.Equal(result.Value.SessionId, root.GetProperty("payload").GetString());
             Assert.True(result.Value.SessionId.Length <= 128);

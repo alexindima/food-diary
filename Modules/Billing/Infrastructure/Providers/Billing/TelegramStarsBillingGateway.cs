@@ -31,14 +31,17 @@ public sealed class TelegramStarsBillingGateway(HttpClient client, IOptions<Tele
         string payload = "stars_" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
             FormattableString.Invariant($"{request.UserId:N}:{request.TelegramUserId}:{request.IdempotencyKey}")))).ToLowerInvariant();
         int amount = options.Value.PremiumPrice;
+        bool testEnvironment = options.Value.UseTestEnvironment;
+        int periodSeconds = testEnvironment ? 300 : 2592000;
+        string periodLabel = testEnvironment ? "5 minutes" : "30 days";
         Result<JsonElement> result = await CallAsync("createInvoiceLink", new {
-            title = "FoodDiary Premium · 30 days",
-            description = "Premium for your FoodDiary account. Renews every 30 days until canceled.",
+            title = testEnvironment ? "FoodDiary Test Premium · 5 minutes" : "FoodDiary Premium · 30 days",
+            description = $"{(testEnvironment ? "Test " : "")}Premium for your FoodDiary account. Renews every {periodLabel} until canceled.",
             payload,
             currency = "XTR",
             provider_token = "",
-            subscription_period = 2592000,
-            prices = new[] { new { label = "Premium · 30 days", amount } },
+            subscription_period = periodSeconds,
+            prices = new[] { new { label = "Premium · " + periodLabel, amount } },
         }, cancellationToken);
         if (result.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(result.Error);
@@ -49,7 +52,8 @@ public sealed class TelegramStarsBillingGateway(HttpClient client, IOptions<Tele
         }
         return Result.Success(new BillingCheckoutSessionModel(payload, invoice.AbsoluteUri,
             request.TelegramUserId.Value.ToString(CultureInfo.InvariantCulture) + ":" + request.UserId.ToString("N", CultureInfo.InvariantCulture),
-            "stars_30d_" + amount.ToString(CultureInfo.InvariantCulture), "monthly", amount, "XTR"));
+            (testEnvironment ? "stars_test_5m_" : "stars_30d_") + amount.ToString(CultureInfo.InvariantCulture),
+            "monthly", amount, "XTR", SubscriptionPeriodSeconds: periodSeconds));
     }
 
     public async Task<Result<BillingCancellationSnapshotModel>> CancelSubscriptionAsync(

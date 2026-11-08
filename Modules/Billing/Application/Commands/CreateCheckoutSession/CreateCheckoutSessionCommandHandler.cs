@@ -12,6 +12,7 @@ using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using System.Security.Cryptography;
 using System.Text;
+using System.Globalization;
 
 namespace FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
 
@@ -67,11 +68,15 @@ public sealed class CreateCheckoutSessionCommandHandler(
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
         }
 
+        string plan = request.Plan.Trim().ToLowerInvariant();
         if (IsCheckoutInProgress(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
+            if (stars) {
+                return await ResumeStarsCheckoutAsync(userId, user.TelegramUserId!.Value, plan,
+                    CaptureVersion(existingSubscription), cancellationToken);
+            }
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
         }
 
-        string plan = request.Plan.Trim().ToLowerInvariant();
         CheckoutVersion? originalVersion = CaptureVersion(existingSubscription);
         Result<BillingCheckoutSessionModel> sessionResult = await billingProvider.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(
@@ -88,6 +93,10 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         BillingCheckoutSessionModel session = sessionResult.Value;
+        if (stars && !TelegramStarsInvoiceMetadata.IsSupportedPeriod(session.SubscriptionPeriodSeconds)) {
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.ProviderOperationFailed(
+                billingProvider.Provider, "Invalid subscription period."));
+        }
 
         var result = Result.Success(session);
         await transactionRunner.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(userId.Value), async token => {
@@ -121,7 +130,9 @@ public sealed class CreateCheckoutSessionCommandHandler(
                     string.Equals(current.Provider, billingProvider.Provider, StringComparison.Ordinal) &&
                     string.Equals(savedCheckout.ExternalCustomerId, session.CustomerId, StringComparison.Ordinal) && string.Equals(current.ExternalCustomerId, session.CustomerId, StringComparison.Ordinal) &&
                     string.Equals(savedCheckout.ExternalPriceId, session.PriceId, StringComparison.Ordinal) && string.Equals(current.ExternalPriceId, session.PriceId, StringComparison.Ordinal) &&
-                    string.Equals(savedCheckout.Plan, session.Plan, StringComparison.Ordinal) && string.Equals(current.Plan, session.Plan, StringComparison.Ordinal);
+                    string.Equals(savedCheckout.Plan, session.Plan, StringComparison.Ordinal) && string.Equals(current.Plan, session.Plan, StringComparison.Ordinal) &&
+                    (!stars || (TelegramStarsInvoiceMetadata.TryReadPeriod(savedCheckout.ProviderMetadataJson, out int savedPeriod) &&
+                        savedPeriod == (session.SubscriptionPeriodSeconds ?? TelegramStarsInvoiceMetadata.ProductionPeriodSeconds)));
                 result = matches ? Result.Success(session)
                     : Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
                 return;
@@ -145,6 +156,51 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 await billingSubscriptionRepository.UpdateAsync(current, token);
                 await AddCheckoutPaymentAsync(current, billingProvider.Provider, session, token);
             }
+        }, cancellationToken);
+        return result;
+    }
+
+    private async Task<Result<BillingCheckoutSessionModel>> ResumeStarsCheckoutAsync(UserId userId, long payerId,
+        string plan, CheckoutVersion? originalVersion, CancellationToken cancellationToken) {
+        var result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
+        await transactionRunner.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(userId.Value), async token => {
+            Result<UserBillingProfileModel> user = await billingUserContextService.Send(new GetUserBillingProfileQuery(userId), token);
+            if (user.IsFailure) {
+                result = Result.Failure<BillingCheckoutSessionModel>(user.Error);
+                return;
+            }
+            if (user.Value.TelegramUserId != payerId) {
+                result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.TelegramNotLinked);
+                return;
+            }
+            BillingSubscription? current = await billingSubscriptionRepository.GetByUserIdAsync(userId, token);
+            DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
+            if (user.Value.HasPaidPremium || IsPaidPremiumActive(current, now)) {
+                result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
+                return;
+            }
+            if (current is not { Provider: BillingProviderNames.TelegramStars, ExternalSubscriptionId: null, ExternalPriceId: not null } ||
+                !IsCheckoutInProgress(current, now) || CaptureVersion(current) != originalVersion ||
+                !string.Equals(current.Plan, plan, StringComparison.Ordinal)) {
+                return;
+            }
+            BillingPayment? order = await billingPaymentRepository.GetLatestCheckoutAsync(userId, current.TypedId, BillingProviderNames.TelegramStars, token);
+            string customer = payerId.ToString(CultureInfo.InvariantCulture) + ":" + userId.Value.ToString("N", CultureInfo.InvariantCulture);
+            if (order is null || order.UserId != userId || order.BillingSubscriptionId != current.Id ||
+                order.Kind is not BillingPaymentKinds.Checkout || order.Status is not BillingSubscription.PendingCheckoutStatus ||
+                order.CreatedOnUtc <= now.AddMinutes(-15) || order.Currency is not "XTR" ||
+                order.Amount is not (> 0 and <= 10000) || decimal.Truncate(order.Amount.Value) != order.Amount ||
+                !string.Equals(order.ExternalCustomerId, customer, StringComparison.Ordinal) ||
+                !string.Equals(current.ExternalCustomerId, customer, StringComparison.Ordinal) ||
+                !string.Equals(order.ExternalPriceId, current.ExternalPriceId, StringComparison.Ordinal) ||
+                !string.Equals(order.Plan, plan, StringComparison.Ordinal) ||
+                !TelegramStarsInvoiceMetadata.TryReadPeriod(order.ProviderMetadataJson, out int period) ||
+                !TelegramStarsInvoiceMetadata.TryReadInvoiceUrl(order.ProviderMetadataJson, out string url)) {
+                return;
+            }
+            // Reopening the original contract is read-only: never extend its approval window or create another invoice.
+            result = Result.Success(new BillingCheckoutSessionModel(order.ExternalPaymentId, url, customer,
+                current.ExternalPriceId, plan, order.Amount, order.Currency, period));
         }, cancellationToken);
         return result;
     }
@@ -218,7 +274,8 @@ public sealed class CreateCheckoutSessionCommandHandler(
             currentPeriodStartUtc: null,
             currentPeriodEndUtc: null,
             webhookEventId: null,
-            providerMetadataJson: null,
+            providerMetadataJson: provider is BillingProviderNames.TelegramStars
+                ? TelegramStarsInvoiceMetadata.Serialize(session.SubscriptionPeriodSeconds, session.Url) : null,
             occurredAtUtc: null);
         await billingPaymentRepository.AddAsync(payment, cancellationToken);
     }

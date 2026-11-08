@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6964,
+    "productionFiles": 6965,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1047,
@@ -631,6 +631,14 @@
       "structuralRiskScore": 115.34
     },
     {
+      "path": "Modules/Billing/Application/Commands/ProcessTelegramStarsUpdate/ProcessTelegramStarsUpdateCommandHandler.cs",
+      "nonBlankLines": 188,
+      "decisionPoints": 73,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 115.26
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
       "nonBlankLines": 334,
       "decisionPoints": 71,
@@ -645,6 +653,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 115.1
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "nonBlankLines": 263,
+      "decisionPoints": 71,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 113.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
@@ -717,14 +733,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 111.52
-    },
-    {
-      "path": "Modules/Billing/Application/Commands/ProcessTelegramStarsUpdate/ProcessTelegramStarsUpdateCommandHandler.cs",
-      "nonBlankLines": 183,
-      "decisionPoints": 70,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.66
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 104.44
-    },
-    {
-      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "nonBlankLines": 817,
-      "decisionPoints": 57,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 101.84
     }
   ],
   "files": [
@@ -19946,11 +19946,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "nonBlankLines": 63,
-      "decisionPoints": 6,
+      "nonBlankLines": 70,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.26
+      "structuralRiskScore": 11.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/development/development-input.ts",
@@ -26090,11 +26090,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs",
@@ -26210,11 +26210,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
@@ -26330,11 +26330,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "nonBlankLines": 207,
-      "decisionPoints": 41,
+      "nonBlankLines": 263,
+      "decisionPoints": 71,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.64
+      "structuralRiskScore": 113.76
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandValidator.cs",
@@ -26474,11 +26474,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessTelegramStarsUpdate/ProcessTelegramStarsUpdateCommandHandler.cs",
-      "nonBlankLines": 183,
-      "decisionPoints": 70,
+      "nonBlankLines": 188,
+      "decisionPoints": 73,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.66
+      "structuralRiskScore": 115.26
     },
     {
       "path": "Modules/Billing/Application/Commands/RecoverStarsRefundCancellation/RecoverStarsRefundCancellationCommand.cs",
@@ -26575,6 +26575,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Billing/Application/Common/TelegramStarsInvoiceMetadata.cs",
+      "nonBlankLines": 57,
+      "decisionPoints": 24,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 37.14
     },
     {
       "path": "Modules/Billing/Application/DependencyInjection.cs",
@@ -26858,11 +26866,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 2,
+      "nonBlankLines": 37,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.52
+      "structuralRiskScore": 9.74
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
@@ -26978,11 +26986,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
-      "nonBlankLines": 103,
+      "nonBlankLines": 107,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.56
+      "structuralRiskScore": 33.64
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBotAuthenticator.cs",
@@ -57059,16 +57067,18 @@
       "name": "CreateCheckoutSessionCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 17,
-      "testReferenceCount": 7,
+      "line": 18,
+      "testReferenceCount": 9,
       "testReferences": [
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutWebhookConsistencyTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalConsistencyTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalMetadataTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
-        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs"
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

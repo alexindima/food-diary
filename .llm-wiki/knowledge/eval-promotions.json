@@ -3632,6 +3632,158 @@
       },
       "reason": "",
       "eventHash": "9ca4a8d79cd817d81d45e4b331c1c0f1978da9e8556ac91c8d8cbc45eb361c61"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 27,
+      "kind": "observed",
+      "candidateId": "learned-4a4b0aef2d049c26",
+      "createdAtUtc": "2026-11-08T07:57:22.6073311Z",
+      "previousHash": "9ca4a8d79cd817d81d45e4b331c1c0f1978da9e8556ac91c8d8cbc45eb361c61",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-stars-checkout-resume",
+        "retrospectiveHash": "de4e49b516bc72e04d912cf2499ed085f12515eaa1f89028429764b2b10350fc",
+        "packetFingerprint": "216a8bc1586f6b74865a787699227ac08c3389b5a33db43f6aaab901990e4624",
+        "signals": [
+          {
+            "id": "cost-architecture-health",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-health'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-health",
+              "error=67900%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1941.51%"
+            ]
+          },
+          {
+            "id": "cost-data-access-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'data-access-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "data-access-integration-tests",
+              "error=55.76%"
+            ]
+          },
+          {
+            "id": "cost-frontend-verify",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'frontend-verify'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=95.19%",
+              "frontend-verify"
+            ]
+          },
+          {
+            "id": "cost-nuget-vulnerability-audit",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'nuget-vulnerability-audit'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1141.38%",
+              "nuget-vulnerability-audit"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-4a4b0aef2d049c26",
+          "changedPaths": [
+            ".nuget/lockfiles/FoodDiary.ArchitectureTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Infrastructure.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Initializer.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.JobManager.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.JobManager.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Billing.Application.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Billing.Application.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Billing.Infrastructure.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Billing.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Billing.Presentation.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Billing.Presentation.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Fasting.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Hydration.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Marketing.Application.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Presentation.Api.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Web.Api.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Web.Api.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Web.Api.Tests.packages.lock.json",
+            ".nuget/lockfiles/linux-musl-x64/FoodDiary.Modules.Billing.Application.packages.lock.json",
+            ".nuget/lockfiles/linux-musl-x64/FoodDiary.Modules.Billing.Infrastructure.packages.lock.json",
+            ".nuget/lockfiles/linux-musl-x64/FoodDiary.Modules.Billing.Presentation.packages.lock.json",
+            ".nuget/lockfiles/linux-musl-x64/FoodDiary.Web.Api.packages.lock.json",
+            "docs/backend/TELEGRAM_STARS.md",
+            "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.spec.ts",
+            "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
+            "FoodDiary.Web.Client/src/app/shared/bootstrap/telegram-mini-app-bootstrap.spec.ts",
+            "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs",
+            "Modules/Billing/Application.Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
+            "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
+            "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+            "Modules/Billing/Application/Commands/ProcessTelegramStarsUpdate/ProcessTelegramStarsUpdateCommandHandler.cs",
+            "Modules/Billing/Application/Common/TelegramStarsInvoiceMetadata.cs",
+            "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
+            "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.TelegramStarsTests.cs",
+            "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+            "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"
+          ],
+          "expectedModules": [
+            "Billing"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Database",
+            "Documentation",
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-decision",
+            "architecture-drift",
+            "backend-boundaries",
+            "backend-public-contract",
+            "dependency-nuget",
+            "deployment-rollout",
+            "frontend-component-contract",
+            "frontend-workspace",
+            "observability-critical-flow",
+            "performance-data-access",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-health",
+            "architecture-tests",
+            "data-access-integration-tests",
+            "frontend-verify",
+            "nuget-vulnerability-audit"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "a9b813659a40a323941da7ea98c170af96d6827b4f4ed5d4a1d957f402fd6ce8"
+      },
+      "reason": "",
+      "eventHash": "6da1c594c8a5cc52c614e439bb23762e3a4b1120e4043a3037b879aa7b4365ca"
     }
   ]
 }

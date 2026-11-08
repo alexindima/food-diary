@@ -19,7 +19,7 @@ New checkouts are disabled by default. API settings:
 | --- | --- |
 | `TelegramStars:CheckoutEnabled` | `false`; enable only after the acceptance checks below |
 | `TelegramStars:PremiumPrice` | `500`; integer from 1 through 10,000 |
-| `TelegramStars:UseTestEnvironment` | `false`; Bot API test endpoint when true |
+| `TelegramStars:UseTestEnvironment` | `false`; Bot API test endpoint and accelerated 300-second subscription when true |
 | `TelegramAuth:BotToken` | Existing bot token; reused for invoice creation and cancellation |
 | `TelegramBot:ApiSecret` | Existing shared bot-to-API secret, at least 16 characters |
 
@@ -39,10 +39,21 @@ financial updates have committed in the API. A failed API call retries the updat
 ## Payment and access
 
 The API creates an opaque, server-owned invoice contract containing the account,
-Telegram payer, amount and currency. Pre-checkout requires the matching linked
+Telegram payer, amount, currency and quoted period. The period is saved with the
+checkout and used for purchase, renewal and refund history; changing runtime
+settings does not reinterpret an existing order. Legacy orders without period
+metadata retain 30 days. Pre-checkout requires the matching linked
 account, XTR, the saved amount, a fresh invoice (15 minutes), and one reserved
 checkout. A forwarded link cannot grant access to another account. Re-delivery
 of the same pre-checkout is safe; a new attempt needs a new invoice.
+
+Closing the native payment dialog before approval does not cancel the server's
+invoice. Retrying checkout reopens the same fresh, unreserved Stars invoice,
+including after an app reload. The bounded provider URL is kept with the protected
+checkout quote and is never logged. Resume does not call Telegram, create a row,
+change the quoted price/period or restart its 15-minute lifetime. Approved or
+paid invoices cannot be reopened through this path. Legacy orders without a saved
+URL keep the original cooldown; expired orders use normal checkout creation.
 
 Only a confirmed recurring payment grants access. Neither an invoice link,
 pre-checkout approval, nor the Mini App's `paid` callback grants Premium. The
@@ -88,6 +99,10 @@ authorization, so cancellation also completes for an inactive or deleted account
    unchanged. Deploy the matching bot and frontend before enabling checkout.
 2. Use Telegram's dedicated test environment and a separate test bot/account.
    Set both test-environment flags consistently. Keep production checkout off.
+   Test subscriptions use **300 seconds (5 minutes)** so renewal and expiry can be
+   observed quickly. Telegram rejects the production 2,592,000-second period on
+   its test server; test invoice titles/descriptions explicitly show 5 minutes.
+   The selected test price is charged again on each successful five-minute renewal.
 3. Link the test account; check website Paddle plus Stars and Mini App Stars
    only. Complete a 500 XTR invoice and verify that both clients see the same
    Premium account and the provider expiration.
@@ -126,6 +141,7 @@ rollback. Disabling sales does not itself cancel existing renewals.
 
 - [Digital goods and Stars payments](https://core.telegram.org/bots/payments-stars)
 - [Recurring invoice links](https://core.telegram.org/bots/api#createinvoicelink)
+- [Telegram maintainer confirmation of test periods](https://github.com/tdlib/td/issues/3309)
 - [Successful payment fields](https://core.telegram.org/bots/api#successfulpayment)
 - [Subscription changes](https://core.telegram.org/bots/api#subscription)
 - [Cancel a Stars subscription](https://core.telegram.org/bots/api#edituserstarsubscription)

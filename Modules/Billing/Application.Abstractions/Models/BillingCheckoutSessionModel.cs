@@ -7,4 +7,5 @@ public sealed record BillingCheckoutSessionModel(
     string PriceId,
     string Plan,
     decimal? Amount = null,
-    string? Currency = null);
+    string? Currency = null,
+    int? SubscriptionPeriodSeconds = null);

@@ -522,6 +522,14 @@ public partial class BillingFeatureTests {
         public List<BillingPayment> Payments { get; } = [];
         public bool ThrowAlreadyExistsOnAdd { get; init; }
 
+        public Task<BillingPayment?> GetLatestCheckoutAsync(UserId userId, BillingSubscriptionId subscriptionId,
+            string provider, CancellationToken cancellationToken = default) =>
+            Task.FromResult(Payments.Where(payment => payment.UserId == userId &&
+                    payment.BillingSubscriptionId == subscriptionId.Value && string.Equals(payment.Provider, provider, StringComparison.Ordinal) &&
+                    string.Equals(payment.Kind, BillingPaymentKinds.Checkout, StringComparison.Ordinal) &&
+                    string.Equals(payment.Status, BillingSubscription.PendingCheckoutStatus, StringComparison.Ordinal))
+                .OrderByDescending(payment => payment.CreatedOnUtc).ThenByDescending(payment => payment.Id).FirstOrDefault());
+
         public Task<BillingPayment?> GetByExternalPaymentIdAsync(
             string provider,
             string externalPaymentId,

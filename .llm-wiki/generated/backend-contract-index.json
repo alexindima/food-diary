@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1403,
     "ambiguousContracts": 32,
-    "consumerEdges": 11434,
+    "consumerEdges": 11449,
     "productionConsumerEdges": 6331,
-    "testConsumerEdges": 5103,
+    "testConsumerEdges": 5118,
     "consumedContracts": 1403,
     "unconsumedContracts": 0
   },
@@ -32291,6 +32291,19 @@
         "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CheckUserAccessQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/CheckUserAccess/CheckUserAccessQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -34647,6 +34660,19 @@
         "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateCheckoutSessionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -34700,6 +34726,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CreateCheckoutSessionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -57847,7 +57886,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "GetUserBillingProfileQuery",
@@ -58001,6 +58040,19 @@
         "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetUserBillingProfileQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -58030,6 +58082,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetUserBillingProfileQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserBillingProfile/GetUserBillingProfileQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetUserBillingProfileQuery",
@@ -64933,6 +64998,19 @@
       "referenceCount": 4
     },
     {
+      "contract": "IBillingCheckoutLock",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IBillingPaymentReadRepository",
       "roles": [
         "ReadRepository"
@@ -65178,6 +65256,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Stars.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IBillingPaymentWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IBillingPaymentWriteRepository",
@@ -65448,6 +65539,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBillingProviderGateway",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -65516,6 +65620,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IBillingProviderGateway",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IBillingProviderGateway",
@@ -65656,6 +65773,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBillingProviderGatewayAccessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -65685,6 +65815,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Checkout.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IBillingProviderGatewayAccessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IBillingProviderGatewayAccessor",
@@ -66319,6 +66462,19 @@
         "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingSubscriptionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingSubscriptionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Workflows.cs",
       "isTest": true,
       "referenceCount": 9
@@ -66632,6 +66788,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Stars.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBillingTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Billing/Application.Abstractions/Common/IBillingTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -124612,6 +124781,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.StarsCheckoutResumeTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TelegramStarsTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -126032,6 +126214,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.Stars.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.StarsCheckoutResume.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ISender",

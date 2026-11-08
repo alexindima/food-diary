@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4773,
-    "symbols": 4709,
+    "sourceFiles": 4774,
+    "symbols": 4710,
     "interfaceImplementationLinks": 212,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2435,
+      "class": 2436,
       "enum": 75,
       "interface": 428,
       "record": 1628,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1944,
+      "Other": 1945,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -6807,7 +6807,7 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingPaymentWriteRepository.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "IBillingProviderGateway",
@@ -7010,7 +7010,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -7221,6 +7221,13 @@
       "role": "Other",
       "path": "Modules/Billing/Application/Common/TelegramStarsBillingState.cs",
       "line": 2
+    },
+    {
+      "name": "TelegramStarsInvoiceMetadata",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Common/TelegramStarsInvoiceMetadata.cs",
+      "line": 4
     },
     {
       "name": "DependencyInjection",
@@ -7472,7 +7479,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "BillingSubscriptionRepository",
