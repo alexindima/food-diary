@@ -572,8 +572,16 @@ new chat's tool catalog is selected. This avoids racing the default one-second
 grace with the Development MCP's launcher/build. Keep the server optional; a
 missing SDK must not make unrelated project work unavailable.
 
+Both project servers pin `cwd = "D:/FD"` to this checkout. Update both values
+when moving the checkout or using a different worktree. Codex launches relative
+working directories from its own process directory, which can be the desktop
+installation folder; `cwd = "."` does not select the repository.
+
 When tools are absent, run `node scripts/ai/development-mcp-diagnostics.mjs`
-once. It reports standalone connection success, catalog timing, native chat
+once. It first rejects relative, omitted or nonexistent working directories for
+either enabled project server instead of silently resolving them against the
+repository. Disabled servers do not block this check. It then probes the
+Development server and reports standalone connection success, catalog timing, native chat
 catalog observation (unknown to the probe), executable-source identity and index
 freshness separately. A different build commit can still contain the current
 executable sources; use the source fingerprint, not the commit comparison alone.

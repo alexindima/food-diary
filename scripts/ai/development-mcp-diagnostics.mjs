@@ -1,19 +1,34 @@
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { isAbsolute, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
+
+function readServerValues(text, serverName) {
+  const section = text.match(new RegExp(`^\\[mcp_servers\\.${serverName}\\]\\s*\\r?\\n([\\s\\S]*?)(?=^\\[|$(?![\\s\\S]))`, 'm'))?.[1];
+  return section === undefined ? null : Object.fromEntries([...section.matchAll(/^([a-z_]+)\s*=\s*(.+)$/gm)]
+    .map(([, key, value]) => [key, JSON.parse(value.trim())]));
+}
 
 export function readDevelopmentMcpConfiguration(repositoryRoot) {
   const configPath = resolve(repositoryRoot, '.codex/config.toml');
   const text = readFileSync(configPath, 'utf8');
-  const section = text.match(/^\[mcp_servers\.fooddiary_development\]\s*\r?\n([\s\S]*?)(?=^\[|$(?![\s\S]))/m)?.[1];
-  if (!section) throw new Error('Project configuration has no FoodDiary Development MCP server.');
-  const values = Object.fromEntries([...section.matchAll(/^([a-z_]+)\s*=\s*(.+)$/gm)].map(([, key, value]) => [key, JSON.parse(value.trim())]));
-  const cwd = resolve(repositoryRoot, values.cwd ?? '.');
+  const values = readServerValues(text, 'fooddiary_development');
+  if (!values) throw new Error('Project configuration has no FoodDiary Development MCP server.');
+  const workingDirectoryIssues = ['fooddiary_development', 'angular_cli'].flatMap(serverName => {
+    const server = serverName === 'fooddiary_development' ? values : readServerValues(text, serverName);
+    if (!server || server.enabled === false) return [];
+    const configuredCwd = server.cwd ?? null;
+    // Codex passes cwd to the process launcher; it is not relative to this repository.
+    const reason = configuredCwd === null || !isAbsolute(configuredCwd) ? 'working-directory-not-absolute'
+      : statSync(configuredCwd, { throwIfNoEntry: false })?.isDirectory() !== true ? 'working-directory-not-found' : null;
+    return reason ? [{ serverName, configuredCwd, reason }] : [];
+  });
+  const cwd = resolve(values.cwd ?? '.');
   const fileIndex = values.args.indexOf('-File');
   const launcherPath = fileIndex >= 0 ? resolve(cwd, values.args[fileIndex + 1]) : null;
-  return { configPath, cwd, command: values.command, args: values.args, enabled: values.enabled !== false,
+  return { configPath, configuredCwd: values.cwd ?? null, cwd, workingDirectoryIssues,
+    command: values.command, args: values.args, enabled: values.enabled !== false,
     launcherPath, launcherExists: launcherPath === null || existsSync(launcherPath),
     enabledTools: values.enabled_tools ?? [], required: values.required === true,
     startupTimeoutSeconds: values.startup_timeout_sec ?? 10,
@@ -31,6 +46,10 @@ function readStatusPayload(status) {
 
 export async function diagnoseDevelopmentMcp(repositoryRoot, timeoutMilliseconds = 120000) {
   const configuration = readDevelopmentMcpConfiguration(repositoryRoot);
+  if (configuration.workingDirectoryIssues.length > 0) return {
+    ok: false, configuration, reason: 'invalid-working-directory', workingDirectoryIssues: configuration.workingDirectoryIssues,
+    recoveryActions: ['Set an absolute cwd pointing to an existing directory for each listed enabled MCP server. Relative or omitted cwd depends on the Codex launching process, not the repository.'],
+  };
   if (!configuration.enabled || !configuration.launcherExists) return { ok: false, configuration, reason: !configuration.enabled ? 'server-disabled' : 'launcher-not-found' };
   const child = spawn(configuration.command, configuration.args, { cwd: configuration.cwd, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true });
   const pending = new Map();

@@ -5,8 +5,8 @@ mcp_optional_startup_grace_ms = 0
 [mcp_servers.fooddiary_development]
 command = "powershell.exe"
 args = ["-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts\\Start-FoodDiaryDevelopmentMcp.ps1", "-BuildMode", "--build-if-stale"]
-# MCP subprocesses resolve relative paths from the repository working directory.
-cwd = "."
+# Pin this checkout: relative cwd follows the Codex desktop process directory.
+cwd = "D:/FD"
 startup_timeout_sec = 120
 tool_timeout_sec = 210
 enabled = true
@@ -17,7 +17,7 @@ default_tools_approval_mode = "auto"
 [mcp_servers.angular_cli]
 command = "node"
 args = ["FoodDiary.Web.Client/node_modules/@angular/cli/bin/ng.js", "mcp", "--read-only"]
-cwd = "."
+cwd = "D:/FD"
 startup_timeout_sec = 60
 tool_timeout_sec = 150
 enabled = true
