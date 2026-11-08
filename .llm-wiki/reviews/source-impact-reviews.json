@@ -942,14 +942,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "421059963f23e393df9c5482cf59079f10ca14c0a28c33c2fa03c09726725d2b",
-          "reviewReason": "Reviewed visual evidence requirements against the package script change. The existing build, unit/library and browser verification scripts remain intact; test:ai-development now also runs MCP diagnostics and controlled-runner orchestration tests. Those unit tests do not replace real UI evidence. The new reusable helper was separately exercised in real Chrome over four owned synthetic RU/EN viewport cases, with screenshots inspected for Russian rendering."
+          "sha256": "092570f636a88cbbfefd2c29ba01059e1c40188e5faedec8720129b43d262687",
+          "reviewReason": "Reviewed package.json against the frontend visual evidence workflow: only the parse5 runtime dependency was added for the lazy inbox reader. Build, lint, Angular test and Playwright script contracts are unchanged. The real inbox dialog was exercised in task-owned headed Chrome with synthetic mail at 1440x1000 and 390x844; paragraph/list rendering, decoded text, unchanged source modes, keyboard disclosure, Escape, Russian text and absence of remote pixel requests were verified. Screenshots and logs remain in .artifacts/admin-mail-reader; this is UI evidence, not a live backend acceptance claim."
         }
       ],
-      "reason": "Reviewed visual evidence requirements against the package script change. The existing build, unit/library and browser verification scripts remain intact; test:ai-development now also runs MCP diagnostics and controlled-runner orchestration tests. Those unit tests do not replace real UI evidence. The new reusable helper was separately exercised in real Chrome over four owned synthetic RU/EN viewport cases, with screenshots inspected for Russian rendering.",
-      "baseRef": "HEAD",
-      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
-      "reviewedAtUtc": "2026-11-06T10:25:54.6977071Z"
+      "reason": "Reviewed package.json against the frontend visual evidence workflow: only the parse5 runtime dependency was added for the lazy inbox reader. Build, lint, Angular test and Playwright script contracts are unchanged. The real inbox dialog was exercised in task-owned headed Chrome with synthetic mail at 1440x1000 and 390x844; paragraph/list rendering, decoded text, unchanged source modes, keyboard disclosure, Escape, Russian text and absence of remote pixel requests were verified. Screenshots and logs remain in .artifacts/admin-mail-reader; this is UI evidence, not a live backend acceptance claim.",
+      "baseRef": "origin/master",
+      "gitHead": "8492b45b2040f08ca65f46d154fe9db4d9098cff",
+      "reviewedAtUtc": "2026-11-08T14:04:56.9529558Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
