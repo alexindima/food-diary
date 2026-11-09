@@ -1,5 +1,19 @@
 # Temporary dependency constraints
 
+## Stylelint SCSS compatibility
+
+Reviewed on 2026-11-09. The web workspace uses Stylelint `^17.16.0` and
+`stylelint-config-standard ^40.0.0`. The current SCSS preset and plugin require
+Stylelint 17, while standard config 41 requires Stylelint 18. Installing the
+newer pair with the current SCSS preset caused `npm ci` to fail with `ERESOLVE`.
+[SCSS preset peer range](https://github.com/stylelint-scss/stylelint-config-standard-scss/blob/v17.0.0/package.json)
+[SCSS plugin peer range](https://github.com/stylelint-scss/stylelint-scss/blob/v7.4.0/package.json)
+
+Dependabot skips major version updates for the two constrained packages. Remove
+the exclusions when the SCSS preset and plugin both declare support for the next
+Stylelint major. Update the compatible set together, then run a clean `npm ci`
+and `npm run stylelint` to exercise the SCSS preset and local rules.
+
 ## npm minimatch and mobile glob
 
 Reviewed on 2026-11-01. The web workspace overrides `minimatch` to `11.0.3`

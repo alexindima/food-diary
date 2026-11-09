@@ -947,14 +947,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "092570f636a88cbbfefd2c29ba01059e1c40188e5faedec8720129b43d262687",
-          "reviewReason": "Reviewed package.json against the frontend visual evidence workflow: only the parse5 runtime dependency was added for the lazy inbox reader. Build, lint, Angular test and Playwright script contracts are unchanged. The real inbox dialog was exercised in task-owned headed Chrome with synthetic mail at 1440x1000 and 390x844; paragraph/list rendering, decoded text, unchanged source modes, keyboard disclosure, Escape, Russian text and absence of remote pixel requests were verified. Screenshots and logs remain in .artifacts/admin-mail-reader; this is UI evidence, not a live backend acceptance claim."
+          "sha256": "7774241d2b916744b6c1b56ebe82e5379f5784dc9eebb4152e1390836719b01c",
+          "reviewReason": "Reviewed the compatible Stylelint and SCSS dependency graph, exact Dependabot version update exclusions, and formatter-only Telegram view change. Template semantics and existing lint rules are preserved."
         }
       ],
-      "reason": "Reviewed package.json against the frontend visual evidence workflow: only the parse5 runtime dependency was added for the lazy inbox reader. Build, lint, Angular test and Playwright script contracts are unchanged. The real inbox dialog was exercised in task-owned headed Chrome with synthetic mail at 1440x1000 and 390x844; paragraph/list rendering, decoded text, unchanged source modes, keyboard disclosure, Escape, Russian text and absence of remote pixel requests were verified. Screenshots and logs remain in .artifacts/admin-mail-reader; this is UI evidence, not a live backend acceptance claim.",
-      "baseRef": "origin/master",
-      "gitHead": "8492b45b2040f08ca65f46d154fe9db4d9098cff",
-      "reviewedAtUtc": "2026-11-08T14:04:56.9529558Z"
+      "reason": "Reviewed the compatible Stylelint and SCSS dependency graph, exact Dependabot version update exclusions, and formatter-only Telegram view change. Template semantics and existing lint rules are preserved.",
+      "baseRef": "e754e1d",
+      "gitHead": "e754e1d1a4b7c3d473d5d9c199955245a2e97492",
+      "reviewedAtUtc": "2026-11-09T14:20:03.4877744Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

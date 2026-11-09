@@ -91,6 +91,7 @@ Source: `Modules/Dashboard/Presentation/Controllers/DashboardController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardCancellationIntegrationTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardGoalHistoryIntegrationTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardTimeZoneIntegrationTests.cs`
