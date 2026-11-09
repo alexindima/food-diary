@@ -5,22 +5,27 @@ The production entrypoint is deploy.yml; this module never applies migrations.
 """
 
 import argparse
+from datetime import datetime, timezone
+from http.client import HTTPException
+from http.cookiejar import CookieJar
 import json
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 import sys
 import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
+from urllib.request import HTTPCookieProcessor, HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 
 SLOTS = {"blue": ("api", "client-ssr"), "green": ("api-green", "client-ssr-green")}
 DEFAULT_PORTS = {"blue": (5000, 4000), "green": (5001, 4001)}
 MIGRATION = re.compile(r"\d{14}_[A-Za-z0-9_]+")
 PROBE_PORT = 5090
+DASHBOARD_CREDENTIALS = Path("/etc/fooddiary/dashboard-warmup.json")
 GRACE_SECONDS = 30
 DRAIN_SECONDS = 215  # Nginx worker_shutdown_timeout is 210s (video requests: 190s).
 HISTORY_SQL = '''SELECT to_regclass('"__EFMigrationsHistory"') IS NOT NULL AS history_exists \\gset
@@ -39,6 +44,82 @@ class DeploymentError(RuntimeError):
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
+
+
+def dashboard_credentials(path):
+    try:
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+        with os.fdopen(os.open(path, flags), "rb") as source:
+            metadata = os.fstat(source.fileno())
+            if not stat.S_ISREG(metadata.st_mode) or (os.name != "nt" and (
+                    metadata.st_uid != os.geteuid() or metadata.st_mode & 0o077)):
+                raise DeploymentError("Dashboard warmup credentials must be a private file owned by the deploy user.")
+            payload = source.read(4097)
+    except FileNotFoundError:
+        return None
+    except OSError:
+        raise DeploymentError("Cannot read dashboard warmup credentials.") from None
+    try:
+        credentials = json.loads(payload) if len(payload) <= 4096 else None
+    except (ValueError, RecursionError):
+        credentials = None
+    if not isinstance(credentials, dict) or set(credentials) != {"email", "password"} or not all(
+            isinstance(credentials[key], str) and 0 < len(credentials[key]) <= maximum and credentials[key].strip()
+            for key, maximum in (("email", 320), ("password", 256))):
+        raise DeploymentError("Invalid dashboard warmup credentials file.")
+    return credentials
+
+
+def warm_dashboard(port, credentials):
+    """Use a fresh browser session on the candidate's private loopback listener."""
+    if type(port) is not int or not 1 <= port <= 65535:
+        raise DeploymentError("Invalid dashboard warmup loopback port.")
+    cookies = CookieJar()
+    opener = build_opener(ProxyHandler({}), NoRedirect(), HTTPCookieProcessor(cookies))
+    base = f"http://127.0.0.1:{port}/api/v1"
+
+    def call(phase, path, *, payload=None, timeout=10):
+        headers = {"X-Requested-With": "XMLHttpRequest", "Connection": "close"}
+        data = None
+        if payload is not None:
+            headers["Content-Type"] = "application/json"
+            data = json.dumps(payload).encode("utf-8")
+        request = Request(base + path, headers=headers, data=data)
+        try:
+            with opener.open(request, timeout=timeout) as response:
+                if len(response.read(4 * 1024 * 1024 + 1)) > 4 * 1024 * 1024:
+                    raise DeploymentError(f"Dashboard warmup {phase} response exceeded its size limit.")
+                return response.status
+        except HTTPError as error:
+            with error:
+                return error.code
+        except (OSError, HTTPException, ValueError) as error:
+            raise DeploymentError(f"Dashboard warmup {phase} request failed ({type(error).__name__}).") from None
+
+    started = time.monotonic()
+    try:
+        status = call("login", "/auth/login", payload=credentials, timeout=20)
+        if status != 200:
+            raise DeploymentError(f"Dashboard warmup login returned HTTP {status}.")
+        if not any(cookie.name == "fooddiary.browser" for cookie in cookies):
+            raise DeploymentError("Dashboard warmup login did not issue a browser session.")
+        date = datetime.now(timezone.utc).date().isoformat()
+        path = f"/dashboard?date={date}&timeZoneOffsetMinutes=0&trendDays=30"
+        status = call("snapshot", path, timeout=30)
+        if status in (500, 502, 503, 504):
+            # The first attempt can exhaust its own snapshot budget while warming the process.
+            status = call("snapshot retry", path, timeout=30)
+        if status != 200:
+            raise DeploymentError(f"Dashboard warmup snapshot returned HTTP {status}.")
+    finally:
+        if any(cookie.name == "fooddiary.browser" for cookie in cookies):
+            try:
+                status = call("logout", "/auth/logout", payload={})
+                if status != 204:
+                    print(f"::warning::Dashboard warmup logout returned HTTP {status}.")
+            except DeploymentError as error:
+                print(f"::warning::{error}")
+    print(f"Candidate dashboard warmup ready in {time.monotonic() - started:.1f}s.")
 
 
 def write_atomic(path, value, mode=0o600):
@@ -165,6 +246,11 @@ class Deployment:
                                       timeout=30)[0] == 200,
                   90, "Candidate SSR warmup did not return HTTP 200 within its retry window.")
         print(f"Candidate SSR /explore warmup ready in {time.monotonic() - started:.1f}s.")
+
+    def warm_candidate_dashboard(self, port):
+        credentials = dashboard_credentials(DASHBOARD_CREDENTIALS)
+        if credentials is not None:
+            warm_dashboard(port, credentials)
 
     def memory_headroom(self):
         values = dict(re.findall(r"^(MemAvailable|SwapFree):\s+(\d+) kB$", Path("/proc/meminfo").read_text(), re.MULTILINE))
@@ -345,6 +431,8 @@ class Deployment:
                 or self.request(f"http://127.0.0.1:{ssr_port}/health/ssr")[0] != 200):
             raise DeploymentError("Both candidate services must be ready before switching.")
         self.warm_ssr(ssr_port)
+        if plan["mode"] == "overlap":
+            self.warm_candidate_dashboard(api_port)
         plan["phase"] = "switching"
         plan["workers"] = sorted(set(plan["workers"]) | set(self.workers()))
         self.save(plan)
@@ -387,6 +475,11 @@ class Deployment:
         write_atomic(self.state_path, json.dumps(dict(schemaVersion=1, active=plan["candidate"], sha=plan["sha"], tag=plan["tag"], apiContractSha=plan["apiContractSha"]), indent=2) + "\n")
         plan["phase"] = "complete"
         self.save(plan)
+        if plan["mode"] == "maintenance":
+            try:
+                self.warm_candidate_dashboard(plan["ports"][plan["candidate"]][0])
+            except DeploymentError as error:
+                print(f"::warning::{error}")
 
     def abort(self, plan=None):
         if plan is None:

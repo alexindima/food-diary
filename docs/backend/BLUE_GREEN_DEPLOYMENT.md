@@ -59,6 +59,28 @@ logs successful warmup duration and reports a specific SSR warmup failure when
 the window expires. Ordinary readiness/version probes retain their five-second
 request timeout; redirects remain rejected and only HTTP 200 permits handover.
 
+### Authenticated dashboard warmup
+
+Dashboard warmup is enabled by a private `/etc/fooddiary/dashboard-warmup.json`
+file owned by the deploy user with mode `0600`. Keep the file on the host,
+outside the repository, Compose environment and CI. It contains `email` and
+`password` for a dedicated regular synthetic account with health-tracking
+consent and no real user data. Provision the account and its consent separately.
+A missing file keeps dashboard warmup disabled.
+
+The handover logs in on the candidate's IPv4 loopback port through the normal
+browser login route, fetches the dashboard and revokes its session through
+logout. Credentials and cookies stay in the probe process. The probe rejects
+redirects and reports only outcomes and elapsed time. A transient HTTP 5xx from
+the dashboard allows one retry in the same session. The login socket timeout is
+20 seconds, logout uses 10 seconds, and each dashboard request uses 30 seconds.
+
+During overlap, the dashboard must return 200 before Nginx switches traffic.
+During maintenance, the deployment restores and verifies ingress first. The
+warmup runs after the release is recorded as complete and reports failures as
+warnings. A warmup primes shared code paths and database access for the new API
+process. The synthetic dashboard response stays scoped to the synthetic user.
+
 The generated `nginx/sites-enabled/00-fooddiary-upstreams.conf` is atomically
 replaced in the existing directory mount. Its checked-in blue default supports
 local Compose bootstrap. Deployment deliberately never uploads that default over

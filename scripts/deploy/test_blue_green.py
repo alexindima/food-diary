@@ -3,6 +3,7 @@
 from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -134,6 +135,64 @@ class BlueGreenTests(unittest.TestCase):
         self.assertEqual("overlap", self.host.plan())
         self.host.start("api")
         self.host.start("ssr")
+
+    def test_overlap_dashboard_warmup_targets_candidate_before_route_switch(self):
+        self.ready_candidate()
+        def warm(port):
+            self.assertEqual(5001, port)
+            self.assertEqual(5000, self.host.active_port)
+            self.assertEqual("ssr-ready", self.host.load()["phase"])
+
+        with patch.object(self.host, "warm_candidate_dashboard", side_effect=warm) as probe:
+            self.host.switch()
+        probe.assert_called_once_with(5001)
+        self.assertEqual(5001, self.host.active_port)
+
+    def test_failed_overlap_dashboard_warmup_leaves_old_route(self):
+        self.ready_candidate()
+        with patch.object(self.host, "warm_candidate_dashboard", side_effect=deployment.DeploymentError("Snapshot failed")):
+            with self.assertRaisesRegex(deployment.DeploymentError, "Snapshot failed"):
+                self.host.switch()
+        self.assertEqual(5000, self.host.active_port)
+        self.assertEqual("ssr-ready", self.host.load()["phase"])
+        self.assertFalse(self.commands("stop"))
+
+    def test_maintenance_dashboard_warmup_is_advisory_after_switch(self):
+        self.assertEqual("maintenance", self.host.plan("maintenance"))
+        self.host.start("api")
+        self.host.start("ssr")
+
+        def warm(port):
+            self.assertEqual(5000, port)
+            self.assertEqual("complete", self.host.load()["phase"])
+            self.assertEqual(SHA, json.loads(self.host.state_path.read_text())["sha"])
+            raise deployment.DeploymentError("Snapshot failed")
+
+        with patch.object(self.host, "warm_candidate_dashboard", side_effect=warm) as probe:
+            self.host.switch()
+            probe.assert_not_called()
+            with patch("builtins.print") as output:
+                self.host.finish()
+            output.assert_called_once_with("::warning::Snapshot failed")
+        probe.assert_called_once_with(5000)
+
+    def test_missing_dashboard_credentials_skip_the_warmup(self):
+        with patch.object(deployment, "DASHBOARD_CREDENTIALS", self.host.root / "absent.json"), \
+                patch.object(deployment, "warm_dashboard") as warm:
+            self.host.warm_candidate_dashboard(5001)
+        warm.assert_not_called()
+
+    def test_dashboard_credentials_reject_partial_or_nonprivate_files(self):
+        path = self.host.root / "dashboard-warmup.json"
+        deployment.write_atomic(path, '{"email":"fixture@example.test"}')
+        with self.assertRaisesRegex(deployment.DeploymentError, "Invalid dashboard warmup credentials"):
+            deployment.dashboard_credentials(path)
+        deployment.write_atomic(path, '{"email":"fixture@example.test","password":"fixture"}')
+        self.assertEqual("fixture@example.test", deployment.dashboard_credentials(path)["email"])
+        if os.name != "nt":
+            path.chmod(0o644)
+            with self.assertRaisesRegex(deployment.DeploymentError, "private file"):
+                deployment.dashboard_credentials(path)
 
     def test_no_migration_handover_keeps_old_until_ready_and_drained(self):
         self.ready_candidate()
@@ -621,6 +680,68 @@ class BoundaryTests(unittest.TestCase):
         self.assertIn("fooddiary_api_blue fooddiary_api_blue;", grace)
         self.assertNotIn("fooddiary_api_blue fooddiary_api_blue;", retired)
         self.assertIn("default fooddiary_api_green;", retired)
+
+
+class DashboardWarmupHttpTests(unittest.TestCase):
+    def setUp(self):
+        self.calls = []
+        self.snapshot_statuses = deque([200])
+        self.login_redirect = False
+        fixture = self
+
+        class Backend(BaseHTTPRequestHandler):
+            def do_POST(self):
+                body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                fixture.calls.append((self.path, self.headers["Cookie"], self.headers["X-Requested-With"], body))
+                if self.path.endswith("/login"):
+                    if fixture.login_redirect:
+                        self.send_response(307)
+                        self.send_header("Location", "/unexpected")
+                    else:
+                        self.send_response(200)
+                        self.send_header("Set-Cookie", "fooddiary.browser=fixture-session; Path=/; HttpOnly")
+                else:
+                    self.send_response(204)
+                self.end_headers()
+
+            def do_GET(self):
+                fixture.calls.append((self.path.split("?", 1)[0], self.headers["Cookie"], None, None))
+                self.send_response(fixture.snapshot_statuses.popleft())
+                self.end_headers()
+
+            def log_message(self, *_):
+                pass
+
+        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Backend)
+        worker = threading.Thread(target=self.server.serve_forever, daemon=True)
+        worker.start()
+        self.addCleanup(worker.join, 2)
+        self.addCleanup(self.server.server_close)
+        self.addCleanup(self.server.shutdown)
+        self.credentials = {"email": "fixture@example.test", "password": "fixture-secret"}
+
+    def test_transient_snapshot_failure_retries_then_revokes_the_session(self):
+        self.snapshot_statuses = deque([500, 200])
+        deployment.warm_dashboard(self.server.server_port, self.credentials)
+        self.assertEqual([
+            ("/api/v1/auth/login", None, "XMLHttpRequest", self.credentials),
+            ("/api/v1/dashboard", "fooddiary.browser=fixture-session", None, None),
+            ("/api/v1/dashboard", "fooddiary.browser=fixture-session", None, None),
+            ("/api/v1/auth/logout", "fooddiary.browser=fixture-session", "XMLHttpRequest", {}),
+        ], self.calls)
+
+    def test_terminal_snapshot_failure_revokes_the_session_without_retry(self):
+        self.snapshot_statuses = deque([403])
+        with self.assertRaisesRegex(deployment.DeploymentError, "snapshot returned HTTP 403"):
+            deployment.warm_dashboard(self.server.server_port, self.credentials)
+        self.assertEqual(["/api/v1/auth/login", "/api/v1/dashboard", "/api/v1/auth/logout"],
+                         [call[0] for call in self.calls])
+
+    def test_login_redirect_is_not_followed_with_credentials(self):
+        self.login_redirect = True
+        with self.assertRaisesRegex(deployment.DeploymentError, "login returned HTTP 307"):
+            deployment.warm_dashboard(self.server.server_port, self.credentials)
+        self.assertEqual(["/api/v1/auth/login"], [call[0] for call in self.calls])
 
 
 if __name__ == "__main__":
