@@ -630,7 +630,7 @@ groups:
             type: last
             params: []
           type: query
-    noDataState: Alerting
+    noDataState: OK
     execErrState: Error
     for: 3m
     isPaused: false

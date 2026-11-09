@@ -50,7 +50,7 @@ class HostCollectorTests(unittest.TestCase):
             raise collector.subprocess.TimeoutExpired(["private-command", "sensitive-value"], 10, output="private-response")
 
         errors = io.StringIO()
-        with patch.object(collector, "collect_containers"), patch.object(collector, "collect_redis"), patch.object(
+        with patch.object(collector, "collect_containers"), patch.object(collector, "collect_container_resources", create=True), patch.object(collector, "collect_redis"), patch.object(
             collector, "collect_public"
         ), patch.object(collector, "collect_rabbitmq", side_effect=fail), patch.object(
             collector, "DATABASES", {}
@@ -73,11 +73,9 @@ class HostCollectorTests(unittest.TestCase):
         info = {"State": {"Running": True, "StartedAt": "2026-11-07T00:00:00.123456789Z", "Health": {"Status": "unhealthy"}}, "RestartCount": 2}
         stats = {"memory_stats": {"usage": 1000, "limit": 2000, "stats": {"inactive_file": 300}},
                  "cpu_stats": {"cpu_usage": {"total_usage": 2500000000}}}
-        observed = collector.container_observations(info, stats)
+        observed = collector.container_resources(info, stats)
         self.assertEqual(700, observed["memory_working_set_bytes"])
         self.assertEqual(2.5, observed["cpu_usage_seconds_total"])
-        self.assertEqual(0, observed["healthy"])
-        self.assertEqual(2, observed["restarts"])
 
     def test_newest_corrupt_backup_does_not_fall_back_to_old_success(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -111,6 +109,83 @@ class HostCollectorTests(unittest.TestCase):
                          collector.parse_redis("# Memory\r\nused_memory:123\r\n\r\nkeyspace_hits:5\r\n"))
 
 
+class ContainerAvailabilityTests(unittest.TestCase):
+    def inventory(self, *services):
+        return [{"Id": service, "State": "running", "Labels": {
+            "com.docker.compose.project": "fooddiary", "com.docker.compose.service": service,
+        }} for service in services]
+
+    def info(self):
+        return {"State": {"Running": True, "StartedAt": "2026-11-08T14:59:34.123456789Z",
+                          "Health": {"Status": "healthy"}}, "RestartCount": 0}
+
+    def collect(self, docker):
+        with patch.object(collector, "docker_get", side_effect=docker), patch.object(
+            collector, "collect_redis"
+        ), patch.object(collector, "collect_rabbitmq"), patch.object(
+            collector, "collect_public"
+        ), patch.object(collector, "DATABASES", {}), patch.object(collector, "BACKUPS", []):
+            return collector.collect(pathlib.Path("unused"))
+
+    def test_resource_timeout_preserves_running_and_health_observations(self):
+        def docker(path):
+            if path == "/containers/json?all=true":
+                return self.inventory("api-green", "job-manager", "telegram-bot")
+            if "/stats?" in path:
+                raise TimeoutError("private Docker response")
+            return self.info()
+
+        errors = io.StringIO()
+        with contextlib.redirect_stderr(errors):
+            text = self.collect(docker)
+        for service in ["api", "job-manager", "telegram-bot"]:
+            self.assertIn(f'fooddiary_container_running{{service="{service}"}} 1', text,
+                          "resource timeout must not erase container availability")
+            self.assertIn(f'fooddiary_container_healthy{{service="{service}"}} 1', text)
+        self.assertIn('fooddiary_collector_component_success{component="containers"} 1', text)
+        self.assertIn('fooddiary_collector_component_success{component="container_resources"} 0', text)
+        self.assertNotIn('fooddiary_container_memory_working_set_bytes', text)
+        self.assertNotIn("private Docker response", errors.getvalue())
+
+    def test_inventory_failure_emits_telemetry_failure_without_fabricated_downtime(self):
+        errors = io.StringIO()
+        with contextlib.redirect_stderr(errors):
+            text = self.collect(lambda _: (_ for _ in ()).throw(TimeoutError()))
+        self.assertIn('fooddiary_collector_component_success{component="containers"} 0', text)
+        self.assertNotIn('fooddiary_container_running{', text)
+
+    def test_successful_inventory_still_reports_a_missing_required_service(self):
+        metrics = collector.Metrics()
+        with patch.object(collector, "docker_get", return_value=[]):
+            collector.collect_containers(metrics)
+        self.assertIn('fooddiary_container_running{service="api"} 0', metrics.render())
+
+    def test_unhealthy_container_state_keeps_restart_and_oom_evidence_without_stats(self):
+        info = self.info()
+        info["State"]["Health"]["Status"] = "unhealthy"
+        info["State"]["OOMKilled"] = True
+        info["RestartCount"] = 2
+        observed = collector.container_state(info)
+        self.assertEqual(1, observed["running"])
+        self.assertEqual(0, observed["healthy"])
+        self.assertEqual(2, observed["restarts"])
+        self.assertEqual(1, observed["oom_killed"])
+
+    def test_blue_green_generations_keep_one_stable_service_identity(self):
+        def docker(path):
+            if path == "/containers/json?all=true":
+                return self.inventory("api", "api-green")
+            if "/stats?" in path:
+                return {"memory_stats": {"usage": 100}, "cpu_stats": {"cpu_usage": {"total_usage": 1}}}
+            return self.info()
+
+        metrics = collector.Metrics()
+        with patch.object(collector, "docker_get", side_effect=docker):
+            collector.collect_containers(metrics)
+        self.assertIn('fooddiary_container_running{service="api"} 2', metrics.render())
+        self.assertNotIn('service="api-green"', metrics.render())
+
+
 class ExternalMonitorTests(unittest.TestCase):
     def observation(self, success, days=30):
         return [{"target": "api", "success": success, "tls_days_remaining": days}]
@@ -134,6 +209,19 @@ class ExternalMonitorTests(unittest.TestCase):
 
 
 class AlertDimensionTests(unittest.TestCase):
+    def test_missing_telemetry_cannot_start_the_container_outage_timer(self):
+        import yaml
+        rules = yaml.safe_load((ROOT / "grafana/fooddiary-operational-alerting.yml").read_text(encoding="utf-8"))["groups"][0]["rules"]
+        rules = {rule["uid"]: rule for rule in rules}
+        missing = rules["fd-container-missing"]
+        self.assertEqual("OK", missing["noDataState"],
+                         "missing telemetry must reset rather than advance the container outage timer")
+        self.assertEqual("3m", missing["for"], "prolonged measured downtime must still alert")
+        self.assertEqual("1-fooddiary_container_running", missing["data"][0]["model"]["expr"])
+        for uid in ["fd-host-probe-failed", "fd-host-probes-stale"]:
+            self.assertEqual("critical", rules[uid]["labels"]["severity"])
+            self.assertEqual("Alerting", rules[uid]["noDataState"])
+
     def test_container_alerts_keep_distinct_service_instances(self):
         import yaml
         rules = yaml.safe_load((ROOT / "grafana/fooddiary-operational-alerting.yml").read_text(encoding="utf-8"))["groups"][0]["rules"]

@@ -151,7 +151,20 @@ No database schema, authentication or application-container configuration change
 are required. The collector needs root/Docker access and is an operator service.
 
 Each probe exports `fooddiary_collector_component_success`; a failed probe omits
-its measurements. The separate last-run timestamp detects an abandoned/stuck
+its measurements. Container state (`component="containers"`) is collected
+independently of CPU/memory statistics (`component="container_resources"`). A
+Docker statistics timeout therefore leaves running, health, restart and OOM
+observations available. Failed inventory/inspection still omits state rather
+than inventing stopped or healthy containers.
+
+The container-down rule requires three minutes of measured downtime. No Data
+resets that timer (`noDataState: OK`); unavailable telemetry must not start a
+timer that a brief migration stop later completes. A No Data resolution does
+not confirm recovery: the notification template retains its neutral state-reason
+wording. Separate critical probe-failure and collector-staleness rules cover lost
+measurements. No deployment-wide silence or longer outage threshold is used.
+
+The separate last-run timestamp detects an abandoned/stuck
 collector even while Node Exporter continues serving its previous file. Container
 restarts are a snapshot gauge that resets on replacement; they are not a global
 cumulative counter. Linux's OOM counter supplements the instantaneous container

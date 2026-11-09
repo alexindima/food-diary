@@ -166,7 +166,10 @@ def generate():
         alert("fd-host-probes-stale", "Infrastructure probes have not completed for 3 minutes", 'time()-fooddiary_collector_last_run_timestamp_seconds', 180, "1m", "critical", "telemetry", "Alerting"),
         alert("fd-host-probe-failed", "An infrastructure probe is failing", '1-fooddiary_collector_component_success', pending="3m", severity="critical", service="telemetry", no_data="Alerting"),
         alert("fd-job-schedule-missed", "Recurring job missed its success deadline", 'fooddiary:job_success_deadline_exceeded', pending="2m", severity="critical", service="job-manager"),
-        alert("fd-container-missing", "Required application container is not running", '1-fooddiary_container_running', pending="3m", severity="critical", service="containers", no_data="Alerting"),
+        # NoData must reset this timer: telemetry failure before a brief planned
+        # stop must not count as three minutes of measured container downtime.
+        # Separate probe-failure/staleness rules retain critical coverage.
+        alert("fd-container-missing", "Required application container is not running", '1-fooddiary_container_running', pending="3m", severity="critical", service="containers"),
         alert("fd-container-unhealthy", "Application container health check is failing", 'fooddiary_container_running-fooddiary_container_healthy', pending="3m", severity="critical", service="containers"),
         alert("fd-container-restarted", "Application container restarted recently", 'delta(fooddiary_container_restarts[10m]) > bool 0', pending="0m", service="containers"),
         alert("fd-container-oom", "Container was killed by the memory limit", 'fooddiary_container_oom_killed', pending="0m", severity="critical", service="containers"),

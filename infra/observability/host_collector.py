@@ -137,12 +137,8 @@ class Metrics:
             self.lines.append(line)
 
 
-def container_observations(info, stats):
+def container_state(info):
     state = info["State"]
-    memory = stats.get("memory_stats", {})
-    if "usage" not in memory or "total_usage" not in stats.get("cpu_stats", {}).get("cpu_usage", {}):
-        raise ValueError("Incomplete Docker resource observation")
-    cache = memory.get("stats", {}).get("inactive_file", memory.get("stats", {}).get("cache", 0))
     # Python 3.10 accepts microseconds; Docker reports nanosecond precision.
     started_text = re.sub(r"(\.\d{6})\d+", r"\1", state["StartedAt"])
     started = dt.datetime.fromisoformat(started_text.replace("Z", "+00:00")).timestamp()
@@ -152,6 +148,15 @@ def container_observations(info, stats):
         "restarts": info["RestartCount"],
         "oom_killed": int(state.get("OOMKilled", False)),
         "started_timestamp_seconds": started,
+    }
+
+
+def container_resources(info, stats):
+    memory = stats.get("memory_stats", {})
+    if "usage" not in memory or "total_usage" not in stats.get("cpu_stats", {}).get("cpu_usage", {}):
+        raise ValueError("Incomplete Docker resource observation")
+    cache = memory.get("stats", {}).get("inactive_file", memory.get("stats", {}).get("cache", 0))
+    return {
         "memory_working_set_bytes": max(0, memory.get("usage", 0) - cache),
         "memory_limit_bytes": memory.get("limit", 0),
         "cpu_usage_seconds_total": stats.get("cpu_stats", {}).get("cpu_usage", {}).get("total_usage", 0) / 1e9,
@@ -159,7 +164,7 @@ def container_observations(info, stats):
     }
 
 
-def collect_containers(metrics):
+def running_containers():
     inventory = docker_get("/containers/json?all=true")
     # Aggregate blue/green generations under their stable service. Completed
     # migration/init containers and the legacy static image are not workloads.
@@ -177,28 +182,46 @@ def collect_containers(metrics):
             continue
         if item["State"] == "running":
             selected.setdefault(service, []).append(item["Id"])
-    def observe(item):
-        service, container_id = item
-        info = docker_get(f"/containers/{container_id}/json")
-        stats = docker_get(f"/containers/{container_id}/stats?stream=false&one-shot=true")
-        return service, container_observations(info, stats)
+    return [(service, identifier) for service, ids in selected.items() for identifier in ids]
+
+
+def collect_container_observations(observe):
     totals = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        for service, values in executor.map(observe, [(s, i) for s, ids in selected.items() for i in ids]):
+        for service, values in executor.map(observe, running_containers()):
             previous = totals.setdefault(service, {})
             for key, value in values.items():
                 if key == "started_timestamp_seconds":
                     previous[key] = max(previous.get(key, 0), value)
                 else:
                     previous[key] = previous.get(key, 0) + value
+    return totals
+
+
+def collect_containers(metrics):
+    def observe(item):
+        service, container_id = item
+        return service, container_state(docker_get(f"/containers/{container_id}/json"))
+    totals = collect_container_observations(observe)
     for service in sorted(SERVICES):
         metrics.add("container_running", totals.get(service, {}).get("running", 0), service=service)
         for key, value in totals.get(service, {}).items():
             if key != "running":
-                # Restarts are a snapshot gauge: replacing a container resets
-                # Docker's count without proving that the service recovered.
-                kind = "counter" if key == "cpu_usage_seconds_total" else "gauge"
-                metrics.add("container_" + key, value, kind, service=service)
+                metrics.add("container_" + key, value, service=service)
+
+
+def collect_container_resources(metrics):
+    # Docker statistics can time out during image extraction/recreation. Keep
+    # their failure boundary separate from running/health/restart/OOM evidence.
+    def observe(item):
+        service, container_id = item
+        info = docker_get(f"/containers/{container_id}/json")
+        stats = docker_get(f"/containers/{container_id}/stats?stream=false&one-shot=true")
+        return service, container_resources(info, stats)
+    for service, values in collect_container_observations(observe).items():
+        for key, value in values.items():
+            kind = "counter" if key == "cpu_usage_seconds_total" else "gauge"
+            metrics.add("container_" + key, value, kind, service=service)
 
 
 def collect_postgres(metrics, alias, container):
@@ -288,7 +311,8 @@ def atomic_write(path, text):
 
 def collect(root):
     metrics = Metrics()
-    probes = [("containers", collect_containers), ("redis", collect_redis), ("rabbitmq", collect_rabbitmq), ("public", collect_public)]
+    probes = [("containers", collect_containers), ("container_resources", collect_container_resources),
+              ("redis", collect_redis), ("rabbitmq", collect_rabbitmq), ("public", collect_public)]
     probes += [("postgres_" + a, lambda m, a=a, c=c: collect_postgres(m, a, c)) for a, c in DATABASES.items()]
     probes += [("backup_" + b, lambda m, b=b: collect_backup(m, root, b)) for b in BACKUPS]
     def perform(item):
