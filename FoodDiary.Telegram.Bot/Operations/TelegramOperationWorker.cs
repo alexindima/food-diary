@@ -76,14 +76,16 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         if (checkpoint.Stage is BotPhotoTrial.Offered) {
             return await SendTrialOfferAsync(operations, lease, incoming, cancellationToken);
         }
-        bool firstPhotoAttempt = incoming.Kind is "photo" && checkpoint is { Stage: "received", UploadAttempt: 0 };
-        bool acceptingTrial = checkpoint.Stage is BotPhotoTrial.Accepted;
+        if (checkpoint.Stage is BotPhotoCallback.WaitingForConsent) {
+            return await RequestPhotoConsentAsync(operations, lease, incoming, retryTrial: false, cancellationToken);
+        }
+        BotPhotoCheckpoint previous = checkpoint;
         using HttpClient http = clients.CreateClient(BotDiaryClient.ClientName);
         var diary = new BotDiaryClient(http, options);
         try {
             (string token, string? profileLanguage) = await diary.AuthenticateAsync(incoming.TelegramUserId, lease, cancellationToken);
-            if (acceptingTrial && !await diary.HasPhotoConsentsAsync(token, cancellationToken)) {
-                return await RequestTrialConsentAsync(operations, lease, incoming, cancellationToken);
+            if (checkpoint.Stage is BotPhotoTrial.Accepted && !await diary.HasPhotoConsentsAsync(token, cancellationToken)) {
+                return await RequestPhotoConsentAsync(operations, lease, incoming, retryTrial: true, cancellationToken);
             }
             checkpoint = await AdvanceOperationAsync(diary, token, lease, incoming, checkpoint, cancellationToken);
             if (checkpoint.Stage is "statistics-ready") {
@@ -96,14 +98,26 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         } catch (InvalidDataException) {
             checkpoint = checkpoint with { Stage = "failed", Upload = null, ErrorCode = "InvalidImageOrIdentity" };
         }
-        bool ready = checkpoint.Stage is not ("recognizing" or "received") || (acceptingTrial && checkpoint.Stage is "received");
+        return await CommitStepAsync(operations, lease, incoming, previous, checkpoint, cancellationToken);
+    }
+
+    private async Task<bool> CommitStepAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
+        BotPhotoCheckpoint previous, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
+        bool ready = checkpoint.Stage is not ("recognizing" or "received") || (previous.Stage is BotPhotoTrial.Accepted && checkpoint.Stage is "received");
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
-        string state = checkpoint.Stage is BotPhotoTrial.Offered ? BotPhotoTrial.OfferedCheckpoint : JsonSerializer.Serialize(checkpoint);
+        string state = checkpoint.Stage switch {
+            BotPhotoTrial.Offered => BotPhotoTrial.OfferedCheckpoint,
+            BotPhotoCallback.WaitingForConsent => BotPhotoCallback.ConsentCheckpoint,
+            _ => JsonSerializer.Serialize(checkpoint),
+        };
         if (!await operations.CheckpointAsync(lease, state, completed: false, ready ? now : now.Add(PollInterval), cancellationToken)) {
             return false;
         }
-        if (firstPhotoAttempt && checkpoint.Stage is "upload") {
-            return await SavePhotoProgressAsync(operations, id, incoming, checkpoint, state, cancellationToken);
+        if (incoming.Kind is "photo" && previous is { Stage: "received", UploadAttempt: 0 } && checkpoint.Stage is "upload") {
+            return await SavePhotoProgressAsync(operations, lease.OperationId, incoming, checkpoint, state, cancellationToken);
+        }
+        if (checkpoint.Stage is BotPhotoCallback.WaitingForConsent && previous.ProgressMessageId is > 0) {
+            await DeletePhotoProgressAsync(incoming.ChatId, previous.ProgressMessageId.Value, cancellationToken);
         }
         return ready;
     }
@@ -125,23 +139,33 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         return false;
     }
 
-    private async Task<bool> RequestTrialConsentAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
-        CancellationToken cancellationToken) {
+    private async Task<bool> RequestPhotoConsentAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
+        bool retryTrial, CancellationToken cancellationToken) {
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         DateTime expires = lease.CreatedAtUtc.Add(BotPhotoTrial.OfferLifetime);
+        if (!retryTrial && now >= expires) {
+            await operations.CheckpointAsync(lease, BotPhotoCallback.ConsentCheckpoint, completed: true, now, cancellationToken);
+            return false;
+        }
         bool russian = BotMenu.IsRussian(incoming.Language);
         string message = russian ? "Проверьте в настройках согласия на обработку фото с помощью ИИ и данных дневника."
             : "Review your consent for AI photo processing and diary data in settings.";
-        if (now < expires) {
+        if (!retryTrial) {
+            message += russian ? " Затем нажмите «Продолжить распознавание»." : " Then tap Continue recognition.";
+        } else if (now < expires) {
             message += russian ? " Затем снова нажмите «Начать 7 дней бесплатно»." : " Then tap Start 7 days free again.";
         } else {
             message += russian ? " Затем отправьте фото снова." : " Then send the photo again.";
         }
         InlineKeyboardMarkup? markup = BotMenu.Open(options.Value, incoming.Language, "/privacy-settings",
             russian ? "Настройки конфиденциальности" : "Privacy settings");
+        if (!retryTrial) {
+            markup = new InlineKeyboardMarkup([.. markup?.InlineKeyboard ?? [], [BotPhotoCallback.ContinueButton(lease.OperationId, russian)]]);
+        }
         bool delivered = await SendTerminalNoticeAsync(incoming.ChatId, message, markup, preview: null, cancellationToken);
         bool keepOffer = delivered && now < expires;
-        await operations.CheckpointAsync(lease, BotPhotoTrial.OfferedCheckpoint, completed: !keepOffer, keepOffer ? expires : now, cancellationToken);
+        string waitingCheckpoint = retryTrial ? BotPhotoTrial.OfferedCheckpoint : BotPhotoCallback.ConsentCheckpoint;
+        await operations.CheckpointAsync(lease, waitingCheckpoint, completed: !keepOffer, keepOffer ? expires : now, cancellationToken);
         return false;
     }
 
@@ -149,11 +173,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         bool cleanup = false;
         if (checkpoint.Stage is "photo-notified") {
-            try {
-                await bot.DeleteMessage(incoming.ChatId, checkpoint.ProgressMessageId.GetValueOrDefault(), cancellationToken);
-            } catch (ApiRequestException error) when (error.ErrorCode is 400 or 403) {
-                // Telegram cannot delete a message that is already gone or inaccessible.
-            }
+            await DeletePhotoProgressAsync(incoming.ChatId, checkpoint.ProgressMessageId.GetValueOrDefault(), cancellationToken);
         } else {
             bool delivered = checkpoint.Stage is "failed"
                 ? await SendFailureAsync(incoming, checkpoint.ErrorCode, cancellationToken)
@@ -165,6 +185,14 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         }
         return await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: !cleanup,
             timeProvider.GetUtcNow().UtcDateTime, cancellationToken) && cleanup;
+    }
+
+    private async Task DeletePhotoProgressAsync(long chatId, int messageId, CancellationToken cancellationToken) {
+        try {
+            await bot.DeleteMessage(chatId, messageId, cancellationToken);
+        } catch (ApiRequestException error) when (error.ErrorCode is 400 or 403) {
+            // Telegram cannot delete a message that is already gone or inaccessible.
+        }
     }
 
     private async Task<bool> SavePhotoProgressAsync(BotOperationClient operations, BotOperationId id, BotIncomingOperation incoming,
@@ -278,6 +306,9 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 // Older operations can resume here. Persist access before submitting an AI job that may outlive this attempt.
                 return checkpoint;
             }
+        }
+        if (checkpoint.Stage is "received" or "upload" && !await diary.HasPhotoConsentsAsync(token, cancellationToken)) {
+            return new BotPhotoCheckpoint(Stage: BotPhotoCallback.WaitingForConsent);
         }
         return await AdvanceImageStageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken);
     }

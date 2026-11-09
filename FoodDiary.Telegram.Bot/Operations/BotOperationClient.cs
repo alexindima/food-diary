@@ -58,12 +58,12 @@ internal sealed class BotOperationClient(HttpClient client, IOptions<TelegramBot
         return true;
     }
 
-    internal async Task<bool> AcceptPhotoTrialAsync(BotOperationId operationId, long telegramUserId, CancellationToken cancellationToken) {
-        using HttpResponseMessage response = await CreateSdk().ResumeAsync(operationId.Value, "1",
+    internal async Task<bool> ResumePhotoAsync(BotPhotoCallback callback, long telegramUserId, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await CreateSdk().ResumeAsync(callback.OperationId.Value, "1",
             new ResumeTelegramOperationHttpRequest {
                 TelegramUserId = telegramUserId,
-                ExpectedCheckpoint = BotPhotoTrial.OfferedCheckpoint,
-                Checkpoint = BotPhotoTrial.AcceptedCheckpoint,
+                ExpectedCheckpoint = callback.ExpectedCheckpoint,
+                Checkpoint = callback.NextCheckpoint,
             }, RequestContext(), cancellationToken);
         // An older API slot can return 404 during cutover. Keep the Telegram update pending until the new API handles it.
         if (response.StatusCode == HttpStatusCode.Conflict) {

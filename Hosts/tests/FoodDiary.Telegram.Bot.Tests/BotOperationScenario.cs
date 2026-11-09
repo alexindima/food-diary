@@ -17,6 +17,7 @@ internal sealed class BotOperationScenario : IDisposable {
     private readonly TelegramOperationWorker _worker;
     private readonly BotOperationClient _operations;
     private int _acquisitions;
+    private string? _checkpoint;
 
     public BotOperationScenario() {
         _handler = new ScenarioHandler(RespondAsync);
@@ -56,7 +57,12 @@ internal sealed class BotOperationScenario : IDisposable {
     public Action<int>? BeforeAcquire { get; set; }
 
     public Task ProcessAsync() => _worker.ProcessAsync(_operations, new BotOperationId(Id), CancellationToken.None);
-    public Task<bool> AcceptTrialAsync() => _operations.AcceptPhotoTrialAsync(new BotOperationId(Id), Incoming.TelegramUserId, CancellationToken.None);
+    public Task<bool> AcceptTrialAsync() => ResumePhotoAsync($"photo-trial:{Id:N}");
+
+    public Task<bool> ResumePhotoAsync(string? data) {
+        Assert.True(BotPhotoCallback.TryRead(data, out BotPhotoCallback callback));
+        return _operations.ResumePhotoAsync(callback, Incoming.TelegramUserId, CancellationToken.None);
+    }
     public static HttpResponseMessage Json<T>(T body) => new(HttpStatusCode.OK) { Content = JsonContent.Create(body) };
 
     private async Task<HttpResponseMessage> RespondAsync(HttpRequestMessage request) {
@@ -80,7 +86,8 @@ internal sealed class BotOperationScenario : IDisposable {
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
-            State = JsonSerializer.Deserialize<BotPhotoCheckpoint>(body.RootElement.GetProperty("checkpoint").GetString()!)!;
+            _checkpoint = body.RootElement.GetProperty("checkpoint").GetString();
+            State = JsonSerializer.Deserialize<BotPhotoCheckpoint>(_checkpoint!)!;
             Completed = body.RootElement.GetProperty("completed").GetBoolean();
             NextAttemptAtUtc = body.RootElement.GetProperty("nextAttemptAtUtc").GetDateTime();
             Checkpoints++;
@@ -90,11 +97,12 @@ internal sealed class BotOperationScenario : IDisposable {
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
             Assert.Equal($"/api/v1/auth/telegram/bot/operations/{Id:D}/resume", path);
             Assert.Equal(Incoming.TelegramUserId, body.RootElement.GetProperty("telegramUserId").GetInt64());
-            Assert.Equal(BotPhotoTrial.OfferedCheckpoint, body.RootElement.GetProperty("expectedCheckpoint").GetString());
-            if (State.Stage is not BotPhotoTrial.Offered || Completed) {
+            if (!string.Equals(_checkpoint, body.RootElement.GetProperty("expectedCheckpoint").GetString(), StringComparison.Ordinal) || Completed ||
+                CreatedAtUtc.AddMinutes(15) <= DateTime.UtcNow) {
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
-            State = JsonSerializer.Deserialize<BotPhotoCheckpoint>(body.RootElement.GetProperty("checkpoint").GetString()!)!;
+            _checkpoint = body.RootElement.GetProperty("checkpoint").GetString();
+            State = JsonSerializer.Deserialize<BotPhotoCheckpoint>(_checkpoint!)!;
             return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
         if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {

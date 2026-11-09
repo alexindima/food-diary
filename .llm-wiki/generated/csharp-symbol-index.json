@@ -8,8 +8,8 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4813,
-    "symbols": 4749,
+    "sourceFiles": 4814,
+    "symbols": 4750,
     "interfaceImplementationLinks": 213,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
@@ -17,7 +17,7 @@
       "enum": 76,
       "interface": 430,
       "record": 1642,
-      "record struct": 143
+      "record struct": 144
     },
     "roles": {
       "Command": 253,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1959,
+      "Other": 1960,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -2355,6 +2355,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationStateReader.cs",
+      "line": 4
+    },
+    {
+      "name": "BotPhotoCallback",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCallback.cs",
       "line": 4
     },
     {

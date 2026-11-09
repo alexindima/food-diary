@@ -1514,14 +1514,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8fba6925a34722c84ca8da4d89ef6793d7e4c70323f9ce569bb1bcd100b84bd7",
-          "reviewReason": "Verified the idempotent trial call and fresh bot authentication precede photo processing. New bot callbacks remain pending when the stable ingress still targets an old API slot. No service, storage or startup topology changed."
+          "sha256": "47b32ffa4fb89e9305732977a73013438922ee854d79adb9cee9019a35e7f08f",
+          "reviewReason": "Bot photo processing reads current consent before Telegram download and storage upload. The waiting callback reuses the signed owner-bound resume API, current lease fencing and expiry. The generated topology adds the existing privacy check dependency."
         }
       ],
-      "reason": "Verified the idempotent trial call and fresh bot authentication precede photo processing. New bot callbacks remain pending when the stable ingress still targets an old API slot. No service, storage or startup topology changed.",
+      "reason": "Bot photo processing reads current consent before Telegram download and storage upload. The waiting callback reuses the signed owner-bound resume API, current lease fencing and expiry. The generated topology adds the existing privacy check dependency.",
       "baseRef": "HEAD",
-      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
-      "reviewedAtUtc": "2026-11-09T08:05:52.5625789Z"
+      "gitHead": "820729ddb978bfd3a50dfaf25e32fc4cd557e540",
+      "reviewedAtUtc": "2026-11-09T08:55:48.4151401Z"
     },
     {
       "pageId": "workflow-security-review",

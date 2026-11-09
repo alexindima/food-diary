@@ -44,13 +44,13 @@ public sealed class TelegramOperationRecoveryTests {
     }
 
     [Theory]
-    [InlineData(null, "ru", "🔍 Распознаю продукты на фото…", false, false)]
-    [InlineData("Гречка с курицей\nСоус отдельно", "ru", "🔍 Распознаю продукты на фото…", false, false)]
-    [InlineData(null, "en", "🔍 Identifying foods in the photo…", true, false)]
-    [InlineData("Original photo caption", "en", "🔍 Identifying foods in the photo…", false, true)]
+    [InlineData(null, "ru", "🔍 Распознаю продукты на фото…", false, false, true)]
+    [InlineData("Гречка с курицей\nСоус отдельно", "ru", "🔍 Распознаю продукты на фото…", false, false, false)]
+    [InlineData(null, "en", "🔍 Identifying foods in the photo…", true, false, true)]
+    [InlineData("Original photo caption", "en", "🔍 Identifying foods in the photo…", false, true, true)]
     public async Task PremiumPhoto_AdvancesAcrossDurableCheckpointsAndDeliversSavedReceipt(
-        string? caption, string language, string progressNotice, bool rejectProgressNotice, bool startTrial) {
-        using var scenario = new BotOperationScenario { IsPremium = !startTrial, CanStartTrial = startTrial };
+        string? caption, string language, string progressNotice, bool rejectProgressNotice, bool startTrial, bool hasConsent) {
+        using var scenario = new BotOperationScenario { IsPremium = !startTrial, CanStartTrial = startTrial, HasAiConsent = hasConsent };
         bool russian = string.Equals(language, "ru", StringComparison.Ordinal);
         scenario.Incoming = scenario.Incoming with { Caption = caption, Language = language };
         scenario.BlockedByUser = rejectProgressNotice;
@@ -130,6 +130,30 @@ public sealed class TelegramOperationRecoveryTests {
             scenario.Notices.Clear();
             scenario.SilentNotices.Clear();
         }
+        if (!hasConsent) {
+            await scenario.ProcessAsync();
+            await scenario.ProcessAsync();
+            Assert.Equal(BotPhotoCallback.WaitingForConsent, scenario.State.Stage);
+            Assert.False(scenario.Completed);
+            Assert.Equal(scenario.CreatedAtUtc.AddMinutes(15), scenario.NextAttemptAtUtc);
+            Assert.DoesNotContain(scenario.BusinessPaths, path => path.EndsWith("/getFile", StringComparison.OrdinalIgnoreCase));
+            JsonElement consentMarkup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
+            JsonElement settings = Assert.Single(consentMarkup.GetProperty("inline_keyboard")[0].EnumerateArray());
+            Assert.Equal("https://diary.example/privacy-settings", settings.GetProperty("web_app").GetProperty("url").GetString());
+            JsonElement resume = Assert.Single(consentMarkup.GetProperty("inline_keyboard")[1].EnumerateArray());
+            string? callback = resume.GetProperty("callback_data").GetString();
+            Assert.Equal($"photo-continue:{scenario.Id:N}", callback);
+            Assert.True(await scenario.ResumePhotoAsync(callback));
+            await scenario.ProcessAsync();
+            await scenario.ProcessAsync();
+            Assert.Equal(BotPhotoCallback.WaitingForConsent, scenario.State.Stage);
+            Assert.DoesNotContain(scenario.BusinessPaths, path => path.EndsWith("/getFile", StringComparison.OrdinalIgnoreCase));
+            scenario.HasAiConsent = true;
+            Assert.True(await scenario.ResumePhotoAsync(callback));
+            Assert.False(await scenario.ResumePhotoAsync(callback));
+            scenario.Notices.Clear();
+            scenario.SilentNotices.Clear();
+        }
 
         foreach (string stage in new[] { "upload", "image-ready", "recognizing", "recognition-ready", "meal-saved" }) {
             DateTime before = DateTime.UtcNow;
@@ -168,12 +192,14 @@ public sealed class TelegramOperationRecoveryTests {
             await scenario.ProcessAsync();
             Assert.Equal(new[] { 77, 77 }, scenario.DeletedMessages);
         }
+        int billingReads = 1 + (startTrial ? 1 : 0) + (hasConsent ? 0 : 2);
         Assert.Multiple(
             () => Assert.True(scenario.Completed),
             () => Assert.Equal(1, uploads),
             () => Assert.Equal(1, recognitions),
             () => Assert.Equal(1, saves),
-            () => Assert.Equal(startTrial ? 2 : 1, scenario.BusinessPaths.Count(path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal))),
+            () => Assert.Equal(billingReads,
+                scenario.BusinessPaths.Count(path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal))),
             () => Assert.Equal(startTrial ? 1 : 0, trialStarts),
             () => Assert.Contains(russian ? "Приём пищи сохранён" : "Meal saved to your diary", notice, StringComparison.Ordinal),
             () => Assert.Equal(2, scenario.Notices.Count),
@@ -289,7 +315,7 @@ public sealed class TelegramOperationRecoveryTests {
             Upload: new BotImageUpload("https://storage.example/expired", "food", DateTime.UtcNow.AddMinutes(-1), new BotImageAssetId(scenario.ImageId)));
         await scenario.ProcessAsync();
         Assert.Equal(new BotPhotoCheckpoint(UploadAttempt: 3, PhotoPremiumApproved: true), scenario.State);
-        Assert.Equal(new[] { "/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview" }, scenario.BusinessPaths, StringComparer.Ordinal);
+        Assert.Equal(["/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview", "/api/v1/users/privacy"], scenario.BusinessPaths, StringComparer.Ordinal);
         Assert.False(scenario.Completed);
     }
 

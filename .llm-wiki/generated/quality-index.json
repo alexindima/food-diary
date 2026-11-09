@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7009,
+    "productionFiles": 7010,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1056,
@@ -279,6 +279,14 @@
       "structuralRiskScore": 170.1
     },
     {
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+      "nonBlankLines": 397,
+      "decisionPoints": 108,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 169.94
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDispatch.ps1",
       "nonBlankLines": 488,
       "decisionPoints": 103,
@@ -341,14 +349,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 155.44
-    },
-    {
-      "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 368,
-      "decisionPoints": 97,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 152.86
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiInstructionExperiment.ps1",
@@ -5305,6 +5305,14 @@
       "structuralRiskScore": 15.6
     },
     {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCallback.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.02
+    },
+    {
       "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -5314,11 +5322,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoTrial.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 6,
+      "nonBlankLines": 23,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.66
+      "structuralRiskScore": 4.96
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionAccessException.cs",
@@ -5402,11 +5410,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 368,
-      "decisionPoints": 97,
+      "nonBlankLines": 397,
+      "decisionPoints": 108,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 152.86
+      "structuralRiskScore": 169.94
     },
     {
       "path": "FoodDiary.Telegram.Bot/Program.cs",
