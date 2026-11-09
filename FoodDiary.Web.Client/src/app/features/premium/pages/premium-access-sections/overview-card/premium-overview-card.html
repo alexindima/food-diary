@@ -1,27 +1,21 @@
-<fd-ui-card class="premium-access-page__card premium-access-page__card--overview" density="profile">
-    <div class="premium-access-page__section-header fd-row fd-align-start fd-justify-between fd-gap-card-header fd-wrap">
-        <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
-            <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
-            <p class="premium-access-page__text fd-ui-body">{{ viewModel().copyState.stateLabelKey | translate }}</p>
+@let vm = viewModel();
+<fd-ui-card class="premium-access-page__card" density="profile" [class.premium-access-page__card--overview]="vm.accessActive">
+    <div class="premium-access-page__section-header fd-row fd-align-center fd-justify-between fd-gap-card-header fd-wrap">
+        <div class="fd-row fd-align-center fd-gap-sm">
+            <fd-ui-icon class="premium-access-page__accent" name="auto_awesome" [hidden]="vm.isFreePlan" />
+            <h2 class="premium-access-page__title fd-ui-section-title">{{ vm.titleKey | translate }}</h2>
         </div>
-
-        <div class="fd-row fd-wrap fd-gap-actions">
-            @if (!isLoading() && viewModel().showManageBilling) {
-                <fd-ui-button variant="secondary" fill="outline" [loading]="portalLoading()" (click)="manageBilling.emit()">
-                    {{
-                        (overview()?.cancellationAvailable || overview()?.cancelAtPeriodEnd || overview()?.subscriptionStatus === 'canceled'
-                            ? 'PREMIUM_PAGE.CANCELLATION.PAYMENTS_ACTION'
-                            : 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION'
-                        ) | translate
-                    }}
-                </fd-ui-button>
-            } @else if (!isLoading() && viewModel().showStartTrial) {
-                <fd-ui-button variant="primary" [loading]="trialLoading()" (click)="startTrial.emit()">
-                    {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
-                </fd-ui-button>
-            }
-            <fd-premium-cancellation-actions [overview]="overview()" (overviewChanged)="overviewChanged.emit($event)" />
-        </div>
+        @if (!isLoading() && overview() && !vm.isFreePlan) {
+            <span
+                class="fd-ui-pill fd-ui-pill--compact fd-ui-action-text"
+                [class.premium-access-page__status--active]="vm.accessActive && !vm.statusNeedsAttention"
+                [class.fd-ui-pill--success]="vm.accessActive && !vm.statusNeedsAttention"
+                [class.fd-ui-pill--warning]="vm.statusNeedsAttention"
+                [class.fd-ui-pill--muted]="!vm.accessActive && !vm.statusNeedsAttention"
+            >
+                {{ vm.badges.statusLabelKey | translate }}
+            </span>
+        }
     </div>
 
     @if (isLoading()) {
@@ -29,33 +23,73 @@
             {{ 'PREMIUM_PAGE.STATUS_LOADING' | translate }}
         </p>
     } @else if (overview()) {
-        <div class="premium-access-page__badges fd-row fd-gap-pill fd-wrap">
-            @if (viewModel().badges.planLabelKey) {
-                <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--premium fd-ui-action-text">
-                    {{ viewModel().badges.planLabelKey | translate }}
-                </span>
-            }
-            <span class="premium-access-page__badge fd-ui-pill fd-ui-pill--primary fd-ui-action-text">
-                {{ viewModel().badges.statusLabelKey | translate }}
-            </span>
-        </div>
-
-        <dl class="premium-access-page__details fd-grid fd-gap-sm">
-            @for (detail of viewModel().details; track detail.labelKey) {
-                <div class="premium-access-page__detail fd-stack fd-gap-xxs">
-                    <dt class="fd-ui-body-sm fd-ui-text-muted">{{ detail.labelKey | translate }}</dt>
-                    <dd class="fd-ui-body">{{ detail.translateValue ? (detail.value | translate) : detail.value }}</dd>
-                </div>
-            }
-        </dl>
-
-        @if (viewModel().currentPeriodEndLabel; as currentPeriodEnd) {
-            <p class="premium-access-page__meta fd-ui-body-sm">
-                {{ viewModel().copyState.periodLabelKey | translate }}
-                <strong>{{ currentPeriodEnd }}</strong>
+        <h3 class="premium-access-page__access-date" [hidden]="!showTrialOffer()">
+            {{ 'PREMIUM_PAGE.OVERVIEW.TRIAL_OFFER_TITLE' | translate }}
+        </h3>
+        @if (vm.currentPeriodEndLabel; as currentPeriodEnd) {
+            <div class="fd-stack fd-gap-xxs">
+                <p class="premium-access-page__meta fd-ui-body-sm">{{ vm.accessPeriodLabelKey | translate }}</p>
+                <p class="premium-access-page__access-date">{{ currentPeriodEnd }}</p>
+            </div>
+        } @else {
+            <p class="premium-access-page__text fd-ui-body" [hidden]="vm.isFreePlan || vm.subscriptionEnded || vm.paymentIssue">
+                {{ vm.copyState.stateLabelKey | translate }}
             </p>
         }
 
-        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">{{ viewModel().hintKey | translate }}</p>
+        @if (vm.accessActive && vm.copyState.showRenewalOffNotice) {
+            <p class="premium-access-page__renewal-note fd-row fd-align-start fd-gap-xs fd-ui-body-sm">
+                <fd-ui-icon name="info_outline" size="sm" />
+                <span>{{ 'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE' | translate }}</span>
+            </p>
+        }
+
+        <p
+            class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm"
+            [hidden]="vm.copyState.showRenewalOffNotice && vm.accessActive && !vm.paymentIssue"
+        >
+            {{ vm.hintKey | translate }}
+        </p>
+
+        <div class="premium-access-page__actions fd-row fd-wrap fd-gap-actions" [hidden]="!showActions()">
+            <fd-ui-button [hidden]="!showResume()" (click)="resumeSubscription.emit()">
+                {{ 'PREMIUM_PAGE.OVERVIEW.RESUME_ACTION' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                [variant]="vm.paymentIssue ? 'primary' : 'secondary'"
+                [fill]="vm.paymentIssue ? 'solid' : 'outline'"
+                [hidden]="!vm.showManageBilling"
+                [loading]="portalLoading()"
+                (click)="manageBilling.emit()"
+            >
+                {{ manageActionKey() | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                [variant]="showResume() ? 'secondary' : 'primary'"
+                [fill]="showResume() ? 'outline' : 'solid'"
+                [hidden]="!vm.showStartTrial"
+                [loading]="trialLoading()"
+                (click)="startTrial.emit()"
+            >
+                {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
+            </fd-ui-button>
+            <fd-ui-button variant="secondary" fill="outline" [hidden]="!showPaymentHelp()" (click)="readSupport.emit()">
+                {{ 'PREMIUM_PAGE.OVERVIEW.PAYMENT_HELP_ACTION' | translate }}
+            </fd-ui-button>
+            <fd-premium-cancellation-actions [overview]="overview()" (overviewChanged)="overviewChanged.emit($event)" />
+        </div>
+
+        <p class="premium-access-page__meta fd-ui-body-sm" [hidden]="!showTrialOffer()">
+            {{ 'PREMIUM_PAGE.OVERVIEW.TRIAL_NO_CHARGES' | translate }}
+        </p>
+
+        <dl class="premium-access-page__details" [hidden]="vm.details.length === 0">
+            @for (detail of vm.details; track detail.labelKey) {
+                <div class="premium-access-page__detail">
+                    <dt class="fd-ui-body-sm fd-ui-text-muted">{{ detail.labelKey | translate }}</dt>
+                    <dd class="fd-ui-body-sm">{{ detail.translateValue ? (detail.value | translate) : detail.value }}</dd>
+                </div>
+            }
+        </dl>
     }
 </fd-ui-card>

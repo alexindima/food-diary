@@ -57,7 +57,7 @@ describe('premium access view mapper', () => {
         expect(buildPremiumOverviewCopyState({ ...overview, cancelAtPeriodEnd: true }, true)).toEqual({
             stateLabelKey: 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE',
             periodLabelKey: 'PREMIUM_PAGE.OVERVIEW.ENDS_ON',
-            showCancelAtPeriodEndBanner: true,
+            showRenewalOffNotice: true,
         });
     });
 
@@ -72,7 +72,7 @@ describe('premium access view mapper', () => {
             copyState: {
                 stateLabelKey: 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE',
                 periodLabelKey: 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
-                showCancelAtPeriodEndBanner: false,
+                showRenewalOffNotice: false,
             },
             badges: {
                 planLabelKey: 'PREMIUM_PAGE.PLANS.YEARLY.TITLE',

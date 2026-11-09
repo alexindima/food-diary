@@ -1,12 +1,27 @@
 <fd-ui-card class="premium-access-page__card" density="profile">
-    <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.SUPPORT.TITLE' | translate }}</h2>
-    <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-        {{ 'PREMIUM_PAGE.SUPPORT.PAYMENT_HELP' | translate }}
-    </p>
-    <p class="premium-access-page__text fd-ui-body-sm">{{ 'PREMIUM_PAGE.SUPPORT.MANAGEMENT_HELP' | translate }}</p>
-    <a class="premium-access-page__link" [href]="supportEmailHref">{{ supportEmail }}</a>
-    <div id="stars-subscription-terms" class="fd-stack fd-gap-sm">
-        <h3 class="fd-ui-card-title">{{ 'PREMIUM_PAGE.STARS.TERMS_TITLE' | translate }}</h3>
+    <fd-ui-button
+        #termsToggle
+        variant="secondary"
+        fill="text"
+        fullWidth
+        stretchContent
+        ariaControls="premium-subscription-terms"
+        [ariaExpanded]="expanded()"
+        (click)="expanded.set(!expanded())"
+    >
+        <span class="premium-access-page__disclosure fd-row fd-align-center fd-justify-between fd-gap-sm">
+            <span>{{ 'PREMIUM_PAGE.SUPPORT.DISCLOSURE_TITLE' | translate }}</span>
+            <fd-ui-icon [name]="expanded() ? 'expand_less' : 'expand_more'" />
+        </span>
+    </fd-ui-button>
+    <div id="premium-subscription-terms" class="fd-stack fd-gap-sm" [hidden]="!expanded()">
+        <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.STARS.TERMS_TITLE' | translate }}</h2>
         <p class="premium-access-page__text fd-ui-body-sm">{{ 'PREMIUM_PAGE.STARS.TERMS_DETAIL' | translate }}</p>
+        <h3 class="premium-access-page__title fd-ui-card-title">{{ 'PREMIUM_PAGE.SUPPORT.TITLE' | translate }}</h3>
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+            {{ 'PREMIUM_PAGE.SUPPORT.PAYMENT_HELP' | translate }}
+        </p>
+        <p class="premium-access-page__text fd-ui-body-sm">{{ 'PREMIUM_PAGE.SUPPORT.MANAGEMENT_HELP' | translate }}</p>
+        <a class="premium-access-page__link" [href]="supportEmailHref">{{ supportEmail }}</a>
     </div>
 </fd-ui-card>

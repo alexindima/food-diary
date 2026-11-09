@@ -28,16 +28,20 @@ const activeOverview: BillingOverview = {
 };
 
 describe('Subscription overview actions', () => {
-    it('opens self-service management for an unpaid account without Premium access', async () => {
-        const fixture = await renderOverviewAsync({ ...activeOverview, isPremium: false, subscriptionStatus: 'unpaid' });
+    it.each([
+        { subscriptionStatus: 'unpaid', isPremium: false, hint: 'PAYMENT_ISSUE_WITHOUT_ACCESS' },
+        { subscriptionStatus: 'past_due', isPremium: true, hint: 'PAYMENT_ISSUE_WITH_ACCESS' },
+    ])('offers payment repair for $subscriptionStatus with Premium access=$isPremium', async ({ hint, ...state }) => {
+        const fixture = await renderOverviewAsync({ ...activeOverview, ...state });
         const manage = vi.fn();
         fixture.componentInstance.manageBilling.subscribe(manage);
-        const button = host(fixture).querySelector<HTMLButtonElement>('button');
+        const button = host(fixture).querySelector<HTMLButtonElement>('fd-ui-button:not([hidden]) button');
 
-        expect(button?.textContent).toContain('PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION');
+        expect(button?.textContent).toContain('PREMIUM_PAGE.OVERVIEW.FIX_PAYMENT_ACTION');
         button?.click();
         expect(manage).toHaveBeenCalledOnce();
-        expect(host(fixture).textContent).toContain('PREMIUM_PAGE.STATUS.UNPAID');
+        expect(host(fixture).textContent).toContain('PREMIUM_PAGE.STATUS.PAYMENT_ISSUE');
+        expect(host(fixture).textContent).toContain(`PREMIUM_PAGE.OVERVIEW.${hint}`);
     });
 
     it('explains how to change access managed outside the portal', async () => {
@@ -62,9 +66,11 @@ describe('Subscription renewal details', () => {
         const fixture = await renderOverviewAsync({ ...activeOverview, cancelAtPeriodEnd: true, renewalEnabled: false });
         const text = host(fixture).textContent;
 
-        expect(text).toContain('PREMIUM_PAGE.OVERVIEW.ENDS_ON');
+        expect(text).toContain('PREMIUM_PAGE.OVERVIEW.ACCESS_UNTIL');
         expect(text).toContain('Dec 1, 2026');
-        expect(text).toContain('PREMIUM_PAGE.OVERVIEW.RENEWAL_OFF');
+        expect(text).toContain('PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE');
+        expect(text).not.toContain('PREMIUM_PAGE.OVERVIEW.RENEWAL_OFF');
+        expect(text).not.toContain('PREMIUM_PAGE.OVERVIEW.PERIOD');
         expect(text).not.toContain('PREMIUM_PAGE.OVERVIEW.NEXT_CHARGE');
     });
 
@@ -80,8 +86,49 @@ describe('Subscription renewal details', () => {
 
         expect(text).toContain('PREMIUM_PAGE.OVERVIEW.RENEWAL_TRIAL');
         expect(text).toContain('PREMIUM_PAGE.OVERVIEW.TRIAL_ENDS_ON');
+        expect(text).toContain('PREMIUM_PAGE.STATUS.TRIALING');
         expect(text).not.toContain('PREMIUM_PAGE.OVERVIEW.SUPPORT_MANAGED');
         expect(text).not.toContain('Paddle');
+    });
+
+    it('keeps paid access active with a quiet renewal-off message after cancellation', async () => {
+        const fixture = await renderOverviewAsync({
+            ...activeOverview,
+            subscriptionStatus: 'canceled',
+            cancelAtPeriodEnd: true,
+            renewalEnabled: false,
+        });
+        const badge = host(fixture).querySelector('.fd-ui-pill');
+
+        expect(badge?.textContent).toContain('PREMIUM_PAGE.STATUS.ACCESS_ACTIVE');
+        expect(badge?.classList.contains('fd-ui-pill--success')).toBe(true);
+        expect(host(fixture).querySelector('.premium-access-page__renewal-note')?.textContent).toContain(
+            'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE',
+        );
+        expect(host(fixture).querySelector('fd-notice-banner')).toBeNull();
+    });
+
+    it('shows expired access without promising that Premium continues', async () => {
+        const fixture = await renderOverviewAsync({
+            ...activeOverview,
+            isPremium: false,
+            subscriptionStatus: 'canceled',
+            cancelAtPeriodEnd: true,
+            renewalEnabled: false,
+        });
+
+        const resumeButton = host(fixture).querySelector<HTMLButtonElement>('fd-ui-button[hidden] button');
+        expect(host(fixture).textContent).toContain('PREMIUM_PAGE.OVERVIEW.SUBSCRIPTION_ENDED');
+        expect(host(fixture).querySelector('.premium-access-page__renewal-note')).toBeNull();
+        expect(host(fixture).querySelector('.fd-ui-pill--success')).toBeNull();
+        expect(resumeButton?.textContent).toContain('PREMIUM_PAGE.OVERVIEW.RESUME_ACTION');
+
+        const resume = vi.fn();
+        fixture.componentInstance.resumeSubscription.subscribe(resume);
+        fixture.componentRef.setInput('plansAvailable', true);
+        fixture.detectChanges();
+        host(fixture).querySelector<HTMLButtonElement>('fd-ui-button:not([hidden]) button')?.click();
+        expect(resume).toHaveBeenCalledOnce();
     });
 });
 

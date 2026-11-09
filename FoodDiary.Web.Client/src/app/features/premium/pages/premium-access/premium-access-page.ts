@@ -1,5 +1,15 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    ElementRef,
+    inject,
+    PLATFORM_ID,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -19,6 +29,7 @@ import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import type { BillingOverview, BillingPlan, BillingProvider } from '../../../../shared/models/billing.models';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-element-into-view';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
 import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
 import { PremiumPlanPricingFacade } from '../../lib/premium-plan-pricing.facade';
@@ -77,6 +88,7 @@ export class PremiumAccessPageComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     private readonly isBrowser = isPlatformBrowser(this.platformId);
+    private readonly plansCard = viewChild<PremiumPlansCardComponent, ElementRef<HTMLElement>>('plansCard', { read: ElementRef });
 
     protected readonly overview = signal<BillingOverview | null>(null);
     protected readonly isLoading = signal(true);
@@ -183,6 +195,14 @@ export class PremiumAccessPageComponent {
 
     protected async startCheckoutFromViewAsync(request: PremiumCheckoutRequest): Promise<void> {
         await this.startCheckoutAsync(request.plan, request.provider);
+    }
+
+    protected showRenewalPlans(): void {
+        const plans = this.plansCard()?.nativeElement;
+        if (plans !== undefined) {
+            plans.focus({ preventScroll: true });
+            scrollElementIntoView(plans);
+        }
     }
 
     protected async startTrialAsync(): Promise<void> {

@@ -7544,7 +7544,7 @@
             "CHECKOUT_CANCELED_MESSAGE": "No payment was charged. You can return anytime and choose a plan again.",
             "TRIAL_STARTED_MESSAGE": "Your 7-day Premium trial is active.",
             "CANCEL_AT_PERIOD_END_TITLE": "Subscription ends later",
-            "CANCEL_AT_PERIOD_END_MESSAGE": "Auto-renewal is disabled. Premium remains active until the end of the current period."
+            "CANCEL_AT_PERIOD_END_MESSAGE": "Auto-renewal is off. Your access continues until the end of the paid period."
         },
         "OVERVIEW": {
             "TITLE": "Current plan",
@@ -7554,11 +7554,11 @@
             "RENEWS_ON": "Renews on",
             "TRIAL_ENDS_ON": "Trial ends on",
             "ENDS_ON": "Access ends on",
-            "MANAGE_HINT": "Use the buttons above to manage your subscription and payments.",
-            "TRIAL_HINT": "Start a 7-day trial without a card and try every Premium AI feature.",
+            "MANAGE_HINT": "Manage your subscription and payments below.",
+            "TRIAL_HINT": "Try personalized recommendations, advanced analytics, and Premium AI reports.",
             "CHECKOUT_HINT": "Choose a plan below to start Premium through the payment form.",
             "CHECKOUT_UNAVAILABLE_HINT": "Premium checkout is temporarily unavailable.",
-            "START_TRIAL_ACTION": "Start 7-day trial",
+            "START_TRIAL_ACTION": "Start for free",
             "MANAGE_ACTION": "Manage or cancel subscription",
             "ACCESS_HINT": "Premium features are available for your account.",
             "PROVIDER": "Billed through",
@@ -7569,7 +7569,23 @@
             "RENEWAL_TRIAL": "No automatic charges",
             "PERIOD_START": "Current period started",
             "NEXT_CHARGE": "Next payment attempt",
-            "SUPPORT_MANAGED": "Contact us to change or cancel access arranged through support."
+            "SUPPORT_MANAGED": "Contact us to change or cancel access arranged through support.",
+            "PREMIUM_TITLE": "FoodDiary Premium",
+            "FREE_TITLE": "Free plan",
+            "PLAN": "Plan",
+            "PERIOD": "Current period",
+            "ACCESS_UNTIL": "Access until",
+            "PERIOD_END": "Current period ends on",
+            "TRIAL_OFFER_TITLE": "7 days free",
+            "TRIAL_NO_CHARGES": "No card or automatic charges.",
+            "SUBSCRIPTION_ENDED": "Subscription ended",
+            "PREVIOUS_PERIOD": "Previous period",
+            "RESUME_HINT": "Restart your subscription to use Premium features again.",
+            "RESUME_ACTION": "Restart Premium",
+            "PAYMENT_ISSUE_WITH_ACCESS": "We couldn't renew Premium. You still have access. Check your payment method to renew your subscription.",
+            "PAYMENT_ISSUE_WITHOUT_ACCESS": "We couldn't renew Premium. Check your payment method to restore access.",
+            "FIX_PAYMENT_ACTION": "Fix payment",
+            "PAYMENT_HELP_ACTION": "Get payment help"
         },
         "STATUS": {
             "ACTIVE": "Active",
@@ -7579,7 +7595,9 @@
             "UNPAID": "Unpaid",
             "INCOMPLETE": "Incomplete",
             "NONE": "Free plan",
-            "ACCESS_ACTIVE": "Access active"
+            "ACCESS_ACTIVE": "Access active",
+            "EXPIRED": "Expired",
+            "PAYMENT_ISSUE": "Payment issue"
         },
         "PLANS": {
             "TITLE": "Choose a plan",
@@ -7605,19 +7623,26 @@
             }
         },
         "BENEFITS": {
-            "TITLE": "What Premium includes",
-            "SUBTITLE": "Premium is positioned around guidance and interpretation, not just raw logging.",
-            "ITEM_1": "Adaptive Coach recommendations based on your diary and body trends",
-            "ITEM_2": "TDEE insights and calorie adjustment guidance",
-            "ITEM_3": "Weekly review with personalized summaries",
-            "ITEM_4": "Fasting insights and recurring pattern detection",
-            "ITEM_5": "Advanced analytics and longer history",
-            "ITEM_6": "AI-powered summaries plus dietologist collaboration tools"
+            "TITLE": "Your Premium features",
+            "OFFER_TITLE": "What’s included in Premium",
+            "COACH": {
+                "TITLE": "Personal recommendations",
+                "DESCRIPTION": "Adaptive Coach reviews your diary and body trends to help you understand when to adjust your calorie target."
+            },
+            "ANALYTICS": {
+                "TITLE": "Deeper insights",
+                "DESCRIPTION": "More history, fasting analysis and recurring habits help you see what works for you."
+            },
+            "REPORTS": {
+                "TITLE": "Smart reports",
+                "DESCRIPTION": "Weekly takeaways, AI summaries and tools for working with your dietitian."
+            }
         },
         "SUPPORT": {
             "TITLE": "Need help with payments or your subscription?",
             "PAYMENT_HELP": "Questions about Paddle or Telegram Stars payments? Email us with the payment date and receipt ID. Never send passwords or sign-in codes.",
-            "MANAGEMENT_HELP": "If you cannot open subscription management or cancel your subscription, we can help."
+            "MANAGEMENT_HELP": "If you cannot open subscription management or cancel your subscription, we can help.",
+            "DISCLOSURE_TITLE": "Subscription terms and help"
         },
         "TOUR": {
             "START_TOUR": "Show subscription tips",
@@ -7658,14 +7683,16 @@
             "PERIOD_MESSAGE": "Auto-renewal will be turned off. Premium and AI features will remain available until the end of the current period. We will show the exact date after Paddle confirms cancellation."
         },
         "STARS": {
-            "SUBSCRIBE": "Subscribe for {{stars}} Stars / 30 days",
-            "TERMS": "Stars renew automatically every 30 days. You can cancel renewal in Telegram or here; access remains until the paid period ends. By subscribing you accept the subscription terms.",
+            "SUBSCRIBE": "Subscribe to Premium",
+            "PRICE_INTERVAL": "Stars / 30 days",
+            "TERMS": "Renews automatically every 30 days. You can turn off renewal in FoodDiary or Telegram.",
             "TERMS_LINK": "Read the terms",
             "PENDING": "Payment is being confirmed. Premium will appear after server confirmation; refresh this page if needed.",
             "TERMS_TITLE": "Telegram Stars subscription terms",
             "TERMS_DETAIL": "Premium applies to the FoodDiary account used for checkout. Telegram charges the displayed Stars amount automatically every 30 days while renewal is enabled and sufficient Stars are available. Cancel renewal here or in Telegram to stop future charges; access remains until the paid period ends. Contact payment support below about refunds. A refund of the current payment removes access for that period and cancels future renewal. Refunds are returned in Stars. Telegram support does not handle FoodDiary purchases.",
             "TITLE": "Premium for 30 days",
-            "ACCESS_HINT": "Access lasts until the end of the paid period. Manage automatic renewal here or in Telegram."
+            "ACCESS_HINT": "Access lasts until the end of the paid period. Manage automatic renewal here or in Telegram.",
+            "PERIOD": "30 days"
         }
     },
     "LESSONS": {

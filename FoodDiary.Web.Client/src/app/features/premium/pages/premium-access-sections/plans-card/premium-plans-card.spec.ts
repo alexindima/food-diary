@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { PremiumPlanCardViewModel } from '../../premium-access/premium-access-lib/premium-access.types';
+import { buildPremiumPlanCards } from '../../premium-access/premium-access-lib/premium-access-view.mapper';
 import { PremiumPlansCardComponent } from './premium-plans-card';
 
 describe('PremiumPlansCardComponent', () => {
@@ -56,6 +57,23 @@ describe('PremiumPlansCardComponent', () => {
             ?.click();
         expect(host.textContent).toContain('PREMIUM_PAGE.PLANS.PRICE_UNAVAILABLE');
         expect(retry).toHaveBeenCalledOnce();
+    });
+
+    it('shows the Stars amount outside the purchase button and keeps the monthly Stars checkout action', () => {
+        const starsPrice = 500;
+        const { component, fixture } = setupComponent(buildPremiumPlanCards(['TelegramStars'], null));
+        fixture.componentRef.setInput('starsPrice', starsPrice);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const checkout = vi.fn();
+        component.checkout.subscribe(checkout);
+        const button = host.querySelector<HTMLButtonElement>('article button');
+
+        expect(host.querySelector('fd-premium-plan-price strong')?.textContent).toBe(String(starsPrice));
+        expect(button?.textContent).toContain('PREMIUM_PAGE.STARS.SUBSCRIBE');
+        expect(button?.textContent).not.toContain(String(starsPrice));
+        button?.click();
+        expect(checkout).toHaveBeenCalledWith({ plan: 'monthly', provider: 'TelegramStars' });
     });
 });
 

@@ -15,7 +15,6 @@
     <fd-page-body>
         <fd-premium-access-banners
             [checkoutReturnState]="checkoutReturnState()"
-            [overviewCopyState]="overviewViewModel().copyState"
             [errorMessage]="errorMessage()"
             (retry)="reloadOverviewAsync()"
         />
@@ -27,26 +26,35 @@
             [trialLoading]="trialLoading()"
             [isLoading]="isLoading()"
             [overview]="overview()"
+            [plansAvailable]="showPlans()"
             (overviewChanged)="overview.set($event)"
             (manageBilling)="openPortalAsync()"
             (startTrial)="startTrialAsync()"
+            (resumeSubscription)="showRenewalPlans()"
+            (readSupport)="support.expanded.set(true)"
         />
 
         @if (showPlans()) {
             <fd-premium-plans-card
+                #plansCard
                 data-tour-id="premium-plans"
+                role="region"
+                tabindex="-1"
+                [attr.aria-label]="'PREMIUM_PAGE.PLANS.TITLE' | translate"
                 [cards]="planCards()"
                 [prices]="pricing.prices()"
                 [pricesLoading]="pricing.loading()"
                 [pricesUnavailable]="pricing.unavailable()"
                 [starsPrice]="overview()?.telegramStarsPrice ?? null"
+                [preferTrial]="overviewViewModel().showStartTrial && overviewViewModel().isFreePlan"
                 (retryPrices)="reloadOverviewAsync()"
                 (checkout)="startCheckoutFromViewAsync($event)"
+                (readTerms)="support.expanded.set(true)"
             />
         }
 
-        <fd-premium-support-card />
+        <fd-premium-benefits-card data-tour-id="premium-benefits" [accessActive]="isPremium()" />
 
-        <fd-premium-benefits-card data-tour-id="premium-benefits" />
+        <fd-premium-support-card #support />
     </fd-page-body>
 </section>

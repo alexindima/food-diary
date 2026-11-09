@@ -1,17 +1,18 @@
 <fd-ui-card class="premium-access-page__card" density="profile">
-    <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
-        <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.BENEFITS.TITLE' | translate }}</h2>
-        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-            {{ 'PREMIUM_PAGE.BENEFITS.SUBTITLE' | translate }}
-        </p>
-    </div>
-
-    <ul class="premium-access-page__benefits fd-grid fd-gap-card-header fd-ui-body">
-        <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_1' | translate }}</li>
-        <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_2' | translate }}</li>
-        <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_3' | translate }}</li>
-        <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_4' | translate }}</li>
-        <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_5' | translate }}</li>
-        <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_6' | translate }}</li>
+    <h2 class="premium-access-page__title fd-ui-section-title">
+        {{ (accessActive() ? 'PREMIUM_PAGE.BENEFITS.TITLE' : 'PREMIUM_PAGE.BENEFITS.OFFER_TITLE') | translate }}
+    </h2>
+    <ul class="premium-access-page__benefits fd-stack fd-gap-sm">
+        @for (benefit of benefits; track benefit.key) {
+            <li class="premium-access-page__benefit fd-row fd-align-start fd-gap-sm">
+                <fd-ui-icon class="premium-access-page__accent" [name]="benefit.icon" />
+                <div class="fd-stack fd-gap-xxs">
+                    <h3 class="premium-access-page__title fd-ui-card-title">{{ `${benefit.key}.TITLE` | translate }}</h3>
+                    <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+                        {{ `${benefit.key}.DESCRIPTION` | translate }}
+                    </p>
+                </div>
+            </li>
+        }
     </ul>
 </fd-ui-card>

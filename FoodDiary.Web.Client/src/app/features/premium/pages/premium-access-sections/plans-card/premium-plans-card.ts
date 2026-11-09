@@ -21,10 +21,22 @@ export class PremiumPlansCardComponent {
     public readonly pricesLoading = input(false);
     public readonly pricesUnavailable = input(false);
     public readonly starsPrice = input<number | null>(null);
+    public readonly preferTrial = input(false);
     protected readonly hasPrices = computed(() => Object.keys(this.prices()).length > 0);
     protected readonly showProviderChoices = computed(() => this.cards().some(card => card.providerOptions.length > 1));
     protected readonly checkoutDisabled = computed(() => this.cards().some(card => card.isLoading));
+    protected readonly singlePlan = computed(() => this.cards().length === 1);
+    protected readonly hasStarsPlan = computed(() => this.cards().some(card => this.supportsStars(card)));
 
     public readonly checkout = output<PremiumCheckoutRequest>();
     public readonly retryPrices = output();
+    public readonly readTerms = output();
+
+    protected starsPriceFor(card: PremiumPlanCardViewModel): number | null {
+        return this.supportsStars(card) ? this.starsPrice() : null;
+    }
+
+    private supportsStars(card: PremiumPlanCardViewModel): boolean {
+        return card.providerOptions.some(option => option.provider.toLowerCase() === 'telegramstars');
+    }
 }

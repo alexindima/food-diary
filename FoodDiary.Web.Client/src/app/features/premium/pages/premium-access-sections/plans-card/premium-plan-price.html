@@ -1,4 +1,10 @@
 <div class="fd-grid fd-gap-card-header" role="status" aria-live="polite" [attr.aria-busy]="loading()">
+    @if (starsPrice(); as stars) {
+        <p class="premium-access-page__text">
+            <strong class="fd-ui-section-title">{{ stars }}</strong>
+            <span class="fd-ui-body-sm"> {{ 'PREMIUM_PAGE.STARS.PRICE_INTERVAL' | translate }}</span>
+        </p>
+    }
     @if (loading()) {
         <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
             {{ 'PREMIUM_PAGE.PLANS.PRICE_LOADING' | translate }}

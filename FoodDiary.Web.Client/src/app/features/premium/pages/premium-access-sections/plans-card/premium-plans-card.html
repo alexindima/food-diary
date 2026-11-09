@@ -1,16 +1,17 @@
 <fd-ui-card class="premium-access-page__card" density="profile">
     <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
         <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.PLANS.TITLE' | translate }}</h2>
-        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm" [hidden]="singlePlan()">
             {{ 'PREMIUM_PAGE.PLANS.SUBTITLE' | translate }}
         </p>
     </div>
 
-    <div class="premium-access-page__plans fd-grid fd-gap-card-content">
+    <div class="premium-access-page__plans fd-grid fd-gap-card-content" [class.premium-access-page__plans--single]="singlePlan()">
         @for (card of cards(); track card.plan) {
             <article
-                class="premium-access-page__plan fd-grid fd-gap-card-profile"
+                class="premium-access-page__plan fd-grid fd-gap-sm"
                 [class.premium-access-page__plan--featured]="card.isFeatured"
+                [class.premium-access-page__plan--single]="singlePlan()"
             >
                 <div class="premium-access-page__plan-copy fd-grid fd-gap-card-header">
                     @if (card.kickerKey) {
@@ -22,10 +23,11 @@
                     <fd-premium-plan-price
                         [plan]="card.plan"
                         [price]="prices()[card.plan] ?? null"
+                        [starsPrice]="starsPriceFor(card)"
                         [loading]="pricesLoading()"
                         [showProvider]="showProviderChoices()"
                     />
-                    <p class="premium-access-page__text fd-ui-body">{{ card.descriptionKey | translate }}</p>
+                    <p class="premium-access-page__text fd-ui-body" [hidden]="singlePlan()">{{ card.descriptionKey | translate }}</p>
                 </div>
                 @if (showProviderChoices()) {
                     <div class="premium-access-page__provider-actions fd-grid fd-gap-actions">
@@ -39,28 +41,32 @@
                                 [disabledReason]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
                                 (click)="checkout.emit({ plan: card.plan, provider: provider.provider })"
                             >
-                                {{ provider.actionKey | translate: { provider: provider.label, stars: starsPrice() } }}
+                                {{ provider.actionKey | translate: { provider: provider.label } }}
                             </fd-ui-button>
                         }
                     </div>
                 } @else {
                     <fd-ui-button
                         fullWidth
+                        [variant]="preferTrial() ? 'secondary' : 'primary'"
+                        [fill]="preferTrial() ? 'outline' : 'solid'"
                         [loading]="card.isLoading"
                         [disabled]="checkoutDisabled()"
                         [disabledReason]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
                         (click)="checkout.emit({ plan: card.plan, provider: card.providerOptions[0]?.provider })"
                     >
-                        {{ card.actionKey | translate: { stars: starsPrice() } }}
+                        {{ card.actionKey | translate }}
                     </fd-ui-button>
                 }
             </article>
         }
     </div>
-    <p class="fd-ui-body-sm" [hidden]="starsPrice() === null">
-        {{ 'PREMIUM_PAGE.STARS.TERMS' | translate }}
-        <a href="#stars-subscription-terms">{{ 'PREMIUM_PAGE.STARS.TERMS_LINK' | translate }}</a>
-    </p>
+    <div class="fd-stack fd-gap-xxs" [hidden]="!hasStarsPlan()">
+        <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">{{ 'PREMIUM_PAGE.STARS.TERMS' | translate }}</p>
+        <fd-ui-button variant="secondary" fill="text" size="sm" (click)="readTerms.emit()">
+            {{ 'PREMIUM_PAGE.STARS.TERMS_LINK' | translate }}
+        </fd-ui-button>
+    </div>
     <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm" [hidden]="!hasPrices()">
         {{ 'PREMIUM_PAGE.PLANS.PRICE_NOTE' | translate }}
     </p>

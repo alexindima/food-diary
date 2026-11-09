@@ -14,6 +14,7 @@ import type { PremiumPlanPrice } from '../../../models/premium-plan-price';
 export class PremiumPlanPriceComponent {
     public readonly plan = input.required<BillingPlan>();
     public readonly price = input<PremiumPlanPrice | null>(null);
+    public readonly starsPrice = input<number | null>(null);
     public readonly loading = input(false);
     public readonly showProvider = input(false);
     protected readonly periodKey = computed(() =>

@@ -8,10 +8,17 @@ export type PremiumOverviewBadgesViewModel = {
 export type PremiumOverviewCopyState = {
     stateLabelKey: string;
     periodLabelKey: string;
-    showCancelAtPeriodEndBanner: boolean;
+    showRenewalOffNotice: boolean;
 };
 
 export type PremiumOverviewCardViewModel = {
+    titleKey: string;
+    accessActive: boolean;
+    isFreePlan: boolean;
+    subscriptionEnded: boolean;
+    paymentIssue: boolean;
+    statusNeedsAttention: boolean;
+    accessPeriodLabelKey: string;
     copyState: PremiumOverviewCopyState;
     badges: PremiumOverviewBadgesViewModel;
     currentPeriodEndLabel: string | null;

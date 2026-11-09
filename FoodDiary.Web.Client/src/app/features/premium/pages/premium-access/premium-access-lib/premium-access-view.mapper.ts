@@ -17,28 +17,69 @@ export function buildPremiumOverviewCardViewModel(
 ): PremiumOverviewCardViewModel {
     const showManageBilling = overview?.manageBillingAvailable ?? false;
     const showStartTrial = !showManageBilling && !isPremium && (overview?.canStartPremiumTrial ?? false);
+    const accessState = buildPremiumAccessState(overview, isPremium);
 
     return {
+        ...accessState,
         copyState: buildPremiumOverviewCopyState(overview, isPremium),
         badges: buildPremiumOverviewBadges(overview, isPremium),
         currentPeriodEndLabel: dates.periodEnd,
-        hintKey:
-            isPremium && !showManageBilling
-                ? getAccessHintKey(overview)
-                : getPremiumOverviewHintKey(showManageBilling, showStartTrial, checkoutAvailable),
+        hintKey: getOverviewHintKey(overview, accessState, { showManageBilling, showStartTrial, checkoutAvailable }),
         showManageBilling,
         showStartTrial,
-        details: buildSubscriptionDetails(overview, dates),
+        details: buildSubscriptionDetails(overview, dates, accessState),
     };
+}
+
+function buildPremiumAccessState(
+    overview: BillingOverview | null,
+    isPremium: boolean,
+): Pick<
+    PremiumOverviewCardViewModel,
+    'titleKey' | 'accessActive' | 'isFreePlan' | 'subscriptionEnded' | 'paymentIssue' | 'statusNeedsAttention' | 'accessPeriodLabelKey'
+> {
+    const status = overview?.subscriptionStatus ?? null;
+    const isFreePlan = !isPremium && status === null;
+    const subscriptionEnded = !isPremium && (status === 'canceled' || status === 'active');
+    const paymentIssue = status === 'past_due' || status === 'unpaid';
+    return {
+        titleKey: isFreePlan ? 'PREMIUM_PAGE.OVERVIEW.FREE_TITLE' : 'PREMIUM_PAGE.OVERVIEW.PREMIUM_TITLE',
+        accessActive: isPremium,
+        isFreePlan,
+        subscriptionEnded,
+        paymentIssue,
+        statusNeedsAttention: paymentIssue || status === 'incomplete',
+        accessPeriodLabelKey: getAccessPeriodLabelKey(overview, isPremium, subscriptionEnded),
+    };
+}
+
+function getAccessPeriodLabelKey(overview: BillingOverview | null, isPremium: boolean, subscriptionEnded: boolean): string {
+    if (overview?.premiumTrialActive === true) {
+        return 'PREMIUM_PAGE.OVERVIEW.TRIAL_ENDS_ON';
+    }
+    if (isPremium) {
+        return 'PREMIUM_PAGE.OVERVIEW.ACCESS_UNTIL';
+    }
+    return subscriptionEnded ? 'PREMIUM_PAGE.OVERVIEW.SUBSCRIPTION_ENDED' : 'PREMIUM_PAGE.OVERVIEW.PERIOD_END';
 }
 
 export function buildPremiumOverviewBadges(overview: BillingOverview | null, isPremium: boolean): PremiumOverviewBadgesViewModel {
     const plan = overview?.plan ?? null;
-    const status = overview?.subscriptionStatus ?? null;
+    const status = overview?.premiumTrialActive === true ? 'trialing' : (overview?.subscriptionStatus ?? null);
     return {
         planLabelKey: isPremium && plan !== null ? getPremiumPlanLabelKey(plan) : null,
-        statusLabelKey: isPremium && status === null ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : getPremiumStatusLabelKey(status),
+        statusLabelKey: getPremiumAccessStatusLabelKey(status, isPremium),
     };
+}
+
+function getPremiumAccessStatusLabelKey(status: string | null, isPremium: boolean): string {
+    if (status === 'active' && !isPremium) {
+        return 'PREMIUM_PAGE.STATUS.EXPIRED';
+    }
+    if (status === 'canceled') {
+        return isPremium ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : 'PREMIUM_PAGE.STATUS.EXPIRED';
+    }
+    return isPremium && status === null ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : getPremiumStatusLabelKey(status);
 }
 
 export function buildPremiumOverviewCopyState(overview: BillingOverview | null, isPremium: boolean): PremiumOverviewCopyState {
@@ -50,7 +91,7 @@ export function buildPremiumOverviewCopyState(overview: BillingOverview | null, 
               ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE'
               : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
         periodLabelKey: getPeriodLabelKey(overview),
-        showCancelAtPeriodEndBanner: overview?.cancelAtPeriodEnd ?? false,
+        showRenewalOffNotice: overview?.cancelAtPeriodEnd ?? false,
     };
 }
 
@@ -74,24 +115,63 @@ function getPeriodLabelKey(overview: BillingOverview | null): string {
     return 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON';
 }
 
-function buildSubscriptionDetails(overview: BillingOverview | null, dates: PremiumSubscriptionDates): PremiumSubscriptionDetail[] {
-    if (overview === null) {
+function buildSubscriptionDetails(
+    overview: BillingOverview | null,
+    dates: PremiumSubscriptionDates,
+    state: ReturnType<typeof buildPremiumAccessState>,
+): PremiumSubscriptionDetail[] {
+    if (overview === null || state.isFreePlan) {
         return [];
     }
 
     const details: PremiumSubscriptionDetail[] = [];
+    if (overview.plan !== null) {
+        details.push({
+            labelKey: 'PREMIUM_PAGE.OVERVIEW.PLAN',
+            value: getSubscriptionPlanLabelKey(overview.plan, overview.subscriptionProvider),
+            translateValue: true,
+        });
+    }
     const provider = overview.subscriptionProvider?.trim() ?? '';
     if (provider.length > 0) {
         details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.PROVIDER', value: getPremiumProviderLabel(provider), translateValue: false });
     }
-    details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.RENEWAL', value: getRenewalLabelKey(overview), translateValue: true });
-    if (dates.periodStart !== null) {
-        details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.PERIOD_START', value: dates.periodStart, translateValue: false });
+    return details.concat(buildScheduleDetails(overview, dates, state));
+}
+
+function buildScheduleDetails(
+    overview: BillingOverview,
+    dates: PremiumSubscriptionDates,
+    state: ReturnType<typeof buildPremiumAccessState>,
+): PremiumSubscriptionDetail[] {
+    const details: PremiumSubscriptionDetail[] = [];
+    if (!state.paymentIssue && !(state.accessActive && overview.cancelAtPeriodEnd)) {
+        details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.RENEWAL', value: getRenewalLabelKey(overview), translateValue: true });
+    }
+    const period = state.accessActive ? null : buildPeriodDetail(dates, state.subscriptionEnded);
+    if (period !== null) {
+        details.push(period);
     }
     if (dates.nextBillingAttempt !== null && shouldShowNextBillingAttempt(overview)) {
         details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.NEXT_CHARGE', value: dates.nextBillingAttempt, translateValue: false });
     }
     return details;
+}
+
+function getSubscriptionPlanLabelKey(plan: BillingPlan, provider: string | null): string {
+    return provider?.toLowerCase() === 'telegramstars' ? 'PREMIUM_PAGE.STARS.PERIOD' : getPremiumPlanLabelKey(plan);
+}
+
+function buildPeriodDetail(dates: PremiumSubscriptionDates, subscriptionEnded: boolean): PremiumSubscriptionDetail | null {
+    if (dates.periodStart === null) {
+        return null;
+    }
+    const periodLabelKey = subscriptionEnded ? 'PREMIUM_PAGE.OVERVIEW.PREVIOUS_PERIOD' : 'PREMIUM_PAGE.OVERVIEW.PERIOD';
+    return {
+        labelKey: dates.periodEnd === null ? 'PREMIUM_PAGE.OVERVIEW.PERIOD_START' : periodLabelKey,
+        value: dates.periodEnd === null ? dates.periodStart : `${dates.periodStart} — ${dates.periodEnd}`,
+        translateValue: false,
+    };
 }
 
 function shouldShowNextBillingAttempt(overview: BillingOverview): boolean {
@@ -141,7 +221,7 @@ export function buildPremiumProviderOption(provider: BillingProvider): PremiumPr
     return {
         provider,
         label: getPremiumProviderLabel(provider),
-        actionKey: provider.toLowerCase() === 'telegramstars' ? 'PREMIUM_PAGE.STARS.SUBSCRIBE' : 'PREMIUM_PAGE.PLANS.PAY_WITH',
+        actionKey: 'PREMIUM_PAGE.PLANS.PAY_WITH',
     };
 }
 
@@ -157,14 +237,12 @@ export function getPremiumStatusLabelKey(status: string | null): string {
         case 'trialing': {
             return 'PREMIUM_PAGE.STATUS.TRIALING';
         }
-        case 'past_due': {
-            return 'PREMIUM_PAGE.STATUS.PAST_DUE';
+        case 'past_due':
+        case 'unpaid': {
+            return 'PREMIUM_PAGE.STATUS.PAYMENT_ISSUE';
         }
         case 'canceled': {
             return 'PREMIUM_PAGE.STATUS.CANCELED';
-        }
-        case 'unpaid': {
-            return 'PREMIUM_PAGE.STATUS.UNPAID';
         }
         case 'incomplete': {
             return 'PREMIUM_PAGE.STATUS.INCOMPLETE';
@@ -198,7 +276,26 @@ export function getPremiumProviderLabel(provider: BillingProvider): string {
     }
 }
 
-function getPremiumOverviewHintKey(showManageBilling: boolean, showStartTrial: boolean, checkoutAvailable: boolean): string {
+function getOverviewHintKey(
+    overview: BillingOverview | null,
+    state: ReturnType<typeof buildPremiumAccessState>,
+    {
+        showManageBilling,
+        showStartTrial,
+        checkoutAvailable,
+    }: { showManageBilling: boolean; showStartTrial: boolean; checkoutAvailable: boolean },
+): string {
+    if (state.paymentIssue) {
+        return state.accessActive
+            ? 'PREMIUM_PAGE.OVERVIEW.PAYMENT_ISSUE_WITH_ACCESS'
+            : 'PREMIUM_PAGE.OVERVIEW.PAYMENT_ISSUE_WITHOUT_ACCESS';
+    }
+    if (checkoutAvailable && state.subscriptionEnded) {
+        return 'PREMIUM_PAGE.OVERVIEW.RESUME_HINT';
+    }
+    if (!showManageBilling && state.accessActive) {
+        return getAccessHintKey(overview);
+    }
     if (showManageBilling) {
         return 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT';
     }
