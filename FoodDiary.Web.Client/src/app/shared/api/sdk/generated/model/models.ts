@@ -192,6 +192,7 @@ export * from './repeat-meal-http-request';
 export * from './request-password-reset-http-request';
 export * from './resend-email-verification-http-request';
 export * from './restore-account-http-request';
+export * from './resume-telegram-operation-http-request';
 export * from './schedule-test-notification-http-request';
 export * from './scheduled-notification-http-response';
 export * from './sensitive-cycle-export-http-request';

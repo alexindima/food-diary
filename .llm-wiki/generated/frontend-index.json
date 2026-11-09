@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2820,
+    "typescriptFiles": 2821,
     "symbols": 885,
     "routes": 111,
     "features": 46,
@@ -7209,7 +7209,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-bot.service.ts",
-      "line": 58
+      "line": 66
     },
     {
       "name": "UsdaSdk",

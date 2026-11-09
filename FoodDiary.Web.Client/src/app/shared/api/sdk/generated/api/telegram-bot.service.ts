@@ -19,6 +19,8 @@ import { CheckpointTelegramOperationHttpRequest } from '../model/checkpoint-tele
 
 import { RegisterTelegramOperationHttpRequest } from '../model/register-telegram-operation-http-request';
 
+import { ResumeTelegramOperationHttpRequest } from '../model/resume-telegram-operation-http-request';
+
 import { TelegramBotAuthHttpRequest } from '../model/telegram-bot-auth-http-request';
 
 import { TelegramOperationLeaseHttpResponse } from '../model/telegram-operation-lease-http-response';
@@ -52,6 +54,12 @@ export interface PostAuthTelegramBotOperationsByOperationIdCheckpointRequestPara
 export interface PostAuthTelegramBotOperationsByOperationIdLeaseRequestParams {
     operationId: string;
     version: string;
+}
+
+export interface PostAuthTelegramBotOperationsByOperationIdResumeRequestParams {
+    operationId: string;
+    version: string;
+    resumeTelegramOperationHttpRequest?: ResumeTelegramOperationHttpRequest;
 }
 
 @Injectable()
@@ -458,6 +466,95 @@ export class TelegramBotSdk extends BaseService {
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<TelegramOperationLeaseHttpResponse>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/auth/telegram/bot/operations/{operationId}/resume
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAuthTelegramBotOperationsByOperationIdResume(
+        requestParameters: PostAuthTelegramBotOperationsByOperationIdResumeRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<void>;
+    public postAuthTelegramBotOperationsByOperationIdResume(
+        requestParameters: PostAuthTelegramBotOperationsByOperationIdResumeRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<void>>;
+    public postAuthTelegramBotOperationsByOperationIdResume(
+        requestParameters: PostAuthTelegramBotOperationsByOperationIdResumeRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<void>>;
+    public postAuthTelegramBotOperationsByOperationIdResume(
+        requestParameters: PostAuthTelegramBotOperationsByOperationIdResumeRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const operationId = requestParameters?.operationId;
+        if (operationId === null || operationId === undefined) {
+            throw new Error(
+                'Required parameter operationId was null or undefined when calling postAuthTelegramBotOperationsByOperationIdResume.',
+            );
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error(
+                'Required parameter version was null or undefined when calling postAuthTelegramBotOperationsByOperationIdResume.',
+            );
+        }
+        const resumeTelegramOperationHttpRequest = requestParameters?.resumeTelegramOperationHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/auth/telegram/bot/operations/${this.configuration.encodeParam({ name: 'operationId', value: operationId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/resume`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: resumeTelegramOperationHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

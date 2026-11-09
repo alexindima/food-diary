@@ -463,6 +463,7 @@
             "POST /api/v{version}/auth/telegram/bot/operations": "postAuthTelegramBotOperations",
             "POST /api/v{version}/auth/telegram/bot/operations/{operationId}/checkpoint": "postAuthTelegramBotOperationsByOperationIdCheckpoint",
             "POST /api/v{version}/auth/telegram/bot/operations/{operationId}/lease": "postAuthTelegramBotOperationsByOperationIdLease",
+            "POST /api/v{version}/auth/telegram/bot/operations/{operationId}/resume": "postAuthTelegramBotOperationsByOperationIdResume",
             "GET /api/v{version}/auth/telegram/bot/operations/ready": "getAuthTelegramBotOperationsReady"
         },
         "prefix": "/api/v{version}/auth/telegram/bot",
