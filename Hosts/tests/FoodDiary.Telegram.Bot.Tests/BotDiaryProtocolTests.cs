@@ -43,7 +43,7 @@ public sealed class BotDiaryProtocolTests {
         });
         using var http = new HttpClient(handler);
 
-        Assert.Equal(premium, await Client(http).HasPremiumAsync("token", CancellationToken.None));
+        Assert.Equal((premium, !premium), await Client(http).GetPremiumAccessAsync("token", CancellationToken.None));
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public sealed class BotDiaryProtocolTests {
         using var handler = new Handler(_ => Json(new { premiumTrialActive = false }));
         using var http = new HttpClient(handler);
 
-        await Assert.ThrowsAsync<JsonException>(() => Client(http).HasPremiumAsync("token", CancellationToken.None));
+        await Assert.ThrowsAsync<JsonException>(() => Client(http).GetPremiumAccessAsync("token", CancellationToken.None));
     }
 
     [Theory]

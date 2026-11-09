@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1801,
+    "candidateFields": 1804,
     "credential": 175,
-    "identity": 196,
+    "identity": 199,
     "health": 833,
     "financial": 170,
     "privateContent": 427,
-    "boundaryFiles": 238,
+    "boundaryFiles": 241,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 3
   },
@@ -8302,6 +8302,13 @@
       "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+      "line": 13
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/TelegramBotAuthHttpRequest.cs",
       "line": 9
     },
@@ -8951,6 +8958,13 @@
     },
     {
       "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommand.cs",
@@ -9137,6 +9151,13 @@
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
       "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs",
+      "line": 3
     },
     {
       "category": "identity",
@@ -12716,6 +12737,13 @@
       "fieldCount": 1
     },
     {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
       "categories": [
         "privateContent"
@@ -13526,6 +13554,13 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramBackupEmail/StartTelegramBackupEmailCommand.cs",
       "categories": [
         "identity"
@@ -13639,6 +13674,13 @@
         "identity"
       ],
       "fieldCount": 2
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs",

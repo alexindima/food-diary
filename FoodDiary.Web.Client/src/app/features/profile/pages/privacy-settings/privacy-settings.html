@@ -24,12 +24,18 @@
     @if (privacy.state()?.healthDeclinedAtUtc) {
         <fd-account-deletion-offer />
     }
-    @if (privacy.state()?.aiAcceptedAtUtc) {
+    @if (privacy.state(); as state) {
         <fd-ui-card>
             <h2>{{ 'AI_CONSENT.TITLE' | translate }}</h2>
-            <fd-ui-button type="button" variant="secondary" [loading]="privacy.busy()" (click)="withdrawAi()">{{
-                'PRIVACY_CHOICES.WITHDRAW' | translate
-            }}</fd-ui-button>
+            @if (state.aiAcceptedAtUtc) {
+                <fd-ui-button type="button" variant="secondary" [loading]="privacy.busy()" (click)="withdrawAi()">{{
+                    'PRIVACY_CHOICES.WITHDRAW' | translate
+                }}</fd-ui-button>
+            } @else {
+                <fd-ui-button type="button" [loading]="privacy.busy()" (click)="allowAiAsync()">{{
+                    'PRIVACY_CHOICES.REVIEW' | translate
+                }}</fd-ui-button>
+            }
         </fd-ui-card>
     }
     <a routerLink="/profile">{{ 'PRIVACY_CHOICES.ACCOUNT' | translate }}</a>

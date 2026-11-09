@@ -11,4 +11,5 @@ public sealed record BillingSubscriptionOverviewReadModel(
     DateTime? CurrentPeriodEndUtc,
     bool CancelAtPeriodEnd,
     DateTime? NextBillingAttemptUtc,
-    string? ExternalSubscriptionId = null);
+    string? ExternalSubscriptionId = null,
+    bool HasPremiumPaymentHistory = false);

@@ -73,18 +73,19 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         if (checkpoint.Stage is "failed" or "meal-saved" or "undo-complete" or "water-saved" or "statistics-ready" or "photo-notified") {
             return await FinishOperationAsync(operations, lease, incoming, checkpoint, cancellationToken);
         }
+        if (checkpoint.Stage is BotPhotoTrial.Offered) {
+            return await SendTrialOfferAsync(operations, lease, incoming, cancellationToken);
+        }
         bool firstPhotoAttempt = incoming.Kind is "photo" && checkpoint is { Stage: "received", UploadAttempt: 0 };
+        bool acceptingTrial = checkpoint.Stage is BotPhotoTrial.Accepted;
         using HttpClient http = clients.CreateClient(BotDiaryClient.ClientName);
         var diary = new BotDiaryClient(http, options);
         try {
             (string token, string? profileLanguage) = await diary.AuthenticateAsync(incoming.TelegramUserId, lease, cancellationToken);
-            if (string.Equals(incoming.Kind, "water", StringComparison.Ordinal)) {
-                if (lease.CreatedAtUtc == default || lease.CreatedAtUtc.Kind != DateTimeKind.Utc) {
-                    throw new InvalidDataException("A durable water operation timestamp is required.");
-                }
-                incoming = incoming with { OccurredAtUtc = lease.CreatedAtUtc };
+            if (acceptingTrial && !await diary.HasPhotoConsentsAsync(token, cancellationToken)) {
+                return await RequestTrialConsentAsync(operations, lease, incoming, cancellationToken);
             }
-            checkpoint = await AdvanceOperationAsync(diary, token, lease.OperationId, incoming, checkpoint, cancellationToken);
+            checkpoint = await AdvanceOperationAsync(diary, token, lease, incoming, checkpoint, cancellationToken);
             if (checkpoint.Stage is "statistics-ready") {
                 checkpoint = checkpoint with { StatisticsLanguage = profileLanguage };
             }
@@ -95,9 +96,9 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         } catch (InvalidDataException) {
             checkpoint = checkpoint with { Stage = "failed", Upload = null, ErrorCode = "InvalidImageOrIdentity" };
         }
-        bool ready = checkpoint.Stage is not ("recognizing" or "received");
+        bool ready = checkpoint.Stage is not ("recognizing" or "received") || (acceptingTrial && checkpoint.Stage is "received");
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
-        string state = JsonSerializer.Serialize(checkpoint);
+        string state = checkpoint.Stage is BotPhotoTrial.Offered ? BotPhotoTrial.OfferedCheckpoint : JsonSerializer.Serialize(checkpoint);
         if (!await operations.CheckpointAsync(lease, state, completed: false, ready ? now : now.Add(PollInterval), cancellationToken)) {
             return false;
         }
@@ -105,6 +106,43 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             return await SavePhotoProgressAsync(operations, id, incoming, checkpoint, state, cancellationToken);
         }
         return ready;
+    }
+
+    private async Task<bool> SendTrialOfferAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
+        CancellationToken cancellationToken) {
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        DateTime expires = lease.CreatedAtUtc.Add(BotPhotoTrial.OfferLifetime);
+        bool delivered = false;
+        if (now < expires) {
+            bool russian = BotMenu.IsRussian(incoming.Language);
+            string message = russian
+                ? "Попробуйте Premium бесплатно 7 дней. Бот распознает еду на этом фото и добавит её в дневник. Без карты и автопродления."
+                : "Try Premium free for 7 days. The bot will recognize this photo and add the food to your diary. No card or automatic renewal.";
+            delivered = await SendTerminalNoticeAsync(incoming.ChatId, message, BotPhotoTrial.Keyboard(options.Value, russian, lease.OperationId),
+                preview: null, cancellationToken);
+        }
+        await operations.CheckpointAsync(lease, BotPhotoTrial.OfferedCheckpoint, completed: !delivered, delivered ? expires : now, cancellationToken);
+        return false;
+    }
+
+    private async Task<bool> RequestTrialConsentAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
+        CancellationToken cancellationToken) {
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        DateTime expires = lease.CreatedAtUtc.Add(BotPhotoTrial.OfferLifetime);
+        bool russian = BotMenu.IsRussian(incoming.Language);
+        string message = russian ? "Проверьте в настройках согласия на обработку фото с помощью ИИ и данных дневника."
+            : "Review your consent for AI photo processing and diary data in settings.";
+        if (now < expires) {
+            message += russian ? " Затем снова нажмите «Начать 7 дней бесплатно»." : " Then tap Start 7 days free again.";
+        } else {
+            message += russian ? " Затем отправьте фото снова." : " Then send the photo again.";
+        }
+        InlineKeyboardMarkup? markup = BotMenu.Open(options.Value, incoming.Language, "/privacy-settings",
+            russian ? "Настройки конфиденциальности" : "Privacy settings");
+        bool delivered = await SendTerminalNoticeAsync(incoming.ChatId, message, markup, preview: null, cancellationToken);
+        bool keepOffer = delivered && now < expires;
+        await operations.CheckpointAsync(lease, BotPhotoTrial.OfferedCheckpoint, completed: !keepOffer, keepOffer ? expires : now, cancellationToken);
+        return false;
     }
 
     private async Task<bool> FinishOperationAsync(BotOperationClient operations, BotOperationLease lease, BotIncomingOperation incoming,
@@ -189,12 +227,12 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 : "Processing could not continue. Check your diary before sending again: the entry may already have been saved.";
         }
         InlineKeyboardMarkup? markup = errorCode is BotRecognitionFailure.PremiumRequired
-            ? BotMenu.Open(options.Value, incoming.Language, BotMenu.MealPath, russian ? "Добавить вручную" : "Add manually")
+            ? BotPhotoTrial.Keyboard(options.Value, russian)
             : null;
         return SendTerminalNoticeAsync(incoming.ChatId, message, markup, preview: null, cancellationToken);
     }
 
-    private async Task<BotPhotoCheckpoint> AdvanceOperationAsync(BotDiaryClient diary, string token, BotOperationId operationId,
+    private async Task<BotPhotoCheckpoint> AdvanceOperationAsync(BotDiaryClient diary, string token, BotOperationLease lease,
         BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         if (string.Equals(incoming.Kind, "statistics", StringComparison.Ordinal)) {
             BotDiaryStatistics statistics = await diary.GetStatisticsAsync(token,
@@ -202,8 +240,10 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             return checkpoint with { Stage = "statistics-ready", Statistics = statistics };
         }
         if (string.Equals(incoming.Kind, "water", StringComparison.Ordinal)) {
-            BotHydrationReceipt receipt = await diary.SaveWaterAsync(token, operationId,
-                incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing water timestamp."),
+            if (lease.CreatedAtUtc == default || lease.CreatedAtUtc.Kind != DateTimeKind.Utc) {
+                throw new InvalidDataException("A durable water operation timestamp is required.");
+            }
+            BotHydrationReceipt receipt = await diary.SaveWaterAsync(token, lease.OperationId, lease.CreatedAtUtc,
                 incoming.AmountMl ?? throw new InvalidDataException("Missing water amount."), cancellationToken);
             return checkpoint with { Stage = "water-saved", WaterEntryId = receipt.EntryId.Value };
         }
@@ -212,13 +252,25 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 new BotOperationId(incoming.MealOperationId ?? throw new InvalidDataException("Missing meal operation ID.")), cancellationToken);
             return checkpoint with { Stage = "undo-complete", ErrorCode = result };
         }
-        return await AdvanceImageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken);
+        return await AdvanceImageAsync(diary, token, lease.OperationId, incoming, checkpoint, cancellationToken);
     }
 
     private async Task<BotPhotoCheckpoint> AdvanceImageAsync(BotDiaryClient diary, string token, BotOperationId operationId,
         BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
+        if (checkpoint.Stage is BotPhotoTrial.Accepted) {
+            (bool isPremium, bool canStartTrial) = await diary.GetPremiumAccessAsync(token, cancellationToken);
+            if (!isPremium && (!canStartTrial || !await diary.StartTrialAsync(token, operationId, cancellationToken))) {
+                return checkpoint with { Stage = "failed", ErrorCode = BotRecognitionFailure.PremiumRequired };
+            }
+            // Reacquire with a new token after activation. Recognition requires the Premium claim on that token.
+            return checkpoint with { Stage = "received", PhotoPremiumApproved = true };
+        }
         if (!checkpoint.PhotoPremiumApproved && checkpoint.Stage is "received" or "upload" or "image-ready") {
-            if (!await diary.HasPremiumAsync(token, cancellationToken)) {
+            (bool isPremium, bool canStartTrial) = await diary.GetPremiumAccessAsync(token, cancellationToken);
+            if (!isPremium) {
+                if (canStartTrial && checkpoint is { Stage: "received", UploadAttempt: 0 }) {
+                    return new BotPhotoCheckpoint(Stage: BotPhotoTrial.Offered);
+                }
                 return checkpoint with { Stage = "failed", Upload = null, ErrorCode = BotRecognitionFailure.PremiumRequired };
             }
             checkpoint = checkpoint with { PhotoPremiumApproved = true };
@@ -227,6 +279,11 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 return checkpoint;
             }
         }
+        return await AdvanceImageStageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken);
+    }
+
+    private async Task<BotPhotoCheckpoint> AdvanceImageStageAsync(BotDiaryClient diary, string token, BotOperationId operationId,
+        BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         var downloader = new TelegramImageDownloader(bot);
         switch (checkpoint.Stage) {
             case "recognition-ready": {

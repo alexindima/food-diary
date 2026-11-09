@@ -304,8 +304,8 @@
         "tracked:TelegramOperation",
         "write:TelegramOperation"
       ],
-      "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "564cbb7493b8d56b88f0a36f1ad42fd6afad89125af5879cc651082c81b3f6ed"
+      "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs. Conditional updates enforce leases and cancellation. Resumption compares the protected checkpoint within the current bot, user and security version and invalidates the previous lease. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
+      "technicalSourceSha256": "4d7fcce36385970dabea678c9f93c616bd06890828728981dbd1d2e563797e19"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -425,7 +425,7 @@
         "tracked:BillingWebhookEvent"
       ],
       "reason": "Billing owns cancellation history writes. The owner repository synchronizes the shared transaction before reads; the caller retains per-user serialization and final commit. Registration supplies only the Billing owner entity set.",
-      "technicalSourceSha256": "f895f370f3d1db3e2289a6aaee14df40002ae4408dd07a92143fa84518aae591"
+      "technicalSourceSha256": "cc1378d70ae214c25a81cbe9c92ce82e30d23e36b89f048070cb3bc507d007c7"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -439,11 +439,13 @@
     "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs": {
       "module": "Billing",
       "capabilities": [
+        "entity:BillingPayment",
         "entity:BillingSubscription",
+        "tracked:BillingPayment",
         "tracked:BillingSubscription",
         "write:BillingSubscription"
       ],
-      "reason": "Billing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "The Billing adapter persists subscriptions and projects prior payment existence for trial eligibility. The payment check is a scalar EXISTS over the owner table and materializes no payment entities. Existing callers retain SaveChanges and commit."
     },
     "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs": {
       "module": "Billing",

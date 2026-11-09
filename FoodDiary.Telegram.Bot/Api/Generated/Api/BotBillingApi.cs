@@ -14,4 +14,14 @@ internal sealed class BotBillingApi(BotApiTransport transport) {
         using HttpRequestMessage request = transport.CreateRequest("GET", path, context);
         return await transport.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
+    internal async Task<HttpResponseMessage> StartTrialAsync(
+        string version,
+        string? idempotencyKey,
+        BotApiRequestContext context, CancellationToken cancellationToken) {
+        string path = "/api/v{version}/billing/trial";
+        path = path.Replace("{" + "version" + "}", BotApiTransport.PathValue(version), StringComparison.Ordinal);
+        using HttpRequestMessage request = transport.CreateRequest("POST", path, context);
+        BotApiTransport.SetHeader(request, "Idempotency-Key", idempotencyKey);
+        return await transport.SendAsync(request, cancellationToken).ConfigureAwait(false);
+    }
 }

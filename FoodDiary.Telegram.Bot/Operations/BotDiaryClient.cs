@@ -40,9 +40,33 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         return (reply.AccessToken, reply.User.Language);
     }
 
-    internal async Task<bool> HasPremiumAsync(string token, CancellationToken cancellationToken) {
+    internal async Task<(bool IsPremium, bool CanStartTrial)> GetPremiumAccessAsync(string token, CancellationToken cancellationToken) {
         using HttpResponseMessage response = await new BotBillingApi(CreateTransport()).GetOverviewAsync("1",
             new BotApiRequestContext(token), cancellationToken);
+        BillingOverviewHttpResponse overview = await ReadAsync<BillingOverviewHttpResponse>(response, cancellationToken);
+        return (overview.IsPremium, overview.CanStartPremiumTrial);
+    }
+
+    internal async Task<bool> HasPhotoConsentsAsync(string token, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotPrivacyApi(CreateTransport()).GetPrivacyAsync("1",
+            new BotApiRequestContext(token), cancellationToken);
+        UserPrivacyHttpResponse privacy = await ReadAsync<UserPrivacyHttpResponse>(response, cancellationToken);
+        return privacy.AiAcceptedAtUtc.HasValue && privacy.HealthAcceptedAtUtc.HasValue;
+    }
+
+    internal async Task<bool> StartTrialAsync(string token, BotOperationId operationId, CancellationToken cancellationToken) {
+        using HttpResponseMessage response = await new BotBillingApi(CreateTransport()).StartTrialAsync("1", $"telegram:{operationId.Value:N}:trial",
+            new BotApiRequestContext(token), cancellationToken);
+        if (response.StatusCode == HttpStatusCode.Conflict) {
+            await response.Content.LoadIntoBufferAsync(MaximumResponseBytes, cancellationToken);
+            ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>(cancellationToken: cancellationToken);
+            if (error?.Error is "Idempotency.InProgress" or "Idempotency.LeaseLost") {
+                throw new InvalidOperationException("Trial activation is still being processed.");
+            }
+            if (error?.Error is "Billing.TrialAlreadyUsed" or "Billing.TrialUnavailable" or "Billing.SubscriptionAlreadyActive" or "User.EmailRequired") {
+                return (await GetPremiumAccessAsync(token, cancellationToken)).IsPremium;
+            }
+        }
         return (await ReadAsync<BillingOverviewHttpResponse>(response, cancellationToken)).IsPremium;
     }
 

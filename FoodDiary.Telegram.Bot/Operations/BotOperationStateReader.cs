@@ -16,6 +16,7 @@ internal static class BotOperationStateReader {
         BotPhotoCheckpoint checkpoint = payload is null ? new BotPhotoCheckpoint() :
             JsonSerializer.Deserialize<BotPhotoCheckpoint>(payload) ?? throw new InvalidDataException("Missing checkpoint.");
         bool valid = checkpoint.Stage is "received" or "failed" || (kind, checkpoint.Stage) switch {
+            ("photo", BotPhotoTrial.Offered or BotPhotoTrial.Accepted) => true,
             ("photo", "upload") => checkpoint.Upload is not null,
             ("photo", "image-ready") => checkpoint.ImageAssetId is not null,
             ("photo", "recognizing" or "recognition-ready") => checkpoint.RecognitionId is not null,

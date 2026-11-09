@@ -46,4 +46,16 @@ internal sealed class BotOperationsApi(BotApiTransport transport) {
         request.Content = JsonContent.Create(registerTelegramOperationHttpRequest);
         return await transport.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
+    internal async Task<HttpResponseMessage> ResumeAsync(
+        Guid operationId,
+        string version,
+        ResumeTelegramOperationHttpRequest? resumeTelegramOperationHttpRequest,
+        BotApiRequestContext context, CancellationToken cancellationToken) {
+        string path = "/api/v{version}/auth/telegram/bot/operations/{operationId}/resume";
+        path = path.Replace("{" + "operationId" + "}", BotApiTransport.PathValue(operationId), StringComparison.Ordinal);
+        path = path.Replace("{" + "version" + "}", BotApiTransport.PathValue(version), StringComparison.Ordinal);
+        using HttpRequestMessage request = transport.CreateRequest("POST", path, context);
+        request.Content = JsonContent.Create(resumeTelegramOperationHttpRequest);
+        return await transport.SendAsync(request, cancellationToken).ConfigureAwait(false);
+    }
 }

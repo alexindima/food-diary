@@ -40,6 +40,17 @@ public sealed class BotOperationClientTests {
     }
 
     [Fact]
+    public async Task AcceptPhotoTrialAsync_MissingRouteCanRetryDuringApiCutover() {
+        using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)));
+        using var http = new HttpClient(handler);
+
+        HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(() =>
+            CreateClient(http).AcceptPhotoTrialAsync(new BotOperationId(Guid.NewGuid()), 123, CancellationToken.None));
+
+        Assert.Equal(HttpStatusCode.NotFound, error.StatusCode);
+    }
+
+    [Fact]
     public async Task MissingSecret_FailsBeforeSendingRequest() {
         using var http = new HttpClient();
         var client = new BotOperationClient(http, Options.Create(new TelegramBotOptions { ApiBaseUrl = "https://diary.example", ApiSecret = "" }));

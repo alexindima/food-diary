@@ -5746,7 +5746,7 @@
       "role": "Component",
       "selector": "fd-privacy-settings",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
-      "line": 25
+      "line": 29
     },
     {
       "name": "UserManageComparisonWidgetsComponent",

@@ -40,19 +40,23 @@ public sealed class StartPremiumTrialCommandHandler(
 
         UserBillingProfileModel user = userResult.Value;
         BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken);
-        if (user.HasPaidPremium || IsPaidPremiumActive(subscription)) {
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        if (user.HasPaidPremium || user.ManualPremiumEndsAtUtc > nowUtc ||
+            BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, nowUtc, subscription?.Provider)) {
             return Result.Failure<BillingOverviewModel>(BillingErrors.SubscriptionAlreadyActive);
         }
 
         if (user.PremiumTrialStartedAtUtc is not null || user.PremiumTrialEndsAtUtc is not null) {
             return Result.Failure<BillingOverviewModel>(BillingErrors.TrialAlreadyUsed);
         }
+        if (BillingTrialPolicy.HasSubscriptionHistory(subscription)) {
+            return Result.Failure<BillingOverviewModel>(BillingErrors.TrialUnavailable);
+        }
 
         if (!string.IsNullOrWhiteSpace(user.Email) && !user.IsEmailConfirmed) {
             return Result.Failure<BillingOverviewModel>(UserErrors.EmailRequired);
         }
 
-        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService.Send(new StartUserPremiumTrialCommand(UserId: userId, StartedAtUtc: nowUtc, Duration: TrialDuration), cancellationToken);
         if (startedTrialResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(startedTrialResult.Error);
@@ -85,7 +89,4 @@ public sealed class StartPremiumTrialCommandHandler(
             publicConfig.PaddleYearlyPriceId,
             TelegramStarsPrice: updatedUser.TelegramUserId is > 0 ? publicConfig.TelegramStarsPrice : null));
     }
-
-    private bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription) =>
-        BillingPremiumAccessPolicy.GrantsPremiumAccess(subscription?.Status, subscription?.CurrentPeriodEndUtc, dateTimeProvider.GetUtcNow().UtcDateTime, subscription?.Provider);
 }

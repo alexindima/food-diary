@@ -40,6 +40,9 @@ internal sealed class BotOperationScenario : IDisposable {
     public bool BlockedByUser { get; set; }
     public HttpStatusCode ProgressDeletionStatus { get; set; } = HttpStatusCode.OK;
     public bool IsPremium { get; set; } = true;
+    public bool CanStartTrial { get; set; }
+    public bool HasAiConsent { get; set; } = true;
+    public bool HasHealthConsent { get; set; } = true;
     public HttpStatusCode BillingStatus { get; set; } = HttpStatusCode.OK;
     public bool Completed { get; private set; }
     public int Checkpoints { get; private set; }
@@ -53,6 +56,7 @@ internal sealed class BotOperationScenario : IDisposable {
     public Action<int>? BeforeAcquire { get; set; }
 
     public Task ProcessAsync() => _worker.ProcessAsync(_operations, new BotOperationId(Id), CancellationToken.None);
+    public Task<bool> AcceptTrialAsync() => _operations.AcceptPhotoTrialAsync(new BotOperationId(Id), Incoming.TelegramUserId, CancellationToken.None);
     public static HttpResponseMessage Json<T>(T body) => new(HttpStatusCode.OK) { Content = JsonContent.Create(body) };
 
     private async Task<HttpResponseMessage> RespondAsync(HttpRequestMessage request) {
@@ -82,6 +86,17 @@ internal sealed class BotOperationScenario : IDisposable {
             Checkpoints++;
             return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
+        if (path.EndsWith("/resume", StringComparison.Ordinal)) {
+            using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
+            Assert.Equal($"/api/v1/auth/telegram/bot/operations/{Id:D}/resume", path);
+            Assert.Equal(Incoming.TelegramUserId, body.RootElement.GetProperty("telegramUserId").GetInt64());
+            Assert.Equal(BotPhotoTrial.OfferedCheckpoint, body.RootElement.GetProperty("expectedCheckpoint").GetString());
+            if (State.Stage is not BotPhotoTrial.Offered || Completed) {
+                return new HttpResponseMessage(HttpStatusCode.Conflict);
+            }
+            State = JsonSerializer.Deserialize<BotPhotoCheckpoint>(body.RootElement.GetProperty("checkpoint").GetString()!)!;
+            return new HttpResponseMessage(HttpStatusCode.NoContent);
+        }
         if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
             Notices.Add(body.RootElement.GetProperty("text").GetString()!);
@@ -105,8 +120,14 @@ internal sealed class BotOperationScenario : IDisposable {
             string payload = Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"security_version\":\"1\"}")).TrimEnd('=').Replace('+', '-').Replace('/', '_');
             return Json(new { AccessToken = $"header.{payload}.signature", User = new { Id = UserId } });
         }
+        if (string.Equals(path, "/api/v1/users/privacy", StringComparison.Ordinal)) {
+            return Json(new {
+                AiAcceptedAtUtc = HasAiConsent ? DateTime.UtcNow : (DateTime?)null,
+                HealthAcceptedAtUtc = HasHealthConsent ? DateTime.UtcNow : (DateTime?)null,
+            });
+        }
         if (string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal)) {
-            return BillingStatus == HttpStatusCode.OK ? Json(new { IsPremium }) : new HttpResponseMessage(BillingStatus);
+            return BillingStatus == HttpStatusCode.OK ? Json(new { IsPremium, CanStartPremiumTrial = CanStartTrial }) : new HttpResponseMessage(BillingStatus);
         }
         if (path.EndsWith("/getFile", StringComparison.OrdinalIgnoreCase)) {
             return Json(new { ok = true, result = new { file_id = "food", file_unique_id = "unique", file_size = 3, file_path = "photos/food" } });

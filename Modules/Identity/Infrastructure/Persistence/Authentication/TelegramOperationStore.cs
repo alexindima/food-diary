@@ -112,6 +112,39 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
                 cancellationToken) == 1;
     }
 
+    public async Task<bool> ResumeAsync(long botId, TelegramOperationId operationId, UserId userId, long securityVersion,
+        string expectedCheckpoint, string checkpoint, CancellationToken cancellationToken) {
+        ValidatePayload(expectedCheckpoint);
+        ValidatePayload(checkpoint);
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken);
+        }
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        DateTime cutoff = now.AddMinutes(-15);
+        Guid id = operationId.Value;
+        Guid ownerId = userId.Value;
+        IQueryable<TelegramOperation> pending = context.Set<TelegramOperation>()
+            .Where(item => item.Id == id && item.BotId == botId && item.UserId == ownerId && item.SecurityVersion == securityVersion &&
+                !item.Completed && item.CreatedAtUtc > cutoff);
+        string replacement = Protect(id, checkpoint);
+        // A worker can reschedule the same offer as the user clicks. Re-read once if its checkpoint wins the race.
+        for (int attempt = 0; attempt < 2; attempt++) {
+            string? current = await pending.Select(item => item.ProtectedCheckpoint).SingleOrDefaultAsync(cancellationToken);
+            if (current is null || !string.Equals(Unprotect(id, current), expectedCheckpoint, StringComparison.Ordinal)) {
+                return false;
+            }
+            int changed = await pending.Where(item => item.ProtectedCheckpoint == current)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.ProtectedCheckpoint, replacement)
+                    .SetProperty(item => item.NextAttemptAtUtc, now)
+                    .SetProperty(item => item.LeaseId, (Guid?)null).SetProperty(item => item.LeaseExpiresAtUtc, (DateTime?)null),
+                    cancellationToken);
+            if (changed == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public async Task CancelUserAsync(UserId userId, CancellationToken cancellationToken) {
         Guid storedUserId = userId.Value;
         if (synchronizeTransactionAsync is not null) {

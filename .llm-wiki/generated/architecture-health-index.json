@@ -8,12 +8,12 @@
     "moduleCycleNodes": 0,
     "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 4,
-    "ambiguousBackendContracts": 32,
+    "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
     "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 49,
+    "criticalSymbolsWithoutTestReferences": 50,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -717,6 +717,25 @@
       "collisionClassification": "ambiguous"
     },
     {
+      "name": "ResumeTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
       "name": "ReviewContentReportCommand",
       "roles": [
         "Command"
@@ -863,6 +882,25 @@
       "definitionPaths": [
         "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
+      "name": "UserPrivacyHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
+        "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
       ],
       "ambiguous": true,
       "collisionClassification": "ambiguous"
@@ -6097,6 +6135,16 @@
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommandHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ResumeTelegramOperationCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
+      "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

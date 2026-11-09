@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "f20780d094d0c195fd8add85b4a782baafbb54a640399d8bbf1cfcf0d114ed96",
-    "sourceFileCount": 4806
+    "sourceFingerprint": "8696151d367d5d1b407661ec20528b349da4313ebcd1d62e0ad73a0046a90500",
+    "sourceFileCount": 4814
   },
   "summary": {
     "composeServices": 20,
@@ -1380,6 +1380,7 @@
       ],
       "behaviorSignals": [
         "cancellation-propagation-candidate",
+        "idempotency",
         "retry-or-resilience"
       ],
       "behaviorSignalScope": "policy-file",

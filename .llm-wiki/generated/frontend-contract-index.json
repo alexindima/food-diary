@@ -32971,7 +32971,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "loading",
         "type",

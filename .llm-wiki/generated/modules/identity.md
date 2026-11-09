@@ -130,6 +130,7 @@ Source: `Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperati
 - `GET /api/v{version:apiVersion}/auth/telegram/bot/operations/ready`
 - `POST /api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/lease`
 - `POST /api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/checkpoint`
+- `POST /api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/resume`
 
 ## Boundary Health
 

@@ -44,20 +44,29 @@ public sealed class TelegramOperationRecoveryTests {
     }
 
     [Theory]
-    [InlineData(null, "ru", "🔍 Распознаю продукты на фото…", false)]
-    [InlineData("Гречка с курицей\nСоус отдельно", "ru", "🔍 Распознаю продукты на фото…", false)]
-    [InlineData(null, "en", "🔍 Identifying foods in the photo…", true)]
+    [InlineData(null, "ru", "🔍 Распознаю продукты на фото…", false, false)]
+    [InlineData("Гречка с курицей\nСоус отдельно", "ru", "🔍 Распознаю продукты на фото…", false, false)]
+    [InlineData(null, "en", "🔍 Identifying foods in the photo…", true, false)]
+    [InlineData("Original photo caption", "en", "🔍 Identifying foods in the photo…", false, true)]
     public async Task PremiumPhoto_AdvancesAcrossDurableCheckpointsAndDeliversSavedReceipt(
-        string? caption, string language, string progressNotice, bool rejectProgressNotice) {
-        using var scenario = new BotOperationScenario();
+        string? caption, string language, string progressNotice, bool rejectProgressNotice, bool startTrial) {
+        using var scenario = new BotOperationScenario { IsPremium = !startTrial, CanStartTrial = startTrial };
         bool russian = string.Equals(language, "ru", StringComparison.Ordinal);
         scenario.Incoming = scenario.Incoming with { Caption = caption, Language = language };
         scenario.BlockedByUser = rejectProgressNotice;
         int uploads = 0;
         int recognitions = 0;
         int saves = 0;
+        int trialStarts = 0;
         scenario.BusinessResponse = async request => {
             string path = request.RequestUri!.AbsolutePath;
+            if (string.Equals(path, "/api/v1/billing/trial", StringComparison.Ordinal)) {
+                trialStarts++;
+                Assert.Equal($"telegram:{scenario.Id:N}:trial", Assert.Single(request.Headers.GetValues("Idempotency-Key")));
+                scenario.IsPremium = true;
+                scenario.CanStartTrial = false;
+                return BotOperationScenario.Json(new { isPremium = true, premiumTrialActive = true });
+            }
             if (path.EndsWith("/upload-url", StringComparison.Ordinal)) {
                 Assert.Equal($"telegram:{scenario.Id:N}:upload:0", Assert.Single(request.Headers.GetValues("Idempotency-Key")));
                 return BotOperationScenario.Json(new BotImageUpload("https://storage.example/upload", "food", DateTime.UtcNow.AddMinutes(5), new BotImageAssetId(scenario.ImageId)));
@@ -102,6 +111,26 @@ public sealed class TelegramOperationRecoveryTests {
             throw new InvalidOperationException(path);
         };
 
+        if (startTrial) {
+            await scenario.ProcessAsync();
+            await scenario.ProcessAsync();
+            Assert.Equal(BotPhotoTrial.Offered, scenario.State.Stage);
+            Assert.Contains("No card or automatic renewal", Assert.Single(scenario.Notices), StringComparison.Ordinal);
+            JsonElement trialMarkup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
+            JsonElement trialButton = Assert.Single(trialMarkup.GetProperty("inline_keyboard")[0].EnumerateArray());
+            Assert.Equal($"photo-trial:{scenario.Id:N}", trialButton.GetProperty("callback_data").GetString());
+            Assert.Equal(0, trialStarts);
+            Assert.DoesNotContain(scenario.BusinessPaths, path => path.EndsWith("/getFile", StringComparison.OrdinalIgnoreCase));
+            Assert.True(await scenario.AcceptTrialAsync());
+            Assert.False(await scenario.AcceptTrialAsync());
+            await scenario.ProcessAsync();
+            Assert.Equal("received", scenario.State.Stage);
+            Assert.Equal(1, trialStarts);
+            Assert.DoesNotContain(scenario.BusinessPaths, path => path.EndsWith("/getFile", StringComparison.OrdinalIgnoreCase));
+            scenario.Notices.Clear();
+            scenario.SilentNotices.Clear();
+        }
+
         foreach (string stage in new[] { "upload", "image-ready", "recognizing", "recognition-ready", "meal-saved" }) {
             DateTime before = DateTime.UtcNow;
             await scenario.ProcessAsync();
@@ -144,7 +173,8 @@ public sealed class TelegramOperationRecoveryTests {
             () => Assert.Equal(1, uploads),
             () => Assert.Equal(1, recognitions),
             () => Assert.Equal(1, saves),
-            () => Assert.Single(scenario.BusinessPaths, path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal)),
+            () => Assert.Equal(startTrial ? 2 : 1, scenario.BusinessPaths.Count(path => string.Equals(path, "/api/v1/billing/overview", StringComparison.Ordinal))),
+            () => Assert.Equal(startTrial ? 1 : 0, trialStarts),
             () => Assert.Contains(russian ? "Приём пищи сохранён" : "Meal saved to your diary", notice, StringComparison.Ordinal),
             () => Assert.Equal(2, scenario.Notices.Count),
             () => Assert.Contains(russian ? "400 ккал" : "400 kcal", notice, StringComparison.Ordinal),
@@ -205,12 +235,15 @@ public sealed class TelegramOperationRecoveryTests {
         await scenario.ProcessAsync();
 
         JsonElement markup = Assert.IsType<JsonElement>(scenario.LastNoticeMarkup);
-        JsonElement button = Assert.Single(Assert.Single(markup.GetProperty("inline_keyboard").EnumerateArray()).EnumerateArray());
+        JsonElement rows = markup.GetProperty("inline_keyboard");
+        JsonElement button = Assert.Single(rows[0].EnumerateArray());
+        JsonElement premium = Assert.Single(rows[1].EnumerateArray());
         Assert.Multiple(
             () => Assert.True(scenario.Completed),
             () => Assert.Contains("Food Diary Premium", Assert.Single(scenario.Notices), StringComparison.Ordinal),
             () => Assert.Equal(buttonText, button.GetProperty("text").GetString()),
             () => Assert.Equal("https://diary.example/meals/add", button.GetProperty("web_app").GetProperty("url").GetString()),
+            () => Assert.Equal("https://diary.example/premium", premium.GetProperty("web_app").GetProperty("url").GetString()),
             () => Assert.Equal(new[] { "/api/v1/auth/telegram/bot/auth", "/api/v1/billing/overview" }, scenario.BusinessPaths, StringComparer.Ordinal));
     }
 

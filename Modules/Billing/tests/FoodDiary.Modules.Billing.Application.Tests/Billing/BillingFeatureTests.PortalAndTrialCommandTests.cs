@@ -306,7 +306,7 @@ public partial class BillingFeatureTests {
     [InlineData("past_due", 0)]
     [InlineData("past_due", null)]
     [InlineData("canceled", 1)]
-    public async Task StartPremiumTrial_WithInactivePaidSubscription_AllowsTrial(string status, int? periodEndOffsetDays) {
+    public async Task StartPremiumTrial_WithInactivePaidSubscription_RejectsTrial(string status, int? periodEndOffsetDays) {
         var user = User.Create($"trial-inactive-{status}@example.com", "hash");
         user.SetEmailConfirmed(isConfirmed: true);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
@@ -332,9 +332,8 @@ public partial class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
-        ResultAssert.Success(result);
-        Assert.True(result.Value.PremiumTrialActive);
-        Assert.Equal(1, userRepository.UpdateCount);
+        Assert.Equal("Billing.TrialUnavailable", ResultAssert.Failure(result).Code);
+        Assert.Equal(0, userRepository.UpdateCount);
     }
 
     [Fact]

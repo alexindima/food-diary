@@ -52,7 +52,7 @@ public sealed class GetBillingOverviewQueryHandler(
             provider is not BillingProviderNames.TelegramStars || userProfile.TelegramUserId is > 0)];
         bool renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
-        bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !hasUsedTrial &&
+        bool canStartTrial = !isPremium && !hasUsedTrial && !BillingTrialPolicy.HasSubscriptionHistory(subscription) &&
             (string.IsNullOrWhiteSpace(userProfile.Email) || userProfile.IsEmailConfirmed);
 
         return Result.Success(new BillingOverviewModel(

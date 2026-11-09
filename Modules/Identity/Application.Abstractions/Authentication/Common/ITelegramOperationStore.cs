@@ -9,6 +9,8 @@ public interface ITelegramOperationStore {
     Task<TelegramOperationLease?> GetLeaseAsync(long botId, TelegramOperationId operationId, TelegramLeaseId leaseId, CancellationToken cancellationToken);
     Task<bool> CheckpointAsync(long botId, TelegramOperationId operationId, TelegramLeaseId leaseId, string checkpoint, bool completed,
         DateTime nextAttemptAtUtc, CancellationToken cancellationToken);
+    Task<bool> ResumeAsync(long botId, TelegramOperationId operationId, UserId userId, long securityVersion,
+        string expectedCheckpoint, string checkpoint, CancellationToken cancellationToken);
     Task CancelUserAsync(UserId userId, CancellationToken cancellationToken);
     Task CancelOperationAsync(long botId, TelegramOperationId operationId, CancellationToken cancellationToken);
 }

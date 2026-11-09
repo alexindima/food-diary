@@ -20,7 +20,7 @@
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
     "controllers": 116,
-    "endpoints": 378,
+    "endpoints": 379,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -17038,6 +17038,11 @@
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/checkpoint",
             "line": 47
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/bot/operations/{operationId:guid}/resume",
+            "line": 52
           }
         ]
       },

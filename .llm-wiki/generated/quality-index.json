@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7001,
+    "productionFiles": 7009,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
-    "criticalSymbols": 1055,
+    "criticalSymbols": 1056,
     "criticalSymbolsWithTestReferences": 1006,
-    "criticalSymbolsWithoutTestReferences": 49,
+    "criticalSymbolsWithoutTestReferences": 50,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -343,6 +343,14 @@
       "structuralRiskScore": 155.44
     },
     {
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
+      "nonBlankLines": 368,
+      "decisionPoints": 97,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 152.86
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiInstructionExperiment.ps1",
       "nonBlankLines": 475,
       "decisionPoints": 94,
@@ -445,14 +453,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 130.9
-    },
-    {
-      "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 314,
-      "decisionPoints": 83,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.78
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
@@ -783,6 +783,14 @@
       "structuralRiskScore": 107.42
     },
     {
+      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "nonBlankLines": 360,
+      "decisionPoints": 66,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 106.2
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
       "nonBlankLines": 329,
       "decisionPoints": 65,
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 105.88
-    },
-    {
-      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 347,
-      "decisionPoints": 65,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 104.44
     }
   ],
   "files": [
@@ -4762,11 +4762,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotBillingApi.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.5
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotDiaryApi.cs",
@@ -4802,11 +4802,19 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotOperationsApi.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 59,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.94
+      "structuralRiskScore": 1.18
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotPrivacyApi.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotRecognitionApi.cs",
@@ -5025,6 +5033,14 @@
       "structuralRiskScore": 0.24
     },
     {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
@@ -5079,6 +5095,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.76
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Telegram.Bot/BotInputParser.cs",
@@ -5138,11 +5162,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "nonBlankLines": 153,
-      "decisionPoints": 35,
+      "nonBlankLines": 175,
+      "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.56
+      "structuralRiskScore": 62
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
@@ -5250,11 +5274,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
-      "nonBlankLines": 66,
-      "decisionPoints": 10,
+      "nonBlankLines": 80,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.32
+      "structuralRiskScore": 18.1
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationId.cs",
@@ -5274,11 +5298,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationStateReader.cs",
-      "nonBlankLines": 29,
+      "nonBlankLines": 30,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.58
+      "structuralRiskScore": 15.6
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
@@ -5287,6 +5311,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoTrial.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.66
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotRecognitionAccessException.cs",
@@ -5370,11 +5402,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "nonBlankLines": 314,
-      "decisionPoints": 83,
+      "nonBlankLines": 368,
+      "decisionPoints": 97,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.78
+      "structuralRiskScore": 152.86
     },
     {
       "path": "FoodDiary.Telegram.Bot/Program.cs",
@@ -5410,11 +5442,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 347,
-      "decisionPoints": 65,
+      "nonBlankLines": 360,
+      "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 104.44
+      "structuralRiskScore": 106.2
     },
     {
       "path": "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",
@@ -14730,11 +14762,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
-      "nonBlankLines": 41,
-      "decisionPoints": 1,
+      "nonBlankLines": 59,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 5.68
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
@@ -26146,11 +26178,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/BillingErrors.cs",
-      "nonBlankLines": 48,
+      "nonBlankLines": 52,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.96
+      "structuralRiskScore": 7.04
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/BillingInputLimits.cs",
@@ -26402,11 +26434,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
@@ -26690,11 +26722,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "nonBlankLines": 80,
-      "decisionPoints": 10,
+      "nonBlankLines": 82,
+      "decisionPoints": 12,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.6
+      "structuralRiskScore": 21.64
     },
     {
       "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommand.cs",
@@ -26727,6 +26759,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Billing/Application/Common/BillingTrialPolicy.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.68
     },
     {
       "path": "Modules/Billing/Application/Common/TelegramStarsBillingState.cs",
@@ -27018,11 +27058,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 45,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.38
+      "structuralRiskScore": 2.4
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
@@ -27050,11 +27090,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
-      "nonBlankLines": 99,
-      "decisionPoints": 12,
+      "nonBlankLines": 103,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.98
+      "structuralRiskScore": 27.56
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
@@ -37010,11 +37050,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IUserLoginEventQuery.cs",
@@ -37735,6 +37775,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
       "structuralRiskScore": 7.2
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 7,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 18.06
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
@@ -38642,11 +38698,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
-      "nonBlankLines": 150,
-      "decisionPoints": 44,
+      "nonBlankLines": 182,
+      "decisionPoints": 55,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 69
+      "structuralRiskScore": 86.14
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
@@ -38986,11 +39042,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 50,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.92
+      "structuralRiskScore": 3
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
@@ -39018,11 +39074,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/PasswordLoginRetryAfterAttribute.cs",
@@ -39159,6 +39215,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/StartTelegramBackupEmailHttpRequest.cs",
@@ -58912,6 +58976,16 @@
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/RestoreFavoriteMealTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "ResumeTelegramOperationCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {

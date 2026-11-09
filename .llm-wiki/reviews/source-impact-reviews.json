@@ -348,15 +348,20 @@
           "reviewReason": "Reviewed actual full/payload snapshots and SDK guide: activity endpoint, nullable timestamp and optional ranges are additive. The executed report has zero breaking and six additive changes; old login fields/filters remain. No acceptance exception changed, and the prior browser-session migration record remains exact and separate from this feature."
         },
         {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "fb087a73f4b9d251a7063606f548fc070913bef70f1925c38e19f388a8ccdd5b",
+          "reviewReason": "The API adds one bot-secret protected resume operation. The existing Billing trial and Users privacy contracts are reused by the bot SDK. OpenAPI snapshots, live SDK comparison and missing-secret requests passed."
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "eae0c81f30c0cdcadfc92163fd7781eb97551b93dab80a02572f403edea8b57e",
-          "reviewReason": "Reviewed the full snapshot delta and the semantic compatibility result. GET, PUT, and DELETE on the new admin user premium-grant path add dedicated request and response schemas. Existing operations and payloads keep their contracts, so the compatibility workflow requires no text change."
+          "sha256": "ea46144e71870332eb5f34624abb908d26d48ae8fc26d8a11b87540e22d2af87",
+          "reviewReason": "The API adds one bot-secret protected resume operation. The existing Billing trial and Users privacy contracts are reused by the bot SDK. OpenAPI snapshots, live SDK comparison and missing-secret requests passed."
         }
       ],
-      "reason": "Reviewed the full snapshot delta and the semantic compatibility result. GET, PUT, and DELETE on the new admin user premium-grant path add dedicated request and response schemas. Existing operations and payloads keep their contracts, so the compatibility workflow requires no text change.",
+      "reason": "The API adds one bot-secret protected resume operation. The existing Billing trial and Users privacy contracts are reused by the bot SDK. OpenAPI snapshots, live SDK comparison and missing-secret requests passed.",
       "baseRef": "HEAD",
-      "gitHead": "d1beb7347c8942760626f7afbe0daee741244565",
-      "reviewedAtUtc": "2026-11-09T02:37:17.0940393Z"
+      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
+      "reviewedAtUtc": "2026-11-09T07:59:21.8022035Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -365,8 +370,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4ae6a65c5ce4a417eee8de46fff78fa138352e22297bb6c5e3bdd448936adb2b",
-          "reviewReason": "The dedicated Admin Premium grant controller is covered through real HTTP grant and revoke requests. The generated static reference inventory records the new controller separately. All 359 presentation convention tests passed."
+          "sha256": "a92bf6185404471a8ea117965013e265f115beb0295de1001b8c405b8b1c218d",
+          "reviewReason": "Verified the new Identity command and existing controller keep identity resolution and HTTP mapping separate. The architecture suite and focused PostgreSQL, bot and HTTP checks exercised the changed boundaries."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -389,10 +394,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "The dedicated Admin Premium grant controller is covered through real HTTP grant and revoke requests. The generated static reference inventory records the new controller separately. All 359 presentation convention tests passed.",
-      "baseRef": "f011fd9a315f1876e3810005d256aef98e3c81a4",
-      "gitHead": "f83e49937614cb7f5feb5f851081cc0ecc0970cb",
-      "reviewedAtUtc": "2026-11-09T06:31:38.0037609Z"
+      "reason": "Verified the new Identity command and existing controller keep identity resolution and HTTP mapping separate. The architecture suite and focused PostgreSQL, bot and HTTP checks exercised the changed boundaries.",
+      "baseRef": "HEAD",
+      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
+      "reviewedAtUtc": "2026-11-09T07:59:22.1602548Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1291,8 +1296,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "465f4460345a3afce7391db428de36edf3ee97e94309f3bc5dcd827a4cb1a030",
-          "reviewReason": "Reviewed the new manual grant reason and the shifted index coordinates. The dedicated Admin-authorized response is the only HTTP projection of the reason. Revocation clears the stored reason, and the post-commit audit omits it. The existing lifecycle review procedure still applies."
+          "sha256": "ad08a98712d68c7f081976355deedbdd1e774b33c46781c2131704f7a87a3429",
+          "reviewReason": "The resume request carries the current Telegram identity and opaque checkpoints. The journal retains the protected file reference for up to 15 minutes while awaiting consent. Images are downloaded only after acceptance and required privacy grants. Owner and security-version checks plus terminal erasure remain enforced."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1305,10 +1310,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed the new manual grant reason and the shifted index coordinates. The dedicated Admin-authorized response is the only HTTP projection of the reason. Revocation clears the stored reason, and the post-commit audit omits it. The existing lifecycle review procedure still applies.",
-      "baseRef": "origin/master",
-      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
-      "reviewedAtUtc": "2026-11-09T06:08:53.2977468Z"
+      "reason": "The resume request carries the current Telegram identity and opaque checkpoints. The journal retains the protected file reference for up to 15 minutes while awaiting consent. Images are downloaded only after acceptance and required privacy grants. Owner and security-version checks plus terminal erasure remain enforced.",
+      "baseRef": "HEAD",
+      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
+      "reviewedAtUtc": "2026-11-09T07:59:22.6981656Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1509,14 +1514,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3f8e798da78ffcc21ca317502a1948cec6b51188c8970f1aaaa1a8717d13b800",
-          "reviewReason": "The runtime topology delta changes only the source fingerprint and file count. The controller split preserves the same routes, Admin role checks and existing runtime registration."
+          "sha256": "8fba6925a34722c84ca8da4d89ef6793d7e4c70323f9ce569bb1bcd100b84bd7",
+          "reviewReason": "Verified the idempotent trial call and fresh bot authentication precede photo processing. New bot callbacks remain pending when the stable ingress still targets an old API slot. No service, storage or startup topology changed."
         }
       ],
-      "reason": "The runtime topology delta changes only the source fingerprint and file count. The controller split preserves the same routes, Admin role checks and existing runtime registration.",
-      "baseRef": "f011fd9a315f1876e3810005d256aef98e3c81a4",
-      "gitHead": "f83e49937614cb7f5feb5f851081cc0ecc0970cb",
-      "reviewedAtUtc": "2026-11-09T06:31:39.3091349Z"
+      "reason": "Verified the idempotent trial call and fresh bot authentication precede photo processing. New bot callbacks remain pending when the stable ingress still targets an old API slot. No service, storage or startup topology changed.",
+      "baseRef": "HEAD",
+      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
+      "reviewedAtUtc": "2026-11-09T08:05:52.5625789Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1891,8 +1896,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c4d4ca1e97229482618246391e4f7ca000a048128a52a5a1de2288635fd4edbd",
-          "reviewReason": "Verified the catalog relocates exactly the existing GET, PUT and DELETE premium-grant routes to the dedicated Admin controller. The full OpenAPI snapshot and both canonical SDK contracts passed unchanged."
+          "sha256": "0b776eb7ec910d4ecddf8a87a6a3e2621c3a7d917b37921a33c47d17de7f8edf",
+          "reviewReason": "The endpoint catalog adds only the Telegram operation resume route. Checked the path, POST verb, controller ownership and matching bot SDK operation against the API export."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
@@ -1920,10 +1925,10 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "Verified the catalog relocates exactly the existing GET, PUT and DELETE premium-grant routes to the dedicated Admin controller. The full OpenAPI snapshot and both canonical SDK contracts passed unchanged.",
-      "baseRef": "f011fd9a315f1876e3810005d256aef98e3c81a4",
-      "gitHead": "f83e49937614cb7f5feb5f851081cc0ecc0970cb",
-      "reviewedAtUtc": "2026-11-09T06:31:38.7108711Z"
+      "reason": "The endpoint catalog adds only the Telegram operation resume route. Checked the path, POST verb, controller ownership and matching bot SDK operation against the API export.",
+      "baseRef": "HEAD",
+      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
+      "reviewedAtUtc": "2026-11-09T07:59:23.1997480Z"
     },
     {
       "pageId": "workflow.review-diff",

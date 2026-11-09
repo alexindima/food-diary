@@ -30,6 +30,12 @@
     "path": "/api/v{version}/auth/telegram/bot/operations/{operationId}/checkpoint"
   },
   {
+    "method": "POST",
+    "name": "BotOperations",
+    "operationId": "Resume",
+    "path": "/api/v{version}/auth/telegram/bot/operations/{operationId}/resume"
+  },
+  {
     "method": "GET",
     "name": "BotDiary",
     "operationId": "GetStatistics",
@@ -40,6 +46,18 @@
     "name": "BotBilling",
     "operationId": "GetOverview",
     "path": "/api/v{version}/billing/overview"
+  },
+  {
+    "method": "POST",
+    "name": "BotBilling",
+    "operationId": "StartTrial",
+    "path": "/api/v{version}/billing/trial"
+  },
+  {
+    "method": "GET",
+    "name": "BotPrivacy",
+    "operationId": "GetPrivacy",
+    "path": "/api/v{version}/users/privacy"
   },
   {
     "method": "POST",

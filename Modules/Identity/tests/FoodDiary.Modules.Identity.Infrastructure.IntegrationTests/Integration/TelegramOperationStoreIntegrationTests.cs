@@ -94,6 +94,55 @@ public sealed class TelegramOperationStoreIntegrationTests(PostgresDatabaseFixtu
     }
 
     [RequiresDockerFact]
+    public async Task Resume_OnlyCurrentOwnerCanAcceptAndAcceptanceFencesTheSendingLease() {
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
+        var clock = new Clock();
+        var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), clock);
+        var userId = UserId.New();
+        TelegramOperationId? id = await store.RegisterAsync(123, 10, userId, 7, "original photo reference", CancellationToken.None);
+        Assert.NotNull(id);
+        TelegramOperationLease? original = await store.AcquireAsync(123, id.Value, CancellationToken.None);
+        Assert.NotNull(original);
+        Assert.True(await store.CheckpointAsync(123, id.Value, original.LeaseId, "offered", completed: false, Now, CancellationToken.None));
+        TelegramOperationLease? sending = await store.AcquireAsync(123, id.Value, CancellationToken.None);
+        Assert.NotNull(sending);
+
+        Assert.False(await store.ResumeAsync(123, id.Value, UserId.New(), 7, "offered", "accepted", CancellationToken.None));
+        Assert.False(await store.ResumeAsync(123, id.Value, userId, 8, "offered", "accepted", CancellationToken.None));
+        Assert.False(await store.ResumeAsync(124, id.Value, userId, 7, "offered", "accepted", CancellationToken.None));
+        Assert.True(await store.ResumeAsync(123, id.Value, userId, 7, "offered", "accepted", CancellationToken.None));
+        Assert.False(await store.ResumeAsync(123, id.Value, userId, 7, "offered", "accepted", CancellationToken.None));
+        Assert.False(await store.CheckpointAsync(123, id.Value, sending.LeaseId, "offered", completed: false, Now.AddMinutes(15), CancellationToken.None));
+
+        TelegramOperationLease? accepted = await store.AcquireAsync(123, id.Value, CancellationToken.None);
+        Assert.NotNull(accepted);
+        Assert.Equal("original photo reference", accepted.Payload);
+        Assert.Equal("accepted", accepted.Checkpoint);
+    }
+
+    [RequiresDockerFact]
+    public async Task Resume_RefusesOfferAtExpiryBeforeWorkerClearsThePayload() {
+        await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
+        var clock = new Clock();
+        var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), clock);
+        var userId = UserId.New();
+        TelegramOperationId? id = await store.RegisterAsync(123, 10, userId, 1, "photo reference", CancellationToken.None);
+        Assert.NotNull(id);
+        TelegramOperationLease? lease = await store.AcquireAsync(123, id.Value, CancellationToken.None);
+        Assert.NotNull(lease);
+        DateTime expiry = Now.AddMinutes(15);
+        Assert.True(await store.CheckpointAsync(123, id.Value, lease.LeaseId, "offered", completed: false, expiry, CancellationToken.None));
+        Assert.Empty(await store.ListReadyAsync(123, CancellationToken.None));
+
+        clock.UtcNow = expiry;
+
+        Assert.False(await store.ResumeAsync(123, id.Value, userId, 1, "offered", "accepted", CancellationToken.None));
+        TelegramOperationLease? expired = await store.AcquireAsync(123, id.Value, CancellationToken.None);
+        Assert.NotNull(expired);
+        Assert.Equal("offered", expired.Checkpoint);
+    }
+
+    [RequiresDockerFact]
     public async Task TerminalCleanup_ErasesOldContentButPreservesDeduplicationAndPendingWork() {
         await using IdentityDbContext context = await IdentityContextTestFactory.CreateAsync(databaseFixture);
         var store = new TelegramOperationStore(context, new EphemeralDataProtectionProvider(), new Clock());

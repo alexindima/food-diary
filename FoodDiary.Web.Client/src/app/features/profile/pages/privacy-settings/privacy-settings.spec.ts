@@ -1,9 +1,12 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { AiConsentDialogComponent } from '../../../../components/shared/ai-consent-dialog/ai-consent-dialog';
 import type { UserPrivacyState } from '../../../../shared/api/user.service';
 import { MARKETING_ATTRIBUTION_ENABLED } from '../../../../shared/marketing/marketing-attribution-enabled';
 import { MarketingConsentService } from '../../../../shared/marketing/marketing-consent.service';
@@ -31,6 +34,7 @@ const privacy = {
     ensureHealthConsentAsync: vi.fn(),
 };
 const deletion = { busy: signal(false), failed: signal(false), confirmAsync: vi.fn() };
+const dialogs = { open: vi.fn() };
 const marketing = {
     currentDecision: signal<{ allowed: boolean } | null>(null),
     accountSyncFailed: signal(false),
@@ -44,6 +48,7 @@ async function setupAsync(marketingAttributionEnabled = true): Promise<void> {
         ...value,
         healthAcceptedAtUtc: '2026-11-02T10:00:00Z',
         healthDeclinedAtUtc: null,
+        aiAcceptedAtUtc: null,
         marketingAcceptedAtUtc: null,
     }));
     privacy.loadAsync.mockResolvedValue(state());
@@ -55,6 +60,7 @@ async function setupAsync(marketingAttributionEnabled = true): Promise<void> {
         providers: [
             provideRouter([]),
             provideTranslateTesting(),
+            { provide: FdUiDialogService, useValue: dialogs },
             { provide: MARKETING_ATTRIBUTION_ENABLED, useValue: marketingAttributionEnabled },
             { provide: PrivacyConsentFacade, useValue: privacy },
             { provide: MarketingConsentService, useValue: marketing },
@@ -97,6 +103,21 @@ describe('PrivacySettingsComponent marketing choices', () => {
             true,
         );
     });
+});
+
+it.each([true, false])('only saves AI consent after explicit confirmation (%s)', async accepted => {
+    await setupAsync();
+    dialogs.open.mockReturnValue({ afterClosed: () => of(accepted) });
+
+    click('PRIVACY_CHOICES.REVIEW');
+    await fixture.whenStable();
+
+    expect(dialogs.open).toHaveBeenCalledWith(AiConsentDialogComponent, { size: 'lg' });
+    if (accepted) {
+        expect(privacy.chooseAsync).toHaveBeenCalledExactlyOnceWith(2, true);
+    } else {
+        expect(privacy.chooseAsync).not.toHaveBeenCalled();
+    }
 });
 
 it('allows withdrawal of existing marketing consent while the feature is disabled', async () => {

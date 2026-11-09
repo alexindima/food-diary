@@ -112,6 +112,10 @@ public sealed partial class TelegramBotWorker(
             }
         } else if (update.CallbackQuery is { From: { IsBot: false } actor, Message.Chat.Type: ChatType.Private } callback &&
             callback.Message.Chat.Id == actor.Id) {
+            if (BotPhotoTrial.TryReadCallback(callback.Data, out BotOperationId photoOperation)) {
+                await AcceptPhotoTrialAsync(callback, photoOperation, cancellationToken);
+                return;
+            }
             if (callback.Data is "stats:today" or "stats:week") {
                 operation = new BotIncomingOperation("statistics", callback.Message.Chat.Id, actor.Id, callback.Message.Id,
                     OccurredAtUtc: null, actor.LanguageCode, CallbackId: callback.Id,
@@ -146,6 +150,16 @@ public sealed partial class TelegramBotWorker(
         if (operation.CallbackId is { } callbackId) {
             await AnswerCallbackAsync(callbackId, message: null, cancellationToken);
         }
+    }
+
+    private async Task AcceptPhotoTrialAsync(CallbackQuery callback, BotOperationId photoOperation, CancellationToken cancellationToken) {
+        using HttpClient http = httpClientFactory.CreateClient(BotOperationClient.ClientName);
+        var operations = new BotOperationClient(http, options);
+        bool accepted = await operations.AcceptPhotoTrialAsync(photoOperation, callback.From.Id, cancellationToken);
+        string message = BotMenu.IsRussian(callback.From.LanguageCode)
+            ? "Кнопка уже использована или срок предложения истёк."
+            : "This button has already been used or the offer has expired.";
+        await AnswerCallbackAsync(callback.Id, accepted ? null : message, cancellationToken);
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {

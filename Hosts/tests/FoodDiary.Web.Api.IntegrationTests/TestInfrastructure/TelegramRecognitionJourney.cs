@@ -13,16 +13,14 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 [ExcludeFromCodeCoverage]
 internal static class TelegramRecognitionJourney {
     internal static async Task StartAsync(HttpClient client, IServiceProvider services, Guid jobId, Guid assetId) {
+        await AuthenticateBotAsync(client);
         using HttpResponseMessage trial = await client.PostAsync("/api/v1/billing/trial", content: null);
         Assert.Equal(HttpStatusCode.OK, trial.StatusCode);
-        using var botRequest = new HttpRequestMessage(HttpMethod.Post, "/api/v1/auth/telegram/bot/auth") {
-            Content = JsonContent.Create(new { TelegramUserId = 987654321 }),
-        };
-        botRequest.Headers.Add("X-Telegram-Bot-Secret", "telegram-integration-test-secret");
-        using HttpResponseMessage botLogin = await client.SendAsync(botRequest);
-        Assert.Equal(HttpStatusCode.OK, botLogin.StatusCode);
-        using var authentication = JsonDocument.Parse(await botLogin.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.RootElement.GetProperty("accessToken").GetString());
+        using HttpResponseMessage repeatedTrial = await client.PostAsync("/api/v1/billing/trial", content: null);
+        Assert.Equal(HttpStatusCode.Conflict, repeatedTrial.StatusCode);
+        using var trialError = JsonDocument.Parse(await repeatedTrial.Content.ReadAsStringAsync());
+        Assert.Equal("Billing.TrialAlreadyUsed", trialError.RootElement.GetProperty("error").GetString());
+        await AuthenticateBotAsync(client);
         await client.GrantHealthTrackingConsentAsync();
         var request = new { Id = jobId, ImageAssetId = assetId, Description = "Apple" };
         using HttpResponseMessage withoutConsent = await client.PostAsJsonAsync("/api/v1/ai/food/recognitions", request);
@@ -48,6 +46,17 @@ internal static class TelegramRecognitionJourney {
         Assert.Equal("Succeeded", job.RootElement.GetProperty("status").GetString());
         Assert.Equal(52, job.RootElement.GetProperty("nutrition").GetProperty("calories").GetDecimal());
         await VerifyUsageAsync(client);
+    }
+
+    private static async Task AuthenticateBotAsync(HttpClient client) {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/auth/telegram/bot/auth") {
+            Content = JsonContent.Create(new { TelegramUserId = 987654321 }),
+        };
+        request.Headers.Add("X-Telegram-Bot-Secret", "telegram-integration-test-secret");
+        using HttpResponseMessage response = await client.SendAsync(request);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var authentication = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.RootElement.GetProperty("accessToken").GetString());
     }
 
     internal static async Task VerifyUsageAsync(HttpClient client) {

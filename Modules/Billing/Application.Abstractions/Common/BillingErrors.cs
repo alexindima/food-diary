@@ -48,6 +48,11 @@ public static class BillingErrors {
         "Premium trial has already been used for the current user.",
         Kind: ErrorKind.Conflict);
 
+    public static Error TrialUnavailable => new(
+        "Billing.TrialUnavailable",
+        "The Premium trial is only available before the first subscription.",
+        Kind: ErrorKind.Conflict);
+
     public static Error CustomerPortalUnavailable => new(
         "Billing.CustomerPortalUnavailable",
         "Billing management is not available for the current user.",

@@ -48,4 +48,9 @@ public sealed class TelegramOperationsController(ISender mediator) : BaseApiCont
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public Task<IActionResult> Checkpoint(Guid operationId, [FromBody] CheckpointTelegramOperationHttpRequest request) =>
         HandleNoContent(request.ToCommand(operationId));
+
+    [HttpPost("{operationId:guid}/resume")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public Task<IActionResult> Resume(Guid operationId, [FromBody] ResumeTelegramOperationHttpRequest request) =>
+        HandleNoContent(request.ToCommand(operationId));
 }

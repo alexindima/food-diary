@@ -529,7 +529,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         context.Users.Add(target);
         await context.SaveChangesAsync();
 
-        var subscriptionRepository = new BillingSubscriptionRepository(context.BillingSubscriptions);
+        var subscriptionRepository = new BillingSubscriptionRepository(context.BillingSubscriptions, context.BillingPayments);
         BillingSubscription subscription = CreateActiveSubscription(target);
         await subscriptionRepository.AddAsync(subscription);
         await context.SaveChangesAsync();
@@ -545,6 +545,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Equal(target.Id.Value, overviewValue.UserId);
         Assert.Equal(BillingProviderNames.Stripe, overviewValue.Provider);
         Assert.Equal("active", overviewValue.Status);
+        Assert.False(overviewValue.HasPremiumPaymentHistory);
 
         var paymentRepository = new BillingPaymentRepository(context.BillingPayments);
         BillingPayment payment = await paymentRepository.AddAsync(CreatePayment(target, subscription.Id));
@@ -578,6 +579,13 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             "{}",
             "{}"));
         await context.SaveChangesAsync();
+
+        subscription.UpdateCheckoutContext(BillingProviderNames.TelegramStars, "stars-customer", externalPriceId: null, plan: "monthly");
+        await context.SaveChangesAsync();
+        BillingSubscriptionOverviewReadModel? afterPayment = await subscriptionRepository.GetOverviewReadModelByUserIdAsync(target.Id);
+        Assert.NotNull(afterPayment);
+        Assert.Equal(BillingSubscription.PendingCheckoutStatus, afterPayment.Status);
+        Assert.True(afterPayment.HasPremiumPaymentHistory);
 
         Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, webhookEvent.EventId));
         Assert.Same(webhookEvent, await webhookRepository.GetByIdAsync(webhookEvent.TypedId));

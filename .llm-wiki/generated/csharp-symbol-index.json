@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4805,
-    "symbols": 4741,
+    "sourceFiles": 4813,
+    "symbols": 4749,
     "interfaceImplementationLinks": 213,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2452,
+      "class": 2458,
       "enum": 76,
       "interface": 430,
-      "record": 1640,
+      "record": 1642,
       "record struct": 143
     },
     "roles": {
-      "Command": 252,
-      "CommandHandler": 246,
+      "Command": 253,
+      "CommandHandler": 247,
       "Configuration": 105,
       "Controller": 119,
       "Entity": 106,
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1956,
+      "Other": 1959,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 106,
-      "Request": 184,
-      "Response": 278,
+      "Request": 186,
+      "Response": 279,
       "Service": 177,
       "Validator": 238,
       "ValueObject": 183,
@@ -1917,6 +1917,13 @@
       "line": 7
     },
     {
+      "name": "BotPrivacyApi",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotPrivacyApi.cs",
+      "line": 7
+    },
+    {
       "name": "BotRecognitionApi",
       "kind": "class",
       "role": "Other",
@@ -2106,6 +2113,13 @@
       "line": 6
     },
     {
+      "name": "ResumeTelegramOperationHttpRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+      "line": 6
+    },
+    {
       "name": "StartFoodRecognitionHttpRequest",
       "kind": "class",
       "role": "Request",
@@ -2152,6 +2166,13 @@
       "kind": "class",
       "role": "Response",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "name": "UserPrivacyHttpResponse",
+      "kind": "class",
+      "role": "Response",
+      "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
       "line": 6
     },
     {
@@ -2341,6 +2362,13 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoCheckpoint.cs",
+      "line": 4
+    },
+    {
+      "name": "BotPhotoTrial",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/BotPhotoTrial.cs",
       "line": 4
     },
     {
@@ -7319,6 +7347,13 @@
       "role": "Other",
       "path": "Modules/Billing/Application/Common/BillingOperationLockKeys.cs",
       "line": 2
+    },
+    {
+      "name": "BillingTrialPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Common/BillingTrialPolicy.cs",
+      "line": 5
     },
     {
       "name": "TelegramStarsBillingState",
@@ -16827,6 +16862,20 @@
       "line": 7
     },
     {
+      "name": "ResumeTelegramOperationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ResumeTelegramOperationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
+      "line": 9
+    },
+    {
       "name": "RevokeOtherSessionsCommand",
       "kind": "record",
       "role": "Command",
@@ -17965,7 +18014,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "PasswordLoginRetryAfterAttribute",
@@ -18085,6 +18134,13 @@
       "role": "Request",
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/RestoreAccountHttpRequest.cs",
       "line": 4
+    },
+    {
+      "name": "ResumeTelegramOperationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "StartTelegramBackupEmailHttpRequest",

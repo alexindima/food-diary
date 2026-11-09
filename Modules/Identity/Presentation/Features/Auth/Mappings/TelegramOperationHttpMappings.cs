@@ -2,6 +2,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AcquireTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.CheckpointTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResumeTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.ListReadyTelegramOperations;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
@@ -17,4 +18,7 @@ public static class TelegramOperationHttpMappings {
 
     public static CheckpointTelegramOperationCommand ToCommand(this CheckpointTelegramOperationHttpRequest request, Guid operationId) =>
         new(new TelegramOperationId(operationId), new TelegramLeaseId(request.LeaseId), request.Checkpoint, request.Completed, request.NextAttemptAtUtc);
+
+    public static ResumeTelegramOperationCommand ToCommand(this ResumeTelegramOperationHttpRequest request, Guid operationId) =>
+        new(new TelegramOperationId(operationId), request.TelegramUserId, request.ExpectedCheckpoint, request.Checkpoint);
 }

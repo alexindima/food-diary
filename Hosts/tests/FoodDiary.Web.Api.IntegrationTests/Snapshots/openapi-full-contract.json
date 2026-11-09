@@ -7220,6 +7220,59 @@
       ]
     },
     {
+      "Path": "/api/v{version}/auth/telegram/bot/operations/{operationid}/resume",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/ResumeTelegramOperationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/ResumeTelegramOperationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/ResumeTelegramOperationHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "409",
+            "413",
+            "429",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "operationId",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/auth/telegram/complete",
       "Operations": [
         {
@@ -35918,6 +35971,30 @@
           "Name": "rememberMe",
           "Required": false,
           "Type": "boolean",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "ResumeTelegramOperationHttpRequest",
+      "Properties": [
+        {
+          "Name": "checkpoint",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "expectedCheckpoint",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "telegramUserId",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
           "Nullable": false
         }
       ]

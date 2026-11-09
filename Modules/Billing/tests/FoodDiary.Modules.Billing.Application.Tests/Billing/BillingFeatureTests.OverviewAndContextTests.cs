@@ -68,7 +68,7 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
-    public async Task GetBillingOverview_WithExpiredProviderTrial_DoesNotGrantPremium() {
+    public async Task GetBillingOverview_WithExpiredProviderTrial_DoesNotGrantPremiumOrOfferAnotherTrial() {
         var user = User.Create("expired-provider-trial@example.com", "hash");
         user.SetEmailConfirmed(isConfirmed: true);
         var subscription = BillingSubscription.CreatePending(
@@ -105,7 +105,7 @@ public partial class BillingFeatureTests {
         Assert.Null(result.Value.SubscriptionStatus);
         Assert.Null(result.Value.CurrentPeriodStartUtc);
         Assert.Null(result.Value.CurrentPeriodEndUtc);
-        Assert.True(result.Value.CanStartPremiumTrial);
+        Assert.False(result.Value.CanStartPremiumTrial);
     }
 
     [Fact]
@@ -188,11 +188,11 @@ public partial class BillingFeatureTests {
 
     [Theory]
     [InlineData("trialing", 1, true, false)]
-    [InlineData("past_due", null, false, true)]
-    [InlineData("past_due", 0, false, true)]
+    [InlineData("past_due", null, false, false)]
+    [InlineData("past_due", 0, false, false)]
     [InlineData("past_due", 1, true, false)]
-    [InlineData("past_due", -1, false, true)]
-    [InlineData("canceled", 1, false, true)]
+    [InlineData("past_due", -1, false, false)]
+    [InlineData("canceled", 1, false, false)]
     public async Task GetBillingOverview_WithPaidSubscriptionStatuses_ReportsPremiumState(
         string status,
         int? periodEndOffsetDays,

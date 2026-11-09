@@ -19,6 +19,23 @@ internal static class TelegramDeletionJourney {
         using HttpResponseMessage acquire = await client.PostAsync($"{route}/{id}/lease", content: null);
         Assert.Equal(HttpStatusCode.OK, acquire.StatusCode);
         using var lease = JsonDocument.Parse(await acquire.Content.ReadAsStringAsync());
+        using HttpResponseMessage offer = await client.PostAsJsonAsync($"{route}/{id}/checkpoint", new {
+            LeaseId = lease.RootElement.GetProperty("leaseId").GetGuid(),
+            Checkpoint = "trial-offered",
+            Completed = false,
+            NextAttemptAtUtc = DateTime.UtcNow.AddMinutes(15),
+        });
+        Assert.Equal(HttpStatusCode.NoContent, offer.StatusCode);
+        var accept = new { TelegramUserId = 987654321, ExpectedCheckpoint = "trial-offered", Checkpoint = "trial-accepted" };
+        using HttpResponseMessage resumed = await client.PostAsJsonAsync($"{route}/{id}/resume", accept);
+        Assert.Equal(HttpStatusCode.NoContent, resumed.StatusCode);
+        using HttpResponseMessage duplicate = await client.PostAsJsonAsync($"{route}/{id}/resume", accept);
+        Assert.Equal(HttpStatusCode.Conflict, duplicate.StatusCode);
+        using HttpResponseMessage acquireResumed = await client.PostAsync($"{route}/{id}/lease", content: null);
+        Assert.Equal(HttpStatusCode.OK, acquireResumed.StatusCode);
+        using var resumedLease = JsonDocument.Parse(await acquireResumed.Content.ReadAsStringAsync());
+        Assert.Equal("pending-photo", resumedLease.RootElement.GetProperty("payload").GetString());
+        Assert.Equal("trial-accepted", resumedLease.RootElement.GetProperty("checkpoint").GetString());
         using HttpResponseMessage delete = await client.DeleteAsync("/api/v1/users");
         Assert.Equal(HttpStatusCode.NoContent, delete.StatusCode);
         using HttpResponseMessage profile = await client.GetAsync("/api/v1/users/info");
@@ -26,7 +43,7 @@ internal static class TelegramDeletionJourney {
         client.DefaultRequestHeaders.Authorization = null;
         using HttpResponseMessage checkpoint = await client.PostAsJsonAsync($"{route}/{id}/checkpoint",
             new {
-                LeaseId = lease.RootElement.GetProperty("leaseId").GetGuid(),
+                LeaseId = resumedLease.RootElement.GetProperty("leaseId").GetGuid(),
                 Checkpoint = "recognizing",
                 Completed = false,
                 NextAttemptAtUtc = DateTime.UtcNow,

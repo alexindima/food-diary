@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1413,
-    "ambiguousContracts": 32,
-    "consumerEdges": 11513,
-    "productionConsumerEdges": 6383,
+    "contracts": 1415,
+    "ambiguousContracts": 34,
+    "consumerEdges": 11525,
+    "productionConsumerEdges": 6395,
     "testConsumerEdges": 5130,
-    "consumedContracts": 1413,
+    "consumedContracts": 1415,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -20820,6 +20820,42 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ResumeTelegramOperationCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ResumeTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "class",
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs"
+      ],
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
+    },
+    {
       "name": "ReviewContentReportCommand",
       "roles": [
         "Command"
@@ -23645,16 +23681,18 @@
         "Response"
       ],
       "kinds": [
+        "class",
         "record"
       ],
       "areas": [
         "FoodDiary"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
       ],
-      "ambiguous": false,
-      "collisionClassification": "unique"
+      "ambiguous": true,
+      "collisionClassification": "ambiguous"
     },
     {
       "name": "UserRestoredDomainEvent",
@@ -29031,7 +29069,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -30230,7 +30268,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "BillingOverviewHttpResponse",
@@ -49137,7 +49175,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GetBillingOverviewQuery",
@@ -69934,6 +69972,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -72366,6 +72417,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -129592,6 +129656,19 @@
         "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramOperationPolicy",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationPolicy.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Common/TelegramOperationChecks.cs",
       "isTest": false,
       "referenceCount": 2
@@ -129710,6 +129787,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramOperationStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -133051,6 +133141,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAuthenticationIdentityService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -160371,6 +160474,88 @@
       "referenceCount": 2
     },
     {
+      "contract": "ResumeTelegramOperationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ResumeTelegramOperationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ResumeTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Api/Generated/Api/BotOperationsApi.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ResumeTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ResumeTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ResumeTelegramOperationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ResumeTelegramOperationHttpRequest.cs",
+        "Modules/Identity/Presentation/Features/Auth/Requests/ResumeTelegramOperationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "ReviewContentReportCommand",
       "roles": [
         "Command"
@@ -164128,7 +164313,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "StartPremiumTrialCommand",
@@ -172404,6 +172589,21 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
+        "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserPrivacyHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -172417,6 +172617,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
@@ -172430,6 +172631,7 @@
         "Response"
       ],
       "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserPrivacyHttpResponse.cs",
         "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",

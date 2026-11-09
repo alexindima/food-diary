@@ -1531,7 +1531,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
     private static async Task CoverBillingRepositoriesAsync(FoodDiaryDbContext context, UserId userId) {
         DateTime now = DateTime.UtcNow;
-        var subscriptionRepository = new BillingSubscriptionRepository(context.BillingSubscriptions);
+        var subscriptionRepository = new BillingSubscriptionRepository(context.BillingSubscriptions, context.BillingPayments);
         var subscription = BillingSubscription.CreatePending(userId, BillingProviderNames.Stripe, "cus_test", "price_test", "premium");
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,

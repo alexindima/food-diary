@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> subscriptions, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
+public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> subscriptions, DbSet<BillingPayment> payments,
+    Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
     public async Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) {
         await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
@@ -31,7 +32,10 @@ public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> sub
                 subscription.CurrentPeriodEndUtc,
                 subscription.CancelAtPeriodEnd,
                 subscription.NextBillingAttemptUtc,
-                subscription.ExternalSubscriptionId))
+                subscription.ExternalSubscriptionId,
+                payments.Any(payment => payment.UserId == userId &&
+                    (payment.Status == "active" || payment.Status == "paid" || payment.Status == "completed" ||
+                        payment.Status == "succeeded" || payment.Status == "refunded"))))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

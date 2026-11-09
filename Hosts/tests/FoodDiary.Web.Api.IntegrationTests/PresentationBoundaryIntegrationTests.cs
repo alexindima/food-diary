@@ -300,6 +300,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [InlineData("POST", "/api/v1/auth/telegram/bot/operations")]
     [InlineData("POST", "/api/v1/auth/telegram/bot/operations/00000000-0000-0000-0000-000000000001/lease")]
     [InlineData("POST", "/api/v1/auth/telegram/bot/operations/00000000-0000-0000-0000-000000000001/checkpoint")]
+    [InlineData("POST", "/api/v1/auth/telegram/bot/operations/00000000-0000-0000-0000-000000000001/resume")]
     public async Task TelegramOperations_WithoutConfiguredSecret_RejectsBeforeProcessing(string method, string path) {
         HttpClient client = apiFactory.CreateClient();
         using var request = new HttpRequestMessage(new HttpMethod(method), path) { Content = JsonContent.Create(new { }) };
