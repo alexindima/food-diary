@@ -108,17 +108,23 @@ describe('Subscription renewal details', () => {
         expect(host(fixture).querySelector('fd-notice-banner')).toBeNull();
     });
 
-    it('shows expired access without promising that Premium continues', async () => {
+    it.each([
+        { subscriptionStatus: 'canceled', subscriptionProvider: 'paddle', manageBillingAvailable: true },
+        { subscriptionStatus: 'active', subscriptionProvider: 'TelegramStars', manageBillingAvailable: false },
+    ])('shows expired access for $subscriptionProvider with billing status $subscriptionStatus', async subscription => {
         const fixture = await renderOverviewAsync({
             ...activeOverview,
+            ...subscription,
             isPremium: false,
-            subscriptionStatus: 'canceled',
             cancelAtPeriodEnd: true,
             renewalEnabled: false,
+            nextBillingAttemptUtc: null,
         });
 
         const resumeButton = host(fixture).querySelector<HTMLButtonElement>('fd-ui-button[hidden] button');
         expect(host(fixture).textContent).toContain('PREMIUM_PAGE.OVERVIEW.SUBSCRIPTION_ENDED');
+        expect(host(fixture).querySelector('.fd-ui-pill')?.textContent).toContain('PREMIUM_PAGE.STATUS.EXPIRED');
+        expect(host(fixture).textContent).not.toContain('PREMIUM_PAGE.OVERVIEW.ACCESS_UNTIL');
         expect(host(fixture).querySelector('.premium-access-page__renewal-note')).toBeNull();
         expect(host(fixture).querySelector('.fd-ui-pill--success')).toBeNull();
         expect(resumeButton?.textContent).toContain('PREMIUM_PAGE.OVERVIEW.RESUME_ACTION');

@@ -365,8 +365,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8c0abdfb3dde436c3b024b9f48258b727ac4d36014cb957b0dffab7826d6fc8f",
-          "reviewReason": "Reviewed refreshed inventory for the Users-owned activity adapter/controller and optional model. No project reference, host, dependency direction or module ownership change occurred; all 2285 architecture tests pass. Hotspot/removal and separate publication/query evidence guidance remains applicable."
+          "sha256": "ee6cbc948d482fb7f39248cad4bf52d538f366e2776e66895feb83377b825985",
+          "reviewReason": "Reviewed the regenerated component and handler inventory for the Premium UI and Admin grant slices. Existing Admin-to-Users contracts carry the new requests without any project dependency change. The focused architecture suite passed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -389,10 +389,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "Reviewed refreshed inventory for the Users-owned activity adapter/controller and optional model. No project reference, host, dependency direction or module ownership change occurred; all 2285 architecture tests pass. Hotspot/removal and separate publication/query evidence guidance remains applicable.",
-      "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:33.9250356Z"
+      "reason": "Reviewed the regenerated component and handler inventory for the Premium UI and Admin grant slices. Existing Admin-to-Users contracts carry the new requests without any project dependency change. The focused architecture suite passed.",
+      "baseRef": "origin/master",
+      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
+      "reviewedAtUtc": "2026-11-09T06:08:52.5108096Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -853,14 +853,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "c4a17e0c0f87f9f4ac9d6513507ba89aff6d7736f0b2d6da2b086f30a198300e",
-          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
+          "sha256": "52108c22828a6fc2c599df99f6b159400171be6d2548c2c2fe0a7ba93b83300b",
+          "reviewReason": "Reviewed the Users aggregate, strict UTC privilege boundary, nullable EF columns and paired migration. The PostgreSQL API test verified expiration and independent paid access. EF reported no pending model changes. The workflow still describes the applicable checks."
         }
       ],
-      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
-      "baseRef": "HEAD",
-      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
-      "reviewedAtUtc": "2026-11-08T14:00:40.4377878Z"
+      "reason": "Reviewed the Users aggregate, strict UTC privilege boundary, nullable EF columns and paired migration. The PostgreSQL API test verified expiration and independent paid access. EF reported no pending model changes. The workflow still describes the applicable checks.",
+      "baseRef": "origin/master",
+      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
+      "reviewedAtUtc": "2026-11-09T06:08:52.9058992Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1291,8 +1291,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "01b39c866c6b53a0dff4f05ec643cfa6359a4eb5e377cedb397afb6a37a8728e",
-          "reviewReason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion."
+          "sha256": "465f4460345a3afce7391db428de36edf3ee97e94309f3bc5dcd827a4cb1a030",
+          "reviewReason": "Reviewed the new manual grant reason and the shifted index coordinates. The dedicated Admin-authorized response is the only HTTP projection of the reason. Revocation clears the stored reason, and the post-commit audit omits it. The existing lifecycle review procedure still applies."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1305,10 +1305,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
-      "baseRef": "HEAD",
-      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
-      "reviewedAtUtc": "2026-11-08T14:00:41.3822108Z"
+      "reason": "Reviewed the new manual grant reason and the shifted index coordinates. The dedicated Admin-authorized response is the only HTTP projection of the reason. Revocation clears the stored reason, and the post-commit audit omits it. The existing lifecycle review procedure still applies.",
+      "baseRef": "origin/master",
+      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
+      "reviewedAtUtc": "2026-11-09T06:08:53.2977468Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1509,14 +1509,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1c6ad708bf709a11d91944e43088a92e4a18b75c5160411627696eca7fac7385",
-          "reviewReason": "Reviewed the merged runtime inventory against blue_green.py, the Users activity and Billing Telegram cancellation sources. The incoming Billing cancellation job is explicitly inventoried as a hosted/recurring boundary and the existing page still requires opening the implementation for cancellation, delivery and recovery guarantees. Local pre-push accepted the already-Reviewed page state, while CI compared the full published source delta and requires an explicit current source-hash receipt. No runtime workflow guidance or delivery behavior was changed."
+          "sha256": "f562ea9d08bb59477386a0ce879d6677a8b4ee8656af49ce415d000dd9ab88cb",
+          "reviewReason": "Reviewed the runtime topology source fingerprint and source file count changes. The new user-card commands reuse existing API and Users persistence wiring, with no new worker, external provider call, scheduled job or host."
         }
       ],
-      "reason": "Reviewed the merged runtime inventory against blue_green.py, the Users activity and Billing Telegram cancellation sources. The incoming Billing cancellation job is explicitly inventoried as a hosted/recurring boundary and the existing page still requires opening the implementation for cancellation, delivery and recovery guarantees. Local pre-push accepted the already-Reviewed page state, while CI compared the full published source delta and requires an explicit current source-hash receipt. No runtime workflow guidance or delivery behavior was changed.",
-      "baseRef": "380bb1248dcada0947c566079643b460e89a90b5",
-      "gitHead": "378b8bb17b29bad907b91abbc5edb8bae9a249eb",
-      "reviewedAtUtc": "2026-11-08T14:13:12.6746654Z"
+      "reason": "Reviewed the runtime topology source fingerprint and source file count changes. The new user-card commands reuse existing API and Users persistence wiring, with no new worker, external provider call, scheduled job or host.",
+      "baseRef": "origin/master",
+      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
+      "reviewedAtUtc": "2026-11-09T06:08:53.9853948Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1891,8 +1891,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f5a4dd6e2bba947c55b0bf0631f55f50c8c52e669e0725b8ef4628e5274df2e1",
-          "reviewReason": "Reviewed the current page and refreshed catalog containing the literal activity endpoint in the existing Users module. No ranking, frozen corpus, reader or MCP behavior changed. Catalog freshness is navigation evidence; real HTTP/provider/frontend tests separately establish feature behavior, preserving the documented distinction."
+          "sha256": "9bf7765dd361ec30e59388451b975da5751e0022f4966e8d726a73f469d11e11",
+          "reviewReason": "Reviewed the catalog changes for GET, PUT and DELETE on the Admin Premium grant resource and the updated source locations. The catalog lookup workflow still applies to these added entries."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
@@ -1920,10 +1920,10 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "Reviewed the current page and refreshed catalog containing the literal activity endpoint in the existing Users module. No ranking, frozen corpus, reader or MCP behavior changed. Catalog freshness is navigation evidence; real HTTP/provider/frontend tests separately establish feature behavior, preserving the documented distinction.",
-      "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:37.2321423Z"
+      "reason": "Reviewed the catalog changes for GET, PUT and DELETE on the Admin Premium grant resource and the updated source locations. The catalog lookup workflow still applies to these added entries.",
+      "baseRef": "origin/master",
+      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
+      "reviewedAtUtc": "2026-11-09T06:08:53.6707493Z"
     },
     {
       "pageId": "workflow.review-diff",
