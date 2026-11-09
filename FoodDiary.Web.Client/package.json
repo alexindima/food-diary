@@ -176,7 +176,7 @@
         "@types/node": "^26.6.6",
         "@typescript-eslint/eslint-plugin": "^8.72.1",
         "@typescript-eslint/parser": "^8.70.1",
-        "@vitest/coverage-v8": "^5.0.5",
+        "@vitest/coverage-v8": "^5.1.0",
         "ajv": "8.20.0",
         "ajv-formats": "3.0.1",
         "angular-eslint": "^22.6.0",
@@ -213,6 +213,6 @@
         "stylelint-scss": "^7.4.0",
         "typescript": "6.0.3",
         "vite": "^8.3.5",
-        "vitest": "^5.0.1"
+        "vitest": "^5.1.0"
     }
 }
