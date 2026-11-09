@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 
 import { FdCardHoverDirective } from './card-hover.directive';
 
+const hoverShadow = '0 8px 24px rgba(0, 0, 0, 0.16)';
+
 @Component({
     imports: [FdCardHoverDirective],
     template:
@@ -12,7 +14,7 @@ import { FdCardHoverDirective } from './card-hover.directive';
 class CardHoverHostComponent {
     public disabled = false;
     public transform: string | null = 'translateY(-2px)';
-    public shadow: string | null = '0 8px 24px rgba(0, 0, 0, 0.16)';
+    public shadow: string | null = hoverShadow;
 }
 
 describe('FdCardHoverDirective', () => {
@@ -24,7 +26,7 @@ describe('FdCardHoverDirective', () => {
         fixture.detectChanges();
 
         expect(element.style.transform).toBe('translateY(-2px)');
-        expect(element.style.boxShadow).toBe('0 8px 24px rgba(0, 0, 0, 0.16)');
+        expectHoverShadow(element);
 
         element.dispatchEvent(new Event('mouseleave'));
         fixture.detectChanges();
@@ -41,7 +43,7 @@ describe('FdCardHoverDirective', () => {
         fixture.detectChanges();
 
         expect(element.style.transform).toBe('translateY(-2px)');
-        expect(element.style.boxShadow).toBe('0 8px 24px rgba(0, 0, 0, 0.16)');
+        expectHoverShadow(element);
     });
 
     it('should remove hover behavior when disabled', () => {
@@ -59,6 +61,14 @@ describe('FdCardHoverDirective', () => {
         expect(element.style.boxShadow).toBe('');
     });
 });
+
+function expectHoverShadow(element: HTMLButtonElement): void {
+    // Compare the shadow in the DOM's own serialization format.
+    const expectedStyle = document.createElement('button').style;
+    expectedStyle.boxShadow = hoverShadow;
+    expect(element.style.boxShadow).not.toBe('');
+    expect(element.style.boxShadow).toBe(expectedStyle.boxShadow);
+}
 
 function createFixture(): ComponentFixture<CardHoverHostComponent> {
     const fixture = TestBed.createComponent(CardHoverHostComponent);
