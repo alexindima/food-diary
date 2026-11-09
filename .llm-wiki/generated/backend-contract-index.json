@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1426,
     "ambiguousContracts": 34,
-    "consumerEdges": 11583,
+    "consumerEdges": 11584,
     "productionConsumerEdges": 6451,
-    "testConsumerEdges": 5132,
+    "testConsumerEdges": 5133,
     "consumedContracts": 1426,
     "unconsumedContracts": 0
   },
@@ -158715,6 +158715,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardCancellationIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
