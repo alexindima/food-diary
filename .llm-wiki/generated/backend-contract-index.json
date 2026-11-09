@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1413,
     "ambiguousContracts": 32,
-    "consumerEdges": 11509,
-    "productionConsumerEdges": 6379,
+    "consumerEdges": 11513,
+    "productionConsumerEdges": 6383,
     "testConsumerEdges": 5130,
     "consumedContracts": 1413,
     "unconsumedContracts": 0
@@ -28256,7 +28256,20 @@
         "Modules/Admin/Presentation/Requests/AdminUserPremiumGrantHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminUserPremiumGrantHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminUserPremiumGrantHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminUserPremiumGrantHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28269,9 +28282,22 @@
         "Modules/Admin/Presentation/Responses/AdminUserPremiumGrantHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
       "isTest": false,
-      "referenceCount": 6
+      "referenceCount": 3
+    },
+    {
+      "contract": "AdminUserPremiumGrantHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminUserPremiumGrantHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminUserPremiumGrantHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "AdminUserRoleAuditEventHttpResponse",
@@ -48368,7 +48394,7 @@
         "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminUserPremiumGrantHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -122832,6 +122858,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -136001,6 +136040,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -137108,19 +137160,6 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/UsersIdentityContractAssemblyTests.cs",
       "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Users/Application.Abstractions/Common/IUserRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
-      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -141137,6 +141176,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -162430,7 +162482,7 @@
         "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Mappings/AdminUserPremiumGrantHttpMappings.cs",
       "isTest": false,
       "referenceCount": 2
     },

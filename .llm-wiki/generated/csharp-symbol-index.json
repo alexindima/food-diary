@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4803,
-    "symbols": 4739,
+    "sourceFiles": 4805,
+    "symbols": 4741,
     "interfaceImplementationLinks": 213,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2450,
+      "class": 2452,
       "enum": 76,
       "interface": 430,
       "record": 1640,
@@ -23,7 +23,7 @@
       "Command": 252,
       "CommandHandler": 246,
       "Configuration": 105,
-      "Controller": 118,
+      "Controller": 119,
       "Entity": 106,
       "Event": 20,
       "Factory": 15,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1955,
+      "Other": 1956,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -4633,11 +4633,18 @@
       "line": 16
     },
     {
+      "name": "AdminUserPremiumGrantController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+      "line": 18
+    },
+    {
       "name": "AdminUsersController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
-      "line": 19
+      "line": 17
     },
     {
       "name": "AdminPresentationServiceCollectionExtensions",
@@ -4792,6 +4799,13 @@
       "role": "Other",
       "path": "Modules/Admin/Presentation/Mappings/AdminTemplateRevisionHttpMappings.cs",
       "line": 6
+    },
+    {
+      "name": "AdminUserPremiumGrantHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Mappings/AdminUserPremiumGrantHttpMappings.cs",
+      "line": 8
     },
     {
       "name": "AdminAiPromptDraftHttpRequest",

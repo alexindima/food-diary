@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
     "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 48,
+    "criticalSymbolsWithoutTestReferences": 49,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -6137,6 +6137,16 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
       "line": 20,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AdminUserPremiumGrantController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+      "line": 18,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

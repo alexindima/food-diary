@@ -19,7 +19,7 @@
     "applicationModules": 0,
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
-    "controllers": 115,
+    "controllers": 116,
     "endpoints": 378,
     "agentGuides": 297,
     "documentationPages": 253
@@ -15833,6 +15833,28 @@
         ]
       },
       {
+        "name": "AdminUserPremiumGrantController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+            "line": 19
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+            "line": 26
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+            "line": 33
+          }
+        ]
+      },
+      {
         "name": "AdminUsersController",
         "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
         "routePrefix": "api/v{version:apiVersion}/admin/users",
@@ -15840,57 +15862,42 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users",
-            "line": 20
+            "line": 18
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
-            "line": 26
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
-            "line": 33
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
-            "line": 40
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
-            "line": 48
+            "line": 24
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/role-audit",
-            "line": 56
+            "line": 31
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/impersonation-sessions",
-            "line": 63
+            "line": 38
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/login-events",
-            "line": 69
+            "line": 44
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/login-summary",
-            "line": 75
+            "line": 50
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
-            "line": 81
+            "line": 56
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/impersonation",
-            "line": 91
+            "line": 66
           }
         ]
       },

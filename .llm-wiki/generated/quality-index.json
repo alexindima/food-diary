@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6999,
+    "productionFiles": 7001,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
-    "criticalSymbols": 1054,
+    "criticalSymbols": 1055,
     "criticalSymbolsWithTestReferences": 1006,
-    "criticalSymbolsWithoutTestReferences": 48,
+    "criticalSymbolsWithoutTestReferences": 49,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -23649,12 +23649,20 @@
       "structuralRiskScore": 2.48
     },
     {
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.7
+    },
+    {
       "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
-      "nonBlankLines": 96,
+      "nonBlankLines": 74,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.92
+      "structuralRiskScore": 3.48
     },
     {
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
@@ -23833,6 +23841,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Admin/Presentation/Mappings/AdminUserPremiumGrantHttpMappings.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
       "path": "Modules/Admin/Presentation/Requests/AdminAiPromptDraftHttpRequest.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -23962,11 +23978,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Requests/AdminUserPremiumGrantHttpRequest.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Admin/Presentation/Requests/AdminUserSetPasswordHttpRequest.cs",
@@ -49114,11 +49130,11 @@
     },
     {
       "path": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 36,
       "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 18.16
+      "structuralRiskScore": 18.22
     },
     {
       "path": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
@@ -60292,10 +60308,20 @@
       "coveredThrough": []
     },
     {
+      "name": "AdminUserPremiumGrantController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
+      "line": 18,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AdminUsersController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
-      "line": 19,
+      "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",

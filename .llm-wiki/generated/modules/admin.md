@@ -180,15 +180,20 @@ Source: `Modules/Admin/Presentation/Controllers/AdminUserPasswordController.cs`
 
 - `PATCH /api/v{version:apiVersion}/admin/users/{id:guid}/password`
 
+### AdminUserPremiumGrantController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
+- `PUT /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
+- `DELETE /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
+
 ### AdminUsersController
 
 Source: `Modules/Admin/Presentation/Controllers/AdminUsersController.cs`
 
 - `GET /api/v{version:apiVersion}/admin/users`
 - `GET /api/v{version:apiVersion}/admin/users/{id:guid}`
-- `GET /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
-- `PUT /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
-- `DELETE /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
 - `GET /api/v{version:apiVersion}/admin/users/{id:guid}/role-audit`
 - `GET /api/v{version:apiVersion}/admin/users/impersonation-sessions`
 - `GET /api/v{version:apiVersion}/admin/users/login-events`
