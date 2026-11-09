@@ -10,7 +10,10 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Users.Application.Commands.SetUserManualPremiumGrant;
 
-public sealed class SetUserManualPremiumGrantCommandHandler(IUserRepository users, TimeProvider clock)
+public sealed class SetUserManualPremiumGrantCommandHandler(
+    IUserLookupRepository userLookupRepository,
+    IUserWriteRepository userWriteRepository,
+    TimeProvider clock)
     : IRequestHandler<SetUserManualPremiumGrantCommand, Result<UserManualPremiumGrantModel>> {
     public async Task<Result<UserManualPremiumGrantModel>> Handle(SetUserManualPremiumGrantCommand request, CancellationToken cancellationToken) {
         DateTime? end = request.EndsAt?.UtcDateTime;
@@ -24,12 +27,12 @@ public sealed class SetUserManualPremiumGrantCommandHandler(IUserRepository user
         if (request.UserId == SystemContentOwner.Id) {
             return Result.Failure<UserManualPremiumGrantModel>(UserErrors.NotFound(request.UserId));
         }
-        User? user = await users.GetByIdIncludingDeletedAsync(request.UserId, cancellationToken);
+        User? user = await userLookupRepository.GetByIdIncludingDeletedAsync(request.UserId, cancellationToken);
         if (user is null || user.DeletedAt is not null) {
             return Result.Failure<UserManualPremiumGrantModel>(UserErrors.NotFound(request.UserId));
         }
         user.SetManualPremiumGrant(end, reason);
-        await users.UpdateAsync(user, cancellationToken);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(new UserManualPremiumGrantModel(user.ManualPremiumEndsAtUtc, user.ManualPremiumReason));
     }
 }

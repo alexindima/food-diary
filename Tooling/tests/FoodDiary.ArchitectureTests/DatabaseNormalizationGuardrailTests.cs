@@ -62,6 +62,9 @@ public sealed class DatabaseNormalizationGuardrailTests {
         "Recipe.TotalFats",
         "Recipe.TotalFiber",
         "Recipe.TotalProteins",
+        // The administrator supplies these independent grant facts on the owning user.
+        "User.ManualPremiumEndsAtUtc",
+        "User.ManualPremiumReason",
     };
 
     private static readonly HashSet<string> AllowedRawSqlDocumentColumns = new(StringComparer.Ordinal) {

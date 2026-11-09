@@ -3589,7 +3589,11 @@ test.describe('scoped frontend owners', () => {
         const failedAttempts = billingAttempts;
         billingCanSucceed = true;
         await retry.click();
-        await expect(subscriptionPage.getByText('You are currently using the free plan.', { exact: true })).toBeVisible();
+        await expect(subscriptionPage.getByRole('heading', { name: 'Free plan', exact: true, level: 2 })).toBeVisible();
+        await expect(subscriptionPage.getByRole('button', { name: 'Start for free', exact: true })).toBeVisible();
+        const terms = subscriptionPage.getByRole('button', { name: 'Subscription terms and help', exact: true });
+        await terms.click();
+        await expect(terms).toHaveAttribute('aria-expanded', 'true');
         await expect(subscriptionPage.getByRole('link', { name: 'admin@fooddiary.club', exact: true })).toHaveAttribute(
             'href',
             'mailto:admin@fooddiary.club',

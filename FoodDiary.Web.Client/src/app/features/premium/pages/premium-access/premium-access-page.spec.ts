@@ -131,6 +131,19 @@ describe('Premium Telegram Stars', () => {
         expect(component['checkoutReturnState']()).toBe('canceled');
         expect(authService.refreshSession).not.toHaveBeenCalled();
     });
+
+    it('keeps the free plan and reports a failed Telegram invoice', async () => {
+        miniApp = true;
+        offerStars();
+        openInvoice.mockResolvedValue('failed');
+        const { component } = setupComponent();
+        await settleAsync();
+        await component['startCheckoutAsync']('monthly', 'TelegramStars');
+        expect(component['isPremium']()).toBe(false);
+        expect(component['checkoutReturnState']()).toBeNull();
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(authService.refreshSession).not.toHaveBeenCalled();
+    });
 });
 
 describe('PremiumAccessPageComponent checkout', () => {
@@ -419,6 +432,22 @@ describe('PremiumAccessPageComponent checkout return', () => {
         expect(component['overview']()).toEqual(premiumOverview);
         expect(component['checkoutReturnState']()).toBe('success');
         expect(toastService.success).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE');
+        expect(router.navigate).toHaveBeenCalledWith([], {
+            relativeTo: routeStub,
+            queryParams: {},
+            replaceUrl: true,
+        });
+    });
+
+    it('reports a canceled checkout and clears the return URL without refreshing access', async () => {
+        queryParams = { checkout: 'canceled' };
+        const { component } = setupComponent();
+        await settleAsync();
+
+        expect(component['checkoutReturnState']()).toBe('canceled');
+        expect(component['isPremium']()).toBe(false);
+        expect(authService.refreshSession).not.toHaveBeenCalled();
+        expect(toastService.info).toHaveBeenCalledWith('PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE');
         expect(router.navigate).toHaveBeenCalledWith([], {
             relativeTo: routeStub,
             queryParams: {},

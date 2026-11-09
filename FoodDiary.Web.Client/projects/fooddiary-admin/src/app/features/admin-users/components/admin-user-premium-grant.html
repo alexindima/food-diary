@@ -18,7 +18,7 @@
             }
 
             @if (editing()) {
-                <form class="fd-grid fd-gap-sm" [formRoot]="form">
+                <form class="fd-grid fd-gap-sm" method="post" [formRoot]="form">
                     <fd-ui-input
                         type="datetime-local"
                         floatLabel="always"
