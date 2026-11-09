@@ -420,17 +420,51 @@ public sealed class TelegramBotWorkerTests {
         Assert.Equal("https://app.example.test" + path, button.WebApp?.Url);
     }
 
-    [Fact]
-    public async Task HandleUpdateAsync_WaterShortcut_SendsTheExistingAmountChoices() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task HandleUpdateAsync_WaterShortcut_ShowsCustomChoiceWhenDurableOperationsAreEnabled(bool operationsEnabled) {
         var botClient = new RecordingTelegramBotClient();
-        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions(operationsEnabled));
+        Update update = CreateMessageUpdate("💧 Вода", telegramUserId: 123);
+        update.Message!.From!.LanguageCode = "ru";
 
-        await InvokeHandleUpdateAsync(worker, botClient, CreateMessageUpdate("💧 Вода", telegramUserId: 100));
+        await InvokeHandleUpdateAsync(worker, botClient, update);
 
         object request = Assert.Single(botClient.Requests);
         InlineKeyboardMarkup keyboard = Assert.IsType<InlineKeyboardMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
-        Assert.Equal(new[] { "water:250", "water:500" },
-            Assert.Single(keyboard.InlineKeyboard).Select(button => button.CallbackData), StringComparer.Ordinal);
+        IEnumerable<InlineKeyboardButton>[] rows = [.. keyboard.InlineKeyboard];
+        Assert.Equal(operationsEnabled ? 2 : 1, rows.Length);
+        Assert.Equal(new[] { "water:250", "water:500" }, rows[0].Select(button => button.CallbackData), StringComparer.Ordinal);
+        if (operationsEnabled) {
+            InlineKeyboardButton custom = Assert.Single(rows[1]);
+            Assert.Multiple(
+                () => Assert.Equal("Свой объём", custom.Text),
+                () => Assert.Equal("water:custom", custom.CallbackData));
+        }
+    }
+
+    [Theory]
+    [InlineData("ru", "Введите объём воды в мл", "Объём в мл")]
+    [InlineData("en", "Enter the amount of water in ml", "Amount in ml")]
+    public async Task HandleUpdateAsync_CustomWaterCallback_OpensAReplyPrompt(string language, string promptStart, string placeholder) {
+        var botClient = new RecordingTelegramBotClient();
+        var httpFactory = new RecordingHttpClientFactory();
+        TelegramBotWorker worker = CreateWorker(botClient, httpFactory, CreateOptions(operationsEnabled: true));
+        Update update = CreateCallbackUpdate("water:custom");
+        update.CallbackQuery!.From.LanguageCode = language;
+
+        await InvokeHandleUpdateAsync(worker, botClient, update);
+
+        Assert.Equal(2, botClient.Requests.Count);
+        Assert.Equal("AnswerCallbackQueryRequest", botClient.Requests[0].GetType().Name);
+        object request = botClient.Requests[1];
+        ForceReplyMarkup markup = Assert.IsType<ForceReplyMarkup>(GetPropertyValue<object?>(request, "ReplyMarkup"));
+        Assert.Multiple(
+            () => Assert.StartsWith(promptStart, GetPropertyValue<string>(request, "Text"), StringComparison.Ordinal),
+            () => Assert.True(markup.ForceReply),
+            () => Assert.Equal(placeholder, markup.InputFieldPlaceholder),
+            () => Assert.Empty(httpFactory.Requests));
     }
 
     [Theory]
@@ -542,7 +576,7 @@ public sealed class TelegramBotWorkerTests {
         await InvokeHandleUpdateAsync(worker, botClient, CreateCallbackUpdate("water:500"));
 
         object request = Assert.Single(botClient.Requests);
-        Assert.Equal("Added 500 ml.", GetPropertyValue<string>(request, "Text"));
+        Assert.Equal("💧 Added 500 ml of water.", GetPropertyValue<string>(request, "Text"));
         Assert.Equal("Bearer", httpFactory.Requests[1].Headers.Authorization?.Scheme);
         Assert.Equal("access-token", httpFactory.Requests[1].Headers.Authorization?.Parameter);
         Assert.Equal("https://api.example.test/api/v1/hydrations", httpFactory.Requests[1].RequestUri?.ToString());

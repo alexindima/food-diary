@@ -133,14 +133,17 @@ public sealed class BotPhotoPipelineTests {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task Water_UsesDurableTimestampAndDoesNotRepeatSavedMutation(bool notificationOnly) {
+    [InlineData(false, "en", 250, "💧 Added 250 ml of water.")]
+    [InlineData(true, "en", 500, "💧 Added 500 ml of water.")]
+    [InlineData(false, "ru", 330, "💧 Добавлено 330 мл воды.")]
+    [InlineData(true, "ru", 330, "💧 Добавлено 330 мл воды.")]
+    public async Task Water_UsesDurableTimestampAndDoesNotRepeatSavedMutation(bool notificationOnly, string language,
+        int amountMl, string expectedNotice) {
         var operationId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
         DateTime createdAt = new(2026, 9, 10, 23, 59, 0, DateTimeKind.Utc);
-        var incoming = new BotIncomingOperation("water", 123, 123, 10, OccurredAtUtc: null, "en", AmountMl: 250);
+        var incoming = new BotIncomingOperation("water", 123, 123, 10, OccurredAtUtc: null, language, AmountMl: amountMl);
         var checkpoint = new BotPhotoCheckpoint(notificationOnly ? "water-saved" : "received", WaterEntryId: notificationOnly ? entryId : null);
         var lease = new BotOperationLease(new BotOperationId(operationId), new BotLeaseId(Guid.NewGuid()), new BotUserId(userId), 1, JsonSerializer.Serialize(incoming),
             JsonSerializer.Serialize(checkpoint), DateTime.UtcNow.AddMinutes(2), createdAt);
@@ -160,12 +163,13 @@ public sealed class BotPhotoPipelineTests {
                 mutations++;
                 using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
                 Assert.Equal(createdAt, body.RootElement.GetProperty("timestampUtc").GetDateTime());
-                Assert.Equal(250, body.RootElement.GetProperty("amountMl").GetInt32());
-                return Json(new BotHydrationReceipt(new BotOperationId(operationId), new BotHydrationEntryId(entryId), createdAt, 250));
+                Assert.Equal(amountMl, body.RootElement.GetProperty("amountMl").GetInt32());
+                return Json(new BotHydrationReceipt(new BotOperationId(operationId), new BotHydrationEntryId(entryId), createdAt, amountMl));
             }
             if (path.EndsWith("/sendMessage", StringComparison.OrdinalIgnoreCase)) {
                 notices++;
-                Assert.Contains("250 ml", await request.Content!.ReadAsStringAsync(), StringComparison.Ordinal);
+                using JsonDocument message = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync());
+                Assert.Equal(expectedNotice, message.RootElement.GetProperty("text").GetString());
                 return Json(new { ok = true, result = new { message_id = 77, date = 1789214400, chat = new { id = 123, type = "private" }, text = "Water" } });
             }
             if (path.EndsWith("/checkpoint", StringComparison.Ordinal)) {

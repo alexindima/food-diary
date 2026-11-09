@@ -7,6 +7,9 @@ namespace FoodDiary.Telegram.Bot;
 internal static class BotInputParser {
     private const string WaterPrefix = "water:";
 
+    internal static bool TryParseCustomWaterAmount(string? text, out int amountMl) =>
+        int.TryParse(text.AsSpan().Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out amountMl) && amountMl is > 0 and <= 10_000;
+
     internal static bool TryParseWaterAmount(string? callbackData, out int amountMl) {
         amountMl = 0;
         if (string.IsNullOrWhiteSpace(callbackData) ||

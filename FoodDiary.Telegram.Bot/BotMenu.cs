@@ -1,3 +1,4 @@
+using System.Globalization;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoodDiary.Telegram.Bot;
@@ -6,6 +7,9 @@ internal static class BotMenu {
     internal const string DashboardPath = "/dashboard";
     internal const string MealPath = "/meals/add";
     internal const string SettingsPath = "/profile";
+    internal const string CustomWaterCallback = "water:custom";
+    internal const string RussianWaterPrompt = "Введите объём воды в мл (от 1 до 10 000), например 330.";
+    internal const string EnglishWaterPrompt = "Enter the amount of water in ml (1 to 10,000), for example 330.";
 
     private static readonly Shortcut WaterShortcut = new("/water", "💧 Water", "💧 Вода");
     private static readonly Shortcut MealShortcut = new("/meal", "🍽 Add meal", "🍽 Добавить еду");
@@ -97,10 +101,23 @@ internal static class BotMenu {
             : "\n/today — today\n/week — 7 days\n\nWith Food Diary Premium, send one food photo. After successful recognition, the meal is saved automatically with an Undo button in the reply. Add a caption to describe the food. Edit entries in your diary.");
     }
 
-    internal static InlineKeyboardMarkup Water(string? language) => new(
-        InlineKeyboardButton.WithCallbackData(IsRussian(language) ? "+250 мл" : "+250 ml", "water:250"),
-        InlineKeyboardButton.WithCallbackData(IsRussian(language) ? "+500 мл" : "+500 ml", "water:500")
-    );
+    internal static InlineKeyboardMarkup Water(string? language, bool customAmountEnabled) {
+        bool russian = IsRussian(language);
+        List<IEnumerable<InlineKeyboardButton>> rows = [
+            [
+                InlineKeyboardButton.WithCallbackData(russian ? "+250 мл" : "+250 ml", "water:250"),
+                InlineKeyboardButton.WithCallbackData(russian ? "+500 мл" : "+500 ml", "water:500"),
+            ],
+        ];
+        if (customAmountEnabled) {
+            rows.Add([InlineKeyboardButton.WithCallbackData(russian ? "Свой объём" : "Custom amount", CustomWaterCallback)]);
+        }
+        return new InlineKeyboardMarkup(rows);
+    }
+
+    internal static string WaterAdded(int amountMl, bool russian) => russian
+        ? string.Create(CultureInfo.InvariantCulture, $"💧 Добавлено {amountMl} мл воды.")
+        : string.Create(CultureInfo.InvariantCulture, $"💧 Added {amountMl} ml of water.");
 
     internal static InlineKeyboardMarkup Actions(TelegramBotOptions options, string? language) {
         bool ru = IsRussian(language);

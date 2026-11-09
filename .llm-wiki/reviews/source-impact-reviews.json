@@ -370,8 +370,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a92bf6185404471a8ea117965013e265f115beb0295de1001b8c405b8b1c218d",
-          "reviewReason": "Verified the new Identity command and existing controller keep identity resolution and HTTP mapping separate. The architecture suite and focused PostgreSQL, bot and HTTP checks exercised the changed boundaries."
+          "sha256": "902d4159a1b0896950dd26d15467598fdc53ea2861418fcca8ddc5cd23a2d04e",
+          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -394,10 +394,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "Verified the new Identity command and existing controller keep identity resolution and HTTP mapping separate. The architecture suite and focused PostgreSQL, bot and HTTP checks exercised the changed boundaries.",
-      "baseRef": "HEAD",
-      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
-      "reviewedAtUtc": "2026-11-09T07:59:22.1602548Z"
+      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
+      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
+      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
+      "reviewedAtUtc": "2026-11-09T13:39:31.0963512Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -858,14 +858,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "52108c22828a6fc2c599df99f6b159400171be6d2548c2c2fe0a7ba93b83300b",
-          "reviewReason": "Reviewed the Users aggregate, strict UTC privilege boundary, nullable EF columns and paired migration. The PostgreSQL API test verified expiration and independent paid access. EF reported no pending model changes. The workflow still describes the applicable checks."
+          "sha256": "6fe6e14a36a6ce5b75713ab4b8716bf2ebd166553eb4c22e5a745bd32b5f8d0d",
+          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
         }
       ],
-      "reason": "Reviewed the Users aggregate, strict UTC privilege boundary, nullable EF columns and paired migration. The PostgreSQL API test verified expiration and independent paid access. EF reported no pending model changes. The workflow still describes the applicable checks.",
-      "baseRef": "origin/master",
-      "gitHead": "0a92a3ec7bdcbc3af4c03a7a702d20366642e0f2",
-      "reviewedAtUtc": "2026-11-09T06:08:52.9058992Z"
+      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
+      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
+      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
+      "reviewedAtUtc": "2026-11-09T13:39:31.4568391Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1296,8 +1296,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "ad08a98712d68c7f081976355deedbdd1e774b33c46781c2131704f7a87a3429",
-          "reviewReason": "The resume request carries the current Telegram identity and opaque checkpoints. The journal retains the protected file reference for up to 15 minutes while awaiting consent. Images are downloaded only after acceptance and required privacy grants. Owner and security-version checks plus terminal erasure remain enforced."
+          "sha256": "ffe2e21e7f5c4531ef2e9c8a333d2ff4800b613565df56a2fb96396c3d1aee77",
+          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1310,10 +1310,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "The resume request carries the current Telegram identity and opaque checkpoints. The journal retains the protected file reference for up to 15 minutes while awaiting consent. Images are downloaded only after acceptance and required privacy grants. Owner and security-version checks plus terminal erasure remain enforced.",
-      "baseRef": "HEAD",
-      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
-      "reviewedAtUtc": "2026-11-09T07:59:22.6981656Z"
+      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
+      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
+      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
+      "reviewedAtUtc": "2026-11-09T13:39:31.8791841Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1514,14 +1514,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "47b32ffa4fb89e9305732977a73013438922ee854d79adb9cee9019a35e7f08f",
-          "reviewReason": "Bot photo processing reads current consent before Telegram download and storage upload. The waiting callback reuses the signed owner-bound resume API, current lease fencing and expiry. The generated topology adds the existing privacy check dependency."
+          "sha256": "5c751788972cd935d4a93da1ecd12471fe28c0aa6cb307659936cc2776f9d18f",
+          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
         }
       ],
-      "reason": "Bot photo processing reads current consent before Telegram download and storage upload. The waiting callback reuses the signed owner-bound resume API, current lease fencing and expiry. The generated topology adds the existing privacy check dependency.",
-      "baseRef": "HEAD",
-      "gitHead": "820729ddb978bfd3a50dfaf25e32fc4cd557e540",
-      "reviewedAtUtc": "2026-11-09T08:55:48.4151401Z"
+      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
+      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
+      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
+      "reviewedAtUtc": "2026-11-09T13:39:32.8659730Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1896,8 +1896,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0b776eb7ec910d4ecddf8a87a6a3e2621c3a7d917b37921a33c47d17de7f8edf",
-          "reviewReason": "The endpoint catalog adds only the Telegram operation resume route. Checked the path, POST verb, controller ownership and matching bot SDK operation against the API export."
+          "sha256": "16a17b4f0fca8ef72cfaeac0b03a66fa1a434427e0ce0c0ee61028e0427f0b21",
+          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
@@ -1925,10 +1925,10 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "The endpoint catalog adds only the Telegram operation resume route. Checked the path, POST verb, controller ownership and matching bot SDK operation against the API export.",
-      "baseRef": "HEAD",
-      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
-      "reviewedAtUtc": "2026-11-09T07:59:23.1997480Z"
+      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
+      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
+      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
+      "reviewedAtUtc": "2026-11-09T13:39:32.2953591Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -16,11 +16,12 @@ namespace FoodDiary.Telegram.Bot.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIntakeDeliveryTests {
     [Fact]
-    public async Task PrivatePhoto_PreservesAttachedCaptionInTheDurableOperation() {
+    public async Task PrivatePhotoReplyToWaterPrompt_PreservesAttachedCaptionInTheDurableOperation() {
         using var scenario = new IntakeScenario();
         const string caption = "Гречка с курицей\nСоус отдельно";
         Update photo = MessageUpdate(10, 100, text: null);
-        photo.Message!.Caption = caption;
+        photo.Message!.ReplyToMessage = WaterPrompt(photo.Message.Chat, botId: 123);
+        photo.Message.Caption = caption;
         photo.Message.Photo = [new PhotoSize { FileId = "food", FileUniqueId = "photo", Width = 400, Height = 400, FileSize = 1024 }];
 
         await scenario.Receiver.ProcessBatchAsync([photo], CancellationToken.None);
@@ -31,6 +32,43 @@ public sealed class TelegramIntakeDeliveryTests {
             () => Assert.Equal(caption, operation.Caption),
             () => Assert.Equal("food", operation.FileId));
     }
+
+    [Theory]
+    [InlineData(123L, "330", 330)]
+    [InlineData(123L, " 10000 ", 10000)]
+    [InlineData(null, "330", null)]
+    [InlineData(999L, "330", null)]
+    [InlineData(123L, "0", null)]
+    [InlineData(123L, "10001", null)]
+    [InlineData(123L, "1.5", null)]
+    public async Task CustomWater_QueuesOnlyValidAmountsInRepliesToTheBotPrompt(long? promptAuthor, string text, int? amountMl) {
+        using var scenario = new IntakeScenario();
+        Update update = MessageUpdate(10, 100, text);
+        if (promptAuthor is { } botId) {
+            update.Message!.ReplyToMessage = WaterPrompt(update.Message.Chat, botId);
+        }
+
+        await scenario.Receiver.ProcessBatchAsync([update], CancellationToken.None);
+
+        if (amountMl is null) {
+            Assert.Empty(scenario.RegistrationAttempts);
+            Assert.Equal("sendMessage", Assert.Single(scenario.TelegramMethods));
+            return;
+        }
+        BotIncomingOperation operation = Assert.Single(scenario.RegisteredOperations);
+        Assert.Multiple(
+            () => Assert.Equal("water", operation.Kind),
+            () => Assert.Equal(amountMl, operation.AmountMl),
+            () => Assert.Equal(10, operation.MessageId),
+            () => Assert.Empty(scenario.TelegramMethods));
+    }
+
+    private static Message WaterPrompt(Chat chat, long botId) => new() {
+        Id = 9,
+        Chat = chat,
+        From = new User { Id = botId, IsBot = true, FirstName = "Bot" },
+        Text = BotMenu.RussianWaterPrompt,
+    };
 
     [Theory]
     [InlineData("Today", 1)]

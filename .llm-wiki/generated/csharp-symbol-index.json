@@ -2194,7 +2194,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/BotMenu.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "BotUriHelper",
@@ -2460,7 +2460,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "Program",

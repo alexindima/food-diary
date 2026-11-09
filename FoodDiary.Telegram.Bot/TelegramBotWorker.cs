@@ -108,6 +108,13 @@ public sealed partial class TelegramBotWorker(
                 if (command is "/today" or "/week") {
                     operation = new BotIncomingOperation("statistics", message.Chat.Id, sender.Id, message.Id, message.Date,
                         sender.LanguageCode, PeriodDays: string.Equals(command, "/today", StringComparison.Ordinal) ? 1 : 7);
+                } else if (command?.TrimStart().StartsWith('/') == false && IsCustomWaterReply(message)) {
+                    if (!BotInputParser.TryParseCustomWaterAmount(message.Text, out int amountMl)) {
+                        await SendCustomWaterPromptAsync(message.Chat.Id, sender.LanguageCode, cancellationToken);
+                        return;
+                    }
+                    operation = new BotIncomingOperation("water", message.Chat.Id, sender.Id, message.Id, message.Date,
+                        sender.LanguageCode, AmountMl: amountMl);
                 }
             }
         } else if (update.CallbackQuery is { From: { IsBot: false } actor, Message.Chat.Type: ChatType.Private } callback &&
@@ -133,10 +140,14 @@ public sealed partial class TelegramBotWorker(
             await HandleUpdateAsync(botClient, update, cancellationToken);
             return;
         }
+        await RegisterOperationAsync(update.Id, operation, cancellationToken);
+    }
+
+    private async Task RegisterOperationAsync(int updateId, BotIncomingOperation operation, CancellationToken cancellationToken) {
         using HttpClient http = httpClientFactory.CreateClient(BotOperationClient.ClientName);
         var client = new BotOperationClient(http, options);
         try {
-            await client.RegisterAsync(update.Id, operation.TelegramUserId, JsonSerializer.Serialize(operation), cancellationToken);
+            await client.RegisterAsync(updateId, operation.TelegramUserId, JsonSerializer.Serialize(operation), cancellationToken);
         } catch (BotOperationApiException error) when (error.ErrorCode is "Authentication.TelegramNotLinked" or
             "Authentication.InvalidToken" or "Authentication.AccountDeleted") {
             string instruction = operation.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true
@@ -280,7 +291,19 @@ public sealed partial class TelegramBotWorker(
 
     private Task SendWaterMenuAsync(long chatId, string? language, CancellationToken cancellationToken) =>
         botClient.SendMessage(chatId, BotMenu.IsRussian(language) ? "Сколько воды добавить?" : "How much water would you like to add?",
-            replyMarkup: BotMenu.Water(language), cancellationToken: cancellationToken);
+            replyMarkup: BotMenu.Water(language, _options.OperationsEnabled), cancellationToken: cancellationToken);
+
+    private bool IsCustomWaterReply(Message message) =>
+        message.ReplyToMessage is { From.IsBot: true } prompt &&
+        prompt.From.Id == botClient.BotId && prompt.Chat.Id == message.Chat.Id &&
+        prompt.Text is BotMenu.RussianWaterPrompt or BotMenu.EnglishWaterPrompt;
+
+    private Task SendCustomWaterPromptAsync(long chatId, string? language, CancellationToken cancellationToken) {
+        bool russian = BotMenu.IsRussian(language);
+        return botClient.SendMessage(chatId, russian ? BotMenu.RussianWaterPrompt : BotMenu.EnglishWaterPrompt,
+            replyMarkup: new ForceReplyMarkup { InputFieldPlaceholder = russian ? "Объём в мл" : "Amount in ml" },
+            cancellationToken: cancellationToken);
+    }
 
     private async Task HandleCallbackAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken) {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -294,6 +317,12 @@ public sealed partial class TelegramBotWorker(
 
         if (callbackQuery.Data is "menu:food" or "menu:water" or "menu:help") {
             await HandleMenuCallbackAsync(callbackQuery, cancellationToken);
+            return;
+        }
+
+        if (callbackQuery.Data is BotMenu.CustomWaterCallback && _options.OperationsEnabled) {
+            await AnswerCallbackAsync(callbackQuery.Id, message: null, cancellationToken);
+            await SendCustomWaterPromptAsync(callbackQuery.Message.Chat.Id, callbackQuery.From.LanguageCode, cancellationToken);
             return;
         }
 
@@ -314,8 +343,7 @@ public sealed partial class TelegramBotWorker(
             bool success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken);
             string notice = russian ? "Не удалось добавить воду." : "Failed to add water.";
             if (success) {
-                notice = russian ? string.Create(CultureInfo.InvariantCulture, $"Добавлено {amountMl} мл.")
-                    : string.Create(CultureInfo.InvariantCulture, $"Added {amountMl} ml.");
+                notice = BotMenu.WaterAdded(amountMl, russian);
             }
             await AnswerCallbackAsync(callbackQuery.Id, notice, cancellationToken);
         }
