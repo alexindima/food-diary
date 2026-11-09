@@ -108,7 +108,8 @@ describe('Mobile dialog swipe dismissal', () => {
         touch(header, 'touchstart', [100, 200, 0]);
         const move = touch(header, 'touchmove', [100, 360, 500]);
         expect(move.defaultPrevented).toBe(true);
-        expect(root.style.translate).toBe('0 160px');
+        // CSSOM can serialize a zero length with or without a unit.
+        expect(root.style.translate).toMatch(/^0(?:px)? 160px$/u);
         touch(header, 'touchend', [100, 360, 510]);
         expect(closed).toHaveBeenCalledOnce();
     });
@@ -137,7 +138,7 @@ describe('Mobile dialog swipe dismissal', () => {
         reducedMotion = false;
         vi.useFakeTimers();
         drag(header);
-        expect(root.style.translate).toBe('0 600px');
+        expect(root.style.translate).toMatch(/^0(?:px)? 600px$/u);
         expect(closed).not.toHaveBeenCalled();
         vi.advanceTimersByTime(180);
         expect(closed).toHaveBeenCalledOnce();

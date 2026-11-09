@@ -947,14 +947,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "7774241d2b916744b6c1b56ebe82e5379f5784dc9eebb4152e1390836719b01c",
-          "reviewReason": "Reviewed the compatible Stylelint and SCSS dependency graph, exact Dependabot version update exclusions, and formatter-only Telegram view change. Template semantics and existing lint rules are preserved."
+          "sha256": "f76b04f4e7ba62c280d6f3ab722b1d1da3addc697953115d614678a5d0e39596",
+          "reviewReason": "Reviewed the dependency updates in the frontend manifest. The documented visual QA command still uses the repository Playwright installation and its evidence requirements still apply. Playwright 1.65.0 launched Chromium, Firefox and WebKit in the matching CI image, all 700 UI Kit tests passed with jsdom 31, and fd-tour built with ng-packagr 22.2.6."
         }
       ],
-      "reason": "Reviewed the compatible Stylelint and SCSS dependency graph, exact Dependabot version update exclusions, and formatter-only Telegram view change. Template semantics and existing lint rules are preserved.",
-      "baseRef": "e754e1d",
-      "gitHead": "e754e1d1a4b7c3d473d5d9c199955245a2e97492",
-      "reviewedAtUtc": "2026-11-09T14:20:03.4877744Z"
+      "reason": "Reviewed the dependency updates in the frontend manifest. The documented visual QA command still uses the repository Playwright installation and its evidence requirements still apply. Playwright 1.65.0 launched Chromium, Firefox and WebKit in the matching CI image, all 700 UI Kit tests passed with jsdom 31, and fd-tour built with ng-packagr 22.2.6.",
+      "baseRef": "25d308e0ffe5e6af7d639f705b0d52ae03957bf7",
+      "gitHead": "5be8195a33f775cb8fa79711883a8afc22bd5eb8",
+      "reviewedAtUtc": "2026-11-09T16:15:27.5660496Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
