@@ -1,19 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { Location } from '@angular/common';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { map } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
+import { TelegramDiaryTransferComponent } from './telegram-diary-transfer';
 
-type VerificationState = 'pending' | 'success' | 'invalid' | 'error';
+type VerificationState = 'pending' | 'success' | 'invalid' | 'error' | 'cancelled';
 
 @Component({
     selector: 'fd-email-verification',
-    imports: [TranslatePipe, FdUiCardComponent, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiCardComponent, FdUiButtonComponent, TelegramDiaryTransferComponent],
     templateUrl: './email-verification.html',
     styleUrls: ['./email-verification.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,12 +25,15 @@ export class EmailVerificationComponent {
     private readonly authService = inject(AuthService);
     private readonly navigationService = inject(NavigationService);
     private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly location = inject(Location);
 
     protected readonly state = signal<VerificationState>('pending');
     protected readonly isBusy = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
+    protected readonly transferTicket = signal<string | null>(null);
     protected readonly emailToken = signal<{ userId: string | null; token: string | null }>({ userId: null, token: null });
     protected readonly isBackupEmail = computed(() => this.emailToken().token?.startsWith('telegram-backup.') === true);
 
@@ -71,6 +77,23 @@ export class EmailVerificationComponent {
         }
     }
 
+    protected onKeepDiariesSeparate(): void {
+        this.transferTicket.set(null);
+        this.state.set('cancelled');
+    }
+
+    protected async onUseAnotherEmailAsync(): Promise<void> {
+        this.onKeepDiariesSeparate();
+        if (this.authService.getUserId() === this.emailToken().userId) {
+            await this.navigationService.navigateToProfileAsync();
+            return;
+        }
+        if (this.authService.isAuthenticated()) {
+            await this.authService.onLogoutAsync();
+        }
+        await this.navigationService.navigateToAuthAsync('login', '/profile');
+    }
+
     private resolveAndVerify(): void {
         const params = this.route.snapshot.queryParamMap;
         const userId = params.get('userId') ?? params.get('user') ?? params.get('id');
@@ -82,6 +105,12 @@ export class EmailVerificationComponent {
             this.errorMessage.set(this.translateService.instant('AUTH.VERIFY.ERROR_INVALID'));
             return;
         }
+        if (this.isBackupEmail()) {
+            this.location.replaceState('/verify-email');
+            afterNextRender(() => {
+                void this.router.navigateByUrl('/verify-email', { replaceUrl: true });
+            });
+        }
 
         this.verify(userId, token);
     }
@@ -91,28 +120,31 @@ export class EmailVerificationComponent {
         this.state.set('pending');
         this.errorMessage.set(null);
 
-        this.authService
-            .verifyEmail(userId, token)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isBusy.set(false);
-                    this.state.set('success');
-                },
-                error: (error: unknown) => {
-                    this.isBusy.set(false);
-                    const invalidToken = getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.InvalidToken';
-                    this.state.set(invalidToken ? 'invalid' : 'error');
-                    this.errorMessage.set(
-                        this.translateService.instant(
-                            this.isBackupEmail()
-                                ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR'
-                                : invalidToken
-                                  ? 'AUTH.VERIFY.ERROR_INVALID'
-                                  : 'AUTH.VERIFY.ERROR_GENERIC',
-                        ),
-                    );
-                },
-            });
+        const verification = this.isBackupEmail()
+            ? this.authService.verifyTelegramBackupEmail(userId, token)
+            : this.authService.verifyEmail(userId, token).pipe(map(() => null));
+        verification.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: ticket => {
+                this.isBusy.set(false);
+                this.state.set('success');
+                if (ticket !== null) {
+                    this.transferTicket.set(ticket);
+                }
+            },
+            error: (error: unknown) => {
+                this.isBusy.set(false);
+                const invalidToken = getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.InvalidToken';
+                this.state.set(invalidToken ? 'invalid' : 'error');
+                this.errorMessage.set(
+                    this.translateService.instant(
+                        this.isBackupEmail()
+                            ? 'USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR'
+                            : invalidToken
+                              ? 'AUTH.VERIFY.ERROR_INVALID'
+                              : 'AUTH.VERIFY.ERROR_GENERIC',
+                    ),
+                );
+            },
+        });
     }
 }

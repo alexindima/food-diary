@@ -71,10 +71,42 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         await migrator.MigrateAsync(premiumMigration);
 
         Assert.Equal([.. appliedBefore, activityMigration, premiumMigration], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
-        User preservedUser = await context.Users.AsNoTracking().SingleAsync(user => user.Id == userId);
+        var preservedUser = await context.Users.AsNoTracking().Where(user => user.Id == userId)
+            .Select(user => new { user.Preferences.Language, user.ManualPremiumEndsAtUtc, user.ManualPremiumReason }).SingleAsync();
         Assert.Equal("ru", preservedUser.Language);
         Assert.Null(preservedUser.ManualPremiumEndsAtUtc);
         Assert.Null(preservedUser.ManualPremiumReason);
+    }
+
+    [RequiresDockerFact]
+    public async Task TelegramTrialRedemptions_UpgradeSeedsPreviouslyUsedLinkedIdentities() {
+        await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
+        IMigrator migrator = context.GetService<IMigrator>();
+        await migrator.MigrateAsync("20261109022333_AddManualPremiumGrant");
+        UserId used = await InitialBaselineUserFixture.InsertAsync(context, "telegram-used-trial@example.com", "en");
+        UserId unused = await InitialBaselineUserFixture.InsertAsync(context, "telegram-unused-trial@example.com", "en");
+        UserId emailTrial = await InitialBaselineUserFixture.InsertAsync(context, "email-trial-linked-later@example.com", "en");
+        const long usedTelegramId = 1012345L;
+        const long unusedTelegramId = 1012346L;
+        const long emailTrialTelegramId = 1012347L;
+        await context.Database.ExecuteSqlInterpolatedAsync($"""
+            UPDATE "Users" SET "TelegramUserId" = {usedTelegramId}, "TelegramLinkVerifiedForRecovery" = TRUE, "Email" = NULL,
+                "HasPassword" = FALSE, "PremiumTrialStartedAtUtc" = CURRENT_TIMESTAMP - INTERVAL '8 days',
+                "PremiumTrialEndsAtUtc" = CURRENT_TIMESTAMP - INTERVAL '1 day' WHERE "Id" = {used.Value};
+            UPDATE "Users" SET "TelegramUserId" = {unusedTelegramId}, "TelegramLinkVerifiedForRecovery" = TRUE,
+                "Email" = NULL, "HasPassword" = FALSE WHERE "Id" = {unused.Value};
+            UPDATE "Users" SET "TelegramUserId" = {emailTrialTelegramId}, "TelegramLinkVerifiedForRecovery" = TRUE,
+                "PremiumTrialStartedAtUtc" = CURRENT_TIMESTAMP - INTERVAL '8 days',
+                "PremiumTrialEndsAtUtc" = CURRENT_TIMESTAMP - INTERVAL '1 day' WHERE "Id" = {emailTrial.Value};
+            """);
+
+        await migrator.MigrateAsync("20261109123143_AddTelegramPremiumTrialRedemptions");
+
+        Assert.Equal([usedTelegramId], await context.Database.SqlQuery<long>($"""
+            SELECT "TelegramUserId" AS "Value" FROM "TelegramPremiumTrialRedemptions"
+            """).ToListAsync());
+        Assert.NotNull(await context.Users.Where(user => user.Id == used).Select(user => user.PremiumTrialEndsAtUtc).SingleAsync());
+        Assert.False(context.Database.HasPendingModelChanges());
     }
 
     [RequiresDockerTheory]

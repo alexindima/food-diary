@@ -18,6 +18,16 @@ public static class UserErrors {
         "Add and verify an email address to use this feature.",
         Kind: ErrorKind.Conflict);
 
+    public static Error PremiumTrialAlreadyUsed => new(
+        "User.PremiumTrialAlreadyUsed",
+        "Premium trial has already been used.",
+        Kind: ErrorKind.Conflict);
+
+    public static Error TelegramTrialLinkUnverified => new(
+        "User.TelegramTrialLinkUnverified",
+        "Confirm the linked Telegram account again before starting the Premium trial.",
+        Kind: ErrorKind.Conflict);
+
     public static Error TelegramIdentityDifferent => new(
         "User.TelegramIdentityDifferent",
         "Disconnect the current Telegram identity before linking another one.",

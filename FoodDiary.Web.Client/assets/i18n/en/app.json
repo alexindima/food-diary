@@ -3536,6 +3536,7 @@
             "ENDS_ON": "Access ends on",
             "MANAGE_HINT": "Manage your subscription and payments below.",
             "TRIAL_HINT": "Try personalized recommendations, advanced analytics, and Premium AI reports.",
+            "TRIAL_USED_HINT": "The free Premium trial has already been used.",
             "CHECKOUT_HINT": "Choose a plan below to start Premium through the payment form.",
             "CHECKOUT_UNAVAILABLE_HINT": "Premium checkout is temporarily unavailable.",
             "START_TRIAL_ACTION": "Start for free",

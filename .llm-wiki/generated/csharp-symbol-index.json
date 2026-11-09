@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4814,
-    "symbols": 4750,
-    "interfaceImplementationLinks": 213,
+    "sourceFiles": 4841,
+    "symbols": 4778,
+    "interfaceImplementationLinks": 216,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2458,
+      "class": 2466,
       "enum": 76,
-      "interface": 430,
-      "record": 1642,
+      "interface": 434,
+      "record": 1658,
       "record struct": 144
     },
     "roles": {
-      "Command": 253,
-      "CommandHandler": 247,
-      "Configuration": 105,
+      "Command": 255,
+      "CommandHandler": 249,
+      "Configuration": 106,
       "Controller": 119,
-      "Entity": 106,
+      "Entity": 108,
       "Event": 20,
       "Factory": 15,
       "Handler": 10,
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1960,
+      "Other": 1976,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 106,
-      "Request": 186,
-      "Response": 279,
+      "Request": 187,
+      "Response": 283,
       "Service": 177,
       "Validator": 238,
       "ValueObject": 183,
@@ -1831,6 +1831,13 @@
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
       "line": 13
+    },
+    {
+      "name": "TelegramDiaryTransferReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Users/TelegramDiaryTransferReader.cs",
+      "line": 9
     },
     {
       "name": "UserCurrentWaistProvider",
@@ -17023,6 +17030,27 @@
       "line": 5
     },
     {
+      "name": "TelegramDiaryTransferAttempt",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TelegramDiaryTransferAttempt.cs",
+      "line": 2
+    },
+    {
+      "name": "TransferTelegramDiaryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "TransferTelegramDiaryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommandHandler.cs",
+      "line": 9
+    },
+    {
       "name": "UnlinkTelegramCommand",
       "kind": "record",
       "role": "Command",
@@ -17056,6 +17084,27 @@
       "role": "Validator",
       "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "TelegramDiaryEmailVerification",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/TelegramDiaryEmailVerification.cs",
+      "line": 2
+    },
+    {
+      "name": "VerifyTelegramDiaryEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/VerifyTelegramDiaryEmailCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "VerifyTelegramDiaryEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/VerifyTelegramDiaryEmailCommandHandler.cs",
+      "line": 11
     },
     {
       "name": "TelegramBackupEmailOidcAttempt",
@@ -17259,6 +17308,13 @@
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
       "line": 12
+    },
+    {
+      "name": "EmailProof",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
+      "line": 88
     },
     {
       "name": "ParsedUserAgent",
@@ -18010,6 +18066,13 @@
       "line": 9
     },
     {
+      "name": "TelegramDiaryHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramDiaryHttpMappings.cs",
+      "line": 8
+    },
+    {
       "name": "TelegramOnboardingHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -18185,6 +18248,13 @@
       "line": 5
     },
     {
+      "name": "TransferTelegramDiaryHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TransferTelegramDiaryHttpRequest.cs",
+      "line": 4
+    },
+    {
       "name": "VerifyEmailHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -18232,6 +18302,34 @@
       "role": "Response",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramConfigurationHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "TelegramDiaryCountsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryCountsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramDiaryEmailVerificationHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryEmailVerificationHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramDiaryGoalsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryGoalsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramDiaryTransferHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryTransferHttpResponse.cs",
+      "line": 4
     },
     {
       "name": "TelegramOidcStartHttpResponse",
@@ -26487,6 +26585,13 @@
       "line": 5
     },
     {
+      "name": "IUserPremiumTrialStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Application.Abstractions/Common/IUserPremiumTrialStore.cs",
+      "line": 4
+    },
+    {
       "name": "IUserRepository",
       "kind": "interface",
       "role": "Repository",
@@ -27264,6 +27369,20 @@
       "line": 5
     },
     {
+      "name": "ITelegramDiaryContentTransfer",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/ITelegramDiaryContentTransfer.cs",
+      "line": 4
+    },
+    {
+      "name": "ITelegramDiaryTransferReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/ITelegramDiaryTransferReader.cs",
+      "line": 5
+    },
+    {
       "name": "IUserAccessTokenSecurityReader",
       "kind": "interface",
       "role": "Other",
@@ -27446,6 +27565,13 @@
       "line": 6
     },
     {
+      "name": "IUserTelegramDiaryTransfer",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/IUserTelegramDiaryTransfer.cs",
+      "line": 4
+    },
+    {
       "name": "IUserWeeklyCheckInProfileReadService",
       "kind": "interface",
       "role": "Service",
@@ -27458,6 +27584,41 @@
       "role": "Other",
       "path": "Modules/Users/Contracts/Common/PersonalDataArchiveLimitException.cs",
       "line": 2
+    },
+    {
+      "name": "TelegramDiaryCounts",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryCounts.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramDiaryGoals",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryGoals.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramDiaryPreview",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryPreview.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramDiaryProof",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryProof.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramDiaryTarget",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryTarget.cs",
+      "line": 4
     },
     {
       "name": "UserAccountStatusFilter",
@@ -28055,6 +28216,13 @@
       "line": 6
     },
     {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/User.TelegramDiary.cs",
+      "line": 4
+    },
+    {
       "name": "UserActivity",
       "kind": "class",
       "role": "Entity",
@@ -28419,6 +28587,13 @@
       "line": 7
     },
     {
+      "name": "UserPremiumTrialStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserPremiumTrialStore.cs",
+      "line": 7
+    },
+    {
       "name": "UserPrivacyStateReader",
       "kind": "class",
       "role": "Other",
@@ -28482,6 +28657,13 @@
       "line": 11
     },
     {
+      "name": "UserTelegramDiaryTransfer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserTelegramDiaryTransfer.cs",
+      "line": 13
+    },
+    {
       "name": "UsersDbContext",
       "kind": "class",
       "role": "Other",
@@ -28515,6 +28697,13 @@
       "role": "Configuration",
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/RoleConfiguration.cs",
       "line": 7
+    },
+    {
+      "name": "TelegramPremiumTrialRedemptionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/TelegramPremiumTrialRedemptionConfiguration.cs",
+      "line": 6
     },
     {
       "name": "UserActivityConfiguration",
@@ -28571,6 +28760,13 @@
       "role": "Configuration",
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserRoleConfiguration.cs",
       "line": 8
+    },
+    {
+      "name": "TelegramPremiumTrialRedemption",
+      "kind": "record",
+      "role": "Entity",
+      "path": "Modules/Users/PersistenceModel/Persistence/Entities/TelegramPremiumTrialRedemption.cs",
+      "line": 2
     },
     {
       "name": "UsersPersistenceModelRegistration",
@@ -34511,6 +34707,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "ITelegramDiaryTransferReader",
+      "interfacePath": "Modules/Users/Contracts/Common/ITelegramDiaryTransferReader.cs",
+      "implementation": "TelegramDiaryTransferReader",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Users/TelegramDiaryTransferReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "ITelegramLoginTicketStore",
       "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramLoginTicketStore.cs",
       "implementation": "TelegramLoginTicketStore",
@@ -34679,6 +34882,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IUserPremiumTrialStore",
+      "interfacePath": "Modules/Users/Application.Abstractions/Common/IUserPremiumTrialStore.cs",
+      "implementation": "UserPremiumTrialStore",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserPremiumTrialStore.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IUserPrivacyStateReader",
       "interfacePath": "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs",
       "implementation": "UserPrivacyStateReader",
@@ -34725,6 +34935,13 @@
       "interfacePath": "Modules/Users/Contracts/Common/IUserTelegramAccountService.cs",
       "implementation": "UserTelegramAccountService",
       "implementationPath": "Modules/Users/Application/Services/UserTelegramAccountService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserTelegramDiaryTransfer",
+      "interfacePath": "Modules/Users/Contracts/Common/IUserTelegramDiaryTransfer.cs",
+      "implementation": "UserTelegramDiaryTransfer",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserTelegramDiaryTransfer.cs",
       "confidence": "naming-convention"
     },
     {
@@ -35070,28 +35287,28 @@
       "implementation": "ImageAssetOwnershipService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IImageAssetContentService",
       "implementation": "ImageAssetContentService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "IUserProfileImageService",
       "implementation": "UserProfileImageService",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 24
+      "line": 25
     },
     {
       "service": "IImageAssetCleanupBatch",
       "implementation": "ImageAssetCleanupBatch",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 26
+      "line": 27
     },
     {
       "service": "IShoppingListCreationService",

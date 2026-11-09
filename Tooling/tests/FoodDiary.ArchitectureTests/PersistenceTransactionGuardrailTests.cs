@@ -37,6 +37,8 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfModuleSessionCoordinator.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Meals", "Infrastructure", "Persistence", "Meals", "EfMealRecognitionTransactionRunner.cs"),
+            // Release the source's unique Telegram keys before assigning them to the target in the same transaction.
+            ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserTelegramDiaryTransfer.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxProcessingEngine.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Outbox.Infrastructure", "Persistence", "OutboxMessageClaimer.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),

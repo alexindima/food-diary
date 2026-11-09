@@ -5,38 +5,59 @@
             <h1 id="email-verify-title" class="email-verify__title fd-page-title">{{ 'AUTH.VERIFY.TITLE' | translate }}</h1>
         </header>
 
-        <div class="email-verify__state" role="status" aria-live="polite">
-            @if (state() === 'pending') {
-                <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
-            } @else if (state() === 'success') {
-                <p class="email-verify__description fd-ui-body-sm">
-                    {{ (isBackupEmail() ? 'USER_MANAGE.BACKUP_EMAIL_VERIFIED' : 'AUTH.VERIFY.SUCCESS') | translate }}
-                </p>
-            } @else {
-                <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
-            }
-        </div>
+        @if (transferTicket(); as ticket) {
+            <fd-telegram-diary-transfer
+                [ticket]="ticket"
+                (keepSeparate)="onKeepDiariesSeparate()"
+                (useAnotherEmail)="onUseAnotherEmailAsync()"
+            />
+        } @else {
+            <div class="email-verify__state" role="status" aria-live="polite">
+                @if (state() === 'pending') {
+                    <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.VERIFY.PENDING' | translate }}</p>
+                } @else if (state() === 'success') {
+                    <p class="email-verify__description fd-ui-body-sm">
+                        {{ (isBackupEmail() ? 'USER_MANAGE.BACKUP_EMAIL_VERIFIED' : 'AUTH.VERIFY.SUCCESS') | translate }}
+                    </p>
+                } @else if (state() === 'cancelled') {
+                    <p class="email-verify__description fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.CANCELLED' | translate }}</p>
+                } @else {
+                    <p class="email-verify__description fd-ui-body-sm">{{ errorMessage() || ('AUTH.VERIFY.ERROR_GENERIC' | translate) }}</p>
+                }
+            </div>
 
-        <div class="email-verify__actions">
-            @if (state() === 'success') {
-                <fd-ui-button type="button" variant="primary" [fullWidth]="true" (click)="onContinue()">
-                    {{ 'AUTH.VERIFY.CONTINUE' | translate }}
-                </fd-ui-button>
-            } @else if (state() === 'error') {
-                <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" [loading]="isBusy()" (click)="onRetry()">
-                    {{ 'AUTH.VERIFY.RETRY' | translate }}
-                </fd-ui-button>
-            }
-            @if (state() === 'error' || state() === 'invalid') {
-                <fd-ui-button type="button" variant="primary" [fullWidth]="true" (click)="onRequestNewLink()">
-                    {{ (isBackupEmail() ? 'AUTH.VERIFY.BACK_TO_LOGIN' : 'AUTH.VERIFY.REQUEST_NEW_LINK') | translate }}
-                </fd-ui-button>
-                @if (!isBackupEmail()) {
-                    <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onBackToLogin()">
+            <div class="email-verify__actions">
+                @if (state() === 'success') {
+                    <fd-ui-button type="button" variant="primary" [fullWidth]="true" (click)="onContinue()">
+                        {{ 'AUTH.VERIFY.CONTINUE' | translate }}
+                    </fd-ui-button>
+                } @else if (state() === 'cancelled') {
+                    <fd-ui-button type="button" [fullWidth]="true" (click)="onBackToLogin()">
                         {{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}
                     </fd-ui-button>
+                } @else if (state() === 'error') {
+                    <fd-ui-button
+                        type="button"
+                        variant="secondary"
+                        fill="outline"
+                        [fullWidth]="true"
+                        [loading]="isBusy()"
+                        (click)="onRetry()"
+                    >
+                        {{ 'AUTH.VERIFY.RETRY' | translate }}
+                    </fd-ui-button>
                 }
-            }
-        </div>
+                @if (state() === 'error' || state() === 'invalid') {
+                    <fd-ui-button type="button" variant="primary" [fullWidth]="true" (click)="onRequestNewLink()">
+                        {{ (isBackupEmail() ? 'AUTH.VERIFY.BACK_TO_LOGIN' : 'AUTH.VERIFY.REQUEST_NEW_LINK') | translate }}
+                    </fd-ui-button>
+                    @if (!isBackupEmail()) {
+                        <fd-ui-button type="button" variant="secondary" fill="outline" [fullWidth]="true" (click)="onBackToLogin()">
+                            {{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}
+                        </fd-ui-button>
+                    }
+                }
+            </div>
+        }
     </fd-ui-card>
 </section>

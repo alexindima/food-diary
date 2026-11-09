@@ -314,6 +314,78 @@
       ],
       "transaction": "owner-purge-transaction",
       "reason": "Selective system ownership precedes ordinary purge within the same per-user transaction. Recipes runs before Products; owners write only their selected content and all content changes roll back together. ReadModel.Composition provides scalar-only selection. ADR 0054 and PostgreSQL SystemOwnership tests."
+    },
+    {
+      "contract": "ITelegramDiaryContentTransfer",
+      "contractOwner": "Users",
+      "provider": "Meals",
+      "implementation": "MealsUserDataPurgeParticipant",
+      "source": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Moves source meals by owner ID, preserving item, photo and AI session references. The authenticated diary-transfer command owns the encompassing transaction."
+    },
+    {
+      "contract": "ITelegramDiaryContentTransfer",
+      "contractOwner": "Users",
+      "provider": "Recipes",
+      "implementation": "RecipesUserDataPurgeParticipant",
+      "source": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Moves source recipes with their images and keeps all ingredient and nested recipe IDs. The authenticated diary-transfer command owns the encompassing transaction."
+    },
+    {
+      "contract": "ITelegramDiaryContentTransfer",
+      "contractOwner": "Users",
+      "provider": "Products",
+      "implementation": "ProductsUserDataPurgeParticipant",
+      "source": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Moves source products and galleries without changing product IDs or nutrition. The authenticated diary-transfer command owns the encompassing transaction."
+    },
+    {
+      "contract": "ITelegramDiaryContentTransfer",
+      "contractOwner": "Users",
+      "provider": "Hydration",
+      "implementation": "HydrationUserDataPurgeParticipant",
+      "source": "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Moves source water entries without recalculating their amounts or timestamps. The authenticated diary-transfer command owns the encompassing transaction."
+    },
+    {
+      "contract": "ITelegramDiaryContentTransfer",
+      "contractOwner": "Users",
+      "provider": "BodyMetrics",
+      "implementation": "BodyMetricsUserDataPurgeParticipant",
+      "source": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Moves source weight and waist entries after the reader rejects duplicate calendar dates. The authenticated diary-transfer command owns the encompassing transaction."
+    },
+    {
+      "contract": "ITelegramDiaryContentTransfer",
+      "contractOwner": "Users",
+      "provider": "Images",
+      "implementation": "ImagesUserDataPurgeParticipant",
+      "source": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Moves source-confirmed image assets to preserve ownership of transferred diary media. The authenticated diary-transfer command owns the encompassing transaction."
     }
   ]
 }

@@ -354,14 +354,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ea46144e71870332eb5f34624abb908d26d48ae8fc26d8a11b87540e22d2af87",
-          "reviewReason": "The API adds one bot-secret protected resume operation. The existing Billing trial and Users privacy contracts are reused by the bot SDK. OpenAPI snapshots, live SDK comparison and missing-secret requests passed."
+          "sha256": "81a91ee13191e067895dc7283dfada8cd6eb47d77c4b79eb27d0ca28673f287b",
+          "reviewReason": "Reviewed the additive OpenAPI routes for backup email verification and diary transfer. The snapshot adds two operations and their DTOs while retaining existing paths and schemas. OpenApiSdkExportTests and the PostgreSQL scenarios verified the legacy endpoint, the generated SDK contract, and the new authenticated transfer."
         }
       ],
-      "reason": "The API adds one bot-secret protected resume operation. The existing Billing trial and Users privacy contracts are reused by the bot SDK. OpenAPI snapshots, live SDK comparison and missing-secret requests passed.",
+      "reason": "Reviewed the additive OpenAPI routes for backup email verification and diary transfer. The snapshot adds two operations and their DTOs while retaining existing paths and schemas. OpenApiSdkExportTests and the PostgreSQL scenarios verified the legacy endpoint, the generated SDK contract, and the new authenticated transfer.",
       "baseRef": "HEAD",
-      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
-      "reviewedAtUtc": "2026-11-09T07:59:21.8022035Z"
+      "gitHead": "76ee600bc504a67349a3a49edf53275f36fa9e32",
+      "reviewedAtUtc": "2026-11-09T11:55:49.4147445Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

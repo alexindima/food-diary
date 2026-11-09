@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 522,
-    "componentsWithoutDirectSpecs": 133,
-    "inputs": 1681,
-    "outputs": 563,
-    "apiCalls": 332,
-    "templatesWithTranslations": 377,
-    "translationKeys": 2273,
-    "consumerEdges": 1345,
-    "consumedComponents": 331,
-    "unconsumedComponents": 190
+    "components": 523,
+    "componentsWithoutDirectSpecs": 134,
+    "inputs": 1683,
+    "outputs": 566,
+    "apiCalls": 334,
+    "templatesWithTranslations": 378,
+    "translationKeys": 2285,
+    "consumerEdges": 1349,
+    "consumedComponents": 333,
+    "unconsumedComponents": 189
   },
   "components": [
     {
@@ -1203,6 +1203,11 @@
           "required": false
         },
         {
+          "name": "inlineSignIn",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "hideTelegram",
           "type": "",
           "required": false
@@ -1228,7 +1233,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "signedIn",
+          "type": ""
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.spec.ts"
     },
     {
@@ -1539,6 +1549,32 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.spec.ts"
+    },
+    {
+      "class": "TelegramDiaryTransferComponent",
+      "selector": "fd-telegram-diary-transfer",
+      "feature": "auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "ticket",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "keepSeparate",
+          "type": ""
+        },
+        {
+          "name": "useAnotherEmail",
+          "type": ""
+        }
+      ],
+      "specPath": null
     },
     {
       "class": "TelegramEntryButtonComponent",
@@ -20482,7 +20518,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/login",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 199,
+      "line": 201,
       "publicMethod": "login",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20494,7 +20530,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/register",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 211,
+      "line": 213,
       "publicMethod": "register",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20506,7 +20542,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 236,
+      "line": 238,
       "publicMethod": "verifyEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20518,7 +20554,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email/resend",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 253,
+      "line": 255,
       "publicMethod": "resendEmailVerification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20530,7 +20566,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/restore",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 269,
+      "line": 271,
       "publicMethod": "restoreAccount",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20542,7 +20578,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 290,
+      "line": 292,
       "publicMethod": "loginWithGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20554,7 +20590,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google/link",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 301,
+      "line": 303,
       "publicMethod": "linkGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20566,7 +20602,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 308,
+      "line": 310,
       "publicMethod": "unlinkTelegram",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20578,7 +20614,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink/oidc/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 312,
+      "line": 314,
       "publicMethod": "startTelegramUnlink",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20590,7 +20626,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/disconnect",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 318,
+      "line": 320,
       "publicMethod": "disconnectTelegram",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20602,7 +20638,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink/oidc/complete",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 322,
+      "line": 324,
       "publicMethod": "completeTelegramUnlink",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20614,7 +20650,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 329,
+      "line": 331,
       "publicMethod": "requestTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20624,9 +20660,33 @@
       "feature": "shell",
       "method": "POST",
       "responseType": null,
+      "urlExpression": "/api/v{version}/auth/telegram/backup-email/verify",
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "line": 338,
+      "publicMethod": "verifyTelegramBackupEmail",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.auth",
+      "resolvedUrlExpression": "/api/v{version}/auth/telegram/backup-email/verify"
+    },
+    {
+      "feature": "shell",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/auth/telegram/diary-transfer",
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "line": 344,
+      "publicMethod": "transferTelegramDiary",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.auth",
+      "resolvedUrlExpression": "/api/v{version}/auth/telegram/diary-transfer"
+    },
+    {
+      "feature": "shell",
+      "method": "POST",
+      "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 336,
+      "line": 353,
       "publicMethod": "startTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20638,7 +20698,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/complete",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 342,
+      "line": 359,
       "publicMethod": "completeTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20650,7 +20710,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/request",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 349,
+      "line": 366,
       "publicMethod": "requestPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20662,7 +20722,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/confirm",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 362,
+      "line": 379,
       "publicMethod": "confirmPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20674,7 +20734,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 373,
+      "line": 390,
       "publicMethod": "startAdminSso",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20686,7 +20746,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/refresh",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 391,
+      "line": 408,
       "publicMethod": "refreshSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20698,7 +20758,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/session",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 392,
+      "line": 409,
       "publicMethod": "refreshSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20710,7 +20770,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/logout",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 521,
+      "line": 538,
       "publicMethod": "retryPendingLogoutAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20722,7 +20782,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/impersonation/exchange",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 657,
+      "line": 674,
       "publicMethod": "restoreSessionInternalAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -22629,8 +22689,11 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users-table.html",
       "keys": [
         "ADMIN_COMMON.REGISTERED",
+        "ADMIN_USER.ACCOUNT",
         "ADMIN_USER.ACTIVITY_UNKNOWN",
-        "ADMIN_USER.LAST_ACTIVE"
+        "ADMIN_USER.CONFIRMED",
+        "ADMIN_USER.LAST_ACTIVE",
+        "ADMIN_USER.TELEGRAM_ACCOUNT"
       ]
     },
     {
@@ -22741,12 +22804,31 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.html",
       "keys": [
+        "AUTH.TELEGRAM_DIARY.CANCELLED",
         "AUTH.VERIFY.BACK_TO_LOGIN",
         "AUTH.VERIFY.CONTINUE",
         "AUTH.VERIFY.ERROR_GENERIC",
         "AUTH.VERIFY.PENDING",
         "AUTH.VERIFY.RETRY",
         "AUTH.VERIFY.TITLE"
+      ]
+    },
+    {
+      "feature": "auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
+      "keys": [
+        "AUTH.TELEGRAM_DIARY.CHOOSE_GOALS",
+        "AUTH.TELEGRAM_DIARY.CONFLICT",
+        "AUTH.TELEGRAM_DIARY.DONE",
+        "AUTH.TELEGRAM_DIARY.EMPTY",
+        "AUTH.TELEGRAM_DIARY.KEEP_SEPARATE",
+        "AUTH.TELEGRAM_DIARY.REVIEW",
+        "AUTH.TELEGRAM_DIARY.SIGN_IN",
+        "AUTH.TELEGRAM_DIARY.SIGN_IN_HINT",
+        "AUTH.TELEGRAM_DIARY.USE_ANOTHER_EMAIL",
+        "AUTH.VERIFY.BACK_TO_LOGIN",
+        "AUTH.VERIFY.RETRY",
+        "COMMON.LOADING"
       ]
     },
     {
@@ -27942,6 +28024,22 @@
       "selector": "fd-auth",
       "componentPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
       "consumerFeature": "auth",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "hideTelegram",
+        "inlineSignIn",
+        "useRouting"
+      ],
+      "outputsHandled": [
+        "signedIn"
+      ]
+    },
+    {
+      "component": "AuthComponent",
+      "selector": "fd-auth",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
+      "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -31259,12 +31357,28 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "fill",
         "fullWidth",
         "loading",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "auth",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
+      "occurrences": 6,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "fullWidth",
+        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -41011,6 +41125,23 @@
       "outputsHandled": []
     },
     {
+      "component": "FdUiRadioGroupComponent",
+      "selector": "fd-ui-radio-group",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.ts",
+      "consumerFeature": "auth",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
       "component": "FdUiRadioOptionsComponent",
       "selector": "fd-ui-radio-options",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.ts",
@@ -46480,6 +46611,21 @@
         "summaryKey"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "TelegramDiaryTransferComponent",
+      "selector": "fd-telegram-diary-transfer",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
+      "consumerFeature": "auth",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ticket"
+      ],
+      "outputsHandled": [
+        "keepSeparate",
+        "useAnotherEmail"
+      ]
     },
     {
       "component": "TelegramEntryButtonComponent",

@@ -48,7 +48,8 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
         shared.WeightEntries.Add(WeightEntry.Create(user.Id, DateTime.UtcNow, 70));
-        Assert.Equal(11, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(12, owned.Model.GetEntityTypes().Count());
+        Assert.Contains(owned.Model.GetEntityTypes(), type => string.Equals(type.GetTableName(), "TelegramPremiumTrialRedemptions", StringComparison.Ordinal));
         Assert.NotNull(owned.Model.FindEntityType(typeof(UserActivity)));
         Assert.NotNull(owned.Model.FindEntityType(typeof(UserGoalRevision)));
         Assert.NotNull(owned.Model.FindEntityType(typeof(UserPrivacyConsentEvent)));

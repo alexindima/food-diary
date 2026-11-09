@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2821,
-    "symbols": 885,
+    "typescriptFiles": 2829,
+    "symbols": 886,
     "routes": 111,
     "features": 46,
     "specs": 856,
     "localeFiles": 5,
     "roles": {
-      "Component": 512,
+      "Component": 513,
       "Directive": 20,
       "Facade": 91,
       "Other": 41,
@@ -465,6 +465,7 @@
         "TelegramAuthComponent",
         "TelegramAuthFacade",
         "TelegramAuthService",
+        "TelegramDiaryTransferComponent",
         "TelegramEntryButtonComponent"
       ],
       "routes": [
@@ -3807,7 +3808,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 58
+      "line": 59
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -3849,7 +3850,14 @@
       "role": "Component",
       "selector": "fd-email-verification",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/email-verification.ts",
-      "line": 21
+      "line": 24
+    },
+    {
+      "name": "TelegramDiaryTransferComponent",
+      "role": "Component",
+      "selector": "fd-telegram-diary-transfer",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
+      "line": 39
     },
     {
       "name": "MobileLoginComponent",
@@ -6845,7 +6853,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 45
+      "line": 47
     },
     {
       "name": "GlobalErrorHandler",
@@ -7202,7 +7210,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
-      "line": 128
+      "line": 146
     },
     {
       "name": "TelegramBotSdk",
@@ -8411,16 +8419,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4223,
-      "russianProperties": 4223,
+      "englishProperties": 4224,
+      "russianProperties": 4224,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1438,
-      "russianProperties": 1438,
+      "englishProperties": 1468,
+      "russianProperties": 1468,
       "countsMatch": true
     },
     {

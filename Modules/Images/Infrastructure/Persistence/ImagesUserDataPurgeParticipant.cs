@@ -10,8 +10,14 @@ namespace FoodDiary.Modules.Images.Infrastructure.Persistence;
 internal sealed class ImagesUserDataPurgeParticipant(
     ImagesDbContext context,
     IModuleTransactionCoordinator coordinator,
-    IImageObjectDeletionOutbox imageObjectDeletionOutbox) : IUserDataPurgeParticipant {
+    IImageObjectDeletionOutbox imageObjectDeletionOutbox) : IUserDataPurgeParticipant, ITelegramDiaryContentTransfer {
     public int Order => 135;
+
+    public async Task TransferAsync(UserId sourceId, UserId targetId, CancellationToken cancellationToken) {
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.ImageAssets.Where(item => item.UserId == sourceId && item.IsConfirmed)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, targetId), cancellationToken);
+    }
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
         await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);

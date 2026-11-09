@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, model, output } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
 import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
@@ -18,6 +18,7 @@ let nextId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T | null> {
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
     public readonly focus = injectFdUiControlFocus();
     protected readonly isEqual = Object.is;
@@ -83,6 +84,7 @@ export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T 
 
         event.preventDefault();
         this.selectOption(options[nextIndex]);
+        this.host.nativeElement.querySelectorAll<HTMLInputElement>('input[type="radio"]').item(nextIndex).focus();
     }
 
     protected trackByValue(_: number, option: FdUiRadioOption<T>): unknown {

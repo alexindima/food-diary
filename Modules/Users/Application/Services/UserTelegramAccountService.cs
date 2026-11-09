@@ -18,7 +18,8 @@ internal sealed class UserTelegramAccountService(
     IUserWriteRepository userWriteRepository,
     IUserSessionRevocationService sessionRevocationService,
     IPasswordHasher passwordHasher,
-    TimeProvider timeProvider) : IUserTelegramAccountService {
+    TimeProvider timeProvider,
+    IUserPremiumTrialStore trials) : IUserTelegramAccountService {
     public async Task<Result<bool>> IsRegisteredAsync(long telegramUserId, CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
         if (user is null) {
@@ -38,7 +39,8 @@ internal sealed class UserTelegramAccountService(
         }
 
         string inaccessiblePassword = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-        var user = User.CreateTelegram(registration.TelegramUserId, passwordHasher.Hash(inaccessiblePassword));
+        bool trialRedeemed = await trials.HasRedeemedTelegramAsync(registration.TelegramUserId, cancellationToken);
+        var user = User.CreateTelegram(registration.TelegramUserId, passwordHasher.Hash(inaccessiblePassword), trialRedeemed);
         if (registration.OidcIssuer is not null && registration.OidcSubject is not null) {
             user.BindTelegramOidcIdentity(registration.OidcIssuer, registration.OidcSubject);
         }

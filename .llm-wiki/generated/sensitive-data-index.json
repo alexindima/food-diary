@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1804,
-    "credential": 175,
-    "identity": 199,
-    "health": 833,
-    "financial": 170,
+    "candidateFields": 1828,
+    "credential": 176,
+    "identity": 217,
+    "health": 839,
+    "financial": 169,
     "privateContent": 427,
-    "boundaryFiles": 241,
+    "boundaryFiles": 251,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 3
   },
@@ -495,6 +495,13 @@
     },
     {
       "category": "credential",
+      "name": "Token",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/VerifyTelegramDiaryEmailCommand.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
@@ -855,21 +862,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 430
+      "line": 432
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 436
+      "line": 438
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 438
+      "line": 440
     },
     {
       "category": "credential",
@@ -1920,13 +1927,6 @@
       "type": "DateTime?",
       "path": "Modules/Billing/Application/Commands/RenewDueSubscriptions/RenewDueSubscriptionsCommandHandler.cs",
       "line": 381
-    },
-    {
-      "category": "financial",
-      "name": "ITransactionalCommand",
-      "type": "IRequest<Result<BillingOverviewModel>>,",
-      "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
-      "line": 9
     },
     {
       "category": "financial",
@@ -4982,6 +4982,27 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "double?",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryGoalsHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Waist",
+      "type": "double?",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryGoalsHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "double?",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryGoalsHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
       "name": "RecipeTotalCalories",
       "type": "double?",
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
@@ -6431,6 +6452,27 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryGoals.cs",
+      "line": 3
+    },
+    {
+      "category": "health",
+      "name": "Waist",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryGoals.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryGoals.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
       "path": "Modules/Users/Contracts/Models/GoalsModel.cs",
@@ -7176,105 +7218,105 @@
       "name": "NutritionProfile",
       "type": "UserNutritionProfile",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 124
+      "line": 125
     },
     {
       "category": "health",
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 295
+      "line": 297
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 297
+      "line": 299
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 299
+      "line": 301
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 312
+      "line": 314
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 314
+      "line": 316
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 316
+      "line": 318
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 318
+      "line": 320
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 320
+      "line": 322
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 355
+      "line": 357
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 367
+      "line": 369
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 369
+      "line": 371
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 371
+      "line": 373
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 379
+      "line": 381
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 381
+      "line": 383
     },
     {
       "category": "health",
@@ -8720,6 +8762,13 @@
     },
     {
       "category": "identity",
+      "name": "ITelegramDiaryContentTransfer",
+      "type": "IUserDataPurgeParticipant,",
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
+      "line": 10
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string?",
       "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
@@ -8881,6 +8930,13 @@
     },
     {
       "category": "identity",
+      "name": "ITelegramDiaryContentTransfer",
+      "type": "IUserDataPurgeParticipant,",
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs",
+      "line": 10
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
@@ -8981,6 +9037,20 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TelegramDiaryTransferAttempt.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "UseTelegramGoals",
+      "type": "bool?",
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
       "path": "Modules/Identity/Application/Authentication/Common/TelegramBackupEmailOidcAttempt.cs",
       "line": 3
     },
@@ -8996,7 +9066,7 @@
       "name": "Email",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Services/TelegramBackupEmailService.cs",
-      "line": 85
+      "line": 89
     },
     {
       "category": "identity",
@@ -9196,6 +9266,48 @@
     },
     {
       "category": "identity",
+      "name": "UseTelegramGoals",
+      "type": "bool?",
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TransferTelegramDiaryHttpRequest.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "EmailGoals",
+      "type": "TelegramDiaryGoalsHttpResponse",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryTransferHttpResponse.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "TelegramGoals",
+      "type": "TelegramDiaryGoalsHttpResponse",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryTransferHttpResponse.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "CanUseTelegramGoals",
+      "type": "bool",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryTransferHttpResponse.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "ITelegramDiaryContentTransfer",
+      "type": "IUserDataPurgeParticipant,",
+      "path": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
+      "line": 13
+    },
+    {
+      "category": "identity",
+      "name": "ITelegramDiaryContentTransfer",
+      "type": "IUserDataPurgeParticipant,",
+      "path": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
       "name": "UserAgent",
       "type": "string?",
       "path": "Modules/Notifications/Application.Abstractions/Common/WebPushSubscriptionData.cs",
@@ -9256,6 +9368,48 @@
       "type": "string",
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs",
       "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "ITelegramDiaryContentTransfer",
+      "type": "IUserDataPurgeParticipant,",
+      "path": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
+      "line": 13
+    },
+    {
+      "category": "identity",
+      "name": "ITelegramDiaryContentTransfer",
+      "type": "IUserDataPurgeParticipant,",
+      "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
+      "line": 13
+    },
+    {
+      "category": "identity",
+      "name": "EmailGoals",
+      "type": "TelegramDiaryGoals",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryPreview.cs",
+      "line": 3
+    },
+    {
+      "category": "identity",
+      "name": "CanUseTelegramGoals",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryPreview.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "TelegramGoals",
+      "type": "TelegramDiaryGoals",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryPreview.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "VerifiedEmail",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryProof.cs",
+      "line": 6
     },
     {
       "category": "identity",
@@ -9483,17 +9637,24 @@
     },
     {
       "category": "identity",
+      "name": "PremiumTrialRestrictedByTelegram",
+      "type": "bool",
+      "path": "Modules/Users/Domain/Entities/User.cs",
+      "line": 84
+    },
+    {
+      "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 432
+      "line": 434
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 434
+      "line": 436
     },
     {
       "category": "identity",
@@ -9522,6 +9683,13 @@
       "type": "DateTime?",
       "path": "Modules/Users/Domain/ValueObjects/UserSecurityState.cs",
       "line": 10
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long",
+      "path": "Modules/Users/PersistenceModel/Persistence/Entities/TelegramPremiumTrialRedemption.cs",
+      "line": 3
     },
     {
       "category": "identity",
@@ -12601,7 +12769,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 373
+      "line": 375
     },
     {
       "category": "privateContent",
@@ -13575,6 +13743,27 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TelegramDiaryTransferAttempt.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommand.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/VerifyTelegramDiaryEmailCommand.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Identity/Application/Authentication/Common/TelegramBackupEmailOidcAttempt.cs",
       "categories": [
         "identity"
@@ -13704,6 +13893,13 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Identity/Presentation/Features/Auth/Requests/TransferTelegramDiaryHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/VerifyEmailHttpRequest.cs",
       "categories": [
         "credential"
@@ -13723,6 +13919,20 @@
         "credential"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryGoalsHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramDiaryTransferHttpResponse.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 3
     },
     {
       "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
@@ -14049,7 +14259,35 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryGoals.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryPreview.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Modules/Users/Contracts/Common/TelegramDiaryProof.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Users/Contracts/Models/UserTelegramRegistrationModel.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Users/PersistenceModel/Persistence/Entities/TelegramPremiumTrialRedemption.cs",
       "categories": [
         "identity"
       ],

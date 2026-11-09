@@ -1,12 +1,14 @@
 ﻿<div class="auth fd-stack fd-gap-md">
-    <fd-ui-tabs
-        #modeTabs
-        class="auth__tabs"
-        [ariaLabel]="'AUTH.DIALOG_TITLE' | translate"
-        [tabs]="authTabs"
-        [selectedValue]="authMode"
-        (selectedValueChange)="changeAuthMode($event)"
-    />
+    <div [hidden]="inlineSignIn()">
+        <fd-ui-tabs
+            #modeTabs
+            class="auth__tabs"
+            [ariaLabel]="'AUTH.DIALOG_TITLE' | translate"
+            [tabs]="authTabs"
+            [selectedValue]="authMode"
+            (selectedValueChange)="changeAuthMode($event)"
+        />
+    </div>
 
     <p class="auth__subtitle fd-ui-body-sm">
         @if (authMode === 'login') {
@@ -19,9 +21,9 @@
     <div class="auth__content fd-stack fd-gap-md">
         @if (authMode === 'login') {
             <div
-                role="tabpanel"
+                [attr.role]="inlineSignIn() ? null : 'tabpanel'"
                 [id]="modeTabs.panelId('login')"
-                [attr.aria-labelledby]="modeTabs.tabId('login')"
+                [attr.aria-labelledby]="inlineSignIn() ? null : modeTabs.tabId('login')"
                 [hidden]="authMode !== 'login'"
             >
                 @if (showPasswordReset()) {

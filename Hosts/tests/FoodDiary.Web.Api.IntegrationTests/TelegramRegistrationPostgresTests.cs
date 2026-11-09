@@ -4,6 +4,15 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Meals.Domain.Entities;
+using FoodDiary.Modules.Products.Domain.Entities;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +28,169 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationFactory factory) : IClassFixture<PostgresApiWebApplicationFactory> {
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ExistingEmail_CombinesBothDiariesAndKeepsTheSelectedGoals(bool useTelegramGoals) {
+        const string password = "Password123!";
+        const string botSecret = "telegram-transfer-integration-secret";
+        await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, configuration) =>
+            configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["TelegramClient:LoginEnabled"] = "true",
+                ["TelegramClient:RegistrationEnabled"] = "true",
+                ["TelegramBot:ApiSecret"] = botSecret,
+                ["TelegramAuth:BotToken"] = "123:test-token",
+            })));
+        await CompleteTelegramCutoverForScenarioAsync(app);
+        using HttpClient source = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        source.DefaultRequestHeaders.Add("X-FoodDiary-Client", "telegram");
+        long telegramId = Random.Shared.NextInt64(1_000_000, 900_000_000);
+        using HttpResponseMessage begin = await source.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData(telegramId) });
+        begin.EnsureSuccessStatusCode();
+        JsonElement intent = await begin.Content.ReadFromJsonAsync<JsonElement>();
+        using HttpResponseMessage created = await source.PostAsJsonAsync("/api/v1/auth/telegram/complete",
+            new { Ticket = intent.GetProperty("ticket").GetString(), Action = "register", Language = "en", TimeZoneId = "UTC" });
+        Assert.True(created.IsSuccessStatusCode, created.IsSuccessStatusCode ? null : await created.Content.ReadAsStringAsync());
+        JsonElement sourceSession = await created.Content.ReadFromJsonAsync<JsonElement>();
+        var sourceId = new UserId(sourceSession.GetProperty("user").GetProperty("id").GetGuid());
+        string? sourceAccess = sourceSession.GetProperty("accessToken").GetString();
+        source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sourceAccess);
+        using HttpResponseMessage startedTrial = await source.PostAsync("/api/v1/billing/trial", content: null);
+        startedTrial.EnsureSuccessStatusCode();
+        JsonElement trial = await startedTrial.Content.ReadFromJsonAsync<JsonElement>();
+        DateTime trialStartedAt = trial.GetProperty("premiumTrialStartUtc").GetDateTime();
+        DateTime trialEndsAt = trial.GetProperty("premiumTrialEndUtc").GetDateTime();
+        Assert.Equal(TimeSpan.FromDays(7), trialEndsAt - trialStartedAt);
+
+        using HttpClient target = app.CreateClient();
+        string email = $"telegram-transfer-{Guid.NewGuid():N}@example.com";
+        using HttpResponseMessage registered = await target.PostAsJsonAsync("/api/v1/auth/register", new { email, password, language = "en" });
+        registered.EnsureSuccessStatusCode();
+        JsonElement targetSession = await registered.Content.ReadFromJsonAsync<JsonElement>();
+        var targetId = new UserId(targetSession.GetProperty("user").GetProperty("id").GetGuid());
+        using HttpResponseMessage verified = await target.PostAsJsonAsync("/api/v1/auth/verify-email",
+            new { UserId = targetId.Value, Token = factory.EmailSender.GetRequiredEmailVerificationToken(email) });
+        Assert.Equal(HttpStatusCode.NoContent, verified.StatusCode);
+
+        var sourceMeal = Meal.Create(sourceId, DateTime.UtcNow, comment: "Telegram meal");
+        var targetMeal = Meal.Create(targetId, DateTime.UtcNow, comment: "Email meal");
+        var recipe = Recipe.Create(sourceId, "Transfer recipe", servings: 2);
+        var product = Product.Create(sourceId, "Transfer product", MeasurementUnit.G, baseAmount: 100,
+            defaultPortionAmount: 100, caloriesPerBase: 50, proteinsPerBase: 1, fatsPerBase: 0,
+            carbsPerBase: 10, fiberPerBase: 1, alcoholPerBase: 0);
+        sourceMeal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
+        sourceMeal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
+        await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
+            FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            (await db.Users.SingleAsync(item => item.Id == targetId)).UpdateGoals(dailyCalorieTarget: 2300);
+            db.AddRange(product, recipe, sourceMeal, targetMeal);
+            await db.SaveChangesAsync();
+        }
+
+        using HttpResponseMessage request = await source.PostAsJsonAsync("/api/v1/auth/telegram/backup-email",
+            new { Email = email, InitData = CreateInitData(telegramId) });
+        Assert.Equal(HttpStatusCode.NoContent, request.StatusCode);
+        using HttpResponseMessage confirmation = await source.PostAsJsonAsync("/api/v1/auth/telegram/backup-email/verify",
+            new { UserId = sourceId.Value, Token = factory.EmailSender.GetRequiredEmailVerificationToken(email) });
+        confirmation.EnsureSuccessStatusCode();
+        JsonElement verification = await confirmation.Content.ReadFromJsonAsync<JsonElement>();
+        string ticket = verification.GetProperty("transferTicket").GetString()!;
+        const string transferRoute = "/api/v1/auth/telegram/diary-transfer";
+        using HttpResponseMessage wrongAccount = await source.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
+        Assert.Equal(HttpStatusCode.Forbidden, wrongAccount.StatusCode);
+        using HttpResponseMessage stillSource = await source.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.OK, stillSource.StatusCode);
+
+        source.DefaultRequestHeaders.Authorization = null;
+        using HttpResponseMessage signedIn = await source.PostAsJsonAsync("/api/v1/auth/login", new { email, password });
+        signedIn.EnsureSuccessStatusCode();
+        JsonElement login = await signedIn.Content.ReadFromJsonAsync<JsonElement>();
+        string? targetAccess = login.GetProperty("accessToken").GetString();
+        source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", targetAccess);
+        using HttpClient otherBrowser = app.CreateClient();
+        otherBrowser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", targetAccess);
+        using HttpResponseMessage unbound = await otherBrowser.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
+        Assert.Equal(HttpStatusCode.Conflict, unbound.StatusCode);
+
+        using HttpResponseMessage previewResponse = await source.PostAsJsonAsync(transferRoute, new { ticket });
+        Assert.True(previewResponse.IsSuccessStatusCode, await previewResponse.Content.ReadAsStringAsync());
+        JsonElement preview = await previewResponse.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(1, preview.GetProperty("counts").GetProperty("meals").GetInt32());
+        Assert.Equal(1, preview.GetProperty("counts").GetProperty("recipes").GetInt32());
+        Assert.Equal(1, preview.GetProperty("counts").GetProperty("products").GetInt32());
+        Assert.Equal(2000, preview.GetProperty("telegramGoals").GetProperty("calories").GetDouble());
+        Assert.Equal(2300, preview.GetProperty("emailGoals").GetProperty("calories").GetDouble());
+        await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
+            FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            Assert.Equal(sourceId, (await db.Meals.SingleAsync(item => item.Id == sourceMeal.Id)).UserId);
+            Assert.Null((await db.Users.SingleAsync(item => item.Id == sourceId)).DeletedAt);
+        }
+
+        using HttpResponseMessage missingConsent = await source.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
+        Assert.Equal(HttpStatusCode.Forbidden, missingConsent.StatusCode);
+        await source.GrantHealthTrackingConsentAsync();
+        using HttpResponseMessage confirmed = await source.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
+        Assert.True(confirmed.IsSuccessStatusCode, await confirmed.Content.ReadAsStringAsync());
+        using HttpResponseMessage staleTarget = await source.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, staleTarget.StatusCode);
+        source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sourceAccess);
+        using HttpResponseMessage staleSource = await source.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, staleSource.StatusCode);
+
+        using HttpClient bot = app.CreateClient();
+        bot.DefaultRequestHeaders.Add(TelegramBotSecretAuthorizationFilter.SecretHeaderName, botSecret);
+        using HttpResponseMessage botAuth = await bot.PostAsJsonAsync("/api/v1/auth/telegram/bot/auth", new { telegramUserId = telegramId });
+        botAuth.EnsureSuccessStatusCode();
+        JsonElement botSession = await botAuth.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(targetId.Value, botSession.GetProperty("user").GetProperty("id").GetGuid());
+        await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
+            FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            User old = await db.Users.SingleAsync(item => item.Id == sourceId);
+            Assert.NotNull(old.DeletedAt);
+            Assert.Null(old.TelegramUserId);
+            User combined = await db.Users.SingleAsync(item => item.Id == targetId);
+            Assert.Equal(useTelegramGoals ? 2000 : 2300, combined.DailyCalorieTarget);
+            Assert.Equal(trialStartedAt.Ticks / TimeSpan.TicksPerMicrosecond, combined.PremiumTrialStartedAtUtc!.Value.Ticks / TimeSpan.TicksPerMicrosecond);
+            Assert.Equal(trialEndsAt.Ticks / TimeSpan.TicksPerMicrosecond, combined.PremiumTrialEndsAtUtc!.Value.Ticks / TimeSpan.TicksPerMicrosecond);
+            Assert.Equal(2, await db.Meals.CountAsync(item => item.UserId == targetId));
+            Assert.Equal(2, await db.MealItems.CountAsync(item => item.MealId == sourceMeal.Id));
+            Assert.Equal(targetId, (await db.Products.SingleAsync(item => item.Id == product.Id)).UserId);
+            Assert.Equal(targetId, (await db.Recipes.SingleAsync(item => item.Id == recipe.Id)).UserId);
+        }
+
+        source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", botSession.GetProperty("accessToken").GetString());
+        using HttpResponseMessage unlinked = await source.PostAsJsonAsync("/api/v1/auth/telegram/unlink", new { InitData = CreateInitData(telegramId) });
+        Assert.Equal(HttpStatusCode.NoContent, unlinked.StatusCode);
+
+        using HttpClient recreated = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        recreated.DefaultRequestHeaders.Add("X-FoodDiary-Client", "telegram");
+        using HttpResponseMessage newBegin = await recreated.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData(telegramId) });
+        newBegin.EnsureSuccessStatusCode();
+        JsonElement newIntent = await newBegin.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("onboarding", newIntent.GetProperty("nextAction").GetString());
+        using HttpResponseMessage newRegistration = await recreated.PostAsJsonAsync("/api/v1/auth/telegram/complete",
+            new { Ticket = newIntent.GetProperty("ticket").GetString(), Action = "register", Language = "en", TimeZoneId = "UTC" });
+        newRegistration.EnsureSuccessStatusCode();
+        JsonElement newSession = await newRegistration.Content.ReadFromJsonAsync<JsonElement>();
+        Guid newUserId = newSession.GetProperty("user").GetProperty("id").GetGuid();
+        Assert.NotEqual(sourceId.Value, newUserId);
+        Assert.NotEqual(targetId.Value, newUserId);
+        recreated.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newSession.GetProperty("accessToken").GetString());
+
+        using HttpResponseMessage repeatedTrial = await recreated.PostAsync("/api/v1/billing/trial", content: null);
+        Assert.Equal(HttpStatusCode.Conflict, repeatedTrial.StatusCode);
+        JsonElement trialError = await repeatedTrial.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Billing.TrialAlreadyUsed", trialError.GetProperty("error").GetString());
+        using HttpResponseMessage overview = await recreated.GetAsync("/api/v1/billing/overview");
+        overview.EnsureSuccessStatusCode();
+        JsonElement eligibility = await overview.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Multiple(
+            () => Assert.False(eligibility.GetProperty("canStartPremiumTrial").GetBoolean()),
+            () => Assert.True(eligibility.GetProperty("premiumTrialUsed").GetBoolean()),
+            () => Assert.False(eligibility.GetProperty("premiumTrialActive").GetBoolean()),
+            () => Assert.Equal(JsonValueKind.Null, eligibility.GetProperty("premiumTrialStartUtc").ValueKind));
+    }
+
     [RequiresDockerFact]
     public async Task MiniAppRegistration_AndSubsequentLogin_PreserveEmailLessAccountAndRejectReplay() {
         var diagnostics = new ExceptionLog();
@@ -98,10 +270,10 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         await VerifySubsequentLoginAsync(app, userId.ToString(), email);
     }
 
-    private static string CreateInitData() {
+    private static string CreateInitData(long telegramUserId = 987654321) {
         string authDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
         string queryId = Guid.NewGuid().ToString("N");
-        string user = JsonSerializer.Serialize(new { id = 987654321, first_name = "Test", language_code = "en" });
+        string user = JsonSerializer.Serialize(new { id = telegramUserId, first_name = "Test", language_code = "en" });
         byte[] secret = HMACSHA256.HashData(Encoding.UTF8.GetBytes("WebAppData"), Encoding.UTF8.GetBytes("123:test-token"));
         string hash = Convert.ToHexStringLower(HMACSHA256.HashData(secret, Encoding.UTF8.GetBytes($"auth_date={authDate}\nquery_id={queryId}\nuser={user}")));
         return $"auth_date={authDate}&query_id={queryId}&user={Uri.EscapeDataString(user)}&hash={hash}";

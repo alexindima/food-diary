@@ -300,8 +300,20 @@ function getOverviewHintKey(
         return 'PREMIUM_PAGE.OVERVIEW.MANAGE_HINT';
     }
 
+    return getTrialOrCheckoutHintKey(overview, state.isFreePlan, showStartTrial, checkoutAvailable);
+}
+
+function getTrialOrCheckoutHintKey(
+    overview: BillingOverview | null,
+    isFreePlan: boolean,
+    showStartTrial: boolean,
+    checkoutAvailable: boolean,
+): string {
     if (showStartTrial) {
         return 'PREMIUM_PAGE.OVERVIEW.TRIAL_HINT';
+    }
+    if (isFreePlan && overview?.premiumTrialUsed === true) {
+        return 'PREMIUM_PAGE.OVERVIEW.TRIAL_USED_HINT';
     }
 
     return checkoutAvailable ? 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT' : 'PREMIUM_PAGE.OVERVIEW.CHECKOUT_UNAVAILABLE_HINT';

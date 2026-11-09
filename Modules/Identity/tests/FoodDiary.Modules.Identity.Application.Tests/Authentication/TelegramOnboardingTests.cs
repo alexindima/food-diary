@@ -263,5 +263,12 @@ public sealed class TelegramOnboardingTests {
             ConsumptionCount++;
             return Task.FromResult<string?>(value.Payload);
         }
+
+        public Task<string?> ReadAsync(string ticket, string purpose, string browserBinding, CancellationToken cancellationToken) =>
+            Task.FromResult(_values.TryGetValue(ticket, out (string Purpose, string Binding, string Payload) value) &&
+                string.Equals(value.Purpose, purpose, StringComparison.Ordinal) &&
+                string.Equals(value.Binding, browserBinding, StringComparison.Ordinal)
+                ? value.Payload
+                : null);
     }
 }

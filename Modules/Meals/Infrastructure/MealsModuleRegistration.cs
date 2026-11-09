@@ -20,6 +20,7 @@ public static class MealsModuleRegistration {
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<MealsDbContext>(options => new MealsDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, MealsUserDataPurgeParticipant>());
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<ITelegramDiaryContentTransfer, MealsUserDataPurgeParticipant>());
         services.AddScoped<IMealDailyCalorieReadService, MealDailyCalorieReadService>();
         services.AddScoped<IMealNutritionStatisticsReadService>(static provider => new MealNutritionStatisticsReadService(
             provider.GetRequiredService<MealsDbContext>().Meals, CreateTransactionSynchronizer(provider)));

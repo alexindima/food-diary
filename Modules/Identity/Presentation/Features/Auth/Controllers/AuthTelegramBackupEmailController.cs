@@ -42,4 +42,19 @@ public sealed class AuthTelegramBackupEmailController(ISender mediator, Telegram
     public Task<IActionResult> CompleteBackupEmail([FromCurrentUser] Guid userId, [FromBody] ExchangeTelegramOidcHttpRequest request) =>
         HandleNoContent(request.ToBackupEmailCompleteCommand(userId, bindings.Read(HttpContext)));
 
+    [AllowAnonymous]
+    [HttpPost("backup-email/verify")]
+    [ProducesResponseType<TelegramDiaryEmailVerificationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> VerifyBackupEmail([FromBody] VerifyEmailHttpRequest request) =>
+        HandleOk(request.ToDiaryVerificationCommand(bindings.Ensure(HttpContext, renew: true)),
+            static result => new TelegramDiaryEmailVerificationHttpResponse(result.TransferTicket));
+
+    [Authorize]
+    [BlockImpersonatedAccess]
+    [HttpPost("diary-transfer")]
+    [ProducesResponseType<TelegramDiaryTransferHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
+    public Task<IActionResult> TransferDiary([FromCurrentUser] Guid userId, [FromBody] TransferTelegramDiaryHttpRequest request) =>
+        HandleOk(request.ToDiaryTransferCommand(userId, bindings.Read(HttpContext)), static result => result.ToDiaryTransferResponse());
 }

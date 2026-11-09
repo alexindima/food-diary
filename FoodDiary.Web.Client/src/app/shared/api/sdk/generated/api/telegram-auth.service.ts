@@ -31,9 +31,17 @@ import { TelegramBackupEmailHttpRequest } from '../model/telegram-backup-email-h
 
 import { TelegramConfigurationHttpResponse } from '../model/telegram-configuration-http-response';
 
+import { TelegramDiaryEmailVerificationHttpResponse } from '../model/telegram-diary-email-verification-http-response';
+
+import { TelegramDiaryTransferHttpResponse } from '../model/telegram-diary-transfer-http-response';
+
 import { TelegramLoginWidgetHttpRequest } from '../model/telegram-login-widget-http-request';
 
 import { TelegramOidcStartHttpResponse } from '../model/telegram-oidc-start-http-response';
+
+import { TransferTelegramDiaryHttpRequest } from '../model/transfer-telegram-diary-http-request';
+
+import { VerifyEmailHttpRequest } from '../model/verify-email-http-request';
 
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
@@ -58,6 +66,11 @@ export interface PostAuthTelegramBackupEmailOidcStartRequestParams {
     startTelegramBackupEmailHttpRequest?: StartTelegramBackupEmailHttpRequest;
 }
 
+export interface PostAuthTelegramBackupEmailVerifyRequestParams {
+    version: string;
+    verifyEmailHttpRequest?: VerifyEmailHttpRequest;
+}
+
 export interface PostAuthTelegramCompleteRequestParams {
     version: string;
     completeTelegramAuthenticationHttpRequest?: CompleteTelegramAuthenticationHttpRequest;
@@ -66,6 +79,11 @@ export interface PostAuthTelegramCompleteRequestParams {
 export interface PostAuthTelegramCompleteLinkRequestParams {
     version: string;
     completeTelegramLinkHttpRequest?: CompleteTelegramLinkHttpRequest;
+}
+
+export interface PostAuthTelegramDiaryTransferRequestParams {
+    version: string;
+    transferTelegramDiaryHttpRequest?: TransferTelegramDiaryHttpRequest;
 }
 
 export interface PostAuthTelegramDisconnectRequestParams {
@@ -465,6 +483,87 @@ export class TelegramAuthSdk extends BaseService {
     }
 
     /**
+     * @endpoint post /api/v{version}/auth/telegram/backup-email/verify
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAuthTelegramBackupEmailVerify(
+        requestParameters: PostAuthTelegramBackupEmailVerifyRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<TelegramDiaryEmailVerificationHttpResponse>;
+    public postAuthTelegramBackupEmailVerify(
+        requestParameters: PostAuthTelegramBackupEmailVerifyRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<TelegramDiaryEmailVerificationHttpResponse>>;
+    public postAuthTelegramBackupEmailVerify(
+        requestParameters: PostAuthTelegramBackupEmailVerifyRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<TelegramDiaryEmailVerificationHttpResponse>>;
+    public postAuthTelegramBackupEmailVerify(
+        requestParameters: PostAuthTelegramBackupEmailVerifyRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postAuthTelegramBackupEmailVerify.');
+        }
+        const verifyEmailHttpRequest = requestParameters?.verifyEmailHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/auth/telegram/backup-email/verify`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<TelegramDiaryEmailVerificationHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: verifyEmailHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
      * @endpoint post /api/v{version}/auth/telegram/complete
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -622,6 +721,92 @@ export class TelegramAuthSdk extends BaseService {
         return this.httpClient.request<AuthenticationHttpResponse>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             body: completeTelegramLinkHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/auth/telegram/diary-transfer
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAuthTelegramDiaryTransfer(
+        requestParameters: PostAuthTelegramDiaryTransferRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<TelegramDiaryTransferHttpResponse>;
+    public postAuthTelegramDiaryTransfer(
+        requestParameters: PostAuthTelegramDiaryTransferRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<TelegramDiaryTransferHttpResponse>>;
+    public postAuthTelegramDiaryTransfer(
+        requestParameters: PostAuthTelegramDiaryTransferRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<TelegramDiaryTransferHttpResponse>>;
+    public postAuthTelegramDiaryTransfer(
+        requestParameters: PostAuthTelegramDiaryTransferRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postAuthTelegramDiaryTransfer.');
+        }
+        const transferTelegramDiaryHttpRequest = requestParameters?.transferTelegramDiaryHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/auth/telegram/diary-transfer`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<TelegramDiaryTransferHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: transferTelegramDiaryHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

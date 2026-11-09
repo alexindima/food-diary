@@ -6,4 +6,4 @@ using FoodDiary.Mediator;
 namespace FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
 
 public sealed record StartPremiumTrialCommand(Guid? UserId)
-    : IRequest<Result<BillingOverviewModel>>, ITransactionalCommand;
+    : IRequest<Result<BillingOverviewModel>>, IAtomicCommand;

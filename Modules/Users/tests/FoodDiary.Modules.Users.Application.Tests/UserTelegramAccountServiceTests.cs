@@ -192,5 +192,6 @@ public sealed class UserTelegramAccountServiceTests {
         await _writer.DidNotReceive().UpdateAsync(Arg.Any<User>(), Arg.Any<CancellationToken>());
     }
 
-    private UserTelegramAccountService CreateService() => new(_lookup, _writer, _sessions, _hasher, TimeProvider.System);
+    private UserTelegramAccountService CreateService() => new(_lookup, _writer, _sessions, _hasher, TimeProvider.System,
+        Substitute.For<IUserPremiumTrialStore>());
 }

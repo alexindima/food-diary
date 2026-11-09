@@ -20,7 +20,7 @@
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
     "controllers": 116,
-    "endpoints": 379,
+    "endpoints": 381,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -16893,6 +16893,16 @@
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/backup-email/oidc/complete",
             "line": 40
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/backup-email/verify",
+            "line": 46
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/diary-transfer",
+            "line": 55
           }
         ]
       },

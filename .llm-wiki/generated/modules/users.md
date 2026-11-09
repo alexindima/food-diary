@@ -103,17 +103,17 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 109
+- Public contract files: 118
 - Observed external consumer groups: 34
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 109
-- Interfaces: 41
+- Public contract types: 118
+- Interfaces: 45
 - DTO/read-model/projection types: 40
 - Enums: 2
-- Exported repository-shaped contracts: 8
+- Exported repository-shaped contracts: 9
 - Contracts referencing domain entities: 0
 - `class CurrentUserAccessResolver`
 - `class PersonalDataArchiveLimitException`
@@ -126,6 +126,8 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - `interface IPersonalDataArchiveReader`
 - `interface IProfileDietologistReadService`
 - `interface IProfileNotificationReadService`
+- `interface ITelegramDiaryContentTransfer`
+- `interface ITelegramDiaryTransferReader`
 - `interface IUserAccessTokenSecurityReader`
 - `interface IUserActivityRepository`
 - `interface IUserAdminReadModelRepository`
@@ -143,9 +145,7 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - `interface IUserCurrentWeightProvider`
 - `interface IUserDashboardProfileReadService`
 - `interface IUserDataPurgeParticipant`
-- `interface IUserDietologistProfileReadService`
-- `interface IUserFastingReminderReadService`
-- ... 79 more type(s)
+- ... 88 more type(s)
 
 ## Extraction Readiness
 

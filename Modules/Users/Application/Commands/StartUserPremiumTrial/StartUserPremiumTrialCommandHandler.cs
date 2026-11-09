@@ -12,11 +12,12 @@ using FoodDiary.Mediator;
 namespace FoodDiary.Modules.Users.Application.Commands.StartUserPremiumTrial;
 
 public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository userLookupRepository,
-    IUserWriteRepository userWriteRepository) : IRequestHandler<StartUserPremiumTrialCommand, Result<UserBillingProfileModel>> {
+    IUserWriteRepository userWriteRepository, IUserPremiumTrialStore trials) : IRequestHandler<StartUserPremiumTrialCommand, Result<UserBillingProfileModel>> {
     public async Task<Result<UserBillingProfileModel>> Handle(StartUserPremiumTrialCommand request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
         DateTime startedAtUtc = request.StartedAtUtc;
         TimeSpan duration = request.Duration;
+        await trials.LockAccountAsync(userId, cancellationToken);
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
@@ -25,6 +26,17 @@ public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository us
 
         if (!string.IsNullOrWhiteSpace(user!.Email) && !user.IsEmailConfirmed) {
             return Result.Failure<UserBillingProfileModel>(UserErrors.EmailRequired);
+        }
+        if (user.HasUsedPremiumTrial() || user.PremiumTrialEndsAtUtc.HasValue || user.PremiumTrialRestrictedByTelegram) {
+            return Result.Failure<UserBillingProfileModel>(UserErrors.PremiumTrialAlreadyUsed);
+        }
+        if (user.TelegramUserId is { } telegramId) {
+            if (!user.TelegramLinkVerifiedForRecovery) {
+                return Result.Failure<UserBillingProfileModel>(UserErrors.TelegramTrialLinkUnverified);
+            }
+            if (!await trials.TryRedeemTelegramAsync(telegramId, cancellationToken)) {
+                return Result.Failure<UserBillingProfileModel>(UserErrors.PremiumTrialAlreadyUsed);
+            }
         }
 
         user.StartPremiumTrial(startedAtUtc, duration);
@@ -43,6 +55,7 @@ public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository us
             user.PremiumTrialStartedAtUtc,
             user.PremiumTrialEndsAtUtc,
             user.IsEmailConfirmed,
-            TelegramUserId: user.TelegramUserId);
+            TelegramUserId: user.TelegramUserId,
+            HasVerifiedTelegramLink: user.TelegramLinkVerifiedForRecovery);
 
 }

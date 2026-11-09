@@ -12,5 +12,6 @@ public interface ITelegramOperationStore {
     Task<bool> ResumeAsync(long botId, TelegramOperationId operationId, UserId userId, long securityVersion,
         string expectedCheckpoint, string checkpoint, CancellationToken cancellationToken);
     Task CancelUserAsync(UserId userId, CancellationToken cancellationToken);
+    Task<bool> HasPendingUserAsync(UserId userId, CancellationToken cancellationToken);
     Task CancelOperationAsync(long botId, TelegramOperationId operationId, CancellationToken cancellationToken);
 }

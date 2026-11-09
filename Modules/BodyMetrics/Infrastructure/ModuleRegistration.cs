@@ -12,6 +12,7 @@ namespace FoodDiary.Modules.BodyMetrics.Infrastructure;
 public static class ModuleRegistration {
     public static IServiceCollection AddBodyMetricsModule(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, BodyMetricsUserDataPurgeParticipant>());
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<ITelegramDiaryContentTransfer, BodyMetricsUserDataPurgeParticipant>());
         services.AddBodyMetricsApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<BodyMetricsDbContext>(static options => new BodyMetricsDbContext(options)));

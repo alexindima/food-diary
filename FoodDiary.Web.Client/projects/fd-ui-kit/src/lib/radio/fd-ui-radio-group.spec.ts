@@ -60,6 +60,7 @@ describe('FdUiRadioGroupComponent', () => {
 
         const label = requireElement('.fd-ui-radio-group__label');
         expect(label.textContent).toContain('Choose one');
+        expect(requireElement('[role="radiogroup"]').getAttribute('aria-labelledby')).toBe(label.id);
     });
 
     it('should render options', async () => {
@@ -94,6 +95,20 @@ describe('FdUiRadioGroupComponent signal form control', () => {
         fixture.detectChanges();
 
         expect(component.value()).toBe('a');
+    });
+
+    it('moves focus with the selected option when using arrow keys', async () => {
+        const { component, fixture, requireElement } = await setupRadioGroupAsync();
+        setRadioOptions(fixture);
+
+        const first = requireElement('input[type="radio"]:first-of-type');
+        const second = requireElement('input[type="radio"]:nth-of-type(2)');
+        first.focus();
+        first.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+
+        expect(component.value()).toBe('b');
+        expect(second.ownerDocument.activeElement).toBe(second);
     });
 
     it('should mark touched on blur', async () => {

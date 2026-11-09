@@ -145,6 +145,13 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
         return false;
     }
 
+    public async Task<bool> HasPendingUserAsync(UserId userId, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken);
+        }
+        return await context.Set<TelegramOperation>().AnyAsync(item => item.UserId == userId.Value && !item.Completed, cancellationToken);
+    }
+
     public async Task CancelUserAsync(UserId userId, CancellationToken cancellationToken) {
         Guid storedUserId = userId.Value;
         if (synchronizeTransactionAsync is not null) {

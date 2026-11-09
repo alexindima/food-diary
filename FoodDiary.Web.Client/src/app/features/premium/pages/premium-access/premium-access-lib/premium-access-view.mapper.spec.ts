@@ -105,6 +105,17 @@ describe('premium access view mapper', () => {
             showStartTrial: true,
         });
     });
+
+    it('explains why a used trial is unavailable even without trial dates on this diary', () => {
+        expect(
+            buildPremiumOverviewCardViewModel(
+                { ...overview, isPremium: false, subscriptionStatus: null, manageBillingAvailable: false, premiumTrialUsed: true },
+                false,
+                true,
+                { periodEnd: null, periodStart: null, nextBillingAttempt: null },
+            ),
+        ).toMatchObject({ hintKey: 'PREMIUM_PAGE.OVERVIEW.TRIAL_USED_HINT', showStartTrial: false });
+    });
 });
 
 describe('premium plan choices', () => {

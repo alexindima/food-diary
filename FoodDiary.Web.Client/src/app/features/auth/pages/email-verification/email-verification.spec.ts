@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -14,19 +14,23 @@ let authServiceMock: {
     isAuthenticated: ReturnType<typeof vi.fn>;
     getUserId: ReturnType<typeof vi.fn>;
     verifyEmail: ReturnType<typeof vi.fn>;
+    verifyTelegramBackupEmail: ReturnType<typeof vi.fn>;
 };
 let navigationServiceMock: {
     navigateToAuthAsync: ReturnType<typeof vi.fn>;
     navigateToHomeAsync: ReturnType<typeof vi.fn>;
     navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
 };
+let navigateByUrl: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
+    navigateByUrl = vi.fn().mockResolvedValue(true);
     authServiceMock = {
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         isAuthenticated: vi.fn().mockReturnValue(true),
         getUserId: vi.fn().mockReturnValue('user-1'),
         verifyEmail: vi.fn().mockReturnValue(of(true)),
+        verifyTelegramBackupEmail: vi.fn().mockReturnValue(of(null)),
     };
     navigationServiceMock = {
         navigateToAuthAsync: vi.fn().mockResolvedValue(void 0),
@@ -45,9 +49,19 @@ describe('EmailVerificationComponent backup email', () => {
     });
 
     it('explains how to recover an expired or already-used backup link', () => {
-        authServiceMock.verifyEmail.mockReturnValue(throwError(() => new Error('expired')));
+        authServiceMock.verifyTelegramBackupEmail.mockReturnValue(throwError(() => new Error('expired')));
         const component = createComponent({ userId: 'user-1', token: 'telegram-backup.ticket' });
         expect(component['errorMessage']()).toBe('USER_MANAGE.BACKUP_EMAIL_VERIFY_ERROR');
+    });
+
+    it('discards the transfer ticket when the user keeps the diaries separate', () => {
+        authServiceMock.verifyTelegramBackupEmail.mockReturnValue(of('browser-bound-ticket'));
+        const component = createComponent({ userId: 'user-1', token: 'telegram-backup.ticket' });
+        expect(component['transferTicket']()).toBe('browser-bound-ticket');
+        expect(navigateByUrl).toHaveBeenCalledWith('/verify-email', { replaceUrl: true });
+        component['onKeepDiariesSeparate']();
+        expect(component['transferTicket']()).toBeNull();
+        expect(component['state']()).toBe('cancelled');
     });
 });
 
@@ -157,6 +171,7 @@ function createComponent(queryParams: Record<string, string>): EmailVerification
         providers: [
             { provide: AuthService, useValue: authServiceMock },
             { provide: NavigationService, useValue: navigationServiceMock },
+            { provide: Router, useValue: { navigateByUrl } },
             { provide: TranslateService, useValue: { instant: (key: string): string => key } },
             {
                 provide: ActivatedRoute,

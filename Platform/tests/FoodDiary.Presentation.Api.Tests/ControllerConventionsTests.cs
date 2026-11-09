@@ -197,6 +197,8 @@ public sealed class ControllerConventionsTests {
             "AuthSessionController.RestoreAccount",
             "AuthSessionController.VerifyEmail",
             "AuthSessionLifecycleController.Logout",
+            // The emailed one-time proof can be opened before signing in to the target diary.
+            "AuthTelegramBackupEmailController.VerifyBackupEmail",
             "AuthTelegramController.TelegramBotAuth",
             "AuthTelegramController.TelegramLoginWidget",
             "AuthTelegramController.TelegramVerify",

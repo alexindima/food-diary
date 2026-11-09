@@ -14,4 +14,8 @@ public sealed record UserBillingProfileModel(
     string? Language = null,
     string? TimeZoneId = null,
     long? TelegramUserId = null,
-    DateTime? ManualPremiumEndsAtUtc = null);
+    DateTime? ManualPremiumEndsAtUtc = null,
+    bool PremiumTrialRestrictedByTelegram = false,
+    bool HasVerifiedTelegramLink = false) {
+    public bool HasUsedPremiumTrial => PremiumTrialStartedAtUtc.HasValue || PremiumTrialEndsAtUtc.HasValue || PremiumTrialRestrictedByTelegram;
+}

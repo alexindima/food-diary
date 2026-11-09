@@ -46,7 +46,7 @@ public sealed class StartPremiumTrialCommandHandler(
             return Result.Failure<BillingOverviewModel>(BillingErrors.SubscriptionAlreadyActive);
         }
 
-        if (user.PremiumTrialStartedAtUtc is not null || user.PremiumTrialEndsAtUtc is not null) {
+        if (user.HasUsedPremiumTrial) {
             return Result.Failure<BillingOverviewModel>(BillingErrors.TrialAlreadyUsed);
         }
         if (BillingTrialPolicy.HasSubscriptionHistory(subscription)) {
@@ -59,7 +59,9 @@ public sealed class StartPremiumTrialCommandHandler(
 
         Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService.Send(new StartUserPremiumTrialCommand(UserId: userId, StartedAtUtc: nowUtc, Duration: TrialDuration), cancellationToken);
         if (startedTrialResult.IsFailure) {
-            return Result.Failure<BillingOverviewModel>(startedTrialResult.Error);
+            return Result.Failure<BillingOverviewModel>(string.Equals(startedTrialResult.Error.Code, UserErrors.PremiumTrialAlreadyUsed.Code, StringComparison.Ordinal)
+                ? BillingErrors.TrialAlreadyUsed
+                : startedTrialResult.Error);
         }
 
         UserBillingProfileModel updatedUser = startedTrialResult.Value;

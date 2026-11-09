@@ -10,37 +10,43 @@ namespace FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 internal sealed class RecipesUserDataPurgeParticipant(
     RecipesDbContext context,
     IModuleTransactionCoordinator coordinator,
-    IImageAssetOwnershipService imageAssetOwnershipService) : IUserDataPurgeParticipant {
+    IImageAssetOwnershipService imageAssetOwnershipService) : IUserDataPurgeParticipant, ITelegramDiaryContentTransfer {
     public int Order => 7;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         if (reassignTarget is { } target) {
-            List<ImageAssetId> assetIds = await context.Recipes
-                .Where(item => item.UserId == userId && item.ImageAssetId != null)
-                .Select(item => item.ImageAssetId!.Value).ToListAsync(cancellationToken);
-            assetIds.AddRange(await context.Recipes.Where(item => item.UserId == userId)
-                .SelectMany(item => item.Images).Select(image => image.ImageAssetId)
-                .ToListAsync(cancellationToken));
-
-            List<ImageAssetId> stepAssets = await context.RecipeSteps
-                .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
-                .Select(step => step.ImageAssetId!.Value).ToListAsync(cancellationToken);
-            stepAssets.AddRange(await context.RecipeSteps.Where(step => step.Recipe.UserId == userId)
-                .SelectMany(step => step.Images).Select(image => image.ImageAssetId)
-                .ToListAsync(cancellationToken));
-            assetIds = [.. assetIds.Concat(stepAssets).Distinct()];
-
-            await imageAssetOwnershipService.ReassignAsync(assetIds, userId, target, cancellationToken);
-            await context.Recipes.Where(item => item.UserId == userId)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, target), cancellationToken);
-        } else {
-            // Restrictive nested references are checked while rows are deleted. Remove
-            // outgoing edges of this user's recipes first, including parent -> child.
-            // Incoming references from another owner's recipes remain restrictive.
-            await context.RecipeIngredients.Where(item => item.RecipeStep.Recipe.UserId == userId)
-                .ExecuteDeleteAsync(cancellationToken);
-            await context.Recipes.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+            await TransferAsync(userId, target, cancellationToken);
+            return;
         }
+
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        // Restrictive nested references are checked while rows are deleted. Remove
+        // outgoing edges of this user's recipes first, including parent -> child.
+        // Incoming references from another owner's recipes remain restrictive.
+        await context.RecipeIngredients.Where(item => item.RecipeStep.Recipe.UserId == userId)
+            .ExecuteDeleteAsync(cancellationToken);
+        await context.Recipes.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+    }
+
+    public async Task TransferAsync(UserId sourceId, UserId targetId, CancellationToken cancellationToken) {
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        List<ImageAssetId> assetIds = await context.Recipes
+            .Where(item => item.UserId == sourceId && item.ImageAssetId != null)
+            .Select(item => item.ImageAssetId!.Value).ToListAsync(cancellationToken);
+        assetIds.AddRange(await context.Recipes.Where(item => item.UserId == sourceId)
+            .SelectMany(item => item.Images).Select(image => image.ImageAssetId)
+            .ToListAsync(cancellationToken));
+
+        List<ImageAssetId> stepAssets = await context.RecipeSteps
+            .Where(step => step.Recipe.UserId == sourceId && step.ImageAssetId != null)
+            .Select(step => step.ImageAssetId!.Value).ToListAsync(cancellationToken);
+        stepAssets.AddRange(await context.RecipeSteps.Where(step => step.Recipe.UserId == sourceId)
+            .SelectMany(step => step.Images).Select(image => image.ImageAssetId)
+            .ToListAsync(cancellationToken));
+        assetIds = [.. assetIds.Concat(stepAssets).Distinct()];
+
+        await imageAssetOwnershipService.ReassignAsync(assetIds, sourceId, targetId, cancellationToken);
+        await context.Recipes.Where(item => item.UserId == sourceId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, targetId), cancellationToken);
     }
 }

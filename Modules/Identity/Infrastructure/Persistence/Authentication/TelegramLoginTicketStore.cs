@@ -39,8 +39,14 @@ public sealed class TelegramLoginTicketStore(
         return ticket;
     }
 
-    public async Task<string?> ConsumeAsync(
-        string ticket, string purpose, string browserBinding, CancellationToken cancellationToken) {
+    public Task<string?> ConsumeAsync(string ticket, string purpose, string browserBinding, CancellationToken cancellationToken) =>
+        ReadCoreAsync(ticket, purpose, browserBinding, consume: true, cancellationToken);
+
+    public Task<string?> ReadAsync(string ticket, string purpose, string browserBinding, CancellationToken cancellationToken) =>
+        ReadCoreAsync(ticket, purpose, browserBinding, consume: false, cancellationToken);
+
+    private async Task<string?> ReadCoreAsync(
+        string ticket, string purpose, string browserBinding, bool consume, CancellationToken cancellationToken) {
         if (string.IsNullOrWhiteSpace(ticket) || ticket.Length != 43 || string.IsNullOrWhiteSpace(purpose) ||
             purpose.Length > 64 || string.IsNullOrWhiteSpace(browserBinding) || browserBinding.Length > 256) {
             return null;
@@ -56,8 +62,9 @@ public sealed class TelegramLoginTicketStore(
             item.BrowserBindingHash == bindingHash && item.ExpiresAtUtc > now);
         TelegramLoginTicket? record = await query.AsNoTracking().SingleOrDefaultAsync(cancellationToken);
         DateTime consumedAtUtc = timeProvider.GetUtcNow().UtcDateTime;
-        if (record is null || await query.Where(item => item.ExpiresAtUtc > consumedAtUtc)
-                .ExecuteDeleteAsync(cancellationToken) != 1) {
+        if (record is null || record.ExpiresAtUtc <= consumedAtUtc ||
+            (consume && await query.Where(item => item.ExpiresAtUtc > consumedAtUtc)
+                .ExecuteDeleteAsync(cancellationToken) != 1)) {
             return null;
         }
         try {

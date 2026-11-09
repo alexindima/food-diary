@@ -1,0 +1,59 @@
+<div class="fd-stack fd-gap-md">
+    @switch (step()) {
+        @case ('conflict') {
+            <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.CONFLICT' | translate }}</p>
+            <fd-ui-button [fullWidth]="true" (click)="beginSignIn()">
+                {{ 'AUTH.TELEGRAM_DIARY.SIGN_IN' | translate }}
+            </fd-ui-button>
+            <fd-ui-button variant="secondary" [fullWidth]="true" (click)="useAnotherEmail.emit()">
+                {{ 'AUTH.TELEGRAM_DIARY.USE_ANOTHER_EMAIL' | translate }}
+            </fd-ui-button>
+        }
+        @case ('sign-in') {
+            <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.SIGN_IN_HINT' | translate }}</p>
+            <p role="status" [hidden]="!busy()">{{ 'COMMON.LOADING' | translate }}</p>
+            <div [hidden]="busy()">
+                <fd-auth [useRouting]="false" [inlineSignIn]="true" [hideTelegram]="true" (signedIn)="loadPreview()" />
+            </div>
+            <div [hidden]="!canRetryPreview()">
+                <fd-ui-button variant="secondary" [fullWidth]="true" (click)="loadPreview()">{{
+                    'AUTH.VERIFY.RETRY' | translate
+                }}</fd-ui-button>
+            </div>
+        }
+        @case ('review') {
+            <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.REVIEW' | translate }}</p>
+            <p class="fd-ui-body-sm" [hidden]="recordCounts().length > 0">{{ 'AUTH.TELEGRAM_DIARY.EMPTY' | translate }}</p>
+            <ul [hidden]="recordCounts().length === 0">
+                @for (record of recordCounts(); track record.label) {
+                    <li>{{ record.label | translate: { count: record.count } }}</li>
+                }
+            </ul>
+            <fd-ui-radio-group
+                [label]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
+                [options]="goalOptions()"
+                [disabled]="busy()"
+                [(value)]="choice"
+            />
+            <fd-ui-button
+                [fullWidth]="true"
+                [loading]="busy()"
+                [disabled]="choice() === null"
+                [disabledReason]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
+                (click)="confirm()"
+            >
+                {{ confirmLabel() | translate }}
+            </fd-ui-button>
+        }
+        @case ('done') {
+            <p role="status" class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.DONE' | translate }}</p>
+            <fd-ui-button [fullWidth]="true" (click)="continueToSignIn()">{{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}</fd-ui-button>
+        }
+    }
+    <p role="alert" class="fd-ui-body-sm" [hidden]="error() === null">{{ error() ?? '' | translate }}</p>
+    <div [hidden]="step() === 'done'">
+        <fd-ui-button variant="secondary" [fullWidth]="true" [loading]="busy()" (click)="keepSeparate.emit()">
+            {{ 'AUTH.TELEGRAM_DIARY.KEEP_SEPARATE' | translate }}
+        </fd-ui-button>
+    </div>
+</div>

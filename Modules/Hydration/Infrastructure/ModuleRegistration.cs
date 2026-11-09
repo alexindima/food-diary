@@ -12,6 +12,7 @@ public static class ModuleRegistration {
     public static IServiceCollection AddHydrationModule(this IServiceCollection services) {
         services.AddScoped<IHydrationOperationTransactionRunner, EfHydrationOperationTransactionRunner>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, HydrationUserDataPurgeParticipant>());
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<ITelegramDiaryContentTransfer, HydrationUserDataPurgeParticipant>());
         services.AddHydrationApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options)));

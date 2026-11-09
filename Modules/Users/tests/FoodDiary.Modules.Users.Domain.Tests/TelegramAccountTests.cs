@@ -5,6 +5,23 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramAccountTests {
     [Fact]
+    public void AdoptingRestrictedTelegramDiary_BlocksFutureTrialsAfterUnlinkWithoutCreatingTrialDates() {
+        var source = User.CreateTelegram(123, "inaccessible-hash", premiumTrialRestricted: true);
+        var target = User.Create("verified@example.test", "hash");
+        target.SetEmailConfirmed(isConfirmed: true);
+        target.LinkTelegram(123);
+
+        target.AdoptDiaryPremiumTrial(source);
+        target.UnlinkTelegram();
+
+        Assert.Multiple(
+            () => Assert.True(target.PremiumTrialRestrictedByTelegram),
+            () => Assert.Null(target.TelegramUserId),
+            () => Assert.Null(target.PremiumTrialStartedAtUtc),
+            () => Assert.Null(target.PremiumTrialEndsAtUtc));
+    }
+
+    [Fact]
     public void RelinkingTheSameTelegram_AfterMailboxVerificationEstablishesRecoveryTrustWithoutChangingIdentity() {
         var user = User.Create("verified-relink@example.test", "hash");
         user.LinkTelegram(123);

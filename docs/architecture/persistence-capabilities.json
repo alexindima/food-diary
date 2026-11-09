@@ -97,7 +97,7 @@
         "tracked:ImageObjectDeletionOutboxMessage"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "6fef98bffb6c79741d3e62855c4db2a45567b271dbcb585cabf6e333381fd084"
+      "technicalSourceSha256": "acc9f9d47b069d81bf0af5d3a2d17eeb47a61c2aa05621cc2e71d7be4c21369e"
     },
     "FoodDiary.ReadModel.Composition/Images/ImageAssetUsageQuery.cs": {
       "module": "ReadModelComposition",
@@ -304,8 +304,8 @@
         "tracked:TelegramOperation",
         "write:TelegramOperation"
       ],
-      "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs. Conditional updates enforce leases and cancellation. Resumption compares the protected checkpoint within the current bot, user and security version and invalidates the previous lease. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "4d7fcce36385970dabea678c9f93c616bd06890828728981dbd1d2e563797e19"
+      "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs. Conditional updates enforce leases and cancellation. Resumption compares the protected checkpoint within the current bot, user and security version and invalidates the previous lease. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges. Diary transfer checks for pending operations using the exact source owner.",
+      "technicalSourceSha256": "bc8bcef360fa6d658a28579cc411ec7e9a6d623f40be4c6058379f3e06f521d3"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -314,8 +314,8 @@
         "entity:TelegramLoginTicket",
         "write:TelegramLoginTicket"
       ],
-      "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
-      "technicalSourceSha256": "1ab065ee1a0913f52176acd52aaa0b6730a5dc552987e5299bd0239b0268d700"
+      "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges. Diary preview reads an unexpired purpose- and browser-bound proof without consuming it.",
+      "technicalSourceSha256": "4b8d98891222e2a41871275c1804ce30eab73d10bccaa321d4390e567fcd9dd4"
     },
     "Modules/Admin/Infrastructure/AdminModuleRegistration.cs": {
       "module": "Admin",
@@ -474,7 +474,7 @@
         "tracked:WeightEntry"
       ],
       "reason": "BodyMetrics registration supplies only owned sets from its runtime context. The shared factory preserves connection and coordinated UoW saves; central migration/read/purge bridges remain. See ADR 0040.",
-      "technicalSourceSha256": "5a6270509694a6be466b7aa8a60ba92fe7f809f4c7c315a3dbacf440d08a2419"
+      "technicalSourceSha256": "3b1020cde609f686a607cfd97442aa4d01b8abca44fc7160f10f632704df997c"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs": {
       "module": "BodyMetrics",
@@ -488,8 +488,8 @@
         "write:WaistEntry",
         "write:WeightEntry"
       ],
-      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
-      "technicalSourceSha256": "caf5cfc2aa511f4aebf55c7682f0f2e8fa6d77994c413506ce6741bef0dbfa12"
+      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit. Diary transfer reassigns only source-owned rows to the authorized target in the shared transaction.",
+      "technicalSourceSha256": "1a6dc5cae3b2511e7e88a3af12318b9542336ba9771d553d98127ac280ffd92d"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs": {
       "module": "BodyMetrics",
@@ -827,7 +827,7 @@
         "tracked:HydrationOperationReceipt"
       ],
       "reason": "Hydration composition creates its owned runtime context through the shared provider/connection factory. Only its two owned sets reach repositories; IUnitOfWork coordinates transactions and saves. Central purge remains a separate reviewed bridge; see ADR 0040.",
-      "technicalSourceSha256": "146a80f83b728fb7ea865b076995bc38426216b7d85fa7265fe8596927b8205d"
+      "technicalSourceSha256": "a21f54013914863111f213823565af7271167e175c1b0ed93bb36d5e53127035"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs": {
       "module": "Hydration",
@@ -847,8 +847,8 @@
         "tracked:HydrationEntry",
         "write:HydrationEntry"
       ],
-      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
-      "technicalSourceSha256": "808bd52bb84b48bc4a23e096efeac1107da07f1c9b850358331472e46d3f5d4e"
+      "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit. Diary transfer reassigns only source-owned rows to the authorized target in the shared transaction.",
+      "technicalSourceSha256": "611f4d1df61e58a69ae29af019a0542b2a2a14b4a3cd793938ed15fa482e5f06"
     },
     "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs": {
       "module": "Identity",
@@ -961,8 +961,8 @@
         "tracked:ImageAsset",
         "write:ImageAsset"
       ],
-      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Reviewed storage-key port grouping: enqueue now takes ObjectStorageKey.FromStoredValue for the same scalar persisted key. User filters, two-phase image cleanup, transaction synchronization and enqueue persistence are unchanged.",
-      "technicalSourceSha256": "bbac944cc6a46effe7b355f0f7bab14a8b1752a7826c6250cb1d278c0194f6b4"
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Reviewed storage-key port grouping: enqueue now takes ObjectStorageKey.FromStoredValue for the same scalar persisted key. User filters, two-phase image cleanup, transaction synchronization and enqueue persistence are unchanged. Diary transfer reassigns only source-owned rows to the authorized target in the shared transaction.",
+      "technicalSourceSha256": "aa861af1bc7dc6411621a5a79c0a3a6e5d7577da894eaba72d15e792ed9fab45"
     },
     "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
       "module": "Lessons",
@@ -1068,8 +1068,8 @@
         "write:Meal",
         "write:MealItem"
       ],
-      "reason": "Meals purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "956e6b2a2b94913c88d1c92cefa632b89f3d5d73e09c172e47edc36edf65224b"
+      "reason": "Meals purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests. Diary transfer reassigns only source-owned rows to the authorized target in the shared transaction.",
+      "technicalSourceSha256": "717a32b0f0603b350ec4c35d76d90e0ee0d09cc5cba75031aa94a70bf5400e2c"
     },
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
@@ -1180,8 +1180,8 @@
         "tracked:ProductImage",
         "write:Product"
       ],
-      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "ebb2c1f34d587dedabcc1c18a2aec234bbc8556323fbb484ac9a0ceff8d838ae"
+      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Diary transfer reassigns only source-owned rows to the authorized target in the shared transaction.",
+      "technicalSourceSha256": "ff9b34b66a5980df3c84eac99ddd0197fcd2c731ff2ca0699ea575dee55debfd"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
@@ -1265,8 +1265,8 @@
         "write:Recipe",
         "write:RecipeIngredient"
       ],
-      "reason": "Binds the live owner transaction. Explicit successor transfers legacy and recipe/step gallery assets with source filtering before owned recipes. Otherwise selective retention preserves referenced closure and ordinary purge deletes remaining own outgoing ingredient edges and recipes. Strict fixture cleanup still rejects foreign references. Users owns save/commit and all-owner rollback. ADR 0054.",
-      "technicalSourceSha256": "aa03c5619e0d81209530a72f6eda3adca1dff87260c63996a5ccc258a3346696"
+      "reason": "Binds the live owner transaction. Explicit successor transfers legacy and recipe/step gallery assets with source filtering before owned recipes. Otherwise selective retention preserves referenced closure and ordinary purge deletes remaining own outgoing ingredient edges and recipes. Strict fixture cleanup still rejects foreign references. Users owns save/commit and all-owner rollback. ADR 0054. Diary transfer reassigns only source-owned rows to the authorized target in the shared transaction.",
+      "technicalSourceSha256": "7b7f375a4375ccc41969ea1d0ab3a95cd12146583deebceb079644214264a5c7"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1729,7 +1729,7 @@
         "tracked:Meal"
       ],
       "reason": "Compose the owner context and narrow repositories; synchronize owner queries with the live IModuleTransactionCoordinator transaction, including after intermediate recognition flush.",
-      "technicalSourceSha256": "0b9ca3d04ea01ad544f009db7a124f44849b270112ff7d5a3d192b85f502d049"
+      "technicalSourceSha256": "d3d337d4c48c2f6d5cf619ff6b517d62fa462cbcb00e677d60451a09474d2e43"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",
@@ -1759,7 +1759,7 @@
         "tracked:Product"
       ],
       "reason": "Compose scoped Products owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "567c36187f03ffb51401b3809ed70d55c77a73bbc9214097444f2cc4bea54c79"
+      "technicalSourceSha256": "84e1b9e8b3e1d811e70900cfd00fd7726f2d2fe78a381d2b8176ddf06887f7d3"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1780,7 +1780,7 @@
         "context:Database"
       ],
       "reason": "Compose scoped Recipes owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "983febebbf1205b9d976d1273caac885c93ad62317c8830519f93b6c126d2c2f"
+      "technicalSourceSha256": "b9dd99e0cfd1575c2f43263063338cab4b27d5ee2a19dc24f3fc8d612b872d7b"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",
@@ -1844,7 +1844,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "c9e4b7aa67ac7d3633b22aa99b0e595c6b638be165a04b6ef04ac4746ebfd794"
+      "technicalSourceSha256": "dd4055b07b00b8a51e542bd72e4435ca437a450196be72f224e14a603c09fb6e"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -2031,6 +2031,67 @@
       "capabilities": [],
       "reason": "Reviewed owner-only parameterized atomic upsert of UserActivities, selected from an active non-deleted Users row. Uses server UTC time with a five-minute monotonic cutoff. No account, credential, audit or security-version writes; joins the caller transaction through the owner synchronizer.",
       "technicalSourceSha256": "d8a1035b1e07ea369615af5692af3e61b1a5b48eb354abbdf91da7839efe5128"
+    },
+    "FoodDiary.ReadModel.Composition/Users/TelegramDiaryTransferReader.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:BillingCancellation",
+        "entity:BillingPayment",
+        "entity:BillingSubscription",
+        "entity:ContentReport",
+        "entity:CycleProfile",
+        "entity:DietologistInvitation",
+        "entity:ExerciseEntry",
+        "entity:FastingCheckIn",
+        "entity:FastingPlan",
+        "entity:FastingSession",
+        "entity:FavoriteMeal",
+        "entity:FavoriteProduct",
+        "entity:FavoriteRecipe",
+        "entity:HydrationEntry",
+        "entity:Meal",
+        "entity:MealPlan",
+        "entity:Product",
+        "entity:Recipe",
+        "entity:RecipeComment",
+        "entity:RecipeLike",
+        "entity:Recommendation",
+        "entity:RecommendationComment",
+        "entity:ShoppingList",
+        "entity:User",
+        "entity:UserLessonProgress",
+        "entity:WaistEntry",
+        "entity:WearableConnection",
+        "entity:WearableSyncEntry",
+        "entity:WeeklyGoal",
+        "entity:WeightEntry"
+      ],
+      "reason": "Reads scalar counts, conflicting measurement dates and unsupported record existence for two already-authorized accounts. Uses the shared transaction and no-tracking owner projections. Performs no writes."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserPremiumTrialStore.cs": {
+      "module": "Users",
+      "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database"
+      ],
+      "reason": "Uses the caller transaction to lock the account before reading grant state and atomically insert the owner-local Telegram redemption key. The eligibility probe reads the same key with a parameterized EXISTS. Retains no link to a diary or account row and performs no independent commit.",
+      "technicalSourceSha256": "74a83e6079ba335dbd3ce1105260b8a1baadfdcc3e3afd792443b08eb45f55ee"
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserTelegramDiaryTransfer.cs": {
+      "module": "Users",
+      "capabilities": [
+        "call:User.AdoptDiaryGoals",
+        "call:User.AdoptDiaryPremiumTrial",
+        "call:User.BindTelegramOidcIdentity",
+        "call:User.HasRole",
+        "call:User.LinkTelegram",
+        "call:User.RetireTelegramDiary",
+        "context:CurrentTransaction",
+        "context:Database",
+        "entity:User"
+      ],
+      "reason": "Locks both Users rows in stable ID order, checks the browser-bound account proofs and coordinates source-filtered owner transfers in the caller transaction. The intermediate unit-of-work save releases the source identity keys before linking the target. No independent commit.",
+      "technicalSourceSha256": "52203270b8b25a63822db53c2bf2a279202a24d410b1852f2d25c476a5bc7345"
     }
   }
 }

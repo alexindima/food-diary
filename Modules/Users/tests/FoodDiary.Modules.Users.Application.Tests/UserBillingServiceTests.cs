@@ -143,6 +143,22 @@ public sealed class UserBillingServiceTests {
     }
 
     [Fact]
+    public async Task StartPremiumTrialAsync_WhenLegacyTelegramLinkIsUnverified_RequiresConfirmation() {
+        User user = CreateUser();
+        user.LinkTelegram(123456789);
+        user.SetEmailConfirmed(isConfirmed: true);
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        ISender service = CreateService(CreateReader(user), writer);
+
+        Result<UserBillingProfileModel> result = await service.Send(
+            new StartUserPremiumTrialCommand(user.Id, Now, TimeSpan.FromDays(7)), CancellationToken.None);
+
+        ResultAssert.Failure(result, UserErrors.TelegramTrialLinkUnverified.Code);
+        Assert.Null(user.PremiumTrialStartedAtUtc);
+        await writer.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+    }
+
+    [Fact]
     public async Task StartPremiumTrialAsync_WhenUserIsMissing_ReturnsAccessFailureWithoutWriting() {
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
         ISender service = CreateService(Substitute.For<IUserLookupRepository>(), writer);
@@ -184,14 +200,17 @@ public sealed class UserBillingServiceTests {
         IUserLookupRepository reader,
         IUserWriteRepository? writer = null,
         IUserRoleMembershipService? roleMembershipService = null,
-        IUserBillingProfileReadModelRepository? billingProfileReader = null) =>
-        RequestTestSender.Create(
-            new GetUserBillingProfileQueryHandler(billingProfileReader ?? reader as IUserBillingProfileReadModelRepository ?? Substitute.For<IUserBillingProfileReadModelRepository>()),
+        IUserBillingProfileReadModelRepository? billingProfileReader = null) {
+        IUserPremiumTrialStore trials = Substitute.For<IUserPremiumTrialStore>();
+        trials.TryRedeemTelegramAsync(Arg.Any<long>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        return RequestTestSender.Create(
+            new GetUserBillingProfileQueryHandler(billingProfileReader ?? reader as IUserBillingProfileReadModelRepository ?? Substitute.For<IUserBillingProfileReadModelRepository>(), trials),
             new GetUserBillingProfileIncludingDeletedQueryHandler(billingProfileReader ?? Substitute.For<IUserBillingProfileReadModelRepository>()),
-            new StartUserPremiumTrialCommandHandler(reader, writer ?? Substitute.For<IUserWriteRepository>()),
+            new StartUserPremiumTrialCommandHandler(reader, writer ?? Substitute.For<IUserWriteRepository>(), trials),
             new EnsureUserPremiumRoleCommandHandler(roleMembershipService ?? Substitute.For<IUserRoleMembershipService>()),
             new RemoveUserPremiumRoleCommandHandler(roleMembershipService ?? Substitute.For<IUserRoleMembershipService>()),
             new CheckUserAccessQueryHandler(reader as ICurrentUserAccessService ?? MissingAccessService()));
+    }
 
     private static IUserLookupRepository CreateReader(User user) {
         IUserLookupRepository reader = Substitute.For<IUserLookupRepository, IUserBillingProfileReadModelRepository, ICurrentUserAccessService>();

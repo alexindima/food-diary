@@ -8,12 +8,12 @@ public sealed class TelegramBrowserBindingHttpProcessor(TimeProvider timeProvide
 
     public string Read(HttpContext context) => context.Request.Cookies[CookieName] ?? string.Empty;
 
-    public string Ensure(HttpContext context) {
+    public string Ensure(HttpContext context, bool renew = false) {
         string current = Read(context);
-        if (current.Length == 43) {
+        if (current.Length == 43 && !renew) {
             return current;
         }
-        string binding = SecurityTokenGenerator.GenerateUrlSafeToken();
+        string binding = current.Length == 43 ? current : SecurityTokenGenerator.GenerateUrlSafeToken();
         context.Response.Cookies.Append(CookieName, binding, new CookieOptions {
             HttpOnly = true,
             Secure = context.Request.IsHttps,

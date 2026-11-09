@@ -1,6 +1,6 @@
 <div class="fd-ui-radio-group" [class.fd-ui-radio-group--horizontal]="orientation() === 'horizontal'">
     @if (label()) {
-        <p class="fd-ui-radio-group__label">
+        <p class="fd-ui-radio-group__label" [id]="`${id()}-label`">
             {{ label() }}
             @if (required()) {
                 <span aria-hidden="true">*</span>
@@ -11,6 +11,7 @@
     <div
         class="fd-ui-radio-group__control"
         role="radiogroup"
+        [attr.aria-labelledby]="label() ? `${id()}-label` : null"
         [attr.aria-describedby]="resolvedError() ? `${id()}-error` : null"
         [attr.aria-invalid]="resolvedError() ? 'true' : null"
     >

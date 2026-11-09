@@ -83,6 +83,8 @@ Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramBac
 
 - `POST /api/v{version:apiVersion}/auth/telegram/backup-email/oidc/start`
 - `POST /api/v{version:apiVersion}/auth/telegram/backup-email/oidc/complete`
+- `POST /api/v{version:apiVersion}/auth/telegram/backup-email/verify`
+- `POST /api/v{version:apiVersion}/auth/telegram/diary-transfer`
 
 ### AuthTelegramController
 

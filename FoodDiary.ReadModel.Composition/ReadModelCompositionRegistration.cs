@@ -40,6 +40,7 @@ namespace FoodDiary.ReadModel.Composition;
 public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
         services.TryAddScoped<ICompositionReadContext>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.TryAddScoped<ITelegramDiaryTransferReader, TelegramDiaryTransferReader>();
         services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();
         services.AddScoped<IPersonalDataArchiveReader, PersonalDataArchiveReader>();
         services.AddScoped<IUserCurrentWaistProvider, UserCurrentWaistProvider>();

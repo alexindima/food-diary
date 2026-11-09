@@ -81,6 +81,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     public DateTime? AiConsentAcceptedAt { get; private set; }
     public DateTime? PremiumTrialStartedAtUtc { get; private set; }
     public DateTime? PremiumTrialEndsAtUtc { get; private set; }
+    public bool PremiumTrialRestrictedByTelegram { get; private set; }
     public DateTime? PremiumAccessEndsAtUtc { get; private set; }
     public const int ManualPremiumReasonMaxLength = 500;
     public DateTime? ManualPremiumEndsAtUtc { get; private set; }
@@ -131,7 +132,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         return CreateCore(normalizedEmail, hashedPassword, hasPassword);
     }
 
-    public static User CreateTelegram(long telegramUserId, string inaccessiblePasswordHash) {
+    public static User CreateTelegram(long telegramUserId, string inaccessiblePasswordHash, bool premiumTrialRestricted = false) {
         if (telegramUserId <= 0) {
             throw new ArgumentOutOfRangeException(nameof(telegramUserId));
         }
@@ -139,6 +140,7 @@ public sealed partial class User : AggregateRoot<UserId> {
         User user = CreateCore(normalizedEmail: null, inaccessiblePasswordHash, hasPassword: false);
         user.ApplyAccountState(user.GetAccountState().WithTelegram(telegramUserId));
         user.TelegramLinkVerifiedForRecovery = true;
+        user.PremiumTrialRestrictedByTelegram = premiumTrialRestricted;
         return user;
     }
 

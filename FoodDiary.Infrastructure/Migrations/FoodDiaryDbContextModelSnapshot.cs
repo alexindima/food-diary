@@ -4636,6 +4636,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("PremiumTrialEndsAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("PremiumTrialRestrictedByTelegram")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("PremiumTrialStartedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -5061,6 +5064,16 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoleAuditEvents");
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Users.PersistenceModel.Persistence.Entities.TelegramPremiumTrialRedemption", b =>
+                {
+                    b.Property<long>("TelegramUserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("TelegramUserId");
+
+                    b.ToTable("TelegramPremiumTrialRedemptions", (string)null);
                 });
 
             modelBuilder.Entity("FoodDiary.Modules.Wearables.Domain.Entities.WearableConnection", b =>

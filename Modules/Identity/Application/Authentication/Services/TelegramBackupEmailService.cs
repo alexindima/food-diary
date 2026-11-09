@@ -63,26 +63,30 @@ public sealed class TelegramBackupEmailService(ITelegramAuthValidator validator,
     }
 
     public async Task<Result> ConfirmAsync(Guid userId, string token, CancellationToken cancellationToken) {
+        EmailProof? proof = await ConsumeProofAsync(userId, token, cancellationToken);
+        return proof is null
+            ? InvalidProof()
+            : await accounts.AddVerifiedEmailAsync(new UserId(userId), proof.Email, proof.SecurityVersion, cancellationToken);
+    }
+
+    internal async Task<EmailProof?> ConsumeProofAsync(Guid userId, string token, CancellationToken cancellationToken) {
         if (userId == Guid.Empty || !token.StartsWith(TokenPrefix, StringComparison.Ordinal)) {
-            return InvalidProof();
+            return null;
         }
         string? payload = await tickets.ConsumeAsync(token[TokenPrefix.Length..], Purpose, userId.ToString("D"), cancellationToken);
         if (payload is null) {
-            return InvalidProof();
+            return null;
         }
         EmailProof? proof;
         try {
             proof = JsonSerializer.Deserialize<EmailProof>(payload);
         } catch (JsonException) {
-            return InvalidProof();
+            return null;
         }
-        if (proof is null || proof.UserId != userId || string.IsNullOrWhiteSpace(proof.Email)) {
-            return InvalidProof();
-        }
-        return await accounts.AddVerifiedEmailAsync(new UserId(userId), proof.Email, proof.SecurityVersion, cancellationToken);
+        return proof is not null && proof.UserId == userId && !string.IsNullOrWhiteSpace(proof.Email) ? proof : null;
     }
 
-    private sealed record EmailProof(Guid UserId, string Email, long SecurityVersion);
+    internal sealed record EmailProof(Guid UserId, string Email, long SecurityVersion);
     private static Result InvalidProof() => Failure("Authentication.TelegramProofRequired", "Request a new email confirmation from your Telegram account.", ErrorKind.Unauthorized);
     private static Result Failure(string code, string message, ErrorKind kind) => Result.Failure(new Error(code, message, kind));
 }

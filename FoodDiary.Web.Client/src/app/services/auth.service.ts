@@ -9,6 +9,7 @@ import { AuthSdk } from '../shared/api/sdk/generated/api/auth.service';
 import { TelegramAuthSdk } from '../shared/api/sdk/generated/api/telegram-auth.service';
 import { createSdkConnection, sdkRequestOptions } from '../shared/api/sdk/sdk-connection';
 import { requireSdkFields } from '../shared/api/sdk/sdk-response';
+import { telegramDiaryPreviewFromSdk } from '../shared/api/sdk/telegram-diary-sdk.mapper';
 import { userFromSdk } from '../shared/api/sdk/user-sdk.mapper';
 import type {
     AuthResponse,
@@ -25,6 +26,7 @@ import { BrowserSessionStateService } from '../shared/auth/browser-session-state
 import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
+import type { TelegramDiaryPreview } from '../shared/auth/telegram-diary.data';
 import type { TelegramOAuthCode, TelegramOAuthState } from '../shared/auth/telegram-oidc-values';
 import { TelegramWebAppService } from '../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
@@ -330,6 +332,21 @@ export class AuthService {
             version: this.telegram.version,
             telegramBackupEmailHttpRequest: { email, initData },
         });
+    }
+
+    public verifyTelegramBackupEmail(userId: string, token: string): Observable<string | null> {
+        return this.telegram.client
+            .postAuthTelegramBackupEmailVerify({ version: this.telegram.version, verifyEmailHttpRequest: { userId, token } })
+            .pipe(map(response => response.transferTicket ?? null));
+    }
+
+    public transferTelegramDiary(ticket: string, useTelegramGoals?: boolean): Observable<TelegramDiaryPreview> {
+        return this.telegram.client
+            .postAuthTelegramDiaryTransfer({
+                version: this.telegram.version,
+                transferTelegramDiaryHttpRequest: { ticket, useTelegramGoals },
+            })
+            .pipe(map(telegramDiaryPreviewFromSdk));
     }
 
     public startTelegramBackupEmail(email: string): Observable<{ authorizationUrl: string }> {

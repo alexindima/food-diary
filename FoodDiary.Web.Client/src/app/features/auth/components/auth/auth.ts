@@ -8,6 +8,7 @@ import {
     effect,
     inject,
     input,
+    output,
     PLATFORM_ID,
     signal,
     viewChild,
@@ -57,6 +58,8 @@ import { AuthRegisterFormComponent } from './auth-register-form/auth-register-fo
 })
 export class AuthComponent {
     public readonly useRouting = input(true);
+    public readonly inlineSignIn = input(false);
+    public readonly signedIn = output();
     public readonly hideTelegram = input(false);
     public readonly initialMode = input<'login' | 'register'>('login');
     public readonly initialPasswordReset = input(false);
@@ -431,6 +434,11 @@ export class AuthComponent {
 
         if (this.authService.requiresEmailVerification()) {
             await this.navigationService.navigateToEmailVerificationPendingAsync({ autoResend: true });
+            return;
+        }
+
+        if (this.inlineSignIn()) {
+            this.signedIn.emit();
             return;
         }
 

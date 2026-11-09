@@ -19,6 +19,7 @@ public static class DependencyInjection {
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<ImagesDbContext>(static options => new ImagesDbContext(options)));
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ImagesUserDataPurgeParticipant>());
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<ITelegramDiaryContentTransfer, ImagesUserDataPurgeParticipant>());
         services.AddScoped<IImageAssetOwnershipService, ImageAssetOwnershipService>();
         services.AddScoped<IImageAssetContentService, ImageAssetContentService>();
         services.AddScoped<IUserProfileImageService, UserProfileImageService>();

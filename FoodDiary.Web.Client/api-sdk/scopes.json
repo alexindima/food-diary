@@ -428,6 +428,8 @@
         "operations": {
             "POST /api/v{version}/auth/telegram/backup-email": "postAuthTelegramBackupEmail",
             "POST /api/v{version}/auth/telegram/backup-email/oidc/complete": "postAuthTelegramBackupEmailOidcComplete",
+            "POST /api/v{version}/auth/telegram/backup-email/verify": "postAuthTelegramBackupEmailVerify",
+            "POST /api/v{version}/auth/telegram/diary-transfer": "postAuthTelegramDiaryTransfer",
             "POST /api/v{version}/auth/telegram/backup-email/oidc/start": "postAuthTelegramBackupEmailOidcStart",
             "POST /api/v{version}/auth/telegram/complete": "postAuthTelegramComplete",
             "POST /api/v{version}/auth/telegram/complete-link": "postAuthTelegramCompleteLink",

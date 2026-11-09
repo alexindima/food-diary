@@ -10,10 +10,10 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 121,
+    "selectorUnreferencedComponents": 120,
     "routedStandaloneComponents": 69,
-    "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 50,
+    "componentsWithoutDirectSpecs": 134,
+    "criticalSymbolsWithoutTestReferences": 52,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -1261,14 +1261,6 @@
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.spec.ts"
     },
     {
-      "class": "FdUiRadioGroupComponent",
-      "selector": "fd-ui-radio-group",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.html",
-      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.spec.ts"
-    },
-    {
       "class": "FormValidationExample",
       "selector": "fd-form-validation-example",
       "feature": "fd-ui-kit",
@@ -2403,6 +2395,32 @@
         }
       ],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "TelegramDiaryTransferComponent",
+      "selector": "fd-telegram-diary-transfer",
+      "feature": "auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "ticket",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "keepSeparate",
+          "type": ""
+        },
+        {
+          "name": "useAnotherEmail",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -6171,10 +6189,30 @@
       "coveredThrough": []
     },
     {
+      "name": "TransferTelegramDiaryCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "UpdateAdminDailyAdviceGroupCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
       "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "VerifyTelegramDiaryEmailCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/VerifyTelegramDiaryEmailCommandHandler.cs",
+      "line": 11,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -35,6 +35,7 @@
                     <fd-ui-button [fullWidth]="true" (click)="chooseExisting()">{{ 'AUTH.TELEGRAM.EXISTING' | translate }}</fd-ui-button>
                 } @else {
                     <p>{{ 'AUTH.TELEGRAM.NEW_HINT' | translate }}</p>
+                    <fd-ui-button [fullWidth]="true" (click)="chooseExisting()">{{ 'AUTH.TELEGRAM.EXISTING' | translate }}</fd-ui-button>
                     @if (facade.configuration()?.registrationEnabled) {
                         <form method="post" class="fd-stack fd-gap-md" [formRoot]="registrationForm" (submit)="complete('register')">
                             <fd-ui-input
@@ -48,12 +49,9 @@
                                 [label]="'AUTH.TELEGRAM.TIME_ZONE' | translate"
                             />
                             <p class="fd-ui-caption">{{ 'AUTH.TELEGRAM.TIME_ZONE_HINT' | translate }}</p>
-                            <fd-ui-button type="submit" [fullWidth]="true">{{ 'AUTH.TELEGRAM.CREATE' | translate }}</fd-ui-button>
+                            <fd-ui-button type="submit" variant="secondary" [fullWidth]="true">{{ 'AUTH.TELEGRAM.CREATE' | translate }}</fd-ui-button>
                         </form>
                     }
-                    <fd-ui-button variant="secondary" [fullWidth]="true" (click)="chooseExisting()">{{
-                        'AUTH.TELEGRAM.EXISTING' | translate
-                    }}</fd-ui-button>
                 }
                 <fd-ui-button variant="ghost" (click)="restart()">{{ 'AUTH.TELEGRAM.START_OVER' | translate }}</fd-ui-button>
             } @else {

@@ -38,7 +38,7 @@ public sealed class GetBillingOverviewQueryHandler(
             .GetOverviewReadModelByUserIdAsync(userId, cancellationToken);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         bool isTrialActive = userProfile.PremiumTrialStartedAtUtc <= nowUtc && userProfile.PremiumTrialEndsAtUtc > nowUtc;
-        bool hasUsedTrial = userProfile.PremiumTrialStartedAtUtc.HasValue || userProfile.PremiumTrialEndsAtUtc.HasValue;
+        bool hasUsedTrial = userProfile.HasUsedPremiumTrial;
         bool hasPaidPremium = userProfile.HasPaidPremium;
         bool paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
         bool isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive || userProfile.ManualPremiumEndsAtUtc > nowUtc;
@@ -53,6 +53,7 @@ public sealed class GetBillingOverviewQueryHandler(
         bool renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
         bool canStartTrial = !isPremium && !hasUsedTrial && !BillingTrialPolicy.HasSubscriptionHistory(subscription) &&
+            (userProfile.TelegramUserId is null || userProfile.HasVerifiedTelegramLink) &&
             (string.IsNullOrWhiteSpace(userProfile.Email) || userProfile.IsEmailConfirmed);
 
         return Result.Success(new BillingOverviewModel(
