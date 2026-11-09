@@ -20,7 +20,7 @@
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
     "controllers": 115,
-    "endpoints": 375,
+    "endpoints": 378,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -15840,42 +15840,57 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users",
-            "line": 18
+            "line": 20
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
-            "line": 24
+            "line": 26
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+            "line": 33
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+            "line": 40
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant",
+            "line": 48
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/role-audit",
-            "line": 31
+            "line": 56
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/impersonation-sessions",
-            "line": 38
+            "line": 63
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/login-events",
-            "line": 44
+            "line": 69
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/admin/users/login-summary",
-            "line": 50
+            "line": 75
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
-            "line": 56
+            "line": 81
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/impersonation",
-            "line": 66
+            "line": 91
           }
         ]
       },

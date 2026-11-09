@@ -12,6 +12,7 @@ import type {
     AdminUserCreation,
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
+    AdminUserPremiumGrant,
     AdminUserRoleAuditEvent,
     AdminUserSetPassword,
     AdminUserUpdate,
@@ -49,6 +50,18 @@ export class AdminUsersFacade {
 
     public getUser(userId: AdminId<'user'>): Observable<AdminUser> {
         return this.usersService.getUser(userId);
+    }
+
+    public getPremiumGrant(userId: AdminId<'user'>): Observable<AdminUserPremiumGrant | null> {
+        return this.usersService.getPremiumGrant(userId);
+    }
+
+    public setPremiumGrant(userId: AdminId<'user'>, grant: AdminUserPremiumGrant): Observable<AdminUserPremiumGrant | null> {
+        return this.usersService.setPremiumGrant(userId, grant);
+    }
+
+    public revokePremiumGrant(userId: AdminId<'user'>): Observable<AdminUserPremiumGrant | null> {
+        return this.usersService.revokePremiumGrant(userId);
     }
 
     public getUserRoleAudit(userId: AdminId<'user'>): Observable<AdminUserRoleAuditEvent[]> {

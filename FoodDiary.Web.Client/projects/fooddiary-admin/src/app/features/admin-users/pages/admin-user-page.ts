@@ -10,6 +10,7 @@ import { environment } from '../../../../environments/environment';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUserDetailsBodyComponent } from '../components/admin-user-details-body';
+import { AdminUserPremiumGrantComponent } from '../components/admin-user-premium-grant';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
 import { AdminUserNotificationDialogComponent } from '../dialogs/admin-user-notification-dialog';
@@ -29,7 +30,15 @@ const ACTIVITY_PREVIEW_LIMIT = 3;
 
 @Component({
     selector: 'fd-admin-user-page',
-    imports: [AdminUserDetailsBodyComponent, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiCardComponent, AdminLoadErrorComponent],
+    imports: [
+        AdminUserDetailsBodyComponent,
+        AdminUserPremiumGrantComponent,
+        RouterLink,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        AdminLoadErrorComponent,
+    ],
     templateUrl: './admin-user-page.html',
     styleUrl: './admin-user-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

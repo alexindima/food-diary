@@ -34,6 +34,10 @@ import { AdminUserLoginDeviceSummaryHttpResponse } from '../model/admin-user-log
 
 import { AdminUserLoginEventHttpResponsePagedHttpResponse } from '../model/admin-user-login-event-http-response-paged-http-response';
 
+import { AdminUserPremiumGrantHttpRequest } from '../model/admin-user-premium-grant-http-request';
+
+import { AdminUserPremiumGrantHttpResponse } from '../model/admin-user-premium-grant-http-response';
+
 import { AdminUserRoleAuditEventHttpResponse } from '../model/admin-user-role-audit-event-http-response';
 
 import { AdminUserSetPasswordHttpRequest } from '../model/admin-user-set-password-http-request';
@@ -47,6 +51,11 @@ import { ScheduledNotificationHttpResponse } from '../model/scheduled-notificati
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
+
+export interface DeleteAdminUsersByIdPremiumGrantRequestParams {
+    id: string;
+    version: string;
+}
 
 export interface GetAdminUsersRequestParams {
     version: string;
@@ -66,6 +75,11 @@ export interface GetAdminUsersRequestParams {
 }
 
 export interface GetAdminUsersByIdRequestParams {
+    id: string;
+    version: string;
+}
+
+export interface GetAdminUsersByIdPremiumGrantRequestParams {
     id: string;
     version: string;
 }
@@ -142,6 +156,12 @@ export interface PostAdminUsersByIdNotificationsTestRequestParams {
     scheduleTestNotificationHttpRequest?: ScheduleTestNotificationHttpRequest;
 }
 
+export interface PutAdminUsersByIdPremiumGrantRequestParams {
+    id: string;
+    version: string;
+    adminUserPremiumGrantHttpRequest?: AdminUserPremiumGrantHttpRequest;
+}
+
 @Injectable()
 export class AdminUsersSdk extends BaseService {
     constructor(
@@ -150,6 +170,87 @@ export class AdminUsersSdk extends BaseService {
         @Optional() configuration?: Configuration,
     ) {
         super(basePath, configuration);
+    }
+
+    /**
+     * @endpoint delete /api/v{version}/admin/users/{id}/premium-grant
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public deleteAdminUsersByIdPremiumGrant(
+        requestParameters: DeleteAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<AdminUserPremiumGrantHttpResponse>;
+    public deleteAdminUsersByIdPremiumGrant(
+        requestParameters: DeleteAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<AdminUserPremiumGrantHttpResponse>>;
+    public deleteAdminUsersByIdPremiumGrant(
+        requestParameters: DeleteAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<AdminUserPremiumGrantHttpResponse>>;
+    public deleteAdminUsersByIdPremiumGrant(
+        requestParameters: DeleteAdminUsersByIdPremiumGrantRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const id = requestParameters?.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteAdminUsersByIdPremiumGrant.');
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling deleteAdminUsersByIdPremiumGrant.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/users/${this.configuration.encodeParam({ name: 'id', value: id, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/premium-grant`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AdminUserPremiumGrantHttpResponse>('delete', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
     }
 
     /**
@@ -378,6 +479,87 @@ export class AdminUsersSdk extends BaseService {
         let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/users/${this.configuration.encodeParam({ name: 'id', value: id, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<AdminUserHttpResponse>('get', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint get /api/v{version}/admin/users/{id}/premium-grant
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public getAdminUsersByIdPremiumGrant(
+        requestParameters: GetAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<AdminUserPremiumGrantHttpResponse>;
+    public getAdminUsersByIdPremiumGrant(
+        requestParameters: GetAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<AdminUserPremiumGrantHttpResponse>>;
+    public getAdminUsersByIdPremiumGrant(
+        requestParameters: GetAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<AdminUserPremiumGrantHttpResponse>>;
+    public getAdminUsersByIdPremiumGrant(
+        requestParameters: GetAdminUsersByIdPremiumGrantRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const id = requestParameters?.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getAdminUsersByIdPremiumGrant.');
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling getAdminUsersByIdPremiumGrant.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/users/${this.configuration.encodeParam({ name: 'id', value: id, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/premium-grant`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AdminUserPremiumGrantHttpResponse>('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
@@ -1299,6 +1481,96 @@ export class AdminUsersSdk extends BaseService {
         return this.httpClient.request<ScheduledNotificationHttpResponse>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             body: scheduleTestNotificationHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint put /api/v{version}/admin/users/{id}/premium-grant
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public putAdminUsersByIdPremiumGrant(
+        requestParameters: PutAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<AdminUserPremiumGrantHttpResponse>;
+    public putAdminUsersByIdPremiumGrant(
+        requestParameters: PutAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<AdminUserPremiumGrantHttpResponse>>;
+    public putAdminUsersByIdPremiumGrant(
+        requestParameters: PutAdminUsersByIdPremiumGrantRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<AdminUserPremiumGrantHttpResponse>>;
+    public putAdminUsersByIdPremiumGrant(
+        requestParameters: PutAdminUsersByIdPremiumGrantRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const id = requestParameters?.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling putAdminUsersByIdPremiumGrant.');
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling putAdminUsersByIdPremiumGrant.');
+        }
+        const adminUserPremiumGrantHttpRequest = requestParameters?.adminUserPremiumGrantHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/users/${this.configuration.encodeParam({ name: 'id', value: id, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/premium-grant`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AdminUserPremiumGrantHttpResponse>('put', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: adminUserPremiumGrantHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

@@ -22,13 +22,15 @@ public sealed class UserSessionPrincipalReader(DbSet<User> users, Func<Cancellat
                 user.PremiumTrialStartedAtUtc,
                 user.PremiumTrialEndsAtUtc,
                 user.PremiumAccessEndsAtUtc,
+                user.ManualPremiumEndsAtUtc,
                 Roles = user.UserRoles.Select(membership => membership.Role.Name).ToList(),
             }).AsSingleQuery().SingleOrDefaultAsync(cancellationToken);
         if (data is null) {
             return Result.Failure<UserSessionPrincipalModel>(AuthenticationErrors.InvalidToken);
         }
         (IReadOnlyCollection<string> roles, DateTime? cap) = UserAuthenticationPrivileges.Evaluate(
-            data.Roles, data.PremiumTrialStartedAtUtc, data.PremiumTrialEndsAtUtc, evaluatedAtUtc, data.PremiumAccessEndsAtUtc);
+            data.Roles, data.PremiumTrialStartedAtUtc, data.PremiumTrialEndsAtUtc, evaluatedAtUtc,
+            data.PremiumAccessEndsAtUtc, data.ManualPremiumEndsAtUtc);
         return Result.Success(new UserSessionPrincipalModel(data.Id, data.Email, roles, cap, data.SecurityVersion));
     }
 }

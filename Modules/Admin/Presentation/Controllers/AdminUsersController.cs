@@ -1,5 +1,7 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Admin.Application.Commands.SetAdminUserPremiumGrant;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminUserPremiumGrant;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
@@ -27,6 +29,29 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetUser(Guid id) =>
         HandleOk(id.ToAdminUserQuery(), static value => value.ToHttpResponse());
+
+    [HttpGet("{id:guid}/premium-grant")]
+    [ProducesResponseType<AdminUserPremiumGrantHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> GetUserPremiumGrant(Guid id) =>
+        HandleOk(new GetAdminUserPremiumGrantQuery(id), static grant => new AdminUserPremiumGrantHttpResponse(grant.EndsAtUtc, grant.Reason));
+
+    [HttpPut("{id:guid}/premium-grant")]
+    [ProducesResponseType<AdminUserPremiumGrantHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> SetUserPremiumGrant(Guid id, [FromCurrentUser] Guid actorUserId, [FromBody] AdminUserPremiumGrantHttpRequest request) =>
+        HandleOk(new SetAdminUserPremiumGrantCommand(id, actorUserId, request.EndsAtUtc, request.Reason),
+            static grant => new AdminUserPremiumGrantHttpResponse(grant.EndsAtUtc, grant.Reason));
+
+    [HttpDelete("{id:guid}/premium-grant")]
+    [ProducesResponseType<AdminUserPremiumGrantHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> RevokeUserPremiumGrant(Guid id, [FromCurrentUser] Guid actorUserId) =>
+        HandleOk(new SetAdminUserPremiumGrantCommand(id, actorUserId, EndsAtUtc: null, Reason: null),
+            static grant => new AdminUserPremiumGrantHttpResponse(grant.EndsAtUtc, grant.Reason));
 
     [HttpGet("{id:guid}/role-audit")]
     [ProducesResponseType<IReadOnlyList<AdminUserRoleAuditEventHttpResponse>>(StatusCodes.Status200OK)]

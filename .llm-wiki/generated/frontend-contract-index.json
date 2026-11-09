@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 521,
+    "components": 522,
     "componentsWithoutDirectSpecs": 133,
-    "inputs": 1676,
-    "outputs": 559,
-    "apiCalls": 329,
+    "inputs": 1681,
+    "outputs": 563,
+    "apiCalls": 332,
     "templatesWithTranslations": 377,
-    "translationKeys": 2267,
-    "consumerEdges": 1335,
-    "consumedComponents": 330,
+    "translationKeys": 2273,
+    "consumerEdges": 1345,
+    "consumedComponents": 331,
     "unconsumedComponents": 190
   },
   "components": [
@@ -1095,6 +1095,23 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.spec.ts"
+    },
+    {
+      "class": "AdminUserPremiumGrantComponent",
+      "selector": "fd-admin-user-premium-grant",
+      "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "userId",
+          "type": "AdminId<'user'>",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "AdminUserSetPasswordDialogComponent",
@@ -10267,11 +10284,6 @@
           "required": true
         },
         {
-          "name": "overviewCopyState",
-          "type": "PremiumOverviewCopyState",
-          "required": true
-        },
-        {
           "name": "errorMessage",
           "type": "string | null",
           "required": true
@@ -10307,7 +10319,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "accessActive",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -10378,6 +10396,11 @@
           "name": "overview",
           "type": "BillingOverview | null",
           "required": true
+        },
+        {
+          "name": "plansAvailable",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -10391,6 +10414,14 @@
         },
         {
           "name": "startTrial",
+          "type": ""
+        },
+        {
+          "name": "resumeSubscription",
+          "type": ""
+        },
+        {
+          "name": "readSupport",
           "type": ""
         }
       ],
@@ -10414,6 +10445,11 @@
         {
           "name": "price",
           "type": "PremiumPlanPrice | null",
+          "required": false
+        },
+        {
+          "name": "starsPrice",
+          "type": "number | null",
           "required": false
         },
         {
@@ -10464,6 +10500,11 @@
           "name": "starsPrice",
           "type": "number | null",
           "required": false
+        },
+        {
+          "name": "preferTrial",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -10473,6 +10514,10 @@
         },
         {
           "name": "retryPrices",
+          "type": ""
+        },
+        {
+          "name": "readTerms",
           "type": ""
         }
       ],
@@ -10487,9 +10532,20 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
       ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
+      "inputs": [
+        {
+          "name": "expanded",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "expandedChange",
+          "type": ""
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.spec.ts"
     },
     {
       "class": "FavoriteProductRowComponent",
@@ -18590,7 +18646,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 45,
+      "line": 47,
       "publicMethod": "createUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18602,7 +18658,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 70,
+      "line": 72,
       "publicMethod": "getUsers",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18614,7 +18670,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 85,
+      "line": 87,
       "publicMethod": "updateUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18626,7 +18682,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/password",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 91,
+      "line": 93,
       "publicMethod": "setPassword",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18638,7 +18694,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 99,
+      "line": 101,
       "publicMethod": "getUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18646,11 +18702,47 @@
     },
     {
       "feature": "admin-users",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/users/{id}/premium-grant",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
+      "line": 105,
+      "publicMethod": "getPremiumGrant",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
+      "resolvedUrlExpression": "/api/v{version}/admin/users/{id}/premium-grant"
+    },
+    {
+      "feature": "admin-users",
+      "method": "PUT",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/users/{id}/premium-grant",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
+      "line": 111,
+      "publicMethod": "setPremiumGrant",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
+      "resolvedUrlExpression": "/api/v{version}/admin/users/{id}/premium-grant"
+    },
+    {
+      "feature": "admin-users",
+      "method": "DELETE",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/users/{id}/premium-grant",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
+      "line": 117,
+      "publicMethod": "revokePremiumGrant",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
+      "resolvedUrlExpression": "/api/v{version}/admin/users/{id}/premium-grant"
+    },
+    {
+      "feature": "admin-users",
       "method": "POST",
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/notifications/test",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 107,
+      "line": 127,
       "publicMethod": "scheduleTestNotification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18662,7 +18754,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/role-audit",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 119,
+      "line": 139,
       "publicMethod": "getUserRoleAudit",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18674,7 +18766,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/impersonation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 125,
+      "line": 145,
       "publicMethod": "startImpersonation",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18686,7 +18778,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/impersonation-sessions",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 142,
+      "line": 162,
       "publicMethod": "getImpersonationSessions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18698,7 +18790,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/login-events",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 168,
+      "line": 188,
       "publicMethod": "getLoginEvents",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18710,7 +18802,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/login-summary",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 183,
+      "line": 203,
       "publicMethod": "getLoginSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -22458,6 +22550,25 @@
     },
     {
       "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "keys": [
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_USER_PREMIUM.CURRENT_END",
+        "ADMIN_USER_PREMIUM.DESCRIPTION",
+        "ADMIN_USER_PREMIUM.EMPTY",
+        "ADMIN_USER_PREMIUM.END_INPUT",
+        "ADMIN_USER_PREMIUM.FORM_INCOMPLETE",
+        "ADMIN_USER_PREMIUM.REASON",
+        "ADMIN_USER_PREMIUM.REVOKE",
+        "ADMIN_USER_PREMIUM.REVOKE_CONFIRM",
+        "ADMIN_USER_PREMIUM.SAVING",
+        "ADMIN_USER_PREMIUM.TITLE",
+        "COMMON.CANCEL",
+        "COMMON.SAVE"
+      ]
+    },
+    {
+      "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.html",
       "keys": [
         "ADMIN_USER.SAVE_ERROR"
@@ -24355,8 +24466,6 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/access-banners/premium-access-banners.html",
       "keys": [
-        "PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE",
-        "PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_TITLE",
         "PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_MESSAGE",
         "PREMIUM_PAGE.BANNERS.CHECKOUT_CANCELED_TITLE",
         "PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE",
@@ -24367,24 +24476,14 @@
     },
     {
       "feature": "premium",
-      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/benefits-card/premium-benefits-card.html",
-      "keys": [
-        "PREMIUM_PAGE.BENEFITS.ITEM_1",
-        "PREMIUM_PAGE.BENEFITS.ITEM_2",
-        "PREMIUM_PAGE.BENEFITS.ITEM_3",
-        "PREMIUM_PAGE.BENEFITS.ITEM_4",
-        "PREMIUM_PAGE.BENEFITS.ITEM_5",
-        "PREMIUM_PAGE.BENEFITS.ITEM_6",
-        "PREMIUM_PAGE.BENEFITS.SUBTITLE",
-        "PREMIUM_PAGE.BENEFITS.TITLE"
-      ]
-    },
-    {
-      "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
       "keys": [
+        "PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE",
+        "PREMIUM_PAGE.OVERVIEW.PAYMENT_HELP_ACTION",
+        "PREMIUM_PAGE.OVERVIEW.RESUME_ACTION",
         "PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION",
-        "PREMIUM_PAGE.OVERVIEW.TITLE",
+        "PREMIUM_PAGE.OVERVIEW.TRIAL_NO_CHARGES",
+        "PREMIUM_PAGE.OVERVIEW.TRIAL_OFFER_TITLE",
         "PREMIUM_PAGE.STATUS_LOADING"
       ]
     },
@@ -24393,7 +24492,8 @@
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.html",
       "keys": [
         "PREMIUM_PAGE.PLANS.PRICE_LOADING",
-        "PREMIUM_PAGE.PLANS.PRICE_PROVIDER"
+        "PREMIUM_PAGE.PLANS.PRICE_PROVIDER",
+        "PREMIUM_PAGE.STARS.PRICE_INTERVAL"
       ]
     },
     {
@@ -24416,6 +24516,7 @@
       "keys": [
         "PREMIUM_PAGE.STARS.TERMS_DETAIL",
         "PREMIUM_PAGE.STARS.TERMS_TITLE",
+        "PREMIUM_PAGE.SUPPORT.DISCLOSURE_TITLE",
         "PREMIUM_PAGE.SUPPORT.MANAGEMENT_HELP",
         "PREMIUM_PAGE.SUPPORT.PAYMENT_HELP",
         "PREMIUM_PAGE.SUPPORT.TITLE"
@@ -24425,6 +24526,7 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.html",
       "keys": [
+        "PREMIUM_PAGE.PLANS.TITLE",
         "PREMIUM_PAGE.SUBTITLE",
         "PREMIUM_PAGE.TITLE",
         "PREMIUM_PAGE.TOUR.START_TOUR"
@@ -27214,6 +27316,18 @@
       "selector": "fd-admin-load-error",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
       "occurrences": 1,
       "inputsUsed": [],
@@ -27517,6 +27631,18 @@
       "outputsHandled": [
         "retry"
       ]
+    },
+    {
+      "component": "AdminUserPremiumGrantComponent",
+      "selector": "fd-admin-user-premium-grant",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "userId"
+      ],
+      "outputsHandled": []
     },
     {
       "component": "AdminUsersTableComponent",
@@ -30324,6 +30450,22 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "occurrences": 6,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
       "occurrences": 3,
       "inputsUsed": [
@@ -32464,7 +32606,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
-      "occurrences": 2,
+      "occurrences": 4,
       "inputsUsed": [
         "fill",
         "loading",
@@ -32478,12 +32620,28 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "disabled",
         "disabledReason",
         "fill",
         "loading",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaControls",
+        "ariaExpanded",
+        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -34209,6 +34367,16 @@
       "consumerFeature": "admin-retention",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/pages/admin-retention.html",
       "occurrences": 2,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -37809,6 +37977,43 @@
       "component": "FdUiIconComponent",
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/benefits-card/premium-benefits-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
       "occurrences": 1,
@@ -38681,6 +38886,20 @@
       "outputsHandled": [
         "valueChange"
       ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "floatLabel",
+        "label",
+        "type"
+      ],
+      "outputsHandled": []
     },
     {
       "component": "FdUiInputComponent",
@@ -42271,6 +42490,19 @@
       "selector": "fd-ui-textarea",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
       "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "rows"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiTextareaComponent",
+      "selector": "fd-ui-textarea",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+      "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -43794,7 +44026,7 @@
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/notice-banner/notice-banner.ts",
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/access-banners/premium-access-banners.html",
-      "occurrences": 4,
+      "occurrences": 3,
       "inputsUsed": [
         "actionLabel",
         "message",
@@ -44756,8 +44988,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "checkoutReturnState",
-        "errorMessage",
-        "overviewCopyState"
+        "errorMessage"
       ],
       "outputsHandled": [
         "retry"
@@ -44770,7 +45001,9 @@
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "accessActive"
+      ],
       "outputsHandled": []
     },
     {
@@ -44797,6 +45030,7 @@
       "inputsUsed": [
         "isLoading",
         "overview",
+        "plansAvailable",
         "portalLoading",
         "trialLoading",
         "viewModel"
@@ -44804,6 +45038,8 @@
       "outputsHandled": [
         "manageBilling",
         "overviewChanged",
+        "readSupport",
+        "resumeSubscription",
         "startTrial"
       ]
     },
@@ -44818,7 +45054,8 @@
         "loading",
         "plan",
         "price",
-        "showProvider"
+        "showProvider",
+        "starsPrice"
       ],
       "outputsHandled": []
     },
@@ -44831,6 +45068,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "cards",
+        "preferTrial",
         "prices",
         "pricesLoading",
         "pricesUnavailable",
@@ -44838,6 +45076,7 @@
       ],
       "outputsHandled": [
         "checkout",
+        "readTerms",
         "retryPrices"
       ]
     },

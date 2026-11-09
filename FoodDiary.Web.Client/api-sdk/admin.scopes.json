@@ -183,18 +183,21 @@
     {
         "name": "AdminUsers",
         "operations": {
+            "DELETE /api/v{version}/admin/users/{id}/premium-grant": "deleteAdminUsersByIdPremiumGrant",
             "GET /api/v{version}/admin/users": "getAdminUsers",
             "GET /api/v{version}/admin/users/collaboration-audit": "getAdminUsersCollaborationAudit",
             "GET /api/v{version}/admin/users/impersonation-sessions": "getAdminUsersImpersonationSessions",
             "GET /api/v{version}/admin/users/login-events": "getAdminUsersLoginEvents",
             "GET /api/v{version}/admin/users/login-summary": "getAdminUsersLoginSummary",
             "GET /api/v{version}/admin/users/{id}": "getAdminUsersById",
+            "GET /api/v{version}/admin/users/{id}/premium-grant": "getAdminUsersByIdPremiumGrant",
             "GET /api/v{version}/admin/users/{id}/role-audit": "getAdminUsersByIdRoleAudit",
             "PATCH /api/v{version}/admin/users/{id}": "patchAdminUsersById",
             "PATCH /api/v{version}/admin/users/{id}/password": "patchAdminUsersByIdPassword",
             "POST /api/v{version}/admin/users": "postAdminUsers",
             "POST /api/v{version}/admin/users/{id}/impersonation": "postAdminUsersByIdImpersonation",
-            "POST /api/v{version}/admin/users/{id}/notifications/test": "postAdminUsersByIdNotificationsTest"
+            "POST /api/v{version}/admin/users/{id}/notifications/test": "postAdminUsersByIdNotificationsTest",
+            "PUT /api/v{version}/admin/users/{id}/premium-grant": "putAdminUsersByIdPremiumGrant"
         },
         "prefix": "/api/v{version}/admin/users"
     },

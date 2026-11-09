@@ -20,6 +20,7 @@ const ACTIVITY_PREVIEW_LIMIT = 3;
 
 type UsersFacadeMock = {
     getUser: ReturnType<typeof vi.fn>;
+    getPremiumGrant: ReturnType<typeof vi.fn>;
     getLoginEvents: ReturnType<typeof vi.fn>;
     getUserRoleAudit: ReturnType<typeof vi.fn>;
 };
@@ -131,6 +132,7 @@ function host(fixture: ComponentFixture<AdminUserPageComponent>): HTMLElement {
 function createUsersFacadeMock(): UsersFacadeMock {
     return {
         getUser: vi.fn().mockReturnValue(of(baseUser)),
+        getPremiumGrant: vi.fn().mockReturnValue(of(null)),
         getLoginEvents: vi.fn().mockReturnValue(of(pagedLogins([loginEvent]))),
         getUserRoleAudit: vi.fn().mockReturnValue(of([roleAuditEvent])),
     };

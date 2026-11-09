@@ -36,6 +36,30 @@ describe('AdminUsersService', () => {
         httpMock.verify();
     });
 
+    it('reads and writes manual Premium independently of the user and billing endpoints', () => {
+        const user = adminId<'user'>('grant-user');
+        const path = `${baseUrl}/${user}/premium-grant`;
+        const grant = { endsAtUtc: adminUtcInstant('2026-12-12T12:30:00.000Z'), reason: 'Test access' };
+        const empty = { endsAtUtc: null, reason: null };
+
+        service.getPremiumGrant(user).subscribe(result => {
+            expect(result).toBeNull();
+        });
+        httpMock.expectOne({ method: 'GET', url: path }).flush(empty);
+
+        service.setPremiumGrant(user, grant).subscribe(result => {
+            expect(result).toEqual(grant);
+        });
+        const update = httpMock.expectOne({ method: 'PUT', url: path });
+        expect(update.request.body).toEqual(grant);
+        update.flush(grant);
+
+        service.revokePremiumGrant(user).subscribe(result => {
+            expect(result).toBeNull();
+        });
+        httpMock.expectOne({ method: 'DELETE', url: path }).flush(empty);
+    });
+
     it('should request paged users and map response to items', () => {
         const response = {
             data: [

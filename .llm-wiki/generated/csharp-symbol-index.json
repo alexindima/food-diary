@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4792,
-    "symbols": 4728,
+    "sourceFiles": 4803,
+    "symbols": 4739,
     "interfaceImplementationLinks": 213,
     "dependencyInjectionRegistrations": 75,
     "kinds": {
-      "class": 2446,
+      "class": 2450,
       "enum": 76,
       "interface": 430,
-      "record": 1633,
+      "record": 1640,
       "record struct": 143
     },
     "roles": {
-      "Command": 250,
-      "CommandHandler": 244,
+      "Command": 252,
+      "CommandHandler": 246,
       "Configuration": 105,
       "Controller": 118,
       "Entity": 106,
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1954,
-      "Query": 308,
-      "QueryHandler": 222,
+      "Other": 1955,
+      "Query": 310,
+      "QueryHandler": 224,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 106,
-      "Request": 183,
-      "Response": 277,
+      "Request": 184,
+      "Response": 278,
       "Service": 177,
       "Validator": 238,
       "ValueObject": 183,
@@ -3366,6 +3366,20 @@
       "line": 5
     },
     {
+      "name": "SetAdminUserPremiumGrantCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "SetAdminUserPremiumGrantCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "line": 13
+    },
+    {
       "name": "StartAdminImpersonationCommand",
       "kind": "record",
       "role": "Command",
@@ -4248,6 +4262,20 @@
       "line": 9
     },
     {
+      "name": "GetAdminUserPremiumGrantQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminUserPremiumGrantQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
+      "line": 12
+    },
+    {
       "name": "GetAdminUserRoleAuditQuery",
       "kind": "record",
       "role": "Query",
@@ -4609,7 +4637,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "AdminPresentationServiceCollectionExtensions",
@@ -4875,6 +4903,13 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/Admin/Presentation/Requests/AdminUserCreateHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminUserPremiumGrantHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminUserPremiumGrantHttpRequest.cs",
       "line": 5
     },
     {
@@ -5421,6 +5456,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminUserPremiumGrantHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminUserPremiumGrantHttpResponse.cs",
       "line": 2
     },
     {
@@ -26550,6 +26592,13 @@
       "line": 5
     },
     {
+      "name": "SetUserManualPremiumGrantCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
+      "line": 12
+    },
+    {
       "name": "SetUserPasswordByAdministratorCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
@@ -26914,6 +26963,13 @@
       "line": 4
     },
     {
+      "name": "GetUserManualPremiumGrantQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetUserPrivacyQuery",
       "kind": "record",
       "role": "Query",
@@ -27065,6 +27121,13 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Users/Contracts/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "SetUserManualPremiumGrantCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Contracts/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommand.cs",
       "line": 7
     },
     {
@@ -27523,6 +27586,13 @@
       "line": 2
     },
     {
+      "name": "UserManualPremiumGrantModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Models/UserManualPremiumGrantModel.cs",
+      "line": 2
+    },
+    {
       "name": "UserModel",
       "kind": "record",
       "role": "Other",
@@ -27674,6 +27744,13 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserManualPremiumGrantQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQuery.cs",
       "line": 6
     },
     {

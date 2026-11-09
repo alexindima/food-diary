@@ -5,7 +5,7 @@ namespace FoodDiary.Modules.Users.Domain.Common;
 public static class UserAuthenticationPrivileges {
     public static (IReadOnlyCollection<string> Roles, DateTime? AccessTokenCapUtc) Evaluate(
         IEnumerable<string> assignedRoles, DateTime? trialStartedAtUtc, DateTime? trialEndsAtUtc, DateTime nowUtc,
-        DateTime? premiumAccessEndsAtUtc = null) {
+        DateTime? premiumAccessEndsAtUtc = null, DateTime? manualPremiumEndsAtUtc = null) {
         if (nowUtc.Kind == DateTimeKind.Unspecified) {
             throw new ArgumentOutOfRangeException(nameof(nowUtc), "UTC timestamp kind must be specified.");
         }
@@ -16,10 +16,20 @@ public static class UserAuthenticationPrivileges {
         }
         bool paidPremium = roles.Contains(RoleNames.Premium, StringComparer.Ordinal);
         bool activeTrial = trialStartedAtUtc <= now && trialEndsAtUtc > now;
-        if (activeTrial && !paidPremium) {
+        bool activeManualGrant = manualPremiumEndsAtUtc > now;
+        if ((activeTrial || activeManualGrant) && !paidPremium) {
             roles.Add(RoleNames.Premium);
         }
-        DateTime? trialCap = activeTrial ? trialEndsAtUtc : null;
-        return (roles, paidPremium ? premiumAccessEndsAtUtc : trialCap);
+        if (paidPremium && premiumAccessEndsAtUtc is null) {
+            return (roles, null);
+        }
+        DateTime? cap = paidPremium ? premiumAccessEndsAtUtc : null;
+        if (activeTrial && (cap is null || trialEndsAtUtc > cap)) {
+            cap = trialEndsAtUtc;
+        }
+        if (activeManualGrant && (cap is null || manualPremiumEndsAtUtc > cap)) {
+            cap = manualPremiumEndsAtUtc;
+        }
+        return (roles, cap);
     }
 }

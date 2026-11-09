@@ -186,6 +186,9 @@ Source: `Modules/Admin/Presentation/Controllers/AdminUsersController.cs`
 
 - `GET /api/v{version:apiVersion}/admin/users`
 - `GET /api/v{version:apiVersion}/admin/users/{id:guid}`
+- `GET /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
+- `PUT /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
+- `DELETE /api/v{version:apiVersion}/admin/users/{id:guid}/premium-grant`
 - `GET /api/v{version:apiVersion}/admin/users/{id:guid}/role-audit`
 - `GET /api/v{version:apiVersion}/admin/users/impersonation-sessions`
 - `GET /api/v{version:apiVersion}/admin/users/login-events`
@@ -250,6 +253,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminAiPromptWorkbenchIntegrationTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminMailTransportTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminNotificationTransportTests.cs`
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminUserPremiumGrantApiTests.cs`
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/AdminProxyOriginTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminDashboardOverviewTests.cs`
@@ -276,7 +280,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/AdminBillingCancellationQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FeatureErrorContractTests.cs`
-- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/ImportAdminDailyAdvicesValidatorTests.cs`
 
 ## Working Rule
 

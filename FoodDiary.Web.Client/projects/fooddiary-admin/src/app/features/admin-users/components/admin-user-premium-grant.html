@@ -1,0 +1,77 @@
+<fd-ui-card>
+    <section class="fd-grid fd-gap-sm" aria-labelledby="manual-premium-title">
+        <h2 id="manual-premium-title">{{ 'ADMIN_USER_PREMIUM.TITLE' | translate }}</h2>
+        <p>{{ 'ADMIN_USER_PREMIUM.DESCRIPTION' | translate }}</p>
+        @if (loadFailed()) {
+            <fd-admin-load-error (retry)="reload()" />
+        } @else if (grant() === undefined) {
+            <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+        } @else {
+            @if (grant(); as current) {
+                <p>
+                    {{ 'ADMIN_USER_PREMIUM.CURRENT_END' | translate }}
+                    <strong>{{ current.endsAtUtc | date: 'yyyy-MM-dd HH:mm' }}</strong>
+                </p>
+                <p>{{ current.reason }}</p>
+            } @else {
+                <p>{{ 'ADMIN_USER_PREMIUM.EMPTY' | translate }}</p>
+            }
+
+            @if (editing()) {
+                <form class="fd-grid fd-gap-sm" [formRoot]="form">
+                    <fd-ui-input
+                        type="datetime-local"
+                        floatLabel="always"
+                        [label]="'ADMIN_USER_PREMIUM.END_INPUT' | translate"
+                        [formField]="form.endsAtLocal"
+                    />
+                    <fd-ui-textarea [label]="'ADMIN_USER_PREMIUM.REASON' | translate" [rows]="2" [formField]="form.reason" />
+                    <div class="fd-row fd-wrap fd-gap-sm">
+                        <fd-ui-button
+                            type="submit"
+                            [loading]="saving()"
+                            [disabled]="form().invalid()"
+                            [disabledReason]="'ADMIN_USER_PREMIUM.FORM_INCOMPLETE' | translate"
+                            >{{ 'COMMON.SAVE' | translate }}</fd-ui-button
+                        >
+                        <fd-ui-button
+                            variant="secondary"
+                            [disabled]="saving()"
+                            [disabledReason]="'ADMIN_USER_PREMIUM.SAVING' | translate"
+                            (click)="closeEditor()"
+                            >{{ 'COMMON.CANCEL' | translate }}</fd-ui-button
+                        >
+                    </div>
+                </form>
+            } @else if (confirmingRevoke()) {
+                <p>{{ 'ADMIN_USER_PREMIUM.REVOKE_CONFIRM' | translate }}</p>
+                <div class="fd-row fd-wrap fd-gap-sm">
+                    <fd-ui-button variant="danger" [loading]="saving()" (click)="revokeAsync()">{{
+                        'ADMIN_USER_PREMIUM.REVOKE' | translate
+                    }}</fd-ui-button>
+                    <fd-ui-button
+                        variant="secondary"
+                        [disabled]="saving()"
+                        [disabledReason]="'ADMIN_USER_PREMIUM.SAVING' | translate"
+                        (click)="closeEditor()"
+                        >{{ 'COMMON.CANCEL' | translate }}</fd-ui-button
+                    >
+                </div>
+            } @else {
+                <div class="fd-row fd-wrap fd-gap-sm">
+                    <fd-ui-button variant="secondary" (click)="edit()">
+                        {{ (grant() ? 'ADMIN_USER_PREMIUM.EDIT' : 'ADMIN_USER_PREMIUM.GRANT') | translate }}
+                    </fd-ui-button>
+                    @if (grant()) {
+                        <fd-ui-button variant="danger" (click)="confirmRevoke()">{{
+                            'ADMIN_USER_PREMIUM.REVOKE' | translate
+                        }}</fd-ui-button>
+                    }
+                </div>
+            }
+            @if (errorKey(); as error) {
+                <p class="fd-ui-error-text" role="alert">{{ error | translate }}</p>
+            }
+        }
+    </section>
+</fd-ui-card>

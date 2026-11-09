@@ -17,6 +17,7 @@ import type {
     AdminUserCreation,
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
+    AdminUserPremiumGrant,
     AdminUserRoleAuditEvent,
     AdminUserSetPassword,
     AdminUserUpdate,
@@ -29,6 +30,7 @@ import {
     adminUserFromSdk,
     adminUserLoginDeviceSummaryFromSdk,
     adminUserLoginEventFromSdk,
+    adminUserPremiumGrantFromSdk,
     adminUserRoleAuditEventFromSdk,
 } from './admin-users-sdk.mapper';
 
@@ -97,6 +99,24 @@ export class AdminUsersService {
 
     public getUser(userId: AdminId<'user'>): Observable<AdminUser> {
         return this.sdk.client.getAdminUsersById({ version: this.sdk.version, id: userId }).pipe(map(adminUserFromSdk));
+    }
+
+    public getPremiumGrant(userId: AdminId<'user'>): Observable<AdminUserPremiumGrant | null> {
+        return this.sdk.client
+            .getAdminUsersByIdPremiumGrant({ version: this.sdk.version, id: userId })
+            .pipe(map(adminUserPremiumGrantFromSdk));
+    }
+
+    public setPremiumGrant(userId: AdminId<'user'>, grant: AdminUserPremiumGrant): Observable<AdminUserPremiumGrant | null> {
+        return this.sdk.client
+            .putAdminUsersByIdPremiumGrant({ version: this.sdk.version, id: userId, adminUserPremiumGrantHttpRequest: grant })
+            .pipe(map(adminUserPremiumGrantFromSdk));
+    }
+
+    public revokePremiumGrant(userId: AdminId<'user'>): Observable<AdminUserPremiumGrant | null> {
+        return this.sdk.client
+            .deleteAdminUsersByIdPremiumGrant({ version: this.sdk.version, id: userId })
+            .pipe(map(adminUserPremiumGrantFromSdk));
     }
 
     public scheduleTestNotification(userId: AdminId<'user'>, payload: AdminTestNotification): Observable<void> {

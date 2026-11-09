@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1407,
+    "contracts": 1413,
     "ambiguousContracts": 32,
-    "consumerEdges": 11483,
-    "productionConsumerEdges": 6355,
-    "testConsumerEdges": 5128,
-    "consumedContracts": 1407,
+    "consumerEdges": 11509,
+    "productionConsumerEdges": 6379,
+    "testConsumerEdges": 5130,
+    "consumedContracts": 1413,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1468,6 +1468,40 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Responses/AdminUserLoginEventHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminUserPremiumGrantHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminUserPremiumGrantHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminUserPremiumGrantHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminUserPremiumGrantHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6434,6 +6468,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetAdminUserPremiumGrantQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetAdminUserQuery",
       "roles": [
         "Query"
@@ -9000,6 +9051,23 @@
       ],
       "definitionPaths": [
         "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetUserManualPremiumGrantQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -21212,6 +21280,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "SetAdminUserPremiumGrantCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "SetAttentionSignalStateCommand",
       "roles": [
         "Command"
@@ -21292,6 +21377,23 @@
       ],
       "definitionPaths": [
         "Modules/RecipeCommunity/Presentation/RecipeLikes/Requests/SetRecipeLikeStateHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "SetUserManualPremiumGrantCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -28144,6 +28246,32 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/HttpResponseContractCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminUserPremiumGrantHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Requests/AdminUserPremiumGrantHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AdminUserPremiumGrantHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Responses/AdminUserPremiumGrantHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "isTest": false,
+      "referenceCount": 6
     },
     {
       "contract": "AdminUserRoleAuditEventHttpResponse",
@@ -48219,6 +48347,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminUserPremiumGrantQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminUserPremiumGrantQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminUserQuery",
       "roles": [
         "Query"
@@ -58464,6 +58618,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetUserManualPremiumGrantQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetUserManualPremiumGrantQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
       "contract": "GetUserPrivacyQuery",
       "roles": [
         "Query"
@@ -64164,6 +64344,19 @@
         "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditLogger",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -68389,6 +68582,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -70821,6 +71027,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105648,6 +105867,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -108183,6 +108415,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -110394,6 +110639,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -118011,6 +118269,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Contracts/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -118116,6 +118387,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Contracts/Queries/GetUserForAdministration/GetUserForAdministrationQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Contracts/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -120767,6 +121051,19 @@
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -120872,6 +121169,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserForAdministration/GetUserForAdministrationQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -121924,6 +122234,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/TestAdminAiPrompt/TestAdminAiPromptCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -122172,6 +122495,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -132103,6 +132439,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserAdminReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdminReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserAdminReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUsersForAdministration/GetUsersForAdministrationQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -136770,6 +137119,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
       "isTest": false,
       "referenceCount": 1
@@ -140007,6 +140369,19 @@
         "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminUserPremiumGrantApiTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserRoleMembershipService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -140191,6 +140566,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserSessionPrincipalReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserSessionPrincipalReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminUserPremiumGrantApiTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -162021,6 +162409,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "SetAdminUserPremiumGrantCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SetAdminUserPremiumGrantCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Controllers/AdminUsersController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
       "contract": "SetAttentionSignalStateCommand",
       "roles": [
         "Command"
@@ -162356,6 +162770,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/PositionalRequestValidationTests.cs",
       "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SetUserManualPremiumGrantCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SetUserManualPremiumGrantCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
+      "isTest": false,
       "referenceCount": 2
     },
     {

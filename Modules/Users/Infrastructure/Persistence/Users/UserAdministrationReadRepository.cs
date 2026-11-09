@@ -12,6 +12,16 @@ namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<UserRole> userRoles, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserAdminReadRepository, IUserAdminReadModelRepository {
     private const string LikeEscapeCharacter = "\\";
 
+    public async Task<UserManualPremiumGrantModel?> GetManualPremiumGrantAsync(UserId id, CancellationToken cancellationToken) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken);
+        }
+        return await users.AsNoTracking()
+            .Where(user => user.Id == id && user.Id != SystemContentOwner.Id && user.DeletedAt == null)
+            .Select(user => new UserManualPremiumGrantModel(user.ManualPremiumEndsAtUtc, user.ManualPremiumReason))
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
     private IQueryable<User> UsersWithRoles() =>
         users
             .Where(user => user.Id != SystemContentOwner.Id)

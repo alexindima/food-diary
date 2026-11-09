@@ -349,14 +349,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "de0177e9dd24d9ff320d0081aff3854bc4d08622e0492d268cef779f7b0b29d6",
-          "reviewReason": "Reviewed actual full/payload snapshots and SDK guide: activity endpoint, nullable timestamp and optional ranges are additive. The executed report has zero breaking and six additive changes; old login fields/filters remain. No acceptance exception changed, and the prior browser-session migration record remains exact and separate from this feature."
+          "sha256": "eae0c81f30c0cdcadfc92163fd7781eb97551b93dab80a02572f403edea8b57e",
+          "reviewReason": "Reviewed the full snapshot delta and the semantic compatibility result. GET, PUT, and DELETE on the new admin user premium-grant path add dedicated request and response schemas. Existing operations and payloads keep their contracts, so the compatibility workflow requires no text change."
         }
       ],
-      "reason": "Reviewed actual full/payload snapshots and SDK guide: activity endpoint, nullable timestamp and optional ranges are additive. The executed report has zero breaking and six additive changes; old login fields/filters remain. No acceptance exception changed, and the prior browser-session migration record remains exact and separate from this feature.",
+      "reason": "Reviewed the full snapshot delta and the semantic compatibility result. GET, PUT, and DELETE on the new admin user premium-grant path add dedicated request and response schemas. Existing operations and payloads keep their contracts, so the compatibility workflow requires no text change.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:33.6600192Z"
+      "gitHead": "d1beb7347c8942760626f7afbe0daee741244565",
+      "reviewedAtUtc": "2026-11-09T02:37:17.0940393Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

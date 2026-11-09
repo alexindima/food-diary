@@ -4595,6 +4595,13 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("ManualPremiumEndsAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ManualPremiumReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<DateTime?>("MarketingConsentAcceptedAtUtc")
                         .HasColumnType("timestamp with time zone");
 

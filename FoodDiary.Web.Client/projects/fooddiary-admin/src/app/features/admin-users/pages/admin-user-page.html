@@ -59,6 +59,9 @@
             'ADMIN_NAV.AUDIT' | translate
         }}</a>
     </nav>
+    @if (!account.deletedAt) {
+        <fd-admin-user-premium-grant [userId]="account.id" />
+    }
     <fd-ui-card>
         <fd-admin-user-details-body
             [sections]="sections()"

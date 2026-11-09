@@ -1,4 +1,10 @@
 import type { AdminCalendarDate, AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+
+export type AdminUserPremiumGrant = {
+    endsAtUtc: AdminUtcInstant;
+    reason: string;
+};
+
 export type AdminUser = {
     id: AdminId<'user'>;
     email: string | null;

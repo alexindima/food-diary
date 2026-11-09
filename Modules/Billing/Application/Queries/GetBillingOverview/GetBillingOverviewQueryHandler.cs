@@ -41,7 +41,7 @@ public sealed class GetBillingOverviewQueryHandler(
         bool hasUsedTrial = userProfile.PremiumTrialStartedAtUtc.HasValue || userProfile.PremiumTrialEndsAtUtc.HasValue;
         bool hasPaidPremium = userProfile.HasPaidPremium;
         bool paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
-        bool isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;
+        bool isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive || userProfile.ManualPremiumEndsAtUtc > nowUtc;
         bool providerTrialExpired = IsExpiredProviderTrial(subscription, nowUtc);
         string? subscriptionStatus = ResolveSubscriptionStatus(subscription, isTrialActive, providerTrialExpired);
         DateTime? currentPeriodStartUtc = ResolveCurrentPeriodStartUtc(subscription, userProfile, isTrialActive, providerTrialExpired);

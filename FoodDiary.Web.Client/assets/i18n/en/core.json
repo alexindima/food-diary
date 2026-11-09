@@ -1179,6 +1179,23 @@
         "ACTIVE_TO": "Last active to",
         "SAVE_ERROR": "Could not save the account. Your edits are preserved. Try again."
     },
+    "ADMIN_USER_PREMIUM": {
+        "TITLE": "Manual Premium",
+        "DESCRIPTION": "This access is managed separately from paid subscriptions and renewals.",
+        "EMPTY": "No manual Premium grant.",
+        "CURRENT_END": "Manual access expires",
+        "END_INPUT": "Expiry date and time (local)",
+        "REASON": "Reason",
+        "GRANT": "Grant Premium until…",
+        "EDIT": "Change expiry or reason",
+        "REVOKE": "Revoke manual Premium",
+        "REVOKE_CONFIRM": "Revoke this manual grant? The user keeps access from any active subscription or trial.",
+        "FORM_INCOMPLETE": "Enter an expiry date and a reason of up to 500 characters.",
+        "SAVING": "An update is in progress.",
+        "DATE_INVALID": "Choose a valid date and time in the future.",
+        "REASON_INVALID": "Enter a reason for the grant.",
+        "SAVE_ERROR": "Could not update manual Premium. Please try again."
+    },
     "ADMIN_NOTIFICATION": {
         "TITLE": "Test notification",
         "RECIPIENT": "Recipient: {{recipient}}",

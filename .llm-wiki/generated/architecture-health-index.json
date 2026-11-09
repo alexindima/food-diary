@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
     "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 44,
+    "criticalSymbolsWithoutTestReferences": 48,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -2252,6 +2252,23 @@
           "type": "number"
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "AdminUserPremiumGrantComponent",
+      "selector": "fd-admin-user-premium-grant",
+      "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "userId",
+          "type": "AdminId<'user'>",
+          "required": true
+        }
+      ],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -5142,11 +5159,6 @@
           "required": true
         },
         {
-          "name": "overviewCopyState",
-          "type": "PremiumOverviewCopyState",
-          "required": true
-        },
-        {
           "name": "errorMessage",
           "type": "string | null",
           "required": true
@@ -5169,7 +5181,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "accessActive",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -5205,6 +5223,11 @@
           "required": false
         },
         {
+          "name": "starsPrice",
+          "type": "number | null",
+          "required": false
+        },
+        {
           "name": "loading",
           "type": "",
           "required": false
@@ -5215,19 +5238,6 @@
           "required": false
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "PremiumSupportCardComponent",
-      "selector": "fd-premium-support-card",
-      "feature": "premium",
-      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
-      ],
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -6093,6 +6103,26 @@
       "coveredThrough": []
     },
     {
+      "name": "SetAdminUserPremiumGrantCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
+      "line": 13,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "SetUserManualPremiumGrantCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
+      "line": 12,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "UpdateAdminDailyAdviceGroupCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
@@ -6203,6 +6233,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminUserPremiumGrantQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
+      "line": 12,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetBrowserSessionProfileQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/GetBrowserSessionProfile/GetBrowserSessionProfileQueryHandler.cs",
@@ -6237,6 +6277,16 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
       "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetUserManualPremiumGrantQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQueryHandler.cs",
+      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

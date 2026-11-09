@@ -33,7 +33,7 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
                 user.DeletedAt != null, user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium) &&
                     (user.PremiumAccessEndsAtUtc == null || user.PremiumAccessEndsAtUtc > now),
                 user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed,
-                user.Preferences.Language, user.Preferences.TimeZoneId, user.TelegramUserId))
+                user.Preferences.Language, user.Preferences.TimeZoneId, user.TelegramUserId, user.ManualPremiumEndsAtUtc))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -55,8 +55,8 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
                 (user.AiConsentNoticeVersion == PrivacyNoticeVersions.Current
                  || (PrivacyNoticeVersions.Current == PrivacyNoticeVersions.LegacyCompatibleAiNotice &&
                      (user.AiConsentNoticeVersion == null || user.AiConsentNoticeVersion == PrivacyNoticeVersions.LegacyUnversioned))),
-            user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium) &&
-                (user.PremiumAccessEndsAtUtc == null || user.PremiumAccessEndsAtUtc > now),
+            user.ManualPremiumEndsAtUtc > now || (user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium) &&
+                (user.PremiumAccessEndsAtUtc == null || user.PremiumAccessEndsAtUtc > now)),
             user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc), cancellationToken);
     }
 

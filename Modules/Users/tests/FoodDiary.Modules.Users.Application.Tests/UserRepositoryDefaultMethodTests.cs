@@ -61,6 +61,8 @@ public sealed class UserRepositoryDefaultMethodTests {
 
         public Task<UserAdminReadModel?> GetByIdIncludingDeletedReadModelAsync(UserId id, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+        public Task<UserManualPremiumGrantModel?> GetManualPremiumGrantAsync(UserId id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
             string? search,
             int page,

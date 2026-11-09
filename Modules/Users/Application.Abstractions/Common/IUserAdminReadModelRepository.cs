@@ -5,6 +5,8 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Users.Application.Abstractions.Common;
 
 public interface IUserAdminReadModelRepository {
+    Task<UserManualPremiumGrantModel?> GetManualPremiumGrantAsync(UserId id, CancellationToken cancellationToken);
+
     Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedReadModelsAsync(
         string? search, int page, int limit, UserAccountStatusFilter status,
         UserAdministrationFilter filter, CancellationToken cancellationToken);

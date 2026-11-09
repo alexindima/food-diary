@@ -82,6 +82,27 @@ public sealed partial class User : AggregateRoot<UserId> {
     public DateTime? PremiumTrialStartedAtUtc { get; private set; }
     public DateTime? PremiumTrialEndsAtUtc { get; private set; }
     public DateTime? PremiumAccessEndsAtUtc { get; private set; }
+    public const int ManualPremiumReasonMaxLength = 500;
+    public DateTime? ManualPremiumEndsAtUtc { get; private set; }
+    public string? ManualPremiumReason { get; private set; }
+
+    public void SetManualPremiumGrant(DateTime? endsAtUtc, string? reason) {
+        EnsureNotDeleted();
+        DateTime? end = endsAtUtc is { } value ? NormalizeUtcTimestamp(value, nameof(endsAtUtc)) : null;
+        string? normalizedReason = end.HasValue ? reason?.Trim() : null;
+        if (end.HasValue && (string.IsNullOrEmpty(normalizedReason) || normalizedReason.Length > ManualPremiumReasonMaxLength)) {
+            throw new ArgumentException("A reason of up to 500 characters is required.", nameof(reason));
+        }
+        if (ManualPremiumEndsAtUtc == end && string.Equals(ManualPremiumReason, normalizedReason, StringComparison.Ordinal)) {
+            return;
+        }
+        if (ManualPremiumEndsAtUtc != end) {
+            AdvanceSecurityVersion();
+        }
+        ManualPremiumEndsAtUtc = end;
+        ManualPremiumReason = normalizedReason;
+        SetModified();
+    }
 
     public void SetPremiumAccessEnd(DateTime? endsAtUtc) {
         EnsureNotDeleted();

@@ -4,6 +4,7 @@ import type { AdminUserCreationHttpResponse } from '../../../shared/api/sdk/gene
 import type { AdminUserHttpResponse } from '../../../shared/api/sdk/generated/model/admin-user-http-response';
 import type { AdminUserLoginDeviceSummaryHttpResponse } from '../../../shared/api/sdk/generated/model/admin-user-login-device-summary-http-response';
 import type { AdminUserLoginEventHttpResponse } from '../../../shared/api/sdk/generated/model/admin-user-login-event-http-response';
+import type { AdminUserPremiumGrantHttpResponse } from '../../../shared/api/sdk/generated/model/admin-user-premium-grant-http-response';
 import type { AdminUserRoleAuditEventHttpResponse } from '../../../shared/api/sdk/generated/model/admin-user-role-audit-event-http-response';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import {
@@ -20,8 +21,17 @@ import type {
     AdminUserCreation,
     AdminUserLoginDeviceSummary,
     AdminUserLoginEvent,
+    AdminUserPremiumGrant,
     AdminUserRoleAuditEvent,
 } from '../models/admin-user.models';
+
+export function adminUserPremiumGrantFromSdk(response: AdminUserPremiumGrantHttpResponse): AdminUserPremiumGrant | null {
+    if ((response.endsAtUtc ?? null) === null && (response.reason ?? null) === null) {
+        return null;
+    }
+    const grant = requireSdkFields(response, ['endsAtUtc', 'reason']);
+    return { endsAtUtc: adminUtcInstant(grant.endsAtUtc), reason: grant.reason };
+}
 
 export function adminUserFromSdk(response: AdminUserHttpResponse): AdminUser {
     const value = requireSdkFields(response, ['id', 'isActive', 'isEmailConfirmed', 'createdOnUtc', 'roles']);

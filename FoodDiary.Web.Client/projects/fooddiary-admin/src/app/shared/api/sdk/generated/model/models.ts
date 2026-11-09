@@ -76,6 +76,8 @@ export * from './admin-user-http-response-paged-http-response';
 export * from './admin-user-login-device-summary-http-response';
 export * from './admin-user-login-event-http-response';
 export * from './admin-user-login-event-http-response-paged-http-response';
+export * from './admin-user-premium-grant-http-request';
+export * from './admin-user-premium-grant-http-response';
 export * from './admin-user-role-audit-event-http-response';
 export * from './admin-user-set-password-http-request';
 export * from './admin-user-update-http-request';

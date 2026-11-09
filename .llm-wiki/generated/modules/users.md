@@ -103,15 +103,15 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 106
+- Public contract files: 109
 - Observed external consumer groups: 34
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 106
+- Public contract types: 109
 - Interfaces: 41
-- DTO/read-model/projection types: 39
+- DTO/read-model/projection types: 40
 - Enums: 2
 - Exported repository-shaped contracts: 8
 - Contracts referencing domain entities: 0
@@ -145,7 +145,7 @@ Source: `Modules/Users/Presentation/Goals/Controllers/GoalsController.cs`
 - `interface IUserDataPurgeParticipant`
 - `interface IUserDietologistProfileReadService`
 - `interface IUserFastingReminderReadService`
-- ... 76 more type(s)
+- ... 79 more type(s)
 
 ## Extraction Readiness
 
