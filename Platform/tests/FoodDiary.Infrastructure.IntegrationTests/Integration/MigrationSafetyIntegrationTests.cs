@@ -46,27 +46,35 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
     }
 
     [RequiresDockerFact]
-    public async Task BillingCancellationSchema_UpgradeAddsUserActivityWithoutChangingExistingUsers() {
+    public async Task BillingCancellationSchema_UpgradeAddsUserActivityAndManualPremiumWithoutChangingExistingUsers() {
+        const string activityMigration = "20261108141136_AddUserForegroundActivity";
+        const string premiumMigration = "20261109022333_AddManualPremiumGrant";
         await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
-        await context.GetService<IMigrator>().MigrateAsync("20261108115006_AddBillingCancellationTelegramDelivery");
+        IMigrator migrator = context.GetService<IMigrator>();
+        await migrator.MigrateAsync("20261108115006_AddBillingCancellationTelegramDelivery");
         Assert.False(await context.Database.SqlQuery<bool>($"""
             SELECT to_regclass('"UserActivities"') IS NOT NULL AS "Value"
             """).SingleAsync());
         string[] appliedBefore = [.. await context.Database.GetAppliedMigrationsAsync()];
         UserId userId = await InitialBaselineUserFixture.InsertAsync(context, "activity-upgrade@example.com", "ru");
 
-        await context.Database.MigrateAsync();
+        await migrator.MigrateAsync(activityMigration);
 
-        string[] appliedAfter = [.. await context.Database.GetAppliedMigrationsAsync()];
-        Assert.Equal(appliedBefore, appliedAfter.Take(appliedBefore.Length), StringComparer.Ordinal);
-        Assert.Single(appliedAfter.Skip(appliedBefore.Length));
+        Assert.Equal([.. appliedBefore, activityMigration], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
         Assert.Equal(0, await context.Database.SqlQuery<int>($"""
             SELECT count(*)::integer AS "Value" FROM "UserActivities"
             """).SingleAsync());
+        Assert.Equal("ru", await context.Database.SqlQuery<string>($"""
+            SELECT "Language" AS "Value" FROM "UserPreferences" WHERE "Id" = {userId.Value}
+            """).SingleAsync());
+
+        await migrator.MigrateAsync(premiumMigration);
+
+        Assert.Equal([.. appliedBefore, activityMigration, premiumMigration], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
         User preservedUser = await context.Users.AsNoTracking().SingleAsync(user => user.Id == userId);
         Assert.Equal("ru", preservedUser.Language);
-        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
-        Assert.False(context.Database.HasPendingModelChanges());
+        Assert.Null(preservedUser.ManualPremiumEndsAtUtc);
+        Assert.Null(preservedUser.ManualPremiumReason);
     }
 
     [RequiresDockerTheory]
