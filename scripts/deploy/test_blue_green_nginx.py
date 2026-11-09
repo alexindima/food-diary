@@ -190,6 +190,35 @@ include "{self.routing.as_posix()}";
                     self.assertEqual("localhost", self.servers[backend].hosts[-1])
         self.assertEqual(404, self.request("/internal/version")[0])
 
+    def test_routes_recover_when_nginx_switches_away_from_a_stopped_active_slot(self):
+        send_response = Backend.send_response
+
+        def close_upstream_connection(handler, code, message=None):
+            send_response(handler, code, message)
+            handler.send_header("Connection", "close")
+            handler.close_connection = True
+
+        paths = (
+            ("/api/v1/products", "GET"),
+            ("/api/v1/auth/telegram/bot/operations/ready", "GET"),
+            ("/hubs/notifications/negotiate", "POST"),
+        )
+
+        def statuses():
+            return [self.request(path, method=method)[0] for path, method in paths]
+
+        with patch.object(Backend, "send_response", close_upstream_connection):
+            self.assertEqual([200, 200, 200], statuses())
+            active = self.servers[0]
+            active.shutdown()
+            active.server_close()
+            self.assertEqual([502, 502, 502], statuses())
+
+            self.write_routes("green")
+            self.control("-s", "reload")
+            self.until(lambda: self.request("/api/probe")[2] == b"green")
+            self.assertEqual([200, 200, 200], statuses())
+
     def test_reload_preserves_inflight_http_and_websocket_and_hub_affinity(self):
         _, headers, body = self.request("/hubs/notifications/negotiate", method="POST")
         self.assertEqual(b"blue", body)
