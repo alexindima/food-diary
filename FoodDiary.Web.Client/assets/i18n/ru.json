@@ -1572,6 +1572,8 @@
         "DAILY_ADVICES": "Советы дня"
     },
     "ADMIN_USER": {
+        "ACCOUNT": "Аккаунт",
+        "TELEGRAM_ACCOUNT": "Telegram · {{id}}",
         "SET_PASSWORD": "Задать пароль",
         "IMPERSONATE": "Войти как пользователь",
         "IMPERSONATE_UNAVAILABLE": "Вход от имени этого пользователя недоступен.",

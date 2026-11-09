@@ -4,24 +4,32 @@
     <table class="users-table" aria-label="User accounts">
         <thead>
             <tr>
-                <th>Email</th>
+                <th>{{ 'ADMIN_USER.ACCOUNT' | translate }}</th>
                 <th>Username</th>
                 <th>Roles</th>
                 <th>{{ 'ADMIN_USER.LAST_ACTIVE' | translate }}</th>
-                <th>Confirmed</th>
+                <th>{{ 'ADMIN_USER.CONFIRMED' | translate }}</th>
                 <th>{{ 'ADMIN_COMMON.REGISTERED' | translate }}</th>
             </tr>
         </thead>
         <tbody>
             @for (user of users(); track user.id) {
                 <tr class="users-table__row" fdUiActivate [fdUiActivateRole]="null" (fdUiActivated)="details.emit(user)">
-                    <td>{{ user.email }}</td>
+                    <td>
+                        @if (user.email; as email) {
+                            {{ email }}
+                        } @else if (user.telegramUserId) {
+                            {{ 'ADMIN_USER.TELEGRAM_ACCOUNT' | translate: { id: user.telegramUserId } }}
+                        } @else {
+                            —
+                        }
+                    </td>
                     <td>{{ user.username || '-' }}</td>
                     <td>{{ user.roles.join(', ') || '-' }}</td>
                     <td>
                         {{ user.lastActiveAtUtc ? (user.lastActiveAtUtc | date: 'medium') : ('ADMIN_USER.ACTIVITY_UNKNOWN' | translate) }}
                     </td>
-                    <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
+                    <td>{{ user.email ? ((user.isEmailConfirmed ? 'ADMIN_USER.YES' : 'ADMIN_USER.NO') | translate) : '—' }}</td>
                     <td>{{ user.createdOnUtc | date: 'mediumDate' }}</td>
                 </tr>
             } @empty {

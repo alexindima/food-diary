@@ -1572,6 +1572,8 @@
         "DAILY_ADVICES": "Daily advices"
     },
     "ADMIN_USER": {
+        "ACCOUNT": "Account",
+        "TELEGRAM_ACCOUNT": "Telegram · {{id}}",
         "SET_PASSWORD": "Set password",
         "IMPERSONATE": "Impersonate",
         "IMPERSONATE_UNAVAILABLE": "This user cannot be impersonated.",
