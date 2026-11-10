@@ -255,7 +255,7 @@
         </fd-ui-card>
     </div>
 
-    <nav class="profile-comparison__section-links fd-stack" [attr.aria-label]="'USER_MANAGE.COMPARISON.OTHER_SECTIONS' | translate">
+    <section class="profile-comparison__section-links fd-stack" [attr.aria-label]="'USER_MANAGE.COMPARISON.OTHER_SECTIONS' | translate">
         <details class="profile-comparison__accordion profile-comparison__appearance">
             <summary>
                 <fd-ui-icon name="palette" />
@@ -313,11 +313,16 @@
                 <ng-content select="[profileDietologist]" />
             </div>
         </details>
-        <a class="profile-comparison__settings-link" routerLink="/privacy-settings" data-tour-id="user-manage-privacy">
-            <fd-ui-icon name="shield" />
-            <strong>{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</strong>
-            <span>{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</span>
-            <fd-ui-icon class="profile-comparison__accordion-chevron" name="chevron_right" />
-        </a>
-    </nav>
+    </section>
+
+    <a
+        class="profile-comparison__privacy-link fd-row fd-gap-sm"
+        routerLink="/privacy-settings"
+        data-tour-id="user-manage-privacy"
+        [attr.aria-description]="'USER_MANAGE.PRIVACY_DESC' | translate"
+    >
+        <fd-ui-icon name="shield" size="sm" />
+        <span>{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</span>
+        <fd-ui-icon name="arrow_forward" size="sm" />
+    </a>
 </div>
