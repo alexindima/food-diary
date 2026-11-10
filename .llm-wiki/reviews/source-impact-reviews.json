@@ -952,14 +952,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "f76b04f4e7ba62c280d6f3ab722b1d1da3addc697953115d614678a5d0e39596",
-          "reviewReason": "Reviewed the dependency updates in the frontend manifest. The documented visual QA command still uses the repository Playwright installation and its evidence requirements still apply. Playwright 1.65.0 launched Chromium, Firefox and WebKit in the matching CI image, all 700 UI Kit tests passed with jsdom 31, and fd-tour built with ng-packagr 22.2.6."
+          "sha256": "1b5b18eda4b080b1dec98abe61212da0aa994a453178a67c7e5bd2be522d34cd",
+          "reviewReason": "Reviewed the public Angular build commands. They now keep esbuild output instead of running the secondary chunk optimizer, while retaining the same build configurations, stats, script CSP and service-worker finalization. The local browser QA commands and evidence requirements are unchanged."
         }
       ],
-      "reason": "Reviewed the dependency updates in the frontend manifest. The documented visual QA command still uses the repository Playwright installation and its evidence requirements still apply. Playwright 1.65.0 launched Chromium, Firefox and WebKit in the matching CI image, all 700 UI Kit tests passed with jsdom 31, and fd-tour built with ng-packagr 22.2.6.",
-      "baseRef": "25d308e0ffe5e6af7d639f705b0d52ae03957bf7",
-      "gitHead": "5be8195a33f775cb8fa79711883a8afc22bd5eb8",
-      "reviewedAtUtc": "2026-11-09T16:15:27.5660496Z"
+      "reason": "Reviewed the public Angular build commands. They now keep esbuild output instead of running the secondary chunk optimizer, while retaining the same build configurations, stats, script CSP and service-worker finalization. The local browser QA commands and evidence requirements are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "5f103833fdc415b3f0e94c327b0ba7a9eeb6718b",
+      "reviewedAtUtc": "2026-11-10T05:36:25.6300158Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
