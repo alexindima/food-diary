@@ -1893,9 +1893,7 @@ function readPageSpacing(element: Element): PageSpacingObservation {
     const peerLayouts = Array.from(body.querySelectorAll('.fd-gap-page-card, .dashboard__column, .habit-path, .catalog-grid')).filter(
         layout => layout.getBoundingClientRect().height > 0,
     );
-    const finalCard = body.querySelector(
-        '.profile-comparison__section-links, .fasting-redesign > :last-child, .goals-editor > :last-child',
-    );
+    const finalCard = body.querySelector('.profile-comparison > :last-child, .fasting-redesign > :last-child, .goals-editor > :last-child');
     const dashboardCards = Array.from(body.querySelectorAll('.dashboard__column > :not(:empty)')).filter(
         card => card.getBoundingClientRect().height > 0,
     );
