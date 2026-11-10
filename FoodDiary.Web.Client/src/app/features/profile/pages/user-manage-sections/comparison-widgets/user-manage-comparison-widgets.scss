@@ -228,7 +228,6 @@
     }
 
     &__privacy-link {
-        align-self: flex-start;
         align-items: center;
         max-inline-size: 100%;
         min-block-size: var(--fd-size-control-lg);
@@ -256,6 +255,10 @@
 
         fd-ui-icon:first-child {
             color: var(--fd-color-emerald-300);
+        }
+
+        fd-ui-icon:last-child {
+            margin-inline-start: auto;
         }
     }
 
