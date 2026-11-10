@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import type { CanActivateFn } from '@angular/router';
 
-import { publicSiteLocale, stripPublicLocale } from '../../config/public-site-paths';
+import { isPublicMarketingPath, publicSiteLocale, stripPublicLocale, usesPublicSiteChrome } from '../../config/public-site-paths';
 import { AuthService } from '../../services/auth.service';
 import { LocalizationService } from './localization.service';
 
@@ -14,6 +14,9 @@ export const publicSiteLocaleGuard: CanActivateFn = async (_route, state) => {
         return true;
     }
     await localization.applyLanguagePreferenceAsync(publicSiteLocale(state.url));
+    if (isPublicMarketingPath(state.url) && !usesPublicSiteChrome(state.url, auth.isAuthenticated())) {
+        await localization.loadApplicationTranslationsAsync();
+    }
     await localization.loadRouteTranslationsAsync(state.url);
     return true;
 };

@@ -9,9 +9,11 @@ export const PUBLIC_INFORMATION_PAGES = [
     { path: 'guides/calories-in-homemade-meals', baseKey: 'PUBLIC_PAGES.RECIPE_GUIDE' },
 ] as const;
 
+const PRIVACY_POLICY_PATH = '/privacy-policy';
+
 export const PUBLIC_MARKETING_PATHS = new Set<string>([
     '/',
-    '/privacy-policy',
+    PRIVACY_POLICY_PATH,
     ...PUBLIC_SEO_PATHS,
     ...PUBLIC_INFORMATION_PAGES.map(page => `/${page.path}`),
 ]);
@@ -41,4 +43,9 @@ export function localizedPublicPath(path: string, locale: PublicSiteLocale): str
 
 export function isPublicMarketingPath(path: string): boolean {
     return PUBLIC_MARKETING_PATHS.has(stripPublicLocale(path));
+}
+
+export function usesPublicSiteChrome(path: string, isAuthenticated: boolean): boolean {
+    const basePath = stripPublicLocale(path);
+    return PUBLIC_MARKETING_PATHS.has(basePath) && (basePath !== PRIVACY_POLICY_PATH || !isAuthenticated);
 }

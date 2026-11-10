@@ -243,13 +243,14 @@ describe('AppComponent shell behavior', () => {
     it(
         'prepares route localization, theme and SEO after navigation',
         async () => {
-            const { localizationService, router, routerEvents, seoService, themeService } = await createComponentAsync();
+            const { fixture, localizationService, router, routerEvents, seoService, themeService } = await createComponentAsync();
 
             routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard', '/dashboard'));
+            fixture.detectChanges();
             await waitForAsyncTasksAsync();
             await waitForAsyncTasksAsync();
 
-            expect(themeService.applyThemeForRoute).toHaveBeenCalledWith('/dashboard');
+            expect(themeService.applyThemeForRoute).toHaveBeenCalledWith('/dashboard', false);
             expect(localizationService.loadTranslationsForRouteAsync).toHaveBeenCalledWith('/dashboard');
             expect(seoService.update).toHaveBeenCalledWith({
                 titleKey: 'SEO.DASHBOARD.TITLE',

@@ -34,7 +34,7 @@ import { AppUpdateNoticeComponent } from '../components/shared/app-update-notice
 import { AuthRecoveryNoticeComponent } from '../components/shared/auth-recovery-notice/auth-recovery-notice';
 import { MarketingConsentComponent } from '../components/shared/marketing-consent/marketing-consent';
 import { PwaInstallBannerComponent } from '../components/shared/pwa-install-banner/pwa-install-banner';
-import { isPublicMarketingPath } from '../config/public-site-paths';
+import { usesPublicSiteChrome } from '../config/public-site-paths';
 import { QuickMealDrawerComponent } from '../features/meals/contracts/quick-meal-drawer';
 import { PublicSiteFooterComponent, PublicSiteHeaderComponent } from '../features/public/contracts/public-site-chrome';
 import { AuthService } from '../services/auth.service';
@@ -98,6 +98,7 @@ export class AppComponent {
     private readonly installPromotion = inject(PwaInstallPromotionService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly completedUrl = signal<string | null>(null);
     private publicScrollNavigationId: number | null = null;
 
     protected isAuthenticated = this.authService.isAuthenticated;
@@ -107,13 +108,13 @@ export class AppComponent {
     protected readonly routeContentActive = signal(true);
     protected readonly usesAuthenticatedShell = computed(() => this.isAuthenticated() && this.shellMode() === 'authenticated');
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
-    protected readonly currentUrl = signal(this.router.url);
+    protected readonly currentUrl = computed(() => this.completedUrl() ?? this.router.url);
     protected readonly currentPath = computed(() => this.getCurrentPath(this.currentUrl()));
     protected readonly skipToMainHref = computed(() => {
         const path = this.currentUrl().split('#', 1)[0];
         return `${path.length > 0 ? path : '/'}#main-content`;
     });
-    protected readonly usesPublicSiteChrome = computed(() => isPublicMarketingPath(this.currentPath()));
+    protected readonly usesPublicSiteChrome = computed(() => usesPublicSiteChrome(this.currentPath(), this.isAuthenticated()));
     protected readonly isSidebarCollapsed = signal(false);
     protected readonly usesCompactMobileNavigation = computed(() => {
         const path = this.currentPath();
@@ -140,6 +141,15 @@ export class AppComponent {
     }
 
     public constructor() {
+        effect(() => {
+            const url = this.completedUrl();
+            if (url !== null) {
+                const isAuthenticated = this.isAuthenticated();
+                untracked(() => {
+                    this.themeService.applyThemeForRoute(url, isAuthenticated);
+                });
+            }
+        });
         effect(() => {
             if (!this.usesPublicSiteChrome()) {
                 this.marketingSettingsOpen.set(false);
@@ -195,7 +205,7 @@ export class AppComponent {
         this.router.events
             .pipe(
                 filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-                mergeMap(event => from(this.prepareRouteAsync(event.urlAfterRedirects))),
+                mergeMap(event => from(this.localizationService.loadTranslationsForRouteAsync(event.urlAfterRedirects))),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -238,11 +248,6 @@ export class AppComponent {
         return this.getDeepestRoute(this.activatedRoute).snapshot.data['shell'] === 'public' ? 'public' : 'authenticated';
     }
 
-    private async prepareRouteAsync(url: string): Promise<void> {
-        this.themeService.applyThemeForRoute(url);
-        await this.localizationService.loadTranslationsForRouteAsync(url);
-    }
-
     private observeNavigationCompletion(): void {
         this.router.events
             .pipe(
@@ -251,9 +256,10 @@ export class AppComponent {
             )
             .subscribe(event => {
                 const nextPath = this.getCurrentPath(event.urlAfterRedirects);
-                this.publicScrollNavigationId = nextPath !== this.currentPath() && isPublicMarketingPath(nextPath) ? event.id : null;
+                this.publicScrollNavigationId =
+                    nextPath !== this.currentPath() && usesPublicSiteChrome(nextPath, this.isAuthenticated()) ? event.id : null;
                 this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
-                this.currentUrl.set(event.urlAfterRedirects);
+                this.completedUrl.set(event.urlAfterRedirects);
                 afterNextRender(
                     () => {
                         this.document.documentElement.setAttribute('data-app-ready', 'true');

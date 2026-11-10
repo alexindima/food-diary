@@ -928,24 +928,52 @@ test.describe('mobile navigation keyboard regression', () => {
     });
 });
 
-test.describe('authenticated feature smoke', () => {
-    test('renders privacy policy without the authenticated shell', async ({ page }) => {
-        await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('fooddiary.fixture.role', token);
-            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
-            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
-        }, fixtureRole());
+test.describe('privacy policy navigation', () => {
+    const locales = [
+        { path: '/privacy-policy', title: 'Privacy Policy', signIn: 'Sign in', navigation: 'Main navigation' },
+        { path: '/ru/privacy-policy', title: 'Политика конфиденциальности', signIn: 'Войти', navigation: 'Основная навигация' },
+    ];
 
+    for (const { path, title, signIn, navigation } of locales) {
+        test(`renders ${path} with public navigation for a guest`, async ({ page }) => {
+            await page.setViewportSize({ width: 390, height: 844 });
+            await mockAuthenticatedClientApiAsync(page);
+            await page.goto(path);
+            await expect(page).toHaveURL(path);
+            await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+            await expect(page.locator('fd-public-site-header').getByText(signIn, { exact: true })).toBeVisible();
+            await expect(page.locator('fd-public-site-footer')).toBeAttached();
+            await expect(page.locator('fd-sidebar')).toHaveCount(0);
+        });
+
+        test(`renders ${path} with app navigation after restoring a session`, async ({ page }) => {
+            await page.setViewportSize({ width: 390, height: 844 });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await page.goto(path);
+            await expect(page).toHaveURL(path);
+            await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+            await expect(page.getByRole('navigation', { name: navigation })).toBeVisible();
+            await expect(page.locator('fd-public-site-header, fd-public-site-footer')).toHaveCount(0);
+            await page.setViewportSize({ width: 1440, height: 900 });
+            await expect(page.locator('fd-sidebar-desktop')).toBeVisible();
+        });
+    }
+
+    test('keeps app navigation when opening the policy from privacy settings', async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);
-        await page.goto('/privacy-policy');
-
-        await expect(page.getByRole('heading', { level: 1 })).toContainText('Privacy Policy');
-        await expect(page.locator('.fd-root')).toHaveClass(/fd-root--no-sidebar/);
-        await expect(page.locator('fd-sidebar')).toHaveCount(0);
-        await expect(page.locator('fd-quick-meal-drawer')).toHaveCount(0);
+        await page.goto('/privacy-settings');
+        await page.getByRole('link', { name: 'Privacy Policy' }).click();
+        await expect(page).toHaveURL('/privacy-policy');
+        await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible();
+        await expect(page.getByRole('navigation', { name: 'Main navigation' })).toBeVisible();
+        await expect(page.locator('fd-public-site-header')).toHaveCount(0);
     });
+});
 
+test.describe('authenticated feature smoke', () => {
     test('renders not found page for unknown route', async ({ page }) => {
         await page.goto('/missing-page');
 
