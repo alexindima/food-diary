@@ -343,6 +343,11 @@
       "pageSha256": "b1728bb90b67957ba40b869820fb3755208998f669429ba064e35d790a4e3f21",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "70d8510a981ecb346651bab8f9f71fe395075f3ffad34836c7f7c793d69a51c4",
+          "reviewReason": "Reviewed the CI version pin changes and the existing additive OpenAPI snapshot. The snapshot adds two Telegram backup email verification and diary transfer POST operations plus their DTOs. The compatibility step and its baseline selection remain as documented."
+        },
+        {
           "path": "docs/frontend/API_SDK.md",
           "sha256": "e9a67ec4235ee436b9bba281aed883d600be83eb699c28f6edafa3df3b96ca24",
           "reviewReason": "Reviewed actual full/payload snapshots and SDK guide: activity endpoint, nullable timestamp and optional ranges are additive. The executed report has zero breaking and six additive changes; old login fields/filters remain. No acceptance exception changed, and the prior browser-session migration record remains exact and separate from this feature."
@@ -355,13 +360,13 @@
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
           "sha256": "81a91ee13191e067895dc7283dfada8cd6eb47d77c4b79eb27d0ca28673f287b",
-          "reviewReason": "Reviewed the additive OpenAPI routes for backup email verification and diary transfer. The snapshot adds two operations and their DTOs while retaining existing paths and schemas. OpenApiSdkExportTests and the PostgreSQL scenarios verified the legacy endpoint, the generated SDK contract, and the new authenticated transfer."
+          "reviewReason": "Reviewed the CI version pin changes and the existing additive OpenAPI snapshot. The snapshot adds two Telegram backup email verification and diary transfer POST operations plus their DTOs. The compatibility step and its baseline selection remain as documented."
         }
       ],
-      "reason": "Reviewed the additive OpenAPI routes for backup email verification and diary transfer. The snapshot adds two operations and their DTOs while retaining existing paths and schemas. OpenApiSdkExportTests and the PostgreSQL scenarios verified the legacy endpoint, the generated SDK contract, and the new authenticated transfer.",
-      "baseRef": "HEAD",
-      "gitHead": "76ee600bc504a67349a3a49edf53275f36fa9e32",
-      "reviewedAtUtc": "2026-11-09T11:55:49.4147445Z"
+      "reason": "Reviewed the CI version pin changes and the existing additive OpenAPI snapshot. The snapshot adds two Telegram backup email verification and diary transfer POST operations plus their DTOs. The compatibility step and its baseline selection remain as documented.",
+      "baseRef": "eddeb23ff4fc34978c6d34f1e0a269f0f19358b7",
+      "gitHead": "edf5fa2542a592094a71f2d3fb1bd6221f89cd45",
+      "reviewedAtUtc": "2026-11-10T04:53:50.5240483Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1076,6 +1081,11 @@
       "pageSha256": "96add9c4d777b77071ddf1fd39b846fb6d6aef8e34fdacc812d94fc61a8e13c6",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "70d8510a981ecb346651bab8f9f71fe395075f3ffad34836c7f7c793d69a51c4",
+          "reviewReason": "Reviewed the current CI focused job, the Core, Workspace and Orchestration audit matrix, and the aggregate Wiki gate. The setup-dotnet and setup-java pin changes preserve the documented Wiki execution and artifact layout."
+        },
+        {
           "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
           "sha256": "ed224d3efa33fb151f418d8d4d908082678f029b72bb11c841289ba52e073298",
           "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
@@ -1096,10 +1106,10 @@
           "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         }
       ],
-      "reason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved.",
-      "baseRef": "HEAD",
-      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
-      "reviewedAtUtc": "2026-11-08T04:24:01.1360858Z"
+      "reason": "Reviewed the current CI focused job, the Core, Workspace and Orchestration audit matrix, and the aggregate Wiki gate. The setup-dotnet and setup-java pin changes preserve the documented Wiki execution and artifact layout.",
+      "baseRef": "eddeb23ff4fc34978c6d34f1e0a269f0f19358b7",
+      "gitHead": "edf5fa2542a592094a71f2d3fb1bd6221f89cd45",
+      "reviewedAtUtc": "2026-11-10T04:53:50.8748176Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1453,33 +1463,18 @@
     {
       "pageId": "workflow-review-report",
       "pagePath": ".llm-wiki/workflows/review-report.md",
-      "pageSha256": "e2d8e40fe4c068e5d0754b907d23f8078816e56429491fb2e619e7dfcd76b7a1",
+      "pageSha256": "a8c3164702eb0bdb06c97372f923634e29c8ce8ab8879e9140d45151268e3fe3",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "a922b9ad355e3846c7bf47cac280abe62bdafc1a08e845037cb5e52de24dfa9c",
-          "reviewReason": "The added CI test exercises Docker image retention after deployment. Review report generation, assessment provenance and readiness inputs retain their existing contracts."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "899aba4d79f418b168aa9c65a7f51704e287e6d7b6bb2e35e61f7eb9905bec35",
-          "reviewReason": "Reviewed the readiness consumer used by the report. Incomplete optional privacy metadata renders as an unassessed dimension instead of a strict-mode exception. JSON/Markdown finding contracts, snapshot provenance and optional-governance behavior are unchanged; the real report regression passes."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
-          "sha256": "14efea7f02c0e51ef21c05fa5c36b861e47128fac8b262192c65e4478c16fe47",
-          "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiChangePacket.ps1",
-          "sha256": "7af220d692aa7995bd24a84be58d17f2559474586ba1de8285e188aae6201f7e",
-          "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
+          "sha256": "70d8510a981ecb346651bab8f9f71fe395075f3ffad34836c7f7c793d69a51c4",
+          "reviewReason": "Reviewed the current report page and the Compile Wiki review report step in CI. The focused job still runs index verification, API compatibility and dependency checks before compiling the report, and optional governance artifacts remain optional."
         }
       ],
-      "reason": "The added CI test exercises Docker image retention after deployment. Review report generation, assessment provenance and readiness inputs retain their existing contracts.",
-      "baseRef": "HEAD",
-      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
-      "reviewedAtUtc": "2026-11-04T05:02:51.0708372Z"
+      "reason": "Reviewed the current report page and the Compile Wiki review report step in CI. The focused job still runs index verification, API compatibility and dependency checks before compiling the report, and optional governance artifacts remain optional.",
+      "baseRef": "eddeb23ff4fc34978c6d34f1e0a269f0f19358b7",
+      "gitHead": "edf5fa2542a592094a71f2d3fb1bd6221f89cd45",
+      "reviewedAtUtc": "2026-11-10T04:53:51.2340159Z"
     },
     {
       "pageId": "workflow-risk-calibration",
