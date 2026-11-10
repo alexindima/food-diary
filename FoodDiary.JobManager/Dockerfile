@@ -466,7 +466,7 @@ RUN apk add --no-cache \
     icu-libs=78.1-r0 \
     keyutils-libs=1.6.3-r4 \
     krb5-conf=1.0-r2 \
-    krb5-libs=1.22.2-r1 \
+    krb5-libs=1.22.3-r0 \
     libcom_err=1.47.4-r0 \
     libverto=0.3.2-r2
 COPY --from=build /app/publish .
