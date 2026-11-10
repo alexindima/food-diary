@@ -11,6 +11,7 @@ import threading
 import time
 import unittest
 from unittest.mock import patch
+from urllib.request import OpenerDirector
 
 import blue_green as deployment
 
@@ -719,6 +720,12 @@ class DashboardWarmupHttpTests(unittest.TestCase):
         self.addCleanup(self.server.server_close)
         self.addCleanup(self.server.shutdown)
         self.credentials = {"email": "fixture@example.test", "password": "fixture-secret"}
+
+    def test_cold_login_uses_a_separate_bounded_timeout(self):
+        with patch.object(OpenerDirector, "open", autospec=True, side_effect=OpenerDirector.open) as requests:
+            deployment.warm_dashboard(self.server.server_port, self.credentials)
+
+        self.assertEqual([60, 30, 10], [request.kwargs["timeout"] for request in requests.call_args_list])
 
     def test_transient_snapshot_failure_retries_then_revokes_the_session(self):
         self.snapshot_statuses = deque([500, 200])

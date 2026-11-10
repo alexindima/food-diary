@@ -98,7 +98,7 @@ def warm_dashboard(port, credentials):
 
     started = time.monotonic()
     try:
-        status = call("login", "/auth/login", payload=credentials, timeout=20)
+        status = call("login", "/auth/login", payload=credentials, timeout=60)
         if status != 200:
             raise DeploymentError(f"Dashboard warmup login returned HTTP {status}.")
         if not any(cookie.name == "fooddiary.browser" for cookie in cookies):

@@ -73,7 +73,8 @@ browser login route, fetches the dashboard and revokes its session through
 logout. Credentials and cookies stay in the probe process. The probe rejects
 redirects and reports only outcomes and elapsed time. A transient HTTP 5xx from
 the dashboard allows one retry in the same session. The login socket timeout is
-20 seconds, logout uses 10 seconds, and each dashboard request uses 30 seconds.
+60 seconds to allow a cold candidate to authenticate while the current slot is
+still running. Logout uses 10 seconds, and each dashboard request uses 30 seconds.
 
 During overlap, the dashboard must return 200 before Nginx switches traffic.
 During maintenance, the deployment restores and verifies ingress first. The
