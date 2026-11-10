@@ -235,16 +235,13 @@ test('ordinary-user account deletion schedules removal and revokes existing acce
     const page = await context.newPage();
     try {
         await page.goto('/profile');
-        await page
-            .locator('summary')
-            .filter({ has: page.getByText('Privacy & Data', { exact: true }) })
-            .click();
-        await expect(page.locator('fd-user-manage-privacy-card')).toBeVisible();
-        await page.locator('fd-user-manage-privacy-card').getByRole('button', { name: 'Delete', exact: true }).click();
+        await page.getByRole('link', { name: /Privacy & Data/u }).click();
+        await expect(page).toHaveURL(/\/privacy-settings$/u);
+        await page.getByRole('button', { name: 'Delete account and data', exact: true }).click();
         const deleted = page.waitForResponse(
             response => new URL(response.url()).pathname === '/api/v1/users' && response.request().method() === 'DELETE',
         );
-        await page.getByRole('dialog').getByRole('button', { name: 'Delete account', exact: true }).click();
+        await page.getByRole('dialog').getByRole('button', { name: 'Delete account and data', exact: true }).click();
         const deletedResponse = await deleted;
         expect(deletedResponse.status()).toBe(HTTP_NO_CONTENT);
         await expect(page).toHaveURL(/\/(?:mobile\/login|\?auth=login)?$/u);

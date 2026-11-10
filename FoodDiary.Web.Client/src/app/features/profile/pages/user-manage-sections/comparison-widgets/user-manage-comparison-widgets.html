@@ -313,16 +313,11 @@
                 <ng-content select="[profileDietologist]" />
             </div>
         </details>
-        <details class="profile-comparison__accordion">
-            <summary>
-                <fd-ui-icon name="shield" />
-                <strong>{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</strong>
-                <span>{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</span>
-                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
-            </summary>
-            <div class="profile-comparison__accordion-content">
-                <ng-content select="[profilePrivacy]" />
-            </div>
-        </details>
+        <a class="profile-comparison__settings-link" routerLink="/privacy-settings" data-tour-id="user-manage-privacy">
+            <fd-ui-icon name="shield" />
+            <strong>{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</strong>
+            <span>{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</span>
+            <fd-ui-icon class="profile-comparison__accordion-chevron" name="chevron_right" />
+        </a>
     </nav>
 </div>

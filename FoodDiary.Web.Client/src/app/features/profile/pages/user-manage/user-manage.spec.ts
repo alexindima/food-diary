@@ -882,10 +882,8 @@ type UserManageNotificationsFacadeMock = {
 type ProfileManageFacadeMock = {
     user: WritableSignal<User | null>;
     globalError: ReturnType<typeof signal<string | null>>;
-    isDeleting: ReturnType<typeof signal<boolean>>;
     isSavingProfile: ReturnType<typeof signal<boolean>>;
     profileSavedVersion: ReturnType<typeof signal<number>>;
-    isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isLinkingGoogle: ReturnType<typeof signal<boolean>>;
     isUnlinkingTelegram: ReturnType<typeof signal<boolean>>;
     telegramUnlinkError: ReturnType<typeof signal<string | null>>;
@@ -906,8 +904,6 @@ type ProfileManageFacadeMock = {
     saveProfileAsync: ReturnType<typeof vi.fn<ProfileManageFacade['saveProfileAsync']>>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
     linkGoogle: ReturnType<typeof vi.fn>;
-    revokeAiConsent: ReturnType<typeof vi.fn>;
-    deleteAccount: ReturnType<typeof vi.fn>;
     updateNotificationPreferences: ReturnType<typeof vi.fn>;
     refreshWebPushSubscriptions: ReturnType<typeof vi.fn>;
     removeWebPushSubscription: ReturnType<typeof vi.fn>;
@@ -1088,10 +1084,8 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
     return {
         user: signal(user),
         globalError: signal<string | null>(null),
-        isDeleting: signal(false),
         isSavingProfile: signal(false),
         profileSavedVersion: signal(0),
-        isRevokingAiConsent: signal(false),
         isLinkingGoogle: signal(false),
         isUnlinkingTelegram: signal(false),
         telegramUnlinkError: signal<string | null>(null),
@@ -1112,8 +1106,6 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         saveProfileAsync: vi.fn<ProfileManageFacade['saveProfileAsync']>().mockResolvedValue(true),
         openChangePasswordDialog: vi.fn(),
         linkGoogle: vi.fn(),
-        revokeAiConsent: vi.fn(),
-        deleteAccount: vi.fn(),
         updateNotificationPreferences: vi.fn(),
         refreshWebPushSubscriptions: vi.fn(),
         removeWebPushSubscription: vi.fn(),

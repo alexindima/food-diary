@@ -4,12 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { filter, finalize, firstValueFrom, type Subscription, switchMap, tap } from 'rxjs';
+import { finalize, firstValueFrom, type Subscription } from 'rxjs';
 
-import {
-    ConfirmDeleteDialogComponent,
-    type ConfirmDeleteDialogData,
-} from '../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -56,10 +52,8 @@ export class ProfileManageFacade {
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
-    public readonly isDeleting = signal(false);
     public readonly isSavingProfile = signal(false);
     public readonly profileSavedVersion = signal(0);
-    public readonly isRevokingAiConsent = signal(false);
     public readonly isLinkingGoogle = signal(false);
     public readonly isUnlinkingTelegram = signal(false);
     public readonly telegramUnlinkError = signal<string | null>(null);
@@ -180,81 +174,6 @@ export class ProfileManageFacade {
                     }
                     this.openPasswordSuccessDialog();
                 }
-            });
-    }
-
-    public deleteAccount(): void {
-        if (this.isDeleting() || this.isSavingProfile()) {
-            return;
-        }
-
-        const data: ConfirmDeleteDialogData = {
-            title: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM_TITLE'),
-            message: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM_MESSAGE'),
-            confirmLabel: this.translateService.instant('USER_MANAGE.DELETE_ACCOUNT_CONFIRM'),
-            cancelLabel: this.translateService.instant('COMMON.CANCEL'),
-        };
-
-        this.dialogService
-            .open(ConfirmDeleteDialogComponent, {
-                preset: 'confirm',
-                data,
-            })
-            .afterClosed()
-            .pipe(
-                filter((confirmed): confirmed is true => confirmed === true),
-                filter(() => !this.isDeleting() && !this.isSavingProfile()),
-                tap(() => {
-                    this.isDeleting.set(true);
-                }),
-                switchMap(() =>
-                    this.userService.deleteCurrentUser().pipe(
-                        finalize(() => {
-                            this.isDeleting.set(false);
-                        }),
-                    ),
-                ),
-            )
-            .subscribe({
-                next: success => {
-                    if (!success) {
-                        this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-                        return;
-                    }
-
-                    this.user.set(null);
-                    this.clearGlobalError();
-                    void this.authService.onLogoutAsync(true);
-                },
-                error: () => {
-                    this.setGlobalError('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-                },
-            });
-    }
-
-    public revokeAiConsent(): void {
-        if (this.isRevokingAiConsent()) {
-            return;
-        }
-
-        this.isRevokingAiConsent.set(true);
-        this.userService
-            .revokeAiConsent()
-            .pipe(
-                finalize(() => {
-                    this.isRevokingAiConsent.set(false);
-                }),
-            )
-            .subscribe({
-                next: () => {
-                    const current = this.user();
-                    if (current !== null) {
-                        this.user.set({ ...current, aiConsentAcceptedAt: null });
-                    }
-                },
-                error: () => {
-                    this.setGlobalError('USER_MANAGE.REVOKE_AI_CONSENT_ERROR');
-                },
             });
     }
 

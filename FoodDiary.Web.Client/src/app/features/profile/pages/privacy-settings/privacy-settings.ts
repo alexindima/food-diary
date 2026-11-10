@@ -2,14 +2,17 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiCardComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiCardComponent, FdUiIconComponent, FdUiInlineAlertComponent, FdUiStatusBadgeComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
 import { AiConsentDialogComponent } from '../../../../components/shared/ai-consent-dialog/ai-consent-dialog';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { localizedPublicPath } from '../../../../config/public-site-paths';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
+import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { AccountDeletionOfferComponent } from '../../components/account-deletion-offer/account-deletion-offer';
 import { PrivacyMarketingSettingsComponent } from '../../components/privacy-marketing-settings/privacy-marketing-settings';
 
@@ -20,10 +23,17 @@ import { PrivacyMarketingSettingsComponent } from '../../components/privacy-mark
         TranslatePipe,
         FdUiButtonComponent,
         FdUiCardComponent,
+        FdUiIconComponent,
+        FdUiInlineAlertComponent,
+        FdUiStatusBadgeComponent,
+        FdPageContainerDirective,
+        PageBodyComponent,
+        PageHeaderComponent,
         AccountDeletionOfferComponent,
         PrivacyMarketingSettingsComponent,
     ],
     templateUrl: './privacy-settings.html',
+    styleUrl: './privacy-settings.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacySettingsComponent {

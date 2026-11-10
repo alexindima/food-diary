@@ -370,8 +370,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a92bf6185404471a8ea117965013e265f115beb0295de1001b8c405b8b1c218d",
-          "reviewReason": "Verified the new Identity command and existing controller keep identity resolution and HTTP mapping separate. The architecture suite and focused PostgreSQL, bot and HTTP checks exercised the changed boundaries."
+          "sha256": "e25802c90279aa4813a0b0418b10f62a5d0eaba2af0b2018e9bd6f194ff43090",
+          "reviewReason": "The private settings page reuses the existing Food Diary page shell and UI kit. Profile now links to the existing private route. Consent and account deletion use their existing facades, with no API or authorization contract changes."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -394,10 +394,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "Verified the new Identity command and existing controller keep identity resolution and HTTP mapping separate. The architecture suite and focused PostgreSQL, bot and HTTP checks exercised the changed boundaries.",
+      "reason": "The private settings page reuses the existing Food Diary page shell and UI kit. Profile now links to the existing private route. Consent and account deletion use their existing facades, with no API or authorization contract changes.",
       "baseRef": "HEAD",
-      "gitHead": "f1f0839a8f4327f35cf71dd77429d65c0832dea8",
-      "reviewedAtUtc": "2026-11-09T07:59:22.1602548Z"
+      "gitHead": "c1a949c76361890f74c8e94f5326799f0ef3379f",
+      "reviewedAtUtc": "2026-11-10T04:13:15.4180819Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

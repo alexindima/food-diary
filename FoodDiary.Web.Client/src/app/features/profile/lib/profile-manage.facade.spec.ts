@@ -5,7 +5,6 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
@@ -62,7 +61,6 @@ let facade: ProfileManageFacade;
 let userService: {
     getOverview: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
-    deleteCurrentUser: ReturnType<typeof vi.fn>;
 };
 let notificationService: {
     updateNotificationPreferences: ReturnType<typeof vi.fn>;
@@ -106,7 +104,6 @@ beforeEach(() => {
     userService = {
         getOverview: vi.fn().mockReturnValue(of(overview)),
         update: vi.fn().mockReturnValue(of(user)),
-        deleteCurrentUser: vi.fn().mockReturnValue(of(true)),
     };
     notificationService = {
         updateNotificationPreferences: vi.fn().mockReturnValue(
@@ -382,46 +379,6 @@ describe('ProfileManageFacade password and deletion actions', () => {
             }),
         );
         expect(facade.user()?.hasPassword).toBe(true);
-        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
-    });
-
-    it('logs out after confirmed successful account deletion', () => {
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
-
-        facade.deleteAccount();
-
-        expect(userService.deleteCurrentUser).toHaveBeenCalledTimes(1);
-        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
-        expect(facade.isDeleting()).toBe(false);
-    });
-
-    it('sets global error when account deletion fails', () => {
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
-        userService.deleteCurrentUser.mockReturnValueOnce(throwError(() => new Error('delete failed')));
-
-        facade.deleteAccount();
-
-        expect(facade.globalError()).toBe('USER_MANAGE.DELETE_ACCOUNT_ERROR');
-        expect(facade.isDeleting()).toBe(false);
-    });
-
-    it('does not start account deletion while profile autosave is in flight', () => {
-        facade.isSavingProfile.set(true);
-
-        facade.deleteAccount();
-
-        expect(dialogService.open).not.toHaveBeenCalled();
-        expect(userService.deleteCurrentUser).not.toHaveBeenCalled();
-    });
-
-    it('deletes the account without submitting a profile update', async () => {
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
-
-        facade.deleteAccount();
-        await waitForAsyncTasksAsync();
-
-        expect(userService.deleteCurrentUser).toHaveBeenCalledTimes(1);
-        expect(userService.update).not.toHaveBeenCalled();
         expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
     });
 });

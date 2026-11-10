@@ -5380,7 +5380,9 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.html",
-      "stylePaths": [],
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5391,7 +5393,9 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.html",
-      "stylePaths": [],
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null

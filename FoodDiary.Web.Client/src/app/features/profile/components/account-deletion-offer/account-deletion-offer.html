@@ -1,21 +1,34 @@
 <fd-ui-card>
     <div class="fd-stack fd-gap-sm">
-        <h2>{{ 'PRIVACY_CHOICES.DELETE_OFFER_TITLE' | translate }}</h2>
-        <p>{{ 'PRIVACY_CHOICES.DELETE_OFFER_TEXT' | translate }}</p>
-        @if (deletion.failed()) {
-            <p role="alert">{{ 'USER_MANAGE.DELETE_ACCOUNT_ERROR' | translate }}</p>
+        <h2 class="fd-ui-section-title">{{ 'PRIVACY_CHOICES.DATA_TITLE' | translate }}</h2>
+        <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'PRIVACY_CHOICES.DOWNLOAD_SCOPE' | translate }}</p>
+        @if (privacy.state()?.healthDeclinedAtUtc) {
+            <fd-ui-inline-alert
+                severity="warning"
+                [title]="'PRIVACY_CHOICES.DELETE_OFFER_TITLE' | translate"
+                [message]="'PRIVACY_CHOICES.DELETE_OFFER_TEXT' | translate"
+            />
+        } @else {
+            <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'USER_MANAGE.DELETE_ACCOUNT_HINT' | translate }}</p>
         }
-        <fd-ui-button type="button" variant="secondary" [loading]="privacy.busy()" (click)="privacy.downloadAsync()">{{
-            'PRIVACY_CHOICES.DOWNLOAD' | translate
-        }}</fd-ui-button>
-        <fd-ui-button
-            type="button"
-            variant="danger"
-            [loading]="deletion.busy()"
-            [disabled]="privacy.busy()"
-            [disabledReason]="'DISABLED_HINTS.ACCOUNT_ACTION_BUSY' | translate"
-            (click)="deletion.confirmAsync()"
-            >{{ 'PRIVACY_CHOICES.DELETE_ACCOUNT' | translate }}</fd-ui-button
-        >
+        @if (deletion.failed()) {
+            <fd-ui-inline-alert severity="danger" [message]="'USER_MANAGE.DELETE_ACCOUNT_ERROR' | translate" />
+        }
+        <div class="fd-row fd-wrap fd-gap-sm">
+            <fd-ui-button icon="download" variant="secondary" fill="outline" [loading]="privacy.busy()" (click)="privacy.downloadAsync()">
+                {{ 'PRIVACY_CHOICES.DOWNLOAD' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                icon="delete"
+                variant="danger"
+                fill="outline"
+                [loading]="deletion.busy()"
+                [disabled]="privacy.busy()"
+                [disabledReason]="'DISABLED_HINTS.ACCOUNT_ACTION_BUSY' | translate"
+                (click)="deletion.confirmAsync()"
+            >
+                {{ 'PRIVACY_CHOICES.DELETE_ACCOUNT' | translate }}
+            </fd-ui-button>
+        </div>
     </div>
 </fd-ui-card>

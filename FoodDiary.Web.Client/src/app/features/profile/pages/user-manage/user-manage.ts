@@ -58,7 +58,6 @@ import {
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
-import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card';
 import { UserManageBackupEmailComponent } from '../user-manage-sections/security-card/user-manage-backup-email';
 import { UserManageSecurityCardComponent } from '../user-manage-sections/security-card/user-manage-security-card';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
@@ -87,7 +86,6 @@ const MAX_PROFILE_HEIGHT_CM = 300;
         FdPageContainerDirective,
         UserManageDietologistCardComponent,
         UserManageNotificationsCardComponent,
-        UserManagePrivacyCardComponent,
         UserManageSecurityCardComponent,
         UserManageBackupEmailComponent,
         UserManageComparisonWidgetsComponent,
@@ -153,14 +151,8 @@ export class UserManageComponent {
     protected readonly isSavingDietologistPermissions = this.dietologist.isSavingDietologistPermissions;
     protected readonly isSavingDietologistRelationshipAction = this.dietologist.isSavingDietologistRelationshipAction;
     protected readonly isSavingDietologist = this.dietologist.isSavingDietologist;
-    protected readonly isDeleting = this.facade.isDeleting;
     protected readonly isSavingProfile = this.facade.isSavingProfile;
-    protected readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
     protected readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().includes(true));
-    protected readonly hasAiConsent = computed(() => {
-        const acceptedAt = this.facade.user()?.aiConsentAcceptedAt;
-        return acceptedAt !== null && acceptedAt !== undefined && acceptedAt.length > 0;
-    });
     protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
     protected readonly hasGoogleIdentity = computed(() => this.facade.user()?.hasGoogleIdentity ?? false);
     protected readonly hasTelegramIdentity = computed(() => this.facade.user()?.hasTelegramIdentity ?? false);
@@ -431,14 +423,6 @@ export class UserManageComponent {
         this.facade.linkGoogle(credential);
     }
 
-    protected onRevokeAiConsent(): void {
-        this.facade.revokeAiConsent();
-    }
-
-    protected onDeleteAccount(): void {
-        this.facade.deleteAccount();
-    }
-
     protected inviteDietologist(): void {
         this.dietologist.inviteDietologist();
     }
@@ -621,8 +605,6 @@ export class UserManageComponent {
     private surfaceBusySignals(): boolean[] {
         return [
             this.isSavingProfile(),
-            this.isDeleting(),
-            this.isRevokingAiConsent(),
             this.notifications.isUpdatingNotifications(),
             this.notifications.isSchedulingTestNotification(),
             this.isSavingDietologist(),

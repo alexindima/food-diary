@@ -10,6 +10,7 @@ import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent
     selector: 'fd-privacy-marketing-settings',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent],
     templateUrl: './privacy-marketing-settings.html',
+    styleUrl: './privacy-marketing-settings.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacyMarketingSettingsComponent {

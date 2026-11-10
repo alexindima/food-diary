@@ -133,6 +133,22 @@ it('allows withdrawal of existing marketing consent while the feature is disable
     expect(marketing.decide).toHaveBeenCalledExactlyOnceWith(false);
 });
 
+it('shows the two consent choices independently and keeps data actions available', async () => {
+    await setupAsync();
+    const root = fixture.nativeElement as HTMLElement;
+    const [health, ai] = Array.from(root.querySelectorAll('.privacy-settings__choices fd-ui-card'));
+    expect(health.textContent).toContain('PRIVACY_CHOICES.HEALTH_ALLOWED');
+    expect(ai.textContent).toContain('PRIVACY_CHOICES.AI_OPTIONAL');
+    expect(root.textContent).toContain('PRIVACY_CHOICES.DELETE_ACCOUNT');
+    expect(root.textContent).toContain('PRIVACY_CHOICES.DOWNLOAD');
+
+    state.update(value => ({ ...value, healthAcceptedAtUtc: null, aiAcceptedAtUtc: '2026-11-02T11:00:00Z' }));
+    fixture.detectChanges();
+
+    expect(health.textContent).toContain('PRIVACY_CHOICES.HEALTH_REQUIRED');
+    expect(ai.textContent).toContain('PRIVACY_CHOICES.AI_ALLOWED');
+});
+
 function click(label: string): void {
     const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button'));
     const button = buttons.find(value => value.textContent.includes(label));
