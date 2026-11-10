@@ -1,8 +1,6 @@
 name: External availability
 
 on:
-  schedule:
-    - cron: '3-58/5 * * * *'
   workflow_dispatch:
   pull_request:
     paths:
@@ -29,7 +27,7 @@ jobs:
         run: python3 infra/observability/external_monitor.py
 
   public-probes:
-    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 4
     steps:
