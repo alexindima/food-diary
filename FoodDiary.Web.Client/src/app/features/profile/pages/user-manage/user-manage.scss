@@ -269,66 +269,6 @@
         line-height: 1.35;
     }
 
-    &__privacy-item {
-        &--danger {
-            padding-top: var(--fd-space-xxs);
-        }
-    }
-
-    &__privacy-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    &__privacy-label {
-        font-weight: var(--fd-font-weight-medium);
-        font-size: var(--fd-text-body-sm-size);
-        color: var(--fd-color-text-strong);
-    }
-
-    &__privacy-hint {
-        font-size: var(--fd-text-caption-size);
-        color: var(--fd-color-text-muted);
-        margin-top: var(--fd-space-micro);
-    }
-
-    &__privacy-status {
-        margin-top: var(--fd-space-xxs);
-    }
-
-    &__privacy-badge {
-        --fd-pill-min-height: var(--fd-size-control-xs);
-        --fd-pill-padding-inline: var(--fd-space-xs);
-
-        &--active {
-            --fd-pill-bg: var(--fd-bg-status-success);
-            --fd-pill-border: transparent;
-            --fd-pill-color: var(--fd-color-emerald-300);
-        }
-
-        &--inactive {
-            --fd-pill-bg: var(--fd-bg-status-muted);
-            --fd-pill-border: transparent;
-            --fd-pill-color: var(--fd-color-text-muted);
-        }
-    }
-
-    &__privacy-link {
-        color: var(--fd-color-purple-500);
-        font-size: var(--fd-text-body-sm-size);
-        font-weight: var(--fd-font-weight-medium);
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
-    &__privacy-divider {
-        height: 1px;
-        background: var(--fd-bg-border);
-    }
-
     &__sessions {
         margin-top: var(--fd-space-sm);
     }

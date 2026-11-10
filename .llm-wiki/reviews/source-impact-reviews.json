@@ -370,8 +370,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "902d4159a1b0896950dd26d15467598fdc53ea2861418fcca8ddc5cd23a2d04e",
-          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
+          "sha256": "7ef287d59196d706a3c4221ee9a7511af717debf1be96979fdc0a5dec86cbf34",
+          "reviewReason": "The regenerated architecture-health inventory adds local stylesheet paths to the account deletion offer and privacy marketing settings components. The architecture review workflow and dependency rules still apply as documented."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -394,10 +394,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
-      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
-      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
-      "reviewedAtUtc": "2026-11-09T13:39:31.0963512Z"
+      "reason": "The regenerated architecture-health inventory adds local stylesheet paths to the account deletion offer and privacy marketing settings components. The architecture review workflow and dependency rules still apply as documented.",
+      "baseRef": "HEAD",
+      "gitHead": "1a0c51f33f9a283ef16f7212397bcab8ec989758",
+      "reviewedAtUtc": "2026-11-10T04:33:17.5832087Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

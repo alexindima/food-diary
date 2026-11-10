@@ -102,17 +102,6 @@
                         (dietologistProfileToggle)="onDietologistProfileToggle($event)"
                         (dietologistPermissionChange)="onDietologistPermissionChangeRequest($event)"
                     />
-
-                    <fd-user-manage-privacy-card
-                        profilePrivacy
-                        data-tour-id="user-manage-privacy"
-                        [hasAiConsent]="hasAiConsent()"
-                        [isRevokingAiConsent]="isRevokingAiConsent()"
-                        [isDeleting]="isDeleting()"
-                        [isAccountActionBusy]="isSurfaceBusy()"
-                        (aiConsentRevoke)="onRevokeAiConsent()"
-                        (accountDelete)="onDeleteAccount()"
-                    />
                 </fd-user-manage-comparison-widgets>
             </div>
 

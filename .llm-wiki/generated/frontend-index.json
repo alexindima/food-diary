@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2829,
-    "symbols": 886,
+    "typescriptFiles": 2827,
+    "symbols": 885,
     "routes": 111,
     "features": 46,
-    "specs": 856,
+    "specs": 855,
     "localeFiles": 5,
     "roles": {
-      "Component": 513,
+      "Component": 512,
       "Directive": 20,
       "Facade": 91,
       "Other": 41,
@@ -1198,7 +1198,6 @@
         "UserManageNotificationsCardComponent",
         "UserManageNotificationsFacade",
         "UserManagePasswordMethodComponent",
-        "UserManagePrivacyCardComponent",
         "UserManageSecurityCardComponent",
         "UserManageTelegramConnectionComponent"
       ],
@@ -1220,7 +1219,6 @@
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-permissions/user-manage-dietologist-permissions.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-date.mapper.spec.ts",
@@ -5691,14 +5689,14 @@
       "role": "Component",
       "selector": "fd-account-deletion-offer",
       "path": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "PrivacyMarketingSettingsComponent",
       "role": "Component",
       "selector": "fd-privacy-marketing-settings",
       "path": "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "ChangePasswordDialogComponent",
@@ -5747,14 +5745,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 37
+      "line": 33
     },
     {
       "name": "PrivacySettingsComponent",
       "role": "Component",
       "selector": "fd-privacy-settings",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
-      "line": 29
+      "line": 39
     },
     {
       "name": "UserManageComparisonWidgetsComponent",
@@ -5799,13 +5797,6 @@
       "line": 33
     },
     {
-      "name": "UserManagePrivacyCardComponent",
-      "role": "Component",
-      "selector": "fd-user-manage-privacy-card",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.ts",
-      "line": 15
-    },
-    {
       "name": "UserManageBackupEmailComponent",
       "role": "Component",
       "selector": "fd-user-manage-backup-email",
@@ -5845,7 +5836,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 100
+      "line": 98
     },
     {
       "name": "DietologistPromoComponent",
@@ -8427,8 +8418,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1468,
-      "russianProperties": 1468,
+      "englishProperties": 1480,
+      "russianProperties": 1480,
       "countsMatch": true
     },
     {
