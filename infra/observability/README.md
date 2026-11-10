@@ -214,21 +214,22 @@ checks model matching, unknown models and USD-per-million units independently.
 
 ### Independent availability
 
-`.github/workflows/external-monitoring.yml` runs the same public probes from a
-GitHub-hosted runner on the default branch. It checks the site, admin site,
-Grafana health and the expected unauthorized JSON response on the public API.
+Grafana evaluates the scheduled HTTP and TLS checks from the production VPS.
+`.github/workflows/external-monitoring.yml` validates monitoring changes in pull
+requests, including a probe run from a GitHub-hosted runner without notifications.
+Operators can also run the same probes manually on the default branch. They check
+the site, admin site, Grafana health and the expected unauthorized JSON response
+on the public API.
 Public readiness stays private at ingress. This verifies API transport/auth
 response handling; PostgreSQL readiness is covered by the internal probes.
-No test account or user data is required. State is cached between serialized
-runs, with notification after two consecutive failures and measured recovery.
+No test account or user data is required. Manual runs cache state between runs
+and notify after two consecutive failures and on measured recovery.
 TLS expiry below 14 days is actionable immediately. Existing GitHub Telegram
 secrets supply the receiver; successful checks send no routine messages.
 
-The five-minute GitHub schedule is best-effort: scheduler delays or dropped runs
-can extend detection time. Cache loss restarts the two-observation grace period.
-The workflow remains independent of the VPS and can report a complete VPS outage.
-The VPS dashboard shows its own additional probe measurements, not the remote
-runner's results. Remote observations are retained as GitHub artifacts for seven
+Cache loss restarts the two-observation grace period. Continuous monitoring of
+a complete VPS outage is deferred. The VPS dashboard displays measurements from
+its own probes. Manual observations are retained as GitHub artifacts for seven
 days. This public repository uses standard public-repository hosted runners.
 
 ### Validate, install and recover
