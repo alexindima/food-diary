@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Service, signal } from '@angular/core';
 
-import { isPublicMarketingPath } from '../../config/public-site-paths';
+import { usesPublicSiteChrome } from '../../config/public-site-paths';
 import {
     APP_THEMES,
     type AppSurfaceStyleName,
@@ -53,8 +53,8 @@ export class ThemeService {
         this.applyThemeForRoute(this.browserWindow.getPathname() ?? '/');
     }
 
-    public applyThemeForRoute(pathname: string): void {
-        if (this.isPublicRoute(pathname)) {
+    public applyThemeForRoute(pathname: string, isAuthenticated = false): void {
+        if (usesPublicSiteChrome(pathname, isAuthenticated)) {
             this.applyDefaultPublicTheme();
             return;
         }
@@ -88,7 +88,7 @@ export class ThemeService {
         const resolvedSurface = isAppSurfaceStyleName(surfaceStyle) ? surfaceStyle : DEFAULT_APP_SURFACE_STYLE;
         this.storage.setItem('local', this.surfaceStyleStorageKey, resolvedSurface);
 
-        if (this.isPublicRoute(this.browserWindow.getPathname() ?? '/')) {
+        if (usesPublicSiteChrome(this.browserWindow.getPathname() ?? '/', true)) {
             this.persistThemePreference(resolvedTheme);
             this.persistUiStylePreference(resolvedUiStyle);
             return;
@@ -179,10 +179,6 @@ export class ThemeService {
 
     private resolveUiStyle(uiStyle: string | null | undefined): AppUiStyleName {
         return isAppUiStyleName(uiStyle) ? uiStyle : DEFAULT_APP_UI_STYLE;
-    }
-
-    private isPublicRoute(pathname: string): boolean {
-        return isPublicMarketingPath(pathname);
     }
 
     private updateBrowserThemeColor(color: string): void {

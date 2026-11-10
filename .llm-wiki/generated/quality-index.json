@@ -10946,11 +10946,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/config/public-site-paths.ts",
-      "nonBlankLines": 37,
-      "decisionPoints": 1,
+      "nonBlankLines": 42,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
+      "structuralRiskScore": 5.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/config/runtime-ui.tokens.ts",
@@ -20234,11 +20234,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/public-site-locale.guard.ts",
-      "nonBlankLines": 17,
-      "decisionPoints": 2,
+      "nonBlankLines": 20,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.34
+      "structuralRiskScore": 6.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/russian-plural.utils.ts",
@@ -21298,11 +21298,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/theme/theme.service.ts",
-      "nonBlankLines": 157,
+      "nonBlankLines": 154,
       "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.14
+      "structuralRiskScore": 39.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/tours/localized-tour-definition.service.ts",
@@ -21394,11 +21394,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "nonBlankLines": 264,
-      "decisionPoints": 19,
+      "nonBlankLines": 271,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.78
+      "structuralRiskScore": 36.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/admin-panel-launcher.service.ts",

@@ -223,13 +223,13 @@ const configuredRoutes: Routes = [
         path: 'privacy-policy',
         canActivate: [publicSiteLocaleGuard],
         loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
-        data: { shell: 'public', seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
+        data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },
     {
         path: 'ru/privacy-policy',
         canActivate: [publicSiteLocaleGuard],
         loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
-        data: { shell: 'public', seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
+        data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },
     {
         path: '**',

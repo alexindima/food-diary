@@ -2,7 +2,7 @@
 
 .privacy-policy {
     min-height: 100dvh;
-    background: var(--fd-bg-surface-inset);
+    background: var(--fd-bg-page);
     padding: var(--fd-space-xxl) var(--fd-space-lg) calc(var(--fd-space-xxl) + var(--fd-space-xxl));
 
     &__container {
@@ -15,12 +15,12 @@
     }
 
     &__title {
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
         margin: 0 0 var(--fd-space-lg);
     }
 
     &__content {
-        color: var(--fd-color-slate-700);
+        color: var(--fd-color-text);
         font-size: var(--fd-text-body-sm-size);
         line-height: 1.7;
         font-weight: var(--fd-text-body-sm-weight);
@@ -30,7 +30,7 @@
         font-size: var(--fd-text-section-title-size);
         line-height: var(--fd-text-section-title-line-height);
         font-weight: var(--fd-text-section-title-weight);
-        color: var(--fd-color-slate-800);
+        color: var(--fd-color-text-strong);
         margin: var(--fd-space-xl) 0 var(--fd-space-sm);
     }
 
