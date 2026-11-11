@@ -863,14 +863,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "6fe6e14a36a6ce5b75713ab4b8716bf2ebd166553eb4c22e5a745bd32b5f8d0d",
-          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
+          "sha256": "897d567cf80281349ca371e9ecca76ee32fd712235cbd5d330bdc90611b46f27",
+          "reviewReason": "Verified the new bounded administrative SSO confirmation invariant and the relocated source anchors in UserRefreshTokenSession. The domain index generation and review workflow still applies."
         }
       ],
-      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
-      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
-      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
-      "reviewedAtUtc": "2026-11-09T13:39:31.4568391Z"
+      "reason": "Verified the new bounded administrative SSO confirmation invariant and the relocated source anchors in UserRefreshTokenSession. The domain index generation and review workflow still applies.",
+      "baseRef": "c1f0d19cbbc3ab91bb77e418415977d577911122",
+      "gitHead": "4cb9deba0060275e080ff5288dfddeb9b837e37c",
+      "reviewedAtUtc": "2026-11-11T04:57:56.8858307Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1509,14 +1509,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5c751788972cd935d4a93da1ecd12471fe28c0aa6cb307659936cc2776f9d18f",
-          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
+          "sha256": "0ea6e4637c2f50a2beca046768800f998f0434de87d33a5f10292366150ce81c",
+          "reviewReason": "Verified that only topology freshness metadata changes. The source set includes the new Identity session service and authorization handler, while the runtime topology and its review workflow are unchanged."
         }
       ],
-      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
-      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
-      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
-      "reviewedAtUtc": "2026-11-09T13:39:32.8659730Z"
+      "reason": "Verified that only topology freshness metadata changes. The source set includes the new Identity session service and authorization handler, while the runtime topology and its review workflow are unchanged.",
+      "baseRef": "c1f0d19cbbc3ab91bb77e418415977d577911122",
+      "gitHead": "4cb9deba0060275e080ff5288dfddeb9b837e37c",
+      "reviewedAtUtc": "2026-11-11T04:57:58.0397169Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1891,8 +1891,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "16a17b4f0fca8ef72cfaeac0b03a66fa1a434427e0ce0c0ee61028e0427f0b21",
-          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
+          "sha256": "8f8da35de5559f915147356273ef5d5d1bcaa25b776ea106d573168feb81abef",
+          "reviewReason": "Verified the catalog changes shift controller line anchors for existing authentication and password routes. Route strings and verbs, and the query-context lookup workflow, are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
@@ -1920,10 +1920,10 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
-      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
-      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
-      "reviewedAtUtc": "2026-11-09T13:39:32.2953591Z"
+      "reason": "Verified the catalog changes shift controller line anchors for existing authentication and password routes. Route strings and verbs, and the query-context lookup workflow, are unchanged.",
+      "baseRef": "c1f0d19cbbc3ab91bb77e418415977d577911122",
+      "gitHead": "4cb9deba0060275e080ff5288dfddeb9b837e37c",
+      "reviewedAtUtc": "2026-11-11T04:57:57.5482089Z"
     },
     {
       "pageId": "workflow.review-diff",
