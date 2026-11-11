@@ -5,12 +5,15 @@ using System.Text.Json;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +32,10 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationFactory factory) : IClassFixture<PostgresApiWebApplicationFactory> {
     [RequiresDockerTheory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task ExistingEmail_CombinesBothDiariesAndKeepsTheSelectedGoals(bool useTelegramGoals) {
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public async Task ExistingEmail_CombinesOnlyEligibleDiaries(bool useTelegramGoals, bool targetIsAdmin) {
         const string password = "Password123!";
         const string botSecret = "telegram-transfer-integration-secret";
         await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, configuration) =>
@@ -85,6 +89,10 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             (await db.Users.SingleAsync(item => item.Id == targetId)).UpdateGoals(dailyCalorieTarget: 2300);
             db.AddRange(product, recipe, sourceMeal, targetMeal);
             await db.SaveChangesAsync();
+            if (targetIsAdmin) {
+                IUserRoleMembershipService roles = scope.ServiceProvider.GetRequiredService<IUserRoleMembershipService>();
+                await roles.EnsureRoleAsync(targetId, RoleNames.Admin);
+            }
         }
 
         using HttpResponseMessage request = await source.PostAsJsonAsync("/api/v1/auth/telegram/backup-email",
@@ -111,6 +119,35 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         otherBrowser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", targetAccess);
         using HttpResponseMessage unbound = await otherBrowser.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
         Assert.Equal(HttpStatusCode.Conflict, unbound.StatusCode);
+
+        if (targetIsAdmin) {
+            await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
+                FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+                DateTime staleAuthentication = DateTime.UtcNow.AddMinutes(-16);
+                int aged = await db.Set<UserRefreshTokenSession>()
+                    .Where(session => session.UserId == targetId && session.AuthProvider == "password")
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.CreatedAtUtc, staleAuthentication));
+                Assert.Equal(1, aged);
+            }
+            using HttpResponseMessage expiredConfirmation = await source.PostAsJsonAsync(transferRoute, new { ticket });
+            await AssertConfirmationRequiredAsync(expiredConfirmation);
+            using HttpResponseMessage restored = await source.PostAsJsonAsync("/api/v1/auth/refresh", new { });
+            restored.EnsureSuccessStatusCode();
+            JsonElement refreshed = await restored.Content.ReadFromJsonAsync<JsonElement>();
+            source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshed.GetProperty("accessToken").GetString());
+            using HttpResponseMessage stillStale = await source.PostAsJsonAsync(transferRoute, new { ticket });
+            await AssertConfirmationRequiredAsync(stillStale);
+
+            using HttpResponseMessage wrongConfirmation = await source.PostAsJsonAsync("/api/v1/auth/login",
+                new { email, password, ExpectedUserId = sourceId.Value });
+            Assert.Equal(HttpStatusCode.Forbidden, wrongConfirmation.StatusCode);
+            Assert.False(wrongConfirmation.Headers.Contains("Set-Cookie"));
+            using HttpResponseMessage confirmedLogin = await source.PostAsJsonAsync("/api/v1/auth/login",
+                new { email, password, ExpectedUserId = targetId.Value });
+            confirmedLogin.EnsureSuccessStatusCode();
+            JsonElement confirmedSession = await confirmedLogin.Content.ReadFromJsonAsync<JsonElement>();
+            source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", confirmedSession.GetProperty("accessToken").GetString());
+        }
 
         using HttpResponseMessage previewResponse = await source.PostAsJsonAsync(transferRoute, new { ticket });
         Assert.True(previewResponse.IsSuccessStatusCode, await previewResponse.Content.ReadAsStringAsync());
@@ -159,6 +196,16 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         }
 
         source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", botSession.GetProperty("accessToken").GetString());
+        if (targetIsAdmin) {
+            using HttpResponseMessage diary = await source.GetAsync("/api/v1/users/info");
+            diary.EnsureSuccessStatusCode();
+            using HttpResponseMessage admin = await source.GetAsync("/api/v1/admin/users");
+            await AssertConfirmationRequiredAsync(admin);
+            using HttpResponseMessage adminSso = await source.PostAsync("/api/v1/auth/admin-sso/start", content: null);
+            await AssertConfirmationRequiredAsync(adminSso);
+            using HttpResponseMessage setPassword = await source.PatchAsJsonAsync("/api/v1/users/password/set", new { NewPassword = password });
+            await AssertConfirmationRequiredAsync(setPassword);
+        }
         using HttpResponseMessage unlinked = await source.PostAsJsonAsync("/api/v1/auth/telegram/unlink", new { InitData = CreateInitData(telegramId) });
         Assert.Equal(HttpStatusCode.NoContent, unlinked.StatusCode);
 
@@ -189,6 +236,12 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             () => Assert.True(eligibility.GetProperty("premiumTrialUsed").GetBoolean()),
             () => Assert.False(eligibility.GetProperty("premiumTrialActive").GetBoolean()),
             () => Assert.Equal(JsonValueKind.Null, eligibility.GetProperty("premiumTrialStartUtc").ValueKind));
+    }
+
+    private static async Task AssertConfirmationRequiredAsync(HttpResponseMessage response) {
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        JsonElement error = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Authentication.ReauthenticationRequired", error.GetProperty("error").GetString());
     }
 
     [RequiresDockerFact]

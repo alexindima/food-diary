@@ -1,10 +1,12 @@
 import { inject, Service } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
 import { environment } from '../../../environments/environment';
 import { ADMIN_LOADING_URL_TTL_MS } from '../../config/runtime-ui.tokens';
 import { AuthService } from '../../services/auth.service';
+import { getRecordProperty, getStringProperty } from '../../shared/lib/unknown-value.utils';
 import { BrowserWindowService } from '../../shared/platform/browser-window.service';
 
 @Service()
@@ -14,6 +16,7 @@ export class AdminPanelLauncherService {
     private readonly toastService = inject(FdUiToastService);
     private readonly translateService = inject(TranslateService);
     private readonly loadingUrlTtlMs = inject(ADMIN_LOADING_URL_TTL_MS);
+    private readonly router = inject(Router);
 
     public open(isAdmin: boolean): void {
         const adminAppUrl = environment.adminAppUrl;
@@ -33,8 +36,12 @@ export class AdminPanelLauncherService {
                 url.hash = new URLSearchParams({ code: response.code }).toString();
                 adminWindow?.location.assign(url.toString());
             },
-            error: () => {
+            error: (error: unknown) => {
                 adminWindow?.close();
+                if (getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.ReauthenticationRequired') {
+                    void this.router.navigate(['/auth/confirm-admin']);
+                    return;
+                }
                 this.toastService.error(this.translateService.instant('USER_MANAGE.ADMIN_SSO_ERROR'));
             },
         });

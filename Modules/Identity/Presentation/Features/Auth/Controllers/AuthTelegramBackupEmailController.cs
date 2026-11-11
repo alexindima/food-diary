@@ -55,6 +55,7 @@ public sealed class AuthTelegramBackupEmailController(ISender mediator, Telegram
     [HttpPost("diary-transfer")]
     [ProducesResponseType<TelegramDiaryTransferHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
-    public Task<IActionResult> TransferDiary([FromCurrentUser] Guid userId, [FromBody] TransferTelegramDiaryHttpRequest request) =>
-        HandleOk(request.ToDiaryTransferCommand(userId, bindings.Read(HttpContext)), static result => result.ToDiaryTransferResponse());
+    public Task<IActionResult> TransferDiary([FromCurrentUser] Guid userId, [FromBody] TransferTelegramDiaryHttpRequest request,
+        [FromCurrentRefreshSession] Guid sessionId) =>
+        HandleOk(request.ToDiaryTransferCommand(userId, bindings.Read(HttpContext), sessionId), static result => result.ToDiaryTransferResponse());
 }

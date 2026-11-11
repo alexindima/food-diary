@@ -5,5 +5,6 @@ namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 
 public sealed record GoogleLoginHttpRequest(
     [Required, MaxLength(IdentityInputLimits.MaximumGoogleCredentialLength)] string Credential,
-    bool RememberMe = false
+    bool RememberMe = false,
+    Guid? ExpectedUserId = null
 );

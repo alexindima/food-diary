@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4841,
-    "symbols": 4778,
+    "sourceFiles": 4843,
+    "symbols": 4781,
     "interfaceImplementationLinks": 216,
-    "dependencyInjectionRegistrations": 75,
+    "dependencyInjectionRegistrations": 76,
     "kinds": {
-      "class": 2466,
+      "class": 2468,
       "enum": 76,
       "interface": 434,
-      "record": 1658,
+      "record": 1659,
       "record struct": 144
     },
     "roles": {
@@ -27,12 +27,12 @@
       "Entity": 108,
       "Event": 20,
       "Factory": 15,
-      "Handler": 10,
+      "Handler": 11,
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1976,
+      "Other": 1977,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -40,7 +40,7 @@
       "Repository": 106,
       "Request": 187,
       "Response": 283,
-      "Service": 177,
+      "Service": 178,
       "Validator": 238,
       "ValueObject": 183,
       "WriteRepository": 47
@@ -2523,7 +2523,7 @@
       "kind": "class",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ApiCompositionConstants",
@@ -16411,7 +16411,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "AdminSsoExchangeCommandValidator",
@@ -16432,7 +16432,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "AdminSsoStartCommandValidator",
@@ -16628,7 +16628,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "GoogleLoginCommandValidator",
@@ -17048,7 +17048,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommandHandler.cs",
-      "line": 9
+      "line": 13
     },
     {
       "name": "UnlinkTelegramCommand",
@@ -17287,6 +17287,13 @@
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
       "line": 6
+    },
+    {
+      "name": "PrivilegedSessionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/PrivilegedSessionService.cs",
+      "line": 7
     },
     {
       "name": "TelegramAuthenticationIntentService",
@@ -17965,7 +17972,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "AuthRequestLimits",
@@ -18386,6 +18393,20 @@
       "role": "Options",
       "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
       "line": 2
+    },
+    {
+      "name": "AdminSessionAuthorizationHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "Modules/Identity/Presentation/Security/AdminSessionAuthorizationHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "CredentialChangeRequirement",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/AdminSessionAuthorizationHandler.cs",
+      "line": 14
     },
     {
       "name": "BrowserSessionAuthenticationHandler",
@@ -28885,7 +28906,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UsersPasswordController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "WaistGoalsController",
@@ -35252,14 +35273,21 @@
       "implementation": "EmailSender",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 21
+    },
+    {
+      "service": "IAuthorizationHandler",
+      "implementation": "AdminSessionAuthorizationHandler",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
+      "line": 18
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 19
+      "line": 24
     },
     {
       "service": "IImageAssetAccessService",

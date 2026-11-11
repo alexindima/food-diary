@@ -42,7 +42,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
 
             const status = error instanceof HttpErrorResponse ? error.status : undefined;
 
-            if (status === HttpStatusCode.Unauthorized) {
+            if (status === HttpStatusCode.Unauthorized || adminApiErrorCode(error) === 'Authentication.ReauthenticationRequired') {
                 auth.invalidateSession();
                 localStorageRef?.removeItem('authToken');
                 localStorageRef?.removeItem('refreshToken');
@@ -52,9 +52,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason: 'unauthenticated', returnUrl },
                 });
-            }
-
-            if (isAccessDenied(error)) {
+            } else if (isAccessDenied(error)) {
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason: 'forbidden', returnUrl: router.url },
                 });

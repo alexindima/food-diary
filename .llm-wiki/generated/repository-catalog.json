@@ -16833,22 +16833,22 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/refresh",
-            "line": 74
+            "line": 75
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/restore",
-            "line": 83
+            "line": 84
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email",
-            "line": 94
+            "line": 95
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email/resend",
-            "line": 106
+            "line": 107
           }
         ]
       },
@@ -17804,12 +17804,12 @@
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/users/password",
-            "line": 18
+            "line": 19
           },
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/users/password/set",
-            "line": 28
+            "line": 29
           }
         ]
       },

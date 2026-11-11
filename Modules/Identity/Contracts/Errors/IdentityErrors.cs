@@ -4,6 +4,16 @@ using System.Globalization;
 namespace FoodDiary.Modules.Identity.Contracts.Errors;
 
 public static class IdentityErrors {
+    public static Error ReauthenticationRequired => new(
+        "Authentication.ReauthenticationRequired",
+        "Confirm this account with its password or Google sign-in to continue.",
+        Kind: ErrorKind.Forbidden);
+
+    public static Error ReauthenticationAccountMismatch => new(
+        "Authentication.ReauthenticationAccountMismatch",
+        "Sign in to the account that requested confirmation.",
+        Kind: ErrorKind.Forbidden);
+
     public static Error PasswordLoginThrottled(int retryAfterSeconds) => new(
         "RateLimit.Exceeded",
         "Too many requests. Try again later.",

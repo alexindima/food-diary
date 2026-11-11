@@ -176,6 +176,9 @@ public sealed class AuthenticationTokenService(
             clientContext?.UserAgent,
             nowUtc,
             expiresAtUtc);
+        if (clientContext is { CredentialKind: AuthenticationCredentialKind.AdminBrowser, AdminAccessConfirmed: true }) {
+            session.GrantAdminAccess(expiresAtUtc);
+        }
         if (browserSecurityVersion is { } version) {
             session.ConvertToBrowserSession(hashedRefreshToken, version, nowUtc,
                 allowRenewal: clientContext?.CredentialKind == AuthenticationCredentialKind.Browser);

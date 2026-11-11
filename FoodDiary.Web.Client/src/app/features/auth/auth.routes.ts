@@ -1,8 +1,15 @@
 import type { Routes } from '@angular/router';
 
+import { authGuard } from '../../guards/auth.guard';
 import { requiredPasswordChangeGuard } from './guards/required-password-change.guard';
 
 export const authRoutes: Routes = [
+    {
+        path: 'auth/confirm-admin',
+        canActivate: [authGuard],
+        loadComponent: async () => import('./pages/admin-confirmation/admin-confirmation').then(m => m.AdminConfirmationComponent),
+        data: { shell: 'public', requiresSession: true, seo: { titleKey: 'AUTH.CONFIRM.TITLE', noIndex: true } },
+    },
     {
         path: 'auth/telegram',
         loadComponent: async () => import('./pages/telegram-auth/telegram-auth').then(m => m.TelegramAuthComponent),

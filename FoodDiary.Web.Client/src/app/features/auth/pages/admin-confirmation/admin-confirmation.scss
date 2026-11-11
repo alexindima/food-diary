@@ -1,0 +1,9 @@
+@use '../auth-page';
+
+.admin-confirmation {
+    @include auth-page.shell;
+}
+
+.admin-confirmation__card {
+    @include auth-page.card(32.5rem);
+}

@@ -2091,7 +2091,7 @@
         "entity:User"
       ],
       "reason": "Locks both Users rows in stable ID order, checks the browser-bound account proofs and coordinates source-filtered owner transfers in the caller transaction. The intermediate unit-of-work save releases the source identity keys before linking the target. No independent commit.",
-      "technicalSourceSha256": "52203270b8b25a63822db53c2bf2a279202a24d410b1852f2d25c476a5bc7345"
+      "technicalSourceSha256": "21ae59febd5b8dbe20b4ace931b1a7ab34b482e6f3d260d97cb6f70e5ff5efa7"
     }
   }
 }

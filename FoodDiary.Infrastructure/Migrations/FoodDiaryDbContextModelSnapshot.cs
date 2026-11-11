@@ -2550,6 +2550,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("AdminAccessExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("AuthProvider")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");

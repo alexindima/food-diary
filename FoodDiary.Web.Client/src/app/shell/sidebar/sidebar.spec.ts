@@ -204,6 +204,25 @@ describe('SidebarComponent admin behavior', () => {
         expect(adminWindow.close).toHaveBeenCalledOnce();
         expect(toastService.error).toHaveBeenCalledWith('USER_MANAGE.ADMIN_SSO_ERROR');
     });
+
+    it('prompts for confirmation in the current tab when admin SSO needs a fresh sign-in', () => {
+        const { authService, component, router, toastService } = createComponent();
+        const harness = component as unknown as SidebarHarness;
+        const adminWindow = createAdminWindowMock();
+        authService.isAdmin.set(true);
+        authService.startAdminSso.mockReturnValueOnce(
+            new Observable(subscriber => {
+                subscriber.error({ error: { error: 'Authentication.ReauthenticationRequired' } });
+            }),
+        );
+        mockAdminWindow(adminWindow);
+
+        harness.openAdminPanel();
+
+        expect(adminWindow.close).toHaveBeenCalledOnce();
+        expect(router.navigate).toHaveBeenCalledWith(['/auth/confirm-admin']);
+        expect(toastService.error).not.toHaveBeenCalled();
+    });
 });
 
 function setupSidebarTestEnvironment(): void {
@@ -242,14 +261,14 @@ function createComponent(options: SidebarViewportOptions = {}): {
     authService: ReturnType<typeof createAuthServiceMock>;
     component: SidebarComponent;
     dialogService: { open: ReturnType<typeof vi.fn> };
-    router: { events: Subject<unknown>; url: string };
+    router: { events: Subject<unknown>; url: string; navigate: ReturnType<typeof vi.fn> };
     routerEvents: Subject<unknown>;
     toastService: { error: ReturnType<typeof vi.fn> };
     unsavedHandler: { discard: ReturnType<typeof vi.fn>; hasChanges: ReturnType<typeof vi.fn>; save: ReturnType<typeof vi.fn> };
 } {
     configureSidebarViewport(options);
     const routerEvents = new Subject<unknown>();
-    const router = { events: routerEvents, url: '/' };
+    const router = { events: routerEvents, url: '/', navigate: vi.fn().mockResolvedValue(true) };
     const authService = createAuthServiceMock();
     const dialogService = createDialogServiceMock();
     const toastService = { error: vi.fn() };

@@ -10,10 +10,18 @@
             </fd-ui-button>
         }
         @case ('sign-in') {
-            <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.SIGN_IN_HINT' | translate }}</p>
+            <p class="fd-ui-body-sm" [attr.role]="needsConfirmation() ? 'alert' : null">
+                {{ (needsConfirmation() ? 'AUTH.CONFIRM.MERGE_HINT' : 'AUTH.TELEGRAM_DIARY.SIGN_IN_HINT') | translate }}
+            </p>
             <p role="status" [hidden]="!busy()">{{ 'COMMON.LOADING' | translate }}</p>
             <div [hidden]="busy()">
-                <fd-auth [useRouting]="false" [inlineSignIn]="true" [hideTelegram]="true" (signedIn)="loadPreview()" />
+                <fd-auth
+                    [useRouting]="false"
+                    [inlineSignIn]="true"
+                    [hideTelegram]="true"
+                    [confirmationUserId]="confirmationUserId()"
+                    (signedIn)="loadPreview()"
+                />
             </div>
             <div [hidden]="!canRetryPreview()">
                 <fd-ui-button variant="secondary" [fullWidth]="true" (click)="loadPreview()">{{
@@ -50,10 +58,8 @@
             <fd-ui-button [fullWidth]="true" (click)="continueToSignIn()">{{ 'AUTH.VERIFY.BACK_TO_LOGIN' | translate }}</fd-ui-button>
         }
     }
-    <p role="alert" class="fd-ui-body-sm" [hidden]="error() === null">{{ error() ?? '' | translate }}</p>
-    <div [hidden]="step() === 'done'">
-        <fd-ui-button variant="secondary" [fullWidth]="true" [loading]="busy()" (click)="keepSeparate.emit()">
-            {{ 'AUTH.TELEGRAM_DIARY.KEEP_SEPARATE' | translate }}
-        </fd-ui-button>
-    </div>
+    <p role="alert" class="fd-ui-body-sm" [hidden]="error() === null || needsConfirmation()">{{ error() ?? '' | translate }}</p>
+    <fd-ui-button variant="secondary" [fullWidth]="true" [loading]="busy()" [hidden]="step() === 'done'" (click)="keepSeparate.emit()">
+        {{ 'AUTH.TELEGRAM_DIARY.KEEP_SEPARATE' | translate }}
+    </fd-ui-button>
 </div>

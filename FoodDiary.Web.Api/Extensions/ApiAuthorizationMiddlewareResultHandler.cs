@@ -3,6 +3,7 @@ using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
+using FoodDiary.Modules.Identity.Contracts.Errors;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -20,11 +21,13 @@ public sealed class ApiAuthorizationMiddlewareResultHandler : IAuthorizationMidd
 
         if (authorizeResult.Forbidden) {
             await context.ForbidAsync();
+            bool confirmationRequired = authorizeResult.AuthorizationFailure?.FailureReasons
+                .Any(reason => string.Equals(reason.Message, IdentityErrors.ReauthenticationRequired.Code, StringComparison.Ordinal)) == true;
             await WriteErrorAsync(
                 context,
                 StatusCodes.Status403Forbidden,
-                "Authentication.Forbidden",
-                "You do not have permission to access this resource.",
+                confirmationRequired ? IdentityErrors.ReauthenticationRequired.Code : "Authentication.Forbidden",
+                confirmationRequired ? IdentityErrors.ReauthenticationRequired.Message : "You do not have permission to access this resource.",
                 context.RequestAborted);
             return;
         }

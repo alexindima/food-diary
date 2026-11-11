@@ -49,9 +49,14 @@ internal sealed class UserTelegramDiaryTransfer(
             !string.Equals(target.Email, proof.VerifiedEmail, StringComparison.Ordinal)) {
             return Failure("Authentication.TelegramDiaryProofExpired", "Start a new diary transfer.");
         }
+        bool confirmedAdmin = proof.AdminTargetConfirmed && target.HasRole(RoleNames.Admin) &&
+            !target.HasRole(RoleNames.Support) && !target.HasRole(RoleNames.Dietologist);
+        if (IsPrivileged(source) || (IsPrivileged(target) && !confirmedAdmin)) {
+            return Failure("User.TelegramDiaryRestrictedAccount", "Automatic diary transfer is unavailable for accounts with privileged roles.");
+        }
+
         if (source.TelegramUserId is not { } telegramId || source.Email is not null || source.HasPassword ||
-            source.GoogleSubject is not null || target.TelegramUserId.HasValue || target.MustChangePassword ||
-            IsPrivileged(source) || IsPrivileged(target) || source.HasRole(RoleNames.Premium) ||
+            source.GoogleSubject is not null || target.TelegramUserId.HasValue || target.MustChangePassword || source.HasRole(RoleNames.Premium) ||
             source.ManualPremiumEndsAtUtc.HasValue || source.PremiumAccessEndsAtUtc.HasValue) {
             return Failure("User.TelegramDiaryTransferUnavailable", "These accounts cannot be combined.");
         }

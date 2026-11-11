@@ -10,5 +10,6 @@
 
 export interface GoogleLoginHttpRequest {
     credential?: string;
+    expectedUserId?: string | null;
     rememberMe?: boolean;
 }

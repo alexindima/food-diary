@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2827,
-    "symbols": 885,
-    "routes": 111,
+    "typescriptFiles": 2828,
+    "symbols": 886,
+    "routes": 112,
     "features": 46,
     "specs": 855,
     "localeFiles": 5,
     "roles": {
-      "Component": 512,
+      "Component": 513,
       "Directive": 20,
       "Facade": 91,
       "Other": 41,
@@ -446,6 +446,7 @@
       "name": "auth",
       "root": "FoodDiary.Web.Client/src/app/features/auth",
       "symbols": [
+        "AdminConfirmationComponent",
         "AuthComponent",
         "AuthDialogComponent",
         "AuthFlowFacade",
@@ -469,6 +470,7 @@
         "TelegramEntryButtonComponent"
       ],
       "routes": [
+        "auth/confirm-admin",
         "auth/telegram",
         "auth/telegram/callback",
         "change-password-required",
@@ -3806,7 +3808,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 59
+      "line": 61
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -3837,6 +3839,13 @@
       "line": 16
     },
     {
+      "name": "AdminConfirmationComponent",
+      "role": "Component",
+      "selector": "fd-admin-confirmation",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.ts",
+      "line": 22
+    },
+    {
       "name": "EmailVerificationPendingComponent",
       "role": "Component",
       "selector": "fd-email-verification-pending",
@@ -3855,7 +3864,7 @@
       "role": "Component",
       "selector": "fd-telegram-diary-transfer",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
-      "line": 39
+      "line": 44
     },
     {
       "name": "MobileLoginComponent",
@@ -7320,35 +7329,35 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RegisterRequest",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
-      "line": 16
+      "line": 19
     },
     {
       "name": "RestoreAccountRequest",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
-      "line": 30
+      "line": 33
     },
     {
       "name": "PasswordResetRequest",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
-      "line": 40
+      "line": 43
     },
     {
       "name": "ConfirmPasswordResetRequest",
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
-      "line": 50
+      "line": 53
     },
     {
       "name": "BrowserSessionStateService",
@@ -7803,7 +7812,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/admin-panel-launcher.service.ts",
-      "line": 11
+      "line": 13
     },
     {
       "name": "SidebarDesktopComponent",
@@ -8195,44 +8204,49 @@
       "line": 235
     },
     {
+      "path": "auth/confirm-admin",
+      "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
+      "line": 8
+    },
+    {
       "path": "auth/telegram",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 7
+      "line": 14
     },
     {
       "path": "auth/telegram/callback",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 12
+      "line": 19
     },
     {
       "path": "mobile",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 17
+      "line": 24
     },
     {
       "path": "mobile/login",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 22
+      "line": 29
     },
     {
       "path": "verify-pending",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 27
+      "line": 34
     },
     {
       "path": "verify-email",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 33
+      "line": 40
     },
     {
       "path": "change-password-required",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 38
+      "line": 45
     },
     {
       "path": "reset-password",
       "source": "FoodDiary.Web.Client/src/app/features/auth/auth.routes.ts",
-      "line": 45
+      "line": 52
     },
     {
       "path": "",
@@ -8418,8 +8432,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1480,
-      "russianProperties": 1480,
+      "englishProperties": 1488,
+      "russianProperties": 1488,
       "countsMatch": true
     },
     {

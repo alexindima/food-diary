@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1426,
     "ambiguousContracts": 34,
-    "consumerEdges": 11584,
-    "productionConsumerEdges": 6451,
-    "testConsumerEdges": 5133,
+    "consumerEdges": 11590,
+    "productionConsumerEdges": 6453,
+    "testConsumerEdges": 5137,
     "consumedContracts": 1426,
     "unconsumedContracts": 0
   },
@@ -60853,6 +60853,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/GoogleLoginHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GoogleLoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/GoogleLoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -89256,6 +89269,19 @@
         "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IGoogleTokenValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -116869,9 +116895,35 @@
         "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Services/PrivilegedSessionService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRefreshTokenSessionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IRefreshTokenSessionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.AdminSso.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IRefreshTokenSessionReadRepository",
@@ -133795,6 +133847,19 @@
         "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAuthenticationIdentityService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -141194,7 +141259,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserRoleMembershipService",
@@ -141206,6 +141271,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/ImpersonationRevocationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserRoleMembershipService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserRoleMembershipService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TelegramRegistrationPostgresTests.cs",
       "isTest": true,
       "referenceCount": 2
     },

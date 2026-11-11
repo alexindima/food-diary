@@ -86,14 +86,16 @@ public static class AuthHttpMappings {
             return new LoginCommand(
                 Email: request.Email,
                 Password: request.Password,
-                RememberMe: request.RememberMe);
+                RememberMe: request.RememberMe,
+                ExpectedUserId: request.ExpectedUserId);
         }
         public LoginCommand ToCommand(HttpContext httpContext) {
             return new LoginCommand(
                 Email: request.Email,
                 Password: request.Password,
                 RememberMe: request.RememberMe,
-                ClientContext: httpContext.ToAuthenticationClientContext("password"));
+                ClientContext: httpContext.ToAuthenticationClientContext("password"),
+                ExpectedUserId: request.ExpectedUserId);
         }
     }
 
@@ -101,13 +103,15 @@ public static class AuthHttpMappings {
         public GoogleLoginCommand ToCommand() {
             return new GoogleLoginCommand(
                 Credential: request.Credential,
-                RememberMe: request.RememberMe);
+                RememberMe: request.RememberMe,
+                ExpectedUserId: request.ExpectedUserId);
         }
         public GoogleLoginCommand ToCommand(HttpContext httpContext) {
             return new GoogleLoginCommand(
                 Credential: request.Credential,
                 RememberMe: request.RememberMe,
-                ClientContext: httpContext.ToAuthenticationClientContext("google"));
+                ClientContext: httpContext.ToAuthenticationClientContext("google"),
+                ExpectedUserId: request.ExpectedUserId);
         }
     }
 

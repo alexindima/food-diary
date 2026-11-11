@@ -9,6 +9,7 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDiary.Modules.Users.Presentation.Controllers;
 
@@ -26,6 +27,7 @@ public sealed class UsersPasswordController(ISender mediator) : AuthorizedContro
         HandleNoContent(request.ToCommand(userId));
 
     [HttpPatch("set")]
+    [Authorize(Policy = PresentationPolicyNames.ConfirmAdminCredentialsPolicyName)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

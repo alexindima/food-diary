@@ -11,11 +11,55 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Results;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : IClassFixture<ApiWebApplicationFactory> {
+    [RequiresDockerFact]
+    public async Task AdminSso_AcceptsFreshGoogleConfirmationForTheSameAccount() {
+        string email = $"google-admin-{Guid.NewGuid():N}@example.com";
+        IGoogleTokenValidator validator = Substitute.For<IGoogleTokenValidator>();
+        validator.ValidateCredentialAsync("admin-google-proof", Arg.Any<CancellationToken>()).Returns(Result.Success(
+            new GoogleIdentityPayload("https://accounts.google.com", email, email, FirstName: null, LastName: null, Locale: "en")));
+        validator.ValidateCredentialAsync("other-google-proof", Arg.Any<CancellationToken>()).Returns(Result.Success(
+            new GoogleIdentityPayload("https://accounts.google.com", $"{email}-other", $"other-{email}", FirstName: null, LastName: null, Locale: "en")));
+        await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder =>
+            builder.ConfigureTestServices(services => services.Replace(ServiceDescriptor.Singleton(validator))));
+        using HttpClient browser = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        using HttpResponseMessage initial = await browser.PostAsJsonAsync("/api/v1/auth/google", new GoogleLoginHttpRequest("admin-google-proof"));
+        initial.EnsureSuccessStatusCode();
+        JsonElement signedIn = await initial.Content.ReadFromJsonAsync<JsonElement>();
+        var userId = new UserId(signedIn.GetProperty("user").GetProperty("id").GetGuid());
+        await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
+            IUserRoleMembershipService roles = scope.ServiceProvider.GetRequiredService<IUserRoleMembershipService>();
+            await roles.EnsureRoleAsync(userId, RoleNames.Admin);
+        }
+
+        using HttpResponseMessage mismatch = await browser.PostAsJsonAsync("/api/v1/auth/google",
+            new GoogleLoginHttpRequest("other-google-proof", ExpectedUserId: userId.Value));
+        Assert.Equal(HttpStatusCode.Forbidden, mismatch.StatusCode);
+        Assert.False(mismatch.Headers.Contains("Set-Cookie"));
+        JsonElement failure = await mismatch.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Authentication.ReauthenticationAccountMismatch", failure.GetProperty("error").GetString());
+
+        using HttpResponseMessage confirmed = await browser.PostAsJsonAsync("/api/v1/auth/google",
+            new GoogleLoginHttpRequest("admin-google-proof", ExpectedUserId: userId.Value));
+        confirmed.EnsureSuccessStatusCode();
+        using HttpResponseMessage start = await browser.PostAsync("/api/v1/auth/admin-sso/start", content: null);
+        start.EnsureSuccessStatusCode();
+        JsonElement handoff = await start.Content.ReadFromJsonAsync<JsonElement>();
+        using HttpResponseMessage exchange = await browser.PostAsJsonAsync("/api/v1/auth/admin-sso/exchange",
+            new { Code = handoff.GetProperty("code").GetString() });
+        exchange.EnsureSuccessStatusCode();
+        using HttpResponseMessage authorized = await browser.GetAsync("/api/v1/admin/users");
+        Assert.Equal(HttpStatusCode.OK, authorized.StatusCode);
+    }
+
     [RequiresDockerFact]
     public async Task CredentialQuotaExhaustion_DoesNotBlockTabRestorationOrLogout() {
         await using WebApplicationFactory<Program> isolated = factory.WithWebHostBuilder(builder =>

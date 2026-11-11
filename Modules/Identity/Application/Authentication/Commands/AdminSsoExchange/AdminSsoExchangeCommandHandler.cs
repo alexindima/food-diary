@@ -10,6 +10,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 
@@ -20,7 +21,8 @@ public sealed class AdminSsoExchangeCommandHandler(
     IAuthenticationTokenService authenticationTokenService,
     IAdminSsoSessionLock sessions,
     IAtomicCommandExecutor atomicExecutor,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    PrivilegedSessionService privilegedSessions)
     : ICommandHandler<AdminSsoExchangeCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(
         AdminSsoExchangeCommand command,
@@ -62,8 +64,13 @@ public sealed class AdminSsoExchangeCommandHandler(
             return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoInvalidCode);
         }
 
+        if (!await privilegedSessions.IsConfirmedAsync(issuer.UserId, issuer.SessionId, allowAdminSession: false, cancellationToken)) {
+            return Result.Failure<AuthenticationModel>(IdentityErrors.ReauthenticationRequired);
+        }
+
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext);
+            .IssueFromPrincipalAsync(principal, cancellationToken,
+                command.ClientContext is { } client ? client with { AdminAccessConfirmed = true } : null);
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

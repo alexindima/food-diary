@@ -8,10 +8,10 @@ import { MarketingAttributionService } from '../../../../../shared/marketing/mar
 import { type AuthResponse, LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
-export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'rateLimited' | 'unknown';
+export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'rateLimited' | 'accountMismatch' | 'unknown';
 export type AuthRegisterResult = 'success' | 'emailExists' | 'accountDeleted' | 'rateLimited' | 'unknown';
 export type AuthPasswordResetResult = 'success' | 'rateLimited' | 'unknown';
-export type GoogleLoginResult = 'success' | 'accountLinkRequired' | 'unknown';
+export type GoogleLoginResult = 'success' | 'accountLinkRequired' | 'accountMismatch' | 'unknown';
 
 @Service()
 export class AuthFlowFacade {
@@ -71,6 +71,9 @@ export class AuthFlowFacade {
             map(() => 'success' as const),
             catchError((error: unknown) => {
                 const errorCode = this.getApiErrorCode(error);
+                if (errorCode === 'Authentication.ReauthenticationAccountMismatch') {
+                    return of('accountMismatch' as const);
+                }
                 const result: GoogleLoginResult =
                     errorCode === 'Authentication.GoogleAccountLinkRequired' ? 'accountLinkRequired' : 'unknown';
                 return of(result);
@@ -99,6 +102,9 @@ export class AuthFlowFacade {
     }
 
     private mapLoginError(errorCode?: string): AuthLoginResult {
+        if (errorCode === 'Authentication.ReauthenticationAccountMismatch') {
+            return 'accountMismatch';
+        }
         if (errorCode === 'User.InvalidCredentials' || errorCode === 'Authentication.InvalidCredentials') {
             return 'invalidCredentials';
         }

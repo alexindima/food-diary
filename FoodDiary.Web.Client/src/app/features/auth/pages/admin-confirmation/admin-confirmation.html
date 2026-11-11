@@ -1,0 +1,24 @@
+<section class="admin-confirmation" aria-labelledby="admin-confirmation-title">
+    <fd-ui-card appearance="entry" density="relaxed" class="admin-confirmation__card">
+        <div class="fd-stack fd-gap-md">
+            <h1 id="admin-confirmation-title" class="fd-page-title">{{ 'AUTH.CONFIRM.TITLE' | translate }}</h1>
+            <p class="fd-ui-body-sm">{{ 'AUTH.CONFIRM.ADMIN_HINT' | translate }}</p>
+            <div [hidden]="busy()">
+                <fd-auth
+                    [useRouting]="false"
+                    [inlineSignIn]="true"
+                    [hideTelegram]="true"
+                    [confirmationUserId]="userId"
+                    (signedIn)="continueAsync()"
+                />
+            </div>
+            @if (busy()) {
+                <p role="status">{{ 'COMMON.LOADING' | translate }}</p>
+            }
+            @if (failed()) {
+                <p role="alert">{{ 'AUTH.CONFIRM.ERROR' | translate }}</p>
+            }
+            <fd-ui-button variant="secondary" [fullWidth]="true" (click)="back()">{{ 'AUTH.CONFIRM.BACK' | translate }}</fd-ui-button>
+        </div>
+    </fd-ui-card>
+</section>

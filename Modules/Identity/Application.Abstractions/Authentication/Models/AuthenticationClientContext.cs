@@ -10,6 +10,7 @@ public sealed record AuthenticationClientContext(
     [property: JsonIgnore] string? ExistingRefreshToken = null,
     AuthenticationCredentialKind CredentialKind = AuthenticationCredentialKind.Bearer,
     [property: JsonIgnore] string? ExistingBrowserCredential = null,
-    [property: JsonIgnore] RefreshTokenSessionId? PreviousBrowserSessionId = null) {
+    [property: JsonIgnore] RefreshTokenSessionId? PreviousBrowserSessionId = null,
+    bool AdminAccessConfirmed = false) {
     public override string ToString() => $"AuthenticationClientContext {{ AuthProvider = {AuthProvider}, ExistingRefreshToken = [redacted] }}";
 }

@@ -196,6 +196,7 @@ export class AuthService {
             email: data.email,
             password: data.password,
             rememberMe: data.rememberMe || this.pwa.shouldRememberSession(),
+            expectedUserId: data.expectedUserId,
         };
         return this.cookieSessions.run(() =>
             this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(

@@ -31781,6 +31781,13 @@
           "Nullable": true
         },
         {
+          "Name": "expectedUserId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
           "Name": "rememberMe",
           "Required": false,
           "Type": "boolean",
@@ -32177,6 +32184,13 @@
           "Name": "email",
           "Required": false,
           "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "expectedUserId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
           "Nullable": true
         },
         {

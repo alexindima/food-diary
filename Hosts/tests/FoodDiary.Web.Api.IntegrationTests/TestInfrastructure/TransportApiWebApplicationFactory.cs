@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -37,11 +36,7 @@ public sealed class TransportApiWebApplicationFactory : WebApplicationFactory<Pr
                 .ImplementationInstance as ApplicationPartManager;
             applicationPartManager?.ApplicationParts.Add(new AssemblyPart(typeof(TestExceptionController).Assembly));
             services.RemoveAll<IHostedService>();
-            services.AddAuthentication(options => {
-                options.DefaultAuthenticateScheme = TestAuthenticationHandler.SchemeName;
-                options.DefaultChallengeScheme = TestAuthenticationHandler.SchemeName;
-                options.DefaultScheme = TestAuthenticationHandler.SchemeName;
-            }).AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(TestAuthenticationHandler.SchemeName, _ => { });
+            services.AddSyntheticAuthentication();
         });
     }
 }

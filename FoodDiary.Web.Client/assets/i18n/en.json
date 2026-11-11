@@ -397,7 +397,7 @@
         "TELEGRAM_DIARY": {
             "CANCELLED": "Your diaries are still separate.",
             "CHOOSE_GOALS": "Which goals should the combined diary use?",
-            "CONFLICT": "This email is already linked to another diary. You can combine the diaries or keep them separate.",
+            "CONFLICT": "This email is already linked to another diary. After signing in, you can review what will move and confirm the merge.",
             "CONNECT": "Move Telegram sign-in",
             "DONE": "Your diaries are combined. Sign in again with email or Telegram to open the combined diary.",
             "EMAIL_GOALS": "Goals from the email diary",
@@ -414,9 +414,10 @@
             "OPERATION_PENDING": "An action is still running in Telegram. Wait for it to finish and try again.",
             "PRODUCTS": "Products ({{count}})",
             "RECIPES": "Recipes ({{count}})",
+            "RESTRICTED_ACCOUNT": "Automatic combining is unavailable because one of the accounts has special permissions. Your diaries remain separate.",
             "REVIEW": "Telegram records will be added to the email diary. The original Telegram diary will be deleted, and the bot will open the combined diary.",
-            "SIGN_IN": "Sign in to the email diary",
-            "SIGN_IN_HINT": "Sign in to the account whose email address you just verified.",
+            "SIGN_IN": "Sign in to combine diaries",
+            "SIGN_IN_HINT": "Sign in with the email address you confirmed using the link. Then review what will move and confirm the merge.",
             "TELEGRAM_GOALS": "Goals from the Telegram diary",
             "UNAVAILABLE": "These diaries can't be combined yet. The email account may already have its own Telegram sign-in, or the source diary may contain records that need a separate transfer.",
             "USE_ANOTHER_EMAIL": "Use a different email",
@@ -478,6 +479,14 @@
             "BACK_TO_LOGIN": "Back to login",
             "RESEND_COOLDOWN": "You can resend in {{ seconds }}s.",
             "REQUEST_NEW_LINK": "Request a new link"
+        },
+        "CONFIRM": {
+            "TITLE": "Confirm your sign-in",
+            "ADMIN_HINT": "To open the admin panel, confirm this account with its password or linked Google account. The admin panel will open after confirmation.",
+            "MERGE_HINT": "To combine diaries with an administrator account, confirm your sign-in with its password or linked Google account. Then review the transfer again.",
+            "ACCOUNT_MISMATCH": "Confirm the same account. Use its email and password or linked Google account.",
+            "ERROR": "The admin panel could not be opened. Confirm your sign-in again.",
+            "BACK": "Back to profile"
         }
     },
     "SHARED": {

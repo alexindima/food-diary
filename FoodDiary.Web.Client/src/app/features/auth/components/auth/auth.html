@@ -10,7 +10,7 @@
         />
     </div>
 
-    <p class="auth__subtitle fd-ui-body-sm">
+    <p class="auth__subtitle fd-ui-body-sm" [hidden]="confirmationUserId() !== null">
         @if (authMode === 'login') {
             {{ 'AUTH.LOGIN.SUBTITLE' | translate }}
         } @else {

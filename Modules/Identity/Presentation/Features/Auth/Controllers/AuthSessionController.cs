@@ -60,6 +60,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
 
     [Authorize]
     [HttpPost("google/link")]
+    [Authorize(Policy = PresentationPolicyNames.ConfirmAdminCredentialsPolicyName)]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]

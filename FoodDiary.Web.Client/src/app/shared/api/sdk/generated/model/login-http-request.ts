@@ -10,6 +10,7 @@
 
 export interface LoginHttpRequest {
     email?: string;
+    expectedUserId?: string | null;
     password?: string;
     rememberMe?: boolean;
 }

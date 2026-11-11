@@ -6,6 +6,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Identity.Contracts.Errors;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
 
@@ -40,6 +41,9 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         UserAuthenticationPrincipalModel principal = authenticationResult.Value;
+        if (command.ExpectedUserId is { } expectedUserId && principal.UserId.Value != expectedUserId) {
+            return Result.Failure<AuthenticationModel>(IdentityErrors.ReauthenticationAccountMismatch);
+        }
         await EnsurePasswordSetupReminderAsync(
             principal,
             notificationDeduplicationService,

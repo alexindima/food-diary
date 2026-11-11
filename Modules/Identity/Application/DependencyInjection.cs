@@ -15,6 +15,7 @@ public static class DependencyInjection {
 
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
         services.AddScoped<BrowserSessionService>();
+        services.AddScoped<PrivilegedSessionService>();
         services.AddScoped<TelegramAuthenticationIntentService>();
         services.AddScoped<TelegramBackupEmailService>();
         services.AddScoped<IEmailSender, EmailSender>();

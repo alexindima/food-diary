@@ -25,6 +25,8 @@ import { environment } from '../../../../../environments/environment';
 import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
+import type { UserId } from '../../../../shared/models/semantics/entity-id';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { PwaInstallService } from '../../../../shared/service-worker/pwa-install.service';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
@@ -61,6 +63,7 @@ export class AuthComponent {
     public readonly inlineSignIn = input(false);
     public readonly signedIn = output();
     public readonly hideTelegram = input(false);
+    public readonly confirmationUserId = input<UserId | null>(null);
     public readonly initialMode = input<'login' | 'register'>('login');
     public readonly initialPasswordReset = input(false);
     public readonly initialReturnUrl = input<string | null>(null);
@@ -236,7 +239,9 @@ export class AuthComponent {
         this.isSubmitting.set(true);
 
         const loginValues = this.loginModel();
-        const result = await firstValueFrom(this.authFlowFacade.login(loginValues));
+        const result = await firstValueFrom(
+            this.authFlowFacade.login({ ...loginValues, expectedUserId: this.confirmationUserId() ?? undefined }),
+        );
         this.isSubmitting.set(false);
         if (result === 'success') {
             if (this.pendingGoogleLinkCredential !== null) {
@@ -320,11 +325,16 @@ export class AuthComponent {
 
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
-        const request: GoogleLoginRequest = { credential, rememberMe: true };
+        const request: GoogleLoginRequest = { credential, rememberMe: true, expectedUserId: this.confirmationUserId() ?? undefined };
         this.authFlowFacade.loginWithGoogle(request).subscribe(result => {
             this.isSubmitting.set(false);
             if (result === 'success') {
                 this.completeAuthenticatedNavigationAndClose();
+                return;
+            }
+
+            if (result === 'accountMismatch' || (result === 'accountLinkRequired' && this.confirmationUserId() !== null)) {
+                this.setGlobalError('AUTH.CONFIRM.ACCOUNT_MISMATCH');
                 return;
             }
 
@@ -471,26 +481,30 @@ export class AuthComponent {
 
         try {
             const adminUrl = new URL(adminPath, adminAppUrl);
-            if (adminUrl.origin !== new URL(adminAppUrl).origin) {
-                return null;
-            }
             const response = await firstValueFrom(this.authService.startAdminSso());
             adminUrl.searchParams.set('code', response.code);
             return adminUrl.toString();
-        } catch {
+        } catch (error: unknown) {
+            if (getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.ReauthenticationRequired') {
+                const confirmation = new URL('/auth/confirm-admin', this.document.location.origin);
+                confirmation.searchParams.set('adminReturnUrl', adminPath);
+                return confirmation.toString();
+            }
             return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
         }
     }
 
     private handleLoginResult(result: AuthLoginResult): void {
-        if (result === 'invalidCredentials') {
+        if (result === 'accountMismatch') {
+            this.setGlobalError('AUTH.CONFIRM.ACCOUNT_MISMATCH');
+        } else if (result === 'invalidCredentials') {
             this.setGlobalError('FORM_ERRORS.INVALID_CREDENTIALS');
             this.showRestoreAction.set(false);
         } else if (result === 'rateLimited') {
             this.setGlobalError('FORM_ERRORS.RATE_LIMITED');
         } else if (result === 'accountDeleted') {
             this.setGlobalError('AUTH.LOGIN.ACCOUNT_DELETED');
-            this.showRestoreAction.set(true);
+            this.showRestoreAction.set(this.confirmationUserId() === null);
         } else {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
             this.showRestoreAction.set(false);

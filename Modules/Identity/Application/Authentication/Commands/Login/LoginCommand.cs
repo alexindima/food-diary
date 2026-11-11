@@ -9,5 +9,6 @@ public record LoginCommand(
     string Email,
     string Password,
     bool RememberMe = false,
-    AuthenticationClientContext? ClientContext = null
+    AuthenticationClientContext? ClientContext = null,
+    Guid? ExpectedUserId = null
 ) : ICommand<Result<AuthenticationModel>>;

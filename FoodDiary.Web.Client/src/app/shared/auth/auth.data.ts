@@ -1,3 +1,4 @@
+import type { UserId } from '../models/semantics/entity-id';
 import type { User } from '../models/user.data';
 
 export type AuthMode = 'login' | 'register';
@@ -6,11 +7,13 @@ export class LoginRequest {
     public email: string;
     public password: string;
     public rememberMe: boolean;
+    public expectedUserId?: UserId;
 
     public constructor(formValue: Partial<LoginRequest>) {
         this.email = formValue.email ?? '';
         this.password = formValue.password ?? '';
         this.rememberMe = formValue.rememberMe ?? false;
+        this.expectedUserId = formValue.expectedUserId;
     }
 }
 

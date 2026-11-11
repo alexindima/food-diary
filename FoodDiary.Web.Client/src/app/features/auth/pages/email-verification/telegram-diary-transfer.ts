@@ -8,10 +8,13 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import type { TelegramDiaryGoals, TelegramDiaryPreview } from '../../../../shared/auth/telegram-diary.data';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
+import { optionalEntityId, type UserId } from '../../../../shared/models/semantics/entity-id';
 import { AuthComponent } from '../../components/auth/auth';
 
 type GoalSource = 'email' | 'telegram';
-type TransferStep = 'conflict' | 'sign-in' | 'review' | 'done';
+type TransferStep = 'conflict' | 'sign-in' | 'review' | 'done' | 'blocked';
+
+const RESTRICTED_ACCOUNT_ERROR = 'User.TelegramDiaryRestrictedAccount';
 
 const COUNT_LABELS = [
     ['meals', 'AUTH.TELEGRAM_DIARY.MEALS'],
@@ -26,6 +29,8 @@ const TRANSFER_ERRORS: Readonly<Record<string, string>> = {
     'Authentication.TelegramDiaryProofExpired': 'AUTH.TELEGRAM_DIARY.EXPIRED',
     'Authentication.TelegramDiaryOperationPending': 'AUTH.TELEGRAM_DIARY.OPERATION_PENDING',
     'User.TelegramDiaryTransferUnavailable': 'AUTH.TELEGRAM_DIARY.UNAVAILABLE',
+    [RESTRICTED_ACCOUNT_ERROR]: 'AUTH.TELEGRAM_DIARY.RESTRICTED_ACCOUNT',
+    'Authentication.ReauthenticationRequired': 'AUTH.CONFIRM.MERGE_HINT',
     'User.TelegramDiaryMeasurementConflict': 'AUTH.TELEGRAM_DIARY.MEASUREMENT_CONFLICT',
     'User.TelegramDiaryGoalsUnavailable': 'AUTH.TELEGRAM_DIARY.GOALS_UNAVAILABLE',
 };
@@ -47,7 +52,9 @@ export class TelegramDiaryTransferComponent {
     protected readonly step = signal<TransferStep>('conflict');
     protected readonly busy = signal(false);
     protected readonly error = signal<string | null>(null);
+    protected readonly needsConfirmation = computed(() => this.error() === 'AUTH.CONFIRM.MERGE_HINT');
     protected readonly choice = signal<GoalSource | null>(null);
+    protected readonly confirmationUserId = signal<UserId | null>(null);
     private readonly preview = signal<TelegramDiaryPreview | null>(null);
     protected readonly recordCounts = computed(() => {
         const counts = this.preview()?.counts;
@@ -117,6 +124,12 @@ export class TelegramDiaryTransferComponent {
                 error: (error: unknown) => {
                     const code = getStringProperty(getRecordProperty(error, 'error'), 'error') ?? '';
                     this.error.set(TRANSFER_ERRORS[code] ?? 'AUTH.TELEGRAM_DIARY.ERROR');
+                    if (code === RESTRICTED_ACCOUNT_ERROR) {
+                        this.step.set('blocked');
+                    } else if (code === 'Authentication.ReauthenticationRequired') {
+                        this.confirmationUserId.set(optionalEntityId<'user'>(this.auth.getUserId()));
+                        this.step.set('sign-in');
+                    }
                 },
             });
     }

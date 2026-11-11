@@ -359,14 +359,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "81a91ee13191e067895dc7283dfada8cd6eb47d77c4b79eb27d0ca28673f287b",
-          "reviewReason": "Reviewed the CI version pin changes and the existing additive OpenAPI snapshot. The snapshot adds two Telegram backup email verification and diary transfer POST operations plus their DTOs. The compatibility step and its baseline selection remain as documented."
+          "sha256": "017e353266ad63296e55765c0cd87e542d57fa3eef91b0eba2e7b8b220fd5a17",
+          "reviewReason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate."
         }
       ],
-      "reason": "Reviewed the CI version pin changes and the existing additive OpenAPI snapshot. The snapshot adds two Telegram backup email verification and diary transfer POST operations plus their DTOs. The compatibility step and its baseline selection remain as documented.",
-      "baseRef": "eddeb23ff4fc34978c6d34f1e0a269f0f19358b7",
-      "gitHead": "edf5fa2542a592094a71f2d3fb1bd6221f89cd45",
-      "reviewedAtUtc": "2026-11-10T04:53:50.5240483Z"
+      "reason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "c1f0d19cbbc3ab91bb77e418415977d577911122",
+      "reviewedAtUtc": "2026-11-11T04:09:50.3678851Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

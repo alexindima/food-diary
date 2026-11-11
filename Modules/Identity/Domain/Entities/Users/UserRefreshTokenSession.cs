@@ -20,6 +20,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
     public DateTime? RevokedAtUtc { get; private set; }
     public long? BrowserSecurityVersion { get; private set; }
     public bool BrowserSlidingExpirationEnabled { get; private set; }
+    public DateTime? AdminAccessExpiresAtUtc { get; private set; }
 
     private UserRefreshTokenSession() {
     }
@@ -60,6 +61,15 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
     }
 
     public bool IsActive => RevokedAtUtc is null;
+
+    public void GrantAdminAccess(DateTime expiresAtUtc) {
+        DateTime expires = NormalizeUtcTimestamp(expiresAtUtc, nameof(expiresAtUtc));
+        if (!IsActive || !string.Equals(AuthProvider, "admin-sso", StringComparison.Ordinal) ||
+            ExpiresAtUtc is not { } limit || expires <= CreatedAtUtc || expires > limit) {
+            throw new InvalidOperationException("Administrative access requires a confirmed SSO session with a bounded lifetime.");
+        }
+        AdminAccessExpiresAtUtc = expires;
+    }
 
     public void ConvertToBrowserSession(string credentialHash, long securityVersion, DateTime nowUtc, DateTime? maximumExpiresAtUtc = null, bool allowRenewal = false) {
         if (!IsActive || BrowserSecurityVersion.HasValue || securityVersion < 0) {

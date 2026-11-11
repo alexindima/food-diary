@@ -10,13 +10,15 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoStart;
 
 public sealed class AdminSsoStartCommandHandler(
     IAdminSsoService adminSsoService,
     IUserAuthenticationIdentityService userIdentityService,
-    TimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider,
+    PrivilegedSessionService privilegedSessions)
     : ICommandHandler<AdminSsoStartCommand, Result<AdminSsoStartModel>> {
     public async Task<Result<AdminSsoStartModel>> Handle(
         AdminSsoStartCommand command,
@@ -47,6 +49,10 @@ public sealed class AdminSsoStartCommandHandler(
 
         if (command.SessionId == Guid.Empty || command.SecurityVersion != principalResult.Value.SecurityVersion) {
             return Result.Failure<AdminSsoStartModel>(AuthenticationErrors.InvalidCredentials);
+        }
+
+        if (!await privilegedSessions.IsConfirmedAsync(userId, command.SessionId, allowAdminSession: false, cancellationToken)) {
+            return Result.Failure<AdminSsoStartModel>(IdentityErrors.ReauthenticationRequired);
         }
 
         var issuer = new AdminSsoIssuer(userId, command.SessionId, principalResult.Value.SecurityVersion);

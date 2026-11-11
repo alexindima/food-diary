@@ -47,6 +47,9 @@ public sealed class LoginCommandHandler(
             }
 
             UserAuthenticationPrincipalModel principal = authenticationResult.Value;
+            if (command.ExpectedUserId is { } expectedUserId && principal.UserId.Value != expectedUserId) {
+                return Result.Failure<AuthenticationModel>(IdentityErrors.ReauthenticationAccountMismatch);
+            }
             IssuedAuthenticationTokens tokens = await authenticationTokenService
                 .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe);
             return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));

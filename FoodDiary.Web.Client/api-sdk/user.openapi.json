@@ -3896,6 +3896,11 @@
                     "credential": {
                         "type": "string"
                     },
+                    "expectedUserId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                    },
                     "rememberMe": {
                         "type": "boolean"
                     }
@@ -4183,6 +4188,11 @@
                 "additionalProperties": false,
                 "properties": {
                     "email": {
+                        "type": "string"
+                    },
+                    "expectedUserId": {
+                        "format": "uuid",
+                        "nullable": true,
                         "type": "string"
                     },
                     "password": {

@@ -5,6 +5,8 @@ using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using FoodDiary.Presentation.Api.Policies;
 
 namespace FoodDiary.Modules.Identity.Presentation.Extensions;
 
@@ -13,6 +15,9 @@ public static class IdentityPresentationServiceCollectionExtensions {
         services.AddScoped<AuthenticationCookieResultFilter>();
         services.AddScoped<RefreshTokenCookieService>();
         services.AddScoped<BrowserSessionCookieService>();
+        services.AddScoped<IAuthorizationHandler, AdminSessionAuthorizationHandler>();
+        services.AddAuthorization(options => options.AddPolicy(PresentationPolicyNames.ConfirmAdminCredentialsPolicyName,
+            policy => policy.RequireAuthenticatedUser().AddRequirements(new AdminSessionAuthorizationHandler.CredentialChangeRequirement())));
         services.AddScoped<ImpersonationCookieService>();
         services.AddScoped<TelegramBrowserBindingHttpProcessor>();
         services.AddScoped<TelegramBotSecretAuthorizationFilter>();
