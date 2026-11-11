@@ -11,8 +11,8 @@
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 120,
-    "routedStandaloneComponents": 69,
-    "componentsWithoutDirectSpecs": 134,
+    "routedStandaloneComponents": 70,
+    "componentsWithoutDirectSpecs": 135,
     "criticalSymbolsWithoutTestReferences": 52,
     "explicitDebtMarkers": 12
   },
@@ -2347,6 +2347,19 @@
           "type": "number"
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "AdminConfirmationComponent",
+      "selector": "fd-admin-confirmation",
+      "feature": "auth",
+      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -6196,7 +6209,7 @@
       "name": "TransferTelegramDiaryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommandHandler.cs",
-      "line": 9,
+      "line": 13,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
