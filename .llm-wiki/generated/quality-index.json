@@ -135,6 +135,14 @@
       "structuralRiskScore": 229.32
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+      "nonBlankLines": 612,
+      "decisionPoints": 123,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 198.74
+    },
+    {
       "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
       "nonBlankLines": 666,
       "decisionPoints": 122,
@@ -165,14 +173,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 195.92
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
-      "nonBlankLines": 588,
-      "decisionPoints": 120,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 193.76
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
@@ -2202,11 +2202,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
-      "nonBlankLines": 588,
-      "decisionPoints": 120,
+      "nonBlankLines": 612,
+      "decisionPoints": 123,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 193.76
+      "structuralRiskScore": 198.74
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",

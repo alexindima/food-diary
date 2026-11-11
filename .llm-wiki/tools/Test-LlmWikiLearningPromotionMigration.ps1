@@ -37,6 +37,18 @@ function Add-LegacyEvent([Collections.Generic.List[object]]$Events, [string]$Kin
 
 try {
     New-Item -ItemType Directory -Path $sandbox -Force | Out-Null
+    Copy-Item (Join-Path $repositoryRoot '.llm-wiki/knowledge/learning-promotions.json') $registryPath
+    $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT = $sandbox
+    $journalHash = (Get-FileHash $registryPath -Algorithm SHA256).Hash
+    & {
+        if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) {
+            $PSDefaultParameterValues = @{ 'ConvertFrom-Json:DateKind' = 'String' }
+        }
+        $report = & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningPromotion.ps1') verify -Format Json | ConvertFrom-Json
+        if (-not $report.valid) { throw "The committed journal failed under the Wiki JSON date defaults: $($report.issues[0])" }
+    }
+    if ((Get-FileHash $registryPath -Algorithm SHA256).Hash -cne $journalHash) { throw 'Verification rewrote the committed journal.' }
+
     foreach ($name in @('learning-experiments.json','eval-promotions.json','learning-health.json')) {
         Copy-Item ".llm-wiki/knowledge/$name" (Join-Path $sandbox $name)
     }
@@ -78,11 +90,20 @@ try {
     # round-trip. This is the shape used by apply/rollback in the governed
     # lifecycle and guards against invalidating earlier hashes or snapshots
     # while a new event is validated.
-    $rollback = & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningPromotion.ps1') rollback `
-        -Id $candidateId -Reason 'Regression rollback.' -AsOfUtc ([DateTime]'2026-01-01T00:00:10Z') -Format Json | ConvertFrom-Json
+    $rollback = & {
+        if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) {
+            $PSDefaultParameterValues = @{ 'ConvertFrom-Json:DateKind' = 'String' }
+        }
+        & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningPromotion.ps1') rollback `
+            -Id $candidateId -Reason 'Regression rollback.' -AsOfUtc ([DateTime]'2026-01-01T00:00:10Z') -Format Json | ConvertFrom-Json
+    }
     if (-not $rollback.valid -or $rollback.candidate.materialization -ne 'rolled-back') { throw 'A persisted current registry could not append a governed rollback.' }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiLearningPromotion.ps1') verify -FailOnInvalid -Format Json | Out-Null
+    $beforeRollback = @($migrated.events.eventHash)
     $migrated = Get-Content $registryPath -Raw | ConvertFrom-Json
+    if ((($migrated.events.eventHash | Select-Object -First $beforeRollback.Count) -join ',') -cne ($beforeRollback -join ',')) {
+        throw 'Appending to the journal changed the earlier event hashes.'
+    }
 
     $migrated.events[0].eventHash = ('0' * 64)
     [IO.File]::WriteAllText($registryPath, (($migrated | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))

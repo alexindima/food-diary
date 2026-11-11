@@ -731,6 +731,11 @@
           "reviewReason": "Reviewed command additions and the corresponding health, design, context and evaluation usage. Existing graph, dispatch and frontend query commands are compatible."
         },
         {
+          "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+          "sha256": "14fcf7b4b58fb64db21f405392a6a7ea1e98bc07ff9896dfbd70fb1d23ecfd9c",
+          "reviewReason": "Verified that event hashes use a UTC timestamp for new entries, existing journal hashes verify under the Wiki JSON defaults on Windows and Linux, and corrupt history is still rejected. The promotion, approval, and rollback workflow is unchanged."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
           "sha256": "41297718b1e74a2751170d6fb4a9b4bda681460c121d825b5b2a7fa920c7f63a",
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
@@ -741,10 +746,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the master synchronization against both parent versions: independent observation payloads are retained, chains are serialized and verified through their owning registry functions, and no approvals or materializations are added. Domain and sensitive-data indexes are rebuilt from the combined Users activity and Billing cancellation sources; existing guidance remains source-linked navigation. The combined full EF model passes the existing pending-model-changes assertion.",
+      "reason": "Verified that event hashes use a UTC timestamp for new entries, existing journal hashes verify under the Wiki JSON defaults on Windows and Linux, and corrupt history is still rejected. The promotion, approval, and rollback workflow is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "8a95e14db8ceb6e572aa249bce3140919f2dc9d3",
-      "reviewedAtUtc": "2026-11-08T14:00:40.1830373Z"
+      "gitHead": "97bde53e17aec374b28f9eaaac0a517cd88464d2",
+      "reviewedAtUtc": "2026-11-11T06:23:09.2048467Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",

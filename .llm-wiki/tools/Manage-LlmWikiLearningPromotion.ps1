@@ -27,6 +27,12 @@ $knowledgeRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_KNOWLEDGE_R
 $registryPath = Join-Path $knowledgeRoot 'learning-promotions.json'
 $policy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
 $promotionPolicy = $policy.scheduler.learningPromotion
+$journalJsonParameters = @{}
+if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) {
+    $journalJsonParameters.DateKind = 'Default'
+}
+# The committed schema-2 history was hashed with the writer's UTC+04 offset.
+$committedJournalHashOffset = [TimeSpan]::FromHours(4)
 
 function Get-RawHash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 40 -Compress
@@ -35,18 +41,17 @@ function Get-RawHash([object]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
-function Get-StableHash([object]$Value) {
-    # Hash the same JSON-compatible shape that a later process will read.
-    # A recursive PowerShell normalizer is subtly affected by pipeline
-    # enumeration (especially empty and singleton arrays), while a JSON
-    # round-trip gives us one stable persistence boundary for every action.
+function ConvertTo-JournalJsonShape([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 50 -Compress
     if ($null -eq $json) { $json = 'null' }
-    Get-RawHash ($json | ConvertFrom-Json)
+    # Wiki entrypoints default dates to strings. Journal snapshots and legacy
+    # verification must use the same JSON conversion as the original writer.
+    ConvertFrom-Json -InputObject $json @journalJsonParameters
 }
+function Get-StableHash([object]$Value) { Get-RawHash (ConvertTo-JournalJsonShape $Value) }
 function Get-Hash([object]$Value) { Get-RawHash $Value }
 function Read-Registry {
-    $registry = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
+    $registry = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json @journalJsonParameters
     if ($registry.schemaVersion -ne 1 -or $null -eq $registry.events) { throw 'Unsupported learning-promotion registry schema.' }
     $registry
 }
@@ -60,17 +65,17 @@ function Write-Registry([object]$Registry) {
         $persisted = $Registry
         $stable = $false
         foreach ($attempt in 1..3) {
-            $persisted = ($persisted | ConvertTo-Json -Depth 50 -Compress) | ConvertFrom-Json
+            $persisted = ConvertTo-JournalJsonShape $persisted
             $persisted | Add-Member -NotePropertyName hashSchemaVersion -NotePropertyValue 2 -Force
             Update-LegacyDerivedSnapshots $persisted
             $previousHash = ''
             foreach ($event in @($persisted.events)) {
                 $event.previousHash = $previousHash
-                $event.eventHash = Get-StableHash (Get-EventPayload $event)
+                if (-not (Test-EventHash $event)) { $event.eventHash = Get-EventHash $event }
                 $previousHash = [string]$event.eventHash
             }
             [IO.File]::WriteAllText($temporaryRegistryPath, (($persisted | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
-            $roundTripped = Get-Content -LiteralPath $temporaryRegistryPath -Raw | ConvertFrom-Json
+            $roundTripped = Get-Content -LiteralPath $temporaryRegistryPath -Raw | ConvertFrom-Json @journalJsonParameters
             $issues = @(Test-Registry $roundTripped)
             if ($issues.Count -eq 0) {
                 $persisted = $roundTripped
@@ -91,13 +96,34 @@ function Get-EventPayload([object]$Event) {
         sequence = [int]$Event.sequence
         kind = [string]$Event.kind
         id = [string]$Event.id
-        createdAtUtc = ([DateTimeOffset]$Event.createdAtUtc).ToUniversalTime().ToString('o')
+        createdAtUtc = $Event.createdAtUtc
         previousHash = [string]$Event.previousHash
         observation = $Event.observation
         decision = $Event.decision
         targetId = $Event.targetId
         reason = $Event.reason
     }
+}
+function Get-NormalizedEventPayload([object]$Event) {
+    $payload = ConvertTo-JournalJsonShape (Get-EventPayload $Event)
+    # Set the timestamp after the JSON round-trip, which can turn an ISO offset
+    # into a local DateTime. Serialize a UTC DateTimeOffset for new hashes.
+    $payload.createdAtUtc = ([DateTimeOffset]$payload.createdAtUtc).ToUniversalTime()
+    $payload
+}
+function Get-EventHash([object]$Event) { Get-RawHash (Get-NormalizedEventPayload $Event) }
+function Test-EventHash([object]$Event) {
+    $payload = Get-NormalizedEventPayload $Event
+    $expectedHash = [string]$Event.eventHash
+    if ($expectedHash -ceq (Get-RawHash $payload)) { return $true }
+
+    $utc = $payload.createdAtUtc
+    $payload.createdAtUtc = $utc.ToOffset($committedJournalHashOffset)
+    if ($expectedHash -ceq (Get-RawHash $payload)) { return $true }
+
+    # A pre-existing local journal may have used the current machine's offset.
+    $payload.createdAtUtc = $utc.ToLocalTime()
+    $expectedHash -ceq (Get-RawHash $payload)
 }
 function Get-LegacyEventPayload([object]$Event) {
     [pscustomobject][ordered]@{
@@ -133,7 +159,7 @@ function Add-Event([object]$Registry, [string]$Kind, [string]$CandidateId, [obje
         reason = $EventReason
         eventHash = ''
     }
-    $event.eventHash = Get-StableHash (Get-EventPayload $event)
+    $event.eventHash = Get-EventHash $event
     $Registry.events = @($Registry.events) + $event
     # Property assignments can leak values into a PowerShell function's output
     # pipeline. Return exactly the event object so callers never append a hash
@@ -267,7 +293,7 @@ function Test-Registry([object]$Registry) {
         $sequence++
         if ([int]$event.sequence -ne $sequence) { $issues.Add("Event sequence is invalid at $sequence.") }
         if ([string]$event.previousHash -cne $previous) { $issues.Add("Event $sequence has invalid previousHash.") }
-        if ([string]$event.eventHash -cne (Get-StableHash (Get-EventPayload $event))) { $issues.Add("Event $sequence has invalid eventHash.") }
+        if (-not (Test-EventHash $event)) { $issues.Add("Event $sequence has invalid eventHash.") }
         if ($event.kind -eq 'observed') {
             if ([string]$event.id -ne (Get-CandidateId $event.observation)) { $issues.Add("Observation $sequence has an invalid candidate id.") }
             $known.Add([string]$event.id) | Out-Null
@@ -358,7 +384,7 @@ function Initialize-LegacyHashChain([object]$Registry) {
         } else {
             $event | Add-Member -NotePropertyName previousHash -NotePropertyValue $previousHash
         }
-        $eventHash = Get-StableHash (Get-EventPayload $event)
+        $eventHash = Get-EventHash $event
         if ($event.PSObject.Properties['eventHash']) {
             $event.eventHash = $eventHash
         } else {
@@ -423,7 +449,7 @@ function Convert-LegacyRegistry([object]$Registry) {
     $previousHash = ''
     foreach ($event in @($Registry.events)) {
         $event.previousHash = $previousHash
-        $event.eventHash = Get-StableHash (Get-EventPayload $event)
+        $event.eventHash = Get-EventHash $event
         $previousHash = [string]$event.eventHash
     }
     $Registry | Add-Member -NotePropertyName hashSchemaVersion -NotePropertyValue 2 -Force
