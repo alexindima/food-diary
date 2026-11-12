@@ -39,6 +39,7 @@ const TRANSFER_ERRORS: Readonly<Record<string, string>> = {
     selector: 'fd-telegram-diary-transfer',
     imports: [AuthComponent, FdUiButtonComponent, FdUiRadioGroupComponent, TranslatePipe],
     templateUrl: './telegram-diary-transfer.html',
+    styleUrl: './telegram-diary-transfer.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelegramDiaryTransferComponent {
@@ -56,6 +57,9 @@ export class TelegramDiaryTransferComponent {
     protected readonly choice = signal<GoalSource | null>(null);
     protected readonly confirmationUserId = signal<UserId | null>(null);
     private readonly preview = signal<TelegramDiaryPreview | null>(null);
+    protected readonly selectedGoalSource = computed<GoalSource | null>(() =>
+        this.preview()?.canUseTelegramGoals === false ? 'email' : this.choice(),
+    );
     protected readonly recordCounts = computed(() => {
         const counts = this.preview()?.counts;
         return counts === undefined
@@ -73,14 +77,13 @@ export class TelegramDiaryTransferComponent {
     );
     protected readonly goalOptions = computed<Array<FdUiRadioOption<GoalSource>>>(() => {
         const preview = this.preview();
-        if (preview === null) {
+        if (preview?.canUseTelegramGoals !== true) {
             return [];
         }
-        const options = [this.goalOption('email', 'AUTH.TELEGRAM_DIARY.EMAIL_GOALS', preview.emailGoals)];
-        if (preview.canUseTelegramGoals) {
-            options.push(this.goalOption('telegram', 'AUTH.TELEGRAM_DIARY.TELEGRAM_GOALS', preview.telegramGoals));
-        }
-        return options;
+        return [
+            this.goalOption('email', 'AUTH.TELEGRAM_DIARY.EMAIL_GOALS', preview.emailGoals),
+            this.goalOption('telegram', 'AUTH.TELEGRAM_DIARY.TELEGRAM_GOALS', preview.telegramGoals),
+        ];
     });
 
     protected beginSignIn(): void {
@@ -92,7 +95,7 @@ export class TelegramDiaryTransferComponent {
     }
 
     protected confirm(): void {
-        const choice = this.choice();
+        const choice = this.selectedGoalSource();
         if (choice !== null) {
             this.runTransfer(choice === 'telegram');
         }
@@ -135,7 +138,9 @@ export class TelegramDiaryTransferComponent {
     }
 
     private goalOption(value: GoalSource, key: string, goals: TelegramDiaryGoals): FdUiRadioOption<GoalSource> {
-        const summary = Object.fromEntries(Object.entries(goals).map(([name, goal]) => [name, goal ?? '–']));
+        const { weight, waist } = goals;
+        const displayGoals = { ...goals, weight: weight === 0 ? null : weight, waist: waist === 0 ? null : waist };
+        const summary = Object.fromEntries(Object.entries(displayGoals).map(([name, goal]) => [name, goal ?? '–']));
         return {
             value,
             label: this.translate.instant(key),

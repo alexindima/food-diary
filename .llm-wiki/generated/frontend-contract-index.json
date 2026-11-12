@@ -7,7 +7,7 @@
     "outputs": 564,
     "apiCalls": 334,
     "templatesWithTranslations": 378,
-    "translationKeys": 2287,
+    "translationKeys": 2289,
     "consumerEdges": 1356,
     "consumedComponents": 332,
     "unconsumedComponents": 190
@@ -1574,7 +1574,9 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
-      "stylePaths": [],
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.scss"
+      ],
       "inputs": [
         {
           "name": "ticket",
@@ -22813,9 +22815,11 @@
         "AUTH.TELEGRAM_DIARY.CONFLICT",
         "AUTH.TELEGRAM_DIARY.DONE",
         "AUTH.TELEGRAM_DIARY.EMPTY",
+        "AUTH.TELEGRAM_DIARY.KEEP_EMAIL_GOALS",
         "AUTH.TELEGRAM_DIARY.KEEP_SEPARATE",
         "AUTH.TELEGRAM_DIARY.REVIEW",
         "AUTH.TELEGRAM_DIARY.SIGN_IN",
+        "AUTH.TELEGRAM_DIARY.TRANSFER_ITEMS",
         "AUTH.TELEGRAM_DIARY.USE_ANOTHER_EMAIL",
         "AUTH.VERIFY.BACK_TO_LOGIN",
         "AUTH.VERIFY.RETRY",

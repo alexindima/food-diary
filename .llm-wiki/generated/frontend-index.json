@@ -3864,7 +3864,7 @@
       "role": "Component",
       "selector": "fd-telegram-diary-transfer",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "MobileLoginComponent",
@@ -8432,8 +8432,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1488,
-      "russianProperties": 1488,
+      "englishProperties": 1490,
+      "russianProperties": 1490,
       "countsMatch": true
     },
     {

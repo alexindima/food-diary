@@ -11242,11 +11242,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
-      "nonBlankLines": 132,
-      "decisionPoints": 10,
+      "nonBlankLines": 137,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.64
+      "structuralRiskScore": 16.24
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/mobile-login/mobile-login.ts",

@@ -2416,7 +2416,9 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
-      "stylePaths": [],
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.scss"
+      ],
       "inputs": [
         {
           "name": "ticket",

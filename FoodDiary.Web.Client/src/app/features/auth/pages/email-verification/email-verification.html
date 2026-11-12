@@ -1,5 +1,5 @@
 <section class="email-verify" aria-labelledby="email-verify-title">
-    <fd-ui-card appearance="entry" density="relaxed" class="email-verify__card">
+    <fd-ui-card appearance="entry" density="relaxed" class="email-verify__card" [class.email-verify__card--transfer]="transferTicket()">
         <header class="email-verify__header">
             <p class="email-verify__brand">Food Diary</p>
             <h1 id="email-verify-title" class="email-verify__title fd-page-title">{{ 'AUTH.VERIFY.TITLE' | translate }}</h1>

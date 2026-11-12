@@ -30,23 +30,35 @@
             </div>
         }
         @case ('review') {
-            <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.REVIEW' | translate }}</p>
-            <p class="fd-ui-body-sm" [hidden]="recordCounts().length > 0">{{ 'AUTH.TELEGRAM_DIARY.EMPTY' | translate }}</p>
-            <ul [hidden]="recordCounts().length === 0">
-                @for (record of recordCounts(); track record.label) {
-                    <li>{{ record.label | translate: { count: record.count } }}</li>
-                }
-            </ul>
-            <fd-ui-radio-group
-                [label]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
-                [options]="goalOptions()"
-                [disabled]="busy()"
-                [(value)]="choice"
-            />
+            <div class="fd-stack fd-gap-sm">
+                <p class="fd-ui-body-sm">{{ 'AUTH.TELEGRAM_DIARY.REVIEW' | translate }}</p>
+                <div [hidden]="recordCounts().length === 0">
+                    <p class="fd-ui-body-sm">
+                        <strong>{{ 'AUTH.TELEGRAM_DIARY.TRANSFER_ITEMS' | translate }}</strong>
+                    </p>
+                    <ul class="transfer-records fd-ui-body-sm">
+                        @for (record of recordCounts(); track record.label) {
+                            <li>{{ record.label | translate: { count: record.count } }}</li>
+                        }
+                    </ul>
+                </div>
+                <p class="fd-ui-body-sm" [hidden]="recordCounts().length > 0">{{ 'AUTH.TELEGRAM_DIARY.EMPTY' | translate }}</p>
+            </div>
+            <div [hidden]="goalOptions().length === 0">
+                <fd-ui-radio-group
+                    [label]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
+                    [options]="goalOptions()"
+                    [disabled]="busy()"
+                    [(value)]="choice"
+                />
+            </div>
+            <p class="fd-ui-body-sm fd-ui-text-muted" [hidden]="goalOptions().length > 0">
+                {{ 'AUTH.TELEGRAM_DIARY.KEEP_EMAIL_GOALS' | translate }}
+            </p>
             <fd-ui-button
                 [fullWidth]="true"
                 [loading]="busy()"
-                [disabled]="choice() === null"
+                [disabled]="selectedGoalSource() === null"
                 [disabledReason]="'AUTH.TELEGRAM_DIARY.CHOOSE_GOALS' | translate"
                 (click)="confirm()"
             >

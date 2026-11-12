@@ -375,8 +375,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "573f694e9fdf82095625ba5e8d230842efc9b9b7383c11431eb4bcff3c346ed0",
-          "reviewReason": "Verified that the new AdminConfirmationComponent is reached by a standalone auth route and appears in the structural spec inventory. The Telegram transfer handler anchor moved, and the dependency and cycle summaries are unchanged."
+          "sha256": "d41a66395cd2e16ad1ad918ebe28af3a62fb9a84360c583f6481f8370550ef32",
+          "reviewReason": "Verified that the architecture projection adds only the Telegram diary transfer component stylesheet; route, selector, input/output contracts, and dependency ownership are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -399,10 +399,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "Verified that the new AdminConfirmationComponent is reached by a standalone auth route and appears in the structural spec inventory. The Telegram transfer handler anchor moved, and the dependency and cycle summaries are unchanged.",
+      "reason": "Verified that the architecture projection adds only the Telegram diary transfer component stylesheet; route, selector, input/output contracts, and dependency ownership are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "24f78425bdba5ea5d66067d5dfb403d4f78182f3",
-      "reviewedAtUtc": "2026-11-11T05:08:01.1772813Z"
+      "gitHead": "29db2a4a7cf1a003cb3cf20293661b26b2506608",
+      "reviewedAtUtc": "2026-11-12T12:08:51.9224584Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

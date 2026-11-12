@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
@@ -7,7 +7,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import type { TelegramDiaryPreview } from '../../../../shared/auth/telegram-diary.data';
 import { EmailVerificationComponent } from './email-verification';
+import { TelegramDiaryTransferComponent } from './telegram-diary-transfer';
 
 let authServiceMock: {
     onLogoutAsync: ReturnType<typeof vi.fn>;
@@ -164,6 +166,68 @@ describe('EmailVerificationComponent', () => {
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login');
     });
 });
+
+describe('Telegram diary transfer review', () => {
+    it('explains why email goals stay and confirms directly when they are the only option', () => {
+        const { root, confirm, transfer } = openTransferReview(false);
+
+        expect(root.textContent).toContain('AUTH.TELEGRAM_DIARY.TRANSFER_ITEMS');
+        expect(root.querySelector('ul')?.textContent).toContain('AUTH.TELEGRAM_DIARY.MEALS');
+        expect(root.textContent).toContain('AUTH.TELEGRAM_DIARY.KEEP_EMAIL_GOALS');
+        expect(root.querySelector('input[type="radio"]')).toBeNull();
+        expect(root.querySelector('[role="radiogroup"]')?.closest('[hidden]')).not.toBeNull();
+        expect(confirm.disabled).toBe(false);
+        expect(transfer).toHaveBeenCalledTimes(1);
+
+        confirm.click();
+
+        expect(transfer).toHaveBeenLastCalledWith('transfer-ticket', false);
+    });
+
+    it('asks for a choice when both diaries can supply goals', () => {
+        const { root, confirm, transfer, fixture } = openTransferReview(true);
+        const radios = root.querySelectorAll<HTMLInputElement>('input[type="radio"]');
+
+        expect(radios).toHaveLength(2);
+        expect(confirm.disabled).toBe(true);
+        radios[1].click();
+        fixture.detectChanges();
+        expect(confirm.disabled).toBe(false);
+        confirm.click();
+
+        expect(transfer).toHaveBeenLastCalledWith('transfer-ticket', true);
+    });
+});
+
+function openTransferReview(canUseTelegramGoals: boolean): {
+    root: HTMLElement;
+    confirm: HTMLButtonElement;
+    transfer: ReturnType<typeof vi.fn>;
+    fixture: ComponentFixture<TelegramDiaryTransferComponent>;
+} {
+    const goals = { calories: 2000, protein: 150, fat: 65, carbs: 200, fiber: 28, water: 2000, steps: null, weight: null, waist: null };
+    const preview: TelegramDiaryPreview = {
+        counts: { meals: 1, recipes: 0, products: 0, waterEntries: 0, measurements: 0 },
+        emailGoals: goals,
+        telegramGoals: goals,
+        canUseTelegramGoals,
+    };
+    const transfer = vi.fn().mockReturnValue(of(preview));
+    TestBed.configureTestingModule({
+        imports: [TelegramDiaryTransferComponent],
+        providers: [provideTranslateTesting(), { provide: AuthService, useValue: { transferTelegramDiary: transfer } }],
+    });
+    const fixture = TestBed.createComponent(TelegramDiaryTransferComponent);
+    fixture.componentRef.setInput('ticket', 'transfer-ticket');
+    fixture.componentInstance['loadPreview']();
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const confirm = root.querySelector<HTMLButtonElement>('fd-ui-button button');
+    if (confirm === null) {
+        throw new Error('Expected a transfer confirmation button.');
+    }
+    return { root, confirm, transfer, fixture };
+}
 
 function createComponent(queryParams: Record<string, string>): EmailVerificationComponent {
     TestBed.configureTestingModule({

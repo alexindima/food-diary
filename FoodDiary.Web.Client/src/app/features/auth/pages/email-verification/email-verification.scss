@@ -12,6 +12,14 @@
     @include auth-page.header;
 }
 
+.email-verify__card--transfer {
+    --fd-space-card-relaxed-gap: var(--fd-space-sm);
+
+    .email-verify__header {
+        margin-bottom: 0;
+    }
+}
+
 .email-verify__brand {
     @include auth-page.brand;
 }
