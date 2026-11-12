@@ -241,13 +241,8 @@
         },
         {
           "path": "Directory.Packages.props",
-          "sha256": "148499c806b9fd8261cdfe85d911e51576619e3b2f291f437f5c16bde410ab36",
-          "reviewReason": "Reviewed Telegram.Bot upgrade 22.10.0.1 to 22.10.3.3 for subscription state updates. Central package references, project inventory and catalog extraction contracts are unchanged; regenerated catalog includes the new owned controller and rollout document."
-        },
-        {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
-          "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
+          "sha256": "ceb8e344d9f6a55182e3c71633cea7208aa680f19db2ca402284f5adb452d19b",
+          "reviewReason": "Verified the two ASP.NET Core patch-version changes against regenerated portable and linux-musl lockfiles and the 458-project NuGet audit. Project, route, and package-reference inventory counts remain valid."
         },
         {
           "path": "docs/architecture/backend-modules.json",
@@ -258,12 +253,17 @@
           "path": "docs/architecture/module-dependencies.json",
           "sha256": "731cfb023e2f892ba7c0da02e47e6cdf703ba99de433bef8d9fb676c0f8e0a3f",
           "reviewReason": "Regenerated catalog includes privacy controller, profile filter, DTOs, modules and project references. Literal route discovery remains navigation only; current exported OpenAPI and generated SDK establish the HTTP surface. No catalog algorithm or inventory semantics changed."
+        },
+        {
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
+          "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Reviewed project-driven production presentation discovery and generated HTTP entries; existing literal-route inventory and navigation limitations remain accurate. Module ownership is covered by the new isolated generator regression.",
-      "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T15:59:37.5697452Z"
+      "reason": "Verified the two ASP.NET Core patch-version changes against regenerated portable and linux-musl lockfiles and the 458-project NuGet audit. Project, route, and package-reference inventory counts remain valid.",
+      "baseRef": "97bde53e17aec374b28f9eaaac0a517cd88464d2",
+      "gitHead": "23b19eaebbda6090678e49f71c7c87187d01a14e",
+      "reviewedAtUtc": "2026-11-12T12:21:17.0207648Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",

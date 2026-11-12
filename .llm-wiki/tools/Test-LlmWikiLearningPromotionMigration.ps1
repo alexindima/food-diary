@@ -7,6 +7,10 @@ $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $sandbox = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'learning-promotion-migration'
 $registryPath = Join-Path $sandbox 'learning-promotions.json'
 $previousRoot = $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT
+$legacyJsonParameters = @{}
+if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) {
+    $legacyJsonParameters.DateKind = 'Default'
+}
 
 function Get-TestHash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 40 -Compress
@@ -28,9 +32,8 @@ function Add-LegacyEvent([Collections.Generic.List[object]]$Events, [string]$Kin
         previousHash=$(if ($Events.Count -eq 0) { '' } else { [string]$Events[-1].eventHash })
         observation=$Observation; decision=$Decision; targetId=''; reason=$Reason; eventHash=''
     }
-    # The migration validates the persisted JSON shape, so build the legacy hash
-    # from that same round-tripped representation on every PowerShell platform.
-    $normalizedEvent = $event | ConvertTo-Json -Depth 40 | ConvertFrom-Json
+    # Model the original writer independently of the smoke runner's date defaults.
+    $normalizedEvent = $event | ConvertTo-Json -Depth 40 | ConvertFrom-Json @legacyJsonParameters
     $event.eventHash = Get-TestHash (Get-LegacyPayload $normalizedEvent)
     $Events.Add($event)
 }

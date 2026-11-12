@@ -473,7 +473,7 @@ COPY Shared/FoodDiary.Email.Infrastructure/ Shared/FoodDiary.Email.Infrastructur
 COPY Shared/FoodDiary.Audit.Infrastructure/ Shared/FoodDiary.Audit.Infrastructure/
 RUN dotnet publish FoodDiary.Initializer/FoodDiary.Initializer.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:486297ae006e95ee2ee3112a2c03e3d26e41fbbc64b7a29e28e7a18cc36b12bb
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:21c3f9798416cba4c0576a947c286231cb71ea2884896cb968253f5c9668f930
 
 WORKDIR /app
 RUN apk add --no-cache \
