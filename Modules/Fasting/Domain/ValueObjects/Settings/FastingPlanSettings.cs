@@ -2,7 +2,7 @@ using FoodDiary.Modules.Fasting.Domain.Enums;
 
 namespace FoodDiary.Modules.Fasting.Domain.ValueObjects.Settings;
 
-public abstract class FastingPlanSettings {
+public closed class FastingPlanSettings {
     private protected FastingPlanSettings() {
     }
 

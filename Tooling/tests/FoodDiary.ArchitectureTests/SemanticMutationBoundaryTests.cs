@@ -83,14 +83,12 @@ public sealed class SemanticMutationBoundaryTests {
     [InlineData(typeof(PreferredProductQuantity))]
     [InlineData(typeof(ExerciseDuration))]
     [InlineData(typeof(BurnedEnergy))]
-    [InlineData(typeof(ReportTarget))]
     [InlineData(typeof(RecentItemReference))]
     [InlineData(typeof(BillingPaymentFinancials))]
     [InlineData(typeof(BmrCalculationInput))]
     [InlineData(typeof(PlanDurationDays))]
     [InlineData(typeof(PlanDayNumber))]
     [InlineData(typeof(PlannedServings))]
-    [InlineData(typeof(FieldChange<string>))]
     [InlineData(typeof(ProductMeasurementBasis))]
     [InlineData(typeof(ProductDefaultPortion))]
     [InlineData(typeof(NotificationIntent))]
@@ -101,6 +99,29 @@ public sealed class SemanticMutationBoundaryTests {
             Assert.True(valueType.IsSealed);
             Assert.Empty(valueType.GetConstructors());
             Assert.DoesNotContain(valueType.GetProperties(), property => property.SetMethod?.IsPublic == true);
+        });
+    }
+
+    [Theory]
+    [InlineData(typeof(ReportTarget))]
+    [InlineData(typeof(FieldChange<>))]
+    public void ValidatedValueHierarchy_OnlyExposesImmutableFactoryCreatedValues(Type valueType) {
+        Type[] cases = [
+            .. valueType.Assembly.GetTypes().Where(type => type.BaseType == valueType ||
+                (type.BaseType?.IsGenericType == true && type.BaseType.GetGenericTypeDefinition() == valueType)),
+        ];
+
+        Assert.Multiple(
+            () => Assert.True(valueType.IsAbstract),
+            () => Assert.Empty(valueType.GetConstructors()),
+            () => Assert.Contains(valueType.CustomAttributes,
+                attribute => string.Equals(attribute.AttributeType.FullName,
+                    "System.Runtime.CompilerServices.IsClosedTypeAttribute", StringComparison.Ordinal)),
+            () => Assert.DoesNotContain(valueType.GetProperties(), property => property.SetMethod?.IsPublic == true),
+            () => Assert.NotEmpty(cases));
+        Assert.All(cases, type => {
+            Assert.True(type.IsNestedPrivate);
+            Assert.True(type.IsSealed);
         });
     }
 

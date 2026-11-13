@@ -61,12 +61,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
         IReadOnlyDictionary<Guid, Guid> existingByClient,
         CancellationToken cancellationToken) {
         if (existingByClient.TryGetValue(clientId.Value, out Guid recommendationId)) {
-            return new(
-                ClientUserId: clientId.Value,
-                Succeeded: true,
-                RecommendationId: recommendationId,
-                WasAlreadyProcessed: true,
-                ErrorCode: null);
+            return new BulkRecommendationRecipientResultModel.AlreadyProcessed(clientId.Value, recommendationId);
         }
 
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
@@ -75,22 +70,12 @@ public sealed class BulkCreateRecommendationsCommandHandler(
             clientId,
             cancellationToken);
         if (accessResult.IsFailure) {
-            return new(
-                ClientUserId: clientId.Value,
-                Succeeded: false,
-                RecommendationId: null,
-                WasAlreadyProcessed: false,
-                ErrorCode: accessResult.Error.Code);
+            return new BulkRecommendationRecipientResultModel.Rejected(clientId.Value, accessResult.Error.Code);
         }
 
         Error? permissionError = DietologistAccessPolicy.EnsureRecommendationPermission(accessResult.Value);
         if (permissionError is not null) {
-            return new(
-                ClientUserId: clientId.Value,
-                Succeeded: false,
-                RecommendationId: null,
-                WasAlreadyProcessed: false,
-                ErrorCode: permissionError.Code);
+            return new BulkRecommendationRecipientResultModel.Rejected(clientId.Value, permissionError.Code);
         }
 
         var recommendation = Recommendation.Create(dietologistId, clientId, text);
@@ -98,11 +83,6 @@ public sealed class BulkCreateRecommendationsCommandHandler(
         await dispatchWriteRepository.AddAsync(
             RecommendationBulkDispatch.Create(dietologistId, clientId, recommendation.Id, idempotencyKey),
             cancellationToken);
-        return new(
-            ClientUserId: clientId.Value,
-            Succeeded: true,
-            RecommendationId: recommendation.Id.Value,
-            WasAlreadyProcessed: false,
-            ErrorCode: null);
+        return new BulkRecommendationRecipientResultModel.Created(clientId.Value, recommendation.Id.Value);
     }
 }

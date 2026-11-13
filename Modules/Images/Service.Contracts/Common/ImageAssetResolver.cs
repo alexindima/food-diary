@@ -21,8 +21,13 @@ public static class ImageAssetResolver {
             imageAssetIdResult.Value,
             userId,
             cancellationToken);
-        return imageAssetResult.IsFailure
-            ? Result.Failure<ImageAssetResolution>(imageAssetResult.Error)
-            : Result.Success(new ImageAssetResolution(imageAssetIdResult.Value, imageAssetResult.Value));
+        if (imageAssetResult.IsFailure) {
+            return Result.Failure<ImageAssetResolution>(imageAssetResult.Error);
+        }
+
+        ImageAssetResolution resolution = imageAssetResult.Value is { } asset
+            ? new ImageAssetResolution.Resolved(imageAssetIdResult.Value, asset)
+            : new ImageAssetResolution.Unresolved(imageAssetIdResult.Value);
+        return Result.Success(resolution);
     }
 }

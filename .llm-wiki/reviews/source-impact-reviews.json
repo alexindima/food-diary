@@ -813,8 +813,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "897d567cf80281349ca371e9ecca76ee32fd712235cbd5d330bdc90611b46f27",
-          "reviewReason": "Verified the new bounded administrative SSO confirmation invariant and the relocated source anchors in UserRefreshTokenSession. The domain index generation and review workflow still applies."
+          "sha256": "e8b2d4a5c390bf066e36b1cfe7466c1524fada5649a966972472e533d1e2cf1a",
+          "reviewReason": "FieldChange still validates set values and rejects value access for clear or unchanged. The domain index diff only moves invariant line numbers. PostgreSQL migration and rollback tests passed and the guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
@@ -822,10 +822,10 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "reason": "FieldChange still validates set values and rejects value access for clear or unchanged. The domain index diff only moves invariant line numbers. PostgreSQL migration and rollback tests passed and the guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:44.9574780Z"
+      "gitHead": "15209daafa4b09ee6e96b5113ffabd267772ac00",
+      "reviewedAtUtc": "2026-11-13T15:14:34.9234653Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1286,8 +1286,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "374708b80784dc4339b7d1d0df38092510f8f4e288ac51badbfd67bdba3064e7",
-          "reviewReason": "Verified the sensitive data index diff contains three line-number shifts only. Code graph now loads the .NET 11 extractor with the same privacy projection."
+          "sha256": "4fa7e5cfaf6ff62b05122d221e377a24dc00f2aaefcf788e7d71f1572ebd5134",
+          "reviewReason": "Reviewed new candidate declarations for existing idempotency tokens, checkout state, health metrics and reported comments. Only their C# representation or source position changes. Existing storage, sharing, logging and retention guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1300,10 +1300,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Verified the sensitive data index diff contains three line-number shifts only. Code graph now loads the .NET 11 extractor with the same privacy projection.",
-      "baseRef": "HEAD^",
-      "gitHead": "1eb6d29d172acd03702d85227bcd51b99540cb9b",
-      "reviewedAtUtc": "2026-11-13T11:02:12.5245325Z"
+      "reason": "Reviewed new candidate declarations for existing idempotency tokens, checkout state, health metrics and reported comments. Only their C# representation or source position changes. Existing storage, sharing, logging and retention guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "15209daafa4b09ee6e96b5113ffabd267772ac00",
+      "reviewedAtUtc": "2026-11-13T15:14:35.1959731Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1489,14 +1489,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "875d23f74edb91f8b13dcf35bbd81e5e0af7ffc996760cd91ff9c76562f24fa4",
-          "reviewReason": "Compared the generated runtime topology with the current branch. The analyzer changes update only the source fingerprint and file count. The recorded hosts, workers, clients, webhooks and recurring jobs are identical."
+          "sha256": "d03e667cfb5a93bd3b13f93fe361f3304c84283e0cb1aadc29797604aa8a0535",
+          "reviewReason": "The topology differs only in its source fingerprint. Deployment hosts, workers, jobs and webhook inventory are identical. PostgreSQL, Redis and RabbitMQ behavior tests passed."
         }
       ],
-      "reason": "Compared the generated runtime topology with the current branch. The analyzer changes update only the source fingerprint and file count. The recorded hosts, workers, clients, webhooks and recurring jobs are identical.",
+      "reason": "The topology differs only in its source fingerprint. Deployment hosts, workers, jobs and webhook inventory are identical. PostgreSQL, Redis and RabbitMQ behavior tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "090faa0e6026f74977b5bf09c62cd2e8b5dead4d",
-      "reviewedAtUtc": "2026-11-13T14:33:51.1561809Z"
+      "gitHead": "15209daafa4b09ee6e96b5113ffabd267772ac00",
+      "reviewedAtUtc": "2026-11-13T15:14:35.4320315Z"
     },
     {
       "pageId": "workflow-security-review",

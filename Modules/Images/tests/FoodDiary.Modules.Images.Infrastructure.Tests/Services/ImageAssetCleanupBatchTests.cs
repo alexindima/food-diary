@@ -37,7 +37,7 @@ public sealed class ImageAssetCleanupBatchTests {
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             Call = (assetId, cancellationToken);
-            return Task.FromResult(new DeleteImageAssetResult(Deleted: false));
+            return Task.FromResult<DeleteImageAssetResult>(new DeleteImageAssetResult.Refused());
         }
 
         public ValueTask DisposeAsync() {

@@ -91,13 +91,18 @@ internal sealed class UsdaFoodDetailCache {
             return null;
         }
 
-        if (result.Cacheable) {
-            TimeSpan duration = result.Value is null ? NegativeDuration : PositiveDuration;
-            _entries[key] = new CacheEntry(result.Value, _timeProvider.GetUtcNow().Add(duration));
-            TrimIfNeeded();
-        }
+        return result switch {
+            UsdaFoodDetailLookupResult.Found found => Cache(key, found.Food, PositiveDuration),
+            UsdaFoodDetailLookupResult.NotFound => Cache(key, value: null, NegativeDuration),
+            UsdaFoodDetailLookupResult.LookupFailed => null,
+            null => throw new InvalidOperationException("A USDA detail lookup must return an outcome."),
+        };
+    }
 
-        return result.Value;
+    private UsdaFoodDetailModel? Cache(CacheKey key, UsdaFoodDetailModel? value, TimeSpan duration) {
+        _entries[key] = new CacheEntry(value, _timeProvider.GetUtcNow().Add(duration));
+        TrimIfNeeded();
+        return value;
     }
 
     private void TrimIfNeeded() {

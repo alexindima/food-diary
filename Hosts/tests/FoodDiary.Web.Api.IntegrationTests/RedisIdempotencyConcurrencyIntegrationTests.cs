@@ -28,7 +28,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             reservations,
             static reservation => reservation.Status == IdempotencyReservationStatus.Acquired);
         Assert.All(
-            reservations.Where(reservation => !ReferenceEquals(reservation, owner)),
+            reservations.Where(static reservation => reservation is not IdempotencyReservation.Acquired),
             static reservation => Assert.Equal(IdempotencyReservationStatus.InProgress, reservation.Status));
 
         bool completed = await store.CompleteAsync(

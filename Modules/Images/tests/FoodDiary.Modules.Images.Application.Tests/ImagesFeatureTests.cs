@@ -217,7 +217,7 @@ public class ImagesFeatureTests {
         await repository.AddAsync(asset, CancellationToken.None);
         var handler = new ConfirmImageUploadCommandHandler(
             repository,
-            CreateImageStorageService(new ImageObjectValidationResult(IsValid: false)),
+            CreateImageStorageService((ImageObjectValidationResult)new ImageObjectValidationResult.Invalid()),
             new FakeImageObjectDeletionOutbox(),
             CreateUnitOfWork(), new InlineImageTransactionRunner());
 
@@ -303,7 +303,7 @@ public class ImagesFeatureTests {
         await repository.AddAsync(asset, CancellationToken.None);
         var handler = new ConfirmImageUploadCommandHandler(
             repository,
-            CreateImageStorageService(new ImageObjectValidationResult(IsValid: false, "invalid_content", "Invalid image.")),
+            CreateImageStorageService((ImageObjectValidationResult)new ImageObjectValidationResult.Invalid("invalid_content", "Invalid image.")),
             new FakeImageObjectDeletionOutbox(),
             CreateUnitOfWork(), new InlineImageTransactionRunner());
 
@@ -611,8 +611,8 @@ public class ImagesFeatureTests {
         service
             .DeleteIfUnusedAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(Deleted: true)
-                : new DeleteImageAssetResult(Deleted: false, errorCode)));
+                ? DeleteImageAssetResult.Success
+                : new DeleteImageAssetResult.Refused(errorCode)));
         return service;
     }
 
@@ -627,7 +627,7 @@ public class ImagesFeatureTests {
 
         public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) {
             ValidatedObjectKey = key.Value;
-            return Task.FromResult(new ImageObjectValidationResult(IsValid: true));
+            return Task.FromResult(ImageObjectValidationResult.Accepted);
         }
     }
 
@@ -660,7 +660,7 @@ public class ImagesFeatureTests {
             .Returns(Task.CompletedTask);
         service
             .ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(validationResult ?? new ImageObjectValidationResult(IsValid: true)));
+            .Returns(Task.FromResult(validationResult ?? ImageObjectValidationResult.Accepted));
         return service;
     }
 
@@ -688,7 +688,7 @@ public class ImagesFeatureTests {
             });
         service
             .ConfirmUploadedObjectAsync(Arg.Any<ObjectStorageKey>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new ImageObjectValidationResult(IsValid: true)));
+            .Returns(Task.FromResult(ImageObjectValidationResult.Accepted));
         return service;
     }
 

@@ -35,7 +35,7 @@ public sealed class TelegramStarsTransportIntegrationTests(TransportApiWebApplic
     public async Task StarsUpdate_MapsAuthenticatedEnvelopeAndCheckoutDecisionAsync() {
         ISender sender = Substitute.For<ISender>();
         sender.Send(Arg.Any<ProcessTelegramStarsUpdateCommand>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: true)));
+            .Returns(Result.Success(TelegramStarsUpdateResultModel.CheckoutAccepted));
         await using WebApplicationFactory<Program> configured = CreateFactory(sender);
         using HttpClient client = configured.CreateClient();
         client.DefaultRequestHeaders.Add("X-Telegram-Bot-Secret", new string('s', 32));

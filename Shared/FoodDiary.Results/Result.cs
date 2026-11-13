@@ -4,10 +4,12 @@ namespace FoodDiary.Results;
 /// Represents the outcome of an operation that does not return a value.
 /// </summary>
 public abstract class Result {
+    private readonly Outcome _outcome;
+
     /// <summary>
     /// Gets a value indicating whether the operation succeeded.
     /// </summary>
-    public bool IsSuccess { get; }
+    public bool IsSuccess => _outcome is Successful;
 
     /// <summary>
     /// Gets a value indicating whether the operation failed.
@@ -17,7 +19,7 @@ public abstract class Result {
     /// <summary>
     /// Gets the failure information, or <see cref="Error.None"/> for a successful result.
     /// </summary>
-    public Error Error { get; }
+    public Error Error => _outcome is Error error ? error : Error.None;
 
     protected Result(bool isSuccess, Error error) {
         ArgumentNullException.ThrowIfNull(error);
@@ -32,8 +34,7 @@ public abstract class Result {
             case false when string.IsNullOrWhiteSpace(error.Message):
                 throw new InvalidOperationException("A failed result must contain a non-empty error message.");
             default:
-                IsSuccess = isSuccess;
-                Error = error;
+                _outcome = isSuccess ? Successful.Instance : error;
                 break;
         }
     }
@@ -62,6 +63,12 @@ public abstract class Result {
     /// <typeparam name="TValue">The value type.</typeparam>
     /// <param name="error">The failure information.</param>
     public static Result<TValue> Failure<TValue>(Error error) => new(default, isSuccess: false, error);
+
+    private union Outcome(Successful, Error);
+
+    private sealed class Successful {
+        public static readonly Successful Instance = new();
+    }
 
     private sealed class NonGenericResult(bool isSuccess, Error error) : Result(isSuccess, error);
 }

@@ -26,31 +26,28 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
 
             if (_entries.TryGetValue(key, out Entry? entry)) {
                 if (!string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)) {
-                    return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.Conflict));
+                    return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.Conflict());
                 }
 
                 if (entry.Completed) {
-                    return Task.FromResult(new IdempotencyReservation(
-                        IdempotencyReservationStatus.Replay,
+                    return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.Replay(
                         entry.StatusCode,
                         entry.Body,
                         entry.Location));
                 }
 
-                return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.InProgress));
+                return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.InProgress());
             }
 
             if (_entries.Count >= _maximumEntries) {
-                return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.CapacityExceeded));
+                return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.CapacityExceeded());
             }
 
             string ownerToken = Guid.NewGuid().ToString("N");
             DateTime expiresAtUtc = nowUtc.Add(processingTtl);
             _entries[key] = Entry.InProgress(requestHash, ownerToken, expiresAtUtc);
             _expirations.Enqueue(new Expiration(key, expiresAtUtc), expiresAtUtc);
-            return Task.FromResult(new IdempotencyReservation(
-                IdempotencyReservationStatus.Acquired,
-                OwnerToken: ownerToken));
+            return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.Acquired(ownerToken));
         }
     }
 

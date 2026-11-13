@@ -361,6 +361,8 @@ The module-page generator takes one in-memory snapshot of the relevant C# source
 files, caches area-prefix lookups, and derives host namespace references from
 that snapshot. Do not reintroduce recursive source-tree reads inside the
 per-module loop; the backend-module regression explicitly guards this contract.
+The C# symbol, domain, and module indexes recognize C# 15 union declarations
+and closed hierarchies.
 Contract-consumer discovery reads each candidate C# file once, skips per-line
 PowerShell iteration when its text lacks the contract word, and reuses matching
 text for declaration and consumer analysis. This reduces uncached generation

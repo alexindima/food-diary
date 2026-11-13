@@ -149,7 +149,7 @@ public sealed class S3ImageStorageService(
 
             await PublishValidatedContentAsync(objectKey, info.ContentType, content, cancellationToken);
 
-            return new ImageObjectValidationResult(IsValid: true);
+            return ImageObjectValidationResult.Accepted;
         } catch (InvalidDataException ex) {
             errorType = ex.GetType().Name;
             return CreateInvalidValidationResult(ref outcome, "invalid_content",
@@ -187,7 +187,7 @@ public sealed class S3ImageStorageService(
         string errorCode,
         string errorMessage) {
         outcome = errorCode;
-        return new ImageObjectValidationResult(IsValid: false, errorCode, errorMessage);
+        return new ImageObjectValidationResult.Invalid(errorCode, errorMessage);
     }
 
     [ExcludeFromCodeCoverage]

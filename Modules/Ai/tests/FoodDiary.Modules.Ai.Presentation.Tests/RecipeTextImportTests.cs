@@ -42,7 +42,7 @@ public sealed class RecipeTextImportTests {
         var controller = new AiFoodController(sender) { ControllerContext = new ControllerContext { HttpContext = http } };
         IIdempotencyStore store = Substitute.For<IIdempotencyStore>();
         store.ReserveAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<TimeSpan>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
-            .Returns(new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: "fixture-owner"));
+            .Returns((IdempotencyReservation)new IdempotencyReservation.Acquired("fixture-owner"));
         store.RenewAsync(Arg.Any<string>(), Arg.Any<string>(), "fixture-owner", Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);
         store.CompleteAsync(Arg.Any<string>(), Arg.Any<string>(), "fixture-owner", 200, Arg.Any<string?>(), Arg.Any<string?>(),
             Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(returnThis: true);

@@ -197,11 +197,16 @@ public sealed class UsdaFoodSearchServiceTests {
 
     [Fact]
     public async Task GetFoodDetailAsync_WhenRequestFails_ReturnsNull() {
-        UsdaFoodSearchService service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError));
+        var handler = new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError);
+        UsdaFoodSearchService service = CreateService(handler);
 
         UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
+        UsdaFoodDetailModel? repeated = await service.GetFoodDetailAsync(539789);
 
-        Assert.Null(result);
+        Assert.Multiple(
+            () => Assert.Null(result),
+            () => Assert.Null(repeated),
+            () => Assert.Equal(2, handler.RequestCount));
     }
 
     [Fact]

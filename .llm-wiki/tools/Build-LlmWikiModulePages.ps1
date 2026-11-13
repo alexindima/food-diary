@@ -405,19 +405,19 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
         foreach ($area in $contractAreas) {
             $contractArea = Resolve-AbstractionAreaPath ([string]$area)
             Get-SourceFilesUnder $contractArea | Where-Object {
-                $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
+                $_.content -match '\bpublic\s+(?:(?:sealed|abstract|closed|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum|union)\b'
             }
         }
         foreach ($contractProjectArea in $contractProjectAreas) {
             Get-SourceFilesUnder ([string]$contractProjectArea) | Where-Object {
-                $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
+                $_.content -match '\bpublic\s+(?:(?:sealed|abstract|closed|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum|union)\b'
             }
         }
     ) | Sort-Object { Get-LlmWikiOrdinalSortKey $_.path } -Unique)
     $publicContractTypes = @(
         foreach ($contractFile in $publicContractFiles) {
             $content = $contractFile.content
-            foreach ($match in [regex]::Matches($content, '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?<kind>interface|record(?:\s+(?:class|struct))?|class|struct|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
+            foreach ($match in [regex]::Matches($content, '\bpublic\s+(?:(?:sealed|abstract|closed|partial|readonly|static)\s+)*(?<kind>interface|record(?:\s+(?:class|struct))?|class|struct|enum|union)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
                 [pscustomobject]@{
                     kind = $match.Groups['kind'].Value
                     name = $match.Groups['name'].Value

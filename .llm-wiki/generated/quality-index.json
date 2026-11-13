@@ -424,11 +424,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 540,
+      "nonBlankLines": 548,
       "decisionPoints": 82,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 133.8
+      "structuralRiskScore": 133.96
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
@@ -4186,11 +4186,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "nonBlankLines": 495,
-      "decisionPoints": 54,
+      "nonBlankLines": 482,
+      "decisionPoints": 51,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 90.9
+      "structuralRiskScore": 86.14
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs",
@@ -4210,11 +4210,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 2
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservationStatus.cs",
@@ -4226,11 +4226,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
-      "nonBlankLines": 157,
+      "nonBlankLines": 154,
       "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 37.64
+      "structuralRiskScore": 37.58
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
@@ -5826,11 +5826,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "nonBlankLines": 184,
+      "nonBlankLines": 183,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.18
+      "structuralRiskScore": 26.16
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",
@@ -25858,11 +25858,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 540,
+      "nonBlankLines": 548,
       "decisionPoints": 82,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 133.8
+      "structuralRiskScore": 133.96
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodResponseDecoder.cs",
@@ -26570,11 +26570,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Billing/Application/AssemblyInfo.cs",
@@ -28674,11 +28674,11 @@
     },
     {
       "path": "Modules/ContentReports/Domain.Contracts/ValueObjects/ReportTarget.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
+      "nonBlankLines": 30,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
+      "structuralRiskScore": 5.1
     },
     {
       "path": "Modules/ContentReports/Domain/Entities/ContentReport.cs",
@@ -31170,11 +31170,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-      "nonBlankLines": 99,
+      "nonBlankLines": 79,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.48
+      "structuralRiskScore": 11.08
     },
     {
       "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
@@ -31642,11 +31642,11 @@
     },
     {
       "path": "Modules/Dietologist/Application/Models/BulkRecommendationRecipientResultModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 3.46
     },
     {
       "path": "Modules/Dietologist/Application/Models/BulkRecommendationResultModel.cs",
@@ -39754,11 +39754,11 @@
     },
     {
       "path": "Modules/Images/Application.Abstractions/Common/ImageObjectValidationResult.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Images/Application.Abstractions/Common/PresignedUpload.cs",
@@ -40194,11 +40194,11 @@
     },
     {
       "path": "Modules/Images/Service.Contracts/Common/DeleteImageAssetResult.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
@@ -40242,19 +40242,19 @@
     },
     {
       "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolver.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 13,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2
+      "structuralRiskScore": 1.76
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolver.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.58
     },
     {
       "path": "Modules/Images/Service.Contracts/Models/ImageAssetReadModel.cs",
@@ -48490,11 +48490,11 @@
     },
     {
       "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
@@ -48954,19 +48954,19 @@
     },
     {
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailCache.cs",
-      "nonBlankLines": 105,
+      "nonBlankLines": 110,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.6
+      "structuralRiskScore": 15.7
     },
     {
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailLookupResult.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
@@ -54666,11 +54666,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
-      "nonBlankLines": 93,
+      "nonBlankLines": 95,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.86
+      "structuralRiskScore": 19.9
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/NoOpMailRelayDeliveryPolicy.cs",
@@ -54738,11 +54738,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
-      "nonBlankLines": 5,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Telemetry/MailRelayTelemetry.cs",
@@ -55306,11 +55306,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
-      "nonBlankLines": 142,
-      "decisionPoints": 16,
+      "nonBlankLines": 141,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.84
+      "structuralRiskScore": 25.32
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",
@@ -56258,11 +56258,11 @@
     },
     {
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChanges.cs",
@@ -57154,11 +57154,11 @@
     },
     {
       "path": "Shared/FoodDiary.Results/Result.cs",
-      "nonBlankLines": 79,
+      "nonBlankLines": 83,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.58
+      "structuralRiskScore": 13.66
     },
     {
       "path": "Tooling/FoodDiary.Testing/Assertions/ResultAssert.cs",

@@ -96,14 +96,14 @@ internal sealed class UsdaFoodSearchService(
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken);
             if (response.StatusCode == HttpStatusCode.NotFound) {
-                return new UsdaFoodDetailLookupResult(Cacheable: true, Value: null);
+                return new UsdaFoodDetailLookupResult.NotFound();
             }
 
             response.EnsureSuccessStatusCode();
 
             UsdaFoodDetailResponse? food = await ReadJsonAsync<UsdaFoodDetailResponse>(response.Content, cancellationToken);
             if (food is null) {
-                return new UsdaFoodDetailLookupResult(Cacheable: false, Value: null);
+                return new UsdaFoodDetailLookupResult.LookupFailed();
             }
 
             var nutrients = food.FoodNutrients
@@ -127,7 +127,7 @@ internal sealed class UsdaFoodSearchService(
                     p.Modifier))
                 .ToList();
 
-            return new UsdaFoodDetailLookupResult(Cacheable: true, new UsdaFoodDetailModel(
+            return new UsdaFoodDetailLookupResult.Found(new UsdaFoodDetailModel(
                 food.FdcId,
                 food.Description,
                 food.FoodCategory?.Description ?? food.FoodCategoryDescription ?? food.BrandName,
@@ -138,7 +138,7 @@ internal sealed class UsdaFoodSearchService(
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "USDA food detail lookup failed for FDC ID {FdcId}", fdcId);
-            return new UsdaFoodDetailLookupResult(Cacheable: false, Value: null);
+            return new UsdaFoodDetailLookupResult.LookupFailed();
         }
     }
 

@@ -506,8 +506,8 @@ public partial class RecipesFeatureTests {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
             return Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(Deleted: true)
-                : new DeleteImageAssetResult(Deleted: false, errorCode));
+                ? DeleteImageAssetResult.Success
+                : new DeleteImageAssetResult.Refused(errorCode));
         }
 
     }

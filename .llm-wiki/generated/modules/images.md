@@ -56,7 +56,7 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 
 ## Public Surface
 
-- Public contract types: 25
+- Public contract types: 31
 - Interfaces: 13
 - DTO/read-model/projection types: 1
 - Enums: 0
@@ -79,14 +79,20 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 - `interface IImageObjectDeletionOutboxProcessor`
 - `interface IImageStorageService`
 - `record CleanupOrphanImagesCommand`
-- `record DeleteImageAssetResult`
 - `record ImageAssetReadModel`
-- `record ImageAssetResolution`
 - `record ImageCleanupCandidate`
-- `record ImageObjectValidationResult`
+- `record Invalid`
 - `record PresignedUpload`
 - `record ProcessOwnedImageDeletionsCommand`
+- `record Refused`
+- `record Removed`
+- `record Resolved`
+- `record Unresolved`
+- `record Valid`
 - `record struct ImageAssetId`
+- `union DeleteImageAssetResult`
+- `union ImageAssetResolution`
+- ... 1 more type(s)
 
 ## Focused Tests
 

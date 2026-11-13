@@ -82,9 +82,8 @@ public sealed partial class OpenAiFoodClient(
 
         string requestModel = _options.VisionModel;
         object request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
-        if (!response.IsSuccess &&
-            response.CanFallback &&
+        RequestOutcome response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        if (response is RequestOutcome.FallbackAllowed &&
             !string.Equals(_options.VisionFallbackModel, requestModel, StringComparison.Ordinal)) {
             IntegrationsTelemetry.AiFallbackCounter.Add(
                 1,
@@ -96,11 +95,11 @@ public sealed partial class OpenAiFoodClient(
             response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken);
         }
 
-        if (!response.IsSuccess) {
-            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
+        if (response is not RequestOutcome.Success success) {
+            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(GetRequestError(response));
         }
 
-        using JsonDocument json = response.Json!;
+        using JsonDocument json = success.Document;
         Result<FoodVisionModel> parsed = product is null
             ? OpenAiFoodResponseDecoder.Vision(ExtractOutputText(json))
             : OpenAiFoodResponseDecoder.ProductLabel(ExtractOutputText(json));
@@ -143,12 +142,12 @@ public sealed partial class OpenAiFoodClient(
 
         string requestModel = _options.TextModel;
         object request = BuildTextParseRequest(requestModel, text, userLanguage, promptTemplate, _options.MaxOutputTokens);
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
-        if (!response.IsSuccess) {
-            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
+        RequestOutcome response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        if (response is not RequestOutcome.Success success) {
+            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(GetRequestError(response));
         }
 
-        using JsonDocument json = response.Json!;
+        using JsonDocument json = success.Document;
         Result<FoodVisionModel> parsed = OpenAiFoodResponseDecoder.Vision(ExtractOutputText(json));
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
@@ -187,12 +186,12 @@ public sealed partial class OpenAiFoodClient(
 
         string requestModel = _options.TextModel;
         object request = BuildNutritionRequest(requestModel, items, promptTemplate, _options.MaxOutputTokens);
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
-        if (!response.IsSuccess) {
-            return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(response.Error);
+        RequestOutcome response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
+        if (response is not RequestOutcome.Success success) {
+            return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(GetRequestError(response));
         }
 
-        using JsonDocument json = response.Json!;
+        using JsonDocument json = success.Document;
         Result<FoodNutritionModel> parsed = OpenAiFoodResponseDecoder.Nutrition(ExtractOutputText(json), items.Count);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(parsed.Error);
@@ -277,7 +276,7 @@ public sealed partial class OpenAiFoodClient(
     }
 
     [ExcludeFromCodeCoverage]
-    private async Task<(bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback)> SendRequestAsync(
+    private async Task<RequestOutcome> SendRequestAsync(
         object payload,
         string operation,
         string model,
@@ -285,9 +284,8 @@ public sealed partial class OpenAiFoodClient(
         long started = _timeProvider.GetTimestamp();
         string outcome = "failure";
         try {
-            (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) result =
-                await SendRequestCoreAsync(payload, operation, model, cancellationToken);
-            outcome = result.IsSuccess ? "success" : "failure";
+            RequestOutcome result = await SendRequestCoreAsync(payload, operation, model, cancellationToken);
+            outcome = result is RequestOutcome.Success ? "success" : "failure";
             return result;
         } catch (OperationCanceledException) {
             outcome = "canceled";
@@ -302,7 +300,7 @@ public sealed partial class OpenAiFoodClient(
     }
 
     [ExcludeFromCodeCoverage]
-    private async Task<(bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback)> SendRequestCoreAsync(
+    private async Task<RequestOutcome> SendRequestCoreAsync(
         object payload,
         string operation,
         string model,
@@ -325,7 +323,7 @@ public sealed partial class OpenAiFoodClient(
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
                 logger.LogWarning(ex, "OpenAI request timed out.");
                 RecordAiRequest(operation, model, "timeout");
-                return (false, null, AiErrors.OpenAiFailed("OpenAI request timed out."), false);
+                return new RequestOutcome.Failure(AiErrors.OpenAiFailed("OpenAI request timed out."));
             }
 
             using HttpResponseMessage _ = response;
@@ -335,7 +333,7 @@ public sealed partial class OpenAiFoodClient(
                 overallDeadline.Token,
                 cancellationToken);
             if (!responseBody.IsSuccess) {
-                return (false, null, responseBody.Error, false);
+                return new RequestOutcome.Failure(responseBody.Error);
             }
 
             if (!response.IsSuccessStatusCode) {
@@ -350,35 +348,35 @@ public sealed partial class OpenAiFoodClient(
                         overallDeadline.Token);
                 } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
                     RecordAiRequest(operation, model, "timeout");
-                    return (false, null, AiErrors.OpenAiFailed("OpenAI request deadline expired."), false);
+                    return new RequestOutcome.Failure(AiErrors.OpenAiFailed("OpenAI request deadline expired."));
                 }
                 if (failedResponse.ShouldRetry) {
                     continue;
                 }
 
-                return (false, null, failedResponse.Error, true);
+                return new RequestOutcome.FallbackAllowed(failedResponse.Error);
             }
 
             return ParseSuccessfulResponse(responseBody.Body!, operation, model);
         }
 
         RecordAiRequest(operation, model, "retry_exhausted");
-        return (false, null, AiErrors.OpenAiFailed("OpenAI request failed after retries."), true);
+        return new RequestOutcome.FallbackAllowed(AiErrors.OpenAiFailed("OpenAI request failed after retries."));
     }
 
-    private (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) HandleResponseTransportFailure(
+    private RequestOutcome HandleResponseTransportFailure(
         Exception exception,
         string operation,
         string model) {
         if (exception is BrokenCircuitException) {
             logger.LogWarning(exception, "OpenAI request circuit is open.");
             RecordAiRequest(operation, model, "circuit_open");
-            return (false, null, AiErrors.OpenAiFailed("OpenAI is temporarily unavailable."), false);
+            return new RequestOutcome.Failure(AiErrors.OpenAiFailed("OpenAI is temporarily unavailable."));
         }
 
         logger.LogWarning(exception, "OpenAI request failed due to transport error.");
         RecordAiRequest(operation, model, "transport_error");
-        return (false, null, AiErrors.OpenAiFailed("OpenAI transport error."), false);
+        return new RequestOutcome.Failure(AiErrors.OpenAiFailed("OpenAI transport error."));
     }
 
     private HttpRequestMessage CreateResponseRequest(string requestBody) {
@@ -423,7 +421,7 @@ public sealed partial class OpenAiFoodClient(
         }
     }
 
-    private static (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) ParseSuccessfulResponse(
+    private static RequestOutcome ParseSuccessfulResponse(
         string responseBody,
         string operation,
         string model) {
@@ -443,11 +441,23 @@ public sealed partial class OpenAiFoodClient(
                     new KeyValuePair<string, object?>("fooddiary.ai.model", model),
                     new KeyValuePair<string, object?>("fooddiary.ai.token_type", "output"));
             }
-            return (true, json, Error.None, false);
+            return new RequestOutcome.Success(json);
         } catch (JsonException) {
             RecordAiRequest(operation, model, "invalid_json");
-            return (false, null, AiErrors.InvalidResponse("OpenAI returned an invalid JSON response."), true);
+            return new RequestOutcome.FallbackAllowed(AiErrors.InvalidResponse("OpenAI returned an invalid JSON response."));
         }
+    }
+
+    private static Error GetRequestError(RequestOutcome response) => response switch {
+        RequestOutcome.Failure failure => failure.Error,
+        RequestOutcome.FallbackAllowed fallback => fallback.Error,
+        RequestOutcome.Success or null => throw new InvalidOperationException("The request has no error."),
+    };
+
+    private union RequestOutcome(RequestOutcome.Success, RequestOutcome.Failure, RequestOutcome.FallbackAllowed) {
+        public sealed record Success(JsonDocument Document);
+        public sealed record Failure(Error Error);
+        public sealed record FallbackAllowed(Error Error);
     }
 
     private async Task<(bool ShouldRetry, Error Error)> HandleFailedResponseAsync(

@@ -43,7 +43,7 @@ foreach ($root in $domainRoots) {
     foreach ($file in Get-ChildItem -LiteralPath $absoluteRoot -Recurse -File -Filter '*.cs' | Sort-Object FullName) {
         $content = [System.IO.File]::ReadAllText($file.FullName)
         $path = ConvertTo-RepositoryPath $file.FullName
-        foreach ($match in [regex]::Matches($content, '(?m)^\s*public\s+(?:(?:sealed|abstract|readonly)\s+)*(?<kind>class|record(?:\s+struct)?|struct|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
+        foreach ($match in [regex]::Matches($content, '(?m)^\s*public\s+(?:(?:sealed|abstract|closed|readonly)\s+)*(?<kind>class|record(?:\s+(?:class|struct))?|struct|enum|union)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
             $kind = $match.Groups['kind'].Value
             $role = if ($path -match '/Entities/') { 'entity' } elseif ($path -match '/ValueObjects/') { 'value-object' } elseif ($kind -eq 'enum') { 'enum' } else { 'domain-type' }
             $domainTypes.Add([pscustomobject]@{

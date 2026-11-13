@@ -4,7 +4,7 @@ using FoodDiary.Modules.Ai.Domain.Recognition;
 namespace FoodDiary.Modules.Ai.Application.Abstractions.Common;
 
 /// <summary>Decodes the existing job contract into the states a meal consumer can use.</summary>
-public abstract class FoodRecognitionResult {
+public closed class FoodRecognitionResult {
     private FoodRecognitionResult() { }
 
     public sealed class Pending : FoodRecognitionResult;

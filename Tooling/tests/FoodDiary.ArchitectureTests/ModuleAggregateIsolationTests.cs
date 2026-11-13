@@ -65,6 +65,8 @@ public sealed class ModuleAggregateIsolationTests {
                 typeof(CleanupOrphanImagesCommand),
                 typeof(ProcessOwnedImageDeletionsCommand),
                 typeof(DeleteImageAssetResult),
+                typeof(DeleteImageAssetResult.Removed),
+                typeof(DeleteImageAssetResult.Refused),
                 typeof(IImageAssetAccessService),
                 typeof(IImageAssetCleanupService),
                 typeof(IImageAssetContentService),
@@ -72,6 +74,8 @@ public sealed class ModuleAggregateIsolationTests {
                 typeof(ImageAssetReadModel),
                 typeof(ImageAssetIdParser),
                 typeof(ImageAssetResolution),
+                typeof(ImageAssetResolution.Resolved),
+                typeof(ImageAssetResolution.Unresolved),
                 typeof(ImageAssetResolver),
             }.OrderBy(type => type.FullName, StringComparer.Ordinal),
             assembly.GetExportedTypes().OrderBy(type => type.FullName, StringComparer.Ordinal));

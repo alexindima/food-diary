@@ -57,7 +57,7 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
     public Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
         ObjectStorageKey key,
         CancellationToken cancellationToken) =>
-        Task.FromResult(new ImageObjectValidationResult(IsValid: true));
+        Task.FromResult(ImageObjectValidationResult.Accepted);
 
     public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
         ObjectStorageKey key,

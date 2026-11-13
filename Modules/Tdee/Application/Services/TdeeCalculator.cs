@@ -32,12 +32,12 @@ public static class TdeeCalculator {
         IReadOnlyList<ExerciseSample>? exerciseEntries) {
         var sortedWeights = weightEntries.OrderBy(static w => w.Date).ToList();
         if (sortedWeights.Count < MinWeightEntries || periodDays < MinDaysForAdaptive) {
-            return AdaptiveTdeeResult.Insufficient;
+            return AdaptiveTdeeResult.InsufficientData.Instance;
         }
 
         int daysWithCalories = dailyCalories.Count;
         if (daysWithCalories < MinDaysForAdaptive) {
-            return AdaptiveTdeeResult.Insufficient;
+            return AdaptiveTdeeResult.InsufficientData.Instance;
         }
 
         double avgDailyIntake = dailyCalories.Values.Average();
@@ -50,7 +50,7 @@ public static class TdeeCalculator {
         DateTime lastDate = sortedWeights[^1].Date;
         double actualDays = (lastDate - firstDate).TotalDays;
         if (actualDays < MinDaysForAdaptive) {
-            return AdaptiveTdeeResult.Insufficient;
+            return AdaptiveTdeeResult.InsufficientData.Instance;
         }
 
         double weightChange = smoothedEnd - smoothedStart;
@@ -61,13 +61,13 @@ public static class TdeeCalculator {
         double adaptiveTdee = avgDailyIntake + avgDailyExercise - caloriesFromWeightChange;
 
         if (adaptiveTdee is < MinReasonableTdee or > MaxReasonableTdee) {
-            return AdaptiveTdeeResult.Insufficient;
+            return AdaptiveTdeeResult.InsufficientData.Instance;
         }
 
         TdeeConfidence confidence = DetermineConfidence(sortedWeights.Count, daysWithCalories, actualDays);
         double weightTrendPerWeek = Math.Round(weightChangePerDay * 7, 2, MidpointRounding.ToEven);
 
-        return new AdaptiveTdeeResult(
+        return new AdaptiveTdeeResult.Calculated(
             Math.Round(adaptiveTdee, 0, MidpointRounding.ToEven),
             confidence,
             daysWithCalories,

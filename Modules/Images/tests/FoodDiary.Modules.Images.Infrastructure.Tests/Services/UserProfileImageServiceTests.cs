@@ -59,7 +59,7 @@ public sealed class UserProfileImageServiceTests {
         public (ImageAssetId, CancellationToken) Call { get; private set; }
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             Call = (assetId, cancellationToken);
-            return Task.FromResult(new DeleteImageAssetResult(Deleted: true));
+            return Task.FromResult(DeleteImageAssetResult.Success);
         }
     }
 }

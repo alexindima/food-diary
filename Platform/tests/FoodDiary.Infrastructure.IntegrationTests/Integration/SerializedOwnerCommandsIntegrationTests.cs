@@ -95,7 +95,7 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
         storage.ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), Arg.Any<CancellationToken>()).Returns(async _ => {
             entered.TrySetResult();
             await release.Task.WaitAsync(timeout.Token);
-            return new ImageObjectValidationResult(IsValid: true);
+            return ImageObjectValidationResult.Accepted;
         });
         var command = new ConfirmImageUploadCommand(user.Id.Value, asset.Id.Value);
         Task<Result<ConfirmImageUploadResult>> first = ImageHandler(firstProvider, storage).Handle(command, timeout.Token);

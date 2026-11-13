@@ -529,8 +529,8 @@ public sealed class UpdateUserCommandHandlerTests {
         service
             .DeleteIfUnusedAsync(Arg.Do<ImageAssetId>(capturedRequestedAssetIds.Add), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(Deleted: true)
-                : new DeleteImageAssetResult(Deleted: false, errorCode)));
+                ? DeleteImageAssetResult.Success
+                : new DeleteImageAssetResult.Refused(errorCode)));
         return service;
     }
 }

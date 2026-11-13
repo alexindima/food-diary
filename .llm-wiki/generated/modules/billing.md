@@ -66,7 +66,7 @@ Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
 
 ## Public Surface
 
-- Public contract types: 37
+- Public contract types: 40
 - Interfaces: 16
 - DTO/read-model/projection types: 16
 - Enums: 1
@@ -93,6 +93,7 @@ Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
 - `interface IBillingWebhookEventWriteRepository`
 - `interface IPaddleNotificationRecoveryGateway`
 - `interface ITelegramStarsBotAuthenticator`
+- `record Approved`
 - `record BillingCancellationEmailCandidateModel`
 - `record BillingCancellationRequestModel`
 - `record BillingCancellationSnapshotModel`
@@ -101,8 +102,7 @@ Source: `Modules/Billing/Presentation/Controllers/TelegramStarsController.cs`
 - `record BillingCheckoutSessionModel`
 - `record BillingCheckoutSessionRequestModel`
 - `record BillingPortalSessionModel`
-- `record BillingPortalSessionRequestModel`
-- ... 7 more type(s)
+- ... 10 more type(s)
 
 ## Focused Tests
 

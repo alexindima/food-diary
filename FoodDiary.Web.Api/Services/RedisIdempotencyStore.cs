@@ -49,8 +49,8 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 requestHash,
                 ownerToken,
                 out string? corruptResponse);
-            if (reservation is not null) {
-                return reservation;
+            if (reservation.HasValue) {
+                return reservation.GetValueOrDefault();
             }
 
             await DeleteCorruptResponseAsync(
@@ -74,13 +74,13 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         corruptResponse = null;
 
         if (state == AcquiredState) {
-            return new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: ownerToken);
+            return (IdempotencyReservation)new IdempotencyReservation.Acquired(ownerToken);
         }
 
         if (state == ActiveLockState) {
             return HasRequestHash(storedValue, requestHash)
-                ? new IdempotencyReservation(IdempotencyReservationStatus.InProgress)
-                : new IdempotencyReservation(IdempotencyReservationStatus.Conflict);
+                ? (IdempotencyReservation)new IdempotencyReservation.InProgress()
+                : new IdempotencyReservation.Conflict();
         }
 
         if (state != CompletedState) {
@@ -95,11 +95,10 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         }
 
         if (!string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)) {
-            return new IdempotencyReservation(IdempotencyReservationStatus.Conflict);
+            return (IdempotencyReservation)new IdempotencyReservation.Conflict();
         }
 
-        return new IdempotencyReservation(
-            IdempotencyReservationStatus.Replay,
+        return (IdempotencyReservation)new IdempotencyReservation.Replay(
             entry.StatusCode,
             entry.Body,
             entry.Location);

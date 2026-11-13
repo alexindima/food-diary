@@ -8,7 +8,7 @@ public sealed class MailRelayMessageProcessor(
     ILogger<MailRelayMessageProcessor> logger) {
     public async Task<MailRelayProcessResult> ProcessAsync(QueuedEmailMessage message, CancellationToken cancellationToken) {
         if (!await queueStore.RenewClaimAsync(message.Id, message.AttemptCount, cancellationToken)) {
-            return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: false);
+            return new MailRelayProcessResult.Recoverable();
         }
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(10));
         using var delivery = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, deadline.Token);
@@ -18,10 +18,10 @@ public sealed class MailRelayMessageProcessor(
             return await ProcessClaimAsync(message, delivery.Token);
         } catch (MailRelayClaimLostException) {
             logger.LogInformation("Relay email {QueuedEmailId} is now owned by another delivery attempt.", message.Id);
-            return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: false);
+            return new MailRelayProcessResult.Recoverable();
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
             // Leave an expired/lost claim for recovery. No stale attempt may schedule a retry.
-            return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: false);
+            return new MailRelayProcessResult.Recoverable();
         } finally {
             await renewalStop.CancelAsync();
             await renewal;
@@ -60,7 +60,7 @@ public sealed class MailRelayMessageProcessor(
                     queuedEmail.Id,
                     suppressedRecipients.Count);
                 MailRelayTelemetry.RecordDeliveryEvent("suppressed");
-                return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: true);
+                return new MailRelayProcessResult.TerminalFailure();
             }
 
             await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken);
@@ -77,7 +77,7 @@ public sealed class MailRelayMessageProcessor(
                 queuedEmail.Id,
                 queuedEmail.AttemptCount);
             MailRelayTelemetry.RecordDeliveryEvent("success");
-            return new MailRelayProcessResult(Succeeded: true, IsTerminalFailure: false);
+            return new MailRelayProcessResult.Sent();
         } catch (MailRelayClaimLostException) {
             throw;
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
@@ -94,7 +94,9 @@ public sealed class MailRelayMessageProcessor(
                 queuedEmail.MaxAttempts,
                 errorType);
             MailRelayTelemetry.RecordDeliveryEvent("failure", errorType);
-            return new MailRelayProcessResult(Succeeded: false, failureDecision.IsTerminalFailure, retryAvailableAtUtc);
+            return failureDecision.IsTerminalFailure
+                ? new MailRelayProcessResult.TerminalFailure()
+                : new MailRelayProcessResult.Retry(retryAvailableAtUtc);
         }
     }
 }

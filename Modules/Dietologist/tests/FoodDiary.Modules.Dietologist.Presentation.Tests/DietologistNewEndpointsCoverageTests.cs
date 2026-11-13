@@ -402,5 +402,5 @@ public sealed class DietologistNewEndpointsCoverageTests {
     private static BulkRecommendationResultModel CreateBulkModel(Guid clientId) =>
         new(
             "key",
-            [new BulkRecommendationRecipientResultModel(clientId, true, Guid.NewGuid(), false, null)]);
+            [new BulkRecommendationRecipientResultModel.Created(clientId, Guid.NewGuid())]);
 }

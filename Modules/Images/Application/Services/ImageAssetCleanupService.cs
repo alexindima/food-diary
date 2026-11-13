@@ -11,22 +11,22 @@ public sealed class ImageAssetCleanupService(
     IImageObjectDeletionOutbox imageObjectDeletionOutbox) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         if (assetId == ImageAssetId.Empty) {
-            return new DeleteImageAssetResult(Deleted: false, "invalid");
+            return new DeleteImageAssetResult.Refused("invalid");
         }
 
         ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
         if (asset is null) {
-            return new DeleteImageAssetResult(Deleted: false, "not_found");
+            return new DeleteImageAssetResult.Refused("not_found");
         }
 
         bool inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken);
         if (inUse) {
-            return new DeleteImageAssetResult(Deleted: false, "in_use");
+            return new DeleteImageAssetResult.Refused("in_use");
         }
 
         await EnqueueObjectDeletionAsync(asset, cancellationToken);
         await imageAssetRepository.DeleteAsync(asset, cancellationToken);
-        return new DeleteImageAssetResult(Deleted: true);
+        return DeleteImageAssetResult.Success;
     }
 
     private async Task EnqueueObjectDeletionAsync(ImageAsset asset, CancellationToken cancellationToken) {

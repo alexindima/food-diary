@@ -56,7 +56,7 @@ public sealed class ConfirmImageUploadCommandHandler(
                 return Result.Failure<ConfirmImageUploadResult>(ImageErrors.StorageError());
             }
 
-            if (!validation.IsValid) {
+            if (validation is not ImageObjectValidationResult.Valid) {
                 return Result.Failure<ConfirmImageUploadResult>(ImageErrors.InvalidData(
                     validation.Message ?? "Image upload has not completed or is invalid."));
             }

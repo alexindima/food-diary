@@ -9,15 +9,17 @@
   },
   "summary": {
     "sourceFiles": 4845,
-    "symbols": 4783,
+    "symbols": 4812,
     "interfaceImplementationLinks": 216,
     "dependencyInjectionRegistrations": 76,
     "kinds": {
-      "class": 2470,
+      "class": 2479,
       "enum": 76,
       "interface": 434,
-      "record": 1659,
-      "record struct": 144
+      "record": 1668,
+      "record class": 2,
+      "record struct": 144,
+      "union": 9
     },
     "roles": {
       "Command": 255,
@@ -32,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1979,
+      "Other": 2008,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -1393,10 +1395,45 @@
     },
     {
       "name": "IdempotencyReservation",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
       "line": 2
+    },
+    {
+      "name": "Acquired",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "line": 9
+    },
+    {
+      "name": "Replay",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "line": 10
+    },
+    {
+      "name": "Conflict",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "line": 11
+    },
+    {
+      "name": "InProgress",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "line": 12
+    },
+    {
+      "name": "CapacityExceeded",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "line": 13
     },
     {
       "name": "IdempotencyReservationStatus",
@@ -6502,6 +6539,27 @@
       "line": 20
     },
     {
+      "name": "Success",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "line": 458
+    },
+    {
+      "name": "Failure",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "line": 459
+    },
+    {
+      "name": "FallbackAllowed",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "line": 460
+    },
+    {
       "name": "OpenAiFoodClient",
       "kind": "class",
       "role": "Other",
@@ -7126,10 +7184,31 @@
     },
     {
       "name": "TelegramStarsUpdateResultModel",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
       "line": 2
+    },
+    {
+      "name": "Approved",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
+      "line": 12
+    },
+    {
+      "name": "Processed",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
+      "line": 14
+    },
+    {
+      "name": "Rejected",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
+      "line": 15
     },
     {
       "name": "CancelSubscriptionCommand",
@@ -8946,7 +9025,7 @@
     },
     {
       "name": "ReportTarget",
-      "kind": "record",
+      "kind": "record class",
       "role": "ValueObject",
       "path": "Modules/ContentReports/Domain.Contracts/ValueObjects/ReportTarget.cs",
       "line": 6
@@ -11515,10 +11594,31 @@
     },
     {
       "name": "BulkRecommendationRecipientResultModel",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Dietologist/Application/Models/BulkRecommendationRecipientResultModel.cs",
       "line": 2
+    },
+    {
+      "name": "Created",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Models/BulkRecommendationRecipientResultModel.cs",
+      "line": 22
+    },
+    {
+      "name": "AlreadyProcessed",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Models/BulkRecommendationRecipientResultModel.cs",
+      "line": 24
+    },
+    {
+      "name": "Rejected",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Models/BulkRecommendationRecipientResultModel.cs",
+      "line": 25
     },
     {
       "name": "BulkRecommendationResultModel",
@@ -18557,10 +18657,24 @@
     },
     {
       "name": "ImageObjectValidationResult",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Images/Application.Abstractions/Common/ImageObjectValidationResult.cs",
       "line": 2
+    },
+    {
+      "name": "Valid",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application.Abstractions/Common/ImageObjectValidationResult.cs",
+      "line": 9
+    },
+    {
+      "name": "Invalid",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Application.Abstractions/Common/ImageObjectValidationResult.cs",
+      "line": 11
     },
     {
       "name": "PresignedUpload",
@@ -18928,10 +19042,24 @@
     },
     {
       "name": "DeleteImageAssetResult",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Images/Service.Contracts/Common/DeleteImageAssetResult.cs",
       "line": 2
+    },
+    {
+      "name": "Removed",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/DeleteImageAssetResult.cs",
+      "line": 8
+    },
+    {
+      "name": "Refused",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/DeleteImageAssetResult.cs",
+      "line": 10
     },
     {
       "name": "IImageAssetAccessService",
@@ -18970,10 +19098,24 @@
     },
     {
       "name": "ImageAssetResolution",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
       "line": 5
+    },
+    {
+      "name": "Resolved",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
+      "line": 14
+    },
+    {
+      "name": "Unresolved",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
+      "line": 16
     },
     {
       "name": "ImageAssetResolver",
@@ -26019,10 +26161,24 @@
     },
     {
       "name": "AdaptiveTdeeResult",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
       "line": 4
+    },
+    {
+      "name": "Calculated",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
+      "line": 6
+    },
+    {
+      "name": "InsufficientData",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
+      "line": 11
     },
     {
       "name": "TdeeCalculator",
@@ -26418,10 +26574,31 @@
     },
     {
       "name": "UsdaFoodDetailLookupResult",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailLookupResult.cs",
       "line": 4
+    },
+    {
+      "name": "Found",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailLookupResult.cs",
+      "line": 9
+    },
+    {
+      "name": "NotFound",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailLookupResult.cs",
+      "line": 10
+    },
+    {
+      "name": "LookupFailed",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailLookupResult.cs",
+      "line": 11
     },
     {
       "name": "UsdaFoodSearchService",
@@ -31409,10 +31586,38 @@
     },
     {
       "name": "MailRelayProcessResult",
-      "kind": "record",
+      "kind": "union",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
       "line": 2
+    },
+    {
+      "name": "Sent",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
+      "line": 8
+    },
+    {
+      "name": "TerminalFailure",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
+      "line": 9
+    },
+    {
+      "name": "Retry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
+      "line": 10
+    },
+    {
+      "name": "Recoverable",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
+      "line": 11
     },
     {
       "name": "MailRelayTelemetry",
@@ -32725,7 +32930,7 @@
     },
     {
       "name": "FieldChange",
-      "kind": "record",
+      "kind": "record class",
       "role": "Other",
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
       "line": 2
@@ -33477,7 +33682,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Results/Result.cs",
-      "line": 73
+      "line": 80
     },
     {
       "name": "ResultAssert",

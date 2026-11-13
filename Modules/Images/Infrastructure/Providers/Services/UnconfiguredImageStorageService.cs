@@ -34,8 +34,8 @@ internal sealed class UnconfiguredImageStorageService : IImageStorageService {
         string objectKey = key.Value;
         cancellationToken.ThrowIfCancellationRequested();
         ImageObjectValidationResult result = string.IsNullOrWhiteSpace(objectKey)
-            ? new ImageObjectValidationResult(IsValid: false, "invalid_key", "Image object key is required.")
-            : new ImageObjectValidationResult(IsValid: false, "storage_not_configured", ErrorMessage);
+            ? new ImageObjectValidationResult.Invalid("invalid_key", "Image object key is required.")
+            : new ImageObjectValidationResult.Invalid("storage_not_configured", ErrorMessage);
         return Task.FromResult(result);
     }
 

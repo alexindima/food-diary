@@ -135,7 +135,7 @@ if ($ReuseUnchangedCheck -and (Test-Path -LiteralPath $outputPath -PathType Leaf
     return
 }
 
-$typePattern = '(?m)^\s*(?:public|internal)\s+(?:(?:sealed|abstract|static|partial|readonly)\s+)*(?<kind>class|interface|record(?:\s+struct)?|struct|enum)\s+(?<name>[A-Za-z_]\w*)'
+$typePattern = '(?m)^\s*(?:public|internal)\s+(?:(?:sealed|abstract|closed|static|partial|readonly)\s+)*(?<kind>class|interface|record(?:\s+(?:class|struct))?|struct|enum|union)\s+(?<name>[A-Za-z_]\w*)'
 $symbols = [System.Collections.Generic.List[object]]::new()
 foreach ($sourceFile in $sourceFiles) {
     $content = Get-Content -LiteralPath $sourceFile.FullName -Raw

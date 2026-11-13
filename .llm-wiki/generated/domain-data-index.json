@@ -6597,14 +6597,14 @@
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Only a set field change has a value.\")",
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
-      "line": 18
+      "line": 11
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(value)",
       "path": "Shared/FoodDiary.Domain.Primitives/FieldChange.cs",
-      "line": 21
+      "line": 14
     },
     {
       "area": "FoodDiary",

@@ -28,12 +28,12 @@ public sealed partial class OpenAiFoodClient {
             return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(
                 AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(
+        RequestOutcome response = await SendRequestAsync(
             BuildRecipeImportRequest(text, userLanguage), operation, _options.TextModel, cancellationToken);
-        if (!response.IsSuccess) {
-            return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(response.Error);
+        if (response is not RequestOutcome.Success success) {
+            return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(GetRequestError(response));
         }
-        using JsonDocument json = response.Json!;
+        using JsonDocument json = success.Document;
         if (json.RootElement.ValueKind != JsonValueKind.Object ||
             !json.RootElement.TryGetProperty("status", out JsonElement status) || status.ValueKind != JsonValueKind.String ||
             !string.Equals(status.GetString(), "completed", StringComparison.Ordinal)) {

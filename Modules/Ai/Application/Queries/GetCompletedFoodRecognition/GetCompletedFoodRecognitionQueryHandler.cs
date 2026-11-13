@@ -21,7 +21,7 @@ public sealed class GetCompletedFoodRecognitionQueryHandler(IFoodRecognitionJobR
         return FoodRecognitionResult.Decode(job) switch {
             FoodRecognitionResult.Pending => Result.Failure<FoodRecognitionJobModel>(new Error("Ai.RecognitionNotReady", "Recognition has not completed.", ErrorKind.Conflict)),
             FoodRecognitionResult.Ready ready => Result.Success(ready.Job),
-            _ => Result.Failure<FoodRecognitionJobModel>(new Error("Ai.RecognitionNotUsable", "Recognition does not contain a complete nutrition result.", ErrorKind.Validation)),
+            FoodRecognitionResult.Unusable => Result.Failure<FoodRecognitionJobModel>(new Error("Ai.RecognitionNotUsable", "Recognition does not contain a complete nutrition result.", ErrorKind.Validation)),
         };
     }
 

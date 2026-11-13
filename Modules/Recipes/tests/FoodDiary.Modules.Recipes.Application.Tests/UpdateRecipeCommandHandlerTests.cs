@@ -212,7 +212,7 @@ public partial class UpdateRecipeCommandHandlerTests {
     [ExcludeFromCodeCoverage]
     private sealed class NoopImageAssetCleanupService : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new DeleteImageAssetResult(Deleted: true));
+            Task.FromResult(DeleteImageAssetResult.Success);
 
     }
 
@@ -222,7 +222,7 @@ public partial class UpdateRecipeCommandHandlerTests {
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
-            return Task.FromResult(new DeleteImageAssetResult(Deleted: true));
+            return Task.FromResult(DeleteImageAssetResult.Success);
         }
 
     }

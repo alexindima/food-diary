@@ -75,16 +75,19 @@ public sealed class IdempotencyFilter(
                 _options.ProcessingTtl,
                 context.HttpContext.RequestAborted);
 
-        if (TryApplyReservation(context, reservation)) {
+        if (reservation is IdempotencyReservation.Acquired acquired) {
+            await ExecuteAndFinalizeAsync(context, next, cacheKey, requestHash, acquired.Token);
             return;
         }
 
-        await ExecuteAndFinalizeAsync(
-            context,
-            next,
-            cacheKey,
-            requestHash,
-            reservation.OwnerToken!);
+        context.Result = reservation switch {
+            IdempotencyReservation.Acquired => null,
+            IdempotencyReservation.Conflict => CreateIdempotencyConflict(context),
+            IdempotencyReservation.InProgress => CreateIdempotencyInProgress(context),
+            IdempotencyReservation.CapacityExceeded => CreateIdempotencyCapacityExceeded(context),
+            IdempotencyReservation.Replay replay => CreateReplayResult(context, replay),
+            null => throw new InvalidOperationException("An idempotency reservation must have an outcome."),
+        };
     }
 
     [ExcludeFromCodeCoverage]
@@ -281,39 +284,19 @@ public sealed class IdempotencyFilter(
         executedContext.Result = CreateIdempotencyLeaseLost(context);
     }
 
-    private static bool TryApplyReservation(ActionExecutingContext context, IdempotencyReservation reservation) {
-        if (reservation.Status == IdempotencyReservationStatus.Conflict) {
-            context.Result = CreateIdempotencyConflict(context);
-            return true;
+    private static IActionResult CreateReplayResult(ActionExecutingContext context, IdempotencyReservation.Replay replay) {
+        int statusCode = replay.StatusCode ?? StatusCodes.Status200OK;
+        if (!string.IsNullOrWhiteSpace(replay.Location)) {
+            context.HttpContext.Response.Headers.Location = replay.Location;
         }
 
-        if (reservation.Status == IdempotencyReservationStatus.InProgress) {
-            context.Result = CreateIdempotencyInProgress(context);
-            return true;
-        }
-
-        if (reservation.Status == IdempotencyReservationStatus.CapacityExceeded) {
-            context.Result = CreateIdempotencyCapacityExceeded(context);
-            return true;
-        }
-
-        if (reservation.Status != IdempotencyReservationStatus.Replay) {
-            return false;
-        }
-
-        int statusCode = reservation.StatusCode ?? StatusCodes.Status200OK;
-        if (!string.IsNullOrWhiteSpace(reservation.Location)) {
-            context.HttpContext.Response.Headers.Location = reservation.Location;
-        }
-
-        context.Result = reservation.Body is null
+        return replay.Body is null
             ? new StatusCodeResult(statusCode)
             : new ContentResult {
-                Content = reservation.Body,
+                Content = replay.Body,
                 ContentType = "application/json",
                 StatusCode = statusCode,
             };
-        return true;
     }
 
     private async Task TryReleaseReservationAsync(string cacheKey, string requestHash, string ownerToken) {

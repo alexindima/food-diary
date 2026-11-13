@@ -34,11 +34,11 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
         if (before is null || before.Kind is not BillingPaymentKinds.Checkout) {
             return update.Kind is "pre_checkout" ? Reject() : Failure("Unknown Telegram invoice.");
         }
-        var result = Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+        var result = Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
         string eventId = "stars-update:" + update.UpdateId.ToString(CultureInfo.InvariantCulture);
         try {
             await transactions.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(before.UserId.Value), async token => {
-                result = Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+                result = Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
                 BillingPayment order = await payments.GetByExternalPaymentIdAsync(Provider, update.InvoicePayload, token)
                     ?? throw new InvalidOperationException("Telegram invoice no longer exists.");
                 string customerId = update.TelegramUserId.ToString(CultureInfo.InvariantCulture) + ":" + order.UserId.Value.ToString("N", CultureInfo.InvariantCulture);
@@ -85,7 +85,7 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
             }, cancellationToken);
         } catch (BillingWebhookEventAlreadyProcessedException) {
             // The durable refund intent may still need its provider cancellation after a concurrent receipt.
-            result = Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+            result = Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
         }
         if (result.IsSuccess && update.Kind is not "pre_checkout") {
             BillingSubscription? pending = await subscriptions.GetByUserIdAsync(before.UserId, cancellationToken);
@@ -118,7 +118,7 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
         current.ApplyProviderSnapshot(Provider, update.InvoicePayload, externalPaymentMethodId: null, order.ExternalPriceId, "monthly",
             BillingSubscription.PendingCheckoutStatus, currentPeriodStartUtc: null, currentPeriodEndUtc: null, cancelAtPeriodEnd: false, canceledAtUtc: null, trialStartUtc: null, trialEndUtc: null, eventId, now, webhookOccurredAtUtc: now);
         await subscriptions.UpdateAsync(current, token);
-        return Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: true));
+        return Result.Success(TelegramStarsUpdateResultModel.CheckoutAccepted);
     }
 
     private async Task<Result<TelegramStarsUpdateResultModel>> RecordPaymentAsync(TelegramStarsUpdateModel update, BillingPayment order,
@@ -130,7 +130,7 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
         string refundId = "refund:" + Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(charge)));
         string paymentId = update.Kind is "refund" ? refundId : charge;
         if (await payments.GetByExternalPaymentIdAsync(Provider, paymentId, token) is not null) {
-            return Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+            return Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
         }
         BillingPayment? original = await payments.GetByExternalPaymentIdAsync(Provider, charge, token);
         BillingPayment? refund = await payments.GetByExternalPaymentIdAsync(Provider, refundId, token);
@@ -150,7 +150,7 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
             start, end, eventId, providerMetadataJson: null, update.PaymentOccurredAtUtc);
         await payments.AddAsync(payment, token);
         if (current is null) {
-            return Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+            return Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
         }
         if (update.Kind is "payment" && refund is null && end > (current.CurrentPeriodEndUtc ?? DateTime.MinValue)) {
             // A confirmed provider expiration wins over server time and calendar arithmetic.
@@ -162,11 +162,11 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
                 current.ExternalPaymentMethodId ?? (current.Status is BillingSubscription.PendingCheckoutStatus ? charge : null),
                 eventId, now, TelegramStarsBillingState.RefundCancellationPending);
         } else {
-            return Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+            return Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
         }
         await subscriptions.UpdateAsync(current, token);
         await SynchronizeAccessAsync(current, user, token);
-        return Result.Success(new TelegramStarsUpdateResultModel(CheckoutApproved: false));
+        return Result.Success(TelegramStarsUpdateResultModel.UpdateProcessed);
     }
 
     private async Task SynchronizeAccessAsync(BillingSubscription current, UserBillingProfileModel? user, CancellationToken token) {
@@ -190,8 +190,8 @@ public sealed class ProcessTelegramStarsUpdateCommandHandler(IBillingPaymentWrit
         current.LastWebhookEventId is not { } id || !id.StartsWith("stars-update:", StringComparison.Ordinal) ||
         !long.TryParse(id.AsSpan("stars-update:".Length), CultureInfo.InvariantCulture, out long previous) || update.UpdateId > previous;
 
-    private static Result<TelegramStarsUpdateResultModel> Reject() => Result.Success(
-        new TelegramStarsUpdateResultModel(CheckoutApproved: false, "This invoice is unavailable. Open FoodDiary and create a new checkout."));
+    private static Result<TelegramStarsUpdateResultModel> Reject() => Result.Success<TelegramStarsUpdateResultModel>(
+        new TelegramStarsUpdateResultModel.Rejected("This invoice is unavailable. Open FoodDiary and create a new checkout."));
 
     private static Result<TelegramStarsUpdateResultModel> Failure(string message) =>
         Result.Failure<TelegramStarsUpdateResultModel>(BillingErrors.WebhookValidationFailed(message));

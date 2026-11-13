@@ -1,9 +1,38 @@
+using FoodDiary.Modules.Usda.Contracts.Models;
 using FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
 
 namespace FoodDiary.Modules.Usda.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaFoodDetailCacheTests {
+    [Theory]
+    [InlineData(true, 30)]
+    [InlineData(false, 5)]
+    public async Task CacheableLookup_ExpiresAtItsConfiguredDeadline(bool found, int lifetimeMinutes) {
+        var clock = new AdvancingClock();
+        var cache = new UsdaFoodDetailCache(clock);
+        var food = new UsdaFoodDetailModel(42, "Apple", FoodCategory: null, [], [], HealthScores: null);
+        int calls = 0;
+
+        Task<UsdaFoodDetailLookupResult> Lookup(CancellationToken _) {
+            calls++;
+            return Task.FromResult<UsdaFoodDetailLookupResult>(
+                found ? new UsdaFoodDetailLookupResult.Found(food) : new UsdaFoodDetailLookupResult.NotFound());
+        }
+
+        UsdaFoodDetailModel? first = await cache.GetOrCreateAsync("https://usda.test", 42, Lookup, CancellationToken.None);
+        clock.Now = clock.Now.AddMinutes(lifetimeMinutes).AddTicks(-1);
+        UsdaFoodDetailModel? cached = await cache.GetOrCreateAsync("https://usda.test", 42, Lookup, CancellationToken.None);
+        Assert.Equal(1, calls);
+        clock.Now = clock.Now.AddTicks(1);
+        await cache.GetOrCreateAsync("https://usda.test", 42, Lookup, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Same(found ? food : null, first),
+            () => Assert.Same(first, cached),
+            () => Assert.Equal(2, calls));
+    }
+
     [Fact]
     public async Task QueuedSameKeyCallers_ShareNewFlightAndReturnSurplusAdmissionPermit() {
         var cache = new UsdaFoodDetailCache(TimeProvider.System, 2, TimeSpan.FromSeconds(30));
@@ -13,7 +42,7 @@ public sealed class UsdaFoodDetailCacheTests {
         var sharedEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var sentinelEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         int sharedCalls = 0;
-        var lookup = new UsdaFoodDetailLookupResult(Cacheable: false, Value: null);
+        UsdaFoodDetailLookupResult lookup = new UsdaFoodDetailLookupResult.LookupFailed();
         Task<UsdaFoodDetailLookupResult> Shared(CancellationToken token) {
             Interlocked.Increment(ref sharedCalls);
             sharedEntered.TrySetResult();
@@ -52,7 +81,7 @@ public sealed class UsdaFoodDetailCacheTests {
         Task<UsdaFoodDetailLookupResult> Factory(CancellationToken token) {
             token.ThrowIfCancellationRequested();
             calls++;
-            return Task.FromResult(new UsdaFoodDetailLookupResult(Cacheable: true, Value: null));
+            return Task.FromResult<UsdaFoodDetailLookupResult>(new UsdaFoodDetailLookupResult.NotFound());
         }
 
         for (int id = 0; id <= 2048; id++) {

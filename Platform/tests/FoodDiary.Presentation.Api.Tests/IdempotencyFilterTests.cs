@@ -268,7 +268,7 @@ public sealed class IdempotencyFilterTests {
     [Fact]
     public async Task OnActionExecutionAsync_WhenReservationIsInProgress_ReturnsConflict() {
         var filter = new IdempotencyFilter(new FixedIdempotencyStore(
-            new IdempotencyReservation(IdempotencyReservationStatus.InProgress)));
+            new IdempotencyReservation.InProgress()));
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-busy", userId: "user-busy");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
         bool nextCalled = false;
@@ -286,7 +286,7 @@ public sealed class IdempotencyFilterTests {
     [Fact]
     public async Task OnActionExecutionAsync_WhenFallbackStoreIsAtCapacity_ReturnsServiceUnavailable() {
         var filter = new IdempotencyFilter(new FixedIdempotencyStore(
-            new IdempotencyReservation(IdempotencyReservationStatus.CapacityExceeded)));
+            new IdempotencyReservation.CapacityExceeded()));
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-capacity", userId: "user-capacity");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
@@ -1127,9 +1127,7 @@ public sealed class IdempotencyFilterTests {
             CancellationToken cancellationToken = default) {
             ReserveCalls++;
             LastReservedKey = key;
-            return Task.FromResult(new IdempotencyReservation(
-                IdempotencyReservationStatus.Acquired,
-                OwnerToken: "owner-token"));
+            return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.Acquired("owner-token"));
         }
 
         public Task<bool> RenewAsync(

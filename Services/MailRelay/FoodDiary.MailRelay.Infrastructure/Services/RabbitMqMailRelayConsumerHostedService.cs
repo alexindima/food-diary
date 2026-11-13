@@ -138,13 +138,11 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
 
     private async Task ProcessClaimedMessageAsync(QueuedEmailId queuedEmailId, QueuedEmailMessage claimedMessage, CancellationToken cancellationToken) {
         MailRelayProcessResult result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken);
-        if (result.Succeeded) {
-            return;
-        }
-
-        if (result.IsTerminalFailure) {
-            await broker.PublishDeadLetterAsync(queuedEmailId, cancellationToken);
-        }
+        await (result switch {
+            MailRelayProcessResult.TerminalFailure => broker.PublishDeadLetterAsync(queuedEmailId, cancellationToken),
+            MailRelayProcessResult.Sent or MailRelayProcessResult.Retry or MailRelayProcessResult.Recoverable => Task.CompletedTask,
+            null => throw new InvalidOperationException("Mail relay processing must return an outcome."),
+        });
     }
 
     private async Task HandleDeliveryFailureAsync(

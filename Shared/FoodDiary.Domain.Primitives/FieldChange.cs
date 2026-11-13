@@ -1,24 +1,21 @@
 namespace FoodDiary.Domain.Primitives;
 
-public sealed record FieldChange<T> where T : notnull {
-    private enum ChangeKind { Unchanged = 0, Set = 1, Clear = 2 }
+public closed record class FieldChange<T> where T : notnull {
+    private FieldChange() { }
 
-    private readonly ChangeKind _kind;
-
-    private FieldChange(ChangeKind kind, T? value) {
-        _kind = kind;
-        Value = value;
-    }
-
-    internal static FieldChange<T> Unchanged { get; } = new(ChangeKind.Unchanged, default);
-    internal static FieldChange<T> Clear { get; } = new(ChangeKind.Clear, default);
-    public bool IsUnchanged => _kind == ChangeKind.Unchanged;
-    public bool IsSet => _kind == ChangeKind.Set;
-    public bool IsClear => _kind == ChangeKind.Clear;
-    public T Value => IsSet ? field! : throw new InvalidOperationException("Only a set field change has a value.");
+    internal static FieldChange<T> Unchanged { get; } = new UnchangedChange();
+    internal static FieldChange<T> Clear { get; } = new ClearChange();
+    public bool IsUnchanged => this is UnchangedChange;
+    public bool IsSet => this is SetChange;
+    public bool IsClear => this is ClearChange;
+    public T Value => this is SetChange change ? change.NewValue : throw new InvalidOperationException("Only a set field change has a value.");
 
     internal static FieldChange<T> Set(T value) {
         ArgumentNullException.ThrowIfNull(value);
-        return new FieldChange<T>(ChangeKind.Set, value);
+        return new SetChange(value);
     }
+
+    private sealed record UnchangedChange : FieldChange<T>;
+    private sealed record ClearChange : FieldChange<T>;
+    private sealed record SetChange(T NewValue) : FieldChange<T>;
 }

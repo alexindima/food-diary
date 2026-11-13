@@ -88,7 +88,7 @@ public sealed class DurableMealIdempotencyIntegrationTests(PostgresApiWebApplica
         private int _loseNext;
         public void LoseNextCompletion() => Interlocked.Exchange(ref _loseNext, 1);
         public Task<IdempotencyReservation> ReserveAsync(string key, string requestHash, TimeSpan responseTtl, TimeSpan processingTtl, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.Acquired, OwnerToken: Guid.NewGuid().ToString("N")));
+            Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.Acquired(Guid.NewGuid().ToString("N")));
         public Task<bool> RenewAsync(string key, string requestHash, string ownerToken, TimeSpan processingTtl, CancellationToken cancellationToken = default) => Task.FromResult(true);
         public Task<bool> CompleteAsync(string key, string requestHash, string ownerToken, int statusCode, string? body, string? location, TimeSpan responseTtl, CancellationToken cancellationToken = default) =>
             Task.FromResult(Interlocked.Exchange(ref _loseNext, 0) == 0);

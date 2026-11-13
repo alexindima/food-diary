@@ -1427,7 +1427,7 @@ public sealed class JobsTests {
         public List<DateTime> OlderThanValues { get; } = [];
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new DeleteImageAssetResult(Deleted: false));
+            Task.FromResult<DeleteImageAssetResult>(new DeleteImageAssetResult.Refused());
 
         public Task<int> Handle(CleanupOrphanImagesCommand request, CancellationToken cancellationToken) {
             DateTime olderThanUtc = request.OlderThanUtc;

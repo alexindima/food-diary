@@ -146,7 +146,7 @@ foreach ($property in @($manifest.modules.PSObject.Properties)) {
         if ([string]::IsNullOrWhiteSpace([string]$area)) { continue }
         foreach ($file in @(Get-ChildItem -LiteralPath (Join-Path $repositoryRoot $area) -Recurse -File -Filter '*.cs')) {
             if ($file.FullName -match '[\\/](?:obj|bin|\.artifacts)[\\/]') { continue }
-            if ([IO.File]::ReadAllText($file.FullName) -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b') {
+            if ([IO.File]::ReadAllText($file.FullName) -match '\bpublic\s+(?:(?:sealed|abstract|closed|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum|union)\b') {
                 [void]$publicPaths.Add($file.FullName)
             }
         }

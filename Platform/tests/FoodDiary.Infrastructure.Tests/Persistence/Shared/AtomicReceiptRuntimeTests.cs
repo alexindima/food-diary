@@ -119,6 +119,19 @@ public sealed class AtomicReceiptRuntimeTests {
     }
 
     [Fact]
+    public void LegacyNullableSuccessReceipt_RemainsSuccessfulWithNullValue() {
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new AtomicResultJsonConverter() } };
+        const string legacyJson = """{"success":true,"value":null}""";
+
+        Result<string?>? replayed = JsonSerializer.Deserialize<Result<string?>>(legacyJson, options);
+
+        Assert.NotNull(replayed);
+        ResultAssert.Success(replayed);
+        Assert.Null(replayed.Value);
+        Assert.Equal(legacyJson, JsonSerializer.Serialize(replayed, options));
+    }
+
+    [Fact]
     public void FailedValueReceipt_PreservesTheErrorAndDoesNotSerializeAnUnavailableValue() {
         var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new AtomicResultJsonConverter() } };
         var error = new Error("Recipe.NotFound", "Not found", ErrorKind.NotFound,

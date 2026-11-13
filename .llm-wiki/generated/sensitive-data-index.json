@@ -7,12 +7,12 @@
   },
   "summary": {
     "candidateFields": 1828,
-    "credential": 176,
+    "credential": 177,
     "identity": 217,
     "health": 839,
     "financial": 169,
-    "privateContent": 427,
-    "boundaryFiles": 251,
+    "privateContent": 426,
+    "boundaryFiles": 252,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 3
   },
@@ -47,10 +47,17 @@
     },
     {
       "category": "credential",
+      "name": "Token",
+      "type": "string",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
       "name": "OwnerToken",
       "type": "string?",
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
-      "line": 164
+      "line": 161
     },
     {
       "category": "credential",
@@ -1881,10 +1888,10 @@
     },
     {
       "category": "financial",
-      "name": "CheckoutApproved",
-      "type": "bool",
+      "name": "CheckoutAccepted",
+      "type": "TelegramStarsUpdateResultModel",
       "path": "Modules/Billing/Application.Abstractions/Models/TelegramStarsUpdateResultModel.cs",
-      "line": 3
+      "line": 7
     },
     {
       "category": "financial",
@@ -6236,16 +6243,16 @@
     {
       "category": "health",
       "name": "AdaptiveTdee",
-      "type": "double?",
+      "type": "double",
       "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
-      "line": 6
+      "line": 7
     },
     {
       "category": "health",
       "name": "WeightTrendPerWeek",
-      "type": "double?",
+      "type": "double",
       "path": "Modules/Tdee/Application/Services/AdaptiveTdeeResult.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "health",
@@ -10407,6 +10414,13 @@
     },
     {
       "category": "privateContent",
+      "name": "CommentId",
+      "type": "RecipeCommentId",
+      "path": "Modules/ContentReports/Domain.Contracts/ValueObjects/ReportTarget.cs",
+      "line": 35
+    },
+    {
+      "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Cycles/Application.Abstractions/Models/BleedingEntryReadModel.cs",
@@ -11104,20 +11118,6 @@
       "type": "string?",
       "path": "Modules/Favorites/Presentation.Contracts/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
       "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAsset",
-      "type": "ImageAssetReadModel?",
-      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
-      "line": 6
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
-      "line": 6
     },
     {
       "category": "privateContent",
@@ -12815,6 +12815,13 @@
     }
   ],
   "boundaryFiles": [
+    {
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
     {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
       "categories": [
@@ -14648,7 +14655,7 @@
   "externalTransfers": [
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 214,
+      "line": 213,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
@@ -14663,7 +14670,7 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 385,
+      "line": 383,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

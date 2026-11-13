@@ -30,7 +30,8 @@ deterministic navigation index for production C# code.
 
 It extracts:
 
-- public and internal classes, interfaces, records, structs, and enums;
+- public and internal classes, interfaces, records, structs, enums, and unions,
+  including closed classes and closed records;
 - semantic roles inferred from names and folders, including handlers,
   validators, repositories, services, commands, queries, entities, and value
   objects;
