@@ -116,7 +116,7 @@ public sealed class MailInboxCoverageGapTests {
             Task<bool> readinessTask = MailInboxLocalTlsHealthCheck.IsReadyAsync("localhost", CancellationToken.None);
             using TcpClient accepted = await acceptTask.WaitAsync(TimeSpan.FromSeconds(5));
 
-            Assert.False(await readinessTask.WaitAsync(TimeSpan.FromSeconds(6)));
+            Assert.False(await readinessTask.WaitAsync(TimeSpan.FromSeconds(12)));
         } finally {
             listener.Stop();
         }

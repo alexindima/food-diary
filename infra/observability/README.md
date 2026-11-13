@@ -232,6 +232,13 @@ a complete VPS outage is deferred. The VPS dashboard displays measurements from
 its own probes. Manual observations are retained as GitHub artifacts for seven
 days. This public repository uses standard public-repository hosted runners.
 
+The MailInbox Docker probe uses a two-minute startup grace and checks every ten
+seconds during that period. Grafana excludes its container-health sample during
+the same grace. Afterward the usual three-minute critical alert threshold applies.
+The container-missing and OOM alerts remain active during startup. Deploy waits
+up to four minutes for Docker health before publishing frontend assets or
+switching traffic.
+
 ### Validate, install and recover
 
 Generate configuration with Python and `PyYAML==6.0.3`:

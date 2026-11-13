@@ -170,7 +170,8 @@ def generate():
         # stop must not count as three minutes of measured container downtime.
         # Separate probe-failure/staleness rules retain critical coverage.
         alert("fd-container-missing", "Required application container is not running", '1-fooddiary_container_running', pending="3m", severity="critical", service="containers"),
-        alert("fd-container-unhealthy", "Application container health check is failing", 'fooddiary_container_running-fooddiary_container_healthy', pending="3m", severity="critical", service="containers"),
+        # Exclude only MailInbox during the same startup grace as its Docker health check.
+        alert("fd-container-unhealthy", "Application container health check is failing", '(fooddiary_container_running-fooddiary_container_healthy) unless (time()-fooddiary_container_started_timestamp_seconds{service="mail-inbox"} < 120)', pending="3m", severity="critical", service="containers"),
         alert("fd-container-restarted", "Application container restarted recently", 'delta(fooddiary_container_restarts[10m]) > bool 0', pending="0m", service="containers"),
         alert("fd-container-oom", "Container was killed by the memory limit", 'fooddiary_container_oom_killed', pending="0m", severity="critical", service="containers"),
         alert("fd-kernel-oom", "Linux OOM killer terminated a process", 'increase(node_vmstat_oom_kill[10m])', pending="0m", severity="critical", service="infrastructure"),

@@ -20,7 +20,8 @@ public static class MailInboxLocalTlsHealthCheck {
             ConnectCallback = ConnectToLoopbackAsync,
         };
         using var client = new HttpClient(handler) {
-            Timeout = TimeSpan.FromSeconds(4),
+            // Leave room for the readiness endpoint's default five-second DB budget and TLS handshake.
+            Timeout = TimeSpan.FromSeconds(8),
         };
 
         try {

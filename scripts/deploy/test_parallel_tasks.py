@@ -71,6 +71,13 @@ if tool == 'docker':
             gate('tech-radar')
         if service == 'mail-relay' and os.environ.get('FAIL_AUXILIARY'):
             sys.exit(17)
+        if service == 'mail-inbox':
+            assert '--wait' in arguments
+            assert arguments[arguments.index('--wait-timeout') + 1] == '240'
+            gate('mail-inbox-health')
+            if os.environ.get('FAIL_MAIL_INBOX_HEALTH'):
+                sys.exit(18)
+            emit('mail_inbox_ready')
     elif arguments[:1] == ['create']:
         print('fixture-image')
     elif arguments[:1] == ['cp']:
@@ -242,6 +249,25 @@ class DeploymentFixture(unittest.TestCase):
 
 
 class DeployWorkflowTests(DeploymentFixture):
+    def test_publication_waits_for_mail_inbox_health(self):
+        self.make_gate("mail-inbox-health")
+        process = self.workflow()
+        self.assertTrue(self.wait_for(lambda rows: any(row.get("gate") == "mail-inbox-health" for row in rows)))
+        self.assertTrue(any(row["name"] == "api_ready" for row in self.events))
+        self.assertFalse(any(row["name"] in {"assets", "nginx_reload"} for row in self.events))
+        self.release("mail-inbox-health")
+        code, output = self.result(process)
+        self.assertEqual(0, code, output)
+        names = [row["name"] for row in self.events]
+        self.assertLess(names.index("mail_inbox_ready"), names.index("assets"))
+
+    def test_mail_inbox_health_failure_blocks_publication(self):
+        self.environment["FAIL_MAIL_INBOX_HEALTH"] = "1"
+        code, output = self.result(self.workflow())
+        self.assertNotEqual(0, code, output)
+        self.assertTrue(any(row["name"] == "service" and row["service"] == "mail-inbox" for row in self.events))
+        self.assertFalse(any(row["name"] in {"assets", "nginx_reload"} for row in self.events))
+
     def test_api_ready_does_not_wait_for_independent_bugtriage(self):
         self.make_gate("bugtriage")
         process = self.workflow()

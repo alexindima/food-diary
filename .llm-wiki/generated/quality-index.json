@@ -53826,11 +53826,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 5,
+      "nonBlankLines": 45,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.38
+      "structuralRiskScore": 9.9
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",

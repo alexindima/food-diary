@@ -1569,14 +1569,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9de6086bdb775e74fad8da2bb93e3cdd221bd89388b5f8128a42279ffb4ce5a6",
-          "reviewReason": "The regenerated runtime topology changes only the source fingerprint. The service, worker and HTTP client inventory has the same content."
+          "sha256": "878ec9bc61f4cd6296ae6fc0acc542cf776b9f2e7eec93566e3243d687f2332c",
+          "reviewReason": "Runtime topology fingerprint reflects the MailInbox health cadence. The deployment fixture verified that a healthy result gates publication and a failed wait blocks the handover."
         }
       ],
-      "reason": "The regenerated runtime topology changes only the source fingerprint. The service, worker and HTTP client inventory has the same content.",
-      "baseRef": "HEAD^",
-      "gitHead": "1eb6d29d172acd03702d85227bcd51b99540cb9b",
-      "reviewedAtUtc": "2026-11-13T11:02:13.2424794Z"
+      "reason": "Runtime topology fingerprint reflects the MailInbox health cadence. The deployment fixture verified that a healthy result gates publication and a failed wait blocks the handover.",
+      "baseRef": "HEAD",
+      "gitHead": "171661f0b6500fd65e670c6cc1a193dd592211d4",
+      "reviewedAtUtc": "2026-11-13T12:04:26.6068081Z"
     },
     {
       "pageId": "workflow-security-review",

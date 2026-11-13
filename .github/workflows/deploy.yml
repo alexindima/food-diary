@@ -555,7 +555,7 @@ jobs:
           deploy_mailinbox() {
             docker compose --profile mail-inbox up -d mailinbox-postgres
             deploy_initializer docker compose --profile mail-inbox run -T --rm mailinbox-db-init update
-            docker compose --profile mail-inbox up -d --force-recreate --no-deps mail-inbox
+            docker compose --profile mail-inbox up --force-recreate --no-deps --wait --wait-timeout 240 mail-inbox
           }
           deploy_bugtriage() {
             deploy_initializer python3 /opt/fooddiary/bugtriage/deploy.py '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.images.outputs.bugtriage }}'

@@ -391,10 +391,11 @@ services:
       - /run/mail-inbox-tls:size=1m,mode=0700,noexec,nosuid,nodev
     healthcheck:
       test: ["CMD", "dotnet", "FoodDiary.MailInbox.WebApi.dll", "--healthcheck"]
-      interval: 180s
-      timeout: 10s
+      interval: 30s
+      timeout: 15s
       retries: 6
-      start_period: 30s
+      start_period: 120s
+      start_interval: 10s
     depends_on:
       mailinbox-db-init:
         condition: service_completed_successfully

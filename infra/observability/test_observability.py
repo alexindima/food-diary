@@ -209,6 +209,22 @@ class ExternalMonitorTests(unittest.TestCase):
 
 
 class AlertDimensionTests(unittest.TestCase):
+    def test_mail_inbox_health_alert_uses_only_its_docker_startup_grace(self):
+        import yaml
+        config = yaml.safe_load((ROOT / "grafana/fooddiary-operational-alerting.yml").read_text(encoding="utf-8"))
+        rules = {rule["uid"]: rule for rule in config["groups"][0]["rules"]}
+        compose = yaml.safe_load((ROOT.parents[1] / "docker-compose.yml").read_text(encoding="utf-8"))
+        healthcheck = compose["services"]["mail-inbox"]["healthcheck"]
+        startup_seconds = int(healthcheck["start_period"].removesuffix("s"))
+        alert = rules["fd-container-unhealthy"]
+        self.assertEqual(
+            '(fooddiary_container_running-fooddiary_container_healthy) unless '
+            f'(time()-fooddiary_container_started_timestamp_seconds{{service="mail-inbox"}} < {startup_seconds})',
+            alert["data"][0]["model"]["expr"],
+        )
+        self.assertEqual("3m", alert["for"])
+        self.assertEqual("critical", alert["labels"]["severity"])
+
     def test_missing_telemetry_cannot_start_the_container_outage_timer(self):
         import yaml
         rules = yaml.safe_load((ROOT / "grafana/fooddiary-operational-alerting.yml").read_text(encoding="utf-8"))["groups"][0]["rules"]

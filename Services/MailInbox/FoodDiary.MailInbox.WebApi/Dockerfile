@@ -57,7 +57,7 @@ EXPOSE 5098
 EXPOSE 2525
 ENV ASPNETCORE_URLS=https://+:5098
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-HEALTHCHECK --interval=10s --timeout=5s --retries=6 --start-period=10s CMD ["dotnet", "FoodDiary.MailInbox.WebApi.dll", "--healthcheck"]
+HEALTHCHECK --interval=30s --timeout=15s --retries=6 --start-period=120s --start-interval=10s CMD ["dotnet", "FoodDiary.MailInbox.WebApi.dll", "--healthcheck"]
 
 USER $APP_UID
 

@@ -654,7 +654,8 @@ groups:
         datasource:
           type: prometheus
           uid: cfhlwwx2t4w00a
-        expr: fooddiary_container_running-fooddiary_container_healthy
+        expr: (fooddiary_container_running-fooddiary_container_healthy) unless (time()-fooddiary_container_started_timestamp_seconds{service="mail-inbox"}
+          < 120)
         instant: true
         range: false
         refId: A
