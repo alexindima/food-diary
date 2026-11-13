@@ -53,10 +53,10 @@ public sealed class HashSetCollectionExpressionAnalyzer : DiagnosticAnalyzer {
 
         SemanticModel model = context.SemanticModel;
         if (model.GetOperation(creation, context.CancellationToken) is not IObjectCreationOperation {
-                Constructor: { } constructor,
-                Type: INamedTypeSymbol { Arity: 1 } type,
-                Arguments.Length: 2,
-            } operation ||
+            Constructor: { } constructor,
+            Type: INamedTypeSymbol { Arity: 1 } type,
+            Arguments.Length: 2,
+        } operation ||
             constructor.Parameters[0].Type.OriginalDefinition.SpecialType != SpecialType.System_Collections_Generic_IEnumerable_T ||
             type.TypeArguments[0].SpecialType != SpecialType.System_String ||
             !SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, hashSet) ||

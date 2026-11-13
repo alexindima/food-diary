@@ -3602,6 +3602,7 @@
     {
       "id": "explicit-result-file-role",
       "queryTerms": ["result", "outcome"],
+      "excludedQueryTerms": ["calculator"],
       "minimumMatches": 1,
       "candidateTerms": ["result"],
       "minimumCandidateMatches": 1,

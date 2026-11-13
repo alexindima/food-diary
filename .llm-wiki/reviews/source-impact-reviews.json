@@ -483,15 +483,20 @@
       "pageSha256": "7b5adaa4638d2e8c6199b0a1c47f8a9b05deba2c020b74575356bcc67adc7369",
       "sources": [
         {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
+          "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
+        },
+        {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
           "sha256": "0a53247610c88d7c0a4bd2f5c0c9ee9fde47a99288c4b0ee50cf4dfcc1fe41e4",
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed.",
+      "reason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity.",
       "baseRef": "HEAD",
-      "gitHead": "090faa0e6026f74977b5bf09c62cd2e8b5dead4d",
-      "reviewedAtUtc": "2026-11-13T14:27:20.6763676Z"
+      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
+      "reviewedAtUtc": "2026-11-13T22:10:23.1734107Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1489,14 +1494,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "188b8cb9bcb0343c20c3d26b5e2c82d259da39f1fe3a3015337b3b76ccd1672f",
-          "reviewReason": "Regenerated topology diff changes only the source fingerprint and count. Service, job, client, deployment and health inventory match the previous snapshot."
+          "sha256": "3eb6dc07c00da24eaa9210cf5dea83f92dccbaeebfa8be22b1777cc3a8f503ec",
+          "reviewReason": "The whitespace-only C# analyzer change regenerates only the topology source fingerprint. Service, deployment, health, integration and recurring-job inventory match HEAD."
         }
       ],
-      "reason": "Regenerated topology diff changes only the source fingerprint and count. Service, job, client, deployment and health inventory match the previous snapshot.",
+      "reason": "The whitespace-only C# analyzer change regenerates only the topology source fingerprint. Service, deployment, health, integration and recurring-job inventory match HEAD.",
       "baseRef": "HEAD",
-      "gitHead": "0e54a9a48386e75461b89c42b900cb30d2c4a1a9",
-      "reviewedAtUtc": "2026-11-13T21:01:51.8863292Z"
+      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
+      "reviewedAtUtc": "2026-11-13T22:10:24.1586963Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1505,8 +1510,8 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ee1b89f981b1da635cb2eff2843ff133b2782313ea5b20a5bca8b693a6d2cadb",
-          "reviewReason": "Reviewed advisory ranking-only rule plus equivalent normalization consolidation. No security or application authorization behavior changed; combined budget remains700 and curated discovery still treats search results as leads only."
+          "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
+          "reviewReason": "Reviewed the calculator-only exclusion from the generic result-file affinity. Security discovery signals and control classifications are unchanged, and the frozen security retrieval corpus passed."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
@@ -1514,10 +1519,10 @@
           "reviewReason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force."
         }
       ],
-      "reason": "Reviewed advisory ranking-only rule plus equivalent normalization consolidation. No security or application authorization behavior changed; combined budget remains700 and curated discovery still treats search results as leads only.",
+      "reason": "Reviewed the calculator-only exclusion from the generic result-file affinity. Security discovery signals and control classifications are unchanged, and the frozen security retrieval corpus passed.",
       "baseRef": "HEAD",
-      "gitHead": "40f3e0a7a8610c47d5cc832391205e937a30a1f1",
-      "reviewedAtUtc": "2026-11-02T05:28:55.986979Z"
+      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
+      "reviewedAtUtc": "2026-11-13T22:10:23.8721671Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1875,6 +1880,11 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         },
         {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
+          "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
+        },
+        {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
           "sha256": "05e14ff01e5a121611dd7775729f48c7e7a91fdbc03880a7a371a07899895f7d",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
@@ -1910,10 +1920,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The same HashSet constructor still consumes the same ranking terms with the same ordinal comparer. No query or ranking rules change. The 242 SQLite reader tests passed.",
+      "reason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity.",
       "baseRef": "HEAD",
-      "gitHead": "090faa0e6026f74977b5bf09c62cd2e8b5dead4d",
-      "reviewedAtUtc": "2026-11-13T14:27:21.4657482Z"
+      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
+      "reviewedAtUtc": "2026-11-13T22:10:23.5465533Z"
     },
     {
       "pageId": "workflow.review-diff",
