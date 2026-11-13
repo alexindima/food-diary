@@ -33,7 +33,7 @@ public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : I
         using HttpResponseMessage initial = await browser.PostAsJsonAsync("/api/v1/auth/google", new GoogleLoginHttpRequest("admin-google-proof"));
         initial.EnsureSuccessStatusCode();
         JsonElement signedIn = await initial.Content.ReadFromJsonAsync<JsonElement>();
-        var userId = new UserId(signedIn.GetProperty("user").GetProperty("id").GetGuid());
+        var userId = new UserId(signedIn["user"]["id"].GetGuid());
         await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
             IUserRoleMembershipService roles = scope.ServiceProvider.GetRequiredService<IUserRoleMembershipService>();
             await roles.EnsureRoleAsync(userId, RoleNames.Admin);
@@ -291,7 +291,7 @@ public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : I
         using HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/auth/register", new RegisterHttpRequest(email, "Password123!", "en"));
         response.EnsureSuccessStatusCode();
         JsonElement payload = await response.Content.ReadFromJsonAsync<JsonElement>();
-        return (payload.GetProperty("user").GetProperty("id").GetGuid(), email);
+        return (payload["user"]["id"].GetGuid(), email);
     }
 
     private static async Task<string> ExchangeContextAsync(HttpClient browser, Guid target) {

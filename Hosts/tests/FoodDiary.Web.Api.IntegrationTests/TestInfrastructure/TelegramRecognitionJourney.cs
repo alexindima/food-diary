@@ -43,7 +43,7 @@ internal static class TelegramRecognitionJourney {
         Assert.Equal(HttpStatusCode.OK, completed.StatusCode);
         using var job = JsonDocument.Parse(await completed.Content.ReadAsStringAsync());
         Assert.Equal("Succeeded", job.RootElement.GetProperty("status").GetString());
-        Assert.Equal(52, job.RootElement.GetProperty("nutrition").GetProperty("calories").GetDecimal());
+        Assert.Equal(52, job.RootElement["nutrition"]["calories"].GetDecimal());
         await VerifyUsageAsync(client);
     }
 

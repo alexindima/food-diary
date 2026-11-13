@@ -126,9 +126,9 @@ public sealed class RecipeImportProviderTests {
         JsonElement input = request.RootElement.GetProperty("input");
         Assert.Multiple(
             () => Assert.Equal("developer", input[0].GetProperty("role").GetString()),
-            () => Assert.Contains("untrusted", input[0].GetProperty("content")[0].GetProperty("text").GetString(), StringComparison.Ordinal),
-            () => Assert.Contains("Ignore prior instructions", input[1].GetProperty("content")[0].GetProperty("text").GetString(), StringComparison.Ordinal),
-            () => Assert.True(request.RootElement.GetProperty("text").GetProperty("format").GetProperty("strict").GetBoolean()),
+            () => Assert.Contains("untrusted", input[0]["content"][0]["text"].GetString(), StringComparison.Ordinal),
+            () => Assert.Contains("Ignore prior instructions", input[1]["content"][0]["text"].GetString(), StringComparison.Ordinal),
+            () => Assert.True(request.RootElement["text"]["format"]["strict"].GetBoolean()),
             () => Assert.False(request.RootElement.GetProperty("store").GetBoolean()),
             () => Assert.Equal("щепотка", response.Value.Ingredients[1].Amount),
             () => Assert.Null(response.Value.Servings),
@@ -157,11 +157,11 @@ public sealed class RecipeImportProviderTests {
         Assert.All(recipe.Ingredients, ingredient => Assert.Equal("1/2 tsp", ingredient.Amount));
         Assert.Equal(new RecipeImportNutritionModel("serving", 505, 36, 37, 5, 1, Alcohol: null), recipe.Nutrition);
         using var request = JsonDocument.Parse(handler.Body!);
-        JsonElement schema = request.RootElement.GetProperty("text").GetProperty("format").GetProperty("schema");
-        Assert.Contains("stepIndex", schema.GetProperty("properties").GetProperty("ingredients").GetProperty("items")
-            .GetProperty("required").EnumerateArray().Select(x => x.GetString()), StringComparer.Ordinal);
+        JsonElement schema = request.RootElement["text"]["format"]["schema"];
+        Assert.Contains("stepIndex", schema["properties"]["ingredients"]["items"]
+            ["required"].EnumerateArray().Select(x => x.GetString()), StringComparer.Ordinal);
         Assert.Contains("nutrition", schema.GetProperty("required").EnumerateArray().Select(x => x.GetString()), StringComparer.Ordinal);
-        string instructions = request.RootElement.GetProperty("input")[0].GetProperty("content")[0].GetProperty("text").GetString()!;
+        string instructions = request.RootElement["input"][0]["content"][0]["text"].GetString()!;
         Assert.Contains("never merge", instructions, StringComparison.Ordinal);
         Assert.Contains("Preheating an oven does not use ingredients", instructions, StringComparison.Ordinal);
         Assert.Contains("recipeYield alone does not", instructions, StringComparison.Ordinal);

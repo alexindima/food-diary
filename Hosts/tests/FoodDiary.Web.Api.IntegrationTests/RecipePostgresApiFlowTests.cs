@@ -64,7 +64,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
         JsonElement recentItems = recentJson.RootElement;
         JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
         JsonElement recentOverviewItems = overviewRoot.GetProperty("recentItems");
-        JsonElement allRecipes = overviewRoot.GetProperty("allRecipes").GetProperty("data");
+        JsonElement allRecipes = overviewRoot["allRecipes"]["data"];
 
         Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
         Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("recipeId").GetGuid() == favoriteRecipeId);
@@ -190,10 +190,9 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
         using var duplicateJson = JsonDocument.Parse(await owner.GetStringAsync($"/api/v1/recipes/{duplicate.Id}"));
         Assert.Equal(200, duplicateJson.RootElement.GetProperty("totalCalories").GetDouble());
         Assert.NotEqual(
-            parentJson.RootElement.GetProperty("steps")[0].GetProperty("id").GetGuid(),
-            duplicateJson.RootElement.GetProperty("steps")[0].GetProperty("id").GetGuid());
-        Assert.Equal(child.Id, duplicateJson.RootElement.GetProperty("steps")[0]
-            .GetProperty("ingredients")[0].GetProperty("nestedRecipeId").GetGuid());
+            parentJson.RootElement["steps"][0]["id"].GetGuid(),
+            duplicateJson.RootElement["steps"][0]["id"].GetGuid());
+        Assert.Equal(child.Id, duplicateJson.RootElement["steps"][0]["ingredients"][0]["nestedRecipeId"].GetGuid());
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, await owner.DeleteAsync($"/api/v1/recipes/{parent.Id}"));
         await AssertStatusCodeAsync(HttpStatusCode.BadRequest, await owner.DeleteAsync($"/api/v1/recipes/{child.Id}"));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, await owner.DeleteAsync($"/api/v1/recipes/{duplicate.Id}"));
@@ -340,9 +339,8 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
         await AssertStatusCodeAsync(HttpStatusCode.OK, response).ConfigureAwait(false);
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
-        JsonElement recipe = json.RootElement
-            .GetProperty("allRecipes")
-            .GetProperty("data")
+        JsonElement recipe = json.RootElement["allRecipes"]
+            ["data"]
             .EnumerateArray()
             .Single(item => item.GetProperty("id").GetGuid() == recipeId);
 

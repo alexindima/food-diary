@@ -405,7 +405,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         registerResponse.EnsureSuccessStatusCode();
 
         using var registerJson = JsonDocument.Parse(await registerResponse.Content.ReadAsStringAsync());
-        Guid userId = registerJson.RootElement.GetProperty("user").GetProperty("id").GetGuid();
+        Guid userId = registerJson.RootElement["user"]["id"].GetGuid();
 
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
@@ -460,7 +460,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(1, importJson.RootElement.GetProperty("importedCount").GetInt32());
-        Assert.Equal(title, importJson.RootElement.GetProperty("lessons")[0].GetProperty("title").GetString());
+        Assert.Equal(title, importJson.RootElement["lessons"][0]["title"].GetString());
 
         HttpResponseMessage getResponse = await client.GetAsync("/api/v1/admin/lessons");
         using var listJson = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
@@ -923,21 +923,14 @@ public sealed partial class PresentationBoundaryIntegrationTests(
 
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        JsonElement securitySchemes = json.RootElement
-            .GetProperty("components")
-            .GetProperty("securitySchemes")
-            .GetProperty("Bearer");
-        JsonElement authorizedSecurityRequirement = json.RootElement
-            .GetProperty("paths")
-            .GetProperty("/api/v{version}/products")
-            .GetProperty("get")
-            .GetProperty("security")[0]
-            .GetProperty("Bearer");
-        JsonElement anonymousSecurity = json.RootElement
-            .GetProperty("paths")
-            .GetProperty("/api/v{version}/auth/login")
-            .GetProperty("post")
-            .GetProperty("security");
+        JsonElement securitySchemes = json.RootElement["components"]
+            ["securitySchemes"]["Bearer"];
+        JsonElement authorizedSecurityRequirement = json.RootElement["paths"]
+            ["/api/v{version}/products"]["get"]
+            ["security"][0]["Bearer"];
+        JsonElement anonymousSecurity = json.RootElement["paths"]
+            ["/api/v{version}/auth/login"]["post"]
+            ["security"];
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("http", securitySchemes.GetProperty("type").GetString());
@@ -966,7 +959,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
             parameter.TryGetProperty("name", out JsonElement name) &&
             name.GetString() is "userId" or "actorUserId");
 
-        JsonElement productCreate = paths.GetProperty("/api/v{version}/products").GetProperty("post");
+        JsonElement productCreate = paths["/api/v{version}/products"]["post"];
         JsonElement idempotencyParameter = Assert.Single(productCreate.GetProperty("parameters").EnumerateArray(), static parameter =>
             string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
         JsonElement schema = idempotencyParameter.GetProperty("schema");
@@ -981,7 +974,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
             () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("409", out _)),
             () => Assert.True(productCreate.GetProperty("responses").TryGetProperty("503", out _)));
 
-        JsonElement aiCreate = paths.GetProperty("/api/v{version}/ai/food/vision").GetProperty("post");
+        JsonElement aiCreate = paths["/api/v{version}/ai/food/vision"]["post"];
         JsonElement requiredIdempotency = Assert.Single(aiCreate.GetProperty("parameters").EnumerateArray(), static parameter =>
             string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
         Assert.True(requiredIdempotency.GetProperty("required").GetBoolean());
@@ -994,19 +987,19 @@ public sealed partial class PresentationBoundaryIntegrationTests(
             ("/api/v{version}/admin/lessons/import", "post"),
         ];
         Assert.All(retrySensitiveOperations, operation => {
-            JsonElement endpoint = paths.GetProperty(operation.Path).GetProperty(operation.Method);
+            JsonElement endpoint = paths[operation.Path][operation.Method];
             JsonElement parameter = Assert.Single(endpoint.GetProperty("parameters").EnumerateArray(), static value =>
                 string.Equals(value.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal));
             Assert.True(parameter.GetProperty("required").GetBoolean());
         });
 
-        JsonElement refresh = paths.GetProperty("/api/v{version}/auth/refresh").GetProperty("post");
+        JsonElement refresh = paths["/api/v{version}/auth/refresh"]["post"];
         Assert.False(refresh.TryGetProperty("parameters", out JsonElement refreshParameters) &&
             refreshParameters.EnumerateArray().Any(static parameter =>
                 string.Equals(parameter.GetProperty("name").GetString(), "Idempotency-Key", StringComparison.Ordinal)));
 
-        JsonElement dashboardTestEmail = paths.GetProperty("/api/v{version}/dashboard/test-email").GetProperty("post");
-        JsonElement scheduledTestNotification = paths.GetProperty("/api/v{version}/notifications/test/schedule").GetProperty("post");
+        JsonElement dashboardTestEmail = paths["/api/v{version}/dashboard/test-email"]["post"];
+        JsonElement scheduledTestNotification = paths["/api/v{version}/notifications/test/schedule"]["post"];
         Assert.Multiple(
             () => Assert.True(dashboardTestEmail.GetProperty("responses").TryGetProperty("429", out _)),
             () => Assert.True(scheduledTestNotification.GetProperty("responses").TryGetProperty("429", out _)));
@@ -1040,7 +1033,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
 
         foreach ((string path, string method) in operations) {
             Assert.True(
-                paths.GetProperty(path).GetProperty(method).GetProperty("responses").TryGetProperty("429", out _),
+                paths[path][method]["responses"].TryGetProperty("429", out _),
                 $"{method.ToUpperInvariant()} {path} must document HTTP 429.");
         }
     }
@@ -1049,10 +1042,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     public async Task SwaggerJson_WearableAuthUrl_DocumentsBoundedRequiredState() {
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
-        JsonElement operation = json.RootElement
-            .GetProperty("paths")
-            .GetProperty("/api/v{version}/wearables/{provider}/auth-url")
-            .GetProperty("get");
+        JsonElement operation = json.RootElement["paths"]
+            ["/api/v{version}/wearables/{provider}/auth-url"]["get"];
         JsonElement state = Assert.Single(operation.GetProperty("parameters").EnumerateArray(), static parameter =>
             string.Equals(parameter.GetProperty("name").GetString(), "state", StringComparison.Ordinal));
         JsonElement stateSchema = state.GetProperty("schema");
@@ -1084,7 +1075,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         ];
         Assert.All(lengthCases, testCase => {
             JsonElement parameter = GetOpenApiParameter(paths, testCase.Path, testCase.Method, testCase.Parameter);
-            Assert.Equal(testCase.MaximumLength, parameter.GetProperty("schema").GetProperty("maxLength").GetInt32());
+            Assert.Equal(testCase.MaximumLength, parameter["schema"]["maxLength"].GetInt32());
         });
 
         (string Path, string Parameter, int Minimum, int Maximum)[] rangeCases = [
@@ -1100,18 +1091,16 @@ public sealed partial class PresentationBoundaryIntegrationTests(
                 () => Assert.Equal(testCase.Maximum, schema.GetProperty("maximum").GetInt32()));
         });
 
-        JsonElement connectSchema = json.RootElement
-            .GetProperty("components")
-            .GetProperty("schemas")
-            .GetProperty("ConnectWearableHttpRequest")
-            .GetProperty("properties");
+        JsonElement connectSchema = json.RootElement["components"]
+            ["schemas"]["ConnectWearableHttpRequest"]
+            ["properties"];
         Assert.Multiple(
             () => Assert.Equal(
                 WearableInputLimits.MaximumAuthorizationCodeLength,
-                connectSchema.GetProperty("code").GetProperty("maxLength").GetInt32()),
+                connectSchema["code"]["maxLength"].GetInt32()),
             () => Assert.Equal(
                 WearableInputLimits.MaximumProtectedOAuthStateLength,
-                connectSchema.GetProperty("state").GetProperty("maxLength").GetInt32()));
+                connectSchema["state"]["maxLength"].GetInt32()));
     }
 
     [RequiresDockerFact]
@@ -1255,31 +1244,24 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         using var json = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
         JsonElement paths = json.RootElement.GetProperty("paths");
-        JsonElement loginBody = paths.GetProperty("/api/v{version}/auth/login")
-            .GetProperty("post")
-            .GetProperty("requestBody");
-        JsonElement weightItems = paths.GetProperty("/api/v{version}/weight-entries")
-            .GetProperty("get")
-            .GetProperty("responses")
-            .GetProperty("200")
-            .GetProperty("content")
-            .GetProperty("application/json")
-            .GetProperty("schema")
-            .GetProperty("items");
-        JsonElement exportResponse = paths.GetProperty("/api/v{version}/export/diary")
-            .GetProperty("get")
-            .GetProperty("responses")
-            .GetProperty("200");
+        JsonElement loginBody = paths["/api/v{version}/auth/login"]["post"]
+            ["requestBody"];
+        JsonElement weightItems = paths["/api/v{version}/weight-entries"]["get"]
+            ["responses"]["200"]
+            ["content"]["application/json"]
+            ["schema"]["items"];
+        JsonElement exportResponse = paths["/api/v{version}/export/diary"]["get"]
+            ["responses"]["200"];
 
         Assert.Multiple(
             () => Assert.Equal(
                 "#/components/schemas/LoginHttpRequest",
-                loginBody.GetProperty("content").GetProperty("application/json").GetProperty("schema").GetProperty("$ref").GetString()),
+                loginBody["content"]["application/json"]["schema"]["$ref"].GetString()),
             () => Assert.Equal(
                 "#/components/schemas/WeightEntryHttpResponse",
                 weightItems.GetProperty("$ref").GetString()),
-            () => Assert.Equal("binary", exportResponse.GetProperty("content").GetProperty("text/csv").GetProperty("schema").GetProperty("format").GetString()),
-            () => Assert.Equal("binary", exportResponse.GetProperty("content").GetProperty("application/pdf").GetProperty("schema").GetProperty("format").GetString()),
+            () => Assert.Equal("binary", exportResponse["content"]["text/csv"]["schema"]["format"].GetString()),
+            () => Assert.Equal("binary", exportResponse["content"]["application/pdf"]["schema"]["format"].GetString()),
             () => Assert.True(exportResponse.GetProperty("headers").TryGetProperty("Content-Disposition", out _)));
     }
 
@@ -1301,14 +1283,12 @@ public sealed partial class PresentationBoundaryIntegrationTests(
 
         Assert.All(optionalPaths, path => {
             JsonElement responses = paths
-                .GetProperty(path)
-                .GetProperty("get")
-                .GetProperty("responses");
+                [path]["get"]
+                ["responses"];
             JsonElement successSchema = responses
-                .GetProperty("200")
-                .GetProperty("content")
-                .GetProperty("application/json")
-                .GetProperty("schema");
+                ["200"]
+                ["content"]["application/json"]
+                ["schema"];
             Assert.Multiple(
                 () => Assert.True(responses.TryGetProperty("204", out _), $"GET {path} must document HTTP 204."),
                 () => Assert.False(IsNullableSchema(successSchema), $"GET {path} must keep HTTP 200 object-only."));
@@ -1346,10 +1326,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = BuildFullOpenApiSnapshot(json.RootElement);
         await AssertSnapshotAsync("openapi-full-contract.json", actual);
-        JsonElement likeNotFoundSchema = json.RootElement.GetProperty("paths")
-            .GetProperty("/api/v{version}/recipes/{recipeId}/likes").GetProperty("get")
-            .GetProperty("responses").GetProperty("404").GetProperty("content")
-            .GetProperty("application/json").GetProperty("schema");
+        JsonElement likeNotFoundSchema = json.RootElement["paths"]["/api/v{version}/recipes/{recipeId}/likes"]["get"]
+            ["responses"]["404"]["content"]["application/json"]["schema"];
         await AssertSnapshotAsync("openapi-recipe-like-not-found-schema.json",
             JsonSerializer.Serialize(likeNotFoundSchema, IndentedJsonOptions));
     }
@@ -1976,7 +1954,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         string method,
         string parameterName) =>
         Assert.Single(
-            paths.GetProperty(path).GetProperty(method).GetProperty("parameters").EnumerateArray(),
+            paths[path][method]["parameters"].EnumerateArray(),
             parameter => string.Equals(
                 parameter.GetProperty("name").GetString(),
                 parameterName,

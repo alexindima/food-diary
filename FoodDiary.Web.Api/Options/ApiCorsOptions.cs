@@ -13,7 +13,7 @@ public sealed class ApiCorsOptions {
             return false;
         }
 
-        var canonicalOrigins = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> canonicalOrigins = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (string origin in options.Origins) {
             if (!IsCanonicalHttpOrigin(origin, out string canonicalOrigin) ||
                 !canonicalOrigins.Add(canonicalOrigin)) {

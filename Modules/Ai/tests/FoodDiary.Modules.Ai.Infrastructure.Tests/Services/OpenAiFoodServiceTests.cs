@@ -92,7 +92,7 @@ public sealed class OpenAiFoodServiceTests {
         var requests = new List<string>();
         using var httpClient = new HttpClient(new CapturingHttpMessageHandler(request => {
             using var body = JsonDocument.Parse(CapturingHttpMessageHandler.LastRequestBody!);
-            JsonElement image = body.RootElement.GetProperty("input")[0].GetProperty("content")
+            JsonElement image = body.RootElement["input"][0]["content"]
                 .EnumerateArray().Single(item => string.Equals(item.GetProperty("type").GetString(), "input_image", StringComparison.Ordinal));
             Assert.Equal(dataUrl, image.GetProperty("image_url").GetString());
             string path = request.RequestUri!.AbsolutePath;
@@ -1357,12 +1357,12 @@ public sealed class OpenAiFoodServiceTests {
             calls++;
             using var body = JsonDocument.Parse(CapturingHttpMessageHandler.LastRequestBody!);
             JsonElement root = body.RootElement;
-            string?[] images = [.. root.GetProperty("input")[0].GetProperty("content").EnumerateArray()
+            string?[] images = [.. root["input"][0]["content"].EnumerateArray()
                 .Where(item => string.Equals(item.GetProperty("type").GetString(), "input_image", StringComparison.Ordinal))
                 .Select(item => item.GetProperty("image_url").GetString())];
             Assert.Equal(photos, images, StringComparer.Ordinal);
-            Assert.Equal("product_label", root.GetProperty("text").GetProperty("format").GetProperty("name").GetString());
-            Assert.Contains("Do not estimate nutrition", root.GetProperty("input")[0].GetProperty("content")[0].GetProperty("text").GetString(), StringComparison.Ordinal);
+            Assert.Equal("product_label", root["text"]["format"]["name"].GetString());
+            Assert.Contains("Do not estimate nutrition", root["input"][0]["content"][0]["text"].GetString(), StringComparison.Ordinal);
             return request.RequestUri!.AbsolutePath.EndsWith("input_tokens", StringComparison.Ordinal)
                 ? CreateTokenCountResponse(200)
                 : CreateOpenAiSuccessResponse("""{"name":"Yogurt","brand":null,"baseAmount":100,"baseUnit":"g","calories":63.5,"protein":5,"fat":2,"carbs":6,"fiber":null,"alcohol":null,"notes":"Unreadable fiber"}""");

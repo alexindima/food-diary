@@ -108,7 +108,7 @@ public sealed class RecipeTimeLimitContractTests(TestAuthApiWebApplicationFactor
         using var body = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader,
-            body.RootElement.GetProperty("user").GetProperty("id").GetGuid().ToString());
+            body.RootElement["user"]["id"].GetGuid().ToString());
         if (isAdmin) { client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin); }
         return client;
     }

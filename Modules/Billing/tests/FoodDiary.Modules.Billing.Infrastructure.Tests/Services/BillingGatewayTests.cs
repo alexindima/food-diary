@@ -8,6 +8,7 @@ using System.Text.Json;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
+using FoodDiary.Testing;
 using FoodDiary.Modules.Billing.Domain.Contracts;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
@@ -2727,10 +2728,7 @@ public sealed partial class BillingGatewayTests {
 
     private static StripeBillingGateway CreateConfiguredStripeWebhookGateway(string eventPayload) {
         using var document = JsonDocument.Parse(eventPayload);
-        string subscriptionPayload = document.RootElement
-            .GetProperty("data")
-            .GetProperty("object")
-            .GetRawText();
+        string subscriptionPayload = document.RootElement["data"]["object"].GetRawText();
         var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = new StringContent(subscriptionPayload, Encoding.UTF8, "application/json"),
         });

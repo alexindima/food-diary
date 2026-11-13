@@ -37,7 +37,7 @@ public sealed class ProtocolCompactionTests {
             () => Assert.Equal("TimeProvider", output.GetProperty("unresolvedDependencies")[0].GetString()),
             () => Assert.Single(output.GetProperty("limitations").EnumerateArray()),
             () => Assert.Equal("handler-dependencies-plus-one-interface-hop", output.GetProperty("traceDepth").GetString()),
-            () => Assert.Equal(12, output.GetProperty("handler").GetProperty("line").GetInt32()),
+            () => Assert.Equal(12, output["handler"]["line"].GetInt32()),
             () => Assert.Single(output.GetProperty("presentation").EnumerateArray()),
             () => Assert.Single(output.GetProperty("tests").EnumerateArray()));
     }
@@ -54,7 +54,7 @@ public sealed class ProtocolCompactionTests {
         JsonElement output = trace.StructuredOutput!.Value;
         Assert.Multiple(
             () => Assert.Single(output.GetProperty("nestedDependencies").EnumerateArray()),
-            () => Assert.Equal("Search.cs", output.GetProperty("nestedDependencies")[0].GetProperty("parentPath").GetString()),
+            () => Assert.Equal("Search.cs", output["nestedDependencies"][0]["parentPath"].GetString()),
             () => Assert.True(output.GetProperty("nestedDependenciesTruncated").GetBoolean()),
             () => Assert.True(output.GetProperty("truncated").GetBoolean()));
     }

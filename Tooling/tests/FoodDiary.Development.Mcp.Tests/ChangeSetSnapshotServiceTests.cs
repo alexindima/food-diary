@@ -341,7 +341,7 @@ public sealed class ChangeSetSnapshotServiceTests {
             Assert.True(process.ExitCode == 0, await error);
             using var status = JsonDocument.Parse(await output);
             Assert.Equal(snapshot.Fingerprint, status.RootElement.GetProperty("currentChangeSetFingerprint").GetString());
-            Assert.Equal(snapshot.ChangedPaths.Count, status.RootElement.GetProperty("currentWorkspace").GetProperty("changedPathCount").GetInt32());
+            Assert.Equal(snapshot.ChangedPaths.Count, status.RootElement["currentWorkspace"]["changedPathCount"].GetInt32());
         } finally {
             foreach (string path in Directory.EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)) {
                 File.SetAttributes(path, FileAttributes.Normal);

@@ -293,11 +293,10 @@ public sealed class McpServerTests {
         CallToolResult statusResult = await client.CallToolAsync(
             "get_server_status",
             cancellationToken: timeout.Token);
-        JsonElement runtimeMetrics = statusResult.StructuredContent!.Value
-            .GetProperty("data")
-            .GetProperty("runtimeMetrics");
-        Assert.True(runtimeMetrics.GetProperty("queryCache").GetProperty("hits").GetInt64() >= 1);
-        Assert.True(runtimeMetrics.GetProperty("queryCache").GetProperty("entries").GetInt32() >= 1);
+        JsonElement runtimeMetrics = statusResult.StructuredContent!.Value["data"]
+            ["runtimeMetrics"];
+        Assert.True(runtimeMetrics["queryCache"]["hits"].GetInt64() >= 1);
+        Assert.True(runtimeMetrics["queryCache"]["entries"].GetInt32() >= 1);
         Assert.True(runtimeMetrics.GetProperty("completedCommands").GetInt64() >= 1);
         Assert.Contains(runtimeMetrics.GetProperty("commandTimings").EnumerateArray(), timing =>
             string.Equals(timing.GetProperty("command").GetString(), "brief", StringComparison.Ordinal));

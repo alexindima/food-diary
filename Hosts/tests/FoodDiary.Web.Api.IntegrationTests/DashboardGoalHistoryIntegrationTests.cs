@@ -41,11 +41,11 @@ public sealed class DashboardGoalHistoryIntegrationTests(PostgresApiWebApplicati
         using var newPayload = JsonDocument.Parse(await newResponse.Content.ReadAsStringAsync());
         Assert.Multiple(
             () => Assert.Equal(3000, oldPayload.RootElement.GetProperty("dailyGoal").GetDouble()),
-            () => Assert.Equal(150, oldPayload.RootElement.GetProperty("statistics").GetProperty("proteinGoal").GetDouble()),
-            () => Assert.Equal(2000, oldPayload.RootElement.GetProperty("hydration").GetProperty("goalMl").GetDouble()),
+            () => Assert.Equal(150, oldPayload.RootElement["statistics"]["proteinGoal"].GetDouble()),
+            () => Assert.Equal(2000, oldPayload.RootElement["hydration"]["goalMl"].GetDouble()),
             () => Assert.Equal(2500, newPayload.RootElement.GetProperty("dailyGoal").GetDouble()),
-            () => Assert.Equal(120, newPayload.RootElement.GetProperty("statistics").GetProperty("proteinGoal").GetDouble()),
-            () => Assert.Equal(2500, newPayload.RootElement.GetProperty("hydration").GetProperty("goalMl").GetDouble()),
+            () => Assert.Equal(120, newPayload.RootElement["statistics"]["proteinGoal"].GetDouble()),
+            () => Assert.Equal(2500, newPayload.RootElement["hydration"]["goalMl"].GetDouble()),
             () => Assert.Equal(20500, newPayload.RootElement.GetProperty("weeklyCalorieGoal").GetDouble()));
     }
 

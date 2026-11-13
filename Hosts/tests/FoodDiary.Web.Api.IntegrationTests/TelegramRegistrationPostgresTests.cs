@@ -55,7 +55,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             new { Ticket = intent.GetProperty("ticket").GetString(), Action = "register", Language = "en", TimeZoneId = "UTC" });
         Assert.True(created.IsSuccessStatusCode, created.IsSuccessStatusCode ? null : await created.Content.ReadAsStringAsync());
         JsonElement sourceSession = await created.Content.ReadFromJsonAsync<JsonElement>();
-        var sourceId = new UserId(sourceSession.GetProperty("user").GetProperty("id").GetGuid());
+        var sourceId = new UserId(sourceSession["user"]["id"].GetGuid());
         string? sourceAccess = sourceSession.GetProperty("accessToken").GetString();
         source.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sourceAccess);
         using HttpResponseMessage startedTrial = await source.PostAsync("/api/v1/billing/trial", content: null);
@@ -70,7 +70,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using HttpResponseMessage registered = await target.PostAsJsonAsync("/api/v1/auth/register", new { email, password, language = "en" });
         registered.EnsureSuccessStatusCode();
         JsonElement targetSession = await registered.Content.ReadFromJsonAsync<JsonElement>();
-        var targetId = new UserId(targetSession.GetProperty("user").GetProperty("id").GetGuid());
+        var targetId = new UserId(targetSession["user"]["id"].GetGuid());
         using HttpResponseMessage verified = await target.PostAsJsonAsync("/api/v1/auth/verify-email",
             new { UserId = targetId.Value, Token = factory.EmailSender.GetRequiredEmailVerificationToken(email) });
         Assert.Equal(HttpStatusCode.NoContent, verified.StatusCode);
@@ -151,11 +151,11 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using HttpResponseMessage previewResponse = await source.PostAsJsonAsync(transferRoute, new { ticket });
         Assert.True(previewResponse.IsSuccessStatusCode, await previewResponse.Content.ReadAsStringAsync());
         JsonElement preview = await previewResponse.Content.ReadFromJsonAsync<JsonElement>();
-        Assert.Equal(1, preview.GetProperty("counts").GetProperty("meals").GetInt32());
-        Assert.Equal(1, preview.GetProperty("counts").GetProperty("recipes").GetInt32());
-        Assert.Equal(1, preview.GetProperty("counts").GetProperty("products").GetInt32());
-        Assert.Equal(2000, preview.GetProperty("telegramGoals").GetProperty("calories").GetDouble());
-        Assert.Equal(2300, preview.GetProperty("emailGoals").GetProperty("calories").GetDouble());
+        Assert.Equal(1, preview["counts"]["meals"].GetInt32());
+        Assert.Equal(1, preview["counts"]["recipes"].GetInt32());
+        Assert.Equal(1, preview["counts"]["products"].GetInt32());
+        Assert.Equal(2000, preview["telegramGoals"]["calories"].GetDouble());
+        Assert.Equal(2300, preview["emailGoals"]["calories"].GetDouble());
         await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
             FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             Assert.Equal(sourceId, (await db.Meals.SingleAsync(item => item.Id == sourceMeal.Id)).UserId);
@@ -178,7 +178,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using HttpResponseMessage botAuth = await bot.PostAsJsonAsync("/api/v1/auth/telegram/bot/auth", new { telegramUserId = telegramId });
         botAuth.EnsureSuccessStatusCode();
         JsonElement botSession = await botAuth.Content.ReadFromJsonAsync<JsonElement>();
-        Assert.Equal(targetId.Value, botSession.GetProperty("user").GetProperty("id").GetGuid());
+        Assert.Equal(targetId.Value, botSession["user"]["id"].GetGuid());
         await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
             FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             User old = await db.Users.SingleAsync(item => item.Id == sourceId);
@@ -218,7 +218,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             new { Ticket = newIntent.GetProperty("ticket").GetString(), Action = "register", Language = "en", TimeZoneId = "UTC" });
         newRegistration.EnsureSuccessStatusCode();
         JsonElement newSession = await newRegistration.Content.ReadFromJsonAsync<JsonElement>();
-        Guid newUserId = newSession.GetProperty("user").GetProperty("id").GetGuid();
+        Guid newUserId = newSession["user"]["id"].GetGuid();
         Assert.NotEqual(sourceId.Value, newUserId);
         Assert.NotEqual(targetId.Value, newUserId);
         recreated.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", newSession.GetProperty("accessToken").GetString());
@@ -273,7 +273,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             await response.Content.ReadAsStringAsync() + Environment.NewLine + string.Join(Environment.NewLine, diagnostics.Errors));
         using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         Assert.False(string.IsNullOrEmpty(body.RootElement.GetProperty("accessToken").GetString()));
-        Assert.Equal(JsonValueKind.Null, body.RootElement.GetProperty("user").GetProperty("email").ValueKind);
+        Assert.Equal(JsonValueKind.Null, body.RootElement["user"]["email"].ValueKind);
         await VerifySessionAsync(client, body.RootElement);
         using HttpClient otherUserClient = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         await TelegramMealJourney.VerifyAsync(client, otherUserClient, app.Services);
@@ -281,7 +281,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using HttpResponseMessage replay = await client.PostAsJsonAsync("/api/v1/auth/telegram/complete",
             new { Ticket = ticket, Action = "register", Language = "en", TimeZoneId = "UTC" });
         Assert.Equal(HttpStatusCode.Unauthorized, replay.StatusCode);
-        await VerifySubsequentLoginAsync(app, body.RootElement.GetProperty("user").GetProperty("id").GetString());
+        await VerifySubsequentLoginAsync(app, body.RootElement["user"]["id"].GetString());
         using HttpResponseMessage invalid = await client.PostAsJsonAsync("/api/v1/auth/telegram/complete",
             new { Ticket = "short", Action = "register", Language = "en", TimeZoneId = "UTC" });
         Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
@@ -289,7 +289,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         Assert.Equal(HttpStatusCode.BadRequest, invalidMiniApp.StatusCode);
         using HttpResponseMessage invalidOidc = await client.PostAsJsonAsync("/api/v1/auth/telegram/oidc/exchange", new { Code = "", State = "short" });
         Assert.Equal(HttpStatusCode.BadRequest, invalidOidc.StatusCode);
-        await VerifyBackupEmailAsync(client, app, body.RootElement.GetProperty("user").GetProperty("id").GetGuid());
+        await VerifyBackupEmailAsync(client, app, body.RootElement["user"]["id"].GetGuid());
     }
 
     private static async Task CompleteTelegramCutoverForScenarioAsync(WebApplicationFactory<Program> app) {
@@ -364,10 +364,10 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             new { Ticket = intent.RootElement.GetProperty("ticket").GetString(), Action = "login" });
         Assert.Equal(HttpStatusCode.OK, login.StatusCode);
         using var authentication = JsonDocument.Parse(await login.Content.ReadAsStringAsync());
-        Assert.Equal(expectedUserId, authentication.RootElement.GetProperty("user").GetProperty("id").GetString());
-        Assert.Equal(expectedEmail, authentication.RootElement.GetProperty("user").GetProperty("email").GetString());
+        Assert.Equal(expectedUserId, authentication.RootElement["user"]["id"].GetString());
+        Assert.Equal(expectedEmail, authentication.RootElement["user"]["email"].GetString());
         if (expectedEmail is not null) {
-            Assert.True(authentication.RootElement.GetProperty("user").GetProperty("isEmailConfirmed").GetBoolean());
+            Assert.True(authentication.RootElement["user"]["isEmailConfirmed"].GetBoolean());
         }
         await VerifySessionAsync(client, authentication.RootElement, expectedEmail);
         if (expectedEmail is not null) {
@@ -390,8 +390,8 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             new { Email = email, Password = password });
         Assert.Equal(HttpStatusCode.OK, login.StatusCode);
         using var authentication = JsonDocument.Parse(await login.Content.ReadAsStringAsync());
-        Assert.Equal(expectedUserId, authentication.RootElement.GetProperty("user").GetProperty("id").GetString());
-        Assert.True(authentication.RootElement.GetProperty("user").GetProperty("hasPassword").GetBoolean());
+        Assert.Equal(expectedUserId, authentication.RootElement["user"]["id"].GetString());
+        Assert.True(authentication.RootElement["user"]["hasPassword"].GetBoolean());
         await VerifySessionAsync(client, authentication.RootElement, email);
         using HttpResponseMessage unlink = await client.PostAsJsonAsync("/api/v1/auth/telegram/unlink",
             new { InitData = CreateInitData() });
@@ -403,7 +403,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             new { Email = email, Password = password });
         Assert.Equal(HttpStatusCode.OK, passwordLogin.StatusCode);
         using var restored = JsonDocument.Parse(await passwordLogin.Content.ReadAsStringAsync());
-        Assert.Equal(expectedUserId, restored.RootElement.GetProperty("user").GetProperty("id").GetString());
+        Assert.Equal(expectedUserId, restored.RootElement["user"]["id"].GetString());
         await VerifySessionAsync(client, restored.RootElement, email);
         using HttpResponseMessage telegramBegin = await client.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin",
             new { InitData = CreateInitData() });
@@ -414,8 +414,8 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             new { Ticket = intent.RootElement.GetProperty("ticket").GetString() });
         Assert.Equal(HttpStatusCode.OK, relink.StatusCode);
         using var linked = JsonDocument.Parse(await relink.Content.ReadAsStringAsync());
-        Assert.Equal(expectedUserId, linked.RootElement.GetProperty("user").GetProperty("id").GetString());
-        Assert.True(linked.RootElement.GetProperty("user").GetProperty("hasTelegramIdentity").GetBoolean());
+        Assert.Equal(expectedUserId, linked.RootElement["user"]["id"].GetString());
+        Assert.True(linked.RootElement["user"]["hasTelegramIdentity"].GetBoolean());
         await VerifySessionAsync(client, linked.RootElement, email);
         await TelegramDeletionJourney.VerifyAsync(client);
         using HttpResponseMessage deletedLogin = await client.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin",

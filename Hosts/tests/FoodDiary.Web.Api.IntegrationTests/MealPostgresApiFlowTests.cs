@@ -136,9 +136,8 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
         await AssertStatusCodeAsync(HttpStatusCode.OK, response).ConfigureAwait(false);
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
-        JsonElement meal = json.RootElement
-            .GetProperty("allMeals")
-            .GetProperty("data")
+        JsonElement meal = json.RootElement["allMeals"]
+            ["data"]
             .EnumerateArray()
             .Single(item => item.GetProperty("id").GetGuid() == mealId);
 

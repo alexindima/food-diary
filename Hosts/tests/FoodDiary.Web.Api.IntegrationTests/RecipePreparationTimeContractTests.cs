@@ -17,7 +17,7 @@ public sealed class RecipePreparationTimeContractTests(TestAuthApiWebApplication
             new RegisterHttpRequest($"recipe-time-{Guid.NewGuid():N}@example.test", "Password123!", "en"));
         registration.EnsureSuccessStatusCode();
         using var registered = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
-        Guid userId = registered.RootElement.GetProperty("user").GetProperty("id").GetGuid();
+        Guid userId = registered.RootElement["user"]["id"].GetGuid();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, userId.ToString());
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);

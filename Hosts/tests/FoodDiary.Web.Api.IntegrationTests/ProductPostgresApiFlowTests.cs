@@ -356,7 +356,7 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
         JsonElement recentItems = recentJson.RootElement;
         JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
         JsonElement recentOverviewItems = overviewRoot.GetProperty("recentItems");
-        JsonElement allProducts = overviewRoot.GetProperty("allProducts").GetProperty("data");
+        JsonElement allProducts = overviewRoot["allProducts"]["data"];
 
         Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
         JsonElement favoritePreview = favoriteItems.EnumerateArray().Single(item => item.GetProperty("productId").GetGuid() == favoriteProductId);

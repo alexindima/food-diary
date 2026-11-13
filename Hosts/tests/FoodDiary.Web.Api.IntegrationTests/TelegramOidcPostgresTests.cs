@@ -126,11 +126,11 @@ public sealed class TelegramOidcPostgresTests(PostgresApiWebApplicationFactory f
         using HttpResponseMessage complete = await client.PostAsJsonAsync("/api/v1/auth/telegram/complete", completionRequest);
         Assert.Equal(HttpStatusCode.OK, complete.StatusCode);
         using var authentication = JsonDocument.Parse(await complete.Content.ReadAsStringAsync());
-        Assert.Equal(JsonValueKind.Null, authentication.RootElement.GetProperty("user").GetProperty("email").ValueKind);
+        Assert.Equal(JsonValueKind.Null, authentication.RootElement["user"]["email"].ValueKind);
         Assert.False(string.IsNullOrWhiteSpace(authentication.RootElement.GetProperty("sessionId").GetString()));
         using HttpResponseMessage repeatedCompletion = await client.PostAsJsonAsync("/api/v1/auth/telegram/complete", completionRequest);
         Assert.Equal(HttpStatusCode.Unauthorized, repeatedCompletion.StatusCode);
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(complete));
-        return authentication.RootElement.GetProperty("user").GetProperty("id").GetGuid();
+        return authentication.RootElement["user"]["id"].GetGuid();
     }
 }

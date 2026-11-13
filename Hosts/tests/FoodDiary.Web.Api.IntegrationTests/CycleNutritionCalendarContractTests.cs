@@ -83,7 +83,7 @@ public sealed class CycleNutritionCalendarContractTests(TestAuthApiWebApplicatio
             new RegisterHttpRequest($"cycle-calendar-{Guid.NewGuid():N}@example.test", "Password123!", "en"));
         response.EnsureSuccessStatusCode();
         using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Guid userId = body.RootElement.GetProperty("user").GetProperty("id").GetGuid();
+        Guid userId = body.RootElement["user"]["id"].GetGuid();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, userId.ToString());
         await client.GrantHealthTrackingConsentAsync();

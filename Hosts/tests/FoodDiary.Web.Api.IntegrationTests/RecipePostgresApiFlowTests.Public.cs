@@ -22,7 +22,7 @@ public sealed partial class RecipePostgresApiFlowTests {
         detail.EnsureSuccessStatusCode();
         using var body = JsonDocument.Parse(await detail.Content.ReadAsStringAsync());
         JsonElement root = body.RootElement;
-        JsonElement ingredient = root.GetProperty("steps")[0].GetProperty("ingredients")[0];
+        JsonElement ingredient = root["steps"][0]["ingredients"][0];
         Assert.Multiple(
             () => Assert.Equal(name, root.GetProperty("name").GetString()),
             () => Assert.False(root.TryGetProperty("comment", out _)),

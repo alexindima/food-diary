@@ -131,7 +131,7 @@ public sealed class EvaluationRunnerTests {
             () => Assert.True(root.GetProperty("passed").GetBoolean()),
             () => Assert.False(root.GetProperty("switchReady").GetBoolean()),
             () => Assert.Equal(2, root.GetProperty("caseCount").GetInt32()),
-            () => Assert.Equal(2, root.GetProperty("metrics").GetProperty("top1Count").GetInt32()),
+            () => Assert.Equal(2, root["metrics"]["top1Count"].GetInt32()),
             () => Assert.Empty(root.GetProperty("misses").EnumerateArray()));
     }
 
@@ -202,10 +202,10 @@ public sealed class EvaluationRunnerTests {
         Assert.Multiple(
             () => Assert.True(root.GetProperty("passed").GetBoolean()),
             () => Assert.Equal(1, root.GetProperty("caseCount").GetInt32()),
-            () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("sqlitePrimaryRate").GetDouble()),
-            () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("explainableRankingRate").GetDouble()),
-            () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("contextBundleReadyRate").GetDouble()),
-            () => Assert.Equal(0, root.GetProperty("metrics").GetProperty("unplannedQueryRate").GetDouble()),
+            () => Assert.Equal(1, root["metrics"]["sqlitePrimaryRate"].GetDouble()),
+            () => Assert.Equal(1, root["metrics"]["explainableRankingRate"].GetDouble()),
+            () => Assert.Equal(1, root["metrics"]["contextBundleReadyRate"].GetDouble()),
+            () => Assert.Equal(0, root["metrics"]["unplannedQueryRate"].GetDouble()),
             () => Assert.Empty(root.GetProperty("failures").EnumerateArray()));
     }
 
@@ -257,8 +257,8 @@ public sealed class EvaluationRunnerTests {
         using var document = JsonDocument.Parse(output.ToString());
         JsonElement root = document.RootElement;
         Assert.Multiple(
-            () => Assert.Equal(0, root.GetProperty("metrics").GetProperty("explainableRankingRate").GetDouble()),
-            () => Assert.Equal(0, root.GetProperty("metrics").GetProperty("contextBundleReadyRate").GetDouble()),
+            () => Assert.Equal(0, root["metrics"]["explainableRankingRate"].GetDouble()),
+            () => Assert.Equal(0, root["metrics"]["contextBundleReadyRate"].GetDouble()),
             () => Assert.Single(root.GetProperty("failures").EnumerateArray()));
     }
 
@@ -327,8 +327,8 @@ public sealed class EvaluationRunnerTests {
             Assert.Multiple(
                 () => Assert.True(root.GetProperty("passed").GetBoolean()),
                 () => Assert.Equal(1, root.GetProperty("caseCount").GetInt32()),
-                () => Assert.Equal(1, root.GetProperty("metrics").GetProperty("sqlitePrimaryCount").GetInt32()),
-                () => Assert.Equal(1, root.GetProperty("persistentEvidenceAfter").GetProperty("sampleCount").GetInt32()));
+                () => Assert.Equal(1, root["metrics"]["sqlitePrimaryCount"].GetInt32()),
+                () => Assert.Equal(1, root["persistentEvidenceAfter"]["sampleCount"].GetInt32()));
         } finally {
             File.Delete(corpusPath);
             if (Directory.Exists(telemetryDirectory)) {

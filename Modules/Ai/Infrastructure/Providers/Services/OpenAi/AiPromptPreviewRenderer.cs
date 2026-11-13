@@ -14,7 +14,7 @@ internal sealed class AiPromptPreviewRenderer : IAiPromptPreviewRenderer {
             "nutrition" => OpenAiRequestFactory.BuildFoodNutritionTextFormat(),
             _ => throw new ArgumentOutOfRangeException(nameof(key)),
         };
-        return JsonSerializer.Serialize(JsonSerializer.SerializeToElement(text).GetProperty("format"), JsonOptions);
+        return JsonSerializer.Serialize(JsonSerializer.SerializeToElement(text)["format"], JsonOptions);
     }
 
     public string Render(AiPromptDraft draft) {
@@ -25,8 +25,8 @@ internal sealed class AiPromptPreviewRenderer : IAiPromptPreviewRenderer {
             _ => OpenAiRequestFactory.BuildNutritionRequest("preview", draft.Items!, draft.PromptText, 1),
         };
         // Use the production request factory; expose only resolved text, never image bytes or provider credentials.
-        JsonElement input = JsonSerializer.SerializeToElement(request).GetProperty("input")[0].GetProperty("content");
-        return string.Join("\n\n", input.EnumerateArray().Where(part => string.Equals(part.GetProperty("type").GetString(), "input_text", StringComparison.Ordinal))
-            .Select(part => part.GetProperty("text").GetString()));
+        JsonElement input = JsonSerializer.SerializeToElement(request)["input"][0]["content"];
+        return string.Join("\n\n", input.EnumerateArray().Where(part => string.Equals(part["type"].GetString(), "input_text", StringComparison.Ordinal))
+            .Select(part => part["text"].GetString()));
     }
 }

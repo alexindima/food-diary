@@ -23,7 +23,7 @@ internal static class CookieAuthenticationScenario {
         JsonElement payload = await registered.Content.ReadFromJsonAsync<JsonElement>();
         Assert.False(payload.TryGetProperty("accessToken", out _));
         Assert.False(payload.TryGetProperty("refreshToken", out _));
-        Guid id = payload.GetProperty("user").GetProperty("id").GetGuid();
+        Guid id = payload["user"]["id"].GetGuid();
         string cookie = AuthenticationResponseCookies.ReadBrowserSession(registered);
         using HttpResponseMessage confirmed = await browser.PostAsJsonAsync("/api/v1/auth/verify-email",
             new { UserId = id, Token = factory.EmailSender.GetRequiredEmailVerificationToken(email) });

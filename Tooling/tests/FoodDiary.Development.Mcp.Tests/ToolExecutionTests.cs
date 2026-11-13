@@ -32,7 +32,7 @@ public sealed class ToolExecutionTests {
         Assert.Multiple(
             () => Assert.False(result.IsError),
             () => Assert.True(structured.GetProperty("success").GetBoolean()),
-            () => Assert.Equal(expected, structured.GetProperty("data").GetProperty("retrievalAssessment").GetString()),
+            () => Assert.Equal(expected, structured["data"]["retrievalAssessment"].GetString()),
             () => Assert.Equal(context.RetrievalWarnings.Count > 0 ? context.RetrievalWarnings[0] : "Structured FoodDiary development context is available.", content.Text),
             () => Assert.False(context.PartialSuccess));
     }
@@ -97,7 +97,7 @@ public sealed class ToolExecutionTests {
         using var document = JsonDocument.Parse(json);
         Assert.Multiple(
             () => Assert.True(document.RootElement.GetProperty("success").GetBoolean()),
-            () => Assert.Equal(7, document.RootElement.GetProperty("data").GetProperty("value").GetInt32()),
+            () => Assert.Equal(7, document.RootElement["data"]["value"].GetInt32()),
             () => Assert.False(document.RootElement.TryGetProperty("errorCode", out _)));
     }
 

@@ -18,9 +18,9 @@ public sealed partial class PresentationBoundaryIntegrationTests {
             Assert.Equal(HttpStatusCode.Created, created.StatusCode);
         }
         using var overview = JsonDocument.Parse(await client.GetStringAsync("/api/v1/shopping-lists/overview"));
-        Assert.Equal(3, overview.RootElement.GetProperty("lists").GetProperty("items").GetArrayLength());
-        Assert.False(overview.RootElement.GetProperty("lists").GetProperty("hasMore").GetBoolean());
-        Assert.Equal(2, overview.RootElement.GetProperty("selectedList").GetProperty("items").GetArrayLength());
+        Assert.Equal(3, overview.RootElement["lists"]["items"].GetArrayLength());
+        Assert.False(overview.RootElement["lists"]["hasMore"].GetBoolean());
+        Assert.Equal(2, overview.RootElement["selectedList"]["items"].GetArrayLength());
         using var first = JsonDocument.Parse(await client.GetStringAsync("/api/v1/shopping-lists/page?limit=2"));
         using var second = JsonDocument.Parse(await client.GetStringAsync("/api/v1/shopping-lists/page?limit=2&page=2"));
         Assert.Equal(2, first.RootElement.GetArrayLength());
@@ -37,6 +37,6 @@ public sealed partial class PresentationBoundaryIntegrationTests {
         Assert.Equal(0, empty.RootElement.GetArrayLength());
         using var emptyOverview = JsonDocument.Parse(await other.GetStringAsync("/api/v1/shopping-lists/overview"));
         Assert.Equal(JsonValueKind.Null, emptyOverview.RootElement.GetProperty("selectedList").ValueKind);
-        Assert.Equal(0, emptyOverview.RootElement.GetProperty("lists").GetProperty("items").GetArrayLength());
+        Assert.Equal(0, emptyOverview.RootElement["lists"]["items"].GetArrayLength());
     }
 }

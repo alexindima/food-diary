@@ -374,8 +374,8 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "af4c92ca82def084de8c30aabed64c12c36b96ae8f3de72e9e0ae38b0f53ddb1",
-          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
+          "sha256": "710e1c0f7f40d932a2fd6c0cc560849cca8ba71a76d18930dc1ebd60d7f21dad",
+          "reviewReason": "Verified that PresentationBoundaryIntegrationTests reads identical required JSON properties in the same order and leaves response assertions and OpenAPI snapshots intact."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
@@ -383,10 +383,10 @@
           "reviewReason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate."
         }
       ],
-      "reason": "Wiki CI now installs the same SDK selected by global.json before API compatibility checks. Snapshot and comparison behavior are unchanged.",
+      "reason": "Verified that PresentationBoundaryIntegrationTests reads identical required JSON properties in the same order and leaves response assertions and OpenAPI snapshots intact.",
       "baseRef": "HEAD",
-      "gitHead": "871bb97ef1f0bf62f0aa2f4c37080058cbfe959c",
-      "reviewedAtUtc": "2026-11-13T11:07:31.2955335Z"
+      "gitHead": "0e54a9a48386e75461b89c42b900cb30d2c4a1a9",
+      "reviewedAtUtc": "2026-11-13T21:01:51.5425891Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1489,14 +1489,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4ff144bcfc4d9cf38c664456dccc576f839d018a04e44b8734c896f3a5e39ab5",
-          "reviewReason": "The topology diff updates only its source fingerprint. Host, job, worker and provider registrations are identical."
+          "sha256": "188b8cb9bcb0343c20c3d26b5e2c82d259da39f1fe3a3015337b3b76ccd1672f",
+          "reviewReason": "Regenerated topology diff changes only the source fingerprint and count. Service, job, client, deployment and health inventory match the previous snapshot."
         }
       ],
-      "reason": "The topology diff updates only its source fingerprint. Host, job, worker and provider registrations are identical.",
+      "reason": "Regenerated topology diff changes only the source fingerprint and count. Service, job, client, deployment and health inventory match the previous snapshot.",
       "baseRef": "HEAD",
-      "gitHead": "420766f617128b0e3dc3f79e3040529055ac1daa",
-      "reviewedAtUtc": "2026-11-13T20:30:07.7219231Z"
+      "gitHead": "0e54a9a48386e75461b89c42b900cb30d2c4a1a9",
+      "reviewedAtUtc": "2026-11-13T21:01:51.8863292Z"
     },
     {
       "pageId": "workflow-security-review",

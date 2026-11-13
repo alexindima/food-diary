@@ -100,7 +100,7 @@ public sealed class ImpersonationRevocationTests(ApiWebApplicationFactory factor
         response.EnsureSuccessStatusCode();
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        return (json.RootElement.GetProperty("user").GetProperty("id").GetGuid(), email);
+        return (json.RootElement["user"]["id"].GetGuid(), email);
     }
 
     private static async Task<string> LoginAsync(HttpClient client, string email) {

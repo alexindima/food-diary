@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4845,
-    "symbols": 4812,
+    "sourceFiles": 4847,
+    "symbols": 4814,
     "interfaceImplementationLinks": 216,
     "dependencyInjectionRegistrations": 76,
     "kinds": {
-      "class": 2479,
+      "class": 2481,
       "enum": 76,
       "interface": 434,
       "record": 1665,
@@ -34,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 2008,
+      "Other": 2010,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -6523,6 +6523,13 @@
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/AiPromptPreviewRenderer.cs",
       "line": 6
+    },
+    {
+      "name": "JsonElementIndexers",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/JsonElementIndexers.cs",
+      "line": 4
     },
     {
       "name": "OpenAiErrorMetadata",
@@ -33697,6 +33704,13 @@
       "role": "Other",
       "path": "Tooling/FoodDiary.Testing/DockerAvailability.cs",
       "line": 6
+    },
+    {
+      "name": "JsonElementIndexers",
+      "kind": "class",
+      "role": "Other",
+      "path": "Tooling/FoodDiary.Testing/JsonElementIndexers.cs",
+      "line": 4
     },
     {
       "name": "PowerShellFactAttribute",

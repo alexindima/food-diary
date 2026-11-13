@@ -50,7 +50,7 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
             return Result.Failure<DiaryStatisticsSummaryModel>(datedProfile.Error);
         }
         profile = datedProfile.Value;
-        var summaries = new List<DiaryStatisticsDayModel>(days.Count);
+        List<DiaryStatisticsDayModel> summaries = [with(capacity: days.Count)];
         foreach (LocalStatisticsDay day in days) {
             IReadOnlyList<MealNutritionStatisticsBucket> buckets = [];
             long waterMl = 0;

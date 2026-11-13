@@ -29,8 +29,7 @@ public sealed class AdminNotificationTransportTests(TransportApiWebApplicationFa
     public async Task Swagger_ExposesAdminScheduleContractAsync() {
         using HttpClient client = factory.CreateClient();
         using var document = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
-        JsonElement operation = document.RootElement.GetProperty("paths")
-            .GetProperty("/api/v{version}/admin/users/{id}/notifications/test").GetProperty("post");
+        JsonElement operation = document.RootElement["paths"]["/api/v{version}/admin/users/{id}/notifications/test"]["post"];
         foreach (string status in new[] { "202", "400", "401", "403", "404", "429" }) {
             Assert.True(operation.GetProperty("responses").TryGetProperty(status, out _), $"Missing response {status}");
         }

@@ -6,6 +6,7 @@ using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 using FoodDiary.Results;
+using FoodDiary.Testing;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
@@ -86,7 +87,7 @@ public sealed class YooKassaRecurringPaymentTests {
 
         Result<BillingRecurringPaymentModel> response = await gateway.CreateRecurringPaymentAsync(CreateRequest(), CancellationToken.None);
         using var body = JsonDocument.Parse(Assert.IsType<string>(http.Body));
-        Assert.Equal("2026-08-01T00:00:00.0000000Z", body.RootElement.GetProperty("metadata").GetProperty("renewal_period_start").GetString());
+        Assert.Equal("2026-08-01T00:00:00.0000000Z", body.RootElement["metadata"]["renewal_period_start"].GetString());
         Result<BillingWebhookEventModel?> webhookResult = await gateway.ParseWebhookEventAsync(
             """{"event":"payment.succeeded","object":{"id":"pay_final"}}""", string.Empty, CancellationToken.None);
         Assert.True(response.IsSuccess);

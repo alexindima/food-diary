@@ -63,8 +63,7 @@ internal static class ModuleSourceCatalog {
         return manifest.RootElement.GetProperty("modules").EnumerateObject().ToDictionary(
             module => module.Name,
             module => {
-                string relativePath = module.Value.GetProperty("sourceMappings")
-                    .GetProperty("applicationProjects").EnumerateArray().Single().GetString()!;
+                string relativePath = module.Value["sourceMappings"]["applicationProjects"].EnumerateArray().Single().GetString()!;
                 string root = ArchitectureTestPaths.FromRoot(relativePath.Replace('/', Path.DirectorySeparatorChar));
                 _ = RequiredFiles(root);
                 return root;

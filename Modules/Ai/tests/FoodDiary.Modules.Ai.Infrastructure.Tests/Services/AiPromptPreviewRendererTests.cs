@@ -14,7 +14,7 @@ public sealed class AiPromptPreviewRendererTests {
         Assert.True(format.RootElement.GetProperty("strict").GetBoolean());
         JsonElement schema = format.RootElement.GetProperty("schema");
         Assert.False(schema.GetProperty("additionalProperties").GetBoolean());
-        Assert.Equal("null", schema.GetProperty("properties").GetProperty("fiber").GetProperty("type")[1].GetString());
+        Assert.Equal("null", schema["properties"]["fiber"]["type"][1].GetString());
         string result = renderer.Render(new AiPromptDraft("product-label", "ru", "Read {{descriptionHint}}. {{languageHint}}", "back label", Guid.NewGuid(), Items: null));
         Assert.Contains("back label", result, StringComparison.Ordinal);
         Assert.Contains("language ru", result, StringComparison.Ordinal);
@@ -34,7 +34,7 @@ public sealed class AiPromptPreviewRendererTests {
         using var format = JsonDocument.Parse(new AiPromptPreviewRenderer().GetResponseFormatJson(key));
         Assert.Equal(name, format.RootElement.GetProperty("name").GetString());
         Assert.True(format.RootElement.GetProperty("strict").GetBoolean());
-        JsonElement item = format.RootElement.GetProperty("schema").GetProperty("properties").GetProperty("items").GetProperty("items");
+        JsonElement item = format.RootElement["schema"]["properties"]["items"]["items"];
         Assert.False(item.GetProperty("additionalProperties").GetBoolean());
         Assert.Contains(item.GetProperty("required").EnumerateArray(), value => string.Equals(value.GetString(), field, StringComparison.Ordinal));
     }

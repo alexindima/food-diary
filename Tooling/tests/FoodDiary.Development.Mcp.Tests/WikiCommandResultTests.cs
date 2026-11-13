@@ -26,7 +26,7 @@ public sealed class WikiCommandResultTests {
         }
         Assert.True(summary.GetProperty("truncated").GetBoolean());
         Assert.True(summary.GetProperty("nestedDependenciesTruncated").GetBoolean());
-        Assert.True(summary.GetProperty("impact").GetProperty("truncated").GetBoolean());
+        Assert.True(summary["impact"]["truncated"].GetBoolean());
     }
 
     [Fact]
@@ -134,9 +134,9 @@ public sealed class WikiCommandResultTests {
         Assert.Equal(20, compact.ReferencedPaths.Count);
         JsonElement summary = compact.StructuredOutput!.Value;
         Assert.True(summary.GetProperty("compact").GetBoolean());
-        Assert.Equal(25, summary.GetProperty("change").GetProperty("pathCount").GetInt32());
-        Assert.True(summary.GetProperty("change").GetProperty("pathsTruncated").GetBoolean());
-        Assert.Equal("frontend-verify", summary.GetProperty("requiredChecks")[0].GetProperty("id").GetString());
+        Assert.Equal(25, summary["change"]["pathCount"].GetInt32());
+        Assert.True(summary["change"]["pathsTruncated"].GetBoolean());
+        Assert.Equal("frontend-verify", summary["requiredChecks"][0]["id"].GetString());
         Assert.False(summary.TryGetProperty("rolloutPlan", out _));
     }
 

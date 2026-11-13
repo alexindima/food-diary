@@ -28,7 +28,7 @@ public sealed class TelegramDisconnectPostgresTests(PostgresApiWebApplicationFac
         using HttpResponseMessage registered = await client.PostAsJsonAsync("/api/v1/auth/register", new { email, password = Password, language = "en" });
         registered.EnsureSuccessStatusCode();
         JsonElement registration = await registered.Content.ReadFromJsonAsync<JsonElement>();
-        Guid owner = registration.GetProperty("user").GetProperty("id").GetGuid();
+        Guid owner = registration["user"]["id"].GetGuid();
         long telegramId = Random.Shared.NextInt64(1_000_000, 900_000_000);
         Guid foreignId;
         await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
@@ -48,7 +48,7 @@ public sealed class TelegramDisconnectPostgresTests(PostgresApiWebApplicationFac
         using HttpResponseMessage beforeProfile = await client.GetAsync("/api/v1/users/overview");
         beforeProfile.EnsureSuccessStatusCode();
         JsonElement beforeOverview = await beforeProfile.Content.ReadFromJsonAsync<JsonElement>();
-        Assert.True(beforeOverview.GetProperty("user").GetProperty("hasTelegramIdentity").GetBoolean());
+        Assert.True(beforeOverview["user"]["hasTelegramIdentity"].GetBoolean());
         using HttpClient bot = app.CreateClient();
         bot.DefaultRequestHeaders.Add(TelegramBotSecretAuthorizationFilter.SecretHeaderName, BotSecret);
         using HttpResponseMessage botLogin = await bot.PostAsJsonAsync("/api/v1/auth/telegram/bot/auth", new { telegramUserId = telegramId });
@@ -88,11 +88,11 @@ public sealed class TelegramDisconnectPostgresTests(PostgresApiWebApplicationFac
         }
         using HttpClient returning = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         JsonElement restored = await LoginAsync(returning, email, miniApp: false);
-        Assert.False(restored.GetProperty("user").GetProperty("hasTelegramIdentity").GetBoolean());
+        Assert.False(restored["user"]["hasTelegramIdentity"].GetBoolean());
         using HttpResponseMessage freshProfile = await returning.GetAsync("/api/v1/users/overview");
         freshProfile.EnsureSuccessStatusCode();
         JsonElement freshOverview = await freshProfile.Content.ReadFromJsonAsync<JsonElement>();
-        Assert.False(freshOverview.GetProperty("user").GetProperty("hasTelegramIdentity").GetBoolean());
+        Assert.False(freshOverview["user"]["hasTelegramIdentity"].GetBoolean());
     }
 
     private WebApplicationFactory<Program> CreateApp() => factory.WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, configuration) =>

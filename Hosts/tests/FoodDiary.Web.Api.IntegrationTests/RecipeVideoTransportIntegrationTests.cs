@@ -14,13 +14,13 @@ public sealed class RecipeVideoTransportIntegrationTests(TransportApiWebApplicat
         using HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
         response.EnsureSuccessStatusCode();
         using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        JsonElement operation = document.RootElement.GetProperty("paths").GetProperty("/api/v{version}/ai/food/recipe-import/video").GetProperty("post");
-        JsonElement form = operation.GetProperty("requestBody").GetProperty("content").GetProperty("multipart/form-data").GetProperty("schema").GetProperty("properties");
+        JsonElement operation = document.RootElement["paths"]["/api/v{version}/ai/food/recipe-import/video"]["post"];
+        JsonElement form = operation["requestBody"]["content"]["multipart/form-data"]["schema"]["properties"];
         Assert.Multiple(
-            () => Assert.True(operation.GetProperty("requestBody").GetProperty("content").TryGetProperty("multipart/form-data", out _)),
-            () => Assert.Equal("binary", form.GetProperty("video").GetProperty("format").GetString()),
-            () => Assert.Equal("string", form.GetProperty("sourceUrl").GetProperty("type").GetString()),
-            () => Assert.Equal("string", form.GetProperty("text").GetProperty("type").GetString()),
+            () => Assert.True(operation["requestBody"]["content"].TryGetProperty("multipart/form-data", out _)),
+            () => Assert.Equal("binary", form["video"]["format"].GetString()),
+            () => Assert.Equal("string", form["sourceUrl"]["type"].GetString()),
+            () => Assert.Equal("string", form["text"]["type"].GetString()),
             () => Assert.True(operation.GetProperty("responses").TryGetProperty("200", out _)),
             () => Assert.True(operation.GetProperty("responses").TryGetProperty("413", out _)),
             () => Assert.True(operation.GetProperty("responses").TryGetProperty("429", out _)));

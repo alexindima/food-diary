@@ -34,15 +34,15 @@ public sealed class OpenApiSdkExportTests(TransportApiWebApplicationFactory fact
         using HttpClient client = sdkFactory.CreateClient();
         string content = await client.GetStringAsync("/swagger/v1/swagger.json", CancellationToken.None);
         using var document = JsonDocument.Parse(content);
-        JsonElement schemas = document.RootElement.GetProperty("components").GetProperty("schemas");
+        JsonElement schemas = document.RootElement["components"]["schemas"];
 
-        JsonElement bleeding = schemas.GetProperty("UpsertCycleDayHttpRequest").GetProperty("properties").GetProperty("bleeding");
+        JsonElement bleeding = schemas["UpsertCycleDayHttpRequest"]["properties"]["bleeding"];
         Assert.True(bleeding.GetProperty("nullable").GetBoolean());
-        Assert.Equal("#/components/schemas/BleedingLogHttpModel", bleeding.GetProperty("allOf")[0].GetProperty("$ref").GetString());
+        Assert.Equal("#/components/schemas/BleedingLogHttpModel", bleeding["allOf"][0]["$ref"].GetString());
 
-        JsonElement vision = schemas.GetProperty("FoodRecognitionJobHttpResponse").GetProperty("properties").GetProperty("vision");
+        JsonElement vision = schemas["FoodRecognitionJobHttpResponse"]["properties"]["vision"];
         Assert.True(vision.GetProperty("nullable").GetBoolean());
-        JsonElement name = schemas.GetProperty("MealPlanHttpResponse").GetProperty("properties").GetProperty("name");
+        JsonElement name = schemas["MealPlanHttpResponse"]["properties"]["name"];
         Assert.False(name.TryGetProperty("nullable", out JsonElement nullableName) && nullableName.GetBoolean());
     }
 
@@ -65,7 +65,7 @@ public sealed class OpenApiSdkExportTests(TransportApiWebApplicationFactory fact
         await using WebApplicationFactory<Program> sdkFactory = CreateSdkFactory();
         using HttpClient client = sdkFactory.CreateClient();
         using var document = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json", CancellationToken.None));
-        JsonElement schemas = document.RootElement.GetProperty("components").GetProperty("schemas");
+        JsonElement schemas = document.RootElement["components"]["schemas"];
         foreach ((string schemaName, string propertyName) in new[] {
                      ("UpdateShoppingListHttpRequest", "expectedRevision"),
                      ("ShoppingListHttpResponse", "revision"),
@@ -73,7 +73,7 @@ public sealed class OpenApiSdkExportTests(TransportApiWebApplicationFactory fact
             JsonElement schema = schemas.GetProperty(schemaName);
             Assert.Contains(schema.GetProperty("required").EnumerateArray(),
                 value => string.Equals(value.GetString(), propertyName, StringComparison.Ordinal));
-            JsonElement property = schema.GetProperty("properties").GetProperty(propertyName);
+            JsonElement property = schema["properties"][propertyName];
             Assert.Equal("string", property.GetProperty("type").GetString());
             Assert.False(property.TryGetProperty("nullable", out JsonElement nullable) && nullable.GetBoolean());
         }
@@ -81,10 +81,9 @@ public sealed class OpenApiSdkExportTests(TransportApiWebApplicationFactory fact
         foreach (string optionalProperty in new[] { "name", "items" }) {
             Assert.DoesNotContain(update.GetProperty("required").EnumerateArray(),
                 value => string.Equals(value.GetString(), optionalProperty, StringComparison.Ordinal));
-            Assert.True(update.GetProperty("properties").GetProperty(optionalProperty).GetProperty("nullable").GetBoolean());
+            Assert.True(update["properties"][optionalProperty]["nullable"].GetBoolean());
         }
-        JsonElement responses = document.RootElement.GetProperty("paths")
-            .GetProperty("/api/v{version}/shopping-lists/{id}").GetProperty("patch").GetProperty("responses");
+        JsonElement responses = document.RootElement["paths"]["/api/v{version}/shopping-lists/{id}"]["patch"]["responses"];
         Assert.True(responses.TryGetProperty("409", out _));
     }
 

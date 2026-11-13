@@ -21,7 +21,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         HttpResponseMessage created = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/factors", request);
         created.EnsureSuccessStatusCode();
         using var initial = JsonDocument.Parse(await created.Content.ReadAsStringAsync());
-        Guid factorId = initial.RootElement.GetProperty("factors")[0].GetProperty("id").GetGuid();
+        Guid factorId = initial.RootElement["factors"][0]["id"].GetGuid();
         UpsertCycleFactorHttpRequest editedRequest = request with { FactorId = factorId, StartDate = request.StartDate.AddDays(1) };
         HttpResponseMessage edited = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/factors", editedRequest);
         edited.EnsureSuccessStatusCode();
@@ -228,7 +228,7 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         JsonElement symptom = Assert.Single(root.GetProperty("symptoms").EnumerateArray());
         Assert.Equal((int)BleedingType.Bleeding, bleeding.GetProperty("type").GetInt32());
         Assert.Equal((int)CycleSymptomCategory.Mood, symptom.GetProperty("category").GetInt32());
-        Assert.Equal(36.6, root.GetProperty("fertilitySignal").GetProperty("basalBodyTemperatureCelsius").GetDouble());
+        Assert.Equal(36.6, root["fertilitySignal"]["basalBodyTemperatureCelsius"].GetDouble());
     }
 
     [RequiresDockerFact]

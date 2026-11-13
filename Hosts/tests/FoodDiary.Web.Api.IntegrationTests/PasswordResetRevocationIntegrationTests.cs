@@ -112,7 +112,7 @@ public sealed class PasswordResetRevocationIntegrationTests(PostgresApiWebApplic
             "/api/v1/auth/register", new RegisterHttpRequest(email, password, "en"));
         response.EnsureSuccessStatusCode();
         using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        return (payload.RootElement.GetProperty("user").GetProperty("id").GetGuid(),
+        return (payload.RootElement["user"]["id"].GetGuid(),
             AuthenticationResponseCookies.ReadBrowserSession(response));
     }
 }

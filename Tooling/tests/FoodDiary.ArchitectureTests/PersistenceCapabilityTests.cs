@@ -79,7 +79,7 @@ public sealed class PersistenceCapabilityTests {
             string source = sources.Single(candidate => candidate.Path.Equals(path, StringComparison.Ordinal)).Source;
             string normalized = source.Replace("\r\n", "\n", StringComparison.Ordinal).Trim();
             string fingerprint = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(normalized)));
-            string reviewed = manifest.RootElement.GetProperty("adapters").GetProperty(path).GetProperty("technicalSourceSha256").GetString()!;
+            string reviewed = manifest.RootElement["adapters"][path]["technicalSourceSha256"].GetString()!;
             Assert.True(fingerprint.Equals(reviewed, StringComparison.Ordinal),
                 $"{path}: review SQL, ChangeTracker and context escape paths after this change; technicalSourceSha256={fingerprint}");
         }

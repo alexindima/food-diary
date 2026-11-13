@@ -42,7 +42,7 @@ public sealed class TaskToolsTests {
         Assert.NotNull(result.StructuredContent);
         Assert.Multiple(
             () => Assert.False(result.StructuredContent.Value.GetProperty("readOnly").GetBoolean()),
-            () => Assert.Equal("owned-job", result.StructuredContent.Value.GetProperty("data").GetProperty("jobId").GetString()));
+            () => Assert.Equal("owned-job", result.StructuredContent.Value["data"]["jobId"].GetString()));
         await executor.Received(1).ExecuteAsync(Arg.Is<TaskToolRequest>(request => request.Action == TaskToolAction.Verify && request.CheckId == "architecture-tests" && request.TimeoutMinutes == 3), Arg.Any<CancellationToken>());
     }
 

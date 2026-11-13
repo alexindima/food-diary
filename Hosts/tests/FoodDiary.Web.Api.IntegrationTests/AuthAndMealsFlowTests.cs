@@ -65,7 +65,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         using var overviewJson = JsonDocument.Parse(await overviewResponse.Content.ReadAsStringAsync());
         JsonElement overviewRoot = overviewJson.RootElement;
         JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
-        JsonElement allMeals = overviewRoot.GetProperty("allMeals").GetProperty("data");
+        JsonElement allMeals = overviewRoot["allMeals"]["data"];
 
         Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
         Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("mealId").GetGuid() == favoriteMealId);

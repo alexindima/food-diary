@@ -38,7 +38,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
             dispatch => dispatch.ClientUserId,
             dispatch => dispatch.RecommendationId);
 
-        var results = new List<BulkRecommendationRecipientResultModel>(clientIds.Length);
+        List<BulkRecommendationRecipientResultModel> results = [with(capacity: clientIds.Length)];
         foreach (UserId clientId in clientIds) {
             BulkRecommendationRecipientResultModel result = await ProcessClientAsync(
                 dietologistId,

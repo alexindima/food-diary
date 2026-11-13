@@ -20,7 +20,7 @@ public sealed class CookieImpersonationBoundaryApiTests(ApiWebApplicationFactory
         using HttpResponseMessage response = await browser.PostAsync("/api/v1/auth/session", content: null);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         JsonElement payload = await response.Content.ReadFromJsonAsync<JsonElement>();
-        Assert.Equal(proof.Target.Id, payload.GetProperty("user").GetProperty("id").GetGuid());
+        Assert.Equal(proof.Target.Id, payload["user"]["id"].GetGuid());
         Assert.Equal(proof.Id, payload.GetProperty("impersonationContext").GetString());
         Assert.Equal(Reason, payload.GetProperty("impersonationReason").GetString());
         Assert.DoesNotContain(payload.GetProperty("roles").EnumerateArray(), role => string.Equals(role.GetString(), "Admin", StringComparison.Ordinal));

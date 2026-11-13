@@ -36,9 +36,8 @@ public sealed class RepositoryKnowledgeGuardrailTests {
 
         using var catalog = JsonDocument.Parse(File.ReadAllText(
             ArchitectureTestPaths.FromRoot(".llm-wiki", "generated", "repository-catalog.json")));
-        string[] catalogProjects = [.. catalog.RootElement
-            .GetProperty("dotnet")
-            .GetProperty("projects")
+        string[] catalogProjects = [.. catalog.RootElement["dotnet"]
+            ["projects"]
             .EnumerateArray()
             .Select(static project => project.GetProperty("path").GetString())
             .Where(static path => !string.IsNullOrWhiteSpace(path))

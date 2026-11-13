@@ -119,12 +119,12 @@ public sealed class DashboardQueryBudgetIntegrationTests(PostgresApiWebApplicati
         Assert.InRange(snapshotQueries, 1, 32);
         using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         Assert.Multiple(
-            () => Assert.Equal(mealCount, payload.RootElement.GetProperty("meals").GetProperty("total").GetInt32()),
-            () => Assert.Equal(500 * mealCount, payload.RootElement.GetProperty("statistics").GetProperty("totalCalories").GetDouble()),
+            () => Assert.Equal(mealCount, payload.RootElement["meals"]["total"].GetInt32()),
+            () => Assert.Equal(500 * mealCount, payload.RootElement["statistics"]["totalCalories"].GetDouble()),
             () => Assert.Equal(JsonValueKind.Object, payload.RootElement.GetProperty("tdeeInsight").ValueKind),
             () => Assert.Equal(includeCycle ? JsonValueKind.Object : JsonValueKind.Null, payload.RootElement.GetProperty("currentCycle").ValueKind),
             () => Assert.Equal(includeFasting ? JsonValueKind.Object : JsonValueKind.Null, payload.RootElement.GetProperty("currentFastingSession").ValueKind));
-        JsonElement[] meals = [.. payload.RootElement.GetProperty("meals").GetProperty("items").EnumerateArray()];
+        JsonElement[] meals = [.. payload.RootElement["meals"]["items"].EnumerateArray()];
         Assert.Equal(Math.Min(mealCount, 10), meals.Length);
         Assert.All(meals, meal => {
             Assert.Single(meal.GetProperty("items").EnumerateArray());
@@ -142,8 +142,8 @@ public sealed class DashboardQueryBudgetIntegrationTests(PostgresApiWebApplicati
                 Assert.True(paged.StatusCode == HttpStatusCode.OK, await paged.Content.ReadAsStringAsync());
                 Assert.InRange(snapshotQueries, 1, 32);
                 using var pagePayload = JsonDocument.Parse(await paged.Content.ReadAsStringAsync());
-                Assert.Equal(mealCount, pagePayload.RootElement.GetProperty("meals").GetProperty("total").GetInt32());
-                Assert.Equal(page == 2 ? 1 : 0, pagePayload.RootElement.GetProperty("meals").GetProperty("items").GetArrayLength());
+                Assert.Equal(mealCount, pagePayload.RootElement["meals"]["total"].GetInt32());
+                Assert.Equal(page == 2 ? 1 : 0, pagePayload.RootElement["meals"]["items"].GetArrayLength());
             }
         }
     }
