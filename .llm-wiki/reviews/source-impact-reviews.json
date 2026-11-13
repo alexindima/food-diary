@@ -354,8 +354,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "7fd12a9adc2529b1162d882ee1a3d903a5834a300c5540e98d8ee6bd6e3feeb5",
-          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
+          "sha256": "1efa5590a4580b455780c98a0d9d1a1e5e657415c87b38aa47d1cc7b13f7660e",
+          "reviewReason": "Wiki CI now installs the same SDK selected by global.json before API compatibility checks. Snapshot and comparison behavior are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
@@ -383,10 +383,10 @@
           "reviewReason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate."
         }
       ],
-      "reason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs.",
+      "reason": "Wiki CI now installs the same SDK selected by global.json before API compatibility checks. Snapshot and comparison behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:43.6972406Z"
+      "gitHead": "871bb97ef1f0bf62f0aa2f4c37080058cbfe959c",
+      "reviewedAtUtc": "2026-11-13T11:07:31.2955335Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1117,8 +1117,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "7fd12a9adc2529b1162d882ee1a3d903a5834a300c5540e98d8ee6bd6e3feeb5",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+          "sha256": "1efa5590a4580b455780c98a0d9d1a1e5e657415c87b38aa47d1cc7b13f7660e",
+          "reviewReason": "Wiki jobs install the pinned .NET SDK before invoking their existing index and regression commands. The Wiki shard selection and CI orchestration contract tests passed."
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
@@ -1166,10 +1166,10 @@
           "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         }
       ],
-      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "reason": "Wiki jobs install the pinned .NET SDK before invoking their existing index and regression commands. The Wiki shard selection and CI orchestration contract tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:45.7809336Z"
+      "gitHead": "871bb97ef1f0bf62f0aa2f4c37080058cbfe959c",
+      "reviewedAtUtc": "2026-11-13T11:07:31.6083982Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1527,14 +1527,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "7fd12a9adc2529b1162d882ee1a3d903a5834a300c5540e98d8ee6bd6e3feeb5",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+          "sha256": "1efa5590a4580b455780c98a0d9d1a1e5e657415c87b38aa47d1cc7b13f7660e",
+          "reviewReason": "The existing Wiki checks and reporting steps keep their scope and dependencies. The runner explicitly installs the SDK required to execute them."
         }
       ],
-      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "reason": "The existing Wiki checks and reporting steps keep their scope and dependencies. The runner explicitly installs the SDK required to execute them.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:47.0358118Z"
+      "gitHead": "871bb97ef1f0bf62f0aa2f4c37080058cbfe959c",
+      "reviewedAtUtc": "2026-11-13T11:07:31.9385271Z"
     },
     {
       "pageId": "workflow-risk-calibration",

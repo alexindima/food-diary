@@ -216,8 +216,15 @@ include "{self.routing.as_posix()}";
 
             self.write_routes("green")
             self.control("-s", "reload")
-            self.until(lambda: self.request("/api/probe")[2] == b"green")
-            self.assertEqual([200, 200, 200], statuses())
+            # Fresh connections can still reach retiring workers during reload.
+            def routes_serve_green():
+                for path, method in paths:
+                    status, _, body = self.request(path, method=method)
+                    if (status, body) != (200, b"green"):
+                        return False
+                return True
+
+            self.until(routes_serve_green)
 
     def test_reload_preserves_inflight_http_and_websocket_and_hub_affinity(self):
         _, headers, body = self.request("/hubs/notifications/negotiate", method="POST")
