@@ -3503,91 +3503,91 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(stoppedAtUtc), \"Stop timestamp cannot be earlier than the plan start timestamp.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 133
+      "line": 142
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Only cyclic fasting plans can change the next phase date.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 153
+      "line": 162
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 168
+      "line": 177
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Title must be at most {TitleMaxLength} characters.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 183
+      "line": 192
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 189
+      "line": 198
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(protocol), \"Protocol is not valid for intermittent fasting.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 195
+      "line": 204
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(protocol), \"Protocol is not valid for extended fasting.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 201
+      "line": 210
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(fastHours), \"Fast hours must be in range [1, 23].\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 207
+      "line": 216
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(eatingWindowHours), \"Eating window hours must be in range [1, 23].\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 211
+      "line": 220
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(eatingWindowHours), \"Intermittent fasting windows must add up to 24 hours.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 215
+      "line": 224
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(targetHours), $\"Extended fasting target must be between {MinIntermittentHours} and {MaxExtendedHours} hours.\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 221
+      "line": 230
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(fastDays), $\"Fast days must be in range [1, {MaxCycleDays}].\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 227
+      "line": 236
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(eatDays), $\"Eat days must be in range [1, {MaxCycleDays}].\")",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 231
+      "line": 240
     },
     {
       "area": "FoodDiary",
@@ -6457,21 +6457,21 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(utcOffset), \"UTC offset must be whole minutes between UTC-14 and UTC+14.\")",
       "path": "Modules/WeeklyGoals/Domain/ValueObjects/WeeklyGoalReminderSettings.cs",
-      "line": 25
+      "line": 21
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(timeMinutes), \"Reminder time must be within a local day.\")",
       "path": "Modules/WeeklyGoals/Domain/ValueObjects/WeeklyGoalReminderSettings.cs",
-      "line": 37
+      "line": 33
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(offsetMinutes), \"Time zone offset must be between UTC-14 and UTC+14.\")",
       "path": "Modules/WeeklyGoals/Domain/ValueObjects/WeeklyGoalReminderSettings.cs",
-      "line": 41
+      "line": 37
     },
     {
       "area": "FoodDiary",

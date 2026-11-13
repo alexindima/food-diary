@@ -82,27 +82,36 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             Title = NormalizeTitle(title),
             StartedAtUtc = NormalizeTimestamp(startedAtUtc, nameof(startedAtUtc)),
         };
-        switch (settings) {
-            case IntermittentFastingSettings intermittent:
-                plan.Protocol = intermittent.Protocol;
-                plan.IntermittentFastHours = intermittent.Window.FastHours;
-                plan.IntermittentEatingWindowHours = intermittent.Window.EatingWindowHours;
-                break;
-            case ExtendedFastingSettings extended:
-                plan.Protocol = extended.Protocol;
-                plan.ExtendedTargetHours = extended.TargetHours;
-                break;
-            case CyclicFastingSettings cyclic:
-                plan.CyclicFastDays = cyclic.FastDays;
-                plan.CyclicEatDays = cyclic.EatDays;
-                plan.CyclicEatDayFastHours = cyclic.EatingDayWindow.FastHours;
-                plan.CyclicEatDayEatingWindowHours = cyclic.EatingDayWindow.EatingWindowHours;
-                plan.CyclicAnchorDateUtc = cyclic.AnchorDay.ToUtcDateTime();
-                plan.CyclicNextPhaseDateUtc = plan.CyclicAnchorDateUtc;
-                break;
-        }
+        plan = settings switch {
+            IntermittentFastingSettings intermittent => plan.ApplySettings(intermittent),
+            ExtendedFastingSettings extended => plan.ApplySettings(extended),
+            CyclicFastingSettings cyclic => plan.ApplySettings(cyclic),
+        };
         plan.SetCreated();
         return plan;
+    }
+
+    private FastingPlan ApplySettings(IntermittentFastingSettings settings) {
+        Protocol = settings.Protocol;
+        IntermittentFastHours = settings.Window.FastHours;
+        IntermittentEatingWindowHours = settings.Window.EatingWindowHours;
+        return this;
+    }
+
+    private FastingPlan ApplySettings(ExtendedFastingSettings settings) {
+        Protocol = settings.Protocol;
+        ExtendedTargetHours = settings.TargetHours;
+        return this;
+    }
+
+    private FastingPlan ApplySettings(CyclicFastingSettings settings) {
+        CyclicFastDays = settings.FastDays;
+        CyclicEatDays = settings.EatDays;
+        CyclicEatDayFastHours = settings.EatingDayWindow.FastHours;
+        CyclicEatDayEatingWindowHours = settings.EatingDayWindow.EatingWindowHours;
+        CyclicAnchorDateUtc = settings.AnchorDay.ToUtcDateTime();
+        CyclicNextPhaseDateUtc = CyclicAnchorDateUtc;
+        return this;
     }
 
     public void Pause() {

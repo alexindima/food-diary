@@ -813,8 +813,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "e8b2d4a5c390bf066e36b1cfe7466c1524fada5649a966972472e533d1e2cf1a",
-          "reviewReason": "FieldChange still validates set values and rejects value access for clear or unchanged. The domain index diff only moves invariant line numbers. PostgreSQL migration and rollback tests passed and the guidance remains accurate."
+          "sha256": "c7c63cec2c05e0646e59bfd605e9bb45f5f2b9c661c8250c9ae9fcd772d13266",
+          "reviewReason": "Closed variants keep existing validated factory entry points and scalar projections for fasting, recent items, and reminders. The domain index updates invariant source coordinates only."
         },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
@@ -822,10 +822,10 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "FieldChange still validates set values and rejects value access for clear or unchanged. The domain index diff only moves invariant line numbers. PostgreSQL migration and rollback tests passed and the guidance remains accurate.",
+      "reason": "Closed variants keep existing validated factory entry points and scalar projections for fasting, recent items, and reminders. The domain index updates invariant source coordinates only.",
       "baseRef": "HEAD",
-      "gitHead": "15209daafa4b09ee6e96b5113ffabd267772ac00",
-      "reviewedAtUtc": "2026-11-13T15:14:34.9234653Z"
+      "gitHead": "420766f617128b0e3dc3f79e3040529055ac1daa",
+      "reviewedAtUtc": "2026-11-13T20:30:07.2195651Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1286,8 +1286,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4fa7e5cfaf6ff62b05122d221e377a24dc00f2aaefcf788e7d71f1572ebd5134",
-          "reviewReason": "Reviewed new candidate declarations for existing idempotency tokens, checkout state, health metrics and reported comments. Only their C# representation or source position changes. Existing storage, sharing, logging and retention guidance remains accurate."
+          "sha256": "23e331a9327ea391df6fdabf5a9e08759657867e51b9d5f360dd15f29fcf64d5",
+          "reviewReason": "Recognition completion still passes the same nutrition and error fields to the existing job store. The derived index changes because the public properties now project from private variants; collection, storage and sharing rules remain the same."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1300,10 +1300,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed new candidate declarations for existing idempotency tokens, checkout state, health metrics and reported comments. Only their C# representation or source position changes. Existing storage, sharing, logging and retention guidance remains accurate.",
+      "reason": "Recognition completion still passes the same nutrition and error fields to the existing job store. The derived index changes because the public properties now project from private variants; collection, storage and sharing rules remain the same.",
       "baseRef": "HEAD",
-      "gitHead": "15209daafa4b09ee6e96b5113ffabd267772ac00",
-      "reviewedAtUtc": "2026-11-13T15:14:35.1959731Z"
+      "gitHead": "420766f617128b0e3dc3f79e3040529055ac1daa",
+      "reviewedAtUtc": "2026-11-13T20:30:07.4784723Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1489,14 +1489,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d03e667cfb5a93bd3b13f93fe361f3304c84283e0cb1aadc29797604aa8a0535",
-          "reviewReason": "The topology differs only in its source fingerprint. Deployment hosts, workers, jobs and webhook inventory are identical. PostgreSQL, Redis and RabbitMQ behavior tests passed."
+          "sha256": "4ff144bcfc4d9cf38c664456dccc576f839d018a04e44b8734c896f3a5e39ab5",
+          "reviewReason": "The topology diff updates only its source fingerprint. Host, job, worker and provider registrations are identical."
         }
       ],
-      "reason": "The topology differs only in its source fingerprint. Deployment hosts, workers, jobs and webhook inventory are identical. PostgreSQL, Redis and RabbitMQ behavior tests passed.",
+      "reason": "The topology diff updates only its source fingerprint. Host, job, worker and provider registrations are identical.",
       "baseRef": "HEAD",
-      "gitHead": "15209daafa4b09ee6e96b5113ffabd267772ac00",
-      "reviewedAtUtc": "2026-11-13T15:14:35.4320315Z"
+      "gitHead": "420766f617128b0e3dc3f79e3040529055ac1daa",
+      "reviewedAtUtc": "2026-11-13T20:30:07.7219231Z"
     },
     {
       "pageId": "workflow-security-review",

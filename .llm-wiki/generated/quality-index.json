@@ -24874,11 +24874,11 @@
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 0,
+      "nonBlankLines": 32,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
+      "structuralRiskScore": 2.14
     },
     {
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionJobUpdate.cs",
@@ -34338,11 +34338,11 @@
     },
     {
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "nonBlankLines": 197,
-      "decisionPoints": 23,
+      "nonBlankLines": 203,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.44
+      "structuralRiskScore": 34.06
     },
     {
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingSession.cs",
@@ -46330,11 +46330,11 @@
     },
     {
       "path": "Modules/RecentItems/Domain/ValueObjects/RecentItemReference.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
+      "nonBlankLines": 26,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 3.52
     },
     {
       "path": "Modules/RecentItems/Infrastructure/AssemblyInfo.cs",
@@ -52890,11 +52890,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Domain/ValueObjects/WeeklyGoalReminderSettings.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 34,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.72
+      "structuralRiskScore": 9.68
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/ModuleRegistration.cs",

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Domain.ValueObjects;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Billing.Domain.Entities;
@@ -83,7 +84,6 @@ public sealed class SemanticMutationBoundaryTests {
     [InlineData(typeof(PreferredProductQuantity))]
     [InlineData(typeof(ExerciseDuration))]
     [InlineData(typeof(BurnedEnergy))]
-    [InlineData(typeof(RecentItemReference))]
     [InlineData(typeof(BillingPaymentFinancials))]
     [InlineData(typeof(BmrCalculationInput))]
     [InlineData(typeof(PlanDurationDays))]
@@ -105,6 +105,8 @@ public sealed class SemanticMutationBoundaryTests {
     [Theory]
     [InlineData(typeof(ReportTarget))]
     [InlineData(typeof(FieldChange<>))]
+    [InlineData(typeof(FoodRecognitionCompletion))]
+    [InlineData(typeof(RecentItemReference))]
     public void ValidatedValueHierarchy_OnlyExposesImmutableFactoryCreatedValues(Type valueType) {
         Type[] cases = [
             .. valueType.Assembly.GetTypes().Where(type => type.BaseType == valueType ||

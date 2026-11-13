@@ -109,10 +109,10 @@ Source: `Modules/Ai/Presentation/Recipes/Controllers/RecipeVideoImportController
 - `record AiQuotaReservationRequest`
 - `record AiQuotaUsage`
 - `record AiUsageTotals`
-- `record FoodRecognitionCompletion`
 - `record FoodRecognitionJobUpdate`
 - `record OpenAiFoodClientResponse`
 - `record ProductImageAnalysis`
+- `record RecipeAudio`
 - ... 3 more type(s)
 
 ## Focused Tests

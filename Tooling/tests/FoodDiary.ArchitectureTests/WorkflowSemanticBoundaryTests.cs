@@ -36,7 +36,7 @@ public sealed class WorkflowSemanticBoundaryTests {
     public void CorrectIdentityAndOidcRoles_AreAccepted(string expression) => Assert.Empty(Compile(expression));
 
     [Theory]
-    [InlineData("new FoodRecognitionCompletion(nutrition, \"vision\", \"nutrition\")", "CS1729")]
+    [InlineData("new FoodRecognitionCompletion(nutrition, \"vision\", \"nutrition\")", "CS0144")]
     [InlineData("FoodRecognitionCompletion.WithoutNutrition with { ErrorCode = \"vision\" }", "CS0200")]
     [InlineData("FoodRecognitionCompletion.WithoutNutrition with { Nutrition = nutrition }", "CS0200")]
     public void CompletionConstruction_CannotBypassClosedOutcomes(string expression, string code) {

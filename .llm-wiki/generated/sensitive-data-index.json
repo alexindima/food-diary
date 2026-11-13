@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1828,
+    "candidateFields": 1826,
     "credential": 177,
     "identity": 217,
-    "health": 839,
+    "health": 837,
     "financial": 169,
     "privateContent": 426,
     "boundaryFiles": 252,
@@ -3183,24 +3183,10 @@
     },
     {
       "category": "health",
-      "name": "Nutrition",
-      "type": "FoodNutritionModel?",
-      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "NutritionErrorCode",
-      "type": "string?",
-      "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
       "name": "WithoutNutrition",
       "type": "FoodRecognitionCompletion",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
-      "line": 20
+      "line": 19
     },
     {
       "category": "health",

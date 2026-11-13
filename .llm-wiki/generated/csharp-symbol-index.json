@@ -16,8 +16,8 @@
       "class": 2479,
       "enum": 76,
       "interface": 434,
-      "record": 1668,
-      "record class": 2,
+      "record": 1665,
+      "record class": 5,
       "record struct": 144,
       "union": 9
     },
@@ -5679,7 +5679,7 @@
     },
     {
       "name": "FoodRecognitionCompletion",
-      "kind": "record",
+      "kind": "record class",
       "role": "Other",
       "path": "Modules/Ai/Application.Abstractions/Common/FoodRecognitionCompletion.cs",
       "line": 5
@@ -24334,7 +24334,7 @@
     },
     {
       "name": "RecentItemReference",
-      "kind": "record",
+      "kind": "record class",
       "role": "ValueObject",
       "path": "Modules/RecentItems/Domain/ValueObjects/RecentItemReference.cs",
       "line": 7
@@ -29976,7 +29976,7 @@
     },
     {
       "name": "WeeklyGoalReminderSettings",
-      "kind": "record",
+      "kind": "record class",
       "role": "ValueObject",
       "path": "Modules/WeeklyGoals/Domain/ValueObjects/WeeklyGoalReminderSettings.cs",
       "line": 2

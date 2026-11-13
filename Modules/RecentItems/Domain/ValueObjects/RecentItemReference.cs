@@ -5,16 +5,21 @@ using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.RecentItems.Domain.ValueObjects;
 
-public sealed record RecentItemReference {
-    public RecentItemType Kind { get; }
-    public Guid Id { get; }
-    private RecentItemReference(RecentItemType kind, Guid id) {
-        Kind = kind;
-        Id = id;
-    }
+public closed record class RecentItemReference {
+    private RecentItemReference() { }
 
-    public static RecentItemReference ForProduct(ProductId id) => new(RecentItemType.Product, id.Value);
-    public static RecentItemReference ForRecipe(RecipeId id) => new(RecentItemType.Recipe, id.Value);
+    public RecentItemType Kind => this switch {
+        ProductReference => RecentItemType.Product,
+        RecipeReference => RecentItemType.Recipe,
+    };
+
+    public Guid Id => this switch {
+        ProductReference product => product.ProductId.Value,
+        RecipeReference recipe => recipe.RecipeId.Value,
+    };
+
+    public static RecentItemReference ForProduct(ProductId id) => new ProductReference(id);
+    public static RecentItemReference ForRecipe(RecipeId id) => new RecipeReference(id);
 
     public static RecentItemReference FromFields(RecentItemType itemType, Guid itemId) {
         DomainGuard.Defined(itemType, nameof(itemType));
@@ -22,4 +27,7 @@ public sealed record RecentItemReference {
             ? ForProduct(new ProductId(itemId))
             : ForRecipe(new RecipeId(itemId));
     }
+
+    private sealed record ProductReference(ProductId ProductId) : RecentItemReference;
+    private sealed record RecipeReference(RecipeId RecipeId) : RecentItemReference;
 }

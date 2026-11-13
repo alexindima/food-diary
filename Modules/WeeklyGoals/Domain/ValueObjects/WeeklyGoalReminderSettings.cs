@@ -1,20 +1,16 @@
 namespace FoodDiary.Modules.WeeklyGoals.Domain.ValueObjects;
 
-public sealed record WeeklyGoalReminderSettings {
+public closed record class WeeklyGoalReminderSettings {
     private const int MinutesPerDay = 24 * 60;
     private const int MaximumOffsetMinutes = 14 * 60;
 
-    private WeeklyGoalReminderSettings(bool isEnabled, TimeOnly? localTime, TimeSpan? utcOffset) {
-        IsEnabled = isEnabled;
-        LocalTime = localTime;
-        UtcOffset = utcOffset;
-    }
+    private WeeklyGoalReminderSettings() { }
 
-    public static WeeklyGoalReminderSettings Disabled { get; } = new(isEnabled: false, localTime: null, utcOffset: null);
+    public static WeeklyGoalReminderSettings Disabled { get; } = new DisabledReminder();
 
-    public bool IsEnabled { get; }
-    public TimeOnly? LocalTime { get; }
-    public TimeSpan? UtcOffset { get; }
+    public bool IsEnabled => this is EnabledReminder;
+    public TimeOnly? LocalTime => this is EnabledReminder enabled ? enabled.Time : null;
+    public TimeSpan? UtcOffset => this is EnabledReminder enabled ? enabled.Offset : null;
     public int? LocalTimeMinutes => LocalTime is { } time ? (time.Hour * 60) + time.Minute : null;
     public int? UtcOffsetMinutes => UtcOffset is { } offset ? (int)offset.TotalMinutes : null;
 
@@ -25,7 +21,7 @@ public sealed record WeeklyGoalReminderSettings {
             throw new ArgumentOutOfRangeException(nameof(utcOffset), "UTC offset must be whole minutes between UTC-14 and UTC+14.");
         }
 
-        return new WeeklyGoalReminderSettings(isEnabled: true, new TimeOnly(localTime.Hour, localTime.Minute), utcOffset);
+        return new EnabledReminder(new TimeOnly(localTime.Hour, localTime.Minute), utcOffset);
     }
 
     public static WeeklyGoalReminderSettings FromMinutes(bool enabled, int? timeMinutes, int? offsetMinutes) {
@@ -43,4 +39,7 @@ public sealed record WeeklyGoalReminderSettings {
 
         return EnabledAt(new TimeOnly(timeMinutes.Value / 60, timeMinutes.Value % 60), TimeSpan.FromMinutes(offsetMinutes.Value));
     }
+
+    private sealed record DisabledReminder : WeeklyGoalReminderSettings;
+    private sealed record EnabledReminder(TimeOnly Time, TimeSpan Offset) : WeeklyGoalReminderSettings;
 }
