@@ -71,9 +71,8 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
     }
     private const string CreatorAuditSource = "AdminUserCreator";
 
-    private static readonly HashSet<string> CreatableRoles = new(
-        [RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist],
-        StringComparer.Ordinal);
+    private static readonly HashSet<string> CreatableRoles =
+        [with(StringComparer.Ordinal), RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist];
 
     private static string[] NormalizeRoles(IEnumerable<string> roles) =>
         [.. roles.Where(role => !string.IsNullOrWhiteSpace(role)).Select(role => role.Trim()).Distinct(StringComparer.Ordinal)];

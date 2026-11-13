@@ -24,3 +24,5 @@ FD0017 | Style | Disabled | Require collection expressions for xUnit TheoryData<
 FD0018 | Architecture | Disabled | Reject EF writes, tracking, raw SQL and ADO capabilities in composed reads
 FD0019 | Reliability | Disabled | Reject discarded FoodDiary Result values and awaitables in application code
 FD0020 | Style | Disabled | Require using directives or aliases instead of namespace-qualified type references
+FD0021 | Style | Disabled | Require C# 15 collection expressions for explicitly typed string sets constructed from an enumerable with an ordinal comparer
+FD0022 | Style | Disabled | Keep empty dictionary collection expressions with arguments outside conditional branches and argument lists until Rider resolves them

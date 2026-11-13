@@ -148,9 +148,9 @@ public sealed class SqliteContextSearchReader {
 
             RankingPolicy policy = _policy.Value;
             IReadOnlyList<HashSet<string>> negativeRoleGroups = GetNegatedRoleTermGroups(query, policy);
-            HashSet<string> negativeRoleTerms = new(
+            HashSet<string> negativeRoleTerms = [with(
                 negativeRoleGroups.SelectMany(group => group),
-                StringComparer.Ordinal);
+                StringComparer.Ordinal)];
             string[] alternativeTerms = GetNegatedRoleAlternatives(negativeRoleGroups, policy);
             string[] queryTerms = [.. ExpandQueryTerms(query, policy)
                 .Where(term => !negativeRoleTerms.Contains(term))
@@ -579,7 +579,7 @@ public sealed class SqliteContextSearchReader {
         $"{candidate.RecordType}\0{candidate.RecordKey}\0{candidate.Path}";
 
     private static bool RequestsGuidance(IReadOnlyList<string> rankingTerms) {
-        HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
+        HashSet<string> terms = [with(rankingTerms, StringComparer.Ordinal)];
         return terms.Overlaps(["agent", "agents", "guide", "guidance", "instruction", "instructions"]) ||
             (terms.Overlaps(["policy", "rule", "rules"]) &&
                 terms.Overlaps(["repository", "project", "module", "convention", "access", "readonly"]));
@@ -603,9 +603,9 @@ public sealed class SqliteContextSearchReader {
         string[] normalizedScopes = [.. (scopePaths ?? [])
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Select(path => NormalizePath(path).ToLowerInvariant())];
-        HashSet<string> terms = new(rankingTerms, StringComparer.Ordinal);
+        HashSet<string> terms = [with(rankingTerms, StringComparer.Ordinal)];
         bool requestsGuidance = RequestsGuidance(rankingTerms);
-        HashSet<string> directTerms = new(directQueryTerms, StringComparer.Ordinal);
+        HashSet<string> directTerms = [with(directQueryTerms, StringComparer.Ordinal)];
         StructuralRoleBoost[] applicableStructuralRoleBoosts = [.. (policy.StructuralRoleBoosts ?? []).Where(boost => {
             HashSet<string> eligibleTerms = boost.DirectOnly ? directTerms : terms;
             return (boost.ChangeTypes is not { Length: > 0 } || boost.ChangeTypes.Any(value =>
@@ -624,9 +624,12 @@ public sealed class SqliteContextSearchReader {
                 (string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
                     directTerms.Contains("tests")) ||
                 Regex.IsMatch(query.Trim(), @"^(?:(?:какие|найти|найди|покажи)\s+тесты|(?:which|what|find|show)\s+tests)(?=\s|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
-        Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
-            ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
-            : [with(StringComparer.Ordinal)];
+        Dictionary<string, int> testSubjectWeights;
+        if (stronglyRequestsTest) {
+            testSubjectWeights = GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity);
+        } else {
+            testSubjectWeights = [with(StringComparer.Ordinal)];
+        }
         string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
             new string([.. term.Where(char.IsLetterOrDigit)]))];
         GenericAffinities genericAffinity = policy.GenericAffinities;
@@ -695,9 +698,12 @@ public sealed class SqliteContextSearchReader {
         }
         List<RankedCandidate> ranked = [];
         Dictionary<string, int> lexicalPathRanks = [with(StringComparer.Ordinal)];
-        HashSet<string> compoundModules = new(candidates.Where(candidate => NormalizePath(candidate.Path).StartsWith("Modules/", StringComparison.OrdinalIgnoreCase))
-            .Select(candidate => GetRankingModuleIdentity(NormalizePath(candidate.Path).ToLowerInvariant()))
-            .Where(moduleIdentity => moduleIdentity.Length >= policy.ModuleIdentityMinimumLength && CompoundModuleMention(moduleIdentity, directQueryTerms)), StringComparer.Ordinal);
+        HashSet<string> compoundModules = [with(
+            candidates.Where(candidate => NormalizePath(candidate.Path).StartsWith("Modules/", StringComparison.OrdinalIgnoreCase))
+                .Select(candidate => GetRankingModuleIdentity(NormalizePath(candidate.Path).ToLowerInvariant()))
+                .Where(moduleIdentity => moduleIdentity.Length >= policy.ModuleIdentityMinimumLength &&
+                    CompoundModuleMention(moduleIdentity, directQueryTerms)),
+            StringComparer.Ordinal)];
         foreach (RawCandidate candidate in candidates) {
             string path = NormalizePath(candidate.Path).ToLowerInvariant();
             lexicalPathRanks.TryAdd(path, lexicalPathRanks.Count);
@@ -736,7 +742,9 @@ public sealed class SqliteContextSearchReader {
             string searchableIdentity = $"{searchablePath} {normalizedTitle}";
             string searchableFileIdentity =
                 ExpandSearchText(Path.GetFileName(NormalizePath(candidate.Path))).ToLowerInvariant();
-            HashSet<string> fileIdentityWords = new(Terms.Matches(searchableFileIdentity).Select(match => match.Value), StringComparer.Ordinal);
+            HashSet<string> fileIdentityWords = [with(
+                Terms.Matches(searchableFileIdentity).Select(match => match.Value),
+                StringComparer.Ordinal)];
             string[] candidateParts = normalizedPath.Split('/', 4);
             string roleIdentity = string.Empty;
             if (candidateParts.Length == 4 && string.Equals(candidateParts[0], "modules", StringComparison.Ordinal) &&
@@ -1297,7 +1305,7 @@ public sealed class SqliteContextSearchReader {
     private static string[] ExpandQueryTerms(string query, RankingPolicy policy) {
         string[] directTerms = GetDirectQueryTerms(query, policy);
         List<string> terms = [.. directTerms];
-        HashSet<string> seen = new(terms, StringComparer.Ordinal);
+        HashSet<string> seen = [with(terms, StringComparer.Ordinal)];
         foreach (string term in directTerms) {
             AddExpansions(GetEnglishMorphologicalVariants(term), terms, seen);
         }
@@ -1308,7 +1316,7 @@ public sealed class SqliteContextSearchReader {
     private static string[] ExpandRankingTerms(string query, RankingPolicy policy) {
         string[] directTerms = GetDirectQueryTerms(query, policy);
         List<string> terms = [.. directTerms];
-        HashSet<string> seen = new(terms, StringComparer.Ordinal);
+        HashSet<string> seen = [with(terms, StringComparer.Ordinal)];
         if (query.Contains('?', StringComparison.Ordinal) || Regex.IsMatch(query, @"^(?:where|find|locate|which|где|как|какие|найди|нужно|хочу)\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))) {
             foreach (string term in directTerms) { AddExpansions(GetEnglishMorphologicalVariants(term), terms, seen); }
         }
@@ -1319,7 +1327,7 @@ public sealed class SqliteContextSearchReader {
     private static string[] GetDirectQueryTerms(string query, RankingPolicy policy) {
         List<string> terms = [];
         HashSet<string> seen = [with(StringComparer.Ordinal)];
-        HashSet<string> stopTerms = new(policy.StopTerms, StringComparer.Ordinal);
+        HashSet<string> stopTerms = [with(policy.StopTerms, StringComparer.Ordinal)];
         foreach (Match match in Terms.Matches(ExpandSearchText(query).ToLowerInvariant())) {
             if (match.Value.Length >= 2 && !stopTerms.Contains(match.Value) && seen.Add(match.Value)) {
                 terms.Add(match.Value);
@@ -1401,9 +1409,9 @@ public sealed class SqliteContextSearchReader {
             $@"(?:^|\s)(?:{markerPattern})\s+(?<phrase>.+?)(?=(?:\s+(?:и\s+)?(?:{markerPattern})\s+)|[,;:—–]|\s+(?:а|but)\s+|$)",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
             TimeSpan.FromMilliseconds(100));
-        HashSet<string> roleTerms = new(
+        HashSet<string> roleTerms = [with(
             policy.NegatedRolePenalty.RoleTerms.Select(term => term.ToLowerInvariant()),
-            StringComparer.Ordinal);
+            StringComparer.Ordinal)];
         List<HashSet<string>> groups = [];
         foreach (Match match in expression.Matches(ExpandSearchText(query).ToLowerInvariant())) {
             HashSet<string> group = [with(StringComparer.Ordinal)];

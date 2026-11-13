@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7048,
+    "productionFiles": 7050,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1059,
@@ -16,11 +16,11 @@
   "hotspots": [
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1814,
-      "decisionPoints": 462,
+      "nonBlankLines": 1822,
+      "decisionPoints": 463,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 729.28
+      "structuralRiskScore": 730.94
     },
     {
       "path": ".llm-wiki/wiki.ps1",
@@ -2633,12 +2633,28 @@
       "structuralRiskScore": 685.14
     },
     {
+      "path": "FoodDiary.Analyzers/DictionaryCollectionExpressionCompatibilityAnalyzer.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.1
+    },
+    {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
       "nonBlankLines": 57,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 10.14
+    },
+    {
+      "path": "FoodDiary.Analyzers/HashSetCollectionExpressionAnalyzer.cs",
+      "nonBlankLines": 70,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.4
     },
     {
       "path": "FoodDiary.Analyzers/IgnoredResultAnalyzer.cs",
@@ -3058,11 +3074,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "nonBlankLines": 1814,
-      "decisionPoints": 462,
+      "nonBlankLines": 1822,
+      "decisionPoints": 463,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 729.28
+      "structuralRiskScore": 730.94
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
@@ -22058,11 +22074,11 @@
     },
     {
       "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandValidator.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 38,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.28
+      "structuralRiskScore": 7.26
     },
     {
       "path": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommand.cs",
@@ -41530,11 +41546,11 @@
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 27,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.06
+      "structuralRiskScore": 4.04
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQuery.cs",
@@ -49282,11 +49298,11 @@
     },
     {
       "path": "Modules/Users/Application/Commands/CreateUserByAdministrator/CreateUserByAdministratorCommandHandler.cs",
-      "nonBlankLines": 70,
+      "nonBlankLines": 69,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.4
+      "structuralRiskScore": 9.38
     },
     {
       "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommand.cs",

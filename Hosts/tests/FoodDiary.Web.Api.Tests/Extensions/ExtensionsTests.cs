@@ -249,7 +249,8 @@ public sealed class ExtensionsTests {
     [Fact]
     public void AddApiServices_WithoutRedisConnectionOutsideDevelopment_Throws() {
         var services = new ServiceCollection();
-        IConfiguration configuration = CreateApiConfiguration([with(StringComparer.Ordinal)]);
+        Dictionary<string, string?> overrides = [with(StringComparer.Ordinal)];
+        IConfiguration configuration = CreateApiConfiguration(overrides);
 
         InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
             services.AddApiServices(configuration, new StubHostEnvironment(Environments.Production)));

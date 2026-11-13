@@ -157,8 +157,8 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
 
     private const string EditorAuditSource = "AdminUserEditor";
 
-    private static readonly HashSet<string> AllowedRoles = new(
-        [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist],
-        StringComparer.Ordinal);
+    private static readonly HashSet<string> AllowedRoles = [
+        with(StringComparer.Ordinal), RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist,
+    ];
 
 }

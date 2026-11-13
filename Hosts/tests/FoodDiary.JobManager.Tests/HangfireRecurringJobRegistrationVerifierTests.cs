@@ -96,20 +96,18 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
 
         public Dictionary<string, string> GetAllEntriesFromHash(string key) {
             const string prefix = "recurring-job:";
-            if (!key.StartsWith(prefix, StringComparison.Ordinal)) {
+            if (!key.StartsWith(prefix, StringComparison.Ordinal) ||
+                !recurringJobIds.Contains(key[prefix.Length..], StringComparer.Ordinal)) {
                 return [with(StringComparer.Ordinal)];
             }
 
-            string recurringJobId = key[prefix.Length..];
-            return recurringJobIds.Contains(recurringJobId, StringComparer.Ordinal)
-                ? new Dictionary<string, string>(StringComparer.Ordinal) {
-                    ["Cron"] = "* * * * *",
-                    ["Job"] = string.Empty,
-                    ["Queue"] = "default",
-                    ["TimeZoneId"] = TimeZoneInfo.Utc.Id,
-                    ["CreatedAt"] = DateTime.UtcNow.ToString("O"),
-                }
-                : [with(StringComparer.Ordinal)];
+            return new Dictionary<string, string>(StringComparer.Ordinal) {
+                ["Cron"] = "* * * * *",
+                ["Job"] = string.Empty,
+                ["Queue"] = "default",
+                ["TimeZoneId"] = TimeZoneInfo.Utc.Id,
+                ["CreatedAt"] = DateTime.UtcNow.ToString("O"),
+            };
         }
     }
 }

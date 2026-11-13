@@ -6,9 +6,8 @@ using FluentValidation;
 namespace FoodDiary.Modules.Admin.Application.Commands.CreateAdminUser;
 
 public sealed class CreateAdminUserCommandValidator : AbstractValidator<CreateAdminUserCommand> {
-    private static readonly HashSet<string> AllowedRoles = new(
-        [RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist],
-        StringComparer.Ordinal);
+    private static readonly HashSet<string> AllowedRoles =
+        [with(StringComparer.Ordinal), RoleNames.Admin, RoleNames.Premium, RoleNames.Support, RoleNames.Dietologist];
 
     public CreateAdminUserCommandValidator() {
         RuleFor(command => command.Email)

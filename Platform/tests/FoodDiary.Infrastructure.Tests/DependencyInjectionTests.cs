@@ -194,7 +194,8 @@ public sealed class DependencyInjectionTests {
     public async Task AddIntegrations_WithOptionalProvidersNotConfigured_RegistersSafeStorageFallbackOnly() {
         var services = new ServiceCollection();
         services.AddLogging();
-        IConfiguration configuration = CreateConfiguration([with(StringComparer.Ordinal)]);
+        Dictionary<string, string?> values = [with(StringComparer.Ordinal)];
+        IConfiguration configuration = CreateConfiguration(values);
 
         services.AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration).AddNotificationsProvider(configuration);
         await using ServiceProvider provider = services.BuildServiceProvider();

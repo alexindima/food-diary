@@ -379,6 +379,8 @@ dotnet_diagnostic.FD0013.severity = error
 dotnet_diagnostic.FD0014.severity = error
 dotnet_diagnostic.FD0017.severity = error
 dotnet_diagnostic.FD0020.severity = error
+dotnet_diagnostic.FD0021.severity = error
+dotnet_diagnostic.FD0022.severity = error
 
 dotnet_naming_rule.private_instance_fields_use_underscore.symbols = private_fields
 dotnet_naming_rule.private_instance_fields_use_underscore.style = underscore_camel_case

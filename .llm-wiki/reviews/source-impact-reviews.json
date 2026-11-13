@@ -480,98 +480,18 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "d579b45acf7f945aed0470c1531b53e2f7f337fbf9f77c500471f2108c1e1e30",
+      "pageSha256": "7b5adaa4638d2e8c6199b0a1c47f8a9b05deba2c020b74575356bcc67adc7369",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "82d5e6e0f6ff13fd851deaa40735302d02173556c70dc7d202616be1c4cb2080",
-          "reviewReason": "Reviewed current user and login-event repository owners. A shared declarative role now prefers exact UserRepository for all three user/entity/repository concepts while excluding login/session/event/audit queries. Existing frozen control moves from MRR0.9444 to0.9611 without changing queries, baselines or thresholds; explicit login-event query still ranks its owner first. Personal-data export remains an accepted legitimate owner for the ambiguous archive query."
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ee1b89f981b1da635cb2eff2843ff133b2782313ea5b20a5bca8b693a6d2cadb",
-          "reviewReason": "Reviewed shared aggregate repository role and equivalent compile/compiles normalization factoring. Direct compile already includes itself, so the union adds no term or ordering change after deduplication. Combined rule count remains700 and context governance/operations pass. Corpus quality thresholds and frozen baselines are unchanged."
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiInProcessSqliteReader.ps1",
-          "sha256": "6d5d35b47c460b7366c8841b7748c19c9c65e378c2d193e98d8611e324276886",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "27c76c1319e4bc64aae797fc1cbde89bb1076055316453c8d99913723d8b8ac5",
-          "reviewReason": "Reviewed projection authority, writer ownership and backend prerequisite claims. The same Node writer repairs stale private risk metadata once; no JSON fallback, graph schema change or source-checkout database is introduced. The cold fixture now deliberately corrupts derived metadata and verifies recovery, backend design/topology and all twelve index reads."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-          "sha256": "faf1cc8c45ace8bd39ff639dd9c5d27e886566f9547d0db79e4bdefe8c6708d1",
-          "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "6efe7fcd84e15241a3b19c4a7a011913ef67fc8f0d58e3d508afd48e19b3ad21",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
-          "sha256": "b5dd3498175c728915e93651e4c8df56358fe53904b0858cc723924ce900e5a9",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiInProcessSqlite.ps1",
-          "sha256": "378f213ccca6d703cfa777af58a386a1c505ff608c7bc031bf9632008665d53a",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "3074acfbc5fb9b1083d812ae7b2fc6d47f1130ba29e65134f158430c2cfbc18d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/code-graph.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
-          "sha256": "7f038882909d4211e5acaff5b3b6c545ca49d6c35c67b9fbb1b54189337df5a6",
-          "reviewReason": "Read SQLite projection and cold-checkout guidance. Reproduced original failure and fixed hidden-directory discovery in Linux without weakening any assertion; all twelve cold indexes, stale projection recovery and source isolation pass. The facade identity change does not alter graph preparation or query contracts."
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
-          "reviewReason": "Read SQLite projection and cold-checkout guidance. Reproduced original failure and fixed hidden-directory discovery in Linux without weakening any assertion; all twelve cold indexes, stale projection recovery and source isolation pass. The facade identity change does not alter graph preparation or query contracts."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-          "sha256": "265e9c0941094d989aea9e17758211102f8fb1ada6e868f4eb908716a3acd69a",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
-        },
-        {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "169c3db38a44f5af518e4f2a75b4f0a4b13e3188fbf027824793c7cb6c1123d7",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
-          "sha256": "32ac9cfcabede42c0dbecac581887cdabea871e8ae2481ca08228c71fd17ab87",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "14ddad5765cf9862b11280e00b6d34788cb6daa0b2b28f424a896b0b7cbf92b9",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
-          "sha256": "03498a4786ce2d643a1f5169d9ac8a4ad6993829d21292e24ec32302ebf4436e",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+          "sha256": "0a53247610c88d7c0a4bd2f5c0c9ee9fde47a99288c4b0ee50cf4dfcc1fe41e4",
+          "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "Read SQLite projection and cold-checkout guidance. Reproduced original failure and fixed hidden-directory discovery in Linux without weakening any assertion; all twelve cold indexes, stale projection recovery and source isolation pass. The facade identity change does not alter graph preparation or query contracts.",
+      "reason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
-      "reviewedAtUtc": "2026-11-08T04:24:02.0625744Z"
+      "gitHead": "090faa0e6026f74977b5bf09c62cd2e8b5dead4d",
+      "reviewedAtUtc": "2026-11-13T14:27:20.6763676Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1569,14 +1489,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "878ec9bc61f4cd6296ae6fc0acc542cf776b9f2e7eec93566e3243d687f2332c",
-          "reviewReason": "Runtime topology fingerprint reflects the MailInbox health cadence. The deployment fixture verified that a healthy result gates publication and a failed wait blocks the handover."
+          "sha256": "875d23f74edb91f8b13dcf35bbd81e5e0af7ffc996760cd91ff9c76562f24fa4",
+          "reviewReason": "Compared the generated runtime topology with the current branch. The analyzer changes update only the source fingerprint and file count. The recorded hosts, workers, clients, webhooks and recurring jobs are identical."
         }
       ],
-      "reason": "Runtime topology fingerprint reflects the MailInbox health cadence. The deployment fixture verified that a healthy result gates publication and a failed wait blocks the handover.",
+      "reason": "Compared the generated runtime topology with the current branch. The analyzer changes update only the source fingerprint and file count. The recorded hosts, workers, clients, webhooks and recurring jobs are identical.",
       "baseRef": "HEAD",
-      "gitHead": "171661f0b6500fd65e670c6cc1a193dd592211d4",
-      "reviewedAtUtc": "2026-11-13T12:04:26.6068081Z"
+      "gitHead": "090faa0e6026f74977b5bf09c62cd2e8b5dead4d",
+      "reviewedAtUtc": "2026-11-13T14:33:51.1561809Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1981,8 +1901,8 @@
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "d47772ce52ab19f81086ab3d16be42a76875e93ab800d5f6d8cdcc30d7fe2081",
-          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
+          "sha256": "0a53247610c88d7c0a4bd2f5c0c9ee9fde47a99288c4b0ee50cf4dfcc1fe41e4",
+          "reviewReason": "The same HashSet constructor still consumes the same ranking terms with the same ordinal comparer. No query or ranking rules change. The 242 SQLite reader tests passed."
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
@@ -1990,10 +1910,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay.",
-      "baseRef": "HEAD^",
-      "gitHead": "1eb6d29d172acd03702d85227bcd51b99540cb9b",
-      "reviewedAtUtc": "2026-11-13T11:02:12.9410785Z"
+      "reason": "The same HashSet constructor still consumes the same ranking terms with the same ordinal comparer. No query or ranking rules change. The 242 SQLite reader tests passed.",
+      "baseRef": "HEAD",
+      "gitHead": "090faa0e6026f74977b5bf09c62cd2e8b5dead4d",
+      "reviewedAtUtc": "2026-11-13T14:27:21.4657482Z"
     },
     {
       "pageId": "workflow.review-diff",

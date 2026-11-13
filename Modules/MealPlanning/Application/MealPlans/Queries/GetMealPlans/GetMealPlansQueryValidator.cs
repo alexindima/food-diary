@@ -6,9 +6,8 @@ namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetMealPl
 
 public sealed class GetMealPlansQueryValidator : AbstractValidator<GetMealPlansQuery> {
     private const int MaximumDietTypeLength = 32;
-    private static readonly HashSet<string> ValidDietTypes = new(
-        Enum.GetNames<DietType>(),
-        StringComparer.OrdinalIgnoreCase);
+    private static readonly HashSet<string> ValidDietTypes =
+        [with(StringComparer.OrdinalIgnoreCase), .. Enum.GetNames<DietType>()];
 
     public GetMealPlansQueryValidator() {
         RuleFor(x => x.Page).InclusiveBetween(1, PaginationPolicy.MaxPageNumber).WithErrorCode("Validation.Invalid");

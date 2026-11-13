@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4843,
-    "symbols": 4781,
+    "sourceFiles": 4845,
+    "symbols": 4783,
     "interfaceImplementationLinks": 216,
     "dependencyInjectionRegistrations": 76,
     "kinds": {
-      "class": 2468,
+      "class": 2470,
       "enum": 76,
       "interface": 434,
       "record": 1659,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 1977,
+      "Other": 1979,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -48,11 +48,25 @@
   },
   "symbols": [
     {
+      "name": "DictionaryCollectionExpressionCompatibilityAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/DictionaryCollectionExpressionCompatibilityAnalyzer.cs",
+      "line": 10
+    },
+    {
       "name": "ExpressionTreeSpanOverloadAnalyzer",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
       "line": 13
+    },
+    {
+      "name": "HashSetCollectionExpressionAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/HashSetCollectionExpressionAnalyzer.cs",
+      "line": 11
     },
     {
       "name": "IgnoredResultAnalyzer",
