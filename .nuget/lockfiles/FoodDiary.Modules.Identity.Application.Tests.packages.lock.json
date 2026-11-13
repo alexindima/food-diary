@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
+    "net11.0": {
       "Meziantou.Analyzer": {
         "type": "Direct",
         "requested": "[3.0.195, )",
@@ -134,9 +134,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Mediator": "[1.0.0, )"
         }
       },
       "fooddiary.audit.contracts": {
@@ -158,10 +156,7 @@
         "type": "Project"
       },
       "fooddiary.mediator": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
+        "type": "Project"
       },
       "fooddiary.modules.dietologist.application": {
         "type": "Project",
@@ -179,8 +174,7 @@
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dietologist.application.abstractions": {
@@ -222,9 +216,7 @@
           "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.identity.application.abstractions": {
@@ -300,8 +292,7 @@
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.notifications.application.abstractions": {
@@ -340,8 +331,7 @@
           "FoodDiary.Modules.Users.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.users.application.abstractions": {
@@ -400,23 +390,7 @@
         "resolved": "12.1.1",
         "contentHash": "D0VXh4dtjjX2aQizuaa0g6R8X3U1JaVqJPfGCvLwZX9t/O2h7tkpbitbadQMfwcgSPdDbI2vDxuwRMv/Uf9dHA==",
         "dependencies": {
-          "FluentValidation": "12.1.1",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0"
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg=="
-      },
-      "Microsoft.Extensions.Logging.Abstractions": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "Ljd0Uxoq5XpScD2Bg0nM/r3mwx7Ao5Uq24eo2ARxbGvqJ7Zht6rt2cJtwVRH4Cv+1ZVMdXz6TB43KbpmsxRrvQ==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+          "FluentValidation": "12.1.1"
         }
       }
     }

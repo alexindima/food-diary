@@ -3,7 +3,7 @@ namespace FoodDiary.Presentation.Api.Filters;
 public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdempotencyStore {
     private const int DefaultMaximumEntries = 10_000;
     private readonly Lock _syncRoot = new();
-    private readonly Dictionary<string, Entry> _entries = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Entry> _entries = [with(StringComparer.Ordinal)];
     private readonly PriorityQueue<Expiration, DateTime> _expirations = new();
     private readonly int _maximumEntries = DefaultMaximumEntries;
 

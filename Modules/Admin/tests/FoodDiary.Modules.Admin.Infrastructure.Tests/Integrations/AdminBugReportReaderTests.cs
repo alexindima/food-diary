@@ -1,6 +1,5 @@
 using System.Text;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations;

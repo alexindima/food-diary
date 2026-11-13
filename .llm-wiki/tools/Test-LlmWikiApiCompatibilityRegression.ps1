@@ -191,7 +191,7 @@ try {
     foreach ($name in @('Program.cs', 'LlmWiki.RoslynExtractor.csproj')) {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot "roslyn-extractor/$name") -Destination (Join-Path $extractorRoot $name)
     }
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'roslyn-extractor/bin/Release/net10.0') -Destination (Join-Path $extractorRoot 'bin/Release/net10.0') -Recurse
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'roslyn-extractor/bin/Release/net11.0') -Destination (Join-Path $extractorRoot 'bin/Release/net11.0') -Recurse
     $fixtureTool = Join-Path $fixtureTools 'Test-LlmWikiApiCompatibility.ps1'
     $moduleDto = 'Modules/Example/Presentation.Contracts/ExampleHttpRequest.cs'
     $legacyDto = 'FoodDiary.Presentation.Api/LegacyHttpResponse.cs'

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
+    "net11.0": {
       "Meziantou.Analyzer": {
         "type": "Direct",
         "requested": "[3.0.195, )",
@@ -28,7 +28,6 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "10.0.11",
           "Microsoft.Extensions.Caching.Memory": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
           "Microsoft.Extensions.Logging": "10.0.11"
         }
       },
@@ -39,7 +38,6 @@
         "contentHash": "eIDa/Rl+93aj17gMlFsJJx+LhBvb3CP0Mu1PeVYkDp2Y3S4Jock8UynfGQEcx7lrlq+gKW+ECQJHbro/LTPDEQ==",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
           "Microsoft.Extensions.Configuration.Binder": "10.0.11",
           "Microsoft.Extensions.Configuration.CommandLine": "10.0.11",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "10.0.11",
@@ -47,19 +45,14 @@
           "Microsoft.Extensions.Configuration.Json": "10.0.11",
           "Microsoft.Extensions.Configuration.UserSecrets": "10.0.11",
           "Microsoft.Extensions.DependencyInjection": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
-          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.11",
           "Microsoft.Extensions.FileProviders.Physical": "10.0.11",
-          "Microsoft.Extensions.Hosting.Abstractions": "10.0.11",
           "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
           "Microsoft.Extensions.Logging.Configuration": "10.0.11",
           "Microsoft.Extensions.Logging.Console": "10.0.11",
           "Microsoft.Extensions.Logging.Debug": "10.0.11",
           "Microsoft.Extensions.Logging.EventLog": "10.0.11",
-          "Microsoft.Extensions.Logging.EventSource": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11"
+          "Microsoft.Extensions.Logging.EventSource": "10.0.11"
         }
       },
       "Roslynator.Analyzers": {
@@ -75,8 +68,8 @@
       },
       "BouncyCastle.Cryptography": {
         "type": "Transitive",
-        "resolved": "2.6.2",
-        "contentHash": "7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w=="
+        "resolved": "2.7.0",
+        "contentHash": "U+12df8UEWHgBi04YVf/Lgi2dy3SItlIYvHjjEVa/BngCQIzDCDRBk50DDByCfDvSbe5pRNFr3b7UrVK2kMcLw=="
       },
       "Humanizer.Core": {
         "type": "Transitive",
@@ -124,45 +117,20 @@
         "contentHash": "BX45SeAjP6sz9Djg6Gm0/IruBuWkyUKxtr4pn9sLAuprnuRn+VBPZVH2XxpzbaT7cVCPim3+Dkijl6yhLHjBOw==",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Hosting.Abstractions": "10.0.11",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.Caching.Abstractions": {
-        "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "vUl798SmruTqqlt/xH2gDk3tJlhk6k3HdOXAHirlRfbNKDym4g/kRpUL9S4sl6F6FsOTOMW+ZsDapqlZMOOiEw==",
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "10.0.11"
         }
       },
       "Microsoft.Extensions.Caching.Memory": {
         "type": "Transitive",
         "resolved": "10.0.11",
-        "contentHash": "el1g0mBEbDBGY2bT9mcSfrTWO8QlPdq2nOCnvQugioOFwHV+bVBMeiakoI0dNOdj8d6Hi9K6HY2xzRUWJiDR3w==",
-        "dependencies": {
-          "Microsoft.Extensions.Caching.Abstractions": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
-        }
+        "contentHash": "el1g0mBEbDBGY2bT9mcSfrTWO8QlPdq2nOCnvQugioOFwHV+bVBMeiakoI0dNOdj8d6Hi9K6HY2xzRUWJiDR3w=="
       },
       "Microsoft.Extensions.Compliance.Abstractions": {
         "type": "Transitive",
         "resolved": "10.9.0",
         "contentHash": "tuSqNuiJxlln43sZ8c1EDA4WXit1eX4foGadylXso3DnMVc+DtKfaNEwvHuiFXfPsEUZ6Z3GnF0Bfk9vvOsE4Q==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.ObjectPool": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.Configuration.Abstractions": {
-        "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "fVi053xdpda9Em7vSkmgVxO/PtgC2m78ekReKWsgcyskqY0U82Bz/MONwxpGzI0hElYKJfw+fupqMVeKW3fSaA==",
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "10.0.11"
         }
       },
       "Microsoft.Extensions.Configuration.Binder": {
@@ -170,8 +138,7 @@
         "resolved": "10.0.11",
         "contentHash": "rFn8RuszZn3qquPVkDytMUlPc2+rXl9MCoygwc1XmAgC5vg5/oXJ8hkOosOrLoBLsqdTy4lFwP6iQdPS9uSYOA==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11"
+          "Microsoft.Extensions.Configuration": "10.0.11"
         }
       },
       "Microsoft.Extensions.Configuration.CommandLine": {
@@ -179,8 +146,7 @@
         "resolved": "10.0.11",
         "contentHash": "1KHr/1L56llwQ/yI0tAisEA31UpPsn8aasjASIwELOaN4JIUcbjuQBMdFOIzfNBBeULoUa0XfBe5QDtRRUY+fg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11"
+          "Microsoft.Extensions.Configuration": "10.0.11"
         }
       },
       "Microsoft.Extensions.Configuration.EnvironmentVariables": {
@@ -188,8 +154,7 @@
         "resolved": "10.0.11",
         "contentHash": "KICyU3eVi5jvloKm01EXV69L97H/zkhISVtV98cIuzuFOxNx3xTUVcXqvWTz3aq7OvUuDB/MFlPFjmxRaKF7/A==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11"
+          "Microsoft.Extensions.Configuration": "10.0.11"
         }
       },
       "Microsoft.Extensions.Configuration.FileExtensions": {
@@ -198,19 +163,13 @@
         "contentHash": "mDW7KVFB05M6jiRUyaZiOMWhS31n5HlSZwoYctHAZAucD4sMDJ70IxOmkGDt6RpstchD+keWBjhdzcMpSkWvWQ==",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
-          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.11",
-          "Microsoft.Extensions.FileProviders.Physical": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
+          "Microsoft.Extensions.FileProviders.Physical": "10.0.11"
         }
       },
       "Microsoft.Extensions.DependencyInjection.AutoActivation": {
         "type": "Transitive",
         "resolved": "10.9.0",
-        "contentHash": "hO/IpudHBl+EMXm1Ag8+7ersCN7VuiR6ech1+cVk8I+o7ssPRKdTozIAO4HGPt49G/lY6lo7G2kY5Q00biMHew==",
-        "dependencies": {
-          "Microsoft.Extensions.Hosting.Abstractions": "10.0.11"
-        }
+        "contentHash": "hO/IpudHBl+EMXm1Ag8+7ersCN7VuiR6ech1+cVk8I+o7ssPRKdTozIAO4HGPt49G/lY6lo7G2kY5Q00biMHew=="
       },
       "Microsoft.Extensions.Diagnostics": {
         "type": "Transitive",
@@ -218,61 +177,26 @@
         "contentHash": "HT70uGPxMLqqnOzKMcnQtDmeV4r0KHr4qVCLhP7SXil9jMEm8sQXwcybxVVFGXZJ1V44xV0mLqQ54aZbcR2OiQ==",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.11",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.Diagnostics.Abstractions": {
-        "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "se7Kx8QpJEt+nf26L4qIVAofGTDr1wbexxsh/Fm3Xc04xUkqUXK06KUS7FLwSQYSjqb7q9n+T7MEcXYBhI1Y5g==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11"
         }
       },
       "Microsoft.Extensions.Diagnostics.ExceptionSummarization": {
         "type": "Transitive",
         "resolved": "10.9.0",
-        "contentHash": "Cyp36W6/XHD6sSDnbc6Ss7M+qOcjrer400Dx4Tfkb5OHcKV6bp9uMqZ4Y8PAoSwTfS8a/3lB9xCF+CLf0JGUig==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.FileProviders.Abstractions": {
-        "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "JOjac6SQQgZmdmB8WGEw61/7siqMZoWJMkmq2p1goJGxqI59lO6oB4bOl0jNsbaPBdYy5Mlkb+6U7T4+CjnD8Q==",
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "10.0.11"
-        }
+        "contentHash": "Cyp36W6/XHD6sSDnbc6Ss7M+qOcjrer400Dx4Tfkb5OHcKV6bp9uMqZ4Y8PAoSwTfS8a/3lB9xCF+CLf0JGUig=="
       },
       "Microsoft.Extensions.FileProviders.Physical": {
         "type": "Transitive",
         "resolved": "10.0.11",
         "contentHash": "Tq/UqMaczePv9yWwSsJZRgKtgA46djVR5xHj/lZBCueQ3ag8f9v5mu0EdhrNx7tXxNk+Y9OurG2oKuSKINjr0A==",
         "dependencies": {
-          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.11",
-          "Microsoft.Extensions.FileSystemGlobbing": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
+          "Microsoft.Extensions.FileSystemGlobbing": "10.0.11"
         }
       },
       "Microsoft.Extensions.FileSystemGlobbing": {
         "type": "Transitive",
         "resolved": "10.0.11",
         "contentHash": "2i6rtW/B5rCnWCnhdmWWEmaM9O0HD0zsPY9eRqa++y4tclI3Uw8zvGbBvhY/LjAdtf8gUHhUPcAWj3DRlWMXmQ=="
-      },
-      "Microsoft.Extensions.Hosting.Abstractions": {
-        "type": "Transitive",
-        "resolved": "10.0.11",
-        "contentHash": "pwtpF7iF/NNaOBcX+pvMZ7y2+JAVbH5KkNrH9uMZtuVxVJsFTDiWiCR7Tk3HVptsAijaetipUZVRVK2LLq+nvA==",
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.11",
-          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11"
-        }
       },
       "Microsoft.Extensions.Http.Diagnostics": {
         "type": "Transitive",
@@ -289,12 +213,8 @@
         "contentHash": "S7LvLeVHKNPaY2NMyxW7c2TBGsLgxoSUBCV5Ev5iN8kgC7EPR2UB7eW7vHsElGMcIUDwRmoxLfvGDynCn3q6EA==",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
           "Microsoft.Extensions.Configuration.Binder": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.11"
         }
       },
@@ -303,11 +223,8 @@
         "resolved": "10.0.11",
         "contentHash": "dFc0yDudyD1iIg6z9XT7ofsT3hVO7Y4ylrxGHIVRR0GaZ4CUk4ujOrMoy7wWEdNHZhvJooySg6hZpOxyS8zEVA==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Logging.Configuration": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11"
+          "Microsoft.Extensions.Logging.Configuration": "10.0.11"
         }
       },
       "Microsoft.Extensions.Logging.Debug": {
@@ -315,9 +232,7 @@
         "resolved": "10.0.11",
         "contentHash": "wr+j1bjdFXhc8lKTLoq+RbwFM8M+orcMS9xrcqLmDGOxJcXpKizEeE5h6v/GKwCZV02FmhaA7OlNjoq072jZpQ==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11"
+          "Microsoft.Extensions.Logging": "10.0.11"
         }
       },
       "Microsoft.Extensions.Logging.EventLog": {
@@ -325,10 +240,7 @@
         "resolved": "10.0.11",
         "contentHash": "Eck9GpCCpvZ3f6L7IUlN+mPtRVefnf7PsiIG5vi61QawPtLNCEAv2TPD/M3SojcU0PFaef+BxiVGPOShFHtDog==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11",
           "System.Diagnostics.EventLog": "10.0.11"
         }
       },
@@ -337,22 +249,13 @@
         "resolved": "10.0.11",
         "contentHash": "hs6QWECLLohi2VKqUvSGRUvrg7eXR1DqKL95Jrtz3cdD2g2nBA+yJPdRQLZ7SLmnTZWycxfMDK2s0ho+rfst5w==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
+          "Microsoft.Extensions.Logging": "10.0.11"
         }
       },
       "Microsoft.Extensions.ObjectPool": {
         "type": "Transitive",
         "resolved": "10.0.11",
         "contentHash": "p76ztQFROBOlHgdV1vXfmTjRyu073Av7ZlsiLR93ka6+nzkLCeV2ONXq0DO/BGf71REqGW29Uy/20fzQHAjB7Q=="
-      },
-      "Microsoft.Extensions.Primitives": {
-        "type": "Transitive",
-        "resolved": "10.0.15",
-        "contentHash": "NjzLiZ1/bYx8VwLqHxNnCfDTQQbCY7P1dwT7JM5FiANiaSfI6UKHi0/sla+jyRbOIbPAMJkhWQ/9pH3tMf+IrQ=="
       },
       "Microsoft.Extensions.Resilience": {
         "type": "Transitive",
@@ -385,9 +288,7 @@
         "contentHash": "rCyM64XvBNi2IY/5noMVsJjt22zVmnI+8tGrb6JnPRW/75Nyv9Hi+7gkxb7zQcR0+2mzS1sAqPXz2PsdHZCqHg==",
         "dependencies": {
           "Microsoft.Extensions.Compliance.Abstractions": "10.9.0",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.ObjectPool": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11"
+          "Microsoft.Extensions.ObjectPool": "10.0.11"
         }
       },
       "Microsoft.IdentityModel.Abstractions": {
@@ -425,17 +326,13 @@
         "contentHash": "i4lywKKUuVmheCUA+w/q8QNPReNI0qanHI9hhz48AFqD1ljyb8sxPL2RbXOGiPV13XdJ4kxieL9ukS7tD43LxA==",
         "dependencies": {
           "Microsoft.Bcl.Cryptography": "10.0.2",
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
           "Microsoft.IdentityModel.Logging": "8.22.0"
         }
       },
       "Microsoft.Net.Http.Headers": {
         "type": "Transitive",
         "resolved": "10.0.15",
-        "contentHash": "g3xR6vyq+3mmiZxsET77UAWC3fZo49Zan5/cqmN2XoryMOWIC4AwINwYowJao/3cx5D/L6lQSWXbHQmprvW/wg==",
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "10.0.15"
-        }
+        "contentHash": "g3xR6vyq+3mmiZxsET77UAWC3fZo49Zan5/cqmN2XoryMOWIC4AwINwYowJao/3cx5D/L6lQSWXbHQmprvW/wg=="
       },
       "Microsoft.VisualStudio.SolutionPersistence": {
         "type": "Transitive",
@@ -444,11 +341,11 @@
       },
       "MimeKit": {
         "type": "Transitive",
-        "resolved": "4.17.0",
-        "contentHash": "h/KXsCreJf8RpR/PSAtlbvYtZFndp9N8Wn1Bs248AL7ITyhn+AiIY5bLTvt60tbN2mu6g8KadtBNWygTji2lqg==",
+        "resolved": "4.18.2",
+        "contentHash": "aYnwCCq+ZgQIsnHSJd3TMeGqf/Rz/9jYEItXpOoG3E2REOCZtLishwBSDFl2wQ/W2SB5wBsvE38DgHZ0IEyz4Q==",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.6.2",
-          "System.Security.Cryptography.Pkcs": "10.0.0"
+          "BouncyCastle.Cryptography": "2.7.0",
+          "System.Security.Cryptography.Pkcs": "10.0.13"
         }
       },
       "Polly.Core": {
@@ -461,8 +358,6 @@
         "resolved": "8.4.2",
         "contentHash": "GZ9vRVmR0jV2JtZavt+pGUsQ1O1cuRKG7R7VOZI6ZDy9y6RNPvRvXK1tuS4ffUrv8L0FTea59oEuQzgS0R7zSA==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
-          "Microsoft.Extensions.Options": "8.0.0",
           "Polly.Core": "8.4.2"
         }
       },
@@ -482,8 +377,8 @@
       },
       "RESPite": {
         "type": "Transitive",
-        "resolved": "3.0.11",
-        "contentHash": "txORk48Kw4utEaKHD5AWyfsxj7ZTb8EuJM9RaQjPg0pt0YxjBHgFEohE4bia0o3Ik1F5MhoayaUy3hYvcsb5Ng=="
+        "resolved": "3.1.11",
+        "contentHash": "jkm3/wiiYN2zRPjR9Yyu5NNVDBxgCYmrqC/u5ZPwJpOHTaT/7OOIU6pqDTHOqvOg5snzPuxPJYS1HOVeRZPpTA=="
       },
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
@@ -562,6 +457,11 @@
         "resolved": "10.0.5",
         "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       },
+      "System.Security.Cryptography.Pkcs": {
+        "type": "Transitive",
+        "resolved": "10.0.13",
+        "contentHash": "a+EovgC1fBnwdlQ6cn3j4JFBfKqiFaFvoAhjisOoSvazLAcIznaBzPQP0oYnvccmeXfqUH1KebVZOxSeH6rMaw=="
+      },
       "System.Security.Cryptography.ProtectedData": {
         "type": "Transitive",
         "resolved": "9.0.0",
@@ -597,8 +497,7 @@
           "FoodDiary.Modules.Lessons.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "FoodDiary.Application.Ai": {
@@ -614,8 +513,7 @@
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.application.contracts": {
@@ -631,9 +529,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Mediator": "[1.0.0, )"
         }
       },
       "fooddiary.audit.contracts": {
@@ -649,9 +545,7 @@
           "FoodDiary.Audit.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Runtime": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.audit.persistencemodel": {
@@ -689,10 +583,7 @@
           "FoodDiary.Outbox.Infrastructure": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Runtime": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Options": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.email.persistencemodel": {
@@ -796,10 +687,7 @@
         }
       },
       "fooddiary.mediator": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
+        "type": "Project"
       },
       "fooddiary.modules.admin.application.abstractions": {
         "type": "Project",
@@ -838,13 +726,11 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "MailKit": "[4.17.0, )",
+          "MailKit": "[4.18.2, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Hosting": "[10.0.11, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
-          "System.Security.Cryptography.Pkcs": "[10.0.13, )"
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )"
         }
       },
       "fooddiary.modules.admin.persistencemodel": {
@@ -895,7 +781,6 @@
           "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
@@ -928,9 +813,7 @@
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.billing.application.abstractions": {
@@ -978,7 +861,6 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
@@ -1006,8 +888,7 @@
           "FoodDiary.Modules.BodyMetrics.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.bodymetrics.application.abstractions": {
@@ -1043,7 +924,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql": "[10.0.3, )"
         }
       },
@@ -1069,8 +949,7 @@
           "FoodDiary.Modules.ContentReports.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.contentreports.application.abstractions": {
@@ -1118,7 +997,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql": "[10.0.3, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
@@ -1147,8 +1025,7 @@
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.cycles.application.abstractions": {
@@ -1190,8 +1067,7 @@
           "FoodDiary.Modules.Cycles.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Persistence.Abstractions": "[1.0.0, )"
         }
       },
       "fooddiary.modules.cycles.persistencemodel": {
@@ -1215,8 +1091,7 @@
           "FoodDiary.Modules.DailyAdvices.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dailyadvices.application.abstractions": {
@@ -1248,8 +1123,7 @@
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.dailyadvices.persistencemodel": {
@@ -1286,9 +1160,7 @@
           "FoodDiary.Modules.Products.FoodQuality": "[1.0.0, )",
           "FoodDiary.Modules.Tdee.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dashboard.application.abstractions": {
@@ -1333,8 +1205,7 @@
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dietologist.application.abstractions": {
@@ -1374,7 +1245,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
@@ -1398,8 +1268,7 @@
           "FoodDiary.Modules.Exercises.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.exercises.application.abstractions": {
@@ -1433,8 +1302,7 @@
           "FoodDiary.Modules.Exercises.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.exercises.persistencemodel": {
@@ -1460,8 +1328,7 @@
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.export.application.abstractions": {
@@ -1496,9 +1363,7 @@
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.fasting.application.abstractions": {
@@ -1537,8 +1402,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.fasting.persistencemodel": {
@@ -1565,8 +1429,7 @@
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.FoodQuality": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.favorites.application.abstractions": {
@@ -1625,8 +1488,7 @@
           "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.favorites.persistencemodel": {
@@ -1655,8 +1517,7 @@
           "FoodDiary.Modules.Gamification.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.gamification.application.abstractions": {
@@ -1703,7 +1564,6 @@
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
@@ -1728,8 +1588,7 @@
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.hydration.application.abstractions": {
@@ -1766,7 +1625,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql": "[10.0.3, )"
         }
       },
@@ -1794,9 +1652,7 @@
           "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.identity.application.abstractions": {
@@ -1842,11 +1698,10 @@
           "Microsoft.AspNetCore.DataProtection": "[10.0.11, )",
           "Microsoft.AspNetCore.WebUtilities": "[10.0.15, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
-          "StackExchange.Redis": "[3.0.11, )",
+          "StackExchange.Redis": "[3.1.11, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )",
           "System.Security.Cryptography.Xml": "[10.0.13, )"
         }
@@ -1869,9 +1724,7 @@
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.images.application.abstractions": {
@@ -1916,8 +1769,6 @@
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "SkiaSharp": "[4.151.1, )",
           "SkiaSharp.NativeAssets.Linux.NoDependencies": "[4.151.1, )"
@@ -1956,8 +1807,7 @@
           "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.lessons.application.abstractions": {
@@ -2004,7 +1854,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
@@ -2027,8 +1876,7 @@
           "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.marketing.application.abstractions": {
@@ -2062,7 +1910,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
@@ -2088,8 +1935,7 @@
           "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.mealplanning.application.abstractions": {
@@ -2126,8 +1972,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.mealplanning.persistencemodel": {
@@ -2167,9 +2012,7 @@
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Nutrition.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
+          "FoodDiary.Nutrition.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.meals.application.abstractions": {
@@ -2232,8 +2075,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.meals.persistencemodel": {
@@ -2272,8 +2114,7 @@
           "FoodDiary.Modules.Notifications.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.notifications.application.abstractions": {
@@ -2338,8 +2179,7 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.openfoodfacts.application.abstractions": {
@@ -2370,7 +2210,6 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
@@ -2407,8 +2246,7 @@
           "FoodDiary.Modules.RecentItems.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.products.application.abstractions": {
@@ -2470,8 +2308,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.products.persistencemodel": {
@@ -2492,8 +2329,7 @@
         "dependencies": {
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.RecentItems.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.RecentItems.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.recentitems.application.abstractions": {
@@ -2534,8 +2370,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.recentitems.persistencemodel": {
@@ -2560,8 +2395,7 @@
           "FoodDiary.Modules.RecipeCommunity.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.recipecommunity.application.abstractions": {
@@ -2600,8 +2434,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.recipecommunity.persistencemodel": {
@@ -2635,8 +2468,7 @@
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Nutrition.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Nutrition.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.recipes.application.abstractions": {
@@ -2690,8 +2522,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.recipes.persistencemodel": {
@@ -2719,8 +2550,7 @@
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.tdee.application": {
@@ -2735,8 +2565,7 @@
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Tdee.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.tdee.contracts": {
@@ -2758,8 +2587,7 @@
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.usda.application.abstractions": {
@@ -2798,7 +2626,6 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )"
         }
@@ -2825,8 +2652,7 @@
           "FoodDiary.Modules.Users.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.users.application.abstractions": {
@@ -2876,7 +2702,6 @@
           "FoodDiary.Modules.Users.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql": "[10.0.3, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
@@ -2901,8 +2726,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.wearables.application.abstractions": {
@@ -2934,7 +2758,6 @@
           "Microsoft.AspNetCore.DataProtection": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
@@ -2962,8 +2785,7 @@
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.weeklygoals.application": {
@@ -2979,8 +2801,7 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.weeklygoals.application.abstractions": {
@@ -3014,7 +2835,6 @@
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
@@ -3041,7 +2861,6 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Npgsql": "[10.0.3, )"
         }
@@ -3159,8 +2978,7 @@
           "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.results": {
@@ -3193,17 +3011,16 @@
         "resolved": "12.1.1",
         "contentHash": "D0VXh4dtjjX2aQizuaa0g6R8X3U1JaVqJPfGCvLwZX9t/O2h7tkpbitbadQMfwcgSPdDbI2vDxuwRMv/Uf9dHA==",
         "dependencies": {
-          "FluentValidation": "12.1.1",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0"
+          "FluentValidation": "12.1.1"
         }
       },
       "MailKit": {
         "type": "CentralTransitive",
-        "requested": "[4.17.0, )",
-        "resolved": "4.17.0",
-        "contentHash": "1nUAVLxM9fhT/78we6/AGsCesnpn5dRNLLeRqOfr52Wnk87pzVwo5YMTMyqnmoXrYc7piGhmayiMA/OgDluIjg==",
+        "requested": "[4.18.2, )",
+        "resolved": "4.18.2",
+        "contentHash": "ofqddpSbdrD00NqTD0ZyVfKvrl/ZZ70VFFEQ+DuR8r8CdbY3U02/sdb0CSQBNUqJifsXfVHIwRe1ToR2MvJJkw==",
         "dependencies": {
-          "MimeKit": "4.17.0"
+          "MimeKit": "4.18.2"
         }
       },
       "Microsoft.AspNetCore.DataProtection": {
@@ -3214,10 +3031,6 @@
         "dependencies": {
           "Microsoft.AspNetCore.Cryptography.Internal": "10.0.11",
           "Microsoft.AspNetCore.DataProtection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Hosting.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11",
           "System.Security.Cryptography.Xml": "10.0.11"
         }
       },
@@ -3287,9 +3100,6 @@
           "Microsoft.CodeAnalysis.Workspaces.Common": "[5.9.0]",
           "Microsoft.Extensions.DependencyInjection": "10.0.1",
           "Microsoft.Extensions.Logging": "10.0.1",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.1",
-          "Microsoft.Extensions.Options": "10.0.1",
-          "Microsoft.Extensions.Primitives": "10.0.1",
           "Microsoft.VisualStudio.SolutionPersistence": "1.0.52",
           "System.Composition": "10.0.1"
         }
@@ -3298,11 +3108,7 @@
         "type": "CentralTransitive",
         "requested": "[10.0.11, )",
         "resolved": "10.0.11",
-        "contentHash": "wlhRqZW8LcJPa+vk2oLAc/REXDItHtkFQdf/QcXYGZbZOO13izcsKY1pCvuFQYwUiZD+hwSZwsKASjqT+BNaVg==",
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
-        }
+        "contentHash": "wlhRqZW8LcJPa+vk2oLAc/REXDItHtkFQdf/QcXYGZbZOO13izcsKY1pCvuFQYwUiZD+hwSZwsKASjqT+BNaVg=="
       },
       "Microsoft.Extensions.Configuration.Json": {
         "type": "CentralTransitive",
@@ -3311,9 +3117,7 @@
         "contentHash": "nSPrT8U/cNoB4coqkmnanAMK9PsL7lsjG+LLUKEwHRFwS6E78b8S1wdv/y88EOxBhasWov1rLd7RTHmmsYPOLg==",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.11",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Configuration.FileExtensions": "10.0.11",
-          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.11"
+          "Microsoft.Extensions.Configuration.FileExtensions": "10.0.11"
         }
       },
       "Microsoft.Extensions.Configuration.UserSecrets": {
@@ -3322,9 +3126,7 @@
         "resolved": "10.0.11",
         "contentHash": "BRliLdUowglV8GS+J1G/QsSofCJYYFg3U8QZx0ACRn+a91az/Qnpy+h6PyHS94WgV2TSazX5D/cuuk6wnCJatw==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
           "Microsoft.Extensions.Configuration.Json": "10.0.11",
-          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.11",
           "Microsoft.Extensions.FileProviders.Physical": "10.0.11"
         }
       },
@@ -3332,16 +3134,7 @@
         "type": "CentralTransitive",
         "requested": "[10.0.11, )",
         "resolved": "10.0.11",
-        "contentHash": "PSmotV19c7E3lKed++uYo1kSiXFI+uTl37CBSrhq+CfLC3FCHjG7R91+xPnNehQfHS1b0Tzo/CCLPWH3qaEheg==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg=="
+        "contentHash": "PSmotV19c7E3lKed++uYo1kSiXFI+uTl37CBSrhq+CfLC3FCHjG7R91+xPnNehQfHS1b0Tzo/CCLPWH3qaEheg=="
       },
       "Microsoft.Extensions.Http": {
         "type": "CentralTransitive",
@@ -3349,12 +3142,8 @@
         "resolved": "10.0.11",
         "contentHash": "ujx8RvcKzkxPFBguwgiygbwWVHVK0P7HFlNJ6I0JBRb28tzwe42jixBoA+dGmqG9IHepPVcm04vv2IDnU93ekA==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
           "Microsoft.Extensions.Diagnostics": "10.0.11",
-          "Microsoft.Extensions.Logging": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11"
+          "Microsoft.Extensions.Logging": "10.0.11"
         }
       },
       "Microsoft.Extensions.Http.Resilience": {
@@ -3374,28 +3163,7 @@
         "resolved": "10.0.11",
         "contentHash": "nUOJwgFkSiLHiVGFpU22pIJtuWYewuSYQ3JVuP/gdK8ASMT807Px+TYQiRWs6uSsOmoyFTaVCwKXTasczV6BpA==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "10.0.11",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.Logging.Abstractions": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "Ljd0Uxoq5XpScD2Bg0nM/r3mwx7Ao5Uq24eo2ARxbGvqJ7Zht6rt2cJtwVRH4Cv+1ZVMdXz6TB43KbpmsxRrvQ==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
-        }
-      },
-      "Microsoft.Extensions.Options": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "eY1GAKcTfD2maP27J84X9IovT3yjHJ2dVDzPmDg6/XqYvt3jMzJhtfQCLjG9pVsZGAd+8DQ2QrjaDcs2+VQLGw==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
+          "Microsoft.Extensions.DependencyInjection": "10.0.11"
         }
       },
       "Microsoft.Extensions.Options.ConfigurationExtensions": {
@@ -3404,11 +3172,7 @@
         "resolved": "10.0.11",
         "contentHash": "syEhXQ/sEaSBFaqzlp9gDGHX/nk6gkQkh1sIUpBO1mlBj3Phu1rmb4ML1uCiyPW9N6Kxfxv3y5FGObC+bV01Qw==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Configuration.Binder": "10.0.11",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
-          "Microsoft.Extensions.Options": "10.0.11",
-          "Microsoft.Extensions.Primitives": "10.0.11"
+          "Microsoft.Extensions.Configuration.Binder": "10.0.11"
         }
       },
       "Microsoft.IdentityModel.Protocols.OpenIdConnect": {
@@ -3431,10 +3195,7 @@
         "type": "CentralTransitive",
         "requested": "[10.0.3, )",
         "resolved": "10.0.3",
-        "contentHash": "7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
-        }
+        "contentHash": "7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w=="
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {
         "type": "CentralTransitive",
@@ -3471,12 +3232,11 @@
       },
       "StackExchange.Redis": {
         "type": "CentralTransitive",
-        "requested": "[3.0.11, )",
-        "resolved": "3.0.11",
-        "contentHash": "aLUOeQ3hpTg1H7AT6nVS3Roy8lKPsTG7VIEhspT5sNXWqcKbYJo1ytx8JqTNEWmnl/Ou/LwrDJntbl2P32IGcQ==",
+        "requested": "[3.1.11, )",
+        "resolved": "3.1.11",
+        "contentHash": "E+HnHo9rw8OZEz0QAoMEup8lwRi6DbQh/nTBGPrCpJLS+L/JrtbPSURgpYjI7TnAvtUsfo9AMYNlqfU1awYPLg==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.5",
-          "RESPite": "3.0.11",
+          "RESPite": "3.1.11",
           "System.IO.Hashing": "10.0.5"
         }
       },
@@ -3499,12 +3259,6 @@
           "Microsoft.IdentityModel.JsonWebTokens": "8.22.0",
           "Microsoft.IdentityModel.Tokens": "8.22.0"
         }
-      },
-      "System.Security.Cryptography.Pkcs": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "a+EovgC1fBnwdlQ6cn3j4JFBfKqiFaFvoAhjisOoSvazLAcIznaBzPQP0oYnvccmeXfqUH1KebVZOxSeH6rMaw=="
       },
       "System.Security.Cryptography.Xml": {
         "type": "CentralTransitive",

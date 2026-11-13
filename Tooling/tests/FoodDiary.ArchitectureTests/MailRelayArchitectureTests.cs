@@ -84,7 +84,6 @@ public sealed class MailRelayArchitectureTests {
             ["Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj"] = [
                 "FluentValidation",
                 "FluentValidation.DependencyInjectionExtensions",
-                "Microsoft.Extensions.Logging.Abstractions",
             ],
             ["Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"] = [
                 "Microsoft.Extensions.Http",
@@ -101,8 +100,6 @@ public sealed class MailRelayArchitectureTests {
                 "OpenTelemetry.Instrumentation.AspNetCore",
                 "OpenTelemetry.Instrumentation.Http",
                 "RabbitMQ.Client",
-                // Temporary MimeKit security floor: docs/dependencies/overrides.md.
-                "System.Security.Cryptography.Pkcs",
             ],
             ["Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"] = [
                 "Microsoft.Extensions.Hosting",

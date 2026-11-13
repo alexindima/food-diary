@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Domain.Entities;

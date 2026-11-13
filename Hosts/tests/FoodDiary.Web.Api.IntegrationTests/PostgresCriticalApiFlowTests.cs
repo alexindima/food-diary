@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;

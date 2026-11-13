@@ -252,7 +252,7 @@ public sealed class BusinessModuleBoundaryTests {
                 .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} references {reference}"))
             .Order(StringComparer.Ordinal)];
 
-    private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedFastingApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Fasting",
         "FoodDiary.Application.Abstractions.Notifications.Common",
@@ -261,18 +261,18 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Modules.Fasting.Application",
         "FoodDiary.Application.Notifications.Common",
         "FoodDiary.Application.Users.Common",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedNotificationsApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedNotificationsApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Authentication.Contracts.Authentication.Common",
         "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Notifications",
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Modules.Notifications.Application",
         "FoodDiary.Application.Abstractions.Users.Models",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedBillingApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Authentication.Contracts.Authentication.Common",
         "FoodDiary.Modules.Billing.Application.Abstractions",
         "FoodDiary.Modules.Billing.Contracts",
@@ -283,9 +283,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Marketing.Common",
         "FoodDiary.Application.Marketing.Commands.RecordPremiumConversion",
         "FoodDiary.Application.Users.Common",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedProductsApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedProductsApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Authentication.Contracts.Authentication.Common",
         "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Images.Common",
@@ -303,9 +303,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.RecentItems.Common",
         "FoodDiary.Application.Users.Common",
         "FoodDiary.Application.Usda.Common",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedRecipesApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedRecipesApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.Images.Models",
@@ -322,9 +322,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Modules.Recipes.Application",
         "FoodDiary.Modules.Recipes.Application",
         "FoodDiary.Application.Users.Common",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedMealsApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedMealsApplicationDependencies = [with(StringComparer.Ordinal),
         // ADR 0037: consume the owned recognition result, never the mutable job store.
         "FoodDiary.Modules.Ai.Contracts.Common",
         "FoodDiary.Modules.Ai.Contracts.Models",
@@ -350,9 +350,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Modules.Meals.Contracts",
         "FoodDiary.Application.Abstractions.Nutrition.Common",
         "FoodDiary.Application.Users.Common",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedUsersApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedUsersApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Authentication.Contracts.Authentication.Common",
         "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Dietologist",
@@ -362,9 +362,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Images.Common",
         "FoodDiary.Modules.Users.Application",
         "FoodDiary.Modules.Users.Application",
-    };
+    ];
 
-    private static readonly HashSet<string> ApprovedAuthenticationApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedAuthenticationApplicationDependencies = [with(StringComparer.Ordinal),
         "FoodDiary.Application.Abstractions.Authentication",
         "FoodDiary.Application.Contracts.Common",
         "FoodDiary.Application.Abstractions.Email.Common",
@@ -378,7 +378,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Admin.Common",
         "FoodDiary.Application.Notifications.Common",
         "FoodDiary.Modules.Users.Application",
-    };
+    ];
 
     [Fact]
     public void FastingApplication_DoesNotDependOnUnapprovedApplicationFeatures() {

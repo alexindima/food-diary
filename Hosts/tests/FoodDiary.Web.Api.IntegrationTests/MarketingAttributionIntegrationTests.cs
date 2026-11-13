@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Marketing.Presentation.Requests;
 using FoodDiary.Modules.Users.Domain.Contracts.Privacy;

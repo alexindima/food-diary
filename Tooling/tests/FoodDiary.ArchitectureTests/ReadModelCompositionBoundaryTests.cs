@@ -57,7 +57,7 @@ public sealed class ReadModelCompositionBoundaryTests {
         Assert.DoesNotContain(references, reference => reference.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal)
             && (reference.EndsWith(".Infrastructure", StringComparison.Ordinal) || reference.EndsWith(".Application", StringComparison.Ordinal)
                 || reference.EndsWith(".Presentation", StringComparison.Ordinal)));
-        Assert.Equal(["Microsoft.EntityFrameworkCore", "Microsoft.Extensions.DependencyInjection.Abstractions"],
+        Assert.Equal(["Microsoft.EntityFrameworkCore"],
             project.Descendants("PackageReference").Select(element => element.Attribute("Include")!.Value).Order(StringComparer.Ordinal), StringComparer.Ordinal);
     }
 }

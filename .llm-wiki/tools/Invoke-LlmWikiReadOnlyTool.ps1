@@ -71,7 +71,11 @@ function Get-WorkspaceOverlayPaths {
     $normalizedRelevantPaths = @($RelevantPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
     $pathspecs = @(if ($normalizedRelevantPaths.Count -gt 0) {
         @($normalizedRelevantPaths + @(
-            '.llm-wiki', 'Directory.Build.props', 'Directory.Packages.props',
+            '.llm-wiki', 'global.json', 'Directory.Build.props', 'Directory.Packages.props', 'FoodDiary.Analyzers',
+            '.nuget/lockfiles/FoodDiary.Analyzers.packages.lock.json',
+            '.nuget/lockfiles/LlmWiki.ContractReferenceExtractor.packages.lock.json',
+            '.nuget/lockfiles/LlmWiki.RoslynExtractor.packages.lock.json',
+            '.nuget/lockfiles/LlmWiki.SqliteReader.packages.lock.json',
             'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
             'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
             'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'
@@ -113,8 +117,11 @@ function Copy-WorkspaceOverlay {
 
 function Test-CommonReadOnlyOverlayPath([string]$Path) {
     $candidate = $Path.Replace('\', '/').TrimEnd('/')
-    return $candidate.StartsWith('.llm-wiki/', [StringComparison]::OrdinalIgnoreCase) -or $candidate -in @(
-        'Directory.Build.props', 'Directory.Packages.props',
+    return $candidate.StartsWith('.llm-wiki/', [StringComparison]::OrdinalIgnoreCase) -or
+        $candidate -like '.nuget/lockfiles/LlmWiki.*.packages.lock.json' -or
+        $candidate.StartsWith('FoodDiary.Analyzers/', [StringComparison]::OrdinalIgnoreCase) -or $candidate -in @(
+        'global.json', 'Directory.Build.props', 'Directory.Packages.props',
+        '.nuget/lockfiles/FoodDiary.Analyzers.packages.lock.json',
         'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
         'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
         'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'

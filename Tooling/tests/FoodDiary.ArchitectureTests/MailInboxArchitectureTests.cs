@@ -82,7 +82,6 @@ public sealed class MailInboxArchitectureTests {
             ["Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"] = [
                 "FluentValidation",
                 "FluentValidation.DependencyInjectionExtensions",
-                "Microsoft.Extensions.Logging.Abstractions",
             ],
             ["Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"] = [
                 "Microsoft.Extensions.Http",
@@ -97,8 +96,6 @@ public sealed class MailInboxArchitectureTests {
                 "OpenTelemetry.Extensions.Hosting",
                 "OpenTelemetry.Instrumentation.AspNetCore",
                 "SmtpServer",
-                // Temporary MimeKit security floor: docs/dependencies/overrides.md.
-                "System.Security.Cryptography.Pkcs",
             ],
             ["Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"] = [
                 "Microsoft.Extensions.Hosting",

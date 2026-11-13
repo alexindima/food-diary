@@ -12,7 +12,7 @@ public sealed class WikiQueryCache(
     private const int MaximumEntries = 128;
     private const int MaximumCacheableOutputCharacters = 1024 * 1024;
     private readonly Lock _gate = new();
-    private readonly Dictionary<string, LinkedListNode<CacheEntry>> _entries = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, LinkedListNode<CacheEntry>> _entries = [with(StringComparer.Ordinal)];
     private readonly LinkedList<CacheEntry> _insertionOrder = new();
 
     public bool TryGet(

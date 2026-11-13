@@ -6,7 +6,7 @@ $repositoryFixture = Join-Path ([IO.Path]::GetTempPath()) ("fd-project-format-re
 try {
     $source = @'
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+  <PropertyGroup><TargetFramework>net11.0</TargetFramework></PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <PackageReference Include="Zebra"><PrivateAssets>all</PrivateAssets></PackageReference>
     <PackageReference Include="Alpha" />

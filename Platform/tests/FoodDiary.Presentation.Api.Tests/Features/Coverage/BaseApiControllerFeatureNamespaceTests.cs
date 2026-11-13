@@ -7,7 +7,7 @@ namespace FoodDiary.Presentation.Api.Tests.Features.Coverage;
 
 [ExcludeFromCodeCoverage]
 public sealed class BaseApiControllerFeatureNamespaceTests {
-    public static TheoryData<Type> ControllersWithGlobalTelemetry => [
+    public static TheoryData<Type> ControllersWithGlobalTelemetry => [with((IEnumerable<Type>)[
         typeof(AdminSsoController),
         typeof(AiFoodController),
         typeof(AiUsageController),
@@ -15,7 +15,7 @@ public sealed class BaseApiControllerFeatureNamespaceTests {
         typeof(AuthSessionController),
         typeof(AuthTelegramController),
         typeof(ImagesController),
-    ];
+    ])];
 
     [Theory]
     [MemberData(nameof(ControllersWithGlobalTelemetry))]

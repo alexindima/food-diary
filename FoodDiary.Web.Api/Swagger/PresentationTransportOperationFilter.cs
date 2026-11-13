@@ -57,7 +57,7 @@ public sealed class PresentationTransportOperationFilter : IOperationFilter {
             return;
         }
 
-        HashSet<string> currentContextParameters = [.. controllerAction.MethodInfo
+        HashSet<string> currentContextParameters = [with(StringComparer.Ordinal), .. controllerAction.MethodInfo
             .GetParameters()
             .Where(static parameter =>
                 parameter.GetCustomAttributes(typeof(FromCurrentUserAttribute), inherit: true).Length > 0 ||

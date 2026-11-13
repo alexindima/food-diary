@@ -15,9 +15,10 @@ See [Microsoft's ReadyToRun guide](https://learn.microsoft.com/en-us/dotnet/core
 ## Dependency locking
 
 Ordinary builds retain `.nuget/lockfiles/<project>.packages.lock.json`.
-The API container opts into `FoodDiaryUseRuntimeLockFiles=true`, selecting
-`.nuget/lockfiles/<RuntimeIdentifier>/<project>.packages.lock.json` through the
-root `Directory.Build.props`. The committed platform graph currently covers
+The API container sets `FoodDiaryRuntimeLockIdentifier` to the same RID as
+`--runtime`. The property selects `.nuget/lockfiles/<RID>/<project>.packages.lock.json`
+through the root `Directory.Build.props` before NuGet evaluates the restore graph.
+The committed platform graph currently covers
 `linux-musl-x64`, matching the production Linux x64 container.
 
 Restore remains in `--locked-mode`. Both control and ReadyToRun builds restore
@@ -27,7 +28,7 @@ publish flag preserves the restored inputs for a controlled comparison.
 When updating API dependencies, regenerate the platform graph explicitly:
 
 ```powershell
-dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --runtime linux-musl-x64 --force-evaluate -p:PublishReadyToRun=true -p:FoodDiaryUseRuntimeLockFiles=true
+dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --runtime linux-musl-x64 --force-evaluate -p:PublishReadyToRun=true -p:FoodDiaryRuntimeLockIdentifier=linux-musl-x64
 ```
 
 Review these files with the generic lockfiles. The architecture guard rejects

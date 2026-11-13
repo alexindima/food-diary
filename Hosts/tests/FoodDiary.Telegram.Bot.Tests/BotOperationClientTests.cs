@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Telegram.Bot.Operations;
 using Microsoft.Extensions.Options;
 

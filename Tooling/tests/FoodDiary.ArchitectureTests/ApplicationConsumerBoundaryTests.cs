@@ -43,7 +43,7 @@ public sealed class ApplicationConsumerBoundaryTests {
     }
 
     internal static string[] FindForeignRepositoryUsages(string modules) {
-        Dictionary<string, string> repositoryOwners = [];
+        Dictionary<string, string> repositoryOwners = [with(StringComparer.Ordinal)];
         foreach (string module in Directory.GetDirectories(modules)) {
             string abstractions = Path.Combine(module, "Application.Abstractions");
             if (!Directory.Exists(abstractions)) {

@@ -6,7 +6,7 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserPrivacyConsentBoundaryTests {
-    public static TheoryData<string> InvalidWithdrawalNotices => ["", " ", new string('n', 65)];
+    public static TheoryData<string> InvalidWithdrawalNotices => [with((IEnumerable<string>)["", " ", new string('n', 65)])];
 
     [Theory]
     [MemberData(nameof(InvalidWithdrawalNotices))]

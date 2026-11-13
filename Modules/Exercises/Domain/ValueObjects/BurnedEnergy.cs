@@ -14,6 +14,9 @@ public sealed record BurnedEnergy {
         if (calories is < 0 or > MaximumKilocalories) {
             throw new ArgumentOutOfRangeException(nameof(calories), string.Create(CultureInfo.InvariantCulture, $"Calories must be between 0 and {MaximumKilocalories}."));
         }
-        return new BurnedEnergy(Math.Round(calories, 1, MidpointRounding.ToEven));
+        return new BurnedEnergy(RoundKilocalories(calories));
     }
+
+    internal static double RoundKilocalories(double calories) =>
+        Math.Round(calories * 10, MidpointRounding.ToEven) / 10;
 }

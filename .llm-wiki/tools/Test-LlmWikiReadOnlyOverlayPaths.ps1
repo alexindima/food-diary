@@ -36,12 +36,12 @@ $selectorFunction = $guardAst.Find({
     $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Select-RelevantOverlayPath'
 }, $false)
 . ([scriptblock]::Create($selectorFunction.Extent.Text))
-$scopeAlias = @(Select-RelevantOverlayPath -WorkspacePath @('alpha/file.cs', 'other/file.cs', '.llm-wiki/note.md') -Arguments @{ ScopePath = @('alpha') })
-if (($scopeAlias -join ',') -ne 'alpha/file.cs,.llm-wiki/note.md') { throw 'Context ScopePath did not constrain the snapshot overlay.' }
+$scopeAlias = @(Select-RelevantOverlayPath -WorkspacePath @('alpha/file.cs', 'other/file.cs', '.llm-wiki/note.md', 'global.json') -Arguments @{ ScopePath = @('alpha') })
+if (($scopeAlias -join ',') -ne 'alpha/file.cs,.llm-wiki/note.md,global.json') { throw 'Context ScopePath did not retain the shared SDK pin in the snapshot overlay.' }
 $readerPath = 'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs'
 $readerOverlay = @(Select-RelevantOverlayPath -WorkspacePath @($readerPath, 'other/file.cs') -Arguments @{ ScopePath = @('alpha') })
 if ($readerOverlay.Count -ne 1 -or $readerOverlay[0] -ne $readerPath) { throw 'Scoped snapshots omitted shared CLI reader inputs.' }
-foreach ($overlay in @(@(), @('.llm-wiki/note.md', 'Directory.Build.props', $readerPath))) {
+foreach ($overlay in @(@(), @('.llm-wiki/note.md', 'global.json', 'Directory.Build.props', 'FoodDiary.Analyzers/ProjectConventionAnalyzer.cs', $readerPath))) {
     if (@(Get-ReadOnlySnapshotSlotScope -OverlayPath $overlay -RequestedScope @('alpha')).Count -ne 0) {
         throw 'Identical HEAD/common overlays unnecessarily retained a separate scope slot.'
     }

@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);**/bin/**;**/obj/**</DefaultItemExcludes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -14,7 +14,7 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <NuGetLockFilePath>$(MSBuildThisFileDirectory).nuget\lockfiles\$(MSBuildProjectName).packages.lock.json</NuGetLockFilePath>
-    <NuGetLockFilePath Condition="'$(FoodDiaryUseRuntimeLockFiles)' == 'true'">$(MSBuildThisFileDirectory).nuget\lockfiles\$(RuntimeIdentifier)\$(MSBuildProjectName).packages.lock.json</NuGetLockFilePath>
+    <NuGetLockFilePath Condition="'$(FoodDiaryRuntimeLockIdentifier)' != ''">$(MSBuildThisFileDirectory).nuget\lockfiles\$(FoodDiaryRuntimeLockIdentifier)\$(MSBuildProjectName).packages.lock.json</NuGetLockFilePath>
   </PropertyGroup>
 
   <ItemGroup>

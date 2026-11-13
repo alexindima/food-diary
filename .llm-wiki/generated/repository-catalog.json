@@ -51,7 +51,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -77,7 +77,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -202,7 +202,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -289,7 +289,7 @@
         "sdk": "Microsoft.NET.Sdk.Worker",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -412,7 +412,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -435,7 +435,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -509,10 +509,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -523,7 +519,7 @@
         "sdk": "Microsoft.NET.Sdk.Worker",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -549,7 +545,7 @@
         "sdk": "Microsoft.NET.Sdk.Web",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -740,7 +736,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -842,7 +838,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -874,7 +870,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -993,7 +989,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1089,7 +1085,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1106,7 +1102,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1140,10 +1136,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -1154,7 +1146,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1171,7 +1163,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1186,7 +1178,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1217,19 +1209,11 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Microsoft.Extensions.Hosting",
             "version": null
           },
           {
             "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          },
-          {
-            "name": "System.Security.Cryptography.Pkcs",
             "version": null
           }
         ]
@@ -1241,7 +1225,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1266,7 +1250,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1295,7 +1279,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1359,7 +1343,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1388,7 +1372,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1451,7 +1435,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1494,7 +1478,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1534,7 +1518,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1552,7 +1536,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1574,10 +1558,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -1588,7 +1568,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1605,7 +1585,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1620,7 +1600,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1643,10 +1623,6 @@
           },
           {
             "name": "Microsoft.Extensions.Configuration",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -1678,7 +1654,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1704,7 +1680,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1727,7 +1703,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1778,7 +1754,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1811,7 +1787,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1852,7 +1828,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -1895,7 +1871,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1914,7 +1890,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1938,14 +1914,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -1956,7 +1924,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1971,7 +1939,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -1986,7 +1954,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2003,7 +1971,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2025,10 +1993,6 @@
           },
           {
             "name": "Microsoft.Extensions.Configuration",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -2060,7 +2024,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2085,7 +2049,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2109,7 +2073,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2164,7 +2128,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2198,7 +2162,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2243,7 +2207,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2280,7 +2244,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2297,7 +2261,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2317,10 +2281,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -2331,7 +2291,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2347,7 +2307,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2363,7 +2323,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2381,10 +2341,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql",
             "version": null
           }
@@ -2397,7 +2353,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2422,7 +2378,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -2435,7 +2391,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2451,7 +2407,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2477,7 +2433,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2522,7 +2478,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2551,7 +2507,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2588,7 +2544,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2606,7 +2562,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2628,10 +2584,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -2642,7 +2594,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2660,7 +2612,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2677,7 +2629,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2694,7 +2646,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2709,10 +2661,6 @@
         "packageReferences": [
           {
             "name": "Microsoft.EntityFrameworkCore",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -2732,7 +2680,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2758,7 +2706,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2780,7 +2728,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2827,7 +2775,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2861,7 +2809,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2903,7 +2851,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -2939,7 +2887,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2957,7 +2905,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -2980,10 +2928,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -2994,7 +2938,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3012,7 +2956,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -3025,7 +2969,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3042,7 +2986,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3055,12 +2999,7 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
         ],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          }
-        ]
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Modules.Cycles.PersistenceModel",
@@ -3069,7 +3008,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3095,7 +3034,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -3108,7 +3047,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3125,7 +3064,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3152,7 +3091,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3194,7 +3133,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3228,7 +3167,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3292,7 +3231,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3331,7 +3270,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3369,7 +3308,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3385,7 +3324,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3405,10 +3344,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -3419,7 +3354,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3436,7 +3371,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3451,7 +3386,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3465,10 +3400,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -3479,7 +3410,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3503,7 +3434,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3547,7 +3478,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3579,7 +3510,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3612,7 +3543,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3631,7 +3562,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3666,14 +3597,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -3684,7 +3607,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3709,7 +3632,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3730,7 +3653,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3756,7 +3679,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3796,7 +3719,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3857,7 +3780,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -3901,7 +3824,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3919,7 +3842,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3944,10 +3867,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -3958,7 +3877,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3975,7 +3894,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -3991,7 +3910,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4011,10 +3930,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
             "version": null
           }
@@ -4027,7 +3942,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4052,7 +3967,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -4065,7 +3980,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4096,7 +4011,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4155,7 +4070,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4188,7 +4103,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4241,7 +4156,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4278,7 +4193,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4295,7 +4210,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4315,10 +4230,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -4329,7 +4240,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4345,7 +4256,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4361,7 +4272,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4376,10 +4287,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -4390,7 +4297,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4415,7 +4322,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4439,7 +4346,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4477,7 +4384,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4506,7 +4413,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4542,7 +4449,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4559,7 +4466,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4582,10 +4489,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -4596,7 +4499,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4630,7 +4533,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4653,7 +4556,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4699,7 +4602,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4738,7 +4641,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -4774,7 +4677,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4792,7 +4695,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4813,14 +4716,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -4831,7 +4726,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4849,7 +4744,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4865,7 +4760,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4882,10 +4777,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -4896,7 +4787,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4921,7 +4812,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -4934,7 +4825,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4950,7 +4841,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -4977,7 +4868,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5022,7 +4913,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5055,7 +4946,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5102,7 +4993,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5139,7 +5030,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5160,7 +5051,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5184,10 +5075,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -5198,7 +5085,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5219,7 +5106,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5234,7 +5121,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5254,7 +5141,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5275,10 +5162,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -5289,7 +5172,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5318,7 +5201,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -5331,7 +5214,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5347,7 +5230,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5374,7 +5257,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5429,7 +5312,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5466,7 +5349,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5505,7 +5388,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5523,7 +5406,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5545,10 +5428,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -5559,7 +5438,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5576,7 +5455,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -5589,7 +5468,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5606,7 +5485,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5629,10 +5508,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
             "version": null
           }
@@ -5645,7 +5520,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5671,7 +5546,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5694,7 +5569,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5744,7 +5619,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5778,7 +5653,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5826,7 +5701,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -5862,7 +5737,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5879,7 +5754,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5899,10 +5774,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -5913,7 +5784,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5929,7 +5800,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5945,7 +5816,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -5964,10 +5835,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql",
             "version": null
           }
@@ -5980,7 +5847,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6005,7 +5872,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -6018,7 +5885,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6034,7 +5901,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6060,7 +5927,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6102,7 +5969,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6131,7 +5998,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6186,7 +6053,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6222,7 +6089,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6242,7 +6109,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6266,14 +6133,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -6284,7 +6143,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6301,7 +6160,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6317,7 +6176,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6347,10 +6206,6 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -6386,7 +6241,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6411,7 +6266,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6445,7 +6300,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6497,7 +6352,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6526,7 +6381,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6587,7 +6442,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6636,7 +6491,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6680,7 +6535,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6699,7 +6554,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6711,16 +6566,7 @@
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
-          }
-        ]
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Modules.Images.Contracts",
@@ -6729,7 +6575,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6744,7 +6590,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6761,7 +6607,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6789,14 +6635,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
-          },
-          {
             "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
             "version": null
           },
@@ -6817,7 +6655,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6843,7 +6681,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6867,7 +6705,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -6886,7 +6724,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6928,7 +6766,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -6958,7 +6796,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7027,7 +6865,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7059,7 +6897,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7095,7 +6933,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7114,7 +6952,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7136,10 +6974,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -7150,7 +6984,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7167,7 +7001,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7182,7 +7016,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7199,7 +7033,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7218,10 +7052,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
             "version": null
           }
@@ -7234,7 +7064,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7260,7 +7090,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7284,7 +7114,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7326,7 +7156,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7360,7 +7190,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7393,7 +7223,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7429,7 +7259,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7445,7 +7275,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7457,12 +7287,7 @@
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          }
-        ]
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Modules.Marketing.Contracts",
@@ -7471,7 +7296,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7487,7 +7312,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7502,7 +7327,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7520,10 +7345,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
             "version": null
           }
@@ -7536,7 +7357,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7561,7 +7382,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7585,7 +7406,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7630,7 +7451,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7663,7 +7484,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7725,7 +7546,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7744,7 +7565,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7766,10 +7587,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -7780,7 +7597,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7799,7 +7616,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7819,10 +7636,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -7833,7 +7646,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7865,7 +7678,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -7889,7 +7702,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7937,7 +7750,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -7968,7 +7781,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8013,7 +7826,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8055,7 +7868,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8077,7 +7890,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8110,14 +7923,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -8128,7 +7933,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8148,7 +7953,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8163,7 +7968,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8183,7 +7988,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8208,10 +8013,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -8222,7 +8023,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8255,7 +8056,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -8268,7 +8069,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8284,7 +8085,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8314,7 +8115,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8332,7 +8133,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8393,7 +8194,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8427,7 +8228,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8493,7 +8294,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8533,7 +8334,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8551,7 +8352,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8573,10 +8374,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -8587,7 +8384,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8603,7 +8400,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8619,7 +8416,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8668,7 +8465,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8694,7 +8491,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -8707,7 +8504,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8723,7 +8520,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8749,7 +8546,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8797,7 +8594,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8830,7 +8627,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8885,7 +8682,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -8921,7 +8718,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8936,7 +8733,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8953,10 +8750,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -8967,7 +8760,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -8983,7 +8776,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -8996,7 +8789,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9015,10 +8808,6 @@
           },
           {
             "name": "Microsoft.Extensions.Configuration",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -9046,7 +8835,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9074,7 +8863,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9098,7 +8887,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9135,7 +8924,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9167,7 +8956,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9210,7 +8999,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9246,7 +9035,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9264,7 +9053,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9294,10 +9083,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -9308,7 +9093,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9327,7 +9112,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9342,7 +9127,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9361,7 +9146,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9377,7 +9162,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9400,10 +9185,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -9414,7 +9195,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9446,7 +9227,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9475,7 +9256,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9534,7 +9315,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9566,7 +9347,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9633,7 +9414,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9675,7 +9456,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9690,7 +9471,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9698,12 +9479,7 @@
           "Modules/RecentItems/Contracts/FoodDiary.Modules.RecentItems.Contracts.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          }
-        ]
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Modules.RecentItems.Contracts",
@@ -9712,7 +9488,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9730,7 +9506,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9748,7 +9524,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9768,10 +9544,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -9782,7 +9554,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9807,7 +9579,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9836,7 +9608,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9892,7 +9664,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -9932,7 +9704,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9950,7 +9722,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -9972,10 +9744,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -9986,7 +9754,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10001,7 +9769,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10019,7 +9787,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10037,10 +9805,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -10051,7 +9815,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10078,7 +9842,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10102,7 +9866,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10144,7 +9908,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10179,7 +9943,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10216,7 +9980,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10233,7 +9997,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10262,10 +10026,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -10276,7 +10036,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10295,7 +10055,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10310,7 +10070,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10329,7 +10089,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10352,10 +10112,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -10366,7 +10122,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10399,7 +10155,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10428,7 +10184,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10483,7 +10239,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10519,7 +10275,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10557,7 +10313,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10577,10 +10333,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -10591,7 +10343,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10614,7 +10366,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10661,7 +10413,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10698,7 +10450,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10719,10 +10471,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -10733,7 +10481,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10749,7 +10497,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -10762,7 +10510,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10778,7 +10526,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10802,7 +10550,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10851,7 +10599,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -10888,7 +10636,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10906,7 +10654,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10927,10 +10675,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -10941,7 +10685,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10959,7 +10703,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10974,7 +10718,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -10996,10 +10740,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Microsoft.Extensions.Http",
             "version": null
           },
@@ -11016,7 +10756,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11044,7 +10784,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11068,7 +10808,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11113,7 +10853,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11141,7 +10881,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11171,7 +10911,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11207,7 +10947,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11224,7 +10964,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11246,10 +10986,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -11260,7 +10996,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11280,7 +11016,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11295,7 +11031,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11312,7 +11048,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11333,10 +11069,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql",
             "version": null
           },
@@ -11353,7 +11085,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11379,7 +11111,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -11392,7 +11124,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11408,7 +11140,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11441,7 +11173,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11502,7 +11234,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11533,7 +11265,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11605,7 +11337,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11644,7 +11376,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11661,7 +11393,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11680,10 +11412,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -11694,7 +11422,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11710,7 +11438,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11734,10 +11462,6 @@
           },
           {
             "name": "Microsoft.Extensions.Configuration",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -11769,7 +11493,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11794,7 +11518,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -11817,7 +11541,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11857,7 +11581,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11890,7 +11614,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11946,7 +11670,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -11994,7 +11718,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12030,7 +11754,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12050,10 +11774,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -12064,7 +11784,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12085,7 +11805,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12131,7 +11851,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12167,7 +11887,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12183,7 +11903,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12205,10 +11925,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
           }
         ]
       },
@@ -12219,7 +11935,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12235,7 +11951,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12250,7 +11966,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12268,10 +11984,6 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
             "version": null
           }
@@ -12284,7 +11996,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12309,7 +12021,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -12333,7 +12045,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12376,7 +12088,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12409,7 +12121,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12467,7 +12179,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12503,7 +12215,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12695,7 +12407,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12839,7 +12551,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -12969,7 +12681,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -12982,7 +12694,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13001,10 +12713,6 @@
           {
             "name": "Npgsql",
             "version": null
-          },
-          {
-            "name": "System.Security.Cryptography.Pkcs",
-            "version": null
           }
         ]
       },
@@ -13015,7 +12723,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13030,7 +12738,7 @@
         "sdk": "Microsoft.NET.Sdk.Web",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13046,7 +12754,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13102,7 +12810,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13118,10 +12826,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -13132,7 +12836,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -13154,7 +12858,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13169,7 +12873,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13203,10 +12907,6 @@
           {
             "name": "SmtpServer",
             "version": null
-          },
-          {
-            "name": "System.Security.Cryptography.Pkcs",
-            "version": null
           }
         ]
       },
@@ -13217,7 +12917,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13246,7 +12946,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13261,7 +12961,7 @@
         "sdk": "Microsoft.NET.Sdk.Web",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13278,7 +12978,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13315,7 +13015,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13347,7 +13047,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13379,7 +13079,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13417,7 +13117,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13449,7 +13149,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13501,7 +13201,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13535,7 +13235,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13551,10 +13251,6 @@
           {
             "name": "FluentValidation.DependencyInjectionExtensions",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -13565,7 +13261,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -13587,7 +13283,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13602,7 +13298,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13644,10 +13340,6 @@
           {
             "name": "RabbitMQ.Client",
             "version": null
-          },
-          {
-            "name": "System.Security.Cryptography.Pkcs",
-            "version": null
           }
         ]
       },
@@ -13658,7 +13350,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13687,7 +13379,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13703,7 +13395,7 @@
         "sdk": "Microsoft.NET.Sdk.Web",
         "outputType": "Exe",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -13720,7 +13412,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13765,7 +13457,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13797,7 +13489,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13829,7 +13521,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13872,7 +13564,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13904,7 +13596,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13964,7 +13656,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -13999,7 +13691,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14016,7 +13708,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14026,14 +13718,6 @@
         "packageReferences": [
           {
             "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
             "version": null
           }
         ]
@@ -14045,7 +13729,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14060,7 +13744,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14073,14 +13757,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
           }
         ]
       },
@@ -14091,7 +13767,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14113,7 +13789,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14128,7 +13804,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14152,7 +13828,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14165,7 +13841,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14178,7 +13854,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14192,18 +13868,6 @@
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options",
-            "version": null
           }
         ]
       },
@@ -14214,7 +13878,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14224,10 +13888,6 @@
         "packageReferences": [
           {
             "name": "Microsoft.Extensions.Configuration",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
             "version": null
           },
           {
@@ -14243,7 +13903,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14268,7 +13928,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14281,16 +13941,11 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          }
-        ]
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Nutrition.Contracts",
@@ -14299,7 +13954,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14312,7 +13967,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14325,7 +13980,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14337,10 +13992,6 @@
         "packageReferences": [
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
             "version": null
           },
           {
@@ -14360,7 +14011,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14373,7 +14024,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14395,7 +14046,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14413,7 +14064,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14435,7 +14086,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14482,7 +14133,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [],
@@ -14495,7 +14146,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14529,7 +14180,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14573,7 +14224,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14606,7 +14257,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14638,7 +14289,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14670,7 +14321,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14704,7 +14355,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14732,7 +14383,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14768,7 +14419,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14812,7 +14463,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14844,7 +14495,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": false,
         "projectReferences": [
@@ -14865,7 +14516,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -14897,7 +14548,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [
@@ -15042,7 +14693,7 @@
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
-          "net10.0"
+          "net11.0"
         ],
         "isTestProject": true,
         "projectReferences": [

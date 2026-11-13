@@ -7,7 +7,6 @@ using FoodDiary.Telegram.Bot.Images;
 using FoodDiary.Telegram.Bot.Operations;
 using System.Text.Json;
 using System.Globalization;
-using System.Net.Http.Json;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -108,7 +107,7 @@ public sealed partial class TelegramBotWorker(
                 if (command is "/today" or "/week") {
                     operation = new BotIncomingOperation("statistics", message.Chat.Id, sender.Id, message.Id, message.Date,
                         sender.LanguageCode, PeriodDays: string.Equals(command, "/today", StringComparison.Ordinal) ? 1 : 7);
-                } else if (command?.TrimStart().StartsWith('/') == false && IsCustomWaterReply(message)) {
+                } else if (command?.TrimStart() is [] or [not '/', ..] && IsCustomWaterReply(message)) {
                     if (!BotInputParser.TryParseCustomWaterAmount(message.Text, out int amountMl)) {
                         await SendCustomWaterPromptAsync(message.Chat.Id, sender.LanguageCode, cancellationToken);
                         return;

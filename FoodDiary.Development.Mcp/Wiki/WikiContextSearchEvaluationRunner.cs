@@ -114,7 +114,7 @@ internal static class WikiContextSearchEvaluationRunner {
         };
         string json = JsonSerializer.Serialize(evaluation, OutputOptions);
         await output.WriteAsync(json.AsMemory(), cancellationToken);
-        await output.WriteLineAsync();
+        await output.WriteLineAsync(ReadOnlyMemory<char>.Empty, cancellationToken);
     }
 
     private static void Validate(EvaluationCorpus? corpus) {

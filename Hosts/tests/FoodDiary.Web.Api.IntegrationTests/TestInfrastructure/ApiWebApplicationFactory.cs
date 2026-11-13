@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

@@ -59,7 +59,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
             Date = NormalizeDate(date),
             ExerciseType = exerciseType,
             DurationMinutes = durationMinutes,
-            CaloriesBurned = Math.Round(caloriesBurned, 1, MidpointRounding.ToEven),
+            CaloriesBurned = BurnedEnergy.RoundKilocalories(caloriesBurned),
             Name = NormalizeOptionalText(name, NameMaxLength, nameof(name)),
             Notes = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes)),
         };
@@ -97,7 +97,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         }
 
         if (caloriesBurned.HasValue) {
-            double rounded = Math.Round(caloriesBurned.Value, 1, MidpointRounding.ToEven);
+            double rounded = BurnedEnergy.RoundKilocalories(caloriesBurned.Value);
             if (Math.Abs(rounded - CaloriesBurned) > 0.01) {
                 CaloriesBurned = rounded;
                 changed = true;

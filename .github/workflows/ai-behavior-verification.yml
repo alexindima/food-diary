@@ -29,6 +29,8 @@ on:
       - "infra/load-testing/**"
       - "infra/observability/prometheus/**"
       - "Directory.Packages.props"
+      - "Directory.Build.props"
+      - "global.json"
       - ".config/dotnet-tools.json"
       - ".github/workflows/ai-behavior-verification.yml"
 

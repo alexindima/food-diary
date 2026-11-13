@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 

@@ -4,11 +4,11 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExtractedModuleApplicationProjectTests {
-    public static TheoryData<string> ExtractedModules => [
+    public static TheoryData<string> ExtractedModules => [with((IEnumerable<string>)[
         "Fasting",
         "Hydration",
         "WeeklyGoals",
-    ];
+    ])];
 
     [Theory]
     [MemberData(nameof(ExtractedModules))]

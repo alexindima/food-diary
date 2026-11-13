@@ -78,7 +78,7 @@ public sealed class PhysicalProjectLayoutTests {
             .Order(StringComparer.OrdinalIgnoreCase)];
 
     private static string DirectoryPrefix(string path) {
-        int separator = path.LastIndexOf('/');
+        int separator = path.AsSpan().LastIndexOf('/');
         return separator < 0 ? string.Empty : path[..(separator + 1)];
     }
 

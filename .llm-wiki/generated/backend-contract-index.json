@@ -81302,7 +81302,7 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/FoodDiary.Persistence.Runtime/Persistence/Interceptors/DomainEventDispatcher.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 4
     },
     {
       "contract": "IDomainEvent",

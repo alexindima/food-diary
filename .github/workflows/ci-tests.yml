@@ -355,7 +355,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: 10.0.102
+          global-json-file: global.json
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
@@ -389,7 +389,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: 10.0.102
+          global-json-file: global.json
       - name: Initialize diagnostics
         run: mkdir -p "${RUNNER_TEMP}/backend-format-logs"
 
@@ -479,7 +479,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: 10.0.102
+          global-json-file: global.json
       - name: Verify backend test partition
         shell: pwsh
         run: ./scripts/ci/Test-BackendTestGroups.ps1
@@ -525,7 +525,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: 10.0.102
+          global-json-file: global.json
       - name: Setup Node.js for development MCP tests
         if: matrix.group == 'mcp'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
@@ -632,7 +632,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
-          dotnet-version: 10.0.102
+          global-json-file: global.json
 
       - name: Audit backend dependencies
         shell: bash

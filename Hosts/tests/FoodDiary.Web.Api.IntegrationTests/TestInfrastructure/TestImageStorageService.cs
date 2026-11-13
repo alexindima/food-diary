@@ -9,12 +9,12 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 public sealed class TestImageStorageService(IOptions<S3Options> options) : IImageStorageService {
-    private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
+    private static readonly HashSet<string> AllowedContentTypes = [with(StringComparer.OrdinalIgnoreCase),
         "image/jpeg",
         "image/png",
         "image/webp",
         "image/gif",
-    };
+    ];
 
     private readonly S3Options _options = options.Value;
 

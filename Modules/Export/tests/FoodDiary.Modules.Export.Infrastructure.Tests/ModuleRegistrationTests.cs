@@ -50,16 +50,10 @@ public sealed class ModuleRegistrationTests {
 
     [Fact]
     public async Task ConnectToAllowedRemoteImageEndpointAsync_WhenHostResolvesToLoopback_RejectsConnection() {
-        SocketsHttpConnectionContext context = CreateSocketsHttpConnectionContext(
-            new DnsEndPoint("localhost", 80),
-            new HttpRequestMessage(HttpMethod.Get, "http://localhost/"));
+        var endpoint = new DnsEndPoint("localhost", 80);
 
-        HttpRequestException ex = await Assert.ThrowsAsync<HttpRequestException>(async () => {
-            await InvokePrivateStatic<ValueTask<Stream>>(
-                "ConnectToAllowedRemoteImageEndpointAsync",
-                context,
-                CancellationToken.None).ConfigureAwait(true);
-        }).ConfigureAwait(true);
+        HttpRequestException ex = await Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await ModuleRegistration.ConnectToAllowedRemoteImageEndpointAsync(endpoint, CancellationToken.None));
 
         Assert.Contains("private or loopback", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -79,14 +73,9 @@ public sealed class ModuleRegistrationTests {
                     Assert.Equal(443, port);
                     return ValueTask.FromResult<Stream>(new MemoryStream([1, 2, 3]));
                 };
-            SocketsHttpConnectionContext context = CreateSocketsHttpConnectionContext(
-                new DnsEndPoint("push.example.com", 443),
-                new HttpRequestMessage(HttpMethod.Get, "https://push.example.com/"));
+            var endpoint = new DnsEndPoint("push.example.com", 443);
 
-            await using Stream stream = await InvokePrivateStatic<ValueTask<Stream>>(
-                "ConnectToAllowedRemoteImageEndpointAsync",
-                context,
-                CancellationToken.None);
+            await using Stream stream = await ModuleRegistration.ConnectToAllowedRemoteImageEndpointAsync(endpoint, CancellationToken.None);
 
             Assert.Equal(3, stream.Length);
         } finally {
@@ -111,16 +100,10 @@ public sealed class ModuleRegistrationTests {
                 connectorCalled = true;
                 return ValueTask.FromResult<Stream>(new MemoryStream());
             };
-            SocketsHttpConnectionContext context = CreateSocketsHttpConnectionContext(
-                new DnsEndPoint("rebound.example.com", 443),
-                new HttpRequestMessage(HttpMethod.Get, "https://rebound.example.com/image.png"));
+            var endpoint = new DnsEndPoint("rebound.example.com", 443);
 
-            await Assert.ThrowsAsync<HttpRequestException>(async () => {
-                await InvokePrivateStatic<ValueTask<Stream>>(
-                    "ConnectToAllowedRemoteImageEndpointAsync",
-                    context,
-                    CancellationToken.None).ConfigureAwait(true);
-            }).ConfigureAwait(true);
+            await Assert.ThrowsAsync<HttpRequestException>(async () =>
+                await ModuleRegistration.ConnectToAllowedRemoteImageEndpointAsync(endpoint, CancellationToken.None));
 
             Assert.False(connectorCalled);
         } finally {
@@ -214,18 +197,6 @@ public sealed class ModuleRegistrationTests {
             methodName,
             BindingFlags.Static | BindingFlags.NonPublic)!;
         return (T)method.Invoke(null, args)!;
-    }
-
-    private static SocketsHttpConnectionContext CreateSocketsHttpConnectionContext(
-        DnsEndPoint dnsEndPoint,
-        HttpRequestMessage request) {
-        ConstructorInfo constructor = typeof(SocketsHttpConnectionContext).GetConstructor(
-            BindingFlags.Instance | BindingFlags.NonPublic,
-            binder: null,
-            [typeof(DnsEndPoint), typeof(HttpRequestMessage)],
-            modifiers: null)!;
-
-        return (SocketsHttpConnectionContext)constructor.Invoke([dnsEndPoint, request]);
     }
 
     [ExcludeFromCodeCoverage]

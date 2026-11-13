@@ -33,15 +33,14 @@ public sealed class DashboardCalendarTests {
 
     [Fact]
     public async Task Context_WithSkippedCalendarDay_RejectsBeforeReadingUser() {
-        var date = new DateTime(2011, 12, 30);
+        var date = new DateTime(2012, 1, 1);
         var transitionStart = TimeZoneInfo.TransitionTime.CreateFixedDateRule(DateTime.MinValue, 1, 1);
         var transitionEnd = TimeZoneInfo.TransitionTime.CreateFixedDateRule(DateTime.MinValue, 12, 31);
-        // A 24-hour offset jump collapses this calendar day's UTC interval.
-        // Explicit rules keep the regression independent of the OS time-zone database.
+        // Complete calendar-year rules model a 24-hour offset jump at the year boundary.
         var zone = TimeZoneInfo.CreateCustomTimeZone("test-dateline", TimeSpan.Zero, "test", "test", "test", [
-            TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(new DateTime(2011, 1, 1), date,
+            TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(new DateTime(2011, 1, 1), date.AddDays(-1),
                 TimeSpan.Zero, transitionStart, transitionEnd, TimeSpan.FromHours(-10)),
-            TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(date.AddDays(1), new DateTime(2012, 12, 31),
+            TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(date, new DateTime(2012, 12, 31),
                 TimeSpan.Zero, transitionStart, transitionEnd, TimeSpan.FromHours(14)),
         ]);
         var user = User.Create("skipped-calendar@example.com", "hash");

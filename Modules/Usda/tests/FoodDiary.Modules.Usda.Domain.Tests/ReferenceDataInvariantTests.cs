@@ -4,11 +4,11 @@ namespace FoodDiary.Modules.Usda.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ReferenceDataInvariantTests {
-    public static TheoryData<double> NonFiniteValues => [
+    public static TheoryData<double> NonFiniteValues => [with((IEnumerable<double>)[
         double.NaN,
         double.NegativeInfinity,
         double.PositiveInfinity,
-    ];
+    ])];
 
     [Fact]
     public void DailyReferenceValue_ExposesConfiguredValues() {

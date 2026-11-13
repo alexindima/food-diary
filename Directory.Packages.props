@@ -27,7 +27,6 @@
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.22.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
     <!-- Temporary security pins and removal conditions: docs/dependencies/overrides.md. -->
-    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="System.Security.Cryptography.Xml" Version="10.0.13" />
 
     <!-- Entity Framework Core -->
@@ -59,7 +58,7 @@
     <PackageVersion Include="AWSSDK.S3" Version="4.0.102.4" />
     <PackageVersion Include="DnsClient" Version="1.8.0" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.15" />
-    <PackageVersion Include="MailKit" Version="4.17.0" />
+    <PackageVersion Include="MailKit" Version="4.18.2" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QuestPDF" Version="2026.7.3" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
@@ -98,7 +97,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
     <PackageVersion Include="NSubstitute" Version="6.1.0" />
     <PackageVersion Include="Npgsql" Version="10.0.3" />
-    <PackageVersion Include="StackExchange.Redis" Version="3.0.11" />
+    <PackageVersion Include="StackExchange.Redis" Version="3.1.11" />
     <PackageVersion Include="SSH.NET" Version="2026.0.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.12.0" />
     <PackageVersion Include="Testcontainers.RabbitMq" Version="4.11.0" />

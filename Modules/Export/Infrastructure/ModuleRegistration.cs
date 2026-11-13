@@ -23,19 +23,20 @@ public static class ModuleRegistration {
         services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => client.Timeout = TimeSpan.FromSeconds(5))
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
                 AllowAutoRedirect = false,
-                ConnectCallback = ConnectToAllowedRemoteImageEndpointAsync,
+                ConnectCallback = static (context, cancellationToken) =>
+                    ConnectToAllowedRemoteImageEndpointAsync(context.DnsEndPoint, cancellationToken),
                 UseProxy = false,
             });
 
         return services;
     }
 
-    private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(
-        SocketsHttpConnectionContext context,
+    internal static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(
+        DnsEndPoint endpoint,
         CancellationToken cancellationToken) {
-        IPAddress[] addresses = await ResolveRemoteImageHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
+        IPAddress[] addresses = await ResolveRemoteImageHostAddressesAsync(endpoint.Host, cancellationToken);
         IPAddress publicAddress = addresses.FirstOrDefault(RemoteImageAddressPolicy.IsPublicAddress) ?? throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
-        return await ConnectRemoteImageSocketAsync(publicAddress, context.DnsEndPoint.Port, cancellationToken);
+        return await ConnectRemoteImageSocketAsync(publicAddress, endpoint.Port, cancellationToken);
     }
 
     private static async ValueTask<Stream> ConnectRemoteImageSocketCoreAsync(

@@ -45,11 +45,11 @@ public sealed class WearableDateValidatorTests {
             .WithErrorCode("Validation.Invalid");
     }
 
-    public static TheoryData<DateTime> UnsupportedDates => [
+    public static TheoryData<DateTime> UnsupportedDates => [with((IEnumerable<DateTime>)[
         new DateTime(1969, 12, 31),
         CurrentUtc.Date.AddDays(1),
         DateTime.MaxValue,
-    ];
+    ])];
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTimeProvider(DateTime utcNow) : TimeProvider {

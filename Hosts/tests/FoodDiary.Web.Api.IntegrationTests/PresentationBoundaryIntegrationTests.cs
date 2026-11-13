@@ -1,6 +1,5 @@
 using System.Net.Http.Headers;
 using System.Net;
-using System.Net.Http.Json;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -1909,8 +1908,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         OpenApiSchemaSnapshot[] snapshots = [.. schemas.EnumerateObject()
             .Select(schema => {
                 HashSet<string> required = schema.Value.TryGetProperty("required", out JsonElement requiredNode)
-                    ? [.. requiredNode.EnumerateArray().Select(item => item.GetString() ?? string.Empty)]
-                    : [];
+                    ? [with(StringComparer.Ordinal), .. requiredNode.EnumerateArray().Select(item => item.GetString() ?? string.Empty)]
+                    : [with(StringComparer.Ordinal)];
                 OpenApiSchemaPropertySnapshot[] properties = schema.Value.TryGetProperty(
                     "properties",
                     out JsonElement propertyNodes)

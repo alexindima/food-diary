@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Net.Http.Json;
 using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Client.Options;
 using Microsoft.Extensions.Options;

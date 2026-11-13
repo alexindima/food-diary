@@ -101,11 +101,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
     }
 
     private static IEnumerable<string> GetFlowAnchors(IReadOnlyList<string> paths, IReadOnlyList<string> queryTerms) {
-        HashSet<string> roles = new(StringComparer.OrdinalIgnoreCase) {
+        HashSet<string> roles = [with(StringComparer.OrdinalIgnoreCase),
             "service", "services", "handler", "command", "query", "form", "manage", "calculator", "read", "write",
             "store", "repository", "model", "configuration", "job", "image", "statistics", "controller", "result", "response",
             "manual", "dialog", "item", "items", "list", "page", "history", "data", "snapshot", "summary", "detail", "sidebar", "editor",
-        };
+        ];
         return paths.Where(path => !path.Contains("/generated/", StringComparison.OrdinalIgnoreCase) &&
                 !path.Contains("/fooddiary-admin/", StringComparison.OrdinalIgnoreCase) &&
                 !string.Equals(SqliteFlowScopeReader.Stage(path), "tests", StringComparison.Ordinal))

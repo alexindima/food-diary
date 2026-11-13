@@ -12,18 +12,18 @@ public sealed class ProviderRegistrationTests {
     [Theory]
     [InlineData("123", true)]
     [InlineData("124", false)]
-    public void TelegramOperations_ValidateBoundConfigurationAtStartup(string botId, bool valid) {
+    public async Task TelegramOperations_ValidateBoundConfigurationAtStartupAsync(string botId, bool valid) {
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["TelegramClient:OperationsEnabled"] = "true",
             ["TelegramClient:BotId"] = botId,
             ["TelegramAuth:BotToken"] = "123:test-token",
         }).Build();
-        using ServiceProvider provider = new ServiceCollection().AddIdentityProvider(configuration).BuildServiceProvider();
-        IStartupValidator validator = provider.GetRequiredService<IStartupValidator>();
+        await using ServiceProvider provider = new ServiceCollection().AddIdentityProvider(configuration).BuildServiceProvider();
+        IAsyncStartupValidator validator = provider.GetRequiredService<IAsyncStartupValidator>();
         if (valid) {
-            validator.Validate();
+            await validator.ValidateAsync(CancellationToken.None);
         } else {
-            Assert.Throws<OptionsValidationException>(validator.Validate);
+            await Assert.ThrowsAsync<OptionsValidationException>(async () => await validator.ValidateAsync(CancellationToken.None));
         }
     }
 

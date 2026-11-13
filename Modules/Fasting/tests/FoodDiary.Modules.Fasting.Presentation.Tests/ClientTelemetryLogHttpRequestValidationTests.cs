@@ -25,14 +25,14 @@ public sealed class ClientTelemetryLogHttpRequestValidationTests {
         { "user_action", "fasting.session.started" },
     };
 
-    public static TheoryData<string> InvalidDetailsJson => [
+    public static TheoryData<string> InvalidDetailsJson => [with((IEnumerable<string>)[
         JsonSerializer.Serialize(new string('x', 4097)),
         "{\"a\":{\"b\":{\"c\":{\"d\":{\"e\":1}}}}}",
         $"{{\"{new string('p', 65)}\":1}}",
         $"[{string.Join(',', Enumerable.Repeat("1", 17))}]",
         JsonSerializer.Serialize(new string('s', 513)),
         $"{{{string.Join(',', Enumerable.Range(0, 65).Select(index => "\"p" + index.ToString(CultureInfo.InvariantCulture) + "\":null"))}}}",
-    ];
+    ])];
 
     [Theory]
     [MemberData(nameof(SupportedEvents))]

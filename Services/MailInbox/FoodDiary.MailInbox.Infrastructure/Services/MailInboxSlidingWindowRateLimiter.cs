@@ -226,7 +226,7 @@ public sealed class MailInboxSlidingWindowRateLimiter(
 
         public int MaxEntriesPerCounter { get; } = maxEntriesPerCounter;
 
-        public Dictionary<string, SlidingWindowCounter> Counters { get; } = new(StringComparer.Ordinal);
+        public Dictionary<string, SlidingWindowCounter> Counters { get; } = [with(StringComparer.Ordinal)];
 
         public PriorityQueue<CounterExpiration, long> Expirations { get; } = new();
 

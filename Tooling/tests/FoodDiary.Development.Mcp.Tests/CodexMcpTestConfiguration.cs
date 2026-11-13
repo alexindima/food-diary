@@ -21,13 +21,13 @@ internal sealed record CodexMcpTestConfiguration(
             throw new InvalidOperationException($"{section} was not found in {configPath}.");
         }
 
-        Dictionary<string, string> values = new(StringComparer.Ordinal);
+        Dictionary<string, string> values = [with(StringComparer.Ordinal)];
         for (int index = start + 1; index < lines.Length; index++) {
             string line = lines[index].Trim();
             if (line.Length > 0 && line[0] == '[') {
                 break;
             }
-            if (string.IsNullOrWhiteSpace(line) || line.StartsWith('#')) {
+            if (string.IsNullOrWhiteSpace(line) || line is ['#', ..]) {
                 continue;
             }
 

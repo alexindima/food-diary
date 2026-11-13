@@ -1,14 +1,12 @@
 using System.Collections.Concurrent;
 using System.Data.Common;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 

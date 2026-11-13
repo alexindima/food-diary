@@ -1,6 +1,5 @@
 using System.Diagnostics.Metrics;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;

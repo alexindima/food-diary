@@ -3,7 +3,6 @@ using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Hydration.Infrastructure.Tests;
 

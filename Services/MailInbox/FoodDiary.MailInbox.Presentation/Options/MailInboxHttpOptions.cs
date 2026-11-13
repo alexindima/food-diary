@@ -6,11 +6,11 @@ public sealed class MailInboxHttpOptions {
     public const string SectionName = "MailInboxHttp";
     public const int MinApiKeyLength = 32;
     public const int MaxApiKeyLength = 256;
-    private static readonly HashSet<string> KnownInsecureApiKeys = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> KnownInsecureApiKeys = [with(StringComparer.Ordinal),
         "0123456789abcdef0123456789abcdea",
         "0123456789abcdef0123456789abcdeb",
         "0123456789abcdef0123456789abcdec",
-    };
+    ];
 
     public string MetadataApiKey { get; init; } = string.Empty;
     public string ContentApiKey { get; init; } = string.Empty;

@@ -251,7 +251,7 @@ if ($CompileProbe) {
             $referenceDefinitions = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::OrdinalIgnoreCase)
             foreach ($donorProject in $donorProjects) {
                 # Evaluate in the synthetic project's target context; preserve conditional references and aliases.
-                $evaluation = @(& dotnet msbuild $donorProject -nologo -property:TargetFramework=net10.0 -getItem:ProjectReference 2>&1 | ForEach-Object { [string]$_ })
+                $evaluation = @(& dotnet msbuild $donorProject -nologo -property:TargetFramework=net11.0 -getItem:ProjectReference 2>&1 | ForEach-Object { [string]$_ })
                 if ($LASTEXITCODE -ne 0) { throw "Compile-probe donor evaluation failed for ${donorProject}: $($evaluation -join [Environment]::NewLine)" }
                 $evaluated = ($evaluation -join [Environment]::NewLine) | ConvertFrom-Json
                 foreach ($item in @($evaluated.Items.ProjectReference)) {
@@ -288,7 +288,7 @@ if ($CompileProbe) {
             $projectText = @"
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>

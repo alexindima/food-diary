@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;

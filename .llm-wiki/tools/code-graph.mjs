@@ -24,7 +24,7 @@ const contextSearchSchemaVersion = '10';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
-const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
+const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net11.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
 const dependencyRoot = process.env.LLM_WIKI_READ_ONLY_SOURCE_ROOT
   ? resolve(process.env.LLM_WIKI_READ_ONLY_SOURCE_ROOT)

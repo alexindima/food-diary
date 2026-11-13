@@ -24,7 +24,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class ThinControllerFailureContractTests {
     private static readonly Error ValidationFailure = new("Validation.Invalid", "The request is invalid.");
 
-    public static TheoryData<Type> Controllers => [
+    public static TheoryData<Type> Controllers => [with((IEnumerable<Type>)[
         typeof(AdminDashboardController),
         typeof(AiUsageController),
         typeof(AuthPasswordController),
@@ -40,7 +40,7 @@ public sealed class ThinControllerFailureContractTests {
         typeof(UserOverviewController),
         typeof(WaistGoalsController),
         typeof(WeightGoalsController),
-    ];
+    ])];
 
     [Theory]
     [MemberData(nameof(Controllers))]

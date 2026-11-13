@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.MailInbox.Client.Models;
 using FoodDiary.MailInbox.Client.Options;
 using Microsoft.Extensions.Options;

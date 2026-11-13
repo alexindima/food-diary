@@ -88,7 +88,7 @@ public sealed class SqliteContextSearchReader {
             ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1, nameof(requests));
         }
         if (requests.Count == 0) { return []; }
-        List<WikiContextSearchResult> results = new(requests.Count);
+        List<WikiContextSearchResult> results = [with(requests.Count)];
         BatchContext? batch = null;
         SqliteConnection connection = new(new SqliteConnectionStringBuilder {
             DataSource = _databasePath,
@@ -537,7 +537,7 @@ public sealed class SqliteContextSearchReader {
             runtimeSuffixes = [".ps1"];
         }
         if (runtimeSuffixes.Length > 0) {
-            HashSet<string> runtimeCandidateKeys = new(StringComparer.Ordinal);
+            HashSet<string> runtimeCandidateKeys = [with(StringComparer.Ordinal)];
             List<RawCandidate> runtimeCandidatesToPrepend = [];
             foreach (string suffix in runtimeSuffixes) {
                 SqliteCommand command = connection.CreateCommand();
@@ -626,7 +626,7 @@ public sealed class SqliteContextSearchReader {
                 Regex.IsMatch(query.Trim(), @"^(?:(?:какие|найти|найди|покажи)\s+тесты|(?:which|what|find|show)\s+tests)(?=\s|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)));
         Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
             ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
-            : [];
+            : [with(StringComparer.Ordinal)];
         string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
             new string([.. term.Where(char.IsLetterOrDigit)]))];
         GenericAffinities genericAffinity = policy.GenericAffinities;
@@ -684,7 +684,7 @@ public sealed class SqliteContextSearchReader {
             (terms.Contains("interceptor") && terms.Contains("http")));
         bool backendIntent = conversational && Regex.IsMatch(query, @"backend|сервер", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
         bool wikiIntent = conversational && terms.Overlaps(["wiki", "вики"]);
-        Dictionary<string, int> subjectWeights = [];
+        Dictionary<string, int> subjectWeights = [with(StringComparer.Ordinal)];
         if (conversational) {
             string[] candidateIdentities = [.. candidates.Select(candidate => new string([.. ExpandSearchText(Path.GetFileName(candidate.Path)).Where(char.IsLetterOrDigit)]))];
             foreach (string term in terms.Where(term => (term.Length >= 3 || string.Equals(term, "ai", StringComparison.Ordinal)) && term.All(character => character is >= 'a' and <= 'z') &&
@@ -694,7 +694,7 @@ public sealed class SqliteContextSearchReader {
             }
         }
         List<RankedCandidate> ranked = [];
-        Dictionary<string, int> lexicalPathRanks = new(StringComparer.Ordinal);
+        Dictionary<string, int> lexicalPathRanks = [with(StringComparer.Ordinal)];
         HashSet<string> compoundModules = new(candidates.Where(candidate => NormalizePath(candidate.Path).StartsWith("Modules/", StringComparison.OrdinalIgnoreCase))
             .Select(candidate => GetRankingModuleIdentity(NormalizePath(candidate.Path).ToLowerInvariant()))
             .Where(moduleIdentity => moduleIdentity.Length >= policy.ModuleIdentityMinimumLength && CompoundModuleMention(moduleIdentity, directQueryTerms)), StringComparer.Ordinal);
@@ -750,7 +750,7 @@ public sealed class SqliteContextSearchReader {
             string searchableFileRoleIdentity = $"{searchableFileIdentity} {roleIdentity}";
             if (roleIdentity.Length > 0 && normalizedPath.EndsWith("queryhandler.cs", StringComparison.Ordinal)) {
                 string stem = normalizedPath[..^"queryhandler.cs".Length];
-                if (stem.EndsWith('s') && !stem.EndsWith("status", StringComparison.Ordinal) && !stem.EndsWith("ss", StringComparison.Ordinal) &&
+                if (stem is [.., 's'] && !stem.EndsWith("status", StringComparison.Ordinal) && !stem.EndsWith("ss", StringComparison.Ordinal) &&
                     !stem.EndsWith("ids", StringComparison.Ordinal)) {
                     searchableFileRoleIdentity += " collection";
                 }
@@ -1153,7 +1153,7 @@ public sealed class SqliteContextSearchReader {
             ranked.Add(new RankedCandidate(candidate, score, reasons));
         }
 
-        HashSet<string> seenPaths = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> seenPaths = [with(StringComparer.OrdinalIgnoreCase)];
         List<WikiContextSearchCandidate> result = [];
         foreach (RankedCandidate candidate in ranked
             .OrderByDescending(item => item.Score)
@@ -1318,7 +1318,7 @@ public sealed class SqliteContextSearchReader {
 
     private static string[] GetDirectQueryTerms(string query, RankingPolicy policy) {
         List<string> terms = [];
-        HashSet<string> seen = new(StringComparer.Ordinal);
+        HashSet<string> seen = [with(StringComparer.Ordinal)];
         HashSet<string> stopTerms = new(policy.StopTerms, StringComparer.Ordinal);
         foreach (Match match in Terms.Matches(ExpandSearchText(query).ToLowerInvariant())) {
             if (match.Value.Length >= 2 && !stopTerms.Contains(match.Value) && seen.Add(match.Value)) {
@@ -1347,7 +1347,7 @@ public sealed class SqliteContextSearchReader {
             }
             foreach ((string prefix, string[] prefixExpansions) in policy.QueryPrefixExpansions) {
                 if (prefix.Split('|', StringSplitOptions.RemoveEmptyEntries).Any(candidate =>
-                    candidate.EndsWith('$') ? string.Equals(term, candidate[..^1], StringComparison.Ordinal) : term.StartsWith(candidate, StringComparison.Ordinal))) {
+                    candidate is [.., '$'] ? string.Equals(term, candidate[..^1], StringComparison.Ordinal) : term.StartsWith(candidate, StringComparison.Ordinal))) {
                     AddExpansions(prefixExpansions, terms, seen);
                 }
             }
@@ -1364,7 +1364,7 @@ public sealed class SqliteContextSearchReader {
         List<string> variants = [];
         if (term.Length > 4 && term.EndsWith("ies", StringComparison.Ordinal)) {
             variants.Add($"{term[..^3]}y");
-        } else if (term.Length > 3 && term.EndsWith('s') && !term.EndsWith("ss", StringComparison.Ordinal)) {
+        } else if (term.Length > 3 && term is [.., 's'] && !term.EndsWith("ss", StringComparison.Ordinal)) {
             variants.Add(term[..^1]);
         }
         if (term.Length > 4 && new[] { "xes", "ches", "shes", "sses", "zes" }
@@ -1406,7 +1406,7 @@ public sealed class SqliteContextSearchReader {
             StringComparer.Ordinal);
         List<HashSet<string>> groups = [];
         foreach (Match match in expression.Matches(ExpandSearchText(query).ToLowerInvariant())) {
-            HashSet<string> group = new(StringComparer.Ordinal);
+            HashSet<string> group = [with(StringComparer.Ordinal)];
             foreach (string term in GetDirectQueryTerms(match.Groups["phrase"].Value, policy)) {
                 if (roleTerms.Contains(term)) {
                     group.Add(term);
@@ -1417,7 +1417,7 @@ public sealed class SqliteContextSearchReader {
                     [term],
                     policy,
                     expansions,
-                    new HashSet<string>(StringComparer.Ordinal));
+                    [with(StringComparer.Ordinal)]);
                 group.UnionWith(expansions.Where(roleTerms.Contains));
             }
             if (group.Count > 0) {
@@ -1541,7 +1541,7 @@ public sealed class SqliteContextSearchReader {
             for (int end = start + 1; end < terms.Count && end < start + 4; end++) {
                 phrase += terms[end];
                 if (string.Equals(phrase, module, StringComparison.Ordinal) ||
-                    (module.EndsWith('s') && !module.EndsWith("ss", StringComparison.Ordinal) && !module.EndsWith("status", StringComparison.Ordinal) &&
+                    (module is [.., 's'] && !module.EndsWith("ss", StringComparison.Ordinal) && !module.EndsWith("status", StringComparison.Ordinal) &&
                         string.Equals(phrase, module[..^1], StringComparison.Ordinal))) {
                     return true;
                 }
@@ -1682,7 +1682,7 @@ public sealed class SqliteContextSearchReader {
         string[] identities = [.. candidates.Select(candidate => NormalizePath(candidate.Path).ToLowerInvariant())
             .Distinct(StringComparer.Ordinal)
             .Select(path => ExpandSearchText(Path.GetFileName(path)).ToLowerInvariant())];
-        Dictionary<string, int> weights = new(StringComparer.Ordinal);
+        Dictionary<string, int> weights = [with(StringComparer.Ordinal)];
         foreach (string term in directTerms.Distinct(StringComparer.Ordinal)) {
             if (term is "test" or "tests" or "spec" or "specs" or "feature" or "features") {
                 continue;

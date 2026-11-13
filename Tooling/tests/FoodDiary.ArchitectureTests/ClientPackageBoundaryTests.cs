@@ -7,7 +7,7 @@ public sealed class ClientPackageBoundaryTests {
     [InlineData("FoodDiary.MailInbox.Client", "Services/MailInbox/FoodDiary.MailInbox.Client")]
     public void ClientPackages_DoNotReferenceServerSideNamespaces(string projectName, string projectFolder) {
         string clientRoot = ArchitectureTestPaths.FromRoot(projectFolder);
-        string boundedContextPrefix = projectName[..projectName.LastIndexOf('.')];
+        string boundedContextPrefix = projectName[..projectName.AsSpan().LastIndexOf('.')];
         string[] forbiddenPatterns = [
             $"{boundedContextPrefix}.Application",
             $"{boundedContextPrefix}.Domain",

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
+    "net11.0": {
       "FluentValidation": {
         "type": "Direct",
         "requested": "[12.1.1, )",
@@ -14,8 +14,7 @@
         "resolved": "12.1.1",
         "contentHash": "D0VXh4dtjjX2aQizuaa0g6R8X3U1JaVqJPfGCvLwZX9t/O2h7tkpbitbadQMfwcgSPdDbI2vDxuwRMv/Uf9dHA==",
         "dependencies": {
-          "FluentValidation": "12.1.1",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0"
+          "FluentValidation": "12.1.1"
         }
       },
       "Meziantou.Analyzer": {
@@ -23,12 +22,6 @@
         "requested": "[3.0.195, )",
         "resolved": "3.0.195",
         "contentHash": "+OzBSeXP1nXzQiLOIvZp6G9ldu8QkCTZjyVBAbn7dEBnEeWvDLUW1Py61cQ12OsYf45YpZ6Pel1rQ+cedWQR2Q=="
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions": {
-        "type": "Direct",
-        "requested": "[10.0.11, )",
-        "resolved": "10.0.11",
-        "contentHash": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg=="
       },
       "Roslynator.Analyzers": {
         "type": "Direct",
@@ -54,10 +47,7 @@
         "type": "Project"
       },
       "fooddiary.mediator": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
+        "type": "Project"
       },
       "fooddiary.modules.images.contracts": {
         "type": "Project",
@@ -134,6 +124,6 @@
         "type": "Project"
       }
     },
-    "net10.0/linux-musl-x64": {}
+    "net11.0/linux-musl-x64": {}
   }
 }

@@ -4,9 +4,9 @@ using System.Text;
 namespace FoodDiary.Development.Mcp.Infrastructure;
 
 internal static class DevelopmentMcpSourceFingerprint {
-    private static readonly HashSet<string> SourceExtensions = new(StringComparer.OrdinalIgnoreCase) {
+    private static readonly HashSet<string> SourceExtensions = [with(StringComparer.OrdinalIgnoreCase),
         ".cs", ".csproj", ".props", ".targets",
-    };
+    ];
 
     public static async Task<string> ComputeAsync(
         string repositoryRoot,

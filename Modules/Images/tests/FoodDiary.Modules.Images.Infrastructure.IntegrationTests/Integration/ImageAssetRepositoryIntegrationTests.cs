@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
-using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.Images.Application.Abstractions.Models;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.ReadModel.Composition.Images;

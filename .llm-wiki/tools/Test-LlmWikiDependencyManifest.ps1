@@ -13,7 +13,7 @@ function Assert-Case([string]$Name, [string]$Xml, [int]$Count, [string]$Include 
 }
 
 Assert-Case 'empty project' '<Project />' 0
-Assert-Case 'property-only project' '<Project><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>' 0
+Assert-Case 'property-only project' '<Project><PropertyGroup><TargetFramework>net11.0</TargetFramework></PropertyGroup></Project>' 0
 Assert-Case 'project-reference-only group' '<Project><ItemGroup><ProjectReference Include="..\Other.csproj" /></ItemGroup></Project>' 0
 Assert-Case 'package in later group' '<Project><ItemGroup><ProjectReference Include="..\Other.csproj" /></ItemGroup><ItemGroup><PackageReference Include="Example" Version="1.2.3" /></ItemGroup></Project>' 1 'Example' '1.2.3'
 Assert-Case 'central package management' '<Project><ItemGroup><PackageReference Include="Central.Package" /></ItemGroup></Project>' 1 'Central.Package' ''

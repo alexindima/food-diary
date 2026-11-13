@@ -143,14 +143,14 @@
         },
         {
           "path": "Directory.Build.props",
-          "sha256": "9d93b49a25096acbdfb803343993efa840daeafa22ea1ce69872191eedd98760",
-          "reviewReason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate."
+          "sha256": "be8c25453b79984ff6e6d121a666470a438c4714489523bb0941ae446ab1f77b",
+          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
         }
       ],
-      "reason": "Reviewed the changed Git wait and facade environment lifecycle against this page: NUL path parsing, explicit repository scope, command arguments, output shapes, query semantics and governance boundaries remain accurate; only process/drain deadlines and restoration of caller Git configuration changed.",
+      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T15:59:36.7198487Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:43.0407386Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -236,13 +236,13 @@
         },
         {
           "path": "Directory.Build.props",
-          "sha256": "9d93b49a25096acbdfb803343993efa840daeafa22ea1ce69872191eedd98760",
-          "reviewReason": "Reviewed the ReadyToRun merge against both discovery pages. The root build property adds only an opt-in per-RID NuGet lock path; default generic restores, target frameworks, namespaces, project references and CSharp extraction filters remain unchanged. Both pinned Docker variants built with locked restore and all 278 platform generic dependency graphs match. Final catalog and symbol index were regenerated from the merged sources; their documented inventory, cache boundaries and limitations remain accurate."
+          "sha256": "be8c25453b79984ff6e6d121a666470a438c4714489523bb0941ae446ab1f77b",
+          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
         },
         {
           "path": "Directory.Packages.props",
-          "sha256": "ceb8e344d9f6a55182e3c71633cea7208aa680f19db2ca402284f5adb452d19b",
-          "reviewReason": "Verified the two ASP.NET Core patch-version changes against regenerated portable and linux-musl lockfiles and the 458-project NuGet audit. Project, route, and package-reference inventory counts remain valid."
+          "sha256": "464b06ab274a1c51308d3386ba15e6725c75a5cf97d6deb5490e585c990e725f",
+          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
         },
         {
           "path": "docs/architecture/backend-modules.json",
@@ -260,10 +260,10 @@
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Verified the two ASP.NET Core patch-version changes against regenerated portable and linux-musl lockfiles and the 458-project NuGet audit. Project, route, and package-reference inventory counts remain valid.",
-      "baseRef": "97bde53e17aec374b28f9eaaac0a517cd88464d2",
-      "gitHead": "23b19eaebbda6090678e49f71c7c87187d01a14e",
-      "reviewedAtUtc": "2026-11-12T12:21:17.0207648Z"
+      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
+      "baseRef": "HEAD",
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:43.2417561Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -292,6 +292,11 @@
       "pageSha256": "7b90f0435e77f2049f68c7eef6ba736263bcaeeb413bfc733d2ba16368e42b1f",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
+          "sha256": "a5e849a61456831acd7de1b40abda8db9052a605a022c65033666b9425bea07e",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
           "sha256": "6efe7fcd84e15241a3b19c4a7a011913ef67fc8f0d58e3d508afd48e19b3ad21",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/adaptive-development.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Runtime source hashing uses NUL-delimited Unicode Git names and transitive project reference scope. Unavailable Docker leaves cleanup-failed instead of false stopped; an Engine query must establish container absence. Separate stable SQLite OS locking serializes runtime stale lock recovery, proven with two real processes. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
@@ -303,8 +308,8 @@
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "00b74abe76753eddc75a312ceb70e29e0bf5a3da2a697a4d448741ff47739858",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/adaptive-development.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Runtime source hashing uses NUL-delimited Unicode Git names and transitive project reference scope. Unavailable Docker leaves cleanup-failed instead of false stopped; an Engine query must establish container absence. Separate stable SQLite OS locking serializes runtime stale lock recovery, proven with two real processes. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "d9c1df817d929aeb76b846f391695dedfe61825891d6dea65b531228a509d38e",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
@@ -317,9 +322,14 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/adaptive-development.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Runtime source hashing uses NUL-delimited Unicode Git names and transitive project reference scope. Unavailable Docker leaves cleanup-failed instead of false stopped; an Engine query must establish container absence. Separate stable SQLite OS locking serializes runtime stale lock recovery, proven with two real processes. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         },
         {
+          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+          "sha256": "dc613aa5a7472c35fb57814e3d881e74508fa50e90fc4eca445ba13d5085c8a5",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "9032e4ddbcb19f9c945a4439e9118a1d8b917b489520d43db05e2fce18c63e61",
-          "reviewReason": "Reviewed the adaptive routing and snapshot claims against the final diff. Nested backend-only mode stays inside the private read-only snapshot and restores the caller environment; no new route, workspace requirement or stage is added. Cold design/topology and explicit frontend dependency failure passed."
+          "sha256": "d87ba80f3114b42d68f6790855cb57f1e2257516eaa5dca0ea21680f8988ed36",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
           "path": "docs/ai/AI_WORKFLOW.md",
@@ -332,10 +342,10 @@
           "reviewReason": "Read the workflow and verified current owned-runtime consumers. One shared immutable storage inventory now feeds initialization and cleanup; its changes invalidate runtime freshness. Rendered preparation explicitly completes the synthetic-account consent dialog while retaining identity, proxy, dashboard and owned cleanup checks. The workflow remains accurate."
         }
       ],
-      "reason": "Read the workflow and verified current owned-runtime consumers. One shared immutable storage inventory now feeds initialization and cleanup; its changes invalidate runtime freshness. Rendered preparation explicitly completes the synthetic-account consent dialog while retaining identity, proxy, dashboard and owned cleanup checks. The workflow remains accurate.",
+      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
-      "reviewedAtUtc": "2026-11-08T03:45:32.2523976Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:43.4384454Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -344,8 +354,18 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "70d8510a981ecb346651bab8f9f71fe395075f3ffad34836c7f7c793d69a51c4",
-          "reviewReason": "Reviewed the CI version pin changes and the existing additive OpenAPI snapshot. The snapshot adds two Telegram backup email verification and diary transfer POST operations plus their DTOs. The compatibility step and its baseline selection remain as documented."
+          "sha256": "7fd12a9adc2529b1162d882ee1a3d903a5834a300c5540e98d8ee6bd6e3feeb5",
+          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+          "sha256": "36b23c00ff59f3e3009a47cc6610db52e6faa59d9afc460ad6a40e5bf2d7bee1",
+          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibilityRegression.ps1",
+          "sha256": "803dc00e9a184c3c2b46df48216a04ef84ae84709c5d9bac2d55907fa74046b7",
+          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
         },
         {
           "path": "docs/frontend/API_SDK.md",
@@ -354,8 +374,8 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "fb087a73f4b9d251a7063606f548fc070913bef70f1925c38e19f388a8ccdd5b",
-          "reviewReason": "The API adds one bot-secret protected resume operation. The existing Billing trial and Users privacy contracts are reused by the bot SDK. OpenAPI snapshots, live SDK comparison and missing-secret requests passed."
+          "sha256": "af4c92ca82def084de8c30aabed64c12c36b96ae8f3de72e9e0ae38b0f53ddb1",
+          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
@@ -363,10 +383,10 @@
           "reviewReason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate."
         }
       ],
-      "reason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate.",
+      "reason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs.",
       "baseRef": "HEAD",
-      "gitHead": "c1f0d19cbbc3ab91bb77e418415977d577911122",
-      "reviewedAtUtc": "2026-11-11T04:09:50.3678851Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:43.6972406Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -411,14 +431,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/backend-contract-review.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
+          "reviewReason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/backend-contract-review.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "The API compatibility regression and HTTP contract snapshot tests passed on .NET 11. CI now takes its SDK from global.json. The Roslyn graph change selects the net11.0 extractor output with the same contract inputs.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:42.355886Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:43.9097028Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -828,12 +848,17 @@
           "path": ".llm-wiki/generated/configuration-index.json",
           "sha256": "dd0364ad00c3a105a305d7bdcf0e693fad5a669f8c9fbc696d69a6c99878105b",
           "reviewReason": "Read rollout workflow and generated configuration. Bot logging adds one Warning category; S3 pins affect isolated CI/local fixtures only. Grafana installer validates Loki separately, retains private rollback backups and receivers; apply follows deployed heartbeat. Guidance remains accurate."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
+          "sha256": "06d8004f3c32e7108ce9417d6b6b68359ffda425a9e7677e31f8f3b370b2bc06",
+          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
         }
       ],
-      "reason": "Read rollout workflow and generated configuration. Bot logging adds one Warning category; S3 pins affect isolated CI/local fixtures only. Grafana installer validates Loki separately, retains private rollback backups and receivers; apply follows deployed heartbeat. Guidance remains accurate.",
+      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
       "baseRef": "HEAD",
-      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
-      "reviewedAtUtc": "2026-11-08T03:47:35.4877855Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:44.2038320Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -842,8 +867,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/developer-experience.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
           "path": ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
@@ -856,10 +881,10 @@
           "reviewReason": "Read compact development flow guidance. New verify progress identity tokens do not change routing, scope selection, five-stage experience, backend bootstrap, or completion contracts. Existing guidance remains accurate."
         }
       ],
-      "reason": "Read compact development flow guidance. New verify progress identity tokens do not change routing, scope selection, five-stage experience, backend bootstrap, or completion contracts. Existing guidance remains accurate.",
+      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
       "baseRef": "HEAD",
-      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
-      "reviewedAtUtc": "2026-11-08T04:24:02.7676237Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:44.6386715Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -870,12 +895,17 @@
           "path": ".llm-wiki/generated/domain-data-index.json",
           "sha256": "897d567cf80281349ca371e9ecca76ee32fd712235cbd5d330bdc90611b46f27",
           "reviewReason": "Verified the new bounded administrative SSO confirmation invariant and the relocated source anchors in UserRefreshTokenSession. The domain index generation and review workflow still applies."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+          "sha256": "7757bd8bb03564b426bff41f26d778f6f11ebf1c8f6f4d8c88e311b59168fc45",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "Verified the new bounded administrative SSO confirmation invariant and the relocated source anchors in UserRefreshTokenSession. The domain index generation and review workflow still applies.",
-      "baseRef": "c1f0d19cbbc3ab91bb77e418415977d577911122",
-      "gitHead": "4cb9deba0060275e080ff5288dfddeb9b837e37c",
-      "reviewedAtUtc": "2026-11-11T04:57:56.8858307Z"
+      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "baseRef": "HEAD",
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:44.9574780Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -988,6 +1018,11 @@
       "pageSha256": "0cd6495e8bf721712da9279eb1eaa3ced3e3219eee93783274ad8ff8f8f8f2bb",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
+          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
+        },
+        {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "14d265f1da9bb5fc1c592e60e9a137479e4d9bd6324656180369195590f5edb0",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/impact-simulation.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
@@ -1006,17 +1041,12 @@
           "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
           "sha256": "492353120af92ad464618d5be23a4dca4bc984d5b615a0c6f838b37b4434aadc",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/impact-simulation.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/impact-simulation.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/impact-simulation.md against the final script diff and relevant workflow claims. Completion still checks readiness, confidence, critique and sealed artifacts before publication. New pending publication is invalid for task-verify and retry validates the same seal, preserves retrospective identity, replays idempotent observations and clears pending only after all succeed. Actual completion fixture injects a late I/O failure, verifies unchanged seal bytes and every observer on retry. Related status, handoff, learning, proof and forecast projections keep their producers and fields. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:46.0675316Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:45.3200219Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -1087,8 +1117,18 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "70d8510a981ecb346651bab8f9f71fe395075f3ffad34836c7f7c793d69a51c4",
-          "reviewReason": "Reviewed the current CI focused job, the Core, Workspace and Orchestration audit matrix, and the aggregate Wiki gate. The setup-dotnet and setup-java pin changes preserve the documented Wiki execution and artifact layout."
+          "sha256": "7fd12a9adc2529b1162d882ee1a3d903a5834a300c5540e98d8ee6bd6e3feeb5",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "d9c1df817d929aeb76b846f391695dedfe61825891d6dea65b531228a509d38e",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+          "sha256": "7757bd8bb03564b426bff41f26d778f6f11ebf1c8f6f4d8c88e311b59168fc45",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
           "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
@@ -1097,8 +1137,13 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAuditSystem.ps1",
-          "sha256": "99fb800c674f5fb5d298a76d0cc454067c3e522f78d435fa98034d2c8677687d",
-          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
+          "sha256": "68f82df687104328404e5590d584a7a1448b6389f3c9731f48a5211d55eca1f6",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
+          "sha256": "5bca102c03671563a80cfe1e8193cdc7ab2b83a968c6ac1f726d9ba641fde5a8",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
@@ -1106,15 +1151,25 @@
           "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         },
         {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "d87ba80f3114b42d68f6790855cb57f1e2257516eaa5dca0ea21680f8988ed36",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
+          "sha256": "cbee3dd7e8f59144145ed4e41121f4b34785f5b45f0c724b1674481a463a3d04",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
           "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
         }
       ],
-      "reason": "Reviewed the current CI focused job, the Core, Workspace and Orchestration audit matrix, and the aggregate Wiki gate. The setup-dotnet and setup-java pin changes preserve the documented Wiki execution and artifact layout.",
-      "baseRef": "eddeb23ff4fc34978c6d34f1e0a269f0f19358b7",
-      "gitHead": "edf5fa2542a592094a71f2d3fb1bd6221f89cd45",
-      "reviewedAtUtc": "2026-11-10T04:53:50.8748176Z"
+      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "baseRef": "HEAD",
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:45.7809336Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1311,13 +1366,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "ffe2e21e7f5c4531ef2e9c8a333d2ff4800b613565df56a2fb96396c3d1aee77",
-          "reviewReason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path."
+          "sha256": "374708b80784dc4339b7d1d0df38092510f8f4e288ac51badbfd67bdba3064e7",
+          "reviewReason": "Verified the sensitive data index diff contains three line-number shifts only. Code graph now loads the .NET 11 extractor with the same privacy projection."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed regenerated sensitive-data navigation after combining the approved master commits with production observability. Existing logging/provider boundaries remain; AI additions export numeric durations and validated token counts with bounded model/operation attributes, while telemetry payload and credential exclusions remain documented. The page instructions still match the merged scanner and index sources."
+          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
+          "reviewReason": "Verified the sensitive data index diff contains three line-number shifts only. Code graph now loads the .NET 11 extractor with the same privacy projection."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -1325,10 +1380,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed the admin Telegram identity display, verified diary merge and independent trial history against backend and client tests, and checked custom water replies, amount bounds and the existing durable bot operation path.",
-      "baseRef": "cd4a79208f0df6ca811c2129aeff86d28fb29836",
-      "gitHead": "91b3d125f5bcf4f7734b6b365ca45529a30f4681",
-      "reviewedAtUtc": "2026-11-09T13:39:31.8791841Z"
+      "reason": "Verified the sensitive data index diff contains three line-number shifts only. Code graph now loads the .NET 11 extractor with the same privacy projection.",
+      "baseRef": "HEAD^",
+      "gitHead": "1eb6d29d172acd03702d85227bcd51b99540cb9b",
+      "reviewedAtUtc": "2026-11-13T11:02:12.5245325Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1472,14 +1527,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "70d8510a981ecb346651bab8f9f71fe395075f3ffad34836c7f7c793d69a51c4",
-          "reviewReason": "Reviewed the current report page and the Compile Wiki review report step in CI. The focused job still runs index verification, API compatibility and dependency checks before compiling the report, and optional governance artifacts remain optional."
+          "sha256": "7fd12a9adc2529b1162d882ee1a3d903a5834a300c5540e98d8ee6bd6e3feeb5",
+          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "Reviewed the current report page and the Compile Wiki review report step in CI. The focused job still runs index verification, API compatibility and dependency checks before compiling the report, and optional governance artifacts remain optional.",
-      "baseRef": "eddeb23ff4fc34978c6d34f1e0a269f0f19358b7",
-      "gitHead": "edf5fa2542a592094a71f2d3fb1bd6221f89cd45",
-      "reviewedAtUtc": "2026-11-10T04:53:51.2340159Z"
+      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "baseRef": "HEAD",
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:47.0358118Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1514,14 +1569,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0ea6e4637c2f50a2beca046768800f998f0434de87d33a5f10292366150ce81c",
-          "reviewReason": "Verified that only topology freshness metadata changes. The source set includes the new Identity session service and authorization handler, while the runtime topology and its review workflow are unchanged."
+          "sha256": "9de6086bdb775e74fad8da2bb93e3cdd221bd89388b5f8128a42279ffb4ce5a6",
+          "reviewReason": "The regenerated runtime topology changes only the source fingerprint. The service, worker and HTTP client inventory has the same content."
         }
       ],
-      "reason": "Verified that only topology freshness metadata changes. The source set includes the new Identity session service and authorization handler, while the runtime topology and its review workflow are unchanged.",
-      "baseRef": "c1f0d19cbbc3ab91bb77e418415977d577911122",
-      "gitHead": "4cb9deba0060275e080ff5288dfddeb9b837e37c",
-      "reviewedAtUtc": "2026-11-11T04:57:58.0397169Z"
+      "reason": "The regenerated runtime topology changes only the source fingerprint. The service, worker and HTTP client inventory has the same content.",
+      "baseRef": "HEAD^",
+      "gitHead": "1eb6d29d172acd03702d85227bcd51b99540cb9b",
+      "reviewedAtUtc": "2026-11-13T11:02:13.2424794Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1896,8 +1951,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "8f8da35de5559f915147356273ef5d5d1bcaa25b776ea106d573168feb81abef",
-          "reviewReason": "Verified the catalog changes shift controller line anchors for existing authentication and password routes. Route strings and verbs, and the query-context lookup workflow, are unchanged."
+          "sha256": "e281f41f7a49a810af4e9da57726d3b3c871a315e3a3e6b4e1023909a5950ad1",
+          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
@@ -1906,8 +1961,8 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
+          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         },
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
@@ -1921,14 +1976,24 @@
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "00b74abe76753eddc75a312ceb70e29e0bf5a3da2a697a4d448741ff47739858",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/query-context.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "d9c1df817d929aeb76b846f391695dedfe61825891d6dea65b531228a509d38e",
+          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "d47772ce52ab19f81086ab3d16be42a76875e93ab800d5f6d8cdcc30d7fe2081",
+          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
+          "sha256": "9f98e13d910ff1fbbe955ba9ecb1b5d171ffdb13275c90c86eb149699023a5dc",
+          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Verified the catalog changes shift controller line anchors for existing authentication and password routes. Route strings and verbs, and the query-context lookup workflow, are unchanged.",
-      "baseRef": "c1f0d19cbbc3ab91bb77e418415977d577911122",
-      "gitHead": "4cb9deba0060275e080ff5288dfddeb9b837e37c",
-      "reviewedAtUtc": "2026-11-11T04:57:57.5482089Z"
+      "reason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay.",
+      "baseRef": "HEAD^",
+      "gitHead": "1eb6d29d172acd03702d85227bcd51b99540cb9b",
+      "reviewedAtUtc": "2026-11-13T11:02:12.9410785Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1958,8 +2023,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "897c18ff4d2940177474cc2082c765f86fb5e7097fc03f7249a938251452352d",
-          "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/self-maintenance.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
+          "sha256": "4c211f9677e4125da947c1275866464936848585f53121a36d0faac10c1e6603",
+          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
@@ -1967,10 +2032,10 @@
           "reviewReason": "Read reader/recovery and source-stability guidance. Stable kernel process identity repairs Linux orphan protection without altering cache repair, source ownership checks, projection validation or housekeeping. Cold-checkout isolation and all standalone indexes pass."
         }
       ],
-      "reason": "Read reader/recovery and source-stability guidance. Stable kernel process identity repairs Linux orphan protection without altering cache repair, source ownership checks, projection validation or housekeeping. Cold-checkout isolation and all standalone indexes pass.",
+      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
       "baseRef": "HEAD",
-      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
-      "reviewedAtUtc": "2026-11-08T04:24:03.1446166Z"
+      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
+      "reviewedAtUtc": "2026-11-13T09:10:47.5025145Z"
     }
   ]
 }

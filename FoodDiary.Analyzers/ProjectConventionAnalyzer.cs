@@ -20,7 +20,7 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
     public const string ConcreteClassMustBeClosedId = "FD0008";
     public const string ExternalTestConnectionForbiddenId = "FD0009";
 
-    private static readonly HashSet<string> AllowedNonAsyncSuffixNames = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> AllowedNonAsyncSuffixNames = [with(StringComparer.Ordinal),
         "Execute",
         "Handle",
         "HandleAccepted",
@@ -31,9 +31,9 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
         "HandleObservedNoContent",
         "HandleObservedOk",
         "HandleOk",
-    };
+    ];
 
-    private static readonly HashSet<string> FrameworkAsyncHookNames = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> FrameworkAsyncHookNames = [with(StringComparer.Ordinal),
         "BindModelAsync",
         "CheckHealthAsync",
         "HandleAsync",
@@ -41,7 +41,7 @@ public sealed class ProjectConventionAnalyzer : DiagnosticAnalyzer {
         "OnActionExecutionAsync",
         "OnAuthorizationAsync",
         "TryHandleAsync",
-    };
+    ];
 
     private static readonly DiagnosticDescriptor AsyncSuffixRequiredRule = CreateRule(
         AsyncSuffixRequiredId,

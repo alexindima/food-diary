@@ -87,7 +87,7 @@ public sealed class ClientTelemetryHttpProcessor(ISender sender, ILogger<LogsCon
         if (Uri.TryCreate(path, UriKind.Absolute, out Uri? absolute) && absolute.Scheme is "http" or "https") {
             path = absolute.AbsolutePath;
         }
-        if (!path.StartsWith('/')) {
+        if (path is not ['/', ..]) {
             return "/unknown";
         }
         string[] segments = path.Split('/');

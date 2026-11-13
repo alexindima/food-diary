@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Identity.Presentation.Security;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;

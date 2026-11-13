@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Notifications.Presentation.Services;
 using FoodDiary.Modules.Notifications.Presentation.Extensions;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
-using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;

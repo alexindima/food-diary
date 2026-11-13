@@ -193,7 +193,7 @@ public sealed class EmailSender(
         }
 
         string baseUrl = resolvedBaseUrl.TrimEnd('/');
-        string safePath = path.StartsWith('/') ? path : "/" + path;
+        string safePath = path is ['/', ..] ? path : "/" + path;
         return $"{baseUrl}{safePath}?userId={Uri.EscapeDataString(userId)}&token={Uri.EscapeDataString(token)}";
     }
 

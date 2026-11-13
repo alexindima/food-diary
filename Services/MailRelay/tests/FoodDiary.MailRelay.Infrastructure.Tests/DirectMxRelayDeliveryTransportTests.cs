@@ -9,6 +9,7 @@ using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using MimeKit;
+using MxRecord = FoodDiary.MailRelay.Infrastructure.Services.MxRecord;
 
 namespace FoodDiary.MailRelay.Infrastructure.Tests;
 

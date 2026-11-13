@@ -54,7 +54,7 @@ public sealed class JobManagerGuardrailTests {
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line
                 .Split([' ', '\t', '(', ')', ',', ':', ';'], StringSplitOptions.RemoveEmptyEntries)
-                .Any(static token => token.StartsWith('I') && token.EndsWith("Repository", StringComparison.Ordinal)))
+                .Any(static token => token is ['I', ..] && token.EndsWith("Repository", StringComparison.Ordinal)))
             .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} jobs must invoke an application capability instead of acquiring a repository")
             .Order(StringComparer.Ordinal)];
 

@@ -12,6 +12,7 @@ if (-not $Isolated) {
     try {
         & git clone --shared --quiet $repositoryRoot $fixtureRoot
         if ($LASTEXITCODE -ne 0) { throw 'Unable to clone the concurrent index fixture.' }
+        Copy-Item -LiteralPath (Join-Path $repositoryRoot 'global.json') -Destination $fixtureRoot -Force
         Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki') -Force |
             Copy-Item -Destination (Join-Path $fixtureRoot '.llm-wiki') -Recurse -Force
         $fixtureShell = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)

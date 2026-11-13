@@ -8,7 +8,7 @@ namespace FoodDiary.Web.Api.Extensions;
 public sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
     public const string UnmatchedRouteLabel = "unmatched";
 
-    private static readonly HashSet<string> SensitiveTags = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> SensitiveTags = [with(StringComparer.Ordinal),
         "client.address",
         "client.port",
         "db.query.text",
@@ -23,7 +23,7 @@ public sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
         "user.email",
         "user.id",
         "user_agent.original",
-    };
+    ];
 
     public override void OnEnd(Activity data) {
         Sanitize(data);

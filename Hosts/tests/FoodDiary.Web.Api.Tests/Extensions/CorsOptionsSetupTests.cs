@@ -71,7 +71,7 @@ public sealed class CorsOptionsSetupTests {
     }
 
     public static TheoryData<string[]> InvalidOriginSets =>
-    [
+    [with((IEnumerable<string[]>)[
         [],
         ["not a uri"],
         ["ftp://fooddiary.club"],
@@ -82,5 +82,5 @@ public sealed class CorsOptionsSetupTests {
         ["https://fooddiary.club/"],
         [" https://fooddiary.club"],
         ["https://fooddiary.club", "HTTPS://FOODDIARY.CLUB"],
-    ];
+    ])];
 }

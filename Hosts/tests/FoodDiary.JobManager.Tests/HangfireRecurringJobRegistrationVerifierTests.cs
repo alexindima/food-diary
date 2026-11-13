@@ -87,7 +87,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
         public HashSet<string> GetAllItemsFromSet(string key) =>
             string.Equals(key, "recurring-jobs", StringComparison.Ordinal)
                 ? recurringJobIds.ToHashSet(StringComparer.Ordinal)
-                : [];
+                : [with(StringComparer.Ordinal)];
 
         public string GetFirstByLowestScoreFromSet(string key, double fromScore, double toScore) => throw new NotSupportedException();
 
@@ -97,7 +97,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
         public Dictionary<string, string> GetAllEntriesFromHash(string key) {
             const string prefix = "recurring-job:";
             if (!key.StartsWith(prefix, StringComparison.Ordinal)) {
-                return [];
+                return [with(StringComparer.Ordinal)];
             }
 
             string recurringJobId = key[prefix.Length..];
@@ -109,7 +109,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
                     ["TimeZoneId"] = TimeZoneInfo.Utc.Id,
                     ["CreatedAt"] = DateTime.UtcNow.ToString("O"),
                 }
-                : [];
+                : [with(StringComparer.Ordinal)];
         }
     }
 }

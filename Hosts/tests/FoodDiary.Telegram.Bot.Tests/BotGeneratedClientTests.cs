@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text;
 using FoodDiary.Telegram.Bot.Api;
 using FoodDiary.Telegram.Bot.Api.Generated.Api;

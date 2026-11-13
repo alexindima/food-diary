@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;

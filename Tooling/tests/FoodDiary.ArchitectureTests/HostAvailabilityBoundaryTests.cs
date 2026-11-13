@@ -28,7 +28,7 @@ public sealed class HostAvailabilityBoundaryTests {
         Assert.True(start >= 0, $"Compose service '{serviceName}' was not found.");
         int end = Array.FindIndex(lines, start + 1, line =>
             line.StartsWith("  ", StringComparison.Ordinal) && !line.StartsWith("   ", StringComparison.Ordinal) &&
-            line.EndsWith(':'));
+            line is [.., ':']);
         if (end < 0) {
             end = lines.Length;
         }
@@ -39,7 +39,7 @@ public sealed class HostAvailabilityBoundaryTests {
         }
 
         return [.. lines.Skip(dependenciesStart + 1).TakeWhile(static line => string.IsNullOrWhiteSpace(line) || line.StartsWith("     ", StringComparison.Ordinal))
-            .Where(static line => line.StartsWith("      ", StringComparison.Ordinal) && !line.StartsWith("       ", StringComparison.Ordinal) && line.EndsWith(':'))
+            .Where(static line => line.StartsWith("      ", StringComparison.Ordinal) && !line.StartsWith("       ", StringComparison.Ordinal) && line is [.., ':'])
             .Select(static line => line.Trim()[..^1])];
     }
 }

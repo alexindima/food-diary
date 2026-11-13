@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- PowerShell 7.6 loads this assembly in its .NET 10 process. -->
     <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>15.0</LangVersion>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 

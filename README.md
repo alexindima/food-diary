@@ -6,7 +6,7 @@ Start with the [documentation index](docs/README.md), [architecture](docs/ARCHIT
 
 ## Requirements
 
-- .NET 10 SDK selected by [global.json](global.json) (`10.0.102`, with patch roll-forward).
+- .NET 11 SDK selected by [global.json](global.json) (`11.0.100`, with patch roll-forward).
 - Node.js 22 and npm, matching the CI toolchain.
 - PostgreSQL 17 for local application data.
 - PowerShell 7 (`pwsh`) for repository scripts and the local setup examples below.

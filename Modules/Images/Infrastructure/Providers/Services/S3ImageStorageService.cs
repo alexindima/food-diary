@@ -15,12 +15,12 @@ public sealed class S3ImageStorageService(
     IObjectStorageClient storageClient,
     IOptions<S3Options> options,
     TimeProvider dateTimeProvider) : IImageStorageService {
-    private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
+    private static readonly HashSet<string> AllowedContentTypes = [with(StringComparer.OrdinalIgnoreCase),
         MediaTypeNames.Image.Jpeg,
         "image/png",
         "image/webp",
         "image/gif",
-    };
+    ];
     private const int MaximumDecodedDimension = 2048;
 
     private readonly S3Options _options = options.Value;

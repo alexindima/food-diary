@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Globalization;
 using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;

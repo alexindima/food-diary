@@ -37,7 +37,7 @@ public sealed partial class ResourceContractTests {
             .Select(static field => (string)field.GetRawConstantValue()!)
             .Order(StringComparer.Ordinal)];
         string[] resourceTypes = [.. resources.Keys
-            .Select(static key => key[..key.LastIndexOf('_')])
+            .Select(static key => key[..key.AsSpan().LastIndexOf('_')])
             .Distinct(StringComparer.Ordinal)
             .Order(StringComparer.Ordinal)];
 

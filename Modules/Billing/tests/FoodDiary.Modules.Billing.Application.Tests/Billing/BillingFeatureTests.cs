@@ -553,7 +553,7 @@ public partial class BillingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingBillingWebhookEventRepository : IBillingWebhookEventReadRepository, IBillingWebhookEventWriteRepository {
-        public HashSet<string> ProcessedEventIds { get; } = new(StringComparer.Ordinal);
+        public HashSet<string> ProcessedEventIds { get; } = [with(StringComparer.Ordinal)];
         public List<BillingWebhookEvent> Events { get; } = [];
         public bool ThrowAlreadyProcessedOnAdd { get; init; }
 

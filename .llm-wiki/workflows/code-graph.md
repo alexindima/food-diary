@@ -617,27 +617,27 @@ exact current change-set fingerprint. Evaluate that in-process reader with a
 built MCP:
 
 ```powershell
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-holdout.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-generalization.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-validation.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-2.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-3.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-4.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-5.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-6.json
-dotnet FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll `
+dotnet FoodDiary.Development.Mcp/bin/Debug/net11.0/FoodDiary.Development.Mcp.dll `
   --evaluate-context-search .llm-wiki/evals/context-search-probe-7.json
 ```
 

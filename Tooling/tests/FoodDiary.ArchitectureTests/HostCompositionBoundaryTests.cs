@@ -316,7 +316,7 @@ public sealed class HostCompositionBoundaryTests {
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line
                 .Split([' ', '\t', '(', ')', ',', ':', ';'], StringSplitOptions.RemoveEmptyEntries)
-                .Any(static token => token.StartsWith('I') && token.EndsWith("Repository", StringComparison.Ordinal)))
+                .Any(static token => token is ['I', ..] && token.EndsWith("Repository", StringComparison.Ordinal)))
             .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} adapters and hosts must invoke application capabilities instead of repositories")
             .Order(StringComparer.Ordinal)];
 
@@ -336,7 +336,8 @@ public sealed class HostCompositionBoundaryTests {
         }
 
         int nameStart = markerIndex + marker.Length;
-        int nameEnd = line.IndexOf('>', nameStart);
-        return nameEnd > nameStart ? line[nameStart..nameEnd] : null;
+        ReadOnlySpan<char> name = line.AsSpan(nameStart);
+        int nameLength = name.IndexOf('>');
+        return nameLength > 0 ? name[..nameLength].ToString() : null;
     }
 }

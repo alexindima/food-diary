@@ -247,7 +247,7 @@ public sealed class TelegramOnboardingTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class MemoryTickets : ITelegramLoginTicketStore {
-        private readonly Dictionary<string, (string Purpose, string Binding, string Payload)> _values = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, (string Purpose, string Binding, string Payload)> _values = [with(StringComparer.Ordinal)];
         public int ConsumptionCount { get; private set; }
         public Task<string> CreateAsync(string purpose, string browserBinding, string payload, DateTime expiresAtUtc, CancellationToken cancellationToken) {
             string ticket = SecurityTokenGenerator.GenerateUrlSafeToken();

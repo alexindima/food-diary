@@ -1,7 +1,6 @@
 using System.Net;
 using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
 using System.Globalization;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Modules.Usda.Contracts.Common;

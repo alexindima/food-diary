@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using System.Globalization;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using FoodDiary.Modules.Billing.Domain.Contracts;

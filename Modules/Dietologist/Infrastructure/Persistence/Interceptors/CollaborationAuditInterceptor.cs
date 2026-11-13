@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Interceptors;
 
 internal sealed class CollaborationAuditInterceptor(TimeProvider timeProvider) : SaveChangesInterceptor {
-    private readonly Dictionary<object, AuditEntry> _pendingEntries = new(ReferenceEqualityComparer.Instance);
+    private readonly Dictionary<object, AuditEntry> _pendingEntries = [with(ReferenceEqualityComparer.Instance)];
 
     public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,

@@ -7,7 +7,6 @@ using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.ReadModel.Composition.Meals;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.Integration;
 

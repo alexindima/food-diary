@@ -217,10 +217,10 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
     private static async Task<string> WriteRequestAsync(
         IReadOnlyList<string> arguments,
         CancellationToken cancellationToken) {
-        Dictionary<string, List<object>> grouped = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, List<object>> grouped = [with(StringComparer.OrdinalIgnoreCase)];
         for (int index = 0; index < arguments.Count;) {
             string name = arguments[index].TrimStart('-');
-            bool isSwitch = index + 1 >= arguments.Count || arguments[index + 1].StartsWith('-');
+            bool isSwitch = index + 1 >= arguments.Count || arguments[index + 1] is ['-', ..];
             object value = isSwitch ? true : arguments[index + 1];
             if (!grouped.TryGetValue(name, out List<object>? values)) {
                 values = [];

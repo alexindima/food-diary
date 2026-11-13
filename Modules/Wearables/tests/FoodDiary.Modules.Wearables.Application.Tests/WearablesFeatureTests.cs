@@ -878,7 +878,7 @@ public sealed partial class WearablesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubWearableOAuthStateService : IWearableOAuthStateService {
-        private readonly HashSet<string> _validStates = [];
+        private readonly HashSet<string> _validStates = [with(StringComparer.Ordinal)];
 
         public string CreateState(UserId userId, WearableProvider provider, string? clientState) {
             string state = $"{provider}:{clientState}";

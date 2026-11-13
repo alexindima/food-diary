@@ -232,7 +232,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     internal static string[] ParseChangedPaths(string porcelain) {
         string[] records = porcelain.Split('\0', StringSplitOptions.RemoveEmptyEntries);
         // Git path identities are case-sensitive, including case-only renames.
-        HashSet<string> paths = new(StringComparer.Ordinal);
+        HashSet<string> paths = [with(StringComparer.Ordinal)];
         for (int index = 0; index < records.Length; index++) {
             string record = records[index];
             if (record.Length < 4) {

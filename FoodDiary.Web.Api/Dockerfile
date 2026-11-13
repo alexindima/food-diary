@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:5562fd626eec39f6f53218f9b7d7856ab7195d51d846568304fbe85071a3b6e6 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:11.0-alpine@sha256:52556c0fb9d0f609ae9aeab9efeeba96f4acc2f7038f7696f2235ccbdbb8e290 AS restore
 
 WORKDIR /src
 
@@ -284,10 +284,11 @@ COPY Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.cs
 COPY Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj Shared/FoodDiary.Email.Infrastructure/
 COPY Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj Shared/FoodDiary.Audit.Infrastructure/
 ARG TARGETARCH
-RUN dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --locked-mode --arch "$TARGETARCH" -p:PublishReadyToRun=true -p:FoodDiaryUseRuntimeLockFiles=true
+RUN test "$TARGETARCH" = amd64
+RUN dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --locked-mode --runtime linux-musl-x64 -p:PublishReadyToRun=true -p:FoodDiaryRuntimeLockIdentifier=linux-musl-x64
 
 # Keep restore and source-copy layers below filesystem overlay mount limits.
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:5562fd626eec39f6f53218f9b7d7856ab7195d51d846568304fbe85071a3b6e6 AS build
+FROM mcr.microsoft.com/dotnet/sdk:11.0-alpine@sha256:52556c0fb9d0f609ae9aeab9efeeba96f4acc2f7038f7696f2235ccbdbb8e290 AS build
 WORKDIR /src
 COPY --from=restore /root/.nuget/packages/ /root/.nuget/packages/
 COPY --from=restore /src/ /src/
@@ -580,11 +581,10 @@ COPY Shared/FoodDiary.Persistence.Runtime/ Shared/FoodDiary.Persistence.Runtime/
 COPY Shared/FoodDiary.Persistence.PostgreSql/ Shared/FoodDiary.Persistence.PostgreSql/
 COPY Shared/FoodDiary.Email.Infrastructure/ Shared/FoodDiary.Email.Infrastructure/
 COPY Shared/FoodDiary.Audit.Infrastructure/ Shared/FoodDiary.Audit.Infrastructure/
-ARG TARGETARCH
 ARG PUBLISH_READY_TO_RUN=true
-RUN dotnet publish FoodDiary.Web.Api/FoodDiary.Web.Api.csproj -c Release -o /app/publish --no-restore --arch "$TARGETARCH" --self-contained false -p:PublishReadyToRun="$PUBLISH_READY_TO_RUN" -p:FoodDiaryUseRuntimeLockFiles=true
+RUN dotnet publish FoodDiary.Web.Api/FoodDiary.Web.Api.csproj -c Release -o /app/publish --no-restore --runtime linux-musl-x64 --self-contained false -p:PublishReadyToRun="$PUBLISH_READY_TO_RUN" -p:FoodDiaryRuntimeLockIdentifier=linux-musl-x64
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:21c3f9798416cba4c0576a947c286231cb71ea2884896cb968253f5c9668f930
+FROM mcr.microsoft.com/dotnet/aspnet:11.0-alpine@sha256:d39b72ad1534fa0faf52b488bffb0762df7ba269d120f0338713d4dda2a41bf5
 
 WORKDIR /app
 RUN apk add --no-cache \

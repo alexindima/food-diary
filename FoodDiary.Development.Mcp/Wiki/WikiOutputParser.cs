@@ -80,7 +80,7 @@ public static partial class WikiOutputParser {
         .Distinct(StringComparer.OrdinalIgnoreCase)];
 
     private static string[] CollectTraceScopePaths(JsonElement root) {
-        HashSet<string> paths = new(StringComparer.OrdinalIgnoreCase);
+        HashSet<string> paths = [with(StringComparer.OrdinalIgnoreCase)];
         foreach (string property in new[] { "symbols", "consumers", "candidates" }) {
             if (!root.TryGetProperty(property, out JsonElement items) || items.ValueKind != JsonValueKind.Array) {
                 continue;

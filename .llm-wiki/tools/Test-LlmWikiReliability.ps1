@@ -38,7 +38,7 @@ foreach ($scenario in $cases) {
                 $null = [IO.Directory]::CreateDirectory($output)
                 [IO.File]::WriteAllText((Join-Path (Split-Path (Split-Path (Split-Path $output))) 'ready.txt'), '')
                 $project = Join-Path $fixture 'Fixture.csproj'
-                '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><AssemblyName>LlmWiki.ContractReferenceExtractor</AssemblyName></PropertyGroup></Project>' | Set-Content $project
+                '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net11.0</TargetFramework><AssemblyName>LlmWiki.ContractReferenceExtractor</AssemblyName></PropertyGroup></Project>' | Set-Content $project
                 'System.Console.WriteLine("[]"); return 17;' | Set-Content (Join-Path $fixture 'Program.cs')
                 & dotnet build $project --output $output --artifacts-path (Join-Path $fixture '.artifacts/build') --nologo --verbosity quiet | Out-Null
                 if ($LASTEXITCODE) { throw 'Cannot compile the owned exit-code fixture.' }

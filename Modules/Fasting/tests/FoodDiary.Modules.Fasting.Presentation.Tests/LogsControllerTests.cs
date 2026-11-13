@@ -272,7 +272,7 @@ public sealed class LogsControllerTests {
     private sealed class RecordingLogger(bool returnNullScope = false) : ILogger<LogsController> {
         public LogLevel LogLevel { get; private set; }
         public string Message { get; private set; } = string.Empty;
-        public Dictionary<string, object?> Scope { get; private set; } = new(StringComparer.Ordinal);
+        public Dictionary<string, object?> Scope { get; private set; } = [with(StringComparer.Ordinal)];
 
         public IDisposable? BeginScope<TState>(TState state)
             where TState : notnull {

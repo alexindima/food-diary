@@ -229,7 +229,10 @@ public sealed class DiaryPdfGeneratorTests {
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
         KeyValuePair<ImageAssetId, string> firstImage = AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-1.png");
         KeyValuePair<ImageAssetId, string> secondImage = AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-2.png");
-        Dictionary<ImageAssetId, string> imageUrlsById = new([firstImage, secondImage]);
+        Dictionary<ImageAssetId, string> imageUrlsById = new() {
+            [firstImage.Key] = firstImage.Value,
+            [secondImage.Key] = secondImage.Value,
+        };
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 

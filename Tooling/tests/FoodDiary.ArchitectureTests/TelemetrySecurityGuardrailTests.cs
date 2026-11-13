@@ -180,7 +180,7 @@ public sealed class TelemetrySecurityGuardrailTests {
             string[] lines = File.ReadAllLines(path);
             for (int index = 0; index < lines.Length; index++) {
                 string line = lines[index].Trim();
-                if (!line.StartsWith("ssl_protocols ", StringComparison.Ordinal) || line.StartsWith('#')) {
+                if (!line.StartsWith("ssl_protocols ", StringComparison.Ordinal) || line is ['#', ..]) {
                     continue;
                 }
 

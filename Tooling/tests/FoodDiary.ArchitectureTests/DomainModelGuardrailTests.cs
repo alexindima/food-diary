@@ -9,7 +9,7 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public class DomainModelGuardrailTests {
-    private static readonly HashSet<string> AllowedWideMutators = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> AllowedWideMutators = [with(StringComparer.Ordinal)];
 
     [Theory]
     [InlineData("Products")]

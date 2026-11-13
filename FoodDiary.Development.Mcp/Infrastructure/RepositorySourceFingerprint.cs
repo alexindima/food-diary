@@ -24,7 +24,7 @@ internal static class RepositorySourceFingerprint {
             ["-c", "core.fsmonitor=false", "ls-files", "--deleted", "-z"],
             inputLines: null,
             cancellationToken);
-        HashSet<string> deletedPaths = [.. deletedOutput
+        HashSet<string> deletedPaths = [with(StringComparer.Ordinal), .. deletedOutput
             .Split('\0', StringSplitOptions.RemoveEmptyEntries)
             .Select(path => path.Replace('\\', '/'))];
         string[] paths = [.. pathsOutput

@@ -9,6 +9,17 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 public sealed partial class BillingGatewayTests {
+    public static TheoryData<string, string, long, decimal, string, string> PaidStripeInvoices => new() {
+        { "invoice.paid", "usd", 799, 7.99m, "price_monthly", "monthly" },
+        { "invoice.payment_succeeded", "usd", 799, 7.99m, "price_yearly", "yearly" },
+        { "invoice.paid", "jpy", 799, 799m, "price_monthly", "monthly" },
+        { "invoice.paid", "bhd", 7990, 7.99m, "price_monthly", "monthly" },
+        { "invoice.paid", "bhd", 7991, 7.991m, "price_monthly", "monthly" },
+        { "invoice.paid", "isk", 500, 5m, "price_monthly", "monthly" },
+        { "invoice.paid", "ugx", 500, 5m, "price_monthly", "monthly" },
+        { "invoice.paid", "usd", 0, 0m, "price_monthly", "monthly" },
+    };
+
     [Theory]
     [InlineData("invoice.created")]
     [InlineData("invoice.payment_failed")]
@@ -29,14 +40,7 @@ public sealed partial class BillingGatewayTests {
     }
 
     [Theory]
-    [InlineData("invoice.paid", "usd", 799, 7.99, "price_monthly", "monthly")]
-    [InlineData("invoice.payment_succeeded", "usd", 799, 7.99, "price_yearly", "yearly")]
-    [InlineData("invoice.paid", "jpy", 799, 799, "price_monthly", "monthly")]
-    [InlineData("invoice.paid", "bhd", 7990, 7.99, "price_monthly", "monthly")]
-    [InlineData("invoice.paid", "bhd", 7991, 7.991, "price_monthly", "monthly")]
-    [InlineData("invoice.paid", "isk", 500, 5, "price_monthly", "monthly")]
-    [InlineData("invoice.paid", "ugx", 500, 5, "price_monthly", "monthly")]
-    [InlineData("invoice.paid", "usd", 0, 0, "price_monthly", "monthly")]
+    [MemberData(nameof(PaidStripeInvoices))]
     public async Task StripePaidInvoice_MapsFinancialHistory(string eventType, string currency, long amount, decimal expectedAmount, string priceId, string plan) {
         var userId = Guid.NewGuid();
         string payload = CreateStripeInvoicePayload(userId, eventType, currency, amount, priceId);

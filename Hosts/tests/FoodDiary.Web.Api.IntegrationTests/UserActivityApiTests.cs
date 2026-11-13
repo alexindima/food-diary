@@ -1,6 +1,5 @@
 using System.Net;
 using System.Globalization;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure.Persistence;

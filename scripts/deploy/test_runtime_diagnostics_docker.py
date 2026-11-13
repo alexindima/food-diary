@@ -14,8 +14,8 @@ import install_nginx_logrotate as installer
 
 ROOT = Path(__file__).resolve().parents[2]
 NGINX = "nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
-RUNTIME = "mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:819bd3649d8bf53f35527c68d62e17b348ef6f24ae73073f497f00a878348062"
-SDK = "mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:230c3fbae0ceedc70bca04eed2bfb5694e8b248cadbb81010f41b7a993601f55"
+RUNTIME = "mcr.microsoft.com/dotnet/aspnet:11.0-alpine@sha256:d39b72ad1534fa0faf52b488bffb0762df7ba269d120f0338713d4dda2a41bf5"
+SDK = "mcr.microsoft.com/dotnet/sdk:11.0-alpine@sha256:52556c0fb9d0f609ae9aeab9efeeba96f4acc2f7038f7696f2235ccbdbb8e290"
 
 
 def docker(*arguments, input=None, check=True, timeout=120):
@@ -60,7 +60,7 @@ WORKDIR /fixture
 ENTRYPOINT []
 """, encoding="utf-8")
         (cls.fixture / "Fixture.csproj").write_text('''<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>
-<OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+<OutputType>Exe</OutputType><TargetFramework>net11.0</TargetFramework>
 <AssemblyName>FoodDiary.JobManager</AssemblyName>
 </PropertyGroup></Project>''', encoding="utf-8")
         (cls.fixture / "Program.cs").write_text('''class Program {

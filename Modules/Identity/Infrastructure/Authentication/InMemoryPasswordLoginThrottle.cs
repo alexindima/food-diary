@@ -8,7 +8,7 @@ public sealed class InMemoryPasswordLoginThrottle(
     IOptions<PasswordLoginThrottleOptions> options,
     TimeProvider timeProvider) : IPasswordLoginThrottle {
     private readonly PasswordLoginThrottleOptions _settings = options.Value;
-    private readonly Dictionary<string, AttemptState> _states = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, AttemptState> _states = [with(StringComparer.Ordinal)];
     private readonly Lock _gate = new();
     private DateTimeOffset _nextCleanup;
 

@@ -6,7 +6,7 @@ using OpenTelemetry;
 namespace FoodDiary.MailInbox.Infrastructure.Extensions;
 
 internal sealed class MailInboxTelemetryPrivacyProcessor : BaseProcessor<Activity> {
-    private static readonly HashSet<string> SensitiveTags = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> SensitiveTags = [with(StringComparer.Ordinal),
         "client.address",
         "client.port",
         "db.query.text",
@@ -21,7 +21,7 @@ internal sealed class MailInboxTelemetryPrivacyProcessor : BaseProcessor<Activit
         "user.email",
         "user.id",
         "user_agent.original",
-    };
+    ];
 
     public override void OnEnd(Activity data) {
         string[] tagsToRemove = [.. data.TagObjects

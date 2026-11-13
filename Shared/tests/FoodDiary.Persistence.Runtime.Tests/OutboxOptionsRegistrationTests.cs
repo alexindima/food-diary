@@ -10,31 +10,31 @@ namespace FoodDiary.Persistence.Runtime.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class OutboxOptionsRegistrationTests {
     [Fact]
-    public void PersistenceOnlyDoesNotValidateUnconfiguredOutbox() {
+    public async Task PersistenceOnlyDoesNotValidateUnconfiguredOutboxAsync() {
         var services = new ServiceCollection();
         services.AddPersistenceRuntime(CreateConfiguration("00:00:01"));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IValidateOptions<OutboxProcessingOptions>));
-        using ServiceProvider provider = services.BuildServiceProvider();
-        provider.GetRequiredService<IStartupValidator>().Validate();
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        await provider.GetRequiredService<IAsyncStartupValidator>().ValidateAsync(CancellationToken.None);
         Assert.NotNull(provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
     }
 
     [Fact]
-    public void ExplicitOutboxRegistrationRejectsUnsafeLeaseAtStartup() {
+    public async Task ExplicitOutboxRegistrationRejectsUnsafeLeaseAtStartupAsync() {
         var services = new ServiceCollection();
         services.AddOutboxProcessing(CreateConfiguration("00:00:01"));
-        using ServiceProvider provider = services.BuildServiceProvider();
-        OptionsValidationException error = Assert.Throws<OptionsValidationException>(
-            () => provider.GetRequiredService<IStartupValidator>().Validate());
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        OptionsValidationException error = await Assert.ThrowsAsync<OptionsValidationException>(async () =>
+            await provider.GetRequiredService<IAsyncStartupValidator>().ValidateAsync(CancellationToken.None));
         Assert.Contains("LeaseDuration", error.Message, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void ExplicitOutboxRegistrationBindsConfiguredDurations() {
+    public async Task ExplicitOutboxRegistrationBindsConfiguredDurationsAsync() {
         var services = new ServiceCollection();
         services.AddOutboxProcessing(CreateConfiguration("00:10:00"));
-        using ServiceProvider provider = services.BuildServiceProvider();
-        provider.GetRequiredService<IStartupValidator>().Validate();
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        await provider.GetRequiredService<IAsyncStartupValidator>().ValidateAsync(CancellationToken.None);
         OutboxProcessingOptions options = provider.GetRequiredService<IOptions<OutboxProcessingOptions>>().Value;
         Assert.Equal(TimeSpan.FromMinutes(10), options.LeaseDuration);
         Assert.Equal(TimeSpan.FromMinutes(4), options.DispatchTimeout);

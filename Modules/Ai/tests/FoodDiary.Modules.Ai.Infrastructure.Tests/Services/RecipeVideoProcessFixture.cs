@@ -115,7 +115,7 @@ public sealed class RecipeVideoProcessFixture : IAsyncLifetime {
     private const string ProjectSource = """
         <Project Sdk="Microsoft.NET.Sdk">
           <PropertyGroup>
-            <TargetFramework>net10.0</TargetFramework>
+            <TargetFramework>net11.0</TargetFramework>
             <OutputType>Exe</OutputType>
             <ImplicitUsings>enable</ImplicitUsings>
             <Nullable>enable</Nullable>

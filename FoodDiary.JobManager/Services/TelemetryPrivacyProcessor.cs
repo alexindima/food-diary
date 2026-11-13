@@ -4,7 +4,7 @@ using OpenTelemetry;
 namespace FoodDiary.JobManager.Services;
 
 internal sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
-    private static readonly HashSet<string> SensitiveTags = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> SensitiveTags = [with(StringComparer.Ordinal),
         "db.query.text",
         "db.statement",
         "error.message",
@@ -13,7 +13,7 @@ internal sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
         "url.query",
         "user.email",
         "user.id",
-    };
+    ];
 
     public override void OnEnd(Activity data) {
         if (data.GetTagItem("url.full") is string url) {

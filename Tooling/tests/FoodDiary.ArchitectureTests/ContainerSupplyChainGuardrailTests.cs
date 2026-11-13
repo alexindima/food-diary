@@ -186,7 +186,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
                 .Select(static line => line["uses:".Length..].Split('#', 2)[0].Trim())
                 .Where(static use => !use.StartsWith("./", StringComparison.Ordinal))
                 .Select(use => {
-                    int separator = use.LastIndexOf('@');
+                    int separator = use.AsSpan().LastIndexOf('@');
                     return new {
                     Path = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path),
                     Action = separator > 0 ? use[..separator] : use,

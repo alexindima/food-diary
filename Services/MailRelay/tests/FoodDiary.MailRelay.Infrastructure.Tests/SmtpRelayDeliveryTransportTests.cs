@@ -7,6 +7,7 @@ using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
+using MxRecord = FoodDiary.MailRelay.Infrastructure.Services.MxRecord;
 
 namespace FoodDiary.MailRelay.Infrastructure.Tests;
 
@@ -256,7 +257,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 };
                 await using (writer.ConfigureAwait(false)) {
 
-                    await writer.WriteLineAsync("220 localhost ESMTP").ConfigureAwait(false);
+                    await writer.WriteLineAsync("220 localhost ESMTP".AsMemory(), cancellationToken).ConfigureAwait(false);
                     while (!cancellationToken.IsCancellationRequested) {
                         string? line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
                         if (line is null) {
@@ -265,21 +266,21 @@ public sealed class SmtpRelayDeliveryTransportTests {
 
                         if (line.StartsWith("EHLO ", StringComparison.OrdinalIgnoreCase) ||
                             line.StartsWith("HELO ", StringComparison.OrdinalIgnoreCase)) {
-                            await writer.WriteLineAsync("250-localhost").ConfigureAwait(false);
-                            await writer.WriteLineAsync("250-AUTH PLAIN").ConfigureAwait(false);
-                            await writer.WriteLineAsync("250 OK").ConfigureAwait(false);
+                            await writer.WriteLineAsync("250-localhost".AsMemory(), cancellationToken).ConfigureAwait(false);
+                            await writer.WriteLineAsync("250-AUTH PLAIN".AsMemory(), cancellationToken).ConfigureAwait(false);
+                            await writer.WriteLineAsync("250 OK".AsMemory(), cancellationToken).ConfigureAwait(false);
                         } else if (line.StartsWith("AUTH PLAIN", StringComparison.OrdinalIgnoreCase)) {
                             Authenticated = true;
-                            await writer.WriteLineAsync("235 2.7.0 Authentication successful").ConfigureAwait(false);
+                            await writer.WriteLineAsync("235 2.7.0 Authentication successful".AsMemory(), cancellationToken).ConfigureAwait(false);
                         } else if (line.Equals("DATA", StringComparison.OrdinalIgnoreCase)) {
-                            await writer.WriteLineAsync("354 End data with <CR><LF>.<CR><LF>").ConfigureAwait(false);
+                            await writer.WriteLineAsync("354 End data with <CR><LF>.<CR><LF>".AsMemory(), cancellationToken).ConfigureAwait(false);
                             _messageData.TrySetResult(await ReadMessageDataAsync(reader, cancellationToken).ConfigureAwait(false));
-                            await writer.WriteLineAsync("250 2.0.0 Message accepted").ConfigureAwait(false);
+                            await writer.WriteLineAsync("250 2.0.0 Message accepted".AsMemory(), cancellationToken).ConfigureAwait(false);
                         } else if (line.Equals("QUIT", StringComparison.OrdinalIgnoreCase)) {
-                            await writer.WriteLineAsync("221 2.0.0 Bye").ConfigureAwait(false);
+                            await writer.WriteLineAsync("221 2.0.0 Bye".AsMemory(), cancellationToken).ConfigureAwait(false);
                             return;
                         } else {
-                            await writer.WriteLineAsync("250 OK").ConfigureAwait(false);
+                            await writer.WriteLineAsync("250 OK".AsMemory(), cancellationToken).ConfigureAwait(false);
                         }
                     }
                 }

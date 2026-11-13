@@ -1,7 +1,6 @@
 using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using FoodDiary.BugTriage.Application.AuditRuns;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using FoodDiary.BugTriage.Presentation.Features.Reports;

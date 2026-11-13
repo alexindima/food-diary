@@ -1,5 +1,4 @@
 using System.Diagnostics.Metrics;
-using System.Net.Http.Json;
 using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;

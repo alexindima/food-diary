@@ -13,7 +13,7 @@ try {
     foreach ($name in @('Build-LlmWikiCatalog.ps1','Build-LlmWikiModulePages.ps1','LlmWikiIndexCache.ps1','LlmWikiJson.ps1','LlmWikiGitPaths.ps1','LlmWikiProcess.ps1')) {
         Write-ControllerFixture ".llm-wiki/tools/$name" ([IO.File]::ReadAllText((Join-Path $PSScriptRoot $name)))
     }
-    Write-ControllerFixture 'Directory.Build.props' '<Project><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>'
+    Write-ControllerFixture 'Directory.Build.props' '<Project><PropertyGroup><TargetFramework>net11.0</TargetFramework></PropertyGroup></Project>'
     Write-ControllerFixture 'FoodDiary.Web.Client/angular.json' '{"projects":{}}'
     Write-ControllerFixture 'docs/architecture/module-dependencies.json' '{"modules":{"Probe":[],"Other":[]}}'
     Write-ControllerFixture 'docs/architecture/backend-modules.json' '{"inventory":{"totalModules":2,"folderModules":2,"extractedModules":0},"modules":{"Probe":{"role":"fixture","physicalIsolation":"module-root","enforcement":"fixture","ownedEntities":[],"sourceMappings":{"logicalRoot":"Modules/Probe"}},"Other":{"role":"fixture","physicalIsolation":"module-root","enforcement":"fixture","ownedEntities":[],"sourceMappings":{"logicalRoot":"Modules/Other"}}}}'

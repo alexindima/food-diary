@@ -7,12 +7,12 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ExternalHttpClientGuardrailTests {
-    private static readonly HashSet<string> UnboundedReadMethods = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> UnboundedReadMethods = [with(StringComparer.Ordinal),
         "ReadAsStringAsync",
         "ReadAsByteArrayAsync",
         "ReadFromJsonAsync",
         "GetFromJsonAsync",
-    };
+    ];
 
     [Fact]
     public void Integrations_DoNotBufferExternalResponseBodiesOutsideBoundedReader() {

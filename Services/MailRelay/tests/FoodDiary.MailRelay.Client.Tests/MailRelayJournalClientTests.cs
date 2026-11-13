@@ -1,7 +1,6 @@
 using System.Text;
 using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.MailRelay.Client.Extensions;
 using FoodDiary.MailRelay.Client.Journal;
 using FoodDiary.MailRelay.Client.Models;

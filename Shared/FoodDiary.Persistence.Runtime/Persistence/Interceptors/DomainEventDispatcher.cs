@@ -16,7 +16,7 @@ internal static class DomainEventDispatcher {
         CancellationToken cancellationToken) {
         HashSet<IDomainEvent> publishedEvents = PublishedEvents.GetValue(
             context,
-            static _ => new HashSet<IDomainEvent>(ReferenceEqualityComparer.Instance));
+            static _ => [with(ReferenceEqualityComparer.Instance)]);
         while (true) {
             IDomainEvent[] events = [
                 .. context.ChangeTracker

@@ -1,6 +1,5 @@
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;

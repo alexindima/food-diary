@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Application.Commands.ProcessTelegramStarsUpdate;

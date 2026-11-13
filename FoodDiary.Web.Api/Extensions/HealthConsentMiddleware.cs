@@ -11,14 +11,14 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Web.Api.Extensions;
 
 public sealed class HealthConsentMiddleware(RequestDelegate next, IOptions<PrivacyOptions> options) {
-    private static readonly HashSet<string> HealthAssemblies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> HealthAssemblies = [with(StringComparer.Ordinal),
         "FoodDiary.Modules.Meals.Presentation", "FoodDiary.Modules.BodyMetrics.Presentation",
         "FoodDiary.Modules.Cycles.Presentation", "FoodDiary.Modules.Hydration.Presentation",
         "FoodDiary.Modules.Fasting.Presentation", "FoodDiary.Modules.Exercises.Presentation",
         "FoodDiary.Modules.WeeklyCheckIn.Presentation", "FoodDiary.Modules.WeeklyGoals.Presentation",
         "FoodDiary.Modules.Wearables.Presentation", "FoodDiary.Modules.Dashboard.Presentation",
         "FoodDiary.Modules.Statistics.Presentation", "FoodDiary.Modules.Tdee.Presentation",
-    };
+    ];
 
     public async Task InvokeAsync(HttpContext context, IUserPrivacyStateReader privacy) {
         ControllerActionDescriptor? action = context.GetEndpoint()?.Metadata.GetMetadata<ControllerActionDescriptor>();

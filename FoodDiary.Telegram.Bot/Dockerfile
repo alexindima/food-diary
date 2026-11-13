@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:5562fd626eec39f6f53218f9b7d7856ab7195d51d846568304fbe85071a3b6e6 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:11.0-alpine@sha256:52556c0fb9d0f609ae9aeab9efeeba96f4acc2f7038f7696f2235ccbdbb8e290 AS restore
 
 WORKDIR /src
 
@@ -10,7 +10,7 @@ COPY FoodDiary.Telegram.Bot/*.csproj FoodDiary.Telegram.Bot/
 RUN dotnet restore FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj --locked-mode
 
 # Keep restore and source-copy layers below filesystem overlay mount limits.
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:5562fd626eec39f6f53218f9b7d7856ab7195d51d846568304fbe85071a3b6e6 AS build
+FROM mcr.microsoft.com/dotnet/sdk:11.0-alpine@sha256:52556c0fb9d0f609ae9aeab9efeeba96f4acc2f7038f7696f2235ccbdbb8e290 AS build
 WORKDIR /src
 COPY --from=restore /root/.nuget/packages/ /root/.nuget/packages/
 COPY --from=restore /src/ /src/
@@ -21,7 +21,7 @@ COPY FoodDiary.Telegram.Bot/ FoodDiary.Telegram.Bot/
 
 RUN dotnet publish FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:21c3f9798416cba4c0576a947c286231cb71ea2884896cb968253f5c9668f930
+FROM mcr.microsoft.com/dotnet/aspnet:11.0-alpine@sha256:d39b72ad1534fa0faf52b488bffb0762df7ba269d120f0338713d4dda2a41bf5
 
 WORKDIR /app
 RUN apk add --no-cache \

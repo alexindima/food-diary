@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;

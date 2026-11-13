@@ -11,7 +11,6 @@ using FoodDiary.Modules.Meals.Domain.ValueObjects;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
 using FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 using FoodDiary.Modules.Users.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Meals.Infrastructure.IntegrationTests.Integration;
 

@@ -3,7 +3,6 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;

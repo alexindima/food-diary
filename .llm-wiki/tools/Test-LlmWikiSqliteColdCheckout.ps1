@@ -21,10 +21,17 @@ try {
     & git -C $checkoutRoot checkout --quiet --force HEAD
     if ($LASTEXITCODE -ne 0) { throw 'Unable to check out the cold-checkout fixture.' }
     $checkoutWiki = Join-Path $checkoutRoot '.llm-wiki'
-    # Carry current tracked/untracked Wiki sources, including uncommitted edits,
-    # without inheriting ignored bin/obj outputs or temporary Wiki artifacts.
+    # Carry current Wiki sources and their shared build inputs without copying ignored outputs.
+    $fixtureInputs = @(
+        '.llm-wiki', 'global.json', 'Directory.Build.props', 'Directory.Packages.props', 'FoodDiary.Analyzers',
+        ':(glob).nuget/lockfiles/LlmWiki.*.packages.lock.json',
+        '.nuget/lockfiles/FoodDiary.Analyzers.packages.lock.json',
+        'FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs',
+        'FoodDiary.Development.Mcp/Protocol/WikiContextSearchResult.cs',
+        'FoodDiary.Development.Mcp/Protocol/WikiContextSearchCandidate.cs'
+    )
     $fixturePrefix = [IO.Path]::GetFullPath($checkoutRoot).TrimEnd('\','/') + [IO.Path]::DirectorySeparatorChar
-    foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files','--cached','--others','--exclude-standard','--','.llm-wiki'))) {
+    foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments (@('ls-files','--cached','--others','--exclude-standard','--') + $fixtureInputs))) {
         $source = Join-Path $repositoryRoot $path
         $destination = [IO.Path]::GetFullPath((Join-Path $checkoutRoot $path))
         if (-not $destination.StartsWith($fixturePrefix,[StringComparison]::OrdinalIgnoreCase)) { throw 'Cold Wiki overlay escaped its fixture.' }

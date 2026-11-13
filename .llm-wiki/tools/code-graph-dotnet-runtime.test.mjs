@@ -12,11 +12,11 @@ test('private runtime recovers missing Roslyn dependencies and same-time source 
   writeFileSync(resolve(root, 'Directory.Build.props'), '<Project><PropertyGroup><ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally></PropertyGroup></Project>');
   writeFileSync(resolve(root, 'Directory.Packages.props'), '<Project><PropertyGroup><ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally></PropertyGroup><ItemGroup><PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" /></ItemGroup></Project>');
   const projectPath = resolve(root, 'Bootstrap.csproj');
-  writeFileSync(projectPath, '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework></PropertyGroup><ItemGroup><PackageReference Include="Microsoft.CodeAnalysis.CSharp" /></ItemGroup></Project>');
+  writeFileSync(projectPath, '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net11.0</TargetFramework></PropertyGroup><ItemGroup><PackageReference Include="Microsoft.CodeAnalysis.CSharp" /></ItemGroup></Project>');
   const source = resolve(root, 'Program.cs');
   const first = 'System.Console.WriteLine("before:" + typeof(Microsoft.CodeAnalysis.CSharp.CSharpCompilation).Name);';
   writeFileSync(source, first);
-  const assemblyPath = resolve(root, 'bin/Release/net10.0/Bootstrap.dll');
+  const assemblyPath = resolve(root, 'bin/Release/net11.0/Bootstrap.dll');
   const options = { repositoryRoot: root, projectPath, assemblyPath, sourcePaths: [source] };
   const run = () => execFileSync('dotnet', [assemblyPath], { encoding: 'utf8' }).trim();
   assert.equal(await ensureDotnetToolRuntime(options), true);

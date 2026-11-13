@@ -85,7 +85,7 @@
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "line": 30
+      "line": 29
     },
     {
       "category": "credential",
@@ -6336,7 +6336,7 @@
       "name": "GramWeight",
       "type": "double?",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "line": 233
+      "line": 232
     },
     {
       "category": "health",
@@ -14678,7 +14678,7 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
-      "line": 19,
+      "line": 18,
       "providerHost": "api.telegram.org",
       "dataNames": [
         "text"

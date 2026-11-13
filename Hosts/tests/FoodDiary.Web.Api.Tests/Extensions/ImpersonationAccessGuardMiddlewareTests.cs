@@ -243,7 +243,7 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
             Func<TState, Exception?, string> formatter) {
             IReadOnlyDictionary<string, object?> properties = state is IEnumerable<KeyValuePair<string, object?>> values
                 ? values.ToDictionary(static pair => pair.Key, static pair => pair.Value, StringComparer.Ordinal)
-                : new Dictionary<string, object?>(StringComparer.Ordinal);
+                : [with(StringComparer.Ordinal)];
             Entries.Add(new LogEntry(logLevel, formatter(state, exception), properties));
         }
     }

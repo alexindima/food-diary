@@ -1877,7 +1877,7 @@ public sealed class JobsTests {
         private bool _shouldTimeout = transientLockJobId is not null;
 
         public List<string> JobIds { get; } = [];
-        public Dictionary<string, int> RegistrationAttempts { get; } = [];
+        public Dictionary<string, int> RegistrationAttempts { get; } = [with(StringComparer.Ordinal)];
 
         public void AddOrUpdate(string recurringJobId, Job job, string cronExpression, RecurringJobOptions options) {
             RegistrationAttempts[recurringJobId] = RegistrationAttempts.GetValueOrDefault(recurringJobId) + 1;

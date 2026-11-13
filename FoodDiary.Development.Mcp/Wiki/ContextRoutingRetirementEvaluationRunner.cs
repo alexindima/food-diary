@@ -90,7 +90,7 @@ internal static class ContextRoutingRetirementEvaluationRunner {
         };
         string json = JsonSerializer.Serialize(evaluation, OutputOptions);
         await output.WriteAsync(json.AsMemory(), cancellationToken);
-        await output.WriteLineAsync();
+        await output.WriteLineAsync(ReadOnlyMemory<char>.Empty, cancellationToken);
 
         if (!passed) {
             throw new InvalidOperationException(

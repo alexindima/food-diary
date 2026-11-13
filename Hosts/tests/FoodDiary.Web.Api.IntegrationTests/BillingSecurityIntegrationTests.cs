@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 

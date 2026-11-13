@@ -361,7 +361,7 @@ function Get-HttpDtoProperties {
     if ([string]::IsNullOrWhiteSpace($Content)) { return [pscustomobject]@{} }
     $project = Join-Path $PSScriptRoot 'roslyn-extractor/LlmWiki.RoslynExtractor.csproj'
     $program = Join-Path $PSScriptRoot 'roslyn-extractor/Program.cs'
-    $extractorDll = Join-Path $PSScriptRoot 'roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll'
+    $extractorDll = Join-Path $PSScriptRoot 'roslyn-extractor/bin/Release/net11.0/LlmWiki.RoslynExtractor.dll'
     if (-not (Test-Path -LiteralPath $extractorDll -PathType Leaf) -or
         (Get-Item -LiteralPath $project).LastWriteTimeUtc -gt (Get-Item -LiteralPath $extractorDll).LastWriteTimeUtc -or
         (Get-Item -LiteralPath $program).LastWriteTimeUtc -gt (Get-Item -LiteralPath $extractorDll).LastWriteTimeUtc) {

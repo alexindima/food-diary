@@ -2,7 +2,6 @@ using FoodDiary.Modules.Identity.Presentation.Services;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
-using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;

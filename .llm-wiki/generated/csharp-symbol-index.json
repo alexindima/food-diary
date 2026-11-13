@@ -2236,7 +2236,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "BotDiaryStatistics",
@@ -2341,7 +2341,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "BotOperationId",
@@ -2481,14 +2481,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 20
+      "line": 19
     },
     {
       "name": "TelegramBotWorker",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.Stars.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "ApiBuildInfo",
@@ -4455,7 +4455,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "AdminBugTriageOptions",
@@ -7703,7 +7703,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "PaddleBillingGateway",
@@ -7745,14 +7745,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "TelegramStarsBillingGateway",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "TelegramStarsBotAuthenticator",
@@ -7766,7 +7766,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "YooKassaBillingGateway",
@@ -26414,7 +26414,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "UsdaProviderRegistration",
@@ -30439,7 +30439,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "MailInboxClientServiceCollectionExtensions",
@@ -30460,7 +30460,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "DmarcReportRecordResponse",
@@ -31433,14 +31433,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/MailRelayJournalClient.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "MailRelayClient",
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "EnqueueMailRelayEmailRequest",

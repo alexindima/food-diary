@@ -620,7 +620,7 @@
         "write:AuditEntry"
       ],
       "reason": "Dietologist audits central and typed owner entries through IModuleChangeTrackerSource, without concrete shared context access. Central audit storage, relational guard, timing and pending event deduplication remain unchanged.",
-      "technicalSourceSha256": "016e6d2c26d716b09f93523c128f818fcce530a67b5ae89e4fba34063157f81f"
+      "technicalSourceSha256": "f8aa60b7e7e958dea1e90dfbf17d125b5b5ffa706f8d95fd7c2c3097edc2bfe3"
     },
     "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs": {
       "module": "Dietologist",

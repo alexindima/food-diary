@@ -60,7 +60,7 @@ internal sealed class SqliteFlowScopeReader(string repositoryRoot) {
                     expectedFingerprint, StringComparison.Ordinal)) {
                     result = Unavailable("snapshot-mismatch");
                 } else {
-                    HashSet<string> visited = new(StringComparer.OrdinalIgnoreCase);
+                    HashSet<string> visited = [with(StringComparer.OrdinalIgnoreCase)];
                     List<DevelopmentFlowLink> links = [];
                     string[] frontier = [.. seedPaths.Distinct(StringComparer.OrdinalIgnoreCase).Take(12)];
                     bool truncated = seedPaths.Count > 12;

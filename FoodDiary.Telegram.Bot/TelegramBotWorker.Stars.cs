@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using FoodDiary.Telegram.Bot.Api;
 using FoodDiary.Telegram.Bot.Api.Generated.Api;
 using FoodDiary.Telegram.Bot.Api.Generated.Model;

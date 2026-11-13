@@ -29,8 +29,14 @@ public sealed class LocalStatisticsCalendarTests {
 
     [Fact]
     public void RepeatedMidnight_UsesTheFirstOccurrence() {
+        var transitionTime = new DateTime(1, 1, 1, 1, 0, 0, DateTimeKind.Unspecified);
+        var rule = TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(
+            new DateTime(2026, 1, 1), new DateTime(2026, 12, 31), TimeSpan.FromHours(1),
+            TimeZoneInfo.TransitionTime.CreateFixedDateRule(transitionTime, 3, 8),
+            TimeZoneInfo.TransitionTime.CreateFixedDateRule(transitionTime, 11, 1));
+        var zone = TimeZoneInfo.CreateCustomTimeZone("test-repeated-midnight", TimeSpan.FromHours(-5), "test", "test", "test", [rule]);
         LocalStatisticsDay day = Assert.Single(LocalStatisticsCalendar.GetDays(
-            new DateTime(2026, 11, 1, 12, 0, 0, DateTimeKind.Utc), "America/Havana", 1));
+            new DateTime(2026, 11, 1, 12, 0, 0, DateTimeKind.Utc), zone.Id, 1, _ => zone));
         Assert.Equal(new DateTime(2026, 11, 1, 4, 0, 0, DateTimeKind.Utc), day.StartUtc);
         Assert.Equal(TimeSpan.FromHours(25), day.EndExclusiveUtc - day.StartUtc);
     }

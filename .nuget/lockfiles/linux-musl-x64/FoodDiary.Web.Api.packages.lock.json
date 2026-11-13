@@ -1,7 +1,7 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0": {
+    "net11.0": {
       "Meziantou.Analyzer": {
         "type": "Direct",
         "requested": "[3.0.195, )",
@@ -200,11 +200,11 @@
       },
       "StackExchange.Redis": {
         "type": "Direct",
-        "requested": "[3.0.11, )",
-        "resolved": "3.0.11",
-        "contentHash": "aLUOeQ3hpTg1H7AT6nVS3Roy8lKPsTG7VIEhspT5sNXWqcKbYJo1ytx8JqTNEWmnl/Ou/LwrDJntbl2P32IGcQ==",
+        "requested": "[3.1.11, )",
+        "resolved": "3.1.11",
+        "contentHash": "E+HnHo9rw8OZEz0QAoMEup8lwRi6DbQh/nTBGPrCpJLS+L/JrtbPSURgpYjI7TnAvtUsfo9AMYNlqfU1awYPLg==",
         "dependencies": {
-          "RESPite": "3.0.11",
+          "RESPite": "3.1.11",
           "System.IO.Hashing": "10.0.5"
         }
       },
@@ -240,8 +240,8 @@
       },
       "BouncyCastle.Cryptography": {
         "type": "Transitive",
-        "resolved": "2.6.2",
-        "contentHash": "7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w=="
+        "resolved": "2.7.0",
+        "contentHash": "U+12df8UEWHgBi04YVf/Lgi2dy3SItlIYvHjjEVa/BngCQIzDCDRBk50DDByCfDvSbe5pRNFr3b7UrVK2kMcLw=="
       },
       "Humanizer.Core": {
         "type": "Transitive",
@@ -409,11 +409,10 @@
       },
       "MimeKit": {
         "type": "Transitive",
-        "resolved": "4.17.0",
-        "contentHash": "h/KXsCreJf8RpR/PSAtlbvYtZFndp9N8Wn1Bs248AL7ITyhn+AiIY5bLTvt60tbN2mu6g8KadtBNWygTji2lqg==",
+        "resolved": "4.18.2",
+        "contentHash": "aYnwCCq+ZgQIsnHSJd3TMeGqf/Rz/9jYEItXpOoG3E2REOCZtLishwBSDFl2wQ/W2SB5wBsvE38DgHZ0IEyz4Q==",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.6.2",
-          "System.Security.Cryptography.Pkcs": "10.0.0"
+          "BouncyCastle.Cryptography": "2.7.0"
         }
       },
       "Mono.TextTemplating": {
@@ -473,8 +472,8 @@
       },
       "RESPite": {
         "type": "Transitive",
-        "resolved": "3.0.11",
-        "contentHash": "txORk48Kw4utEaKHD5AWyfsxj7ZTb8EuJM9RaQjPg0pt0YxjBHgFEohE4bia0o3Ik1F5MhoayaUy3hYvcsb5Ng=="
+        "resolved": "3.1.11",
+        "contentHash": "jkm3/wiiYN2zRPjR9Yyu5NNVDBxgCYmrqC/u5ZPwJpOHTaT/7OOIU6pqDTHOqvOg5snzPuxPJYS1HOVeRZPpTA=="
       },
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
@@ -831,9 +830,8 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
-          "MailKit": "[4.17.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "System.Security.Cryptography.Pkcs": "[10.0.13, )"
+          "MailKit": "[4.18.2, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
       "fooddiary.modules.admin.persistencemodel": {
@@ -2066,7 +2064,7 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
-          "StackExchange.Redis": "[3.0.11, )",
+          "StackExchange.Redis": "[3.1.11, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
         }
       },
@@ -3646,11 +3644,11 @@
       },
       "MailKit": {
         "type": "CentralTransitive",
-        "requested": "[4.17.0, )",
-        "resolved": "4.17.0",
-        "contentHash": "1nUAVLxM9fhT/78we6/AGsCesnpn5dRNLLeRqOfr52Wnk87pzVwo5YMTMyqnmoXrYc7piGhmayiMA/OgDluIjg==",
+        "requested": "[4.18.2, )",
+        "resolved": "4.18.2",
+        "contentHash": "ofqddpSbdrD00NqTD0ZyVfKvrl/ZZ70VFFEQ+DuR8r8CdbY3U02/sdb0CSQBNUqJifsXfVHIwRe1ToR2MvJJkw==",
         "dependencies": {
-          "MimeKit": "4.17.0"
+          "MimeKit": "4.18.2"
         }
       },
       "Microsoft.CodeAnalysis.Workspaces.Common": {
@@ -3750,12 +3748,6 @@
           "Microsoft.IdentityModel.Tokens": "8.22.0"
         }
       },
-      "System.Security.Cryptography.Pkcs": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "a+EovgC1fBnwdlQ6cn3j4JFBfKqiFaFvoAhjisOoSvazLAcIznaBzPQP0oYnvccmeXfqUH1KebVZOxSeH6rMaw=="
-      },
       "WebPush": {
         "type": "CentralTransitive",
         "requested": "[1.0.13, )",
@@ -3772,7 +3764,7 @@
         "contentHash": "BN12ipOeTX1157Jx2uvFZGhR6dyHnji+8oM37NqXyu7nCL0rrSrxruea8lTSlUGewoxyvdC1owzRLThBI5Wj9Q=="
       }
     },
-    "net10.0/linux-musl-x64": {
+    "net11.0/linux-musl-x64": {
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
         "resolved": "4.151.1",
@@ -3794,12 +3786,6 @@
         "requested": "[4.151.1, )",
         "resolved": "4.151.1",
         "contentHash": "lqPwXxYhKlmRfCuq1vGRLYEtRo3tn3ij1IGi0tI2qzkKHU6HOznHqZW+NqHV8aSKasPmRawbwlKLLPI132+SEA=="
-      },
-      "System.Security.Cryptography.Pkcs": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "a+EovgC1fBnwdlQ6cn3j4JFBfKqiFaFvoAhjisOoSvazLAcIznaBzPQP0oYnvccmeXfqUH1KebVZOxSeH6rMaw=="
       }
     }
   }

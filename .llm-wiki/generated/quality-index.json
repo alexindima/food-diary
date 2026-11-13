@@ -248,11 +248,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 571,
+      "nonBlankLines": 578,
       "decisionPoints": 109,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 176.92
+      "structuralRiskScore": 177.06
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
@@ -592,11 +592,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 384,
+      "nonBlankLines": 383,
       "decisionPoints": 74,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 118.68
+      "structuralRiskScore": 118.66
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-daily-advices.service.ts",
@@ -1594,11 +1594,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 571,
+      "nonBlankLines": 578,
       "decisionPoints": 109,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 176.92
+      "structuralRiskScore": 177.06
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1",
@@ -5170,11 +5170,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "nonBlankLines": 175,
+      "nonBlankLines": 174,
       "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 62
+      "structuralRiskScore": 61.98
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryStatistics.cs",
@@ -5282,11 +5282,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationClient.cs",
-      "nonBlankLines": 80,
+      "nonBlankLines": 79,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.1
+      "structuralRiskScore": 18.08
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/BotOperationId.cs",
@@ -5450,19 +5450,19 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.Stars.cs",
-      "nonBlankLines": 106,
+      "nonBlankLines": 105,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.12
+      "structuralRiskScore": 23.1
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 384,
+      "nonBlankLines": 383,
       "decisionPoints": 74,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 118.68
+      "structuralRiskScore": 118.66
     },
     {
       "path": "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",
@@ -23506,11 +23506,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 33,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.68
+      "structuralRiskScore": 12.66
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs",
@@ -27242,11 +27242,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
-      "nonBlankLines": 110,
+      "nonBlankLines": 109,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.7
+      "structuralRiskScore": 9.68
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
@@ -27290,19 +27290,19 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramBillingMessageSender.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 37,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.76
+      "structuralRiskScore": 21.74
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBillingGateway.cs",
-      "nonBlankLines": 107,
+      "nonBlankLines": 106,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.64
+      "structuralRiskScore": 33.62
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/TelegramStarsBotAuthenticator.cs",
@@ -27314,11 +27314,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs",
-      "nonBlankLines": 74,
+      "nonBlankLines": 73,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.48
+      "structuralRiskScore": 10.46
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
@@ -32890,11 +32890,11 @@
     },
     {
       "path": "Modules/Exercises/Domain/ValueObjects/BurnedEnergy.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 18,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.32
+      "structuralRiskScore": 3.36
     },
     {
       "path": "Modules/Exercises/Domain/ValueObjects/ExerciseDay.cs",
@@ -33234,11 +33234,11 @@
     },
     {
       "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 62,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.22
+      "structuralRiskScore": 4.24
     },
     {
       "path": "Modules/Export/Infrastructure/Resources/DiaryPdfReportResourceTextProvider.cs",
@@ -48954,11 +48954,11 @@
     },
     {
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "nonBlankLines": 206,
+      "nonBlankLines": 205,
       "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.62
+      "structuralRiskScore": 32.6
     },
     {
       "path": "Modules/Usda/Infrastructure/UsdaProviderRegistration.cs",
@@ -53618,11 +53618,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
-      "nonBlankLines": 50,
+      "nonBlankLines": 49,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.5
+      "structuralRiskScore": 11.48
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
@@ -53642,11 +53642,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
-      "nonBlankLines": 107,
+      "nonBlankLines": 106,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.64
+      "structuralRiskScore": 33.62
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
@@ -54762,19 +54762,19 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/MailRelayJournalClient.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 17,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.86
+      "structuralRiskScore": 10.84
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 35,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.22
+      "structuralRiskScore": 8.2
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailRequest.cs",

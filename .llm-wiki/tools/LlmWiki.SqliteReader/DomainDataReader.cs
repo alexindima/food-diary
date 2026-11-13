@@ -11,14 +11,14 @@ namespace LlmWiki.SqliteReader;
 
 public static class DomainDataReader {
     private const string SourcePath = ".llm-wiki/generated/domain-data-index.json";
-    private static readonly HashSet<string> SupportedViews = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> SupportedViews = [with(StringComparer.Ordinal),
         "all",
         "types",
         "invariants",
         "mappings",
         "indexes",
         "relationships",
-    };
+    ];
 
     static DomainDataReader() {
         Batteries_V2.Init();

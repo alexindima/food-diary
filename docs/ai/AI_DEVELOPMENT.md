@@ -65,7 +65,7 @@ node scripts/ai/verify-user-journeys.mjs --runtime my-change
 
 The pinned Stryker tool mutates only RecipeNutritionPolicy and
 RecipeNutritionIngredient, fails immediately when baseline tests fail, and uses
-two test sessions. The explicit net10.0 target prevents Windows Buildalyzer from
+two test sessions. The explicit net11.0 target prevents Windows Buildalyzer from
 selecting an older Visual Studio MSBuild for inherited project settings. Build
 outputs and reports remain under repository `.artifacts/ai-verification`.
 Review surviving mutants rather than suppressing them to increase a score.

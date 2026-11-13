@@ -1,7 +1,6 @@
 using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using FoodDiary.MailInbox.Client.Export;
 using FoodDiary.MailInbox.Client.Models;
 using FoodDiary.MailInbox.Client.Options;

@@ -51,7 +51,7 @@ if (-not (Test-Path -LiteralPath $wikiPath -PathType Leaf)) {
 
 $projectRoot = Join-Path $resolvedRoot 'FoodDiary.Development.Mcp'
 $projectPath = Join-Path $projectRoot 'FoodDiary.Development.Mcp.csproj'
-$sourceDirectory = Join-Path $projectRoot 'bin/Debug/net10.0'
+$sourceDirectory = Join-Path $projectRoot 'bin/Debug/net11.0'
 $sourceAssembly = Join-Path $sourceDirectory 'FoodDiary.Development.Mcp.dll'
 $buildIdentityPath = Join-Path $sourceDirectory 'fooddiary-development-mcp-build.json'
 $fingerprintTool = Join-Path $projectRoot 'Infrastructure/Get-DevelopmentMcpSourceFingerprint.ps1'

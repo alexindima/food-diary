@@ -8,13 +8,13 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class DatabaseNormalizationGuardrailTests {
     // ADR 0037: immutable operation outcomes depend on the whole owner/operation key.
     // These receipts are not link tables and survive deletion of the recorded entry.
-    private static readonly HashSet<string> AllowedCompositeKeyFacts = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> AllowedCompositeKeyFacts = [with(StringComparer.Ordinal),
         "HydrationOperationReceipt.AmountMl",
         "HydrationOperationReceipt.EntryId",
         "HydrationOperationReceipt.TimestampUtc",
-    };
+    ];
 
-    private static readonly HashSet<string> AllowedDocumentColumns = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> AllowedDocumentColumns = [with(StringComparer.Ordinal),
         "BillingPayment.ProviderMetadataJson",
         "BillingSubscription.ProviderMetadataJson",
         "BillingWebhookEvent.PayloadJson",
@@ -25,18 +25,18 @@ public sealed class DatabaseNormalizationGuardrailTests {
         "Notification.PayloadJson",
         // User-owned display preferences moved with their existing opaque layout document in ADR 0052.
         "UserPreferences.DashboardLayoutJson",
-    };
+    ];
 
-    private static readonly HashSet<string> AllowedSnapshotColumns = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> AllowedSnapshotColumns = [with(StringComparer.Ordinal),
         "FavoriteMeal.Name",
         "FavoriteProduct.Name",
         "FavoriteRecipe.Name",
         "ShoppingListItem.Category",
         "ShoppingListItem.Name",
         "UserRoleAuditEvent.RoleName",
-    };
+    ];
 
-    private static readonly HashSet<string> AllowedDerivedColumns = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> AllowedDerivedColumns = [with(StringComparer.Ordinal),
         "AiUsage.TotalTokens",
         "Meal.ManualAlcohol",
         "Meal.ManualCalories",
@@ -65,12 +65,12 @@ public sealed class DatabaseNormalizationGuardrailTests {
         // The administrator supplies these independent grant facts on the owning user.
         "User.ManualPremiumEndsAtUtc",
         "User.ManualPremiumReason",
-    };
+    ];
 
-    private static readonly HashSet<string> AllowedRawSqlDocumentColumns = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> AllowedRawSqlDocumentColumns = [with(StringComparer.Ordinal),
         "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs:to_recipients_json",
         "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs:to_recipients_json",
-    };
+    ];
 
     private static readonly BusinessKeyExpectation[] ExpectedBusinessKeys = [
         new("User", ["Email"]),
@@ -322,7 +322,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
             }
 
             if (columnName.AsSpan().Contains('(') ||
-                columnName.StartsWith('@') ||
+                columnName is ['@', ..] ||
                 columnName.Equals("cast", StringComparison.OrdinalIgnoreCase)) {
                 continue;
             }

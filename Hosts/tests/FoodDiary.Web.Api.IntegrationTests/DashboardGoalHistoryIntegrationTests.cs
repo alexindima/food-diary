@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;

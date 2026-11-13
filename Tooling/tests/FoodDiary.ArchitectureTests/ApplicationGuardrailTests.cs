@@ -16,8 +16,6 @@ public sealed class ApplicationGuardrailTests {
         ];
         string[] allowedPackageReferences = [
             "FluentValidation",
-            "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "Microsoft.Extensions.Logging.Abstractions",
         ];
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
@@ -3184,7 +3182,7 @@ public sealed class ApplicationGuardrailTests {
 
     private static string GetUnqualifiedTypeName(TypeSyntax? typeSyntax) {
         string typeName = typeSyntax?.ToString().TrimEnd('?') ?? string.Empty;
-        int lastDot = typeName.LastIndexOf('.');
+        int lastDot = typeName.AsSpan().LastIndexOf('.');
 
         return lastDot < 0 ? typeName : typeName[(lastDot + 1)..];
     }

@@ -47,19 +47,19 @@ public sealed class MailInboxHostedServiceTests {
                     NewLine = "\r\n",
                 };
                 Assert.StartsWith("220", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-                await writer.WriteLineAsync("HELO localhost");
+                await writer.WriteLineAsync("HELO localhost".AsMemory(), timeout.Token);
                 Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
                 for (int message = 0; message < 2; message++) {
-                    await writer.WriteLineAsync("MAIL FROM:<sender@example.com>");
+                    await writer.WriteLineAsync("MAIL FROM:<sender@example.com>".AsMemory(), timeout.Token);
                     Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-                    await writer.WriteLineAsync("RCPT TO:<bugs@fooddiary.club>");
+                    await writer.WriteLineAsync("RCPT TO:<bugs@fooddiary.club>".AsMemory(), timeout.Token);
                     Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-                    await writer.WriteLineAsync("DATA");
+                    await writer.WriteLineAsync("DATA".AsMemory(), timeout.Token);
                     Assert.StartsWith("354", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-                    await writer.WriteLineAsync("From: sender@example.com\r\nTo: bugs@fooddiary.club\r\nSubject: \r\n\r\nSynthetic message\r\n.");
+                    await writer.WriteLineAsync("From: sender@example.com\r\nTo: bugs@fooddiary.club\r\nSubject: \r\n\r\nSynthetic message\r\n.".AsMemory(), timeout.Token);
                     Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
                 }
-                await writer.WriteLineAsync("QUIT");
+                await writer.WriteLineAsync("QUIT".AsMemory(), timeout.Token);
                 Assert.StartsWith("221", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
             }
             Assert.Equal(4, store.Messages.Count);
@@ -100,18 +100,18 @@ public sealed class MailInboxHostedServiceTests {
                 NewLine = "\r\n",
             };
             Assert.StartsWith("220", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-            await writer.WriteLineAsync("EHLO localhost");
+            await writer.WriteLineAsync("EHLO localhost".AsMemory(), timeout.Token);
             await ReadSmtpResponseAsync(reader, "250");
-            await writer.WriteLineAsync("MAIL FROM:<sender@example.com>");
+            await writer.WriteLineAsync("MAIL FROM:<sender@example.com>".AsMemory(), timeout.Token);
             Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
             if (string.Equals(limit, "recipient", StringComparison.Ordinal)) {
-                await writer.WriteLineAsync("RCPT TO:<admin@fooddiary.club>");
+                await writer.WriteLineAsync("RCPT TO:<admin@fooddiary.club>".AsMemory(), timeout.Token);
                 Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-                await writer.WriteLineAsync("RCPT TO:<support@fooddiary.club>");
+                await writer.WriteLineAsync("RCPT TO:<support@fooddiary.club>".AsMemory(), timeout.Token);
             } else {
-                await writer.WriteLineAsync("RSET");
+                await writer.WriteLineAsync("RSET".AsMemory(), timeout.Token);
                 Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
-                await writer.WriteLineAsync("MAIL FROM:<sender@example.com>");
+                await writer.WriteLineAsync("MAIL FROM:<sender@example.com>".AsMemory(), timeout.Token);
             }
 
             Assert.StartsWith("4", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);

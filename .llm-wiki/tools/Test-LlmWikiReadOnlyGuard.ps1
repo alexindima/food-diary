@@ -106,6 +106,7 @@ if (-not $Isolated) {
         $null = New-Item -ItemType Directory -Path $cloneParent -Force
         & git clone --shared --quiet $repositoryRoot $cloneRoot
         if ($LASTEXITCODE -ne 0) { throw 'Unable to clone the read-only mutation regression fixture.' }
+        Copy-Item -LiteralPath (Join-Path $repositoryRoot 'global.json') -Destination $cloneRoot -Force
         Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki') -Force |
             Copy-Item -Destination (Join-Path $cloneRoot '.llm-wiki') -Recurse -Force
         $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $null

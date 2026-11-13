@@ -30,7 +30,7 @@ const references = [
     "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
     "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
 ];
-const project = `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><RootNamespace>FoodDiary.Modules.Hydration.Application</RootNamespace><NuGetLockFilePath>$(MSBuildProjectDirectory)/packages.lock.json</NuGetLockFilePath></PropertyGroup><ItemGroup>${references.map((path) => `<ProjectReference Include="${join(repositoryRoot, path)}" />`).join("")}<PackageReference Include="FluentValidation" /></ItemGroup></Project>`;
+const project = `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net11.0</TargetFramework><RootNamespace>FoodDiary.Modules.Hydration.Application</RootNamespace><NuGetLockFilePath>$(MSBuildProjectDirectory)/packages.lock.json</NuGetLockFilePath></PropertyGroup><ItemGroup>${references.map((path) => `<ProjectReference Include="${join(repositoryRoot, path)}" />`).join("")}<PackageReference Include="FluentValidation" /></ItemGroup></Project>`;
 const projectPath = join(directory, "FoodDiary.GeneratedProof.csproj");
 writeFileSync(projectPath, project);
 const result = spawnSync(

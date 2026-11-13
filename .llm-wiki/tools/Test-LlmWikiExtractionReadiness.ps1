@@ -118,7 +118,7 @@ $fingerprint = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($
     [IO.File]::WriteAllText((Join-Path $probeFixtureRoot 'Directory.Build.props'), @'
 <Project>
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
@@ -149,8 +149,8 @@ public sealed class UsesOwner { public owner::Sample.Owner.Marker Value { get; }
     [IO.File]::WriteAllText((Join-Path $probeFixtureRoot 'FoodDiary.Application/FoodDiary.Application.csproj'), @'
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="../Owner &amp; Contracts/Sample.Owner.csproj" Condition="'$(TargetFramework)' == 'net10.0'" Aliases="owner" />
-    <ProjectReference Include="../Absent/NotForThisTarget.csproj" Condition="'$(TargetFramework)' != 'net10.0'" />
+    <ProjectReference Include="../Owner &amp; Contracts/Sample.Owner.csproj" Condition="'$(TargetFramework)' == 'net11.0'" Aliases="owner" />
+    <ProjectReference Include="../Absent/NotForThisTarget.csproj" Condition="'$(TargetFramework)' != 'net11.0'" />
   </ItemGroup>
 </Project>
 '@, $encoding)
