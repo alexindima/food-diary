@@ -8,7 +8,7 @@
     "apiCalls": 334,
     "templatesWithTranslations": 378,
     "translationKeys": 2289,
-    "consumerEdges": 1356,
+    "consumerEdges": 1355,
     "consumedComponents": 332,
     "unconsumedComponents": 190
   },
@@ -41361,26 +41361,6 @@
         "size",
         "stackOnNarrow",
         "wrapOnNarrow"
-      ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
-    },
-    {
-      "component": "FdUiSegmentedToggleComponent",
-      "selector": "fd-ui-segmented-toggle",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
-      "consumerFeature": "cycle-tracking",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "appearance",
-        "ariaLabel",
-        "fullWidth",
-        "options",
-        "selectedValue",
-        "size",
-        "stackOnNarrow"
       ],
       "outputsHandled": [
         "selectedValueChange"

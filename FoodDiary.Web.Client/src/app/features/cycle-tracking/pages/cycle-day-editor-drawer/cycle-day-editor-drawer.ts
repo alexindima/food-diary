@@ -7,7 +7,6 @@ import { FdUiModalDirective } from 'fd-ui-kit/dialog/fd-ui-modal.directive';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
-import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -43,7 +42,6 @@ const SYMPTOM_SEVERITY_SEVERE_VALUE = String(SYMPTOM_SEVERITY_SEVERE);
         FdUiDateInputComponent,
         FdUiFormErrorComponent,
         FdUiInputComponent,
-        FdUiSegmentedToggleComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
     ],
@@ -77,7 +75,8 @@ export class CycleDayEditorDrawerComponent {
     });
 
     protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS.filter(field => field.key !== 'pain');
-    protected readonly symptomSeverityOptions: FdUiSegmentedToggleOption[] = [
+    protected readonly selectedSymptomFields = computed(() => this.symptomFields.filter(field => this.isSymptomSelected(field.key)));
+    protected readonly symptomSeverityOptions = [
         { value: SYMPTOM_SEVERITY_MILD_VALUE, labelKey: 'CYCLE_TRACKING.PAIN_LEVEL_3' },
         { value: SYMPTOM_SEVERITY_MODERATE_VALUE, labelKey: 'CYCLE_TRACKING.PAIN_LEVEL_6' },
         { value: SYMPTOM_SEVERITY_SEVERE_VALUE, labelKey: 'CYCLE_TRACKING.PAIN_LEVEL_9' },
@@ -138,7 +137,9 @@ export class CycleDayEditorDrawerComponent {
     }
 
     protected setSymptomSeverity(key: CycleSymptomField['key'], value: string): void {
-        this.symptomField(key)().value.set(Number(value));
+        if (value !== this.symptomSeverity(key)) {
+            this.symptomField(key)().value.set(Number(value));
+        }
     }
 
     protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {
