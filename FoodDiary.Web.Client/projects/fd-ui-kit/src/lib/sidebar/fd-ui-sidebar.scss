@@ -23,13 +23,22 @@
     position: sticky;
     top: 0;
     height: 100dvh;
-    background: var(--fd-ui-sidebar-background);
     border-right: var(--fd-ui-sidebar-border);
     box-shadow: var(--fd-surface-highlight), var(--fd-ui-sidebar-shadow);
-    backdrop-filter: var(--fd-surface-backdrop-filter);
-    -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
     color: var(--fd-ui-sidebar-text);
     overflow: visible;
+}
+
+.fd-ui-sidebar::before {
+    // Keep the backdrop filter off the sidebar so fixed flyouts use the viewport.
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--fd-ui-sidebar-background);
+    backdrop-filter: var(--fd-surface-backdrop-filter);
+    -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
 }
 
 .fd-ui-sidebar__scroll {
