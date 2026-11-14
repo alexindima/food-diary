@@ -140,25 +140,28 @@
                         </div>
                     </fieldset>
 
-                    <div class="cycle-drawer__symptom-levels fd-stack fd-gap-sm">
-                        @for (field of symptomFields; track field.key) {
-                            @if (isSymptomSelected(field.key)) {
-                                <div class="cycle-drawer__symptom-level fd-grid fd-gap-xs">
-                                    <span class="fd-ui-body-sm">{{ field.labelKey | translate }}</span>
-                                    <fd-ui-segmented-toggle
-                                        size="sm"
-                                        appearance="soft"
-                                        [fullWidth]="true"
-                                        [stackOnNarrow]="false"
-                                        [options]="symptomSeverityOptions"
-                                        [selectedValue]="symptomSeverity(field.key)"
-                                        [ariaLabel]="
-                                            'CYCLE_TRACKING.SYMPTOM_INTENSITY_LABEL' | translate: { symptom: field.labelKey | translate }
-                                        "
-                                        (selectedValueChange)="setSymptomSeverity(field.key, $event)"
-                                    />
+                    <div class="fd-stack fd-gap-card-content">
+                        @for (field of selectedSymptomFields(); track field.key) {
+                            @let symptomLabel = field.labelKey | translate;
+                            @let selectedSeverity = symptomSeverity(field.key);
+                            <fieldset
+                                class="cycle-drawer__fieldset fd-stack fd-gap-xs"
+                                [attr.aria-label]="'CYCLE_TRACKING.SYMPTOM_INTENSITY_LABEL' | translate: { symptom: symptomLabel }"
+                            >
+                                <legend class="cycle-drawer__legend fd-ui-action-text">{{ symptomLabel }}</legend>
+                                <div class="cycle-drawer__segments cycle-drawer__segments--three">
+                                    @for (option of symptomSeverityOptions; track option.value) {
+                                        <button
+                                            type="button"
+                                            [class.is-active]="option.value === selectedSeverity"
+                                            [attr.aria-pressed]="option.value === selectedSeverity"
+                                            (click)="setSymptomSeverity(field.key, option.value)"
+                                        >
+                                            {{ option.labelKey | translate }}
+                                        </button>
+                                    }
                                 </div>
-                            }
+                            </fieldset>
                         }
                     </div>
 

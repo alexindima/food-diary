@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2828,
+    "typescriptFiles": 2829,
     "symbols": 886,
     "routes": 112,
     "features": 46,
-    "specs": 855,
+    "specs": 856,
     "localeFiles": 5,
     "roles": {
       "Component": 513,
@@ -3983,7 +3983,7 @@
       "role": "Component",
       "selector": "fd-cycle-day-editor-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.ts",
-      "line": 54
+      "line": 52
     },
     {
       "name": "CycleDayItemComponent",

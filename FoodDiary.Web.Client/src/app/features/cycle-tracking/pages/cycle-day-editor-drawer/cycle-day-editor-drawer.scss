@@ -136,13 +136,6 @@
         flex-wrap: wrap;
     }
 
-    &__symptom-level {
-        grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr);
-        align-items: center;
-        padding: var(--fd-space-xs) 0;
-        border-bottom: var(--fd-border-muted);
-    }
-
     &__advanced {
         padding-top: var(--fd-space-sm);
         border-top: var(--fd-border-muted);
@@ -174,10 +167,6 @@
     .cycle-drawer {
         &__panel {
             width: 100%;
-        }
-
-        &__symptom-level {
-            grid-template-columns: minmax(0, 1fr);
         }
 
         &__segments--four {
