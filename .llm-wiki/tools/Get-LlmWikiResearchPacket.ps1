@@ -50,7 +50,11 @@ $queryCacheEntry = $null
 $historyRefs = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @(
     'for-each-ref', '--format=%(refname) %(objectname)'
 ) -FailureMessage 'Unable to capture Git history refs for research caching.'
-$historyRefsFingerprint = Get-LlmWikiSha256 ($historyRefs.Lines -join "`n")
+$historyRefsFingerprint = if ($historyRefs.Lines.Count -eq 0) {
+    '<no refs>'
+} else {
+    Get-LlmWikiSha256 ($historyRefs.Lines -join "`n")
+}
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
     ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; CompiledIndexSource = $CompiledIndexSource; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory; HistoryRefs = $historyRefsFingerprint

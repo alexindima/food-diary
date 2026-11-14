@@ -18,8 +18,14 @@ function Assert-ColdCheckout([bool]$Condition, [string]$Message) { if (-not $Con
 try {
     & git clone --shared --quiet --no-checkout $repositoryRoot $checkoutRoot
     if ($LASTEXITCODE -ne 0) { throw 'Unable to create the cold-checkout fixture.' }
-    & git -C $checkoutRoot checkout --quiet --force HEAD
+    & git -C $checkoutRoot checkout --quiet --detach HEAD
     if ($LASTEXITCODE -ne 0) { throw 'Unable to check out the cold-checkout fixture.' }
+    # A pull-request checkout can contain only a detached HEAD.
+    $refs = Invoke-LlmWikiGitCommand -RepositoryRoot $checkoutRoot -Arguments @('for-each-ref', '--format=%(refname)')
+    foreach ($ref in $refs.Lines) {
+        & git -C $checkoutRoot update-ref --no-deref -d $ref
+        if ($LASTEXITCODE -ne 0) { throw "Unable to remove fixture ref '$ref'." }
+    }
     $checkoutWiki = Join-Path $checkoutRoot '.llm-wiki'
     # Carry current Wiki sources and their shared build inputs without copying ignored outputs.
     $fixtureInputs = @(

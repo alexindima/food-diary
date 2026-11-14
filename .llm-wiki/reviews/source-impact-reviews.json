@@ -297,6 +297,11 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "a64abc0738e3fac75b3df7fb14207a0994026723f2b38afa462170b4b4642f55",
+          "reviewReason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
           "sha256": "6efe7fcd84e15241a3b19c4a7a011913ef67fc8f0d58e3d508afd48e19b3ad21",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/adaptive-development.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Runtime source hashing uses NUL-delimited Unicode Git names and transitive project reference scope. Unavailable Docker leaves cleanup-failed instead of false stopped; an Engine query must establish container absence. Separate stable SQLite OS locking serializes runtime stale lock recovery, proven with two real processes. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
@@ -342,10 +347,10 @@
           "reviewReason": "Read the workflow and verified current owned-runtime consumers. One shared immutable storage inventory now feeds initialization and cleanup; its changes invalidate runtime freshness. Rendered preparation explicitly completes the synthetic-account consent dialog while retaining identity, proxy, dashboard and owned cleanup checks. The workflow remains accurate."
         }
       ],
-      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "reason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:43.4384454Z"
+      "gitHead": "704b5cbb8381a944736b0e99da87cff94e45fd92",
+      "reviewedAtUtc": "2026-11-14T11:36:30.2271536Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -796,6 +801,11 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         },
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "a64abc0738e3fac75b3df7fb14207a0994026723f2b38afa462170b4b4642f55",
+          "reviewReason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI."
+        },
+        {
           "path": ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
           "sha256": "db690abfb5e48a52152ae591b77af69189e93933b0c2d2c425b9c9efefbf8798",
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/developer-experience.md against the final script diff and relevant workflow claims. Node read commands validate metadata and select rows/counts in one read transaction, except batch search which already owns its transaction. Direct .NET domain/runtime readers now share the same snapshot across all commands. A real scheduled WAL writer proves Node generation A remains A after B publishes; independent .NET writer stress rejects stale metadata and never returns B under A. Existing index shape, ranking, consumer and privacy semantics are unchanged; full144Node tests passed. Fast cache publication requires its pre-check fingerprint; full groups and both canonical parent and surviving worker reject source drift before reusable success. Canonical switch arguments normalize to bool. Progress uses PID plus process start identity; unverified stale PIDs allow real checks, verified active orphan workers fail explicitly on repeated retries. Existing observed-stage UTF-8/telemetry assertions remain and now use a real source fingerprint. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
@@ -806,10 +816,10 @@
           "reviewReason": "Read compact development flow guidance. New verify progress identity tokens do not change routing, scope selection, five-stage experience, backend bootstrap, or completion contracts. Existing guidance remains accurate."
         }
       ],
-      "reason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed.",
+      "reason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:44.6386715Z"
+      "gitHead": "704b5cbb8381a944736b0e99da87cff94e45fd92",
+      "reviewedAtUtc": "2026-11-14T11:36:30.4525519Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -1119,8 +1129,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "523a4ef66069c0576f6620ed9f9c5901233503d17b5d85b376a45819726db653",
-          "reviewReason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged."
+          "sha256": "a64abc0738e3fac75b3df7fb14207a0994026723f2b38afa462170b4b4642f55",
+          "reviewReason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
@@ -1128,10 +1138,10 @@
           "reviewReason": "Reviewed the declared changed owners for .llm-wiki/workflows/integration-scan.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment."
         }
       ],
-      "reason": "Reviewed the declared changed owners for .llm-wiki/workflows/integration-scan.md against the final script diff and relevant workflow claims. Wiki-only index vocabulary no longer adds product EF paths/checks. Explicit database intent and mixed product/Wiki paths retain required database planning; actual public planner fixtures exercise all three scopes. All other task packet/manifest/plan evidence remains derived from declared sources. Previous verified baseline, Git path, caller environment, handoff and resource-bound fixes remain covered. This page review certifies consistency with these changes, not unexecuted audit hypotheses or deployment.",
+      "reason": "Reviewed the research cache and Git precedent flow for ref-less detached checkouts. The empty ref set has a stable cache key and named ref changes retain the existing fingerprint. The cold checkout fixture exercises the same layout as pull-request CI.",
       "baseRef": "HEAD",
-      "gitHead": "aff2322c6746f2440b83c92190f432de7d94ff65",
-      "reviewedAtUtc": "2026-11-06T22:43:47.3146277Z"
+      "gitHead": "704b5cbb8381a944736b0e99da87cff94e45fd92",
+      "reviewedAtUtc": "2026-11-14T11:36:30.7146968Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
