@@ -4132,6 +4132,76 @@
       },
       "reason": "",
       "eventHash": "e90cd8ebc9440bda48a133d756922e3f1fce0f9259e34b0a31c463afe5c058e1"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 30,
+      "kind": "observed",
+      "candidateId": "learned-6aa14f435b3d4eaa",
+      "createdAtUtc": "2026-11-14T13:00:47.9540109Z",
+      "previousHash": "e90cd8ebc9440bda48a133d756922e3f1fce0f9259e34b0a31c463afe5c058e1",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/recipe-video-error-classification",
+        "retrospectiveHash": "f2b8fa3b32c224d6aeec23eb094b6f9c9a87c1c6275a85bf1823965338e209ec",
+        "packetFingerprint": "16b180da1c33d05cfcef2b31ead6e4d59bce9fb77786b8327d08888ec4638174",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1235.66%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-6aa14f435b3d4eaa",
+          "changedPaths": [
+            "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.ts",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeVideoTransportIntegrationTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/recipe-video-error-contract.json",
+            "Modules/Ai/Application.Abstractions/Common/AiErrors.cs",
+            "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+            "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoSourceException.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeVideoSource.cs",
+            "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+            "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeVideoDownloadTests.cs",
+            "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeYouTubeVideoSourceTests.cs"
+          ],
+          "expectedModules": [
+            "Ai",
+            "Recipes"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Contracts",
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "backend-public-contract",
+            "frontend-component-contract",
+            "frontend-workspace",
+            "observability-critical-flow"
+          ],
+          "expectedChecks": [
+            "architecture-tests",
+            "frontend-verify"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "4f9db80d7a225789ad615f0a5efebe3840dc637b11c004dbb836ea615f2a8bf6"
+      },
+      "reason": "",
+      "eventHash": "844826d154ac91e860d4b2153f526b862af57652866bff152a64fc52f81bbe3e"
     }
   ]
 }

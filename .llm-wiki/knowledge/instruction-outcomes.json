@@ -3323,6 +3323,67 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "0f540282edd6aa3478d5f867cf80392a0c39c79fb641eaf084963c96e7e0d422",
       "eventHash": "46ae17cdec20cd172776e405b8b250787689a0135c7d5a14447d790d8c7883bd"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "1a2bffd29cf54bcbbf5707137e52814f",
+      "workspace": ".artifacts/llm-wiki/tasks/recipe-video-error-classification",
+      "recordedAtUtc": "2026-11-14T13:00:50.6182280Z",
+      "completionFingerprint": "dc6ad49c2a6a9fa30377840a744b90b63fa8a4183e56230ce6ed240e2187929c",
+      "retrospectiveHash": "f2b8fa3b32c224d6aeec23eb094b6f9c9a87c1c6275a85bf1823965338e209ec",
+      "instructionSetFingerprint": "edddc9087882abe405211b04165d7275eff814709310d54f1158f02676c1bc0e",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        },
+        {
+          "path": "Hosts/tests/AGENTS.md",
+          "fingerprint": "3430eb639acde7b34b2a978d180d7ec3236b8322793784d6392a2d6281afda5d"
+        },
+        {
+          "path": "Modules/Ai/Application.Abstractions/AGENTS.md",
+          "fingerprint": "bb1d45ad7e4079b5d8eee7940495b43cd694673c49201a1e30d4f89edf8d287a"
+        },
+        {
+          "path": "Modules/Ai/Application/AGENTS.md",
+          "fingerprint": "c2da54793ea612830f83899124b9685431c658d56ffe61b6ce6456871abfc60a"
+        },
+        {
+          "path": "Modules/Ai/Infrastructure/AGENTS.md",
+          "fingerprint": "fa2545bdefd04e92bc36b9fed8e8f1ea9c41e9fa950c4f44c8a0267f41693655"
+        },
+        {
+          "path": "Modules/Ai/tests/AGENTS.md",
+          "fingerprint": "be1def975dace667a9b8efd302859fd00ccbc496e240860ed92e9f72d190a2d2"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 88,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 72.5,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 95.0,
+        "critiqueScore": 95.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "46ae17cdec20cd172776e405b8b250787689a0135c7d5a14447d790d8c7883bd",
+      "eventHash": "4cb68423290f25f7886f899e0865775642098e3622e40843d9fe9292193099f6"
     }
   ]
 }

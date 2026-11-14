@@ -14738,6 +14738,64 @@
       "targetId": "",
       "reason": "",
       "eventHash": "f8aa855bf7d1ef4cb9f77bb2ef5af4d3dc2019c9ee421efef19f5fdabf20b35d"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 122,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-14T13:00:46.5205543Z",
+      "previousHash": "f8aa855bf7d1ef4cb9f77bb2ef5af4d3dc2019c9ee421efef19f5fdabf20b35d",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/recipe-video-error-classification",
+        "retrospectiveHash": "f2b8fa3b32c224d6aeec23eb094b6f9c9a87c1c6275a85bf1823965338e209ec",
+        "completionFingerprint": "dc6ad49c2a6a9fa30377840a744b90b63fa8a4183e56230ce6ed240e2187929c",
+        "packetFingerprint": "16b180da1c33d05cfcef2b31ead6e4d59bce9fb77786b8327d08888ec4638174",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1910s versus 143s, error 1235.66%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1235.66%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 143.0,
+          "expectedSeconds": 1910.0,
+          "errorPercent": 1235.66
+        },
+        "changedPaths": [
+          "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.spec.ts",
+          "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-import.facade.ts",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeVideoTransportIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/recipe-video-error-contract.json",
+          "Modules/Ai/Application.Abstractions/Common/AiErrors.cs",
+          "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+          "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
+          "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+          "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+          "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoSourceException.cs",
+          "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeVideoSource.cs",
+          "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
+          "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeVideoDownloadTests.cs",
+          "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeYouTubeVideoSourceTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "f48702ca85c02806cdce8cbff638c6f587e8c71008ee84f5f17313ad3d71acb8"
     }
   ],
   "hashSchemaVersion": 2
