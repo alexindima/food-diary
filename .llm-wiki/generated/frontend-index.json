@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2828,
+    "typescriptFiles": 2829,
     "symbols": 886,
     "routes": 112,
     "features": 46,
-    "specs": 855,
+    "specs": 856,
     "localeFiles": 5,
     "roles": {
       "Component": 513,
@@ -5565,7 +5565,7 @@
       "role": "Component",
       "selector": "fd-product-list-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "PublicProductPreviewComponent",

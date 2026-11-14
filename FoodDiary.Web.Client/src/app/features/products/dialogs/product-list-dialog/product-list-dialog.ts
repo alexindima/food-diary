@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, type ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -9,6 +9,7 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { take } from 'rxjs';
 
 import type { Product } from '../../../../shared/models/product.data';
+import { scrollElementIntoView } from '../../../../shared/ui/scroll/scroll-element-into-view';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base';
 import { ProductListFacade } from '../../lib/list/product-list.facade';
 import { ProductAddDialogComponent } from '../product-add-dialog/product-add-dialog';
@@ -33,6 +34,7 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
     public readonly searchChanged = output<string>();
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
@@ -72,6 +74,10 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
 
     protected override handleProductClick(product: Product): void {
         this.handleSelection(product);
+    }
+
+    protected override scrollToTop(): void {
+        scrollElementIntoView(this.container().nativeElement);
     }
 
     private handleSelection(product: Product): void {
