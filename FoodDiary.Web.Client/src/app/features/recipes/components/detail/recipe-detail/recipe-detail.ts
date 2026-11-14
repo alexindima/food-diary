@@ -10,7 +10,9 @@ import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 
 import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { ChartColorsService } from '../../../../../shared/theme/chart-colors.service';
+import { ShoppingListAddFacade } from '../../../../shopping-lists/contracts/shopping-list-add';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
+import { buildRecipeShoppingItems } from '../../../lib/detail/recipe-shopping-items';
 import { RecipeCookModeComponent } from '../recipe-cook-mode/recipe-cook-mode';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 import { buildRecipeDetailViewModel } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';
@@ -21,7 +23,7 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
     templateUrl: './recipe-detail.html',
     styleUrls: ['./recipe-detail.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [RecipeDetailFacade],
+    providers: [RecipeDetailFacade, ShoppingListAddFacade],
     imports: [
         TranslatePipe,
         FdUiHintDirective,
@@ -36,6 +38,9 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
 })
 export class RecipeDetailComponent {
     private readonly recipeDetailFacade = inject(RecipeDetailFacade);
+    protected readonly shopping = inject(ShoppingListAddFacade);
+    protected readonly shoppingItems: ReturnType<typeof buildRecipeShoppingItems>;
+    protected readonly shoppingItemsAdded = computed(() => this.shoppingItems.every(({ index }) => this.shopping.isAdded(index)));
 
     protected readonly isFavorite = this.recipeDetailFacade.isFavorite;
     protected readonly isFavoriteLoading = this.recipeDetailFacade.isFavoriteLoading;
@@ -83,6 +88,8 @@ export class RecipeDetailComponent {
         });
 
         this.recipe = recipe;
+        this.shoppingItems = buildRecipeShoppingItems(recipe, key => translateService.instant(key));
+        this.shopping.setScope(recipe.id, recipe.name);
         this.calories = viewModel.calories;
         this.proteins = viewModel.proteins;
         this.fats = viewModel.fats;

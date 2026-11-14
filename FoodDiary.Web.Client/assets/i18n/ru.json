@@ -773,6 +773,9 @@
             "ITEMS_HIDE": "Свернуть"
         },
         "DUPLICATE_ERROR": "Не удалось скопировать рецепт. Попробуйте ещё раз.",
+        "ADD_TO_SHOPPING_LIST": "В список покупок",
+        "ADDED_TO_SHOPPING_LIST": "Добавлено в «{{name}}»",
+        "SHOPPING_LIST_ERROR": "Не удалось добавить ингредиенты в список покупок. Попробуйте ещё раз.",
         "COOK_MODE": {
             "EMPTY": "Шагов приготовления пока нет.",
             "PROGRESS": "Шаг {{current}} из {{total}}",

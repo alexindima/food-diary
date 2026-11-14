@@ -8,6 +8,7 @@
     }
 </p>
 <fd-recipe-detail-ingredient-preview [ingredients]="ingredientPreview()" />
+<ng-content />
 <p class="fd-ui-caption" [hidden]="(recipe().missingIngredientCount ?? 0) === 0">
     {{ 'NUTRITION_COMPLETENESS.PARTIAL' | translate: { count: recipe().missingIngredientCount } }}
 </p>

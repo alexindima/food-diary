@@ -773,6 +773,9 @@
             "ITEMS_HIDE": "Hide"
         },
         "DUPLICATE_ERROR": "Could not copy the recipe. Please try again.",
+        "ADD_TO_SHOPPING_LIST": "Add to shopping list",
+        "ADDED_TO_SHOPPING_LIST": "Added to {{name}}",
+        "SHOPPING_LIST_ERROR": "Could not add the ingredients to the shopping list. Please try again.",
         "COOK_MODE": {
             "EMPTY": "No cooking steps yet.",
             "PROGRESS": "Step {{current}} of {{total}}",

@@ -7,7 +7,7 @@
     "outputs": 564,
     "apiCalls": 334,
     "templatesWithTranslations": 378,
-    "translationKeys": 2289,
+    "translationKeys": 2292,
     "consumerEdges": 1355,
     "consumedComponents": 332,
     "unconsumedComponents": 190
@@ -25333,11 +25333,15 @@
       "keys": [
         "COMMON.CLOSE",
         "DISABLED_HINTS.OPERATION_BUSY",
+        "PUBLIC_RECIPES.SHOPPING_ALL_ADDED",
         "RECIPE_CARD.ADD_TO_MEAL",
+        "RECIPE_DETAIL.ADDED_TO_SHOPPING_LIST",
+        "RECIPE_DETAIL.ADD_TO_SHOPPING_LIST",
         "RECIPE_DETAIL.DELETE_BUTTON",
         "RECIPE_DETAIL.DUPLICATE_BUTTON",
         "RECIPE_DETAIL.DUPLICATE_ERROR",
-        "RECIPE_DETAIL.EDIT_BUTTON"
+        "RECIPE_DETAIL.EDIT_BUTTON",
+        "RECIPE_DETAIL.SHOPPING_LIST_ERROR"
       ]
     },
     {
@@ -33431,7 +33435,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
-      "occurrences": 6,
+      "occurrences": 7,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -33440,6 +33444,7 @@
         "fill",
         "icon",
         "iconSize",
+        "loading",
         "size",
         "variant"
       ],

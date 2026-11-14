@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -12,6 +13,7 @@ import { type Recipe, RecipeVisibility } from '../../../../../shared/models/reci
 import { recipeIngredientFromStored } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { ShoppingListAddFacade } from '../../../../shopping-lists/contracts/shopping-list-add';
 import { RecipeService } from '../../../api/recipe.service';
 import { RecipeDetailComponent } from './recipe-detail';
 
@@ -19,7 +21,7 @@ const PREP_TIME_MINUTES = 10;
 const COOK_TIME_MINUTES = 20;
 const SERVINGS_COUNT = 4;
 const TOTAL_TIME_MINUTES = 30;
-const INGREDIENT_COUNT = 2;
+const INGREDIENT_COUNT = 4;
 const EXPECTED_TAB_COUNT = 2;
 const EXPECTED_MACRO_BLOCK_COUNT = 5;
 const TOTAL_CALORIES = 800;
@@ -64,6 +66,7 @@ const mockRecipe: Recipe = {
                     amount: BASE_AMOUNT,
                     productId: 'p1',
                     productName: 'Flour',
+                    productBaseUnit: 'G',
                     productBaseAmount: BASE_AMOUNT,
                     productCaloriesPerBase: FLOUR_CALORIES_PER_BASE,
                     productProteinsPerBase: FLOUR_PROTEINS_PER_BASE,
@@ -77,6 +80,7 @@ const mockRecipe: Recipe = {
                     amount: SUGAR_AMOUNT,
                     productId: 'p2',
                     productName: 'Sugar',
+                    productBaseUnit: 'G',
                     productBaseAmount: BASE_AMOUNT,
                     productCaloriesPerBase: SUGAR_CALORIES_PER_BASE,
                     productProteinsPerBase: 0,
@@ -85,6 +89,15 @@ const mockRecipe: Recipe = {
                     productFiberPerBase: 0,
                     productAlcoholPerBase: 0,
                 }),
+            ],
+        },
+        {
+            id: 's2',
+            stepNumber: 2,
+            instruction: 'Season',
+            ingredients: [
+                recipeIngredientFromStored({ id: 'i3', amount: 0, textName: 'Salt', amountText: 'to taste' }),
+                recipeIngredientFromStored({ id: 'i4', amount: BASE_AMOUNT, productId: 'missing-product' }),
             ],
         },
     ],
@@ -109,8 +122,19 @@ const mockRecipeService = {
     duplicate: vi.fn().mockReturnValue(of({ ...mockRecipe, id: entityId<'recipe'>('2'), name: 'Test Recipe (Copy)' })),
 };
 
+const shoppingTarget = signal<{ name: string } | null>(null);
+const mockShopping = {
+    setScope: vi.fn(),
+    addAllAsync: vi.fn().mockResolvedValue(undefined),
+    isAdded: vi.fn(() => shoppingTarget() !== null),
+    target: shoppingTarget,
+    busy: signal(false),
+    message: signal<string | null>(null),
+};
+
 beforeEach(async () => {
     vi.clearAllMocks();
+    shoppingTarget.set(null);
 
     await TestBed.configureTestingModule({
         imports: [RecipeDetailComponent],
@@ -123,7 +147,11 @@ beforeEach(async () => {
             { provide: FdUiDialogService, useValue: mockFdDialogService },
             { provide: RecipeService, useValue: mockRecipeService },
         ],
-    }).compileComponents();
+    })
+        .overrideComponent(RecipeDetailComponent, {
+            add: { providers: [{ provide: ShoppingListAddFacade, useValue: mockShopping }] },
+        })
+        .compileComponents();
 
     fixture = TestBed.createComponent(RecipeDetailComponent);
     component = fixture.componentInstance;
@@ -185,6 +213,26 @@ describe('RecipeDetailComponent summary state', () => {
 });
 
 describe('RecipeDetailComponent actions', () => {
+    it('adds products and imported text ingredients from all steps to a shopping list', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        const add = [...host.querySelectorAll('button')].find(button => button.textContent.includes('RECIPE_DETAIL.ADD_TO_SHOPPING_LIST'));
+        expect(add, 'Personal recipe should have an add-to-shopping-list button').toBeDefined();
+        add?.click();
+
+        expect(mockShopping.setScope).toHaveBeenCalledWith(mockRecipe.id, mockRecipe.name);
+        expect(mockShopping.addAllAsync).toHaveBeenCalledExactlyOnceWith([
+            { index: 0, item: { name: 'Flour', productId: 'p1', amount: BASE_AMOUNT, unit: 'G', isChecked: false } },
+            { index: 1, item: { name: 'Sugar', productId: 'p2', amount: SUGAR_AMOUNT, unit: 'G', isChecked: false } },
+            { index: 2, item: { name: 'Salt', note: 'to taste', isChecked: false } },
+        ]);
+        expect(mockDialogRef.close).not.toHaveBeenCalled();
+
+        shoppingTarget.set({ name: 'Groceries' });
+        fixture.detectChanges();
+        expect(add?.disabled).toBe(true);
+        expect(host.querySelector('[role="status"]')?.textContent).toContain('RECIPE_DETAIL.ADDED_TO_SHOPPING_LIST');
+    });
+
     it('should emit edit action', () => {
         component['onEdit']();
 

@@ -54,7 +54,34 @@
                     [macroSummaryBlocks]="macroSummaryBlocks"
                     [ingredientCount]="ingredientCount"
                     [ingredientPreview]="ingredientPreview"
-                />
+                >
+                    <div [hidden]="shoppingItems.length === 0">
+                        <div class="fd-row fd-wrap fd-gap-sm">
+                            <fd-ui-button
+                                size="sm"
+                                variant="secondary"
+                                fill="text"
+                                icon="add_shopping_cart"
+                                [loading]="shopping.busy()"
+                                [disabled]="shoppingItemsAdded()"
+                                [disabledReason]="'PUBLIC_RECIPES.SHOPPING_ALL_ADDED' | translate"
+                                (click)="shopping.addAllAsync(shoppingItems)"
+                            >
+                                {{ 'RECIPE_DETAIL.ADD_TO_SHOPPING_LIST' | translate }}
+                            </fd-ui-button>
+                            <span role="status" class="fd-ui-caption" [hidden]="!shoppingItemsAdded()">{{
+                                'RECIPE_DETAIL.ADDED_TO_SHOPPING_LIST' | translate: { name: shopping.target()?.name }
+                            }}</span>
+                        </div>
+                        <p
+                            class="fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm"
+                            aria-live="assertive"
+                            [hidden]="shopping.message() !== 'PUBLIC_RECIPES.SHOPPING_ERROR'"
+                        >
+                            {{ 'RECIPE_DETAIL.SHOPPING_LIST_ERROR' | translate }}
+                        </p>
+                    </div>
+                </fd-recipe-detail-summary>
             }
         </div>
         <div

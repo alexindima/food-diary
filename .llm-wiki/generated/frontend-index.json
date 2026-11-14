@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2831,
+    "typescriptFiles": 2832,
     "symbols": 886,
     "routes": 112,
     "features": 46,
@@ -6027,7 +6027,7 @@
       "role": "Component",
       "selector": "fd-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts",
-      "line": 37
+      "line": 39
     },
     {
       "name": "FavoriteRecipeRowComponent",
@@ -8424,8 +8424,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4224,
-      "russianProperties": 4224,
+      "englishProperties": 4227,
+      "russianProperties": 4227,
       "countsMatch": true
     },
     {
