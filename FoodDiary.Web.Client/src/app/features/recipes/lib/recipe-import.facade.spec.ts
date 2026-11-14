@@ -115,6 +115,7 @@ describe('recipe import video validation failures', () => {
     });
     it.each([
         ['Ai.InvalidRecipeVideo', 'RECIPE_MANAGE.IMPORT.VIDEO_INVALID'],
+        ['Ai.InvalidRecipeVideoSource', 'RECIPE_MANAGE.IMPORT.VIDEO_SOURCE_ERROR'],
         ['Ai.InvalidRecipeUrl', 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],
         ['Ai.RecipeNotFound', 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],
         [undefined, 'RECIPE_MANAGE.IMPORT.INVALID_ERROR'],

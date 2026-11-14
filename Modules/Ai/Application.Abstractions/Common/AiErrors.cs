@@ -6,6 +6,9 @@ public static class AiErrors {
     public static Error InvalidRecipeVideo() => new(
         "Ai.InvalidRecipeVideo", "Use an MP4 or WebM video up to 50 MiB with an audio track no longer than five minutes.", Kind: ErrorKind.Validation);
 
+    public static Error InvalidRecipeVideoSource() => new(
+        "Ai.InvalidRecipeVideoSource", "Use a public link to a supported video, upload an MP4 or WebM file, or paste the recipe text.", Kind: ErrorKind.Validation);
+
     public static Error RecipeVideoUnavailable() => new(
         "Ai.RecipeVideoUnavailable", "The video could not be processed. Upload an MP4 or WebM file, or paste the recipe text.", Kind: ErrorKind.ExternalFailure);
 

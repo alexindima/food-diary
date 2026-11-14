@@ -76,7 +76,7 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
     public static async ValueTask<Stream> ConnectPublicAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken) {
         IPAddress[] addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
         if (addresses.Length == 0 || addresses.Any(x => !IsPublicAddress(x))) {
-            throw new HttpRequestException("Recipe source is not a public network destination.");
+            throw new HttpRequestException("Recipe source is not a public network destination.", new NonPublicRecipeSourceException());
         }
         foreach (IPAddress address in addresses) {
             var socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -92,6 +92,8 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
         }
         throw new HttpRequestException("Recipe source connection failed.");
     }
+
+    internal sealed class NonPublicRecipeSourceException : Exception;
 
     public static bool IsPublicAddress(IPAddress address) {
         if (address.IsIPv4MappedToIPv6) {

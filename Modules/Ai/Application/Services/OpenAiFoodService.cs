@@ -6,6 +6,7 @@ using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 
 using FoodDiary.Results;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Modules.Ai.Application.Services;
 
@@ -17,7 +18,8 @@ public sealed partial class OpenAiFoodService(
     IAiPromptProvider aiPromptProvider,
     TimeSpan? overallOperationTimeout = null,
     IRecipeSourceReader? recipeSourceReader = null,
-    IRecipeVideoProcessor? recipeVideoProcessor = null)
+    IRecipeVideoProcessor? recipeVideoProcessor = null,
+    ILogger<OpenAiFoodService>? logger = null)
     : IOpenAiFoodService {
     private static readonly TimeSpan DefaultOverallOperationTimeout = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan ReservationLifetime = TimeSpan.FromMinutes(15);

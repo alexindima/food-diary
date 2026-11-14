@@ -1,0 +1,22 @@
+{
+  "invalid-source": {
+    "status": 400,
+    "error": "Ai.InvalidRecipeVideoSource",
+    "message": "Use a public link to a supported video, upload an MP4 or WebM file, or paste the recipe text."
+  },
+  "invalid-file": {
+    "status": 400,
+    "error": "Ai.InvalidRecipeVideo",
+    "message": "Use an MP4 or WebM video up to 50 MiB with an audio track no longer than five minutes."
+  },
+  "source-failure": {
+    "status": 502,
+    "error": "Ai.RecipeVideoUnavailable",
+    "message": "A required dependency could not complete the request."
+  },
+  "transcription-failure": {
+    "status": 502,
+    "error": "Ai.OpenAiFailed",
+    "message": "A required dependency could not complete the request."
+  }
+}

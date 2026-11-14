@@ -1509,14 +1509,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3eb6dc07c00da24eaa9210cf5dea83f92dccbaeebfa8be22b1777cc3a8f503ec",
-          "reviewReason": "The whitespace-only C# analyzer change regenerates only the topology source fingerprint. Service, deployment, health, integration and recurring-job inventory match HEAD."
+          "sha256": "ea562e8cc444a6e98d26a4dc2f3a67d01c0a7a693a19842e1453627759e8a910",
+          "reviewReason": "Regenerated runtime topology for recipe video failure handling. Only the source fingerprint and file count changed. The service, client, cancellation and timeout inventory still describes the same runtime boundaries."
         }
       ],
-      "reason": "The whitespace-only C# analyzer change regenerates only the topology source fingerprint. Service, deployment, health, integration and recurring-job inventory match HEAD.",
+      "reason": "Regenerated runtime topology for recipe video failure handling. Only the source fingerprint and file count changed. The service, client, cancellation and timeout inventory still describes the same runtime boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
-      "reviewedAtUtc": "2026-11-13T22:10:24.1586963Z"
+      "gitHead": "3d4eaf8fc6bd1ae42256e24cac8101729fd0c40d",
+      "reviewedAtUtc": "2026-11-14T13:01:37.0507450Z"
     },
     {
       "pageId": "workflow-security-review",

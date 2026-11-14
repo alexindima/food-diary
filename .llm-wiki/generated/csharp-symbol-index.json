@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4847,
-    "symbols": 4814,
+    "sourceFiles": 4848,
+    "symbols": 4816,
     "interfaceImplementationLinks": 216,
     "dependencyInjectionRegistrations": 76,
     "kinds": {
-      "class": 2481,
+      "class": 2483,
       "enum": 76,
       "interface": 434,
       "record": 1665,
@@ -34,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 2010,
+      "Other": 2012,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -6151,7 +6151,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "OpenAiFoodService",
@@ -6165,7 +6165,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.RecipeVideoImport.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ProcessNextFoodRecognitionCommand",
@@ -6616,6 +6616,13 @@
       "line": 9
     },
     {
+      "name": "NonPublicRecipeSourceException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeSourceReader.cs",
+      "line": 95
+    },
+    {
       "name": "RecipeSourceTextExtractor",
       "kind": "class",
       "role": "Other",
@@ -6627,7 +6634,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "line": 16
+      "line": 17
+    },
+    {
+      "name": "RecipeVideoSourceException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoSourceException.cs",
+      "line": 2
     },
     {
       "name": "RecipeYouTubeHttpHandler",
@@ -6641,7 +6655,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeVideoSource.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AiPersistenceModelRegistration",
