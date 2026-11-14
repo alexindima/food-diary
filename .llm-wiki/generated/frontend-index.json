@@ -5565,7 +5565,7 @@
       "role": "Component",
       "selector": "fd-product-list-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "PublicProductPreviewComponent",
