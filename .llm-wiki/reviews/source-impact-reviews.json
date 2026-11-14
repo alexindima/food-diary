@@ -493,15 +493,20 @@
           "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
         },
         {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
+          "sha256": "1e32dc94effcc7fe603441ffaf0bda1745219c0266a6c24707ea86d3fd8580a7",
+          "reviewReason": "The SQLite cold-checkout regression now detaches HEAD and removes fixture refs to match pull-request CI. The existing assertions still verify planning, all twelve indexes, source isolation, and the frontend dependency diagnostic. The updated full cold-checkout test passed locally."
+        },
+        {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
           "sha256": "0a53247610c88d7c0a4bd2f5c0c9ee9fde47a99288c4b0ee50cf4dfcc1fe41e4",
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity.",
+      "reason": "The SQLite cold-checkout regression now detaches HEAD and removes fixture refs to match pull-request CI. The existing assertions still verify planning, all twelve indexes, source isolation, and the frontend dependency diagnostic. The updated full cold-checkout test passed locally.",
       "baseRef": "HEAD",
-      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
-      "reviewedAtUtc": "2026-11-13T22:10:23.1734107Z"
+      "gitHead": "9cdb107511acdd673aeb7f44e3d2dcb3234ba704",
+      "reviewedAtUtc": "2026-11-14T11:40:03.9387614Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
