@@ -78,8 +78,9 @@ public sealed class RecipeYouTubeVideoSourceTests {
     public async Task InvalidOrLookalikeSource_DoesNotMakeRequests(string url) {
         using var handler = new YouTubeFixtureHandler();
         using var http = new HttpClient(handler);
-        await Assert.ThrowsAsync<HttpRequestException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
+        RecipeVideoSourceException failure = await Assert.ThrowsAsync<RecipeVideoSourceException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
             new Uri(url), Stream.Null, CancellationToken.None));
+        Assert.Equal("invalid_youtube_video_url", failure.Reason);
         Assert.Empty(handler.Requests);
     }
 
@@ -132,8 +133,10 @@ public sealed class RecipeYouTubeVideoSourceTests {
     public async Task PrivateVideo_ReturnsControlledSourceFailure() {
         using var handler = new YouTubeFixtureHandler { Unavailable = true };
         using var http = new HttpClient(handler);
-        await Assert.ThrowsAsync<HttpRequestException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
-            new Uri("https://www.youtube.com/watch?v=ncD_3gaRKbM"), Stream.Null, CancellationToken.None));
+        var processor = new RecipeVideoProcessor(http, Options.Create(new RecipeVideoOptions { FfmpegPath = "unused-fixture-processor" }),
+            NullLogger<RecipeVideoProcessor>.Instance, new RecipeYouTubeVideoSource(http));
+        ResultAssert.Failure(await processor.ExtractAudioAsync(video: null, "https://www.youtube.com/watch?v=ncD_3gaRKbM", CancellationToken.None),
+            "Ai.InvalidRecipeVideoSource");
         Assert.Equal(0, handler.MediaRequests);
     }
 
@@ -152,11 +155,12 @@ public sealed class RecipeYouTubeVideoSourceTests {
         using var handler = new YouTubeFixtureHandler { PlayerStatus = "UNPLAYABLE" };
         using var http = new HttpClient(handler);
 
-        HttpRequestException result = await Assert.ThrowsAsync<HttpRequestException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
+        RecipeVideoSourceException result = await Assert.ThrowsAsync<RecipeVideoSourceException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
             new Uri("https://youtu.be/yNgjOzU3QaU"), Stream.Null, CancellationToken.None));
 
         Assert.Multiple(
-            () => Assert.Equal("YouTube video audio is unavailable.", result.Message),
+            () => Assert.Equal("youtube_response_failed", result.Message),
+            () => Assert.False(result.InvalidSource),
             () => Assert.Null(result.InnerException),
             () => Assert.Equal(0, handler.MediaRequests),
             () => Assert.NotEmpty(handler.Requests));
@@ -168,10 +172,10 @@ public sealed class RecipeYouTubeVideoSourceTests {
         using var http = new HttpClient(handler);
         await using var destination = new MemoryStream();
 
-        HttpRequestException result = await Assert.ThrowsAsync<HttpRequestException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
+        RecipeVideoSourceException result = await Assert.ThrowsAsync<RecipeVideoSourceException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
             new Uri("https://youtu.be/yNgjOzU3QaU"), destination, CancellationToken.None));
 
-        Assert.Equal("No supported YouTube audio stream is available.", result.Message);
+        Assert.Equal("no_supported_youtube_audio", result.Reason);
         Assert.Equal(0, destination.Length);
     }
 

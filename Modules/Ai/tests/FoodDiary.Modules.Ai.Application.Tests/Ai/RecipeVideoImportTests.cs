@@ -6,6 +6,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 
@@ -28,11 +29,21 @@ public sealed class RecipeVideoImportTests {
 
     [Fact]
     public async Task Video_WithFailedTranscription_DoesNotReconcileOrParseUnobservedContent() {
-        OpenAiFoodService service = CreateService();
+        ILogger<OpenAiFoodService> logger = Substitute.For<ILogger<OpenAiFoodService>>();
+        OpenAiFoodService service = CreateService(logger: logger);
+        const string source = "https://example.org/video?token=private-fixture-value";
         _client.TranscribeRecipeAudioAsync(Arg.Any<RecipeAudio>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<OpenAiFoodClientResponse<string>>(AiErrors.OpenAiFailed("Transcription unavailable")));
+            .Returns(Result.Failure<OpenAiFoodClientResponse<string>>(AiErrors.OpenAiFailed($"Transcription unavailable for {source}")));
 
-        ResultAssert.Failure(await service.ImportRecipeVideoAsync(video: null, "https://example.org/video", text: null, _user, RequestId, CancellationToken.None), "Ai.OpenAiFailed");
+        ResultAssert.Failure(await service.ImportRecipeVideoAsync(video: null, source, text: null, _user, RequestId, CancellationToken.None), "Ai.OpenAiFailed");
+        object?[] arguments = Assert.Single(logger.ReceivedCalls(), call => string.Equals(call.GetMethodInfo().Name, nameof(ILogger.Log), StringComparison.Ordinal)).GetArguments();
+        IReadOnlyList<KeyValuePair<string, object?>> fields = Assert.IsAssignableFrom<IReadOnlyList<KeyValuePair<string, object?>>>(arguments[2]);
+        Assert.Multiple(
+            () => Assert.Equal(LogLevel.Warning, arguments[0]),
+            () => Assert.Contains(new KeyValuePair<string, object?>("Stage", "transcribe_audio"), fields),
+            () => Assert.Contains(new KeyValuePair<string, object?>("Reason", "Ai.OpenAiFailed"), fields),
+            () => Assert.DoesNotContain("private-fixture-value", arguments[2]!.ToString(), StringComparison.Ordinal),
+            () => Assert.Null(arguments[3]));
         await _quota.DidNotReceive().ReconcileAsync(Arg.Any<string>(), Arg.Any<AiQuotaUsage>(), Arg.Any<CancellationToken>());
         await _client.DidNotReceive().GetRecipeImportTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
     }
@@ -145,13 +156,14 @@ public sealed class RecipeVideoImportTests {
         await _client.DidNotReceive().GetRecipeImportTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>());
     }
 
-    private OpenAiFoodService CreateService(bool consent = true, bool videoProcessor = true) {
+    private OpenAiFoodService CreateService(bool consent = true, bool videoProcessor = true, ILogger<OpenAiFoodService>? logger = null) {
         _profiles.GetAiProfileAsync(_user, Arg.Any<CancellationToken>()).Returns(Result.Success(new UserAiProfileModel(_user, "ru", 10000, 10000, consent)));
         _video.ExtractAudioAsync(Arg.Any<Stream?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new RecipeAudio([1, 2], 10, "https://example.org/video")));
         _client.TranscribeRecipeAudioAsync(Arg.Any<RecipeAudio>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new OpenAiFoodClientResponse<string>("180g yoghurt", "recipe-transcription", "gpt-transcribe", Usage: null)));
         _client.GetRecipeImportTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new AiProviderTokenBudget(100, 100)));
         _client.ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<CancellationToken>()).Returns(Result.Success(new OpenAiFoodClientResponse<RecipeImportDraftModel>(new("Salad", Description: null, [new("yoghurt", "180g")], ["Mix"], Servings: null, PrepMinutes: null, CookMinutes: null, AuthorNutrition: null, SourceUrl: null), "recipe-import", "text", AiTokenUsage.FromCounts(20, 10, 30))));
         _quota.ReserveAsync(Arg.Any<AiQuotaReservationRequest>(), Arg.Any<CancellationToken>()).Returns(AiQuotaReservationStatus.Acquired);
-        return new OpenAiFoodService(_client, _quota, _profiles, TimeProvider.System, Substitute.For<IAiPromptProvider>(), recipeVideoProcessor: videoProcessor ? _video : null);
+        return new OpenAiFoodService(_client, _quota, _profiles, TimeProvider.System, Substitute.For<IAiPromptProvider>(),
+            recipeVideoProcessor: videoProcessor ? _video : null, logger: logger);
     }
 }

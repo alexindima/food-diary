@@ -3,6 +3,7 @@ using System.Buffers.Binary;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using FoodDiary.Integrations.Http.Http;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
@@ -24,15 +25,20 @@ public sealed partial class RecipeVideoProcessor(
     public async Task<Result<RecipeAudio>> ExtractAudioAsync(Stream? video, string? sourceUrl, CancellationToken cancellationToken) {
         Uri? source = null;
         if (!string.IsNullOrWhiteSpace(sourceUrl) && !RecipeSourceReader.TryNormalizeUrl(sourceUrl, out source)) {
-            return Result.Failure<RecipeAudio>(AiErrors.InvalidRecipeUrl());
+            return Fail(AiErrors.InvalidRecipeUrl(), "validate_input", "invalid_source_url");
         }
         if (video is null && source is null) {
-            return Result.Failure<RecipeAudio>(AiErrors.InvalidRecipeVideo());
+            return Fail(AiErrors.InvalidRecipeVideo(), "validate_input", "missing_video");
         }
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         deadline.CancelAfter(TimeSpan.FromSeconds(75));
-        await ProcessingSlots.WaitAsync(deadline.Token);
+        try {
+            await ProcessingSlots.WaitAsync(deadline.Token);
+        } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
+            return Fail(AiErrors.RecipeVideoUnavailable(), "wait_for_processor", "deadline_expired");
+        }
         string directory = Path.Combine(Path.GetTempPath(), "fooddiary-recipe-" + Guid.NewGuid().ToString("N"));
+        string stage = "prepare_media";
         try {
             Directory.CreateDirectory(directory);
             RestrictUnixDirectoryPermissions(directory);
@@ -40,16 +46,19 @@ public sealed partial class RecipeVideoProcessor(
             FileStream destination = File.Create(videoPath);
             await using (destination) {
                 if (video is not null) {
+                    stage = "read_upload";
                     await CopyBoundedAsync(video, destination, deadline.Token);
                 } else {
+                    stage = "download_source";
                     await DownloadAsync(source!, destination, deadline.Token);
                 }
             }
+            stage = "validate_container";
             byte[] header = new byte[12];
             FileStream input = File.OpenRead(videoPath);
             await using (input) {
                 if (input.Length < header.Length) {
-                    throw new InvalidDataException("Incomplete video container.");
+                    return Fail(AiErrors.InvalidRecipeVideo(), stage, "incomplete_container");
                 }
                 await input.ReadExactlyAsync(header, deadline.Token);
             }
@@ -59,26 +68,52 @@ public sealed partial class RecipeVideoProcessor(
             } else if (header.AsSpan(0, 4).SequenceEqual(new byte[] { 0x1a, 0x45, 0xdf, 0xa3 })) {
                 format = "matroska";
             } else {
-                throw new InvalidDataException("Unsupported video container.");
+                return Fail(AiErrors.InvalidRecipeVideo(), stage, "unsupported_container");
             }
             string audioPath = Path.Combine(directory, "audio.wav");
+            stage = "extract_audio";
             await ExtractLocalAsync(videoPath, audioPath, format, deadline.Token);
             var audioFile = new FileInfo(audioPath);
             if (!audioFile.Exists || audioFile.Length > MaximumAudioBytes) {
-                throw new InvalidDataException("Invalid audio size.");
+                return Fail(AiErrors.InvalidRecipeVideo(), stage, "invalid_audio_size");
             }
             byte[] audio = await File.ReadAllBytesAsync(audioPath, deadline.Token);
+            stage = "validate_audio";
             double duration = ReadDuration(audio);
             if (duration is <= 0 or > 300) {
-                throw new InvalidDataException("Audio duration exceeds the supported limit.");
+                return Fail(AiErrors.InvalidRecipeVideo(), stage, "invalid_audio_duration");
             }
             return Result.Success(new RecipeAudio(audio, duration, source?.AbsoluteUri));
+        } catch (RecipeVideoSourceException failure) {
+            Error error = failure.InvalidSource ? AiErrors.InvalidRecipeVideoSource() : AiErrors.RecipeVideoUnavailable();
+            return Fail(error, stage, failure.Reason);
         } catch (InvalidDataException) {
-            return Result.Failure<RecipeAudio>(AiErrors.InvalidRecipeVideo());
-        } catch (Exception ex) when (ex is HttpRequestException or IOException or Win32Exception or UriFormatException or TimeoutException) {
-            return Result.Failure<RecipeAudio>(AiErrors.RecipeVideoUnavailable());
+            string reason = stage switch {
+                "download_source" => "invalid_source_media",
+                "read_upload" => "media_size_limit",
+                "extract_audio" => "no_supported_audio_track",
+                _ => "invalid_audio_container",
+            };
+            return Fail(AiErrors.InvalidRecipeVideo(), stage, reason);
+        } catch (HttpRequestException failure) when (failure.GetBaseException() is RecipeSourceReader.NonPublicRecipeSourceException) {
+            return Fail(AiErrors.InvalidRecipeVideoSource(), stage, "non_public_destination");
+        } catch (HttpRequestException failure) when (failure.GetBaseException() is SocketException {
+            SocketErrorCode: SocketError.HostNotFound or SocketError.NoData,
+        }) {
+            return Fail(AiErrors.InvalidRecipeVideoSource(), stage, "source_host_not_found");
+        } catch (HttpRequestException failure) {
+            string reason = failure.StatusCode is { } statusCode
+                ? FormattableString.Invariant($"upstream_http_{(int)statusCode}")
+                : "upstream_request_failed";
+            return Fail(AiErrors.RecipeVideoUnavailable(), stage, reason);
+        } catch (Win32Exception) {
+            return Fail(AiErrors.RecipeVideoUnavailable(), stage, "audio_processor_start_failed");
+        } catch (Exception failure) when (failure is IOException or UnauthorizedAccessException) {
+            return Fail(AiErrors.RecipeVideoUnavailable(), stage, "media_io_failed");
+        } catch (TimeoutException) {
+            return Fail(AiErrors.RecipeVideoUnavailable(), stage, "deadline_expired");
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
-            return Result.Failure<RecipeAudio>(AiErrors.RecipeVideoUnavailable());
+            return Fail(AiErrors.RecipeVideoUnavailable(), stage, "deadline_expired");
         } finally {
             try {
                 // This directory is generated locally; no user-controlled paths enter cleanup.
@@ -90,6 +125,12 @@ public sealed partial class RecipeVideoProcessor(
             }
             ProcessingSlots.Release();
         }
+    }
+
+    private Result<RecipeAudio> Fail(Error error, string stage, string reason) {
+        LogLevel level = error.Kind == ErrorKind.Validation ? LogLevel.Information : LogLevel.Warning;
+        logger.Log(level, "Recipe video import failed at {Stage}: {Reason}", stage, reason);
+        return Result.Failure<RecipeAudio>(error);
     }
 
     [ExcludeFromWindowsCoverage]
@@ -110,22 +151,28 @@ public sealed partial class RecipeVideoProcessor(
             request.Headers.UserAgent.ParseAdd("FoodDiary-RecipeImport/1.0");
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if ((int)response.StatusCode is >= 300 and <= 399) {
-                url = NormalizeTarget(url, response.Headers.Location?.ToString());
+                url = NormalizeTarget(url, response.Headers.Location?.ToString(), "invalid_redirect");
                 continue;
             }
             if (!response.IsSuccessStatusCode) {
-                throw new HttpRequestException("Video source is unavailable.");
+                int status = (int)response.StatusCode;
+                if (status is >= 400 and < 500 and not (408 or 429)) {
+                    throw new RecipeVideoSourceException(FormattableString.Invariant($"source_http_{status}"));
+                }
+                throw new HttpRequestException("Video source request failed.", inner: null, response.StatusCode);
             }
             string? mediaType = response.Content.Headers.ContentType?.MediaType;
             if (!inspectedPage && string.Equals(mediaType, "text/html", StringComparison.Ordinal)) {
                 inspectedPage = true;
                 string html = await BoundedHttpContentReader.ReadAsStringAsync(response.Content, 1024 * 1024, TimeSpan.FromSeconds(10), cancellationToken);
-                url = NormalizeTarget(url, FindVideoUrl(html));
+                url = NormalizeTarget(url, FindVideoUrl(html), "no_public_video_url");
                 continue;
             }
-            if (mediaType is not ("video/mp4" or "video/webm" or "application/octet-stream") ||
-                response.Content.Headers.ContentLength > MaximumVideoBytes) {
-                throw new HttpRequestException("Unsupported video source.");
+            if (mediaType is not ("video/mp4" or "video/webm" or "application/octet-stream")) {
+                throw new RecipeVideoSourceException("unsupported_media_type");
+            }
+            if (response.Content.Headers.ContentLength > MaximumVideoBytes) {
+                throw new RecipeVideoSourceException("media_size_limit");
             }
             Stream body = await response.Content.ReadAsStreamAsync(cancellationToken);
             await using (body) {
@@ -133,12 +180,13 @@ public sealed partial class RecipeVideoProcessor(
             }
             return;
         }
-        throw new HttpRequestException("Video source redirect limit exceeded.");
+        throw new RecipeVideoSourceException("redirect_limit");
     }
 
-    private static Uri NormalizeTarget(Uri basis, string? target) {
-        if (string.IsNullOrWhiteSpace(target) || !RecipeSourceReader.TryNormalizeUrl(new Uri(basis, target).AbsoluteUri, out Uri? normalized)) {
-            throw new HttpRequestException("No public video URL found.");
+    private static Uri NormalizeTarget(Uri basis, string? target, string reason) {
+        if (string.IsNullOrWhiteSpace(target) || !Uri.TryCreate(basis, target, out Uri? resolved) ||
+            !RecipeSourceReader.TryNormalizeUrl(resolved.AbsoluteUri, out Uri? normalized)) {
+            throw new RecipeVideoSourceException(reason);
         }
         return normalized!;
     }

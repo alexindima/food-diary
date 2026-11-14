@@ -111,7 +111,7 @@ function recipeImportErrorKey(error: unknown): string {
             if (body.error === 'Ai.InvalidRecipeVideo') {
                 return 'RECIPE_MANAGE.IMPORT.VIDEO_INVALID';
             }
-            if (body.error === 'Ai.RecipeVideoUnavailable') {
+            if (videoSourceErrors.has(body.error)) {
                 return 'RECIPE_MANAGE.IMPORT.VIDEO_SOURCE_ERROR';
             }
             if (body.error === 'Ai.VideoBusy') {
@@ -125,6 +125,8 @@ function recipeImportErrorKey(error: unknown): string {
     }
     return 'RECIPE_MANAGE.IMPORT.RECOGNITION_ERROR';
 }
+
+const videoSourceErrors = new Set<unknown>(['Ai.RecipeVideoUnavailable', 'Ai.InvalidRecipeVideoSource']);
 
 const recipeImportHttpErrors: Readonly<Partial<Record<string, string>>> = {
     '429': 'RECIPE_MANAGE.IMPORT.QUOTA_ERROR',

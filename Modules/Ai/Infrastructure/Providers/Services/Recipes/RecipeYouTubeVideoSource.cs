@@ -1,3 +1,4 @@
+using System.Text.Json;
 using YoutubeExplode;
 using YoutubeExplode.Exceptions;
 using YoutubeExplode.Videos;
@@ -12,7 +13,7 @@ public sealed class RecipeYouTubeVideoSource(HttpClient httpClient) {
     public async Task DownloadAsync(Uri source, Stream destination, CancellationToken cancellationToken) {
         VideoId? id = IsYouTubeUrl(source) ? VideoId.TryParse(source.AbsoluteUri) : null;
         if (id is null) {
-            throw new HttpRequestException("A YouTube video URL is required.");
+            throw new RecipeVideoSourceException("invalid_youtube_video_url");
         }
         try {
             // The injected client retains public-DNS validation, HTTPS/host gates and response bounds.
@@ -29,7 +30,7 @@ public sealed class RecipeYouTubeVideoSource(HttpClient httpClient) {
                 .ThenBy(stream => stream.Bitrate.BitsPerSecond)
                 .FirstOrDefault();
             if (audio is null) {
-                throw new HttpRequestException("No supported YouTube audio stream is available.");
+                throw new RecipeVideoSourceException("no_supported_youtube_audio");
             }
             if (audio.Size.Bytes > RecipeVideoProcessor.MaximumVideoBytes) {
                 throw new InvalidDataException("Video audio exceeds the supported size limit.");
@@ -38,9 +39,18 @@ public sealed class RecipeYouTubeVideoSource(HttpClient httpClient) {
             await using (input) {
                 await RecipeVideoProcessor.CopyBoundedAsync(input, destination, cancellationToken);
             }
-        } catch (YoutubeExplodeException) {
+        } catch (VideoUnavailableException) {
+            throw new RecipeVideoSourceException("youtube_video_unavailable");
+        } catch (VideoRequiresPurchaseException) {
+            throw new RecipeVideoSourceException("youtube_video_requires_purchase");
+        } catch (RequestLimitExceededException) {
+            throw new RecipeVideoSourceException("youtube_rate_limited", invalidSource: false);
+        } catch (VideoUnplayableException) {
+            // The provider also uses this outcome when its playback clients cannot obtain a stream.
+            throw new RecipeVideoSourceException("youtube_playback_failed", invalidSource: false);
+        } catch (Exception failure) when (failure is YoutubeExplodeException or JsonException) {
             // Provider diagnostics can contain source URLs. Keep them out of logs and API errors.
-            throw new HttpRequestException("YouTube video audio is unavailable.");
+            throw new RecipeVideoSourceException("youtube_response_failed", invalidSource: false);
         }
     }
 }

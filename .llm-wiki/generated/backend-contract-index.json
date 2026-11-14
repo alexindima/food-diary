@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1426,
     "ambiguousContracts": 34,
-    "consumerEdges": 11590,
+    "consumerEdges": 11592,
     "productionConsumerEdges": 6453,
-    "testConsumerEdges": 5137,
+    "testConsumerEdges": 5139,
     "consumedContracts": 1426,
     "unconsumedContracts": 0
   },
@@ -119352,6 +119352,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeVideoTransportIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -125593,6 +125606,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeVideoAdmissionPipelineTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RecipeVideoTransportIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
     },

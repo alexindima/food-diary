@@ -1,10 +1,12 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using FoodDiary.Results;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;
 using FoodDiary.Testing.Assertions;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
@@ -78,8 +80,33 @@ public sealed class RecipeVideoDownloadTests {
         });
         using var http = new HttpClient(handler);
 
-        ResultAssert.Failure(await CreateProcessor(http).ExtractAudioAsync(video: null, "https://example.org/recipe", CancellationToken.None), "Ai.RecipeVideoUnavailable");
-        Assert.Equal(expectedRequests, handler.Targets.Count);
+        Error error = ResultAssert.Failure(await CreateProcessor(http).ExtractAudioAsync(video: null, "https://example.org/recipe", CancellationToken.None), "Ai.InvalidRecipeVideoSource");
+        Assert.Multiple(() => Assert.Equal(ErrorKind.Validation, error.Kind), () => Assert.Equal(expectedRequests, handler.Targets.Count));
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.NotFound, "Ai.InvalidRecipeVideoSource", ErrorKind.Validation, LogLevel.Information, "source_http_404")]
+    [InlineData(HttpStatusCode.TooManyRequests, "Ai.RecipeVideoUnavailable", ErrorKind.ExternalFailure, LogLevel.Warning, "upstream_http_429")]
+    [InlineData(HttpStatusCode.ServiceUnavailable, "Ai.RecipeVideoUnavailable", ErrorKind.ExternalFailure, LogLevel.Warning, "upstream_http_503")]
+    [InlineData(null, "Ai.RecipeVideoUnavailable", ErrorKind.ExternalFailure, LogLevel.Warning, "upstream_request_failed")]
+    public async Task DownloadFailure_ReportsSafeStructuredReason(
+        HttpStatusCode? status, string code, ErrorKind kind, LogLevel level, string reason) {
+        const string url = "https://example.org/video?token=private-fixture-value";
+        using var handler = new SequenceHandler((_, _) => status is { } responseStatus
+            ? new HttpResponseMessage(responseStatus)
+            : throw new HttpRequestException($"Network request failed for {url}"));
+        using var http = new HttpClient(handler);
+        var logger = new RecordingLogger();
+
+        Error error = ResultAssert.Failure(await CreateProcessor(http, logger).ExtractAudioAsync(video: null, url, CancellationToken.None), code);
+        (LogLevel Level, IReadOnlyDictionary<string, object?> Fields, string Message, Exception? Exception) entry = Assert.Single(logger.Entries);
+        Assert.Multiple(
+            () => Assert.Equal(kind, error.Kind),
+            () => Assert.Equal(level, entry.Level),
+            () => Assert.Equal("download_source", entry.Fields["Stage"]),
+            () => Assert.Equal(reason, entry.Fields["Reason"]),
+            () => Assert.DoesNotContain("private-fixture-value", entry.Message, StringComparison.Ordinal),
+            () => Assert.Null(entry.Exception));
     }
 
     [Fact]
@@ -93,9 +120,9 @@ public sealed class RecipeVideoDownloadTests {
         Assert.Single(handler.Targets);
     }
 
-    private static RecipeVideoProcessor CreateProcessor(HttpClient http) => new(http,
+    private static RecipeVideoProcessor CreateProcessor(HttpClient http, ILogger<RecipeVideoProcessor>? logger = null) => new(http,
         Options.Create(new RecipeVideoOptions { FfmpegPath = Path.Combine(Path.GetTempPath(), "absent-recipe-processor-" + Guid.NewGuid().ToString("N")) }),
-        NullLogger<RecipeVideoProcessor>.Instance, new RecipeYouTubeVideoSource(http));
+        logger ?? NullLogger<RecipeVideoProcessor>.Instance, new RecipeYouTubeVideoSource(http));
 
     private static HttpResponseMessage VideoResponse(string mediaType, long? length = null) {
         var response = new HttpResponseMessage(HttpStatusCode.OK) {
@@ -106,6 +133,20 @@ public sealed class RecipeVideoDownloadTests {
             response.Content.Headers.ContentLength = length;
         }
         return response;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger : ILogger<RecipeVideoProcessor> {
+        public List<(LogLevel Level, IReadOnlyDictionary<string, object?> Fields, string Message, Exception? Exception)> Entries { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) {
+            IEnumerable<KeyValuePair<string, object?>> fields = Assert.IsAssignableFrom<IEnumerable<KeyValuePair<string, object?>>>(state);
+            Entries.Add((logLevel, fields.ToDictionary(), formatter(state, exception), exception));
+        }
     }
 
     [ExcludeFromCodeCoverage]
