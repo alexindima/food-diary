@@ -73,7 +73,7 @@ a review of the frozen scope manifest. New modules can be
 added as separate slices instead of generating unrelated Admin APIs into
 the user app. The admin client has its own contract and frozen scope manifest:
 `api-sdk/admin.openapi.json` and `api-sdk/admin.scopes.json`. Its 22 groups and
-76 operations are generated into
+81 operations are generated into
 `projects/fooddiary-admin/src/app/shared/api/sdk/generated/` and consumed by
 21 existing admin services. Both applications reuse the pinned generator and
 contract selector while retaining their existing import boundary.
@@ -82,7 +82,8 @@ Admin adapters retain their application models, collection paging and legacy
 filter omission/whitespace rules. Open filter records use an explicit query
 bridge; fixed query values continue through generated request parameters.
 Admin HTTP uses the admin origin's API proxy, credentials and the custom browser
-request headers. SSO exchange issues an independent opaque HttpOnly admin cookie;
+request headers. SSO exchange and admin credential confirmation issue an independent
+opaque HttpOnly admin cookie.
 AdminAuthService stores only user, roles and public session metadata. Normal
 browser responses contain no access or refresh JWT. Reload uses the generated
 AdminSession operation (POST /auth/session); the user Auth client has the same

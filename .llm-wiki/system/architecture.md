@@ -40,8 +40,9 @@ in [the architecture document](../../docs/ARCHITECTURE.md).
 
 User and admin browser sessions remain inside the existing API; no BFF host is
 added. Identity stores hashed opaque session proofs, while Presentation owns
-HttpOnly cookies and browser request checks. Admin SSO and per-tab impersonation
-have separate cookies. Telegram bot bearer transport and explicit Mini App token
+HttpOnly cookies and browser request checks. Admin SSO and direct credential
+confirmation issue the same fixed-lifetime admin cookie. Per-tab impersonation
+uses separate cookies. Telegram bot bearer transport and explicit Mini App token
 mode remain supported. See [ADR 0058](../../docs/adr/0058-browser-sessions-in-the-existing-api.md).
 
 Ordinary browser renewal uses a persisted eligibility flag and an atomic

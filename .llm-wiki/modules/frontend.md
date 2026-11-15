@@ -78,7 +78,7 @@ and preserve request identity across retries. Swagger retains C# nullable refere
 metadata in the isolated client schema; direct storage uploads and SignalR stay in their owning adapters.
 
 The admin app has a separate generated client under
-`projects/fooddiary-admin/src/app/shared/api/sdk/`. Its 22 groups and 76 operations
+`projects/fooddiary-admin/src/app/shared/api/sdk/`. Its 22 groups and 81 operations
 serve 21 existing admin adapters; generator tooling and schema selection are
 shared with the user app, while application imports and session ownership stay
 separate. Admin paging, dynamic filters, SSO cookie policy and import idempotency
@@ -87,8 +87,10 @@ the editor fetches full detail separately.
 
 Ordinary user and admin authentication use separate opaque HttpOnly cookies in
 the existing API. JavaScript holds only identity, roles and public session/context
-selectors; reload calls `POST /auth/session`. Impersonation selects an independent
-cookie per tab context. Explicit Telegram Mini App mode retains a bearer only in
+selectors; reload calls `POST /auth/session`. Admin entry tries its own session,
+then diary SSO, then password or linked Google confirmation on the admin origin.
+Impersonation selects an independent cookie per tab context. Explicit Telegram
+Mini App mode retains a bearer only in
 memory. See [browser sessions](../../docs/backend/BROWSER_SESSIONS.md) and ADR 0058
 for CSRF, device isolation, admin expiry and coordinated release requirements.
 

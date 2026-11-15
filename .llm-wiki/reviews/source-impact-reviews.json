@@ -374,8 +374,8 @@
         },
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "e9a67ec4235ee436b9bba281aed883d600be83eb699c28f6edafa3df3b96ca24",
-          "reviewReason": "Reviewed actual full/payload snapshots and SDK guide: activity endpoint, nullable timestamp and optional ranges are additive. The executed report has zero breaking and six additive changes; old login fields/filters remain. No acceptance exception changed, and the prior browser-session migration record remains exact and separate from this feature."
+          "sha256": "9f185209c0736b71e98035b1d57150df831e1eb99ca0d447055687d837f5b248",
+          "reviewReason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
@@ -385,13 +385,13 @@
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
           "sha256": "cbb79da82e00ace89fffc2f428d728fb7393a57186a4f44910c265afdc4db0bd",
-          "reviewReason": "The full OpenAPI snapshot adds only POST auth/admin-sso/login and auth/admin-sso/google. They reuse the existing login request and authentication response schemas. Export snapshots and HTTP integration tests passed, including cookie isolation, expected account and role enforcement. The workflow compatibility guidance and its historical acceptance record still apply."
+          "reviewReason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed."
         }
       ],
-      "reason": "The full OpenAPI snapshot adds only POST auth/admin-sso/login and auth/admin-sso/google. They reuse the existing login request and authentication response schemas. Export snapshots and HTTP integration tests passed, including cookie isolation, expected account and role enforcement. The workflow compatibility guidance and its historical acceptance record still apply.",
-      "baseRef": "HEAD",
-      "gitHead": "91d96db68c88339dce8074554c14c03806b4d012",
-      "reviewedAtUtc": "2026-11-15T08:01:19.7020055Z"
+      "reason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed.",
+      "baseRef": "origin/master",
+      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
+      "reviewedAtUtc": "2026-11-15T13:39:49.3112920Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -400,8 +400,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d41a66395cd2e16ad1ad918ebe28af3a62fb9a84360c583f6481f8370550ef32",
-          "reviewReason": "Verified that the architecture projection adds only the Telegram diary transfer component stylesheet; route, selector, input/output contracts, and dependency ownership are unchanged."
+          "sha256": "b7ac489bf7495789286ba03c39775650d8c02c4a1ae3b86efa590c528bd1ddad",
+          "reviewReason": "The regenerated index adds AdminSignInComponent and updates routed-component totals. The controller and architecture review workflow still points to the same generators and boundary checks."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -424,10 +424,10 @@
           "reviewReason": "Reviewed the regenerated architecture graph and exact dependency matrix. The only new project edge documents the required own Billing ID contract; no violation or cycle is introduced. The workflow already requires intentional justified edges and architecture checks; all 2285 architecture tests and the canonical health check pass. Its process and cautions remain accurate."
         }
       ],
-      "reason": "Verified that the architecture projection adds only the Telegram diary transfer component stylesheet; route, selector, input/output contracts, and dependency ownership are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "29db2a4a7cf1a003cb3cf20293661b26b2506608",
-      "reviewedAtUtc": "2026-11-12T12:08:51.9224584Z"
+      "reason": "The regenerated index adds AdminSignInComponent and updates routed-component totals. The controller and architecture review workflow still points to the same generators and boundary checks.",
+      "baseRef": "origin/master",
+      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
+      "reviewedAtUtc": "2026-11-15T13:39:49.9087074Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -833,8 +833,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "c7c63cec2c05e0646e59bfd605e9bb45f5f2b9c661c8250c9ae9fcd772d13266",
-          "reviewReason": "Closed variants keep existing validated factory entry points and scalar projections for fasting, recent items, and reminders. The domain index updates invariant source coordinates only."
+          "sha256": "ec13259c4e8bafd90348f9dd0033e2a4975efab702395f90a9fa5f95306c41ac",
+          "reviewReason": "The domain data index changes only the admin-grant diagnostic. Grants now accept a bounded admin browser session established by SSO or explicit credentials, with the existing storage and expiry guard. No persistence mapping or index schema changed."
         },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
@@ -842,10 +842,10 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "Closed variants keep existing validated factory entry points and scalar projections for fasting, recent items, and reminders. The domain index updates invariant source coordinates only.",
-      "baseRef": "HEAD",
-      "gitHead": "420766f617128b0e3dc3f79e3040529055ac1daa",
-      "reviewedAtUtc": "2026-11-13T20:30:07.2195651Z"
+      "reason": "The domain data index changes only the admin-grant diagnostic. Grants now accept a bounded admin browser session established by SSO or explicit credentials, with the existing storage and expiry guard. No persistence mapping or index schema changed.",
+      "baseRef": "origin/master",
+      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
+      "reviewedAtUtc": "2026-11-15T13:39:50.4712758Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1509,14 +1509,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ea562e8cc444a6e98d26a4dc2f3a67d01c0a7a693a19842e1453627759e8a910",
-          "reviewReason": "Regenerated runtime topology for recipe video failure handling. Only the source fingerprint and file count changed. The service, client, cancellation and timeout inventory still describes the same runtime boundaries."
+          "sha256": "32bffea2dcbb29b77a06037d8cd30d329d17127a39d20f0fc6c9bb9360e75764",
+          "reviewReason": "Only the runtime topology source fingerprint changed. The existing diary and admin bundles, API host and deployment edges still own this flow."
         }
       ],
-      "reason": "Regenerated runtime topology for recipe video failure handling. Only the source fingerprint and file count changed. The service, client, cancellation and timeout inventory still describes the same runtime boundaries.",
-      "baseRef": "HEAD",
-      "gitHead": "3d4eaf8fc6bd1ae42256e24cac8101729fd0c40d",
-      "reviewedAtUtc": "2026-11-14T13:01:37.0507450Z"
+      "reason": "Only the runtime topology source fingerprint changed. The existing diary and admin bundles, API host and deployment edges still own this flow.",
+      "baseRef": "origin/master",
+      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
+      "reviewedAtUtc": "2026-11-15T13:39:52.6443890Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1875,14 +1875,14 @@
       "sources": [
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "e9a67ec4235ee436b9bba281aed883d600be83eb699c28f6edafa3df3b96ca24",
-          "reviewReason": "Reviewed current guide and generated operation through the owning adapter, bootstrap, nullable instant decoder, translated calendar controls and URL state. Component inputs/outputs are preserved; full frontend verify and controlled Chrome desktop/mobile scenarios pass. SDK drift, behavior and rendering remain distinct evidence as documented."
+          "sha256": "9f185209c0736b71e98035b1d57150df831e1eb99ca0d447055687d837f5b248",
+          "reviewReason": "The SDK guide describes two additive operations in the existing admin auth adapter and the same independent cookie contract. The admin scope and generated clients were verified, so the existing contract review workflow still applies."
         }
       ],
-      "reason": "Reviewed current guide and generated operation through the owning adapter, bootstrap, nullable instant decoder, translated calendar controls and URL state. Component inputs/outputs are preserved; full frontend verify and controlled Chrome desktop/mobile scenarios pass. SDK drift, behavior and rendering remain distinct evidence as documented.",
-      "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:34.9699794Z"
+      "reason": "The SDK guide describes two additive operations in the existing admin auth adapter and the same independent cookie contract. The admin scope and generated clients were verified, so the existing contract review workflow still applies.",
+      "baseRef": "origin/master",
+      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
+      "reviewedAtUtc": "2026-11-15T13:39:51.0700560Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1891,8 +1891,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e281f41f7a49a810af4e9da57726d3b3c871a315e3a3e6b4e1023909a5950ad1",
-          "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
+          "sha256": "6ee671f22f83cc25fb42d3ce8b3116473064890ae5be23cff66637da9121a853",
+          "reviewReason": "The repository catalog refresh reflects the changed sign-in sources and snapshot inventory. Retrieval configuration and ranking code are outside the diff, so the workflow still describes the same query behavior."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1935,10 +1935,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity.",
-      "baseRef": "HEAD",
-      "gitHead": "45e3c5e1cafd2db2d21a123eb7da8d245b6b3e04",
-      "reviewedAtUtc": "2026-11-13T22:10:23.5465533Z"
+      "reason": "The repository catalog refresh reflects the changed sign-in sources and snapshot inventory. Retrieval configuration and ranking code are outside the diff, so the workflow still describes the same query behavior.",
+      "baseRef": "origin/master",
+      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
+      "reviewedAtUtc": "2026-11-15T13:39:51.9254085Z"
     },
     {
       "pageId": "workflow.review-diff",
