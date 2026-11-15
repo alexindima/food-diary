@@ -42,11 +42,11 @@ const protectedFeatureRoutes: Routes[] = [
     adminAchievementsRoutes,
     adminModerationRoutes,
 ];
+const publicPages = ['sign-in', 'unauthorized'];
+const featureBoundaries = routes.filter(route => route.path !== '**' && !publicPages.includes(route.path ?? ''));
 
 describe('admin routes', () => {
     it('loads every feature boundary lazily', () => {
-        const featureBoundaries = routes.filter(route => route.path !== 'unauthorized' && route.path !== '**');
-
         expect(featureBoundaries).toHaveLength(protectedFeatureRoutes.length);
         for (const route of featureBoundaries) {
             expect(route.loadChildren).toBeTypeOf('function');
@@ -66,23 +66,23 @@ describe('admin routes', () => {
     });
 
     it('resolves every lazy feature route definition', async () => {
-        const featureBoundaries = routes.filter(
-            (route): route is Route & { loadChildren: NonNullable<Route['loadChildren']> } =>
-                route.path !== 'unauthorized' && route.path !== '**' && route.loadChildren !== undefined,
+        const lazyBoundaries = featureBoundaries.filter(
+            (route): route is Route & { loadChildren: NonNullable<Route['loadChildren']> } => route.loadChildren !== undefined,
         );
 
-        const loadedRoutes = await Promise.all(featureBoundaries.map(async route => route.loadChildren()));
+        const loadedRoutes = await Promise.all(lazyBoundaries.map(async route => route.loadChildren()));
 
         expect(loadedRoutes).toEqual(protectedFeatureRoutes);
     });
 
-    it('keeps the public unauthorized page lazy and before the wildcard', () => {
-        const unauthorizedIndex = routes.findIndex(route => route.path === 'unauthorized');
+    it.each(publicPages)('keeps the public %s page lazy and before the wildcard', page => {
+        const pageIndex = routes.findIndex(route => route.path === page);
         const wildcardIndex = routes.findIndex(route => route.path === '**');
-        const unauthorizedRoute = routes[unauthorizedIndex];
+        const publicRoute = routes[pageIndex];
 
-        expect(unauthorizedRoute.loadComponent).toBeTypeOf('function');
-        expect(unauthorizedRoute.component).toBeUndefined();
-        expect(unauthorizedIndex).toBeLessThan(wildcardIndex);
+        expect(publicRoute.loadComponent).toBeTypeOf('function');
+        expect(publicRoute.component).toBeUndefined();
+        expect(publicRoute.canActivate).toBeUndefined();
+        expect(pageIndex).toBeLessThan(wildcardIndex);
     });
 });
