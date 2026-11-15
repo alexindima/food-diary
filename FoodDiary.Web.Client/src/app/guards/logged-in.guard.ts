@@ -6,16 +6,11 @@ import { AuthService } from '../services/auth.service';
 export const loggedInGuard: CanActivateFn = async (_route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router);
-    await authService.ensureSessionReadyAsync();
-
-    if (!authService.isAuthenticated()) {
-        return true;
-    }
-
     const params = new URL(state.url, 'http://localhost').searchParams;
-    if (params.get('auth') === 'login' && (params.get('adminReturnUrl')?.trim().length ?? 0) > 0) {
-        return true;
+    const adminReturnUrl = params.get('adminReturnUrl')?.trim() ?? '';
+    if (adminReturnUrl.length > 0 && params.get('auth') === 'login') {
+        return router.createUrlTree(['/auth/confirm-admin'], { queryParams: { adminReturnUrl } });
     }
-
-    return router.createUrlTree(['/dashboard']);
+    await authService.ensureSessionReadyAsync();
+    return authService.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
 };

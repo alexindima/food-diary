@@ -51,8 +51,8 @@ public sealed class BrowserSessionService(
     public Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, CancellationToken cancellationToken) =>
         RestoreAsync(credential, rememberMe: false, cancellationToken);
 
-    public async Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, bool rememberMe, CancellationToken cancellationToken) {
-        Result<BrowserSessionModel> result = await ReadRestorableSessionAsync(credential, cancellationToken);
+    public async Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, bool rememberMe, CancellationToken cancellationToken, bool admin = false) {
+        Result<BrowserSessionModel> result = await ReadRestorableSessionAsync(credential, admin, cancellationToken);
         if (result.IsFailure) {
             return result;
         }
@@ -92,7 +92,7 @@ public sealed class BrowserSessionService(
         return RejectRestoration("renewal_conflict");
     }
 
-    private async Task<Result<BrowserSessionModel>> ReadRestorableSessionAsync(string? credential, CancellationToken cancellationToken) {
+    private async Task<Result<BrowserSessionModel>> ReadRestorableSessionAsync(string? credential, bool admin, CancellationToken cancellationToken) {
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid sessionId)) {
             return RejectRestoration(string.IsNullOrEmpty(credential) ? "missing_credential" : "malformed_credential");
         }
@@ -112,6 +112,9 @@ public sealed class BrowserSessionService(
         }
         if (!SecurityTokenGenerator.VerifyFastStorageHash(credential!, session.RefreshTokenHash)) {
             return RejectRestoration("credential_mismatch");
+        }
+        if (admin && !(session.AdminAccessExpiresAtUtc > now)) {
+            return RejectRestoration("admin_confirmation_expired");
         }
         Result<UserAuthenticationPrincipalModel> principal = await users.GetAuthenticationPrincipalAsync(session.UserId, now, cancellationToken);
         expires = EffectiveExpiration(expires, session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled);

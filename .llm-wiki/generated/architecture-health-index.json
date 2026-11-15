@@ -11,8 +11,8 @@
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 120,
-    "routedStandaloneComponents": 70,
-    "componentsWithoutDirectSpecs": 135,
+    "routedStandaloneComponents": 71,
+    "componentsWithoutDirectSpecs": 136,
     "criticalSymbolsWithoutTestReferences": 52,
     "explicitDebtMarkers": 12
   },
@@ -1925,6 +1925,19 @@
           "required": true
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminSignInComponent",
+      "selector": "fd-admin-sign-in",
+      "feature": "admin-auth",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.scss"
+      ],
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },

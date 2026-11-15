@@ -14,8 +14,8 @@ public sealed class PrivilegedSessionService(IRefreshTokenSessionReadRepository 
         if (session is null || session.UserId != userId || !session.IsActive || session.ExpiresAtUtc is not { } expires || expires <= now) {
             return false;
         }
-        if (allowAdminSession && string.Equals(session.AuthProvider, "admin-sso", StringComparison.Ordinal)) {
-            return session.AdminAccessExpiresAtUtc > now;
+        if (session.AdminAccessExpiresAtUtc is { } adminExpires) {
+            return allowAdminSession && adminExpires > now;
         }
         return session.AuthProvider is "password" or "google" && session.CreatedAtUtc <= now &&
             now - session.CreatedAtUtc < ConfirmationLifetime;

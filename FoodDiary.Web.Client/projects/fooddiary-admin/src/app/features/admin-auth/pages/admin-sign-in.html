@@ -1,0 +1,37 @@
+<section aria-labelledby="admin-sign-in-title">
+    <fd-ui-card appearance="entry" density="relaxed" class="admin-sign-in">
+        <div class="fd-stack fd-gap-md">
+            <h1 id="admin-sign-in-title" class="fd-page-title">{{ 'ADMIN_AUTH.SIGN_IN_TITLE' | translate }}</h1>
+            @if (confirm) {
+                <p class="fd-ui-body-sm">{{ 'ADMIN_AUTH.SIGN_IN_HINT' | translate }}</p>
+                <form method="post" class="fd-stack fd-gap-md" [formRoot]="loginForm" [attr.aria-busy]="submitting()">
+                    <fd-ui-input
+                        type="email"
+                        autocomplete="username"
+                        [label]="'AUTH.LOGIN.EMAIL' | translate"
+                        [formField]="loginForm.email"
+                    />
+                    <fd-ui-input
+                        type="password"
+                        autocomplete="current-password"
+                        [label]="'AUTH.LOGIN.PASSWORD' | translate"
+                        [formField]="loginForm.password"
+                    />
+                    <fd-ui-button type="submit" [fullWidth]="true" [loading]="submitting()">
+                        {{ 'AUTH.LOGIN.LOGIN' | translate }}
+                    </fd-ui-button>
+                </form>
+                @if (googleConfigured && !googleUnavailable()) {
+                    <div #googleButton class="admin-sign-in__google" [attr.inert]="submitting() ? '' : null"></div>
+                } @else if (googleUnavailable()) {
+                    <p role="status" class="fd-ui-body-sm">{{ 'ADMIN_AUTH.SIGN_IN_GOOGLE_UNAVAILABLE' | translate }}</p>
+                }
+                @if (error(); as errorKey) {
+                    <p role="alert" class="fd-ui-body-sm">{{ errorKey | translate }}</p>
+                }
+            } @else {
+                <p role="status">{{ 'COMMON.LOADING' | translate }}</p>
+            }
+        </div>
+    </fd-ui-card>
+</section>

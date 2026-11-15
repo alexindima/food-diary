@@ -1,7 +1,9 @@
-import { PLATFORM_ID, type Renderer2, RendererFactory2 } from '@angular/core';
+import { PLATFORM_ID, type Renderer2, RendererFactory2, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { AppThemeName } from '../../theme/app-theme.config';
+import { ThemeService } from '../theme/theme.service';
 import { GoogleIdentityService } from './google-identity.service';
 
 const CLIENT_ID = 'google-client-id';
@@ -123,6 +125,29 @@ describe('GoogleIdentityService browser controls', () => {
         expect(googleIdentityApi.prompt).toHaveBeenCalledOnce();
         expect(googleIdentityApi.cancel).toHaveBeenCalledOnce();
     });
+
+    it('uses the dark Google button and keeps the iframe backdrop transparent on dark pages', () => {
+        const theme = signal<AppThemeName>('dark');
+        const service = setupBrowserService(theme);
+        const target = document.createElement('div');
+        googleWindow.google = { accounts: { id: googleIdentityApi } };
+
+        service.renderButton(target, 'filled_blue', 'ru');
+
+        expect(googleIdentityApi.renderButton).toHaveBeenLastCalledWith(
+            target,
+            expect.objectContaining({ theme: 'filled_black', locale: 'ru' }),
+        );
+        expect(target.style.getPropertyValue('color-scheme')).toBe('light only');
+
+        theme.set('ocean');
+        service.renderButton(target, 'filled_blue', 'ru');
+
+        expect(googleIdentityApi.renderButton).toHaveBeenLastCalledWith(
+            target,
+            expect.objectContaining({ theme: 'filled_blue', locale: 'ru' }),
+        );
+    });
 });
 
 describe('GoogleIdentityService browser script errors', () => {
@@ -174,9 +199,9 @@ describe('GoogleIdentityService server guards', () => {
     });
 });
 
-function setupBrowserService(): GoogleIdentityService {
+function setupBrowserService(theme = signal<AppThemeName>('ocean')): GoogleIdentityService {
     TestBed.configureTestingModule({
-        providers: [GoogleIdentityService],
+        providers: [GoogleIdentityService, { provide: ThemeService, useValue: { theme } }],
     });
 
     return TestBed.inject(GoogleIdentityService);

@@ -21,7 +21,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const auth = inject(AdminAuthService);
     let headers = req.headers.set('X-FoodDiary-Client', 'admin').set('X-Requested-With', 'XMLHttpRequest');
     const sessionId = auth.getSessionId();
-    if (sessionId !== null && !req.url.endsWith('/auth/session') && !req.url.endsWith('/admin-sso/exchange')) {
+    if (sessionId !== null && !isSessionHandshake(req.url)) {
         headers = headers.set('X-FoodDiary-Session', sessionId);
     }
 
@@ -49,8 +49,8 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
                 sessionStorageRef?.removeItem('authToken');
 
                 const returnUrl = router.url;
-                void router.navigate(['/unauthorized'], {
-                    queryParams: { reason: 'unauthenticated', returnUrl },
+                void router.navigate(['/sign-in'], {
+                    queryParams: { returnUrl },
                 });
             } else if (isAccessDenied(error)) {
                 void router.navigate(['/unauthorized'], {
@@ -64,7 +64,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
 };
 
 function isSessionHandshake(url: string): boolean {
-    return url.endsWith('/auth/session') || url.includes('/admin-sso/exchange');
+    return url.endsWith('/auth/session') || /\/admin-sso\/(?:exchange|login|google)$/u.test(url);
 }
 
 function isAccessDenied(error: unknown): boolean {

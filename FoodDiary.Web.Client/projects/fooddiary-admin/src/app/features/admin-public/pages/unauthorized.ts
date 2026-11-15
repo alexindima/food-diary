@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
-import { environment } from '../../../../environments/environment';
 import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
+import { adminSignInAccount, adminSignInAccountFragment, adminSignInReturnUrl } from '../../admin-auth/contracts/admin-sign-in-navigation';
 
 @Component({
     selector: 'fd-admin-unauthorized',
@@ -19,6 +19,7 @@ export class UnauthorizedComponent {
     private readonly router = inject(Router);
     private readonly authService = inject(AdminAuthService);
     private readonly document = inject(DOCUMENT);
+    private readonly account = adminSignInAccount(this.route.snapshot.fragment);
 
     protected readonly reason: string | null;
     protected readonly returnUrl: string;
@@ -46,13 +47,11 @@ export class UnauthorizedComponent {
     }
 
     protected goToLogin(): void {
-        const url = new URL('/', environment.mainAppUrl);
-        url.searchParams.set('auth', 'login');
-        const adminReturnUrl = this.normalizeReturnUrl(this.returnUrl);
-        if (adminReturnUrl.length > 0) {
-            url.searchParams.set('adminReturnUrl', adminReturnUrl);
-        }
-        this.document.defaultView?.location.assign(url.toString());
+        const returnUrl = adminSignInReturnUrl(this.returnUrl, this.document.location.origin);
+        void this.router.navigate(['/sign-in'], {
+            queryParams: { returnUrl, confirm: '1' },
+            fragment: adminSignInAccountFragment(this.account),
+        });
     }
 
     protected async retryRestoreAsync(): Promise<void> {
@@ -64,7 +63,16 @@ export class UnauthorizedComponent {
             await this.authService.restoreSessionAsync(true);
             if (!this.authService.sessionUnavailable()) {
                 if (this.authService.isAdmin()) {
-                    await this.router.navigateByUrl(this.normalizeReturnUrl(this.returnUrl), { replaceUrl: true });
+                    const returnUrl = adminSignInReturnUrl(this.returnUrl, this.document.location.origin);
+                    if (this.account !== null && this.authService.getUserId() !== this.account) {
+                        await this.router.navigate(['/sign-in'], {
+                            queryParams: { returnUrl },
+                            fragment: adminSignInAccountFragment(this.account),
+                            replaceUrl: true,
+                        });
+                    } else {
+                        await this.router.navigateByUrl(returnUrl, { replaceUrl: true });
+                    }
                 } else {
                     this.rejectedReason.set(this.authService.isAuthenticated() ? 'forbidden' : 'unauthenticated');
                 }
@@ -81,26 +89,5 @@ export class UnauthorizedComponent {
         }
 
         await this.router.navigateByUrl(cleanedUrl, { replaceUrl: true });
-    }
-
-    private normalizeReturnUrl(value: string): string {
-        if (value.length === 0) {
-            return '/';
-        }
-
-        const decoded = this.safeDecode(value);
-        if (decoded.includes('returnUrl=')) {
-            return '/';
-        }
-
-        return decoded.startsWith('/') ? decoded : '/';
-    }
-
-    private safeDecode(value: string): string {
-        try {
-            return decodeURIComponent(value);
-        } catch {
-            return value;
-        }
     }
 }

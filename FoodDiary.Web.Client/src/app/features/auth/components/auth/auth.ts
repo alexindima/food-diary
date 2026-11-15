@@ -32,7 +32,7 @@ import { PwaInstallService } from '../../../../shared/service-worker/pwa-install
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
 import { TelegramEntryButtonComponent } from '../telegram-entry-button/telegram-entry-button';
 import type { LoginFormValues } from './auth-lib/auth.types';
-import { buildAdminUnauthorizedUrl, normalizeAdminReturnUrl } from './auth-lib/auth-admin-return-url.utils';
+import { buildAdminSignInUrl, buildAdminUnauthorizedUrl, normalizeAdminReturnUrl } from './auth-lib/auth-admin-return-url.utils';
 import { startSecondsCountdown } from './auth-lib/auth-countdown.utils';
 import { AuthFlowFacade, type AuthLoginResult, type AuthRegisterResult } from './auth-lib/auth-flow.facade';
 import { AUTH_TABS } from './auth-lib/auth-form.config';
@@ -486,9 +486,11 @@ export class AuthComponent {
             return adminUrl.toString();
         } catch (error: unknown) {
             if (getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.ReauthenticationRequired') {
-                const confirmation = new URL('/auth/confirm-admin', this.document.location.origin);
-                confirmation.searchParams.set('adminReturnUrl', adminPath);
-                return confirmation.toString();
+                return buildAdminSignInUrl(
+                    new URL(adminAppUrl, this.document.location.origin),
+                    adminPath,
+                    this.authService.getUserId(),
+                ).toString();
             }
             return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
         }

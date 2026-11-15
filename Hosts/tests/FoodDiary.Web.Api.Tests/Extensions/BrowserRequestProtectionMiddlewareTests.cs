@@ -70,4 +70,30 @@ public sealed class BrowserRequestProtectionMiddlewareTests {
         Assert.False(invoked);
         Assert.Equal(StatusCodes.Status403Forbidden, context.Response.StatusCode);
     }
+
+    [Theory]
+    [InlineData("/api/v1/auth/admin-sso/login", "admin", "https://admin.fooddiary.example", true)]
+    [InlineData("/api/v1/auth/admin-sso/google", "admin", "https://admin.fooddiary.example", true)]
+    [InlineData("/api/v1/auth/admin-sso/login", "web", "https://admin.fooddiary.example", false)]
+    [InlineData("/api/v1/auth/admin-sso/google/", "admin", "https://fooddiary.example", false)]
+    [InlineData("/api/v1/auth/admin-sso/login", "admin", null, false)]
+    public async Task AdminConfirmation_RequiresSameOriginAdminTransportInProduction(string path, string client, string? origin, bool allowed) {
+        await using ServiceProvider services = new ServiceCollection().AddOptions().BuildServiceProvider();
+        var context = new DefaultHttpContext { RequestServices = services };
+        context.Request.Scheme = "https";
+        context.Request.Host = new HostString("admin.fooddiary.example");
+        context.Request.Path = path;
+        context.Request.Method = HttpMethods.Post;
+        context.Request.Headers.XRequestedWith = "XMLHttpRequest";
+        context.Request.Headers[BrowserSessionCookieService.ClientHeader] = client;
+        context.Request.Headers.Origin = origin;
+        context.Response.Body = new MemoryStream();
+        IWebHostEnvironment environment = Substitute.For<IWebHostEnvironment>();
+        environment.EnvironmentName.Returns("Production");
+        var middleware = new BrowserRequestProtectionMiddleware(_ => Task.CompletedTask);
+
+        await middleware.InvokeAsync(context, CorsOptionsFactory.Create(new ApiCorsOptions { Origins = ["https://fooddiary.example"] }), environment);
+
+        Assert.Equal(allowed ? StatusCodes.Status200OK : StatusCodes.Status403Forbidden, context.Response.StatusCode);
+    }
 }

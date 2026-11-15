@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 523,
-    "componentsWithoutDirectSpecs": 135,
+    "components": 524,
+    "componentsWithoutDirectSpecs": 136,
     "inputs": 1680,
     "outputs": 564,
-    "apiCalls": 334,
-    "templatesWithTranslations": 378,
-    "translationKeys": 2292,
-    "consumerEdges": 1355,
+    "apiCalls": 336,
+    "templatesWithTranslations": 379,
+    "translationKeys": 2294,
+    "consumerEdges": 1356,
     "consumedComponents": 332,
-    "unconsumedComponents": 190
+    "unconsumedComponents": 191
   },
   "components": [
     {
@@ -193,6 +193,19 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.spec.ts"
+    },
+    {
+      "class": "AdminSignInComponent",
+      "selector": "fd-admin-sign-in",
+      "feature": "admin-auth",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "AdminBillingCancellationsTableComponent",
@@ -18113,7 +18126,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/session",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 75,
+      "line": 92,
       "publicMethod": "restoreInternalAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18123,9 +18136,33 @@
       "feature": "admin-auth",
       "method": "POST",
       "responseType": null,
+      "urlExpression": "/api/v{version}/auth/admin-sso/login",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
+      "line": 173,
+      "publicMethod": "signInWithPasswordAsync",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/auth/admin-sso/login"
+    },
+    {
+      "feature": "admin-auth",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/auth/admin-sso/google",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
+      "line": 182,
+      "publicMethod": "signInWithGoogleAsync",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/auth/admin-sso/google"
+    },
+    {
+      "feature": "admin-auth",
+      "method": "POST",
+      "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/exchange",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 161,
+      "line": 209,
       "publicMethod": "exchangeSsoCodeAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -22107,6 +22144,19 @@
       ]
     },
     {
+      "feature": "admin-auth",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
+      "keys": [
+        "ADMIN_AUTH.SIGN_IN_GOOGLE_UNAVAILABLE",
+        "ADMIN_AUTH.SIGN_IN_HINT",
+        "ADMIN_AUTH.SIGN_IN_TITLE",
+        "AUTH.LOGIN.EMAIL",
+        "AUTH.LOGIN.LOGIN",
+        "AUTH.LOGIN.PASSWORD",
+        "COMMON.LOADING"
+      ]
+    },
+    {
       "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.html",
       "keys": [
@@ -22773,10 +22823,8 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.html",
       "keys": [
-        "AUTH.CONFIRM.ADMIN_HINT",
         "AUTH.CONFIRM.BACK",
         "AUTH.CONFIRM.ERROR",
-        "AUTH.CONFIRM.TITLE",
         "COMMON.LOADING"
       ]
     },
@@ -28010,23 +28058,6 @@
       "selector": "fd-auth",
       "componentPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
       "consumerFeature": "auth",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "confirmationUserId",
-        "hideTelegram",
-        "inlineSignIn",
-        "useRouting"
-      ],
-      "outputsHandled": [
-        "signedIn"
-      ]
-    },
-    {
-      "component": "AuthComponent",
-      "selector": "fd-auth",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/email-verification/telegram-diary-transfer.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -30205,6 +30236,20 @@
       "component": "FdUiButtonComponent",
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-auth",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fullWidth",
+        "loading",
+        "type"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-billing",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.html",
       "occurrences": 2,
@@ -31334,19 +31379,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "ariaLabel",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "auth",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "fullWidth",
         "variant"
       ],
       "outputsHandled": []
@@ -34426,6 +34458,19 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/pages/admin-ai-usage.html",
       "occurrences": 6,
       "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "admin-auth",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "density"
+      ],
       "outputsHandled": []
     },
     {
@@ -38921,6 +38966,20 @@
       "occurrences": 5,
       "inputsUsed": [
         "label"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "admin-auth",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "autocomplete",
+        "label",
+        "type"
       ],
       "outputsHandled": []
     },

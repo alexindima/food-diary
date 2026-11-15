@@ -69,6 +69,7 @@ export class AppComponent {
     protected readonly isUsersSectionExpanded = signal(true);
     protected readonly currentUrl = signal(this.router.url);
     protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/u, 1)[0] ?? '/');
+    protected readonly isSignIn = computed(() => this.currentPath() === '/sign-in');
     protected readonly skipToMainHref = computed(() => {
         const path = this.currentUrl().split('#', 1)[0];
         return `${path.length > 0 ? path : '/'}#admin-main-content`;

@@ -16763,7 +16763,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "GoogleLoginCommandValidator",
@@ -16826,7 +16826,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "LoginCommandValidator",

@@ -51,7 +51,7 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
             !Request.Headers.ContainsKey(BrowserSessionCookieService.SessionHeader) && !Request.Cookies.ContainsKey(alternateName)) {
             return NoContent();
         }
-        IActionResult result = await HandleOk(credential.ToBrowserRestoreCommand(rememberMe), value => {
+        IActionResult result = await HandleOk(credential.ToBrowserRestoreCommand(rememberMe, admin), value => {
             if (value.Renewed) {
                 cookies.Set(HttpContext, value, BrowserSessionCookieService.IsAdmin(HttpContext));
             } else {

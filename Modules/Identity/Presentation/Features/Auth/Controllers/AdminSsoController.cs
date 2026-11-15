@@ -41,4 +41,34 @@ public sealed class AdminSsoController(ISender mediator) : BaseApiController(med
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> AdminSsoExchange([FromBody] AdminSsoExchangeHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
+
+    [AllowAnonymous]
+    [HttpPost("login")]
+    [PasswordLoginRetryAfter]
+    [RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
+    [RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.PasswordLoginRateLimitPolicyName)]
+    public Task<IActionResult> AdminPasswordLogin([FromBody] LoginHttpRequest request) =>
+        HandleOk(request.ToAdminCommand(HttpContext), static value => value.ToHttpResponse());
+
+    [AllowAnonymous]
+    [HttpPost("google")]
+    [RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
+    [RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.GoogleLoginRateLimitPolicyName)]
+    public Task<IActionResult> AdminGoogleLogin([FromBody] GoogleLoginHttpRequest request) =>
+        HandleOk(request.ToAdminCommand(HttpContext), static value => value.ToHttpResponse());
 }

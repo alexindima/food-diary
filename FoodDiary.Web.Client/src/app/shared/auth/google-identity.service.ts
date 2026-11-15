@@ -1,5 +1,7 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID, RendererFactory2, Service, signal } from '@angular/core';
+import { inject, PLATFORM_ID, RendererFactory2, RendererStyleFlags2, Service, signal } from '@angular/core';
+
+import { ThemeService } from '../theme/theme.service';
 
 type GoogleInitOptions = {
     clientId: string;
@@ -32,6 +34,7 @@ export class GoogleIdentityService {
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly renderer = inject(RendererFactory2).createRenderer(null, null);
+    private readonly themeService = inject(ThemeService);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly scriptUrl = 'https://accounts.google.com/gsi/client';
     private readonly scriptLoaded = signal<boolean>(false);
@@ -82,10 +85,13 @@ export class GoogleIdentityService {
             return;
         }
 
+        // A dark embedding color scheme makes the light Google document paint an opaque canvas.
+        this.renderer.setStyle(target, 'color-scheme', 'only light', RendererStyleFlags2.DashCase);
+        this.renderer.setProperty(target, 'textContent', '');
         googleIdentity.renderButton(target, {
             type: 'standard',
             size: 'large',
-            theme,
+            theme: this.themeService.theme() === 'dark' ? 'filled_black' : theme,
             text: 'continue_with',
             shape: 'pill',
             logo_alignment: 'left',

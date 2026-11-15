@@ -48,14 +48,30 @@ internal sealed class UserAuthenticationIdentityService(
         return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
     }
 
-    public async Task<Result<UserAuthenticationPrincipalModel>> AuthenticateGoogleAsync(
+    public Task<Result<UserAuthenticationPrincipalModel>> AuthenticateGoogleAsync(
         UserGoogleAuthenticationModel identity,
         DateTime authenticatedAtUtc,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default) =>
+        AuthenticateGoogleAsync(identity, authenticatedAtUtc, allowRegistration: true, cancellationToken);
+
+    public Task<Result<UserAuthenticationPrincipalModel>> AuthenticateLinkedGoogleAsync(
+        UserGoogleAuthenticationModel identity,
+        DateTime authenticatedAtUtc,
+        CancellationToken cancellationToken = default) =>
+        AuthenticateGoogleAsync(identity, authenticatedAtUtc, allowRegistration: false, cancellationToken);
+
+    private async Task<Result<UserAuthenticationPrincipalModel>> AuthenticateGoogleAsync(
+        UserGoogleAuthenticationModel identity,
+        DateTime authenticatedAtUtc,
+        bool allowRegistration,
+        CancellationToken cancellationToken) {
         User? user = await googleIdentityUserDirectoryService
             .GetByGoogleIdentityIncludingDeletedAsync(identity.Issuer, identity.Subject, cancellationToken);
 
         if (user is null) {
+            if (!allowRegistration) {
+                return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.GoogleAccountLinkRequired);
+            }
             User? emailOwner = await userLookupRepository
                 .GetByEmailIncludingDeletedAsync(identity.Email, cancellationToken);
             if (emailOwner is not null) {

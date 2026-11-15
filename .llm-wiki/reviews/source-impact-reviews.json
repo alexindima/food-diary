@@ -384,14 +384,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "017e353266ad63296e55765c0cd87e542d57fa3eef91b0eba2e7b8b220fd5a17",
-          "reviewReason": "Reviewed the real host OpenAPI export and both scoped SDK contracts. LoginHttpRequest and GoogleLoginHttpRequest add optional nullable expectedUserId. The same operations, required fields, status codes and response shapes are preserved. Existing clients can omit the field. The workflow and existing compatibility waivers remain accurate."
+          "sha256": "cbb79da82e00ace89fffc2f428d728fb7393a57186a4f44910c265afdc4db0bd",
+          "reviewReason": "The full OpenAPI snapshot adds only POST auth/admin-sso/login and auth/admin-sso/google. They reuse the existing login request and authentication response schemas. Export snapshots and HTTP integration tests passed, including cookie isolation, expected account and role enforcement. The workflow compatibility guidance and its historical acceptance record still apply."
         }
       ],
-      "reason": "Verified that PresentationBoundaryIntegrationTests reads identical required JSON properties in the same order and leaves response assertions and OpenAPI snapshots intact.",
+      "reason": "The full OpenAPI snapshot adds only POST auth/admin-sso/login and auth/admin-sso/google. They reuse the existing login request and authentication response schemas. Export snapshots and HTTP integration tests passed, including cookie isolation, expected account and role enforcement. The workflow compatibility guidance and its historical acceptance record still apply.",
       "baseRef": "HEAD",
-      "gitHead": "0e54a9a48386e75461b89c42b900cb30d2c4a1a9",
-      "reviewedAtUtc": "2026-11-13T21:01:51.5425891Z"
+      "gitHead": "91d96db68c88339dce8074554c14c03806b4d012",
+      "reviewedAtUtc": "2026-11-15T08:01:19.7020055Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

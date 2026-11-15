@@ -1,5 +1,15 @@
 export type AdminUnauthorizedReason = 'forbidden' | 'unauthenticated';
 
+export function buildAdminSignInUrl(adminOrigin: URL, path: string, expectedUserId: string | null): URL {
+    const url = new URL('/sign-in', adminOrigin);
+    url.searchParams.set('returnUrl', path);
+    url.searchParams.set('confirm', '1');
+    if (expectedUserId !== null) {
+        url.hash = new URLSearchParams({ account: expectedUserId }).toString();
+    }
+    return url;
+}
+
 export function buildAdminUnauthorizedUrl(
     returnUrl: string,
     reason: AdminUnauthorizedReason,

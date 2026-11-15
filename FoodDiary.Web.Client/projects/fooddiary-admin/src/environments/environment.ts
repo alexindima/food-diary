@@ -3,6 +3,7 @@ export const environment = {
         auth: 'http://localhost:5300/api/v1/auth',
     },
     mainAppUrl: 'http://localhost:4200',
+    googleClientId: '',
     buildVersion: 'dev',
     enableGlobalErrorHandler: false,
 };

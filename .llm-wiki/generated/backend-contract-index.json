@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1426,
     "ambiguousContracts": 34,
-    "consumerEdges": 11592,
-    "productionConsumerEdges": 6453,
+    "consumerEdges": 11594,
+    "productionConsumerEdges": 6455,
     "testConsumerEdges": 5139,
     "consumedContracts": 1426,
     "unconsumedContracts": 0
@@ -29944,7 +29944,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "AuthenticationHttpResponse",
@@ -60751,7 +60751,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "GoogleLoginCommand",
@@ -60827,6 +60827,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/GoogleLoginHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GoogleLoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/GoogleLoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
       "isTest": false,
       "referenceCount": 2
@@ -60855,7 +60868,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "GoogleLoginHttpRequest",
@@ -141285,7 +141298,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IUserRoleMembershipService",
@@ -146017,7 +146030,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "LoginCommand",
@@ -146106,6 +146119,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "LoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -146173,7 +146199,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 6
     },
     {
       "contract": "LoginHttpRequest",

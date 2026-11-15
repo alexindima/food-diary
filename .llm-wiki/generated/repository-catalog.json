@@ -20,7 +20,7 @@
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
     "controllers": 116,
-    "endpoints": 381,
+    "endpoints": 383,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -16424,6 +16424,16 @@
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
             "line": 32
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/admin-sso/login",
+            "line": 46
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/admin-sso/google",
+            "line": 61
           }
         ]
       },

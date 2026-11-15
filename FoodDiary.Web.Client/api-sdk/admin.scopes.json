@@ -162,6 +162,8 @@
         "name": "AdminAuth",
         "operations": {
             "POST /api/v{version}/auth/admin-sso/exchange": "postAuthAdminSsoExchange",
+            "POST /api/v{version}/auth/admin-sso/google": "postAuthAdminSsoGoogle",
+            "POST /api/v{version}/auth/admin-sso/login": "postAuthAdminSsoLogin",
             "POST /api/v{version}/auth/admin-sso/start": "postAuthAdminSsoStart"
         },
         "prefix": "/api/v{version}/auth/admin-sso"

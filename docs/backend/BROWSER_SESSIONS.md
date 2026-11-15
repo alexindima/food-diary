@@ -210,6 +210,13 @@ Legacy stored browser tokens are discarded on startup.
 ## Admin and impersonation
 
 Admin SSO issues its own opaque cookie and leaves the main site's cookie intact.
+The admin app restores that cookie before requesting SSO from the diary. SSO
+requires a password or Google sign-in from the past 15 minutes. If the diary
+cannot issue a code, the admin app accepts the administrator's password or an
+already linked Google account and sets only the admin cookie. An existing
+admin grant cannot be used as the diary confirmation for another SSO handoff.
+Google sign-in on the admin site requires `https://admin.fooddiary.club` in
+the existing OAuth client's Authorized JavaScript origins.
 Direct issuance uses the configured access-token lifetime and the current account
 access cap; the ordinary 30/90-day browser-session lifetime does not extend
 administrator access. The compatibility converter still caps its session by the

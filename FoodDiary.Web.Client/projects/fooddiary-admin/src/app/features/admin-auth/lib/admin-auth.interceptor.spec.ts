@@ -56,8 +56,8 @@ describe('administrative cookie transport', () => {
         http.get(`${root}/admin/users`).subscribe({ error: () => {} });
         requests.expectOne(`${root}/admin/users`).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
         expect(auth.invalidateSession).toHaveBeenCalledOnce();
-        expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
-            queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' },
+        expect(router.navigate).toHaveBeenCalledWith(['/sign-in'], {
+            queryParams: { returnUrl: '/users?page=2' },
         });
     });
 

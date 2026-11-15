@@ -186,6 +186,8 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void AllowAnonymous_UsageMatchesReviewedAllowlist() {
         string[] expected = [
+            "AdminSsoController.AdminGoogleLogin",
+            "AdminSsoController.AdminPasswordLogin",
             "AdminSsoController.AdminSsoExchange",
             "AuthImpersonationController.ExchangeImpersonation",
             "AuthPasswordController.ConfirmPasswordReset",

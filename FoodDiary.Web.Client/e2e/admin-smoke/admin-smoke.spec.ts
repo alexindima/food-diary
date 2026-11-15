@@ -41,8 +41,8 @@ test.describe('admin guidance accessibility', () => {
     }
 });
 
-test.describe('admin SSO rejection', () => {
-    test('does not exchange a rejected one-use code again on the access denied page', async ({ page }) => {
+test.describe('admin sign-in', () => {
+    test('shows confirmation in the admin app after a one-use code is rejected', async ({ page }) => {
         let exchanges = 0;
         await page.route('**/api/v1/auth/admin-sso/exchange', async route => {
             exchanges++;
@@ -51,9 +51,44 @@ test.describe('admin SSO rejection', () => {
 
         await page.goto('/users?page=2#code=rejected-code');
 
-        await expect(page.getByRole('heading', { name: 'Access denied' })).toBeVisible();
-        await expect(page).toHaveURL(/\/unauthorized\?reason=unauthenticated&returnUrl=%2Fusers%3Fpage%3D2$/);
+        await expect(page.getByRole('heading', { name: 'Sign in to FoodDiary Admin' })).toBeVisible();
+        await expect(page).toHaveURL(/\/sign-in\?returnUrl=%2Fusers%3Fpage%3D2&confirm=1$/);
         expect(exchanges).toBe(1);
+    });
+    test('tries diary SSO after cookie restoration and confirms on the admin origin', async ({ page }) => {
+        const account = '00000000-0000-4000-8000-000000000003';
+        let attempts = 0;
+        await mockAdminApiAsync(page);
+        await page.route('**/api/v1/auth/session', async route => route.fulfill({ status: HTTP_UNAUTHORIZED, json: {} }));
+        await page.route('http://localhost:4200/auth/confirm-admin**', async route => {
+            attempts++;
+            expect(new URL(route.request().url()).searchParams.get('adminReturnUrl')).toBe('/users?page=2');
+            const destination = new URL('/sign-in', 'http://127.0.0.1:4301');
+            destination.searchParams.set('returnUrl', '/users?page=2');
+            destination.searchParams.set('confirm', '1');
+            destination.hash = new URLSearchParams({ account }).toString();
+            await route.fulfill({ status: 302, headers: { Location: destination.href } });
+        });
+        await page.route('**/api/v1/auth/admin-sso/login', async route => {
+            expect(route.request().postDataJSON()).toEqual({
+                email: 'admin@example.com',
+                password: 'Password123!',
+                expectedUserId: account,
+            });
+            expect(route.request().headers()['x-fooddiary-client']).toBe('admin');
+            await route.fulfill(
+                jsonResponse({ sessionId: '00000000-0000-4000-8000-000000000002', roles: ['Admin'], user: { id: account } }),
+            );
+        });
+        await page.goto(`/users?page=2#account=${account}`);
+
+        await expect(page.getByRole('heading', { name: 'Sign in to FoodDiary Admin' })).toBeVisible();
+        await page.getByLabel('Email').fill('admin@example.com');
+        await page.getByLabel('Password').fill('Password123!');
+        await page.getByRole('button', { name: 'Login', exact: true }).click();
+        await expect(page).toHaveURL(/\/users\?page=2$/);
+        await expect(page.getByRole('heading', { name: 'Accounts', exact: true })).toBeVisible();
+        expect(attempts).toBe(1);
     });
 });
 
@@ -96,15 +131,6 @@ test.describe('admin smoke', () => {
             expect(exchanges).toBe(1);
         });
     }
-
-    test('redirects unauthenticated user to unauthorized page', async ({ page }) => {
-        await page.route('**/api/v1/auth/session', async route => route.fulfill({ status: HTTP_UNAUTHORIZED, json: {} }));
-        await page.goto('/users');
-
-        await expect(page).toHaveURL(/\/unauthorized\?reason=unauthenticated/);
-        await expect(page.getByRole('heading', { name: 'Access denied' })).toBeVisible();
-        await expect(page.getByText('Your admin session is missing or expired.')).toBeVisible();
-    });
 
     test('renders admin pages for authenticated admin with mocked api', async ({ page }) => {
         const consoleErrors: string[] = [];

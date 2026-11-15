@@ -1,0 +1,11 @@
+.admin-sign-in {
+    display: block;
+    inline-size: min(100%, 30rem);
+    margin-inline: auto;
+
+    &__google {
+        display: flex;
+        justify-content: center;
+        min-block-size: var(--fd-size-control-md);
+    }
+}

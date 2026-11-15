@@ -23,6 +23,11 @@ public interface IUserAuthenticationIdentityService {
         DateTime authenticatedAtUtc,
         CancellationToken cancellationToken = default);
 
+    Task<Result<UserAuthenticationPrincipalModel>> AuthenticateLinkedGoogleAsync(
+        UserGoogleAuthenticationModel identity,
+        DateTime authenticatedAtUtc,
+        CancellationToken cancellationToken = default);
+
     Task<Result<UserAuthenticationPrincipalModel>> AuthenticateTelegramAsync(
         long telegramUserId,
         DateTime authenticatedAtUtc,

@@ -22,6 +22,15 @@ public sealed class BrowserRequestProtectionMiddleware(RequestDelegate next) {
             return;
         }
         string origin = context.Request.Headers.Origin.ToString();
+        string ownOrigin = $"{context.Request.Scheme}://{context.Request.Host}";
+        string routePath = path.TrimEnd('/');
+        bool adminSignIn = routePath.EndsWith("/auth/admin-sso/login", StringComparison.OrdinalIgnoreCase) ||
+            routePath.EndsWith("/auth/admin-sso/google", StringComparison.OrdinalIgnoreCase);
+        if (adminSignIn && unsafeMethod && (bearer || context.Request.Headers[BrowserSessionCookieService.ClientHeader] != "admin" ||
+            (!environment.IsDevelopment() && !string.Equals(origin, ownOrigin, StringComparison.OrdinalIgnoreCase)))) {
+            await RejectAsync(context, context.RequestAborted);
+            return;
+        }
         string expectedSession = context.Request.Headers[BrowserSessionCookieService.SessionHeader].ToString();
         if (!bearer && context.Request.Headers[BrowserSessionCookieService.ClientHeader] != "telegram" && expectedSession.Length > 0 &&
             BrowserSessionCredential.TryReadSessionId(context.Request.Cookies[BrowserSessionCookieService.CookieName(context)], out Guid actualSession) &&
@@ -31,7 +40,6 @@ public sealed class BrowserRequestProtectionMiddleware(RequestDelegate next) {
                 "Authentication.SessionChanged", "The request belongs to another session.", context.TraceIdentifier), context.RequestAborted);
             return;
         }
-        string ownOrigin = $"{context.Request.Scheme}://{context.Request.Host}";
         if (!bearer && BrowserSessionCookieService.IsAdmin(context) && !environment.IsDevelopment() && origin.Length > 0 &&
             !string.Equals(origin, ownOrigin, StringComparison.OrdinalIgnoreCase)) {
             await RejectAsync(context, context.RequestAborted);

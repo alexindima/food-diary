@@ -1,17 +1,30 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom, type Observable, timeout } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { adminApiErrorCode } from '../../../shared/api/admin-api-error';
 import { AdminAuthSdk } from '../../../shared/api/sdk/generated/api/admin-auth.service';
 import { AdminSessionSdk } from '../../../shared/api/sdk/generated/api/admin-session.service';
+import type { AuthenticationHttpResponse } from '../../../shared/api/sdk/generated/model/authentication-http-response';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
+import { type AdminId, optionalAdminId } from '../../../shared/models/semantics/admin-meaning';
 
-type AdminSession = { id: string; roles: readonly string[] };
+type AdminSession = { id: string; userId: AdminId<'user'> | null; roles: readonly string[] };
 const RESTORATION_TIMEOUT_MS = 30_000;
 const MAX_RETRY_AFTER_SECONDS = 3600;
 const MILLISECONDS_PER_SECOND = 1000;
+
+const ADMIN_SIGN_IN_ERRORS = new Map<string, string>([
+    ['Authentication.ReauthenticationAccountMismatch', 'AUTH.CONFIRM.ACCOUNT_MISMATCH'],
+    ['Authentication.GoogleAccountLinkRequired', 'ADMIN_AUTH.SIGN_IN_GOOGLE_UNLINKED'],
+    ['RateLimit.Exceeded', 'ADMIN_AUTH.RATE_LIMITED_MESSAGE'],
+]);
+
+export function adminSignInErrorKey(error: unknown): string {
+    return ADMIN_SIGN_IN_ERRORS.get(adminApiErrorCode(error) ?? '') ?? 'ADMIN_AUTH.SIGN_IN_ERROR';
+}
 
 @Service()
 export class AdminAuthService {
@@ -38,6 +51,10 @@ export class AdminAuthService {
 
     public isAuthenticated(): boolean {
         return this.session() !== null;
+    }
+
+    public getUserId(): AdminId<'user'> | null {
+        return this.session()?.userId ?? null;
     }
 
     public isAdmin(): boolean {
@@ -151,6 +168,37 @@ export class AdminAuthService {
         return !this.sessionUnavailable() && this.isAdmin();
     }
 
+    public async signInWithPasswordAsync(email: string, password: string, expectedUserId: AdminId<'user'> | null): Promise<boolean> {
+        return this.signInAsync(
+            this.sdk.client.postAuthAdminSsoLogin({
+                version: this.sdk.version,
+                loginHttpRequest: { email, password, expectedUserId },
+            }),
+        );
+    }
+
+    public async signInWithGoogleAsync(credential: string, expectedUserId: AdminId<'user'> | null): Promise<boolean> {
+        return this.signInAsync(
+            this.sdk.client.postAuthAdminSsoGoogle({
+                version: this.sdk.version,
+                googleLoginHttpRequest: { credential, expectedUserId },
+            }),
+        );
+    }
+
+    private async signInAsync(request: Observable<AuthenticationHttpResponse>): Promise<boolean> {
+        const generation = ++this.generation;
+        const response = await firstValueFrom(request);
+        if (generation !== this.generation) {
+            return false;
+        }
+        this.applySession(response);
+        this.sessionUnavailableSignal.set(false);
+        this.ssoRateLimitedSignal.set(false);
+        this.retryAt = 0;
+        return this.isAdmin();
+    }
+
     public async exchangeSsoCodeAsync(code: string): Promise<boolean> {
         const generation = ++this.generation;
         this.sessionUnavailableSignal.set(false);
@@ -179,11 +227,11 @@ export class AdminAuthService {
         }
     }
 
-    private applySession(value: { sessionId?: string | null; roles?: string[] | null }): void {
+    private applySession(value: AuthenticationHttpResponse): void {
         if (value.sessionId === null || value.sessionId === undefined || value.sessionId.length === 0 || !Array.isArray(value.roles)) {
             throw new Error('Missing administrative session metadata');
         }
-        this.session.set({ id: value.sessionId, roles: value.roles });
+        this.session.set({ id: value.sessionId, userId: optionalAdminId<'user'>(value.user?.id ?? null), roles: value.roles });
     }
 
     private replaceCurrentUrl(params: URLSearchParams): void {

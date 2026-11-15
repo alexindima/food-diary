@@ -5,6 +5,7 @@ using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -49,6 +50,10 @@ public sealed class LoginCommandHandler(
             UserAuthenticationPrincipalModel principal = authenticationResult.Value;
             if (command.ExpectedUserId is { } expectedUserId && principal.UserId.Value != expectedUserId) {
                 return Result.Failure<AuthenticationModel>(IdentityErrors.ReauthenticationAccountMismatch);
+            }
+            if (command.ClientContext?.CredentialKind == AuthenticationCredentialKind.AdminBrowser &&
+                !principal.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
+                return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoForbidden);
             }
             IssuedAuthenticationTokens tokens = await authenticationTokenService
                 .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe);

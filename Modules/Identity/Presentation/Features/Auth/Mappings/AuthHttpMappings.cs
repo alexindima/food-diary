@@ -36,7 +36,7 @@ public static class AuthHttpMappings {
     public static RestoreBrowserSessionCommand InvalidBrowserSessionRestoration() => new(Credential: null);
 
     extension(string? credential) {
-        public RestoreBrowserSessionCommand ToBrowserRestoreCommand(bool rememberMe = false) => new(credential, rememberMe);
+        public RestoreBrowserSessionCommand ToBrowserRestoreCommand(bool rememberMe = false, bool admin = false) => new(credential, rememberMe, admin);
         public LogoutBrowserSessionCommand ToBrowserLogoutCommand() => new(credential);
     }
 
@@ -97,6 +97,11 @@ public static class AuthHttpMappings {
                 ClientContext: httpContext.ToAuthenticationClientContext("password"),
                 ExpectedUserId: request.ExpectedUserId);
         }
+
+        public LoginCommand ToAdminCommand(HttpContext httpContext) => request.ToCommand() with {
+            RememberMe = false,
+            ClientContext = httpContext.ToAuthenticationClientContext("password", replaceBrowserSession: false, confirmAdmin: true),
+        };
     }
 
     extension(GoogleLoginHttpRequest request) {
@@ -113,6 +118,11 @@ public static class AuthHttpMappings {
                 ClientContext: httpContext.ToAuthenticationClientContext("google"),
                 ExpectedUserId: request.ExpectedUserId);
         }
+
+        public GoogleLoginCommand ToAdminCommand(HttpContext httpContext) => request.ToCommand() with {
+            RememberMe = false,
+            ClientContext = httpContext.ToAuthenticationClientContext("google", replaceBrowserSession: false, confirmAdmin: true),
+        };
     }
 
     extension(GoogleLoginHttpRequest request) {
@@ -245,8 +255,8 @@ public static class AuthHttpMappings {
     }
 
     extension(HttpContext httpContext) {
-        internal AuthenticationClientContext ToAuthenticationClientContext(string authProvider, bool replaceBrowserSession = true) {
-            bool admin = string.Equals(authProvider, "admin-sso", StringComparison.Ordinal);
+        internal AuthenticationClientContext ToAuthenticationClientContext(string authProvider, bool replaceBrowserSession = true, bool confirmAdmin = false) {
+            bool admin = confirmAdmin || string.Equals(authProvider, "admin-sso", StringComparison.Ordinal);
             bool bearer = !admin && (string.Equals(authProvider, "telegram-bot", StringComparison.Ordinal) ||
                 httpContext.Request.Headers[BrowserSessionCookieService.ClientHeader] == "telegram");
             AuthenticationCredentialKind kind = admin ? AuthenticationCredentialKind.AdminBrowser : AuthenticationCredentialKind.Browser;
@@ -265,7 +275,8 @@ public static class AuthHttpMappings {
                 replaceBrowserSession ? httpContext.Request.Cookies[RefreshTokenCookieService.CookieName] : null,
                 kind,
                 bearer ? null : httpContext.Request.Cookies[BrowserSessionCookieService.CookieName(httpContext, admin)],
-                previousSessionId);
+                previousSessionId,
+                AdminAccessConfirmed: confirmAdmin);
         }
     }
 }

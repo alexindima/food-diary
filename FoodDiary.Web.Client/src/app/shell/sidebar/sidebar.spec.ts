@@ -4,11 +4,11 @@ import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { Observable, of, Subject } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
+import { type Observable, of, Subject } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
-import { ADMIN_LOADING_URL_TTL_MS, SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
+import { SIDEBAR_MOBILE_VIEWPORT_QUERY } from '../../config/runtime-ui.tokens';
 import { DashboardService } from '../../features/dashboard/api/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { UnsavedChangesService } from '../../services/unsaved-changes.service';
@@ -18,9 +18,6 @@ import { SidebarComponent } from './sidebar';
 import type { DesktopSectionId, MobileSheetId, SidebarActionItem, SidebarRouteItem } from './sidebar-lib/sidebar.models';
 
 const NAVIGATION_ID = 1;
-const ADMIN_LOADING_TTL_MS = 100;
-const ADMIN_SSO_CODE = 'admin-sso-code';
-const ADMIN_LOADING_URL = 'blob:admin-loading';
 
 type SidebarHarness = {
     closeMobileMenus: () => void;
@@ -173,55 +170,26 @@ describe('SidebarComponent admin behavior', () => {
     beforeEach(setupSidebarTestEnvironment);
     afterEach(cleanupSidebarTestEnvironment);
 
-    it('opens admin panel with SSO code for admin users', () => {
+    it('opens the admin origin with an account hint so it can restore its own session first', () => {
         const { authService, component } = createComponent();
         const harness = component as unknown as SidebarHarness;
-        const adminWindow = createAdminWindowMock();
         authService.isAdmin.set(true);
-        authService.startAdminSso.mockReturnValueOnce(of({ code: ADMIN_SSO_CODE }));
-        const openAdminWindow = mockAdminWindow(adminWindow);
+        environment.adminAppUrl = 'http://localhost:4300';
+        const openAdminWindow = vi.spyOn(window, 'open').mockReturnValue(null);
 
         harness.openAdminPanel();
 
-        expect(openAdminWindow).toHaveBeenCalledWith(ADMIN_LOADING_URL, '_blank');
-        expect(adminWindow.location.assign).toHaveBeenCalledWith(`http://localhost:4300/#code=${ADMIN_SSO_CODE}`);
+        expect(openAdminWindow).toHaveBeenCalledWith('http://localhost:4300/#account=sidebar-test-user', '_blank', 'noopener');
     });
 
-    it('closes admin loading window and shows toast when SSO fails', () => {
-        const { authService, component, toastService } = createComponent();
+    it('does not open the admin origin for a regular user', () => {
+        const { component } = createComponent();
         const harness = component as unknown as SidebarHarness;
-        const adminWindow = createAdminWindowMock();
-        authService.isAdmin.set(true);
-        authService.startAdminSso.mockReturnValueOnce(
-            new Observable(subscriber => {
-                subscriber.error(new Error('sso failed'));
-            }),
-        );
-        mockAdminWindow(adminWindow);
+        const openAdminWindow = vi.spyOn(window, 'open').mockReturnValue(null);
 
         harness.openAdminPanel();
 
-        expect(adminWindow.close).toHaveBeenCalledOnce();
-        expect(toastService.error).toHaveBeenCalledWith('USER_MANAGE.ADMIN_SSO_ERROR');
-    });
-
-    it('prompts for confirmation in the current tab when admin SSO needs a fresh sign-in', () => {
-        const { authService, component, router, toastService } = createComponent();
-        const harness = component as unknown as SidebarHarness;
-        const adminWindow = createAdminWindowMock();
-        authService.isAdmin.set(true);
-        authService.startAdminSso.mockReturnValueOnce(
-            new Observable(subscriber => {
-                subscriber.error({ error: { error: 'Authentication.ReauthenticationRequired' } });
-            }),
-        );
-        mockAdminWindow(adminWindow);
-
-        harness.openAdminPanel();
-
-        expect(adminWindow.close).toHaveBeenCalledOnce();
-        expect(router.navigate).toHaveBeenCalledWith(['/auth/confirm-admin']);
-        expect(toastService.error).not.toHaveBeenCalled();
+        expect(openAdminWindow).not.toHaveBeenCalled();
     });
 });
 
@@ -317,7 +285,6 @@ function createComponent(options: SidebarViewportOptions = {}): {
             { provide: TranslateService, useValue: { instant: (key: string): string => key } },
             { provide: Router, useValue: router },
             { provide: SIDEBAR_MOBILE_VIEWPORT_QUERY, useValue: '(max-width: 767px)' },
-            { provide: ADMIN_LOADING_URL_TTL_MS, useValue: ADMIN_LOADING_TTL_MS },
         ],
     });
     TestBed.overrideComponent(SidebarComponent, {
@@ -340,7 +307,6 @@ function createAuthServiceMock(): {
     isPremium: WritableSignal<boolean>;
     getUserId: () => string;
     onLogoutAsync: ReturnType<typeof vi.fn>;
-    startAdminSso: ReturnType<typeof vi.fn>;
 } {
     return {
         isAuthenticated: signal(true),
@@ -349,29 +315,7 @@ function createAuthServiceMock(): {
         isDietologist: signal(false),
         isAdmin: signal(false),
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
-        startAdminSso: vi.fn(),
     };
-}
-
-function createAdminWindowMock(): {
-    close: ReturnType<typeof vi.fn>;
-    location: {
-        assign: ReturnType<typeof vi.fn>;
-    };
-} {
-    return {
-        close: vi.fn(),
-        location: {
-            assign: vi.fn(),
-        },
-    };
-}
-
-function mockAdminWindow(adminWindow: ReturnType<typeof createAdminWindowMock>): MockInstance<Window['open']> {
-    environment.adminAppUrl = 'http://localhost:4300';
-    vi.spyOn(URL, 'createObjectURL').mockReturnValue(ADMIN_LOADING_URL);
-    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
-    return vi.spyOn(window, 'open').mockReturnValue(adminWindow as unknown as Window);
 }
 
 function createDialogServiceMock(): {

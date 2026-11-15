@@ -64,9 +64,9 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
 
     public void GrantAdminAccess(DateTime expiresAtUtc) {
         DateTime expires = NormalizeUtcTimestamp(expiresAtUtc, nameof(expiresAtUtc));
-        if (!IsActive || !string.Equals(AuthProvider, "admin-sso", StringComparison.Ordinal) ||
+        if (!IsActive || AuthProvider is not ("admin-sso" or "password" or "google") ||
             ExpiresAtUtc is not { } limit || expires <= CreatedAtUtc || expires > limit) {
-            throw new InvalidOperationException("Administrative access requires a confirmed SSO session with a bounded lifetime.");
+            throw new InvalidOperationException("Administrative access requires a confirmed session with a bounded lifetime.");
         }
         AdminAccessExpiresAtUtc = expires;
     }

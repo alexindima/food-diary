@@ -18,7 +18,6 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { environment } from '../../../../../../environments/environment';
 import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
-import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { ActiveSessionsFacade } from '../../../lib/active-sessions.facade';
 import type { PasswordActionState } from '../../../lib/user-manage.types';
 import { UserManagePasswordMethodComponent } from './user-manage-password-method';
@@ -78,11 +77,17 @@ export class UserManageSecurityCardComponent {
             }
 
             this.initializationStarted = true;
-            void this.initializeGoogleAsync(target);
+            void this.initializeGoogleAsync();
+        });
+        effect(() => {
+            const target = this.googleButton()?.nativeElement;
+            if (target !== undefined && this.isGoogleReady()) {
+                this.googleIdentityService.renderButton(target, 'filled_blue', this.locale() === 'ru' ? 'ru' : 'en');
+            }
         });
     }
 
-    private async initializeGoogleAsync(target: HTMLElement): Promise<void> {
+    private async initializeGoogleAsync(): Promise<void> {
         const clientId = environment.googleClientId ?? '';
         if (clientId.length === 0) {
             this.isGoogleUnavailable.set(true);
@@ -96,14 +101,9 @@ export class UserManageSecurityCardComponent {
                     this.googleCredential.emit(credential);
                 },
             });
-            this.googleIdentityService.renderButton(target, 'filled_blue', this.getGoogleLocale());
             this.isGoogleReady.set(true);
         } catch {
             this.isGoogleUnavailable.set(true);
         }
-    }
-
-    private getGoogleLocale(): string {
-        return resolveTranslateLanguage(this.translateService) === 'ru' ? 'ru' : 'en';
     }
 }

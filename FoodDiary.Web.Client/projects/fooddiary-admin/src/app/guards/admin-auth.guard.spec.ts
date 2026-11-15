@@ -11,6 +11,8 @@ let authService: {
     isAuthenticated: ReturnType<typeof vi.fn>;
     isAdmin: ReturnType<typeof vi.fn>;
     tryUpgradeToAdminAsync: ReturnType<typeof vi.fn>;
+    getUserId: ReturnType<typeof vi.fn>;
+    ssoRateLimited: ReturnType<typeof signal<boolean>>;
     sessionUnavailable: ReturnType<typeof signal<boolean>>;
 };
 let router: {
@@ -26,6 +28,8 @@ beforeEach(() => {
         isAuthenticated: vi.fn(),
         isAdmin: vi.fn(),
         tryUpgradeToAdminAsync: vi.fn(),
+        getUserId: vi.fn(),
+        ssoRateLimited: signal(false),
         sessionUnavailable: signal(false),
     };
     authService.applySsoFromQueryAsync.mockResolvedValue(void 0);
@@ -59,8 +63,8 @@ describe('admin rejected SSO recovery', () => {
         await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
         expect(router.createUrlTree, 'Rejected SSO codes must not be exchanged again by the recovery page').toHaveBeenCalledWith(
-            ['/unauthorized'],
-            { queryParams: { reason: 'unauthenticated', returnUrl } },
+            ['/sign-in'],
+            { queryParams: { returnUrl, confirm: '1' }, fragment: undefined },
         );
     });
 });
@@ -86,20 +90,46 @@ describe('adminAuthGuard', () => {
         expect(authService.applySsoFromQueryAsync).toHaveBeenCalled();
     });
 
-    it('should redirect unauthenticated user to unauthorized page', async () => {
+    it('tries diary SSO for a missing administrative cookie', async () => {
         authService.isAuthenticated.mockReturnValue(false);
 
         const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
-        expect(router.createUrlTree).toHaveBeenCalledWith(['/unauthorized'], {
-            queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' },
+        expect(router.createUrlTree).toHaveBeenCalledWith(['/sign-in'], {
+            queryParams: { returnUrl: '/users?page=2', confirm: '0' },
+            fragment: undefined,
         });
         expect(result).toEqual({
-            commands: ['/unauthorized'],
-            extras: { queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' } },
+            commands: ['/sign-in'],
+            extras: { queryParams: { returnUrl: '/users?page=2', confirm: '0' }, fragment: undefined },
         });
     });
 
+    it.each([
+        ['diary-admin', true],
+        ['other-admin', false],
+    ])('restores the cookie for the requested diary account %s', async (user, allowed) => {
+        authService.isAuthenticated.mockReturnValue(true);
+        authService.isAdmin.mockReturnValue(true);
+        authService.getUserId.mockReturnValue(user);
+        state = Object.assign(Object.create(RouterStateSnapshot.prototype), {
+            url: '/users?page=2#account=diary-admin',
+        }) as RouterStateSnapshot;
+
+        const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
+
+        if (allowed) {
+            expect(result).toEqual(new DefaultUrlSerializer().parse('/users?page=2'));
+        } else {
+            expect(router.createUrlTree).toHaveBeenCalledWith(['/sign-in'], {
+                queryParams: { returnUrl: '/users?page=2', confirm: '0' },
+                fragment: 'account=diary-admin',
+            });
+        }
+    });
+});
+
+describe('admin authorization after SSO', () => {
     it.each([
         ['/users?page=2#code=one-time-code', '/users?page=2'],
         ['/users?page=2&code=one-time-code#details', '/users?page=2#details'],

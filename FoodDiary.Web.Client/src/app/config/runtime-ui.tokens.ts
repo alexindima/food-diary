@@ -44,7 +44,6 @@ const DEFAULT_PAGE_READY_FALLBACK_MS = 1_500;
 const DEFAULT_LOAD_EVENT_FALLBACK_MS = 3_000;
 const DEFAULT_IDLE_TIMEOUT_MS = 2_000;
 const DEFAULT_IDLE_FALLBACK_MS = 1_200;
-const DEFAULT_ADMIN_LOADING_URL_TTL_MS = 30_000;
 
 export const GLOBAL_LOADING_TIMING = new InjectionToken<LoadingTimingConfig>('GLOBAL_LOADING_TIMING', {
     providedIn: 'root',
@@ -116,11 +115,6 @@ export const IDLE_PRELOADING_TIMING_CONFIG = new InjectionToken<IdlePreloadingTi
         idleTimeoutMs: DEFAULT_IDLE_TIMEOUT_MS,
         idleFallbackMs: DEFAULT_IDLE_FALLBACK_MS,
     }),
-});
-
-export const ADMIN_LOADING_URL_TTL_MS = new InjectionToken<number>('ADMIN_LOADING_URL_TTL_MS', {
-    providedIn: 'root',
-    factory: (): number => DEFAULT_ADMIN_LOADING_URL_TTL_MS,
 });
 
 export const AUTH_PASSWORD_RESET_COOLDOWN_SECONDS = new InjectionToken<number>('AUTH_PASSWORD_RESET_COOLDOWN_SECONDS', {

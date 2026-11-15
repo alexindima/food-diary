@@ -93,8 +93,8 @@ export class BrowserWindowService {
         return this.getWindow()?.matchMedia(query) ?? null;
     }
 
-    public open(url: string, target: string): Window | null {
-        return this.getWindow()?.open(url, target) ?? null;
+    public open(url: string, target: string, ...features: [string?]): Window | null {
+        return this.getWindow()?.open(url, target, ...features) ?? null;
     }
 
     public setTimeout(callback: () => void, delayMs: number): number | null {

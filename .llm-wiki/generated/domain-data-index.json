@@ -3949,7 +3949,7 @@
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Administrative access requires a confirmed SSO session with a bounded lifetime.\")",
+      "message": "throw new InvalidOperationException(\"Administrative access requires a confirmed session with a bounded lifetime.\")",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
       "line": 69
     },

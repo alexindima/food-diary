@@ -62,15 +62,15 @@ describe('loggedInGuard', () => {
         expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/dashboard']);
     });
 
-    it('should allow authenticated user to complete the admin sign-in handoff', async () => {
-        authServiceMock.isAuthenticated.set(true);
+    it.each([true, false])('redirects legacy admin login links to SSO with diary session %s', async authenticated => {
+        authServiceMock.isAuthenticated.set(authenticated);
         const adminRedirectState = { url: '/?auth=login&adminReturnUrl=%2F' };
         state = adminRedirectState as RouterStateSnapshot;
 
         const result = await TestBed.runInInjectionContext(async () => loggedInGuard(route, state));
 
-        expect(result).toBe(true);
-        expect(routerMock.createUrlTree).not.toHaveBeenCalled();
+        expect(result).toBe(dashboardUrlTree);
+        expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/auth/confirm-admin'], { queryParams: { adminReturnUrl: '/' } });
     });
 
     it.each(['/?adminReturnUrl=%2F', '/?auth=login&adminReturnUrl='])('should redirect an incomplete admin handoff %s', async url => {

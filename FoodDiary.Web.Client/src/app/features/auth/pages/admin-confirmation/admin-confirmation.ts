@@ -1,20 +1,17 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { AuthService } from '../../../../services/auth.service';
-import { optionalEntityId } from '../../../../shared/models/semantics/entity-id';
-import { AuthComponent } from '../../components/auth/auth';
-import { normalizeAdminReturnUrl } from '../../components/auth/auth-lib/auth-admin-return-url.utils';
+import { buildAdminSignInUrl, normalizeAdminReturnUrl } from '../../components/auth/auth-lib/auth-admin-return-url.utils';
 
 @Component({
     selector: 'fd-admin-confirmation',
-    imports: [AuthComponent, TranslatePipe, FdUiCardComponent, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiCardComponent, RouterLink],
     templateUrl: './admin-confirmation.html',
     styleUrl: './admin-confirmation.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,42 +19,41 @@ import { normalizeAdminReturnUrl } from '../../components/auth/auth-lib/auth-adm
 export class AdminConfirmationComponent {
     private readonly auth = inject(AuthService);
     private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
     private readonly document = inject(DOCUMENT);
-    protected readonly userId = optionalEntityId<'user'>(this.auth.getUserId());
-    protected readonly busy = signal(false);
     protected readonly failed = signal(false);
 
-    protected back(): void {
-        void this.router.navigate(['/profile']);
+    public constructor() {
+        afterNextRender(() => void this.redirectToAdminAsync());
     }
 
-    protected async continueAsync(): Promise<void> {
-        this.busy.set(true);
-        this.failed.set(false);
-        try {
-            if (this.userId === null || this.auth.getUserId() !== this.userId) {
-                this.failed.set(true);
-                return;
-            }
-            const adminAppUrl = environment.adminAppUrl ?? '';
-            const path = normalizeAdminReturnUrl(
-                this.route.snapshot.queryParamMap.get('adminReturnUrl') ?? '/',
-                adminAppUrl,
-                this.document.location.origin,
-            );
-            if (path === null || adminAppUrl.length === 0) {
-                await this.router.navigate(['/profile']);
-                return;
-            }
-            const response = await firstValueFrom(this.auth.startAdminSso());
-            const url = new URL(path, adminAppUrl);
-            url.hash = new URLSearchParams({ code: response.code }).toString();
-            this.document.location.assign(url.toString());
-        } catch {
+    private async redirectToAdminAsync(): Promise<void> {
+        const adminAppUrl = environment.adminAppUrl;
+        if (adminAppUrl === undefined || adminAppUrl.length === 0) {
             this.failed.set(true);
-        } finally {
-            this.busy.set(false);
+            return;
+        }
+
+        const adminOrigin = new URL(adminAppUrl, this.document.location.origin);
+        const path =
+            normalizeAdminReturnUrl(this.route.snapshot.queryParamMap.get('adminReturnUrl') ?? '/', adminOrigin.href, adminOrigin.origin) ??
+            '/';
+        const expectedUserId = new URLSearchParams(this.document.location.hash.slice(1)).get('account');
+        await this.auth.ensureSessionReadyAsync();
+        const diaryAdmin = this.auth.isAdmin() ? this.auth.getUserId() : null;
+        const handoff = await this.startSsoAsync(new URL(path, adminOrigin), diaryAdmin, expectedUserId);
+        this.document.location.replace((handoff ?? buildAdminSignInUrl(adminOrigin, path, expectedUserId ?? diaryAdmin)).href);
+    }
+
+    private async startSsoAsync(destination: URL, diaryAdmin: string | null, expectedUserId: string | null): Promise<URL | null> {
+        if (diaryAdmin === null || (expectedUserId !== null && diaryAdmin !== expectedUserId)) {
+            return null;
+        }
+        try {
+            const { code } = await firstValueFrom(this.auth.startAdminSso());
+            destination.hash = new URLSearchParams({ code, account: diaryAdmin }).toString();
+            return destination;
+        } catch {
+            return null;
         }
     }
 }

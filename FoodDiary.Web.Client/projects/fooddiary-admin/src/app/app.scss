@@ -23,6 +23,11 @@
     @media #{variables.$media-tablet} {
         grid-template-columns: 1fr;
     }
+
+    &--sign-in {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: center;
+    }
 }
 
 .admin-shell__content {

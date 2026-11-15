@@ -57,6 +57,70 @@ public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : I
         exchange.EnsureSuccessStatusCode();
         using HttpResponseMessage authorized = await browser.GetAsync("/api/v1/admin/users");
         Assert.Equal(HttpStatusCode.OK, authorized.StatusCode);
+
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "admin");
+        using HttpResponseMessage unlinked = await browser.PostAsJsonAsync("/api/v1/auth/admin-sso/google",
+            new GoogleLoginHttpRequest("other-google-proof", ExpectedUserId: userId.Value));
+        JsonElement unlinkedResponse = await unlinked.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Authentication.GoogleAccountLinkRequired", unlinkedResponse.GetProperty("error").GetString());
+        Assert.False(unlinked.Headers.Contains("Set-Cookie"));
+
+        using HttpResponseMessage adminLogin = await browser.PostAsJsonAsync("/api/v1/auth/admin-sso/google",
+            new GoogleLoginHttpRequest("admin-google-proof", ExpectedUserId: userId.Value));
+        adminLogin.EnsureSuccessStatusCode();
+        Assert.Contains("fooddiary.admin=", AuthenticationResponseCookies.ReadBrowserSession(adminLogin), StringComparison.Ordinal);
+        using HttpResponseMessage restored = await browser.PostAsync("/api/v1/auth/session", content: null);
+        restored.EnsureSuccessStatusCode();
+    }
+
+    [RequiresDockerFact]
+    public async Task AdminPasswordConfirmation_IssuesOnlyAnAdminCookieForTheExpectedAdministrator() {
+        using HttpClient browser = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        (Guid userId, string email) = await RegisterIdentityAsync(browser);
+        const string route = "/api/v1/auth/admin-sso/login";
+        var credentials = new LoginHttpRequest(email, "Password123!", RememberMe: true, ExpectedUserId: userId);
+        using HttpResponseMessage missingContext = await browser.PostAsJsonAsync(route, credentials);
+        Assert.Equal(HttpStatusCode.Forbidden, missingContext.StatusCode);
+
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "admin");
+        using HttpResponseMessage regularUser = await browser.PostAsJsonAsync(route, credentials);
+        Assert.Equal(HttpStatusCode.Forbidden, regularUser.StatusCode);
+        Assert.False(regularUser.Headers.Contains("Set-Cookie"));
+
+        await using (AsyncServiceScope scope = factory.Services.CreateAsyncScope()) {
+            IUserRoleMembershipService roles = scope.ServiceProvider.GetRequiredService<IUserRoleMembershipService>();
+            await roles.EnsureRoleAsync(new UserId(userId), RoleNames.Admin);
+        }
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.ClientHeader);
+        using HttpResponseMessage diaryRestored = await browser.PostAsync("/api/v1/auth/session", content: null);
+        diaryRestored.EnsureSuccessStatusCode();
+        JsonElement diarySession = await diaryRestored.Content.ReadFromJsonAsync<JsonElement>();
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "admin");
+
+        using HttpResponseMessage mismatch = await browser.PostAsJsonAsync(route, credentials with { ExpectedUserId = Guid.NewGuid() });
+        Assert.Equal(HttpStatusCode.Forbidden, mismatch.StatusCode);
+        Assert.False(mismatch.Headers.Contains("Set-Cookie"));
+
+        using HttpResponseMessage signedIn = await browser.PostAsJsonAsync(route, credentials);
+        signedIn.EnsureSuccessStatusCode();
+        Assert.Contains("fooddiary.admin=", AuthenticationResponseCookies.ReadBrowserSession(signedIn), StringComparison.Ordinal);
+        Assert.DoesNotContain(signedIn.Headers.GetValues("Set-Cookie"), cookie =>
+            cookie.StartsWith(BrowserSessionCookieService.BrowserCookieName + "=", StringComparison.Ordinal));
+        JsonElement session = await signedIn.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.False(session.GetProperty("rememberMe").GetBoolean());
+        using HttpResponseMessage restored = await browser.PostAsync("/api/v1/auth/session", content: null);
+        restored.EnsureSuccessStatusCode();
+        using HttpResponseMessage authorized = await browser.GetAsync("/api/v1/admin/users");
+        Assert.Equal(HttpStatusCode.OK, authorized.StatusCode);
+        using HttpResponseMessage chainedSso = await browser.PostAsync("/api/v1/auth/admin-sso/start", content: null);
+        Assert.Equal(HttpStatusCode.Forbidden, chainedSso.StatusCode);
+
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.ClientHeader);
+        await AssertIdentityAsync(browser, userId);
+        using HttpResponseMessage unchangedDiary = await browser.PostAsync("/api/v1/auth/session", content: null);
+        unchangedDiary.EnsureSuccessStatusCode();
+        JsonElement unchangedSession = await unchangedDiary.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(diarySession.GetProperty("sessionId").GetString(), unchangedSession.GetProperty("sessionId").GetString());
     }
 
     [RequiresDockerFact]

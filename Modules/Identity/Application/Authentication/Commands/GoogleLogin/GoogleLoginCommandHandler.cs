@@ -1,7 +1,9 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -25,17 +27,13 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         GoogleIdentityPayload payload = payloadResult.Value;
-        Result<UserAuthenticationPrincipalModel> authenticationResult = await userIdentityService
-            .AuthenticateGoogleAsync(
-                new UserGoogleAuthenticationModel(
-                    payload.Issuer,
-                    payload.Subject,
-                    payload.Email,
-                    payload.FirstName,
-                    payload.LastName,
-                    payload.Locale),
-                dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken);
+        var identity = new UserGoogleAuthenticationModel(payload.Issuer, payload.Subject, payload.Email,
+            payload.FirstName, payload.LastName, payload.Locale);
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
+        bool admin = command.ClientContext?.CredentialKind == AuthenticationCredentialKind.AdminBrowser;
+        Result<UserAuthenticationPrincipalModel> authenticationResult = await (admin
+            ? userIdentityService.AuthenticateLinkedGoogleAsync(identity, now, cancellationToken)
+            : userIdentityService.AuthenticateGoogleAsync(identity, now, cancellationToken));
         if (authenticationResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(authenticationResult.Error);
         }
@@ -44,11 +42,13 @@ public sealed class GoogleLoginCommandHandler(
         if (command.ExpectedUserId is { } expectedUserId && principal.UserId.Value != expectedUserId) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.ReauthenticationAccountMismatch);
         }
-        await EnsurePasswordSetupReminderAsync(
-            principal,
-            notificationDeduplicationService,
-            notificationWriter,
-            cancellationToken);
+        if (admin) {
+            if (!principal.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
+                return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoForbidden);
+            }
+        } else {
+            await EnsurePasswordSetupReminderAsync(principal, notificationDeduplicationService, notificationWriter, cancellationToken);
+        }
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe);

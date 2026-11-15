@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import {
-    ADMIN_LOADING_URL_TTL_MS,
     APP_FILTER_DEBOUNCE_MS,
     APP_MOBILE_VIEWPORT_QUERY,
     APP_SEARCH_DEBOUNCE_MS,
@@ -22,7 +21,6 @@ import {
 const DEFAULT_DEBOUNCE_MS = 300;
 const DEFAULT_EXPLORE_SEARCH_DEBOUNCE_MS = 400;
 const DEFAULT_NAME_SEARCH_DEBOUNCE_MS = 600;
-const DEFAULT_ADMIN_LOADING_URL_TTL_MS = 30_000;
 
 describe('runtime UI tokens', () => {
     it('should provide loading timing defaults', () => {
@@ -51,7 +49,6 @@ describe('runtime UI tokens', () => {
             idleTimeoutMs: 2000,
             idleFallbackMs: 1200,
         });
-        expect(TestBed.inject(ADMIN_LOADING_URL_TTL_MS)).toBe(DEFAULT_ADMIN_LOADING_URL_TTL_MS);
     });
 
     it('should provide auth timing defaults', () => {

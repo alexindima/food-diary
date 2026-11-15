@@ -41,6 +41,8 @@ Source: `Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoControl
 
 - `POST /api/v{version:apiVersion}/auth/admin-sso/start`
 - `POST /api/v{version:apiVersion}/auth/admin-sso/exchange`
+- `POST /api/v{version:apiVersion}/auth/admin-sso/login`
+- `POST /api/v{version:apiVersion}/auth/admin-sso/google`
 
 ### AuthImpersonationController
 

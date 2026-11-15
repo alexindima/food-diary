@@ -55,6 +55,11 @@
         "RETRY": "Try again"
     },
     "ADMIN_AUTH": {
+        "SIGN_IN_TITLE": "Sign in to FoodDiary Admin",
+        "SIGN_IN_HINT": "Use your administrator account’s password or linked Google account.",
+        "SIGN_IN_ERROR": "Could not sign in. Check that you are using an administrator account and try again.",
+        "SIGN_IN_GOOGLE_UNLINKED": "This Google account is not linked to FoodDiary. Use the password or linked Google account for your administrator account.",
+        "SIGN_IN_GOOGLE_UNAVAILABLE": "Google sign-in is temporarily unavailable. You can sign in with your password.",
         "SESSION_UNAVAILABLE_TITLE": "Could not check your admin session",
         "SESSION_UNAVAILABLE_MESSAGE": "The session check is temporarily unavailable. Check your connection and try again. If you have made several attempts, wait a moment before retrying.",
         "RATE_LIMITED_TITLE": "Sign-in is temporarily paused",
