@@ -40,18 +40,18 @@
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "382a067aa6a90af0d1b9bdd837108b318bb48c951f0a3aea1afc718b6ceffcab",
+      "pageSha256": "cb545f8946ad87b7d3ccccdc5d0cc77426b1b678ffb03ba83f4d1ef59b984431",
       "sources": [
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "e9a67ec4235ee436b9bba281aed883d600be83eb699c28f6edafa3df3b96ca24",
-          "reviewReason": "Compared actual generated contracts: 41 user groups/274 operations and 22 admin groups/76 operations. Corrected stale totals here and in API_SDK.md. The new call uses the existing UserService adapter, generated SDK and HttpClient pipeline; separate user/admin ownership, browser sessions, SSR and bilingual UI guidance remain accurate."
+          "sha256": "9bc12786ab87ffb1c9059bfdb2ec3f28245b7ddeb40fe911f456060a85a55c35",
+          "reviewReason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable."
         }
       ],
-      "reason": "Compared actual generated contracts: 41 user groups/274 operations and 22 admin groups/76 operations. Corrected stale totals here and in API_SDK.md. The new call uses the existing UserService adapter, generated SDK and HttpClient pipeline; separate user/admin ownership, browser sessions, SSR and bilingual UI guidance remain accurate.",
+      "reason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "349d5a0d7b611910b18cf7d8d7814aa3bac61156",
-      "reviewedAtUtc": "2026-11-08T10:54:33.3101585Z"
+      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
+      "reviewedAtUtc": "2026-11-15T13:54:02.8396611Z"
     },
     {
       "pageId": "module.mail-services",
@@ -374,8 +374,8 @@
         },
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "9f185209c0736b71e98035b1d57150df831e1eb99ca0d447055687d837f5b248",
-          "reviewReason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed."
+          "sha256": "9bc12786ab87ffb1c9059bfdb2ec3f28245b7ddeb40fe911f456060a85a55c35",
+          "reviewReason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
@@ -388,10 +388,10 @@
           "reviewReason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed."
         }
       ],
-      "reason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed.",
-      "baseRef": "origin/master",
-      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
-      "reviewedAtUtc": "2026-11-15T13:39:49.3112920Z"
+      "reason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable.",
+      "baseRef": "HEAD",
+      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
+      "reviewedAtUtc": "2026-11-15T13:54:12.1052669Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -488,6 +488,11 @@
       "pageSha256": "7b5adaa4638d2e8c6199b0a1c47f8a9b05deba2c020b74575356bcc67adc7369",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-probe-2.json",
+          "sha256": "aa705ff88b9f78bb6ccf4de6cb6a13c0f808573aa6fc61a441d3b501f513bba7",
+          "reviewReason": "The frozen query still measures persistence retrieval. Its expected file follows the write repository used by ImportDailyAdvicesCommandHandler and ImportDailyAdvicePairsCommandHandler. The old repository only reads projections. The query and score thresholds are unchanged. The focused corpus passed with the corrected owner."
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
           "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
@@ -503,10 +508,10 @@
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "The SQLite cold-checkout regression now detaches HEAD and removes fixture refs to match pull-request CI. The existing assertions still verify planning, all twelve indexes, source isolation, and the frontend dependency diagnostic. The updated full cold-checkout test passed locally.",
+      "reason": "The frozen query still measures persistence retrieval. Its expected file follows the write repository used by ImportDailyAdvicesCommandHandler and ImportDailyAdvicePairsCommandHandler. The old repository only reads projections. The query and score thresholds are unchanged. The focused corpus passed with the corrected owner.",
       "baseRef": "HEAD",
-      "gitHead": "9cdb107511acdd673aeb7f44e3d2dcb3234ba704",
-      "reviewedAtUtc": "2026-11-14T11:40:03.9387614Z"
+      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
+      "reviewedAtUtc": "2026-11-15T13:50:58.7143239Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1875,14 +1880,14 @@
       "sources": [
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "9f185209c0736b71e98035b1d57150df831e1eb99ca0d447055687d837f5b248",
-          "reviewReason": "The SDK guide describes two additive operations in the existing admin auth adapter and the same independent cookie contract. The admin scope and generated clients were verified, so the existing contract review workflow still applies."
+          "sha256": "9bc12786ab87ffb1c9059bfdb2ec3f28245b7ddeb40fe911f456060a85a55c35",
+          "reviewReason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable."
         }
       ],
-      "reason": "The SDK guide describes two additive operations in the existing admin auth adapter and the same independent cookie contract. The admin scope and generated clients were verified, so the existing contract review workflow still applies.",
-      "baseRef": "origin/master",
-      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
-      "reviewedAtUtc": "2026-11-15T13:39:51.0700560Z"
+      "reason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable.",
+      "baseRef": "HEAD",
+      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
+      "reviewedAtUtc": "2026-11-15T13:54:21.6407561Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -40,6 +40,7 @@ export function userApiContract(source, groups, title = 'FoodDiary User API') {
     }
     const paths = {};
     const foundOperations = new Set();
+    const foundExclusions = new Set();
     const operationIds = new Set();
     for (const [path, sourceItem] of Object.entries(source.paths)) {
         // Specific scopes (for example auth sessions) own their nested routes.
@@ -52,6 +53,12 @@ export function userApiContract(source, groups, title = 'FoodDiary User API') {
             if (!httpMethods.has(method)) continue;
             const key = `${method.toUpperCase()} ${path}`;
             const operationId = group.operations[key];
+            if (group.excludedOperations?.includes(key)) {
+                if (operationId) throw new Error(`${group.name} SDK operation is both selected and excluded: ${key}`);
+                foundExclusions.add(key);
+                delete item[method];
+                continue;
+            }
             if (!operationId) throw new Error(`Name the new ${group.name} SDK operation: ${key}`);
             if (operationIds.has(operationId)) throw new Error(`Duplicate SDK operation name: ${operationId}`);
             operationIds.add(operationId);
@@ -59,11 +66,14 @@ export function userApiContract(source, groups, title = 'FoodDiary User API') {
             operation.operationId = operationId;
             operation.tags = [group.name];
         }
-        paths[path] = item;
+        if (Object.keys(item).some(method => httpMethods.has(method))) paths[path] = item;
     }
     for (const group of groups) {
         for (const key of Object.keys(group.operations)) {
             if (!foundOperations.has(key)) throw new Error(`${group.name} SDK operation disappeared: ${key}`);
+        }
+        for (const key of group.excludedOperations ?? []) {
+            if (!foundExclusions.has(key)) throw new Error(`${group.name} SDK excluded operation disappeared: ${key}`);
         }
     }
 

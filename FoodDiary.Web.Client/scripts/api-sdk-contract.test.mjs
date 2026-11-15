@@ -119,3 +119,27 @@ test('gives a nested SDK scope ownership independent of manifest order', () => {
     source.paths['/api/v{version}/auth/sessions/new'] = { get: { responses: {} } };
     assert.throws(() => userApiContract(source, [parent, child]), /Name the new Sessions SDK operation/);
 });
+
+test('keeps explicitly excluded admin credential operations out of the user Auth SDK', () => {
+    const source = sourceDocument();
+    const start = '/api/v{version}/auth/admin-sso/start';
+    const login = '/api/v{version}/auth/admin-sso/login';
+    source.paths[start] = { post: { responses: {} } };
+    source.paths[login] = { post: { responses: {} } };
+    const auth = {
+        name: 'Auth',
+        prefix: '/api/v{version}/auth',
+        operations: { [`POST ${start}`]: 'startAdminSso' },
+        excludedOperations: [`POST ${login}`],
+    };
+
+    const contract = userApiContract(source, [auth]);
+    assert.deepEqual(Object.keys(contract.paths), [start]);
+    assert.equal(contract.paths[start].post.operationId, 'startAdminSso');
+    assert.throws(
+        () => userApiContract(source, [{ ...auth, operations: { ...auth.operations, [`POST ${login}`]: 'login' } }]),
+        /both selected and excluded/,
+    );
+    delete source.paths[login];
+    assert.throws(() => userApiContract(source, [auth]), /excluded operation disappeared/);
+});

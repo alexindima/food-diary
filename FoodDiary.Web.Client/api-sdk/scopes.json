@@ -422,6 +422,7 @@
             "POST /api/v{version}/auth/verify-email/resend": "postAuthVerifyEmailResend"
         },
         "prefix": "/api/v{version}/auth",
+        "excludedOperations": ["POST /api/v{version}/auth/admin-sso/google", "POST /api/v{version}/auth/admin-sso/login"],
         "name": "Auth"
     },
     {

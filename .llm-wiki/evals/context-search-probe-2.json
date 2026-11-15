@@ -84,7 +84,7 @@
       "id": "daily-advice-repository-probe-2",
       "query": "store generated daily advice records",
       "changeType": "Database",
-      "expectedPaths": ["Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs"]
+      "expectedPaths": ["Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceWriteRepository.cs"]
     },
     {
       "id": "shopping-list-repository-probe-2",

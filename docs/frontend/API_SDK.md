@@ -77,6 +77,9 @@ the user app. The admin client has its own contract and frozen scope manifest:
 `projects/fooddiary-admin/src/app/shared/api/sdk/generated/` and consumed by
 21 existing admin services. Both applications reuse the pinned generator and
 contract selector while retaining their existing import boundary.
+The user Auth scope explicitly excludes the two admin credential operations.
+Those operations are available in the admin SDK, while the shared SSO start
+operation remains available to the diary for the handoff.
 
 Admin adapters retain their application models, collection paging and legacy
 filter omission/whitespace rules. Open filter records use an explicit query
