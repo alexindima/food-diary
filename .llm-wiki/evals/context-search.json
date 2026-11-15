@@ -182,7 +182,7 @@
     },
     {
       "id": "user-login-handler",
-      "query": "authenticate a user login and issue tokens",
+      "query": "find the password login command handler for email credentials",
       "changeType": "Backend",
       "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs"]
     },

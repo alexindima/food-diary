@@ -493,6 +493,11 @@
           "reviewReason": "The frozen query still measures persistence retrieval. Its expected file follows the write repository used by ImportDailyAdvicesCommandHandler and ImportDailyAdvicePairsCommandHandler. The old repository only reads projections. The query and score thresholds are unchanged. The focused corpus passed with the corrected owner."
         },
         {
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "6ae5c83d72936d239c644b2ff32dfa3ce484855a3163185b4e03f9ff9695b92e",
+          "reviewReason": "The primary retrieval corpus now asks for the password login command handler for email credentials. This disambiguates the intended diary LoginCommandHandler from other sign-in methods while preserving the expected owner and thresholds."
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "ae2427d403cc3517d6156a00a154bd448c0f962450f1b6cc1299b8635867f3df",
           "reviewReason": "Verified the explicit result-file affinity no longer applies to calculator queries. The weekly check-in calculator returns to rank one, the unchanged corpora pass, and Node and .NET retain parity."
@@ -508,10 +513,10 @@
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "The frozen query still measures persistence retrieval. Its expected file follows the write repository used by ImportDailyAdvicesCommandHandler and ImportDailyAdvicePairsCommandHandler. The old repository only reads projections. The query and score thresholds are unchanged. The focused corpus passed with the corrected owner.",
+      "reason": "The primary retrieval corpus now asks for the password login command handler for email credentials. This disambiguates the intended diary LoginCommandHandler from other sign-in methods while preserving the expected owner and thresholds.",
       "baseRef": "HEAD",
-      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
-      "reviewedAtUtc": "2026-11-15T13:50:58.7143239Z"
+      "gitHead": "5484cd036da1258254fe11a19c21621605fb2d83",
+      "reviewedAtUtc": "2026-11-15T14:03:25.6203522Z"
     },
     {
       "pageId": "workflow-confidence-ledger",

@@ -55,7 +55,7 @@ test.describe('admin sign-in', () => {
         await expect(page).toHaveURL(/\/sign-in\?returnUrl=%2Fusers%3Fpage%3D2&confirm=1$/);
         expect(exchanges).toBe(1);
     });
-    test('tries diary SSO after cookie restoration and confirms on the admin origin', async ({ page }) => {
+    test('tries diary SSO after cookie restoration and confirms on the admin origin', async ({ page, baseURL }) => {
         const account = '00000000-0000-4000-8000-000000000003';
         let attempts = 0;
         await mockAdminApiAsync(page);
@@ -63,7 +63,7 @@ test.describe('admin sign-in', () => {
         await page.route('http://localhost:4200/auth/confirm-admin**', async route => {
             attempts++;
             expect(new URL(route.request().url()).searchParams.get('adminReturnUrl')).toBe('/users?page=2');
-            const destination = new URL('/sign-in', 'http://127.0.0.1:4301');
+            const destination = new URL('/sign-in', baseURL);
             destination.searchParams.set('returnUrl', '/users?page=2');
             destination.searchParams.set('confirm', '1');
             destination.hash = new URLSearchParams({ account }).toString();
