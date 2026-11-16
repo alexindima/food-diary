@@ -26,11 +26,12 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
-        IQueryable<Product> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
+        string? search = string.IsNullOrWhiteSpace(filters.Search) ? null : EscapeLikePattern(filters.Search.Trim());
+        IQueryable<Product> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters, search);
 
         int totalItems = await query.AsNoTracking().CountAsync(cancellationToken);
-        List<ProductOverviewReadRow> rows = await ProjectRows(query.AsNoTracking()
-                .OrderByDescending(p => p.CreatedOnUtc)
+        List<ProductOverviewReadRow> rows = await ProjectRows(OrderProducts(query, search, filters.Language)
+                .AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize))
             .ToListAsync(cancellationToken);
@@ -62,14 +63,15 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
                 ? p => p.UserId == userId || p.Visibility == Visibility.Public
                 : p => p.UserId == userId);
 
-    private static IQueryable<Product> ApplyFilters(IQueryable<Product> query, ProductQueryFilters filters) {
-        if (!string.IsNullOrWhiteSpace(filters.Search)) {
-            string normalizedSearch = $"%{EscapeLikePattern(filters.Search.Trim())}%";
+    private static IQueryable<Product> ApplyFilters(IQueryable<Product> query, ProductQueryFilters filters, string? search) {
+        if (search is not null) {
+            string pattern = $"%{search}%";
             query = query.AsNoTracking().Where(p =>
-                EF.Functions.ILike(p.Name, normalizedSearch, LikeEscapeCharacter) ||
-                EF.Functions.ILike(p.Brand ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
-                EF.Functions.ILike(p.Category ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
-                EF.Functions.ILike(p.Barcode ?? string.Empty, normalizedSearch, LikeEscapeCharacter));
+                EF.Functions.ILike(p.Name, pattern, LikeEscapeCharacter) ||
+                (p.UsdaEnglishName != null && EF.Functions.ILike(p.UsdaEnglishName, pattern, LikeEscapeCharacter)) ||
+                EF.Functions.ILike(p.Brand ?? string.Empty, pattern, LikeEscapeCharacter) ||
+                EF.Functions.ILike(p.Category ?? string.Empty, pattern, LikeEscapeCharacter) ||
+                EF.Functions.ILike(p.Barcode ?? string.Empty, pattern, LikeEscapeCharacter));
         }
 
         if (filters.ProductTypes is { Count: > 0 }) {
@@ -91,6 +93,33 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
         }
 
         return query;
+    }
+
+    private static IQueryable<Product> OrderProducts(IQueryable<Product> query, string? search, ProductCatalogLanguage language) {
+        if (search is null) {
+            return query.AsNoTracking().OrderByDescending(p => p.CreatedOnUtc).ThenBy(p => p.Id);
+        }
+
+        string prefix = $"{search}%";
+        string anywhere = $"%{search}%";
+        return query.AsNoTracking().Select(p => new {
+            Product = p,
+            ExactBarcode = p.Barcode != null && EF.Functions.ILike(p.Barcode, search, LikeEscapeCharacter),
+            NameRank = (EF.Functions.ILike(p.Name, search, LikeEscapeCharacter) ? 1 : 0) +
+                    (EF.Functions.ILike(p.Name, prefix, LikeEscapeCharacter) ? 1 : 0) +
+                    (EF.Functions.ILike(p.Name, anywhere, LikeEscapeCharacter) ? 1 : 0),
+            EnglishRank = (EF.Functions.ILike(p.UsdaEnglishName ?? string.Empty, search, LikeEscapeCharacter) ? 1 : 0) +
+                    (EF.Functions.ILike(p.UsdaEnglishName ?? string.Empty, prefix, LikeEscapeCharacter) ? 1 : 0) +
+                    (EF.Functions.ILike(p.UsdaEnglishName ?? string.Empty, anywhere, LikeEscapeCharacter) ? 1 : 0),
+        })
+            .OrderByDescending(match => match.ExactBarcode)
+            .ThenByDescending(match => Math.Max(match.NameRank, match.EnglishRank))
+            .ThenByDescending(match => match.Product.UsdaEnglishName != null && (
+                (language == ProductCatalogLanguage.English && match.EnglishRank > 0 && match.EnglishRank >= match.NameRank) ||
+                (language == ProductCatalogLanguage.Russian && match.NameRank > 0 && match.NameRank >= match.EnglishRank)))
+            .ThenByDescending(match => match.Product.CreatedOnUtc)
+            .ThenBy(match => match.Product.Id)
+            .Select(match => match.Product);
     }
 
     private IQueryable<ProductOverviewReadRow> ProjectRows(IQueryable<Product> query) =>
@@ -119,6 +148,7 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
             product.Visibility,
             product.CreatedOnUtc,
             product.UsdaFdcId,
+            product.UsdaEnglishName,
             product.Images.OrderBy(image => image.Position).Select(image => new ProductImageReadItem(image.ImageAssetId.Value, image.ImageUrl)).ToList()));
 
     private static ProductOverviewReadItem ToReadItem(ProductOverviewReadRow row, UserId currentUserId) {
@@ -159,7 +189,7 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
             isOwnedByCurrentUser,
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
-            row.UsdaFdcId) { Images = row.Images };
+            row.UsdaFdcId) { Images = row.Images, UsdaEnglishName = row.UsdaEnglishName };
     }
 
     private static string EscapeLikePattern(string value) {
@@ -193,5 +223,5 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
         int UsageCount,
         Visibility Visibility,
         DateTime CreatedOnUtc,
-        int? UsdaFdcId, IReadOnlyList<ProductImageReadItem> Images);
+        int? UsdaFdcId, string? UsdaEnglishName, IReadOnlyList<ProductImageReadItem> Images);
 }

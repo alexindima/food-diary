@@ -7,4 +7,6 @@ public sealed record ProductQueryFilters(
     IReadOnlyCollection<ProductType>? ProductTypes = null,
     double? CaloriesFrom = null,
     double? CaloriesTo = null,
-    bool? HasImage = null);
+    bool? HasImage = null) {
+    public ProductCatalogLanguage Language { get; init; }
+}

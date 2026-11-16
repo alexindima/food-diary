@@ -5,13 +5,13 @@ namespace FoodDiary.Modules.Favorites.Presentation.Mappings.Features.FavoritePro
 
 public static class FavoriteProductHttpResponseMappings {
     extension(FavoriteProductModel model) {
-        public FavoriteProductHttpResponse ToHttpResponse() =>
+        public FavoriteProductHttpResponse ToHttpResponse(bool preferEnglishName = false) =>
                 new(
                     model.Id,
                     model.ProductId,
                     model.Name,
                     model.CreatedAtUtc,
-                    model.ProductName,
+                    preferEnglishName ? model.UsdaEnglishName ?? model.ProductName : model.ProductName,
                     model.Brand,
                     model.Barcode,
                     model.Comment,

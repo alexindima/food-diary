@@ -2668,7 +2668,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 187
+      "line": 217
     },
     {
       "category": "health",
@@ -5706,7 +5706,7 @@
       "name": "CaloriesTo",
       "type": "CaloriesFrom,",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 38
+      "line": 39
     },
     {
       "category": "health",
@@ -5727,7 +5727,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 56
+      "line": 57
     },
     {
       "category": "health",
@@ -9934,21 +9934,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 181
+      "line": 211
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 182
+      "line": 212
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "line": 183
+      "line": 213
     },
     {
       "category": "privateContent",
@@ -11831,63 +11831,63 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 49
+      "line": 50
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 50
+      "line": 51
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 51
+      "line": 52
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 127
+      "line": 129
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 128
+      "line": 130
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 202
+      "line": 204
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 274
+      "line": 276
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 402
+      "line": 404
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 598
+      "line": 615
     },
     {
       "category": "privateContent",

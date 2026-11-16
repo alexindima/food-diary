@@ -68,6 +68,39 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
     }
 
     [RequiresDockerFact]
+    public async Task GetPagedAsync_SearchesBothUsdaNamesAndUsesLanguageOnlyToBreakEqualMatches() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"products-locale-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var canonicalMatch = Product.Create(user.Id, "Tofu", MeasurementUnit.G, 100, 100, 76, 8, 4, 2, 1, 0);
+        canonicalMatch.LinkToUsdaFood(172476);
+        canonicalMatch.SetUsdaEnglishName("Soy curd");
+
+        var englishMatch = Product.Create(user.Id, "Соевый творог", MeasurementUnit.G, 100, 100, 76, 8, 4, 2, 1, 0);
+        englishMatch.LinkToUsdaFood(172475);
+        englishMatch.SetUsdaEnglishName("Tofu");
+
+        var prefixMatch = Product.Create(user.Id, "Копчёный тофу", MeasurementUnit.G, 100, 100, 76, 8, 4, 2, 1, 0);
+        prefixMatch.LinkToUsdaFood(172477);
+        prefixMatch.SetUsdaEnglishName("Tofu, smoked");
+
+        context.Products.AddRange(canonicalMatch, englishMatch, prefixMatch);
+        await context.SaveChangesAsync();
+        var readService = new ProductOverviewReadService(context);
+
+        Assert.Equal([canonicalMatch.Id, englishMatch.Id, prefixMatch.Id], await GetProductIdsAsync(readService, user.Id,
+            new ProductQueryFilters("tofu") { Language = ProductCatalogLanguage.Russian }));
+        Assert.Equal([englishMatch.Id, canonicalMatch.Id, prefixMatch.Id], await GetProductIdsAsync(readService, user.Id,
+            new ProductQueryFilters("tofu") { Language = ProductCatalogLanguage.English }));
+        Assert.Equal([englishMatch.Id], await GetProductIdsAsync(readService, user.Id,
+            new ProductQueryFilters("Соевый") { Language = ProductCatalogLanguage.English }));
+        Assert.Equal([canonicalMatch.Id], await GetProductIdsAsync(readService, user.Id,
+            new ProductQueryFilters("Soy curd") { Language = ProductCatalogLanguage.Russian }));
+    }
+
+    [RequiresDockerFact]
     public async Task GetPagedAsync_AppliesStructuredFilters() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"products-filters-{Guid.NewGuid():N}@example.com", "hash");

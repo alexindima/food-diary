@@ -25,4 +25,5 @@ public sealed record FavoriteProductReadModel(
     double DefaultPortionAmount,
     Guid ProductUserId) {
     public IReadOnlyList<string> ImageUrls { get; init; } = [];
+    public string? UsdaEnglishName { get; init; }
 }

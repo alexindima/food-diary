@@ -207,6 +207,12 @@ export class ProductListFacade {
                 .subscribe();
         }
         this.loadInitialOverview().subscribe();
+        this.translateService.onLangChange
+            .pipe(
+                switchMap(() => this.loadInitialOverview()),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
         this.bindSearch();
     }
 

@@ -33,9 +33,10 @@ public sealed class GetProductsOverviewQueryHandler(
         ProductType[]? ProductTypes,
         double? CaloriesFrom,
         double? CaloriesTo,
-        bool? HasImage) {
+        bool? HasImage,
+        ProductCatalogLanguage Language) {
         public ProductQueryFilters ToFilters(string? search) =>
-            new(search, ProductTypes, CaloriesFrom, CaloriesTo, HasImage);
+            new(search, ProductTypes, CaloriesFrom, CaloriesTo, HasImage) { Language = Language };
     }
 
     public async Task<Result<ProductOverviewModel>> Handle(
@@ -99,7 +100,8 @@ public sealed class GetProductsOverviewQueryHandler(
             productTypes is { Length: > 0 } ? productTypes : null,
             query.CaloriesFrom,
             query.CaloriesTo,
-            query.HasImage);
+            query.HasImage,
+            query.Language);
     }
 
     private static PagedResponse<ProductModel> CreatePagedProducts(

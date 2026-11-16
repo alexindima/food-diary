@@ -23,4 +23,5 @@ public sealed record FavoriteProductModel(
     double PreferredPortionAmount,
     double DefaultPortionAmount) {
     public IReadOnlyList<string> ImageUrls { get; init; } = [];
+    public string? UsdaEnglishName { get; init; }
 }

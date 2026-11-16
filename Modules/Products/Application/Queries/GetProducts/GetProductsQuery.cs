@@ -2,6 +2,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Modules.Products.Contracts.Models;
 
 namespace FoodDiary.Modules.Products.Application.Queries.GetProducts;
 
@@ -15,4 +16,6 @@ public record GetProductsQuery(
     double? CaloriesFrom = null,
     double? CaloriesTo = null,
     bool? HasImage = null)
-    : IQuery<Result<PagedResponse<ProductModel>>>, IUserRequest;
+    : IQuery<Result<PagedResponse<ProductModel>>>, IUserRequest {
+    public ProductCatalogLanguage Language { get; init; }
+}

@@ -46,12 +46,17 @@
           "path": "docs/frontend/API_SDK.md",
           "sha256": "9bc12786ab87ffb1c9059bfdb2ec3f28245b7ddeb40fe911f456060a85a55c35",
           "reviewReason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable."
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
+          "sha256": "8aab288a77906755cffdc238b433827885b6ee5a8c950a3b9e61190c13e5d427",
+          "reviewReason": "ProductService continues to use the generated Angular SDK and the existing HTTP pipeline. The owner adapter now sets Accept-Language per call and preserves caller context. The existing API SDK guidance covers that behavior."
         }
       ],
-      "reason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable.",
+      "reason": "ProductService continues to use the generated Angular SDK and the existing HTTP pipeline. The owner adapter now sets Accept-Language per call and preserves caller context. The existing API SDK guidance covers that behavior.",
       "baseRef": "HEAD",
-      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
-      "reviewedAtUtc": "2026-11-15T13:54:02.8396611Z"
+      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
+      "reviewedAtUtc": "2026-11-16T11:57:28.9283472Z"
     },
     {
       "pageId": "module.mail-services",
@@ -828,8 +833,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "ec13259c4e8bafd90348f9dd0033e2a4975efab702395f90a9fa5f95306c41ac",
-          "reviewReason": "The domain data index changes only the admin-grant diagnostic. Grants now accept a bounded admin browser session established by SSO or explicit credentials, with the existing storage and expiry guard. No persistence mapping or index schema changed."
+          "sha256": "c99b47091780bc95e9072c0b1ae5a0112b5377eda7c0262ac08f0928fc2bacdf",
+          "reviewReason": "The Product mapping adds one nullable bounded English name and its index. The migration was applied with PostgreSQL to the 100 original rows and compared across the upgrade. The IDs, canonical names and nutrition were preserved."
         },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
@@ -837,10 +842,10 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "The domain data index changes only the admin-grant diagnostic. Grants now accept a bounded admin browser session established by SSO or explicit credentials, with the existing storage and expiry guard. No persistence mapping or index schema changed.",
-      "baseRef": "origin/master",
-      "gitHead": "eca87c6fccf2d225336e64d33a825c07457e41e9",
-      "reviewedAtUtc": "2026-11-15T13:39:50.4712758Z"
+      "reason": "The Product mapping adds one nullable bounded English name and its index. The migration was applied with PostgreSQL to the 100 original rows and compared across the upgrade. The IDs, canonical names and nutrition were preserved.",
+      "baseRef": "HEAD",
+      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
+      "reviewedAtUtc": "2026-11-16T11:57:29.3053718Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1301,8 +1306,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "36a13858788cc39d4abb6e0b07b37597dc7a9c26becce7aa47726a13c64435e8",
-          "reviewReason": "The added CaloriesPer100G candidate comes from the public SR Legacy food dataset. It represents product composition without account data. The initializer reads the local reference tables, and the index updates the existing connection-string source line without recording a value. There are no new external transfers or privacy query changes."
+          "sha256": "15179bbdb374e1866f79617b4a39b8044d63faed0ea0d9cd23e1014a54a1b28a",
+          "reviewReason": "The additional USDA title is public catalog text. The sensitive-data index changes are line shifts. Product ownership, visibility, private comment rules, provider calls, and user data handling are unchanged."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1315,10 +1320,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "The added CaloriesPer100G candidate comes from the public SR Legacy food dataset. It represents product composition without account data. The initializer reads the local reference tables, and the index updates the existing connection-string source line without recording a value. There are no new external transfers or privacy query changes.",
+      "reason": "The additional USDA title is public catalog text. The sensitive-data index changes are line shifts. Product ownership, visibility, private comment rules, provider calls, and user data handling are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:18:14.4606709Z"
+      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
+      "reviewedAtUtc": "2026-11-16T11:57:29.9171437Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1504,14 +1509,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "719003abeb8a9a3b68269e44aac51688d0c3f1cfbd9b4ad92903145461b78844",
-          "reviewReason": "The regenerated topology changes its source fingerprint and inventory size for the USDA files. The Compose services, integration clients and recurring jobs are unchanged. Both USDA commands remain explicit initializer invocations and the deployment workflow does not execute them."
+          "sha256": "dabad432ff39c0c15f2b92981f4ab33fd50f30f1ee6ce7fb98f429bc6400ed16",
+          "reviewReason": "The runtime topology change is limited to the source fingerprint and file count after adding the language type. Hosts, integrations, registrations and recurring jobs are unchanged."
         }
       ],
-      "reason": "The regenerated topology changes its source fingerprint and inventory size for the USDA files. The Compose services, integration clients and recurring jobs are unchanged. Both USDA commands remain explicit initializer invocations and the deployment workflow does not execute them.",
+      "reason": "The runtime topology change is limited to the source fingerprint and file count after adding the language type. Hosts, integrations, registrations and recurring jobs are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:18:15.8493650Z"
+      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
+      "reviewedAtUtc": "2026-11-16T11:57:30.8817519Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1886,8 +1891,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ea32745f21582da656682644bad5b04ae9172411be4000d3056d949c8b493209",
-          "reviewReason": "The repository catalog adds the direct reference from the existing Initializer project to the USDA Contracts project. No discovery, scoping, persistence or ranking behavior changes. The workflow continues to describe the same project inventory and query interfaces."
+          "sha256": "ab738f8fc6173ddebd999d3bdeb32f0077b1010e5411e6f5173e625721484a84",
+          "reviewReason": "Repository catalog changes move five FavoriteProductsController source anchors by four lines. HTTP route and verb inventory and context lookup semantics are unchanged."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1930,10 +1935,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The repository catalog adds the direct reference from the existing Initializer project to the USDA Contracts project. No discovery, scoping, persistence or ranking behavior changes. The workflow continues to describe the same project inventory and query interfaces.",
+      "reason": "Repository catalog changes move five FavoriteProductsController source anchors by four lines. HTTP route and verb inventory and context lookup semantics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:18:15.2776941Z"
+      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
+      "reviewedAtUtc": "2026-11-16T11:57:30.4164631Z"
     },
     {
       "pageId": "workflow.review-diff",

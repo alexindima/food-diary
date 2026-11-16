@@ -8,13 +8,13 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4855,
-    "symbols": 4823,
+    "sourceFiles": 4856,
+    "symbols": 4824,
     "interfaceImplementationLinks": 217,
     "dependencyInjectionRegistrations": 77,
     "kinds": {
       "class": 2487,
-      "enum": 76,
+      "enum": 77,
       "interface": 435,
       "record": 1667,
       "record class": 5,
@@ -34,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 2017,
+      "Other": 2018,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -15223,7 +15223,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "FavoriteProductHttpMappings",
@@ -23707,7 +23707,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQuery.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GetProductsQueryHandler",
@@ -23728,7 +23728,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "GetProductsOverviewQueryHandler",
@@ -23855,6 +23855,13 @@
       "role": "Other",
       "path": "Modules/Products/Contracts/Common/ProductErrors.cs",
       "line": 4
+    },
+    {
+      "name": "ProductCatalogLanguage",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Products/Contracts/Models/ProductCatalogLanguage.cs",
+      "line": 2
     },
     {
       "name": "ProductImageReadItem",
@@ -24176,7 +24183,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Presentation/Mappings/ProductHttpResponseMappings.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ProductSuggestionRequestLimits",

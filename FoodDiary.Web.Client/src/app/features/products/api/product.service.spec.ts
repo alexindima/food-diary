@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -73,10 +74,17 @@ const MOCK_PAGE: PageOf<Product> = {
 
 let service: ProductService;
 let httpMock: HttpTestingController;
+let language: string;
 
 beforeEach(() => {
+    language = 'en';
     TestBed.configureTestingModule({
-        providers: [ProductService, provideHttpClient(), provideHttpClientTesting()],
+        providers: [
+            ProductService,
+            { provide: TranslateService, useValue: { getCurrentLang: (): string => language } },
+            provideHttpClient(),
+            provideHttpClientTesting(),
+        ],
     });
     service = TestBed.inject(ProductService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -102,6 +110,15 @@ describe('ProductService query', () => {
         expect(req.request.params.get('page')).toBe('1');
         expect(req.request.params.get('limit')).toBe(String(DEFAULT_PAGE_LIMIT));
         expect(req.request.params.get('includePublic')).toBe('true');
+        expect(req.request.headers.get('Accept-Language')).toBe('en');
+        req.flush(MOCK_PAGE);
+    });
+
+    it('uses the current interface language on each request', () => {
+        language = 'ru';
+        service.query(1, DEFAULT_PAGE_LIMIT).subscribe();
+        const req = httpMock.expectOne(request => request.url === BASE_URL);
+        expect(req.request.headers.get('Accept-Language')).toBe('ru');
         req.flush(MOCK_PAGE);
     });
 
@@ -275,6 +292,7 @@ describe('ProductService defaults', () => {
         TestBed.configureTestingModule({
             providers: [
                 ProductService,
+                { provide: TranslateService, useValue: { getCurrentLang: (): string => language } },
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 {

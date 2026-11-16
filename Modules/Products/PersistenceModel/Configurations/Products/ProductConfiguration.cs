@@ -41,6 +41,11 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
         builder.HasIndex(e => new { e.Visibility, e.CreatedOnUtc });
         builder.HasIndex(e => e.UsdaFdcId);
+        builder.Property(e => e.UsdaEnglishName).HasMaxLength(Product.UsdaEnglishNameMaxLength);
+        builder.HasIndex(e => e.UsdaEnglishName)
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops")
+            .HasFilter("\"UsdaEnglishName\" IS NOT NULL");
         builder.HasIndex(e => e.Name)
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");

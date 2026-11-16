@@ -18,13 +18,13 @@ public sealed class ProductsController(ISender mediator) : AuthorizedController(
     [ProducesResponseType<PagedHttpResponse<ProductHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetProductsHttpQuery query) =>
-        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
+        HandleOk(query.ToQuery(userId) with { Language = ProductHttpResponseMappings.Language }, static value => value.ToHttpResponse());
 
     [HttpGet("overview")]
     [ProducesResponseType<ProductOverviewHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetOverview([FromCurrentUser] Guid userId, [FromQuery] GetProductsOverviewHttpQuery query) =>
-        HandleOk(query.ToQuery(userId), static value => value.ToHttpResponse());
+        HandleOk(query.ToQuery(userId) with { Language = ProductHttpResponseMappings.Language }, static value => value.ToHttpResponse());
 
     [HttpGet("recent")]
     [ProducesResponseType<List<ProductHttpResponse>>(StatusCodes.Status200OK)]

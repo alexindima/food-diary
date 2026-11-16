@@ -16311,27 +16311,27 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/favorite-products/page",
-            "line": 16
+            "line": 20
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/favorite-products/check/{productId:guid}",
-            "line": 23
+            "line": 27
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/favorite-products",
-            "line": 28
+            "line": 32
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/favorite-products/{id:guid}",
-            "line": 35
+            "line": 39
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/favorite-products/{id:guid}",
-            "line": 42
+            "line": 46
           }
         ]
       },

@@ -3882,6 +3882,10 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<double>("ProteinsPerBase")
                         .HasColumnType("double precision");
 
+                    b.Property<string>("UsdaEnglishName")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
                     b.Property<int?>("UsdaFdcId")
                         .HasColumnType("integer");
 
@@ -3922,6 +3926,12 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Name"), "gin");
                     NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("UsdaEnglishName")
+                        .HasFilter("\"UsdaEnglishName\" IS NOT NULL");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("UsdaEnglishName"), "gin");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("UsdaEnglishName"), new[] { "gin_trgm_ops" });
 
                     b.HasIndex("UsdaFdcId");
 

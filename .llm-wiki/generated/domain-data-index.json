@@ -4,9 +4,9 @@
     "domainTypes": 293,
     "entities": 95,
     "valueObjects": 143,
-    "invariants": 659,
+    "invariants": 661,
     "persistenceMappings": 102,
-    "indexes": 185,
+    "indexes": 186,
     "relationships": 42
   },
   "domainTypes": [
@@ -4945,175 +4945,189 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"A product can have up to five distinct images.\", nameof(images))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 32
+      "line": 33
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(basis)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 78
+      "line": 80
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Default portion must use the product measurement unit.\", nameof(defaultPortion))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 80
+      "line": 82
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes)",
-      "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 232
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(changes.Barcode, nameof(changes))",
-      "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 233
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(changes.Brand, nameof(changes))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
       "line": 234
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(changes.Barcode, nameof(changes))",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 235
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(changes.Brand, nameof(changes))",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 236
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes)",
-      "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 241
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(changes.Category, nameof(changes))",
-      "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 242
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(changes.Description, nameof(changes))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
       "line": 243
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(changes.Comment, nameof(changes))",
+      "message": "ArgumentNullException.ThrowIfNull(changes.Category, nameof(changes))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
       "line": 244
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(changes.Description, nameof(changes))",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 245
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(changes.Comment, nameof(changes))",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 246
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 317
+      "line": 319
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Default portion must use the product measurement unit.\", nameof(changes))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 320
+      "line": 322
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 390
+      "line": 392
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes.ImageUrl, nameof(changes))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 391
+      "line": 393
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(changes.ImageAssetId, nameof(changes))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 392
+      "line": 394
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(fdcId), \"USDA FDC ID must be positive.\")",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 438
+      "line": 440
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"A USDA English name requires a USDA link.\")",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 454
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A USDA English name is required.\", nameof(englishName))",
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "line": 458
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Product name is required.\", nameof(value))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 477
+      "line": 494
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Product name must be at most {NameMaxLength} characters.\")",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 482
+      "line": 499
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 497
+      "line": 514
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Base amount for {unit} must be {canonicalAmount}.\"))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 505
+      "line": 522
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 540
+      "line": 557
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 559
+      "line": 576
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 648
+      "line": 665
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 655
+      "line": 672
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "line": 662
+      "line": 679
     },
     {
       "area": "FoodDiary",
@@ -7435,6 +7449,7 @@
         "e => e.Category)",
         "e => e.ImageAssetId)",
         "e => e.Name)",
+        "e => e.UsdaEnglishName)",
         "e => e.UsdaFdcId)",
         "e => new { e.UserId, e.CreatedOnUtc })",
         "e => new { e.Visibility, e.CreatedOnUtc })"

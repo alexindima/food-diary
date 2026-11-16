@@ -71,19 +71,20 @@ Source: `Modules/Products/Presentation/Controllers/PublicProductsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
-- Public contract files: 15
+- Public contract files: 16
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 15
+- Public contract types: 16
 - Interfaces: 10
 - DTO/read-model/projection types: 1
-- Enums: 0
+- Enums: 1
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `class ProductErrors`
+- `enum ProductCatalogLanguage`
 - `interface IProductCatalogIdReadService`
 - `interface IProductLookupService`
 - `interface IProductMutationTransactionRunner`

@@ -18,6 +18,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public const double MaxPieceCaloriesPerBase = 5000d;
     public const double MaxPieceNutrientPerBase = 1000d;
     public const int NameMaxLength = 256;
+    public const int UsdaEnglishNameMaxLength = 512;
     public const int BarcodeMaxLength = 128;
     public const int BrandMaxLength = 128;
     public const int CategoryMaxLength = 128;
@@ -61,6 +62,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public double AlcoholPerBase { get; private set; }
     public Visibility Visibility { get; private set; } = Visibility.Public;
     public int? UsdaFdcId { get; private set; }
+    public string? UsdaEnglishName { get; private set; }
 
     public UserId UserId { get; private set; }
 
@@ -443,7 +445,21 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
 
         UsdaFdcId = fdcId;
+        UsdaEnglishName = null;
         SetModified();
+    }
+
+    public void SetUsdaEnglishName(string englishName) {
+        if (UsdaFdcId is null) {
+            throw new InvalidOperationException("A USDA English name requires a USDA link.");
+        }
+
+        string normalized = NormalizeOptionalText(englishName, UsdaEnglishNameMaxLength, nameof(englishName))
+            ?? throw new ArgumentException("A USDA English name is required.", nameof(englishName));
+        if (!string.Equals(UsdaEnglishName, normalized, StringComparison.Ordinal)) {
+            UsdaEnglishName = normalized;
+            SetModified();
+        }
     }
 
     public void UnlinkUsdaFood() {
@@ -452,6 +468,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
 
         UsdaFdcId = null;
+        UsdaEnglishName = null;
         SetModified();
     }
 

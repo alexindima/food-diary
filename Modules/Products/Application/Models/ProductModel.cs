@@ -33,4 +33,5 @@ public sealed record ProductModel(
     bool IsFavorite,
     Guid? FavoriteProductId) {
     public IReadOnlyList<ProductImageModel> Images { get; init; } = [];
+    public string? UsdaEnglishName { get; init; }
 }

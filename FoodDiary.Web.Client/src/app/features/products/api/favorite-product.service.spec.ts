@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -26,7 +27,12 @@ let httpMock: HttpTestingController;
 
 beforeEach(() => {
     TestBed.configureTestingModule({
-        providers: [FavoriteProductService, provideHttpClient(), provideHttpClientTesting()],
+        providers: [
+            FavoriteProductService,
+            { provide: TranslateService, useValue: { getCurrentLang: (): string => 'en' } },
+            provideHttpClient(),
+            provideHttpClientTesting(),
+        ],
     });
     service = TestBed.inject(FavoriteProductService);
     httpMock = TestBed.inject(HttpTestingController);

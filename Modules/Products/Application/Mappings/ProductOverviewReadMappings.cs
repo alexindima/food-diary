@@ -36,5 +36,8 @@ public static class ProductOverviewReadMappings {
             product.QualityGrade,
             product.UsdaFdcId,
             isFavorite,
-            favoriteProductId) { Images = product.Images.Select(image => new ProductImageModel(image.ImageAssetId, image.ImageUrl)).ToList() };
+            favoriteProductId) {
+            Images = product.Images.Select(image => new ProductImageModel(image.ImageAssetId, image.ImageUrl)).ToList(),
+            UsdaEnglishName = product.UsdaEnglishName,
+        };
 }

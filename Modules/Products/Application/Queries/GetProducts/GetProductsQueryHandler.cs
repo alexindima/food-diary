@@ -48,7 +48,7 @@ public sealed class GetProductsQueryHandler(
                 productTypes,
                 query.CaloriesFrom,
                 query.CaloriesTo,
-                query.HasImage),
+                query.HasImage) { Language = query.Language },
             cancellationToken);
 
         FavoriteProductOverviewModel favorites = items.Count == 0

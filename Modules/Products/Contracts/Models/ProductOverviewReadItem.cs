@@ -35,4 +35,5 @@ public sealed record ProductOverviewReadItem(
     string QualityGrade,
     int? UsdaFdcId) {
     public IReadOnlyList<ProductImageReadItem> Images { get; init; } = [];
+    public string? UsdaEnglishName { get; init; }
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { catchError, EMPTY, expand, map, type Observable, reduce } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -10,6 +11,7 @@ import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteProduct } from '../../../shared/models/product.data';
 import type { FavoriteProductId, ProductId } from '../../../shared/models/semantics/entity-id';
+import { productLanguageRequestOptions } from './product-language-request';
 import { favoriteProductFromSdk } from './product-sdk.mapper';
 
 const FAVORITE_PAGE_SIZE = 10;
@@ -20,12 +22,20 @@ const LOOKUP_PAGE_SIZE = 100;
 export class FavoriteProductService {
     protected readonly baseUrl = environment.apiUrls.favoriteProducts;
     private readonly sdk = createSdkConnection(FavoriteProductsSdk, this.baseUrl, inject(HttpClient));
+    private readonly translate = inject(TranslateService);
 
     public getPage(page: number, limit = FAVORITE_PAGE_SIZE, search = ''): Observable<PageOf<FavoriteProduct>> {
-        return this.sdk.client.getFavoriteProductsPage({ version: this.sdk.version, page, limit, search: search.trim() }).pipe(
-            map(result => sdkPage(result, favoriteProductFromSdk)),
-            catchError((error: unknown) => rethrowApiError('Get favorite product page error', error)),
-        );
+        return this.sdk.client
+            .getFavoriteProductsPage(
+                { version: this.sdk.version, page, limit, search: search.trim() },
+                'body',
+                false,
+                productLanguageRequestOptions(this.translate),
+            )
+            .pipe(
+                map(result => sdkPage(result, favoriteProductFromSdk)),
+                catchError((error: unknown) => rethrowApiError('Get favorite product page error', error)),
+            );
     }
 
     public getLookupPage(): Observable<FavoriteProduct[]> {
@@ -44,7 +54,12 @@ export class FavoriteProductService {
 
     public add(productId: ProductId, name?: string, preferredPortionAmount?: number): Observable<FavoriteProduct> {
         return this.sdk.client
-            .postFavoriteProducts({ version: this.sdk.version, addFavoriteProductHttpRequest: { productId, name, preferredPortionAmount } })
+            .postFavoriteProducts(
+                { version: this.sdk.version, addFavoriteProductHttpRequest: { productId, name, preferredPortionAmount } },
+                'body',
+                false,
+                productLanguageRequestOptions(this.translate),
+            )
             .pipe(
                 map(favoriteProductFromSdk),
                 catchError((error: unknown) => rethrowApiError('Add favorite product error', error)),
@@ -53,7 +68,12 @@ export class FavoriteProductService {
 
     public update(id: FavoriteProductId, name: string | null, preferredPortionAmount: number): Observable<FavoriteProduct> {
         return this.sdk.client
-            .putFavoriteProductsById({ version: this.sdk.version, id, updateFavoriteProductHttpRequest: { name, preferredPortionAmount } })
+            .putFavoriteProductsById(
+                { version: this.sdk.version, id, updateFavoriteProductHttpRequest: { name, preferredPortionAmount } },
+                'body',
+                false,
+                productLanguageRequestOptions(this.translate),
+            )
             .pipe(
                 map(favoriteProductFromSdk),
                 catchError((error: unknown) => rethrowApiError('Update favorite product error', error)),

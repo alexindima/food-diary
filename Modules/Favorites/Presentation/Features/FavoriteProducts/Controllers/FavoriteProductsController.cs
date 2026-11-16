@@ -7,18 +7,22 @@ using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/favorite-products")]
 public sealed class FavoriteProductsController(ISender mediator) : AuthorizedController(mediator) {
+    private static bool PreferEnglishName =>
+        string.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, "en", StringComparison.Ordinal);
+
     [HttpGet("page")]
     [ProducesResponseType<PagedHttpResponse<FavoriteProductHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage([FromCurrentUser] Guid userId, [FromQuery] GetFavoriteProductPageHttpQuery query) =>
         HandleOk(query.ToQuery(userId), static value => new PagedHttpResponse<FavoriteProductHttpResponse>(
-            value.Data.Select(item => item.ToHttpResponse()).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
+            value.Data.Select(item => item.ToHttpResponse(PreferEnglishName)).ToArray(), value.Page, value.Limit, value.TotalPages, value.TotalItems));
 
     [HttpGet("check/{productId:guid}")]
     [ProducesResponseType<bool>(StatusCodes.Status200OK)]
@@ -30,14 +34,14 @@ public sealed class FavoriteProductsController(ISender mediator) : AuthorizedCon
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> Add([FromCurrentUser] Guid userId, [FromBody] AddFavoriteProductHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse(PreferEnglishName));
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType<FavoriteProductHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateFavoriteProductHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
+        HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse(PreferEnglishName));
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

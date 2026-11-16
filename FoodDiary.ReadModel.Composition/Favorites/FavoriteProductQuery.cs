@@ -56,6 +56,7 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
                 .Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
             query = query.Where(row => (row.Favorite.Name != null && EF.Functions.ILike(row.Favorite.Name, term, "\\")) ||
                 EF.Functions.ILike(row.Source.Name, term, "\\") ||
+                (row.Source.UsdaEnglishName != null && EF.Functions.ILike(row.Source.UsdaEnglishName, term, "\\")) ||
                 (row.Source.Brand != null && EF.Functions.ILike(row.Source.Brand, term, "\\")) ||
                 (row.Source.Barcode != null && EF.Functions.ILike(row.Source.Barcode, term, "\\")));
 
@@ -87,5 +88,8 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
                 row.Source.BaseUnit,
                 row.Favorite.PreferredPortionAmount,
                 row.Source.DefaultPortionAmount,
-                row.Source.UserId.Value) { ImageUrls = row.Source.Images.OrderBy(image => image.Position).Select(image => image.ImageUrl).ToList() });
+                row.Source.UserId.Value) {
+                ImageUrls = row.Source.Images.OrderBy(image => image.Position).Select(image => image.ImageUrl).ToList(),
+                UsdaEnglishName = row.Source.UsdaEnglishName,
+            });
 }

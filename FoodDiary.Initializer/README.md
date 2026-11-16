@@ -56,9 +56,14 @@ dotnet run --project FoodDiary.Initializer -- import-usda-catalog ./scripts/data
 The same version 1 manifest works on any database seeded with these USDA records. Each entry
 specifies the FDC ID, Russian name, product type and Russian category. The command reads
 nutrition per 100 g and the original English name from the local FoodData Central data.
+The Russian name remains the canonical product name. The English name is stored on the
+same card and is shown when the product API receives an English language preference.
+Search matches both names and uses language to break equal name matches.
 Each imported item requires energy, protein, fat, carbohydrate, fiber and alcohol measurements.
 Imported records are public and belong to the system content owner. Re-running skips an existing
 public product linked to the same FDC ID. The import adds records in one transaction.
+The name migration backfills English names on existing catalog imports from their recorded
+USDA source descriptions. It preserves product IDs and FDC IDs.
 
 ## Notes
 

@@ -18,7 +18,7 @@ public sealed class PublicProductsController(ISender mediator) : BaseApiControll
     [ProducesResponseType<PublicProductHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetById(Guid id) => HandleOk(id.ToPublicProductQuery(),
-        static p => new PublicProductHttpResponse(p.Id, p.Name, p.Brand, p.ImageUrl, p.BaseUnit,
+        static p => new PublicProductHttpResponse(p.Id, ProductHttpResponseMappings.LocalizeName(p.Name, p.UsdaEnglishName), p.Brand, p.ImageUrl, p.BaseUnit,
             p.BaseAmount, p.Calories, p.Proteins, p.Fats, p.Carbs, p.Fiber, p.Alcohol) {
             Description = p.Description,
             Images = p.Images,

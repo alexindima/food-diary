@@ -59,6 +59,7 @@ public sealed class UsdaCatalogProductImporter(
             item.FiberPer100G, item.AlcoholPer100G, productType: type.Value, category: item.Category,
             description: $"USDA FoodData Central (SR Legacy) · {item.SourceName}", visibility: Visibility.Public, importId: id);
         product.LinkToUsdaFood(item.FdcId);
+        product.SetUsdaEnglishName(item.SourceName);
         return product;
     }
 }

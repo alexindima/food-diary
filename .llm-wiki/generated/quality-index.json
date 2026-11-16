@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7066,
+    "productionFiles": 7068,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1059,
@@ -575,20 +575,20 @@
       "structuralRiskScore": 120.08
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
+      "nonBlankLines": 719,
+      "decisionPoints": 70,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 119.38
+    },
+    {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
       "nonBlankLines": 492,
       "decisionPoints": 73,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 119.34
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 713,
-      "decisionPoints": 70,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 119.26
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
@@ -743,6 +743,14 @@
       "structuralRiskScore": 111.52
     },
     {
+      "path": "Modules/Products/Domain/Entities/Product.cs",
+      "nonBlankLines": 593,
+      "decisionPoints": 66,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 110.86
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiSchedulePlan.ps1",
       "nonBlankLines": 352,
       "decisionPoints": 67,
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 106.08
-    },
-    {
-      "path": "Modules/Products/Domain/Entities/Product.cs",
-      "nonBlankLines": 578,
-      "decisionPoints": 63,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.06
     }
   ],
   "files": [
@@ -4586,11 +4586,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteProductQuery.cs",
-      "nonBlankLines": 83,
-      "decisionPoints": 15,
+      "nonBlankLines": 87,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.16
+      "structuralRiskScore": 27.24
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Favorites/FavoriteRecipeQuery.cs",
@@ -4674,11 +4674,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs",
-      "nonBlankLines": 176,
-      "decisionPoints": 15,
+      "nonBlankLines": 204,
+      "decisionPoints": 28,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.02
+      "structuralRiskScore": 46.08
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Products/ProductUsageQuery.cs",
@@ -14130,11 +14130,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/favorite-product.service.ts",
-      "nonBlankLines": 59,
+      "nonBlankLines": 79,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.18
+      "structuralRiskScore": 1.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/open-food-facts.service.ts",
@@ -14151,6 +14151,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.44
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/products/api/product-language-request.ts",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product-sdk.mapper.ts",
@@ -14170,19 +14178,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-      "nonBlankLines": 146,
+      "nonBlankLines": 159,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.42
+      "structuralRiskScore": 13.68
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/api/public-product.service.ts",
-      "nonBlankLines": 15,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/detail/product-detail-actions/product-detail-actions.ts",
@@ -14570,11 +14578,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "nonBlankLines": 713,
+      "nonBlankLines": 719,
       "decisionPoints": 70,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 119.26
+      "structuralRiskScore": 119.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.state.ts",
@@ -34962,11 +34970,11 @@
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.54
     },
     {
       "path": "Modules/Favorites/Application.Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs",
@@ -35554,19 +35562,19 @@
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadFavoriteProductOverview/FavoriteProductOverviewModel.cs",
@@ -35811,10 +35819,10 @@
     {
       "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteProducts/Mappings/FavoriteProductHttpResponseMappings.cs",
       "nonBlankLines": 30,
-      "decisionPoints": 0,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
+      "structuralRiskScore": 2.1
     },
     {
       "path": "Modules/Favorites/Presentation.Mappings/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpResponseMappings.cs",
@@ -35866,11 +35874,11 @@
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 44,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.82
+      "structuralRiskScore": 2.88
     },
     {
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -45378,11 +45386,11 @@
     },
     {
       "path": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 60,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.68
+      "structuralRiskScore": 14.7
     },
     {
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs",
@@ -45514,11 +45522,11 @@
     },
     {
       "path": "Modules/Products/Application/Mappings/ProductOverviewReadMappings.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
+      "structuralRiskScore": 0.82
     },
     {
       "path": "Modules/Products/Application/Models/CatalogProductImportResult.cs",
@@ -45546,11 +45554,11 @@
     },
     {
       "path": "Modules/Products/Application/Models/ProductModel.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.68
+      "structuralRiskScore": 0.7
     },
     {
       "path": "Modules/Products/Application/Models/ProductOverviewModel.cs",
@@ -45570,11 +45578,11 @@
     },
     {
       "path": "Modules/Products/Application/Models/PublicProductModel.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Products/Application/Queries/ExportCatalogProducts/ExportCatalogProductsQuery.cs",
@@ -45618,11 +45626,11 @@
     },
     {
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQuery.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
@@ -45642,19 +45650,19 @@
     },
     {
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "nonBlankLines": 137,
+      "nonBlankLines": 139,
       "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.24
+      "structuralRiskScore": 18.28
     },
     {
       "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
@@ -45674,11 +45682,11 @@
     },
     {
       "path": "Modules/Products/Application/Queries/GetPublicProduct/GetPublicProductQueryHandler.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 26,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.5
+      "structuralRiskScore": 5.52
     },
     {
       "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
@@ -45793,6 +45801,14 @@
       "structuralRiskScore": 0.4
     },
     {
+      "path": "Modules/Products/Contracts/Models/ProductCatalogLanguage.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/Products/Contracts/Models/ProductImageReadItem.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -45802,19 +45818,19 @@
     },
     {
       "path": "Modules/Products/Contracts/Models/ProductOverviewReadItem.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 37,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.72
+      "structuralRiskScore": 0.74
     },
     {
       "path": "Modules/Products/Contracts/Models/ProductQueryFilters.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Products/Contracts/Models/ProductSnapshotReadModel.cs",
@@ -45866,11 +45882,11 @@
     },
     {
       "path": "Modules/Products/Domain/Entities/Product.cs",
-      "nonBlankLines": 578,
-      "decisionPoints": 63,
+      "nonBlankLines": 593,
+      "decisionPoints": 66,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.06
+      "structuralRiskScore": 110.86
     },
     {
       "path": "Modules/Products/Domain/Entities/ProductImage.cs",
@@ -46002,11 +46018,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 36,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.72
     },
     {
       "path": "Modules/Products/Infrastructure/Persistence/Products/CachedProductRepository.cs",
@@ -46098,11 +46114,11 @@
     },
     {
       "path": "Modules/Products/PersistenceModel/Configurations/Products/ProductConfiguration.cs",
-      "nonBlankLines": 50,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1
+      "structuralRiskScore": 1.1
     },
     {
       "path": "Modules/Products/PersistenceModel/ProductsPersistenceModelRegistration.cs",
@@ -46178,11 +46194,11 @@
     },
     {
       "path": "Modules/Products/Presentation/Mappings/ProductHttpResponseMappings.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 0,
+      "nonBlankLines": 68,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.18
+      "structuralRiskScore": 4.36
     },
     {
       "path": "Modules/Products/Presentation/ProductSuggestionRequestLimits.cs",
@@ -61370,7 +61386,7 @@
       "name": "FavoriteProductsController",
       "role": "Controller",
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Controllers/FavoriteProductsController.cs",
-      "line": 15,
+      "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs"

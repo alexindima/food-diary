@@ -22,6 +22,7 @@ public sealed class GetPublicProductQueryHandler(IProductOverviewReadService pro
             product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase) {
             Description = product.Description,
             Images = product.Images.Select(image => image.ImageUrl).ToArray(),
+            UsdaEnglishName = product.UsdaEnglishName,
         });
     }
 }

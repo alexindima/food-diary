@@ -20,4 +20,5 @@ public sealed record FavoriteProductSourceModel(
     MeasurementUnit BaseUnit,
     double DefaultPortionAmount) {
     public IReadOnlyList<string> ImageUrls { get; init; } = [];
+    public string? UsdaEnglishName { get; init; }
 }

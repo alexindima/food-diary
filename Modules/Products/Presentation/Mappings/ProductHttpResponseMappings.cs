@@ -2,17 +2,28 @@ using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Favorites.Presentation.Mappings.Features.FavoriteProducts.Mappings;
 using FoodDiary.Modules.Products.Presentation.Responses;
+using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Presentation.Api.Responses;
+using System.Globalization;
 
 namespace FoodDiary.Modules.Products.Presentation.Mappings;
 
 public static class ProductHttpResponseMappings {
+    internal static ProductCatalogLanguage Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch {
+        "ru" => ProductCatalogLanguage.Russian,
+        "en" => ProductCatalogLanguage.English,
+        _ => ProductCatalogLanguage.Unspecified,
+    };
+
+    internal static string LocalizeName(string name, string? usdaEnglishName) =>
+        Language == ProductCatalogLanguage.English ? usdaEnglishName ?? name : name;
+
     extension(ProductModel model) {
         public ProductHttpResponse ToHttpResponse() {
             return new ProductHttpResponse(
                 model.Id,
                 model.Barcode,
-                model.Name,
+                LocalizeName(model.Name, model.UsdaEnglishName),
                 model.Brand,
                 model.ProductType,
                 model.Category,
@@ -49,7 +60,7 @@ public static class ProductHttpResponseMappings {
             return new ProductOverviewHttpResponse(
                 model.RecentItems.ToHttpResponseList(ToHttpResponse),
                 model.AllProducts.ToHttpResponse(),
-                model.FavoriteItems.Select(FavoriteProductHttpResponseMappings.ToHttpResponse).ToList(),
+                model.FavoriteItems.Select(item => item.ToHttpResponse(Language == ProductCatalogLanguage.English)).ToList(),
                 model.FavoriteTotalCount
             );
         }

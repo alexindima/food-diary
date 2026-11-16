@@ -1,5 +1,6 @@
 import { HttpClient, type HttpContext } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -18,6 +19,7 @@ import type {
 } from '../../../shared/models/product.data';
 import type { ProductId } from '../../../shared/models/semantics/entity-id';
 import { PRODUCT_API_LIMITS } from './product-api.tokens';
+import { productLanguageRequestOptions } from './product-language-request';
 import { productFromSdk, productOverviewFromSdk, productPageFromSdk } from './product-sdk.mapper';
 
 export type ProductOverviewQuery = {
@@ -32,6 +34,7 @@ export type ProductOverviewQuery = {
 @Service()
 export class ProductService {
     private readonly defaultLimits = inject(PRODUCT_API_LIMITS);
+    private readonly translate = inject(TranslateService);
 
     protected readonly baseUrl = environment.apiUrls.products;
     private readonly sdk = createProductsSdk(this.baseUrl, inject(HttpClient));
@@ -45,9 +48,12 @@ export class ProductService {
         const includePublic = typeof options === 'boolean' ? options : options.includePublic;
         const context = typeof options === 'boolean' ? undefined : options.context;
         return this.sdk.client
-            .queryProducts({ version: this.sdk.version, page, limit, includePublic, ...this.toProductFilters(filters) }, 'body', false, {
-                context,
-            })
+            .queryProducts(
+                { version: this.sdk.version, page, limit, includePublic, ...this.toProductFilters(filters) },
+                'body',
+                false,
+                productLanguageRequestOptions(this.translate, context),
+            )
             .pipe(
                 map(productPageFromSdk),
                 catchError((error: unknown) => rethrowApiError('Query products error', error)),
@@ -55,10 +61,12 @@ export class ProductService {
     }
 
     public getById(id: ProductId): Observable<Product | null> {
-        return this.sdk.client.getProductById({ version: this.sdk.version, id }).pipe(
-            map(productFromSdk),
-            catchError((error: unknown) => fallbackApiError('Get product error', error, null)),
-        );
+        return this.sdk.client
+            .getProductById({ version: this.sdk.version, id }, 'body', false, productLanguageRequestOptions(this.translate))
+            .pipe(
+                map(productFromSdk),
+                catchError((error: unknown) => fallbackApiError('Get product error', error, null)),
+            );
     }
 
     public queryOverview(query: ProductOverviewQuery, context?: HttpContext): Observable<ProductOverview> {
@@ -83,7 +91,7 @@ export class ProductService {
                 },
                 'body',
                 false,
-                { context },
+                productLanguageRequestOptions(this.translate, context),
             )
             .pipe(
                 map(productOverviewFromSdk),
@@ -107,7 +115,12 @@ export class ProductService {
 
     public getRecent(limit?: number, includePublic = true): Observable<Product[]> {
         return this.sdk.client
-            .getRecentProducts({ version: this.sdk.version, limit: limit ?? this.defaultLimits.recent, includePublic })
+            .getRecentProducts(
+                { version: this.sdk.version, limit: limit ?? this.defaultLimits.recent, includePublic },
+                'body',
+                false,
+                productLanguageRequestOptions(this.translate),
+            )
             .pipe(
                 map(products => products.map(productFromSdk)),
                 catchError((error: unknown) => fallbackApiError('Get recent products error', error, [])),
