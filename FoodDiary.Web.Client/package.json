@@ -153,7 +153,7 @@
         "rxjs": "^7.8.2",
         "tslib": "^2.9.1",
         "web-vitals": "6.2.3",
-        "webmcp-types": "0.1.10"
+        "webmcp-types": "0.1.11"
     },
     "devDependencies": {
         "@analogjs/vite-plugin-angular": "^2.9.6",
