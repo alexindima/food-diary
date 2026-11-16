@@ -395,8 +395,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e5854c4c2037417e1c7769845f54d3cc1c1eec04d3eabe11484ab0c3d4eb9cfa",
-          "reviewReason": "Reviewed the exact Initializer-to-USDA Contracts dependency and the regenerated architecture index. The project edge count rises from 1693 to 1694, with zero dependency violations, unused allowances or untracked projects. The runtime query and dependency review described here still apply. All 2286 architecture tests passed."
+          "sha256": "d949c00b05f35e58e63127a58e81b86c9a1f20dfde15ad8b44a1a3b1a654edb1",
+          "reviewReason": "The regenerated health index adds one routed public standalone component, TermsOfServiceComponent, reached by both localized terms URLs. The selector candidate count and backend dependencies are unchanged. The added component has no direct spec. The build prerendered both locales, SEO checks validated them, and routing and translation tests passed. The existing architecture review guidance still applies."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -419,10 +419,10 @@
           "reviewReason": "Reviewed the exact Initializer-to-USDA Contracts dependency and the regenerated architecture index. The project edge count rises from 1693 to 1694, with zero dependency violations, unused allowances or untracked projects. The runtime query and dependency review described here still apply. All 2286 architecture tests passed."
         }
       ],
-      "reason": "Reviewed the exact Initializer-to-USDA Contracts dependency and the regenerated architecture index. The project edge count rises from 1693 to 1694, with zero dependency violations, unused allowances or untracked projects. The runtime query and dependency review described here still apply. All 2286 architecture tests passed.",
-      "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:18:13.7141984Z"
+      "reason": "The regenerated health index adds one routed public standalone component, TermsOfServiceComponent, reached by both localized terms URLs. The selector candidate count and backend dependencies are unchanged. The added component has no direct spec. The build prerendered both locales, SEO checks validated them, and routing and translation tests passed. The existing architecture review guidance still applies.",
+      "baseRef": "origin/master",
+      "gitHead": "67c3fcb67302afc539cd31f39d9eede1c463ddf8",
+      "reviewedAtUtc": "2026-11-16T18:41:43.2904587Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
