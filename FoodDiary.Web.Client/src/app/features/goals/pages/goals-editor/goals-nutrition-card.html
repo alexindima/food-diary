@@ -16,8 +16,9 @@
         <div class="goals-editor-form-row__copy">
             <fd-ui-icon class="goals-editor-form-row__icon goals-editor-form-row__icon--calories" name="local_fire_department" size="sm" />
             <label for="goals-editor-calories">
-                <strong>{{ 'GOALS_PAGE.EDITOR.CALORIES' | translate }}</strong
-                ><small>{{ 'GOALS_PAGE.EDITOR.CALORIES_HINT' | translate }}</small>
+                <strong>{{ 'GOALS_PAGE.EDITOR.CALORIES' | translate }}</strong><small>{{
+                    'GOALS_PAGE.EDITOR.CALORIES_HINT' | translate
+                }}</small>
             </label>
         </div>
         <div class="goals-editor-input">
@@ -40,8 +41,9 @@
             <div class="goals-editor-form-row__copy">
                 <fd-ui-icon class="goals-editor-form-row__icon" size="sm" [name]="macro.icon" [style.color]="macro.accent" />
                 <label [for]="`goals-editor-${macro.key}`">
-                    <strong>{{ macro.labelKey | translate }}</strong
-                    ><small>{{ `GOALS_PAGE.EDITOR.MACRO_HINTS.${(macro.key | uppercase)}` | translate }}</small>
+                    <strong>{{ macro.labelKey | translate }}</strong><small>{{
+                        `GOALS_PAGE.EDITOR.MACRO_HINTS.${(macro.key | uppercase)}` | translate
+                    }}</small>
                 </label>
             </div>
             <div class="goals-editor-input">

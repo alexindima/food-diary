@@ -25,9 +25,7 @@ jobs:
           cache-dependency-path: FoodDiary.Web.Client/package-lock.json
       - name: Install isolated frontend dependencies
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts --no-audit --no-fund
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify source integrity and engine contracts
         run: |
           node Tooling/WebQuality/cli.mjs validate
@@ -101,9 +99,7 @@ jobs:
           cache-dependency-path: FoodDiary.Web.Client/package-lock.json
       - name: Install isolated frontend dependencies
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts --no-audit --no-fund
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Receive the shared production build
         if: matrix.profile == 'browser' || matrix.profile == 'performance'
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8

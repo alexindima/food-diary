@@ -91,9 +91,7 @@ jobs:
 
       - name: Install Wiki compiler dependencies
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts
 
       - name: Resolve Wiki comparison base
         shell: pwsh
@@ -215,9 +213,7 @@ jobs:
           cache-dependency-path: FoodDiary.Web.Client/package-lock.json
       - name: Install Wiki compiler dependencies
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts --no-audit --no-fund
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Run complete focused partition
         shell: pwsh
         env:
@@ -267,9 +263,7 @@ jobs:
 
       - name: Install Wiki compiler dependencies
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts
 
       - name: Run isolated Full audit shard
         shell: pwsh
@@ -383,9 +377,7 @@ jobs:
           java-version: 21
       - name: Install SDK formatting dependencies
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts
       - name: Test SDK contract selection
         working-directory: FoodDiary.Web.Client
         run: npm run test:sdk
@@ -550,9 +542,7 @@ jobs:
       - name: Install development MCP compiler dependencies
         if: matrix.group == 'mcp'
         working-directory: FoodDiary.Web.Client
-        run: |
-          npm ci --ignore-scripts
-          node scripts/apply-dependency-patches.mjs
+        run: npm ci --ignore-scripts
       - name: Verify Docker availability
         if: matrix.group != 'mcp'
         run: docker version

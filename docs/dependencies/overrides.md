@@ -1,19 +1,5 @@
 # Temporary dependency constraints
 
-## Stylelint SCSS compatibility
-
-Reviewed on 2026-11-09. The web workspace uses Stylelint `^17.16.0` and
-`stylelint-config-standard ^40.0.0`. The current SCSS preset and plugin require
-Stylelint 17, while standard config 41 requires Stylelint 18. Installing the
-newer pair with the current SCSS preset caused `npm ci` to fail with `ERESOLVE`.
-[SCSS preset peer range](https://github.com/stylelint-scss/stylelint-config-standard-scss/blob/v17.0.0/package.json)
-[SCSS plugin peer range](https://github.com/stylelint-scss/stylelint-scss/blob/v7.4.0/package.json)
-
-Dependabot skips major version updates for the two constrained packages. Remove
-the exclusions when the SCSS preset and plugin both declare support for the next
-Stylelint major. Update the compatible set together, then run a clean `npm ci`
-and `npm run stylelint` to exercise the SCSS preset and local rules.
-
 ## npm minimatch and mobile glob
 
 Reviewed on 2026-11-01. The web workspace overrides `minimatch` to `11.0.3`
@@ -101,36 +87,12 @@ version. Verify all copies, npm audit, nested-query/array-limit/prototype contro
 and compressed JSON parsing when updating these parents. Keep the override
 removed while every consumer's declared range resolves a safe version.
 
-## npm braces depth mitigation
+## Removed npm braces mitigation
 
-Reviewed on 2026-10-17. The web workspace resolves `braces 3.0.3` through
-`micromatch 4.0.8`, consumed by `eslint-plugin-boundaries 7.2.0` and
-`stylelint 17.16.0` (including fast-glob/globby). These are development tools;
-no application endpoint accepting user-provided glob patterns was identified.
-[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)
-currently lists no patched version, and npm still publishes 3.0.3 as latest.
-
-`FoodDiary.Web.Client/scripts/apply-dependency-patches.mjs` applies a temporary
-local patch after installation. It verifies the upstream source hashes and
-version of every lockfile-listed installation before writing. Parser nesting
-and direct AST walkers reject depths above 128, with an iterative cycle/depth
-check before recursive execution. The patch is idempotent and fails on upstream
-source drift. CI jobs using `--ignore-scripts` invoke it explicitly; the client
-Dockerfile copies the installer before `npm ci`. Lint, Stylelint and the default
-build check that the patch is installed.
-
-Run `npm run test:dependency-patches` for deep brace/parenthesis, unclosed-pattern,
-direct AST and legitimate range/nested-alternative/matcher regressions. Import
-boundary tests, ESLint, Stylelint and the frontend build exercise actual consumers.
-The lockfile keeps the upstream version and integrity: `npm audit` continues to
-report the advisory and its dependent packages. This is a local mitigation, not
-an upstream resolution or an alert dismissal.
-
-Remove the patch, lifecycle/check scripts and explicit CI/Docker installation
-steps after every parent resolves an official compatible fix. Verify all nested
-copies, a fresh installation, the advisory probes, consumer checks and npm audit
-before removal. Existing unrelated npm overrides and NuGet security pins remain
-unchanged.
+Removed on 2026-11-16. Stylelint 18 and `eslint-plugin-boundaries` 7.4.3
+leave the web workspace with no `braces` installations in the lockfile.
+The local patch for [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)
+and its npm, CI and Docker installation steps were retired with that graph change.
 
 ## NuGet cryptography packages
 

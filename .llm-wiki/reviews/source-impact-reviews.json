@@ -48,15 +48,20 @@
           "reviewReason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable."
         },
         {
+          "path": "docs/frontend/WEB_QUALITY.md",
+          "sha256": "8b262be8fc2ccf970a2c141284c9b33ededa60dcdf5f329c1f32611629e5efa9",
+          "reviewReason": "WEB_QUALITY installation instructions now use one locked npm ci. The retired post-install patch has no consumers after the Stylelint upgrade. The documented web quality commands and Angular SDK behavior remain current."
+        },
+        {
           "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
           "sha256": "8aab288a77906755cffdc238b433827885b6ee5a8c950a3b9e61190c13e5d427",
           "reviewReason": "ProductService continues to use the generated Angular SDK and the existing HTTP pipeline. The owner adapter now sets Accept-Language per call and preserves caller context. The existing API SDK guidance covers that behavior."
         }
       ],
-      "reason": "ProductService continues to use the generated Angular SDK and the existing HTTP pipeline. The owner adapter now sets Accept-Language per call and preserves caller context. The existing API SDK guidance covers that behavior.",
+      "reason": "WEB_QUALITY installation instructions now use one locked npm ci. The retired post-install patch has no consumers after the Stylelint upgrade. The documented web quality commands and Angular SDK behavior remain current.",
       "baseRef": "HEAD",
-      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
-      "reviewedAtUtc": "2026-11-16T11:57:28.9283472Z"
+      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
+      "reviewedAtUtc": "2026-11-16T14:27:09.0498709Z"
     },
     {
       "pageId": "module.mail-services",
@@ -349,8 +354,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "1efa5590a4580b455780c98a0d9d1a1e5e657415c87b38aa47d1cc7b13f7660e",
-          "reviewReason": "Wiki CI now installs the same SDK selected by global.json before API compatibility checks. Snapshot and comparison behavior are unchanged."
+          "sha256": "b9214bc40a08de50eecf29e3a65df56bc21edb16ff3d04e75a546f42cb9de071",
+          "reviewReason": "The SDK job still uses the same frozen OpenAPI generation and comparison steps. Its npm ci no longer calls the obsolete braces patch. User and Admin SDK drift checks passed on the updated lockfile."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
@@ -378,10 +383,10 @@
           "reviewReason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed."
         }
       ],
-      "reason": "The SDK guide now documents the exact credential operations excluded from the diary Auth manifest. Admin keeps both operations and the diary keeps its existing SSO operation. Selector tests verify overlap and exclusion drift fail closed. The frontend boundaries and API compatibility workflow remain applicable.",
+      "reason": "The SDK job still uses the same frozen OpenAPI generation and comparison steps. Its npm ci no longer calls the obsolete braces patch. User and Admin SDK drift checks passed on the updated lockfile.",
       "baseRef": "HEAD",
-      "gitHead": "43b78663c380cc8c95efd642bf4e501ac75e3b65",
-      "reviewedAtUtc": "2026-11-15T13:54:12.1052669Z"
+      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
+      "reviewedAtUtc": "2026-11-16T14:27:09.4687276Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -927,14 +932,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "1b5b18eda4b080b1dec98abe61212da0aa994a453178a67c7e5bd2be522d34cd",
-          "reviewReason": "Reviewed the public Angular build commands. They now keep esbuild output instead of running the secondary chunk optimizer, while retaining the same build configurations, stats, script CSP and service-worker finalization. The local browser QA commands and evidence requirements are unchanged."
+          "sha256": "7d696d62e87daa60399e863cdf2a3abb603c162ccf9eaad88ff4af162ffde104",
+          "reviewReason": "The package repairs align the Stylelint peer group and make the SCSS glob shell-safe. Browser and screenshot commands are unchanged. The eight reformatted templates retain identical parsed Angular trees and overridden padding declarations were removed."
         }
       ],
-      "reason": "Reviewed the public Angular build commands. They now keep esbuild output instead of running the secondary chunk optimizer, while retaining the same build configurations, stats, script CSP and service-worker finalization. The local browser QA commands and evidence requirements are unchanged.",
+      "reason": "The package repairs align the Stylelint peer group and make the SCSS glob shell-safe. Browser and screenshot commands are unchanged. The eight reformatted templates retain identical parsed Angular trees and overridden padding declarations were removed.",
       "baseRef": "HEAD",
-      "gitHead": "5f103833fdc415b3f0e94c327b0ba7a9eeb6718b",
-      "reviewedAtUtc": "2026-11-10T05:36:25.6300158Z"
+      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
+      "reviewedAtUtc": "2026-11-16T14:27:09.9451138Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1053,63 +1058,18 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "96add9c4d777b77071ddf1fd39b846fb6d6aef8e34fdacc812d94fc61a8e13c6",
+      "pageSha256": "70ce28499758641427d22a5f8ab2b796c05993206a1d365e311e9beb8bfb1d3d",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "1efa5590a4580b455780c98a0d9d1a1e5e657415c87b38aa47d1cc7b13f7660e",
-          "reviewReason": "Wiki jobs install the pinned .NET SDK before invoking their existing index and regression commands. The Wiki shard selection and CI orchestration contract tests passed."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "d9c1df817d929aeb76b846f391695dedfe61825891d6dea65b531228a509d38e",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
-          "sha256": "7757bd8bb03564b426bff41f26d778f6f11ebf1c8f6f4d8c88e311b59168fc45",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-          "sha256": "ed224d3efa33fb151f418d8d4d908082678f029b72bb11c841289ba52e073298",
-          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAuditSystem.ps1",
-          "sha256": "68f82df687104328404e5590d584a7a1448b6389f3c9731f48a5211d55eca1f6",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1",
-          "sha256": "5bca102c03671563a80cfe1e8193cdc7ab2b83a968c6ac1f726d9ba641fde5a8",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
-          "sha256": "89ca381db6f49ddf24e57355e88922ae1e70da142be938f0b50611a5f0a10092",
-          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "d87ba80f3114b42d68f6790855cb57f1e2257516eaa5dca0ea21680f8988ed36",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
-          "sha256": "cbee3dd7e8f59144145ed4e41121f4b34785f5b45f0c724b1674481a463a3d04",
-          "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "b8481ccc25b11e32e61f73334f893a50f5d441bd89e72587d362654135dd50c9",
-          "reviewReason": "Read verification source stability guidance and updated it for stable Linux boot/start-tick tokens, exact other-platform identities and legacy matching. Linux original failures were reproduced; cold-checkout and stable identity/cleanup tests pass, and full audit-system passes with active orphan blocking preserved."
+          "sha256": "b9214bc40a08de50eecf29e3a65df56bc21edb16ff3d04e75a546f42cb9de071",
+          "reviewReason": "Wiki compiler jobs keep their original locked npm ci flags and index checks. The only removed install follow-up was the now unnecessary braces patch. The affected index pipeline completed on the new package graph."
         }
       ],
-      "reason": "Wiki jobs install the pinned .NET SDK before invoking their existing index and regression commands. The Wiki shard selection and CI orchestration contract tests passed.",
+      "reason": "Wiki compiler jobs keep their original locked npm ci flags and index checks. The only removed install follow-up was the now unnecessary braces patch. The affected index pipeline completed on the new package graph.",
       "baseRef": "HEAD",
-      "gitHead": "871bb97ef1f0bf62f0aa2f4c37080058cbfe959c",
-      "reviewedAtUtc": "2026-11-13T11:07:31.6083982Z"
+      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
+      "reviewedAtUtc": "2026-11-16T14:27:10.4878772Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1467,14 +1427,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "1efa5590a4580b455780c98a0d9d1a1e5e657415c87b38aa47d1cc7b13f7660e",
-          "reviewReason": "The existing Wiki checks and reporting steps keep their scope and dependencies. The runner explicitly installs the SDK required to execute them."
+          "sha256": "b9214bc40a08de50eecf29e3a65df56bc21edb16ff3d04e75a546f42cb9de071",
+          "reviewReason": "The CI edits remove the obsolete dependency patch from install steps. Wiki job partitioning, reporting, comparison base and evidence handling remain the same."
         }
       ],
-      "reason": "The existing Wiki checks and reporting steps keep their scope and dependencies. The runner explicitly installs the SDK required to execute them.",
+      "reason": "The CI edits remove the obsolete dependency patch from install steps. Wiki job partitioning, reporting, comparison base and evidence handling remain the same.",
       "baseRef": "HEAD",
-      "gitHead": "871bb97ef1f0bf62f0aa2f4c37080058cbfe959c",
-      "reviewedAtUtc": "2026-11-13T11:07:31.9385271Z"
+      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
+      "reviewedAtUtc": "2026-11-16T14:27:11.2025664Z"
     },
     {
       "pageId": "workflow-risk-calibration",

@@ -12,8 +12,7 @@
                 [title]="list.name"
                 (click)="selectList(list.id)"
             >
-                <span class="shopping-list__tab-name">{{ list.name }}</span
-                ><span
+                <span class="shopping-list__tab-name">{{ list.name }}</span><span
                     class="shopping-list__tab-count"
                     [hidden]="list.itemsCount === 0"
                     [attr.aria-label]="(list.completed ? 'SHOPPING_LIST.COMPLETED' : 'SHOPPING_LIST.REMAINING') | translate"

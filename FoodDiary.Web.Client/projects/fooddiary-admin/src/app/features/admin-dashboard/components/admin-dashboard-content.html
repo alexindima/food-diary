@@ -83,16 +83,15 @@
         <div class="fd-grid fd-gap-md">
             <h2 class="fd-ui-title-sm">{{ 'ADMIN_OVERVIEW.NOW' | translate }}</h2>
             <div class="fd-row fd-justify-between fd-gap-sm">
-                <span>{{ 'ADMIN_OVERVIEW.TOTAL_USERS' | translate }}</span
-                ><strong>{{ data().totalUsersNow | number }}</strong>
+                <span>{{ 'ADMIN_OVERVIEW.TOTAL_USERS' | translate }}</span><strong>{{ data().totalUsersNow | number }}</strong>
             </div>
             <div class="fd-row fd-justify-between fd-gap-sm">
-                <span>{{ 'ADMIN_OVERVIEW.PREMIUM' | translate }}</span
-                ><strong>{{ data().premiumUsersNow | number }}</strong>
+                <span>{{ 'ADMIN_OVERVIEW.PREMIUM' | translate }}</span><strong>{{ data().premiumUsersNow | number }}</strong>
             </div>
             <div class="fd-row fd-justify-between fd-gap-sm">
-                <a routerLink="/moderation">{{ 'ADMIN_OVERVIEW.PENDING' | translate }}</a
-                ><strong>{{ data().pendingReportsNow | number }}</strong>
+                <a routerLink="/moderation">{{ 'ADMIN_OVERVIEW.PENDING' | translate }}</a><strong>{{
+                    data().pendingReportsNow | number
+                }}</strong>
             </div>
             <a routerLink="/mail-inbox">{{ 'ADMIN_OVERVIEW.OPEN_MAIL' | translate }}</a>
             <small class="admin-dashboard__muted">{{ 'ADMIN_OVERVIEW.NOW_HINT' | translate }}</small>

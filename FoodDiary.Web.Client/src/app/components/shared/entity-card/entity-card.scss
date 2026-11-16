@@ -174,7 +174,6 @@ fd-entity-card-actions {
 }
 
 .entity-card__title-block {
-    padding-inline-end: var(--fd-size-control-sm);
     grid-area: content;
     align-self: start;
     align-items: flex-start;
@@ -384,7 +383,6 @@ fd-entity-card-actions {
     }
 
     .entity-card__title-block {
-        padding-inline-end: var(--fd-size-control-sm);
         padding: 0 calc(var(--fd-size-control-sm) * var(--entity-card-action-count, 1)) 0 0;
     }
 

@@ -112,8 +112,9 @@
                 <fd-ui-icon class="dashboard-fasting-card__stage-icon" name="autorenew" size="lg" [style.color]="stageColor()" />
                 <div class="fd-stack fd-gap-xxs">
                     <div class="dashboard-fasting-card__stage-heading">
-                        <strong>{{ stageTitleKey() | translate }}</strong
-                        ><span class="dashboard-fasting-card__stage-description"> · {{ stageDescriptionKey() | translate }}</span>
+                        <strong>{{ stageTitleKey() | translate }}</strong><span class="dashboard-fasting-card__stage-description">
+                            · {{ stageDescriptionKey() | translate }}</span
+                        >
                     </div>
                     <span>{{ stageSummary() }}</span>
                 </div>

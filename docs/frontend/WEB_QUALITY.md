@@ -56,7 +56,6 @@ installation can avoid changing shared hook configuration:
 ```powershell
 cd FoodDiary.Web.Client
 npm ci --ignore-scripts --no-audit --no-fund
-node scripts/apply-dependency-patches.mjs
 cd ..
 node Tooling/WebQuality/cli.mjs validate
 node --test Tooling/WebQuality/test/*.test.mjs
