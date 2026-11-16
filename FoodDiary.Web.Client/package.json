@@ -169,7 +169,7 @@
         "@emnapi/wasi-threads": "^2.2.0",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
         "@material-design-icons/font": "^0.14.15",
-        "@openai/codex": "0.167.0",
+        "@openai/codex": "0.169.0",
         "@playwright/test": "^1.65.0",
         "@storybook/angular-vite": "^10.6.7",
         "@types/express": "^5.0.6",
