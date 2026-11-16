@@ -13,4 +13,14 @@ internal sealed class ProductCatalogIdReadService(ProductsDbContext context, Fun
         return await context.Products.AsNoTracking().Where(item => item.Id == new ProductId(id))
             .Select(item => (bool?)(item.Visibility == Visibility.Public)).FirstOrDefaultAsync(cancellationToken);
     }
+
+    public async Task<bool?> FindUsdaCatalogMatchAsync(Guid id, int fdcId, CancellationToken cancellationToken = default) {
+        await synchronizeTransactionAsync(cancellationToken);
+        var productId = new ProductId(id);
+        return await context.Products.AsNoTracking()
+            .Where(item => item.Id == productId || (item.Visibility == Visibility.Public && item.UsdaFdcId == fdcId))
+            .OrderByDescending(item => item.Id == productId)
+            .Select(item => (bool?)(item.Visibility == Visibility.Public && item.UsdaFdcId == fdcId))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

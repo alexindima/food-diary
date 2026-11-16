@@ -4202,6 +4202,118 @@
       },
       "reason": "",
       "eventHash": "844826d154ac91e860d4b2153f526b862af57652866bff152a64fc52f81bbe3e"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 31,
+      "kind": "observed",
+      "candidateId": "learned-77e59d04bcaaac49",
+      "createdAtUtc": "2026-11-16T10:52:45.6353112Z",
+      "previousHash": "844826d154ac91e860d4b2153f526b862af57652866bff152a64fc52f81bbe3e",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/usda-public-catalog",
+        "retrospectiveHash": "f0e5d640215bc91633800effaa517365d4444cc181278811c816c5e1ca58e04b",
+        "packetFingerprint": "5e8a6821ce416441b0efa2b1019542f0a28d145582aaec20f349988e826300a5",
+        "signals": [
+          {
+            "id": "cost-architecture-health",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-health'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-health",
+              "error=46100%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1170.47%"
+            ]
+          },
+          {
+            "id": "cost-nuget-vulnerability-audit",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'nuget-vulnerability-audit'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=693.55%",
+              "nuget-vulnerability-audit"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-77e59d04bcaaac49",
+          "changedPaths": [
+            ".nuget/lockfiles/FoodDiary.Infrastructure.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Fasting.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Hydration.Infrastructure.Tests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.packages.lock.json",
+            "docs/architecture/persistence-capabilities.json",
+            "docs/architecture/persistence-technical-sources.txt",
+            "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+            "FoodDiary.Initializer/Program.cs",
+            "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
+            "FoodDiary.Initializer/README.md",
+            "FoodDiary.Initializer/UsdaCatalogImport.cs",
+            "FoodDiary.Initializer/UsdaCsvReader.cs",
+            "FoodDiary.Initializer/UsdaDataSeeder.cs",
+            "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
+            "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+            "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+            "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
+            "Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/CatalogIdReadServiceIntegrationTests.cs",
+            "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+            "Modules/Usda/Application/DependencyInjection.cs",
+            "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+            "Modules/Usda/Contracts/Models/UsdaCatalogFoodModel.cs",
+            "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+            "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
+            "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+            "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaDataSeederIntegrationTests.cs",
+            "scripts/database/usda-staples-ru.json",
+            "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"
+          ],
+          "expectedModules": [
+            "Products",
+            "Usda",
+            "Users"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Database",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-decision",
+            "architecture-drift",
+            "backend-boundaries",
+            "backend-public-contract",
+            "dependency-nuget",
+            "performance-data-access",
+            "privacy-data-lifecycle",
+            "quality-critical-path"
+          ],
+          "expectedChecks": [
+            "architecture-health",
+            "architecture-tests",
+            "data-access-integration-tests",
+            "nuget-vulnerability-audit"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "5017297bf61278b405252b8a6421cd76ab3baacd89b6d80456c8502672babcda"
+      },
+      "reason": "",
+      "eventHash": "7e7d9eeea6ce2ba5fda75e86b10afc5371849bb7a11e14b24103bbe5f8836d42"
     }
   ]
 }

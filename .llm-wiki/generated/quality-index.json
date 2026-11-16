@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7059,
+    "productionFiles": 7066,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1059,
@@ -3578,35 +3578,43 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 393,
-      "decisionPoints": 48,
+      "nonBlankLines": 406,
+      "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.86
+      "structuralRiskScore": 86.12
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "FoodDiary.Initializer/UsdaCatalogImport.cs",
+      "nonBlankLines": 63,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.76
     },
     {
       "path": "FoodDiary.Initializer/UsdaCsvReader.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 41,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.78
+      "structuralRiskScore": 12.82
     },
     {
       "path": "FoodDiary.Initializer/UsdaDataSeeder.cs",
-      "nonBlankLines": 309,
-      "decisionPoints": 44,
+      "nonBlankLines": 313,
+      "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 72.18
+      "structuralRiskScore": 78.26
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
@@ -45194,11 +45202,11 @@
     },
     {
       "path": "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Products/Application.Abstractions/Common/IProductMutationTransactionRunner.cs",
@@ -45359,6 +45367,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 10.4
+    },
+    {
+      "path": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+      "nonBlankLines": 59,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.68
     },
     {
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs",
@@ -46058,11 +46082,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
+      "nonBlankLines": 23,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 4.96
     },
     {
       "path": "Modules/Products/Infrastructure/Services/ProductLookupService.cs",
@@ -48673,6 +48697,14 @@
       "structuralRiskScore": 0.04
     },
     {
+      "path": "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.88
+    },
+    {
       "path": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -48706,11 +48738,11 @@
     },
     {
       "path": "Modules/Usda/Application/DependencyInjection.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/Usda/Application/Mappings/HealthAreaScoreMappings.cs",
@@ -48777,6 +48809,14 @@
       "structuralRiskScore": 2.42
     },
     {
+      "path": "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -48839,6 +48879,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Usda/Contracts/Models/UsdaCatalogFoodModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Usda/Contracts/Models/UsdaDailyReferenceValueReadModel.cs",
@@ -51513,6 +51561,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 27,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 41.22
+    },
+    {
       "path": "Modules/Users/Infrastructure/Persistence/Users/TelegramIdentityConflictInterceptor.cs",
       "nonBlankLines": 19,
       "decisionPoints": 3,
@@ -51554,11 +51610,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 30,
+      "nonBlankLines": 25,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 46.12
+      "structuralRiskScore": 5
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
@@ -51666,11 +51722,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "nonBlankLines": 76,
+      "nonBlankLines": 77,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.02
+      "structuralRiskScore": 3.04
     },
     {
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",

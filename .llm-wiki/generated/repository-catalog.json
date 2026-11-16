@@ -252,6 +252,7 @@
           "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/Usda/Application/FoodDiary.Modules.Usda.Application.csproj",
+          "Modules/Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj",
           "Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj",
           "Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj",
           "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",

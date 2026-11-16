@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1826,
+    "candidateFields": 1827,
     "credential": 177,
     "identity": 217,
-    "health": 837,
+    "health": 838,
     "financial": 169,
     "privateContent": 426,
     "boundaryFiles": 252,
@@ -43,7 +43,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 85
+      "line": 86
     },
     {
       "category": "credential",
@@ -5644,6 +5644,13 @@
       "type": "double",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs",
       "line": 21
+    },
+    {
+      "category": "health",
+      "name": "CaloriesPer100G",
+      "type": "double",
+      "path": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+      "line": 9
     },
     {
       "category": "health",

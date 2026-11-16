@@ -9,82 +9,72 @@ namespace FoodDiary.Initializer;
 
 [ExcludeFromCodeCoverage]
 internal static class UsdaDataSeeder {
-    public static async Task SeedAsync(FoodDiaryDbContext dbContext, string csvDirectory) {
+    private const int DefaultCommandTimeoutSeconds = 120;
+
+    public static Task SeedAsync(
+        FoodDiaryDbContext dbContext, string csvDirectory, CancellationToken cancellationToken = default) =>
+        SeedCoreAsync(dbContext, csvDirectory, force: false, cancellationToken);
+
+    public static Task ForceSeedAsync(
+        FoodDiaryDbContext dbContext, string csvDirectory, CancellationToken cancellationToken = default) =>
+        SeedCoreAsync(dbContext, csvDirectory, force: true, cancellationToken);
+
+    private static async Task SeedCoreAsync(
+        FoodDiaryDbContext dbContext, string csvDirectory, bool force, CancellationToken cancellationToken) {
         if (!Directory.Exists(csvDirectory)) {
             throw new DirectoryNotFoundException($"USDA CSV directory not found: {csvDirectory}");
         }
 
         string connectionString = dbContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("No connection string configured.");
-
-        var connection = new NpgsqlConnection(connectionString);
-        await using (connection) {
-            await connection.OpenAsync();
-
-            long existingCount = await CountRowsAsync(connection, "\"UsdaFoods\"");
-            if (existingCount > 0) {
-                Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"UsdaFoods already has {existingCount} rows. Skipping seed. Use --force to re-seed."));
-                return;
-            }
-
-            Console.WriteLine("Seeding USDA reference data...");
-
-            long foodCount = await ImportFoodsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Foods: {foodCount:N0} rows"));
-
-            long nutrientCount = await ImportNutrientsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Nutrients: {nutrientCount:N0} rows"));
-
-            long foodNutrientCount = await ImportFoodNutrientsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodNutrients: {foodNutrientCount:N0} rows"));
-
-            long portionCount = await ImportFoodPortionsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodPortions: {portionCount:N0} rows"));
-
-            await SeedDailyReferenceValuesAsync(connection);
-
-            Console.WriteLine("USDA seed completed.");
+        var settings = new NpgsqlConnectionStringBuilder(connectionString);
+        if (!settings.ShouldSerialize("Command Timeout")) {
+            settings.CommandTimeout = DefaultCommandTimeoutSeconds;
         }
+
+        await using var connection = new NpgsqlConnection(settings.ConnectionString);
+        await connection.OpenAsync(cancellationToken);
+        await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await ExecuteNonQueryAsync(connection, transaction,
+            "SELECT pg_advisory_xact_lock(hashtextextended('fooddiary:seed-usda', 0))", cancellationToken);
+
+        (bool hasFoods, bool hasNutrients, bool hasDailyReferenceValues) =
+            await ReadSeedStateAsync(connection, transaction, cancellationToken);
+        // The previous initializer wrote the daily values in a single statement after all CSV imports.
+        if (!force && hasFoods && hasDailyReferenceValues) {
+            Console.WriteLine("USDA reference data is already seeded. Skipping seed. Use --force to re-seed.");
+            return;
+        }
+
+        if (force || hasFoods || hasNutrients) {
+            Console.WriteLine(force ? "Replacing existing USDA data..." : "Recovering an incomplete USDA seed...");
+            await ExecuteNonQueryAsync(connection, transaction, """
+                TRUNCATE "UsdaFoodNutrients", "UsdaFoodPortions", "DailyReferenceValues", "UsdaFoods", "UsdaNutrients"
+                """, cancellationToken);
+        }
+
+        Console.WriteLine("Seeding USDA reference data...");
+
+        long foodCount = await ImportFoodsAsync(connection, csvDirectory, cancellationToken);
+        Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Foods: {foodCount:N0} rows"));
+
+        long nutrientCount = await ImportNutrientsAsync(connection, csvDirectory, cancellationToken);
+        Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Nutrients: {nutrientCount:N0} rows"));
+
+        HashSet<int> validFdcIds = await LoadValidFdcIdsAsync(connection, transaction, cancellationToken);
+        long foodNutrientCount = await ImportFoodNutrientsAsync(connection, csvDirectory, validFdcIds, cancellationToken);
+        Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodNutrients: {foodNutrientCount:N0} rows"));
+
+        long portionCount = await ImportFoodPortionsAsync(connection, csvDirectory, validFdcIds, cancellationToken);
+        Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodPortions: {portionCount:N0} rows"));
+
+        await SeedDailyReferenceValuesAsync(connection, transaction, cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        Console.WriteLine("USDA seed completed.");
     }
 
-    public static async Task ForceSeedAsync(FoodDiaryDbContext dbContext, string csvDirectory) {
-        if (!Directory.Exists(csvDirectory)) {
-            throw new DirectoryNotFoundException($"USDA CSV directory not found: {csvDirectory}");
-        }
-
-        string connectionString = dbContext.Database.GetConnectionString()
-            ?? throw new InvalidOperationException("No connection string configured.");
-
-        var connection = new NpgsqlConnection(connectionString);
-        await using (connection) {
-            await connection.OpenAsync();
-
-            Console.WriteLine("Clearing existing USDA data...");
-            await ExecuteNonQueryAsync(connection, """
-            TRUNCATE "UsdaFoodNutrients", "UsdaFoodPortions", "UsdaFoods", "UsdaNutrients" CASCADE
-            """);
-
-            Console.WriteLine("Seeding USDA reference data...");
-
-            long foodCount = await ImportFoodsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Foods: {foodCount:N0} rows"));
-
-            long nutrientCount = await ImportNutrientsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Nutrients: {nutrientCount:N0} rows"));
-
-            long foodNutrientCount = await ImportFoodNutrientsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodNutrients: {foodNutrientCount:N0} rows"));
-
-            long portionCount = await ImportFoodPortionsAsync(connection, csvDirectory);
-            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodPortions: {portionCount:N0} rows"));
-
-            await SeedDailyReferenceValuesAsync(connection);
-
-            Console.WriteLine("USDA seed completed.");
-        }
-    }
-
-    private static async Task SeedDailyReferenceValuesAsync(NpgsqlConnection connection) {
+    private static async Task SeedDailyReferenceValuesAsync(
+        NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken) {
         // FDA Daily Values for adults and children 4+ (standard nutrition label values)
         // Source: https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
         const string sql = """
@@ -118,11 +108,12 @@ internal static class UsdaDataSeeder {
                 "Value" = EXCLUDED."Value",
                 "Unit" = EXCLUDED."Unit"
             """;
-        await ExecuteNonQueryAsync(connection, sql);
+        await ExecuteNonQueryAsync(connection, transaction, sql, cancellationToken);
         Console.WriteLine("  DailyReferenceValues: 22 rows (FDA Daily Values)");
     }
 
-    private static async Task<long> ImportFoodsAsync(NpgsqlConnection connection, string csvDirectory) {
+    private static async Task<long> ImportFoodsAsync(
+        NpgsqlConnection connection, string csvDirectory, CancellationToken cancellationToken) {
         string foodCsvPath = Path.Combine(csvDirectory, "food.csv");
         string categoryCsvPath = Path.Combine(csvDirectory, "food_category.csv");
 
@@ -133,19 +124,21 @@ internal static class UsdaDataSeeder {
         // Load food categories if available
         var categories = new Dictionary<int, string>();
         if (File.Exists(categoryCsvPath)) {
-            await foreach (string line in UsdaCsvReader.ReadLinesAsync(categoryCsvPath)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(categoryCsvPath, cancellationToken)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
-                if (fields.Length >= 2 && int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int catId)) {
-                    categories[catId] = fields[1];
+                // food_category.csv: id, code, description
+                if (fields.Length >= 3 && int.TryParse(fields[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int catId)) {
+                    categories[catId] = fields[2];
                 }
             }
         }
 
         long count = 0;
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
-            """COPY "UsdaFoods" ("FdcId", "Description", "FoodCategoryId", "FoodCategory") FROM STDIN (FORMAT BINARY)""");
+            """COPY "UsdaFoods" ("FdcId", "Description", "FoodCategoryId", "FoodCategory") FROM STDIN (FORMAT BINARY)""",
+            cancellationToken);
         await using (writer) {
-            await foreach (string line in UsdaCsvReader.ReadLinesAsync(foodCsvPath)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(foodCsvPath, cancellationToken)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food.csv: fdc_id, data_type, description, food_category_id, publication_date
                 if (fields.Length < 4) {
@@ -165,28 +158,29 @@ internal static class UsdaDataSeeder {
                 string? foodCategory = foodCategoryId.HasValue && categories.TryGetValue(foodCategoryId.Value, out string? catName)
                     ? catName : null;
 
-                await writer.StartRowAsync();
-                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 512), NpgsqlDbType.Varchar);
+                await writer.StartRowAsync(cancellationToken);
+                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 512), NpgsqlDbType.Varchar, cancellationToken);
                 if (foodCategoryId.HasValue) {
-                    await writer.WriteAsync(foodCategoryId.Value, NpgsqlDbType.Integer);
+                    await writer.WriteAsync(foodCategoryId.Value, NpgsqlDbType.Integer, cancellationToken);
                 } else {
-                    await writer.WriteNullAsync();
+                    await writer.WriteNullAsync(cancellationToken);
                 }
                 if (foodCategory is not null) {
-                    await writer.WriteAsync(UsdaCsvReader.Truncate(foodCategory, 256), NpgsqlDbType.Varchar);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(foodCategory, 256), NpgsqlDbType.Varchar, cancellationToken);
                 } else {
-                    await writer.WriteNullAsync();
+                    await writer.WriteNullAsync(cancellationToken);
                 }
                 count++;
             }
 
-            await writer.CompleteAsync();
+            await writer.CompleteAsync(cancellationToken);
             return count;
         }
     }
 
-    private static async Task<long> ImportNutrientsAsync(NpgsqlConnection connection, string csvDirectory) {
+    private static async Task<long> ImportNutrientsAsync(
+        NpgsqlConnection connection, string csvDirectory, CancellationToken cancellationToken) {
         string csvPath = Path.Combine(csvDirectory, "nutrient.csv");
         if (!File.Exists(csvPath)) {
             throw new FileNotFoundException("nutrient.csv not found in USDA CSV directory.", csvPath);
@@ -194,9 +188,10 @@ internal static class UsdaDataSeeder {
 
         long count = 0;
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
-            """COPY "UsdaNutrients" ("Id", "Name", "UnitName") FROM STDIN (FORMAT BINARY)""");
+            """COPY "UsdaNutrients" ("Id", "Name", "UnitName") FROM STDIN (FORMAT BINARY)""",
+            cancellationToken);
         await using (writer) {
-            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath, cancellationToken)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // nutrient.csv: id, name, unit_name, nutrient_nbr, rank
                 if (fields.Length < 3) {
@@ -207,32 +202,31 @@ internal static class UsdaDataSeeder {
                     continue;
                 }
 
-                await writer.StartRowAsync();
-                await writer.WriteAsync(id, NpgsqlDbType.Integer);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[1], 256), NpgsqlDbType.Varchar);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 32), NpgsqlDbType.Varchar);
+                await writer.StartRowAsync(cancellationToken);
+                await writer.WriteAsync(id, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[1], 256), NpgsqlDbType.Varchar, cancellationToken);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 32), NpgsqlDbType.Varchar, cancellationToken);
                 count++;
             }
 
-            await writer.CompleteAsync();
+            await writer.CompleteAsync(cancellationToken);
             return count;
         }
     }
 
-    private static async Task<long> ImportFoodNutrientsAsync(NpgsqlConnection connection, string csvDirectory) {
+    private static async Task<long> ImportFoodNutrientsAsync(
+        NpgsqlConnection connection, string csvDirectory, HashSet<int> validFdcIds, CancellationToken cancellationToken) {
         string csvPath = Path.Combine(csvDirectory, "food_nutrient.csv");
         if (!File.Exists(csvPath)) {
             throw new FileNotFoundException("food_nutrient.csv not found in USDA CSV directory.", csvPath);
         }
 
-        // Load valid FDC IDs to filter only SR Legacy foods
-        HashSet<int> validFdcIds = await LoadValidFdcIdsAsync(connection);
-
         long count = 0;
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
-            """COPY "UsdaFoodNutrients" ("Id", "FdcId", "NutrientId", "Amount") FROM STDIN (FORMAT BINARY)""");
+            """COPY "UsdaFoodNutrients" ("Id", "FdcId", "NutrientId", "Amount") FROM STDIN (FORMAT BINARY)""",
+            cancellationToken);
         await using (writer) {
-            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath, cancellationToken)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food_nutrient.csv: id, fdc_id, nutrient_id, amount, ...
                 if (fields.Length < 4) {
@@ -259,32 +253,32 @@ internal static class UsdaDataSeeder {
                     continue;
                 }
 
-                await writer.StartRowAsync();
-                await writer.WriteAsync(id, NpgsqlDbType.Integer);
-                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer);
-                await writer.WriteAsync(nutrientId, NpgsqlDbType.Integer);
-                await writer.WriteAsync(amount, NpgsqlDbType.Double);
+                await writer.StartRowAsync(cancellationToken);
+                await writer.WriteAsync(id, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(nutrientId, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(amount, NpgsqlDbType.Double, cancellationToken);
                 count++;
             }
 
-            await writer.CompleteAsync();
+            await writer.CompleteAsync(cancellationToken);
             return count;
         }
     }
 
-    private static async Task<long> ImportFoodPortionsAsync(NpgsqlConnection connection, string csvDirectory) {
+    private static async Task<long> ImportFoodPortionsAsync(
+        NpgsqlConnection connection, string csvDirectory, HashSet<int> validFdcIds, CancellationToken cancellationToken) {
         string csvPath = Path.Combine(csvDirectory, "food_portion.csv");
         if (!File.Exists(csvPath)) {
             throw new FileNotFoundException("food_portion.csv not found in USDA CSV directory.", csvPath);
         }
 
-        HashSet<int> validFdcIds = await LoadValidFdcIdsAsync(connection);
-
         long count = 0;
         NpgsqlBinaryImporter writer = await connection.BeginBinaryImportAsync(
-            """COPY "UsdaFoodPortions" ("Id", "FdcId", "Amount", "MeasureUnitName", "GramWeight", "PortionDescription", "Modifier") FROM STDIN (FORMAT BINARY)""");
+            """COPY "UsdaFoodPortions" ("Id", "FdcId", "Amount", "MeasureUnitName", "GramWeight", "PortionDescription", "Modifier") FROM STDIN (FORMAT BINARY)""",
+            cancellationToken);
         await using (writer) {
-            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(csvPath, cancellationToken)) {
                 string[] fields = UsdaCsvReader.ParseLine(line);
                 // food_portion.csv: id, fdc_id, seq_num, amount, measure_unit_id, portion_description, modifier, gram_weight, ...
                 if (fields.Length < 8) {
@@ -317,57 +311,57 @@ internal static class UsdaDataSeeder {
                 // measure_unit_name is not in CSV directly; use portion_description as fallback
                 string measureUnitName = modifier ?? portionDescription ?? "serving";
 
-                await writer.StartRowAsync();
-                await writer.WriteAsync(id, NpgsqlDbType.Integer);
-                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer);
-                await writer.WriteAsync(amount, NpgsqlDbType.Double);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(measureUnitName, 128), NpgsqlDbType.Varchar);
-                await writer.WriteAsync(gramWeight, NpgsqlDbType.Double);
+                await writer.StartRowAsync(cancellationToken);
+                await writer.WriteAsync(id, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer, cancellationToken);
+                await writer.WriteAsync(amount, NpgsqlDbType.Double, cancellationToken);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(measureUnitName, 128), NpgsqlDbType.Varchar, cancellationToken);
+                await writer.WriteAsync(gramWeight, NpgsqlDbType.Double, cancellationToken);
                 if (portionDescription is not null) {
-                    await writer.WriteAsync(UsdaCsvReader.Truncate(portionDescription, 256), NpgsqlDbType.Varchar);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(portionDescription, 256), NpgsqlDbType.Varchar, cancellationToken);
                 } else {
-                    await writer.WriteNullAsync();
+                    await writer.WriteNullAsync(cancellationToken);
                 }
                 if (modifier is not null) {
-                    await writer.WriteAsync(UsdaCsvReader.Truncate(modifier, 128), NpgsqlDbType.Varchar);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(modifier, 128), NpgsqlDbType.Varchar, cancellationToken);
                 } else {
-                    await writer.WriteNullAsync();
+                    await writer.WriteNullAsync(cancellationToken);
                 }
                 count++;
             }
 
-            await writer.CompleteAsync();
+            await writer.CompleteAsync(cancellationToken);
             return count;
         }
     }
 
-    private static async Task<HashSet<int>> LoadValidFdcIdsAsync(NpgsqlConnection connection) {
+    private static async Task<HashSet<int>> LoadValidFdcIdsAsync(
+        NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken) {
         var ids = new HashSet<int>();
-        var cmd = new NpgsqlCommand("""SELECT "FdcId" FROM "UsdaFoods" """, connection);
-        await using (cmd) {
-            NpgsqlDataReader reader = await cmd.ExecuteReaderAsync();
-            await using (reader) {
-                while (await reader.ReadAsync()) {
-                    ids.Add(reader.GetInt32(0));
-                }
-                return ids;
-            }
+        await using var command = new NpgsqlCommand("""SELECT "FdcId" FROM "UsdaFoods" """, connection, transaction);
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        while (await reader.ReadAsync(cancellationToken)) {
+            ids.Add(reader.GetInt32(0));
         }
+        return ids;
     }
 
-    private static async Task<long> CountRowsAsync(NpgsqlConnection connection, string tableName) {
-        var cmd = new NpgsqlCommand($"SELECT COUNT(*) FROM {tableName}", connection);
-        await using (cmd) {
-            object? result = await cmd.ExecuteScalarAsync();
-            return Convert.ToInt64(result, CultureInfo.InvariantCulture);
-        }
+    private static async Task<(bool HasFoods, bool HasNutrients, bool HasDailyReferenceValues)> ReadSeedStateAsync(
+        NpgsqlConnection connection, NpgsqlTransaction transaction, CancellationToken cancellationToken) {
+        await using var command = new NpgsqlCommand("""
+            SELECT EXISTS (SELECT 1 FROM "UsdaFoods"),
+                   EXISTS (SELECT 1 FROM "UsdaNutrients"),
+                   EXISTS (SELECT 1 FROM "DailyReferenceValues")
+            """, connection, transaction);
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        await reader.ReadAsync(cancellationToken);
+        return (reader.GetBoolean(0), reader.GetBoolean(1), reader.GetBoolean(2));
     }
 
-    private static async Task ExecuteNonQueryAsync(NpgsqlConnection connection, string sql) {
-        var cmd = new NpgsqlCommand(sql, connection);
-        await using (cmd) {
-            await cmd.ExecuteNonQueryAsync();
-        }
+    private static async Task ExecuteNonQueryAsync(
+        NpgsqlConnection connection, NpgsqlTransaction transaction, string sql, CancellationToken cancellationToken) {
+        await using var command = new NpgsqlCommand(sql, connection, transaction);
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
 }

@@ -23,6 +23,8 @@ public sealed class CatalogIdReadServiceIntegrationTests(PostgresDatabaseFixture
         var user = User.Create("catalog-id-owner@example.test", "hash");
         var published = Product.Create(user.Id, "Published", MeasurementUnit.G, 100, 25, 100, 10, 5, 20, 3, 0, visibility: Visibility.Public);
         var privateProduct = Product.Create(user.Id, "Private", MeasurementUnit.G, 100, 25, 100, 10, 5, 20, 3, 0, visibility: Visibility.Private);
+        published.LinkToUsdaFood(171688);
+        privateProduct.LinkToUsdaFood(170393);
         database.Users.Add(user);
         database.Products.AddRange(published, privateProduct);
         await database.SaveChangesAsync();
@@ -41,6 +43,11 @@ public sealed class CatalogIdReadServiceIntegrationTests(PostgresDatabaseFixture
         Assert.True(await reader.CatalogIdIsPublicAsync(published.Id.Value, cancellation.Token));
         Assert.False(await reader.CatalogIdIsPublicAsync(privateProduct.Id.Value, cancellation.Token));
         Assert.Null(await reader.CatalogIdIsPublicAsync(Guid.NewGuid(), cancellation.Token));
+        Assert.True(await reader.FindUsdaCatalogMatchAsync(published.Id.Value, 171688, cancellation.Token));
+        Assert.True(await reader.FindUsdaCatalogMatchAsync(Guid.NewGuid(), 171688, cancellation.Token));
+        Assert.False(await reader.FindUsdaCatalogMatchAsync(privateProduct.Id.Value, 171688, cancellation.Token));
+        Assert.False(await reader.FindUsdaCatalogMatchAsync(published.Id.Value, 170393, cancellation.Token));
+        Assert.Null(await reader.FindUsdaCatalogMatchAsync(Guid.NewGuid(), 170393, cancellation.Token));
         Assert.Empty(owned.ChangeTracker.Entries());
         await using (IDbContextTransaction transaction = await database.Database.BeginTransactionAsync(cancellation.Token)) {
             Product changing = await owned.Products.SingleAsync(item => item.Id == privateProduct.Id, cancellation.Token);

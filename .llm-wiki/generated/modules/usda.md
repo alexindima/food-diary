@@ -50,19 +50,20 @@ Source: `Modules/Usda/Presentation/Controllers/UsdaController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
-- Public contract files: 20
+- Public contract files: 22
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 20
-- Interfaces: 6
-- DTO/read-model/projection types: 12
+- Public contract types: 22
+- Interfaces: 7
+- DTO/read-model/projection types: 13
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
 - `class UsdaErrors`
+- `interface IUsdaCatalogReadService`
 - `interface IUsdaFoodReadModelRepository`
 - `interface IUsdaFoodReadRepository`
 - `interface IUsdaFoodRepository`
@@ -75,6 +76,7 @@ Source: `Modules/Usda/Presentation/Controllers/UsdaController.cs`
 - `record HealthAreaScoresModel`
 - `record MicronutrientModel`
 - `record SearchUsdaFoodsQuery`
+- `record UsdaCatalogFoodModel`
 - `record UsdaDailyReferenceValueReadModel`
 - `record UsdaFoodDetailModel`
 - `record UsdaFoodModel`
@@ -108,6 +110,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `Modules/Usda/tests/FoodDiary.Modules.Usda.Presentation.Tests/UsdaHttpMappingsTests.cs`
 - [presentation] `Modules/Usda/tests/FoodDiary.Modules.Usda.Presentation.Tests/UsdaProviderPolicyTests.cs`
+- [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaDataSeederIntegrationTests.cs`
 - [integration] `Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaReferenceMigrationIntegrationTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
 

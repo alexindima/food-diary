@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4848,
-    "symbols": 4816,
-    "interfaceImplementationLinks": 216,
-    "dependencyInjectionRegistrations": 76,
+    "sourceFiles": 4855,
+    "symbols": 4823,
+    "interfaceImplementationLinks": 217,
+    "dependencyInjectionRegistrations": 77,
     "kinds": {
-      "class": 2483,
+      "class": 2487,
       "enum": 76,
-      "interface": 434,
-      "record": 1665,
+      "interface": 435,
+      "record": 1667,
       "record class": 5,
       "record struct": 144,
       "union": 9
@@ -34,7 +34,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 77,
-      "Other": 2012,
+      "Other": 2017,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -42,7 +42,7 @@
       "Repository": 106,
       "Request": 187,
       "Response": 283,
-      "Service": 178,
+      "Service": 180,
       "Validator": 238,
       "ValueObject": 183,
       "WriteRepository": 47
@@ -866,14 +866,21 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 349
+      "line": 358
+    },
+    {
+      "name": "UsdaCatalogImport",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Initializer/UsdaCatalogImport.cs",
+      "line": 9
     },
     {
       "name": "UsdaCsvReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/UsdaCsvReader.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "UsdaDataSeeder",
@@ -23479,6 +23486,20 @@
       "line": 10
     },
     {
+      "name": "UsdaCatalogProduct",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaCatalogProductImporter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+      "line": 12
+    },
+    {
       "name": "ProductUpdateApplier",
       "kind": "class",
       "role": "Other",
@@ -26293,6 +26314,13 @@
       "line": 5
     },
     {
+      "name": "UsdaCatalogReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+      "line": 6
+    },
+    {
       "name": "LinkProductToUsdaFoodCommand",
       "kind": "record",
       "role": "Command",
@@ -26325,7 +26353,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Application/DependencyInjection.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "HealthAreaScoreMappings",
@@ -26384,6 +26412,13 @@
       "line": 5
     },
     {
+      "name": "IUsdaCatalogReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+      "line": 4
+    },
+    {
       "name": "IUsdaFoodSearchService",
       "kind": "interface",
       "role": "Service",
@@ -26437,6 +26472,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Usda/Contracts/Models/MicronutrientModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UsdaCatalogFoodModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Contracts/Models/UsdaCatalogFoodModel.cs",
       "line": 2
     },
     {
@@ -28771,6 +28813,13 @@
       "line": 6
     },
     {
+      "name": "SystemContentOwnerProvisioner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+      "line": 7
+    },
+    {
       "name": "TelegramIdentityConflictInterceptor",
       "kind": "class",
       "role": "Other",
@@ -28817,7 +28866,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "UserPremiumTrialStore",
@@ -35031,6 +35080,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IUsdaCatalogReadService",
+      "interfacePath": "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+      "implementation": "UsdaCatalogReadService",
+      "implementationPath": "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IUsdaFoodRepository",
       "interfacePath": "Modules/Usda/Application.Abstractions/Common/IUsdaFoodRepository.cs",
       "implementation": "UsdaFoodRepository",
@@ -35317,14 +35373,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 428
+      "line": 437
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 429
+      "line": 438
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
@@ -35682,6 +35738,13 @@
       "lifetime": "Scoped",
       "path": "Modules/Products/Application/DependencyInjection.cs",
       "line": 19
+    },
+    {
+      "service": "IUsdaCatalogReadService",
+      "implementation": "UsdaCatalogReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Usda/Application/DependencyInjection.cs",
+      "line": 14
     },
     {
       "service": "IUserAuthenticationIdentityService",

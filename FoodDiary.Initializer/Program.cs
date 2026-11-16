@@ -6,6 +6,7 @@ using FoodDiary.Modules.Recipes.Infrastructure;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure;
 using FoodDiary.Modules.RecentItems.Infrastructure;
 using FoodDiary.Modules.Products.Infrastructure;
+using FoodDiary.Modules.Products.Application.Commands.ImportUsdaCatalog;
 using FoodDiary.Modules.Meals.Infrastructure;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -144,6 +145,12 @@ static async Task ExecuteAsync(
             break;
         case "replay-outbox":
             await ReplayOutboxAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>());
+            break;
+        case "import-usda-catalog":
+            if (string.IsNullOrWhiteSpace(command.TargetMigration) || command.Force) {
+                throw new InvalidOperationException("Use import-usda-catalog <manifest.json> [--dry-run].");
+            }
+            await services.GetRequiredService<UsdaCatalogImport>().RunAsync(command.TargetMigration, command.DryRun, CancellationToken.None);
             break;
         case "list-dead-letters":
             await ListDeadLettersAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>());
@@ -324,6 +331,8 @@ Commands:
   rollback-last           Roll database back by one migration
   rollback <target|0>     Roll database back to a specific migration or 0
   seed-usda <csv-dir>     Import USDA SR Legacy data from CSV files (--force to re-seed)
+  import-usda-catalog <manifest.json> [--dry-run]
+                         Import curated public products from the local USDA reference tables
   list-dead-letters [outbox] [--limit <1-200>]
                           List dead-lettered messages across all or one outbox
   show-dead-letter <outbox>:<message-id>
@@ -427,6 +436,10 @@ public partial class Program {
             services.AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure();
             services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
             services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
+        } else if (command.Name is "import-usda-catalog") {
+            services.AddUsdaModule().AddUsersPersistence().AddProductsPersistence().AddReadModelComposition();
+            services.AddScoped<UsdaCatalogProductImporter>();
+            services.AddScoped<UsdaCatalogImport>();
         } else if (command.Name is "replay-outbox" or "list-dead-letters" or "show-dead-letter" or "list-outbox-replays") {
             services.AddGamificationModule();
             services.AddImagesInfrastructure();

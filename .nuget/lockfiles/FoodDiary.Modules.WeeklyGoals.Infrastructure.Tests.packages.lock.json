@@ -875,6 +875,7 @@
           "FoodDiary.Modules.Statistics.Application": "[1.0.0, )",
           "FoodDiary.Modules.Tdee.Application": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Users.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",

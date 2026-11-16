@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1426,
+    "contracts": 1427,
     "ambiguousContracts": 34,
-    "consumerEdges": 11594,
-    "productionConsumerEdges": 6455,
+    "consumerEdges": 11602,
+    "productionConsumerEdges": 6463,
     "testConsumerEdges": 5139,
-    "consumedContracts": 1426,
+    "consumedContracts": 1427,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -16199,6 +16199,23 @@
       ],
       "definitionPaths": [
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IUsdaCatalogReadService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -98915,6 +98932,19 @@
         "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IModuleTransactionCoordinator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Persistence.Abstractions/IModuleTransactionCoordinator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -106937,6 +106967,19 @@
         "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductCatalogIdReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -107250,6 +107293,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Commands/ImportCatalogProduct/ImportCatalogProductCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductMutationTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application.Abstractions/Common/IProductMutationTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -108160,6 +108216,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IProductWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application.Abstractions/Common/IProductWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -131993,6 +132062,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "IUsdaCatalogReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Initializer/UsdaCatalogImport.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaCatalogReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaCatalogReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "IUsdaFoodReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -132002,6 +132110,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/Application.Abstractions/Common/IUsdaFoodRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaFoodReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application.Abstractions/Common/IUsdaFoodReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },

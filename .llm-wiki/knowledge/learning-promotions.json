@@ -14796,6 +14796,231 @@
       "targetId": "",
       "reason": "",
       "eventHash": "f48702ca85c02806cdce8cbff638c6f587e8c71008ee84f5f17313ad3d71acb8"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 123,
+      "kind": "observed",
+      "id": "learning-d0259b3955726a523f24",
+      "createdAtUtc": "2026-11-16T10:52:43.7630653Z",
+      "previousHash": "f48702ca85c02806cdce8cbff638c6f587e8c71008ee84f5f17313ad3d71acb8",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/usda-public-catalog",
+        "retrospectiveHash": "f0e5d640215bc91633800effaa517365d4444cc181278811c816c5e1ca58e04b",
+        "completionFingerprint": "70dbb744384115d78b5cf392d1fc25ca2eb42f0a3cc613eb75e3ece07f4aaebb",
+        "packetFingerprint": "5e8a6821ce416441b0efa2b1019542f0a28d145582aaec20f349988e826300a5",
+        "sourceCandidateId": "cost-architecture-health",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-health'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1848s versus 4s, error 46100%.",
+        "score": 70,
+        "evidence": [
+          "architecture-health",
+          "error=46100%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-health",
+          "recommendedSeconds": 4.0,
+          "expectedSeconds": 1848.0,
+          "errorPercent": 46100.0
+        },
+        "changedPaths": [
+          ".nuget/lockfiles/FoodDiary.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Fasting.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Hydration.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.packages.lock.json",
+          "docs/architecture/persistence-capabilities.json",
+          "docs/architecture/persistence-technical-sources.txt",
+          "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+          "FoodDiary.Initializer/Program.cs",
+          "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
+          "FoodDiary.Initializer/README.md",
+          "FoodDiary.Initializer/UsdaCatalogImport.cs",
+          "FoodDiary.Initializer/UsdaCsvReader.cs",
+          "FoodDiary.Initializer/UsdaDataSeeder.cs",
+          "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
+          "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+          "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+          "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
+          "Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/CatalogIdReadServiceIntegrationTests.cs",
+          "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+          "Modules/Usda/Application/DependencyInjection.cs",
+          "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+          "Modules/Usda/Contracts/Models/UsdaCatalogFoodModel.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
+          "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaDataSeederIntegrationTests.cs",
+          "scripts/database/usda-staples-ru.json",
+          "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-health"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "8cc031660b8b3749e59a2c9bd1a3824c53198880962b265aa4e7cd8697015650"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 124,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-16T10:52:43.7630653Z",
+      "previousHash": "8cc031660b8b3749e59a2c9bd1a3824c53198880962b265aa4e7cd8697015650",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/usda-public-catalog",
+        "retrospectiveHash": "f0e5d640215bc91633800effaa517365d4444cc181278811c816c5e1ca58e04b",
+        "completionFingerprint": "70dbb744384115d78b5cf392d1fc25ca2eb42f0a3cc613eb75e3ece07f4aaebb",
+        "packetFingerprint": "5e8a6821ce416441b0efa2b1019542f0a28d145582aaec20f349988e826300a5",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1893s versus 149s, error 1170.47%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1170.47%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 149.0,
+          "expectedSeconds": 1893.0,
+          "errorPercent": 1170.47
+        },
+        "changedPaths": [
+          ".nuget/lockfiles/FoodDiary.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Fasting.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Hydration.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.packages.lock.json",
+          "docs/architecture/persistence-capabilities.json",
+          "docs/architecture/persistence-technical-sources.txt",
+          "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+          "FoodDiary.Initializer/Program.cs",
+          "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
+          "FoodDiary.Initializer/README.md",
+          "FoodDiary.Initializer/UsdaCatalogImport.cs",
+          "FoodDiary.Initializer/UsdaCsvReader.cs",
+          "FoodDiary.Initializer/UsdaDataSeeder.cs",
+          "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
+          "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+          "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+          "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
+          "Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/CatalogIdReadServiceIntegrationTests.cs",
+          "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+          "Modules/Usda/Application/DependencyInjection.cs",
+          "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+          "Modules/Usda/Contracts/Models/UsdaCatalogFoodModel.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
+          "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaDataSeederIntegrationTests.cs",
+          "scripts/database/usda-staples-ru.json",
+          "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "fb44805066835485dcb6785441a13aa523d79349d91c6b31357aec911af8fbbc"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 125,
+      "kind": "observed",
+      "id": "learning-01dbd7562ff405fb11ea",
+      "createdAtUtc": "2026-11-16T10:52:43.7630653Z",
+      "previousHash": "fb44805066835485dcb6785441a13aa523d79349d91c6b31357aec911af8fbbc",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/usda-public-catalog",
+        "retrospectiveHash": "f0e5d640215bc91633800effaa517365d4444cc181278811c816c5e1ca58e04b",
+        "completionFingerprint": "70dbb744384115d78b5cf392d1fc25ca2eb42f0a3cc613eb75e3ece07f4aaebb",
+        "packetFingerprint": "5e8a6821ce416441b0efa2b1019542f0a28d145582aaec20f349988e826300a5",
+        "sourceCandidateId": "cost-nuget-vulnerability-audit",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'nuget-vulnerability-audit'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 984s versus 124s, error 693.55%.",
+        "score": 70,
+        "evidence": [
+          "error=693.55%",
+          "nuget-vulnerability-audit"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "nuget-vulnerability-audit",
+          "recommendedSeconds": 124.0,
+          "expectedSeconds": 984.0,
+          "errorPercent": 693.55
+        },
+        "changedPaths": [
+          ".nuget/lockfiles/FoodDiary.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Fasting.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Hydration.Infrastructure.Tests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.packages.lock.json",
+          "docs/architecture/persistence-capabilities.json",
+          "docs/architecture/persistence-technical-sources.txt",
+          "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+          "FoodDiary.Initializer/Program.cs",
+          "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
+          "FoodDiary.Initializer/README.md",
+          "FoodDiary.Initializer/UsdaCatalogImport.cs",
+          "FoodDiary.Initializer/UsdaCsvReader.cs",
+          "FoodDiary.Initializer/UsdaDataSeeder.cs",
+          "Modules/Products/Application.Abstractions/Common/IProductCatalogIdReadService.cs",
+          "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProduct.cs",
+          "Modules/Products/Application/Commands/ImportUsdaCatalog/UsdaCatalogProductImporter.cs",
+          "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs",
+          "Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/CatalogIdReadServiceIntegrationTests.cs",
+          "Modules/Usda/Application/CatalogImport/UsdaCatalogReadService.cs",
+          "Modules/Usda/Application/DependencyInjection.cs",
+          "Modules/Usda/Contracts/Common/IUsdaCatalogReadService.cs",
+          "Modules/Usda/Contracts/Models/UsdaCatalogFoodModel.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs",
+          "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
+          "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+          "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UsdaDataSeederIntegrationTests.cs",
+          "scripts/database/usda-staples-ru.json",
+          "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"
+        ],
+        "subjectIds": [
+          "nuget-vulnerability-audit"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "89f7c6c64c19d2a3e5791f42b72205e0643d07a307e067ac49914b0dae9444f4"
     }
   ],
   "hashSchemaVersion": 2

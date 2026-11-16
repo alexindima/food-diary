@@ -1844,7 +1844,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "dd4055b07b00b8a51e542bd72e4435ca437a450196be72f224e14a603c09fb6e"
+      "technicalSourceSha256": "802dcf918f8828e1d5c25296b18a862d95e5fd44f559153d81ebc706897d7047"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -1926,7 +1926,7 @@
       "reason": "Reviewed GDPR erasure: same per-account coordinator transaction and lock order; owner-scoped parameterized deletion of owned gallery rows, redaction of captions/identifying text and unlinking images before retained numeric composition is reassigned. No external effects or early saves.",
       "technicalSourceSha256": "72cfe590b57a4934c68c67bd8c1eca49c4026fddfc3e93a246dae15ae671c3b3"
     },
-    "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs": {
+    "Modules/Users/Infrastructure/Persistence/Users/SystemContentOwnerProvisioner.cs": {
       "module": "Users",
       "capabilities": [
         "call:User.CreateSystemContentOwner",
@@ -1936,8 +1936,8 @@
         "tracked:User",
         "write:User"
       ],
-      "reason": "Read-only preflight determines whether a successor is needed. Separate coordinated provisioning serializes the fixed infrastructure principal by advisory lock, validates non-auth state and stages the Users factory result. The coordinator saves and verifies COMMIT. The permanent empty principal can survive a later content-item rollback; content transfer and deletion remain atomic. ADR 0054.",
-      "technicalSourceSha256": "24983f8d882ca1a288ca7bbc014009b0c5926d8bc2a5b9167aab07696cbf172e"
+      "reason": "Separate coordinated provisioning for retained content and public USDA catalog import serializes the fixed infrastructure principal by advisory lock, validates non-auth state and stages the Users factory result. The coordinator saves and verifies COMMIT. The permanent empty principal can survive a later content transaction rollback. ADR 0054.",
+      "technicalSourceSha256": "70bd39a7a9e39976a5c07694e08c7335850587fbc167b7f2d64788f17d998987"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs": {
       "module": "Billing",
