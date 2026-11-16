@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 524,
-    "componentsWithoutDirectSpecs": 136,
+    "components": 525,
+    "componentsWithoutDirectSpecs": 137,
     "inputs": 1680,
     "outputs": 564,
     "apiCalls": 336,
-    "templatesWithTranslations": 379,
-    "translationKeys": 2294,
+    "templatesWithTranslations": 380,
+    "translationKeys": 2302,
     "consumerEdges": 1356,
     "consumedComponents": 332,
-    "unconsumedComponents": 191
+    "unconsumedComponents": 192
   },
   "components": [
     {
@@ -12334,6 +12334,20 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "TermsOfServiceComponent",
+      "selector": "fd-terms-of-service",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.scss",
+        "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.scss"
       ],
       "inputs": [],
       "outputs": [],
@@ -25335,6 +25349,20 @@
         "SEO_PAGE.TRUST_EYEBROW",
         "SEO_PAGE.TRUST_TEXT",
         "SEO_PAGE.TRUST_TITLE"
+      ]
+    },
+    {
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.html",
+      "keys": [
+        "PUBLIC_SITE.FOOTER.PRIVACY_POLICY",
+        "TERMS_OF_SERVICE.DESCRIPTION",
+        "TERMS_OF_SERVICE.PRIVACY.TEXT",
+        "TERMS_OF_SERVICE.PRIVACY.TITLE",
+        "TERMS_OF_SERVICE.PROVIDER.CONTACT",
+        "TERMS_OF_SERVICE.PROVIDER.DETAILS",
+        "TERMS_OF_SERVICE.PROVIDER.TITLE",
+        "TERMS_OF_SERVICE.TITLE"
       ]
     },
     {

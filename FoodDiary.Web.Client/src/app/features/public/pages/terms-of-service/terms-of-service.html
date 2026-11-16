@@ -1,0 +1,30 @@
+<article class="public-article terms-of-service">
+    <header>
+        <h1>{{ 'TERMS_OF_SERVICE.TITLE' | translate }}</h1>
+        <p>{{ 'TERMS_OF_SERVICE.DESCRIPTION' | translate }}</p>
+    </header>
+
+    <section>
+        <h2>{{ 'TERMS_OF_SERVICE.PROVIDER.TITLE' | translate }}</h2>
+        <p>{{ 'TERMS_OF_SERVICE.PROVIDER.DETAILS' | translate: operator }}</p>
+        <address>{{ operator.address }}</address>
+        <p>
+            {{ 'TERMS_OF_SERVICE.PROVIDER.CONTACT' | translate }}
+            <a [href]="`mailto:${supportEmail}`">{{ supportEmail }}</a
+            >.
+        </p>
+    </section>
+
+    @for (section of sections; track section) {
+        <section>
+            <h2>{{ `TERMS_OF_SERVICE.SECTIONS.${section}.TITLE` | translate }}</h2>
+            <p>{{ `TERMS_OF_SERVICE.SECTIONS.${section}.TEXT` | translate }}</p>
+        </section>
+    }
+
+    <section>
+        <h2>{{ 'TERMS_OF_SERVICE.PRIVACY.TITLE' | translate }}</h2>
+        <p>{{ 'TERMS_OF_SERVICE.PRIVACY.TEXT' | translate }}</p>
+        <a [routerLink]="privacyPath">{{ 'PUBLIC_SITE.FOOTER.PRIVACY_POLICY' | translate }}</a>
+    </section>
+</article>

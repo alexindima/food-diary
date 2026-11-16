@@ -6,7 +6,7 @@ import { catchError, forkJoin, map, type Observable, of, shareReplay, tap, throw
 
 import { environment } from '../../../environments/environment';
 import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
-import { PUBLIC_INFORMATION_PAGES, stripPublicLocale } from '../../config/public-site-paths';
+import { PUBLIC_INFORMATION_PAGES, stripPublicLocale, TERMS_OF_SERVICE_PATH } from '../../config/public-site-paths';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { SERVER_TRANSLATIONS, type TranslationBundle } from './server-translations.token';
 
@@ -97,7 +97,7 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
             return ['core', 'landing'];
         }
 
-        if (normalizedPath === '/privacy-policy') {
+        if (normalizedPath === '/privacy-policy' || normalizedPath === TERMS_OF_SERVICE_PATH) {
             return ['core', 'privacy'];
         }
 
@@ -117,6 +117,7 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
         return (
             this.isLandingPath(normalizedPath) ||
             normalizedPath === '/privacy-policy' ||
+            normalizedPath === TERMS_OF_SERVICE_PATH ||
             this.isSeoPath(normalizedPath) ||
             PUBLIC_INFORMATION_PAGES.some(page => normalizedPath === `/${page.path}`)
         );

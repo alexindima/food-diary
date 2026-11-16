@@ -11,8 +11,8 @@
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 120,
-    "routedStandaloneComponents": 71,
-    "componentsWithoutDirectSpecs": 136,
+    "routedStandaloneComponents": 72,
+    "componentsWithoutDirectSpecs": 137,
     "criticalSymbolsWithoutTestReferences": 52,
     "explicitDebtMarkers": 12
   },
@@ -5724,6 +5724,20 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "TermsOfServiceComponent",
+      "selector": "fd-terms-of-service",
+      "feature": "public",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.scss",
+        "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.scss"
       ],
       "inputs": [],
       "outputs": [],

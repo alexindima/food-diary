@@ -22,7 +22,8 @@ for (const route of routes) {
     const isRussian = route === '/ru' || route.startsWith('/ru/');
     const locale = isRussian ? 'ru' : 'en';
     const basePath = route === '/ru' ? '/' : isRussian ? route.slice(3) : route;
-    const bundle = basePath === '/' ? 'landing' : basePath === '/privacy-policy' ? 'privacy' : 'seo';
+    const isLegalPage = basePath === '/privacy-policy' || basePath === '/terms-of-service';
+    const bundle = basePath === '/' ? 'landing' : isLegalPage ? 'privacy' : 'seo';
     issues.push(...inspectPrerenderTranslationState(html, locale, bundle).map(issue => `${route}: ${issue}`));
     if (basePath === '/') {
         for (const selector of ['fd-features', 'fd-dietologist-promo', 'fd-landing-steps', 'fd-landing-faq'])
@@ -52,7 +53,7 @@ for (const route of routes) {
     if (headings.length !== 1) issues.push(`${route}: expected one H1, found ${headings.length}`);
     if (isRussian && !/[А-Яа-яЁё]/u.test(headings[0]?.[1] ?? '')) issues.push(`${route}: H1 is not Russian`);
     if (!isRussian && /[А-Яа-яЁё]/u.test(headings[0]?.[1] ?? '')) issues.push(`${route}: H1 is not English`);
-    if (/\b(?:PUBLIC_PAGES|PUBLIC_SITE|LANDING_HERO|SEO_PAGE|CALORIE_COUNTER_PAGE)\.[A-Z_]+/u.test(html))
+    if (/\b(?:PUBLIC_PAGES|PUBLIC_SITE|LANDING_HERO|SEO_PAGE|CALORIE_COUNTER_PAGE|TERMS_OF_SERVICE)\.[A-Z_]+/u.test(html))
         issues.push(`${route}: untranslated public copy`);
     if (html.includes(retiredHost)) issues.push(`${route}: retired Russian domain is still present`);
     if (html.includes('\uFFFD')) issues.push(`${route}: replacement character in rendered text`);

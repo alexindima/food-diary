@@ -22,6 +22,7 @@
 /guides/how-to-keep-a-food-diary
 /guides/calories-in-homemade-meals
 /privacy-policy
+/terms-of-service
 /ru
 /ru/food-diary
 /ru/calorie-counter
@@ -46,3 +47,4 @@
 /ru/guides/how-to-keep-a-food-diary
 /ru/guides/calories-in-homemade-meals
 /ru/privacy-policy
+/ru/terms-of-service

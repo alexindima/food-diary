@@ -21,12 +21,18 @@ export class PublicSiteFooterComponent {
     protected readonly marketingAttributionEnabled = inject(MARKETING_ATTRIBUTION_ENABLED);
     protected readonly supportEmail = environment.supportEmail;
     protected readonly links = computed(() =>
-        ['about', 'pricing', 'contact', 'privacy-policy', 'guides/how-to-keep-a-food-diary', 'guides/calories-in-homemade-meals'].map(
-            path => ({
-                path: localizedPublicPath(`/${path}`, publicSiteLocale(this.path())),
-                label: `PUBLIC_SITE.FOOTER.${path.split('/').at(-1)?.replaceAll('-', '_').toUpperCase()}`,
-            }),
-        ),
+        [
+            'about',
+            'pricing',
+            'contact',
+            'privacy-policy',
+            'terms-of-service',
+            'guides/how-to-keep-a-food-diary',
+            'guides/calories-in-homemade-meals',
+        ].map(path => ({
+            path: localizedPublicPath(`/${path}`, publicSiteLocale(this.path())),
+            label: `PUBLIC_SITE.FOOTER.${path.split('/').at(-1)?.replaceAll('-', '_').toUpperCase()}`,
+        })),
     );
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Shell restores focus after the requested consent notice closes.

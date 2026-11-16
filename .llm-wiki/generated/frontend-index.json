@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2838,
-    "symbols": 888,
+    "typescriptFiles": 2839,
+    "symbols": 889,
     "routes": 113,
     "features": 46,
     "specs": 858,
     "localeFiles": 5,
     "roles": {
-      "Component": 514,
+      "Component": 515,
       "Directive": 20,
       "Facade": 91,
       "Other": 41,
@@ -1256,7 +1256,8 @@
         "PublicSiteHeaderComponent",
         "SeoLandingContentSectionsComponent",
         "SeoLandingFooterSectionsComponent",
-        "SeoLandingPageComponent"
+        "SeoLandingPageComponent",
+        "TermsOfServiceComponent"
       ],
       "routes": [],
       "tests": [
@@ -5990,6 +5991,13 @@
       "line": 16
     },
     {
+      "name": "TermsOfServiceComponent",
+      "role": "Component",
+      "selector": "fd-terms-of-service",
+      "path": "FoodDiary.Web.Client/src/app/features/public/pages/terms-of-service/terms-of-service.ts",
+      "line": 15
+    },
+    {
       "name": "FavoriteRecipeService",
       "role": "Service",
       "selector": null,
@@ -8222,7 +8230,7 @@
     {
       "path": "**",
       "source": "FoodDiary.Web.Client/src/app/app.routes.ts",
-      "line": 235
+      "line": 241
     },
     {
       "path": "auth/confirm-admin",
@@ -8453,8 +8461,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1495,
-      "russianProperties": 1495,
+      "englishProperties": 1496,
+      "russianProperties": 1496,
       "countsMatch": true
     },
     {
@@ -8469,8 +8477,8 @@
       "name": "privacy.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4,
-      "russianProperties": 4,
+      "englishProperties": 36,
+      "russianProperties": 36,
       "countsMatch": true
     },
     {

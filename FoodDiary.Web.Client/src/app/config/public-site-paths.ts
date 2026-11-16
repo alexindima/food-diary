@@ -10,10 +10,12 @@ export const PUBLIC_INFORMATION_PAGES = [
 ] as const;
 
 const PRIVACY_POLICY_PATH = '/privacy-policy';
+export const TERMS_OF_SERVICE_PATH = '/terms-of-service';
 
 export const PUBLIC_MARKETING_PATHS = new Set<string>([
     '/',
     PRIVACY_POLICY_PATH,
+    TERMS_OF_SERVICE_PATH,
     ...PUBLIC_SEO_PATHS,
     ...PUBLIC_INFORMATION_PAGES.map(page => `/${page.path}`),
 ]);

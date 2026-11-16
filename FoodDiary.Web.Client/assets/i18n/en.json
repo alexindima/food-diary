@@ -2077,6 +2077,7 @@
             "PRICING": "Free and Premium",
             "CONTACT": "Contact",
             "PRIVACY_POLICY": "Privacy policy",
+            "TERMS_OF_SERVICE": "Terms of service",
             "HOW_TO_KEEP_A_FOOD_DIARY": "How to keep a food diary",
             "CALORIES_IN_HOMEMADE_MEALS": "Homemade meal calories"
         }
@@ -4779,6 +4780,49 @@
                     "TEXT": "Select the saved recipe in a meal and enter the servings eaten. Check the resulting nutrition before saving. In the example, a recipe saved as four equal servings would be logged as one serving for 150 g. If a serving or recipe definition differs, use that definition instead. Correct a saved entry when the food or amount does not match what you ate."
                 }
             }
+        }
+    },
+    "TERMS_OF_SERVICE": {
+        "TITLE": "Food Diary Terms of Service",
+        "DESCRIPTION": "These terms explain how to use Food Diary, manage your account and subscription, and connect services such as ChatGPT.",
+        "PROVIDER": {
+            "TITLE": "Who provides Food Diary",
+            "DETAILS": "Individual Entrepreneur {{name}}, identification number {{id}}, registered on 19 May 2025 by the LEPL National Agency of Public Registry in Georgia.",
+            "CONTACT": "For support, complaints, billing questions or refund requests, email"
+        },
+        "SECTIONS": {
+            "ACCOUNT": {
+                "TITLE": "Your account",
+                "TEXT": "Food Diary helps you log meals, organize recipes and shopping lists, and track nutrition and progress. You must be able to enter into this agreement under the law that applies to you. Keep your sign-in details secure and contact us if you suspect someone else can access your account. You can close your account in Privacy settings. If you have a paid subscription, check how renewal is managed before deleting your account."
+            },
+            "CONTENT": {
+                "TITLE": "Your content and how you use the service",
+                "TEXT": "You keep your rights to the content you add. You give Food Diary permission to store, process and show that content as needed to provide the service and honor your sharing choices. Content you choose to publish can be viewed by other users. Only upload or share content you have the right to use. Do not access someone else's account, distribute harmful or unlawful material, or interfere with the service."
+            },
+            "SUBSCRIPTIONS": {
+                "TITLE": "Premium, renewals and refunds",
+                "TEXT": "If you choose a paid plan, check the price, billing interval, renewal and any trial terms shown before you confirm the purchase. A subscription set to renew continues until you cancel it. Cancel through the subscription controls in Food Diary or through the provider that handled your purchase, as shown in your account or receipt. To request a refund or exercise a right to withdraw, contact us or follow the instructions on your receipt. Include your account email and transaction reference. Your rights under applicable consumer law still apply."
+            },
+            "AI": {
+                "TITLE": "Nutrition information and AI results",
+                "TEXT": "Nutrition figures and AI suggestions are estimates. Check labels, ingredient quantities and allergens before using a recipe or relying on its nutrition figures. Food Diary provides tools for tracking and planning. Ask a qualified health professional for medical advice or decisions about treatment."
+            },
+            "CHATGPT": {
+                "TITLE": "Connecting ChatGPT",
+                "TEXT": "Where the Food Diary plugin is available, you can connect your Food Diary account and choose whether to grant it permission to save private recipes and create shopping lists. ChatGPT processes the chat and any photo you attach according to OpenAI's terms and settings. The plugin sends Food Diary the recipe or shopping-list details needed to complete the requested save. You can disconnect Food Diary in ChatGPT. Saved recipes and lists remain in your Food Diary account until you remove them."
+            },
+            "CHANGES": {
+                "TITLE": "Changes and access",
+                "TEXT": "We may update these terms when the service, payment options or applicable law changes. For material changes, we will tell you what changes and when it takes effect. We may restrict access to address illegal use, a serious breach of these terms or an account security issue. Contact us if you think a restriction was applied in error."
+            },
+            "CONSUMER_RIGHTS": {
+                "TITLE": "Your consumer rights",
+                "TEXT": "These terms do not limit rights or remedies you have under mandatory consumer law. You can contact us about a problem and use any consumer complaint or dispute process available to you under applicable law."
+            }
+        },
+        "PRIVACY": {
+            "TITLE": "Privacy and personal data",
+            "TEXT": "The Privacy Policy explains how Food Diary uses personal data and how you can manage your privacy choices, export your data or delete your account."
         }
     },
     "PRIVACY_POLICY": {

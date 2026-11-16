@@ -2,7 +2,7 @@ import type { Type } from '@angular/core';
 import type { Route, Routes } from '@angular/router';
 
 import { PUBLIC_SEO_LANDING_ROUTES, type PublicSeoLandingRouteConfig } from './config/public-seo-landing-routes.config';
-import { localizedPublicPath, PUBLIC_INFORMATION_PAGES, type PublicSiteLocale } from './config/public-site-paths';
+import { localizedPublicPath, PUBLIC_INFORMATION_PAGES, type PublicSiteLocale, TERMS_OF_SERVICE_PATH } from './config/public-site-paths';
 import { requireSessionForGuardedRoutes } from './config/session-route-policy';
 import { authRoutes } from './features/auth/auth.routes';
 import { authGuard } from './guards/auth.guard';
@@ -231,6 +231,12 @@ const configuredRoutes: Routes = [
         loadComponent: async () => import('./features/public/pages/privacy-policy/privacy-policy').then(m => m.PrivacyPolicyComponent),
         data: { seo: { titleKey: 'SEO.PRIVACY_POLICY', descriptionKey: 'SEO.PRIVACY_POLICY_DESCRIPTION' } },
     },
+    ...(['en', 'ru'] as const).map((locale): Route => ({
+        path: localizedPublicPath(TERMS_OF_SERVICE_PATH, locale).slice(1),
+        canActivate: [publicSiteLocaleGuard],
+        loadComponent: async () => import('./features/public/pages/terms-of-service/terms-of-service').then(m => m.TermsOfServiceComponent),
+        data: { shell: 'public', seo: { titleKey: 'TERMS_OF_SERVICE.TITLE', descriptionKey: 'TERMS_OF_SERVICE.DESCRIPTION' } },
+    })),
     {
         path: '**',
         canActivate: [publicSiteLocaleGuard],

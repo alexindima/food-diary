@@ -145,6 +145,12 @@
         <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/privacy-policy" />
     </url>
     <url>
+        <loc>https://fooddiary.club/terms-of-service</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/terms-of-service" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://fooddiary.club/ru/terms-of-service" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/terms-of-service" />
+    </url>
+    <url>
         <loc>https://fooddiary.club/ru</loc>
         <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club" />
         <xhtml:link rel="alternate" hreflang="ru" href="https://fooddiary.club/ru" />
@@ -287,5 +293,11 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/privacy-policy" />
         <xhtml:link rel="alternate" hreflang="ru" href="https://fooddiary.club/ru/privacy-policy" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/privacy-policy" />
+    </url>
+    <url>
+        <loc>https://fooddiary.club/ru/terms-of-service</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://fooddiary.club/terms-of-service" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://fooddiary.club/ru/terms-of-service" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://fooddiary.club/terms-of-service" />
     </url>
 </urlset>
