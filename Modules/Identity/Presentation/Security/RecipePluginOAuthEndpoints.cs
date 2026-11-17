@@ -171,7 +171,8 @@ public static class RecipePluginOAuthEndpoints {
         // HTML form submissions need a same-origin Origin header without sending the OAuth query in Referer.
         context.Response.Headers["Referrer-Policy"] = isRedirectPage ? "no-referrer" : "strict-origin";
         string formAction = isRedirectPage ? "'none'" : "'self'";
-        context.Response.Headers.ContentSecurityPolicy = $"default-src 'none'; form-action {formAction}; frame-ancestors 'none'";
+        context.Response.Headers.ContentSecurityPolicy =
+            $"default-src 'none'; img-src 'self'; style-src {RecipePluginConsentPage.StyleSource}; form-action {formAction}; frame-ancestors 'none'";
         return HttpResults.Content(html, "text/html; charset=utf-8");
     }
 
