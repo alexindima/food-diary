@@ -5,7 +5,7 @@ using FoodDiary.Presentation.Api.Policies;
 using Microsoft.AspNetCore.Antiforgery;
 using OpenIddict.Abstractions;
 
-namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.RecipePlugin;
+namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 
 internal static class RecipePluginConsentPage {
     private static readonly string[] AuthorizationParameters = [

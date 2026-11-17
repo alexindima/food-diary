@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
-using FoodDiary.Modules.Identity.Presentation.Features.Auth.RecipePlugin;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Plugin;
 using FoodDiary.Modules.Recipes.Presentation.Plugin;
 using FoodDiary.Modules.Users.Contracts.Common;

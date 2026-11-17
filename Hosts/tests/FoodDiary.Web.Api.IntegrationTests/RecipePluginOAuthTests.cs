@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using OpenIddict.Validation;
 
@@ -78,8 +77,8 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
         JsonElement retry = await CallAsync(oauth, recipeToken, RecipePluginAccess.RecipeTool, RecipeArguments());
         Assert.Equal(recipeId, retry.GetProperty("structuredContent").GetProperty("id").GetGuid());
 
-        const string BothScopes = RecipePluginAccess.RecipeScope + " " + RecipePluginAccess.ShoppingListScope + " offline_access";
-        JsonElement bothGrant = await ConnectAsync(browser, oauth, BothScopes, browserNavigation: true, CodexClientId, CodexCallback);
+        const string bothScopes = RecipePluginAccess.RecipeScope + " " + RecipePluginAccess.ShoppingListScope + " offline_access";
+        JsonElement bothGrant = await ConnectAsync(browser, oauth, bothScopes, browserNavigation: true, CodexClientId, CodexCallback);
         string bothToken = await RefreshAsync(oauth, bothGrant.GetProperty("refresh_token").GetString()!, CodexClientId);
         JsonElement saveList = await CallAsync(oauth, bothToken, RecipePluginAccess.ShoppingListTool, ShoppingListArguments());
         Guid listId = saveList.GetProperty("structuredContent").GetProperty("id").GetGuid();
@@ -237,9 +236,12 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
         request.Headers.Add("Mcp-Method", "tools/call");
         request.Headers.Add("Mcp-Name", tool);
         request.Content = JsonContent.Create(new {
-            jsonrpc = "2.0", id = 1, method = "tools/call",
+            jsonrpc = "2.0",
+            id = 1,
+            method = "tools/call",
             @params = new {
-                name = tool, arguments,
+                name = tool,
+                arguments,
                 _meta = new Dictionary<string, object>(StringComparer.Ordinal) {
                     ["io.modelcontextprotocol/protocolVersion"] = ProtocolVersion,
                     ["io.modelcontextprotocol/clientInfo"] = new { name = "FoodDiary integration test", version = "1.0" },
@@ -260,6 +262,12 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
     public sealed class PluginFactory : PostgresApiWebApplicationFactory {
         public CookieExpiryApiWebApplicationFactory.ControlledClock ValidationClock { get; } = new();
 
+        protected override async Task PrepareDatabaseAsync(string connectionString) {
+            DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>().UseNpgsql(connectionString).Options;
+            await using var context = new FoodDiaryDbContext(options);
+            await context.Database.MigrateAsync();
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder) {
             base.ConfigureWebHost(builder);
             builder.UseSetting("RecipePlugin:Enabled", "true");
@@ -269,20 +277,8 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
             builder.UseSetting("RecipePlugin:RedirectUri", Callback);
             builder.UseSetting("RecipePlugin:CodexClientId", CodexClientId);
             builder.UseSetting("RecipePlugin:CodexRedirectUri", CodexCallback);
-            builder.ConfigureServices(services => {
-                services.Insert(0, ServiceDescriptor.Singleton<IHostedService, ApplyMigrations>());
-                services.Configure<OpenIddictValidationOptions>(options => options.TimeProvider = ValidationClock);
-            });
+            builder.ConfigureServices(services =>
+                services.Configure<OpenIddictValidationOptions>(options => options.TimeProvider = ValidationClock));
         }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class ApplyMigrations(IServiceScopeFactory scopes) : IHostedService {
-        public async Task StartAsync(CancellationToken cancellationToken) {
-            await using AsyncServiceScope scope = scopes.CreateAsyncScope();
-            await scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>().Database.MigrateAsync(cancellationToken);
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

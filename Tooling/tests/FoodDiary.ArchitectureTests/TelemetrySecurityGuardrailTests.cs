@@ -157,14 +157,26 @@ public sealed class TelemetrySecurityGuardrailTests {
     [Fact]
     public void PrimaryReverseProxy_RejectsUnknownHostsAndCanonicalizesForwardedHost() {
         string nginx = ReadSource("nginx/sites-enabled/fooddiary.club");
+        const string mcpListener = "server {\n    listen 127.0.0.1:15435;";
+        int mcpStart = nginx.IndexOf(mcpListener, StringComparison.Ordinal);
+        Assert.True(mcpStart >= 0, "The MCP proxy must listen on loopback.");
+        int mcpEnd = nginx.IndexOf("\n}", mcpStart, StringComparison.Ordinal);
+        Assert.True(mcpEnd > mcpStart, "The MCP proxy block must have an end.");
+        string mcp = nginx[mcpStart..mcpEnd];
+        string browserIngress = nginx.Remove(mcpStart, mcpEnd - mcpStart);
 
         Assert.Multiple(
             () => Assert.Contains("listen 80 default_server;", nginx, StringComparison.Ordinal),
             () => Assert.Contains("listen 443 ssl default_server;", nginx, StringComparison.Ordinal),
             () => Assert.Contains("listen 443 quic reuseport default_server;", nginx, StringComparison.Ordinal),
             () => Assert.Contains("ssl_reject_handshake on;", nginx, StringComparison.Ordinal),
-            () => Assert.Equal(4, CountOccurrences(nginx, "proxy_set_header Host $server_name;")),
-            () => Assert.Equal(4, CountOccurrences(nginx, "proxy_set_header X-Forwarded-Host $server_name;")),
+            () => Assert.Equal(4, CountOccurrences(browserIngress, "proxy_set_header Host $server_name;")),
+            () => Assert.Equal(4, CountOccurrences(browserIngress, "proxy_set_header X-Forwarded-Host $server_name;")),
+            () => Assert.Contains("server_name mcp.fooddiary.club;", mcp, StringComparison.Ordinal),
+            () => Assert.Contains("if ($host != mcp.fooddiary.club) {", mcp, StringComparison.Ordinal),
+            () => Assert.Contains("return 421;", mcp, StringComparison.Ordinal),
+            () => Assert.Contains("proxy_set_header Host $server_name;", mcp, StringComparison.Ordinal),
+            () => Assert.Contains("proxy_set_header X-Forwarded-Host $server_name;", mcp, StringComparison.Ordinal),
             () => Assert.DoesNotContain("proxy_set_header Host $host;", nginx, StringComparison.Ordinal));
     }
 

@@ -23,6 +23,7 @@ if (await app.TryRunOwnedFixtureCleanupAsync(args)) {
 }
 app.UseApiPipeline();
 
+await app.InitializeRecipePluginAsync(app.Lifetime.ApplicationStopping);
 await app.RunAsync();
 
 [ExcludeFromCodeCoverage]

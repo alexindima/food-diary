@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Identity.Presentation.Security;
-using FoodDiary.Modules.Identity.Presentation.Features.Auth.RecipePlugin;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.Options;

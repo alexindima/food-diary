@@ -5610,11 +5610,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/BrowserRequestProtectionMiddleware.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 60,
       "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 56.72
+      "structuralRiskScore": 56.7
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/DevelopmentRuntimeHeadersMiddleware.cs",
@@ -5666,11 +5666,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/RecipePluginServiceCollectionExtensions.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 15,
+      "nonBlankLines": 114,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.74
+      "structuralRiskScore": 26.28
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
@@ -5842,11 +5842,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Program.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.46
+      "structuralRiskScore": 3.48
     },
     {
       "path": "FoodDiary.Web.Api/Properties/AssemblyInfo.cs",
@@ -39409,22 +39409,6 @@
       "structuralRiskScore": 7.88
     },
     {
-      "path": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginConsentPage.cs",
-      "nonBlankLines": 76,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.52
-    },
-    {
-      "path": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginOAuthEndpoints.cs",
-      "nonBlankLines": 159,
-      "decisionPoints": 35,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.68
-    },
-    {
       "path": "Modules/Identity/Presentation/Features/Auth/Requests/AdminSsoExchangeHttpRequest.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -39657,6 +39641,14 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/RecipePluginConsentPage.cs",
+      "nonBlankLines": 76,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.52
+    },
+    {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramAuthenticationIntentHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -39799,6 +39791,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 23.98
+    },
+    {
+      "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "nonBlankLines": 159,
+      "decisionPoints": 35,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 55.68
     },
     {
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",

@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Security.Claims;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
-using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Presentation.Api.Policies;
 using Microsoft.AspNetCore;
@@ -17,7 +17,7 @@ using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using HttpResults = Microsoft.AspNetCore.Http.Results;
 
-namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.RecipePlugin;
+namespace FoodDiary.Modules.Identity.Presentation.Security;
 
 public static class RecipePluginOAuthEndpoints {
     private const string Scheme = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme;
@@ -40,10 +40,10 @@ public static class RecipePluginOAuthEndpoints {
             .ExcludeFromDescription()
             .AllowAnonymous();
         endpoints.MapGet(RecipePluginAccess.ResourceMetadataPath, () => HttpResults.Json(new {
-                resource = resource.AbsoluteUri,
-                authorization_servers = new[] { issuer.AbsoluteUri },
-                scopes_supported = new[] { RecipePluginAccess.RecipeScope, RecipePluginAccess.ShoppingListScope },
-            }))
+            resource = resource.AbsoluteUri,
+            authorization_servers = new[] { issuer.AbsoluteUri },
+            scopes_supported = new[] { RecipePluginAccess.RecipeScope, RecipePluginAccess.ShoppingListScope },
+        }))
             .RequireHost(issuer.Authority)
             .ExcludeFromDescription()
             .AllowAnonymous();

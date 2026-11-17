@@ -133140,7 +133140,7 @@
         "Modules/Users/Contracts/Common/IUserAccessTokenSecurityReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginOAuthEndpoints.cs",
+      "consumerPath": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -133374,7 +133374,7 @@
         "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginOAuthEndpoints.cs",
+      "consumerPath": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
       "isTest": false,
       "referenceCount": 3
     },

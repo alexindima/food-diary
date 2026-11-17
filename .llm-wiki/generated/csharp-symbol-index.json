@@ -2658,7 +2658,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/BrowserRequestProtectionMiddleware.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "DevelopmentRuntimeHeadersMiddleware",
@@ -2889,7 +2889,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Program.cs",
-      "line": 29
+      "line": 30
     },
     {
       "name": "NotificationTestScheduler",
@@ -18285,27 +18285,6 @@
       "line": 10
     },
     {
-      "name": "RecipePluginConsentPage",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginConsentPage.cs",
-      "line": 9
-    },
-    {
-      "name": "RecipePluginOAuthEndpoints",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginOAuthEndpoints.cs",
-      "line": 21
-    },
-    {
-      "name": "ConsentEndpoint",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Presentation/Features/Auth/RecipePlugin/RecipePluginOAuthEndpoints.cs",
-      "line": 177
-    },
-    {
       "name": "AdminSsoExchangeHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -18509,6 +18488,13 @@
       "line": 4
     },
     {
+      "name": "RecipePluginConsentPage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/RecipePluginConsentPage.cs",
+      "line": 9
+    },
+    {
       "name": "TelegramAuthenticationIntentHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -18640,6 +18626,20 @@
       "role": "Service",
       "path": "Modules/Identity/Presentation/Security/ImpersonationCookieService.cs",
       "line": 12
+    },
+    {
+      "name": "RecipePluginOAuthEndpoints",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "line": 21
+    },
+    {
+      "name": "ConsentEndpoint",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "line": 177
     },
     {
       "name": "RefreshTokenCookieService",

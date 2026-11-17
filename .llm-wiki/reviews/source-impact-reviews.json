@@ -1485,14 +1485,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d505c0d2836f5b48288b5088a0e3bfd8af9dc2808818e6fae6b5996de8773bf7",
-          "reviewReason": "The topology records the conditional OAuth client registration in the existing API. No second application host is introduced in this rollout. Split-origin OAuth integration tests and the loopback Nginx forwarding test passed."
+          "sha256": "752a43f10d7f6854673fc7fb4268269a0a7bf20f06f2e63a81660b101467574c",
+          "reviewReason": "OAuth client registration runs in API startup before the listener opens. The topology drops the separate hosted registration. Architecture and OAuth integration checks verified the host boundary and registration before browser login."
         }
       ],
-      "reason": "The topology records the conditional OAuth client registration in the existing API. No second application host is introduced in this rollout. Split-origin OAuth integration tests and the loopback Nginx forwarding test passed.",
-      "baseRef": "master",
-      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
-      "reviewedAtUtc": "2026-11-17T11:13:30.1332447Z"
+      "reason": "OAuth client registration runs in API startup before the listener opens. The topology drops the separate hosted registration. Architecture and OAuth integration checks verified the host boundary and registration before browser login.",
+      "baseRef": "HEAD",
+      "gitHead": "9e91cc3424fcd3b89fb33a1e91ca4a0215ecf26e",
+      "reviewedAtUtc": "2026-11-17T11:34:15.9263351Z"
     },
     {
       "pageId": "workflow-security-review",

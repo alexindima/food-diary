@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Notifications.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Presentation.Extensions;
-using FoodDiary.Modules.Identity.Presentation.Features.Auth.RecipePlugin;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Ai.Presentation.Extensions;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Telemetry;

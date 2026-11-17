@@ -19,7 +19,6 @@ internal static class RecipePluginServiceCollectionExtensions {
             string resource = new Uri(issuer, RecipePluginAccess.ResourcePath).AbsoluteUri;
             services.AddSingleton(options);
             services.AddSingleton(new RecipePluginLinks(webOrigin));
-            services.AddHostedService<RecipePluginClientRegistration>();
             services.AddAntiforgery();
             services.AddHttpContextAccessor();
             services.AddOpenIddict()
@@ -79,41 +78,44 @@ internal static class RecipePluginServiceCollectionExtensions {
             options.EncryptionCertificatePassword, X509KeyStorageFlags.EphemeralKeySet));
     }
 
-    private sealed class RecipePluginClientRegistration(IServiceScopeFactory scopes, RecipePluginOptions options) : IHostedService {
-        public async Task StartAsync(CancellationToken cancellationToken) {
-            await using AsyncServiceScope scope = scopes.CreateAsyncScope();
+    extension(WebApplication app) {
+        public async Task InitializeRecipePluginAsync(CancellationToken cancellationToken) {
+            if (app.Services.GetService<RecipePluginOptions>() is not { } options) {
+                return;
+            }
+
+            await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
             IOpenIddictApplicationManager applications = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-            await RegisterAsync(applications, options.ClientId, options.RedirectUri!, "FoodDiary for ChatGPT", cancellationToken);
+            string resource = new Uri(options.Issuer!, RecipePluginAccess.ResourcePath).AbsoluteUri;
+            await RegisterAsync(applications, options.ClientId, options.RedirectUri!, "FoodDiary for ChatGPT", resource, cancellationToken);
             if (options.CodexClientId is { } codexClientId && options.CodexRedirectUri is { } codexRedirectUri) {
-                await RegisterAsync(applications, codexClientId, codexRedirectUri, "FoodDiary for Codex", cancellationToken);
+                await RegisterAsync(applications, codexClientId, codexRedirectUri, "FoodDiary for Codex", resource, cancellationToken);
             }
         }
+    }
 
-        private async Task RegisterAsync(IOpenIddictApplicationManager applications, string clientId, Uri redirectUri,
-            string displayName, CancellationToken cancellationToken) {
-            var client = new OpenIddictApplicationDescriptor {
-                ClientId = clientId,
-                ClientType = ClientTypes.Public,
-                DisplayName = displayName,
-                RedirectUris = { redirectUri },
-                Permissions = {
-                    Permissions.Endpoints.Authorization, Permissions.Endpoints.Token, Permissions.Endpoints.Revocation,
-                    Permissions.GrantTypes.AuthorizationCode, Permissions.GrantTypes.RefreshToken,
-                    Permissions.ResponseTypes.Code,
-                    Permissions.Prefixes.Scope + RecipePluginAccess.RecipeScope,
-                    Permissions.Prefixes.Scope + RecipePluginAccess.ShoppingListScope,
-                    Permissions.Prefixes.Resource + new Uri(options.Issuer!, RecipePluginAccess.ResourcePath).AbsoluteUri,
-                },
-                Requirements = { Requirements.Features.ProofKeyForCodeExchange },
-            };
-            object? existing = await applications.FindByClientIdAsync(clientId, cancellationToken);
-            if (existing is null) {
-                await applications.CreateAsync(client, cancellationToken);
-            } else if (!await applications.ValidateRedirectUriAsync(existing, redirectUri.AbsoluteUri, cancellationToken)) {
-                throw new InvalidOperationException("RecipePlugin callback differs from the registered OAuth client.");
-            }
+    private static async Task RegisterAsync(IOpenIddictApplicationManager applications, string clientId, Uri redirectUri,
+        string displayName, string resource, CancellationToken cancellationToken) {
+        var client = new OpenIddictApplicationDescriptor {
+            ClientId = clientId,
+            ClientType = ClientTypes.Public,
+            DisplayName = displayName,
+            RedirectUris = { redirectUri },
+            Permissions = {
+                Permissions.Endpoints.Authorization, Permissions.Endpoints.Token, Permissions.Endpoints.Revocation,
+                Permissions.GrantTypes.AuthorizationCode, Permissions.GrantTypes.RefreshToken,
+                Permissions.ResponseTypes.Code,
+                Permissions.Prefixes.Scope + RecipePluginAccess.RecipeScope,
+                Permissions.Prefixes.Scope + RecipePluginAccess.ShoppingListScope,
+                Permissions.Prefixes.Resource + resource,
+            },
+            Requirements = { Requirements.Features.ProofKeyForCodeExchange },
+        };
+        object? existing = await applications.FindByClientIdAsync(clientId, cancellationToken);
+        if (existing is null) {
+            await applications.CreateAsync(client, cancellationToken);
+        } else if (!await applications.ValidateRedirectUriAsync(existing, redirectUri.AbsoluteUri, cancellationToken)) {
+            throw new InvalidOperationException("RecipePlugin callback differs from the registered OAuth client.");
         }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

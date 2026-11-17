@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "3a7de4482f1754c3c344202cdb30d149a0fd42e07187d1f072ab64608d46ec14",
+    "sourceFingerprint": "40f417000ad5d2940479a00e09bdd4d92f867762a4e6bc281b18cd5422544340",
     "sourceFileCount": 4868
   },
   "summary": {
     "composeServices": 20,
-    "hostedServices": 17,
+    "hostedServices": 16,
     "httpClients": 24,
     "webhooks": 22,
     "recurringJobRegistrations": 20,
@@ -679,15 +679,6 @@
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "retry-or-resilience"
-      ],
-      "behaviorSignalScope": "class-window"
-    },
-    {
-      "name": "RecipePluginClientRegistration",
-      "baseType": "IHostedService",
-      "path": "FoodDiary.Web.Api/Extensions/RecipePluginServiceCollectionExtensions.cs",
-      "behaviorSignals": [
-        "cancellation-propagation-candidate"
       ],
       "behaviorSignalScope": "class-window"
     },
