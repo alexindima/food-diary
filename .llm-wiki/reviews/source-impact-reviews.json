@@ -22,6 +22,11 @@
           "reviewReason": "Read navigation and updated baseline: bounded numeric Telegram loop summaries reuse Loki, with a dedicated dashboard and intake/failure alerts; original monitoring, tracing-off decision and safe logging constraints remain accurate."
         },
         {
+          "path": "docs/backend/PRODUCTION_RUNTIME_DIAGNOSTICS.md",
+          "sha256": "bb05119caf0e5395885b2f5785e59ce92d4d328b9e6a0d4eb2c4fc00a5e6fd68",
+          "reviewReason": "Reviewed the production runtime diagnostics after the server workflow was changed to Compose parallelism one and sequential auxiliary tasks after API readiness. The index still links to the current runbook and does not repeat its deployment order."
+        },
+        {
           "path": "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
           "sha256": "237282689f12f8aacd68690871d47fedf5bdac98f2d5672136f8850ecc614c06",
           "reviewReason": "Reviewed index navigation against the current observability baselines: linked documents now describe bounded host probes, current rules, frontend parsing and disabled traces; no navigation or architecture claim changed."
@@ -32,10 +37,10 @@
           "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
         }
       ],
-      "reason": "Read navigation and updated baseline: bounded numeric Telegram loop summaries reuse Loki, with a dedicated dashboard and intake/failure alerts; original monitoring, tracing-off decision and safe logging constraints remain accurate.",
+      "reason": "Reviewed the production runtime diagnostics after the server workflow was changed to Compose parallelism one and sequential auxiliary tasks after API readiness. The index still links to the current runbook and does not repeat its deployment order.",
       "baseRef": "HEAD",
-      "gitHead": "de3903f08be47559c80a5d2def3e178452efbc5b",
-      "reviewedAtUtc": "2026-11-08T03:47:28.4292724Z"
+      "gitHead": "1b7e29920a9b57dff01b093c29d50003d734db23",
+      "reviewedAtUtc": "2026-11-17T16:37:13.1551801Z"
     },
     {
       "pageId": "module.frontend",

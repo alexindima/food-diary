@@ -503,7 +503,7 @@ jobs:
             "$DEPLOY_COMMIT_SHA" >> .env
 
           export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export COMPOSE_PARALLEL_LIMIT="${COMPOSE_PARALLEL_LIMIT:-2}"
+          export COMPOSE_PARALLEL_LIMIT=1
 
           python3 scripts/deploy/blue_green.py verify-ingress
 
@@ -514,27 +514,16 @@ jobs:
 
           bash -n scripts/deploy/parallel_tasks.sh
           task_logs=$(umask 077; mktemp -d "/tmp/fooddiary-deploy-${DEPLOY_COMMIT_SHA}.XXXXXX")
-          export FOODDIARY_INITIALIZER_LOCK="$task_logs/initializer.lock"
-          export FOODDIARY_MAIN_MIGRATED="$task_logs/main-migrated"
-          auxiliary_pid=""
           id=""
           finish_deployment() {
             status=$?
             trap - EXIT
-            # Release initializer waiters on both success and failure. Without the
-            # success marker they fail before any auxiliary database mutation.
-            exec 8>&-
-            if [ -n "$auxiliary_pid" ]; then
-              if ! wait "$auxiliary_pid"; then
-                if [ "$status" -eq 0 ]; then status=1; fi
-              fi
-            fi
             if [ "$status" -ne 0 ]; then
               python3 scripts/deploy/blue_green.py abort || true
             fi
             if [ -n "$id" ]; then docker rm "$id" >/dev/null 2>&1 || true; fi
             if [ "$status" -eq 0 ]; then
-              rm -f -- "$task_logs"/*.log "$FOODDIARY_INITIALIZER_LOCK" "$FOODDIARY_MAIN_MIGRATED"
+              rm -f -- "$task_logs"/*.log
               rmdir "$task_logs"
             else
               echo "Private deployment task logs retained at: $task_logs" >&2
@@ -546,21 +535,17 @@ jobs:
           trap 'exit 130' INT
           trap 'exit 129' HUP
 
-          deploy_initializer() {
-            flock "$FOODDIARY_INITIALIZER_LOCK" bash -e -c \
-              'test -f "$FOODDIARY_MAIN_MIGRATED"; exec "$@"' -- "$@"
-          }
           deploy_mailrelay() {
-            deploy_initializer docker compose --profile backend run -T --rm mailrelay-db-init update
+            docker compose --profile backend run -T --rm mailrelay-db-init update
             docker compose --profile backend up -d --force-recreate --no-deps mail-relay
           }
           deploy_mailinbox() {
             docker compose --profile mail-inbox up -d mailinbox-postgres
-            deploy_initializer docker compose --profile mail-inbox run -T --rm mailinbox-db-init update
+            docker compose --profile mail-inbox run -T --rm mailinbox-db-init update
             docker compose --profile mail-inbox up --force-recreate --no-deps --wait --wait-timeout 240 mail-inbox
           }
           deploy_bugtriage() {
-            deploy_initializer python3 /opt/fooddiary/bugtriage/deploy.py '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.images.outputs.bugtriage }}'
+            python3 /opt/fooddiary/bugtriage/deploy.py '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.images.outputs.bugtriage }}'
           }
           deploy_tech_radar() {
             docker compose --profile full up -d --force-recreate --no-deps tech-radar
@@ -575,16 +560,9 @@ jobs:
             docker compose logs --tail=100 --timestamps tech-radar
             return 1
           }
-          export -f deploy_initializer deploy_mailrelay deploy_mailinbox deploy_bugtriage deploy_tech_radar
+          export -f deploy_mailrelay deploy_mailinbox deploy_bugtriage deploy_tech_radar
 
-          # Keep the small host to one initializer, including the primary one.
-          # Background workers must not inherit this lock's descriptor.
-          exec 8>"$FOODDIARY_INITIALIZER_LOCK"
-          flock 8
           docker compose --profile backend up -d rabbitmq redis
-          bash scripts/deploy/parallel_tasks.sh "$task_logs" 2 \
-            deploy_tech_radar deploy_mailrelay deploy_mailinbox deploy_bugtriage 8>&- &
-          auxiliary_pid=$!
 
           # Compare the candidate's compiled migration inventory to the live DB.
           # No initializer is allowed to mutate a database during this preflight.
@@ -611,17 +589,13 @@ jobs:
             python3 scripts/deploy/blue_green.py migration-started
             docker compose --profile backend run -T --rm db-init update
           fi
-          # Keep initializer memory out of candidate API startup. Release the
-          # auxiliary mutation barrier only after the primary API is healthy.
           python3 scripts/deploy/blue_green.py start-api
-          (umask 077; : > "$FOODDIARY_MAIN_MIGRATED")
-          exec 8>&-
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager
 
-          # API recovery does not wait for auxiliary services, but publication does.
-          wait "$auxiliary_pid"
-          auxiliary_pid=""
+          # Run each auxiliary chain to completion after the API is ready.
+          bash scripts/deploy/parallel_tasks.sh "$task_logs" 1 \
+            deploy_tech_radar deploy_mailrelay deploy_mailinbox deploy_bugtriage
 
           # Publish assets before SSR can return HTML referencing the new image.
           # TemporaryDirectory removes only its own extraction; releases remain.

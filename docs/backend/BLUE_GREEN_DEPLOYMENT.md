@@ -48,7 +48,7 @@ Private host overrides must apply shared API environment and host aliases to
 both `api` and `api-green`; API-only overrides deliberately fail this check.
 
 `scripts/deploy/blue_green.py` warms and checks the candidate API's exact SHA/tag,
-then releases the serialized auxiliary initializer barrier. Existing atomic
+then the workflow runs its auxiliary tasks one at a time. Existing atomic
 static publication runs before candidate SSR starts. SSR health and `/explore`
 warmup must pass before Nginx can route requests to it.
 The `/explore` cold render has a separate 30-second request timeout and a

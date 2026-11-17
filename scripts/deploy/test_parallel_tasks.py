@@ -43,7 +43,8 @@ import json, os, sys
 from pathlib import Path
 from trace_fixture import emit, gate
 tool, arguments = Path(sys.argv[0]).name, sys.argv[1:]
-emit('command', tool=tool, arguments=arguments)
+emit('command', tool=tool, arguments=arguments,
+     compose_parallel_limit=os.environ.get('COMPOSE_PARALLEL_LIMIT'))
 if tool == 'docker':
     if any('pg_dump' in value for value in arguments):
         emit('backup')
@@ -107,7 +108,7 @@ emit('bugtriage_finished')
 
 HANDOVER = '''from pathlib import Path
 import os, subprocess, sys
-from trace_fixture import emit
+from trace_fixture import emit, gate
 command = sys.argv[1]
 mode = os.environ.get('RELEASE_MODE', 'maintenance')
 marker = Path(os.environ['FIXTURE']) / 'migration-started'
@@ -121,7 +122,9 @@ elif command == 'migration-started':
 elif command in ('start-api', 'start-ssr'):
     service = api if command == 'start-api' else ssr
     subprocess.run(prefix + ['up', '-d', '--force-recreate', '--no-deps', service], check=True)
-    if command == 'start-api': emit('api_ready')
+    if command == 'start-api':
+        gate('api-ready')
+        emit('api_ready')
 elif command == 'switch':
     emit('nginx_reload')
 elif command == 'finish':
@@ -310,21 +313,44 @@ class DeployWorkflowTests(DeploymentFixture):
                                     and "api" in row["arguments"] for row in self.events), output)
                 del self.environment[variable]
 
-    def test_main_failure_drains_children_before_releasing_deployment_lock(self):
-        self.environment["FAIL_MAIN"] = "1"
+    def test_auxiliary_tasks_run_one_at_a_time_after_api_readiness(self):
+        self.environment["COMPOSE_PARALLEL_LIMIT"] = "2"
+        self.make_gate("api-ready")
         self.make_gate("tech-radar")
+        self.make_gate("mail-inbox-health")
         process = self.workflow()
-        self.assertTrue(self.wait_for(lambda rows: any(row["name"] == "main_failed" for row in rows)))
+        self.assertTrue(self.wait_for(lambda rows: any(row.get("gate") == "api-ready" for row in rows)))
+        self.assertFalse(self.wait_for(
+            lambda rows: any(row.get("service") == "tech-radar" for row in rows), timeout=0.2))
+        self.release("api-ready")
+
         self.assertTrue(self.wait_for(lambda rows: any(row.get("gate") == "tech-radar" for row in rows)))
         lock = self.root / "var/lock/fooddiary-deploy.lock"
-        contender = subprocess.run(["flock", "-n", str(lock), "true"], capture_output=True)
-        self.assertNotEqual(0, contender.returncode, "Deployment lock must remain held while tasks drain")
-        self.assertFalse(self.wait_for(lambda rows: any(row["name"] == "process_exit" for row in rows), timeout=0.2))
+        self.assertNotEqual(0, subprocess.run(["flock", "-n", str(lock), "true"], capture_output=True).returncode)
+        self.assertFalse(self.wait_for(
+            lambda rows: any(row.get("service") == "mailrelay-db-init" for row in rows), timeout=0.2))
         self.release("tech-radar")
+
+        self.assertTrue(self.wait_for(lambda rows: any(row.get("gate") == "mail-inbox-health" for row in rows)))
+        self.assertFalse(self.wait_for(
+            lambda rows: any(row.get("service") == "bugtriage" for row in rows), timeout=0.2))
+        self.release("mail-inbox-health")
         code, output = self.result(process)
-        self.assertEqual(31, code, output)
-        self.assertFalse(any(row["name"] == "assets" for row in self.events), output)
+        self.assertEqual(0, code, output)
         self.assertEqual(0, subprocess.run(["flock", "-n", str(lock), "true"], capture_output=True).returncode)
+        compose_calls = [row for row in self.events if row.get("tool") == "docker"
+                         and row["arguments"][:1] == ["compose"]]
+        self.assertTrue(any("pull" in row["arguments"] for row in compose_calls))
+        self.assertEqual({"1"}, {row["compose_parallel_limit"] for row in compose_calls})
+
+    def test_main_failure_stops_before_auxiliary_tasks(self):
+        self.environment["FAIL_MAIN"] = "1"
+        code, output = self.result(self.workflow())
+        self.assertEqual(31, code, output)
+        self.assertFalse(any(row["name"] in {"api_ready", "assets"} for row in self.events), output)
+        self.assertFalse(any(row.get("service") in {"tech-radar", "mailrelay-db-init", "mailinbox-db-init", "bugtriage"}
+                             for row in self.events), output)
+        self.assertTrue(any(row.get("command") == "abort" for row in self.events), output)
 
     def test_initializers_are_serialized_across_primary_and_auxiliary_databases(self):
         services = ("db-init", "mailrelay-db-init", "mailinbox-db-init", "bugtriage")
