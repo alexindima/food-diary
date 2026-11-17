@@ -90,6 +90,7 @@ This catalog carries navigation only; architectural and operational rules remain
 - Images domain: `Modules/Images/Domain/AGENTS.md`
 - Images tests: `Modules/Images/tests/AGENTS.md`
 - Lessons logical module: `Modules/Lessons/AGENTS.md`
+- MCP integration module: `Modules/McpIntegration/AGENTS.md`
 - Meal planning logical module: `Modules/MealPlanning/AGENTS.md`
 - Meal planning Application: `Modules/MealPlanning/Application/AGENTS.md`
 - Meal planning Application/Abstractions: `Modules/MealPlanning/Application.Abstractions/AGENTS.md`

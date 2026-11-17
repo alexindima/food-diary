@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
-    <PackageReference Include="ModelContextProtocol.AspNetCore" />
+    <PackageReference Include="ModelContextProtocol" />
     <PackageReference Include="Npgsql.OpenTelemetry" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" />
     <PackageReference Include="OpenIddict.Server.AspNetCore" />
@@ -90,6 +90,7 @@
     <ProjectReference Include="../Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj" />
     <ProjectReference Include="../Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj" />
+    <ProjectReference Include="../Modules/McpIntegration/Presentation/FoodDiary.Modules.McpIntegration.Presentation.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj" />

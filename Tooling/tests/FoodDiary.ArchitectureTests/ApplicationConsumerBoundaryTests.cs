@@ -18,7 +18,9 @@ public sealed class ApplicationConsumerBoundaryTests {
     public void Modules_NeverReferenceAnotherModulesApplicationImplementation(string layer) {
         string modules = ArchitectureTestPaths.FromRoot("Modules");
         string[] applicationProjects = [.. Directory.GetDirectories(modules)
-            .SelectMany(module => Directory.GetFiles(Path.Combine(module, "Application"), "*.csproj"))];
+            .Select(module => Path.Combine(module, "Application")).Where(Directory.Exists)
+            .SelectMany(folder => Directory.GetFiles(folder, "*.csproj"))];
+        Assert.NotEmpty(applicationProjects);
         Dictionary<string, string> owners = applicationProjects.ToDictionary(Path.GetFullPath,
             project => Directory.GetParent(project)!.Parent!.Name, StringComparer.OrdinalIgnoreCase);
         var violations = new List<string>();
@@ -64,6 +66,9 @@ public sealed class ApplicationConsumerBoundaryTests {
         foreach (string module in Directory.GetDirectories(modules)) {
             string application = Path.Combine(module, "Application");
             string owner = Path.GetFileName(module);
+            if (!Directory.Exists(application)) {
+                continue;
+            }
             string[] applicationSources = [.. SourceScanner.SourceFiles(application)];
             Assert.NotEmpty(applicationSources);
             foreach (string file in applicationSources) {

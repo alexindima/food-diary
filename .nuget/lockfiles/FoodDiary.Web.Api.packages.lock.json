@@ -137,13 +137,13 @@
           "Microsoft.EntityFrameworkCore.Relational": "10.0.11"
         }
       },
-      "ModelContextProtocol.AspNetCore": {
+      "ModelContextProtocol": {
         "type": "Direct",
         "requested": "[2.2.0, )",
         "resolved": "2.2.0",
-        "contentHash": "3JelDMuFIwFzXybsh6K30G6wXu5gmqKnuRnieqgBMuR0FkqqXRv4B+NYZuPgthSyNq5UwRyvv2U2VJBE3RD3PQ==",
+        "contentHash": "4Pb9u02Nwsp0poueDsqNdyGRojFxOYpljB7zDBsq+aHL+Afou3OgxlBc3GWFVnsRMRJrUtWqDh3s6k2JgPzmrQ==",
         "dependencies": {
-          "ModelContextProtocol": "[2.2.0]"
+          "ModelContextProtocol.Core": "[2.2.0]"
         }
       },
       "Npgsql.OpenTelemetry": {
@@ -2437,6 +2437,15 @@
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.mcpintegration.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )",
+          "ModelContextProtocol.AspNetCore": "[2.2.0, )",
+          "OpenIddict.Validation.AspNetCore": "[7.7.2, )"
+        }
+      },
       "fooddiary.modules.mealplanning.application": {
         "type": "Project",
         "dependencies": {
@@ -3788,13 +3797,13 @@
           "System.IdentityModel.Tokens.Jwt": "8.22.0"
         }
       },
-      "ModelContextProtocol": {
+      "ModelContextProtocol.AspNetCore": {
         "type": "CentralTransitive",
         "requested": "[2.2.0, )",
         "resolved": "2.2.0",
-        "contentHash": "4Pb9u02Nwsp0poueDsqNdyGRojFxOYpljB7zDBsq+aHL+Afou3OgxlBc3GWFVnsRMRJrUtWqDh3s6k2JgPzmrQ==",
+        "contentHash": "3JelDMuFIwFzXybsh6K30G6wXu5gmqKnuRnieqgBMuR0FkqqXRv4B+NYZuPgthSyNq5UwRyvv2U2VJBE3RD3PQ==",
         "dependencies": {
-          "ModelContextProtocol.Core": "[2.2.0]"
+          "ModelContextProtocol": "[2.2.0]"
         }
       },
       "Newtonsoft.Json": {

@@ -17,6 +17,11 @@
       "pageSha256": "ac438aaaad818deaa15b0fd448a206e8368be2799344b5461d15327be74da8f1",
       "sources": [
         {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "ae906e398791f446dacee973a09164ae9074c2ea03c60f6529cbea5ea0c6af42",
+          "reviewReason": "The backend module map now includes the MCP transport module in the main API. The index already directs readers to the owning map and its application boundaries remain accurate."
+        },
+        {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
           "sha256": "4c88657f30d20a3b98c73d9d8d81ff59694d7fca304edd6a555922913f9fe9be",
           "reviewReason": "Read navigation and updated baseline: bounded numeric Telegram loop summaries reuse Loki, with a dedicated dashboard and intake/failure alerts; original monitoring, tracing-off decision and safe logging constraints remain accurate."
@@ -37,10 +42,10 @@
           "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
         }
       ],
-      "reason": "Reviewed the production runtime diagnostics after the server workflow was changed to Compose parallelism one and sequential auxiliary tasks after API readiness. The index still links to the current runbook and does not repeat its deployment order.",
-      "baseRef": "HEAD",
-      "gitHead": "1b7e29920a9b57dff01b093c29d50003d734db23",
-      "reviewedAtUtc": "2026-11-17T16:37:13.1551801Z"
+      "reason": "The backend module map now includes the MCP transport module in the main API. The index already directs readers to the owning map and its application boundaries remain accurate.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:02.1632016Z"
     },
     {
       "pageId": "module.frontend",
@@ -77,12 +82,17 @@
           "path": "docs/ARCHITECTURE.md",
           "sha256": "72fed76f3afe61c0d7cd3eb6750398c8d8be3f124734e4f852aae58e87754027",
           "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "ae906e398791f446dacee973a09164ae9074c2ea03c60f6529cbea5ea0c6af42",
+          "reviewReason": "The backend module map adds one primary API transport. MailRelay and MailInbox boundaries and their dependencies remain as documented."
         }
       ],
-      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:47.4062372Z"
+      "reason": "The backend module map adds one primary API transport. MailRelay and MailInbox boundaries and their dependencies remain as documented.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:02.7785822Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -93,12 +103,17 @@
           "path": "docs/architecture/backend-modules.json",
           "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
           "reviewReason": "Reviewed the current module guide against BillingCancellation ownership: Billing owns domain, commands and tracked persistence; Admin joins remain read composition, shared user transactions remain coordinated, and the manifest adds only the owned cancellation aggregate. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged."
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "ae906e398791f446dacee973a09164ae9074c2ea03c60f6529cbea5ea0c6af42",
+          "reviewReason": "The backend module map adds MCP transport hosted in FoodDiary.Web.Api. The page describes the same composition roots and module-owned boundaries."
         }
       ],
-      "reason": "Reviewed the current module guide against BillingCancellation ownership: Billing owns domain, commands and tracked persistence; Admin joins remain read composition, shared user transactions remain coordinated, and the manifest adds only the owned cancellation aggregate. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T00:12:26.8162078Z"
+      "reason": "The backend module map adds MCP transport hosted in FoodDiary.Web.Api. The page describes the same composition roots and module-owned boundaries.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:03.2289393Z"
     },
     {
       "pageId": "system.architecture",
@@ -106,15 +121,20 @@
       "pageSha256": "79e76caa10fa8ebe6c5ffcbdd11e4571277fc9b7052381d064af58b6603f55df",
       "sources": [
         {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "ae906e398791f446dacee973a09164ae9074c2ea03c60f6529cbea5ea0c6af42",
+          "reviewReason": "The dependency matrix and module map show a narrow MCP Presentation dependency on Identity Contracts and the presentation kernel, wired only by the current Web.Api host. The dependency rules and deployment model on this page still apply."
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c31ec5a99ee8a70345396fe65b30eee02bbbd12757a1e97b6e2f2d4c239a31cc",
-          "reviewReason": "Reviewed the direct Initializer reference to the existing USDA Contracts assembly. This is a command-specific composition-root edge. USDA reads local reference data and Products and Users retain their respective write ownership. No host, transport or persistence boundary changed."
+          "sha256": "d4dfee658ef79ac1049d555ec77064f4b4c9df0c32ad2d87c2e66255a6107969",
+          "reviewReason": "The dependency matrix and module map show a narrow MCP Presentation dependency on Identity Contracts and the presentation kernel, wired only by the current Web.Api host. The dependency rules and deployment model on this page still apply."
         }
       ],
-      "reason": "Reviewed the direct Initializer reference to the existing USDA Contracts assembly. This is a command-specific composition-root edge. USDA reads local reference data and Products and Users retain their respective write ownership. No host, transport or persistence boundary changed.",
-      "baseRef": "HEAD",
-      "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:15:19.5293819Z"
+      "reason": "The dependency matrix and module map show a narrow MCP Presentation dependency on Identity Contracts and the presentation kernel, wired only by the current Web.Api host. The dependency rules and deployment model on this page still apply.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:03.7748625Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -194,20 +214,20 @@
           "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         },
         {
+          "path": "docs/adr/README.md",
+          "sha256": "cdb92f45470171f0482336861331020ea0b488abb425230c49db64a0658ef830",
+          "reviewReason": "The ADR listing adds ADR 0062. The model continues to identify accepted ADRs as the source for durable decisions."
+        },
+        {
           "path": "docs/README.md",
           "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
           "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0060 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "015bf5378170ae13f4535c308a446b005160cb23618e490a84e8110748d21946",
-          "reviewReason": "ADR 0061 adds a deployment retention decision to the existing ADR index. It uses the established ADR lifecycle and leaves the compiled knowledge model and authority rules intact."
         }
       ],
-      "reason": "ADR 0061 adds a deployment retention decision to the existing ADR index. It uses the established ADR lifecycle and leaves the compiled knowledge model and authority rules intact.",
-      "baseRef": "HEAD",
-      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
-      "reviewedAtUtc": "2026-11-04T05:18:14.0904937Z"
+      "reason": "The ADR listing adds ADR 0062. The model continues to identify accepted ADRs as the source for durable decisions.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:04.2136728Z"
     },
     {
       "pageId": "system.quality-index",
@@ -416,8 +436,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4dbbd7f0f8c22f26eef91d75debf58e1dadb1036af53e553d63d12d0a1bc04cf",
-          "reviewReason": "Generated index adds the dynamic profile disconnect dialog. It has no template selector consumer or direct component spec because the facade opens it through the dialog service. Facade tests and the Chromium profile regression exercise that path."
+          "sha256": "22b5946f7a81119c132ef3642fd002cb8e361a889a24c5d9e567288090f80f2f",
+          "reviewReason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -436,14 +456,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c31ec5a99ee8a70345396fe65b30eee02bbbd12757a1e97b6e2f2d4c239a31cc",
-          "reviewReason": "Reviewed the exact Initializer-to-USDA Contracts dependency and the regenerated architecture index. The project edge count rises from 1693 to 1694, with zero dependency violations, unused allowances or untracked projects. The runtime query and dependency review described here still apply. All 2286 architecture tests passed."
+          "sha256": "d4dfee658ef79ac1049d555ec77064f4b4c9df0c32ad2d87c2e66255a6107969",
+          "reviewReason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix."
         }
       ],
-      "reason": "Generated index adds the dynamic profile disconnect dialog. It has no template selector consumer or direct component spec because the facade opens it through the dialog service. Facade tests and the Chromium profile regression exercise that path.",
-      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
-      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
-      "reviewedAtUtc": "2026-11-17T09:28:44.8964326Z"
+      "reason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:04.7640683Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -791,14 +811,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "015bf5378170ae13f4535c308a446b005160cb23618e490a84e8110748d21946",
-          "reviewReason": "The index adds ADR 0061 as a related operational decision for frontend release directories. Existing decision search, index inputs and ADR status semantics still apply."
+          "sha256": "cdb92f45470171f0482336861331020ea0b488abb425230c49db64a0658ef830",
+          "reviewReason": "The ADR listing adds a decision for transport ownership and stable public contracts. The workflow still correctly directs readers to the canonical ADR index."
         }
       ],
-      "reason": "The index adds ADR 0061 as a related operational decision for frontend release directories. Existing decision search, index inputs and ADR status semantics still apply.",
-      "baseRef": "HEAD",
-      "gitHead": "18579d7b1cf5d9185401de74cb4fd0437776c461",
-      "reviewedAtUtc": "2026-11-04T05:18:14.3668812Z"
+      "reason": "The ADR listing adds a decision for transport ownership and stable public contracts. The workflow still correctly directs readers to the canonical ADR index.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:05.2794547Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -1490,14 +1510,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2c1b89aa5a8358fe9c42c6c7b3d14e9e40ae20d2e3f6759f5478aebf8d300f99",
-          "reviewReason": "Reviewed the generated runtime topology diff for the OAuth consent restyle and VPS deployment serialization. Only the source fingerprint changed; hosts, workers, integrations and recurring jobs in the index retain the same records, so the runtime impact guide remains accurate."
+          "sha256": "2ddbd45263de7523ee88ccaa3291de5a2de13f66859a8f0e7cf0ceb6d5675324",
+          "reviewReason": "The API Dockerfile now copies the MCP presentation project and source in its existing build stages. Linux locked restore passed. The generated topology describes the same deployed API process and routing, so the runtime impact workflow still applies."
         }
       ],
-      "reason": "Reviewed the generated runtime topology diff for the OAuth consent restyle and VPS deployment serialization. Only the source fingerprint changed; hosts, workers, integrations and recurring jobs in the index retain the same records, so the runtime impact guide remains accurate.",
-      "baseRef": "1b7e29920a9b57dff01b093c29d50003d734db23",
-      "gitHead": "968824e6a940c629b1893314c63eaa565e6f0db1",
-      "reviewedAtUtc": "2026-11-17T16:50:54.9501608Z"
+      "reason": "The API Dockerfile now copies the MCP presentation project and source in its existing build stages. Linux locked restore passed. The generated topology describes the same deployed API process and routing, so the runtime impact workflow still applies.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:53:09.6515237Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1872,8 +1892,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "28822160b9b94bcc5130b79713f78526200c23e7c931f7b5a6fe4060a0e47050",
-          "reviewReason": "The regenerated catalog records the existing project package references after adding OpenIddict and the MCP transport. Context query commands and catalog schema are unchanged. The dependency matrix and affected Wiki checks passed."
+          "sha256": "da31a72a7420f26489a975cf849d9d1d1c26b525de20e26f6c40f907e60620b7",
+          "reviewReason": "The catalog indexes the new MCP code and ADR. The query workflow continues to use that catalog for source discovery."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1916,10 +1936,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The regenerated catalog records the existing project package references after adding OpenIddict and the MCP transport. Context query commands and catalog schema are unchanged. The dependency matrix and affected Wiki checks passed.",
-      "baseRef": "master",
-      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
-      "reviewedAtUtc": "2026-11-17T11:13:29.1404045Z"
+      "reason": "The catalog indexes the new MCP code and ADR. The query workflow continues to use that catalog for source discovery.",
+      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
+      "reviewedAtUtc": "2026-11-17T18:41:06.1556435Z"
     },
     {
       "pageId": "workflow.review-diff",

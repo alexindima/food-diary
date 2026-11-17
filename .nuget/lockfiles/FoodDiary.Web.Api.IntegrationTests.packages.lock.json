@@ -2619,6 +2619,15 @@
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.mcpintegration.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )",
+          "ModelContextProtocol.AspNetCore": "[2.2.0, )",
+          "OpenIddict.Validation.AspNetCore": "[7.7.2, )"
+        }
+      },
       "fooddiary.modules.mealplanning.application": {
         "type": "Project",
         "dependencies": {
@@ -3974,6 +3983,7 @@
           "FoodDiary.Modules.Lessons.Presentation": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.McpIntegration.Presentation": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Presentation": "[1.0.0, )",
@@ -4023,7 +4033,7 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "[10.0.11, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.11, )",
-          "ModelContextProtocol.AspNetCore": "[2.2.0, )",
+          "ModelContextProtocol": "[2.2.0, )",
           "Npgsql.OpenTelemetry": "[10.0.3, )",
           "OpenIddict.EntityFrameworkCore": "[7.7.2, )",
           "OpenIddict.Server.AspNetCore": "[7.7.2, )",

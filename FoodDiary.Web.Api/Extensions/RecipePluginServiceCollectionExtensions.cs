@@ -1,5 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence;
+using FoodDiary.Modules.McpIntegration.Presentation.Extensions;
+using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Plugin;
+using FoodDiary.Modules.Recipes.Presentation.Plugin;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Web.Api.Options;
 using OpenIddict.Abstractions;
@@ -60,7 +63,10 @@ internal static class RecipePluginServiceCollectionExtensions {
                     validation.Configure(settings => settings.TokenValidationParameters.ClockSkew = TimeSpan.Zero);
                     validation.UseAspNetCore();
                 });
-            return services.AddRecipePluginMcp(options);
+            return services.AddMcpIntegrationPresentation(issuer)
+                .WithTools<RecipePluginTools>()
+                .WithTools<ShoppingListPluginTools>()
+                .Services;
         }
     }
 

@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Notifications.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.McpIntegration.Presentation.Extensions;
 using FoodDiary.Modules.Ai.Presentation.Extensions;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Telemetry;
@@ -46,7 +47,7 @@ public static class ApiApplicationBuilderExtensions {
             app.UseAuthentication();
             RecipePluginOptions? plugin = app.Services.GetService<RecipePluginOptions>();
             if (plugin is not null) {
-                app.UseRecipePluginMcp(plugin);
+                app.UseMcpIntegration(plugin.Issuer!);
             }
             app.UseRateLimiter();
             app.UseMiddleware<BrowserRequestProtectionMiddleware>();

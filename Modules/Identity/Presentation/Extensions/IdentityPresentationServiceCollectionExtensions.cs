@@ -3,6 +3,7 @@ using FoodDiary.Modules.Identity.Presentation.Services;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +16,7 @@ public static class IdentityPresentationServiceCollectionExtensions {
         services.AddScoped<AuthenticationCookieResultFilter>();
         services.AddScoped<RefreshTokenCookieService>();
         services.AddScoped<BrowserSessionCookieService>();
+        services.AddScoped<IDelegatedAccessTokenValidator, DelegatedAccessTokenValidator>();
         services.AddScoped<IAuthorizationHandler, AdminSessionAuthorizationHandler>();
         services.AddAuthorization(options => options.AddPolicy(PresentationPolicyNames.ConfirmAdminCredentialsPolicyName,
             policy => policy.RequireAuthenticatedUser().AddRequirements(new AdminSessionAuthorizationHandler.CredentialChangeRequirement())));

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1694,
+    "productionProjectEdges": 1697,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
     "componentsWithoutDirectSpecs": 138,
-    "criticalSymbolsWithoutTestReferences": 52,
+    "criticalSymbolsWithoutTestReferences": 53,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -6498,6 +6498,16 @@
       "role": "Validator",
       "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommandValidator.cs",
       "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "DelegatedAccessTokenValidator",
+      "role": "Validator",
+      "path": "Modules/Identity/Presentation/Security/DelegatedAccessTokenValidator.cs",
+      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

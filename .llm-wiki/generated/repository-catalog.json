@@ -13,7 +13,7 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 458,
+    "dotnetProjects": 459,
     "testProjects": 159,
     "frontendProjects": 5,
     "applicationModules": 0,
@@ -21,8 +21,8 @@
     "backendBusinessModules": 34,
     "controllers": 116,
     "endpoints": 384,
-    "agentGuides": 297,
-    "documentationPages": 253
+    "agentGuides": 298,
+    "documentationPages": 254
   },
   "dotnet": {
     "projects": [
@@ -599,6 +599,7 @@
           "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
+          "Modules/McpIntegration/Presentation/FoodDiary.Modules.McpIntegration.Presentation.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
@@ -697,7 +698,7 @@
             "version": null
           },
           {
-            "name": "ModelContextProtocol.AspNetCore",
+            "name": "ModelContextProtocol",
             "version": null
           },
           {
@@ -7564,6 +7565,31 @@
           },
           {
             "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.McpIntegration.Presentation",
+        "assemblyName": "FoodDiary.Modules.McpIntegration.Presentation",
+        "path": "Modules/McpIntegration/Presentation/FoodDiary.Modules.McpIntegration.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net11.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "ModelContextProtocol.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "OpenIddict.Validation.AspNetCore",
             "version": null
           }
         ]
@@ -18006,6 +18032,7 @@
       "Modules/Marketing/AGENTS.md",
       "Modules/Marketing/Application/AGENTS.md",
       "Modules/Marketing/Contracts/AGENTS.md",
+      "Modules/McpIntegration/AGENTS.md",
       "Modules/MealPlanning/AGENTS.md",
       "Modules/MealPlanning/Application.Abstractions/AGENTS.md",
       "Modules/MealPlanning/Application/AGENTS.md",
@@ -18227,6 +18254,7 @@
       "docs/adr/0059-purpose-specific-privacy-controls.md",
       "docs/adr/0060-single-host-blue-green-deployment.md",
       "docs/adr/0061-frontend-release-retention.md",
+      "docs/adr/0062-mcp-integration-boundary.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/AGENT_GUIDE_CATALOG.md",

@@ -320,7 +320,7 @@ public class LayeringTests {
             "Users -> FoodDiary.Modules.Dietologist.Presentation.Contracts",
         };
 
-        Assert.Equal(32, projectFiles.Length);
+        Assert.Equal(33, projectFiles.Length);
 
         string[] violations = [.. projectFiles.SelectMany(projectFile => {
             string relativePath = Path.GetRelativePath(root, projectFile).Replace('\\', '/');
@@ -370,6 +370,13 @@ public class LayeringTests {
             () => Assert.Equal(expected, actual),
             () => Assert.All(expected, projectName => {
                 string module = projectName["FoodDiary.Modules.".Length..^".Presentation".Length];
+                if (string.Equals(module, "McpIntegration", StringComparison.Ordinal)) {
+                    Assert.Contains(".AddRecipePlugin(configuration, environment)", compositionSource, StringComparison.Ordinal);
+                    string pluginCompositionSource = File.ReadAllText(Path.Combine(root, "FoodDiary.Web.Api", "Extensions",
+                        "RecipePluginServiceCollectionExtensions.cs"));
+                    Assert.Contains(".AddMcpIntegrationPresentation(issuer)", pluginCompositionSource, StringComparison.Ordinal);
+                    return;
+                }
                 Assert.Contains($".Add{module}Presentation()", compositionSource, StringComparison.Ordinal);
             }));
     }

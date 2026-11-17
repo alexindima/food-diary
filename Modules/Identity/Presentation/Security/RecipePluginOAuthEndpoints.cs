@@ -1,10 +1,8 @@
-using System.Globalization;
 using System.Collections.Immutable;
 using System.Security.Claims;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
-using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Presentation.Api.Policies;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Antiforgery;
@@ -34,8 +32,8 @@ public static class RecipePluginOAuthEndpoints {
             .ExcludeFromDescription()
             .AllowAnonymous();
         endpoints.MapPost(RecipePluginAccess.TokenPath,
-                (HttpContext context, IUserAccessTokenSecurityReader security, IUserAccessTokenSessionReader sessions) =>
-                    ExchangeAsync(context, security, sessions, resource))
+                (HttpContext context, IDelegatedAccessTokenValidator validator) =>
+                    ExchangeAsync(context, validator, resource))
             .RequireHost(issuer.Authority)
             .ExcludeFromDescription()
             .AllowAnonymous();
@@ -48,20 +46,6 @@ public static class RecipePluginOAuthEndpoints {
             .ExcludeFromDescription()
             .AllowAnonymous();
         return endpoints;
-    }
-
-    public static async Task<bool> IsCurrentAsync(
-        ClaimsPrincipal principal,
-        IUserAccessTokenSecurityReader security,
-        IUserAccessTokenSessionReader sessions,
-        CancellationToken cancellationToken) {
-        return Guid.TryParse(principal.GetClaim(Claims.Subject), out Guid userId) && userId != Guid.Empty &&
-               Guid.TryParse(principal.GetClaim(JwtSecurityClaimNames.RefreshSessionId), out Guid sessionId) &&
-               sessionId != Guid.Empty &&
-               long.TryParse(principal.GetClaim(JwtSecurityClaimNames.SecurityVersion), NumberStyles.None,
-                   CultureInfo.InvariantCulture, out long securityVersion) &&
-               await security.IsCurrentAsync(userId, securityVersion, cancellationToken) &&
-               await sessions.IsActiveAsync(userId, sessionId, cancellationToken);
     }
 
     private static async Task<IResult> AuthorizeAsync(
@@ -136,7 +120,7 @@ public static class RecipePluginOAuthEndpoints {
     }
 
     private static async Task<IResult> ExchangeAsync(
-        HttpContext context, IUserAccessTokenSecurityReader security, IUserAccessTokenSessionReader sessions, Uri resource) {
+        HttpContext context, IDelegatedAccessTokenValidator validator, Uri resource) {
         if (context.GetOpenIddictServerRequest() is not { } request) {
             return HttpResults.NotFound();
         }
@@ -146,7 +130,7 @@ public static class RecipePluginOAuthEndpoints {
         AuthenticateResult grant = await context.AuthenticateAsync(Scheme);
         if (!grant.Succeeded || grant.Principal is not { } principal ||
             !principal.HasResource(resource.AbsoluteUri) ||
-            !await IsCurrentAsync(principal, security, sessions, context.RequestAborted)) {
+            !await validator.IsCurrentAsync(principal, context.RequestAborted)) {
             return Reject(Errors.InvalidGrant);
         }
         return HttpResults.SignIn(principal, authenticationScheme: Scheme);

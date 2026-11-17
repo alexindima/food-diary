@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4867,
-    "symbols": 4839,
-    "interfaceImplementationLinks": 217,
-    "dependencyInjectionRegistrations": 77,
+    "sourceFiles": 4869,
+    "symbols": 4841,
+    "interfaceImplementationLinks": 218,
+    "dependencyInjectionRegistrations": 78,
     "kinds": {
-      "class": 2497,
+      "class": 2498,
       "enum": 77,
-      "interface": 435,
+      "interface": 436,
       "record": 1672,
       "record class": 5,
       "record struct": 144,
@@ -43,7 +43,7 @@
       "Request": 188,
       "Response": 283,
       "Service": 181,
-      "Validator": 238,
+      "Validator": 240,
       "ValueObject": 183,
       "WriteRepository": 47
     }
@@ -2581,7 +2581,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "ApiAuthenticationServiceCollectionExtensions",
@@ -2696,18 +2696,11 @@
       "line": 5
     },
     {
-      "name": "RecipePluginMcpExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
-      "line": 21
-    },
-    {
       "name": "RecipePluginServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/RecipePluginServiceCollectionExtensions.cs",
-      "line": 9
+      "line": 12
     },
     {
       "name": "RequestObservabilityMiddleware",
@@ -17648,6 +17641,13 @@
       "line": 2
     },
     {
+      "name": "IDelegatedAccessTokenValidator",
+      "kind": "interface",
+      "role": "Validator",
+      "path": "Modules/Identity/Contracts/Authentication/Common/IDelegatedAccessTokenValidator.cs",
+      "line": 4
+    },
+    {
       "name": "IEmailSender",
       "kind": "interface",
       "role": "Other",
@@ -18156,7 +18156,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "AuthRequestLimits",
@@ -18621,6 +18621,13 @@
       "line": 9
     },
     {
+      "name": "DelegatedAccessTokenValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Presentation/Security/DelegatedAccessTokenValidator.cs",
+      "line": 10
+    },
+    {
       "name": "ImpersonationCookieService",
       "kind": "class",
       "role": "Service",
@@ -18632,14 +18639,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
-      "line": 21
+      "line": 19
     },
     {
       "name": "ConsentEndpoint",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
-      "line": 178
+      "line": 162
     },
     {
       "name": "RefreshTokenCookieService",
@@ -19942,6 +19949,13 @@
       "role": "Request",
       "path": "Modules/Marketing/Presentation/Requests/MarketingSignupAttributionHttpRequest.cs",
       "line": 7
+    },
+    {
+      "name": "McpIntegrationPresentationExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/McpIntegration/Presentation/Extensions/McpIntegrationPresentationExtensions.cs",
+      "line": 19
     },
     {
       "name": "IMealPlanCatalogRecipeReader",
@@ -34177,6 +34191,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IDelegatedAccessTokenValidator",
+      "interfacePath": "Modules/Identity/Contracts/Authentication/Common/IDelegatedAccessTokenValidator.cs",
+      "implementation": "DelegatedAccessTokenValidator",
+      "implementationPath": "Modules/Identity/Presentation/Security/DelegatedAccessTokenValidator.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application.Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
@@ -35691,18 +35712,25 @@
       "line": 22
     },
     {
+      "service": "IDelegatedAccessTokenValidator",
+      "implementation": "DelegatedAccessTokenValidator",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
+      "line": 19
+    },
+    {
       "service": "IAuthorizationHandler",
       "implementation": "AdminSessionAuthorizationHandler",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 18
+      "line": 20
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 24
+      "line": 26
     },
     {
       "service": "IImageAssetAccessService",

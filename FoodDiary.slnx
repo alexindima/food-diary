@@ -494,6 +494,9 @@
     <Project Path="Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj" />
     <Project Path="Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj" />
   </Folder>
+  <Folder Name="/Modules/McpIntegration/">
+    <Project Path="Modules/McpIntegration/Presentation/FoodDiary.Modules.McpIntegration.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Modules/MealPlanning/">
     <Project Path="Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
     <Project Path="Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />

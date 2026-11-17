@@ -250,6 +250,7 @@ COPY Modules/Images/Presentation/*.csproj Modules/Images/Presentation/
 COPY Modules/Lessons/Presentation/*.csproj Modules/Lessons/Presentation/
 COPY Modules/Marketing/Presentation/*.csproj Modules/Marketing/Presentation/
 COPY Modules/MealPlanning/Presentation/*.csproj Modules/MealPlanning/Presentation/
+COPY Modules/McpIntegration/Presentation/*.csproj Modules/McpIntegration/Presentation/
 COPY Modules/Meals/Presentation/*.csproj Modules/Meals/Presentation/
 COPY Modules/Meals/Presentation.Mappings/*.csproj Modules/Meals/Presentation.Mappings/
 COPY Modules/Meals/Presentation.Contracts/*.csproj Modules/Meals/Presentation.Contracts/
@@ -548,6 +549,7 @@ COPY Modules/Images/Presentation/ Modules/Images/Presentation/
 COPY Modules/Lessons/Presentation/ Modules/Lessons/Presentation/
 COPY Modules/Marketing/Presentation/ Modules/Marketing/Presentation/
 COPY Modules/MealPlanning/Presentation/ Modules/MealPlanning/Presentation/
+COPY Modules/McpIntegration/Presentation/ Modules/McpIntegration/Presentation/
 COPY Modules/Meals/Presentation/ Modules/Meals/Presentation/
 COPY Modules/Meals/Presentation.Mappings/ Modules/Meals/Presentation.Mappings/
 COPY Modules/Meals/Presentation.Contracts/ Modules/Meals/Presentation.Contracts/

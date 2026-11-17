@@ -3,62 +3,56 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
-using FoodDiary.Modules.Identity.Presentation.Security;
-using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Plugin;
-using FoodDiary.Modules.Recipes.Presentation.Plugin;
-using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Policies;
-using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.AspNetCore;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 
-namespace FoodDiary.Web.Api.Extensions;
+namespace FoodDiary.Modules.McpIntegration.Presentation.Extensions;
 
-internal static class RecipePluginMcpExtensions {
+public static class McpIntegrationPresentationExtensions {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
     extension(IServiceCollection services) {
-        public IServiceCollection AddRecipePluginMcp(RecipePluginOptions options) {
-            string metadata = new Uri(options.Issuer!, RecipePluginAccess.ResourceMetadataPath).AbsoluteUri;
-            services.AddMcpServer()
+        public IMcpServerBuilder AddMcpIntegrationPresentation(Uri issuer) {
+            string metadata = new Uri(issuer, RecipePluginAccess.ResourceMetadataPath).AbsoluteUri;
+            return services.AddMcpServer()
                 .WithHttpTransport(transport => transport.SessionMode = HttpServerSessionMode.Stateless)
-                .WithTools<RecipePluginTools>()
-                .WithTools<ShoppingListPluginTools>()
                 .WithRequestFilters(filters => filters.AddCallToolFilter(next => (context, cancellationToken) =>
                     FilterCallAsync(context, next, metadata, cancellationToken)));
-            return services;
         }
     }
 
     extension(WebApplication app) {
-        public WebApplication UseRecipePluginMcp(RecipePluginOptions options) {
+        public WebApplication UseMcpIntegration(Uri issuer) {
             app.UseWhen(context => context.Request.Path.StartsWithSegments(RecipePluginAccess.ResourcePath, StringComparison.OrdinalIgnoreCase),
-                branch => branch.Use((context, next) => AuthenticateAsync(context, next, options, context.RequestAborted)));
-            app.MapMcp(RecipePluginAccess.ResourcePath).RequireHost(options.Issuer!.Authority).AllowAnonymous();
+                branch => branch.Use((context, next) => AuthenticateAsync(context, next, issuer, context.RequestAborted)));
+            app.MapMcp(RecipePluginAccess.ResourcePath).RequireHost(issuer.Authority).AllowAnonymous();
             return app;
         }
     }
 
     private static async Task AuthenticateAsync(
-        HttpContext context, RequestDelegate next, RecipePluginOptions options, CancellationToken cancellationToken) {
+        HttpContext context, RequestDelegate next, Uri issuer, CancellationToken cancellationToken) {
         string origin = context.Request.Headers.Origin.ToString();
-        if (origin.Length > 0 && !string.Equals(origin, options.Issuer!.GetLeftPart(UriPartial.Authority), StringComparison.Ordinal)) {
+        if (origin.Length > 0 && !string.Equals(origin, issuer.GetLeftPart(UriPartial.Authority), StringComparison.Ordinal)) {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             return;
         }
         AuthenticateResult result = await context.AuthenticateAsync(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        IUserAccessTokenSecurityReader security = context.RequestServices.GetRequiredService<IUserAccessTokenSecurityReader>();
-        IUserAccessTokenSessionReader sessions = context.RequestServices.GetRequiredService<IUserAccessTokenSessionReader>();
+        IDelegatedAccessTokenValidator validator = context.RequestServices.GetRequiredService<IDelegatedAccessTokenValidator>();
         if (!result.Succeeded || result.Principal is not { } principal ||
-            !await RecipePluginOAuthEndpoints.IsCurrentAsync(principal, security, sessions, cancellationToken)) {
+            !await validator.IsCurrentAsync(principal, cancellationToken)) {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.Headers.WWWAuthenticate = "Bearer resource_metadata=\"" +
-                new Uri(options.Issuer!, RecipePluginAccess.ResourceMetadataPath).AbsoluteUri + "\"";
+                new Uri(issuer, RecipePluginAccess.ResourceMetadataPath).AbsoluteUri + "\"";
             return;
         }
         context.User = principal;

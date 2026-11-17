@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7082,
+    "productionFiles": 7084,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
-    "criticalSymbols": 1059,
+    "criticalSymbols": 1060,
     "criticalSymbolsWithTestReferences": 1007,
-    "criticalSymbolsWithoutTestReferences": 52,
+    "criticalSymbolsWithoutTestReferences": 53,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -5522,11 +5522,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "nonBlankLines": 73,
+      "nonBlankLines": 74,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.46
+      "structuralRiskScore": 7.48
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
@@ -5657,20 +5657,12 @@
       "structuralRiskScore": 2.2
     },
     {
-      "path": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
-      "nonBlankLines": 125,
-      "decisionPoints": 14,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.5
-    },
-    {
       "path": "FoodDiary.Web.Api/Extensions/RecipePluginServiceCollectionExtensions.cs",
-      "nonBlankLines": 114,
+      "nonBlankLines": 120,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.28
+      "structuralRiskScore": 26.4
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
@@ -38681,6 +38673,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "Modules/Identity/Contracts/Authentication/Common/IDelegatedAccessTokenValidator.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Identity/Contracts/Authentication/Common/IEmailSender.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -39258,11 +39258,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/AuthRequestLimits.cs",
@@ -39785,6 +39785,14 @@
       "structuralRiskScore": 11.84
     },
     {
+      "path": "Modules/Identity/Presentation/Security/DelegatedAccessTokenValidator.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 16.38
+    },
+    {
       "path": "Modules/Identity/Presentation/Security/ImpersonationCookieService.cs",
       "nonBlankLines": 74,
       "decisionPoints": 15,
@@ -39794,11 +39802,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
-      "nonBlankLines": 160,
-      "decisionPoints": 35,
+      "nonBlankLines": 145,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.7
+      "structuralRiskScore": 46.4
     },
     {
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
@@ -41263,6 +41271,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.64
+    },
+    {
+      "path": "Modules/McpIntegration/Presentation/Extensions/McpIntegrationPresentationExtensions.cs",
+      "nonBlankLines": 119,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.38
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogRecipeReader.cs",
@@ -65776,6 +65792,16 @@
         "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "DelegatedAccessTokenValidator",
+      "role": "Validator",
+      "path": "Modules/Identity/Presentation/Security/DelegatedAccessTokenValidator.cs",
+      "line": 10,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {
