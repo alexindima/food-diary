@@ -58,7 +58,7 @@ test.describe('admin sign-in', () => {
     test('tries diary SSO after cookie restoration and confirms on the admin origin', async ({ page, baseURL }) => {
         const account = '00000000-0000-4000-8000-000000000003';
         let attempts = 0;
-        await mockAdminApiAsync(page);
+        await mockAdminApiAsync(page, { ...createUsersPage(), page: 2, totalPages: 2, totalItems: 21 });
         await page.route('**/api/v1/auth/session', async route => route.fulfill({ status: HTTP_UNAUTHORIZED, json: {} }));
         await page.route('http://localhost:4200/auth/confirm-admin**', async route => {
             attempts++;
@@ -86,8 +86,8 @@ test.describe('admin sign-in', () => {
         await page.getByLabel('Email').fill('admin@example.com');
         await page.getByLabel('Password').fill('Password123!');
         await page.getByRole('button', { name: 'Login', exact: true }).click();
+        await expect(page.getByRole('cell', { name: 'admin@example.com', exact: true })).toBeVisible();
         await expect(page).toHaveURL(/\/users\?page=2$/);
-        await expect(page.getByRole('heading', { name: 'Accounts', exact: true })).toBeVisible();
         expect(attempts).toBe(1);
     });
 });
@@ -180,7 +180,7 @@ async function authenticateAdminAsync(page: Page): Promise<void> {
     );
 }
 
-async function mockAdminApiAsync(page: Page): Promise<void> {
+async function mockAdminApiAsync(page: Page, usersPage = createUsersPage()): Promise<void> {
     await page.route('**/api/v1/admin/dashboard/overview?*', async route => {
         const params = new URL(route.request().url()).searchParams;
         const from = params.get('from') ?? '';
@@ -209,7 +209,7 @@ async function mockAdminApiAsync(page: Page): Promise<void> {
             return;
         }
 
-        await route.fulfill(jsonResponse(createUsersPage()));
+        await route.fulfill(jsonResponse(usersPage));
     });
 
     await page.route('**/api/v1/admin/email-templates**', async route => {
