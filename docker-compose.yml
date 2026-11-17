@@ -459,6 +459,9 @@ services:
   client-ssr:
     image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}
     entrypoint: ["node", "/app/server/server.mjs"]
+    # Forward SIGTERM to Node instead of inheriting Nginx's SIGQUIT.
+    init: true
+    stop_signal: SIGTERM
     restart: unless-stopped
     read_only: true
     user: "65534:65534"
@@ -485,6 +488,8 @@ services:
   client-ssr-green:
     image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}
     entrypoint: ["node", "/app/server/server.mjs"]
+    init: true
+    stop_signal: SIGTERM
     restart: unless-stopped
     read_only: true
     user: "65534:65534"

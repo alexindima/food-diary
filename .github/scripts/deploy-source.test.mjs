@@ -157,6 +157,16 @@ test("handover preserves signed receipts and uses explicit migration/rollback ba
     assert.doesNotMatch(step, /continue-on-error|if:/u);
 });
 
+test("both Node SSR slots forward SIGTERM through Docker init", async () => {
+    const compose = await readFile(new URL("../../docker-compose.yml", import.meta.url), "utf8");
+    for (const name of ["client-ssr", "client-ssr-green"]) {
+        const service = compose.split(`\n  ${name}:\n`)[1]?.split(/^  [\w-]+:/mu)[0];
+        assert.ok(service, `Compose service ${name} must exist`);
+        assert.match(service, /^    init: true$/mu, `${name} must run Node under Docker init`);
+        assert.match(service, /^    stop_signal: SIGTERM$/mu, `${name} must send SIGTERM to Node`);
+    }
+});
+
 test("portable handover behavior and recovery regressions", { timeout: 70000 }, () => {
     const result = spawnSync(process.platform === "win32" ? "python" : "python3",
         ["-B", "-m", "unittest", "discover", "-s", "scripts/deploy", "-p", "test_blue_green.py"],
