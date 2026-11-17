@@ -18492,7 +18492,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/RecipePluginConsentPage.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "TelegramAuthenticationIntentHttpResponse",
@@ -18639,7 +18639,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
-      "line": 177
+      "line": 178
     },
     {
       "name": "RefreshTokenCookieService",

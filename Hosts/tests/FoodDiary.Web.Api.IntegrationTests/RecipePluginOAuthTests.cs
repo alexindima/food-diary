@@ -141,7 +141,11 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
         string page = await consent.Content.ReadAsStringAsync();
         Assert.True(consent.StatusCode == HttpStatusCode.OK, $"Consent page returned {consent.StatusCode}: {page}");
         Assert.Equal("strict-origin", Assert.Single(consent.Headers.GetValues("Referrer-Policy")));
-        Assert.Equal("default-src 'none'; form-action 'self'; frame-ancestors 'none'",
+        int styleStart = page.IndexOf("<style>", StringComparison.Ordinal) + "<style>".Length;
+        int styleEnd = page.IndexOf("</style>", styleStart, StringComparison.Ordinal);
+        Assert.True(styleStart >= "<style>".Length && styleEnd > styleStart);
+        string styleHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(page[styleStart..styleEnd])));
+        Assert.Equal($"default-src 'none'; img-src 'self'; style-src 'sha256-{styleHash}'; form-action 'self'; frame-ancestors 'none'",
             Assert.Single(consent.Headers.GetValues("Content-Security-Policy")));
         Assert.Contains("Сохранять личные рецепты", page, StringComparison.Ordinal);
         if (scopes.Contains(RecipePluginAccess.ShoppingListScope, StringComparison.Ordinal)) {
@@ -255,7 +259,7 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
     [GeneratedRegex("name=\"__RequestVerificationToken\" value=\"(?<token>[^\"]+)\"", RegexOptions.CultureInvariant, 1000)]
     private static partial Regex FormToken();
 
-    [GeneratedRegex("""<a rel="noreferrer" href="(?<url>[^"]+)">""", RegexOptions.CultureInvariant, 1000)]
+    [GeneratedRegex("""<a [^>]*\brel="noreferrer" href="(?<url>[^"]+)">""", RegexOptions.CultureInvariant, 1000)]
     private static partial Regex ContinuationLink();
 
     [ExcludeFromCodeCoverage]

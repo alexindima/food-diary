@@ -39642,11 +39642,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/RecipePluginConsentPage.cs",
-      "nonBlankLines": 76,
+      "nonBlankLines": 192,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.52
+      "structuralRiskScore": 12.84
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramAuthenticationIntentHttpResponse.cs",
@@ -39794,11 +39794,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
-      "nonBlankLines": 159,
+      "nonBlankLines": 160,
       "decisionPoints": 35,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.68
+      "structuralRiskScore": 55.7
     },
     {
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
