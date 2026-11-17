@@ -505,6 +505,8 @@ jobs:
           export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export COMPOSE_PARALLEL_LIMIT="${COMPOSE_PARALLEL_LIMIT:-2}"
 
+          python3 scripts/deploy/blue_green.py verify-ingress
+
           # Resolve the current bridge before stopping writers; fail closed on an unknown topology.
           python3 scripts/deploy/configure_forwarded_proxy.py
 

@@ -53,13 +53,17 @@ class Host(deployment.Deployment):
         self.proxy_failure = False
         self.active_port = 5000
         self.worker_snapshots = deque()
+        self.ingress_listeners = ""
+        self.nginx_pids = (2000, 2001)
         deployment.write_atomic(self.state_path, json.dumps({"active": "blue", "sha": OLD_SHA, "apiContractSha": CONTRACT_SHA}))
         deployment.write_atomic(self.route_path, deployment.routes("blue"), 0o644)
 
     def run(self, *arguments, input=None, required=True):
         self.events.append((arguments, input))
         output = ""
-        if arguments[:2] == ("docker", "compose"):
+        if arguments[0] == "ss":
+            output = self.ingress_listeners
+        elif arguments[:2] == ("docker", "compose"):
             if "config" in arguments:
                 output = json.dumps(self.config)
             elif "ps" in arguments:
@@ -90,6 +94,8 @@ class Host(deployment.Deployment):
                     self.proxy_failure = False
                     raise deployment.DeploymentError("Nginx reload failed")
                 self.active_port = port
+        elif arguments[:2] == ("docker", "top") and arguments[-1] == "pid":
+            output = "PID\n" + "\n".join(map(str, self.nginx_pids))
         elif arguments[:2] == ("docker", "top"):
             snapshot = self.worker_snapshots.popleft() if self.worker_snapshots else []
             self.events.append(("workers", snapshot))
@@ -136,6 +142,29 @@ class BlueGreenTests(unittest.TestCase):
         self.assertEqual("overlap", self.host.plan())
         self.host.start("api")
         self.host.start("ssr")
+
+    def test_ingress_allows_free_ports_and_managed_listeners(self):
+        self.host.services.remove("nginx")
+        self.host.verify_ingress()
+        self.host.services.add("nginx")
+        self.host.ingress_listeners = (
+            'tcp LISTEN 0 511 0.0.0.0:80 0.0.0.0:* users:(("nginx",pid=2000,fd=10),("nginx",pid=2001,fd=10))\n'
+            'udp UNCONN 0 0 0.0.0.0:443 0.0.0.0:* users:(("nginx",pid=2001,fd=11))'
+        )
+        self.host.verify_ingress()
+
+    def test_ingress_rejects_unmanaged_or_unknown_listener_owners(self):
+        for listener, diagnostic in (
+            ('tcp LISTEN 0 511 0.0.0.0:80 0.0.0.0:* users:(("nginx",pid=5248,fd=10))',
+             r"tcp 0.0.0.0:80 .*PID 5248"),
+            ('udp UNCONN 0 0 0.0.0.0:443 0.0.0.0:* users:(("nginx",pid=2001,fd=11),("other",pid=3000,fd=10))',
+             r"udp 0.0.0.0:443 .*PID 3000"),
+            ('tcp LISTEN 0 511 0.0.0.0:443 0.0.0.0:*', r"tcp 0.0.0.0:443 .*PID unknown"),
+        ):
+            with self.subTest(listener=listener):
+                self.host.ingress_listeners = listener
+                with self.assertRaisesRegex(deployment.DeploymentError, diagnostic):
+                    self.host.verify_ingress()
 
     def test_overlap_dashboard_warmup_targets_candidate_before_route_switch(self):
         self.ready_candidate()
