@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 7073,
+    "productionFiles": 7082,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1059,
@@ -4305,6 +4305,22 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "FoodDiary.Presentation.Api/Policies/RecipePluginAccess.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Policies/RecipePluginLinks.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "FoodDiary.Presentation.Api/Requests/CursorPaginationHttpQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -5506,11 +5522,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "nonBlankLines": 65,
-      "decisionPoints": 2,
+      "nonBlankLines": 73,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.3
+      "structuralRiskScore": 7.46
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
@@ -5562,11 +5578,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 228,
+      "nonBlankLines": 229,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.56
+      "structuralRiskScore": 7.58
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTaskConfigurationExtensions.cs",
@@ -5594,11 +5610,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/BrowserRequestProtectionMiddleware.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 36,
+      "nonBlankLines": 60,
+      "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 55.18
+      "structuralRiskScore": 56.7
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/DevelopmentRuntimeHeadersMiddleware.cs",
@@ -5639,6 +5655,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.2
+    },
+    {
+      "path": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
+      "nonBlankLines": 125,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.5
+    },
+    {
+      "path": "FoodDiary.Web.Api/Extensions/RecipePluginServiceCollectionExtensions.cs",
+      "nonBlankLines": 114,
+      "decisionPoints": 16,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.28
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
@@ -5801,12 +5833,20 @@
       "structuralRiskScore": 11.5
     },
     {
+      "path": "FoodDiary.Web.Api/Options/RecipePluginOptions.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 20,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 30.86
+    },
+    {
       "path": "FoodDiary.Web.Api/Program.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.46
+      "structuralRiskScore": 3.48
     },
     {
       "path": "FoodDiary.Web.Api/Properties/AssemblyInfo.cs",
@@ -39202,11 +39242,11 @@
     },
     {
       "path": "Modules/Identity/PersistenceModel/IdentityPersistenceModelRegistration.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationApplicationBuilderExtensions.cs",
@@ -39601,6 +39641,14 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/RecipePluginConsentPage.cs",
+      "nonBlankLines": 76,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.52
+    },
+    {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/TelegramAuthenticationIntentHttpResponse.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -39743,6 +39791,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 23.98
+    },
+    {
+      "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "nonBlankLines": 159,
+      "decisionPoints": 35,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 55.68
     },
     {
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
@@ -42431,6 +42487,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.12
+    },
+    {
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Plugin/ShoppingListPluginTools.cs",
+      "nonBlankLines": 48,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.96
     },
     {
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Requests/CreateShoppingListHttpRequest.cs",
@@ -48087,6 +48151,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.02
+    },
+    {
+      "path": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
+      "nonBlankLines": 60,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.2
     },
     {
       "path": "Modules/Recipes/Presentation/Requests/CatalogRecipeHttpRequest.cs",

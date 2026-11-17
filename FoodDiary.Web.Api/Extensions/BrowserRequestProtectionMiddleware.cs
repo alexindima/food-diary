@@ -16,7 +16,8 @@ public sealed class BrowserRequestProtectionMiddleware(RequestDelegate next) {
         bool browser = context.User.Identity?.IsAuthenticated == true &&
             (string.Equals(context.User.Identity.AuthenticationType, BrowserSessionCookieService.Scheme, StringComparison.Ordinal) || ImpersonationCookieService.HasContext(context));
         bool unsafeMethod = !HttpMethods.IsGet(context.Request.Method) && !HttpMethods.IsHead(context.Request.Method) && !HttpMethods.IsOptions(context.Request.Method);
-        if (!bearer && (browser || authEntry) && unsafeMethod &&
+        bool oauthConsentForm = context.GetEndpoint()?.Metadata.GetMetadata<RecipePluginOAuthEndpoints.ConsentEndpoint>() is not null;
+        if (!bearer && (browser || authEntry) && unsafeMethod && !oauthConsentForm &&
             context.Request.Headers.XRequestedWith != "XMLHttpRequest") {
             await RejectAsync(context, context.RequestAborted);
             return;

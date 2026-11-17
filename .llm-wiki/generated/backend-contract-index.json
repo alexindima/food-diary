@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1428,
     "ambiguousContracts": 34,
-    "consumerEdges": 11610,
-    "productionConsumerEdges": 6468,
+    "consumerEdges": 11622,
+    "productionConsumerEdges": 6480,
     "testConsumerEdges": 5142,
     "consumedContracts": 1428,
     "unconsumedContracts": 0
@@ -37642,6 +37642,19 @@
         "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateRecipeHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/CreateRecipeHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -38241,6 +38254,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateShoppingListHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Requests/CreateShoppingListHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Plugin/ShoppingListPluginTools.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90005,6 +90031,19 @@
         "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IIdempotencyStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
       "isTest": false,
       "referenceCount": 1
@@ -124833,6 +124872,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Plugin/ShoppingListPluginTools.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Commands/CreateMealFromRecognition/CreateMealFromRecognitionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -125211,6 +125263,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Presentation/Controllers/RecipesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -133062,6 +133127,32 @@
         "Modules/Users/Contracts/Common/IUserAccessTokenSecurityReader.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
       "isTest": false,
       "referenceCount": 1
@@ -133244,6 +133335,19 @@
         "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -133260,6 +133364,19 @@
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/AccessTokenSessionReader.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSessionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Authentication/Common/IUserAccessTokenSessionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "isTest": false,
+      "referenceCount": 3
     },
     {
       "contract": "IUserAccessTokenSessionReader",
@@ -157064,6 +157181,19 @@
         "Modules/Recipes/Presentation/Requests/RecipeIngredientHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeIngredientHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/RecipeIngredientHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Presentation/Requests/RecipeStepHttpRequest.cs",
       "isTest": false,
       "referenceCount": 1
@@ -157325,6 +157455,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Presentation/Mappings/RecipeHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeStepHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Recipes/Presentation/Requests/RecipeStepHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -164501,6 +164644,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ShoppingListItemHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/MealPlanning/Presentation/ShoppingLists/Requests/ShoppingListItemHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/MealPlanning/Presentation/ShoppingLists/Plugin/ShoppingListPluginTools.cs",
       "isTest": false,
       "referenceCount": 1
     },

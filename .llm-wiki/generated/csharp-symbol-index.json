@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4858,
-    "symbols": 4826,
+    "sourceFiles": 4867,
+    "symbols": 4839,
     "interfaceImplementationLinks": 217,
     "dependencyInjectionRegistrations": 77,
     "kinds": {
-      "class": 2488,
+      "class": 2497,
       "enum": 77,
       "interface": 435,
-      "record": 1668,
+      "record": 1672,
       "record class": 5,
       "record struct": 144,
       "union": 9
@@ -33,8 +33,8 @@
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
-      "Options": 77,
-      "Other": 2018,
+      "Options": 78,
+      "Other": 2030,
       "Query": 310,
       "QueryHandler": 224,
       "ReadModelRepository": 33,
@@ -1520,6 +1520,20 @@
       "line": 2
     },
     {
+      "name": "RecipePluginAccess",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/RecipePluginAccess.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipePluginLinks",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Policies/RecipePluginLinks.cs",
+      "line": 2
+    },
+    {
       "name": "CursorPaginationHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -2567,7 +2581,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "ApiAuthenticationServiceCollectionExtensions",
@@ -2680,6 +2694,20 @@
       "role": "Validator",
       "path": "FoodDiary.Web.Api/Extensions/JwtTokenUseValidator.cs",
       "line": 5
+    },
+    {
+      "name": "RecipePluginMcpExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/RecipePluginMcpExtensions.cs",
+      "line": 21
+    },
+    {
+      "name": "RecipePluginServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/RecipePluginServiceCollectionExtensions.cs",
+      "line": 9
     },
     {
       "name": "RequestObservabilityMiddleware",
@@ -2850,11 +2878,18 @@
       "line": 19
     },
     {
+      "name": "RecipePluginOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.Web.Api/Options/RecipePluginOptions.cs",
+      "line": 2
+    },
+    {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Program.cs",
-      "line": 29
+      "line": 30
     },
     {
       "name": "NotificationTestScheduler",
@@ -18453,6 +18488,13 @@
       "line": 4
     },
     {
+      "name": "RecipePluginConsentPage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Features/Auth/Responses/RecipePluginConsentPage.cs",
+      "line": 9
+    },
+    {
       "name": "TelegramAuthenticationIntentHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -18584,6 +18626,20 @@
       "role": "Service",
       "path": "Modules/Identity/Presentation/Security/ImpersonationCookieService.cs",
       "line": 12
+    },
+    {
+      "name": "RecipePluginOAuthEndpoints",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "line": 21
+    },
+    {
+      "name": "ConsentEndpoint",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/RecipePluginOAuthEndpoints.cs",
+      "line": 177
     },
     {
       "name": "RefreshTokenCookieService",
@@ -20936,6 +20992,20 @@
       "role": "Other",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Mappings/ShoppingListHttpResponseMappings.cs",
       "line": 6
+    },
+    {
+      "name": "ShoppingListPluginTools",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Plugin/ShoppingListPluginTools.cs",
+      "line": 16
+    },
+    {
+      "name": "PluginShoppingItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Presentation/ShoppingLists/Plugin/ShoppingListPluginTools.cs",
+      "line": 52
     },
     {
       "name": "CreateShoppingListHttpRequest",
@@ -25759,6 +25829,27 @@
       "role": "Other",
       "path": "Modules/Recipes/Presentation/Mappings/RecipeHttpResponseMappings.cs",
       "line": 8
+    },
+    {
+      "name": "RecipePluginTools",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
+      "line": 16
+    },
+    {
+      "name": "PluginRecipeStep",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
+      "line": 64
+    },
+    {
+      "name": "PluginRecipeIngredient",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Presentation/Plugin/RecipePluginTools.cs",
+      "line": 66
     },
     {
       "name": "CatalogRecipeHttpRequest",
@@ -35464,7 +35555,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 234
+      "line": 235
     },
     {
       "service": "IAdminDashboardReadService",

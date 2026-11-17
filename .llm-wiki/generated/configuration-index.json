@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 70,
+    "optionTypes": 71,
     "configurationFiles": 8,
     "configurationKeys": 305,
     "environmentVariables": 188
@@ -653,6 +653,24 @@
         "RequireHealthConsent"
       ],
       "path": "FoodDiary.Web.Api/Options/PrivacyOptions.cs"
+    },
+    {
+      "type": "RecipePluginOptions",
+      "section": "RecipePlugin",
+      "properties": [
+        "ClientId",
+        "CodexClientId",
+        "CodexRedirectUri",
+        "Enabled",
+        "EncryptionCertificatePassword",
+        "EncryptionCertificatePath",
+        "Issuer",
+        "RedirectUri",
+        "SigningCertificatePassword",
+        "SigningCertificatePath",
+        "WebOrigin"
+      ],
+      "path": "FoodDiary.Web.Api/Options/RecipePluginOptions.cs"
     },
     {
       "type": "RecipeVideoOptions",

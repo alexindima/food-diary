@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" />
+    <PackageReference Include="OpenIddict.Server.AspNetCore" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 

@@ -108,6 +108,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddApiOptions()
                 .AddLocalization()
                 .AddApiAuthentication(configuration)
+                .AddRecipePlugin(configuration, environment)
                 .AddApiHostServices()
                 .AddApiDataProtection(configuration)
                 .AddApiSwagger()

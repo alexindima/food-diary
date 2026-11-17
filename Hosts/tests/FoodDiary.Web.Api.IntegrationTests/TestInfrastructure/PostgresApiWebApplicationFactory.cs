@@ -64,7 +64,10 @@ public class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, 
 
         await CreateDatabaseAsync(connectionStringBuilder.Database).ConfigureAwait(false);
         _connectionString = connectionStringBuilder.ConnectionString;
+        await PrepareDatabaseAsync(_connectionString).ConfigureAwait(false);
     }
+
+    protected virtual Task PrepareDatabaseAsync(string connectionString) => Task.CompletedTask;
 
     public new async Task DisposeAsync() {
         EmailSender.Clear();

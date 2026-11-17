@@ -697,7 +697,27 @@
             "version": null
           },
           {
+            "name": "ModelContextProtocol.AspNetCore",
+            "version": null
+          },
+          {
             "name": "Npgsql.OpenTelemetry",
+            "version": null
+          },
+          {
+            "name": "OpenIddict.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "OpenIddict.Server.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "OpenIddict.Validation.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "OpenIddict.Validation.ServerIntegration",
             "version": null
           },
           {
@@ -6257,6 +6277,10 @@
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
             "version": null
+          },
+          {
+            "name": "OpenIddict.EntityFrameworkCore",
+            "version": null
           }
         ]
       },
@@ -6286,6 +6310,10 @@
         "packageReferences": [
           {
             "name": "Asp.Versioning.Mvc",
+            "version": null
+          },
+          {
+            "name": "OpenIddict.Server.AspNetCore",
             "version": null
           },
           {
@@ -7692,6 +7720,10 @@
         "packageReferences": [
           {
             "name": "Asp.Versioning.Mvc",
+            "version": null
+          },
+          {
+            "name": "ModelContextProtocol",
             "version": null
           }
         ]
@@ -10174,6 +10206,10 @@
         "packageReferences": [
           {
             "name": "Asp.Versioning.Mvc",
+            "version": null
+          },
+          {
+            "name": "ModelContextProtocol",
             "version": null
           }
         ]
