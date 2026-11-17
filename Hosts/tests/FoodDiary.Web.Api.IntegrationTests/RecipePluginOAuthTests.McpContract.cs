@@ -82,10 +82,14 @@ public sealed partial class RecipePluginOAuthTests {
         await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder =>
             builder.ConfigureTestServices(services => services.Replace(ServiceDescriptor.Singleton<IIdempotencyStore>(store))));
         using HttpClient browser = app.CreateClient(new WebApplicationFactoryClientOptions {
-            AllowAutoRedirect = false, HandleCookies = true, BaseAddress = WebOrigin,
+            AllowAutoRedirect = false,
+            HandleCookies = true,
+            BaseAddress = WebOrigin,
         });
         using HttpClient oauth = app.CreateClient(new WebApplicationFactoryClientOptions {
-            AllowAutoRedirect = false, HandleCookies = false, BaseAddress = Origin,
+            AllowAutoRedirect = false,
+            HandleCookies = false,
+            BaseAddress = Origin,
         });
         await RegisterBrowserAsync(browser);
         string token = (await ConnectAsync(browser, oauth, RecipePluginAccess.RecipeScope)).GetProperty("access_token").GetString()!;
@@ -121,10 +125,14 @@ public sealed partial class RecipePluginOAuthTests {
                 return new FailOnceSender(mediator, () => Interlocked.Exchange(ref failurePending, 0) == 1);
             }))));
         using HttpClient browser = app.CreateClient(new WebApplicationFactoryClientOptions {
-            AllowAutoRedirect = false, HandleCookies = true, BaseAddress = WebOrigin,
+            AllowAutoRedirect = false,
+            HandleCookies = true,
+            BaseAddress = WebOrigin,
         });
         using HttpClient oauth = app.CreateClient(new WebApplicationFactoryClientOptions {
-            AllowAutoRedirect = false, HandleCookies = false, BaseAddress = Origin,
+            AllowAutoRedirect = false,
+            HandleCookies = false,
+            BaseAddress = Origin,
         });
         await RegisterBrowserAsync(browser);
         JsonElement grant = await ConnectAsync(browser, oauth, RecipePluginAccess.RecipeScope);
@@ -249,7 +257,9 @@ public sealed partial class RecipePluginOAuthTests {
     }
 
     private HttpClient CreateBrowser(Uri origin, bool cookies) => factory.CreateClient(new WebApplicationFactoryClientOptions {
-        AllowAutoRedirect = false, HandleCookies = cookies, BaseAddress = origin,
+        AllowAutoRedirect = false,
+        HandleCookies = cookies,
+        BaseAddress = origin,
     });
 
     private static async Task RegisterBrowserAsync(HttpClient browser) {
