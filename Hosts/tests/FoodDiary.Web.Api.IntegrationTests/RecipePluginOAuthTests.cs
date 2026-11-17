@@ -105,9 +105,14 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
         using HttpResponseMessage afterRevoke = await SendMcpAsync(oauth, bothToken, RecipePluginAccess.ShoppingListTool, ShoppingListArguments());
         Assert.Equal(HttpStatusCode.Unauthorized, afterRevoke.StatusCode);
 
-        factory.ValidationClock.UtcNow += TimeSpan.FromMinutes(6);
-        using HttpResponseMessage expired = await SendMcpAsync(oauth, recipeToken, RecipePluginAccess.RecipeTool, RecipeArguments());
-        Assert.Equal(HttpStatusCode.Unauthorized, expired.StatusCode);
+        DateTimeOffset originalTime = factory.ValidationClock.UtcNow;
+        try {
+            factory.ValidationClock.UtcNow += TimeSpan.FromMinutes(6);
+            using HttpResponseMessage expired = await SendMcpAsync(oauth, recipeToken, RecipePluginAccess.RecipeTool, RecipeArguments());
+            Assert.Equal(HttpStatusCode.Unauthorized, expired.StatusCode);
+        } finally {
+            factory.ValidationClock.UtcNow = originalTime;
+        }
     }
 
     private static object RecipeArguments() => new {
@@ -123,21 +128,8 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
 
     private static async Task<JsonElement> ConnectAsync(HttpClient browser, HttpClient oauth, string scopes,
         bool browserNavigation = false, string clientId = ClientId, string callback = Callback) {
-        string verifier = WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(32));
-        string state = Guid.NewGuid().ToString("N");
-        var parameters = new Dictionary<string, string>(StringComparer.Ordinal) {
-            ["client_id"] = clientId,
-            ["redirect_uri"] = callback,
-            ["response_type"] = "code",
-            ["resource"] = Resource.AbsoluteUri,
-            ["scope"] = scopes,
-            ["state"] = state,
-            ["code_challenge"] = WebEncoders.Base64UrlEncode(SHA256.HashData(Encoding.ASCII.GetBytes(verifier))),
-            ["code_challenge_method"] = "S256",
-        };
-        string authorize = QueryHelpers.AddQueryString(RecipePluginAccess.AuthorizationPath,
-            parameters.Select(static parameter => new KeyValuePair<string, string?>(parameter.Key, parameter.Value)));
-        using HttpResponseMessage consent = await browser.GetAsync(authorize);
+        (Dictionary<string, string> parameters, string verifier) = CreateAuthorization(scopes, clientId, callback);
+        using HttpResponseMessage consent = await browser.GetAsync(AuthorizationUrl(parameters));
         string page = await consent.Content.ReadAsStringAsync();
         Assert.True(consent.StatusCode == HttpStatusCode.OK, $"Consent page returned {consent.StatusCode}: {page}");
         Assert.Equal("strict-origin", Assert.Single(consent.Headers.GetValues("Referrer-Policy")));
@@ -174,7 +166,7 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
             : Assert.IsType<Uri>(approved.Headers.Location, exactMatch: false);
         Assert.Equal(callback, redirect.GetLeftPart(UriPartial.Path));
         Dictionary<string, StringValues> query = QueryHelpers.ParseQuery(redirect.Query);
-        Assert.Equal(state, query["state"].ToString());
+        Assert.Equal(parameters["state"], query["state"].ToString());
         Assert.Equal(Origin.AbsoluteUri, query["iss"].ToString());
         string code = Assert.Single(query["code"])!;
         var exchange = new Dictionary<string, string>(StringComparer.Ordinal) {
@@ -222,6 +214,10 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
 
     private static async Task<JsonElement> CallAsync(HttpClient browser, string token, string tool, object arguments) {
         using HttpResponseMessage response = await SendMcpAsync(browser, token, tool, arguments);
+        return await ReadMcpResultAsync(response);
+    }
+
+    private static async Task<JsonElement> ReadMcpResultAsync(HttpResponseMessage response) {
         string body = await response.Content.ReadAsStringAsync();
         Assert.True(response.StatusCode == HttpStatusCode.OK, $"MCP call returned {response.StatusCode}: {body}");
         string json = response.Content.Headers.ContentType?.MediaType is "text/event-stream"
@@ -233,26 +229,8 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
     }
 
     private static async Task<HttpResponseMessage> SendMcpAsync(HttpClient client, string token, string tool, object arguments) {
-        using var request = new HttpRequestMessage(HttpMethod.Post, RecipePluginAccess.ResourcePath);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        request.Headers.Accept.ParseAdd("application/json, text/event-stream");
-        request.Headers.Add("MCP-Protocol-Version", ProtocolVersion);
-        request.Headers.Add("Mcp-Method", "tools/call");
+        using HttpRequestMessage request = CreateMcpRequest(token, "tools/call", new { name = tool, arguments, _meta = McpClientMetadata() });
         request.Headers.Add("Mcp-Name", tool);
-        request.Content = JsonContent.Create(new {
-            jsonrpc = "2.0",
-            id = 1,
-            method = "tools/call",
-            @params = new {
-                name = tool,
-                arguments,
-                _meta = new Dictionary<string, object>(StringComparer.Ordinal) {
-                    ["io.modelcontextprotocol/protocolVersion"] = ProtocolVersion,
-                    ["io.modelcontextprotocol/clientInfo"] = new { name = "FoodDiary integration test", version = "1.0" },
-                    ["io.modelcontextprotocol/clientCapabilities"] = new { },
-                },
-            },
-        });
         return await client.SendAsync(request);
     }
 
