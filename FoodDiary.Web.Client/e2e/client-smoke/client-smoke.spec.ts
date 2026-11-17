@@ -1603,6 +1603,64 @@ test.describe('dashboard nutrition trend geometry', () => {
     }
 });
 
+test('Telegram disconnection requires confirmation and keeps the profile open', async ({ page }) => {
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    await page.addInitScript(() => {
+        localStorage.setItem('fd_language', 'ru');
+    });
+    const originalSession = '00000000-0000-4000-8000-000000000002';
+    const replacementSession = '00000000-0000-4000-8000-000000000003';
+    const user = { ...createUser(), language: 'ru', hasPassword: true, hasGoogleIdentity: false, hasTelegramIdentity: true };
+    let current = user;
+    let sessionId = originalSession;
+    let attempts = 0;
+    await page.route('**/api/v1/auth/session', async route => route.fulfill(jsonResponse({ sessionId, roles: ['User'], user: current })));
+    await page.route('**/api/v1/users/info', async route => route.fulfill(jsonResponse(current)));
+    await page.route('**/api/v1/users/overview', async route => route.fulfill(jsonResponse({ ...createUserOverview(), user: current })));
+    await page.route('**/api/v1/auth/telegram/disconnect/confirm', async route => {
+        const payload = route.request().postDataJSON() as { password?: string };
+        attempts++;
+        if (attempts === 1) {
+            expect(payload.password).toBe('incorrect-fixture-password');
+            await route.fulfill({ ...jsonResponse({ error: 'Authentication.InvalidCredentials' }), status: 401 });
+            return;
+        }
+        expect(payload.password).toBe('fixture-password');
+        current = { ...user, hasTelegramIdentity: false };
+        sessionId = replacementSession;
+        await route.fulfill(jsonResponse({ sessionId, roles: ['User'], user: current }));
+    });
+
+    await page.goto('/profile');
+    await page.getByText('Безопасность и вход', { exact: true }).click();
+    const telegram = page.locator('fd-user-manage-telegram-connection');
+    const disconnect = telegram.getByRole('button', { name: 'Отключить Telegram' });
+    const dialog = page.getByRole('dialog', { name: 'Отключить Telegram' });
+    await disconnect.click();
+    await dialog.getByRole('button', { name: 'Отмена' }).click();
+    await expect(dialog).toBeHidden();
+    await expect(disconnect).toBeVisible();
+    expect(attempts).toBe(0);
+
+    await disconnect.click();
+    const password = dialog.getByLabel('Текущий пароль');
+    const submit = dialog.getByRole('button', { name: 'Отключить Telegram' });
+    await expect(submit).toBeDisabled();
+    await password.fill('incorrect-fixture-password');
+    await submit.click();
+    await expect(dialog.getByRole('alert')).toContainText('Не удалось подтвердить личность');
+    await expect(page).toHaveURL(/\/profile$/u);
+
+    await password.fill('fixture-password');
+    await submit.click();
+    await expect(dialog).toBeHidden();
+    await expect(telegram).toContainText('Не подключён');
+    await expect(page.getByText('Telegram отключён. Вы остались в профиле.')).toBeVisible();
+    await expect(page).toHaveURL(/\/profile$/u);
+    expect(attempts).toBe(2);
+});
+
 test.describe('dashboard regression measurement charts', () => {
     test.use({ timezoneId: 'UTC' });
     test.beforeEach(async ({ page }) => {

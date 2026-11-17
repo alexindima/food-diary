@@ -5,6 +5,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.Login;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -79,7 +80,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
         throttle.TryBeginAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(new PasswordLoginAttempt("key", OwnerToken: null, RetryAfterSeconds: 30));
         IUserAuthenticationIdentityService users = Substitute.For<IUserAuthenticationIdentityService>();
         var tokens = new StubAuthenticationTokenService();
-        var handler = new LoginCommandHandler(users, new StubDateTimeProvider(), tokens, throttle);
+        var handler = new LoginCommandHandler(
+            new PasswordAuthenticationService(users, new StubDateTimeProvider(), throttle),
+            tokens);
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand("user@example.com", "wrong"), CancellationToken.None);
 
@@ -101,7 +104,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
         IUserAuthenticationIdentityService users = Substitute.For<IUserAuthenticationIdentityService>();
         users.AuthenticatePasswordAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<UserAuthenticationPrincipalModel>(new Error(code, "failure")));
-        var handler = new LoginCommandHandler(users, new StubDateTimeProvider(), new StubAuthenticationTokenService(), throttle);
+        var handler = new LoginCommandHandler(
+            new PasswordAuthenticationService(users, new StubDateTimeProvider(), throttle),
+            new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand("user@example.com", "wrong"), CancellationToken.None);
 
@@ -113,8 +118,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task PasswordThrottle_SuccessClearsFailuresBeforeIssuingTokensAsync() {
         IPasswordLoginThrottle throttle = CreatePasswordLoginThrottle();
         var user = User.Create("user@example.com", "secret");
-        var handler = new LoginCommandHandler(CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
-            new StubDateTimeProvider(), new StubAuthenticationTokenService(), throttle);
+        var handler = new LoginCommandHandler(
+            new PasswordAuthenticationService(CreateUserAuthenticationIdentityService(new StubUserRepository(user)), new StubDateTimeProvider(), throttle),
+            new StubAuthenticationTokenService());
 
         ResultAssert.Success(await handler.Handle(new LoginCommand("user@example.com", "secret"), CancellationToken.None));
 
@@ -127,7 +133,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
         IUserAuthenticationIdentityService users = Substitute.For<IUserAuthenticationIdentityService>();
         users.AuthenticatePasswordAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException<Result<UserAuthenticationPrincipalModel>>(new InvalidOperationException("dependency failed")));
-        var handler = new LoginCommandHandler(users, new StubDateTimeProvider(), new StubAuthenticationTokenService(), throttle);
+        var handler = new LoginCommandHandler(
+            new PasswordAuthenticationService(users, new StubDateTimeProvider(), throttle),
+            new StubAuthenticationTokenService());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(new LoginCommand("user@example.com", "wrong"), CancellationToken.None));
 
@@ -144,7 +152,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
                 await cancellation.CancelAsync();
                 return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
             });
-        var handler = new LoginCommandHandler(users, new StubDateTimeProvider(), new StubAuthenticationTokenService(), throttle);
+        var handler = new LoginCommandHandler(
+            new PasswordAuthenticationService(users, new StubDateTimeProvider(), throttle),
+            new StubAuthenticationTokenService());
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handler.Handle(new LoginCommand("user@example.com", "wrong"), cancellation.Token));
 
@@ -158,8 +168,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
         throttle.CompleteAsync(Arg.Any<PasswordLoginAttempt>(), Arg.Any<PasswordLoginAttemptOutcome>(), Arg.Any<CancellationToken>()).Returns(returnThis: false);
         var user = User.Create("user@example.com", "secret");
         var tokens = new StubAuthenticationTokenService();
-        var handler = new LoginCommandHandler(CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
-            new StubDateTimeProvider(), tokens, throttle);
+        var handler = new LoginCommandHandler(
+            new PasswordAuthenticationService(CreateUserAuthenticationIdentityService(new StubUserRepository(user)), new StubDateTimeProvider(), throttle),
+            tokens);
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand("user@example.com", "secret"), CancellationToken.None);
 

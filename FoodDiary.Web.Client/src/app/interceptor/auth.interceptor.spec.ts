@@ -55,7 +55,7 @@ afterEach(() => {
 });
 
 describe('Telegram unlink confirmation', () => {
-    it.each(['/auth/telegram/unlink/oidc/complete', '/auth/telegram/disconnect'])(
+    it.each(['/auth/telegram/unlink/oidc/complete', '/auth/telegram/disconnect', '/auth/telegram/disconnect/confirm'])(
         'does not refresh or replay a rejected account disconnect %s',
         pathSuffix => {
             const path = `${root}${pathSuffix}`;

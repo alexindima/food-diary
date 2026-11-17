@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2840,
-    "symbols": 889,
+    "typescriptFiles": 2842,
+    "symbols": 890,
     "routes": 113,
     "features": 46,
     "specs": 859,
     "localeFiles": 5,
     "roles": {
-      "Component": 515,
+      "Component": 516,
       "Directive": 20,
       "Facade": 91,
       "Other": 41,
@@ -1191,6 +1191,7 @@
         "ProfileDietologistFacade",
         "ProfileManageFacade",
         "ProfileMeasurementsService",
+        "TelegramDisconnectDialogComponent",
         "UpdateSuccessDialogComponent",
         "UserManageBackupEmailComponent",
         "UserManageComparisonWidgetsComponent",
@@ -5739,6 +5740,13 @@
       "line": 14
     },
     {
+      "name": "TelegramDisconnectDialogComponent",
+      "role": "Component",
+      "selector": "fd-telegram-disconnect-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog.ts",
+      "line": 42
+    },
+    {
       "name": "UpdateSuccessDialogComponent",
       "role": "Component",
       "selector": "fd-user-manage-success-dialog",
@@ -5771,7 +5779,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 33
+      "line": 36
     },
     {
       "name": "PrivacySettingsComponent",
@@ -6877,7 +6885,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 47
+      "line": 48
     },
     {
       "name": "GlobalErrorHandler",
@@ -7234,7 +7242,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
-      "line": 146
+      "line": 153
     },
     {
       "name": "TelegramBotSdk",
@@ -8453,8 +8461,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4227,
-      "russianProperties": 4227,
+      "englishProperties": 4230,
+      "russianProperties": 4230,
       "countsMatch": true
     },
     {

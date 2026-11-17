@@ -46,6 +46,7 @@ export class AuthInterceptor implements HttpInterceptor {
         '/auth/telegram/complete-link',
         '/auth/telegram/unlink/oidc/complete',
         '/auth/telegram/disconnect',
+        '/auth/telegram/disconnect/confirm',
         '/auth/telegram/link',
         '/auth/admin-sso/exchange',
     ];

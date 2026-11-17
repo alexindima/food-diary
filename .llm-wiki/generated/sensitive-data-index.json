@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1827,
-    "credential": 177,
+    "candidateFields": 1829,
+    "credential": 179,
     "identity": 217,
     "health": 838,
     "financial": 169,
     "privateContent": 426,
-    "boundaryFiles": 252,
+    "boundaryFiles": 253,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 3
   },
@@ -429,6 +429,20 @@
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommand.cs",
       "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "credential",
+      "name": "GoogleCredential",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs",
+      "line": 13
     },
     {
       "category": "credential",
@@ -13706,6 +13720,13 @@
         "identity"
       ],
       "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommand.cs",

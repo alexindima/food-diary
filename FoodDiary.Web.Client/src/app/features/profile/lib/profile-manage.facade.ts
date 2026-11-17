@@ -1,7 +1,6 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, firstValueFrom, type Subscription } from 'rxjs';
@@ -25,6 +24,10 @@ import { ThemeService } from '../../../shared/theme/theme.service';
 import { ProfileMeasurementsService } from '../api/profile-measurements.service';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog';
+import {
+    TelegramDisconnectDialogComponent,
+    type TelegramDisconnectDialogData,
+} from '../dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';
 
 const BACKUP_EMAIL_RESEND_MS = 60_000;
@@ -208,32 +211,24 @@ export class ProfileManageFacade {
         if (user?.hasTelegramIdentity !== true || this.isUnlinkingTelegram()) {
             return;
         }
-        if (!this.hasBackupLogin(user)) {
+        const { canUsePassword, canUseGoogle } = this.getTelegramDisconnectOptions(user);
+        if (!canUsePassword && !canUseGoogle) {
             this.telegramUnlinkError.set('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
             return;
         }
         this.isUnlinkingTelegram.set(true);
         this.telegramUnlinkError.set(null);
         try {
-            const confirmed = await firstValueFrom(
+            const updated = await firstValueFrom(
                 this.dialogService
-                    .open(FdUiConfirmDialogComponent, {
-                        preset: 'confirm',
-                        data: {
-                            title: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
-                            message: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK_CONFIRM'),
-                            confirmLabel: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
-                            cancelLabel: this.translateService.instant('COMMON.CANCEL'),
-                        },
+                    .open<TelegramDisconnectDialogComponent, TelegramDisconnectDialogData, User>(TelegramDisconnectDialogComponent, {
+                        data: { owner: user.id, canUsePassword, canUseGoogle },
                     })
                     .afterClosed(),
             );
-            if (confirmed !== true) {
-                return;
-            }
-            if (await this.unlinkFlow.disconnectAsync()) {
-                this.user.set({ ...user, hasTelegramIdentity: false });
-                await this.authService.onLogoutAsync(true);
+            if (updated !== undefined && updated.id === this.user()?.id) {
+                this.user.set(updated);
+                this.toastService.success(this.translateService.instant('USER_MANAGE.TELEGRAM_DISCONNECT_SUCCESS'));
             }
         } catch {
             this.telegramUnlinkError.set('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
@@ -242,8 +237,11 @@ export class ProfileManageFacade {
         }
     }
 
-    private hasBackupLogin(user: User): boolean {
-        return user.hasGoogleIdentity === true || (user.hasPassword && user.isEmailConfirmed && user.email !== null);
+    private getTelegramDisconnectOptions(user: User): Omit<TelegramDisconnectDialogData, 'owner'> {
+        return {
+            canUsePassword: user.hasPassword && user.isEmailConfirmed && user.email !== null,
+            canUseGoogle: user.hasGoogleIdentity === true,
+        };
     }
 
     public async updateNotificationPreferencesAsync(preferences: {

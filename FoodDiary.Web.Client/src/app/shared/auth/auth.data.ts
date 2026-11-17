@@ -76,3 +76,6 @@ export type AuthResponse = {
     impersonationReason?: string | null;
     rememberMe?: boolean;
 };
+
+export type TelegramDisconnectConfirmation =
+    { password: string; googleCredential?: never } | { googleCredential: string; password?: never };

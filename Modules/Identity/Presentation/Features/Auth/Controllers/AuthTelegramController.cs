@@ -1,7 +1,10 @@
 using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
+using FoodDiary.Modules.Identity.Contracts.Errors;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Filters;
 
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -31,9 +34,24 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
-    public Task<IActionResult> DisconnectTelegram([FromCurrentUser] Guid userId) =>
-        HandleNoContent(TelegramOnboardingHttpMappings.ToDisconnectCommand(userId, HttpContext));
+    public Task<IActionResult> DisconnectTelegram() =>
+        Task.FromResult(Result.Failure(IdentityErrors.ReauthenticationRequired).ToNoContentActionResult(this));
+
+    [Authorize]
+    [HttpPost("disconnect/confirm")]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [PasswordLoginRetryAfter]
+    [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    public Task<IActionResult> ConfirmTelegramDisconnect([FromCurrentUser] Guid userId, [FromBody] DisconnectTelegramHttpRequest request) =>
+        HandleOk(TelegramOnboardingHttpMappings.ToDisconnectCommand(request, userId, HttpContext), static value => value.ToHttpResponse());
 
     [Authorize]
     [HttpPost("backup-email")]

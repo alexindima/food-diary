@@ -4,6 +4,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.Register;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Authentication.Services;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
@@ -100,10 +101,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.DeleteAccount(DateTime.UtcNow);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new LoginCommandHandler(
-            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
-            new StubDateTimeProvider(),
-            tokenService,
-            CreatePasswordLoginThrottle());
+            new PasswordAuthenticationService(CreateUserAuthenticationIdentityService(new StubUserRepository(user)), new StubDateTimeProvider(), CreatePasswordLoginThrottle()),
+            tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(Assert.IsType<string>(user.Email), "secret"), CancellationToken.None);
 
@@ -117,10 +116,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("login@example.com", "secret");
         var tokenService = new StubAuthenticationTokenService();
         var handler = new LoginCommandHandler(
-            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
-            new StubDateTimeProvider(),
-            tokenService,
-            CreatePasswordLoginThrottle());
+            new PasswordAuthenticationService(CreateUserAuthenticationIdentityService(new StubUserRepository(user)), new StubDateTimeProvider(), CreatePasswordLoginThrottle()),
+            tokenService);
         var clientContext = new AuthenticationClientContext("password", "203.0.113.10", "test-agent");
 
         Result<AuthenticationModel> result = await handler.Handle(

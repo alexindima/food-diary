@@ -5,7 +5,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Users.Contracts.Common;
 
 public interface IUserTelegramAccountService {
-    Task<Result> DisconnectAsync(UserId userId, long securityVersion, CancellationToken cancellationToken = default);
+    Task<Result<UserAuthenticationPrincipalModel>> DisconnectAsync(UserId userId, long securityVersion, CancellationToken cancellationToken = default);
 
     Task<Result<bool>> IsRegisteredAsync(long telegramUserId, CancellationToken cancellationToken = default);
 

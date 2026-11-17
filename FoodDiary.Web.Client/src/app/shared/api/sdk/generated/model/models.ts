@@ -77,6 +77,7 @@ export * from './dietologist-invitation-for-current-user-http-response';
 export * from './dietologist-permissions-http-request';
 export * from './dietologist-permissions-http-response';
 export * from './dietologist-relationship-http-response';
+export * from './disconnect-telegram-http-request';
 export * from './exchange-impersonation-http-request';
 export * from './exchange-impersonation-http-response';
 export * from './exchange-telegram-oidc-http-request';

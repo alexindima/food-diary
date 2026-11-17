@@ -18,6 +18,7 @@ import { BrowserStorageService } from '../../../shared/platform/browser-storage.
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { ProfileMeasurementsService } from '../api/profile-measurements.service';
+import { TelegramDisconnectDialogComponent } from '../dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog';
 import { ProfileManageFacade } from './profile-manage.facade';
 
 const user: User = {
@@ -70,10 +71,8 @@ let notificationService: {
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let authService: {
     getUserId: ReturnType<typeof vi.fn>;
-    disconnectTelegram: ReturnType<typeof vi.fn>;
     startTelegramUnlink: ReturnType<typeof vi.fn>;
     requestTelegramBackupEmail: ReturnType<typeof vi.fn>;
-    unlinkTelegram: ReturnType<typeof vi.fn>;
     onLogoutAsync: ReturnType<typeof vi.fn>;
     startAdminSso: ReturnType<typeof vi.fn>;
     linkGoogle: ReturnType<typeof vi.fn>;
@@ -121,12 +120,10 @@ beforeEach(() => {
     dialogService = { open: vi.fn() };
     authService = {
         getUserId: vi.fn().mockReturnValue(user.id),
-        disconnectTelegram: vi.fn().mockReturnValue(of(void 0)),
         startTelegramUnlink: vi
             .fn()
             .mockReturnValue(of({ authorizationUrl: `https://oauth.telegram.org/auth?state=${'s'.repeat(STATE_LENGTH)}` })),
         requestTelegramBackupEmail: vi.fn().mockReturnValue(of(void 0)),
-        unlinkTelegram: vi.fn().mockReturnValue(of(void 0)),
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
         linkGoogle: vi.fn().mockReturnValue(of({ ...user, hasGoogleIdentity: true })),
@@ -304,64 +301,39 @@ describe('ProfileManageFacade backup email', () => {
 });
 
 describe('ProfileManageFacade account actions', () => {
-    it('disconnects inside FoodDiary without opening Telegram login', async () => {
-        facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
-        dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
+    it('offers the configured confirmations and keeps the user in their profile', async () => {
+        const linked = { ...user, hasTelegramIdentity: true, hasGoogleIdentity: true, hasPassword: true };
+        const updated = { ...linked, hasTelegramIdentity: false };
+        facade.user.set(linked);
+        dialogService.open.mockReturnValue({ afterClosed: () => of(updated) });
 
         await facade.unlinkTelegramAsync();
 
-        expect(authService.disconnectTelegram, 'Disconnect must stay inside FoodDiary').toHaveBeenCalledOnce();
+        expect(dialogService.open).toHaveBeenCalledWith(TelegramDisconnectDialogComponent, {
+            data: { owner: user.id, canUsePassword: true, canUseGoogle: true },
+        });
+        expect(facade.user()).toEqual(updated);
+        expect(authService.onLogoutAsync).not.toHaveBeenCalled();
+        expect(toastService.success).toHaveBeenCalledWith('USER_MANAGE.TELEGRAM_DISCONNECT_SUCCESS');
         expect(browser.open).not.toHaveBeenCalled();
-        expect(authService.startTelegramUnlink).not.toHaveBeenCalled();
-        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
     });
 
-    it('does not unlink the last sign-in method', async () => {
+    it('does not offer to unlink the last sign-in method', async () => {
         facade.user.set({ ...user, email: null, hasTelegramIdentity: true, hasGoogleIdentity: false });
         await facade.unlinkTelegramAsync();
         expect(facade.telegramUnlinkError()).toBe('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
         expect(dialogService.open).not.toHaveBeenCalled();
-        expect(authService.unlinkTelegram).not.toHaveBeenCalled();
     });
 
-    it('does not unlink after cancelling confirmation', async () => {
+    it('keeps Telegram linked when confirmation is cancelled', async () => {
         facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
-        await facade.unlinkTelegramAsync();
-        expect(authService.unlinkTelegram).not.toHaveBeenCalled();
-        expect(facade.isUnlinkingTelegram()).toBe(false);
-    });
+        dialogService.open.mockReturnValue({ afterClosed: () => of(undefined) });
 
-    it('disconnects from a browser without Mini App proof', async () => {
-        facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
-        dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
-        telegram.getInitData.mockReturnValue(null);
         await facade.unlinkTelegramAsync();
-        expect(authService.unlinkTelegram).not.toHaveBeenCalled();
-        expect(authService.disconnectTelegram).toHaveBeenCalledOnce();
-        expect(authService.startTelegramUnlink).not.toHaveBeenCalled();
-        expect(browser.open).not.toHaveBeenCalled();
-    });
 
-    it('disconnects without reusing the Mini App assertion', async () => {
-        facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
-        dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
-        await facade.unlinkTelegramAsync();
-        expect(authService.disconnectTelegram).toHaveBeenCalledOnce();
-        expect(authService.startTelegramUnlink).not.toHaveBeenCalled();
-        expect(authService.unlinkTelegram).not.toHaveBeenCalled();
-        expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
-        expect(facade.user()?.hasTelegramIdentity).toBe(false);
-    });
-
-    it('keeps the current binding and session when unlink fails', async () => {
-        facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
-        dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
-        authService.disconnectTelegram.mockReturnValue(throwError(() => new Error('request failed')));
-        await facade.unlinkTelegramAsync();
-        expect(authService.onLogoutAsync).not.toHaveBeenCalled();
         expect(facade.user()?.hasTelegramIdentity).toBe(true);
-        expect(facade.telegramUnlinkError()).toBe('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
-        expect(facade.globalError()).toBeNull();
+        expect(facade.isUnlinkingTelegram()).toBe(false);
+        expect(toastService.success).not.toHaveBeenCalled();
     });
 });
 

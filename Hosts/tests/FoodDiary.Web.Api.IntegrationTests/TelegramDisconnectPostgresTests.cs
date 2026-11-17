@@ -44,7 +44,7 @@ public sealed class TelegramDisconnectPostgresTests(PostgresApiWebApplicationFac
         }
         using HttpClient otherDevice = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         await LoginAsync(otherDevice, email, miniApp: false);
-        await LoginAsync(client, email, miniApp);
+        JsonElement oldLogin = await LoginAsync(client, email, miniApp);
         using HttpResponseMessage beforeProfile = await client.GetAsync("/api/v1/users/overview");
         beforeProfile.EnsureSuccessStatusCode();
         JsonElement beforeOverview = await beforeProfile.Content.ReadFromJsonAsync<JsonElement>();
@@ -57,23 +57,47 @@ public sealed class TelegramDisconnectPostgresTests(PostgresApiWebApplicationFac
         string botToken = botSession.GetProperty("accessToken").GetString()!;
 
         using HttpClient anonymous = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
-        using HttpResponseMessage denied = await anonymous.PostAsJsonAsync("/api/v1/auth/telegram/disconnect", new { });
+        using HttpResponseMessage denied = await anonymous.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { });
         Assert.Equal(HttpStatusCode.Unauthorized, denied.StatusCode);
         if (!miniApp) {
             client.DefaultRequestHeaders.Remove("X-Requested-With");
-            using HttpResponseMessage csrf = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect", new { });
+            using HttpResponseMessage csrf = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { });
             Assert.Equal(HttpStatusCode.Forbidden, csrf.StatusCode);
             client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
             client.DefaultRequestHeaders.Add(BrowserSessionCookieService.SessionHeader, Guid.NewGuid().ToString("D"));
-            using HttpResponseMessage stale = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect", new { });
+            using HttpResponseMessage stale = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { });
             Assert.Equal(HttpStatusCode.Unauthorized, stale.StatusCode);
             client.DefaultRequestHeaders.Remove(BrowserSessionCookieService.SessionHeader);
         }
-        using HttpResponseMessage disconnected = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect", new { userId = foreignId });
-        Assert.Equal(HttpStatusCode.NoContent, disconnected.StatusCode);
-        using HttpResponseMessage oldCurrent = await client.GetAsync("/api/v1/users/info");
+        using HttpResponseMessage legacy = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect", new { });
+        Assert.Equal(HttpStatusCode.Forbidden, legacy.StatusCode);
+        using HttpResponseMessage missingProof = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { });
+        Assert.Equal(HttpStatusCode.Forbidden, missingProof.StatusCode);
+        using HttpResponseMessage badProof = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { password = "incorrect" });
+        Assert.Equal(HttpStatusCode.Unauthorized, badProof.StatusCode);
+        using HttpResponseMessage stillLinked = await client.GetAsync("/api/v1/users/overview");
+        stillLinked.EnsureSuccessStatusCode();
+        Assert.True((await stillLinked.Content.ReadFromJsonAsync<JsonElement>())["user"]["hasTelegramIdentity"].GetBoolean());
+        using HttpResponseMessage otherBefore = await otherDevice.GetAsync("/api/v1/users/info");
+        otherBefore.EnsureSuccessStatusCode();
+
+        using HttpResponseMessage disconnected = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { password = Password, userId = foreignId });
+        Assert.Equal(HttpStatusCode.OK, disconnected.StatusCode);
+        JsonElement replacement = await disconnected.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(owner, replacement["user"]["id"].GetGuid());
+        Assert.False(replacement["user"]["hasTelegramIdentity"].GetBoolean());
+        if (miniApp) {
+            using HttpResponseMessage oldCurrent = await client.GetAsync("/api/v1/users/info");
+            Assert.Equal(HttpStatusCode.Unauthorized, oldCurrent.StatusCode);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", replacement["accessToken"].GetString());
+        } else {
+            Assert.NotEqual(oldLogin["sessionId"].GetGuid(), replacement["sessionId"].GetGuid());
+        }
+        using HttpResponseMessage repeated = await client.PostAsJsonAsync("/api/v1/auth/telegram/disconnect/confirm", new { password = Password });
+        Assert.Equal(HttpStatusCode.Conflict, repeated.StatusCode);
+        using HttpResponseMessage current = await client.GetAsync("/api/v1/users/info");
+        current.EnsureSuccessStatusCode();
         using HttpResponseMessage oldOther = await otherDevice.GetAsync("/api/v1/users/info");
-        Assert.Equal(HttpStatusCode.Unauthorized, oldCurrent.StatusCode);
         Assert.Equal(HttpStatusCode.Unauthorized, oldOther.StatusCode);
         using HttpClient oldBot = app.CreateClient();
         oldBot.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", botToken);

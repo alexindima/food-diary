@@ -395,14 +395,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "cbb79da82e00ace89fffc2f428d728fb7393a57186a4f44910c265afdc4db0bd",
-          "reviewReason": "The full OpenAPI snapshot adds the two admin credential POST operations with existing DTOs and no structural breaks. The SDK guide records 81 selected operations, the existing generation boundary, and the shared admin cookie response. Generated SDK and HTTP contract checks passed."
+          "sha256": "26c06ba66e8deb7ee11ce59aa10b2ff4502991916e6aa1a6d8efe0e4e549d944",
+          "reviewReason": "Reviewed Telegram disconnect OpenAPI change. Confirmation uses a new authenticated operation with an explicit authentication response and keeps the legacy response schema. The legacy operation prevents unconfirmed unlink and returns reauthentication required. Frontend SDK and full snapshot are regenerated from the host."
         }
       ],
-      "reason": "The SDK job still uses the same frozen OpenAPI generation and comparison steps. Its npm ci no longer calls the obsolete braces patch. User and Admin SDK drift checks passed on the updated lockfile.",
-      "baseRef": "HEAD",
-      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
-      "reviewedAtUtc": "2026-11-16T14:27:09.4687276Z"
+      "reason": "Reviewed Telegram disconnect OpenAPI change. Confirmation uses a new authenticated operation with an explicit authentication response and keeps the legacy response schema. The legacy operation prevents unconfirmed unlink and returns reauthentication required. Frontend SDK and full snapshot are regenerated from the host.",
+      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
+      "gitHead": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
+      "reviewedAtUtc": "2026-11-17T09:09:56.9034769Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -411,8 +411,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d949c00b05f35e58e63127a58e81b86c9a1f20dfde15ad8b44a1a3b1a654edb1",
-          "reviewReason": "The regenerated health index adds one routed public standalone component, TermsOfServiceComponent, reached by both localized terms URLs. The selector candidate count and backend dependencies are unchanged. The added component has no direct spec. The build prerendered both locales, SEO checks validated them, and routing and translation tests passed. The existing architecture review guidance still applies."
+          "sha256": "4dbbd7f0f8c22f26eef91d75debf58e1dadb1036af53e553d63d12d0a1bc04cf",
+          "reviewReason": "Generated index adds the dynamic profile disconnect dialog. It has no template selector consumer or direct component spec because the facade opens it through the dialog service. Facade tests and the Chromium profile regression exercise that path."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -435,10 +435,10 @@
           "reviewReason": "Reviewed the exact Initializer-to-USDA Contracts dependency and the regenerated architecture index. The project edge count rises from 1693 to 1694, with zero dependency violations, unused allowances or untracked projects. The runtime query and dependency review described here still apply. All 2286 architecture tests passed."
         }
       ],
-      "reason": "The regenerated health index adds one routed public standalone component, TermsOfServiceComponent, reached by both localized terms URLs. The selector candidate count and backend dependencies are unchanged. The added component has no direct spec. The build prerendered both locales, SEO checks validated them, and routing and translation tests passed. The existing architecture review guidance still applies.",
-      "baseRef": "origin/master",
-      "gitHead": "67c3fcb67302afc539cd31f39d9eede1c463ddf8",
-      "reviewedAtUtc": "2026-11-16T18:41:43.2904587Z"
+      "reason": "Generated index adds the dynamic profile disconnect dialog. It has no template selector consumer or direct component spec because the facade opens it through the dialog service. Facade tests and the Chromium profile regression exercise that path.",
+      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
+      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
+      "reviewedAtUtc": "2026-11-17T09:28:44.8964326Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1282,8 +1282,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "15179bbdb374e1866f79617b4a39b8044d63faed0ea0d9cd23e1014a54a1b28a",
-          "reviewReason": "The additional USDA title is public catalog text. The sensitive-data index changes are line shifts. Product ownership, visibility, private comment rules, provider calls, and user data handling are unchanged."
+          "sha256": "4976d190a845d1bf406db16996dc143052f9bcfb4b3f2cb3122c9f534cf74a84",
+          "reviewReason": "Generated inventory adds the transient password and Google confirmation fields. The command excludes both from JSON serialization and redacts its string representation. The flow uses existing identity verification, stores no new credential data, and issues the existing session type."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1296,10 +1296,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "The additional USDA title is public catalog text. The sensitive-data index changes are line shifts. Product ownership, visibility, private comment rules, provider calls, and user data handling are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
-      "reviewedAtUtc": "2026-11-16T11:57:29.9171437Z"
+      "reason": "Generated inventory adds the transient password and Google confirmation fields. The command excludes both from JSON serialization and redacts its string representation. The flow uses existing identity verification, stores no new credential data, and issues the existing session type.",
+      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
+      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
+      "reviewedAtUtc": "2026-11-17T09:28:46.3262586Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1485,14 +1485,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5ecf62702993306e729b8196582c85f5399e33fb182f01e41c95ebbfa57c5ef4",
-          "reviewReason": "Regeneration for the SSR stop configuration changed only the source fingerprint. Inventory records, topology query behavior and review guidance are unchanged."
+          "sha256": "16ff1e76aa9be4ebd2f0f01a1c0012dac6f5c72bd629d96cb6108d451de010a3",
+          "reviewReason": "Runtime topology change is limited to the generated source fingerprint and source-file count. The diff introduces no services, workers, runtime host bindings, configuration or migrations."
         }
       ],
-      "reason": "Regeneration for the SSR stop configuration changed only the source fingerprint. Inventory records, topology query behavior and review guidance are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "ce85a147d78de41cabb0d8467b2161de9dfcf3df",
-      "reviewedAtUtc": "2026-11-17T05:10:00.0898247Z"
+      "reason": "Runtime topology change is limited to the generated source fingerprint and source-file count. The diff introduces no services, workers, runtime host bindings, configuration or migrations.",
+      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
+      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
+      "reviewedAtUtc": "2026-11-17T09:28:48.9532885Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1867,8 +1867,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ab738f8fc6173ddebd999d3bdeb32f0077b1010e5411e6f5173e625721484a84",
-          "reviewReason": "Repository catalog changes move five FavoriteProductsController source anchors by four lines. HTTP route and verb inventory and context lookup semantics are unchanged."
+          "sha256": "902df2b8e018910b738670328ec4d1abe35e0be7c4b563c8a041523dcafbe22d",
+          "reviewReason": "Generated repository catalog adds only POST auth/telegram/disconnect/confirm and updated controller line anchors. The auth controller and application command remain in Identity and the user write remains in Users."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1911,10 +1911,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Repository catalog changes move five FavoriteProductsController source anchors by four lines. HTTP route and verb inventory and context lookup semantics are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
-      "reviewedAtUtc": "2026-11-16T11:57:30.4164631Z"
+      "reason": "Generated repository catalog adds only POST auth/telegram/disconnect/confirm and updated controller line anchors. The auth controller and application command remain in Identity and the user write remains in Users.",
+      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
+      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
+      "reviewedAtUtc": "2026-11-17T09:28:47.7254341Z"
     },
     {
       "pageId": "workflow.review-diff",

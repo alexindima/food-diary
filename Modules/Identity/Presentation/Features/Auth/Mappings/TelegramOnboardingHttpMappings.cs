@@ -28,8 +28,9 @@ public static class TelegramOnboardingHttpMappings {
 
     public static UnlinkTelegramCommand ToUnlinkCommand(this TelegramAuthHttpRequest request, Guid userId) => new(userId, request.InitData);
 
-    public static DisconnectTelegramCommand ToDisconnectCommand(Guid userId, HttpContext context) =>
-        new(userId, TelegramAccountRequestContext.ReadSecurityVersion(context));
+    public static DisconnectTelegramCommand ToDisconnectCommand(DisconnectTelegramHttpRequest request, Guid userId, HttpContext context) =>
+        new(userId, TelegramAccountRequestContext.ReadSecurityVersion(context), request.Password, request.GoogleCredential,
+            context.ToAuthenticationClientContext("telegram-disconnect"), request.RememberMe);
 
     public static StartTelegramUnlinkCommand ToUnlinkStartCommand(Guid userId, string binding) => new(userId, binding);
 

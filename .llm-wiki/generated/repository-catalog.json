@@ -20,7 +20,7 @@
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
     "controllers": 116,
-    "endpoints": 383,
+    "endpoints": 384,
     "agentGuides": 297,
     "documentationPages": 253
   },
@@ -16576,37 +16576,42 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/disconnect",
-            "line": 29
+            "line": 32
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/auth/telegram/disconnect/confirm",
+            "line": 43
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/backup-email",
-            "line": 39
+            "line": 57
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/unlink",
-            "line": 49
+            "line": 67
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/verify",
-            "line": 59
+            "line": 77
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/login-widget",
-            "line": 70
+            "line": 88
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/link",
-            "line": 81
+            "line": 99
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
-            "line": 93
+            "line": 111
           }
         ]
       },

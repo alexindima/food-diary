@@ -18,6 +18,7 @@ import type {
     PasswordResetRequest,
     RegisterRequest,
     RestoreAccountRequest,
+    TelegramDisconnectConfirmation,
 } from '../shared/auth/auth.data';
 import { AuthCookieSessionService } from '../shared/auth/auth-cookie-session.service';
 import { ACCOUNT_ACCESS_STORAGE_KEY, AuthMetadataStorageService } from '../shared/auth/auth-metadata-storage.service';
@@ -317,8 +318,31 @@ export class AuthService {
             .pipe(map(value => requireSdkFields(value, ['authorizationUrl'])));
     }
 
-    public disconnectTelegram(): Observable<void> {
-        return this.telegram.client.postAuthTelegramDisconnect({ version: this.telegram.version });
+    public disconnectTelegram(owner: User['id'], confirmation: TelegramDisconnectConfirmation): Observable<User> {
+        const version = this.sessionVersion;
+        return this.cookieSessions.run(() => {
+            if (this.getUserId() !== owner || version !== this.sessionVersion) {
+                throw new Error('Account changed');
+            }
+
+            const rememberMe = confirmation.googleCredential !== undefined || this.authMetadata.isRemembered();
+            return this.telegram.client
+                .postAuthConfirmTelegramDisconnect({
+                    version: this.telegram.version,
+                    disconnectTelegramHttpRequest: { ...confirmation, rememberMe },
+                })
+                .pipe(
+                    map(authResponseFromSdk),
+                    map(response => {
+                        if (this.getUserId() !== owner || version !== this.sessionVersion || response.user.id !== owner) {
+                            throw new Error('Account changed');
+                        }
+
+                        this.onLogin(response, rememberMe);
+                        return response.user;
+                    }),
+                );
+        });
     }
 
     public completeTelegramUnlink(code: TelegramOAuthCode, state: TelegramOAuthState): Observable<void> {

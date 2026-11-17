@@ -76,36 +76,41 @@ internal sealed class UserTelegramAccountService(
         return Result.Success();
     }
 
-    public Task<Result> DisconnectAsync(UserId userId, long securityVersion, CancellationToken cancellationToken = default) =>
+    public Task<Result<UserAuthenticationPrincipalModel>> DisconnectAsync(UserId userId, long securityVersion, CancellationToken cancellationToken = default) =>
         UnlinkCoreAsync(userId, expectedTelegramUserId: null, securityVersion, cancellationToken);
 
-    public Task<Result> UnlinkAsync(UserId userId, long telegramUserId, long securityVersion, CancellationToken cancellationToken = default) =>
-        UnlinkCoreAsync(userId, telegramUserId, securityVersion, cancellationToken);
+    public async Task<Result> UnlinkAsync(UserId userId, long telegramUserId, long securityVersion, CancellationToken cancellationToken = default) =>
+        await UnlinkCoreAsync(userId, telegramUserId, securityVersion, cancellationToken);
 
-    private async Task<Result> UnlinkCoreAsync(UserId userId, long? expectedTelegramUserId, long securityVersion, CancellationToken cancellationToken) {
+    private async Task<Result<UserAuthenticationPrincipalModel>> UnlinkCoreAsync(UserId userId, long? expectedTelegramUserId, long securityVersion,
+        CancellationToken cancellationToken) {
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
-            return Result.Failure(error);
+            return Result.Failure<UserAuthenticationPrincipalModel>(error);
         }
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         if (!user!.TelegramUserId.HasValue) {
-            return Result.Success();
+            return expectedTelegramUserId.HasValue
+                ? Result.Success(UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, now))
+                : Result.Failure<UserAuthenticationPrincipalModel>(TelegramProofStale);
         }
         if ((expectedTelegramUserId.HasValue && user.TelegramUserId != expectedTelegramUserId) || user.SecurityVersion != securityVersion) {
-            return Result.Failure(new Error("Authentication.TelegramProofStale", "Confirm the current Telegram account again.", ErrorKind.Conflict));
+            return Result.Failure<UserAuthenticationPrincipalModel>(TelegramProofStale);
         }
         bool hasPasswordLogin = user.HasPassword && user.Email is not null && user.IsEmailConfirmed;
         bool hasGoogleLogin = user.GoogleIssuer is not null && user.GoogleSubject is not null;
         if (!hasPasswordLogin && !hasGoogleLogin) {
-            return Result.Failure(UserErrors.LastSignInMethod);
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.LastSignInMethod);
         }
 
         user.UnlinkTelegram();
         await userWriteRepository.UpdateAsync(user, cancellationToken);
-        await sessionRevocationService.RevokeAllAsync(
-            userId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
-        return Result.Success();
+        await sessionRevocationService.RevokeAllAsync(userId, now, cancellationToken);
+        return Result.Success(UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, now));
     }
+
+    private static readonly Error TelegramProofStale = new("Authentication.TelegramProofStale", "Confirm the current Telegram account again.", ErrorKind.Conflict);
 
     public async Task<Result> AddVerifiedEmailAsync(
         UserId userId, string email, long securityVersion, CancellationToken cancellationToken = default) {

@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 120,
+    "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 137,
+    "componentsWithoutDirectSpecs": 138,
     "criticalSymbolsWithoutTestReferences": 52,
     "explicitDebtMarkers": 12
   },
@@ -1467,6 +1467,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.spec.ts"
+    },
+    {
+      "class": "TelegramDisconnectDialogComponent",
+      "selector": "fd-telegram-disconnect-dialog",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog.html",
+      "specPath": null
     },
     {
       "class": "UpdateSuccessDialogComponent",
@@ -5442,6 +5450,17 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/profile/components/privacy-marketing-settings/privacy-marketing-settings.scss"
       ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "TelegramDisconnectDialogComponent",
+      "selector": "fd-telegram-disconnect-dialog",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
