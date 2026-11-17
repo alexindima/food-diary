@@ -1490,14 +1490,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "752a43f10d7f6854673fc7fb4268269a0a7bf20f06f2e63a81660b101467574c",
-          "reviewReason": "OAuth client registration runs in API startup before the listener opens. The topology drops the separate hosted registration. Architecture and OAuth integration checks verified the host boundary and registration before browser login."
+          "sha256": "2c1b89aa5a8358fe9c42c6c7b3d14e9e40ae20d2e3f6759f5478aebf8d300f99",
+          "reviewReason": "Reviewed the generated runtime topology diff for the OAuth consent restyle and VPS deployment serialization. Only the source fingerprint changed; hosts, workers, integrations and recurring jobs in the index retain the same records, so the runtime impact guide remains accurate."
         }
       ],
-      "reason": "OAuth client registration runs in API startup before the listener opens. The topology drops the separate hosted registration. Architecture and OAuth integration checks verified the host boundary and registration before browser login.",
-      "baseRef": "HEAD",
-      "gitHead": "9e91cc3424fcd3b89fb33a1e91ca4a0215ecf26e",
-      "reviewedAtUtc": "2026-11-17T11:34:15.9263351Z"
+      "reason": "Reviewed the generated runtime topology diff for the OAuth consent restyle and VPS deployment serialization. Only the source fingerprint changed; hosts, workers, integrations and recurring jobs in the index retain the same records, so the runtime impact guide remains accurate.",
+      "baseRef": "1b7e29920a9b57dff01b093c29d50003d734db23",
+      "gitHead": "968824e6a940c629b1893314c63eaa565e6f0db1",
+      "reviewedAtUtc": "2026-11-17T16:50:54.9501608Z"
     },
     {
       "pageId": "workflow-security-review",
