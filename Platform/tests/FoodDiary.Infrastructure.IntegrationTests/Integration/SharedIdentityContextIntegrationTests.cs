@@ -55,7 +55,13 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
         (User user, UserRefreshTokenSession session) = await SeedAsync(provider);
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         IdentityDbContext owned = provider.GetRequiredService<IdentityDbContext>();
-        Assert.Equal(8, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(12, owned.Model.GetEntityTypes().Count());
+        string[] oauthTables = [.. owned.Model.GetEntityTypes()
+            .Select(entity => entity.GetTableName())
+            .OfType<string>()
+            .Where(table => table.StartsWith("OpenIddict", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)];
+        Assert.Equal(["OpenIddictApplications", "OpenIddictAuthorizations", "OpenIddictScopes", "OpenIddictTokens"], oauthTables);
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<UserRefreshTokenSession>());
         Assert.Empty(shared.ChangeTracker.Entries<UserLoginEvent>());
