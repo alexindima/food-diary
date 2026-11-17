@@ -101,6 +101,19 @@ reconnect after their drain deadline. This is not durable message replay.
 
 ## Capacity and failure recovery
 
+Deploy checks the owner of the HTTP, HTTPS and QUIC sockets on ports `80` and
+`443` before pulling images or restarting services. A listener owned by a
+process outside the production Compose Nginx fails preflight with its socket
+and PID. Deploy leaves the serving proxy running for operator recovery.
+
+After a reboot, check the Compose Nginx container and its logs if public HTTPS
+is unavailable. Restore the Compose service with
+`docker compose --profile full up -d --no-deps nginx` from `/opt/fooddiary`.
+If a system `nginx.service` is already serving requests, validate the container
+configuration and candidate readiness before a coordinated handover. Confirm
+the container owns the public ports and the main and admin sites answer over
+HTTPS before retrying Deploy.
+
 Overlap requires at least 256 MiB available RAM and 768 MiB available RAM plus
 free swap before each candidate startup. These are admission thresholds, not a
 guarantee about peak memory. API startup is serialized against initializers; SSR

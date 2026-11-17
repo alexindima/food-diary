@@ -202,6 +202,23 @@ class Deployment:
     def running(self, service):
         return self.compose("ps", "--status", "running", "--quiet", service).stdout.strip()
 
+    def verify_ingress(self):
+        listeners = self.run("ss", "-H", "-lntup", "( sport = :80 or sport = :443 )").stdout.splitlines()
+        if not listeners:
+            return
+        nginx = self.running("nginx")
+        managed_pids = set(self.run("docker", "top", nginx, "-eo", "pid").stdout.split()[1:]) if nginx else set()
+        for listener in listeners:
+            owners = set(re.findall(r"\bpid=(\d+),", listener))
+            if owners and owners <= managed_pids:
+                continue
+            protocol, _, _, _, address, *_ = listener.split()
+            unexpected = ", ".join(sorted(owners - managed_pids)) or "unknown"
+            raise DeploymentError(
+                f"Production ingress {protocol} {address} is held outside Compose Nginx (PID {unexpected}). "
+                "Restore the managed Nginx before deploying; see the blue-green deployment runbook."
+            )
+
     def request(self, url, data=None, headers=None, timeout=5):
         request = Request(url, data=data, headers={"Connection": "close", **(headers or {})})
         try:
@@ -516,7 +533,8 @@ class Deployment:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("initialize-routing", "plan", "migration-started", "start-api", "start-ssr", "switch", "finish", "abort"))
+    parser.add_argument("command", choices=("initialize-routing", "verify-ingress", "plan", "migration-started",
+                                            "start-api", "start-ssr", "switch", "finish", "abort"))
     parser.add_argument("--root", type=Path, default=Path("/opt/fooddiary"))
     parser.add_argument("--mode", choices=("auto", "maintenance"), default="auto")
     arguments = parser.parse_args()
@@ -524,6 +542,8 @@ def main():
     try:
         if arguments.command == "initialize-routing":
             deployment.initialize_routing()
+        elif arguments.command == "verify-ingress":
+            deployment.verify_ingress()
         elif arguments.command == "plan":
             print(deployment.plan(arguments.mode))
         elif arguments.command == "migration-started":
