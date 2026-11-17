@@ -261,6 +261,22 @@
       "reviewedAtUtc": "2026-11-13T09:10:43.2417561Z"
     },
     {
+      "pageId": "system.runtime-topology",
+      "pagePath": ".llm-wiki/system/runtime-topology.md",
+      "pageSha256": "7d1ad93c96ff8b16284cb6a79f29e033adff7c073820283fda38bd8ad8fa396b",
+      "sources": [
+        {
+          "path": "docker-compose.yml",
+          "sha256": "a304f6a2c32646ef4726fb891eb57a8026efc4fc662a4c86f194969709ea2d7e",
+          "reviewReason": "Both Node SSR slots now run under Docker init and receive SIGTERM. Verified both resolved Compose services and Linux container shutdown. The declared service topology, ports, dependencies and trust boundaries still match this page."
+        }
+      ],
+      "reason": "Both Node SSR slots now run under Docker init and receive SIGTERM. Verified both resolved Compose services and Linux container shutdown. The declared service topology, ports, dependencies and trust boundaries still match this page.",
+      "baseRef": "HEAD",
+      "gitHead": "f4be04dd1f29da946a7763358f2e02baed62faaf",
+      "reviewedAtUtc": "2026-11-17T05:07:45.9431275Z"
+    },
+    {
       "pageId": "workflow-acceptance-evidence-matrix",
       "pagePath": ".llm-wiki/workflows/acceptance-evidence-matrix.md",
       "pageSha256": "afbb2b3953ad84c0ee010f6ddc21c3a2ed157d398d98547d078567a506d928a7",
@@ -1469,14 +1485,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dabad432ff39c0c15f2b92981f4ab33fd50f30f1ee6ce7fb98f429bc6400ed16",
-          "reviewReason": "The runtime topology change is limited to the source fingerprint and file count after adding the language type. Hosts, integrations, registrations and recurring jobs are unchanged."
+          "sha256": "5ecf62702993306e729b8196582c85f5399e33fb182f01e41c95ebbfa57c5ef4",
+          "reviewReason": "Regeneration for the SSR stop configuration changed only the source fingerprint. Inventory records, topology query behavior and review guidance are unchanged."
         }
       ],
-      "reason": "The runtime topology change is limited to the source fingerprint and file count after adding the language type. Hosts, integrations, registrations and recurring jobs are unchanged.",
+      "reason": "Regeneration for the SSR stop configuration changed only the source fingerprint. Inventory records, topology query behavior and review guidance are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
-      "reviewedAtUtc": "2026-11-16T11:57:30.8817519Z"
+      "gitHead": "ce85a147d78de41cabb0d8467b2161de9dfcf3df",
+      "reviewedAtUtc": "2026-11-17T05:10:00.0898247Z"
     },
     {
       "pageId": "workflow-security-review",
