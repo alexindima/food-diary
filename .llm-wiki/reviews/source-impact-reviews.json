@@ -236,8 +236,8 @@
         },
         {
           "path": "Directory.Packages.props",
-          "sha256": "464b06ab274a1c51308d3386ba15e6725c75a5cf97d6deb5490e585c990e725f",
-          "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
+          "sha256": "d1c43b2f2e0b223a5c87a05fa58f399fa5df498d4293c524af8a992ebe7ca9d8",
+          "reviewReason": "The central package list adds OpenIddict server and validation packages and the MCP ASP.NET transport. The catalog already inventories central package versions and project references. Regenerated the affected indexes and verified locked restore, the API OAuth and Swagger tests, and the project dependency matrix."
         },
         {
           "path": "docs/architecture/backend-modules.json",
@@ -255,10 +255,10 @@
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
+      "reason": "The central package list adds OpenIddict server and validation packages and the MCP ASP.NET transport. The catalog already inventories central package versions and project references. Regenerated the affected indexes and verified locked restore, the API OAuth and Swagger tests, and the project dependency matrix.",
       "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:43.2417561Z"
+      "gitHead": "650b55625428713baa9f909105260a3f1039fbac",
+      "reviewedAtUtc": "2026-11-17T11:09:36.0600166Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -802,8 +802,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "dd0364ad00c3a105a305d7bdcf0e693fad5a669f8c9fbc696d69a6c99878105b",
-          "reviewReason": "Read rollout workflow and generated configuration. Bot logging adds one Warning category; S3 pins affect isolated CI/local fixtures only. Grafana installer validates Loki separately, retains private rollback backups and receivers; apply follows deployed heartbeat. Guidance remains accurate."
+          "sha256": "0526331acc88b4ba5f94aa34e4bfa4b513916b2e15081a1bec5de62332f231b3",
+          "reviewReason": "The option index now includes RecipePlugin configuration and its validated certificate paths. The main API activation and existing feature-off default are documented in the backend runbook. Locked package restore and all recipe plugin option tests passed."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
@@ -811,10 +811,10 @@
           "reviewReason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks."
         }
       ],
-      "reason": "The shared backend TFM is net11.0. EF Core 10 and Npgsql 10 continue to resolve from central packages. The extractor target and in-process reader were verified by the affected index, query and audit smoke checks.",
-      "baseRef": "HEAD",
-      "gitHead": "b643ffb94a9d0ad95ce5e13d9f11bcd7d70a0ab7",
-      "reviewedAtUtc": "2026-11-13T09:10:44.2038320Z"
+      "reason": "The option index now includes RecipePlugin configuration and its validated certificate paths. The main API activation and existing feature-off default are documented in the backend runbook. Locked package restore and all recipe plugin option tests passed.",
+      "baseRef": "master",
+      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
+      "reviewedAtUtc": "2026-11-17T11:13:27.0610504Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -1282,8 +1282,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4976d190a845d1bf406db16996dc143052f9bcfb4b3f2cb3122c9f534cf74a84",
-          "reviewReason": "Generated inventory adds the transient password and Google confirmation fields. The command excludes both from JSON serialization and redacts its string representation. The flow uses existing identity verification, stores no new credential data, and issues the existing session type."
+          "sha256": "72ca42e51589c80c73b51d54cd2774b0470564dec885763cabd881ba3a9265b4",
+          "reviewReason": "The sensitive inventory includes certificate password option names. OAuth credentials are excluded from Nginx query logging, browser consent is antiforgery-protected, and tests cover scoped tool access and revocation. Production account-lifecycle verification remains part of the cutover."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1296,10 +1296,10 @@
           "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
         }
       ],
-      "reason": "Generated inventory adds the transient password and Google confirmation fields. The command excludes both from JSON serialization and redacts its string representation. The flow uses existing identity verification, stores no new credential data, and issues the existing session type.",
-      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
-      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
-      "reviewedAtUtc": "2026-11-17T09:28:46.3262586Z"
+      "reason": "The sensitive inventory includes certificate password option names. OAuth credentials are excluded from Nginx query logging, browser consent is antiforgery-protected, and tests cover scoped tool access and revocation. Production account-lifecycle verification remains part of the cutover.",
+      "baseRef": "master",
+      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
+      "reviewedAtUtc": "2026-11-17T11:13:28.0162702Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1485,14 +1485,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "16ff1e76aa9be4ebd2f0f01a1c0012dac6f5c72bd629d96cb6108d451de010a3",
-          "reviewReason": "Runtime topology change is limited to the generated source fingerprint and source-file count. The diff introduces no services, workers, runtime host bindings, configuration or migrations."
+          "sha256": "d505c0d2836f5b48288b5088a0e3bfd8af9dc2808818e6fae6b5996de8773bf7",
+          "reviewReason": "The topology records the conditional OAuth client registration in the existing API. No second application host is introduced in this rollout. Split-origin OAuth integration tests and the loopback Nginx forwarding test passed."
         }
       ],
-      "reason": "Runtime topology change is limited to the generated source fingerprint and source-file count. The diff introduces no services, workers, runtime host bindings, configuration or migrations.",
-      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
-      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
-      "reviewedAtUtc": "2026-11-17T09:28:48.9532885Z"
+      "reason": "The topology records the conditional OAuth client registration in the existing API. No second application host is introduced in this rollout. Split-origin OAuth integration tests and the loopback Nginx forwarding test passed.",
+      "baseRef": "master",
+      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
+      "reviewedAtUtc": "2026-11-17T11:13:30.1332447Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1867,8 +1867,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "902df2b8e018910b738670328ec4d1abe35e0be7c4b563c8a041523dcafbe22d",
-          "reviewReason": "Generated repository catalog adds only POST auth/telegram/disconnect/confirm and updated controller line anchors. The auth controller and application command remain in Identity and the user write remains in Users."
+          "sha256": "28822160b9b94bcc5130b79713f78526200c23e7c931f7b5a6fe4060a0e47050",
+          "reviewReason": "The regenerated catalog records the existing project package references after adding OpenIddict and the MCP transport. Context query commands and catalog schema are unchanged. The dependency matrix and affected Wiki checks passed."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1911,10 +1911,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Generated repository catalog adds only POST auth/telegram/disconnect/confirm and updated controller line anchors. The auth controller and application command remain in Identity and the user write remains in Users.",
-      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
-      "gitHead": "63b4558ab605cc8ea55ea4d2d963adfcefa67c32",
-      "reviewedAtUtc": "2026-11-17T09:28:47.7254341Z"
+      "reason": "The regenerated catalog records the existing project package references after adding OpenIddict and the MCP transport. Context query commands and catalog schema are unchanged. The dependency matrix and affected Wiki checks passed.",
+      "baseRef": "master",
+      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
+      "reviewedAtUtc": "2026-11-17T11:13:29.1404045Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -655,6 +655,45 @@ Validation after recovery:
 - `FoodDiary.JobManager` starts without recurring-job registration verification errors
 - no recurring cleanup job remains in a repeated retry-exhausted state
 
+## FoodDiary ChatGPT integration
+
+The main API owns the MCP tools and OAuth grants. The tunnel forwards
+`mcp.fooddiary.club` to the production Nginx loopback listener at
+`http://127.0.0.1:15435`. OAuth consent and the links to saved records open on
+`fooddiary.club`, where the browser already has its FoodDiary session cookie.
+
+The deployment applies the Identity OAuth migration before enabling the feature.
+Set these values in `/etc/fooddiary/fooddiary.env` and keep the OAuth client ID
+and callback from the existing OpenAI draft.
+
+```dotenv
+RecipePlugin__Enabled=true
+RecipePlugin__Issuer=https://mcp.fooddiary.club/
+RecipePlugin__WebOrigin=https://fooddiary.club/
+RecipePlugin__ClientId=fooddiary-chatgpt-review
+RecipePlugin__RedirectUri=https://chatgpt.com/connector_platform_oauth_redirect
+```
+
+Supply both `RecipePlugin__SigningCertificatePath` and
+`RecipePlugin__EncryptionCertificatePath` with separate PKCS#12 files that
+both API slots can read. The existing API key-ring volume can hold these files
+under its own `recipe-plugin` subdirectory. Keep the certificate passwords in
+the deployment environment. If using the private Codex build, configure its
+separate `RecipePlugin__CodexClientId` and fixed loopback `RecipePlugin__CodexRedirectUri`.
+
+Copy the public domain challenge and the review assets into
+`/var/www/fooddiary-mcp` before moving the tunnel. Run its connector with host
+networking and set its ingress service to `http://127.0.0.1:15435` with
+`originRequest.httpHostHeader` set to `mcp.fooddiary.club`. Keep the existing
+tunnel identifier and the public MCP endpoint.
+
+Verify discovery on `mcp.fooddiary.club`, consent on `fooddiary.club`, both
+MCP writes, and both record links using a dedicated reviewer account in the
+main application. Supply its credentials through the OpenAI review form.
+Stop the isolated API, database, and proxy after this verification passes and
+keep their data available for rollback. Revert the tunnel target to the
+review stack if switching back is necessary.
+
 ## Post-Incident Template
 
 Record these items after each incident:

@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Notifications.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Presentation.Extensions;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.RecipePlugin;
 using FoodDiary.Modules.Ai.Presentation.Extensions;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Telemetry;
@@ -43,6 +44,10 @@ public static class ApiApplicationBuilderExtensions {
 
             app.UseCors(ApiCompositionConstants.CorsPolicyName);
             app.UseAuthentication();
+            RecipePluginOptions? plugin = app.Services.GetService<RecipePluginOptions>();
+            if (plugin is not null) {
+                app.UseRecipePluginMcp(plugin);
+            }
             app.UseRateLimiter();
             app.UseMiddleware<BrowserRequestProtectionMiddleware>();
             app.UseAuthorization();
@@ -51,6 +56,9 @@ public static class ApiApplicationBuilderExtensions {
             app.UseOutputCache();
 
             app.MapOperationalEndpoints();
+            if (plugin is not null) {
+                app.MapRecipePluginOAuth(plugin.Issuer!, plugin.WebOrigin!);
+            }
             return app
                 .MapPresentationApi()
                 .MapIdentityPresentationHub(ApiCompositionConstants.CorsPolicyName)
