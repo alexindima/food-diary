@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2839,
+    "typescriptFiles": 2840,
     "symbols": 889,
     "routes": 113,
     "features": 46,
-    "specs": 858,
+    "specs": 859,
     "localeFiles": 5,
     "roles": {
       "Component": 515,

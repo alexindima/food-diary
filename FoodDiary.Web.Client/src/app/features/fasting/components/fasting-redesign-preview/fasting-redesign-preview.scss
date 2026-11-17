@@ -731,7 +731,7 @@
 }
 
 .fasting-redesign__target-notice {
-    margin: 0;
+    margin: 0 0 var(--fd-space-sm);
     color: var(--fd-color-text);
     padding: var(--fd-space-sm);
     border: var(--fd-border-default);
