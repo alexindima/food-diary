@@ -73,6 +73,27 @@ function signIn(): void {
 }
 
 describe('server-backed browser sessions', () => {
+    it.each([
+        ['/?view=food#impersonationCode=one-time-code&tab=notes', '?view=food', '#tab=notes'],
+        ['/?view=food&impersonationCode=one-time-code#tab=notes', '?view=food', '#tab=notes'],
+        ['/?impersonationCode=stale-code#impersonationCode=one-time-code', '', ''],
+    ])('exchanges an impersonation handoff and cleans its URL before sending it: %s', async (url, search, hash) => {
+        window.history.replaceState({}, '', url);
+        const restored = service.restoreSessionAsync();
+        const exchange = requests.expectOne(`${base}/impersonation/exchange`);
+        expect(exchange.request.body).toEqual({ code: 'one-time-code' });
+        expect(window.location.search).toBe(search);
+        expect(window.location.hash).toBe(hash);
+        exchange.flush({ contextId: 'context-one' });
+        await vi.waitFor(() => {
+            requests.expectOne(`${base}/session`).flush({ ...response, sessionId: null, impersonationContext: 'context-one' });
+        });
+        await restored;
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.isImpersonating()).toBe(true);
+        expect(sessionStorage.getItem('impersonationContext')).toBe('context-one');
+    });
+
     it('starts as a guest and accepts server session metadata without a bearer credential', () => {
         expect(service.isAuthenticated()).toBe(false);
         signIn();
