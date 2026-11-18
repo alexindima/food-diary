@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1430,
     "ambiguousContracts": 34,
-    "consumerEdges": 11686,
+    "consumerEdges": 11687,
     "productionConsumerEdges": 6490,
-    "testConsumerEdges": 5196,
+    "testConsumerEdges": 5197,
     "consumedContracts": 1430,
     "unconsumedContracts": 0
   },
@@ -128267,6 +128267,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/Features/Coverage/BaseApiControllerFeatureNamespaceTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "ISender",

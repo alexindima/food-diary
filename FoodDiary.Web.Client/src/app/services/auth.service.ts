@@ -691,9 +691,12 @@ export class AuthService {
         const href = this.browserWindow.getHref();
         if (href !== null) {
             const url = new URL(href);
-            const code = url.searchParams.get('impersonationCode');
+            const fragments = new URLSearchParams(url.hash.replace(/^#/, ''));
+            const code = fragments.get('impersonationCode') ?? url.searchParams.get('impersonationCode');
             if (code !== null) {
                 url.searchParams.delete('impersonationCode');
+                fragments.delete('impersonationCode');
+                url.hash = fragments.toString();
                 this.browserWindow.replaceCurrentUrl(url.pathname + url.search + url.hash);
                 const response = await firstValueFrom(
                     this.sdk.client

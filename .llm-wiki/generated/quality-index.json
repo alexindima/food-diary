@@ -191,20 +191,20 @@
       "structuralRiskScore": 190.88
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "nonBlankLines": 704,
+      "decisionPoints": 117,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 189.58
+    },
+    {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskHandoff.ps1",
       "nonBlankLines": 767,
       "decisionPoints": 114,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 188.34
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 701,
-      "decisionPoints": 116,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 188.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/fasting.service.ts",
@@ -17090,11 +17090,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 701,
-      "decisionPoints": 116,
+      "nonBlankLines": 704,
+      "decisionPoints": 117,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 188.02
+      "structuralRiskScore": 189.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
