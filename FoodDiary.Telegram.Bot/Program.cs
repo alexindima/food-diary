@@ -32,6 +32,8 @@ builder.Services.AddSingleton<ITelegramBotClient>(sp => {
     return new TelegramBotClient(new TelegramBotClientOptions(options.Token, useTestEnvironment: options.UseTestEnvironment));
 });
 
+builder.Services.AddSingleton<TelegramReplyQueue>();
+builder.Services.AddHostedService(static provider => provider.GetRequiredService<TelegramReplyQueue>());
 builder.Services.AddHostedService<TelegramBotWorker>();
 builder.Services.AddHostedService<TelegramOperationWorker>();
 

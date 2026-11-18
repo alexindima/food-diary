@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "42016aadedfa1c9b73a5563ca66d7c2c1b87010fba036a978a5e1522a02f24f2",
-    "sourceFileCount": 4870
+    "sourceFingerprint": "5d20fdec39b3db2df94f739054d0a4e40824cebb74be4653b36e4a4b402642d8",
+    "sourceFileCount": 4875
   },
   "summary": {
     "composeServices": 20,
-    "hostedServices": 16,
+    "hostedServices": 17,
     "httpClients": 24,
     "webhooks": 22,
     "recurringJobRegistrations": 20,
@@ -711,6 +711,17 @@
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "class-window"
+    },
+    {
+      "name": "TelegramReplyQueue",
+      "baseType": "BackgroundService",
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramReplyQueue.cs",
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "concurrency-control",
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "class-window"

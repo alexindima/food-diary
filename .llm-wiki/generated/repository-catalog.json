@@ -17538,7 +17538,7 @@
           {
             "verb": "PATCH",
             "route": "/api/v{version:apiVersion}/users/password/set",
-            "line": 29
+            "line": 30
           }
         ]
       },

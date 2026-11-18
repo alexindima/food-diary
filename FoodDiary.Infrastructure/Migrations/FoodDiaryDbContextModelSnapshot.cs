@@ -2958,6 +2958,11 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("OccurredAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("ReceivedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("ReferrerHost")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");

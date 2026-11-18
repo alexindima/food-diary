@@ -78,7 +78,8 @@ services:
     tmpfs:
       - /tmp:size=32m,mode=1777,nosuid,nodev
     env_file:
-      - .env
+      - path: .env.mailrelay-init
+        required: false
     environment:
       ConnectionStrings__DefaultConnection: Host=mailrelay-postgres;Port=5432;Database=${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay};Username=${MAIL_RELAY_POSTGRES_USER:-postgres};Password=${MAIL_RELAY_POSTGRES_PASSWORD:?Set MAIL_RELAY_POSTGRES_PASSWORD}
     depends_on:
@@ -152,8 +153,6 @@ services:
       - no-new-privileges:true
     tmpfs:
       - /tmp:size=32m,mode=1777,nosuid,nodev
-    env_file:
-      - .env
     environment:
       ConnectionStrings__DefaultConnection: Host=mailinbox-postgres;Port=5432;Database=${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox};Username=${MAIL_INBOX_POSTGRES_USER:-postgres};Password=${MAIL_INBOX_POSTGRES_PASSWORD:?Set MAIL_INBOX_POSTGRES_PASSWORD};SSL Mode=VerifyFull;Root Certificate=/run/mailinbox-postgres-ca/ca.crt
       MailInboxRuntimeDatabase__ProvisionRole: "true"
@@ -331,7 +330,8 @@ services:
       MailRelay__ExpectedAwsSesSnsTopicArn: ${MailRelay__ExpectedAwsSesSnsTopicArn:-arn:aws:sns:us-east-1:000000000000:fooddiary-local}
       MailRelayBroker__HostName: rabbitmq
     env_file:
-      - .env
+      - path: .env.mail-relay
+        required: false
     tmpfs:
       - /tmp:size=32m,mode=1777,nosuid,nodev
     healthcheck:
@@ -381,7 +381,8 @@ services:
       MailInboxSmtp__TrustedRelayNetworks__0: ${MAIL_INBOX_TRUSTED_RELAY_NETWORK:?Set MAIL_INBOX_TRUSTED_RELAY_NETWORK}
       MailInboxSmtp__AllowUntrustedSources: ${MAIL_INBOX_ALLOW_UNTRUSTED_SOURCES:-true}
     env_file:
-      - .env
+      - path: .env.mail-inbox
+        required: false
     volumes:
       - /etc/letsencrypt/live/mail.fooddiary.club:/run/letsencrypt/live/mail.fooddiary.club:ro
       - /etc/letsencrypt/archive/mail.fooddiary.club:/run/letsencrypt/archive/mail.fooddiary.club:ro
@@ -420,7 +421,8 @@ services:
     tmpfs:
       - /tmp:size=16m,mode=1777,nosuid,nodev
     env_file:
-      - .env
+      - path: .env.telegram-bot
+        required: false
     depends_on:
       api:
         condition: service_healthy

@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit';
@@ -297,6 +298,20 @@ describe('AdminUserPageComponent actions and navigation', () => {
         dialogs.open.mockReturnValue({ afterClosed: () => of(null) });
         component['impersonate'](baseUser);
         expect(dialogs.open).toHaveBeenCalledWith(AdminUserImpersonationDialogComponent, { size: 'sm', data: baseUser });
+    });
+
+    it('passes the impersonation code in the URL fragment', async () => {
+        const { component, dialogs } = await createContextAsync();
+        const open = vi.spyOn(TestBed.inject(DOCUMENT).defaultView!, 'open').mockReturnValue(null);
+        dialogs.open.mockReturnValue({ afterClosed: () => of({ code: 'one-time-code' }) });
+
+        component['impersonate'](baseUser);
+
+        expect(open).toHaveBeenCalledOnce();
+        const destination = new URL(String(open.mock.calls[0]?.[0]));
+        expect(destination.searchParams.has('impersonationCode')).toBe(false);
+        expect(new URLSearchParams(destination.hash.slice(1)).get('impersonationCode')).toBe('one-time-code');
+        open.mockRestore();
     });
 
     it('drops stale activity when navigating to a different account', async () => {

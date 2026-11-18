@@ -201,7 +201,7 @@ export class AdminUserPageComponent {
                     return;
                 }
                 const url = new URL('/dashboard', environment.mainAppUrl);
-                url.searchParams.set('impersonationCode', result.code);
+                url.hash = new URLSearchParams({ impersonationCode: result.code }).toString();
                 this.document.defaultView?.open(url.toString(), '_blank', 'noopener,noreferrer');
             });
     }

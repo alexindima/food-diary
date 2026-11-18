@@ -83,7 +83,8 @@ describe('AuthComponent admin SSO destination', () => {
         const destination = new URL(result ?? '');
         expect(destination.origin).toBe(new URL(adminAppUrl).origin);
         expect(destination.pathname).toBe('/');
-        expect(destination.searchParams.get('code')).toBe('fresh-admin-code');
+        expect(destination.searchParams.has('code')).toBe(false);
+        expect(new URLSearchParams(destination.hash.slice(1)).get('code')).toBe('fresh-admin-code');
         expect(authService.startAdminSso).toHaveBeenCalledOnce();
     });
 
@@ -103,7 +104,8 @@ describe('AuthComponent admin SSO destination', () => {
         expect(destination.origin).toBe(new URL(adminAppUrl).origin);
         expect(destination.pathname).toBe('/users');
         expect(destination.searchParams.get('tab')).toBe('active');
-        expect(destination.searchParams.get('code')).toBe('fresh-admin-code');
+        expect(destination.searchParams.has('code')).toBe(false);
+        expect(new URLSearchParams(destination.hash.slice(1)).get('code')).toBe('fresh-admin-code');
     });
 
     it('sends a non-admin to the trusted unauthorized page without issuing a code', async () => {

@@ -18,4 +18,5 @@ public sealed record MarketingAttributionEventRecord(
     string? BuildVersion,
     Guid? EventId = null,
     string? ConsentNoticeVersion = null,
-    DateTime? ConsentGrantedAtUtc = null);
+    DateTime? ConsentGrantedAtUtc = null,
+    DateTime? ReceivedAtUtc = null);

@@ -179,7 +179,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
     [RequiresDockerFact]
     public async Task GetLandingAsync_RequiresMatchingServerObservedIdentity() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var now = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
+        DateTime now = DateTime.UtcNow;
         var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
         await repository.AddAsync(CreateRecord("page_landing", now, "session-trusted"));
         await context.SaveChangesAsync();
@@ -190,7 +190,26 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
             new AnonymousVisitorId("anon-session-trusted"), new MarketingSessionId("session-forged"), now.AddMinutes(-1));
 
         Assert.NotNull(trusted);
+        Assert.NotNull(trusted.ReceivedAtUtc);
+        Assert.True(trusted.ReceivedAtUtc >= now.AddSeconds(-1));
         Assert.Null(forged);
+    }
+
+    [RequiresDockerFact]
+    public async Task LandingReceiptTime_IsAssignedByTheDatabaseIndependentlyOfClientTime() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var repository = new MarketingAttributionEventRepository(context.MarketingAttributionEvents);
+        DateTime now = DateTime.UtcNow;
+        DateTime backdated = now.AddHours(-2);
+        await repository.AddAsync(CreateRecord("page_landing", backdated, "session-backdated") with { ReceivedAtUtc = backdated });
+        await context.SaveChangesAsync();
+
+        MarketingAttributionEventRecord? landing = await repository.GetLandingAsync(
+            new AnonymousVisitorId("anon-session-backdated"), new MarketingSessionId("session-backdated"), now.AddHours(-3));
+
+        Assert.NotNull(landing);
+        Assert.Equal(backdated, landing.OccurredAtUtc);
+        Assert.True(landing.ReceivedAtUtc >= now.AddSeconds(-1));
     }
 
     private static MarketingAttributionEventRecord CreateRecord(

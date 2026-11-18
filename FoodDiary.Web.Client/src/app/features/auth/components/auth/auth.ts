@@ -482,7 +482,10 @@ export class AuthComponent {
         try {
             const adminUrl = new URL(adminPath, adminAppUrl);
             const response = await firstValueFrom(this.authService.startAdminSso());
-            adminUrl.searchParams.set('code', response.code);
+            adminUrl.searchParams.delete('code');
+            const fragment = new URLSearchParams(adminUrl.hash.slice(1));
+            fragment.set('code', response.code);
+            adminUrl.hash = fragment.toString();
             return adminUrl.toString();
         } catch (error: unknown) {
             if (getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.ReauthenticationRequired') {
