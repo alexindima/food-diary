@@ -117,44 +117,26 @@ public sealed class EmailSender(
             cancellationToken: cancellationToken);
     }
 
-    public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) {
+    public async Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) {
+        const string templateKey = "password_reset";
         string locale = NormalizeLanguage(message.Language);
-        return SendEmailCoreAsync(
-            templateKey: "password_reset",
-            locale: locale,
-            toEmail: message.ToEmail,
-            buildLink: () => BuildFragmentLink(options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin),
-            createFallbackContent: link => (
-                Subject: string.Equals(locale, "ru", StringComparison.Ordinal) ? PasswordResetSubjectRu : "Reset your password",
-                Html: string.Equals(locale, "ru"
-                    , StringComparison.Ordinal)
-                    ? BuildTemplate(
-                        title: PasswordResetSubjectRu,
-                        intro: PasswordResetIntroRu,
-                        ctaLabel: PasswordResetCtaRu,
-                        ctaLink: link,
-                        footer: IgnoreEmailFooterRu,
-                        locale: locale)
-                    : BuildTemplate(
-                        title: "Reset your password",
-                        intro: "We received a request to reset your FoodDiary password.",
-                        ctaLabel: "Reset password",
-                        ctaLink: link,
-                        footer: "If you did not request this, you can ignore this email.",
-                        locale: locale),
-                Text: string.Equals(locale, "ru"
-                    , StringComparison.Ordinal)
-                    ? $$"""
-                        {{PasswordResetIntroRu}}
-                        {{PasswordResetCtaRu}}: {{link}}
-                        {{IgnoreEmailFooterRu}}
-                        """
-                    : $"""
-                       We received a request to reset your FoodDiary password.
-                       Reset your password: {link}
-                       If you did not request this, you can ignore this email.
-                       """),
-            cancellationToken: cancellationToken);
+        bool isRussian = string.Equals(locale, "ru", StringComparison.Ordinal);
+        string subject = isRussian ? PasswordResetSubjectRu : "Reset your password";
+        string intro = isRussian ? PasswordResetIntroRu : "We received a request to reset your FoodDiary password.";
+        string action = isRussian ? PasswordResetCtaRu : "Reset password";
+        string footer = isRussian ? IgnoreEmailFooterRu : "If you did not request this, you can ignore this email.";
+
+        try {
+            // Keep recovery credentials and their destination outside administrator-editable content.
+            string link = BuildFragmentLink(options.PasswordResetPath, message.UserId, message.Token, message.ClientOrigin);
+            string html = BuildTemplate(subject, intro, action, link, footer, locale);
+            string text = $"{intro}\n{action}: {link}\n{footer}";
+            await DispatchAsync(message.ToEmail, subject, html, text, templateKey, cancellationToken);
+            ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
+        } catch (Exception ex) {
+            ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
+            throw;
+        }
     }
 
     public async Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {

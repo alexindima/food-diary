@@ -110,9 +110,9 @@ public sealed class EmailSenderTests {
     }
 
     [Theory]
-    [InlineData("en", "en", "If the button doesn't work")]
-    [InlineData("ru-RU", "ru", "Если кнопка не работает")]
-    public async Task SendPasswordReset_WithEmptyTemplateHtml_LocalizesFallback(string language, string locale, string copyLinkHint) {
+    [InlineData("en", "en", "Reset your password", "If the button doesn't work")]
+    [InlineData("ru-RU", "ru", "Сброс пароля", "Если кнопка не работает")]
+    public async Task SendPasswordReset_UsesTrustedLocalizedContent(string language, string locale, string subject, string copyLinkHint) {
         Dictionary<(string Key, string Locale), EmailTemplateContent> templates = new() {
             [("password_reset", locale)] = new("Custom subject", "", "Custom plain text"),
         };
@@ -122,15 +122,16 @@ public sealed class EmailSenderTests {
         await sender.SendPasswordResetAsync(new PasswordResetMessage("user@example.com", "user-1", "token", language), CancellationToken.None);
 
         Assert.Multiple(
-            () => Assert.Equal("Custom subject", getSent().Subject),
+            () => Assert.Equal(subject, getSent().Subject),
             () => Assert.Contains($"<html lang=\"{locale}\">", getSent().Body, StringComparison.Ordinal),
             () => Assert.Contains(copyLinkHint, getSent().Body, StringComparison.Ordinal),
             () => Assert.Contains("https://app.example/reset-password#userId=user-1&token=token", getSent().Body, StringComparison.Ordinal),
-            () => Assert.Contains(getSent().AlternateViewBodies, body => string.Equals(body, "Custom plain text", StringComparison.Ordinal)));
+            () => Assert.Contains(getSent().AlternateViewBodies, body => body.Contains("https://app.example/reset-password#userId=user-1&token=token", StringComparison.Ordinal)),
+            () => Assert.DoesNotContain(getSent().AlternateViewBodies, body => string.Equals(body, "Custom plain text", StringComparison.Ordinal)));
     }
 
     [Fact]
-    public async Task SendPasswordReset_WithTemplate_AppliesTokens() {
+    public async Task SendPasswordReset_DoesNotLoadEditableTemplate() {
         Dictionary<(string Key, string Locale), EmailTemplateContent> templates = new() {
             [("password_reset", "ru")] = new EmailTemplateContent(
                 "Reset {{brand}}",
@@ -145,9 +146,8 @@ public sealed class EmailSenderTests {
             new PasswordResetMessage("user@example.com", "user-1", "token", "ru"),
             CancellationToken.None);
 
-        Assert.Equal("Reset FD", getSent().Subject);
-        Assert.Contains("<p>FD https://app.example/reset-password#userId=user-1&token=token</p>", getSent().Body, StringComparison.Ordinal);
-        Assert.Contains(getSent().AlternateViewBodies, body => body.Contains("Plain FD https://app.example/reset-password", StringComparison.Ordinal));
+        await templateProvider.DidNotReceiveWithAnyArgs().GetActiveTemplateAsync(default!, default!, default);
+        Assert.DoesNotContain("Reset FD", getSent().Subject, StringComparison.Ordinal);
     }
 
     [Fact]

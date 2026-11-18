@@ -29,17 +29,18 @@ public sealed class AuthenticationTokenService(
             return await IssueBrowserAsync(principal, clientContext, rememberMe, cancellationToken);
         }
         var resolvedRefreshSessionId = RefreshTokenSessionId.New();
+        IReadOnlyCollection<string> roles = SessionRoles(principal);
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
             principal.Email,
-            principal.Roles,
+            roles,
             principal.AccessTokenCapUtc,
             principal.SecurityVersion,
             resolvedRefreshSessionId);
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
             principal.UserId,
             principal.Email,
-            principal.Roles,
+            roles,
             rememberMe,
             resolvedRefreshSessionId);
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
@@ -79,7 +80,7 @@ public sealed class AuthenticationTokenService(
         await PersistAuthenticationArtifactsAsync(principal.UserId, SecurityTokenGenerator.HashForStorage(credential),
             rememberMe, id, client, now, expires, cancellationToken, principal.SecurityVersion);
         return new IssuedAuthenticationTokens(string.Empty, string.Empty,
-            new IssuedBrowserSession(credential, id.Value, expires, rememberMe, principal.Roles, admin));
+            new IssuedBrowserSession(credential, id.Value, expires, rememberMe, SessionRoles(principal), admin));
     }
 
     private async Task RevokeExistingOpaqueSessionAsync(string? credential, DateTime nowUtc, CancellationToken cancellationToken) {
@@ -100,17 +101,18 @@ public sealed class AuthenticationTokenService(
         string expectedRefreshTokenHash,
         bool rememberMe,
         CancellationToken cancellationToken) {
+        IReadOnlyCollection<string> roles = SessionRoles(principal);
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
             principal.Email,
-            principal.Roles,
+            roles,
             principal.AccessTokenCapUtc,
             principal.SecurityVersion,
             refreshSessionId);
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
             principal.UserId,
             principal.Email,
-            principal.Roles,
+            roles,
             rememberMe,
             refreshSessionId);
         string newRefreshTokenHash = SecurityTokenGenerator.HashForStorage(refreshToken);
@@ -125,6 +127,9 @@ public sealed class AuthenticationTokenService(
             cancellationToken);
         return rotated ? new IssuedAuthenticationTokens(accessToken, refreshToken) : null;
     }
+
+    private static IReadOnlyCollection<string> SessionRoles(UserAuthenticationPrincipalModel principal) =>
+        principal.User?.MustChangePassword == true ? [] : principal.Roles;
 
     private async Task RevokeExistingBrowserSessionAsync(
         UserId userId,

@@ -19,6 +19,7 @@ public sealed class UserSessionPrincipalReader(DbSet<User> users, Func<Cancellat
                 user.Id,
                 user.Email,
                 user.SecurityVersion,
+                user.MustChangePassword,
                 user.PremiumTrialStartedAtUtc,
                 user.PremiumTrialEndsAtUtc,
                 user.PremiumAccessEndsAtUtc,
@@ -31,6 +32,6 @@ public sealed class UserSessionPrincipalReader(DbSet<User> users, Func<Cancellat
         (IReadOnlyCollection<string> roles, DateTime? cap) = UserAuthenticationPrivileges.Evaluate(
             data.Roles, data.PremiumTrialStartedAtUtc, data.PremiumTrialEndsAtUtc, evaluatedAtUtc,
             data.PremiumAccessEndsAtUtc, data.ManualPremiumEndsAtUtc);
-        return Result.Success(new UserSessionPrincipalModel(data.Id, data.Email, roles, cap, data.SecurityVersion));
+        return Result.Success(new UserSessionPrincipalModel(data.Id, data.Email, roles, cap, data.SecurityVersion, data.MustChangePassword));
     }
 }

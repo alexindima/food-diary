@@ -6,6 +6,11 @@ public interface IUserAccessTokenSecurityReader {
         long securityVersion,
         CancellationToken cancellationToken = default);
 
+    Task<bool> IsCurrentForPasswordChangeAsync(
+        Guid userId,
+        long securityVersion,
+        CancellationToken cancellationToken = default);
+
     Task<bool> IsCurrentAdministratorAsync(
         Guid userId,
         long securityVersion,

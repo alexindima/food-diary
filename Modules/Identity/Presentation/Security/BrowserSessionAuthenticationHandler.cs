@@ -7,9 +7,11 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.AuthenticateBrowserSession;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using FoodDiary.Authentication.Contracts.Options;
+using FoodDiary.Presentation.Api.Security;
 
 namespace FoodDiary.Modules.Identity.Presentation.Security;
 
@@ -31,6 +33,10 @@ public sealed class BrowserSessionAuthenticationHandler(
             return AuthenticateResult.Fail("The browser session is no longer valid.");
         }
         BrowserSessionIdentityModel session = result.Value;
+        if (session.Principal.MustChangePassword &&
+            Context.GetEndpoint()?.Metadata.GetMetadata<AllowRequiredPasswordChangeAttribute>() is null) {
+            return AuthenticateResult.Fail("The password must be changed before accessing this resource.");
+        }
         string expected = Request.Headers[BrowserSessionCookieService.SessionHeader].ToString();
         if (expected.Length > 0 && !string.Equals(expected, session.SessionId.ToString("D"), StringComparison.Ordinal)) {
             return AuthenticateResult.Fail("The request belongs to another browser session.");

@@ -6,6 +6,7 @@ using FoodDiary.Authentication.Contracts.Options;
 using System.Text;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Presentation.Api.Features.Version;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Web.Api.Build;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -105,6 +106,7 @@ public static class ApiAuthenticationServiceCollectionExtensions {
                 bool isCurrent = await AccessTokenSecurityStateValidator
                     .IsCurrentAsync(context.Principal, securityReader,
                         context.HttpContext.RequestServices.GetRequiredService<IUserAccessTokenSessionReader>(),
+                        allowRequiredPasswordChange: context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<AllowRequiredPasswordChangeAttribute>() is not null,
                         context.HttpContext.RequestAborted);
                 if (!isCurrent) {
                     context.Fail("The token is no longer valid for the current account security state.");
