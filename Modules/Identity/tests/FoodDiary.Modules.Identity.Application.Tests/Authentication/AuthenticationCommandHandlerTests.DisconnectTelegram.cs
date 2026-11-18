@@ -93,4 +93,45 @@ public sealed partial class AuthenticationCommandHandlerTests {
         await tokens.DidNotReceiveWithAnyArgs().IssueFromPrincipalAsync(default!, default);
         postCommit.DidNotReceive().Enqueue(Arg.Any<string>(), Arg.Any<Func<CancellationToken, Task>>());
     }
+
+    [Theory]
+    [InlineData("account_missing")]
+    [InlineData("unconfirmed_email")]
+    [InlineData("invalid_google")]
+    [InlineData("ambiguous_credentials")]
+    public async Task TelegramDisconnect_RejectsUnusableConfirmationWithoutRevokingExistingSessions(string scenario) {
+        var clock = new StubDateTimeProvider();
+        var user = User.Create("disconnect@example.test", "hash");
+        UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, clock.GetUtcNow().UtcDateTime);
+        IUserTelegramAccountService accounts = Substitute.For<IUserTelegramAccountService>();
+        IUserAuthenticationIdentityService users = Substitute.For<IUserAuthenticationIdentityService>();
+        IGoogleTokenValidator validator = Substitute.For<IGoogleTokenValidator>();
+        IAuthenticationTokenService tokens = Substitute.For<IAuthenticationTokenService>();
+        ITelegramOperationStore operations = Substitute.For<ITelegramOperationStore>();
+        IPostCommitActionQueue postCommit = Substitute.For<IPostCommitActionQueue>();
+        Error lookupError = UserErrors.NotFound(user.Id);
+        Error googleError = new("Fixture.InvalidGoogleCredential", "Invalid test credential.", ErrorKind.Unauthorized);
+        users.GetAuthenticationPrincipalAsync(user.Id, clock.GetUtcNow().UtcDateTime, CancellationToken.None)
+            .Returns(scenario is "account_missing" ? Result.Failure<UserAuthenticationPrincipalModel>(lookupError) : Result.Success(principal));
+        validator.ValidateCredentialAsync("fixture-google", CancellationToken.None).Returns(Result.Failure<GoogleIdentityPayload>(googleError));
+        var handler = new DisconnectTelegramCommandHandler(accounts, users,
+            new PasswordAuthenticationService(users, clock, CreatePasswordLoginThrottle()), validator, tokens, operations, postCommit, clock);
+        var command = new DisconnectTelegramCommand(user.Id.Value, principal.SecurityVersion,
+            scenario is "invalid_google" ? null : "fixture-password",
+            scenario is "invalid_google" or "ambiguous_credentials" ? "fixture-google" : null,
+            new AuthenticationClientContext("telegram-disconnect", IpAddress: null, UserAgent: null), RememberMe: false);
+
+        Result<AuthenticationModel> result = await handler.Handle(command, CancellationToken.None);
+
+        Error expected = scenario switch {
+            "account_missing" => lookupError,
+            "invalid_google" => googleError,
+            _ => IdentityErrors.ReauthenticationRequired,
+        };
+        Assert.Equal(expected, ResultAssert.Failure(result));
+        Assert.Empty(accounts.ReceivedCalls());
+        Assert.Empty(tokens.ReceivedCalls());
+        Assert.Empty(operations.ReceivedCalls());
+        Assert.Empty(postCommit.ReceivedCalls());
+    }
 }

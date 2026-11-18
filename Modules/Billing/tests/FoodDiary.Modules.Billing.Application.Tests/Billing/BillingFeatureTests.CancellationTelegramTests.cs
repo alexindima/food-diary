@@ -154,6 +154,19 @@ public partial class BillingFeatureTests {
         Assert.Null(fixture.HandledAt);
     }
 
+    [Fact]
+    public async Task CancellationTelegram_TransportExceptionKeepsIntentForTheNextSuccessfulDelivery() {
+        var fixture = new TelegramCancellationFixture {
+            SendOverride = _ => throw new HttpRequestException("Transport failed."),
+        };
+        Assert.Equal(new BillingCancellationTelegramRunResult(0, 0, 1), await fixture.RunAsync());
+        Assert.Null(fixture.HandledAt);
+
+        fixture.SendOverride = null;
+        Assert.Equal(new BillingCancellationTelegramRunResult(1, 0, 0), await fixture.RunAsync());
+        Assert.Equal(TelegramCancellationFixture.Instant, fixture.HandledAt);
+    }
+
     // ICU uses a narrow no-break space before AM/PM; Windows NLS uses a regular space.
     private static string NormalizeDateSpaces(string value) => value.Replace('\u202f', ' ').Replace('\u00a0', ' ');
 

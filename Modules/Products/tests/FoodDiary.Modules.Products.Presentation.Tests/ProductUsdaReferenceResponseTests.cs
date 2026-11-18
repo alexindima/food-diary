@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Products.Presentation.Mappings;
@@ -8,6 +9,29 @@ namespace FoodDiary.Modules.Products.Presentation.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ProductUsdaReferenceResponseTests {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
+    [Theory]
+    [InlineData("en-US", "Buckwheat", "Buckwheat")]
+    [InlineData("en-US", null, "Гречка")]
+    [InlineData("ru-RU", "Buckwheat", "Гречка")]
+    [InlineData("fr-FR", "Buckwheat", "Гречка")]
+    public void ProductResponse_UsesEnglishUsdaNameOnlyForEnglishUi(string locale, string? englishName, string expectedName) {
+        CultureInfo previous = CultureInfo.CurrentUICulture;
+        try {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(locale);
+            var model = new ProductModel(Guid.NewGuid(), Barcode: null, "Гречка", Brand: null,
+                "Grain", Category: null, Description: null, Comment: null, ImageUrl: null, ImageAssetId: null,
+                "G", 100, 100, 343, 13.25, 3.4, 71.5, 10, 0, 0, "Public", DateTime.UtcNow,
+                IsOwnedByCurrentUser: false, 80, "green", 168462, IsFavorite: false, FavoriteProductId: null) {
+                UsdaEnglishName = englishName,
+            };
+
+            Assert.Equal(expectedName, model.ToHttpResponse().Name);
+        } finally {
+            CultureInfo.CurrentUICulture = previous;
+        }
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData(171077)]

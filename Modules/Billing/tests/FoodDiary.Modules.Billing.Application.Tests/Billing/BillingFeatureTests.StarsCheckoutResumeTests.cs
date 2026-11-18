@@ -80,6 +80,35 @@ public partial class BillingFeatureTests {
         await fixture.Gateway.Received(1).CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData("missing_user", "Fixture.UserUnavailable")]
+    [InlineData("changed_payer", "Billing.TelegramNotLinked")]
+    [InlineData("paid", "Billing.SubscriptionAlreadyActive")]
+    [InlineData("changed_version", "Billing.CheckoutAlreadyInProgress")]
+    public async Task StarsCheckout_ResumeRechecksCurrentStateInsideTheSerializedTransaction(string scenario, string expectedCode) {
+        var fixture = new StarsResumeFixture();
+        BillingCheckoutSessionModel first = ResultAssert.Success(await fixture.AttemptAsync("first"));
+        IBillingTransactionRunner transaction = Substitute.For<IBillingTransactionRunner>();
+        transaction.ExecuteSerializedAsync(Arg.Any<string>(), Arg.Any<Func<CancellationToken, Task>>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                switch (scenario) {
+                    case "missing_user": fixture.ProfileError = new Error("Fixture.UserUnavailable", "User unavailable.", ErrorKind.NotFound); break;
+                    case "changed_payer": fixture.Profile = fixture.Profile with { TelegramUserId = 124 }; break;
+                    case "paid": fixture.Profile = fixture.Profile with { HasPaidPremium = true }; break;
+                    case "changed_version":
+                        fixture.Subscription.UpdateCheckoutContext(BillingProviderNames.TelegramStars, first.CustomerId, "replaced_quote", first.Plan);
+                        break;
+                }
+                return call.Arg<Func<CancellationToken, Task>>()(call.Arg<CancellationToken>());
+            });
+
+        Result<BillingCheckoutSessionModel> result = await fixture.AttemptAsync("retry", transaction: transaction);
+
+        Assert.Equal(expectedCode, ResultAssert.Failure(result).Code);
+        Assert.Single(fixture.Payments.Payments);
+        await fixture.Gateway.Received(1).CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task StarsCheckout_ExpiredInvoiceUsesNormalCreationInsteadOfExtendingTheOldOrder() {
         var fixture = new StarsResumeFixture();
@@ -107,6 +136,7 @@ public partial class BillingFeatureTests {
     private sealed class StarsResumeFixture {
         public UserBillingProfileModel Profile { get; set; } = new(UserId.New(), "owned@example.com", IsActive: true, IsDeleted: false, HasPaidPremium: false,
             PremiumTrialStartedAtUtc: null, PremiumTrialEndsAtUtc: null, IsEmailConfirmed: true, TelegramUserId: 123);
+        public Error? ProfileError { get; set; }
         public RecordingBillingPaymentRepository Payments { get; } = new();
         public InMemoryBillingSubscriptionRepository Subscriptions { get; } = new();
         public BillingSubscription Subscription => Assert.Single(Subscriptions.Subscriptions);
@@ -118,7 +148,8 @@ public partial class BillingFeatureTests {
         public StarsResumeFixture(string provider = BillingProviderNames.TelegramStars) {
             _provider = provider;
             _sender.Send(Arg.Any<CheckUserAccessQuery>(), Arg.Any<CancellationToken>()).Returns((Error?)null);
-            _sender.Send(Arg.Any<GetUserBillingProfileQuery>(), Arg.Any<CancellationToken>()).Returns(_ => Result.Success(Profile));
+            _sender.Send(Arg.Any<GetUserBillingProfileQuery>(), Arg.Any<CancellationToken>()).Returns(_ =>
+                ProfileError is { } error ? Result.Failure<UserBillingProfileModel>(error) : Result.Success(Profile));
             Gateway.Provider.Returns(provider);
             Gateway.CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>())
                 .Returns(Result.Success(new BillingCheckoutSessionModel("invoice_owned", "https://t.me/$owned",
@@ -126,9 +157,10 @@ public partial class BillingFeatureTests {
             _gateways.GetProviderOrDefault(provider).Returns(Gateway);
         }
 
-        public Task<Result<BillingCheckoutSessionModel>> AttemptAsync(string key, TimeProvider? clock = null) {
+        public Task<Result<BillingCheckoutSessionModel>> AttemptAsync(
+            string key, TimeProvider? clock = null, IBillingTransactionRunner? transaction = null) {
             var handler = new CreateCheckoutSessionCommandHandler(_sender, Subscriptions, Payments, _gateways,
-                clock ?? TimeProvider.System, new NoopBillingCheckoutLock(), new NoOpBillingTransactionRunner());
+                clock ?? TimeProvider.System, new NoopBillingCheckoutLock(), transaction ?? new NoOpBillingTransactionRunner());
             return handler.Handle(new CreateCheckoutSessionCommand(Profile.UserId.Value, "monthly", _provider, key), CancellationToken.None);
         }
     }

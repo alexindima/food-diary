@@ -111,6 +111,13 @@ public sealed partial class RecipePluginOAuthTests {
 
         Guid originalId = SavedId(await first);
         Assert.Equal(originalId, SavedId(await CallAsync(oauth, token, RecipePluginAccess.RecipeTool, arguments)));
+
+        store.ReturnUnreadableReplay = true;
+        JsonElement unreadable = await CallAsync(oauth, token, RecipePluginAccess.RecipeTool, arguments);
+        Assert.False(IsToolSuccess(unreadable));
+        Assert.Equal("FoodDiary could not read the result of the previous save.", ToolMessage(unreadable));
+        store.ReturnUnreadableReplay = false;
+        Assert.Equal(originalId, SavedId(await CallAsync(oauth, token, RecipePluginAccess.RecipeTool, arguments)));
     }
 
     [RequiresDockerFact]
@@ -199,6 +206,18 @@ public sealed partial class RecipePluginOAuthTests {
             () => Assert.Equal(HttpStatusCode.OK, signIn.StatusCode),
             () => Assert.Contains("Sign in to FoodDiary", signInPage, StringComparison.Ordinal),
             () => Assert.DoesNotContain("__RequestVerificationToken", signInPage, StringComparison.Ordinal));
+
+        parameters["fooddiary_decision"] = "approve";
+        using (var unconfirmed = new FormUrlEncodedContent(parameters))
+        using (HttpResponseMessage rejected = await browser.PostAsync(RecipePluginAccess.AuthorizationPath, unconfirmed)) {
+            Assert.Equal(HttpStatusCode.Redirect, rejected.StatusCode);
+            Uri rejectedRedirect = Assert.IsType<Uri>(rejected.Headers.Location, exactMatch: false);
+            Dictionary<string, StringValues> rejectedQuery = QueryHelpers.ParseQuery(rejectedRedirect.Query);
+            Assert.Multiple(
+                () => Assert.Equal(Callback, rejectedRedirect.GetLeftPart(UriPartial.Path)),
+                () => Assert.Equal("access_denied", rejectedQuery["error"].ToString()),
+                () => Assert.False(rejectedQuery.ContainsKey("code")));
+        }
 
         await RegisterBrowserAsync(browser);
         browser.DefaultRequestHeaders.AcceptLanguage.Clear();
@@ -358,11 +377,16 @@ public sealed partial class RecipePluginOAuthTests {
         private readonly TaskCompletionSource _continue = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public Task<Guid> Saved => _saved.Task;
+        public bool ReturnUnreadableReplay { get; set; }
         public void AllowCompletion() => _continue.TrySetResult();
 
-        public Task<IdempotencyReservation> ReserveAsync(string key, string requestHash, TimeSpan responseTtl,
-            TimeSpan processingTtl, CancellationToken cancellationToken = default) =>
-            _inner.ReserveAsync(key, requestHash, responseTtl, processingTtl, cancellationToken);
+        public async Task<IdempotencyReservation> ReserveAsync(string key, string requestHash, TimeSpan responseTtl,
+            TimeSpan processingTtl, CancellationToken cancellationToken = default) {
+            IdempotencyReservation reservation = await _inner.ReserveAsync(key, requestHash, responseTtl, processingTtl, cancellationToken);
+            return ReturnUnreadableReplay && reservation is IdempotencyReservation.Replay replay
+                ? replay with { Body = "null" }
+                : reservation;
+        }
 
         public Task<bool> RenewAsync(string key, string requestHash, string ownerToken,
             TimeSpan processingTtl, CancellationToken cancellationToken = default) =>

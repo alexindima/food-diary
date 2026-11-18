@@ -1,6 +1,7 @@
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,23 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class UserActivityRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [Theory]
+    [InlineData(true, DateTimeKind.Utc, "userId")]
+    [InlineData(false, DateTimeKind.Local, "occurredAtUtc")]
+    [InlineData(false, DateTimeKind.Unspecified, "occurredAtUtc")]
+    public async Task Activity_InvalidArgumentsAreRejectedBeforeOpeningAConnection(
+        bool emptyId, DateTimeKind kind, string parameter) {
+        await using FoodDiaryDbContext database = databaseFixture.CreateDbContext("Host=localhost;Database=unused;Username=unused");
+        var repository = new UserActivityRepository(database.Database);
+        var timestamp = new DateTime(2030, 1, 2, 0, 0, 0, kind);
+        UserId id = emptyId ? new UserId(Guid.Empty) : UserId.New();
+
+        ArgumentException error = await Assert.ThrowsAsync<ArgumentException>(
+            () => repository.RecordAsync(id, timestamp, CancellationToken.None));
+
+        Assert.Equal(parameter, error.ParamName);
+    }
+
     [RequiresDockerFact]
     public async Task ConcurrentFirstActivity_UpsertsOneRowAndPreservesTheLatestInstant() {
         await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();

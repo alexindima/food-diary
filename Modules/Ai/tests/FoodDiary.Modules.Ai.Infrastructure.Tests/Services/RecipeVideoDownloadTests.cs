@@ -109,6 +109,32 @@ public sealed class RecipeVideoDownloadTests {
             () => Assert.Null(entry.Exception));
     }
 
+    [Theory]
+    [InlineData("io", "media_io_failed")]
+    [InlineData("timeout", "deadline_expired")]
+    public async Task InputTransportFailure_DiscardsDetailsAndLeavesProcessingCapacityAvailable(string failure, string reason) {
+        using var handler = new SequenceHandler((_, _) => failure is "io"
+            ? throw new IOException("Synthetic download failure with private fixture details.")
+            : throw new TimeoutException("Synthetic deadline with private fixture details."));
+        using var http = new HttpClient(handler);
+        var logger = new RecordingLogger();
+        RecipeVideoProcessor processor = CreateProcessor(http, logger);
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        ResultAssert.Failure(await processor.ExtractAudioAsync(video: null, "https://example.org/video", deadline.Token),
+            "Ai.RecipeVideoUnavailable");
+        ResultAssert.Failure(await processor.ExtractAudioAsync(video: null, "https://example.org/video", deadline.Token),
+            "Ai.RecipeVideoUnavailable");
+
+        Assert.Equal(2, handler.Targets.Count);
+        Assert.Equal(2, logger.Entries.Count);
+        Assert.All(logger.Entries, entry => {
+            Assert.Equal(reason, entry.Fields["Reason"]);
+            Assert.DoesNotContain("private fixture details", entry.Message, StringComparison.Ordinal);
+            Assert.Null(entry.Exception);
+        });
+    }
+
     [Fact]
     public async Task DownloadedIncompleteContainer_ReturnsValidationFailure() {
         using var handler = new SequenceHandler((_, _) => new HttpResponseMessage(HttpStatusCode.OK) {

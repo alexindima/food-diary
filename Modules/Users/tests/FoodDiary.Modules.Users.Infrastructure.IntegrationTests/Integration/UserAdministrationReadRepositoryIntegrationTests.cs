@@ -16,6 +16,46 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task FilteredPage_UsesInclusiveLastLoginBoundsAndExcludesAccountsWithoutLogin() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var start = new DateTime(2030, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateTime end = start.AddDays(1).AddTicks(-10);
+        var before = User.Create("before-login@example.com", "hash");
+        var first = User.Create("start-login@example.com", "hash");
+        var last = User.Create("end-login@example.com", "hash");
+        var after = User.Create("after-login@example.com", "hash");
+        var never = User.Create("no-login@example.com", "hash");
+        before.RecordAuthenticationActivity(start.AddTicks(-10));
+        first.RecordAuthenticationActivity(start);
+        last.RecordAuthenticationActivity(end);
+        after.RecordAuthenticationActivity(end.AddTicks(10));
+        context.Users.AddRange(before, first, last, after, never);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserAdministrationReadRepository(context.Users, context.UserRoles);
+        var day = DateOnly.FromDateTime(start);
+
+        (IReadOnlyList<UserAdminReadModel> bounded, int total) = await repository.GetFilteredPagedReadModelsAsync(
+            search: null, 1, 10, UserAccountStatusFilter.All,
+            new UserAdministrationFilter(LastLoginFrom: day, LastLoginTo: day), CancellationToken.None);
+        (IReadOnlyList<UserAdminReadModel> lowerBounded, _) = await repository.GetFilteredPagedReadModelsAsync(
+            search: null, 1, 10, UserAccountStatusFilter.All,
+            new UserAdministrationFilter(LastLoginFrom: day), CancellationToken.None);
+        (IReadOnlyList<UserAdminReadModel> upperBounded, _) = await repository.GetFilteredPagedReadModelsAsync(
+            search: null, 1, 10, UserAccountStatusFilter.All,
+            new UserAdministrationFilter(LastLoginTo: day), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal(2, total),
+            () => Assert.Equal(new[] { first.Id.Value, last.Id.Value }.Order(), bounded.Select(item => item.Id).Order()),
+            () => Assert.Equal(3, lowerBounded.Count),
+            () => Assert.Contains(lowerBounded, item => item.Id == after.Id.Value),
+            () => Assert.Equal(3, upperBounded.Count),
+            () => Assert.Contains(upperBounded, item => item.Id == before.Id.Value),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
+    }
+
+    [RequiresDockerFact]
     public async Task FilteredPage_RestrictsLastActivityToInclusiveUtcCalendarDates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var inside = User.Create("login-inside@example.com", "hash");

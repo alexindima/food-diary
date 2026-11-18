@@ -12,6 +12,32 @@ namespace FoodDiary.Telegram.Bot.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class BotGeneratedClientTests {
     [Fact]
+    public async Task PrivacyAsync_RoundTripsDeclinedHealthAndAcceptedMarketingWithTheNoticeVersion() {
+        const string response = """
+            {"aiAcceptedAtUtc":"2026-11-18T10:00:00Z","healthAcceptedAtUtc":null,
+             "healthDeclinedAtUtc":"2026-11-18T10:01:00Z","marketingAcceptedAtUtc":"2026-11-18T10:02:00Z","noticeVersion":"2026-11"}
+            """;
+        using var handler = new Handler(request => {
+            Assert.Equal("https://diary.example/api/v1/users/privacy", request.RequestUri?.AbsoluteUri);
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(response, Encoding.UTF8, "application/json"),
+            });
+        });
+        using var http = new HttpClient(handler);
+        var api = new BotPrivacyApi(new BotApiTransport(http, new Uri("https://diary.example")));
+        using HttpResponseMessage reply = await api.GetPrivacyAsync("1", new BotApiRequestContext("token"), CancellationToken.None);
+        UserPrivacyHttpResponse model = Assert.IsType<UserPrivacyHttpResponse>(
+            await reply.Content.ReadFromJsonAsync<UserPrivacyHttpResponse>());
+        using var wire = JsonDocument.Parse(JsonSerializer.Serialize(model));
+        JsonElement privacy = wire.RootElement;
+        Assert.Multiple(
+            () => Assert.Equal(JsonValueKind.Null, privacy.GetProperty("healthAcceptedAtUtc").ValueKind),
+            () => Assert.Equal(new DateTime(2026, 11, 18, 10, 1, 0, DateTimeKind.Utc), privacy.GetProperty("healthDeclinedAtUtc").GetDateTime()),
+            () => Assert.Equal(new DateTime(2026, 11, 18, 10, 2, 0, DateTimeKind.Utc), privacy.GetProperty("marketingAcceptedAtUtc").GetDateTime()),
+            () => Assert.Equal("2026-11", privacy.GetProperty("noticeVersion").GetString()));
+    }
+
+    [Fact]
     public async Task RecognitionAsync_PreservesDecimalPrecisionAndNullableErrorFields() {
         const decimal expected = 1.234567890123456789m;
         using var handler = new Handler(_ => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {

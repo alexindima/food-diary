@@ -6,6 +6,7 @@ using FoodDiary.Testing;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RegisterTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AcquireTelegramOperation;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.CheckpointTelegramOperation;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.ResumeTelegramOperation;
 
 using FoodDiary.Modules.Users.Application.Services;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -138,8 +139,58 @@ public sealed class TelegramOperationHandlersTests {
         await _store.DidNotReceive().CheckpointAsync(Arg.Any<long>(), Arg.Any<TelegramOperationId>(), Arg.Any<TelegramLeaseId>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData("disabled", "Telegram.OperationsUnavailable")]
+    [InlineData("empty_id", "Telegram.InvalidOperation")]
+    [InlineData("invalid_actor", "Telegram.InvalidOperation")]
+    [InlineData("empty_previous", "Telegram.InvalidOperation")]
+    [InlineData("empty_next", "Telegram.InvalidOperation")]
+    [InlineData("unchanged", "Telegram.InvalidOperation")]
+    public async Task Resume_RejectsInvalidRequestsBeforeAuthenticating(string condition, string expectedError) {
+        _policy.OperationsEnabled.Returns(condition is not "disabled");
+        var command = new ResumeTelegramOperationCommand(
+            condition is "empty_id" ? new TelegramOperationId(Guid.Empty) : TelegramOperationId.New(),
+            condition is "invalid_actor" ? 0 : 456,
+            condition is "empty_previous" ? "" : "offered",
+            condition switch { "empty_next" => "", "unchanged" => "offered", _ => "accepted" });
+
+        Result result = await CreateSender().Send(command, CancellationToken.None);
+
+        Assert.Equal(expectedError, ResultAssert.Failure(result).Code);
+        Assert.Empty(_identities.ReceivedCalls());
+        Assert.Empty(_store.ReceivedCalls());
+    }
+
+    [Theory]
+    [InlineData("account_missing")]
+    [InlineData("checkpoint_changed")]
+    [InlineData("resumed")]
+    public async Task Resume_UsesTheCurrentOwnerAndPropagatesTheStoreOutcome(string outcome) {
+        var user = User.CreateTelegram(456, "hash");
+        UserAuthenticationPrincipalModel principal = UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, DateTime.UtcNow);
+        var operation = TelegramOperationId.New();
+        using var cancellation = new CancellationTokenSource();
+        CancellationToken token = cancellation.Token;
+        _identities.AuthenticateTelegramAsync(456, Arg.Any<DateTime>(), token).Returns(outcome is "account_missing"
+            ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound())
+            : Result.Success(principal));
+        _store.ResumeAsync(123, operation, user.Id, principal.SecurityVersion, "offered", "accepted", token)
+            .Returns(outcome is "resumed");
+
+        Result result = await CreateSender().Send(new ResumeTelegramOperationCommand(operation, 456, "offered", "accepted"), token);
+
+        if (outcome is "resumed") {
+            ResultAssert.Success(result);
+        } else {
+            Assert.Equal("Telegram.OperationConflict", ResultAssert.Failure(result).Code);
+        }
+        await _store.Received(outcome is "account_missing" ? 0 : 1)
+            .ResumeAsync(123, operation, user.Id, principal.SecurityVersion, "offered", "accepted", token);
+    }
+
     private ISender CreateSender() => RequestTestSender.Create(
         new RegisterTelegramOperationCommandHandler(_store, _policy, _identities, TimeProvider.System),
         new AcquireTelegramOperationCommandHandler(_store, _policy, _identities, TimeProvider.System),
-        new CheckpointTelegramOperationCommandHandler(_store, _policy, _identities, TimeProvider.System));
+        new CheckpointTelegramOperationCommandHandler(_store, _policy, _identities, TimeProvider.System),
+        new ResumeTelegramOperationCommandHandler(_store, _policy, _identities, TimeProvider.System));
 }

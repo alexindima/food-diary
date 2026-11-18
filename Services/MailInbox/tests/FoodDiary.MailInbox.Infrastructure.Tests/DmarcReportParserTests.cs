@@ -154,6 +154,7 @@ public sealed class DmarcReportParserTests {
 
     [Theory]
     [InlineData("false-end-record")]
+    [InlineData("missing-end-record")]
     [InlineData("multi-disk")]
     [InlineData("invalid-central-entry")]
     [InlineData("unexpected-central-metadata")]
@@ -571,6 +572,9 @@ public sealed class DmarcReportParserTests {
                 break;
             case "multi-disk":
                 BinaryPrimitives.WriteUInt16LittleEndian(bytes.AsSpan(endOfCentralDirectoryOffset + 4), 1);
+                break;
+            case "missing-end-record":
+                bytes.AsSpan(endOfCentralDirectoryOffset, length: 4).Clear();
                 break;
             case "invalid-central-entry":
                 int centralDirectoryOffset = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(

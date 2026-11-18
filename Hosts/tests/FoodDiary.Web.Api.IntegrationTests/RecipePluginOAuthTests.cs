@@ -107,7 +107,8 @@ public sealed partial class RecipePluginOAuthTests(RecipePluginOAuthTests.Plugin
 
         DateTimeOffset originalTime = factory.ValidationClock.UtcNow;
         try {
-            factory.ValidationClock.UtcNow += TimeSpan.FromMinutes(6);
+            // The issuer uses the system clock even when this fixture freezes validation time.
+            factory.ValidationClock.UtcNow = TimeProvider.System.GetUtcNow().AddMinutes(6);
             using HttpResponseMessage expired = await SendMcpAsync(oauth, recipeToken, RecipePluginAccess.RecipeTool, RecipeArguments());
             Assert.Equal(HttpStatusCode.Unauthorized, expired.StatusCode);
         } finally {

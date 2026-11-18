@@ -53,6 +53,57 @@ public sealed class BotDiaryProtocolTests {
         await Assert.ThrowsAsync<JsonException>(() => Client(http).GetPremiumAccessAsync("token", CancellationToken.None));
     }
 
+    [Fact]
+    public async Task StartTrial_UsesTheStableOperationKeyAndReturnsTheNewAccessState() {
+        var operation = new BotOperationId(Guid.NewGuid());
+        using var handler = new Handler(request => {
+            Assert.Equal(HttpMethod.Post, request.Method);
+            Assert.Equal("https://diary.example/api/v1/billing/trial", request.RequestUri?.AbsoluteUri);
+            Assert.Equal("Bearer token", request.Headers.Authorization?.ToString());
+            Assert.Equal($"telegram:{operation.Value:N}:trial", Assert.Single(request.Headers.GetValues("Idempotency-Key")));
+            return Json(new { isPremium = true });
+        });
+        using var http = new HttpClient(handler);
+
+        Assert.True(await Client(http).StartTrialAsync("token", operation, CancellationToken.None));
+    }
+
+    [Theory]
+    [InlineData("Billing.TrialAlreadyUsed", true)]
+    [InlineData("Billing.TrialUnavailable", false)]
+    [InlineData("Billing.SubscriptionAlreadyActive", true)]
+    [InlineData("User.EmailRequired", false)]
+    public async Task StartTrial_UsesTheCurrentPremiumStateAfterAnExpectedConflict(string code, bool premium) {
+        var requests = new List<HttpMethod>();
+        using var handler = new Handler(request => {
+            requests.Add(request.Method);
+            if (request.Method == HttpMethod.Post) {
+                return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = JsonContent.Create(new { error = code }) };
+            }
+            Assert.Equal("https://diary.example/api/v1/billing/overview", request.RequestUri?.AbsoluteUri);
+            return Json(new { isPremium = premium });
+        });
+        using var http = new HttpClient(handler);
+
+        Assert.Equal(premium, await Client(http).StartTrialAsync("token", new BotOperationId(Guid.NewGuid()), CancellationToken.None));
+        Assert.Equal([HttpMethod.Post, HttpMethod.Get], requests);
+    }
+
+    [Theory]
+    [InlineData("Idempotency.InProgress")]
+    [InlineData("Idempotency.LeaseLost")]
+    public async Task StartTrial_RetryableConflictDoesNotReadAnUncommittedAccessState(string code) {
+        using var handler = new Handler(request => {
+            Assert.Equal(HttpMethod.Post, request.Method);
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = JsonContent.Create(new { error = code }) };
+        });
+        using var http = new HttpClient(handler);
+
+        InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Client(http).StartTrialAsync("token", new BotOperationId(Guid.NewGuid()), CancellationToken.None));
+        Assert.Equal("Trial activation is still being processed.", error.Message);
+    }
+
     [Theory]
     [InlineData("{}")]
     [InlineData("{\"accessToken\":null,\"user\":{\"id\":\"11111111-1111-1111-1111-111111111111\"}}")]

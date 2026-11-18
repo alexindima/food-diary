@@ -40,7 +40,7 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" Aliases="global,Initializer" />
     <ProjectReference Include="../../../FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../../Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />

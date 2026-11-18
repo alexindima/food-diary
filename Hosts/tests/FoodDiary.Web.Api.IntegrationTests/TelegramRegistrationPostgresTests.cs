@@ -31,10 +31,12 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationFactory factory) : IClassFixture<PostgresApiWebApplicationFactory> {
     [RequiresDockerTheory]
-    [InlineData(false, false)]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    public async Task ExistingEmail_CombinesOnlyEligibleDiaries(bool useTelegramGoals, bool targetIsAdmin) {
+    [InlineData(false, false, null)]
+    [InlineData(true, false, null)]
+    [InlineData(false, true, null)]
+    [InlineData(false, false, "weight")]
+    [InlineData(false, false, "waist")]
+    public async Task ExistingEmail_CombinesOnlyEligibleDiaries(bool useTelegramGoals, bool targetIsAdmin, string? trackedGoal) {
         const string password = "Password123!";
         const string botSecret = "telegram-transfer-integration-secret";
         await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, configuration) =>
@@ -44,7 +46,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
                 ["TelegramBot:ApiSecret"] = botSecret,
                 ["TelegramAuth:BotToken"] = "123:test-token",
             })));
-        await CompleteTelegramCutoverForScenarioAsync(app);
+        await SetTelegramCutoverForScenarioAsync(app, completed: true);
         using HttpClient source = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         source.DefaultRequestHeaders.Add("X-FoodDiary-Client", "telegram");
         long telegramId = Random.Shared.NextInt64(1_000_000, 900_000_000);
@@ -85,7 +87,13 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         sourceMeal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
         await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
             FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            (await db.Users.SingleAsync(item => item.Id == targetId)).UpdateGoals(dailyCalorieTarget: 2300);
+            User targetUser = await db.Users.SingleAsync(item => item.Id == targetId);
+            targetUser.UpdateGoals(dailyCalorieTarget: 2300);
+            if (trackedGoal is "weight") {
+                targetUser.StartWeightGoal(70, 80, DateTime.UtcNow);
+            } else if (trackedGoal is "waist") {
+                targetUser.StartWaistGoal(75, 85, DateTime.UtcNow);
+            }
             db.AddRange(product, recipe, sourceMeal, targetMeal);
             await db.SaveChangesAsync();
             if (targetIsAdmin) {
@@ -156,6 +164,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         Assert.Equal(1, preview["counts"]["products"].GetInt32());
         Assert.Equal(2000, preview["telegramGoals"]["calories"].GetDouble());
         Assert.Equal(2300, preview["emailGoals"]["calories"].GetDouble());
+        Assert.Equal(trackedGoal is null, preview["canUseTelegramGoals"].GetBoolean());
         await using (AsyncServiceScope scope = app.Services.CreateAsyncScope()) {
             FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             Assert.Equal(sourceId, (await db.Meals.SingleAsync(item => item.Id == sourceMeal.Id)).UserId);
@@ -165,6 +174,16 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         using HttpResponseMessage missingConsent = await source.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
         Assert.Equal(HttpStatusCode.Forbidden, missingConsent.StatusCode);
         await source.GrantHealthTrackingConsentAsync();
+        if (trackedGoal is not null) {
+            using HttpResponseMessage rejectedGoals = await source.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals = true });
+            Assert.Equal(HttpStatusCode.Conflict, rejectedGoals.StatusCode);
+            JsonElement error = await rejectedGoals.Content.ReadFromJsonAsync<JsonElement>();
+            Assert.Equal("User.TelegramDiaryGoalsUnavailable", error.GetProperty("error").GetString());
+            await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+            FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            Assert.Equal(sourceId, (await db.Meals.SingleAsync(item => item.Id == sourceMeal.Id)).UserId);
+            Assert.Null((await db.Users.SingleAsync(item => item.Id == sourceId)).DeletedAt);
+        }
         using HttpResponseMessage confirmed = await source.PostAsJsonAsync(transferRoute, new { ticket, useTelegramGoals });
         Assert.True(confirmed.IsSuccessStatusCode, await confirmed.Content.ReadAsStringAsync());
         using HttpResponseMessage staleTarget = await source.GetAsync("/api/v1/users/info");
@@ -258,10 +277,11 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
             .ConfigureServices(TelegramRecognitionProvider.Configure));
         using HttpClient client = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         client.DefaultRequestHeaders.Add("X-FoodDiary-Client", "telegram");
+        await SetTelegramCutoverForScenarioAsync(app, completed: false);
         using HttpResponseMessage quarantined = await client.PostAsJsonAsync(
             "/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData() });
         Assert.Equal(HttpStatusCode.Unauthorized, quarantined.StatusCode);
-        await CompleteTelegramCutoverForScenarioAsync(app);
+        await SetTelegramCutoverForScenarioAsync(app, completed: true);
         using HttpResponseMessage begin = await client.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData() });
         Assert.True(begin.StatusCode == HttpStatusCode.OK, begin.IsSuccessStatusCode ? null : await begin.Content.ReadAsStringAsync());
         using var intent = JsonDocument.Parse(await begin.Content.ReadAsStringAsync());
@@ -292,13 +312,15 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         await VerifyBackupEmailAsync(client, app, body.RootElement["user"]["id"].GetGuid());
     }
 
-    private static async Task CompleteTelegramCutoverForScenarioAsync(WebApplicationFactory<Program> app) {
-        // This isolated happy-path fixture starts after the migration quarantine.
-        // The request above proves the pre-cutover restriction before advancing its test-only epoch.
+    private static async Task SetTelegramCutoverForScenarioAsync(WebApplicationFactory<Program> app, bool completed) {
         await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
         FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        int updated = await context.Database.ExecuteSqlRawAsync(
-            "UPDATE \"TelegramAssertionPolicies\" SET \"NotBeforeUtc\" = date_trunc('second', clock_timestamp()) - INTERVAL '1 second' WHERE \"Id\" = 1");
+        int offsetSeconds = completed ? -1 : 300;
+        int updated = await context.Database.ExecuteSqlInterpolatedAsync($"""
+            UPDATE "TelegramAssertionPolicies"
+            SET "NotBeforeUtc" = date_trunc('second', clock_timestamp()) + {offsetSeconds} * INTERVAL '1 second'
+            WHERE "Id" = 1
+            """);
         Assert.Equal(1, updated);
     }
 

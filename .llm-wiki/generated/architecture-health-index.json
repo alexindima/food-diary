@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
     "componentsWithoutDirectSpecs": 138,
-    "criticalSymbolsWithoutTestReferences": 53,
+    "criticalSymbolsWithoutTestReferences": 47,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -6224,60 +6224,10 @@
       "coveredThrough": []
     },
     {
-      "name": "ResumeTelegramOperationCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/ResumeTelegramOperation/ResumeTelegramOperationCommandHandler.cs",
-      "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "SetAdminUserPremiumGrantCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Admin/Application/Commands/SetAdminUserPremiumGrant/SetAdminUserPremiumGrantCommandHandler.cs",
-      "line": 13,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "SetUserManualPremiumGrantCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Users/Application/Commands/SetUserManualPremiumGrant/SetUserManualPremiumGrantCommandHandler.cs",
-      "line": 12,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "TransferTelegramDiaryCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/TransferTelegramDiary/TransferTelegramDiaryCommandHandler.cs",
-      "line": 13,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "UpdateAdminDailyAdviceGroupCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/UpdateAdminDailyAdviceGroup/UpdateAdminDailyAdviceGroupCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "VerifyTelegramDiaryEmailCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/VerifyTelegramDiaryEmail/VerifyTelegramDiaryEmailCommandHandler.cs",
-      "line": 11,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -6388,16 +6338,6 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminUserPremiumGrantQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminUserPremiumGrant/GetAdminUserPremiumGrantQueryHandler.cs",
-      "line": 12,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

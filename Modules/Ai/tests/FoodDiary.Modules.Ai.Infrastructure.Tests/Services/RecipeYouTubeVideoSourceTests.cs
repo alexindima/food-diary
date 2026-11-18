@@ -141,6 +141,22 @@ public sealed class RecipeYouTubeVideoSourceTests {
     }
 
     [Fact]
+    public async Task RateLimitedMetadata_ReturnsARetryableErrorWithoutDownloadingAudio() {
+        using var handler = new YouTubeFixtureHandler { MetadataStatus = HttpStatusCode.TooManyRequests };
+        using var http = new HttpClient(handler);
+        await using var destination = new MemoryStream();
+
+        RecipeVideoSourceException error = await Assert.ThrowsAsync<RecipeVideoSourceException>(() =>
+            new RecipeYouTubeVideoSource(http).DownloadAsync(new Uri("https://youtu.be/yNgjOzU3QaU"), destination, CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal("youtube_rate_limited", error.Reason),
+            () => Assert.False(error.InvalidSource),
+            () => Assert.Equal(0, handler.MediaRequests),
+            () => Assert.Equal(0, destination.Length));
+    }
+
+    [Fact]
     public async Task Cancellation_IsPropagated() {
         using var handler = new YouTubeFixtureHandler();
         using var http = new HttpClient(handler);
@@ -189,6 +205,7 @@ public sealed class RecipeYouTubeVideoSourceTests {
         public long DeclaredAudioSize { get; init; } = 32;
         public bool OversizedMetadata { get; init; }
         public bool Unavailable { get; init; }
+        public HttpStatusCode? MetadataStatus { get; init; }
         public string? RedirectTarget { get; init; }
         public string PlayerStatus { get; init; } = "OK";
         public string AudioMimeType { get; init; } = "audio/mp4; codecs=\"mp4a.40.2\"";
@@ -205,6 +222,9 @@ public sealed class RecipeYouTubeVideoSourceTests {
             if (string.Equals(url.Host, "media.googlevideo.com", StringComparison.Ordinal)) {
                 MediaRequests++;
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(Audio) };
+            }
+            if (MetadataStatus is { } status) {
+                return new HttpResponseMessage(status) { RequestMessage = request };
             }
             if (string.Equals(url.AbsolutePath, "/sw.js_data", StringComparison.Ordinal)) {
                 object?[] visitor = new object?[14];
