@@ -302,7 +302,11 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
     it('passes the impersonation code in the URL fragment', async () => {
         const { component, dialogs } = await createContextAsync();
-        const open = vi.spyOn(TestBed.inject(DOCUMENT).defaultView!, 'open').mockReturnValue(null);
+        const view = TestBed.inject(DOCUMENT).defaultView;
+        if (view === null) {
+            throw new Error('A browser window is required for the handoff test');
+        }
+        const open = vi.spyOn(view, 'open').mockReturnValue(null);
         dialogs.open.mockReturnValue({ afterClosed: () => of({ code: 'one-time-code' }) });
 
         component['impersonate'](baseUser);

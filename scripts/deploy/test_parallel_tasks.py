@@ -230,7 +230,7 @@ class DeploymentFixture(unittest.TestCase):
         scripts.mkdir(parents=True, exist_ok=True)
         if HELPER.exists():
             shutil.copy(HELPER, scripts / HELPER.name)
-        for name in ("install_nginx_logrotate.py", "configure_forwarded_proxy.py"):
+        for name in ("install_nginx_logrotate.py", "configure_forwarded_proxy.py", "configure_service_environment.py"):
             (scripts / name).write_text("# isolated host policy fixture\n")
         # The state machine has its own portable/real-Nginx tests; this fixture
         # owns the shell/initializer/publication boundary only.
