@@ -25,7 +25,7 @@ public sealed class MarketingConsentFailureTests {
             new AnonymousVisitorId("owned-visitor"), new MarketingSessionId("owned-session"), "/",
             ReferrerHost: null, UtmSource: "campaign", UtmMedium: null, UtmCampaign: null, UtmContent: null,
             UtmTerm: null, BuildVersion: null, Guid.NewGuid(), PrivacyNoticeVersions.Current, now.AddMinutes(-1));
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder, new(Enabled: false));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder, new(Enabled: false), MarketingAttributionCoverageTests.RegistrationTime());
 
         ResultAssert.Success(await handler.Handle(command, CancellationToken.None));
 
@@ -52,7 +52,8 @@ public sealed class MarketingConsentFailureTests {
         IMarketingAttributionEventRepository repository = Substitute.For<IMarketingAttributionEventRepository>();
         var landing = new MarketingAttributionEventRecord("page_landing", now, UserId: null,
             new AnonymousVisitorId("owned-visitor"), new MarketingSessionId("owned-session"), "/", ReferrerHost: null,
-            UtmSource: null, UtmMedium: null, UtmCampaign: null, UtmContent: null, UtmTerm: null, BuildVersion: null);
+            UtmSource: null, UtmMedium: null, UtmCampaign: null, UtmContent: null, UtmTerm: null, BuildVersion: null,
+            ReceivedAtUtc: now);
         repository.GetLandingAsync(landing.AnonymousId, landing.SessionId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(landing);
         IUserMarketingConsentRecorder recorder = Substitute.For<IUserMarketingConsentRecorder>();
         var failure = new Error("Privacy.MarketingConsentRequired", "Withdrawn.", ErrorKind.Forbidden);
@@ -62,7 +63,7 @@ public sealed class MarketingConsentFailureTests {
             UtmCampaign: null, UtmContent: null, UtmTerm: null, BuildVersion: null,
             Guid.NewGuid(), PrivacyNoticeVersions.Current, now.AddMinutes(-1));
 
-        Result result = await new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder, new(Enabled: true))
+        Result result = await new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, recorder, new(Enabled: true), MarketingAttributionCoverageTests.RegistrationTime(now))
             .Handle(command, CancellationToken.None);
 
         Assert.Equal(failure, ResultAssert.Failure(result));

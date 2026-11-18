@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4869,
-    "symbols": 4841,
+    "sourceFiles": 4874,
+    "symbols": 4846,
     "interfaceImplementationLinks": 218,
     "dependencyInjectionRegistrations": 78,
     "kinds": {
-      "class": 2498,
+      "class": 2502,
       "enum": 77,
       "interface": 436,
-      "record": 1672,
+      "record": 1673,
       "record class": 5,
       "record struct": 144,
       "union": 9
@@ -34,9 +34,9 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 78,
-      "Other": 2030,
-      "Query": 310,
-      "QueryHandler": 224,
+      "Other": 2033,
+      "Query": 311,
+      "QueryHandler": 225,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 106,
@@ -1611,6 +1611,13 @@
       "line": 4
     },
     {
+      "name": "AllowRequiredPasswordChangeAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Security/AllowRequiredPasswordChangeAttribute.cs",
+      "line": 4
+    },
+    {
       "name": "BlockImpersonatedAccessAttribute",
       "kind": "class",
       "role": "Other",
@@ -2535,11 +2542,18 @@
       "line": 12
     },
     {
+      "name": "TelegramReplyQueue",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Telegram.Bot/Operations/TelegramReplyQueue.cs",
+      "line": 6
+    },
+    {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Program.cs",
-      "line": 43
+      "line": 45
     },
     {
       "name": "TelegramBotOptions",
@@ -2588,7 +2602,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 23
+      "line": 24
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
@@ -18254,7 +18268,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "TelegramDiaryHttpMappings",
@@ -18611,7 +18625,7 @@
       "kind": "class",
       "role": "Handler",
       "path": "Modules/Identity/Presentation/Security/BrowserSessionAuthenticationHandler.cs",
-      "line": 15
+      "line": 17
     },
     {
       "name": "BrowserSessionCookieService",
@@ -19011,6 +19025,13 @@
       "role": "Options",
       "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
       "line": 3
+    },
+    {
+      "name": "ImageMetadataSanitizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Providers/Services/ImageMetadataSanitizer.cs",
+      "line": 5
     },
     {
       "name": "IObjectStorageClient",
@@ -19710,7 +19731,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "RecordPremiumConversionCommandHandler",
@@ -27567,6 +27588,13 @@
       "line": 8
     },
     {
+      "name": "GetUserRegistrationTimeQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQueryHandler.cs",
+      "line": 6
+    },
+    {
       "name": "GetUsersForAdministrationQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -28391,6 +28419,13 @@
       "role": "Query",
       "path": "Modules/Users/Contracts/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQuery.cs",
       "line": 6
+    },
+    {
+      "name": "GetUserRegistrationTimeQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Contracts/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQuery.cs",
+      "line": 5
     },
     {
       "name": "GetUsersForAdministrationQuery",
@@ -35569,7 +35604,7 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 78
+      "line": 79
     },
     {
       "service": "IIdempotencyStore",

@@ -395,8 +395,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "b9214bc40a08de50eecf29e3a65df56bc21edb16ff3d04e75a546f42cb9de071",
-          "reviewReason": "The SDK job still uses the same frozen OpenAPI generation and comparison steps. Its npm ci no longer calls the obsolete braces patch. User and Admin SDK drift checks passed on the updated lockfile."
+          "sha256": "04acfcf748af54ffe4b58c7421c5aa114d37ed01a167c42c87bf27a78045d5fa",
+          "reviewReason": "The added service-environment test step leaves the CI API baseline selection and contract comparison commands intact. The security change introduces only internal query and persistence data."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
@@ -424,10 +424,10 @@
           "reviewReason": "Reviewed Telegram disconnect OpenAPI change. Confirmation uses a new authenticated operation with an explicit authentication response and keeps the legacy response schema. The legacy operation prevents unconfirmed unlink and returns reauthentication required. Frontend SDK and full snapshot are regenerated from the host."
         }
       ],
-      "reason": "Reviewed Telegram disconnect OpenAPI change. Confirmation uses a new authenticated operation with an explicit authentication response and keeps the legacy response schema. The legacy operation prevents unconfirmed unlink and returns reauthentication required. Frontend SDK and full snapshot are regenerated from the host.",
-      "baseRef": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
-      "gitHead": "c28a688bf6f303408fa94f292f550d9ceb948ebf",
-      "reviewedAtUtc": "2026-11-17T09:09:56.9034769Z"
+      "reason": "The added service-environment test step leaves the CI API baseline selection and contract comparison commands intact. The security change introduces only internal query and persistence data.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:48.7610077Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -436,8 +436,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "22b5946f7a81119c132ef3642fd002cb8e361a889a24c5d9e567288090f80f2f",
-          "reviewReason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix."
+          "sha256": "80c128852de207e0fbce8c7e0e995fb12507c8e81e909cd4b6c70aca2b731a93",
+          "reviewReason": "The regenerated index reflects the Users registration-time query and Telegram reply worker. Project dependencies and ownership are preserved and all 2287 architecture checks passed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -460,10 +460,10 @@
           "reviewReason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix."
         }
       ],
-      "reason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix.",
-      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "reviewedAtUtc": "2026-11-17T18:41:04.7640683Z"
+      "reason": "The regenerated index reflects the Users registration-time query and Telegram reply worker. Project dependencies and ownership are preserved and all 2287 architecture checks passed.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:49.4444545Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -879,8 +879,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "c99b47091780bc95e9072c0b1ae5a0112b5377eda7c0262ac08f0928fc2bacdf",
-          "reviewReason": "The Product mapping adds one nullable bounded English name and its index. The migration was applied with PostgreSQL to the 100 original rows and compared across the upgrade. The IDs, canonical names and nutrition were preserved."
+          "sha256": "3ece6f5070afe6d923c2050200e275659034196777fa316cbc5354e9863bff41",
+          "reviewReason": "The domain index now includes the database-generated Marketing receipt time. Its mapping and migration were verified by 10 PostgreSQL integration tests, including a backdated client timestamp."
         },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
@@ -888,10 +888,10 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "The Product mapping adds one nullable bounded English name and its index. The migration was applied with PostgreSQL to the 100 original rows and compared across the upgrade. The IDs, canonical names and nutrition were preserved.",
-      "baseRef": "HEAD",
-      "gitHead": "251589fa8a0437447337613cffd4ae61673a2c28",
-      "reviewedAtUtc": "2026-11-16T11:57:29.3053718Z"
+      "reason": "The domain index now includes the database-generated Marketing receipt time. Its mapping and migration were verified by 10 PostgreSQL integration tests, including a backdated client timestamp.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:50.1141827Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1103,14 +1103,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "b9214bc40a08de50eecf29e3a65df56bc21edb16ff3d04e75a546f42cb9de071",
-          "reviewReason": "Wiki compiler jobs keep their original locked npm ci flags and index checks. The only removed install follow-up was the now unnecessary braces patch. The affected index pipeline completed on the new package graph."
+          "sha256": "04acfcf748af54ffe4b58c7421c5aa114d37ed01a167c42c87bf27a78045d5fa",
+          "reviewReason": "The CI addition runs the isolated-environment Python regression suite. Existing staged index generation, smoke shards, and verification entrypoints remain consistent with the workflow."
         }
       ],
-      "reason": "Wiki compiler jobs keep their original locked npm ci flags and index checks. The only removed install follow-up was the now unnecessary braces patch. The affected index pipeline completed on the new package graph.",
-      "baseRef": "HEAD",
-      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
-      "reviewedAtUtc": "2026-11-16T14:27:10.4878772Z"
+      "reason": "The CI addition runs the isolated-environment Python regression suite. Existing staged index generation, smoke shards, and verification entrypoints remain consistent with the workflow.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:51.1245630Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1468,14 +1468,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "b9214bc40a08de50eecf29e3a65df56bc21edb16ff3d04e75a546f42cb9de071",
-          "reviewReason": "The CI edits remove the obsolete dependency patch from install steps. Wiki job partitioning, reporting, comparison base and evidence handling remain the same."
+          "sha256": "04acfcf748af54ffe4b58c7421c5aa114d37ed01a167c42c87bf27a78045d5fa",
+          "reviewReason": "The CI workflow adds one deployment helper test. Existing artifact publication and report generation semantics described here still match the source."
         }
       ],
-      "reason": "The CI edits remove the obsolete dependency patch from install steps. Wiki job partitioning, reporting, comparison base and evidence handling remain the same.",
-      "baseRef": "HEAD",
-      "gitHead": "e96871851cad615e2c578d3e9c1578dacc851342",
-      "reviewedAtUtc": "2026-11-16T14:27:11.2025664Z"
+      "reason": "The CI workflow adds one deployment helper test. Existing artifact publication and report generation semantics described here still match the source.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:53.1284974Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1510,14 +1510,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2ddbd45263de7523ee88ccaa3291de5a2de13f66859a8f0e7cf0ceb6d5675324",
-          "reviewReason": "The API Dockerfile now copies the MCP presentation project and source in its existing build stages. Linux locked restore passed. The generated topology describes the same deployed API process and routing, so the runtime impact workflow still applies."
+          "sha256": "d58c9111808f0a120623d7f87e3be198d5b02c449f45c9569a0d0fdb5f61045c",
+          "reviewReason": "The topology now includes the reply worker and revised scoped service environment. Review checked cancellation, bounded retries, legacy hydration persistence, Stars intake and deployment ordering."
         }
       ],
-      "reason": "The API Dockerfile now copies the MCP presentation project and source in its existing build stages. Linux locked restore passed. The generated topology describes the same deployed API process and routing, so the runtime impact workflow still applies.",
-      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "reviewedAtUtc": "2026-11-17T18:53:09.6515237Z"
+      "reason": "The topology now includes the reply worker and revised scoped service environment. Review checked cancellation, bounded retries, legacy hydration persistence, Stars intake and deployment ordering.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:54.0328303Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1892,8 +1892,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "da31a72a7420f26489a975cf849d9d1d1c26b525de20e26f6c40f907e60620b7",
-          "reviewReason": "The catalog indexes the new MCP code and ADR. The query workflow continues to use that catalog for source discovery."
+          "sha256": "b96065179ca0790b93f36cfe568c501fe853c16eee18810a174aeadf0be35777",
+          "reviewReason": "The catalog was regenerated for the reviewed security source additions. The context query implementation, provider selection and source-freshness rules have no runtime changes."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1936,10 +1936,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The catalog indexes the new MCP code and ADR. The query workflow continues to use that catalog for source discovery.",
-      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "reviewedAtUtc": "2026-11-17T18:41:06.1556435Z"
+      "reason": "The catalog was regenerated for the reviewed security source additions. The context query implementation, provider selection and source-freshness rules have no runtime changes.",
+      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
+      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
+      "reviewedAtUtc": "2026-11-18T20:55:52.1363141Z"
     },
     {
       "pageId": "workflow.review-diff",

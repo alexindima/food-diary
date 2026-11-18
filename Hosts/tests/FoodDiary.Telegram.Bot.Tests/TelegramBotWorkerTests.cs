@@ -702,7 +702,8 @@ public sealed class TelegramBotWorkerTests {
             Options.Create(options),
             logger ?? NullLogger<TelegramBotWorker>.Instance,
             httpClientFactory,
-            FixedTime);
+            FixedTime,
+            new TelegramReplyQueue(FixedTime, NullLogger<TelegramReplyQueue>.Instance));
 
     private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();

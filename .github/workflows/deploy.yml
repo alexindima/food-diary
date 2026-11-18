@@ -461,6 +461,7 @@ jobs:
           $SCP_CMD scripts/deploy/publish_frontend.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/publish_frontend.py
           $SCP_CMD scripts/deploy/parallel_tasks.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/parallel_tasks.sh
           $SCP_CMD scripts/deploy/configure_forwarded_proxy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/configure_forwarded_proxy.py
+          $SCP_CMD scripts/deploy/configure_service_environment.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/configure_service_environment.py
           $SCP_CMD scripts/deploy/prune_images.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/prune_images.py
           $SCP_CMD scripts/deploy/install_nginx_logrotate.py scripts/deploy/nginx-logrotate.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
@@ -508,6 +509,7 @@ jobs:
           python3 scripts/deploy/blue_green.py verify-ingress
 
           # Resolve the current bridge before stopping writers; fail closed on an unknown topology.
+          python3 scripts/deploy/configure_service_environment.py
           python3 scripts/deploy/configure_forwarded_proxy.py
 
           docker compose --profile backend --profile full --profile mail-inbox pull

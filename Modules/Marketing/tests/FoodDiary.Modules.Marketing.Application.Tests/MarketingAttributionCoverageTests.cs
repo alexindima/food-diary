@@ -5,15 +5,56 @@ using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
 using FoodDiary.Modules.Marketing.Application.Common;
 using FoodDiary.Results;
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserRegistrationTime;
 
 namespace FoodDiary.Modules.Marketing.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionCoverageTests {
     [Fact]
+    public async Task Signup_CannotBackdateALandingToBeforeAccountCreation() {
+        var repository = new RecordingRepository {
+            Landing = CreateLandingRecord() with { ReceivedAtUtc = new DateTime(2026, 4, 2, 11, 58, 0, DateTimeKind.Utc) },
+        };
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(),
+            ConsentingRecorder(), new(Enabled: true), RegistrationTime());
+
+        Result result = await handler.Handle(CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = UserId.New(),
+        }, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(repository.Record);
+    }
+
+    [Fact]
+    public async Task ExistingAccount_CannotClaimANewCampaignSignup() {
+        var repository = new RecordingRepository { Landing = CreateLandingRecord() };
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(),
+            ConsentingRecorder(), new(Enabled: true), RegistrationTime(new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)));
+
+        Result result = await handler.Handle(CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = UserId.New(),
+        }, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(repository.Record);
+    }
+
+    internal static ISender RegistrationTime(DateTime? registeredAt = null) {
+        ISender users = Substitute.For<ISender>();
+        users.Send(Arg.Any<GetUserRegistrationTimeQuery>(), Arg.Any<CancellationToken>())
+            .Returns(registeredAt ?? new DateTime(2026, 4, 2, 11, 56, 0, DateTimeKind.Utc));
+        return users;
+    }
+
+    [Fact]
     public async Task Handle_WithoutOptInEvidence_RejectsBeforeWriting() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with { ConsentNoticeVersion = null, ConsentGrantedAtUtc = null };
         Result result = await handler.Handle(command, CancellationToken.None);
         Assert.True(result.IsFailure, "Marketing ingestion must reject requests without current opt-in evidence.");
@@ -22,7 +63,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithWhitespaceAndOversizedValues_NormalizesStoredRecord() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             AnonymousId = new AnonymousVisitorId("   "),
             SessionId = new MarketingSessionId(new string('s', 120)),
@@ -47,7 +88,7 @@ public sealed class MarketingAttributionCoverageTests {
     [InlineData("2026-04-03T00:00:00Z")]
     public async Task Handle_WithInvalidOrOutOfWindowTimestamp_ReturnsValidationFailure(string timestamp) {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
 
         Result result = await handler.Handle(
             CreateCommand(timestamp),
@@ -61,7 +102,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithAuthLanding_SanitizesBeforeWriting() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             LandingPath = "/auth/telegram/callback?code=oauth-secret&state=oauth-state&utm_source=telegram",
             UtmSource = "telegram",
@@ -81,7 +122,7 @@ public sealed class MarketingAttributionCoverageTests {
         var repository = new RecordingRepository {
             Landing = CreateLandingRecord() with { LandingPath = "/verify-email?%74oken=old-secret&returnUrl=%2Freset-password%3Ftoken%3Dnested&utm_source=trusted" },
         };
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
             UserId = UserId.New(),
@@ -97,7 +138,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithUnsupportedEventType_ReturnsValidationFailure() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = "unsupported_event",
         };
@@ -112,7 +153,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithMissingEventId_ReturnsValidationFailure() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventId = Guid.Empty,
         };
@@ -127,7 +168,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithUserIdOnAnonymousLandingEvent_ReturnsValidationFailure() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.PageLanding,
             UserId = UserId.New(),
@@ -146,7 +187,7 @@ public sealed class MarketingAttributionCoverageTests {
     [InlineData("00000000-0000-0000-0000-000000000000")]
     public async Task Handle_WithoutAuthenticatedUserOnSignupCompletedEvent_ReturnsValidationFailure(string? userIdText) {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         UserId? userId = userIdText is null ? null : new UserId(Guid.Parse(userIdText));
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
@@ -166,7 +207,7 @@ public sealed class MarketingAttributionCoverageTests {
         var repository = new RecordingRepository {
             Landing = CreateLandingRecord(),
         };
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
             UserId = UserId.New(),
@@ -182,7 +223,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithSignupCompletedEvent_CopiesOnlyServerStoredLanding() {
         var repository = new RecordingRepository { Landing = CreateLandingRecord() };
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
             UserId = UserId.New(),
@@ -198,7 +239,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithAlreadyRecordedSignup_IsIdempotentWithoutLandingLookup() {
         var repository = new RecordingRepository { SignupExists = true };
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
             UserId = UserId.New(),
@@ -214,7 +255,7 @@ public sealed class MarketingAttributionCoverageTests {
     [Fact]
     public async Task Handle_WithSignupWithoutTrustedLanding_IsSuccessfulNoOp() {
         var repository = new RecordingRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(), ConsentingRecorder(), new(Enabled: true), RegistrationTime());
         RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
             EventType = MarketingAttributionEventTypes.SignupCompleted,
             UserId = UserId.New(),
@@ -242,7 +283,8 @@ public sealed class MarketingAttributionCoverageTests {
             UtmContent: null,
             UtmTerm: null,
             BuildVersion: null,
-            EventId: Guid.NewGuid());
+            EventId: Guid.NewGuid(),
+            ReceivedAtUtc: new DateTime(2026, 4, 2, 11, 55, 0, DateTimeKind.Utc));
 
     private static RecordMarketingAttributionCommand CreateCommand(string timestamp) =>
         new(

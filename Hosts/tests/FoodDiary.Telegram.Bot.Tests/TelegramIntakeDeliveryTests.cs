@@ -15,6 +15,38 @@ namespace FoodDiary.Telegram.Bot.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIntakeDeliveryTests {
     [Fact]
+    public async Task LegacyWater_IsPersistedDespiteAPendingReplyAndIsNotRetriedWithTheReply() {
+        using var scenario = new IntakeScenario(operationsEnabled: false) { AuthorizeLegacy = true, TelegramErrorCode = 503, ErrorMethod = "answerCallbackQuery" };
+        await scenario.Receiver.ProcessBatchAsync([MessageUpdate(10, 100, "/water"), CallbackUpdate(11, "water:250")], CancellationToken.None);
+
+        Assert.Equal(1, scenario.LegacyHydrationCount);
+        Assert.Equal(12, scenario.Receiver.NextOffset);
+        await scenario.ProcessBatchAsync([CallbackUpdate(12, "water:500")], CancellationToken.None);
+        Assert.Equal(2, scenario.LegacyHydrationCount);
+    }
+
+    [Fact]
+    public async Task StarsCheckout_IsAnsweredBeforeAnOrdinaryReplyIsRetried() {
+        using var scenario = new IntakeScenario { TelegramErrorCode = 429 };
+        var checkout = new Update {
+            Id = 11,
+            PreCheckoutQuery = new() {
+                Id = "owned-query",
+                From = new User { Id = 200, FirstName = "Buyer" },
+                Currency = "XTR",
+                TotalAmount = 500,
+                InvoicePayload = "owned-invoice",
+            },
+        };
+
+        await scenario.ProcessBatchAsync([MessageUpdate(10, 100, "/help"), checkout], CancellationToken.None);
+
+        Assert.Equal(12, scenario.Receiver.NextOffset);
+        Assert.Equal(new[] { "stars:validate", "answerPreCheckoutQuery" }, scenario.Events.Take(2), StringComparer.Ordinal);
+        Assert.Contains("sendMessage", scenario.Events, StringComparer.Ordinal);
+    }
+
+    [Fact]
     public async Task PrivatePhotoReplyToWaterPrompt_PreservesAttachedCaptionInTheDurableOperation() {
         using var scenario = new IntakeScenario();
         const string caption = "Гречка с курицей\nСоус отдельно";
@@ -23,7 +55,7 @@ public sealed class TelegramIntakeDeliveryTests {
         photo.Message.Caption = caption;
         photo.Message.Photo = [new PhotoSize { FileId = "food", FileUniqueId = "photo", Width = 400, Height = 400, FileSize = 1024 }];
 
-        await scenario.Receiver.ProcessBatchAsync([photo], CancellationToken.None);
+        await scenario.ProcessBatchAsync([photo], CancellationToken.None);
 
         BotIncomingOperation operation = Assert.Single(scenario.RegisteredOperations);
         Assert.Multiple(
@@ -47,7 +79,7 @@ public sealed class TelegramIntakeDeliveryTests {
             update.Message!.ReplyToMessage = WaterPrompt(update.Message.Chat, botId);
         }
 
-        await scenario.Receiver.ProcessBatchAsync([update], CancellationToken.None);
+        await scenario.ProcessBatchAsync([update], CancellationToken.None);
 
         if (amountMl is null) {
             Assert.Empty(scenario.RegistrationAttempts);
@@ -77,7 +109,7 @@ public sealed class TelegramIntakeDeliveryTests {
     public async Task StatisticsShortcut_RegistersTheSelectedPeriod(string shortcut, int days) {
         using var scenario = new IntakeScenario();
 
-        await scenario.Receiver.ProcessBatchAsync([MessageUpdate(10, 100, shortcut)], CancellationToken.None);
+        await scenario.ProcessBatchAsync([MessageUpdate(10, 100, shortcut)], CancellationToken.None);
 
         BotIncomingOperation operation = Assert.Single(scenario.RegisteredOperations);
         Assert.Multiple(
@@ -100,7 +132,7 @@ public sealed class TelegramIntakeDeliveryTests {
             rejected.Message!.Photo = [new PhotoSize { FileId = "food", FileUniqueId = "photo", Width = 400, Height = 400, FileSize = 1024 }];
         }
 
-        await scenario.Receiver.ProcessBatchAsync([rejected, MessageUpdate(11, 200, "/today")], CancellationToken.None);
+        await scenario.ProcessBatchAsync([rejected, MessageUpdate(11, 200, "/today")], CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(12, scenario.Receiver.NextOffset),
@@ -124,7 +156,7 @@ public sealed class TelegramIntakeDeliveryTests {
             ? CallbackUpdate(10, command)
             : MessageUpdate(10, 100, command);
 
-        await scenario.Receiver.ProcessBatchAsync([first, MessageUpdate(11, 200, "/today")], CancellationToken.None);
+        await scenario.ProcessBatchAsync([first, MessageUpdate(11, 200, "/today")], CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(12, scenario.Receiver.NextOffset),
@@ -146,7 +178,7 @@ public sealed class TelegramIntakeDeliveryTests {
             ErrorMethod = "answerCallbackQuery",
         };
 
-        await scenario.Receiver.ProcessBatchAsync([CallbackUpdate(10, callback), MessageUpdate(11, 200, "/today")], CancellationToken.None);
+        await scenario.ProcessBatchAsync([CallbackUpdate(10, callback), MessageUpdate(11, 200, "/today")], CancellationToken.None);
 
         long[] expectedUsers = string.Equals(callback, "stats:today", StringComparison.Ordinal) ? [100, 200] : [200];
         Assert.Multiple(
@@ -159,18 +191,11 @@ public sealed class TelegramIntakeDeliveryTests {
     [InlineData(400)]
     [InlineData(429)]
     [InlineData(503)]
-    public async Task OtherTelegramErrors_RetainFailedUpdateForRetry(int errorCode) {
+    public async Task OtherTelegramErrors_DoNotBlockDurableUpdatesForOtherUsers(int errorCode) {
         using var scenario = new IntakeScenario { TelegramErrorCode = errorCode };
         Update[] batch = [MessageUpdate(10, 200, "/today"), MessageUpdate(11, 100, "/help"), MessageUpdate(12, 300, "/today")];
 
-        ApiRequestException failure = await Assert.ThrowsAsync<ApiRequestException>(() => scenario.Receiver.ProcessBatchAsync(batch, CancellationToken.None));
-        Assert.Multiple(
-            () => Assert.Equal(errorCode, failure.ErrorCode),
-            () => Assert.Equal(11, scenario.Receiver.NextOffset),
-            () => Assert.Equal(new long[] { 200 }, scenario.PersistedUsers));
-        scenario.TelegramErrorCode = null;
-
-        await scenario.Receiver.ProcessBatchAsync(batch, CancellationToken.None);
+        await scenario.ProcessBatchAsync(batch, CancellationToken.None);
 
         Assert.Equal(13, scenario.Receiver.NextOffset);
         Assert.Equal(new long[] { 200, 300 }, scenario.PersistedUsers);
@@ -183,7 +208,7 @@ public sealed class TelegramIntakeDeliveryTests {
         using var scenario = new IntakeScenario { RegistrationError = "Persistence.Unavailable", RegistrationStatus = status };
         Update[] batch = [MessageUpdate(10, 200, "/today"), MessageUpdate(11, 100, "/today"), MessageUpdate(12, 300, "/today")];
 
-        BotOperationApiException failure = await Assert.ThrowsAsync<BotOperationApiException>(() => scenario.Receiver.ProcessBatchAsync(batch, CancellationToken.None));
+        BotOperationApiException failure = await Assert.ThrowsAsync<BotOperationApiException>(() => scenario.ProcessBatchAsync(batch, CancellationToken.None));
         Assert.Multiple(
             () => Assert.Equal(status, failure.StatusCode),
             () => Assert.Equal(11, scenario.Receiver.NextOffset),
@@ -191,7 +216,7 @@ public sealed class TelegramIntakeDeliveryTests {
             () => Assert.Empty(scenario.TelegramMethods));
         scenario.RegistrationError = null;
 
-        await scenario.Receiver.ProcessBatchAsync(batch, CancellationToken.None);
+        await scenario.ProcessBatchAsync(batch, CancellationToken.None);
 
         Assert.Equal(13, scenario.Receiver.NextOffset);
         Assert.Equal(new long[] { 200, 100, 300 }, scenario.PersistedUsers);
@@ -199,14 +224,14 @@ public sealed class TelegramIntakeDeliveryTests {
     }
 
     [Fact]
-    public async Task TelegramTransportFailure_RemainsUnacknowledged() {
+    public async Task TelegramTransportFailure_DoesNotBlockDurableUpdates() {
         using var scenario = new IntakeScenario { TelegramFailure = new RequestException("Transport unavailable") };
 
-        await Assert.ThrowsAsync<RequestException>(() => scenario.Receiver.ProcessBatchAsync(
-            [MessageUpdate(10, 100, "/help"), MessageUpdate(11, 200, "/today")], CancellationToken.None));
+        await scenario.ProcessBatchAsync(
+            [MessageUpdate(10, 100, "/help"), MessageUpdate(11, 200, "/today")], CancellationToken.None);
 
-        Assert.Null(scenario.Receiver.NextOffset);
-        Assert.Empty(scenario.PersistedUsers);
+        Assert.Equal(12, scenario.Receiver.NextOffset);
+        Assert.Equal(new long[] { 200 }, scenario.PersistedUsers);
     }
 
     [Fact]
@@ -215,7 +240,7 @@ public sealed class TelegramIntakeDeliveryTests {
         using var scenario = new IntakeScenario { CancelRegistration = stopping };
         Update[] batch = [MessageUpdate(10, 200, "/today"), MessageUpdate(11, 100, "/today"), MessageUpdate(12, 300, "/today")];
 
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => scenario.Receiver.ProcessBatchAsync(batch, stopping.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => scenario.ProcessBatchAsync(batch, stopping.Token));
 
         Assert.Equal(11, scenario.Receiver.NextOffset);
         Assert.Equal(new long[] { 200 }, scenario.PersistedUsers);
@@ -226,19 +251,19 @@ public sealed class TelegramIntakeDeliveryTests {
     public async Task SuccessfulCallback_RegistersBeforeAcknowledgementAndContinues() {
         using var scenario = new IntakeScenario();
 
-        await scenario.Receiver.ProcessBatchAsync([CallbackUpdate(10, "stats:today"), MessageUpdate(11, 200, "/today")], CancellationToken.None);
+        await scenario.ProcessBatchAsync([CallbackUpdate(10, "stats:today"), MessageUpdate(11, 200, "/today")], CancellationToken.None);
 
         Assert.Multiple(
             () => Assert.Equal(12, scenario.Receiver.NextOffset),
             () => Assert.Equal(new long[] { 100, 200 }, scenario.PersistedUsers),
-            () => Assert.Equal(new[] { "register:100", "answerCallbackQuery", "register:200" }, scenario.Events, StringComparer.Ordinal));
+            () => Assert.Equal(new[] { "register:100", "register:200", "answerCallbackQuery" }, scenario.Events, StringComparer.Ordinal));
     }
 
     [Fact]
     public async Task MenuCallback_AcknowledgesBeforeSendingChatResponse() {
         using var scenario = new IntakeScenario();
 
-        await scenario.Receiver.ProcessBatchAsync([CallbackUpdate(10, "menu:food")], CancellationToken.None);
+        await scenario.ProcessBatchAsync([CallbackUpdate(10, "menu:food")], CancellationToken.None);
 
         Assert.True(scenario.TelegramMethods.SequenceEqual(["answerCallbackQuery", "sendMessage"], StringComparer.Ordinal),
             "Expected menu callback acknowledgement before the chat response.");
@@ -278,33 +303,51 @@ public sealed class TelegramIntakeDeliveryTests {
         public string ErrorMethod { get; init; } = "sendMessage";
         public Exception? TelegramFailure { get; init; }
         public CancellationTokenSource? CancelRegistration { get; init; }
+        public bool AuthorizeLegacy { get; init; }
+        public int LegacyHydrationCount { get; private set; }
         public List<long> RegistrationAttempts { get; } = [];
         public List<long> PersistedUsers { get; } = [];
         public List<BotIncomingOperation> RegisteredOperations { get; } = [];
         public List<string> TelegramMethods { get; } = [];
         public List<string> Events { get; } = [];
+        private readonly TelegramReplyQueue _replies = new(TimeProvider.System, NullLogger<TelegramReplyQueue>.Instance);
         public DurableTelegramReceiver Receiver { get; }
 
-        public IntakeScenario() {
+        public IntakeScenario(bool operationsEnabled = true) {
             _apiHandler = new Handler(RespondApiAsync);
             _telegramHandler = new Handler(RespondTelegramAsync);
             _telegramHttp = new HttpClient(_telegramHandler, disposeHandler: false);
             var bot = new TelegramBotClient(new TelegramBotClientOptions("123:test") { RetryCount = 0 }, _telegramHttp);
             _worker = new TelegramBotWorker(bot, Options.Create(new TelegramBotOptions {
                 Token = "123:test",
-                OperationsEnabled = true,
+                OperationsEnabled = operationsEnabled,
                 ApiBaseUrl = "https://api.example.test",
                 ApiSecret = "test-operation-secret",
                 WebAppUrl = "https://app.example.test",
-            }), NullLogger<TelegramBotWorker>.Instance, new Factory(_apiHandler), TimeProvider.System);
+            }), NullLogger<TelegramBotWorker>.Instance, new Factory(_apiHandler), TimeProvider.System, _replies);
             MethodInfo method = typeof(TelegramBotWorker).GetMethod("PersistOrHandleUpdateAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
             Func<Update, CancellationToken, Task> process = method.CreateDelegate<Func<Update, CancellationToken, Task>>(_worker);
             Receiver = new DurableTelegramReceiver(bot, process, TimeProvider.System, NullLogger.Instance);
         }
 
+        public async Task ProcessBatchAsync(Update[] updates, CancellationToken cancellationToken) {
+            await Receiver.ProcessBatchAsync(updates, cancellationToken);
+            while (await _replies.ProcessNextAsync(cancellationToken)) { }
+        }
+
         private async Task<HttpResponseMessage> RespondApiAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            if (request.RequestUri!.AbsolutePath.EndsWith("/telegram-stars/updates", StringComparison.Ordinal)) {
+                Events.Add("stars:validate");
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { checkoutApproved = true }) };
+            }
             if (request.RequestUri!.AbsolutePath.EndsWith("/bot/auth", StringComparison.Ordinal)) {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                return AuthorizeLegacy
+                    ? new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { accessToken = "synthetic-legacy-session" }) }
+                    : new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+            if (request.RequestUri!.AbsolutePath.Contains("/hydration", StringComparison.Ordinal)) {
+                LegacyHydrationCount++;
+                return new HttpResponseMessage(HttpStatusCode.Created);
             }
             using JsonDocument body = await JsonDocument.ParseAsync(await request.Content!.ReadAsStreamAsync(cancellationToken), cancellationToken: cancellationToken);
             long userId = body.RootElement.GetProperty("telegramUserId").GetInt64();
@@ -337,7 +380,7 @@ public sealed class TelegramIntakeDeliveryTests {
                     Content = JsonContent.Create(new { ok = false, error_code = code, description = "Delivery rejected" }),
                 });
             }
-            object response = string.Equals(method, "answerCallbackQuery", StringComparison.OrdinalIgnoreCase)
+            object response = method is "answerCallbackQuery" or "answerPreCheckoutQuery"
                 ? new { ok = true, result = (object)true }
                 : new { ok = true, result = (object)new { message_id = 20, date = 1792238400, chat = new { id = 100, type = "private" }, text = "Reply" } };
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(response) });
@@ -345,6 +388,7 @@ public sealed class TelegramIntakeDeliveryTests {
 
         public void Dispose() {
             _worker.Dispose();
+            _replies.Dispose();
             _telegramHttp.Dispose();
             _apiHandler.Dispose();
             _telegramHandler.Dispose();

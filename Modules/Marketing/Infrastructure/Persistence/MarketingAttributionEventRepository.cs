@@ -104,11 +104,12 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             .Where(x => x.EventType == "page_landing" &&
                 x.AnonymousId == anonymousId &&
                 x.SessionId == sessionId &&
-                x.OccurredAtUtc >= sinceUtc)
-            .OrderByDescending(x => x.OccurredAtUtc)
+                x.OccurredAtUtc >= sinceUtc && x.ReceivedAtUtc >= sinceUtc)
+            .OrderByDescending(x => x.ReceivedAtUtc)
             .Select(x => new MarketingAttributionEventRecord(
                 x.EventType, x.OccurredAtUtc, x.UserId, x.AnonymousId, x.SessionId, x.LandingPath,
-                x.ReferrerHost, x.UtmSource, x.UtmMedium, x.UtmCampaign, x.UtmContent, x.UtmTerm, x.BuildVersion, x.Id.Value))
+                x.ReferrerHost, x.UtmSource, x.UtmMedium, x.UtmCampaign, x.UtmContent, x.UtmTerm, x.BuildVersion, x.Id.Value,
+                ConsentNoticeVersion: null, ConsentGrantedAtUtc: null, ReceivedAtUtc: x.ReceivedAtUtc))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

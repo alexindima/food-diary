@@ -57,6 +57,9 @@ jobs:
       - name: Test Docker proxy trust for administrative HTTPS sessions
         run: python3 -B -m unittest discover -s scripts/deploy -p 'test_configure_forwarded_proxy.py'
 
+      - name: Test isolated supporting service environments
+        run: python3 -B -m unittest discover -s scripts/deploy -p 'test_configure_service_environment.py'
+
       - name: Test scoped .NET artifact cleanup
         shell: pwsh
         run: ./scripts/Test-NestedDotnetArtifactsCleanup.ps1

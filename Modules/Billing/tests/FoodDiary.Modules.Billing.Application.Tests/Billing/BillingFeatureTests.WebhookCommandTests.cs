@@ -19,6 +19,71 @@ using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
+    [Theory]
+    [InlineData("", true)]
+    [InlineData("customer_saved", true)]
+    [InlineData("customer_other", false)]
+    public async Task PaddleAdjustment_UsesTheSavedPaymentOwnerWithoutRequiringCustomerMetadata(string customer, bool accepted) {
+        var owner = User.Create("saved-payment@example.com", "hash");
+        var other = User.Create("payment-metadata@example.com", "hash");
+        var payments = new RecordingBillingPaymentRepository();
+        payments.Payments.Add(BillingPayment.Create(owner.Id, billingSubscriptionId: null, BillingProviderNames.Paddle, "txn_saved",
+            "customer_saved", "subscription_saved", externalPaymentMethodId: null, "price_monthly", "monthly", "active",
+            BillingPaymentKinds.Checkout, 7.99m, "USD", Now, Now.AddMonths(1), webhookEventId: null, providerMetadataJson: null));
+        var resolver = new BillingWebhookContextResolver(new InMemoryBillingSubscriptionRepository(),
+            new FakeUserRepository(owner, other), payments);
+        BillingWebhookEventModel message = CreateWebhookPaymentEvent(other, "evt_adjustment", "") with {
+            ExternalCustomerId = customer,
+            ExternalSubscriptionId = null,
+            ExternalPaymentId = "adj_new",
+            RelatedTransactionId = "txn_saved",
+            UpdatesSubscription = false,
+            FinancialAction = "refund",
+        };
+
+        Result<BillingWebhookProcessingContext?> result = await resolver.ResolveAsync(BillingProviderNames.Paddle,
+            message, CancellationToken.None);
+
+        Assert.Equal(accepted, result.IsSuccess);
+        if (accepted) {
+            Assert.Equal(owner.Id, Assert.IsType<BillingWebhookProcessingContext>(result.Value).User.UserId);
+        }
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_UnknownCustomerCannotSelectAnAccountThroughMetadata() {
+        var user = User.Create("unbound-paddle@example.com", "hash");
+        var subscriptions = new InMemoryBillingSubscriptionRepository();
+        var resolver = new BillingWebhookContextResolver(subscriptions, new FakeUserRepository(user));
+        BillingWebhookEventModel message = CreateWebhookPaymentEvent(user, "evt_unbound", "sub_unbound");
+
+        Result<BillingWebhookProcessingContext?> result = await resolver.ResolveAsync(
+            BillingProviderNames.Paddle, message, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Empty(subscriptions.Subscriptions);
+    }
+
+    [Fact]
+    public async Task PaddleWebhook_SavedCustomerBindingTakesPrecedenceOverMetadata() {
+        var owner = User.Create("bound-paddle@example.com", "hash");
+        var other = User.Create("metadata-paddle@example.com", "hash");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(owner, BillingProviderNames.Paddle,
+            "customer_bound", "subscription_bound", "pm_bound", "active", Now, Now.AddMonths(1), "evt_previous", Now);
+        var resolver = new BillingWebhookContextResolver(new InMemoryBillingSubscriptionRepository(subscription),
+            new FakeUserRepository(owner, other));
+        BillingWebhookEventModel message = CreateWebhookPaymentEvent(other, "evt_bound", "subscription_new") with {
+            ExternalCustomerId = "customer_bound",
+            OccurredAtUtc = Now.AddMinutes(1),
+        };
+
+        Result<BillingWebhookProcessingContext?> result = await resolver.ResolveAsync(
+            BillingProviderNames.Paddle, message, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal(owner.Id, Assert.IsType<BillingWebhookProcessingContext>(result.Value).User.UserId);
+    }
+
     [Fact]
     public async Task ProcessBillingWebhookValidator_RejectsOversizedProvider() {
         var command = new ProcessBillingWebhookCommand(
@@ -84,7 +149,9 @@ public partial class BillingFeatureTests {
     public async Task ProcessBillingWebhookInbox_CountsProcessedAndFailedEvents() {
         var user = User.Create("inbox-batch@example.com", "hash");
         var userRepository = new FakeUserRepository(user);
-        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(
+            CreateSubscriptionSnapshot(user, BillingProviderNames.Paddle, "customer_existing_webhook_payment",
+                "sub_batch_valid", "pm_existing_webhook_payment", "active", Now, Now.AddMonths(1), "evt_checkout", Now.AddMinutes(-1)));
         var paymentRepository = new RecordingBillingPaymentRepository();
         var repository = new RecordingBillingWebhookEventRepository();
         BillingWebhookEventModel validModel = CreateWebhookPaymentEvent(user, "evt_batch_valid", "sub_batch_valid");
@@ -883,7 +950,9 @@ public partial class BillingFeatureTests {
         await webhookEventRepository.AddAsync(inboxEvent);
         if (alreadyProcessed) { inboxEvent.MarkProcessed(Now); }
         var dateTimeProvider = new FixedDateTimeProvider(Now);
-        var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(
+            CreateSubscriptionSnapshot(user, BillingProviderNames.Paddle, "customer_existing_webhook_payment",
+                "sub_queued_payment_race", "pm_existing_webhook_payment", "active", Now, Now.AddMonths(1), "evt_checkout", Now.AddMinutes(-1)));
         var userRepository = new FakeUserRepository(user);
         var processor = new BillingWebhookEventProcessor(
             webhookEventRepository,

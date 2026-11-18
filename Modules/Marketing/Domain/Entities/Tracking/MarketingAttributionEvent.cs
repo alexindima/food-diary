@@ -16,6 +16,7 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
     private const int BuildVersionMaxLength = 64;
 
     public DateTime OccurredAtUtc { get; private set; }
+    public DateTime ReceivedAtUtc { get; private set; }
     public UserId? UserId { get; private set; }
     public string EventType { get; private set; } = string.Empty;
     public AnonymousVisitorId AnonymousId { get; private set; } = AnonymousVisitorId.Empty;
@@ -54,6 +55,8 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
                 ? new MarketingAttributionEventId(eventGuid)
                 : MarketingAttributionEventId.New(),
             OccurredAtUtc = NormalizeUtc(occurredAtUtc, nameof(occurredAtUtc)),
+            // Leave the generated value unset so the database supplies the receipt time.
+            ReceivedAtUtc = default,
             UserId = userId is { } value && value.Value != Guid.Empty ? value : null,
             EventType = NormalizeRequired(eventType, EventTypeMaxLength, nameof(eventType)),
             AnonymousId = new AnonymousVisitorId(NormalizeRequired(anonymousId.Value, AnonymousIdMaxLength, nameof(anonymousId))),

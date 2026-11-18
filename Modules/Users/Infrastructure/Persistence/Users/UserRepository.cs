@@ -6,6 +6,14 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
 public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> auditEvents, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserRepository, IUserGoogleIdentityRepository {
+    public async Task<DateTime?> GetRegistrationTimeAsync(UserId id, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken);
+        }
+        return await users.AsNoTracking().Where(user => user.Id == id && user.IsActive && user.DeletedAt == null)
+            .Select(user => (DateTime?)user.CreatedOnUtc).SingleOrDefaultAsync(cancellationToken);
+    }
+
     private IQueryable<User> UsersWithRoles() =>
         users
             .AsSplitQuery()

@@ -391,6 +391,18 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
+    public void SupportingServices_DoNotReceiveTheSharedEnvironmentFile() {
+        string compose = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.yml"));
+        foreach (string serviceName in new[] { "mailrelay-db-init", "mailinbox-db-init", "mail-relay", "mail-inbox", "telegram-bot" }) {
+            Match service = Regex.Match(compose,
+                $@"(?ms)^  {Regex.Escape(serviceName)}:\r?\n.*?(?=^  [a-zA-Z0-9_-]+:\r?$|\z)",
+                RegexOptions.None, TimeSpan.FromSeconds(1));
+            Assert.True(service.Success);
+            Assert.DoesNotMatch(@"(?m)^\s*-\s*(?:path:\s*)?\.env\s*$", service.Value);
+        }
+    }
+
+    [Fact]
     public void InternetFacingAndApplicationContainers_UseRuntimeHardeningBaseline() {
         string compose = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.yml"));
         foreach (string serviceName in HardenedRuntimeServices) {

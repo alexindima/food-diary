@@ -8,6 +8,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserRegistrationTime;
 
 namespace FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
 
@@ -15,7 +16,8 @@ public sealed class RecordMarketingAttributionCommandHandler(
     IMarketingAttributionEventRepository repository,
     TimeProvider timeProvider,
     IUserMarketingConsentRecorder consentRecorder,
-    MarketingAttributionOptions options)
+    MarketingAttributionOptions options,
+    ISender users)
     : IRequestHandler<RecordMarketingAttributionCommand, Result> {
     private const int EventTypeMaxLength = 32;
     private const int AnonymousIdMaxLength = 96;
@@ -65,6 +67,7 @@ public sealed class RecordMarketingAttributionCommandHandler(
         if (!HasCurrentOptIn(request, timestampResult.Value)) {
             return Result.Failure(Errors.Validation.Invalid(nameof(request.ConsentNoticeVersion), "A current, prior marketing opt-in is required."));
         }
+        DateTime eventOccurredAtUtc = timestampResult.Value;
         MarketingAttributionEventRecord? trustedLanding = null;
         if (string.Equals(request.EventType, MarketingAttributionEventTypes.SignupCompleted, StringComparison.Ordinal)) {
             if (await repository.ExistsForUserAsync(request.UserId!.Value, MarketingAttributionEventTypes.SignupCompleted, cancellationToken)) {
@@ -79,11 +82,21 @@ public sealed class RecordMarketingAttributionCommandHandler(
             if (trustedLanding is null) {
                 return Result.Success();
             }
+            DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+            DateTime? registeredAtUtc = await users.Send(
+                new GetUserRegistrationTimeQuery(request.UserId.Value), cancellationToken);
+            if (registeredAtUtc is not { } registration || trustedLanding.ReceivedAtUtc is not { } received ||
+                registration < received ||
+                registration < nowUtc - MaximumPastTimestampAge || registration > nowUtc ||
+                request.ConsentGrantedAtUtc > registration) {
+                return Result.Success();
+            }
+            eventOccurredAtUtc = registration;
         }
 
         var record = new MarketingAttributionEventRecord(
             NormalizeRequired(request.EventType, EventTypeMaxLength, "page_landing"),
-            timestampResult.Value,
+            eventOccurredAtUtc,
             request.UserId,
             trustedLanding?.AnonymousId ?? new AnonymousVisitorId(NormalizeRequired(request.AnonymousId.Value, AnonymousIdMaxLength, "unknown")),
             trustedLanding?.SessionId ?? new MarketingSessionId(NormalizeRequired(request.SessionId.Value, SessionIdMaxLength, "unknown")),

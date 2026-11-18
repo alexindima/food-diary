@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1429,
+    "contracts": 1430,
     "ambiguousContracts": 34,
-    "consumerEdges": 11629,
-    "productionConsumerEdges": 6482,
-    "testConsumerEdges": 5147,
-    "consumedContracts": 1429,
+    "consumerEdges": 11642,
+    "productionConsumerEdges": 6490,
+    "testConsumerEdges": 5152,
+    "consumedContracts": 1430,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -9102,6 +9102,23 @@
       ],
       "definitionPaths": [
         "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetUserRegistrationTimeQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -30191,7 +30208,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthHttpMappingsTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "AuthenticationHttpResponse",
@@ -59046,6 +59063,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UserPrivacyControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetUserRegistrationTimeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetUserRegistrationTimeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetUserRegistrationTimeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -119182,6 +119238,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Contracts/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Contracts/Queries/GetUsersForAdministration/GetUsersForAdministrationQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -121978,6 +122047,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserManualPremiumGrant/GetUserManualPremiumGrantQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -124928,6 +125010,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Presentation/Controllers/MarketingAttributionController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -127115,6 +127210,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramOperationsControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "ISender",
@@ -133224,7 +133332,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IUserAccessTokenSecurityReader",
@@ -133419,7 +133527,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/AccessTokenSecurityStateValidator.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IUserAccessTokenSessionReader",
@@ -137331,6 +137439,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Common/UserContextService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -142088,6 +142209,19 @@
         "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Services/UserTelegramAccountService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -142114,9 +142248,35 @@
         "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 16
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IUserSessionRevocationService",
@@ -142130,6 +142290,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ResetRevocation.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/SystemContentOwnerAdministrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IUserSessionRevocationService",
@@ -146718,7 +146891,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CookieAccountRevocationApiTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 5
     },
     {
       "contract": "LoginHttpRequest",
@@ -173512,6 +173685,20 @@
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionController.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "UserHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+        "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 2
     },
     {
       "contract": "UserHttpResponse",

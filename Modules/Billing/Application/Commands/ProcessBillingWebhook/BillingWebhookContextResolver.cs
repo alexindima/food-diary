@@ -19,7 +19,17 @@ public sealed class BillingWebhookContextResolver(
     public async Task<string> GetSerializationKeyAsync(string provider, BillingWebhookEventModel webhookEvent, CancellationToken cancellationToken) {
         BillingSubscription? subscription = await ResolveSubscriptionAsync(provider, webhookEvent, cancellationToken);
         BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(provider, webhookEvent.RelatedTransactionId, cancellationToken);
-        Guid? userId = subscription?.UserId.Value ?? (webhookEvent.UserId is { } metadataUserId && metadataUserId != Guid.Empty ? metadataUserId : relatedPayment?.UserId.Value);
+        Guid? userId = subscription?.UserId.Value;
+        if (userId is null) {
+            if (string.Equals(provider, BillingProviderNames.Paddle, StringComparison.OrdinalIgnoreCase)) {
+                BillingPayment? payment = await ResolveRelatedPaymentAsync(provider,
+                    webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId, cancellationToken);
+                userId = payment?.UserId.Value ?? relatedPayment?.UserId.Value;
+            } else {
+                userId = webhookEvent.UserId is { } metadataUserId && metadataUserId != Guid.Empty
+                    ? metadataUserId : relatedPayment?.UserId.Value;
+            }
+        }
         return userId is { } id && id != Guid.Empty
             ? BillingOperationLockKeys.ForUser(id)
             : $"billing-webhook:{provider.Trim().ToLowerInvariant()}:{webhookEvent.EventId}";
@@ -35,6 +45,18 @@ public sealed class BillingWebhookContextResolver(
             cancellationToken);
         BillingPayment? payment = await ResolveRelatedPaymentAsync(provider,
             webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId, cancellationToken);
+        BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(provider, webhookEvent.RelatedTransactionId, cancellationToken);
+        if (string.Equals(provider, BillingProviderNames.Paddle, StringComparison.OrdinalIgnoreCase)) {
+            BillingPayment? savedPayment = payment ?? relatedPayment;
+            if (subscription is null && (savedPayment is null ||
+                (!string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId) &&
+                 !string.Equals(savedPayment.ExternalCustomerId, webhookEvent.ExternalCustomerId, StringComparison.Ordinal)))) {
+                return Result.Failure<BillingWebhookProcessingContext?>(
+                    BillingErrors.WebhookValidationFailed("Paddle webhook has no saved customer or payment binding."));
+            }
+            // Paddle custom_data is writable by checkout clients. Only persisted provider bindings identify the owner.
+            webhookEvent = webhookEvent with { UserId = subscription?.UserId.Value ?? savedPayment!.UserId.Value };
+        }
         webhookEvent = NormalizeRenewal(provider, webhookEvent, subscription, payment);
         if (subscription is null && webhookEvent.UserId is { } ownerId && ownerId != Guid.Empty) {
             // A late notification from the previous provider still belongs to this user's payment history.
@@ -62,10 +84,6 @@ public sealed class BillingWebhookContextResolver(
             return Result.Success<BillingWebhookProcessingContext?>(value: null);
         }
 
-        BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(
-            provider,
-            webhookEvent.RelatedTransactionId,
-            cancellationToken);
         UserBillingProfileModel? user = await ResolveUserAsync(
             subscription,
             webhookEvent.UserId,

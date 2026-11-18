@@ -169,12 +169,14 @@ Email__FrontendBaseUrl=https://your-frontend-domain.com
 Если нужен полный сценарий:
 
 ```powershell
+python scripts/deploy/configure_service_environment.py
 docker compose --profile backend up --build postgres rabbitmq db-init mail-relay api
 ```
 
 Если хочешь подключить DKIM-ключ как файл в контейнер, используй override compose:
 
 ```powershell
+python scripts/deploy/configure_service_environment.py
 docker compose -f docker-compose.yml -f docker-compose.mailrelay-secrets.yml --profile backend up --build postgres rabbitmq db-init mail-relay api
 ```
 

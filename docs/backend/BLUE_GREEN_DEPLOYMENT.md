@@ -5,6 +5,12 @@ The entrypoint remains `.github/workflows/deploy.yml`; run helpers under its
 existing exclusive `/var/lock/fooddiary-deploy.lock`. Production lives at
 `/opt/fooddiary`. Do not run a second deployment controller concurrently.
 
+The deployment runs `python3 scripts/deploy/configure_service_environment.py`
+after preparing `.env`. This generates private `.env.mail-relay`,
+`.env.mailrelay-init`, `.env.mail-inbox` and `.env.telegram-bot` files containing
+each supporting service's own settings. Run the same helper after changing
+`.env` before a manual Compose startup or recreation of these services.
+
 ## Automatic decision
 
 Preflight queries the pinned candidate Initializer with `list` and the live

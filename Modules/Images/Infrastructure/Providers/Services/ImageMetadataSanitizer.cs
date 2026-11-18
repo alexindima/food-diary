@@ -159,26 +159,26 @@ internal static class ImageMetadataSanitizer {
                     output.WriteByte(0x3b);
                     return output.ToArray();
                 case 0x2c when content.Length >= 10: { // Image descriptor
-                    int blocks = 11 + GifColorTableLength(content[9]); // Includes the LZW code size.
-                    if (blocks >= content.Length || !TryMeasureGifBlocks(content[blocks..], out int length)) {
-                        return null;
+                        int blocks = 11 + GifColorTableLength(content[9]); // Includes the LZW code size.
+                        if (blocks >= content.Length || !TryMeasureGifBlocks(content[blocks..], out int length)) {
+                            return null;
+                        }
+                        int imageLength = blocks + length;
+                        output.Write(content[..imageLength]);
+                        content = content[imageLength..];
+                        break;
                     }
-                    int imageLength = blocks + length;
-                    output.Write(content[..imageLength]);
-                    content = content[imageLength..];
-                    break;
-                }
                 case 0x21 when content.Length >= 3: { // Extension
-                    if (!TryMeasureGifBlocks(content[2..], out int length)) {
-                        return null;
+                        if (!TryMeasureGifBlocks(content[2..], out int length)) {
+                            return null;
+                        }
+                        ReadOnlySpan<byte> extension = content[..(length + 2)];
+                        if (IsGifAnimationExtension(extension)) {
+                            output.Write(extension);
+                        }
+                        content = content[extension.Length..];
+                        break;
                     }
-                    ReadOnlySpan<byte> extension = content[..(length + 2)];
-                    if (IsGifAnimationExtension(extension)) {
-                        output.Write(extension);
-                    }
-                    content = content[extension.Length..];
-                    break;
-                }
                 default:
                     return null;
             }
