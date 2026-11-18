@@ -454,7 +454,7 @@ public partial class AdminFeatureTests {
 
     private static UpdateAdminUserCommandHandler CreateUpdateAdminUserHandler(InMemoryUserRepository userRepository) =>
         new(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             new NullAuditLogger(),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 

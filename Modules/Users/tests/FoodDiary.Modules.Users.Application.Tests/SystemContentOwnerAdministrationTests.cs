@@ -4,6 +4,7 @@ using FoodDiary.Modules.Users.Application.Commands.SetUserPasswordByAdministrato
 using FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator;
 using FoodDiary.Modules.Users.Contracts.Commands.SetUserPasswordByAdministrator;
 using FoodDiary.Modules.Users.Contracts.Commands.UpdateUserByAdministrator;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -17,7 +18,7 @@ public sealed class SystemContentOwnerAdministrationTests {
         IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
         IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
         IUserRoleCatalogService roles = Substitute.For<IUserRoleCatalogService>();
-        var handler = new UpdateUserByAdministratorCommandHandler(lookup, writer, roles);
+        var handler = new UpdateUserByAdministratorCommandHandler(lookup, writer, roles, Substitute.For<IUserSessionRevocationService>());
         var update = new UserAdminUpdateModel(SystemContentOwner.Id, IsActive: true, IsEmailConfirmed: true,
             Roles: ["Admin"], Language: "en", AiInputTokenLimit: null, AiOutputTokenLimit: null,
             ActorUserId: UserId.New(), UpdatedAtUtc: DateTime.UtcNow);

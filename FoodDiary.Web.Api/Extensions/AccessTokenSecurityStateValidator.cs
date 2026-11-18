@@ -8,10 +8,18 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 namespace FoodDiary.Web.Api.Extensions;
 
 internal static class AccessTokenSecurityStateValidator {
+    public static Task<bool> IsCurrentAsync(
+        ClaimsPrincipal? principal,
+        IUserAccessTokenSecurityReader securityReader,
+        IUserAccessTokenSessionReader sessionReader,
+        CancellationToken cancellationToken) =>
+        IsCurrentAsync(principal, securityReader, sessionReader, allowRequiredPasswordChange: false, cancellationToken);
+
     public static async Task<bool> IsCurrentAsync(
         ClaimsPrincipal? principal,
         IUserAccessTokenSecurityReader securityReader,
         IUserAccessTokenSessionReader sessionReader,
+        bool allowRequiredPasswordChange,
         CancellationToken cancellationToken) {
         string? userIdClaim = principal?.FindFirstValue(ClaimTypes.NameIdentifier);
         string? securityVersionClaim = principal?.FindFirstValue(JwtSecurityClaimNames.SecurityVersion);
@@ -29,7 +37,10 @@ internal static class AccessTokenSecurityStateValidator {
             return false;
         }
 
-        if (!await securityReader.IsCurrentAsync(userId, securityVersion, cancellationToken)) {
+        bool isCurrent = allowRequiredPasswordChange
+            ? await securityReader.IsCurrentForPasswordChangeAsync(userId, securityVersion, cancellationToken)
+            : await securityReader.IsCurrentAsync(userId, securityVersion, cancellationToken);
+        if (!isCurrent) {
             return false;
         }
 

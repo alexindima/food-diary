@@ -17,6 +17,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVer
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
@@ -355,6 +356,27 @@ public sealed class AuthHttpMappingsTests {
         Assert.Equal("refresh-token", response.RefreshToken);
         Assert.Equal(userId, response.User.Id);
         Assert.Equal("alex@example.com", response.User.Email);
+        Assert.Equal("Alex", response.User.FirstName);
+    }
+
+    [Fact]
+    public void AuthenticationResponses_WithRequiredPasswordChange_OnlyExposeSignInFields() {
+        var id = Guid.NewGuid();
+        UserModel user = CreateUserModel(id) with { MustChangePassword = true, WeightKg = 67, DesiredWaistCm = 75 };
+        var principal = new UserAuthenticationPrincipalModel(new UserId(id), user.Email, ["Admin"], AccessTokenCapUtc: null, user);
+        var session = new BrowserSessionModel("fixture", Guid.NewGuid(), DateTime.UtcNow.AddMinutes(1), RememberMe: false, principal);
+
+        AuthenticationHttpResponse login = new AuthenticationModel("access-token", "refresh-token", user).ToHttpResponse();
+        AuthenticationHttpResponse restored = session.ToHttpResponse();
+
+        Assert.Multiple(
+            () => Assert.True(login.User.MustChangePassword),
+            () => Assert.Equal(id, login.User.Id),
+            () => Assert.Equal(user.Email, login.User.Email),
+            () => Assert.Null(login.User.FirstName),
+            () => Assert.Null(login.User.WeightKg),
+            () => Assert.Null(restored.User.DesiredWaistCm),
+            () => Assert.Empty(restored.Roles!));
     }
 
     [Fact]

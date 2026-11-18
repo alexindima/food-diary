@@ -17,6 +17,7 @@ namespace FoodDiary.Modules.Users.Presentation.Controllers;
 [Route("api/v{version:apiVersion}/users/password")]
 public sealed class UsersPasswordController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPatch]
+    [AllowRequiredPasswordChange]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

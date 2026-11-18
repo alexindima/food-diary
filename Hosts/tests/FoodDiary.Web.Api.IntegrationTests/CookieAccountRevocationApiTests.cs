@@ -1,9 +1,11 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -95,25 +97,90 @@ public sealed class CookieAccountRevocationApiTests(ApiWebApplicationFactory fac
             new LoginHttpRequest(user.Email, CookieAuthenticationScenario.Password));
         Assert.Equal(HttpStatusCode.Unauthorized, oldPassword.StatusCode);
         await CookieAuthenticationScenario.LoginAsync(phone, user.Email, replacement);
+        if (string.Equals(operation, "administrator", StringComparison.Ordinal)) {
+            // An administrator-issued replacement is temporary until the account holder changes it.
+            const string permanent = "PermanentCookiePassword111!";
+            using HttpResponseMessage changed = await phone.PatchAsJsonAsync("/api/v1/users/password",
+                new { currentPassword = replacement, newPassword = permanent });
+            Assert.Equal(HttpStatusCode.NoContent, changed.StatusCode);
+            await CookieAuthenticationScenario.LoginAsync(phone, user.Email, permanent);
+        }
         await CookieAuthenticationScenario.AssertIdentityAsync(phone, user.Id);
     }
 
     [RequiresDockerFact]
     public async Task Deactivation_RejectsBothExistingCookiesRestorationAndFreshLogin() {
         using HttpClient administrator = CookieAuthenticationScenario.CreateBrowser(factory);
-        using HttpClient computer = CookieAuthenticationScenario.CreateBrowser(factory);
-        using HttpClient phone = CookieAuthenticationScenario.CreateBrowser(factory);
+        using HttpClient registration = CookieAuthenticationScenario.CreateBrowser(factory);
+        using HttpClient computer = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
+        using HttpClient phone = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
+        using HttpClient telegram = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
         await CookieAuthenticationScenario.CreateAdministratorAsync(factory, administrator);
-        CookieIdentity user = await CookieAuthenticationScenario.RegisterAsync(factory, computer);
-        await CookieAuthenticationScenario.LoginAsync(phone, user.Email);
+        CookieIdentity user = await CookieAuthenticationScenario.RegisterAsync(factory, registration);
+        AuthenticationResponseCookies.ApplyBrowserSession(computer, user.Cookie);
+        using HttpResponseMessage phoneLogin = await phone.PostAsJsonAsync("/api/v1/auth/login",
+            new LoginHttpRequest(user.Email, CookieAuthenticationScenario.Password));
+        Assert.Equal(HttpStatusCode.OK, phoneLogin.StatusCode);
+        AuthenticationResponseCookies.ApplyBrowserSession(phone, AuthenticationResponseCookies.ReadBrowserSession(phoneLogin));
+        telegram.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "telegram");
+        using HttpResponseMessage bearerLogin = await telegram.PostAsJsonAsync("/api/v1/auth/login",
+            new LoginHttpRequest(user.Email, CookieAuthenticationScenario.Password));
+        Assert.Equal(HttpStatusCode.OK, bearerLogin.StatusCode);
+        string refreshToken = AuthenticationResponseCookies.ReadRefreshToken(bearerLogin);
+
         using HttpResponseMessage deactivated = await administrator.PatchAsJsonAsync($"/api/v1/admin/users/{user.Id}", new { isActive = false });
         Assert.Equal(HttpStatusCode.OK, deactivated.StatusCode);
+        using HttpResponseMessage inactiveProfile = await computer.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, inactiveProfile.StatusCode);
+        using HttpClient subsequent = CookieAuthenticationScenario.CreateBrowser(factory);
+        using HttpResponseMessage login = await subsequent.PostAsJsonAsync("/api/v1/auth/login",
+            new LoginHttpRequest(user.Email, CookieAuthenticationScenario.Password));
+        Assert.Equal(HttpStatusCode.Unauthorized, login.StatusCode);
+
+        // Keep the original credentials unused for restoration until after the account is active again.
+        using HttpResponseMessage reactivated = await administrator.PatchAsJsonAsync($"/api/v1/admin/users/{user.Id}", new { isActive = true });
+        Assert.Equal(HttpStatusCode.OK, reactivated.StatusCode);
         await CookieAuthenticationScenario.AssertRejectedSessionAsync(computer);
         await CookieAuthenticationScenario.AssertRejectedSessionAsync(phone);
-        using HttpResponseMessage login = await phone.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(user.Email, CookieAuthenticationScenario.Password));
-        Assert.Equal(HttpStatusCode.Unauthorized, login.StatusCode);
+        using HttpResponseMessage refresh = await telegram.PostAsJsonAsync("/api/v1/auth/refresh", new { refreshToken });
+        Assert.Equal(HttpStatusCode.Unauthorized, refresh.StatusCode);
+        await CookieAuthenticationScenario.LoginAsync(subsequent, user.Email);
+        await CookieAuthenticationScenario.AssertIdentityAsync(subsequent, user.Id);
         using HttpResponseMessage unaffected = await administrator.GetAsync("/api/v1/admin/users");
         Assert.Equal(HttpStatusCode.OK, unaffected.StatusCode);
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TemporaryPassword_OnlyAllowsPasswordChangeUntilReplacement(bool bearer) {
+        using HttpClient administrator = CookieAuthenticationScenario.CreateBrowser(factory);
+        using HttpClient client = CookieAuthenticationScenario.CreateBrowser(factory);
+        await CookieAuthenticationScenario.CreateAdministratorAsync(factory, administrator);
+        CookieIdentity user = await CookieAuthenticationScenario.RegisterAsync(factory, client);
+        const string temporary = "TemporaryCookiePassword456!";
+        const string replacement = "PermanentCookiePassword789!";
+        using HttpResponseMessage assigned = await administrator.PatchAsJsonAsync($"/api/v1/admin/users/{user.Id}/password", new { newPassword = temporary });
+        Assert.Equal(HttpStatusCode.NoContent, assigned.StatusCode);
+
+        if (bearer) {
+            client.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "telegram");
+        }
+        using HttpResponseMessage login = await client.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(user.Email, temporary));
+        Assert.Equal(HttpStatusCode.OK, login.StatusCode);
+        JsonElement session = await login.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(session.GetProperty("user").GetProperty("mustChangePassword").GetBoolean());
+        if (bearer) {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", session.GetProperty("accessToken").GetString());
+        }
+
+        using HttpResponseMessage denied = await client.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, denied.StatusCode);
+        using HttpResponseMessage changed = await client.PatchAsJsonAsync("/api/v1/users/password", new { currentPassword = temporary, newPassword = replacement });
+        Assert.Equal(HttpStatusCode.NoContent, changed.StatusCode);
+        using HttpClient subsequent = CookieAuthenticationScenario.CreateBrowser(factory);
+        await CookieAuthenticationScenario.LoginAsync(subsequent, user.Email, replacement);
+        await CookieAuthenticationScenario.AssertIdentityAsync(subsequent, user.Id);
     }
 
     [RequiresDockerFact]

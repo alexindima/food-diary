@@ -142,12 +142,14 @@ public sealed class S3ImageStorageService(
                 return CreateInvalidValidationResult(ref outcome, "not_found", "Image upload has not completed.");
             }
 
-            if (content.LongLength != info.SizeBytes || !HasValidImageContent(content, info.ContentType)) {
+            if (content.LongLength != info.SizeBytes ||
+                PreparePublishedContent(content, info.ContentType) is not { Length: > 0 } published ||
+                published.LongLength > _options.MaxUploadSizeBytes) {
                 return CreateInvalidValidationResult(ref outcome, "invalid_content",
                     "Uploaded object content does not match a supported image format.");
             }
 
-            await PublishValidatedContentAsync(objectKey, info.ContentType, content, cancellationToken);
+            await PublishValidatedContentAsync(objectKey, info.ContentType, published, cancellationToken);
 
             return ImageObjectValidationResult.Accepted;
         } catch (InvalidDataException ex) {
@@ -191,16 +193,16 @@ public sealed class S3ImageStorageService(
     }
 
     [ExcludeFromCodeCoverage]
-    private static bool HasValidImageContent(byte[] content, string contentType) {
+    private static byte[]? PreparePublishedContent(byte[] content, string contentType) {
         using var stream = new SKMemoryStream(content);
         using var codec = SKCodec.Create(stream);
         if (codec is null || !ContentTypeMatchesFormat(contentType, codec.EncodedFormat)) {
-            return false;
+            return null;
         }
 
         SKImageInfo original = codec.Info;
         if (original.Width <= 0 || original.Height <= 0) {
-            return false;
+            return null;
         }
 
         double scale = Math.Min(1d, MaximumDecodedDimension / (double)Math.Max(original.Width, original.Height));
@@ -210,7 +212,9 @@ public sealed class S3ImageStorageService(
             SKColorType.Rgba8888,
             SKAlphaType.Premul);
         using var bitmap = new SKBitmap(decoded);
-        return codec.GetPixels(decoded, bitmap.GetPixels()) == SKCodecResult.Success;
+        return codec.GetPixels(decoded, bitmap.GetPixels()) == SKCodecResult.Success
+            ? ImageMetadataSanitizer.Sanitize(content, codec, bitmap)
+            : null;
     }
 
     private static bool ContentTypeMatchesFormat(string contentType, SKEncodedImageFormat format) {

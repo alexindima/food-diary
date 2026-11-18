@@ -6,6 +6,7 @@ using FoodDiary.Modules.Users.Application.Commands.CreateUserByAdministrator;
 using FoodDiary.Mediator;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
@@ -104,7 +105,7 @@ public sealed class UserAdministrationMutationServiceTests {
         IUserRoleCatalogService roles) =>
         RequestTestSender.Create(
             new CreateUserByAdministratorCommandHandler(lookup, writer, roles, new PrefixPasswordHasher()),
-            new UpdateUserByAdministratorCommandHandler(lookup, writer, roles),
+            new UpdateUserByAdministratorCommandHandler(lookup, writer, roles, Substitute.For<IUserSessionRevocationService>()),
             new SetUserPasswordByAdministratorCommandHandler(lookup, writer, new PrefixPasswordHasher()));
 
     private static UserAdminCreateModel CreateRequest() => new(

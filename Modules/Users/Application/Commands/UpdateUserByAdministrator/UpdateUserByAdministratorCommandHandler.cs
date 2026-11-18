@@ -18,7 +18,8 @@ namespace FoodDiary.Modules.Users.Application.Commands.UpdateUserByAdministrator
 
 public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository,
-    IUserRoleCatalogService roleCatalogService) : IRequestHandler<UpdateUserByAdministratorCommand, Result<UserAdminReadModel>> {
+    IUserRoleCatalogService roleCatalogService,
+    IUserSessionRevocationService sessions) : IRequestHandler<UpdateUserByAdministratorCommand, Result<UserAdminReadModel>> {
     public async Task<Result<UserAdminReadModel>> Handle(UpdateUserByAdministratorCommand request, CancellationToken cancellationToken) {
         UserAdminUpdateModel input = request.Request;
         if (input.UserId == SystemContentOwner.Id) {
@@ -43,6 +44,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
             return Result.Failure<UserAdminReadModel>(roleUpdateResult.Error);
         }
 
+        bool wasActive = user.IsActive;
         Error? lifecycleError = ApplyLifecycleUpdate(user, input);
         if (lifecycleError is not null) {
             return Result.Failure<UserAdminReadModel>(lifecycleError);
@@ -59,6 +61,10 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
             user,
             roleUpdateResult.Value?.AuditEvents ?? [],
             cancellationToken);
+        // Reactivation also clears sessions left by deactivations on older deployments.
+        if (wasActive != user.IsActive) {
+            await sessions.RevokeAllAsync(user.Id, input.UpdatedAtUtc, cancellationToken);
+        }
         return Result.Success(user.ToAdminReadModel());
 
     }

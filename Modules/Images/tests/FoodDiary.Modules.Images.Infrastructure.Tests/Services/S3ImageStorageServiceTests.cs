@@ -330,6 +330,58 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task ConfirmUploadedObjectAsync_RemovesJpegExifAndKeepsDisplayOrientation() {
+        using var bitmap = new SKBitmap(12, 8);
+        bitmap.Erase(SKColors.DarkBlue);
+        using SKData jpeg = bitmap.Encode(SKEncodedImageFormat.Jpeg, 95);
+        byte[] original = jpeg.ToArray();
+        // A little-endian TIFF directory with the standard EXIF orientation tag (rotate 90 degrees).
+        byte[] exif = Convert.FromHexString("FFE1002245786966000049492A0008000000010012010300010000000600000000000000");
+        byte[] photo = [.. original.AsSpan(0, 2), .. exif, .. original.AsSpan(2)];
+        var storage = new StubObjectStorageClient(new StoredObjectInfo(photo.Length, "image/jpeg"), photo);
+
+        ImageObjectValidationResult result = await CreateService(storage).ConfirmUploadedObjectAsync(
+            ObjectStorageKey.FromStoredValue("users/test/photo.jpg"), CancellationToken.None);
+
+        Assert.True(result.IsValid);
+        byte[] published = Assert.IsType<byte[]>(storage.PublishedContent);
+        Assert.Equal(-1, published.AsSpan().IndexOf("Exif\0\0"u8));
+        using var stream = new SKMemoryStream(published);
+        using var product = SKCodec.Create(stream);
+        Assert.NotNull(product);
+        Assert.Equal(new SKSizeI(8, 12), product.Info.Size);
+    }
+
+    [Theory]
+    [InlineData("image/png", "iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAAHHRFWHRDb21tZW50AG9yaWdpbmFsLWNhbWVyYS1ub3RlcfK0pAAAADBlWElmTU0AKgAAAAgAAQEOAAIAAAAVAAAAGgAAAABvcmlnaW5hbC1jYW1lcmEtbm90ZQAAQ76rPgAAABNJREFUeJxjZGBoYIABJjgLnQMAEpwAhnB/lqAAAAAASUVORK5CYII=", 1)]
+    [InlineData("image/webp", "UklGRsIAAABXRUJQVlA4WAoAAAAKAAAAAwAAAgAAQU5JTQYAAAAAAAAAAgBBTk1GKAAAAAAAAAAAAAMAAAIAAEYAAAJWUDhMDwAAAC8DgAAABxBRwP4HIqL/AQBBTk1GKAAAAAAAAAAAAAMAAAIAAIIAAABWUDhMDwAAAC8DgAAABxAFjP4HIqL/AQBFWElGNgAAAEV4aWYAAE1NACoAAAAIAAEBDgACAAAAFQAAABoAAAAAb3JpZ2luYWwtY2FtZXJhLW5vdGUAAA==", 2)]
+    [InlineData("image/gif", "R0lGODlhBAADAIEAAAAAgAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwECAAAh/hRvcmlnaW5hbC1jYW1lcmEtbm90ZQAh+QQABwAAACwAAAAABAADAAAICAABCBxIUGBAACH5BAENAAEALAAAAAAEAAMAgYAAAAAAAAAAAAAAAAgIAAEIHEhQYEAAOw==", 2)]
+    public async Task ConfirmUploadedObjectAsync_DropsOptionalMetadataAndKeepsFrames(string contentType, string fixture, int frames) {
+        byte[] source = Convert.FromBase64String(fixture);
+        Assert.True(source.AsSpan().IndexOf("original-camera-note"u8) >= 0);
+        var storage = new StubObjectStorageClient(new StoredObjectInfo(source.Length, contentType), source);
+
+        ImageObjectValidationResult result = await CreateService(storage).ConfirmUploadedObjectAsync(
+            ObjectStorageKey.FromStoredValue("users/test/photo"), CancellationToken.None);
+
+        Assert.True(result.IsValid);
+        byte[] published = Assert.IsType<byte[]>(storage.PublishedContent);
+        Assert.Equal(-1, published.AsSpan().IndexOf("original-camera-note"u8));
+        using var stream = new SKMemoryStream(published);
+        using var product = SKCodec.Create(stream);
+        Assert.NotNull(product);
+        Assert.Equal(new SKSizeI(4, 3), product.Info.Size);
+        Assert.Equal(frames, Math.Max(1, product.FrameCount));
+        if (frames > 1) {
+            using var originalStream = new SKMemoryStream(source);
+            using var original = SKCodec.Create(originalStream);
+            Assert.NotNull(original);
+            Assert.Equal(original.RepetitionCount, product.RepetitionCount);
+            Assert.Equal(new[] { 70, 130 }, product.FrameInfo.Select(frame => frame.Duration));
+        }
+    }
+
+    [Fact]
     public async Task ValidateUploadedObjectAsync_WhenContentIsNotAnImage_ReturnsInvalidContent() {
         byte[] content = "not-an-image"u8.ToArray();
         S3ImageStorageService service = CreateService(new StubObjectStorageClient(

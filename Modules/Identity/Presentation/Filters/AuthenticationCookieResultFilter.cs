@@ -48,7 +48,7 @@ public sealed class AuthenticationCookieResultFilter(
                     response.Value = authentication with {
                         AccessToken = null,
                         RefreshToken = string.Empty,
-                        Roles = session.Value.Principal.Roles.ToArray(),
+                        Roles = authentication.User?.MustChangePassword == true ? [] : session.Value.Principal.Roles.ToArray(),
                         SessionId = session.Value.SessionId.ToString("D"),
                         RememberMe = session.Value.RememberMe,
                     };

@@ -35,7 +35,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<IAuditLogger>());
@@ -58,7 +58,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<IAuditLogger>());
@@ -82,7 +82,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: [roleName]);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<IAuditLogger>());
@@ -105,7 +105,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<IAuditLogger>());
@@ -126,7 +126,7 @@ public partial class AdminFeatureTests {
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             revocation,
             TimeProvider.System,
             Substitute.For<IAuditLogger>());
@@ -528,7 +528,7 @@ public partial class AdminFeatureTests {
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
         var handler = new UpdateAdminUserCommandHandler(
-            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
+            RequestTestSender.Create(new CreateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, new PrefixPasswordHasher()), new UpdateUserByAdministratorCommandHandler(userRepository, userRepository, userRepository, Substitute.For<IUserSessionRevocationService>()), new SetUserPasswordByAdministratorCommandHandler(userRepository, userRepository, new PrefixPasswordHasher())),
             new NullAuditLogger(),
             new FixedDateTimeProvider(timestamp));
 
