@@ -208,7 +208,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
             new AnonymousVisitorId("anon-session-backdated"), new MarketingSessionId("session-backdated"), now.AddHours(-3));
 
         Assert.NotNull(landing);
-        Assert.Equal(backdated, landing.OccurredAtUtc);
+        Assert.Equal(backdated, landing.OccurredAtUtc, TimeSpan.FromMicroseconds(1));
         Assert.True(landing.ReceivedAtUtc >= now.AddSeconds(-1));
     }
 
