@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
-          "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
+          "sha256": "2e153fe10b08a14adddfe1af01045ed5ead05186dc684b63022c35ad28f84fc7",
+          "reviewReason": "The fd-tour test target uses the same Angular unit-test builder, source include and exclusions. The four coverage thresholds increased, and the regenerated frontend index still discovers the same owner."
         }
       ],
-      "reason": "Read frontend index guidance. The facade change only stabilizes verify worker identity and retains exact legacy matching; frontend inventory, standalone routes, cache keys and strict affected contracts remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "405dcfafb79701dc336ab0053a4515c8552ad87b",
-      "reviewedAtUtc": "2026-11-08T04:24:01.7669099Z"
+      "reason": "The fd-tour test target uses the same Angular unit-test builder, source include and exclusions. The four coverage thresholds increased, and the regenerated frontend index still discovers the same owner.",
+      "baseRef": "69e8534ed",
+      "gitHead": "69e8534ed08b8629aadb7d62efbd4a447dbd40c8",
+      "reviewedAtUtc": "2026-11-19T15:59:39.4505507Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
-          "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
+          "sha256": "2e153fe10b08a14adddfe1af01045ed5ead05186dc684b63022c35ad28f84fc7",
+          "reviewReason": "The Angular project inventory and target names are unchanged. The higher coverage thresholds belong to the existing Tour test target and add no build target."
         }
       ],
-      "reason": "The central package list adds OpenIddict server and validation packages and the MCP ASP.NET transport. The catalog already inventories central package versions and project references. Regenerated the affected indexes and verified locked restore, the API OAuth and Swagger tests, and the project dependency matrix.",
-      "baseRef": "HEAD",
-      "gitHead": "650b55625428713baa9f909105260a3f1039fbac",
-      "reviewedAtUtc": "2026-11-17T11:09:36.0600166Z"
+      "reason": "The Angular project inventory and target names are unchanged. The higher coverage thresholds belong to the existing Tour test target and add no build target.",
+      "baseRef": "69e8534ed",
+      "gitHead": "69e8534ed08b8629aadb7d62efbd4a447dbd40c8",
+      "reviewedAtUtc": "2026-11-19T15:59:40.0056756Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -1710,33 +1710,18 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "a062b62c47eb51e07caf5f3c33d04ff496c0302779653cd1f11d29e7c9806949",
+      "pageSha256": "a65ed599558b1fdad755584afbf146fbd09da6008a91d2e818daf0970de6047b",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "b31131e39823a55de2243cf0be2f18152ef1c99b65ff3eb685a5b10725dcfbba",
-          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
-          "sha256": "2625b2a11de6c98cd2bfa3dc283ddac8151d85196375d4c438755d536943f774",
-          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
-          "sha256": "4816e16271763e781f0d7437126f0c6dd30671b3cddc076446ab89576064023d",
-          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
-        },
-        {
-          "path": "docs/ai/AI_WORKFLOW.md",
-          "sha256": "7f2de430cf50d5b4578d422169f98a4dd6a768c2a91be8a425559a172a64873b",
-          "reviewReason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass."
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "a12e31cb911561d9c558122a272868b103cd0eb6daf80d2f98333071f9e47820",
+          "reviewReason": "The documented Tour thresholds now match angular.json. The coverage plan still selects test:ci:tour and test:coverage:tour, and all four thresholds passed in the complete suite."
         }
       ],
-      "reason": "Updated the WebMCP library owner mapping. The precision fixture verifies test:ci:webmcp instead of the application runner, mixed frontend owner commands remain distinct with unique IDs, stylesheet slices exclude unrelated backend tests, and existing cycle/identity routing assertions still pass.",
-      "baseRef": "HEAD",
-      "gitHead": "6d1463956c6680a070d6b3447aa58a18a4c4178f",
-      "reviewedAtUtc": "2026-11-06T10:11:20.3503318Z"
+      "reason": "The documented Tour thresholds now match angular.json. The coverage plan still selects test:ci:tour and test:coverage:tour, and all four thresholds passed in the complete suite.",
+      "baseRef": "69e8534ed",
+      "gitHead": "69e8534ed08b8629aadb7d62efbd4a447dbd40c8",
+      "reviewedAtUtc": "2026-11-19T15:59:40.5401039Z"
     },
     {
       "pageId": "workflow-trace-feature",

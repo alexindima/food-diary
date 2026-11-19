@@ -29,7 +29,7 @@
             [style.max-height.px]="popoverLayout().maxHeight"
         >
             <div class="fd-tour__header">
-                <span class="fd-tour__progress">{{ progressLabel() }}</span>
+                <span class="fd-tour__progress">{{ snapshot.stepIndex + 1 }} / {{ snapshot.stepCount }}</span>
                 <button class="fd-tour__close" type="button" [attr.aria-label]="labels().close" (click)="close()">&times;</button>
             </div>
 

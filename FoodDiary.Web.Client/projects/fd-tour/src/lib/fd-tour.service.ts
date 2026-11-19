@@ -25,7 +25,6 @@ export class FdTourService {
     private readonly preparingState = signal(false);
     private cleanupTarget: (() => void) | null = null;
     private activeResolver: FdTourTargetResolver | null = null;
-    private preparationRevision = 0;
     private refreshScheduled = false;
 
     public readonly target = this.targetState.asReadonly();
@@ -88,26 +87,11 @@ export class FdTourService {
     }
 
     public next(): void {
-        const snapshot = this.snapshot();
-        if (snapshot === null) {
-            return;
-        }
-
-        if (snapshot.isLastStep) {
-            this.complete();
-            return;
-        }
-
-        this.moveTo(snapshot.stepIndex + 1, 1);
+        this.move(1);
     }
 
     public previous(): void {
-        const snapshot = this.snapshot();
-        if (snapshot === null || snapshot.isFirstStep) {
-            return;
-        }
-
-        this.moveTo(snapshot.stepIndex - 1, -1);
+        this.move(-1);
     }
 
     public skip(): void {
@@ -126,13 +110,13 @@ export class FdTourService {
         this.storage.clearCompleted(tourId);
     }
 
-    private moveTo(candidateIndex: number, direction: 1 | -1): void {
+    private move(direction: 1 | -1): void {
         const activeTour = this.activeTourState();
         if (activeTour === null) {
             return;
         }
 
-        let nextIndex = candidateIndex;
+        let nextIndex = this.activeStepIndexState() + direction;
         while (nextIndex >= 0 && nextIndex < activeTour.steps.length) {
             const step = activeTour.steps[nextIndex];
             if (this.hasTarget(step)) {
@@ -213,13 +197,9 @@ export class FdTourService {
         }
         this.preparingState.set(true);
         this.activeResolver = resolver;
-        this.cleanupTarget = resolver.reveal(step.target);
-        const revision = this.preparationRevision;
+        const cleanup = resolver.reveal(step.target);
         const renderRef = afterNextRender(
             () => {
-                if (revision !== this.preparationRevision) {
-                    return;
-                }
                 this.preparingState.set(false);
                 const target = this.findTarget(step);
                 if (target === null) {
@@ -231,7 +211,6 @@ export class FdTourService {
             },
             { injector: this.injector },
         );
-        const cleanup = this.cleanupTarget;
         this.cleanupTarget = (): void => {
             renderRef.destroy();
             cleanup();
@@ -239,7 +218,6 @@ export class FdTourService {
     }
 
     private releaseTarget(): void {
-        this.preparationRevision += 1;
         this.cleanupTarget?.();
         this.cleanupTarget = null;
         this.activeResolver = null;
@@ -248,10 +226,6 @@ export class FdTourService {
     }
 
     private findTarget(step: FdTourStep): Element | null {
-        if (!isPlatformBrowser(this.platformId)) {
-            return null;
-        }
-
         return findTourTarget(this.document, step.target);
     }
 

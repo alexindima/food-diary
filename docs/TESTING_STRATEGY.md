@@ -542,7 +542,7 @@ Admin and all three libraries also enforce project-wide minimums in their Angula
 coverage configurations. These floors preserve the measured baseline; they do
 not imply that every important scenario has a test. In lines/statements/branches/
 functions order, the minimums are Admin 75/76/72/67, UI kit 85/86/84/87, tour
-75/76/69/73, and WebMCP 96/96/96/95. Raise the relevant floor after closing a
+100/100/100/100, and WebMCP 96/96/96/95. Raise the relevant floor after closing a
 meaningful gap rather than compensating for a regression in another project.
 
 Dashboard facade regressions include meal mutations/favorites, initial and silent

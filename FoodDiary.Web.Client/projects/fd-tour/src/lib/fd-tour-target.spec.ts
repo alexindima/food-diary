@@ -21,4 +21,13 @@ describe('Tour target layout boxes', () => {
         document.body.append(host);
         expect(findTourTarget(document, '[data-target]')).toBeNull();
     });
+
+    it('treats an invalid selector as a missing target and can still resolve a valid one', () => {
+        host = document.createElement('div');
+        host.innerHTML = '<button data-target>Available</button>';
+        document.body.append(host);
+
+        expect(findTourTarget(document, '[data-target=')).toBeNull();
+        expect(findTourTarget(document, '[data-target]')).toBe(host.querySelector('button'));
+    });
 });

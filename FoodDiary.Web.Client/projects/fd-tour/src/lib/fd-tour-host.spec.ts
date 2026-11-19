@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { DOCUMENT } from '@angular/common';
+import { afterEveryRender, Component, PLATFORM_ID, signal } from '@angular/core';
+import { type ComponentFixture, TestBed, TestComponentRenderer } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { FdTourService } from './fd-tour.service';
@@ -99,11 +100,8 @@ describe('FdTourHostComponent responsive highlight', () => {
 });
 
 describe('Tour space around a mobile menu item', () => {
-    it('limits the popover to the available space below the highlighted row', () => {
-        const widthDescriptor = Object.getOwnPropertyDescriptor(window, 'innerWidth');
-        const heightDescriptor = Object.getOwnPropertyDescriptor(window, 'innerHeight');
-        Object.defineProperty(window, 'innerWidth', { configurable: true, value: 320 });
-        Object.defineProperty(window, 'innerHeight', { configurable: true, value: 640 });
+    it('limits the measured popover to the available space below the highlighted row', async () => {
+        setViewport({ width: 320, height: 640 });
         const target = document.createElement('button');
         target.id = 'long-menu-item';
         document.body.append(target);
@@ -118,21 +116,18 @@ describe('Tour space around a mobile menu item', () => {
         try {
             service.start({ id: 'mobile-space', version: 1, steps: [{ id: 'row', target: '#long-menu-item', title: 'Row' }] });
             fixture.detectChanges();
-            fixture.componentInstance['popoverSize'].set({ width: 288, height: 305 });
-            fixture.detectChanges();
-            const popover = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.fd-tour__popover');
-            expect(popover?.style.maxHeight).toBe('282px');
-            expect(Number.parseFloat(popover?.style.top ?? '0')).toBeGreaterThan(targetRect.bottom);
+            const popover = requireElement(fixture.nativeElement as HTMLElement, '.fd-tour__popover');
+            vi.spyOn(popover, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect({ width: 288, height: 305 }));
+            await vi.waitFor(() => {
+                fixture.detectChanges();
+                expect(popover.style.top).toBe('342px');
+            });
+            expect(popover.style.maxHeight).toBe('282px');
+            expect(Number.parseFloat(popover.style.top)).toBeGreaterThan(targetRect.bottom);
         } finally {
             service.close();
             fixture.destroy();
             target.remove();
-            if (widthDescriptor !== undefined) {
-                Object.defineProperty(window, 'innerWidth', widthDescriptor);
-            }
-            if (heightDescriptor !== undefined) {
-                Object.defineProperty(window, 'innerHeight', heightDescriptor);
-            }
         }
     });
 });
@@ -178,18 +173,20 @@ function requireElement(host: ParentNode, selector: string): HTMLElement {
 
 function startNavigationTour({ fixture, tour }: TourFixture): void {
     expect(
-        tour.start(
-            {
-                id: 'navigation',
-                version: 1,
-                labels: { previous: 'Earlier', next: 'Continue', finish: 'Finish', skip: 'Dismiss tour', close: 'Close tour' },
-                steps: [
-                    { id: 'dashboard', target: '[data-tour-id="dashboard"]', title: 'Dashboard' },
-                    { id: 'meal', target: '[data-tour-id="meal"]', title: 'Meals' },
-                ],
-            },
-            { force: true },
-        ),
+        tour.start({
+            id: 'navigation',
+            version: 1,
+            labels: { previous: 'Earlier', next: 'Continue', finish: 'Finish', skip: 'Dismiss tour', close: 'Close tour' },
+            steps: [
+                {
+                    id: 'dashboard',
+                    target: '[data-tour-id="dashboard"]',
+                    title: 'Dashboard',
+                    description: 'Review your nutrition summary.',
+                },
+                { id: 'meal', target: '[data-tour-id="meal"]', title: 'Meals' },
+            ],
+        }),
     ).toBe(true);
     fixture.detectChanges();
 }
@@ -199,6 +196,15 @@ function pressTourKey(fixture: ComponentFixture<TourHost>, key: string): Keyboar
     document.dispatchEvent(event);
     fixture.detectChanges();
     return event;
+}
+
+function setViewport({ width, height }: { width: number; height: number }): void {
+    const innerWidth = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(width);
+    const innerHeight = vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(height);
+    onTestFinished(() => {
+        innerWidth.mockRestore();
+        innerHeight.mockRestore();
+    });
 }
 
 describe('FdTourHostComponent navigation', () => {
@@ -211,9 +217,11 @@ describe('FdTourHostComponent navigation', () => {
 
         expect(dialog.getAttribute('aria-label')).toBe('Dashboard');
         expect(progress.textContent.trim()).toBe('1 / 2');
+        expect(requireElement(dialog, '.fd-tour__description').textContent.trim()).toBe('Review your nutrition summary.');
         expect(pressTourKey(view.fixture, 'ArrowRight').defaultPrevented).toBe(true);
         expect(dialog.getAttribute('aria-label')).toBe('Meals');
         expect(progress.textContent.trim()).toBe('2 / 2');
+        expect(dialog.querySelector('.fd-tour__description')).toBeNull();
         expect(pressTourKey(view.fixture, 'ArrowLeft').defaultPrevented).toBe(true);
         expect(dialog.getAttribute('aria-label')).toBe('Dashboard');
     });
@@ -243,6 +251,20 @@ describe('FdTourHostComponent navigation', () => {
         view.fixture.detectChanges();
         expect(view.host.querySelector('[role="dialog"]')).toBeNull();
         expect(view.tour.snapshot()).toBeNull();
+    });
+
+    it('dismisses through the named close control and lets the user reopen the tour', () => {
+        const view = createTourFixture();
+        startNavigationTour(view);
+        const close = requireElement(view.host, '.fd-tour__close');
+        expect(close.getAttribute('aria-label')).toBe('Close tour');
+
+        close.click();
+        view.fixture.detectChanges();
+        expect(view.host.querySelector('[role="dialog"]')).toBeNull();
+
+        startNavigationTour(view);
+        expect(requireElement(view.host, '[role="dialog"]').getAttribute('aria-label')).toBe('Dashboard');
     });
 });
 
@@ -347,5 +369,335 @@ describe('FdTourHostComponent desktop layout', () => {
 
         expect(Number.parseFloat(popover.style.top)).toBeGreaterThan(bounds.bottom);
         expect(popover.style.left).toBe('16px');
+    });
+
+    it.each([
+        { placement: 'auto', top: '124px' },
+        { placement: 'top', top: '16px' },
+    ] as const)('keeps the $placement popover inside a crowded desktop viewport', ({ placement, top }) => {
+        setViewport({ width: 720, height: 360 });
+        const bounds = DOMRect.fromRect({ x: 20, y: 20, width: 680, height: 320 });
+        const popover = startPositionedTour(placement, bounds);
+
+        expect(popover.style.top).toBe(top);
+        expect(popover.style.left).toBe('180px');
+        expect(popover.style.width).toBe('360px');
+    });
+});
+
+describe('FdTourHostComponent mobile layout', () => {
+    it.each([
+        { description: 'space above the target', height: 640, targetY: 500, targetHeight: 52, top: '258px', maxHeight: '462px' },
+        { description: 'a short viewport', height: 300, targetY: 90, targetHeight: 120, top: '64px', maxHeight: '268px' },
+    ])('preserves viewport gutters with $description', ({ height, targetY, targetHeight, top, maxHeight }) => {
+        setViewport({ width: 320, height });
+        const view = createTourFixture();
+        const target = requireElement(view.host, '[data-tour-id="dashboard"]');
+        vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(
+            DOMRect.fromRect({ x: 32, y: targetY, width: 256, height: targetHeight }),
+        );
+        startNavigationTour(view);
+
+        const dialog = requireElement(view.host, '[role="dialog"]');
+        expect(dialog.style.top).toBe(top);
+        expect(dialog.style.left).toBe('16px');
+        expect(dialog.style.width).toBe('288px');
+        expect(dialog.style.maxHeight).toBe(maxHeight);
+    });
+});
+
+async function waitForVisibleDialogAsync(view: TourFixture): Promise<HTMLElement> {
+    await vi.waitFor(() => {
+        view.fixture.detectChanges();
+        expect(view.host.querySelector('.fd-tour__popover--visible')).not.toBeNull();
+    });
+    return requireElement(view.host, '[role="dialog"]');
+}
+
+describe('FdTourHostComponent focus boundaries', () => {
+    it('lets unrelated keyboard input propagate and restores focus inside the dialog on Tab', async () => {
+        const view = createTourFixture();
+        startNavigationTour(view);
+        const dialog = await waitForVisibleDialogAsync(view);
+        const outside = requireElement(view.host, '[data-tour-id="meal"]');
+        const keydown = vi.fn();
+        outside.addEventListener('keydown', keydown);
+        outside.focus();
+        outside.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true, cancelable: true }));
+        expect(keydown).toHaveBeenCalledOnce();
+
+        outside.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+        expect(keydown).toHaveBeenCalledOnce();
+        expect(document.activeElement).toBe(requireElement(dialog, '.fd-tour__close'));
+    });
+
+    it('prevents Tab from leaving the tour when all of its controls are disabled by a containing fieldset', async () => {
+        const view = createTourFixture();
+        const fieldset = document.createElement('fieldset');
+        const overlayHost = requireElement(view.host, 'fd-tour-host');
+        overlayHost.replaceWith(fieldset);
+        fieldset.append(overlayHost);
+        startNavigationTour(view);
+        const dialog = await waitForVisibleDialogAsync(view);
+        fieldset.disabled = true;
+        const outside = requireElement(view.host, '[data-tour-id="dashboard"]');
+        outside.focus();
+        expect(dialog.querySelector('button:not(:disabled)')).toBeNull();
+
+        expect(pressTourKey(view.fixture, 'Tab').defaultPrevented).toBe(true);
+        expect(document.activeElement).toBe(outside);
+    });
+
+    it('does not attempt to restore focus to a non-HTML trigger', async () => {
+        const view = createTourFixture();
+        const trigger = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        trigger.setAttribute('tabindex', '0');
+        view.host.prepend(trigger);
+        trigger.focus();
+        expect(document.activeElement).toBe(trigger);
+        startNavigationTour(view);
+        const dialog = await waitForVisibleDialogAsync(view);
+        expect(document.activeElement).toBe(requireElement(dialog, '.fd-tour__close'));
+
+        pressTourKey(view.fixture, 'Escape');
+        expect(view.host.querySelector('[role="dialog"]')).toBeNull();
+        expect(document.activeElement).not.toBe(trigger);
+    });
+
+    it('keeps focus on the opener when the tour closes during its first visible render', async () => {
+        const view = createTourFixture();
+        const opener = requireElement(view.host, '[data-tour-id="dashboard"]');
+        opener.focus();
+        startNavigationTour(view);
+        const focus = vi.spyOn(requireElement(view.host, '.fd-tour__close'), 'focus');
+        const closeOnReveal = TestBed.runInInjectionContext(() =>
+            afterEveryRender({
+                write: () => {
+                    if (view.host.querySelector('.fd-tour__popover--visible') !== null) {
+                        view.tour.close();
+                    }
+                },
+            }),
+        );
+        onTestFinished(() => {
+            closeOnReveal.destroy();
+        });
+
+        await vi.waitFor(() => {
+            view.fixture.detectChanges();
+            expect(view.host.querySelector('[role="dialog"]')).toBeNull();
+        });
+        expect(focus).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(opener);
+    });
+});
+
+function mockNativePopover(): Array<{ action: 'show' | 'hide'; element: HTMLElement }> {
+    const prototype = HTMLElement.prototype;
+    const calls: Array<{ action: 'show' | 'hide'; element: HTMLElement }> = [];
+    const show = Object.getOwnPropertyDescriptor(prototype, 'showPopover');
+    const hide = Object.getOwnPropertyDescriptor(prototype, 'hidePopover');
+    Object.defineProperties(prototype, {
+        showPopover: {
+            configurable: true,
+            value(this: HTMLElement) {
+                calls.push({ action: 'show', element: this });
+            },
+        },
+        hidePopover: {
+            configurable: true,
+            value(this: HTMLElement) {
+                calls.push({ action: 'hide', element: this });
+            },
+        },
+    });
+    onTestFinished(() => {
+        for (const [name, descriptor] of [
+            ['showPopover', show],
+            ['hidePopover', hide],
+        ] as const) {
+            if (descriptor === undefined) {
+                Reflect.deleteProperty(prototype, name);
+            } else {
+                Object.defineProperty(prototype, name, descriptor);
+            }
+        }
+    });
+    return calls;
+}
+
+describe('FdTourHostComponent browser boundary', () => {
+    it('promotes the overlay back to the top layer each time a new target is presented', () => {
+        const calls = mockNativePopover();
+        const view = createTourFixture();
+        startNavigationTour(view);
+        const overlay = requireElement(view.host, '[popover="manual"]');
+        expect(overlay.isConnected).toBe(true);
+        expect(calls).toEqual([
+            { action: 'hide', element: overlay },
+            { action: 'show', element: overlay },
+        ]);
+
+        pressTourKey(view.fixture, 'ArrowRight');
+        expect(requireElement(view.host, '[role="dialog"]').getAttribute('aria-label')).toBe('Meals');
+        expect(calls.slice(2)).toEqual([
+            { action: 'hide', element: overlay },
+            { action: 'show', element: overlay },
+        ]);
+    });
+
+    it('shows the controls immediately for a document without a browsing context', () => {
+        const detachedDocument = document.implementation.createHTMLDocument('Detached tour');
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: DOCUMENT, useValue: detachedDocument },
+                {
+                    provide: TestComponentRenderer,
+                    useValue: {
+                        insertRootElement(rootElementId: string): void {
+                            const root = detachedDocument.createElement('div');
+                            root.id = rootElementId;
+                            detachedDocument.body.append(root);
+                        },
+                    },
+                },
+            ],
+        });
+        const view = createTourFixture();
+        onTestFinished(() => {
+            view.host.remove();
+        });
+        startNavigationTour(view);
+
+        const popover = requireElement(view.host, '.fd-tour__popover--visible');
+        expect(popover.getAttribute('aria-label')).toBe('Dashboard');
+        expect(popover.style.left).toBe('16px');
+        expect(popover.style.top).toBe('16px');
+        expect(popover.style.width).toBe('360px');
+    });
+});
+
+describe('FdTourHostComponent idle and server rendering', () => {
+    it('initializes without animation frame support when there is no active tour', () => {
+        vi.stubGlobal('requestAnimationFrame', undefined);
+        onTestFinished(() => {
+            vi.unstubAllGlobals();
+        });
+        const view = createTourFixture();
+
+        expect(view.tour.snapshot()).toBeNull();
+        expect(view.host.querySelector('[role="dialog"]')).toBeNull();
+        expect(pressTourKey(view.fixture, 'Tab').defaultPrevented).toBe(false);
+    });
+
+    it('leaves the server render empty and avoids registering browser handlers', () => {
+        TestBed.overrideProvider(PLATFORM_ID, { useValue: 'server' });
+        const documentListeners = vi.spyOn(document, 'addEventListener');
+        const windowListeners = vi.spyOn(window, 'addEventListener');
+        const view = createTourFixture();
+
+        expect(
+            view.tour.start({
+                id: 'server',
+                version: 1,
+                steps: [{ id: 'dashboard', target: '[data-tour-id="dashboard"]', title: 'Dashboard' }],
+            }),
+        ).toBe(false);
+        expect(view.host.querySelector('[role="dialog"]')).toBeNull();
+        expect(documentListeners.mock.calls.some(([event]) => event === 'keydown')).toBe(false);
+        expect(documentListeners.mock.calls.some(([event]) => event === 'scroll')).toBe(false);
+        expect(windowListeners.mock.calls.some(([event]) => event === 'resize')).toBe(false);
+    });
+});
+
+describe('FdTourHostComponent independent tour scope', () => {
+    it('renders and closes its local tour while a root tour remains active', async () => {
+        await TestBed.configureTestingModule({ imports: [FdTourHostComponent] })
+            .overrideComponent(FdTourHostComponent, { add: { providers: [FdTourService] } })
+            .compileComponents();
+        const fixture = TestBed.createComponent(FdTourHostComponent);
+        const host = fixture.nativeElement as HTMLElement;
+        const rootTour = TestBed.inject(FdTourService);
+        const localTour = fixture.debugElement.injector.get(FdTourService);
+        const target = document.createElement('button');
+        target.id = 'scoped-tour-target';
+        document.body.append(target);
+        onTestFinished(() => {
+            target.remove();
+            rootTour.close();
+        });
+        expect(localTour).not.toBe(rootTour);
+
+        const step = { id: 'meal', target: '#scoped-tour-target', title: 'Meals tour' };
+        expect(rootTour.start({ id: 'root-tour', version: 1, steps: [step] })).toBe(true);
+        fixture.detectChanges();
+        expect(host.querySelector('[role="dialog"]')).toBeNull();
+
+        expect(
+            localTour.start({
+                id: 'local',
+                version: 1,
+                steps: [{ ...step, title: 'Local meals tour' }],
+            }),
+        ).toBe(true);
+        fixture.detectChanges();
+        const dialog = requireElement(host, '[role="dialog"]');
+        expect(dialog.getAttribute('aria-label')).toBe('Local meals tour');
+
+        requireElement(dialog, '.fd-tour__close').click();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="dialog"]')).toBeNull();
+        expect(localTour.snapshot()).toBeNull();
+        expect(rootTour.activeStep()?.id).toBe('meal');
+    });
+});
+
+describe('FdTourHostComponent animation cancellation', () => {
+    beforeEach(() => {
+        vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'setTimeout', 'clearTimeout'] });
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('does not reveal the next step from an animation frame scheduled by its predecessor', async () => {
+        const view = createTourFixture();
+        const scrollIdleMs = 140;
+        startNavigationTour(view);
+
+        await vi.advanceTimersByTimeAsync(scrollIdleMs);
+        vi.advanceTimersToNextFrame();
+        pressTourKey(view.fixture, 'ArrowRight');
+        vi.advanceTimersToNextFrame();
+        view.fixture.detectChanges();
+        const intermediate = requireElement(view.host, '[role="dialog"]');
+        expect(intermediate.getAttribute('aria-label')).toBe('Meals');
+        expect(intermediate.classList.contains('fd-tour__popover--visible')).toBe(false);
+
+        await vi.advanceTimersByTimeAsync(scrollIdleMs);
+        vi.advanceTimersToNextFrame();
+        vi.advanceTimersToNextFrame();
+        view.fixture.detectChanges();
+        expect(requireElement(view.host, '.fd-tour__popover--visible').getAttribute('aria-label')).toBe('Meals');
+    });
+
+    it('reveals the tour when repeated scrolling prevents the idle timeout', async () => {
+        const view = createTourFixture();
+        const scrollIntervalMs = 100;
+        const revealDeadlineMs = 700;
+        startNavigationTour(view);
+
+        for (let elapsed = scrollIntervalMs; elapsed < revealDeadlineMs; elapsed += scrollIntervalMs) {
+            await vi.advanceTimersByTimeAsync(scrollIntervalMs);
+            document.dispatchEvent(new Event('scroll'));
+            view.fixture.detectChanges();
+            expect(view.host.querySelector('.fd-tour__popover--visible')).toBeNull();
+        }
+        await vi.advanceTimersByTimeAsync(scrollIntervalMs);
+        vi.advanceTimersToNextFrame();
+        vi.advanceTimersToNextFrame();
+        view.fixture.detectChanges();
+        expect(requireElement(view.host, '.fd-tour__popover--visible').getAttribute('aria-label')).toBe('Dashboard');
     });
 });

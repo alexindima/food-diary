@@ -447,14 +447,6 @@
       "structuralRiskScore": 132.44
     },
     {
-      "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
-      "nonBlankLines": 520,
-      "decisionPoints": 81,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 131.9
-    },
-    {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
       "nonBlankLines": 295,
       "decisionPoints": 82,
@@ -733,6 +725,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 111.66
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
+      "nonBlankLines": 479,
+      "decisionPoints": 68,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 111.58
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
@@ -5986,11 +5986,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
-      "nonBlankLines": 520,
-      "decisionPoints": 81,
+      "nonBlankLines": 479,
+      "decisionPoints": 68,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 131.9
+      "structuralRiskScore": 111.58
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-storage.ts",
@@ -6026,11 +6026,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.service.ts",
-      "nonBlankLines": 236,
-      "decisionPoints": 37,
+      "nonBlankLines": 214,
+      "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60.22
+      "structuralRiskScore": 50.78
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.types.ts",

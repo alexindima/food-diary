@@ -117,16 +117,11 @@ export class FdTourHostComponent {
 
         return this.placePopover(rect, this.tour.activeStep()?.placement ?? 'auto', viewport);
     });
-    protected readonly progressLabel = computed(() => {
-        const snapshot = this.tour.snapshot();
-        if (snapshot === null) {
-            return '';
+    public constructor() {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
         }
 
-        return `${snapshot.stepIndex + 1} / ${snapshot.stepCount}`;
-    });
-
-    public constructor() {
         effect(() => {
             const snapshot = this.tour.snapshot();
             const target = this.tour.target();
@@ -161,7 +156,7 @@ export class FdTourHostComponent {
         });
 
         effect(onCleanup => {
-            if (!isPlatformBrowser(this.platformId) || this.tour.activeTour() === null) {
+            if (this.tour.activeTour() === null) {
                 return;
             }
             const observer = new MutationObserver(() => {
@@ -172,10 +167,6 @@ export class FdTourHostComponent {
                 observer.disconnect();
             });
         });
-
-        if (!isPlatformBrowser(this.platformId)) {
-            return;
-        }
 
         const handleReposition = (): void => {
             this.tour.refreshTarget();
@@ -254,9 +245,6 @@ export class FdTourHostComponent {
     }
 
     private updateFocusOrigin(stepKey: string | null): void {
-        if (!isPlatformBrowser(this.platformId)) {
-            return;
-        }
         if (stepKey !== null && this.presentedStepKey === null) {
             const activeElement = this.document.activeElement;
             this.focusBeforeTour = activeElement instanceof HTMLElement ? activeElement : null;
@@ -294,7 +282,7 @@ export class FdTourHostComponent {
     }
 
     private measureTarget(step: FdTourStep | null): void {
-        if (step === null || !isPlatformBrowser(this.platformId)) {
+        if (step === null) {
             this.targetRect.set(null);
             return;
         }
@@ -341,45 +329,21 @@ export class FdTourHostComponent {
     }
 
     private schedulePopoverReveal(stepKey: string): void {
-        if (!isPlatformBrowser(this.platformId)) {
-            this.popoverVisible.set(true);
-            return;
-        }
-
         const viewport = this.getViewport();
         if (viewport === null) {
             this.popoverVisible.set(true);
             return;
         }
 
-        let idleTimeoutId: number | null = null;
-        let fallbackTimeoutId: number | null = null;
-        let revealed = false;
-
         const cleanup = (): void => {
             this.document.removeEventListener('scroll', handleScroll, { capture: true });
-            if (idleTimeoutId !== null) {
-                viewport.clearTimeout(idleTimeoutId);
-            }
-            if (fallbackTimeoutId !== null) {
-                viewport.clearTimeout(fallbackTimeoutId);
-            }
-            if (this.cleanupPopoverReveal === cleanup) {
-                this.cleanupPopoverReveal = null;
-            }
+            viewport.clearTimeout(idleTimeoutId);
+            viewport.clearTimeout(fallbackTimeoutId);
+            this.cleanupPopoverReveal = null;
         };
 
         const reveal = (): void => {
-            if (revealed) {
-                return;
-            }
-
-            revealed = true;
             cleanup();
-            if (this.presentedStepKey !== stepKey) {
-                return;
-            }
-
             this.measureTarget(this.tour.activeStep());
             this.schedulePopoverMeasurement();
             viewport.requestAnimationFrame(() => {
@@ -392,21 +356,15 @@ export class FdTourHostComponent {
             });
         };
 
-        const scheduleIdleReveal = (): void => {
-            if (idleTimeoutId !== null) {
-                viewport.clearTimeout(idleTimeoutId);
-            }
+        const handleScroll = (): void => {
+            viewport.clearTimeout(idleTimeoutId);
             idleTimeoutId = viewport.setTimeout(reveal, SCROLL_IDLE_DELAY_MS);
         };
 
-        const handleScroll = (): void => {
-            scheduleIdleReveal();
-        };
-
+        let idleTimeoutId = viewport.setTimeout(reveal, SCROLL_IDLE_DELAY_MS);
+        const fallbackTimeoutId = viewport.setTimeout(reveal, STEP_REVEAL_FALLBACK_MS);
         this.document.addEventListener('scroll', handleScroll, { capture: true, passive: true });
         this.cleanupPopoverReveal = cleanup;
-        scheduleIdleReveal();
-        fallbackTimeoutId = viewport.setTimeout(reveal, STEP_REVEAL_FALLBACK_MS);
     }
 
     private placeMobilePopover(rect: TourRect, viewport: Window): PopoverLayout {
@@ -443,6 +401,7 @@ export class FdTourHostComponent {
                         left: rect.left + rect.width / 2 - placementSize.width / 2,
                     },
                     placementSize,
+                    viewport,
                 );
             }
             case 'right': {
@@ -452,6 +411,7 @@ export class FdTourHostComponent {
                         left: rect.left + rect.width + POPOVER_GAP_PX,
                     },
                     placementSize,
+                    viewport,
                 );
             }
             case 'left': {
@@ -461,6 +421,7 @@ export class FdTourHostComponent {
                         left: rect.left - placementSize.width - POPOVER_GAP_PX,
                     },
                     placementSize,
+                    viewport,
                 );
             }
             case 'bottom':
@@ -471,6 +432,7 @@ export class FdTourHostComponent {
                         left: rect.left + rect.width / 2 - placementSize.width / 2,
                     },
                     placementSize,
+                    viewport,
                 );
             }
         }
@@ -530,15 +492,7 @@ export class FdTourHostComponent {
         return rect.left - POPOVER_GAP_PX - VIEWPORT_GUTTER_PX;
     }
 
-    private fitToViewport(position: PopoverPosition, size: PopoverSize): PopoverLayout {
-        const viewport = this.getViewport();
-        if (viewport === null) {
-            return {
-                ...position,
-                width: size.width,
-            };
-        }
-
+    private fitToViewport(position: PopoverPosition, size: PopoverSize, viewport: Window): PopoverLayout {
         const maxLeft = Math.max(viewport.innerWidth - size.width - VIEWPORT_GUTTER_PX, VIEWPORT_GUTTER_PX);
         const maxTop = Math.max(viewport.innerHeight - size.height - VIEWPORT_GUTTER_PX, VIEWPORT_GUTTER_PX);
 
@@ -550,10 +504,6 @@ export class FdTourHostComponent {
     }
 
     private schedulePopoverMeasurement(): void {
-        if (!isPlatformBrowser(this.platformId)) {
-            return;
-        }
-
         const viewport = this.getViewport();
         if (viewport === null || typeof viewport.requestAnimationFrame !== 'function') {
             return;
