@@ -1,10 +1,13 @@
 import { HttpStatusCode } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
@@ -15,6 +18,7 @@ import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { publicImageUrl } from '../../../../shared/models/semantics/image-location';
 import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { MealPhotoRecognitionDialogComponent } from './meal-photo-recognition-dialog';
+import { MealPhotoUploadPanelComponent } from './meal-photo-upload-panel/meal-photo-upload-panel';
 
 const SOURCE_AMOUNT = 100;
 const EDITED_AMOUNT = 150;
@@ -296,7 +300,14 @@ async function setupComponentAsync(
             providers: [
                 provideTranslateTesting(),
                 { provide: AiFoodFacade, useValue: aiFoodService },
-                { provide: PrivacyConsentFacade, useValue: { ensureHealthConsentAsync: vi.fn().mockResolvedValue(true) } },
+                {
+                    provide: PrivacyConsentFacade,
+                    useValue: {
+                        ensureHealthConsentAsync: vi.fn().mockResolvedValue(true),
+                        failed: signal(false),
+                        needsReload: signal(false),
+                    },
+                },
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],
@@ -405,6 +416,90 @@ describe('Meal photo asynchronous requests', () => {
         await component['onImageChangedAsync'](null);
         await component['onReanalyzeAsync']();
         expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('Meal photo consent and loading through uploaded selections', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+
+    it('ignores consent for a replaced photo and enables adding only after nutrition completes', async () => {
+        const analysis = new Subject<{ items: FoodVisionItem[] }>();
+        const calculation = new Subject<FoodNutritionResponse>();
+        aiFoodService.analyzeFoodImage.mockReturnValue(analysis);
+        aiFoodService.calculateNutrition.mockReturnValue(calculation);
+        const { fixture } = await setupComponentAsync();
+        const privacy = TestBed.inject(PrivacyConsentFacade);
+        let acceptOriginal: (allowed: boolean) => void = () => {};
+        vi.spyOn(privacy, 'ensureHealthConsentAsync').mockReturnValueOnce(
+            new Promise(resolve => {
+                acceptOriginal = resolve;
+            }),
+        );
+        const upload = fixture.debugElement.query(By.directive(MealPhotoUploadPanelComponent)).injector.get(MealPhotoUploadPanelComponent);
+        const host = fixture.nativeElement as HTMLElement;
+        const add = Array.from(host.querySelectorAll('button')).find(button =>
+            button.textContent.includes('MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL'),
+        );
+        if (add === undefined) {
+            throw new Error('Expected the Add to meal button');
+        }
+        const status = (): string | undefined => host.querySelector('.photo-ai-dialog__status')?.textContent.trim();
+
+        upload.imageChanged.emit(imageSelection(null, 'original-photo'));
+        fixture.detectChanges();
+        expect(status()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING');
+        expect(add.disabled).toBe(true);
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+
+        upload.imageChanged.emit(imageSelection(null, 'replacement-photo'));
+        await waitForAsyncTasksAsync();
+        expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledExactlyOnceWith({ imageAssetId: 'replacement-photo' });
+        analysis.next({ items: [visionItem] });
+        fixture.detectChanges();
+        expect(status()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION');
+        expect(add.disabled).toBe(true);
+
+        acceptOriginal(true);
+        await waitForAsyncTasksAsync();
+        expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledOnce();
+        calculation.next(nutrition);
+        fixture.detectChanges();
+
+        expect(status()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE');
+        expect(add.disabled).toBe(false);
+        add.click();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ imageAssetId: 'replacement-photo' }));
+    });
+
+    it.each([
+        { failed: false, reload: false, message: null },
+        { failed: true, reload: false, message: 'PRIVACY_CHOICES.ERROR' },
+        { failed: true, reload: true, message: 'PRIVACY_CHOICES.RELOAD' },
+    ])('blocks analysis when consent is unavailable, failed=$failed reload=$reload', async ({ failed, reload, message }) => {
+        const { fixture } = await setupComponentAsync();
+        const privacy = TestBed.inject(PrivacyConsentFacade);
+        vi.spyOn(privacy, 'ensureHealthConsentAsync').mockResolvedValue(false);
+        privacy.failed.set(failed);
+        privacy.needsReload.set(reload);
+        const upload = fixture.debugElement.query(By.directive(MealPhotoUploadPanelComponent)).injector.get(MealPhotoUploadPanelComponent);
+
+        upload.imageChanged.emit(imageSelection(null, 'meal-photo'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const error = host.querySelector('.photo-ai-dialog__error');
+        if (message === null) {
+            expect(error).toBeNull();
+        } else {
+            expect(error?.textContent).toContain(message);
+        }
+        expect(host.querySelector('.photo-ai-dialog__scan-overlay')).toBeNull();
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
     });
 });
 

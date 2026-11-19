@@ -3,15 +3,17 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { type Observable, of } from 'rxjs';
+import { type Observable, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
-import type { FastingProtocol, FastingSession } from '../../../../shared/models/fasting.data';
+import type { FastingMode, FastingProtocol, FastingSession } from '../../../../shared/models/fasting.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { FastingFacade } from '../../lib/fasting.facade';
+import { FastingEndConfirmDialogComponent } from '../fasting-end-confirm-dialog/fasting-end-confirm-dialog';
+import { FastingSafetyDialogComponent } from '../fasting-safety-dialog/fasting-safety-dialog';
 import { FastingControlsComponent } from './fasting-controls';
 
 const CUSTOM_EXTEND_HOURS = 12;
@@ -24,6 +26,10 @@ const DEFAULT_EXTEND_HOURS = 24;
 const DEFAULT_REDUCE_HOURS = 4;
 const DEFAULT_EATING_WINDOW_HOURS = 8;
 const SHORT_REDUCIBLE_HOURS = 2;
+const CUSTOM_CYCLIC_FAST_DAYS = 3;
+const CUSTOM_CYCLIC_EAT_DAYS = 2;
+const CUSTOM_EAT_DAY_FAST_HOURS = 18;
+const CUSTOM_EXTENDED_FAST_HOURS = 48;
 
 let fixture: ComponentFixture<FastingControlsComponent>;
 let component: FastingControlsComponent;
@@ -142,6 +148,105 @@ describe('FastingControlsComponent active cyclic session', () => {
         expect(dialogService.open).toHaveBeenCalledTimes(2);
         expect(facade.skipCyclicDay).toHaveBeenCalledTimes(1);
         expect(facade.postponeCyclicDay).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('FastingControlsComponent rendered configuration', () => {
+    it('edits a custom intermittent window and a custom extended target', () => {
+        facade.selectMode.mockImplementation((mode: FastingMode) => {
+            facade.selectedMode.set(mode);
+        });
+        facade.selectProtocol.mockImplementation((protocol: FastingProtocol) => {
+            facade.selectedProtocol.set(protocol);
+        });
+        facade.setCustomIntermittentFastHours.mockImplementation((hours: number) => {
+            facade.customIntermittentFastHours.set(hours);
+        });
+
+        clickRadio('FASTING.INTERMITTENT_GROUP', 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT');
+        enterNumber('FASTING.FAST_HOURS_SHORT', CUSTOM_EAT_DAY_FAST_HOURS);
+        expect(facade.setCustomIntermittentFastHours).toHaveBeenCalledWith(CUSTOM_EAT_DAY_FAST_HOURS);
+        expect(host(fixture).querySelector('.fasting-controls__custom-intermittent-summary')?.textContent.trim()).toBe('18:6');
+
+        clickRadio('FASTING.MODE_GROUP', 'FASTING.MODE_EXTENDED');
+        clickRadio('FASTING.EXTENDED_GROUP', 'FASTING.PROTOCOL_CUSTOM');
+        enterNumber('FASTING.CUSTOM_HOURS', CUSTOM_EXTENDED_FAST_HOURS);
+        expect(facade.selectMode).toHaveBeenCalledWith('extended');
+        expect(facade.selectProtocol).toHaveBeenLastCalledWith('Custom');
+        expect(facade.setCustomHours).toHaveBeenCalledWith(CUSTOM_EXTENDED_FAST_HOURS);
+    });
+
+    it('offers a custom cycle and custom eating-day window inside the settings dialog', () => {
+        fixture.componentRef.setInput('presentation', 'dialog');
+        fixture.componentRef.setInput('showSetupStartAction', false);
+        facade.selectMode.mockImplementation((mode: FastingMode) => {
+            facade.selectedMode.set(mode);
+        });
+        facade.selectCustomCyclicPreset.mockImplementation(() => {
+            facade.cyclicUsesCustomPreset.set(true);
+        });
+        facade.selectCyclicEatDayProtocol.mockImplementation((protocol: FastingProtocol) => {
+            facade.cyclicEatDayProtocol.set(protocol);
+        });
+        fixture.detectChanges();
+
+        clickRadio('FASTING.MODE_GROUP', 'FASTING.MODE_CYCLIC');
+        clickRadio('FASTING.CYCLIC_GROUP', 'FASTING.CUSTOM_CYCLE');
+        enterNumber('FASTING.CYCLIC_FAST_DAYS_SHORT', CUSTOM_CYCLIC_FAST_DAYS);
+        enterNumber('FASTING.CYCLIC_EAT_DAYS_SHORT', CUSTOM_CYCLIC_EAT_DAYS);
+        clickRadio('FASTING.EAT_DAY_WINDOW_GROUP', 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT');
+        enterNumber('FASTING.FAST_HOURS_SHORT', CUSTOM_EAT_DAY_FAST_HOURS);
+
+        expect(facade.setCyclicFastDays).toHaveBeenCalledWith(CUSTOM_CYCLIC_FAST_DAYS);
+        expect(facade.setCyclicEatDays).toHaveBeenCalledWith(CUSTOM_CYCLIC_EAT_DAYS);
+        expect(facade.setCyclicEatDayFastHours).toHaveBeenCalledWith(CUSTOM_EAT_DAY_FAST_HOURS);
+        expect(host(fixture).textContent).toContain('FASTING.REDESIGN.CYCLIC_SELECTION_SUMMARY');
+        expect(host(fixture).textContent).not.toContain('FASTING.START_FAST');
+    });
+});
+
+describe('FastingControlsComponent rendered active actions', () => {
+    it('asks to start fasting early or skip an eating day, and applies only the confirmed action', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set({ ...createCyclicSession(), occurrenceKind: 'EatDay' });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of('cancel') });
+        fixture.detectChanges();
+
+        getNativeButtonByText(fixture, 'FASTING.START_FAST_NOW').click();
+        expect(dialogService.open.mock.lastCall).toMatchObject([
+            FastingEndConfirmDialogComponent,
+            { data: { title: 'FASTING.START_FAST_NOW_CONFIRM_TITLE' } },
+        ]);
+        expect(facade.skipCyclicDay).not.toHaveBeenCalled();
+
+        getNativeButtonByText(fixture, 'FASTING.SKIP_DAY').click();
+        expect(dialogService.open.mock.lastCall).toMatchObject([
+            FastingEndConfirmDialogComponent,
+            { data: { title: 'FASTING.SKIP_EATING_DAY_CONFIRM_TITLE' } },
+        ]);
+        expect(facade.postponeCyclicDay).toHaveBeenCalledOnce();
+    });
+
+    it('does not extend a long fast when the safety warning is cancelled', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: WARNING_PLANNED_DURATION_HOURS });
+        const result = new Subject<'confirm' | 'cancel'>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => result });
+        fixture.detectChanges();
+
+        const panel = host(fixture).querySelector<HTMLButtonElement>('.fasting-controls__extend-panel-header');
+        panel?.click();
+        fixture.detectChanges();
+        expect(panel?.getAttribute('aria-expanded')).toBe('true');
+        getNativeButtonByText(fixture, 'FASTING.ADD_36_HOURS').click();
+        expect(dialogService.open.mock.lastCall).toMatchObject([
+            FastingSafetyDialogComponent,
+            { data: { tone: 'warning', title: 'FASTING.EXTEND_WARNING_TITLE' } },
+        ]);
+
+        result.next('cancel');
+        result.complete();
+        expect(facade.extendByHours).not.toHaveBeenCalled();
     });
 });
 
@@ -275,6 +380,28 @@ function getNativeButtonByText(componentFixture: ComponentFixture<FastingControl
     }
 
     return button;
+}
+
+function clickRadio(group: string, label: string): void {
+    const options = host(fixture).querySelectorAll<HTMLButtonElement>(`[role="radiogroup"][aria-label="${group}"] button[role="radio"]`);
+    const option = Array.from(options).find(button => button.textContent.trim() === label);
+    if (option === undefined) {
+        throw new Error(`No fasting radio option "${label}" in "${group}"`);
+    }
+    option.click();
+    fixture.detectChanges();
+}
+
+function enterNumber(label: string, value: number): void {
+    const labels = Array.from(host(fixture).querySelectorAll('label'));
+    const numberLabel = labels.find(candidate => candidate.textContent.trim() === label);
+    const input = numberLabel?.control;
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error(`No fasting number input "${label}"`);
+    }
+    input.value = String(value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
 }
 
 type FastingFacadeMock = {

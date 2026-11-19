@@ -96,6 +96,11 @@
                             </div>
                             @if (globalError()) {
                                 <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
+                            } @else if (photoImportLimitReached()) {
+                                <fd-ui-form-error
+                                    class="product-manage__footer-error"
+                                    [error]="'PRODUCT_MANAGE.PHOTO_IMPORT_LIMIT' | translate"
+                                />
                             }
                         </div>
                     </div>

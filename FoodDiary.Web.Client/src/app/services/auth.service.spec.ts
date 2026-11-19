@@ -6,8 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
 import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
-import { LoginRequest } from '../shared/auth/auth.data';
+import { ConfirmPasswordResetRequest, LoginRequest, PasswordResetRequest, RegisterRequest } from '../shared/auth/auth.data';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
+import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { AuthService } from './auth.service';
@@ -71,6 +72,78 @@ function signIn(): void {
     service.login(login).subscribe();
     requests.expectOne(`${base}/login`).flush(response);
 }
+
+describe('email verification requests and session ownership', () => {
+    const unconfirmed = { ...response, user: { ...response.user, isEmailConfirmed: false } };
+
+    it('registers with the browser origin and marks the verification message sent for the new account', async () => {
+        const credentials = new RegisterRequest({ email: response.user.email, password: login.password, language: 'en' });
+        const registered = firstValueFrom(service.register(credentials));
+        const request = requests.expectOne({ method: 'POST', url: `${base}/register` });
+        expect(request.request.body).toEqual({
+            email: credentials.email,
+            password: credentials.password,
+            language: 'en',
+            clientOrigin: window.location.origin,
+        });
+        request.flush(unconfirmed);
+        await registered;
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.requiresEmailVerification()).toBe(true);
+        expect(TestBed.inject(EmailVerificationCooldownService).remainingSeconds(response.user.id)).toBeGreaterThan(0);
+    });
+
+    it('updates the email state for the same session and ignores a verification that finishes after a new login', async () => {
+        service.acceptExternalAuthentication(authResponseFromSdk(unconfirmed));
+        const current = firstValueFrom(service.verifyEmail(response.user.id, 'verification-fixture'));
+        const verification = requests.expectOne({ method: 'POST', url: `${base}/verify-email` });
+        expect(verification.request.body).toEqual({ userId: response.user.id, token: 'verification-fixture' });
+        verification.flush(null);
+        await current;
+        expect(service.isEmailConfirmed()).toBe(true);
+
+        const late = firstValueFrom(service.verifyEmail(response.user.id, 'repeat-verification-fixture'));
+        const pending = requests.expectOne(`${base}/verify-email`);
+        service.acceptExternalAuthentication(authResponseFromSdk({ ...unconfirmed, sessionId: 'replacement-session' }));
+        pending.flush(null);
+        await late;
+        expect(service.getSessionKey()).toBe('replacement-session');
+        expect(service.requiresEmailVerification()).toBe(true);
+    });
+
+    it('keeps the resend cooldown bound to the account that sent the request', async () => {
+        service.acceptExternalAuthentication(authResponseFromSdk(unconfirmed));
+        const resend = firstValueFrom(service.resendEmailVerification());
+        const pending = requests.expectOne({ method: 'POST', url: `${base}/verify-email/resend` });
+        expect(pending.request.body).toEqual({ clientOrigin: window.location.origin });
+        const another = { ...unconfirmed.user, id: 'replacement-account' };
+        service.acceptExternalAuthentication(authResponseFromSdk({ ...unconfirmed, sessionId: 'replacement-session', user: another }));
+        pending.flush(null);
+        await resend;
+
+        const cooldown = TestBed.inject(EmailVerificationCooldownService);
+        expect(cooldown.remainingSeconds(response.user.id)).toBeGreaterThan(0);
+        expect(cooldown.remainingSeconds(another.id)).toBe(0);
+    });
+});
+
+it('sends a password reset link request and accepts the fresh cookie returned by the confirmation', async () => {
+    const requested = firstValueFrom(service.requestPasswordReset(new PasswordResetRequest({ email: response.user.email })));
+    const link = requests.expectOne({ method: 'POST', url: `${base}/password-reset/request` });
+    expect(link.request.body).toEqual({ email: response.user.email, clientOrigin: window.location.origin });
+    link.flush(null);
+    await requested;
+    expect(service.isAuthenticated()).toBe(false);
+
+    const change = new ConfirmPasswordResetRequest({ userId: response.user.id, token: 'reset-fixture', newPassword: 'new-fixture' });
+    const confirmed = firstValueFrom(service.confirmPasswordReset(change));
+    const request = requests.expectOne({ method: 'POST', url: `${base}/password-reset/confirm` });
+    expect(request.request.body).toEqual(change);
+    request.flush(response);
+    await confirmed;
+    expect(service.getSessionKey()).toBe(sessionId);
+    expect(service.isAuthenticated()).toBe(true);
+});
 
 describe('server-backed browser sessions', () => {
     it.each([

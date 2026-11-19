@@ -173,6 +173,42 @@ describe('MealManageFormComponent native submit behavior', () => {
 });
 
 describe('MealManageFormComponent health consent', () => {
+    it.each([
+        { failed: false, reload: false, message: null },
+        { failed: true, reload: false, message: 'PRIVACY_CHOICES.ERROR' },
+        { failed: true, reload: true, message: 'PRIVACY_CHOICES.RELOAD' },
+    ])('preserves the draft when consent is unavailable, failed=$failed reload=$reload', async ({ failed, reload, message }) => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        const privacy = TestBed.inject(PrivacyConsentFacade);
+        vi.spyOn(privacy, 'ensureHealthConsentAsync').mockResolvedValue(false);
+        privacy.failed.set(failed);
+        privacy.needsReload.set(reload);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const note = host.querySelector<HTMLTextAreaElement>('textarea');
+        if (note?.form === null || note?.form === undefined) {
+            throw new Error('Expected the meal comment and form');
+        }
+        note.value = 'Keep this draft';
+        note.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        note.form.requestSubmit();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const error = host.querySelector('.meal-manage__footer-error');
+        if (message === null) {
+            expect(error).toBeNull();
+        } else {
+            expect(error?.textContent).toContain(message);
+        }
+        expect(note.value).toBe('Keep this draft');
+        expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+
     it.each([true, false])('waits for consent before sending a meal, granted=%s', async granted => {
         const { component, mealManageFacade } = await setupComponentAsync();
         mealManageFacade.submitMealAsync.mockResolvedValue(createMeal({ totalCalories: TOTAL_CALORIES }));
@@ -1318,4 +1354,30 @@ describe('Meal form save retry preserves draft state', () => {
         expect(mealManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
         expect(navigationService.navigateToMealListAsync).toHaveBeenCalledOnce();
     });
+});
+
+it('does not redirect from a newer page when a pending save completes after the editor is destroyed', async () => {
+    const { component, fixture, mealManageFacade } = await setupComponentAsync();
+    setValidManualMeal(component);
+    let finishSave: (value: Meal) => void = () => {};
+    mealManageFacade.submitMealAsync.mockReturnValueOnce(
+        new Promise<Meal>(resolve => {
+            finishSave = resolve;
+        }),
+    );
+    fixture.detectChanges();
+    const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+    if (form === null) {
+        throw new Error('Expected the rendered meal editor form');
+    }
+    form.requestSubmit();
+    await vi.waitFor(() => {
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
+    });
+
+    fixture.destroy();
+    finishSave(createMeal());
+    await waitForAsyncTasksAsync();
+
+    expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
 });

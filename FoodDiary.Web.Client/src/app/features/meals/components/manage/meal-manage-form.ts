@@ -803,6 +803,9 @@ export class MealManageFormComponent implements UnsavedEditor {
     }
 
     private async handleSubmitResponseAsync(response: Meal | null): Promise<void> {
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         if (response !== null) {
             if (this.meal() === null) {
                 this.createIntent = null;

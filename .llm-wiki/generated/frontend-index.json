@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2881,
+    "typescriptFiles": 2883,
     "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 897,
+    "specs": 899,
     "localeFiles": 5,
     "roles": {
       "Component": 516,
@@ -504,6 +504,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/auth/api/telegram-auth.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/auth/auth-admin-confirmation.routes.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-admin-redirect.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-admin-return-url.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-lib/auth-countdown.utils.spec.ts",
@@ -1166,6 +1167,7 @@
         "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-add-dialog/product-add-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-action/product-ai-recognition-action.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.integration.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-lib/product-ai-recognition.helpers.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result/product-ai-recognition-result.spec.ts",
@@ -3883,7 +3885,7 @@
       "role": "Component",
       "selector": "fd-admin-confirmation",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/admin-confirmation/admin-confirmation.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "EmailVerificationPendingComponent",

@@ -49,6 +49,7 @@ export class AuthGoogleManager {
 
     public constructor() {
         this.destroyRef.onDestroy(() => {
+            this.callback = null;
             this.nativeClickUnlisten?.();
         });
     }
@@ -60,22 +61,16 @@ export class AuthGoogleManager {
             return;
         }
 
-        if (await this.tryInitializeNativeAsync(clientId)) {
+        const nativeReady = await this.tryInitializeNativeAsync(clientId);
+        if (this.destroyRef.destroyed) {
+            return;
+        }
+        if (nativeReady) {
             this.nativeReady.set(true);
             this.ready.set(true);
             return;
         }
-
-        try {
-            await this.googleIdentityService.initializeAsync({
-                clientId,
-                callback,
-            });
-            this.ready.set(true);
-            this.googleIdentityService.prompt();
-        } catch {
-            this.ready.set(false);
-        }
+        await this.initializeBrowserAsync(clientId);
     }
 
     public renderButton(mode: AuthGoogleMode, loginButton: HTMLElement | undefined, registerButton: HTMLElement | undefined): void {
@@ -100,6 +95,24 @@ export class AuthGoogleManager {
         }
 
         this.googleIdentityService.renderButton(target, 'filled_blue', this.getGoogleLocale());
+    }
+
+    private async initializeBrowserAsync(clientId: string): Promise<void> {
+        try {
+            await this.googleIdentityService.initializeAsync({
+                clientId,
+                callback: credential => {
+                    this.callback?.(credential);
+                },
+            });
+            if (this.destroyRef.destroyed) {
+                return;
+            }
+            this.ready.set(true);
+            this.googleIdentityService.prompt();
+        } catch {
+            this.ready.set(false);
+        }
     }
 
     private getGoogleLocale(): string {

@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -20,6 +21,7 @@ export class AdminConfirmationComponent {
     private readonly auth = inject(AuthService);
     private readonly route = inject(ActivatedRoute);
     private readonly document = inject(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
     protected readonly failed = signal(false);
 
     public constructor() {
@@ -39,9 +41,18 @@ export class AdminConfirmationComponent {
             '/';
         const expectedUserId = new URLSearchParams(this.document.location.hash.slice(1)).get('account');
         await this.auth.ensureSessionReadyAsync();
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         const diaryAdmin = this.auth.isAdmin() ? this.auth.getUserId() : null;
         const handoff = await this.startSsoAsync(new URL(path, adminOrigin), diaryAdmin, expectedUserId);
-        this.document.location.replace((handoff ?? buildAdminSignInUrl(adminOrigin, path, expectedUserId ?? diaryAdmin)).href);
+        this.replaceLocationIfActive(handoff ?? buildAdminSignInUrl(adminOrigin, path, expectedUserId ?? diaryAdmin));
+    }
+
+    private replaceLocationIfActive(destination: URL): void {
+        if (!this.destroyRef.destroyed) {
+            this.document.location.replace(destination.href);
+        }
     }
 
     private async startSsoAsync(destination: URL, diaryAdmin: string | null, expectedUserId: string | null): Promise<URL | null> {
@@ -49,7 +60,7 @@ export class AdminConfirmationComponent {
             return null;
         }
         try {
-            const { code } = await firstValueFrom(this.auth.startAdminSso());
+            const { code } = await firstValueFrom(this.auth.startAdminSso().pipe(takeUntilDestroyed(this.destroyRef)));
             destination.hash = new URLSearchParams({ code, account: diaryAdmin }).toString();
             return destination;
         } catch {

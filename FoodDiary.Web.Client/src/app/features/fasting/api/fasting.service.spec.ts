@@ -1,9 +1,11 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import {
@@ -23,6 +25,18 @@ const CUSTOM_HISTORY_PAGE_SIZE = 7;
 const INTERMITTENT_FAST_HOURS = 16;
 const EXTENDED_FAST_HOURS = 36;
 const CYCLIC_EAT_DAY_FAST_HOURS = 18;
+const EXTENSION_HOURS = 12;
+const NEXT_CYCLIC_PHASE_SESSION = {
+    planType: 'Cyclic',
+    protocol: 'Cyclic',
+    cyclicFastDays: 2,
+    cyclicEatDays: 1,
+    cyclicEatDayFastHours: INTERMITTENT_FAST_HOURS,
+    cyclicEatDayEatingWindowHours: 8,
+    cyclicPhaseDayNumber: 1,
+    cyclicPhaseDayTotal: 1,
+    occurrenceKind: 'EatDay',
+};
 const SESSION_RESPONSE = {
     id: entityId<'fasting-session'>('session-1'),
     startedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
@@ -247,6 +261,76 @@ describe('FastingService current session', () => {
         expect(req.request.method).toBe('PUT');
         expect(req.request.body).toEqual({ reducedHours: 8 });
         req.flush(response);
+    });
+});
+
+describe('FastingService session lifecycle operations', () => {
+    it.each([
+        {
+            action: 'end the fast',
+            perform: (): Observable<FastingSession> => service.end(),
+            path: 'end',
+            body: null,
+            session: { endedAtUtc: utcInstant('2026-04-12T22:00:00Z'), isCompleted: true, status: 'Completed' },
+        },
+        {
+            action: 'extend the fast',
+            perform: (): Observable<FastingSession> => service.extend({ additionalHours: EXTENSION_HOURS }),
+            path: 'current/duration',
+            body: { additionalHours: EXTENSION_HOURS },
+            session: {
+                initialPlannedDurationHours: EXTENDED_FAST_HOURS,
+                plannedDurationHours: EXTENDED_FAST_HOURS + EXTENSION_HOURS,
+                addedDurationHours: EXTENSION_HOURS,
+                protocol: 'Fast36',
+                planType: 'Extended',
+                occurrenceKind: 'FastDay',
+            },
+        },
+        {
+            action: 'skip a cyclic day',
+            perform: (): Observable<FastingSession> => service.skipCyclicDay(),
+            path: 'current/skip-day',
+            body: null,
+            session: { ...NEXT_CYCLIC_PHASE_SESSION, id: entityId<'fasting-session'>('first-eating-day') },
+        },
+        {
+            action: 'postpone a cyclic day',
+            perform: (): Observable<FastingSession> => service.postponeCyclicDay(),
+            path: 'current/postpone-day',
+            body: null,
+            session: { ...NEXT_CYCLIC_PHASE_SESSION, id: entityId<'fasting-session'>('deferred-first-eating-day') },
+        },
+    ] as const)('uses the returned session when asked to $action', async ({ perform, path, body, session }) => {
+        const result = firstValueFrom(perform());
+        const request = httpMock.expectOne({ method: 'PUT', url: `${BASE_URL}/${path}` });
+        expect(request.request.body).toEqual(body);
+
+        const response = { ...SESSION_RESPONSE, ...session };
+        request.flush(response);
+        expect(await result).toEqual(response);
+    });
+
+    it.each([
+        [
+            'start',
+            (): Observable<FastingSession> =>
+                service.start(intermittentFastingStart('Fast16Eat8', fastingDailyWindow(INTERMITTENT_FAST_HOURS))),
+        ],
+        ['end', (): Observable<FastingSession> => service.end()],
+        ['current/duration', (): Observable<FastingSession> => service.extend({ additionalHours: EXTENSION_HOURS })],
+        ['current/duration/reduce', (): Observable<FastingSession> => service.reduceTarget({ reducedHours: 1 })],
+        [
+            'current/check-in',
+            (): Observable<FastingSession> => service.updateCheckIn({ hungerLevel: 2, energyLevel: 2, moodLevel: 2, symptoms: [] }),
+        ],
+        ['current/skip-day', (): Observable<FastingSession> => service.skipCyclicDay()],
+        ['current/postpone-day', (): Observable<FastingSession> => service.postponeCyclicDay()],
+    ] as const)('preserves the conflict response for %s so the UI can handle a rejected operation', async (path, perform) => {
+        const error = { detail: 'Session changed before the operation completed.' };
+        const result = expect(firstValueFrom(perform())).rejects.toMatchObject({ status: HttpStatusCode.Conflict, error });
+        httpMock.expectOne(`${BASE_URL}/${path}`).flush(error, { status: HttpStatusCode.Conflict, statusText: 'Conflict' });
+        await result;
     });
 });
 

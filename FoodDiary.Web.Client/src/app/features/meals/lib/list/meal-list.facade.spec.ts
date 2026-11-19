@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, Subject, throwError } from 'rxjs';
+import { defer, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../../services/navigation.service';
@@ -505,11 +505,21 @@ function registerDetailActionTests(): void {
             typeof dialogs.open
         >);
         const old = new Subject<MealOverview>();
-        mealService.queryOverview.mockReturnValueOnce(old).mockReturnValue(of(createOverview([])));
-        const pending = facade.handleMealDetailsAsync(createMeal(), emptyMealFilters());
-        await vi.waitFor(() => {
-            expect(old.observed).toBe(true);
+        let notifySubscription: () => void = () => {};
+        const subscribed = new Promise<void>(resolve => {
+            notifySubscription = resolve;
         });
+        mealService.queryOverview
+            .mockReturnValueOnce(
+                defer(() => {
+                    notifySubscription();
+                    return old;
+                }),
+            )
+            .mockReturnValue(of(createOverview([])));
+        const pending = facade.handleMealDetailsAsync(createMeal(), emptyMealFilters());
+        await subscribed;
+        expect(old.observed).toBe(true);
         facade.loadMeals(2, emptyMealFilters()).subscribe();
         await expect(pending).resolves.toBe(false);
         expect(old.observed).toBe(false);

@@ -4,12 +4,13 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
+import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { AuthComponent } from './auth';
 import { AuthFlowFacade } from './auth-lib/auth-flow.facade';
 import { AuthFormManager } from './auth-lib/auth-form.manager';
@@ -29,8 +30,11 @@ type AuthComponentTestContext = {
     component: AuthComponent;
     fixture: ComponentFixture<AuthComponent>;
     formManager: AuthFormManager;
+    authServiceSpy: { mustChangePassword: ReturnType<typeof vi.fn>; requiresEmailVerification: ReturnType<typeof vi.fn> };
+    initializeGoogle: Mock<AuthGoogleManager['initializeAsync']>;
     navigationServiceSpy: {
         navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
+        navigateToRequiredPasswordChangeAsync: ReturnType<typeof vi.fn>;
         navigateToReturnUrlAsync: ReturnType<typeof vi.fn>;
         navigateToProfileAsync: ReturnType<typeof vi.fn>;
     };
@@ -38,7 +42,7 @@ type AuthComponentTestContext = {
     dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 };
 
-function createComponent(mode = 'login', renderTemplate = false): AuthComponentTestContext {
+function createComponent(mode = 'login', renderTemplate = false, inputs: Record<string, unknown> = {}): AuthComponentTestContext {
     const authFlowFacadeSpy = {
         login: vi.fn(),
         register: vi.fn(),
@@ -51,19 +55,22 @@ function createComponent(mode = 'login', renderTemplate = false): AuthComponentT
         isAuthenticated: vi.fn().mockReturnValue(false),
         isEmailConfirmed: vi.fn().mockReturnValue(true),
         requiresEmailVerification: vi.fn().mockReturnValue(false),
+        mustChangePassword: vi.fn().mockReturnValue(false),
         isAdmin: vi.fn().mockReturnValue(false),
         startAdminSso: vi.fn(),
     };
     const navigationServiceSpy = {
         navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(void 0),
+        navigateToRequiredPasswordChangeAsync: vi.fn().mockResolvedValue(void 0),
         navigateToReturnUrlAsync: vi.fn().mockResolvedValue(void 0),
         navigateToProfileAsync: vi.fn().mockResolvedValue(void 0),
     };
     const routerSpy = { navigate: vi.fn().mockResolvedValue(true) };
     const dialogRefSpy = { close: vi.fn() };
+    const initializeGoogle = vi.fn<AuthGoogleManager['initializeAsync']>().mockResolvedValue(undefined);
     const googleManagerSpy = {
         ready: vi.fn().mockReturnValue(false),
-        initializeAsync: vi.fn().mockResolvedValue(void 0),
+        initializeAsync: initializeGoogle,
         renderButton: vi.fn(),
     };
 
@@ -99,11 +106,24 @@ function createComponent(mode = 'login', renderTemplate = false): AuthComponentT
     vi.spyOn(translateService, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
 
     const fixture = TestBed.createComponent(AuthComponent);
+    for (const [name, value] of Object.entries(inputs)) {
+        fixture.componentRef.setInput(name, value);
+    }
     const component = fixture.componentInstance;
     const formManager = fixture.debugElement.injector.get(AuthFormManager);
     fixture.detectChanges();
 
-    return { authFlowFacadeSpy, component, fixture, formManager, navigationServiceSpy, routerSpy, dialogRefSpy };
+    return {
+        authFlowFacadeSpy,
+        authServiceSpy,
+        initializeGoogle,
+        component,
+        fixture,
+        formManager,
+        navigationServiceSpy,
+        routerSpy,
+        dialogRefSpy,
+    };
 }
 
 beforeEach(() => {
@@ -304,6 +324,59 @@ describe('AuthComponent Google login', () => {
         expect(component['pendingGoogleLinkCredential']).toBe('google-credential');
         expect(component['globalError']()).toBe('AUTH.GOOGLE.LINK_REQUIRED_ACTION');
     });
+});
+
+describe('AuthComponent rendered Google confirmation', () => {
+    it.each(['accountMismatch', 'accountLinkRequired', 'error'])('retains a login form after Google returns %s', async result => {
+        const account = entityId<'user'>('expected-account');
+        const { fixture, authFlowFacadeSpy, initializeGoogle, navigationServiceSpy } = createComponent('login', true, {
+            confirmationUserId: account,
+        });
+        authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of(result));
+        const host = fixture.nativeElement as HTMLElement;
+        initializeGoogle.mock.calls[0][0]('google-fixture');
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(authFlowFacadeSpy.loginWithGoogle).toHaveBeenCalledExactlyOnceWith({
+            credential: 'google-fixture',
+            expectedUserId: account,
+            rememberMe: true,
+        });
+        const error = result === 'error' ? 'FORM_ERRORS.UNKNOWN' : 'AUTH.CONFIRM.ACCOUNT_MISMATCH';
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain(error);
+        expect(host.querySelector('form')).not.toBeNull();
+        expect(navigationServiceSpy.navigateToReturnUrlAsync).not.toHaveBeenCalled();
+    });
+
+    it.each(['password', 'email', 'inline', 'return'])(
+        'completes a successful Google sign-in through the %s destination',
+        async destination => {
+            const inline = destination === 'inline';
+            const { fixture, authFlowFacadeSpy, authServiceSpy, initializeGoogle, navigationServiceSpy } = createComponent('login', true, {
+                useRouting: false,
+                initialReturnUrl: '/profile?tab=security',
+                inlineSignIn: inline,
+            });
+            authServiceSpy.mustChangePassword.mockReturnValue(destination === 'password');
+            authServiceSpy.requiresEmailVerification.mockReturnValue(destination === 'email');
+            authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(of('success'));
+            const signedIn = vi.fn<() => void>();
+            fixture.componentInstance.signedIn.subscribe(signedIn);
+            initializeGoogle.mock.calls[0][0]('google-fixture');
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
+            expect(navigationServiceSpy.navigateToRequiredPasswordChangeAsync).toHaveBeenCalledTimes(Number(destination === 'password'));
+            expect(navigationServiceSpy.navigateToEmailVerificationPendingAsync).toHaveBeenCalledTimes(Number(destination === 'email'));
+            expect(signedIn).toHaveBeenCalledTimes(Number(inline));
+            expect(navigationServiceSpy.navigateToReturnUrlAsync).toHaveBeenCalledTimes(Number(destination === 'return'));
+            if (destination === 'return') {
+                expect(navigationServiceSpy.navigateToReturnUrlAsync).toHaveBeenCalledWith('/profile?tab=security');
+            }
+        },
+    );
 });
 
 describe('AuthComponent register', () => {

@@ -44,7 +44,7 @@ export class MealItemsListComponent {
 
         return this.items()
             .map((item, index) => ({ index, item }))
-            .filter(({ item }) => this.hasManualItem(item))
+            .filter(({ item }) => item.product !== null || item.recipe !== null)
             .map(({ index, item }) => {
                 const totals = this.getManualItemTotals(item);
 
@@ -69,54 +69,6 @@ export class MealItemsListComponent {
         });
     }
 
-    protected isProductItem(index: number): boolean {
-        return this.getItem(index)?.sourceType === MealSourceType.Product;
-    }
-
-    protected isRecipeItem(index: number): boolean {
-        return this.getItem(index)?.sourceType === MealSourceType.Recipe;
-    }
-
-    protected getProductName(index: number): string {
-        return this.getItem(index)?.product?.name ?? '';
-    }
-
-    protected getRecipeName(index: number): string {
-        return this.getItem(index)?.recipe?.name ?? '';
-    }
-
-    protected getAmountUnitLabel(index: number): string | null {
-        const item = this.getItem(index);
-        if (item === undefined) {
-            return null;
-        }
-
-        if (item.sourceType === MealSourceType.Product) {
-            const unit = item.product?.baseUnit;
-            return unit !== undefined ? this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`) : null;
-        }
-
-        return this.recipeWeight.hasServingWeight(item.recipe)
-            ? this.translateService.instant('PRODUCT_AMOUNT_UNITS.G')
-            : this.getServingUnitLabel(item.amount);
-    }
-
-    protected isProductInvalid(index: number): boolean {
-        return this.getItem(index)?.productInvalid ?? false;
-    }
-
-    protected isRecipeInvalid(index: number): boolean {
-        return this.getItem(index)?.recipeInvalid ?? false;
-    }
-
-    protected isItemSourceInvalid(index: number): boolean {
-        return this.isProductInvalid(index) || this.isRecipeInvalid(index);
-    }
-
-    protected getItemSourceError(index: number): string | null {
-        return this.getItem(index)?.sourceError ?? null;
-    }
-
     private getItemSourceName(item: MealItemsListItemState): string {
         if (item.sourceType === MealSourceType.Recipe) {
             return item.recipe?.name ?? '';
@@ -132,10 +84,6 @@ export class MealItemsListComponent {
             return 'restaurant';
         }
         return 'search';
-    }
-
-    protected getAmountControlError(index: number): string | null {
-        return this.getItem(index)?.amountError ?? null;
     }
 
     private getManualItemTotals(item: MealItemsListItemState): NutritionTotals {
@@ -198,24 +146,12 @@ export class MealItemsListComponent {
         this.editItem.emit(index);
     }
 
-    protected hasManualItem(index: number): boolean;
-    protected hasManualItem(item: MealItemsListItemState): boolean;
-    protected hasManualItem(value: number | MealItemsListItemState): boolean {
-        this.renderVersion();
-        const item = typeof value === 'number' ? this.getItem(value) : value;
-        return item !== undefined && (item.product !== null || item.recipe !== null);
-    }
-
     protected onRemoveItem(index: number): void {
         this.removeItemEvent.emit(index);
     }
 
     protected onItemSourceClick(index: number): void {
         this.openItemSelect.emit(index);
-    }
-
-    private getItem(index: number): MealItemsListItemState | undefined {
-        return this.items()[index];
     }
 
     private getServingUnitLabel(amount: number | null): string {

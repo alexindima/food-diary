@@ -254,17 +254,20 @@ export class AuthService {
     }
 
     public resendEmailVerification(): Observable<void> {
-        return this.sdk.client
-            .postAuthVerifyEmailResend({
-                version: this.sdk.version,
-                resendEmailVerificationHttpRequest: { clientOrigin: this.getClientOrigin() },
-            })
-            .pipe(
-                tap(() => {
-                    this.emailVerificationCooldown.markSent(this.getUserId());
-                }),
-                catchError((error: unknown) => rethrowApiError('Resend email verification error', error)),
-            );
+        return defer(() => {
+            const owner = this.getUserId();
+            return this.sdk.client
+                .postAuthVerifyEmailResend({
+                    version: this.sdk.version,
+                    resendEmailVerificationHttpRequest: { clientOrigin: this.getClientOrigin() },
+                })
+                .pipe(
+                    tap(() => {
+                        this.emailVerificationCooldown.markSent(owner);
+                    }),
+                    catchError((error: unknown) => rethrowApiError('Resend email verification error', error)),
+                );
+        });
     }
 
     public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {

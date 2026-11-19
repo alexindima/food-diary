@@ -33,6 +33,7 @@ import {
     PRODUCT_LIST_PAGE_SIZE,
     PRODUCT_LIST_RECENT_LIMIT,
 } from '../../components/list/product-list.config';
+import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { ProductListFacade } from './product-list.facade';
 
@@ -234,7 +235,91 @@ describe('ProductListFacade product details', () => {
     });
 });
 
-describe('ProductListFacade search and filters', () => {
+describe('ProductListFacade filter dialog', () => {
+    it('leaves the current overview in place when filters are dismissed or reapplied unchanged', async () => {
+        await flushDebounceAsync();
+        const defaults: ProductListFiltersDialogResult = {
+            onlyMine: false,
+            productTypes: [],
+            caloriesFrom: null,
+            caloriesTo: null,
+            hasImage: null,
+        };
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(null) }).mockReturnValueOnce({ afterClosed: () => of(defaults) });
+
+        facade.openFilters();
+        facade.openFilters();
+        await flushDebounceAsync();
+
+        expect(dialogService.open).toHaveBeenLastCalledWith(expect.any(Function), { preset: 'form', data: defaults });
+        expect(productService.query).not.toHaveBeenCalled();
+        expect(productService.queryOverview).toHaveBeenCalledOnce();
+        expect(facade.showRecentSection()).toBe(true);
+    });
+
+    it.each([false, true])('applies all catalog filters in one request, onlyMine=%s', async onlyMine => {
+        await flushDebounceAsync();
+        const filters: ProductListFiltersDialogResult = {
+            onlyMine,
+            productTypes: [ProductType.Fruit, ProductType.Vegetable],
+            caloriesFrom: 20,
+            caloriesTo: 150,
+            hasImage: false,
+        };
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(filters) });
+
+        facade.openFilters();
+        await flushDebounceAsync();
+
+        expect(productService.query).toHaveBeenCalledExactlyOnceWith(
+            1,
+            PRODUCT_LIST_PAGE_SIZE,
+            expect.objectContaining({
+                productTypes: filters.productTypes,
+                caloriesFrom: filters.caloriesFrom,
+                caloriesTo: filters.caloriesTo,
+                hasImage: filters.hasImage,
+            }),
+            expect.objectContaining({ includePublic: !onlyMine }),
+        );
+        expect(facade.showRecentSection()).toBe(false);
+        expect(facade.activeFilterChips().map(chip => chip.id)).toEqual([
+            ...(onlyMine ? ['onlyMine'] : []),
+            'type:Fruit',
+            'type:Vegetable',
+            'caloriesFrom',
+            'caloriesTo',
+            'hasImage',
+        ]);
+
+        facade.openFilters();
+
+        expect(dialogService.open).toHaveBeenLastCalledWith(expect.any(Function), { preset: 'form', data: filters });
+    });
+});
+
+describe('ProductListFacade search', () => {
+    it('keeps a mobile search visible with a query and closes an empty search after switching viewport', () => {
+        isMobile.set(true);
+        TestBed.tick();
+        expect(facade.isMobileSearchVisible()).toBe(false);
+
+        facade.toggleMobileSearch();
+        expect(facade.isMobileSearchVisible()).toBe(true);
+        facade.searchForm.search().value.set('pear');
+        facade.toggleMobileSearch();
+        expect(facade.isMobileSearchVisible()).toBe(true);
+        facade.clearSearch();
+        expect(facade.isMobileSearchVisible()).toBe(false);
+
+        facade.toggleMobileSearch();
+        isMobile.set(false);
+        TestBed.tick();
+        isMobile.set(true);
+        TestBed.tick();
+        expect(facade.isMobileSearchVisible()).toBe(false);
+    });
+
     it('clears the current search', () => {
         facade.searchForm.search().value.set('banana');
 

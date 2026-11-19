@@ -83,13 +83,14 @@ describe('MealItemsListComponent rows', () => {
     });
 
     it('should hide empty manual item rows when only external items exist', async () => {
-        const { component } = await setupComponentAsync({
+        const { fixture } = await setupComponentAsync({
             hasExternalItems: true,
             items: [createItemState({ sourceType: MealSourceType.Product, product: null, amount: null })],
         });
 
-        expect(component['manualItemRows']()).toEqual([]);
-        expect(component['hasManualItem'](0)).toBe(false);
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-manage__manual-summary')).toBeNull();
+        expect(host.querySelector('.meal-manage__items-empty')).toBeNull();
     });
     it('displays recipe servings and matching nutrition when weight is unavailable', async () => {
         const recipeWeight = {
@@ -121,53 +122,51 @@ describe('MealItemsListComponent serving labels', () => {
             displayAmountFromInput: vi.fn().mockReturnValue(recipeDisplayFromInput(amount, UNKNOWN_SERVING_MASS)),
             hasServingWeight: vi.fn().mockReturnValue(false),
         };
-        const { component, fixture } = await setupComponentAsync({
+        const { fixture } = await setupComponentAsync({
             items: [createItemState({ sourceType: MealSourceType.Recipe, recipe: createRecipe(), amount })],
             recipeWeight,
         });
         TestBed.inject(TranslateService).use(language);
         fixture.detectChanges();
 
-        expect(component['manualItemRows']()[0].amountLabel).toBe(`${number} ${unit}`);
-        expect(component['getAmountUnitLabel'](0)).toBe(unit);
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-manage__ai-summary-amount')?.textContent.trim()).toBe(`${number} ${unit}`);
     });
 });
 
 describe('MealItemsListComponent validation', () => {
-    it('should expose array and amount errors after controls are touched', async () => {
-        const { component } = await setupComponentAsync({
+    it('displays the collection error and hides incomplete rows', async () => {
+        const { fixture } = await setupComponentAsync({
             arrayError: 'FORM_ERRORS.NON_EMPTY_ARRAY',
-            items: [
-                createItemState({
-                    amount: null,
-                    amountError: 'FORM_ERRORS.REQUIRED',
-                    product: createProduct(),
-                    sourceType: MealSourceType.Product,
-                }),
-            ],
+            items: [createItemState({ sourceType: MealSourceType.Product, product: null, amount: null })],
         });
 
-        expect(component['arrayError']()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
-        expect(component['getAmountControlError'](0)).toBe('FORM_ERRORS.REQUIRED');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-item__error')?.textContent).toContain('FORM_ERRORS.NON_EMPTY_ARRAY');
+        expect(host.querySelector('.meal-manage__items-empty')?.textContent).toContain('MEAL_MANAGE.ITEMS_EMPTY');
+        expect(host.querySelector('.meal-manage__manual-summary')).toBeNull();
     });
 
-    it('should expose missing source errors for selected item type', async () => {
-        const { component } = await setupComponentAsync({
+    it('renders finite totals for older items whose product base or recipe serving count is zero', async () => {
+        const product = { ...createProduct(), baseAmount: 0 };
+        const recipe = { ...createRecipe(), servings: 0 };
+        const { fixture } = await setupComponentAsync({
             items: [
-                createItemState({
-                    sourceType: MealSourceType.Product,
-                    product: null,
-                    amount: PRODUCT_AMOUNT,
-                    productInvalid: true,
-                    sourceError: 'MEAL_MANAGE.ITEM_SOURCE_ERROR',
-                }),
+                createItemState({ sourceType: MealSourceType.Product, product, amount: PRODUCT_AMOUNT }),
+                createItemState({ sourceType: MealSourceType.Recipe, recipe, amount: RECIPE_FALLBACK_SERVINGS }),
             ],
         });
 
-        expect(component['isProductInvalid'](0)).toBe(true);
-        expect(component['isRecipeInvalid'](0)).toBe(false);
-        expect(component['isItemSourceInvalid'](0)).toBe(true);
-        expect(component['getItemSourceError'](0)).toBe('MEAL_MANAGE.ITEM_SOURCE_ERROR');
+        const host = fixture.nativeElement as HTMLElement;
+        const rows = Array.from(host.querySelectorAll('.meal-manage__manual-summary'));
+        expect(rows.map(row => row.querySelector('.meal-manage__ai-summary-name')?.textContent.trim())).toEqual([
+            product.name,
+            recipe.name,
+        ]);
+        expect(rows.map(row => row.querySelector('.meal-manage__ai-summary-calories span:last-child')?.textContent.trim())).toEqual([
+            '0 GENERAL.UNITS.KCAL',
+            '0 GENERAL.UNITS.KCAL',
+        ]);
     });
 });
 

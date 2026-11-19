@@ -9,6 +9,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
+import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     MeasurementUnit,
     type Product,
@@ -20,8 +21,10 @@ import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { usdaFoodId } from '../../../../../shared/models/semantics/usda-food-id';
 import type { UsdaFoodDetail } from '../../../../../shared/models/usda.data';
 import { ProductService } from '../../../api/product.service';
+import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
 import {
+    PRODUCT_MAX_PHOTOS,
     PRODUCT_MAX_PIECE_AMOUNT,
     PRODUCT_MAX_PIECE_CALORIES_PER_BASE,
     PRODUCT_MAX_PIECE_NUTRIENT_PER_BASE,
@@ -136,6 +139,33 @@ describe('Product editor pending save', () => {
             expect(component['productFormModel']()).toEqual(draft);
             expect(component['hasUnsavedChanges']()).toBe(true);
         }
+    });
+
+    it.each([
+        [HttpStatusCode.Unauthorized, 'FORM_ERRORS.UNAUTHORIZED'],
+        [HttpStatusCode.BadRequest, 'FORM_ERRORS.INVALID_DATA'],
+    ])('shows the save error for HTTP %s and clears it after editing', async (status, errorKey) => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', PRODUCT);
+        productManageFacade.submitProductAsync.mockResolvedValueOnce({ product: null, error: new HttpErrorResponse({ status }) });
+        fixture.detectChanges();
+
+        el.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledOnce();
+        expect(el.querySelector('.product-manage__footer-error')?.textContent.trim()).toBe(errorKey);
+
+        const name = el.querySelector<HTMLInputElement>('fd-ui-autocomplete input');
+        if (name === null) {
+            throw new Error('Missing product name input');
+        }
+        name.value = 'Retry product';
+        name.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
     });
 });
 
@@ -747,6 +777,66 @@ describe('Product portion edits', () => {
 });
 
 describe('Product recognition integration', () => {
+    it.each([false, true])('keeps the product unchanged when recognition is unavailable or canceled, premium=%s', async premium => {
+        const { el, fixture, dialogService, productManageFacade } = await setupComponentAsync();
+        productManageFacade.ensurePremiumAccess.mockReturnValue(premium);
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+
+        const recognize = el.querySelector<HTMLButtonElement>('.product-manage__ai button');
+        expect(recognize).not.toBeNull();
+        recognize?.click();
+        fixture.detectChanges();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(premium ? 1 : 0);
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(PRODUCT.name);
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
+    });
+
+    it('keeps the photo-limit warning visible after applying recognized values to a full gallery', async () => {
+        const { el, fixture, dialogService } = await setupComponentAsync();
+        const gallery = Array.from({ length: PRODUCT_MAX_PHOTOS }, (_, index) => ({
+            imageAssetId: `original-asset-${index}`,
+            imageUrl: `https://images.example.test/original-${index}.jpg`,
+        }));
+        fixture.componentRef.setInput('product', { ...PRODUCT, images: gallery });
+        fixture.detectChanges();
+        const response = new Subject<ProductAiRecognitionResult>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: (): Subject<ProductAiRecognitionResult> => response });
+        const recognize = el.querySelector<HTMLButtonElement>('.product-manage__ai button');
+        if (recognize === null) {
+            throw new Error('Missing product recognition button');
+        }
+        recognize.click();
+        const recognized = imageSelection('https://images.example.test/new.jpg', 'recognized-asset');
+        response.next({
+            name: 'Recognized product',
+            image: recognized,
+            images: [recognized],
+            baseUnit: MeasurementUnit.G,
+            baseAmount: PORTION_AMOUNT,
+            caloriesPerBase: PORTION_CALORIES,
+            proteinsPerBase: 1,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        });
+        response.complete();
+        fixture.detectChanges();
+
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe('Recognized product');
+        expect(el.querySelector('img[src*="original-0.jpg"]')).not.toBeNull();
+        expect(el.querySelector('img[src*="new.jpg"]')).toBeNull();
+        expect(el.querySelector('.product-manage__footer-error')?.textContent.trim()).toBe('PRODUCT_MANAGE.PHOTO_IMPORT_LIMIT');
+
+        fixture.componentRef.setInput('product', SECOND_PRODUCT);
+        fixture.detectChanges();
+
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(SECOND_PRODUCT.name);
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
+    });
+
     it('applies recognized portion values and asks before discarding them', async () => {
         const { component, fixture, productManageFacade } = await setupComponentAsync();
         fixture.detectChanges();

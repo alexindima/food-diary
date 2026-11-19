@@ -111,6 +111,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     public readonly saved = output<Product>();
     public readonly cancelled = output();
     protected readonly globalError = signal<string | null>(null);
+    protected readonly photoImportLimitReached = signal(false);
     private populatedProduct: Product | null = null;
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
@@ -441,6 +442,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
 
         this.isDeleting.set(true);
         this.clearGlobalError();
+        this.photoImportLimitReached.set(false);
 
         const result = await this.productManageFacade.deleteProductAsync(currentProduct, data);
         if (result !== 'deleted') {
@@ -464,6 +466,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
         }
 
         this.isSubmitting.set(true);
+        this.photoImportLimitReached.set(false);
         const currentValues = this.productFormModel();
         const productData = buildProductData(currentValues, this.nutritionMode);
         const product = this.product() ?? null;
@@ -559,6 +562,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     private populateForm(product: Product): void {
+        this.photoImportLimitReached.set(false);
         this.patchProductForm(buildProductFormPatch(product));
         this.nutritionMode = 'base';
         this.nutritionPortionBasis = null;
@@ -570,9 +574,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
         const ids = new Set([...existing, ...(result.images ?? [])].map(image => image.assetId ?? image.url));
         const fits = ids.size <= PRODUCT_MAX_PHOTOS;
         this.patchProductForm(buildAiResultPatch(values, fits ? result : { ...result, image: null, images: undefined }));
-        if (!fits) {
-            this.setGlobalError('PRODUCT_MANAGE.PHOTO_IMPORT_LIMIT');
-        }
+        this.photoImportLimitReached.set(!fits);
         this.productForm().markAsDirty();
         this.nutritionMode = 'portion';
         this.nutritionPortionBasis = getProductControlNumberValue(this.productFormModel().defaultPortionAmount);

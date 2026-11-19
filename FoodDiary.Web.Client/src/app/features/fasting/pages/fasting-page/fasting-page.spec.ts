@@ -1,16 +1,33 @@
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { type FdTourDefinition, FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { type Observable, of } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import type { FastingCheckInDialogResult } from '../../components/fasting-check-in-dialog/fasting-check-in-dialog';
 import type { FastingCheckInChartDialogData } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
+import { FastingEndConfirmDialogComponent } from '../../components/fasting-end-confirm-dialog/fasting-end-confirm-dialog';
+import {
+    FastingHistoryDialogComponent,
+    type FastingHistoryDialogData,
+} from '../../components/fasting-history-dialog/fasting-history-dialog';
+import { FastingProtocolDialogComponent } from '../../components/fasting-protocol-dialog/fasting-protocol-dialog';
+import {
+    FastingSessionDetailsDialogComponent,
+    type FastingSessionDetailsDialogData,
+} from '../../components/fasting-session-details-dialog/fasting-session-details-dialog';
 import { FastingSessionManagementDialogComponent } from '../../components/fasting-session-management-dialog/fasting-session-management-dialog';
 import { FastingFacade } from '../../lib/fasting.facade';
 import { FastingPageComponent } from './fasting-page';
@@ -29,11 +46,238 @@ const CYCLIC_EAT_DAYS = 1;
 const CYCLIC_EAT_FAST_HOURS = 14;
 const CYCLIC_EAT_WINDOW_HOURS = 10;
 
+registerLocaleData(localeRu);
+
 let component: FastingPageComponent;
 let fixture: ComponentFixture<FastingPageComponent>;
 let facade: FastingFacadeMock;
 let toastService: { success: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
+let tourService: { start: ReturnType<typeof vi.fn> };
+let dialogData: FastingHistoryDialogData | FastingSessionDetailsDialogData;
+let dialogRef: { close: ReturnType<typeof vi.fn> };
+
+describe('FastingPageComponent rendered workflow', () => {
+    beforeEach(createComponentAsync);
+
+    it('shows loading before revealing the fasting start action and protocol settings', () => {
+        facade.isLoading.set(true);
+        fixture.detectChanges();
+
+        expect(pageHost().querySelector('.fasting__skeleton-grid')).not.toBeNull();
+        expect(pageHost().querySelector('fd-fasting-redesign-preview')).toBeNull();
+
+        facade.isLoading.set(false);
+        fixture.detectChanges();
+        pageButton('FASTING.START_FAST').click();
+        pageButton('FASTING.REDESIGN.CHANGE_PROTOCOL').click();
+
+        expect(pageHost().querySelector('.fasting__skeleton-grid')).toBeNull();
+        expect(facade.startFasting).toHaveBeenCalledOnce();
+        expect(dialogService.open).toHaveBeenCalledWith(
+            FastingProtocolDialogComponent,
+            expect.objectContaining({ providers: [{ provide: FastingFacade, useValue: facade }] }),
+        );
+    });
+
+    it('starts the page tour from its accessible help button', () => {
+        pageHost().querySelector<HTMLButtonElement>('button[aria-label="FASTING.TOUR.START_TOUR"]')?.click();
+
+        expect(tourService.start).toHaveBeenCalledOnce();
+        const [definition, options] = tourService.start.mock.calls[0] as [FdTourDefinition, { force: boolean }];
+        expect(definition.id).toBe('fasting-page');
+        expect(definition.steps[0]?.id).toBe('timer');
+        expect(options.force).toBe(true);
+    });
+
+    it.each([
+        ['Extended', 'FASTING.INTERRUPT_FAST', 'FASTING.INTERRUPT_CONFIRM_TITLE'],
+        ['Cyclic', 'FASTING.STOP_CYCLE', 'FASTING.STOP_CYCLE_CONFIRM_TITLE'],
+    ] as const)('asks before ending a %s fast and ignores cancellation', (planType, actionLabel, title) => {
+        facade.currentSession.set({ ...createSession(), planType });
+        facade.isActive.set(true);
+        const result = new Subject<'confirm' | 'cancel'>();
+        dialogService.open.mockReturnValue({ afterClosed: () => result });
+        fixture.detectChanges();
+
+        pageButton(actionLabel).click();
+        expect(dialogService.open.mock.lastCall).toMatchObject([
+            FastingEndConfirmDialogComponent,
+            { preset: 'confirm', data: { title, confirmLabel: actionLabel } },
+        ]);
+
+        result.next('cancel');
+        result.complete();
+        expect(facade.endFasting).not.toHaveBeenCalled();
+    });
+
+    it('preserves a saved check-in draft and ignores a dialog result after navigation', () => {
+        facade.currentSession.set(createSession());
+        facade.isActive.set(true);
+        const saved = new Subject<FastingCheckInDialogResult>();
+        const pending = new Subject<FastingCheckInDialogResult>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => saved }).mockReturnValueOnce({ afterClosed: () => pending });
+        fixture.detectChanges();
+
+        pageButton('FASTING.REDESIGN.CHECK_IN').click();
+        saved.next('saved');
+        saved.complete();
+        expect(facade.resetCheckInDraft).not.toHaveBeenCalled();
+
+        pageButton('FASTING.REDESIGN.CHECK_IN').click();
+        expect(dialogService.open).toHaveBeenCalledTimes(2);
+        fixture.destroy();
+        pending.next('cancel');
+        pending.complete();
+        expect(facade.resetCheckInDraft).not.toHaveBeenCalled();
+    });
+});
+
+describe('FastingPageComponent rendered dialogs', () => {
+    beforeEach(createComponentAsync);
+
+    it('keeps protocol settings open after a failed start and closes after a successful retry', () => {
+        pageButton('FASTING.REDESIGN.CHANGE_PROTOCOL').click();
+        expect(dialogService.open).toHaveBeenCalledWith(FastingProtocolDialogComponent, expect.any(Object));
+        const dialog = TestBed.createComponent(FastingProtocolDialogComponent);
+        dialog.detectChanges();
+        const dialogHost = dialog.nativeElement as HTMLElement;
+        const start = pageButton('FASTING.START_FAST', dialogHost);
+        start.click();
+        expect(facade.startFasting).toHaveBeenCalledOnce();
+
+        facade.isStarting.set(true);
+        dialog.detectChanges();
+        expect(start.disabled).toBe(true);
+        facade.isStarting.set(false);
+        facade.requestError.set('FASTING.REQUEST_ERROR');
+        dialog.detectChanges();
+        expect(dialogHost.textContent).toContain('FASTING.REQUEST_ERROR');
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        start.click();
+        expect(facade.startFasting).toHaveBeenCalledTimes(2);
+        facade.requestError.set(null);
+        facade.currentSession.set(createSession());
+        facade.isActive.set(true);
+        dialog.detectChanges();
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+    });
+
+    it('opens completed-session notes and check-ins from the recent history row', () => {
+        const historical = {
+            ...createHistorySession('noted-fast', 2),
+            status: 'Interrupted' as const,
+            endedAtUtc: utcInstant('2026-04-12T20:00:00Z'),
+            notes: 'Paused during a long walk',
+        };
+        facade.history.set([historical]);
+        fixture.detectChanges();
+        pageHost().querySelector<HTMLButtonElement>('button[aria-label="FASTING.REDESIGN.OPEN_SESSION_DETAILS"]')?.click();
+
+        expect(dialogService.open).toHaveBeenCalledWith(FastingSessionDetailsDialogComponent, expect.any(Object));
+        dialogData = (dialogService.open.mock.calls[0][1] as { data: FastingSessionDetailsDialogData }).data;
+        const dialog = TestBed.createComponent(FastingSessionDetailsDialogComponent);
+        dialog.detectChanges();
+        const dialogHost = dialog.nativeElement as HTMLElement;
+        expect(dialogHost.textContent).toContain('Paused during a long walk');
+        expect(dialogHost.textContent).toContain('FASTING.BADGE_INTERRUPTED');
+        expect(dialogHost.textContent).toContain('→');
+        expect(dialogHost.querySelector('fd-fasting-check-in-chart')).not.toBeNull();
+        expect(dialogHost.querySelectorAll('fd-fasting-history-check-in-entry')).toHaveLength(2);
+
+        pageButton('COMMON.CLOSE', dialogHost).click();
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+    });
+});
+
+describe('FastingPageComponent rendered history and alerts', () => {
+    beforeEach(createComponentAsync);
+
+    it('passes live history and delegates row selection and pagination to the page', () => {
+        const endedAtUtc = utcInstant('2026-04-13T06:00:00Z');
+        const historical = { ...createHistorySession('historical', 2), endedAtUtc, status: 'Completed' as const };
+        facade.history.set([historical]);
+        facade.historyTotalPages.set(2);
+        fixture.detectChanges();
+
+        pageButton('FASTING.REDESIGN.VIEW_HISTORY').click();
+        expect(dialogService.open).toHaveBeenCalledWith(FastingHistoryDialogComponent, expect.objectContaining({ preset: 'detail' }));
+        const history = renderHistoryDialog();
+        expect(history.textContent).toContain('FASTING.BADGE_COMPLETED');
+        expect(history.textContent).toContain('24 FASTING.HOURS');
+
+        pageButton('FASTING.LOAD_MORE_HISTORY', history).click();
+        expect(facade.loadMoreHistory).toHaveBeenCalledOnce();
+        facade.historyPage.set(2);
+        facade.historyError.set('FASTING.REQUEST_ERROR');
+        TestBed.tick();
+        expect(history.textContent).not.toContain('FASTING.LOAD_MORE_HISTORY');
+        expect(history.querySelector('[role="alert"]')?.textContent).toContain('FASTING.REQUEST_ERROR');
+
+        history.querySelector<HTMLButtonElement>('button[aria-label="FASTING.REDESIGN.OPEN_SESSION_DETAILS"]')?.click();
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+        expect(dialogService.open.mock.lastCall).toMatchObject([FastingSessionDetailsDialogComponent, { data: { session: historical } }]);
+    });
+
+    it('updates an open history dialog when results and language change, and closes from its footer', async () => {
+        const translate = TestBed.inject(TranslateService);
+        const historical = {
+            ...createHistorySession('short-fast', 0),
+            endedAtUtc: utcInstant('2026-04-12T06:30:00Z'),
+            status: 'Completed' as const,
+        };
+        pageButton('FASTING.REDESIGN.VIEW_HISTORY').click();
+        const history = renderHistoryDialog();
+
+        expect(history.textContent).toContain('FASTING.NO_HISTORY');
+        expect(history.querySelector('.fasting-history-dialog__row')).toBeNull();
+
+        facade.history.set([historical]);
+        TestBed.tick();
+        expect(history.textContent).toContain('April');
+        expect(history.textContent).toContain('30 FASTING.MINUTES');
+        expect(history.querySelector('.fasting-history-dialog__status--interrupted')?.textContent).toContain('FASTING.BADGE_ENDED_EARLY');
+
+        await firstValueFrom(translate.use('ru'));
+        TestBed.tick();
+        expect(history.textContent).toContain('апреля');
+        expect(history.textContent).not.toContain('April');
+
+        pageButton('COMMON.CLOSE', history).click();
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+    });
+
+    it('localizes message parameters, filters hidden prompts, and dismisses the visible prompt', async () => {
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { FASTING: { SUMMARY: '{{stage}} after {{duration}}', STAGE: 'Water' } });
+        translate.setTranslation('ru', { FASTING: { SUMMARY: '{{stage}} спустя {{duration}}', STAGE: 'Вода' } });
+        await firstValueFrom(translate.use('en'));
+        facade.currentSession.set(createSession());
+        facade.isPromptVisible.mockImplementation((_session: FastingSession, alert: { id: string }) => alert.id !== 'hidden-alert');
+        const alert = {
+            id: 'visible-alert',
+            titleKey: 'FASTING.CUSTOM_TITLE',
+            bodyKey: 'FASTING.SUMMARY',
+            tone: 'warning' as const,
+            bodyParams: { stage: 'FASTING.STAGE', duration: '12 h' },
+        };
+        facade.insightsData.set({
+            alerts: [alert, { ...alert, id: 'hidden-alert', titleKey: 'FASTING.HIDDEN' }],
+            insights: [{ ...alert, id: 'steady', titleKey: 'FASTING.STEADY', tone: 'positive', bodyParams: null }],
+        });
+        fixture.detectChanges();
+        expect(pageHost().textContent).toContain('Water after 12 h');
+        expect(pageHost().textContent).toContain('FASTING.STEADY');
+        expect(pageHost().textContent).not.toContain('FASTING.HIDDEN');
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(pageHost().textContent).toContain('Вода спустя 12 h');
+        pageButton('FASTING.PROMPTS.DISMISS').click();
+        expect(facade.dismissPrompt).toHaveBeenCalledExactlyOnceWith('visible-alert');
+    });
+});
 
 describe('FastingPageComponent setup and actions', () => {
     beforeEach(createComponentAsync);
@@ -331,16 +575,13 @@ async function createComponentAsync(): Promise<void> {
     dialogService = {
         open: vi.fn((): { afterClosed: () => Observable<undefined> } => ({ afterClosed: () => of(void 0) })),
     };
+    tourService = { start: vi.fn() };
+    dialogRef = { close: vi.fn() };
 
     await TestBed.configureTestingModule({
         imports: [FastingPageComponent],
         providers: [
-            {
-                provide: TranslateService,
-                useValue: {
-                    instant: vi.fn((key: string) => key),
-                },
-            },
+            provideTranslateTesting(),
             {
                 provide: FdUiDialogService,
                 useValue: dialogService,
@@ -352,11 +593,14 @@ async function createComponentAsync(): Promise<void> {
                 },
             },
             { provide: FdUiToastService, useValue: toastService },
+            { provide: FdTourService, useValue: tourService },
+            { provide: FD_UI_DIALOG_DATA, useFactory: (): FastingHistoryDialogData | FastingSessionDetailsDialogData => dialogData },
+            { provide: FastingFacade, useValue: facade },
+            { provide: FdUiDialogRef, useValue: dialogRef },
         ],
     })
         .overrideComponent(FastingPageComponent, {
             set: {
-                template: '<div></div>',
                 providers: [{ provide: FastingFacade, useValue: facade }],
             },
         })
@@ -365,6 +609,26 @@ async function createComponentAsync(): Promise<void> {
     fixture = TestBed.createComponent(FastingPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+}
+
+function pageHost(): HTMLElement {
+    return fixture.nativeElement as HTMLElement;
+}
+
+function pageButton(label: string, container = pageHost()): HTMLButtonElement {
+    const button = Array.from(container.querySelectorAll('button')).find(candidate => candidate.textContent.trim().endsWith(label));
+    if (button === undefined) {
+        throw new Error(`No fasting page button with label "${label}"`);
+    }
+    return button;
+}
+
+function renderHistoryDialog(): HTMLElement {
+    const historyOptions = dialogService.open.mock.calls[0][1] as { data: FastingHistoryDialogData };
+    dialogData = historyOptions.data;
+    const history = TestBed.createComponent(FastingHistoryDialogComponent);
+    history.detectChanges();
+    return history.nativeElement as HTMLElement;
 }
 
 type FastingFacadeMock = {
@@ -405,6 +669,8 @@ type FastingFacadeMock = {
     isReducing: ReturnType<typeof signal<boolean>>;
     isUpdatingCycle: ReturnType<typeof signal<boolean>>;
     isSavingCheckIn: ReturnType<typeof signal<boolean>>;
+    requestError: WritableSignal<string | null>;
+    maxReducibleHours: WritableSignal<number>;
     currentSession: WritableSignal<FastingSession | null>;
     stats: WritableSignal<FastingStats | null>;
     history: WritableSignal<FastingSession[]>;
@@ -433,6 +699,8 @@ type FastingFacadeMock = {
     progressPercent: ReturnType<typeof signal<number>>;
     elapsedFormatted: ReturnType<typeof signal<string>>;
     remainingFormatted: ReturnType<typeof signal<string>>;
+    plannedDurationHours: WritableSignal<number>;
+    now: WritableSignal<Date>;
     isOvertime: ReturnType<typeof signal<boolean>>;
     isActive: ReturnType<typeof signal<boolean>>;
     canExtendActiveSession: ReturnType<typeof signal<boolean>>;
@@ -521,6 +789,8 @@ function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof cr
         isReducing: signal(false),
         isUpdatingCycle: signal(false),
         isSavingCheckIn: signal(false),
+        requestError: signal<string | null>(null),
+        maxReducibleHours: signal(0),
         currentSession: signal<FastingSession | null>(null),
         stats: signal<FastingStats | null>(null),
         history: signal<FastingSession[]>([]),
@@ -549,6 +819,8 @@ function createFacadeState(): Omit<FastingFacadeMock, keyof ReturnType<typeof cr
         progressPercent: signal(0),
         elapsedFormatted: signal('00:00:00'),
         remainingFormatted: signal('00:00:00'),
+        plannedDurationHours: signal(DEFAULT_SESSION_HOURS),
+        now: signal(new Date('2026-04-12T11:00:00Z')),
         isOvertime: signal(false),
         isActive: signal(false),
         canExtendActiveSession: signal(false),
