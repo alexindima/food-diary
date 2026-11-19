@@ -5,6 +5,18 @@ namespace FoodDiary.Modules.Usda.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaFoodDetailCacheTests {
+    [Fact]
+    public async Task MissingLookupOutcomeFailsWithoutCachingOrHoldingTheAdmissionSlot() {
+        var cache = new UsdaFoodDetailCache(TimeProvider.System, 1, TimeSpan.FromSeconds(10));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => cache.GetOrCreateAsync("https://usda.test", 42,
+            _ => Task.FromResult(default(UsdaFoodDetailLookupResult)), CancellationToken.None));
+
+        UsdaFoodDetailModel? recovered = await cache.GetOrCreateAsync("https://usda.test", 42,
+            _ => Task.FromResult<UsdaFoodDetailLookupResult>(new UsdaFoodDetailLookupResult.NotFound()), CancellationToken.None);
+        Assert.Null(recovered);
+    }
+
     [Theory]
     [InlineData(true, 30)]
     [InlineData(false, 5)]

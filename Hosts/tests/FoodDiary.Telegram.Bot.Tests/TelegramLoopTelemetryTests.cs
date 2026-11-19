@@ -6,6 +6,13 @@ namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramLoopTelemetryTests {
+    [Fact]
+    public void UnknownLoopIsRejectedBeforeRecordingTelemetry() {
+        ArgumentOutOfRangeException error = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new TelegramLoopTelemetry((TelegramLoopKind)42, TimeProvider.System, new RecordingLogger()));
+        Assert.Equal("loop", error.ParamName);
+    }
+
     [Theory]
     [InlineData(true, "intake")]
     [InlineData(false, "discovery")]

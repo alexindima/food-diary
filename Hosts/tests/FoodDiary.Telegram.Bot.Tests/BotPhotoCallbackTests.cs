@@ -4,6 +4,20 @@ namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BotPhotoCallbackTests {
+    [Fact]
+    public void CopiedCallbackKeepsItsNewOperationAndTrialTransitionTogether() {
+        var original = new BotPhotoCallback(new BotOperationId(Guid.NewGuid()), StartsTrial: false);
+        var next = new BotOperationId(Guid.NewGuid());
+
+        BotPhotoCallback trial = original with { OperationId = next, StartsTrial = true };
+
+        Assert.Equal(next, trial.OperationId);
+        Assert.Equal(BotPhotoTrial.OfferedCheckpoint, trial.ExpectedCheckpoint);
+        Assert.Equal(BotPhotoTrial.AcceptedCheckpoint, trial.NextCheckpoint);
+        Assert.False(original.StartsTrial);
+        Assert.NotEqual(next, original.OperationId);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]

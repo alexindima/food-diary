@@ -163,6 +163,10 @@ public sealed class RecipeVideoProcessFixture : IAsyncLifetime {
                     return 17;
                 }
                 if (mode == "missing") { return 0; }
+                if (mode == "corrupt") {
+                    await File.WriteAllBytesAsync(output, Encoding.ASCII.GetBytes("Invalid WAV fixture"));
+                    return 0;
+                }
                 if (mode == "oversized") {
                     using FileStream oversized = File.Create(output);
                     oversized.SetLength(10 * 1024 * 1024 + 1);

@@ -11,6 +11,32 @@ namespace FoodDiary.Modules.Users.Application.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ManualPremiumGrantTests {
     [Theory]
+    [InlineData("past")]
+    [InlineData("blank-reason")]
+    [InlineData("long-reason")]
+    public async Task Grant_ValidatesExpirationAndReasonBeforeReadingOrWritingAccounts(string scenario) {
+        IUserLookupRepository users = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writes = Substitute.For<IUserWriteRepository>();
+        var handler = new SetUserManualPremiumGrantCommandHandler(users, writes, TimeProvider.System);
+        DateTimeOffset end = DateTimeOffset.UtcNow.AddDays(scenario is "past" ? -1 : 1);
+        string reason = scenario switch {
+            "past" => "Owned manual-grant fixture",
+            "long-reason" => new string('x', 501),
+            _ => " ",
+        };
+
+        Result<UserManualPremiumGrantModel> result = await handler.Handle(
+            new SetUserManualPremiumGrantCommand(UserId.New(), end, reason), CancellationToken.None);
+
+        Error error = ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Equal(ErrorKind.Validation, error.Kind);
+        Assert.NotNull(error.Details);
+        Assert.Contains(scenario is "past" ? "endsAtUtc" : "reason", error.Details.Keys, StringComparer.Ordinal);
+        Assert.Empty(users.ReceivedCalls());
+        Assert.Empty(writes.ReceivedCalls());
+    }
+
+    [Theory]
     [InlineData("missing")]
     [InlineData("deleted")]
     [InlineData("system")]

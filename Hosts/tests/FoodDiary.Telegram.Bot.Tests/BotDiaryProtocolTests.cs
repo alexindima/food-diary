@@ -105,6 +105,25 @@ public sealed class BotDiaryProtocolTests {
     }
 
     [Theory]
+    [InlineData("null")]
+    [InlineData("{\"error\":\"Billing.UnexpectedConflict\"}")]
+    public async Task StartTrial_UnknownConflictRemainsAnHttpFailureWithoutReadingPremiumAccess(string body) {
+        int requests = 0;
+        using var handler = new Handler(request => {
+            requests++;
+            Assert.Equal(HttpMethod.Post, request.Method);
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(body, Encoding.UTF8, "application/json") };
+        });
+        using var http = new HttpClient(handler);
+
+        HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(() =>
+            Client(http).StartTrialAsync("token", new BotOperationId(Guid.NewGuid()), CancellationToken.None));
+
+        Assert.Equal(HttpStatusCode.Conflict, error.StatusCode);
+        Assert.Equal(1, requests);
+    }
+
+    [Theory]
     [InlineData("{}")]
     [InlineData("{\"accessToken\":null,\"user\":{\"id\":\"11111111-1111-1111-1111-111111111111\"}}")]
     [InlineData("{\"accessToken\":\"broken\",\"user\":null}")]

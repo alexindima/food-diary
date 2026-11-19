@@ -19,6 +19,31 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class IdempotencyFilterTests {
     [Fact]
+    public async Task MissingStoreOutcomeStopsTheRequestBeforeItsActionRuns() {
+        var store = new RecordingIdempotencyStore(returnMissingOutcome: true);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext http = CreateHttpContext("POST", "/api/v1/products", "owned-key", "owned-user");
+        ActionExecutingContext context = CreateActionExecutingContext(http, new EnableIdempotencyAttribute());
+        bool executed = false;
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => filter.OnActionExecutionAsync(context, () => {
+            executed = true;
+            return Task.FromResult(new ActionExecutedContext(context, [], new object()));
+        }));
+
+        Assert.False(executed);
+        Assert.Equal(1, store.ReserveCalls);
+        Assert.Equal(0, store.CompleteCalls);
+    }
+
+    [Fact]
+    public void MissingReservationOutcomeCannotBeInterpretedAsAnAcquiredWrite() {
+        IdempotencyReservation reservation = default;
+        Assert.Throws<InvalidOperationException>(() => reservation.Status);
+        Assert.Null(reservation.OwnerToken);
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_UploadHash_UsesFileContents() {
         var store = new RecordingIdempotencyStore();
         var filter = new IdempotencyFilter(store);
@@ -1105,7 +1130,8 @@ public sealed class IdempotencyFilterTests {
         bool throwOnRelease = false,
         bool renewResult = true,
         bool completeResult = true,
-        bool throwOnFirstRenew = false) : IIdempotencyStore {
+        bool throwOnFirstRenew = false,
+        bool returnMissingOutcome = false) : IIdempotencyStore {
         public int ReserveCalls { get; private set; }
         public int RenewCalls { get; private set; }
         public int CompleteCalls { get; private set; }
@@ -1127,7 +1153,7 @@ public sealed class IdempotencyFilterTests {
             CancellationToken cancellationToken = default) {
             ReserveCalls++;
             LastReservedKey = key;
-            return Task.FromResult<IdempotencyReservation>(new IdempotencyReservation.Acquired("owner-token"));
+            return Task.FromResult<IdempotencyReservation>(returnMissingOutcome ? default(IdempotencyReservation) : new IdempotencyReservation.Acquired("owner-token"));
         }
 
         public Task<bool> RenewAsync(

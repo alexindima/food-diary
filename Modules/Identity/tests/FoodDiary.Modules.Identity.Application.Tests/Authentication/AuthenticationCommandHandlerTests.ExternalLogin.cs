@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.GoogleLogin;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.LinkGoogle;
 using FoodDiary.Results;
@@ -13,6 +14,31 @@ using FluentValidation.TestHelper;
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task GoogleReauthenticationRejectsADifferentAccountOrANonAdministrativePrincipal(bool admin) {
+        var user = User.Create("google-boundary@example.test", "hash");
+        user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
+        var notifications = new StubNotificationRepository();
+        var tokens = new StubAuthenticationTokenService();
+        var handler = new GoogleLoginCommandHandler(
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)), notifications,
+            new StubNotificationWriter(notifications),
+            new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email!, "Alex", "User", "en")),
+            new StubDateTimeProvider(), tokens);
+        AuthenticationClientContext? client = admin
+            ? new AuthenticationClientContext("google", IpAddress: null, UserAgent: null, CredentialKind: AuthenticationCredentialKind.AdminBrowser)
+            : null;
+
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential", ClientContext: client,
+            ExpectedUserId: admin ? null : Guid.NewGuid()), CancellationToken.None);
+
+        ResultAssert.Failure(result, admin ? "Authentication.AdminSsoForbidden" : "Authentication.ReauthenticationAccountMismatch");
+        Assert.Null(tokens.LastPrincipal);
+        Assert.Empty(notifications.Notifications);
+    }
+
     private const string GoogleIssuer = "https://accounts.google.com";
     private const string GoogleSubject = "google-subject";
 

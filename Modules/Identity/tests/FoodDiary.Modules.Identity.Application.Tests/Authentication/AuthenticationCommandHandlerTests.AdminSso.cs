@@ -16,6 +16,21 @@ using FoodDiary.Modules.Users.Contracts.Models;
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
+    [Fact]
+    public async Task AdminSsoExchangeRequiresTheOriginalSessionConfirmationToRemainFresh() {
+        var user = User.Create("expired-confirmation@example.test", "hash");
+        user.ReplaceRoles([Role.Create(RoleNames.Admin)]);
+        var tokens = new StubAuthenticationTokenService();
+        var handler = new AdminSsoExchangeCommandHandler(
+            new StubAdminSsoService(user.Id, user.SecurityVersion),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)), new StubDateTimeProvider(),
+            tokens, ActiveSsoSessions(), InlineSsoExecutor(), Substitute.For<IUnitOfWork>(),
+            ConfirmedPrivilegedSessions(user.Id, minutesAgo: 15));
+
+        ResultAssert.Failure(await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None),
+            "Authentication.ReauthenticationRequired");
+        Assert.Null(tokens.LastPrincipal);
+    }
 
     [Fact]
     public async Task AdminSsoStartHandler_WithEmptyUserId_ReturnsValidationFailure() {

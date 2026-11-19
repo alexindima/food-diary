@@ -22,6 +22,19 @@ namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed partial class BrowserSessionServiceTests {
+    [Fact]
+    public async Task RestoreAdminRequiresTheExistingAdministrativeConfirmationBeforeRevalidation() {
+        var scenario = new Scenario();
+        string credential = BrowserSessionCredential.Create(scenario.Session.Id.Value);
+        scenario.Session.ConvertToBrowserSession(SecurityTokenGenerator.HashForStorage(credential), 7, Now);
+
+        Result<BrowserSessionModel> result = await scenario.Service.RestoreAsync(credential, rememberMe: false, CancellationToken.None, admin: true);
+
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
+        await scenario.Sessions.DidNotReceive().TryRevalidateBrowserSessionAsync(
+            scenario.Session.Id, scenario.Session.UserId, Arg.Any<string>(), Arg.Any<long>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
+    }
+
     private static readonly DateTime Now = new(2030, 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
     [Theory]

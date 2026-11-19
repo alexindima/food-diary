@@ -9,6 +9,18 @@ namespace FoodDiary.Modules.Export.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ModuleRegistrationTests {
     [Fact]
+    public async Task RegisteredHttpClientRejectsLoopbackThroughItsActualConnectionCallback() {
+        var services = new ServiceCollection();
+        services.AddExportInfrastructure();
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        using HttpClient client = provider.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(IDiaryPdfGenerator));
+
+        HttpRequestException error = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("http://127.0.0.1/"));
+
+        Assert.Contains("private or loopback", error.GetBaseException().Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AddExportInfrastructure_PreservesHostTimeProviderAndSafeHttpHandler() {
         var services = new ServiceCollection();
         var timeProvider = new TestTimeProvider();

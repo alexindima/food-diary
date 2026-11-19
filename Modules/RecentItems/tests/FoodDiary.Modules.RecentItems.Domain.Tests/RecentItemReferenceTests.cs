@@ -10,6 +10,17 @@ namespace FoodDiary.Modules.RecentItems.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class RecentItemReferenceTests {
     [Fact]
+    public void CopyPreservesTheSourceIdentityWhenRecordingRecentUsage() {
+        var original = RecentItemReference.ForRecipe(RecipeId.New());
+        RecentItemReference copy = original with { };
+        var item = RecentItem.CreateWithReference(UserId.New(), copy, DateTime.UtcNow);
+        Assert.NotSame(original, copy);
+        Assert.Equal(original, copy);
+        Assert.Equal(original.Id, item.ItemId);
+        Assert.Equal(RecentItemType.Recipe, item.ItemType);
+    }
+
+    [Fact]
     public void References_PreserveKindIdentityAndTimestamp() {
         var id = ProductId.New();
         var reference = RecentItemReference.ForProduct(id);

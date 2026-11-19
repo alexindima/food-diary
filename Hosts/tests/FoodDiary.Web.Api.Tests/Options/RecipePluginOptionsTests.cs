@@ -6,6 +6,18 @@ namespace FoodDiary.Web.Api.Tests.Options;
 [ExcludeFromCodeCoverage]
 public sealed class RecipePluginOptionsTests {
     [Fact]
+    public void CertificatePasswordsAreBoundFromTheEnabledIntegrationConfiguration() {
+        IConfiguration configuration = BuildConfiguration("fooddiary-codex", "http://127.0.0.1:15473/callback");
+        configuration["RecipePlugin:SigningCertificatePassword"] = "owned-signing-fixture";
+        configuration["RecipePlugin:EncryptionCertificatePassword"] = "owned-encryption-fixture";
+
+        RecipePluginOptions options = Assert.IsType<RecipePluginOptions>(RecipePluginOptions.ReadEnabled(configuration, development: false));
+
+        Assert.Equal("owned-signing-fixture", options.SigningCertificatePassword);
+        Assert.Equal("owned-encryption-fixture", options.EncryptionCertificatePassword);
+    }
+
+    [Fact]
     public void ProductionAcceptsExplicitNativeCodexClientWithLoopbackCallback() {
         IConfiguration configuration = BuildConfiguration("fooddiary-codex", "http://127.0.0.1:15473/callback");
 

@@ -11,6 +11,7 @@ public sealed class MarketingAttributionEventInvariantTests {
             new AnonymousVisitorId("  visitor/from-local-storage  "), new MarketingSessionId("  session:opaque  "), "/");
 
         Assert.Multiple(
+            () => Assert.Equal(default, attributionEvent.ReceivedAtUtc),
             () => Assert.Equal("visitor/from-local-storage", attributionEvent.AnonymousId.Value),
             () => Assert.Equal("session:opaque", attributionEvent.SessionId.Value),
             () => Assert.Equal("custom_event", attributionEvent.EventType));

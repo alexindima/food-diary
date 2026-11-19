@@ -4,6 +4,17 @@ namespace FoodDiary.Modules.WeeklyGoals.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class WeeklyGoalReminderSettingsTests {
+    [Fact]
+    public void CopyPreservesTheEnabledReminderTimeAndOffset() {
+        var original = WeeklyGoalReminderSettings.EnabledAt(new TimeOnly(9, 30), TimeSpan.FromHours(4));
+        WeeklyGoalReminderSettings copy = original with { };
+        Assert.NotSame(original, copy);
+        Assert.Equal(original, copy);
+        Assert.Equal(new TimeOnly(9, 30), copy.LocalTime);
+        Assert.Equal(TimeSpan.FromHours(4), copy.UtcOffset);
+        Assert.True(copy.IsEnabled);
+    }
+
     [Theory]
     [InlineData(null, null)]
     [InlineData(-1, 841)]

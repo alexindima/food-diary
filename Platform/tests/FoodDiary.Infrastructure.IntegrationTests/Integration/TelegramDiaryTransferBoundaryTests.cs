@@ -20,6 +20,55 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class TelegramDiaryTransferBoundaryTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task TransferRequiresACallerTransactionBeforeReadingOrChangingAccounts() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        IUserSessionRevocationService sessions = Substitute.For<IUserSessionRevocationService>();
+        await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!, sessions);
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IUserTelegramDiaryTransfer transfer = scope.ServiceProvider.GetRequiredService<IUserTelegramDiaryTransfer>();
+        var source = User.CreateTelegram(456, "hash");
+        var target = User.Create("target@example.test", "hash");
+        var proof = new TelegramDiaryProof(source.Id, source.SecurityVersion, target.Id, target.SecurityVersion, target.Email!, AdminTargetConfirmed: false);
+
+        InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(() => transfer.TransferAsync(proof, useTelegramGoals: false, CancellationToken.None));
+
+        Assert.Equal("Diary transfer requires a caller transaction.", error.Message);
+        Assert.Empty(sessions.ReceivedCalls());
+        Assert.Empty(await database.Users.ToListAsync());
+    }
+
+    [RequiresDockerFact]
+    public async Task TransferMovesTheOidcBindingAndRevokesBothOwnersSessionsAtomically() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        var source = User.CreateTelegram(456, "hash");
+        const string issuer = "https://oauth.telegram.org";
+        const string subject = "456";
+        source.BindTelegramOidcIdentity(issuer, subject);
+        var target = User.Create("oidc-target@example.test", "hash");
+        target.SetEmailConfirmed(isConfirmed: true);
+        database.Users.AddRange(source, target);
+        await database.SaveChangesAsync();
+        var proof = new TelegramDiaryProof(source.Id, source.SecurityVersion, target.Id, target.SecurityVersion, target.Email!, AdminTargetConfirmed: false);
+        IUserSessionRevocationService sessions = Substitute.For<IUserSessionRevocationService>();
+        await using ServiceProvider provider = CreateProvider(database.Database.GetConnectionString()!, sessions);
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IModuleTransactionCoordinator transactions = scope.ServiceProvider.GetRequiredService<IModuleTransactionCoordinator>();
+        IUserTelegramDiaryTransfer transfer = scope.ServiceProvider.GetRequiredService<IUserTelegramDiaryTransfer>();
+
+        ResultAssert.Success(await transactions.ExecuteAsync((_, token) => transfer.TransferAsync(proof, useTelegramGoals: false, token), CancellationToken.None));
+
+        User persistedSource = await database.Users.AsNoTracking().SingleAsync(user => user.Id == source.Id);
+        User persistedTarget = await database.Users.AsNoTracking().SingleAsync(user => user.Id == target.Id);
+        Assert.NotNull(persistedSource.DeletedAt);
+        Assert.Null(persistedSource.TelegramUserId);
+        Assert.Equal(456, persistedTarget.TelegramUserId);
+        Assert.Equal(issuer, persistedTarget.TelegramOidcIssuer);
+        Assert.Equal(subject, persistedTarget.TelegramOidcSubject);
+        await sessions.Received(1).RevokeAllAsync(source.Id, Arg.Any<DateTime>(), CancellationToken.None);
+        await sessions.Received(1).RevokeAllAsync(target.Id, Arg.Any<DateTime>(), CancellationToken.None);
+    }
+
     [RequiresDockerTheory]
     [InlineData("changed_version", "Authentication.TelegramDiaryProofExpired")]
     [InlineData("privileged_target", "User.TelegramDiaryRestrictedAccount")]

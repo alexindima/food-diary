@@ -9,8 +9,8 @@
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1061,
-    "criticalSymbolsWithTestReferences": 1013,
-    "criticalSymbolsWithoutTestReferences": 48,
+    "criticalSymbolsWithTestReferences": 1016,
+    "criticalSymbolsWithoutTestReferences": 45,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -39805,8 +39805,8 @@
       "nonBlankLines": 19,
       "decisionPoints": 6,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 16.38
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.38
     },
     {
       "path": "Modules/Identity/Presentation/Security/ImpersonationCookieService.cs",
@@ -49645,8 +49645,8 @@
       "nonBlankLines": 19,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.88
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.88
     },
     {
       "path": "Modules/Users/Application/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommandHandler.cs",
@@ -50149,8 +50149,8 @@
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.18
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Users/Application/Queries/GetUsersForAdministration/GetUsersForAdministrationQueryHandler.cs",
@@ -59357,9 +59357,11 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/RecordUserActivity/RecordUserActivityCommandHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserActivityAndRegistrationTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -64460,9 +64462,12 @@
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserRegistrationTime/GetUserRegistrationTimeQueryHandler.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserActivityAndRegistrationTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserRegistrationLookupCompatibilityTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -65863,9 +65868,11 @@
       "role": "Validator",
       "path": "Modules/Identity/Presentation/Security/DelegatedAccessTokenValidator.cs",
       "line": 10,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/RecipePluginEndpointBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

@@ -13,6 +13,28 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [Collection("Recipe media")]
 public sealed class RecipeYouTubeVideoSourceTests {
     [Theory]
+    [InlineData(false, "youtube_playback_failed", false)]
+    [InlineData(true, "youtube_video_requires_purchase", true)]
+    public async Task UnavailablePlaybackRetainsTheControlledOutcomeAfterTheProviderClientFallback(bool purchaseRequired, string expectedReason, bool invalidSource) {
+        using var handler = new YouTubeFixtureHandler {
+            PlayerStatus = purchaseRequired ? "OK" : "UNPLAYABLE",
+            ProvidePlayerScript = true,
+            PurchaseRequired = purchaseRequired,
+        };
+        using var http = new HttpClient(handler);
+        await using var destination = new MemoryStream();
+
+        RecipeVideoSourceException error = await Assert.ThrowsAsync<RecipeVideoSourceException>(() =>
+            new RecipeYouTubeVideoSource(http).DownloadAsync(new Uri("https://youtu.be/yNgjOzU3QaU"), destination, CancellationToken.None));
+
+        Assert.Equal(expectedReason, error.Reason);
+        Assert.Equal(invalidSource, error.InvalidSource);
+        Assert.Null(error.InnerException);
+        Assert.Equal(0, handler.MediaRequests);
+        Assert.Equal(0, destination.Length);
+    }
+
+    [Theory]
     [InlineData("https://www.youtube.com/watch?v=ncD_3gaRKbM")]
     [InlineData("https://youtu.be/ncD_3gaRKbM")]
     public async Task VideoProcessor_UsesTheYouTubeDownloaderAndRejectsItsInvalidContainer(string url) {
@@ -205,6 +227,8 @@ public sealed class RecipeYouTubeVideoSourceTests {
         public long DeclaredAudioSize { get; init; } = 32;
         public bool OversizedMetadata { get; init; }
         public bool Unavailable { get; init; }
+        public bool ProvidePlayerScript { get; init; }
+        public bool PurchaseRequired { get; init; }
         public HttpStatusCode? MetadataStatus { get; init; }
         public string? RedirectTarget { get; init; }
         public string PlayerStatus { get; init; } = "OK";
@@ -226,6 +250,14 @@ public sealed class RecipeYouTubeVideoSourceTests {
             if (MetadataStatus is { } status) {
                 return new HttpResponseMessage(status) { RequestMessage = request };
             }
+            if (ProvidePlayerScript && url.AbsolutePath is "/iframe_api") {
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("/s/player/1234abcd/") };
+            }
+            if (ProvidePlayerScript && url.AbsolutePath.EndsWith("/base.js", StringComparison.Ordinal)) {
+                return new HttpResponseMessage(HttpStatusCode.OK) {
+                    Content = new StringContent("var sw={rv:function(a){a.reverse()}};dec=function(a){a=a.split(\"\");sw.rv(a,0);return a.join(\"\")};signatureTimestamp:12345;"),
+                };
+            }
             if (string.Equals(url.AbsolutePath, "/sw.js_data", StringComparison.Ordinal)) {
                 object?[] visitor = new object?[14];
                 visitor[13] = "fixture-visitor";
@@ -237,8 +269,15 @@ public sealed class RecipeYouTubeVideoSourceTests {
                 using var payload = JsonDocument.Parse(await request.Content.ReadAsStringAsync(cancellationToken));
                 VideoId = payload.RootElement.GetProperty("videoId").GetString();
             }
+            var playability = new Dictionary<string, object>(StringComparer.Ordinal) {
+                ["status"] = PlayerStatus,
+                ["reason"] = "Fixture provider diagnostics containing a private source URL.",
+            };
+            if (PurchaseRequired) {
+                playability["errorScreen"] = new { playerLegacyDesktopYpcTrailerRenderer = new { trailerVideoId = "ncD_3gaRKbM" } };
+            }
             string player = JsonSerializer.Serialize(new {
-                playabilityStatus = new { status = PlayerStatus, reason = "Fixture provider diagnostics containing a private source URL." },
+                playabilityStatus = playability,
                 videoDetails = new { videoId = VideoId, title = "Fixture recipe", author = "Fixture cook", channelId = "UC0000000000000000000000", lengthSeconds = Duration.ToString(CultureInfo.InvariantCulture) },
                 microformat = new { playerMicroformatRenderer = new { uploadDate = "2026-01-01" } },
                 streamingData = new {

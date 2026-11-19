@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Text;
 using FoodDiary.Results;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
@@ -14,6 +15,61 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 [Collection("Recipe media")]
 public sealed class RecipeVideoDownloadTests {
+    [Fact]
+    public async Task CorruptDownload_ReturnsValidationFailureAndReleasesEachResponseAndProcessingSlot() {
+        var streams = new List<CorruptMediaStream>();
+        using var handler = new SequenceHandler((_, _) => {
+            var stream = new CorruptMediaStream();
+            streams.Add(stream);
+            return new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StreamContent(stream) { Headers = { ContentType = new MediaTypeHeaderValue("video/mp4") } },
+            };
+        });
+        using var http = new HttpClient(handler);
+        var logger = new RecordingLogger();
+        RecipeVideoProcessor processor = CreateProcessor(http, logger);
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        for (int attempt = 0; attempt < 3; attempt++) {
+            Error error = ResultAssert.Failure(await processor.ExtractAudioAsync(video: null,
+                "https://example.org/video", deadline.Token), "Ai.InvalidRecipeVideo");
+            Assert.Equal(ErrorKind.Validation, error.Kind);
+        }
+
+        Assert.Equal(3, handler.Targets.Count);
+        Assert.All(streams, stream => {
+            Assert.Equal(1, stream.ReadCount);
+            Assert.False(stream.CanRead);
+        });
+        Assert.Equal(3, logger.Entries.Count);
+        Assert.All(logger.Entries, entry => {
+            Assert.Equal("download_source", entry.Fields["Stage"]);
+            Assert.Equal("invalid_source_media", entry.Fields["Reason"]);
+            Assert.DoesNotContain("private fixture diagnostics", entry.Message, StringComparison.Ordinal);
+            Assert.Null(entry.Exception);
+        });
+    }
+
+    [Theory]
+    [InlineData(false, "non_public_destination")]
+    [InlineData(true, "source_host_not_found")]
+    public async Task UnsafeOrUnresolvableDestinationReturnsAControlledValidationFailure(bool dnsFailure, string expectedReason) {
+        using var handler = new SequenceHandler((_, _) => throw new HttpRequestException("private fixture diagnostics", dnsFailure
+            ? new SocketException((int)SocketError.HostNotFound)
+            : new RecipeSourceReader.NonPublicRecipeSourceException()));
+        using var http = new HttpClient(handler);
+        var logger = new RecordingLogger();
+
+        Error error = ResultAssert.Failure(await CreateProcessor(http, logger)
+            .ExtractAudioAsync(video: null, "https://example.org/video", CancellationToken.None), "Ai.InvalidRecipeVideoSource");
+
+        Assert.Equal(ErrorKind.Validation, error.Kind);
+        (LogLevel Level, IReadOnlyDictionary<string, object?> Fields, string Message, Exception? Exception) entry = Assert.Single(logger.Entries);
+        Assert.Equal(expectedReason, entry.Fields["Reason"]);
+        Assert.DoesNotContain("private fixture diagnostics", entry.Message, StringComparison.Ordinal);
+        Assert.Null(entry.Exception);
+    }
+
     [Theory]
     [InlineData(null, "Ai.InvalidRecipeVideo")]
     [InlineData("http://example.org/video", "Ai.InvalidRecipeUrl")]
@@ -172,6 +228,15 @@ public sealed class RecipeVideoDownloadTests {
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) {
             IEnumerable<KeyValuePair<string, object?>> fields = Assert.IsAssignableFrom<IEnumerable<KeyValuePair<string, object?>>>(state);
             Entries.Add((logLevel, fields.ToDictionary(), formatter(state, exception), exception));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CorruptMediaStream : MemoryStream {
+        public int ReadCount { get; private set; }
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) {
+            ReadCount++;
+            return ValueTask.FromException<int>(new InvalidDataException("private fixture diagnostics"));
         }
     }
 

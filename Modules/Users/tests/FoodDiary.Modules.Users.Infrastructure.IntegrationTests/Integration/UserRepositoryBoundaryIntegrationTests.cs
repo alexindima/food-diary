@@ -14,6 +14,28 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserRepositoryBoundaryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task DetachedUpdateKeepsTheLoadedActivityUnmodified() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("detached-activity@example.test", "hash");
+        context.Users.Add(user);
+        var activity = UserActivity.Create(user.Id, DateTime.UtcNow);
+        context.Add(activity);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserRepository(context.Users, context.UserRoleAuditEvents);
+        User loaded = Assert.IsType<User>(await repository.GetByIdAsync(user.Id));
+        Assert.NotNull(loaded.Activity);
+        DateTime persistedActivity = loaded.Activity.LastActiveAtUtc;
+        context.ChangeTracker.Clear();
+
+        await repository.UpdateAsync(loaded);
+
+        Assert.Equal(EntityState.Unchanged, context.Entry(loaded.Activity).State);
+        Assert.Equal(persistedActivity, await context.Set<UserActivity>().Where(item => item.UserId == user.Id)
+            .Select(item => item.LastActiveAtUtc).SingleAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task Lookups_PreserveActiveAndInclusiveFiltersAndCompositeGoogleIdentity() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var active = User.Create("active-boundary@example.com", "hash");

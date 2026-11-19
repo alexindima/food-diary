@@ -6,6 +6,18 @@ namespace FoodDiary.Modules.Ai.Application.Tests.Ai;
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionCompletionTests {
     [Fact]
+    public void CopyPreservesThePartialRecognitionFailureAndSuccessfulVision() {
+        var original = FoodRecognitionCompletion.NutritionFailed("Ai.QuotaExceeded");
+        FoodRecognitionCompletion copy = original with { };
+        Assert.NotSame(original, copy);
+        Assert.Equal(original, copy);
+        Assert.Equal("Succeeded", copy.Status);
+        Assert.Equal("Ai.QuotaExceeded", copy.NutritionErrorCode);
+        Assert.Null(copy.Nutrition);
+        Assert.Null(copy.ErrorCode);
+    }
+
+    [Fact]
     public void VisionOnlyAndNutritionFailure_KeepSuccessfulVisionStatusWithoutInventingNutrition() {
         FoodRecognitionCompletion visionOnly = FoodRecognitionCompletion.WithoutNutrition;
         var partial = FoodRecognitionCompletion.NutritionFailed("Ai.QuotaExceeded");

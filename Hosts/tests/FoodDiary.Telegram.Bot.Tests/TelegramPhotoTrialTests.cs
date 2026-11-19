@@ -6,6 +6,41 @@ namespace FoodDiary.Telegram.Bot.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class TelegramPhotoTrialTests {
     [Theory]
+    [InlineData("en", "send the photo again")]
+    [InlineData("ru", "отправьте фото снова")]
+    public async Task ExpiredAcceptedTrialWithMissingConsentClosesTheOfferWithoutStartingATrial(string language, string expectedMessage) {
+        using var scenario = new BotOperationScenario {
+            IsPremium = false,
+            CanStartTrial = true,
+            HasAiConsent = false,
+            CreatedAtUtc = DateTime.UtcNow.AddMinutes(-16),
+            State = new BotPhotoCheckpoint(BotPhotoTrial.Accepted),
+        };
+        scenario.Incoming = scenario.Incoming with { Language = language };
+
+        await scenario.ProcessAsync();
+
+        Assert.True(scenario.Completed);
+        Assert.Contains(expectedMessage, Assert.Single(scenario.Notices), StringComparison.Ordinal);
+        Assert.DoesNotContain(scenario.BusinessPaths, path => path.EndsWith("/trial", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task AcceptedTrialWhoseEligibilityWasLostCannotProceedToUpload() {
+        using var scenario = new BotOperationScenario {
+            IsPremium = false,
+            CanStartTrial = false,
+            State = new BotPhotoCheckpoint(BotPhotoTrial.Accepted),
+        };
+
+        await scenario.ProcessAsync();
+
+        Assert.Equal("failed", scenario.State.Stage);
+        Assert.Equal(BotRecognitionFailure.PremiumRequired, scenario.State.ErrorCode);
+        Assert.DoesNotContain(scenario.BusinessPaths, path => path.EndsWith("/trial", StringComparison.Ordinal) || path.Contains("upload", StringComparison.Ordinal));
+    }
+
+    [Theory]
     [InlineData(false, true)]
     [InlineData(true, false)]
     public async Task TrialAcceptanceWithoutRequiredConsents_PreservesPhotoAndDoesNotConsumeTheTrial(bool hasAiConsent, bool hasHealthConsent) {

@@ -10,6 +10,17 @@ namespace FoodDiary.Modules.ContentReports.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ReportTargetTests {
     [Fact]
+    public void CopyPreservesTheTargetUsedToCreateAReport() {
+        var original = ReportTarget.ForRecipe(RecipeId.New());
+        ReportTarget copy = original with { };
+        var report = ContentReport.CreateWithTarget(UserId.New(), copy, "Spam");
+        Assert.NotSame(original, copy);
+        Assert.Equal(original, copy);
+        Assert.Equal(original.Id, report.TargetId);
+        Assert.Equal(ReportTargetType.Recipe, copy.Kind);
+    }
+
+    [Fact]
     public void TargetFactories_PairKindWithOwningIdentity() {
         var recipeId = RecipeId.New();
         var commentId = RecipeCommentId.New();

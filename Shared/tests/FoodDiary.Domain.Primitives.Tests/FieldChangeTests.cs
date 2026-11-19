@@ -4,6 +4,16 @@ namespace FoodDiary.Domain.Primitives.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FieldChangeTests {
     [Fact]
+    public void CopyPreservesAnExplicitChangeAndItsValueSemantics() {
+        FieldChange<string> original = FieldChanges.Set("renamed");
+        FieldChange<string> copy = original with { };
+        Assert.NotSame(original, copy);
+        Assert.Equal(original, copy);
+        Assert.Equal("renamed", copy.Value);
+        Assert.True(copy.IsSet);
+    }
+
+    [Fact]
     public void Changes_DistinguishOmissionValueAndClearing() {
         FieldChange<string> omitted = FieldChanges.Unchanged<string>();
         FieldChange<string> clear = FieldChanges.Clear<string>();

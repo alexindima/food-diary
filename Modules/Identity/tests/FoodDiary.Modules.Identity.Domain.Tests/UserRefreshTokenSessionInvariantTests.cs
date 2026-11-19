@@ -6,6 +6,29 @@ namespace FoodDiary.Modules.Identity.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserRefreshTokenSessionInvariantTests {
+    [Theory]
+    [InlineData("revoked")]
+    [InlineData("provider")]
+    [InlineData("unbounded")]
+    [InlineData("before-creation")]
+    [InlineData("beyond-session")]
+    public void GrantRejectsUnusableSessionsWithoutChangingTheConfirmation(string fault) {
+        DateTime now = new(2026, 11, 19, 12, 0, 0, DateTimeKind.Utc);
+        var session = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), UserId.New(), "proof", rememberMe: false,
+            fault is "provider" ? "telegram" : "password", ipAddress: null, userAgent: null, now, fault is "unbounded" ? null : now.AddHours(1));
+        if (fault is "revoked") {
+            session.Revoke(now);
+        }
+        DateTime expires = fault switch {
+            "before-creation" => now,
+            "beyond-session" => now.AddHours(2),
+            _ => now.AddMinutes(15),
+        };
+
+        Assert.Throws<InvalidOperationException>(() => session.GrantAdminAccess(expires));
+        Assert.Null(session.AdminAccessExpiresAtUtc);
+    }
+
     [Fact]
     public void RefreshSessionExpiration_IsPreservedOnCreationAndReplacedOnRotation() {
         var now = new DateTime(2030, 1, 1, 12, 0, 0, DateTimeKind.Utc);

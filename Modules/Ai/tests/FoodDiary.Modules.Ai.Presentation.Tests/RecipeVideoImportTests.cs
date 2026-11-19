@@ -11,16 +11,54 @@ using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 
 namespace FoodDiary.Modules.Ai.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RecipeVideoImportTests {
+    [Theory]
+    [InlineData("sync")]
+    [InlineData("async")]
+    [InlineData("property")]
+    public async Task AdmissionPreservesAllFormFeatureAccessorsAndRestoresTheOriginalFeature(string access) {
+        var filter = new RecipeVideoAdmissionAttribute();
+        ResourceExecutingContext context = CreateResourceContext();
+        var expected = new FormCollection(new Dictionary<string, StringValues>(StringComparer.Ordinal) {
+            ["text"] = "Salad",
+        });
+        var original = new FormFeature(expected);
+        context.HttpContext.Features.Set<IFormFeature>(original);
+
+        await filter.OnResourceExecutionAsync(context, async () => {
+            IFormFeature guarded = Assert.IsAssignableFrom<IFormFeature>(context.HttpContext.Features.Get<IFormFeature>());
+            Assert.NotSame(original, guarded);
+            IFormCollection? form;
+            if (access is "sync") {
+                form = ReadSynchronousForm(guarded);
+            } else if (access is "async") {
+                form = await guarded.ReadFormAsync(CancellationToken.None);
+            } else {
+                guarded.Form = expected;
+                form = guarded.Form;
+            }
+            Assert.Same(expected, form);
+            Assert.Equal("Salad", form["text"].ToString());
+            return new ResourceExecutedContext(context, []);
+        });
+
+        Assert.Same(original, context.HttpContext.Features.Get<IFormFeature>());
+        Assert.Empty(context.HttpContext.Items);
+    }
+
+    private static IFormCollection ReadSynchronousForm(IFormFeature feature) => feature.ReadForm();
+
     [Fact]
     public async Task Upload_SendsOpenStreamToApplication_AndReturnsRecipeDraft() {
         var draft = new RecipeImportDraftModel("Salad", Description: null, [new("yoghurt", "180g")], ["Mix"], Servings: null, PrepMinutes: null, CookMinutes: null, AuthorNutrition: null, SourceUrl: null);

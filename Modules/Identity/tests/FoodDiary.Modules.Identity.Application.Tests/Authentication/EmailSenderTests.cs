@@ -8,6 +8,23 @@ namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class EmailSenderTests {
+    [Fact]
+    public async Task EmailVerificationTemplateReplacesCaseInsensitiveLinkAndBrandTokensInEveryBody() {
+        Dictionary<(string Key, string Locale), EmailTemplateContent> templates = new() {
+            [("email_verification", "en")] = new("{{BRAND}} confirmation", "<a href=\"{{LINK}}\">{{brand}}</a>", "{{Brand}} {{link}}"),
+        };
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new EmailSender(CreateOptions(fromName: "FD"), CreateTemplateProvider(templates), CreateSuccessfulTransport(), outbox);
+
+        await sender.SendEmailVerificationAsync(new EmailVerificationMessage("user@example.test", "user-id", "proof", "en", ClientOrigin: null), CancellationToken.None);
+
+        Assert.Equal("FD confirmation", getSent().Subject);
+        Assert.Contains(">FD</a>", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains("proof", getSent().Body, StringComparison.Ordinal);
+        Assert.DoesNotContain("{{", getSent().Body, StringComparison.Ordinal);
+        Assert.Contains(getSent().AlternateViewBodies, body => body.StartsWith("FD https://", StringComparison.Ordinal));
+    }
+
     [Theory]
     [InlineData("en", "en", "Your FoodDiary account is ready", "Temporary password", "Sign in")]
     [InlineData("ru-RU", "ru", "Ваш аккаунт FoodDiary создан", "Временный пароль", "Войти")]

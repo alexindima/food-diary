@@ -12,6 +12,35 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [Collection("Recipe media")]
 public sealed class RecipeVideoProcessorCancellationTests {
     [Fact]
+    [Trait("Category", "Slow")]
+    public async Task WaitingForCapacityHasItsOwnDeadlineEvenWhenExistingUploadsIgnoreCancellation() {
+        using var http = new HttpClient();
+        RecipeVideoProcessor processor = CreateProcessor(http);
+        await using var first = new SuspendedReadStream();
+        await using var second = new SuspendedReadStream();
+        using var harness = new CancellationTokenSource(TimeSpan.FromSeconds(100));
+        Task<Result<RecipeAudio>> firstTask = processor.ExtractAudioAsync(first, sourceUrl: null, harness.Token);
+        Task<Result<RecipeAudio>> secondTask = processor.ExtractAudioAsync(second, sourceUrl: null, harness.Token);
+        try {
+            await Task.WhenAll(first.Entered.Task, second.Entered.Task).WaitAsync(TimeSpan.FromSeconds(10), harness.Token);
+            await using var queued = new MemoryStream();
+
+            ResultAssert.Failure(await processor.ExtractAudioAsync(queued, sourceUrl: null, harness.Token), "Ai.RecipeVideoUnavailable");
+
+            Assert.False(harness.IsCancellationRequested);
+            Assert.True(queued.CanRead);
+            Assert.False(firstTask.IsCompleted);
+            Assert.False(secondTask.IsCompleted);
+        } finally {
+            first.Release();
+            second.Release();
+            await Task.WhenAll(firstTask, secondTask).WaitAsync(TimeSpan.FromSeconds(10), CancellationToken.None);
+        }
+        await using var retry = new MemoryStream();
+        ResultAssert.Failure(await processor.ExtractAudioAsync(retry, sourceUrl: null, CancellationToken.None), "Ai.InvalidRecipeVideo");
+    }
+
+    [Fact]
     public async Task UpstreamReadCancellation_ReturnsUnavailableAndReleasesProcessingCapacityWithoutClosingBorrowedStreams() {
         using var http = new HttpClient();
         RecipeVideoProcessor processor = CreateProcessor(http);
@@ -48,6 +77,18 @@ public sealed class RecipeVideoProcessorCancellationTests {
     private static RecipeVideoProcessor CreateProcessor(HttpClient http) => new(http,
         Options.Create(new RecipeVideoOptions { FfmpegPath = "unused-because-copy-never-completes" }),
         NullLogger<RecipeVideoProcessor>.Instance, new RecipeYouTubeVideoSource(http));
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SuspendedReadStream : MemoryStream {
+        private readonly TaskCompletionSource _release = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource Entered { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public void Release() => _release.TrySetResult();
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) {
+            Entered.TrySetResult();
+            await _release.Task.ConfigureAwait(false);
+            return 0;
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class CancelledReadStream : MemoryStream {

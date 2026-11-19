@@ -16,6 +16,35 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Billing.Application.Tests.Billing;
 
 public partial class BillingFeatureTests {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(301)]
+    public async Task StarsCheckoutRejectsAnUnsupportedProviderPeriodBeforePersistingTheOrder(int period) {
+        var fixture = new StarsResumeFixture();
+        fixture.Gateway.CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new BillingCheckoutSessionModel("invalid-period", "https://t.me/$owned", "customer",
+                "price", "monthly", 500, "XTR", period)));
+
+        ResultAssert.Failure(await fixture.AttemptAsync("invalid-period"), "Billing.ProviderOperationFailed");
+
+        Assert.Empty(fixture.Payments.Payments);
+        Assert.Empty(fixture.Subscriptions.Subscriptions);
+        await fixture.Gateway.Received(1).CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task NonTelegramCheckoutRequiresAConfirmedEmailBeforeCallingThePaymentProvider(bool missingEmail) {
+        var fixture = new StarsResumeFixture(BillingProviderNames.Paddle);
+        fixture.Profile = fixture.Profile with { Email = missingEmail ? null : "unconfirmed@example.test", IsEmailConfirmed = false };
+
+        ResultAssert.Failure(await fixture.AttemptAsync("first"), "User.EmailRequired");
+
+        Assert.Empty(fixture.Payments.Payments);
+        await fixture.Gateway.DidNotReceive().CreateCheckoutSessionAsync(Arg.Any<BillingCheckoutSessionRequestModel>(), Arg.Any<CancellationToken>());
+    }
+
     [Fact]
     public async Task StarsCheckout_CanceledInvoiceReopensAcrossHandlersWithoutAnotherProviderCall() {
         var fixture = new StarsResumeFixture();

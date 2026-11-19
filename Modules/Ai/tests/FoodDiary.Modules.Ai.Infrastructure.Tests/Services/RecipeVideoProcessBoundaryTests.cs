@@ -82,6 +82,7 @@ public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fi
     [InlineData("oversized")]
     [InlineData("zero-duration")]
     [InlineData("error")]
+    [InlineData("corrupt")]
     public async Task InvalidOutputOrLargeDiagnostics_AreRejectedWithoutLeakingDataOrTemporaryFiles(string mode) {
         string statePath = fixture.NewStatePath();
         await using MemoryStream video = RecipeVideoProcessFixture.Input(mode, statePath);
