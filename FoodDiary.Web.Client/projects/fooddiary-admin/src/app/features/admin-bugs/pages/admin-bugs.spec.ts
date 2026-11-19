@@ -178,7 +178,7 @@ it('retries a failed journal from its visible error and replaces it with the ret
     expect(getPage).toHaveBeenCalledTimes(2);
 });
 
-it('groups findings by audit run and only exposes usable review links in the rendered cards', () => {
+it('groups findings by audit run, keeps legacy findings separate, and only exposes usable review links', () => {
     query.next(convertToParamMap({ source: 'logs' }));
     const repeatedObservationCount = 16;
     const summary = `${'A long observation. '.repeat(repeatedObservationCount)}\n\nDetailed evidence stays in the full report.`;
@@ -196,14 +196,20 @@ it('groups findings by audit run and only exposes usable review links in the ren
             auditToUtc: adminUtcInstant('2026-10-11T05:00:00Z'),
             mergeRequestUrl: 'not a link',
         }),
+        testFinding('legacy-one', { subject: 'First legacy finding', auditRunId: null, auditFromUtc: null, auditToUtc: null }),
+        testFinding('legacy-two', { subject: 'Second legacy finding', auditRunId: null, auditFromUtc: null, auditToUtc: null }),
     ];
     getPage.mockReturnValueOnce(of({ items: findings, totalItems: findings.length, isConfigured: true, latestAudit: null }));
     const fixture = TestBed.createComponent(AdminBugsPageComponent);
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
     const groups = Array.from(host.querySelectorAll('.audit-group'));
-    expect(groups.map(group => group.querySelectorAll('article').length)).toEqual([latestFindings.length, 1]);
-    expect(groups[1]?.querySelector('article h2')?.textContent).toBe('Previous finding');
+    expect(groups.map(group => [...group.querySelectorAll('article h2')].map(title => title.textContent))).toEqual([
+        latestFindings.map(finding => finding.subject),
+        ['Previous finding'],
+        ['First legacy finding'],
+        ['Second legacy finding'],
+    ]);
     expect(groups[0]?.querySelector('.audit-group__period')?.textContent).toContain('ADMIN_BUGS.AUDIT_PERIOD');
     expect(Array.from(host.querySelectorAll('article a'), link => link.getAttribute('href'))).toEqual(['https://example.test/pull/17']);
     expect(host.querySelector('article a')?.textContent).toContain('#17');

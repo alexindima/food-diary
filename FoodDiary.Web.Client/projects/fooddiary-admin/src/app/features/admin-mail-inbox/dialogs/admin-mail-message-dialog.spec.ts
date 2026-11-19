@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit';
@@ -5,6 +7,8 @@ import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { environment } from '../../../../environments/environment';
+import type { AdminMailInboxMessageDetailsHttpResponse } from '../../../shared/api/sdk/generated/model/admin-mail-inbox-message-details-http-response';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
 import type { AdminMailInboxMessageDetails } from '../models/admin-mail-inbox.data';
@@ -50,14 +54,17 @@ describe('mail message read state', () => {
         const retry = [...host.querySelectorAll<HTMLButtonElement>('button')].find(button =>
             button.textContent.includes('ADMIN_COMMON.RETRY'),
         );
-        fixture.componentInstance['retryRead']();
-        fixture.componentInstance['retryRead']();
+        if (retry === undefined) {
+            throw new Error('Expected the retry control.');
+        }
+        retry.click();
+        retry.click();
         fixture.detectChanges();
         expect(markMessageRead).toHaveBeenCalledTimes(2);
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.READ_ERROR');
-        expect(retry?.isConnected).toBe(true);
-        expect(retry?.disabled).toBe(true);
-        expect(retry?.getAttribute('aria-busy')).toBe('true');
+        expect(retry.isConnected).toBe(true);
+        expect(retry.disabled).toBe(true);
+        expect(retry.getAttribute('aria-busy')).toBe('true');
         expect(
             [...host.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent.includes('ADMIN_COMMON.RETRY')),
         ).toBe(retry);
@@ -67,6 +74,70 @@ describe('mail message read state', () => {
         expect(host.querySelector('[role="alert"]')).toBeNull();
         expect(fixture.componentInstance['selectedMessage']()?.readAtUtc).toBeTruthy();
         expect(onRead).toHaveBeenCalledOnce();
+    });
+});
+
+function renderMailOverHttp(): {
+    fixture: ComponentFixture<AdminMailMessageDialogComponent>;
+    requests: HttpTestingController;
+    onRead: ReturnType<typeof vi.fn>;
+} {
+    const onRead = vi.fn();
+    TestBed.configureTestingModule({
+        imports: [AdminMailMessageDialogComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: FD_UI_DIALOG_DATA, useValue: { id: message.id, onRead } },
+        ],
+    });
+    const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
+    fixture.detectChanges();
+    return { fixture, requests: TestBed.inject(HttpTestingController), onRead };
+}
+
+describe('mail message HTTP details', () => {
+    const url = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages/${message.id}`;
+
+    it('renders a read DMARC report with no listed recipients and preserves its raw source', () => {
+        const { fixture, requests, onRead } = renderMailOverHttp();
+        const rawMime = 'Content-Type: text/plain\r\n\r\nAggregated report';
+        const report = {
+            ...message,
+            category: 'dmarc-report',
+            toRecipients: [],
+            readAtUtc: message.receivedAtUtc,
+            rawMime,
+            dmarcReport: { domain: 'example.test', records: [{ sourceIp: '192.0.2.1', count: 1, disposition: 'none' }] },
+        } satisfies AdminMailInboxMessageDetailsHttpResponse;
+        requests.expectOne({ method: 'GET', url }).flush(report);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.mail-badge--dmarc')?.textContent.trim()).toBe('DMARC');
+        expect(host.querySelector('.mail-details__meta')?.textContent.trim()).toBe('ADMIN_MAIL_INBOX.TO: -');
+        expect(host.querySelector('.dmarc-report tbody tr')?.textContent).toContain('192.0.2.1');
+        expect(host.querySelector('.dmarc-report__warning')?.textContent).toContain('ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING');
+        selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_RAW');
+        fixture.detectChanges();
+        expect(host.querySelector('pre.mail-body--source')?.textContent).toBe(rawMime);
+        expect(onRead).not.toHaveBeenCalled();
+        requests.expectNone({ method: 'POST', url: `${url}/read` });
+        requests.verify();
+    });
+
+    it('disposes a pending read-mark request when the message dialog is closed', () => {
+        const { fixture, requests, onRead } = renderMailOverHttp();
+        requests.expectOne({ method: 'GET', url }).flush(message);
+        const pending = requests.expectOne({ method: 'POST', url: `${url}/read` });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.mail-read-state--unread')).not.toBeNull();
+        fixture.destroy();
+        expect(pending.cancelled).toBe(true);
+        expect(onRead).not.toHaveBeenCalled();
+        requests.verify();
     });
 });
 
@@ -172,6 +243,19 @@ function selectBodyMode(fixture: ComponentFixture<AdminMailMessageDialogComponen
     }
     option.click();
 }
+
+it('preserves text inside legacy wrappers, named anchors and relative links', () => {
+    const fixture = renderMessage({
+        htmlBody: '<center><a name="overview"><strong>Overview</strong></a><p><a href="/help">Support</a></p></center>',
+        textBody: null,
+    });
+    const host = fixture.nativeElement as HTMLElement;
+    const body = host.querySelector('.mail-body--formatted');
+    expect(body?.innerHTML).not.toContain('<center');
+    expect(body?.querySelector('strong')?.textContent).toBe('Overview');
+    expect(body?.querySelector('p')?.textContent).toBe('Support');
+    expect(body?.querySelector('a[href], a[name]')).toBeNull();
+});
 
 describe('mail message loading', () => {
     it('shows a loading status and reports a failed load without marking the message read', () => {

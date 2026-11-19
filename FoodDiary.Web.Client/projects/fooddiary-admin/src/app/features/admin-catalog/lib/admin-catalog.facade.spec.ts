@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminCatalogService } from '../api/admin-catalog.service';
-import type { CatalogRecipe } from '../models/catalog-transfer';
+import type { CatalogProduct, CatalogRecipe } from '../models/catalog-transfer';
 import { AdminCatalogFacade } from './admin-catalog.facade';
 
 const firstId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
@@ -47,21 +47,50 @@ function file(recipes: CatalogRecipe[]): File {
     return selected;
 }
 
-describe('AdminCatalogFacade transfer recovery', () => {
-    const api = {
-        exportCatalog: vi.fn(),
-        preview: vi.fn(),
-        importItem: vi.fn(),
-    };
-    let facade: AdminCatalogFacade;
+const api = {
+    exportCatalog: vi.fn(),
+    preview: vi.fn(),
+    importItem: vi.fn(),
+};
+let facade: AdminCatalogFacade;
 
-    beforeEach(() => {
-        vi.resetAllMocks();
-        api.exportCatalog.mockReturnValue(of({ products: [], recipes: [] }));
-        api.preview.mockImplementation((_kind: string, item: CatalogRecipe) => of({ id: item.id, status: 'ready', errors: [] }));
-        api.importItem.mockImplementation((_kind: string, item: CatalogRecipe) => of({ id: item.id, status: 'imported', errors: [] }));
-        TestBed.configureTestingModule({ providers: [AdminCatalogFacade, { provide: AdminCatalogService, useValue: api }] });
-        facade = TestBed.inject(AdminCatalogFacade);
+beforeEach(() => {
+    vi.resetAllMocks();
+    api.exportCatalog.mockReturnValue(of({ products: [], recipes: [] }));
+    api.preview.mockImplementation((_kind: string, item: CatalogRecipe) => of({ id: item.id, status: 'ready', errors: [] }));
+    api.importItem.mockImplementation((_kind: string, item: CatalogRecipe) => of({ id: item.id, status: 'imported', errors: [] }));
+    TestBed.configureTestingModule({ providers: [AdminCatalogFacade, { provide: AdminCatalogService, useValue: api }] });
+    facade = TestBed.inject(AdminCatalogFacade);
+});
+
+describe('AdminCatalogFacade transfer recovery', () => {
+    it('keeps a pending file and imports its new recipe against an existing dependency', async () => {
+        const existing = recipe(secondId);
+        const dependent = recipe(firstId, secondId);
+        const loading = new Subject<{ products: CatalogProduct[]; recipes: CatalogRecipe[] }>();
+        api.exportCatalog.mockReturnValueOnce(loading);
+        api.preview.mockReturnValueOnce(of({ id: firstId, status: 'ready', errors: [] }));
+        api.preview.mockReturnValueOnce(of({ id: secondId, status: 'skipped', errors: [] }));
+        const active = facade.previewFileAsync(file([dependent, existing]));
+        await vi.waitFor(() => {
+            expect(api.exportCatalog).toHaveBeenCalledOnce();
+        });
+
+        await facade.previewFileAsync(file([]));
+        expect(facade.busy()).toBe(true);
+        loading.next({ products: [], recipes: [existing] });
+        loading.complete();
+        await active;
+        expect(api.exportCatalog).toHaveBeenCalledOnce();
+        expect(facade.report()).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ id: firstId, status: 'ready' }),
+                expect.objectContaining({ id: secondId, status: 'skipped' }),
+            ]),
+        );
+        await facade.importAsync();
+        expect(api.importItem).toHaveBeenCalledExactlyOnceWith('recipes', dependent);
+        expect(facade.error()).toBeNull();
     });
 
     it('imports dependencies first and retries only the failed remainder', async () => {

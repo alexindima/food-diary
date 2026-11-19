@@ -5,7 +5,7 @@ export function adminSignInReturnUrl(value: string | null, origin: string): stri
         return '/';
     }
     const url = new URL(value, origin);
-    const route = url.pathname.split('/')[1]?.split(';')[0] ?? '';
+    const [route] = url.pathname.slice(1).split(/[/;]/u, 1);
     if (url.origin !== origin || ['sign-in', 'unauthorized'].includes(route) || url.searchParams.has('returnUrl')) {
         return '/';
     }

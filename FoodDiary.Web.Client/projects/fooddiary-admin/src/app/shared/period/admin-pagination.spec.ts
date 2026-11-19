@@ -25,6 +25,8 @@ describe('admin pagination recovery', () => {
         [FIFTH_PAGE, TWO_PAGE_TOTAL, PAGE_SIZE, 2],
         [OVERSIZED_PAGE, SMALL_TOTAL, PAGE_SIZE, 2],
         [Number.NaN, SMALL_TOTAL, PAGE_SIZE, 1],
+        [FIFTH_PAGE, Number.POSITIVE_INFINITY, PAGE_SIZE, 1],
+        [FIFTH_PAGE, 2, Number.NaN, 2],
         [2, GROUP_SIZE, GROUP_SIZE, 1],
         [OVER_MAX_PAGE, LARGE_TOTAL, PAGE_SIZE, MAX_PAGE],
     ])('bounds page %s against %s records with page size %s', (page, total, size, expected) => {

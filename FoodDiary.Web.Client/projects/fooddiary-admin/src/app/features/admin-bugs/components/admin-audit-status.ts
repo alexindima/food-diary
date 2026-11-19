@@ -5,14 +5,14 @@ import { FdUiCardComponent, FdUiStatusBadgeComponent } from 'fd-ui-kit';
 
 import type { AdminAuditRunSummary } from '../models/admin-bug-report';
 
-const STATUS_KEYS: Record<string, string> = {
-    running: 'ADMIN_BUGS.AUDIT_RUNNING',
-    clean: 'ADMIN_BUGS.AUDIT_CLEAN',
-    findings: 'ADMIN_BUGS.AUDIT_FINDINGS',
-    incomplete: 'ADMIN_BUGS.AUDIT_INCOMPLETE',
-    failed: 'ADMIN_BUGS.AUDIT_FAILED',
-    expired: 'ADMIN_BUGS.AUDIT_EXPIRED',
-};
+const STATUS_KEYS: ReadonlyMap<string, string> = new Map([
+    ['running', 'ADMIN_BUGS.AUDIT_RUNNING'],
+    ['clean', 'ADMIN_BUGS.AUDIT_CLEAN'],
+    ['findings', 'ADMIN_BUGS.AUDIT_FINDINGS'],
+    ['incomplete', 'ADMIN_BUGS.AUDIT_INCOMPLETE'],
+    ['failed', 'ADMIN_BUGS.AUDIT_FAILED'],
+    ['expired', 'ADMIN_BUGS.AUDIT_EXPIRED'],
+]);
 
 @Component({
     selector: 'fd-admin-audit-status',
@@ -28,7 +28,7 @@ export class AdminAuditStatusComponent {
         if (audit === null) {
             return 'ADMIN_BUGS.AUDIT_NONE';
         }
-        return audit.isStale ? 'ADMIN_BUGS.AUDIT_STALE' : (STATUS_KEYS[audit.status] ?? 'ADMIN_BUGS.AUDIT_UNKNOWN');
+        return audit.isStale ? 'ADMIN_BUGS.AUDIT_STALE' : (STATUS_KEYS.get(audit.status) ?? 'ADMIN_BUGS.AUDIT_UNKNOWN');
     });
     protected readonly accent = computed(() => {
         const audit = this.audit();

@@ -7,12 +7,12 @@ import { provideFdUiDialogNavigation } from 'fd-ui-kit';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { adminAuthInterceptor } from './features/admin-auth/lib/admin-auth.interceptor';
-import { ADMIN_WEBMCP_PROVIDERS } from './shared/development/admin-webmcp.providers';
+import { provideAdminWebmcp } from './shared/development/admin-webmcp.providers';
 import { AdminTranslationLoader } from './shared/i18n/admin-translation.loader';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        ...ADMIN_WEBMCP_PROVIDERS,
+        ...provideAdminWebmcp(),
         ...(environment.enableGlobalErrorHandler ? [provideBrowserGlobalErrorListeners()] : []),
         provideHttpClient(withInterceptors([adminAuthInterceptor])),
         provideRouter(routes),

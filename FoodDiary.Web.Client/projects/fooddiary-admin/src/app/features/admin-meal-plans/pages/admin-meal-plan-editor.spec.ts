@@ -31,6 +31,41 @@ beforeEach(async () => {
     }).compileComponents();
 });
 
+describe('Meal plan recipe limits', () => {
+    it('shows the stored recipe ID when the name is unavailable and keeps the daily recipe limit', () => {
+        const dailyLimit = 20;
+        const meals = Array.from({ length: dailyLimit }, (_, index) => ({
+            mealType: 'Lunch',
+            recipeId: adminId<'recipe'>(`legacy-recipe-${index}`),
+            servings: 1,
+        }));
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.componentRef.setInput('plan', { ...plan, days: [{ dayNumber: 1, meals }] });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-fields')?.textContent).toContain(meals[0].recipeId);
+        expect(host.querySelectorAll('.meal-fields')).toHaveLength(dailyLimit);
+
+        editorButton(host, 'ADD_RECIPE').click();
+        fixture.detectChanges();
+
+        expect(host.querySelectorAll('.meal-fields')).toHaveLength(dailyLimit);
+        expect(host.querySelector('.meal-fields')?.textContent).toContain(meals[0].recipeId);
+    });
+
+    it('keeps a blank draft open and does not send a save request', () => {
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        editorButton(host, 'SAVE').click();
+        fixture.detectChanges();
+
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MEAL_PLANS.INVALID');
+        expect(host.querySelector('form')).not.toBeNull();
+        expect(api.save).not.toHaveBeenCalled();
+    });
+});
+
 describe('AdminMealPlanEditorComponent', () => {
     it('preserves an edited plan after a failed save and allows retry', () => {
         const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);

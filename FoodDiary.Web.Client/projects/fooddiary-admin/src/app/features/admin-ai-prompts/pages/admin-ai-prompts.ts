@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength, readonly, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -47,7 +47,6 @@ const PROMPT_MAX_LENGTH = 4096;
 })
 export class AdminAiPromptsPageComponent {
     private readonly api = inject(AdminAiPromptsFacade);
-    private readonly languageSelect = viewChild(FdUiSelectComponent);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogs = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
@@ -107,7 +106,7 @@ export class AdminAiPromptsPageComponent {
                 },
             });
     }
-    protected selectScenario(key: AdminAiPromptKey, locale: string): void {
+    protected selectScenario(key: AdminAiPromptKey, locale: string, localeSelect?: FdUiSelectComponent<string>): void {
         if (key === this.key() && locale === this.locale()) {
             return;
         }
@@ -115,7 +114,7 @@ export class AdminAiPromptsPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(allowed => {
                 if (!allowed) {
-                    this.languageSelect()?.value.set(this.locale());
+                    localeSelect?.value.set(this.locale());
                     return;
                 }
                 this.key.set(key);

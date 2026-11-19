@@ -30,8 +30,8 @@ export class AdminBugReportCardComponent {
               ? this.report().subject
               : null;
     });
-    protected readonly preview = computed(() =>
-        this.report().contentExpired ? '' : (optionalReportText(this.report().shortSummary) ?? conciseReportSummary(this.report().summary)),
+    protected readonly preview = computed(
+        () => optionalReportText(this.report().shortSummary) ?? conciseReportSummary(this.report().summary),
     );
     protected readonly status = computed(() => reportStatusPresentation(this.report().status));
     protected readonly pullRequestNumber = computed(

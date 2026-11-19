@@ -3,7 +3,7 @@
     <div class="fd-row fd-gap-sm fd-wrap">
         <!-- The UI kit has no JSON file picker; a labelled native input uses the shared button trigger. -->
         <label for="advice-import" hidden>{{ 'ADMIN_DAILY_ADVICES.IMPORT' | translate }}</label>
-        <input #importInput id="advice-import" type="file" accept="application/json,.json" hidden (change)="importFileAsync($event)" />
+        <input #importInput id="advice-import" type="file" accept="application/json,.json" hidden (change)="importFileAsync(importInput)" />
         <fd-ui-button type="button" variant="secondary" (click)="downloadExample()">{{
             'ADMIN_DAILY_ADVICES.EXAMPLE' | translate
         }}</fd-ui-button>

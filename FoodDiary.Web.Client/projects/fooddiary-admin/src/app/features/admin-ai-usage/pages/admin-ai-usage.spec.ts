@@ -5,7 +5,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
+import { AdminAiUsageService } from '../api/admin-ai-usage.service';
 import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 import { AdminAiUsageComponent } from './admin-ai-usage';
 
@@ -20,16 +20,16 @@ const summary: AdminAiUsageSummary = {
 };
 
 describe('AdminAiUsageComponent', () => {
-    let getSummary: ReturnType<typeof vi.fn<AdminAiUsageFacade['getSummary']>>;
+    let getSummary: ReturnType<typeof vi.fn<AdminAiUsageService['getSummary']>>;
 
     beforeEach(async () => {
-        getSummary = vi.fn<AdminAiUsageFacade['getSummary']>().mockReturnValue(of(summary));
+        getSummary = vi.fn<AdminAiUsageService['getSummary']>().mockReturnValue(of(summary));
 
         await TestBed.configureTestingModule({
             providers: [
                 ...provideTranslateTesting(),
                 provideRouter([{ path: 'ai-usage', component: AdminAiUsageComponent }]),
-                { provide: AdminAiUsageFacade, useValue: { getSummary } },
+                { provide: AdminAiUsageService, useValue: { getSummary } },
             ],
         }).compileComponents();
     });
@@ -58,6 +58,25 @@ describe('AdminAiUsageComponent', () => {
         expect(getSummary.mock.calls).toEqual([[period], [period]]);
         expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
         expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
+    });
+
+    it('shows a valid empty period with zero totals and empty breakdowns', async () => {
+        getSummary.mockReturnValueOnce(
+            of({ totalTokens: 0, inputTokens: 0, outputTokens: 0, byDay: [], byOperation: [], byModel: [], byUser: [] }),
+        );
+        const harness = await RouterTestingHarness.create('/ai-usage?period=today');
+        const root = harness.routeNativeElement;
+        expect(root?.querySelector('[role="alert"]')).toBeNull();
+        expect(Array.from(root?.querySelectorAll('.admin-ai-usage strong') ?? [], element => element.textContent.trim())).toEqual([
+            '0',
+            '0',
+            '0',
+        ]);
+        expect(Array.from(root?.querySelectorAll('tbody td') ?? [], cell => cell.textContent.trim())).toEqual([
+            'ADMIN_COMMON.EMPTY',
+            'ADMIN_COMMON.EMPTY',
+            'ADMIN_COMMON.EMPTY',
+        ]);
     });
 
     it('clears stale usage and ignores a late response after switching to an invalid period', async () => {

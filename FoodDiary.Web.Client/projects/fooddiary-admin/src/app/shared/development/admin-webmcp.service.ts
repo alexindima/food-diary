@@ -180,15 +180,16 @@ export class AdminWebmcpService {
     }
     private operation(
         session: string | null,
-        operation: Omit<AdminTool, 'execute'> & { run: (input: Record<string, unknown>) => unknown },
+        operation: Omit<AdminTool, 'execute'> & {
+            inputSchema: AdminTool['inputSchema'] & { properties: Record<string, unknown> };
+            run: (input: Record<string, unknown>) => unknown;
+        },
     ): AdminTool {
+        const fields = Object.keys(operation.inputSchema.properties);
         return this.executor.tool(
             {
                 ...operation,
-                run: input => {
-                    const schema = operation.inputSchema['properties'];
-                    return operation.run(this.record(input, typeof schema === 'object' && schema !== null ? Object.keys(schema) : []));
-                },
+                run: input => operation.run(this.record(input, fields)),
             },
             {
                 requireSession: () => {

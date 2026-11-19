@@ -7,6 +7,7 @@ import { FdUiDateInputComponent } from 'fd-ui-kit';
 import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
 import { AdminAuthService } from '../admin-auth/contracts/admin-session';
 import { adminDashboardRoutes } from './admin-dashboard.routes';
@@ -100,6 +101,7 @@ describe('Dashboard applied period', () => {
 
 describe('Dashboard preset selection', () => {
     it('applies a relative period across leap day, clears stale bounds and validates a new custom draft', async () => {
+        stubScrollIntoView();
         const harness = await RouterTestingHarness.create(`/dashboard?period=custom&from=${initialStart}&to=${initialEnd}`);
         const router = TestBed.inject(Router);
         await choosePresetAsync(harness, 'DAYS7');

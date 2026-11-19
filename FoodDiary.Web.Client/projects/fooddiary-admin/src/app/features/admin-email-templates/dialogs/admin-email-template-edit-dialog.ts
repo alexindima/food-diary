@@ -77,7 +77,27 @@ export class AdminEmailTemplateEditDialogComponent {
         isActive: this.data.isActive,
     });
     private readonly submitTemplateFormAsync = async (): Promise<void> => {
-        await this.saveAsync();
+        this.isSaving.set(true);
+        this.saveFailed.set(false);
+        const value = this.formModel();
+        const key = value.key.trim();
+        const locale = value.locale.trim();
+
+        try {
+            await firstValueFrom(
+                this.templatesFacade.upsert(key, locale, {
+                    subject: value.subject,
+                    htmlBody: value.htmlBody,
+                    textBody: value.textBody,
+                    isActive: value.isActive,
+                }),
+            );
+            this.isSaving.set(false);
+            this.dialogRef.close(true);
+        } catch {
+            this.saveFailed.set(true);
+            this.isSaving.set(false);
+        }
     };
     protected readonly form = form(
         this.formModel,
@@ -122,39 +142,6 @@ export class AdminEmailTemplateEditDialogComponent {
             textBody: revision.textBody,
             isActive: revision.isActive,
         }));
-    }
-
-    protected onSave(): void {
-        void this.saveAsync();
-    }
-
-    private async saveAsync(): Promise<void> {
-        this.form().markAsTouched();
-        if (this.form().invalid() || this.isSaving()) {
-            return;
-        }
-
-        this.isSaving.set(true);
-        this.saveFailed.set(false);
-        const value = this.formModel();
-        const key = value.key.trim();
-        const locale = value.locale.trim();
-
-        try {
-            await firstValueFrom(
-                this.templatesFacade.upsert(key, locale, {
-                    subject: value.subject,
-                    htmlBody: value.htmlBody,
-                    textBody: value.textBody,
-                    isActive: value.isActive,
-                }),
-            );
-            this.isSaving.set(false);
-            this.dialogRef.close(true);
-        } catch {
-            this.saveFailed.set(true);
-            this.isSaving.set(false);
-        }
     }
 
     protected setPreviewMode(mode: 'html' | 'text'): void {

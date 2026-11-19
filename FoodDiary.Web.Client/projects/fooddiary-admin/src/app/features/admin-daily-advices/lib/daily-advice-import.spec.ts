@@ -36,4 +36,8 @@ describe('daily advice JSON import', () => {
         expect(isDailyAdviceImport({ version: 2, advices: [{ ...pair, en: ' ' }] })).toBe(false);
         expect(isDailyAdviceImport({ version: 2, advices: [pair, pair] })).toBe(false);
     });
+
+    it.each(['legacy-advice', '00000000-0000-0000-0000-000000000000'])('rejects pair identity %s', id => {
+        expect(isDailyAdviceImport({ version: 2, advices: [{ id, ru: 'Совет', en: 'Advice' }] })).toBe(false);
+    });
 });

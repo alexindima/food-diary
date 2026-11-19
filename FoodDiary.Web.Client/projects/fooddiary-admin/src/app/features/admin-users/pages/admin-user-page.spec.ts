@@ -130,6 +130,11 @@ function host(fixture: ComponentFixture<AdminUserPageComponent>): HTMLElement {
     return fixture.nativeElement as HTMLElement;
 }
 
+function detailField(fixture: ComponentFixture<AdminUserPageComponent>, label: string): string | null | undefined {
+    const term = [...host(fixture).querySelectorAll('dt')].find(field => field.textContent === label);
+    return term?.nextElementSibling?.textContent;
+}
+
 function createUsersServiceMock(): UsersServiceMock {
     return {
         getUser: vi.fn().mockReturnValue(of(baseUser)),
@@ -225,8 +230,8 @@ describe('AdminUserPageComponent', () => {
             usersService.getUser.mockReturnValueOnce(of(telegramUser));
         }, telegramUser);
 
-        expect(component['initials']()).toBe('?');
-        expect(component['sections']().flatMap(section => section.fields)).toContainEqual({ label: 'Email', value: '-' });
+        expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('?');
+        expect(detailField(fixture, 'Email')).toBe('-');
         expect(component['failed']()).toBe(false);
         expect(host(fixture).textContent).not.toContain('Could not load user details.');
     });
@@ -245,14 +250,14 @@ describe('AdminUserPageComponent', () => {
     });
 
     it('keeps details visible when activity loading fails', async () => {
-        const { component } = await createContextAsync(usersService => {
+        const { component, fixture } = await createContextAsync(usersService => {
             usersService.getLoginEvents.mockReturnValueOnce(throwError(() => new Error('activity failed')));
         });
 
         expect(component['activityLoading']()).toBe(false);
         expect(component['failed']()).toBe(false);
         expect(component['activityFailed']()).toBe(true);
-        expect(component['sections']()).not.toHaveLength(0);
+        expect(detailField(fixture, 'Email')).toBe(baseUser.email);
         expect(component['loginEvents']()).toEqual([]);
         expect(component['roleAuditEvents']()).toEqual([]);
     });
@@ -348,17 +353,29 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
         expect(component['canImpersonate']()).toBe(false);
     });
+});
 
+describe('Admin account detail fallback fields', () => {
     it('formats initials and fallback fields', async () => {
-        const { component } = await createContextAsync();
+        const { fixture, usersService, routeParams } = await createContextAsync();
 
-        expect(component['initials']()).toBe('JD');
-        expect(component['sections']()[0]?.fields.some(field => field.label === 'Roles' && field.value === 'User')).toBe(true);
+        expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('JD');
+        expect(detailField(fixture, 'Roles')).toBe('User');
 
-        component['user'].set({ ...baseUser, firstName: '', lastName: '', email: 'fallback@example.com', roles: [] });
+        const alternate = {
+            ...baseUser,
+            id: adminId<'user'>('fallback-user'),
+            firstName: '',
+            lastName: '',
+            email: 'fallback@example.com',
+            roles: [],
+        };
+        usersService.getUser.mockReturnValueOnce(of(alternate));
+        routeParams.next(convertToParamMap({ id: alternate.id }));
+        fixture.detectChanges();
 
-        expect(component['initials']()).toBe('F');
-        expect(component['sections']()[0]?.fields.some(field => field.label === 'Roles' && field.value === '-')).toBe(true);
+        expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('F');
+        expect(detailField(fixture, 'Roles')).toBe('-');
     });
 });
 

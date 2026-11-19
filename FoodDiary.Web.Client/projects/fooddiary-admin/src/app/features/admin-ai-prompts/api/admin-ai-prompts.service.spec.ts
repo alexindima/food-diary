@@ -5,7 +5,9 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, onTestFinished } from 'vitest';
 
+import { COLLECTION_PAGE_SIZE } from '../../../shared/api/load-paged-collection';
 import type { AdminAiPromptScenarioHttpResponse } from '../../../shared/api/sdk/generated/model/admin-ai-prompt-scenario-http-response';
+import { AdminAiPromptsFacade } from '../lib/admin-ai-prompts.facade';
 import type { AdminAiPromptDraft } from '../models/admin-ai-prompt-scenario';
 import { AdminAiPromptsService } from './admin-ai-prompts.service';
 
@@ -67,6 +69,29 @@ describe('AdminAiPromptsService secure browser requirement', () => {
         expect(() => service.test(draft)).toThrow('A secure browser context is required.');
         http.expectNone(`${promptsUrl}/test`);
     });
+});
+
+it('loads stored prompt versions across SDK pages through the existing facade', async () => {
+    const facade = TestBed.inject(AdminAiPromptsFacade);
+    const http = TestBed.inject(HttpTestingController);
+    const storedPrompt = {
+        id: 'nutrition-en',
+        key: 'nutrition',
+        locale: 'en',
+        promptText: 'Estimate nutrition',
+        version: 2,
+        isActive: true,
+        createdOnUtc: '2026-10-01T00:00:00Z',
+    };
+    const saved = firstValueFrom(facade.getAll());
+    const first = http.expectOne(request => request.method === 'GET' && request.url === promptsUrl && request.params.get('page') === '1');
+    expect(first.request.params.get('limit')).toBe(String(COLLECTION_PAGE_SIZE));
+    const firstPage = Array.from({ length: COLLECTION_PAGE_SIZE }, (_, index) => ({ ...storedPrompt, id: `saved-${index}` }));
+    first.flush(firstPage);
+    const second = http.expectOne(request => request.method === 'GET' && request.url === promptsUrl && request.params.get('page') === '2');
+    const translated = { ...storedPrompt, id: 'nutrition-ru', locale: 'ru', promptText: 'Оцени пищевую ценность' };
+    second.flush([translated]);
+    expect(await saved).toEqual([...firstPage, translated].map(item => ({ ...item, updatedOnUtc: null })));
 });
 
 describe('AdminAiPromptsService editor API', () => {

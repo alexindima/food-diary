@@ -5,7 +5,7 @@ import type { WebmcpModelContext, WebmcpTool } from 'fd-webmcp';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { AdminAuthService } from '../../features/admin-auth/lib/admin-auth.service';
-import { ADMIN_WEBMCP_PROVIDERS } from './admin-webmcp.providers';
+import { provideAdminWebmcp } from './admin-webmcp.providers';
 import { AdminWebmcpService } from './admin-webmcp.service';
 
 const DIAGNOSTICS = 'meta[name="fooddiary-webmcp"]';
@@ -67,7 +67,7 @@ function registrationFixture(hasBrowserApi = true): {
     };
     TestBed.configureTestingModule({
         providers: [
-            ...ADMIN_WEBMCP_PROVIDERS,
+            ...provideAdminWebmcp(),
             { provide: Router, useValue: Object.assign(router, { navigateByUrl: navigateRouterAsync }) },
             { provide: AdminAuthService, useValue: { isAdmin: admin, isAuthenticated: authenticated, getSessionId: session } },
         ],

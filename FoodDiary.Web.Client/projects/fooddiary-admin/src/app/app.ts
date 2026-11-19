@@ -68,12 +68,9 @@ export class AppComponent {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly isUsersSectionExpanded = signal(true);
     protected readonly currentUrl = signal(this.router.url);
-    protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/u, 1)[0] ?? '/');
+    protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/u, 1)[0]);
     protected readonly isSignIn = computed(() => this.currentPath() === '/sign-in');
-    protected readonly skipToMainHref = computed(() => {
-        const path = this.currentUrl().split('#', 1)[0];
-        return `${path.length > 0 ? path : '/'}#admin-main-content`;
-    });
+    protected readonly skipToMainHref = computed(() => `${this.currentUrl().split('#', 1)[0]}#admin-main-content`);
     private readonly translate = inject(TranslateService);
     private readonly language = toSignal(this.translate.onLangChange);
     protected readonly currentSection = computed(
@@ -90,12 +87,10 @@ export class AppComponent {
             : (ADMIN_PAGE_HEADERS[this.currentSection()] ?? null),
     );
     protected readonly mobileItems = computed(() => [
-        ...this.sidebarSections().flatMap(section =>
-            section.items.flatMap(item => ('route' in item ? [{ id: item.id, route: item.route, label: item.label }] : [])),
-        ),
-        { id: 'outgoing', route: '/outgoing-emails', label: String(this.translate.instant('ADMIN_OUTGOING.OUTGOING')) },
+        ...this.sidebarSections().flatMap(section => section.items.map(({ route, label }) => ({ route, label }))),
+        { route: '/outgoing-emails', label: String(this.translate.instant('ADMIN_OUTGOING.OUTGOING')) },
     ]);
-    protected readonly sidebarSections = computed<FdUiSidebarSection[]>(() => {
+    protected readonly sidebarSections = computed(() => {
         this.language();
         return [
             {
@@ -147,7 +142,7 @@ export class AppComponent {
                     label: String(this.translate.instant(item.key)),
                 })),
             },
-        ];
+        ] satisfies FdUiSidebarSection[];
     });
 
     public constructor() {

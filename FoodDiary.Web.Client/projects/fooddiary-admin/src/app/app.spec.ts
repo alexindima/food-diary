@@ -1,8 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
+import { FdUiSelectComponent, FdUiSidebarComponent } from 'fd-ui-kit';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../src/testing/dom-testing';
@@ -50,10 +52,13 @@ describe('AppComponent', () => {
         expect(fixture.componentInstance).toBeTruthy();
     });
 
-    it('renders the current route as the page heading', () => {
+    it('renders the dashboard heading and connects its skip navigation to the main content', () => {
         fixture.detectChanges();
 
-        expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('ADMIN_NAV.DASHBOARD');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('h1')?.textContent).toContain('ADMIN_NAV.DASHBOARD');
+        expect(host.querySelector('.admin-skip-nav')?.getAttribute('href')).toBe('/#admin-main-content');
+        expect(host.querySelector('main#admin-main-content')?.getAttribute('tabindex')).toBe('-1');
     });
 
     it('provides every admin section through the mobile route selector', () => {
@@ -84,6 +89,15 @@ it('keeps the Users navigation expanded on account pages and restores its previo
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(host.querySelector('fd-ui-sidebar a[href="/users/login-activity"]')).toBeNull();
 
+    const sidebar = fixture.debugElement.query(By.directive(FdUiSidebarComponent)).injector.get(FdUiSidebarComponent);
+    const staticSection = sidebar.sections().find(section => section.id !== 'users' && section.collapsible !== true);
+    if (staticSection === undefined) {
+        throw new Error('Expected a navigation section without a disclosure.');
+    }
+    sidebar.sectionToggled.emit({ section: staticSection });
+    fixture.detectChanges();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+
     await router.navigateByUrl('/users');
     await renderShellAsync(fixture);
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
@@ -98,6 +112,21 @@ it('keeps the Users navigation expanded on account pages and restores its previo
 });
 
 describe('admin shell navigation', () => {
+    it('keeps the bookmarked section and filters when the mobile navigation model is cleared', async () => {
+        const fixture = await createShellAsync();
+        const router = TestBed.inject(Router);
+        const url = '/users/login-activity?search=reader';
+        await router.navigateByUrl(url);
+        await renderShellAsync(fixture);
+
+        const select = fixture.debugElement.query(By.directive(FdUiSelectComponent)).injector.get(FdUiSelectComponent);
+        select.value.set(null);
+        await renderShellAsync(fixture);
+
+        expect(router.url).toBe(url);
+        expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent.trim()).toBe('ADMIN_NAV.LOGINS');
+    });
+
     it('uses the actual selected mobile route and preserves the filters in the skip link', async () => {
         const fixture = await createShellAsync();
         fixture.detectChanges();

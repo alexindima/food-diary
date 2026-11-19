@@ -214,10 +214,9 @@ export class AdminLessonsComponent {
         URL.revokeObjectURL(url);
     }
 
-    protected importLessons(event: Event): void {
-        const input = event.target instanceof HTMLInputElement ? event.target : null;
-        const file = input?.files?.[0];
-        if (input === null || file === undefined || this.isImporting()) {
+    protected importLessons(input: HTMLInputElement): void {
+        const file = input.files?.[0];
+        if (file === undefined || this.isImporting()) {
             return;
         }
 
@@ -274,7 +273,7 @@ export class AdminLessonsComponent {
     }
 
     private isImportPayload(value: unknown): value is AdminLessonsImportRequest {
-        if (!this.isRecord(value) || value['version'] !== 1 || !Array.isArray(value['lessons'])) {
+        if (!this.isRecord(value) || value['version'] !== 1 || !Array.isArray(value['lessons']) || value['lessons'].length === 0) {
             return false;
         }
 

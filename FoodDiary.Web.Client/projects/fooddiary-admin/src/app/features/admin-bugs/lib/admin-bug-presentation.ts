@@ -1,35 +1,26 @@
-export const REPORT_STATUSES = [
-    'pending',
-    'in_progress',
-    'needs_information',
-    'not_confirmed',
-    'duplicate',
-    'draft_ready',
-    'failed',
-    'content_unavailable',
-    'expired',
-] as const;
-
 type StatusTone = 'muted' | 'success' | 'warning' | 'danger';
+const REPORT_TONES: ReadonlyMap<string, StatusTone> = new Map([
+    ['pending', 'muted'],
+    ['in_progress', 'muted'],
+    ['needs_information', 'warning'],
+    ['not_confirmed', 'muted'],
+    ['duplicate', 'muted'],
+    ['draft_ready', 'success'],
+    ['failed', 'danger'],
+    ['content_unavailable', 'warning'],
+    ['expired', 'muted'],
+]);
+export const REPORT_STATUSES: readonly string[] = [...REPORT_TONES.keys()];
+
 const PREVIEW_LIMIT = 260;
 const ELLIPSIS_RESERVE = 3;
 const PREVIEW_CONTENT_LIMIT = PREVIEW_LIMIT - ELLIPSIS_RESERVE;
 
 export function reportStatusPresentation(status: string): { key: string; tone: StatusTone } {
-    const tones: Record<string, StatusTone> = {
-        pending: 'muted',
-        in_progress: 'muted',
-        needs_information: 'warning',
-        not_confirmed: 'muted',
-        duplicate: 'muted',
-        draft_ready: 'success',
-        failed: 'danger',
-        content_unavailable: 'warning',
-        expired: 'muted',
-    };
-    return Object.hasOwn(tones, status)
-        ? { key: `ADMIN_BUGS.STATUS_${status.toUpperCase()}`, tone: tones[status] ?? 'muted' }
-        : { key: 'ADMIN_BUGS.STATUS_UNKNOWN', tone: 'muted' };
+    const tone = REPORT_TONES.get(status);
+    return tone === undefined
+        ? { key: 'ADMIN_BUGS.STATUS_UNKNOWN', tone: 'muted' }
+        : { key: `ADMIN_BUGS.STATUS_${status.toUpperCase()}`, tone };
 }
 
 export function conciseReportSummary(summary: string | null | undefined): string {

@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -28,20 +28,24 @@ describe('daily advices page', () => {
         }).compileComponents();
     });
 
-    function fileEvent(text: string): Event {
-        const input = document.createElement('input');
-        input.type = 'file';
-        Object.defineProperty(input, 'files', { value: [{ size: text.length, text: vi.fn().mockResolvedValue(text) }] });
-        const event = new Event('change');
-        Object.defineProperty(event, 'target', { value: input });
-        return event;
+    async function selectFileAsync(fixture: ComponentFixture<AdminDailyAdvicesComponent>, contents: string): Promise<void> {
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input#advice-import');
+        if (input === null) {
+            throw new Error('Missing daily advice file input');
+        }
+        const file = new File([contents], 'advices.json', { type: 'application/json' });
+        Object.defineProperty(file, 'text', { value: vi.fn<() => Promise<string>>().mockResolvedValue(contents) });
+        Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        await fixture.whenStable();
     }
 
     it('shows empty state and import result, then reloads the list', async () => {
         const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_DAILY_ADVICES.EMPTY');
-        await fixture.componentInstance['importFileAsync'](fileEvent(JSON.stringify(DAILY_ADVICE_IMPORT_EXAMPLE)));
+        await selectFileAsync(fixture, JSON.stringify(DAILY_ADVICE_IMPORT_EXAMPLE));
         fixture.detectChanges();
         expect(importAdvices).toHaveBeenCalledWith(DAILY_ADVICE_IMPORT_EXAMPLE);
         expect(getAll).toHaveBeenCalledTimes(2);
@@ -52,9 +56,9 @@ describe('daily advices page', () => {
 
     it('rejects invalid JSON and invalid fields before calling the API', async () => {
         const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
-        await fixture.componentInstance['importFileAsync'](fileEvent('{'));
+        await selectFileAsync(fixture, '{');
         expect(fixture.componentInstance['importError']()).toBe('ADMIN_DAILY_ADVICES.INVALID_JSON');
-        await fixture.componentInstance['importFileAsync'](fileEvent('{"version":1,"advices":[null]}'));
+        await selectFileAsync(fixture, '{"version":1,"advices":[null]}');
         expect(fixture.componentInstance['importError']()).toBe('ADMIN_DAILY_ADVICES.INVALID_FORMAT');
         expect(importAdvices).not.toHaveBeenCalled();
     });
@@ -64,13 +68,13 @@ describe('daily advices page', () => {
         importAdvices.mockReturnValueOnce(pending);
         const fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
         const text = JSON.stringify(DAILY_ADVICE_IMPORT_EXAMPLE);
-        await fixture.componentInstance['importFileAsync'](fileEvent(text));
-        await fixture.componentInstance['importFileAsync'](fileEvent(text));
+        await selectFileAsync(fixture, text);
+        await selectFileAsync(fixture, text);
         expect(importAdvices).toHaveBeenCalledTimes(1);
         pending.error(new Error('offline'));
         expect(fixture.componentInstance['importing']()).toBe(false);
         expect(fixture.componentInstance['importError']()).toBe('ADMIN_DAILY_ADVICES.IMPORT_FAILED');
-        await fixture.componentInstance['importFileAsync'](fileEvent(text));
+        await selectFileAsync(fixture, text);
         expect(importAdvices).toHaveBeenCalledTimes(2);
     });
 
@@ -111,6 +115,16 @@ describe('daily advices pagination', () => {
         expect(fixture.componentInstance['page']()).toBe(1);
         expect(fixture.componentInstance['pageItems']()[0]?.id).toBe('advice-25');
         expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('2');
+        const host = fixture.nativeElement as HTMLElement;
+        const previous = host.querySelector<HTMLButtonElement>('fd-ui-pagination button:first-child');
+        expect(previous).not.toBeNull();
+        previous?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-admin-daily-advice-group-card [lang="en"]')?.textContent).toBe('Advice 0');
+        expect(new URL(router.url, 'http://localhost').searchParams.get('page')).toBe('1');
+        await router.navigateByUrl('/?page=2');
+        await fixture.whenStable();
         getAll.mockReturnValueOnce(of(items.slice(0, 1)));
         fixture.componentInstance['loadAdvices']();
         await fixture.whenStable();

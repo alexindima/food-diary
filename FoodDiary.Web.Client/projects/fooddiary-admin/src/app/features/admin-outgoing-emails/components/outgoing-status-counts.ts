@@ -11,5 +11,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit';
 export class OutgoingStatusCountsComponent {
     public readonly counts = input<Record<string, number> | null>(null);
     public readonly selected = output<string>();
-    protected readonly entries = computed(() => Object.entries(this.counts() ?? {}).map(([status, count]) => ({ status, count })));
+    protected readonly entries = computed(() => {
+        const counts = this.counts();
+        return counts === null ? null : Object.entries(counts).map(([status, count]) => ({ status, count }));
+    });
 }

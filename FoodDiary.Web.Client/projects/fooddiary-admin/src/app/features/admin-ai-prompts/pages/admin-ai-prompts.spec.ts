@@ -4,15 +4,16 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormRoot } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { FdUiDialogService, FdUiSelectComponent } from 'fd-ui-kit';
+import { FdUiDialogService } from 'fd-ui-kit';
 import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminTemplateHistoryService } from '../../admin-template-history/api/admin-template-history.service';
+import { AdminAiPromptsService } from '../api/admin-ai-prompts.service';
 import { AdminAiPromptWorkbenchComponent } from '../components/admin-ai-prompt-workbench';
-import { AdminAiPromptsFacade } from '../lib/admin-ai-prompts.facade';
 import type { AdminAiPrompt } from '../models/admin-ai-prompt';
 import type { AdminAiPromptKey, AdminAiPromptScenario } from '../models/admin-ai-prompt-scenario';
 import { AdminAiPromptsPageComponent } from './admin-ai-prompts';
@@ -34,8 +35,10 @@ const scenarios: AdminAiPromptScenario[] = (['vision', 'text-parse', 'nutrition'
 
 describe('AdminAiPromptsPageComponent', () => {
     const api = { getScenarios: vi.fn(), preview: vi.fn(), test: vi.fn(), save: vi.fn() };
+    const discard = vi.fn<() => Observable<boolean>>();
     beforeEach(async () => {
         vi.clearAllMocks();
+        discard.mockReset().mockReturnValue(of(false));
         api.getScenarios.mockReturnValue(of(scenarios));
         api.preview.mockReturnValue(of({ text: 'Resolved text' }));
         await TestBed.configureTestingModule({
@@ -45,11 +48,11 @@ describe('AdminAiPromptsPageComponent', () => {
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 ...provideTranslateTesting(),
-                { provide: AdminAiPromptsFacade, useValue: api },
+                { provide: AdminAiPromptsService, useValue: api },
                 {
                     provide: FdUiDialogService,
                     useValue: {
-                        open: (): { afterClosed: () => Observable<boolean> } => ({ afterClosed: (): Observable<boolean> => of(false) }),
+                        open: (): { afterClosed: typeof discard } => ({ afterClosed: discard }),
                     },
                 },
             ],
@@ -78,17 +81,30 @@ describe('AdminAiPromptsPageComponent', () => {
         expect(page['canApply']()).toBe(false);
     });
 
-    it('keeps unsaved text when switching scenario is cancelled', () => {
+    it('restores the visible language and draft after cancel, then switches after discarding the draft', () => {
+        stubScrollIntoView();
         const fixture = TestBed.createComponent(AdminAiPromptsPageComponent);
         fixture.detectChanges();
-        fixture.componentInstance['setCustom'](true);
-        const select = fixture.debugElement.query(By.directive(FdUiSelectComponent)).injector.get(FdUiSelectComponent);
-        select.value.set('ru');
-        fixture.componentInstance['selectScenario']('nutrition', 'ru');
-        expect(select.value()).toBe('en');
-        expect(fixture.componentInstance['key']()).toBe('vision');
-        expect(fixture.componentInstance['locale']()).toBe('en');
-        expect(fixture.componentInstance['formModel']().isActive).toBe(true);
+        const root = fixture.nativeElement as HTMLElement;
+        root.querySelector<HTMLInputElement>('form input[type="checkbox"]')?.click();
+        fixture.detectChanges();
+        const draft = root.querySelector<HTMLTextAreaElement>('form textarea');
+        if (draft === null) {
+            throw new Error('Expected an editable prompt draft');
+        }
+        draft.value = 'Unsaved prompt';
+        draft.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(chooseRussianLocale(fixture).textContent).toContain('English');
+        button(root, 'ADMIN_PROMPTS.SCENARIOS_nutrition').click();
+        fixture.detectChanges();
+        expect(draft.value).toBe('Unsaved prompt');
+        expect(root.querySelector('nav button[aria-pressed="true"]')?.textContent).toContain('ADMIN_PROMPTS.SCENARIOS_vision');
+        discard.mockReturnValueOnce(of(true));
+        expect(chooseRussianLocale(fixture).textContent).toContain('Русский');
+        expect(root.querySelector('form textarea')).toBeNull();
+        expect(api.save).not.toHaveBeenCalled();
     });
 
     it('shows a load error and supports retry', () => {
@@ -100,6 +116,41 @@ describe('AdminAiPromptsPageComponent', () => {
         fixture.detectChanges();
         expect(fixture.componentInstance['selected']()?.key).toBe('vision');
     });
+});
+
+function chooseRussianLocale(fixture: ComponentFixture<AdminAiPromptsPageComponent>): HTMLButtonElement {
+    const select = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.prompt-heading fd-ui-select button');
+    if (select === null) {
+        throw new Error('Expected the prompt language selector');
+    }
+    select.click();
+    fixture.detectChanges();
+    const russian = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(option => option.textContent.trim() === 'Русский');
+    if (russian === undefined) {
+        throw new Error('Expected Russian in the prompt language menu');
+    }
+    russian.click();
+    fixture.detectChanges();
+    return select;
+}
+
+it('keeps scenario navigation usable when the service returns no scenarios', async () => {
+    const getScenarios = vi.fn<AdminAiPromptsService['getScenarios']>().mockReturnValue(of([]));
+    const save = vi.fn<AdminAiPromptsService['save']>();
+    await TestBed.configureTestingModule({
+        imports: [AdminAiPromptsPageComponent],
+        providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAiPromptsService, useValue: { getScenarios, save } }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminAiPromptsPageComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    button(root, 'ADMIN_PROMPTS.SCENARIOS_nutrition').click();
+    fixture.detectChanges();
+
+    expect(root.querySelector('nav button[aria-pressed="true"]')?.textContent).toContain('ADMIN_PROMPTS.SCENARIOS_nutrition');
+    expect(root.querySelector('form')).toBeNull();
+    expect(root.querySelector('fd-admin-ai-prompt-workbench')).toBeNull();
+    expect(save).not.toHaveBeenCalled();
 });
 
 function button(root: HTMLElement, text: string): HTMLButtonElement {
@@ -125,9 +176,9 @@ function savedPrompt(promptText: string): AdminAiPrompt {
 
 describe('AdminAiPromptsPageComponent saves through the prompt editor', () => {
     const api = {
-        getScenarios: vi.fn<AdminAiPromptsFacade['getScenarios']>(),
-        preview: vi.fn<AdminAiPromptsFacade['preview']>(),
-        save: vi.fn<AdminAiPromptsFacade['save']>(),
+        getScenarios: vi.fn<AdminAiPromptsService['getScenarios']>(),
+        preview: vi.fn<AdminAiPromptsService['preview']>(),
+        save: vi.fn<AdminAiPromptsService['save']>(),
     };
     let fixture: ComponentFixture<AdminAiPromptsPageComponent>;
     let root: HTMLElement;
@@ -141,7 +192,7 @@ describe('AdminAiPromptsPageComponent saves through the prompt editor', () => {
             providers: [
                 provideRouter([]),
                 ...provideTranslateTesting(),
-                { provide: AdminAiPromptsFacade, useValue: api },
+                { provide: AdminAiPromptsService, useValue: api },
                 { provide: AdminTemplateHistoryService, useValue: { getRevisions: vi.fn().mockReturnValue(of([])) } },
             ],
         }).compileComponents();
@@ -165,6 +216,9 @@ describe('AdminAiPromptsPageComponent saves through the prompt editor', () => {
         draft.dispatchEvent(new Event('input', { bubbles: true }));
         fixture.detectChanges();
         expect(button(root, 'ADMIN_PROMPTS.APPLY').disabled).toBe(true);
+        draft.form?.requestSubmit();
+        await fixture.whenStable();
+        expect(api.save).not.toHaveBeenCalled();
         button(root, 'ADMIN_PROMPTS.PREVIEW').click();
         await fixture.whenStable();
         fixture.detectChanges();
@@ -184,13 +238,10 @@ describe('AdminAiPromptsPageComponent saves through the prompt editor', () => {
         expect(draft.value).toBe(promptText);
         expect(draft.readOnly).toBe(false);
         expect(button(root, 'ADMIN_PROMPTS.APPLY').disabled).toBe(false);
-        api.getScenarios.mockReturnValueOnce(
-            of(
-                scenarios.map<AdminAiPromptScenario>(item =>
-                    item.key === 'vision' && item.locale === 'en' ? { ...item, promptText, source: 'custom', template: saved } : item,
-                ),
-            ),
+        const refreshedScenarios = scenarios.map<AdminAiPromptScenario>(item =>
+            item.key === 'vision' && item.locale === 'en' ? { ...item, promptText, source: 'custom', template: saved } : item,
         );
+        api.getScenarios.mockReturnValueOnce(of(refreshedScenarios));
         const form = fixture.debugElement.query(By.directive(FormRoot)).injector.get(FormRoot);
         await vi.waitFor(() => {
             expect(form.fieldTree()().submitting()).toBe(false);

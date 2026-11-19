@@ -1,10 +1,13 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of, Subject } from 'rxjs';
+import { filter, of, Subject, take } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { environment } from '../../../../environments/environment';
 import { ADMIN_DEVELOPMENT_SCREENS, type AdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminOutgoingEmailsFacade } from '../lib/admin-outgoing-emails.facade';
@@ -97,6 +100,51 @@ function requireOutboxButton(element: HTMLElement, name: string): HTMLButtonElem
     }
     return button;
 }
+
+it('keeps the requested page when a final detail click follows a return to the list', async () => {
+    TestBed.configureTestingModule({
+        providers: [
+            provideRouter([{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }]),
+            provideTranslateTesting(),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+        ],
+    });
+    const harness = await RouterTestingHarness.create(`${OUTBOX}?status=sent&id=${MAIL.id}`);
+    const router = TestBed.inject(Router);
+    const requests = TestBed.inject(HttpTestingController);
+    const api = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/outgoing-emails`;
+    const request = requests.expectOne(candidate => candidate.url === api && candidate.params.get('id') === MAIL.id);
+    request.flush({ items: [MAIL], totalItems: 1 });
+    harness.detectChanges();
+    const element = harness.routeNativeElement;
+    if (element === null) {
+        throw new Error('Expected the outgoing email reader.');
+    }
+    const close = requireOutboxButton(element, 'ADMIN_OUTGOING.CLOSE');
+    const list = `${OUTBOX}?status=sent&page=${LAST_PAGE}`;
+    const clickBeforeRender = vi.fn<(connected: boolean) => void>();
+    router.events
+        .pipe(
+            filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === list),
+            take(1),
+        )
+        .subscribe(() => {
+            clickBeforeRender(close.isConnected);
+            close.click();
+        });
+    await router.navigateByUrl(list);
+    expect(clickBeforeRender).toHaveBeenCalledExactlyOnceWith(true);
+    const listRequest = requests.expectOne(candidate => candidate.url === api && !candidate.params.has('id'));
+    expect(listRequest.request.params.get('page')).toBe(String(LAST_PAGE));
+    listRequest.flush({ items: [MAIL], totalItems: OUTBOX_TOTAL });
+    await renderOutboxAsync(harness);
+
+    expect(router.url).toBe(list);
+    expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
+    expect(element.querySelector('tbody')?.textContent).toContain(RECIPIENT);
+    requests.verify();
+});
 
 describe('outgoing mail route state', () => {
     it('skips an invalid period and preserves the corrected UTC bounds when recovering an out-of-range page', async () => {
@@ -191,5 +239,38 @@ describe('outgoing mail applied filters', () => {
         expect(router.url).toBe(appliedUrl);
         expect(getPage).toHaveBeenCalledTimes(callsBeforeRefresh + 1);
         expect(getPage).toHaveBeenLastCalledWith(1, '', 'sent', expect.objectContaining({ recipient: RECIPIENT }));
+    });
+});
+
+describe('outgoing receipt source and delivery counts', () => {
+    it('links a bug report receipt to its correlated inbox message', async () => {
+        const receipt = { ...MAIL, purpose: 'bug_report_received', correlationId: 'source-message' };
+        const getPage = vi.fn<AdminOutgoingEmailsFacade['getPage']>().mockReturnValue(of({ items: [receipt], totalItems: 1 }));
+        const { element } = await setupOutboxAsync(`${OUTBOX}?id=${receipt.id}`, getPage);
+        const source = element.querySelector<HTMLAnchorElement>('fd-outgoing-email-details a');
+        expect(source?.hidden).toBe(false);
+        expect(source?.textContent).toContain('ADMIN_BUGS.SOURCE');
+        expect(source?.getAttribute('href')).toBe('/mail-inbox?id=source-message');
+    });
+
+    it('hides missing counts, shows help for empty counts and renders returned delivery statuses', async () => {
+        const page = { items: [MAIL], totalItems: 1 };
+        const getPage = vi
+            .fn<AdminOutgoingEmailsFacade['getPage']>()
+            .mockReturnValueOnce(of(page))
+            .mockReturnValueOnce(of({ ...page, statusCounts: {} }))
+            .mockReturnValueOnce(of({ ...page, statusCounts: { sent: 1 } }));
+        const { element, harness } = await setupOutboxAsync(OUTBOX, getPage);
+        const counts = element.querySelector('fd-outgoing-status-counts');
+        expect(counts?.textContent).not.toContain('ADMIN_OUTGOING.STATUS_COUNTS_HELP');
+
+        requireOutboxButton(element, 'ADMIN_OUTGOING.REFRESH').click();
+        await renderOutboxAsync(harness);
+        expect(counts?.textContent).toContain('ADMIN_OUTGOING.STATUS_COUNTS_HELP');
+        expect(counts?.querySelector('button')).toBeNull();
+
+        requireOutboxButton(element, 'ADMIN_OUTGOING.REFRESH').click();
+        await renderOutboxAsync(harness);
+        expect(counts?.querySelector('button')?.textContent.trim()).toBe('ADMIN_OUTGOING.STATUSES.sent: 1');
     });
 });

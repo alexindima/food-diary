@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
-import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
+import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates';
 
@@ -44,7 +44,7 @@ describe('AdminEmailTemplatesComponent', () => {
             providers: [
                 provideRouter([]),
                 ...provideTranslateTesting(),
-                { provide: AdminEmailTemplatesFacade, useValue: templatesService },
+                { provide: AdminEmailTemplatesService, useValue: templatesService },
                 { provide: FdUiDialogService, useValue: dialogService },
             ],
         }).compileComponents();
@@ -109,7 +109,7 @@ describe('AdminEmailTemplatesComponent', () => {
 });
 
 describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
-    const getAll = vi.fn<AdminEmailTemplatesFacade['getAll']>();
+    const getAll = vi.fn<AdminEmailTemplatesService['getAll']>();
     const closed = vi.fn<() => Observable<boolean>>();
 
     beforeEach(async () => {
@@ -120,7 +120,7 @@ describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
             providers: [
                 provideRouter([]),
                 ...provideTranslateTesting(),
-                { provide: AdminEmailTemplatesFacade, useValue: { getAll } },
+                { provide: AdminEmailTemplatesService, useValue: { getAll } },
                 { provide: FdUiDialogService, useValue: { open: (): { afterClosed: typeof closed } => ({ afterClosed: closed }) } },
             ],
         }).compileComponents();

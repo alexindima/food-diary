@@ -4,7 +4,7 @@ import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminAiPromptsFacade } from '../lib/admin-ai-prompts.facade';
+import { AdminAiPromptsService } from '../api/admin-ai-prompts.service';
 import { AdminAiPromptWorkbenchComponent } from './admin-ai-prompt-workbench';
 
 function workbenchButton(root: HTMLElement, key: string): HTMLButtonElement {
@@ -25,9 +25,9 @@ function choosePhoto(root: HTMLElement, file: File | null): void {
 }
 
 const visionApi = {
-    preview: vi.fn<AdminAiPromptsFacade['preview']>(),
-    test: vi.fn<AdminAiPromptsFacade['test']>(),
-    uploadImage: vi.fn<AdminAiPromptsFacade['uploadImage']>(),
+    preview: vi.fn<AdminAiPromptsService['preview']>(),
+    test: vi.fn<AdminAiPromptsService['test']>(),
+    uploadImage: vi.fn<AdminAiPromptsService['uploadImage']>(),
 };
 
 async function renderVisionWorkbenchAsync(): Promise<{ fixture: ComponentFixture<AdminAiPromptWorkbenchComponent>; root: HTMLElement }> {
@@ -36,7 +36,7 @@ async function renderVisionWorkbenchAsync(): Promise<{ fixture: ComponentFixture
     visionApi.test.mockReturnValue(of({ text: '{"items":[]}' }));
     await TestBed.configureTestingModule({
         imports: [AdminAiPromptWorkbenchComponent],
-        providers: [...provideTranslateTesting(), { provide: AdminAiPromptsFacade, useValue: visionApi }],
+        providers: [...provideTranslateTesting(), { provide: AdminAiPromptsService, useValue: visionApi }],
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminAiPromptWorkbenchComponent);
     fixture.componentRef.setInput('scenarioKey', 'vision');
@@ -182,7 +182,7 @@ describe('AdminAiPromptWorkbenchComponent', () => {
         api.test.mockReturnValue(of({ text: '{"items":[]}' }));
         await TestBed.configureTestingModule({
             imports: [AdminAiPromptWorkbenchComponent],
-            providers: [...provideTranslateTesting(), { provide: AdminAiPromptsFacade, useValue: api }],
+            providers: [...provideTranslateTesting(), { provide: AdminAiPromptsService, useValue: api }],
         }).compileComponents();
     });
     function create(): ComponentFixture<AdminAiPromptWorkbenchComponent> {
@@ -261,7 +261,7 @@ describe('AdminAiPromptWorkbenchComponent AI consent error', () => {
             providers: [
                 ...provideTranslateTesting(),
                 {
-                    provide: AdminAiPromptsFacade,
+                    provide: AdminAiPromptsService,
                     useValue: {
                         preview: (): Observable<{ text: string }> => of({ text: 'Checked request' }),
                         test: (): Observable<never> => throwError(() => new HttpErrorResponse({ status, error: { error: code } })),

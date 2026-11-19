@@ -1,5 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
+import { FdUiDateInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { describe, expect, it } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../src/testing/dom-testing';
@@ -107,4 +109,30 @@ it('applies a selected leap day to the scoped period and leaves the other filter
     await choosePresetAsync(fixture, 'custom');
     expect(host.querySelectorAll('fd-ui-date-input')).toHaveLength(2);
     expect(router.parseUrl(router.url).queryParams).toEqual({ period: '90d', activity_period: '7d' });
+});
+
+it('adapts date model values to calendar dates and clears them when the period model is reset', async () => {
+    const fixture = await openPeriodAsync('/?period=custom&from=2024-02-28&to=2024-03-03&page=4');
+    const router = TestBed.inject(Router);
+    const host = fixture.nativeElement as HTMLElement;
+    const dateControls = fixture.debugElement.queryAll(By.directive(FdUiDateInputComponent));
+    const apply = host.querySelector<HTMLButtonElement>('fd-ui-button button');
+    if (apply === null || dateControls.length !== 2) {
+        throw new Error('Missing custom period controls');
+    }
+    const [start, end] = dateControls.map(node => node.injector.get(FdUiDateInputComponent));
+    start.value.set(new Date('2024-02-29T23:50:00'));
+    end.value.set(new Date('2024-03-01T00:10:00'));
+    fixture.detectChanges();
+    apply.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(router.parseUrl(router.url).queryParams).toEqual({ period: 'custom', from: '2024-02-29', to: '2024-03-01' });
+
+    const preset = fixture.debugElement.query(By.directive(FdUiSelectComponent)).injector.get(FdUiSelectComponent);
+    preset.value.set(null);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(router.parseUrl(router.url).queryParams).toEqual({ period: 'all' });
+    expect(host.querySelector('fd-ui-date-input')).toBeNull();
 });

@@ -29,6 +29,16 @@ afterEach(() => {
 });
 
 describe('administrative session restoration recovery', () => {
+    it('keeps an authenticated cookie visible when older responses omit the optional account identity', async () => {
+        const restored = service.restoreSessionAsync();
+        requests.expectOne(`${base}/session`).flush({ sessionId: response.sessionId, roles: response.roles });
+        await restored;
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.isAdmin()).toBe(true);
+        expect(service.getSessionId()).toBe(response.sessionId);
+        expect(service.getUserId()).toBeNull();
+    });
+
     it.each([HttpStatusCode.TooManyRequests, HttpStatusCode.ServiceUnavailable])(
         'retains known identity after temporary restore failure %s',
         async status => {

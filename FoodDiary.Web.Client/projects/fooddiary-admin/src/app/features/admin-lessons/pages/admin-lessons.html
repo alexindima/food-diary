@@ -4,7 +4,13 @@
         <p class="fd-page-subtitle">{{ 'ADMIN_SUBTITLE.LESSONS' | translate }}</p>
     </div>
     <div class="fd-row fd-wrap fd-gap-sm">
-        <input #lessonImportInput class="import-input" type="file" accept="application/json,.json" (change)="importLessons($event)" />
+        <input
+            #lessonImportInput
+            class="import-input"
+            type="file"
+            accept="application/json,.json"
+            (change)="importLessons(lessonImportInput)"
+        />
         <fd-ui-button
             type="button"
             variant="secondary"

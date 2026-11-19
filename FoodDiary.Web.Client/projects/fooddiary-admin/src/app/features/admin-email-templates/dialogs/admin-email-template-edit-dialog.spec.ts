@@ -8,7 +8,7 @@ import { provideTranslateTesting } from '../../../../../../../src/testing/transl
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import type { AdminTemplateRevision } from '../../admin-template-history/contracts/history';
 import { AdminTemplateHistoryFacade } from '../../admin-template-history/lib/admin-template-history.facade';
-import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
+import { AdminEmailTemplatesService } from '../api/admin-email-templates.service';
 import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog';
 
 const TEMPLATE = {
@@ -35,7 +35,7 @@ type EmailTemplateDialogContext = {
 };
 
 async function setupEmailTemplateDialogAsync(
-    template = TEMPLATE,
+    template: typeof TEMPLATE & { isNew?: boolean } = TEMPLATE,
     revisions: AdminTemplateRevision[] = [],
 ): Promise<EmailTemplateDialogContext> {
     const service = {
@@ -48,7 +48,7 @@ async function setupEmailTemplateDialogAsync(
         imports: [AdminEmailTemplateEditDialogComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: AdminEmailTemplatesFacade, useValue: service },
+            { provide: AdminEmailTemplatesService, useValue: service },
             {
                 provide: AdminTemplateHistoryFacade,
                 useValue: { getRevisions: (): ReturnType<AdminTemplateHistoryFacade['getRevisions']> => of(revisions) },
@@ -87,6 +87,23 @@ function emailButton(root: ParentNode, text: string): HTMLButtonElement {
     }
     return button;
 }
+
+it.each(['constructor', '__proto__'])('allows editing a new template with an unrecognized key %s', async key => {
+    const { fixture, service } = await setupEmailTemplateDialogAsync({ ...TEMPLATE, key: '', isNew: true });
+    const root = fixture.nativeElement as HTMLElement;
+    setEmailField(root, 'Key', key);
+    fixture.detectChanges();
+
+    expect(root.querySelector('.preview--html')?.textContent).toContain('Verify');
+    expect(root.querySelectorAll('.token-list code')).toHaveLength(0);
+    expect(emailButton(root, 'Save').disabled).toBe(false);
+    expect(service.upsert).not.toHaveBeenCalled();
+    setEmailField(root, 'Key', 'password_reset');
+    fixture.detectChanges();
+
+    expect(root.querySelector('.token-list')?.textContent).toContain('{{link}}');
+    expect(root.querySelector('.preview--html a')?.getAttribute('href')).toContain('/reset-password');
+});
 
 describe('Email template preview fallback', () => {
     it('shows a plain subject in both preview modes when both bodies are empty', async () => {
@@ -239,15 +256,18 @@ describe('AdminEmailTemplateEditDialogComponent preview', () => {
 
 describe('AdminEmailTemplateEditDialogComponent saving', () => {
     it('should close false on cancel', async () => {
-        const { component, dialogRef } = await setupEmailTemplateDialogAsync();
-        component['onCancel']();
+        const { fixture, dialogRef } = await setupEmailTemplateDialogAsync();
+        emailButton(fixture.nativeElement as HTMLElement, 'Cancel').click();
         expect(dialogRef.close).toHaveBeenCalledWith(false);
     });
 
     it('should save and close true on success', async () => {
-        const { component, dialogRef, service } = await setupEmailTemplateDialogAsync();
-        component['formModel'].update(value => ({ ...value, subject: 'Updated subject' }));
-        component['onSave']();
+        const { fixture, dialogRef, service } = await setupEmailTemplateDialogAsync();
+        const root = fixture.nativeElement as HTMLElement;
+        setEmailField(root, 'Subject', 'Updated subject');
+        fixture.detectChanges();
+        emailButton(root, 'Save').click();
+        await fixture.whenStable();
 
         expect(service.upsert).toHaveBeenCalledWith('email_verification', 'en', {
             subject: 'Updated subject',
@@ -260,41 +280,51 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
         });
     });
 
-    it('should prevent native form submit when saving', async () => {
-        const { fixture, service } = await setupEmailTemplateDialogAsync();
-
-        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+    it('blocks invalid and duplicate native submits at the form boundary', async () => {
+        const { fixture, service, dialogRef } = await setupEmailTemplateDialogAsync();
+        const pending = new Subject<typeof TEMPLATE>();
+        service.upsert.mockReturnValueOnce(pending);
+        const root = fixture.nativeElement as HTMLElement;
+        const form = root.querySelector('form');
         expect(form).not.toBeNull();
 
-        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        setEmailField(root, 'Subject', '');
+        fixture.detectChanges();
+        const invalidSubmit = new Event('submit', { bubbles: true, cancelable: true });
+        form?.dispatchEvent(invalidSubmit);
         await fixture.whenStable();
+        expect(invalidSubmit.defaultPrevented).toBe(true);
+        expect(service.upsert).not.toHaveBeenCalled();
 
-        expect(wasNotCancelled).toBe(false);
-        expect(submitEvent.defaultPrevented).toBe(true);
+        setEmailField(root, 'Subject', 'Ready to save');
+        fixture.detectChanges();
+        form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
         expect(service.upsert).toHaveBeenCalledOnce();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        pending.next(TEMPLATE);
+        await fixture.whenStable();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
     });
 
     it('shows a save error, preserves the draft and allows retry', async () => {
-        const { component, service, fixture, dialogRef } = await setupEmailTemplateDialogAsync();
+        const { service, fixture, dialogRef } = await setupEmailTemplateDialogAsync();
+        const root = fixture.nativeElement as HTMLElement;
         service.upsert.mockReturnValueOnce(throwError(() => new Error('save failed')));
-        component['formModel'].update(value => ({ ...value, subject: 'Unsaved draft' }));
-
-        component['onSave']();
-
-        await vi.waitFor(() => {
-            expect(component['isSaving']()).toBe(false);
-        });
+        setEmailField(root, 'Subject', 'Unsaved draft');
+        fixture.detectChanges();
+        emailButton(root, 'Save').click();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(dialogRef.close).not.toHaveBeenCalled();
-        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_TEMPLATES.SAVE_ERROR');
-        expect(component['formModel']().subject).toBe('Unsaved draft');
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_TEMPLATES.SAVE_ERROR');
+        expect(emailField(root, 'Subject').value).toBe('Unsaved draft');
 
-        component['onSave']();
-        await vi.waitFor(() => {
-            expect(dialogRef.close).toHaveBeenCalledWith(true);
-        });
-        expect(component['saveFailed']()).toBe(false);
+        emailButton(root, 'Save').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(dialogRef.close).toHaveBeenCalledWith(true);
+        expect(root.querySelector('[role="alert"]')).toBeNull();
         expect(service.upsert).toHaveBeenLastCalledWith('email_verification', 'en', expect.objectContaining({ subject: 'Unsaved draft' }));
     });
 });
@@ -331,37 +361,53 @@ describe('AdminEmailTemplateEditDialogComponent test send', () => {
 
 describe('AdminEmailTemplateEditDialogComponent pending saves', () => {
     it('locks draft controls and dismissal while a save is pending, then preserves the draft for retry', async () => {
-        const { component, dialogRef, fixture, service } = await setupEmailTemplateDialogAsync();
+        const revision: AdminTemplateRevision = {
+            id: adminId<'template-revision'>('older-draft'),
+            subject: 'Archived subject',
+            htmlBody: '<p>Archived HTML</p>',
+            textBody: 'Archived body',
+            isActive: false,
+            version: 1,
+            savedOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+            archivedOnUtc: adminUtcInstant('2026-01-02T00:00:00Z'),
+        };
+        const { dialogRef, fixture, service } = await setupEmailTemplateDialogAsync(TEMPLATE, [revision]);
         const pending = new Subject<typeof TEMPLATE>();
         service.upsert.mockReturnValueOnce(pending);
-        component['testEmailModel'].set({ email: 'test@example.com' });
-        component['formModel'].update(value => ({ ...value, subject: 'Pending subject' }));
-        component['onSave']();
-        fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
+        await fixture.whenStable();
+        element.querySelector<HTMLElement>('fd-admin-template-history details > summary')?.click();
+        setEmailField(element, 'Send test to', 'test@example.com');
+        setEmailField(element, 'Subject', 'Pending subject');
+        fixture.detectChanges();
+        const save = emailButton(element, 'Save');
+        const cancel = emailButton(element, 'Cancel');
+        const restore = emailButton(element, 'ADMIN_TEMPLATE_HISTORY.RESTORE');
+        const send = emailButton(element, 'Send test');
+
+        save.click();
+        restore.click();
+        cancel.click();
+        send.click();
+        fixture.detectChanges();
 
         for (const control of element.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')) {
             expect(control.disabled).toBe(true);
         }
-        const cancel = Array.from(element.querySelectorAll<HTMLButtonElement>('button')).find(
-            button => button.textContent.trim() === 'Cancel',
-        );
-        expect(cancel?.disabled).toBe(true);
+        expect(cancel.disabled).toBe(true);
         expect(element.querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button')?.disabled).toBe(true);
-        component['onCancel']();
-        component['onSendTest']();
         expect(dialogRef.close).not.toHaveBeenCalled();
         expect(service.sendTest).not.toHaveBeenCalled();
 
         pending.error(new Error('offline'));
         await vi.waitFor(() => {
             fixture.detectChanges();
-            expect(component['isSaving']()).toBe(false);
-            expect(component['saveFailed']()).toBe(true);
+            expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_TEMPLATES.SAVE_ERROR');
+            expect(save.disabled).toBe(false);
         });
         expect(element.querySelector<HTMLTextAreaElement>('textarea')?.disabled).toBe(false);
-        expect(component['formModel']().subject).toBe('Pending subject');
-        component['onSave']();
+        expect(emailField(element, 'Subject').value).toBe('Pending subject');
+        save.click();
         await vi.waitFor(() => {
             expect(dialogRef.close).toHaveBeenCalledWith(true);
         });

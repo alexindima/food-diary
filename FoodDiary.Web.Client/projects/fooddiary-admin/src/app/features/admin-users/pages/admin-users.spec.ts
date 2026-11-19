@@ -1,8 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -321,6 +323,28 @@ describe('Admin users filters and pagination', () => {
         expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
         expect(root.querySelector('tbody')?.textContent).toContain(pagedUsers.items[0].email);
     });
+});
+
+it('restores the first active page when the status select model is cleared', async () => {
+    await setupComponentAsync();
+    const router = TestBed.inject(Router);
+    await router.navigate([], { queryParams: { page: SECOND_PAGE, status: 'inactive', role: 'Support' } });
+    fixture.detectChanges();
+    const select = fixture.debugElement.query(By.css('.admin-filter-bar > fd-ui-select')).injector.get(FdUiSelectComponent);
+    expect(select.value()).toBe('inactive');
+
+    select.value.set(null);
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(select.value()).toBe('active');
+    expect(router.parseUrl(router.url).queryParams).toEqual({ page: '1', status: 'active', role: 'Support' });
+    expect(usersService.getUsers).toHaveBeenLastCalledWith(
+        FIRST_PAGE,
+        PAGE_SIZE,
+        null,
+        expect.objectContaining({ status: 'active', role: 'Support' }),
+    );
 });
 
 function findControl(root: ParentNode, selector: string): HTMLButtonElement {

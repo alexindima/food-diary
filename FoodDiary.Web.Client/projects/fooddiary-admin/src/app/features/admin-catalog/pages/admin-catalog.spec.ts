@@ -1,3 +1,4 @@
+import { PLATFORM_ID } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { of, Subject, throwError } from 'rxjs';
@@ -109,14 +110,18 @@ function catalogButton(root: HTMLElement, suffix: string): HTMLButtonElement {
     return result;
 }
 
-function chooseFile(root: HTMLElement, contents: string): void {
+function chooseFile(root: HTMLElement, contents: string | null): void {
     const input = root.querySelector<HTMLInputElement>('#catalog-file');
     if (input === null) {
         throw new Error('Missing catalog file input');
     }
-    const file = new File([contents], 'catalog.json', { type: 'application/json' });
-    Object.defineProperty(file, 'text', { value: vi.fn<() => Promise<string>>().mockResolvedValue(contents) });
-    Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+    const files: File[] = [];
+    if (contents !== null) {
+        const file = new File([contents], 'catalog.json', { type: 'application/json' });
+        Object.defineProperty(file, 'text', { value: vi.fn<() => Promise<string>>().mockResolvedValue(contents) });
+        files.push(file);
+    }
+    Object.defineProperty(input, 'files', { configurable: true, value: files });
     input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
@@ -141,7 +146,7 @@ async function readFileAsync(blob: Blob | undefined): Promise<unknown> {
     return JSON.parse(contents) as unknown;
 }
 
-async function setupFileTransferAsync(): Promise<{
+async function setupFileTransferAsync(platform = 'browser'): Promise<{
     fixture: ComponentFixture<AdminCatalogComponent>;
     root: HTMLElement;
     service: {
@@ -159,7 +164,11 @@ async function setupFileTransferAsync(): Promise<{
     };
     await TestBed.configureTestingModule({
         imports: [AdminCatalogComponent],
-        providers: [...provideTranslateTesting(), { provide: AdminCatalogService, useValue: service }],
+        providers: [
+            ...provideTranslateTesting(),
+            { provide: AdminCatalogService, useValue: service },
+            { provide: PLATFORM_ID, useValue: platform },
+        ],
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminCatalogComponent);
     fixture.detectChanges();
@@ -229,6 +238,47 @@ describe('AdminCatalog import and file downloads', () => {
         expect(revoke).toHaveBeenCalledExactlyOnceWith(blobUrl);
         const blob = objectUrl.mock.calls[0]?.[0];
         expect(await readFileAsync(blob instanceof Blob ? blob : undefined)).toEqual(catalogFile);
+    });
+});
+
+describe('Catalog file picker and browser lifecycle', () => {
+    it('retains the first file when another selection arrives early and keeps its preview after cancellation', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync();
+        const pending = new Subject<CatalogResult>();
+        service.preview.mockReturnValueOnce(pending);
+        chooseFile(root, JSON.stringify(catalogFile));
+        chooseFile(root, 'obsolete invalid file');
+        await vi.waitFor(() => {
+            expect(service.preview).toHaveBeenCalledExactlyOnceWith('products', catalogProduct);
+        });
+        pending.next({ id: catalogProduct.id, status: 'ready', errors: [] });
+        pending.complete();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(root.querySelector('article strong')?.textContent).toBe(catalogProduct.name);
+        });
+        chooseFile(root, null);
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(root.querySelector('article strong')?.textContent).toBe(catalogProduct.name);
+        expect(catalogButton(root, 'CONFIRM').disabled).toBe(false);
+        expect(root.querySelector('[role="alert"]')).toBeNull();
+        expect(service.exportCatalog).toHaveBeenCalledOnce();
+    });
+
+    it('does not create file URLs when export runs without a browser platform', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync('server');
+        const objectUrl = vi.spyOn(URL, 'createObjectURL');
+        try {
+            catalogButton(root, 'EXPORT').click();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(service.exportCatalog).toHaveBeenCalledOnce();
+            expect(objectUrl).not.toHaveBeenCalled();
+            expect(catalogButton(root, 'EXPORT').disabled).toBe(false);
+        } finally {
+            objectUrl.mockRestore();
+        }
     });
 });
 

@@ -31,15 +31,24 @@ export class AdminAiUsageComponent {
     private readonly route = inject(ActivatedRoute);
     private requestId = 0;
 
-    protected readonly usage = signal<AdminAiUsageSummary | null>(null);
+    private readonly usage = signal<AdminAiUsageSummary | null>(null);
     protected readonly isLoading = signal(false);
     protected readonly userId = signal<string | null>(null);
     protected readonly failed = signal(false);
-    protected readonly points = computed(() => (this.usage()?.byDay ?? []).map(day => ({ label: day.date, value: day.totalTokens })));
-    protected readonly breakdowns = computed(() => [
-        { title: 'ADMIN_AI.OPERATIONS', rows: this.usage()?.byOperation ?? [] },
-        { title: 'ADMIN_AI.MODELS', rows: this.usage()?.byModel ?? [] },
-    ]);
+    protected readonly report = computed(() => {
+        const usage = this.usage();
+        if (usage === null) {
+            return null;
+        }
+        return {
+            ...usage,
+            points: usage.byDay.map(day => ({ label: day.date, value: day.totalTokens })),
+            breakdowns: [
+                { title: 'ADMIN_AI.OPERATIONS', rows: usage.byOperation },
+                { title: 'ADMIN_AI.MODELS', rows: usage.byModel },
+            ],
+        };
+    });
 
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(() => {

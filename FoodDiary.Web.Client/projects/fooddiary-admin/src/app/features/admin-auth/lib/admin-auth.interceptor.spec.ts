@@ -1,8 +1,10 @@
-import { HttpClient, HttpStatusCode, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
+import { HttpClient, type HttpInterceptorFn, HttpStatusCode, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -15,13 +17,15 @@ let requests: HttpTestingController;
 let router: { url: string; navigate: ReturnType<typeof vi.fn> };
 let auth: { getSessionId: ReturnType<typeof vi.fn>; invalidateSession: ReturnType<typeof vi.fn> };
 
-function configureTransport(platform = 'browser'): void {
+function configureTransport(platform = 'browser', options: { documentRef?: Document; downstream?: HttpInterceptorFn } = {}): void {
     auth = { getSessionId: vi.fn(() => 'admin-session'), invalidateSession: vi.fn() };
     router = { url: '/users?page=2', navigate: vi.fn().mockResolvedValue(true) };
+    const interceptors = options.downstream === undefined ? [adminAuthInterceptor] : [adminAuthInterceptor, options.downstream];
     TestBed.configureTestingModule({
         providers: [
-            provideHttpClient(withInterceptors([adminAuthInterceptor])),
+            provideHttpClient(withInterceptors(interceptors)),
             provideHttpClientTesting(),
+            { provide: DOCUMENT, useValue: options.documentRef ?? document },
             { provide: PLATFORM_ID, useValue: platform },
             { provide: AdminAuthService, useValue: auth },
             { provide: Router, useValue: router },
@@ -36,6 +40,35 @@ beforeEach(() => {
 });
 afterEach(() => {
     requests.verify();
+});
+
+describe('administrative transport dependencies', () => {
+    it('continues to recover the local session when its document has no browser storage', () => {
+        TestBed.resetTestingModule();
+        const detachedDocument = document.implementation.createHTMLDocument();
+        expect(detachedDocument.defaultView).toBeNull();
+        configureTransport('browser', { documentRef: detachedDocument });
+        const errors = vi.fn();
+        const url = `${root}/admin/users`;
+        http.get(url).subscribe({ error: errors });
+        requests.expectOne(url).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(errors).toHaveBeenCalledOnce();
+        expect(auth.invalidateSession).toHaveBeenCalledOnce();
+        expect(router.navigate).toHaveBeenCalledExactlyOnceWith(['/sign-in'], { queryParams: { returnUrl: router.url } });
+    });
+
+    it('reports a downstream transport failure without clearing the administrative session', () => {
+        TestBed.resetTestingModule();
+        const failure = new Error('Request preparation failed');
+        configureTransport('browser', { downstream: () => throwError(() => failure) });
+        const errors = vi.fn();
+        http.get(`${root}/admin/users`).subscribe({ error: errors });
+
+        expect(errors).toHaveBeenCalledExactlyOnceWith(failure);
+        expect(auth.invalidateSession).not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalled();
+    });
 });
 
 describe('administrative cookie transport', () => {

@@ -78,3 +78,25 @@ it('does not promote an opaque ID to a title or expose expired display content',
     expect(element.querySelector('h2')?.textContent).toContain('ADMIN_BUGS.UNTITLED');
     expect(element.textContent).not.toContain('Legacy investigation');
 });
+
+it('keeps a review link without a numbered pull request visible without adding a number', () => {
+    TestBed.configureTestingModule({ imports: [AdminBugReportCardComponent], providers: [provideRouter([]), provideTranslateTesting()] });
+    const fixture = TestBed.createComponent(AdminBugReportCardComponent);
+    fixture.componentRef.setInput('report', {
+        id: 'external-review',
+        source: 'logs',
+        sourceMessageId: null,
+        receivedAtUtc: '2026-10-12T05:00:00Z',
+        subject: 'Review awaiting triage',
+        status: 'draft_ready',
+        attempt: 1,
+        contentExpired: false,
+    });
+    const review = 'https://review.example.test/changes/proposed';
+    fixture.componentRef.setInput('pullRequestUrl', review);
+    fixture.detectChanges();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector('a[target="_blank"]');
+    expect(link?.getAttribute('href')).toBe(review);
+    expect(link?.textContent.trim()).toBe('ADMIN_BUGS.OPEN_PR');
+});

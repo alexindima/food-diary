@@ -32,6 +32,14 @@ type SignInContext = {
     navigateByUrl: MockInstance<Router['navigateByUrl']>;
 };
 
+async function initializeLanguageAsync(locale: string | null): Promise<void> {
+    if (locale !== null) {
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation(locale, {});
+        await firstValueFrom(translate.use(locale));
+    }
+}
+
 async function createPageAsync({
     confirm = '1',
     returnUrl = RETURN_URL,
@@ -47,7 +55,7 @@ async function createPageAsync({
     restoredAccount?: string | null;
     unavailable?: boolean;
     googleUnavailable?: boolean;
-    locale?: string;
+    locale?: string | null;
 } = {}): Promise<SignInContext> {
     const auth = {
         restoreSessionAsync: vi.fn<AdminAuthService['restoreSessionAsync']>().mockResolvedValue(undefined),
@@ -87,9 +95,7 @@ async function createPageAsync({
         })
         .compileComponents();
 
-    const translate = TestBed.inject(TranslateService);
-    translate.setTranslation(locale, {});
-    await firstValueFrom(translate.use(locale));
+    await initializeLanguageAsync(locale);
 
     const router = TestBed.inject(Router);
     const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
@@ -125,6 +131,23 @@ async function submitAsync(fixture: SignInFixture): Promise<void> {
 
 afterEach(() => {
     environment.googleClientId = originalGoogleClientId;
+});
+
+describe('Admin sign-in navigation defaults', () => {
+    it('uses English for Google before a language is active', async () => {
+        environment.googleClientId = 'test-google-client';
+        const { fixture, renderGoogle } = await createPageAsync({ locale: null });
+        const target = element(fixture, '.admin-sign-in__google');
+        expect(renderGoogle).toHaveBeenCalledExactlyOnceWith(target, 'test-google-client', 'en', expect.any(Function));
+    });
+
+    it.each(['/sign-in;step=again', '/unauthorized', '/users?returnUrl=%2Fusers'])(
+        'returns to the admin root instead of creating another sign-in loop through %s',
+        async returnUrl => {
+            const { navigateByUrl } = await createPageAsync({ confirm: '', restoredAccount: ACCOUNT, returnUrl });
+            expect(navigateByUrl).toHaveBeenCalledExactlyOnceWith('/', { replaceUrl: true });
+        },
+    );
 });
 
 describe('Admin sign-in confirmation', () => {

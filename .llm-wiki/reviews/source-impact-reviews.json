@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "b58d0e53114b4cc0df2e7c0f400a17b302294c7a0e5288b2954b275827f5916a",
-          "reviewReason": "The Admin 98/98/97/97 thresholds passed on Node 22 across 202 unchanged source paths. Project discovery, entry points and coverage selection remain as documented."
+          "sha256": "71e5c062a35560463bd4fdf139a3a051328450c1386943e27f3ec6c0304f3d4e",
+          "reviewReason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build."
         }
       ],
-      "reason": "The Admin 98/98/97/97 thresholds passed on Node 22 across 202 unchanged source paths. Project discovery, entry points and coverage selection remain as documented.",
-      "baseRef": "652f5ad7a",
-      "gitHead": "652f5ad7a3c14f9400184908cec254e6ef80ffe2",
-      "reviewedAtUtc": "2026-11-19T19:20:40.6042422Z"
+      "reason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build.",
+      "baseRef": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T20:57:28.5841319Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "b58d0e53114b4cc0df2e7c0f400a17b302294c7a0e5288b2954b275827f5916a",
-          "reviewReason": "Verified the new thresholds on the existing Angular Admin test target and the current Angular project inventory."
+          "sha256": "71e5c062a35560463bd4fdf139a3a051328450c1386943e27f3ec6c0304f3d4e",
+          "reviewReason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build."
         }
       ],
-      "reason": "Verified the new thresholds on the existing Angular Admin test target and the current Angular project inventory.",
-      "baseRef": "652f5ad7a",
-      "gitHead": "652f5ad7a3c14f9400184908cec254e6ef80ffe2",
-      "reviewedAtUtc": "2026-11-19T19:20:40.8948073Z"
+      "reason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build.",
+      "baseRef": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T20:57:28.7404069Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -1714,14 +1714,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "2b7f100fc82cd05157d54d99fb8d7c03566bcd15d065e8d489ef58f32cc7bf69",
-          "reviewReason": "Verified the documented Admin floors against the complete 738-test coverage run and the Admin verification commands against the successful build and 16 Chromium scenarios."
+          "sha256": "4bdbe4f1055db4f65383d8c13e88ce5e885509e1ac34abcf9b81ef7e151500a2",
+          "reviewReason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build."
         }
       ],
-      "reason": "Verified the documented Admin floors against the complete 738-test coverage run and the Admin verification commands against the successful build and 16 Chromium scenarios.",
-      "baseRef": "652f5ad7a",
-      "gitHead": "652f5ad7a3c14f9400184908cec254e6ef80ffe2",
-      "reviewedAtUtc": "2026-11-19T19:20:41.2363646Z"
+      "reason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build.",
+      "baseRef": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T20:57:28.9920361Z"
     },
     {
       "pageId": "workflow-trace-feature",

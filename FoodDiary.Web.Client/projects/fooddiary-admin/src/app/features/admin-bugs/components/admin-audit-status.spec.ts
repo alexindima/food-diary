@@ -43,6 +43,13 @@ describe('Production audit status', () => {
         expect(fixture.componentInstance['accent']()).toBe('default');
     });
 
+    it.each(['awaiting_review', 'constructor'])('renders a neutral status for an unrecognized audit value %s', status => {
+        const fixture = TestBed.createComponent(AdminAuditStatusComponent);
+        fixture.componentRef.setInput('audit', { ...audit, status });
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('ADMIN_BUGS.AUDIT_UNKNOWN');
+    });
+
     it('makes an overdue clean result visibly stale and hides expired summaries', () => {
         const fixture = TestBed.createComponent(AdminAuditStatusComponent);
         fixture.componentRef.setInput('audit', { ...audit, isStale: true, contentExpired: true, summary: 'Expired content' });

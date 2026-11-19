@@ -65,10 +65,9 @@ export class AdminDailyAdvicesComponent {
         URL.revokeObjectURL(url);
     }
 
-    protected async importFileAsync(event: Event): Promise<void> {
-        const input = event.target instanceof HTMLInputElement ? event.target : null;
-        const file = input?.files?.[0];
-        if (input === null || file === undefined) {
+    protected async importFileAsync(input: HTMLInputElement): Promise<void> {
+        const file = input.files?.[0];
+        if (file === undefined) {
             return;
         }
         input.value = '';

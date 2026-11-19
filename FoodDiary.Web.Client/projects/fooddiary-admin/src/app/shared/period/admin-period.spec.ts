@@ -35,5 +35,6 @@ describe('Admin calendar period', () => {
     });
     it('does not impose a date filter for all-time records', () => {
         expect(adminPeriod(convertToParamMap({ period: 'all' }), 'all', now)).toEqual({});
+        expect(adminUtcPeriod({})).toEqual({});
     });
 });

@@ -35,7 +35,7 @@
 
             @if (readFailed()) {
                 <p class="fd-ui-error-text" role="alert">{{ 'ADMIN_MAIL_INBOX.READ_ERROR' | translate }}</p>
-                <fd-ui-button type="button" [loading]="markingRead()" (click)="retryRead()">{{
+                <fd-ui-button type="button" [loading]="markingRead()" (click)="markMessageRead(message.id)">{{
                     'ADMIN_COMMON.RETRY' | translate
                 }}</fd-ui-button>
             }
@@ -138,7 +138,9 @@
             @if (selectedBodyMode() === 'preview' && content().previewHtml) {
                 <article class="mail-body mail-body--formatted" dir="auto" [innerHTML]="content().previewHtml"></article>
             } @else if (selectedBodyMode() === 'html' || selectedBodyMode() === 'raw') {
-                <pre class="mail-body mail-body--source">{{ selectedBody() || ('ADMIN_MAIL_INBOX.NO_BODY' | translate) }}</pre>
+                <pre class="mail-body mail-body--source">{{
+                    (selectedBodyMode() === 'html' ? message.htmlBody : message.rawMime) || ('ADMIN_MAIL_INBOX.NO_BODY' | translate)
+                }}</pre>
             } @else {
                 <article
                     class="mail-body mail-body--text"

@@ -21,6 +21,16 @@ describe('admin SDK required fields', () => {
 });
 
 describe('admin SDK optional values', () => {
+    it('creates an own field for a nullable or defined key omitted by the SDK', () => {
+        const wire: { title?: string | null } = {};
+        const nullable = sdkNullableFields(wire, ['title']);
+        const defined = sdkDefinedFields(wire, ['title']);
+
+        expect(nullable).toStrictEqual({ title: null });
+        expect(defined).toStrictEqual({ title: undefined });
+        expect(wire).toStrictEqual({});
+    });
+
     it('normalizes missing values without overwriting supplied zero and false values or mutating the wire object', () => {
         const wire = Object.freeze({ omitted: undefined, explicitNull: null, views: 0, isEnabled: false, label: 'Sample' });
         const keys = ['omitted', 'explicitNull', 'views', 'isEnabled'] as const;

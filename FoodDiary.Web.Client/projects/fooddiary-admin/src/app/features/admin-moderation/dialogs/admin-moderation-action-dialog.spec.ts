@@ -90,6 +90,27 @@ function renderModerationAction(action: 'review' | 'dismiss'): { host: HTMLEleme
 }
 
 describe('Admin moderation confirmation controls', () => {
+    it('submits a trimmed note entered in the rendered textarea', () => {
+        const { host, close } = renderModerationAction('review');
+        const note = host.querySelector('textarea');
+        if (note === null) {
+            throw new Error('Expected the moderator note field.');
+        }
+        note.value = '  Checked against the recipe  ';
+        note.dispatchEvent(new Event('input', { bubbles: true }));
+        const confirm = [...host.querySelectorAll<HTMLButtonElement>('.dialog-actions button')].at(-1);
+        if (confirm === undefined) {
+            throw new Error('Expected the review confirmation.');
+        }
+        confirm.click();
+        const http = TestBed.inject(HttpTestingController);
+        const request = http.expectOne(current => current.url.endsWith('/admin/moderation/owned-report/review'));
+        expect(request.request.body).toEqual({ adminNote: 'Checked against the recipe' });
+        request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        expect(close).toHaveBeenCalledExactlyOnceWith({ confirmed: true });
+        http.verify();
+    });
+
     it.each(['review', 'dismiss'] as const)('performs %s through the real endpoint with no optional note', action => {
         const { host, close } = renderModerationAction(action);
         const confirm = [...host.querySelectorAll<HTMLButtonElement>('.dialog-actions button')].at(-1);

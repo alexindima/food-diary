@@ -5,8 +5,9 @@ import { firstValueFrom, retry } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { COLLECTION_PAGE_SIZE } from '../../../shared/api/load-paged-collection';
+import { adminId } from '../../../shared/models/semantics/admin-meaning';
+import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import type { AdminLessonsImportRequest } from '../models/admin-lesson.data';
-import { AdminLessonsService } from './admin-lessons.service';
 
 const draft = {
     title: 'Plan a balanced meal',
@@ -21,13 +22,13 @@ const draft = {
 };
 const draftResponse = { ...draft, id: 'lesson-1', createdOnUtc: '2026-10-01T12:00:00Z' };
 
-describe('AdminLessonsService requests', () => {
-    let lessons: AdminLessonsService;
+describe('Admin lesson API requests', () => {
+    let lessons: AdminLessonsFacade;
     let http: HttpTestingController;
 
     beforeEach(() => {
         TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
-        lessons = TestBed.inject(AdminLessonsService);
+        lessons = TestBed.inject(AdminLessonsFacade);
         http = TestBed.inject(HttpTestingController);
     });
 
@@ -72,5 +73,20 @@ describe('AdminLessonsService requests', () => {
         retried.flush({ importedCount: 1, lessons: [draftResponse] });
 
         expect(await imported).toEqual({ importedCount: 1, lessons: [{ ...draftResponse, modifiedOnUtc: null }] });
+    });
+
+    it('creates a hidden lesson and targets that lesson on delete', async () => {
+        const created = firstValueFrom(lessons.create(draft));
+        const create = http.expectOne(request => request.method === 'POST' && request.url.endsWith('/admin/lessons'));
+        expect(create.request.body).toEqual(draft);
+        create.flush(draftResponse);
+        expect(await created).toEqual({ ...draftResponse, modifiedOnUtc: null });
+
+        const deleted = firstValueFrom(lessons.delete(adminId<'lesson'>(draftResponse.id)));
+        const deletion = http.expectOne(
+            request => request.method === 'DELETE' && request.url.endsWith(`/admin/lessons/${draftResponse.id}`),
+        );
+        deletion.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await deleted;
     });
 });

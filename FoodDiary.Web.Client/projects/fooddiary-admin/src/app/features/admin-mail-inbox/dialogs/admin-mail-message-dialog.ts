@@ -65,22 +65,6 @@ export class AdminMailMessageDialogComponent {
             toRecipientsLabel: this.formatRecipients(message.toRecipients),
         };
     });
-    protected readonly selectedBody = computed(() => {
-        const message = this.selectedMessage();
-        if (message === null) {
-            return '';
-        }
-
-        if (this.selectedBodyMode() === 'html') {
-            return message.htmlBody ?? '';
-        }
-
-        if (this.selectedBodyMode() === 'raw') {
-            return message.rawMime ?? '';
-        }
-
-        return this.content().textBody;
-    });
     public constructor() {
         this.loadMessage();
     }
@@ -88,12 +72,6 @@ export class AdminMailMessageDialogComponent {
         this.selectedBodyMode.set(mode);
     }
 
-    protected retryRead(): void {
-        const message = this.selectedMessage();
-        if (message !== null) {
-            this.markMessageRead(message.id);
-        }
-    }
     private loadMessage(): void {
         this.isDetailsLoading.set(true);
         this.selectedBodyMode.set('preview');
@@ -124,7 +102,7 @@ export class AdminMailMessageDialogComponent {
         return category === 'dmarc-report' ? 'DMARC' : 'ADMIN_MAIL_INBOX.MESSAGE_MAIL';
     }
 
-    private markMessageRead(id: AdminId<'mail-inbox-message'>): void {
+    protected markMessageRead(id: AdminId<'mail-inbox-message'>): void {
         if (this.markingRead()) {
             return;
         }

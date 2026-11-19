@@ -10,7 +10,7 @@
 } @else if (failed()) {
     <p role="alert">{{ 'ADMIN_COMMON.LOAD_ERROR' | translate }}</p>
     <fd-ui-button (click)="loadUsage()">{{ 'ADMIN_COMMON.RETRY' | translate }}</fd-ui-button>
-} @else if (usage(); as data) {
+} @else if (report(); as data) {
     <div class="admin-ai-usage fd-grid fd-gap-md">
         <fd-ui-card
             ><span>{{ 'ADMIN_AI.TOTAL' | translate }}</span
@@ -28,7 +28,7 @@
     <fd-ui-card>
         <h2>{{ 'ADMIN_AI.DAILY' | translate }}</h2>
         <fd-ui-line-chart
-            [points]="points()"
+            [points]="data.points"
             [minValue]="0"
             [showAxisLabels]="true"
             [showGrid]="true"
@@ -36,7 +36,7 @@
         />
     </fd-ui-card>
     <div class="fd-grid fd-gap-md">
-        @for (group of breakdowns(); track group.title) {
+        @for (group of data.breakdowns; track group.title) {
             <fd-ui-card
                 ><h2>{{ group.title | translate }}</h2>
                 <div class="table-scroll" role="region" tabindex="0" [attr.aria-label]="group.title | translate">

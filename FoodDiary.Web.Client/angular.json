@@ -458,10 +458,10 @@
                             ],
                             "runnerConfig": "vitest.config.mjs",
                             "coverageThresholds": {
-                                "statements": 98,
-                                "lines": 98,
-                                "branches": 97,
-                                "functions": 97
+                                "statements": 100,
+                                "lines": 100,
+                                "branches": 99,
+                                "functions": 100
                             }
                         }
                     }

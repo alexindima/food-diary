@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -24,12 +24,22 @@ beforeEach(async () => {
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', { ADMIN_DAILY_ADVICES: { SUCCESS: 'Imported {{imported}}, skipped {{skipped}}' } });
     await firstValueFrom(translate.use('en'));
+    http = TestBed.inject(HttpTestingController);
+    renderGroups([]);
+});
+
+type AdviceWireGroup = { id: string; ru?: string; en?: string; weight: number; tag?: string };
+
+function renderGroups(groups: AdviceWireGroup[]): void {
     fixture = TestBed.createComponent(AdminDailyAdvicesComponent);
     root = fixture.nativeElement as HTMLElement;
-    http = TestBed.inject(HttpTestingController);
-    http.expectOne(request => request.method === 'GET' && request.url === `${baseUrl}/groups`).flush([]);
+    expectGroupReload(groups);
     fixture.detectChanges();
-});
+}
+
+function expectGroupReload(groups: AdviceWireGroup[]): void {
+    http.expectOne(request => request.method === 'GET' && request.url === `${baseUrl}/groups`).flush(groups);
+}
 
 afterEach(() => {
     vi.restoreAllMocks();
@@ -128,3 +138,87 @@ it('ignores an empty selection, rejects an oversized file, and recovers with a l
     expect(root.querySelector('[lang="en"]')?.textContent).toBe('Build a routine');
     expect(root.querySelector('[lang="ru"]')?.textContent).toContain('ADMIN_DAILY_ADVICES.MISSING');
 });
+
+it.each(['ru', 'en'] as const)('repairs missing %s, rejects fractional weight and submits through the native form', async missing => {
+    const id = '11111111-1111-4111-8111-111111111111';
+    const existing = { id, weight: 1, ...(missing === 'ru' ? { en: 'Older English' } : { ru: 'Предыдущий совет' }) };
+    fixture.destroy();
+    renderGroups([existing]);
+    expect(root.querySelector(`[lang="${missing}"]`)?.textContent).toContain('ADMIN_DAILY_ADVICES.MISSING');
+    button('EDIT').click();
+    fixture.detectChanges();
+    const [ru, en] = root.querySelectorAll<HTMLTextAreaElement>('form textarea');
+    const tag = root.querySelector<HTMLInputElement>('form input[type="text"]');
+    const weight = root.querySelector<HTMLInputElement>('form input[type="number"]');
+    expect(missing === 'ru' ? ru.value : en.value).toBe('');
+    fillAdviceControl(ru, ' Новый совет ');
+    fillAdviceControl(en, ' Updated advice ');
+    fillAdviceControl(tag, ' nutrition ');
+    fillAdviceControl(weight, '1.5');
+    fixture.detectChanges();
+    expect(button('SAVE').disabled).toBe(true);
+    http.expectNone({ method: 'PUT' });
+
+    fillAdviceControl(weight, '2');
+    fixture.detectChanges();
+    const valid = { ru: 'Новый совет', en: 'Updated advice', tag: 'nutrition', weight: 2 };
+    button('SAVE').click();
+    await fixture.whenStable();
+    const save = http.expectOne({ method: 'PUT', url: `${baseUrl}/groups/${id}` });
+    expect(save.request.body).toEqual(valid);
+    save.flush({ id, ...valid });
+    await fixture.whenStable();
+    expectGroupReload([{ id, ...valid }]);
+    fixture.detectChanges();
+    expect(root.querySelector('[lang="en"]')?.textContent).toBe(valid.en);
+    expect(root.textContent).toContain(valid.tag);
+});
+
+it('removes a confirmed pair only after the delete request succeeds and refreshes the page', () => {
+    const id = '22222222-2222-4222-8222-222222222222';
+    fixture.destroy();
+    renderGroups([{ id, en: 'Advice to delete', ru: 'Удаляемый совет', weight: 1 }]);
+    button('DELETE').click();
+    fixture.detectChanges();
+    expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_DAILY_ADVICES.DELETE_CONFIRM');
+    http.expectNone({ method: 'DELETE' });
+
+    button('DELETE_BOTH').click();
+    const removal = http.expectOne({ method: 'DELETE', url: `${baseUrl}/groups/${id}` });
+    expect(root.textContent).toContain('Advice to delete');
+    removal.flush(null, { status: 204, statusText: 'No Content' });
+    expectGroupReload([]);
+    fixture.detectChanges();
+
+    expect(root.textContent).not.toContain('Advice to delete');
+    expect(root.textContent).toContain('ADMIN_DAILY_ADVICES.EMPTY');
+});
+
+it('does not send a daily advice import after the document leaves while reading the file', async () => {
+    const read = new Subject<string>();
+    const contents = firstValueFrom(read);
+    const file = new File([], 'advices.json', { type: 'application/json' });
+    const text = vi.fn<() => Promise<string>>().mockReturnValue(contents);
+    Object.defineProperty(file, 'text', { value: text });
+    const input = root.querySelector<HTMLInputElement>('input#advice-import');
+    if (input === null) {
+        throw new Error('Missing daily advice file chooser');
+    }
+    Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(text).toHaveBeenCalledOnce();
+    fixture.destroy();
+
+    read.next(JSON.stringify(DAILY_ADVICE_IMPORT_EXAMPLE));
+    await contents;
+
+    http.expectNone({ method: 'POST' });
+});
+
+function fillAdviceControl(control: HTMLInputElement | HTMLTextAreaElement | null, value: string): void {
+    if (control === null) {
+        throw new Error('Missing daily advice editor control');
+    }
+    control.value = value;
+    control.dispatchEvent(new Event('input', { bubbles: true }));
+}

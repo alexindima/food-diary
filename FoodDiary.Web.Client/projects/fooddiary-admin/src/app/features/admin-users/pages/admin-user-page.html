@@ -1,9 +1,10 @@
 <a routerLink="/users" queryParamsHandling="preserve">{{ 'ADMIN_COMMON.BACK' | translate }}</a>
 @if (failed()) {
     <fd-admin-load-error (retry)="reload()" />
-} @else if (user(); as account) {
+} @else if (details(); as detail) {
+    @let account = detail.account;
     <header class="admin-user-details__header">
-        @if (avatarUrl(); as imageUrl) {
+        @if (detail.avatarUrl; as imageUrl) {
             <img
                 class="admin-user-details__avatar"
                 alt=""
@@ -12,7 +13,7 @@
                 (error)="onAvatarError(account.id, imageUrl)"
             />
         } @else {
-            <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ initials() }}</div>
+            <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ detail.initials }}</div>
         }
         <div class="admin-user-details__identity">
             <h1 class="fd-page-title">{{ account.email || account.username || account.id }}</h1>
@@ -64,7 +65,7 @@
     }
     <fd-ui-card>
         <fd-admin-user-details-body
-            [sections]="sections()"
+            [sections]="detail.sections"
             [loginEvents]="loginEvents()"
             [roleAuditEvents]="roleAuditEvents()"
             [activityLoading]="activityLoading()"

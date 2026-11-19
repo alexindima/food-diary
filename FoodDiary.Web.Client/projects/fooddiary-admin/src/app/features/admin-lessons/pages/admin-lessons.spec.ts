@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -211,6 +211,70 @@ describe('AdminLessonsComponent refresh ordering', () => {
     });
 });
 
+it('refreshes the rendered lesson after its edit dialog reports a completed save', async () => {
+    const result = new Subject<boolean>();
+    const revised = { ...LESSON, title: 'Revised lesson' };
+    const getAll = vi
+        .fn<AdminLessonsFacade['getAll']>()
+        .mockReturnValueOnce(of([LESSON]))
+        .mockReturnValueOnce(of([revised]));
+    await TestBed.configureTestingModule({
+        imports: [AdminLessonsComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            { provide: AdminLessonsFacade, useValue: { getAll } },
+            {
+                provide: FdUiDialogService,
+                useValue: { open: (): { afterClosed: () => Observable<boolean> } => ({ afterClosed: (): Observable<boolean> => result }) },
+            },
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminLessonsComponent);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const edit = [...host.querySelectorAll<HTMLButtonElement>('tbody button')].find(button => button.textContent.trim() === 'Edit');
+    expect(edit).toBeDefined();
+    edit?.click();
+    expect(getAll).toHaveBeenCalledOnce();
+
+    result.next(true);
+    result.complete();
+    fixture.detectChanges();
+
+    expect(getAll).toHaveBeenCalledTimes(2);
+    expect(host.querySelector('tbody')?.textContent).toContain(revised.title);
+    expect(host.querySelector('tbody')?.textContent).not.toContain(LESSON.title);
+});
+
+it('shows a lesson list error and loads the available rows after Retry', async () => {
+    const getAll = vi
+        .fn<AdminLessonsFacade['getAll']>()
+        .mockReturnValueOnce(throwError(() => new Error('offline')))
+        .mockReturnValue(of([LESSON]));
+    await TestBed.configureTestingModule({
+        imports: [AdminLessonsComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            { provide: AdminLessonsFacade, useValue: { getAll } },
+            { provide: FdUiDialogService, useValue: {} },
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminLessonsComponent);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+    expect(retry).not.toBeNull();
+    expect(host.querySelector('tbody')).toBeNull();
+
+    retry?.click();
+    fixture.detectChanges();
+
+    expect(host.querySelector('fd-admin-load-error')).toBeNull();
+    expect(host.querySelector('tbody')?.textContent).toContain(LESSON.title);
+});
+
 const importPayload: AdminLessonsImportRequest = {
     version: 1,
     lessons: [
@@ -267,6 +331,7 @@ describe('AdminLessonsComponent JSON import', () => {
     it.each([
         { contents: 'not JSON', message: 'Import file is not valid JSON.' },
         { contents: '{"version":2,"lessons":[]}', message: 'Import file has an invalid lesson format.' },
+        { contents: '{"version":1,"lessons":[]}', message: 'Import file has an invalid lesson format.' },
         { contents: '{"version":1,"lessons":[null]}', message: 'Import file has an invalid lesson format.' },
         { contents: '{"version":1,"lessons":[{"title":"Missing required fields"}]}', message: 'Import file has an invalid lesson format.' },
         {
@@ -363,12 +428,22 @@ describe('AdminLessonsComponent filtered JSON export', () => {
         }).compileComponents();
         const harness = await RouterTestingHarness.create('/lessons?locale=en&page=2');
         const root = harness.routeNativeElement;
-        const exportButton = Array.from(root?.querySelectorAll('button') ?? []).find(button => button.textContent.trim() === 'Export JSON');
+        if (root === null) {
+            throw new Error('Missing lessons route');
+        }
+        const exportButton = Array.from(root.querySelectorAll('button')).find(button => button.textContent.trim() === 'Export JSON');
         if (exportButton === undefined) {
             throw new Error('Missing lesson export button');
         }
-        expect(root?.querySelector('tbody tr')?.textContent).toContain('English lesson 21');
-        expect(root?.querySelectorAll('tbody tr')).toHaveLength(1);
+        expect(root.querySelector('tbody tr')?.textContent).toContain('English lesson 21');
+        expect(root.querySelectorAll('tbody tr')).toHaveLength(1);
+        const previous = root.querySelector<HTMLButtonElement>('fd-ui-pagination button:first-child');
+        expect(previous).not.toBeNull();
+        previous?.click();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(root.querySelector('tbody tr')?.textContent).toContain('English lesson 1');
+        expect(TestBed.inject(Router).url).toBe('/lessons?locale=en&page=1');
 
         const link = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
         const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:lesson-export');

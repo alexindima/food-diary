@@ -27,13 +27,14 @@
                 <p class="fd-ui-body-sm">{{ `ADMIN_PROMPTS.DESCRIPTION_${key()}` | translate }}</p>
             </div>
             <fd-ui-select
+                #localeSelect
                 [label]="'ADMIN_PROMPTS.LOCALE' | translate"
                 [value]="locale()"
                 [options]="[
                     { value: 'en', label: 'English' },
                     { value: 'ru', label: 'Русский' },
                 ]"
-                (valueChange)="selectScenario(key(), $event?.toString() || 'en')"
+                (valueChange)="selectScenario(key(), $event?.toString() || 'en', localeSelect)"
             />
         </div>
         <p class="fd-ui-body-sm">

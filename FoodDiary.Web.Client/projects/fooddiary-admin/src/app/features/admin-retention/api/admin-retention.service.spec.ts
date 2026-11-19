@@ -17,7 +17,8 @@ it('omits absent dates rather than sending undefined for all-time cohorts', () =
     expect(request.request.params.has('cohortTo')).toBe(false);
     expect(request.request.params.get('from')).toBe('2026-09-01');
     const date = '2026-09-18T00:00:00Z';
-    const cohort = { date, registered: 1, day1: 0 };
+    const measured = { date: '2026-09-17T00:00:00Z', registered: 1, day1: 0 };
+    const newest = { date, registered: 1 };
     const activityByDay = [{ date, activeUsers: 0, mealEntries: 0 }];
     request.flush({
         fromUtc: '2026-09-01T00:00:00Z',
@@ -27,13 +28,16 @@ it('omits absent dates rather than sending undefined for all-time cohorts', () =
         cohortToUtc: '2026-09-19T00:00:00Z',
         mealEntriesInPeriod: 0,
         activeUsersInPeriod: 0,
-        cohorts: [cohort],
+        cohorts: [measured, newest],
         activityByDay,
     });
     expect(receive).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({
             activityByDay,
-            cohorts: [{ ...cohort, activatedWithinSevenDays: null, day7: null, day30: null }],
+            cohorts: [
+                { ...measured, activatedWithinSevenDays: null, day7: null, day30: null },
+                { ...newest, activatedWithinSevenDays: null, day1: null, day7: null, day30: null },
+            ],
         }),
     );
     http.verify();

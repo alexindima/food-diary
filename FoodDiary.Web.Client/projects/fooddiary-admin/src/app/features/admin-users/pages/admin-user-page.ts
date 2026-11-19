@@ -61,30 +61,25 @@ export class AdminUserPageComponent {
     private readonly passwordChangeLabel = toSignal(this.translate.stream('ADMIN_USER.PASSWORD_CHANGE_REQUIRED'), { initialValue: '' });
     private readonly lastActiveLabel = toSignal(this.translate.stream('ADMIN_USER.LAST_ACTIVE'), { initialValue: '' });
     private readonly unknownActivityLabel = toSignal(this.translate.stream('ADMIN_USER.ACTIVITY_UNKNOWN'), { initialValue: '' });
-    protected readonly sections = computed(() => {
-        const user = this.user();
-        return user === null
-            ? []
-            : buildAdminUserSections(
-                  user,
-                  String(this.passwordChangeLabel()),
-                  String(this.lastActiveLabel()),
-                  String(this.unknownActivityLabel()),
-              );
-    });
-    protected readonly initials = computed(() => {
-        const user = this.user();
-        return user === null ? '?' : this.buildInitials(user);
-    });
     private readonly avatarLoadFailure = signal<{ userId: AdminUser['id']; url: string } | null>(null);
-    protected readonly avatarUrl = computed(() => {
-        const user = this.user();
-        if (user === null) {
+    protected readonly details = computed(() => {
+        const account = this.user();
+        if (account === null) {
             return null;
         }
-        const url = resolveAdminAvatarUrl(user.profileImage, this.document.baseURI);
+        const url = resolveAdminAvatarUrl(account.profileImage, this.document.baseURI);
         const failure = this.avatarLoadFailure();
-        return failure?.userId === user.id && failure.url === url ? null : url;
+        return {
+            account,
+            avatarUrl: failure?.userId === account.id && failure.url === url ? null : url,
+            initials: this.buildInitials(account),
+            sections: buildAdminUserSections(
+                account,
+                String(this.passwordChangeLabel()),
+                String(this.lastActiveLabel()),
+                String(this.unknownActivityLabel()),
+            ),
+        };
     });
     protected readonly canImpersonate = computed(() => {
         const user = this.user();
@@ -131,7 +126,8 @@ export class AdminUserPageComponent {
     }
 
     protected onAvatarError(userId: AdminUser['id'], url: string): void {
-        if (this.user()?.id === userId && this.avatarUrl() === url) {
+        const details = this.details();
+        if (details?.account.id === userId && details.avatarUrl === url) {
             this.avatarLoadFailure.set({ userId, url });
         }
     }

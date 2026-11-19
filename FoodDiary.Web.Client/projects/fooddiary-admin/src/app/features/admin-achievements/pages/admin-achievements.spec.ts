@@ -1,6 +1,10 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { of, Subject, throwError } from 'rxjs';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -289,4 +293,88 @@ it('creates a new bilingual achievement from the rendered draft and displays the
     expect(root.querySelector('.definition-card strong')?.textContent).toBe(created.titleEn);
     expect(root.querySelector<HTMLInputElement>('form input')?.value).toBe('');
     expect(save.disabled).toBe(true);
+});
+
+it('keeps the catalog filter when paging and updates the selected definition through its versioned API', async () => {
+    const definitions = Array.from({ length: 21 }, (_, index) => ({
+        ...DEFINITION,
+        id: `definition-${index + 1}`,
+        key: `meals_${index + 1}`,
+        titleEn: `Achievement ${index + 1}`,
+    }));
+    const inactive = { ...DEFINITION, id: 'inactive-definition', titleEn: 'Inactive achievement', isActive: false };
+    TestBed.configureTestingModule({
+        providers: [
+            provideRouter([{ path: 'achievements', component: AdminAchievementsComponent }]),
+            provideTranslateTesting(),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+        ],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    const harness = await RouterTestingHarness.create('/achievements?state=active');
+    const refresh = (): void => {
+        http.expectOne(request => request.method === 'GET' && request.url.endsWith('/admin/achievement-definitions')).flush([
+            ...definitions,
+            inactive,
+        ]);
+        harness.detectChanges();
+    };
+    refresh();
+    const root = harness.routeNativeElement;
+    const next = root?.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
+    expect(next).not.toBeNull();
+    next?.click();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(TestBed.inject(Router).url).toBe('/achievements?state=active&page=2');
+    if (root === null) {
+        throw new Error('Expected the achievements route');
+    }
+    expect(root.querySelectorAll('.definition-card')).toHaveLength(1);
+    const selected = root.querySelector<HTMLButtonElement>('.definition-card');
+    expect(selected?.textContent).toContain('Achievement 21');
+    selected?.click();
+    harness.detectChanges();
+    writeAchievementField(root, 'TITLE_EN', 'Revised achievement');
+    harness.detectChanges();
+    root.querySelector<HTMLButtonElement>('form button[type="submit"]')?.click();
+
+    const request = http.expectOne(item => item.method === 'PUT' && item.url.endsWith('/admin/achievement-definitions/definition-21'));
+    expect(request.request.body).toMatchObject({ titleEn: 'Revised achievement', version: DEFINITION.version });
+    expect(request.request.body).not.toHaveProperty('key');
+    const previous = definitions.at(-1);
+    if (previous === undefined) {
+        throw new Error('Missing the achievement on the second page');
+    }
+    const updated = { ...previous, titleEn: 'Revised achievement', version: DEFINITION.version + 1 };
+    definitions[definitions.length - 1] = updated;
+    request.flush(updated);
+    refresh();
+    expect(root.querySelector('.definition-card')?.textContent).toContain(updated.titleEn);
+    http.verify();
+});
+
+it('keeps the metric readable when a translation entry is an object rather than a label', async () => {
+    TestBed.configureTestingModule({
+        imports: [AdminAchievementsComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            {
+                provide: AdminAchievementsService,
+                useValue: { getAll: vi.fn<AdminAchievementsService['getAll']>().mockReturnValue(of([])) },
+            },
+        ],
+    });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { ADMIN_ACHIEVEMENTS: { METRICS: { LONGEST_STREAK: { label: 'Unexpected nested label' } } } });
+    await firstValueFrom(translate.use('en'));
+    const fixture = TestBed.createComponent(AdminAchievementsComponent);
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('form fd-ui-select')?.textContent).toContain(
+        'ADMIN_ACHIEVEMENTS.METRICS.LONGEST_STREAK',
+    );
 });
