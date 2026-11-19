@@ -60040,8 +60040,9 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
       "line": 13,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandlerTests.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramTrialEligibilityTests.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
