@@ -185,10 +185,10 @@ def running_containers():
     return [(service, identifier) for service, ids in selected.items() for identifier in ids]
 
 
-def collect_container_observations(observe):
+def collect_container_observations(observe, containers=None):
     totals = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        for service, values in executor.map(observe, running_containers()):
+        for service, values in executor.map(observe, running_containers() if containers is None else containers):
             previous = totals.setdefault(service, {})
             for key, value in values.items():
                 if key == "started_timestamp_seconds":
@@ -198,11 +198,11 @@ def collect_container_observations(observe):
     return totals
 
 
-def collect_containers(metrics):
+def collect_containers(metrics, containers=None):
     def observe(item):
         service, container_id = item
         return service, container_state(docker_get(f"/containers/{container_id}/json"))
-    totals = collect_container_observations(observe)
+    totals = collect_container_observations(observe, containers)
     for service in sorted(SERVICES):
         metrics.add("container_running", totals.get(service, {}).get("running", 0), service=service)
         for key, value in totals.get(service, {}).items():
@@ -210,7 +210,7 @@ def collect_containers(metrics):
                 metrics.add("container_" + key, value, service=service)
 
 
-def collect_container_resources(metrics):
+def collect_container_resources(metrics, containers=None):
     # Docker statistics can time out during image extraction/recreation. Keep
     # their failure boundary separate from running/health/restart/OOM evidence.
     def observe(item):
@@ -218,7 +218,7 @@ def collect_container_resources(metrics):
         info = docker_get(f"/containers/{container_id}/json")
         stats = docker_get(f"/containers/{container_id}/stats?stream=false&one-shot=true")
         return service, container_resources(info, stats)
-    for service, values in collect_container_observations(observe).items():
+    for service, values in collect_container_observations(observe, containers).items():
         for key, value in values.items():
             kind = "counter" if key == "cpu_usage_seconds_total" else "gauge"
             metrics.add("container_" + key, value, kind, service=service)
@@ -311,8 +311,7 @@ def atomic_write(path, text):
 
 def collect(root):
     metrics = Metrics()
-    probes = [("containers", collect_containers), ("container_resources", collect_container_resources),
-              ("redis", collect_redis), ("rabbitmq", collect_rabbitmq), ("public", collect_public)]
+    probes = [("redis", collect_redis), ("rabbitmq", collect_rabbitmq), ("public", collect_public)]
     probes += [("postgres_" + a, lambda m, a=a, c=c: collect_postgres(m, a, c)) for a, c in DATABASES.items()]
     probes += [("backup_" + b, lambda m, b=b: collect_backup(m, root, b)) for b in BACKUPS]
     def perform(item):
@@ -328,7 +327,14 @@ def collect(root):
         else:
             return component, partial
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        for component, partial in executor.map(perform, probes):
+        # Share one fresh inventory (or its failure) so independent probes do
+        # not compete for the same slow Docker listing on a busy daemon.
+        containers = executor.submit(running_containers)
+        docker_probes = [
+            ("containers", lambda m: collect_containers(m, containers.result())),
+            ("container_resources", lambda m: collect_container_resources(m, containers.result())),
+        ]
+        for component, partial in executor.map(perform, docker_probes + probes):
             if partial is not None:
                 metrics.merge(partial)
             metrics.add("collector_component_success", int(partial is not None), component=component)
