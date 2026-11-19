@@ -131,6 +131,19 @@ describe('Admin browser registration', () => {
         });
         expect(context.tools.size).toBe(0);
     });
+
+    it('releases browser registrations when the admin application environment is destroyed', async () => {
+        const context = registrationFixture();
+        await registerAsync(context);
+        const signals = [...context.browserSignals];
+        expect(signals).toHaveLength(TOOL_COUNT);
+        expect(signals.every(abortSignal => !abortSignal.aborted)).toBe(true);
+
+        TestBed.resetTestingModule();
+
+        expect(signals.every(abortSignal => abortSignal.aborted)).toBe(true);
+        expect(diagnostics()).toMatchObject({ registration: 'disposed', registeredToolCount: 0 });
+    });
 });
 
 describe('registered Admin screen tools', () => {

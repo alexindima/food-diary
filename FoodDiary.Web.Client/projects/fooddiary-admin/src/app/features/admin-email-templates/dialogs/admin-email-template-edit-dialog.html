@@ -73,7 +73,11 @@
                 </div>
 
                 @if (previewMode() === 'html') {
-                    <div class="preview preview--html" [innerHTML]="previewHtml()"></div>
+                    @if (previewHtml(); as html) {
+                        <div class="preview preview--html" [innerHTML]="html"></div>
+                    } @else {
+                        <div class="preview preview--html">{{ previewSubject() }}</div>
+                    }
                 } @else {
                     <pre class="preview preview--text">{{ previewText() }}</pre>
                 }

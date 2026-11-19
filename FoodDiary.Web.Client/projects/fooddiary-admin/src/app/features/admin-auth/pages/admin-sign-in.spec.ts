@@ -128,6 +128,28 @@ afterEach(() => {
 });
 
 describe('Admin sign-in confirmation', () => {
+    it('keeps password confirmation available when a failure has no service error code', async () => {
+        const { fixture, auth, navigateByUrl } = await createPageAsync();
+        auth.signInWithPasswordAsync.mockRejectedValue(new Error('Network unavailable'));
+        enterCredentials(fixture, 'admin@example.test', 'password');
+        await submitAsync(fixture);
+
+        expect(element(fixture, '[role="alert"]').textContent).toContain('ADMIN_AUTH.SIGN_IN_ERROR');
+        expect((element(fixture, 'button[type="submit"]') as HTMLButtonElement).disabled).toBe(false);
+        expect(navigateByUrl).not.toHaveBeenCalled();
+    });
+
+    it('hands off to the diary confirmation without a fragment when the handoff account is empty', async () => {
+        const { replace, auth } = await createPageAsync({ confirm: '0', account: '' });
+
+        expect(replace).toHaveBeenCalledOnce();
+        const redirect = new URL(replace.mock.calls[0][0]);
+        expect(redirect.pathname).toBe('/auth/confirm-admin');
+        expect(redirect.searchParams.get('adminReturnUrl')).toBe(RETURN_URL);
+        expect(redirect.hash).toBe('');
+        expect(auth.restoreSessionAsync).not.toHaveBeenCalled();
+    });
+
     it('blocks invalid credentials and submits a valid password to the account named in the fragment', async () => {
         const { auth, fixture, navigateByUrl } = await createPageAsync({ returnUrl: `${RETURN_URL}&code=old#account=another&tab=active` });
         auth.signInWithPasswordAsync.mockResolvedValue(true);

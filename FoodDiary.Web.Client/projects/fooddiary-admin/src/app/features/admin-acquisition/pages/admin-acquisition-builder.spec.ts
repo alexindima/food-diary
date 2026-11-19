@@ -79,6 +79,13 @@ describe('AdminAcquisition generated-link ingestion boundaries', () => {
         expect(url.searchParams.get('keep')).toBe('two words');
         expect(url.hash).toBe('#hero');
     });
+    it.each(['   ', 'https://[invalid'])('uses the canonical FoodDiary base when the builder input is %j', baseUrl => {
+        fillBuilder(fixture, { 'base-url': baseUrl, source: 'referral' });
+        const url = generatedUrl(fixture);
+        expect(url.origin).toBe('https://fooddiary.club');
+        expect(url.pathname).toBe('/');
+        expect(url.searchParams.get('utm_source')).toBe('referral');
+    });
     it('renders the actual Russian boundary message without replacement characters', async () => {
         const translate = TestBed.inject(TranslateService);
         translate.setTranslation('ru', ruCore);

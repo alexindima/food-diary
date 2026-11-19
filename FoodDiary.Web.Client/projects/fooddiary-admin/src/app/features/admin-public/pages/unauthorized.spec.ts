@@ -168,21 +168,23 @@ const EXPECTED_ACCOUNT = 'requested-admin';
 const ACCOUNT_FRAGMENT = `account=${EXPECTED_ACCOUNT}`;
 const RESTORE_ENDPOINT = `${environment.apiUrls.auth}/session`;
 
-describe('Native Admin recovery with the protected account guard', () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                provideTranslateTesting(),
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                provideRouter([
-                    { path: 'users', component: ProtectedUsersFixture, canActivate: [adminAuthGuard] },
-                    { path: 'unauthorized', component: UnauthorizedComponent },
-                    { path: 'sign-in', component: ConfirmSignInFixture },
-                ]),
-            ],
-        });
+function configureRecoveryRoutes(): void {
+    TestBed.configureTestingModule({
+        providers: [
+            provideTranslateTesting(),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            provideRouter([
+                { path: 'users', component: ProtectedUsersFixture, canActivate: [adminAuthGuard] },
+                { path: 'unauthorized', component: UnauthorizedComponent },
+                { path: 'sign-in', component: ConfirmSignInFixture },
+            ]),
+        ],
     });
+}
+
+describe('Native Admin recovery with the protected account guard', () => {
+    beforeEach(configureRecoveryRoutes);
 
     it.each([
         { account: EXPECTED_ACCOUNT, title: 'Protected users', fragment: null, returnUrl: null },
@@ -247,6 +249,59 @@ describe('Native Admin recovery with the protected account guard', () => {
         }
         http.verify();
     });
+});
+
+describe('Native Admin recovery after another failed retry', () => {
+    beforeEach(configureRecoveryRoutes);
+
+    it.each([
+        { hasCookie: true, message: 'You do not have permission' },
+        { hasCookie: false, message: 'Your admin session is missing or expired' },
+    ])('changes an unavailable page to the definitive denial when a cookie is present: $hasCookie', async ({ hasCookie, message }) => {
+        const harness = await openUnavailableRouteAsync();
+        const http = TestBed.inject(HttpTestingController);
+        const router = TestBed.inject(Router);
+
+        recoveryButton(harness).click();
+        const unavailable = await nextRestoreAsync(http);
+        unavailable.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(recoveryButton(harness).disabled).toBe(false);
+        });
+        expect(harness.routeNativeElement?.querySelector('[role="status"]')?.textContent).toContain(
+            'ADMIN_AUTH.SESSION_UNAVAILABLE_MESSAGE',
+        );
+
+        recoveryButton(harness).click();
+        const response = await nextRestoreAsync(http);
+        if (hasCookie) {
+            response.flush({ sessionId: 'known-session', roles: ['User'], user: { id: EXPECTED_ACCOUNT } });
+        } else {
+            response.flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Expired' });
+        }
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(harness.routeNativeElement?.textContent).toContain(message);
+        });
+        expect(recoveryButton(harness).textContent).toContain('Go to login');
+        expect(router.parseUrl(router.url).queryParamMap.get('returnUrl')).toBe(RETURN_URL);
+        http.verify();
+    });
+
+    it.each(['/unauthorized?reason=unauthenticated', '/unauthorized?reason=unauthenticated&returnUrl='])(
+        'offers the homepage on manual sign-in from %s',
+        async url => {
+            const harness = await RouterTestingHarness.create(url);
+            expect(harness.routeNativeElement?.textContent).toContain('Your admin session is missing or expired');
+            recoveryButton(harness).click();
+            const router = TestBed.inject(Router);
+            await vi.waitFor(() => {
+                expect(router.parseUrl(router.url).queryParamMap.get('returnUrl')).toBe('/');
+            });
+            TestBed.inject(HttpTestingController).verify();
+        },
+    );
 });
 
 async function openUnavailableRouteAsync(): Promise<RouterTestingHarness> {

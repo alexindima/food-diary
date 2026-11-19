@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, maxLengthError, minLengthError, required, validate } from '@angular/forms/signals';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -18,6 +18,7 @@ type AdminUserSetPasswordFormModel = {
 };
 
 const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_MAX_LENGTH = 256;
 
 @Component({
     selector: 'fd-admin-user-set-password-dialog',
@@ -47,7 +48,13 @@ export class AdminUserSetPasswordDialogComponent {
         path => {
             disabled(path, { when: () => this.isSubmitting() });
             required(path.newPassword);
-            minLength(path.newPassword, PASSWORD_MIN_LENGTH);
+            validate(path.newPassword, ({ value }) => {
+                const length = value().trim().length;
+                if (length < PASSWORD_MIN_LENGTH) {
+                    return minLengthError(PASSWORD_MIN_LENGTH);
+                }
+                return length > PASSWORD_MAX_LENGTH ? maxLengthError(PASSWORD_MAX_LENGTH) : undefined;
+            });
             required(path.confirmPassword);
             validate(path.confirmPassword, ({ value }) => (value() === this.formModel().newPassword ? undefined : { kind: 'matchField' }));
         },

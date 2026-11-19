@@ -5,7 +5,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserImpersonationDialogComponent } from './admin-user-impersonation-dialog';
 
 const user = {
@@ -38,7 +38,7 @@ beforeEach(async () => {
         imports: [AdminUserImpersonationDialogComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: AdminUsersFacade, useValue: usersService },
+            { provide: AdminUsersService, useValue: usersService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: user },
         ],
@@ -47,6 +47,32 @@ beforeEach(async () => {
     fixture = TestBed.createComponent(AdminUserImpersonationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+});
+
+describe('Admin impersonation reason validation through the form', () => {
+    const REASON_MINIMUM = 10;
+    const REASON_MAXIMUM = 500;
+    it.each([
+        { reason: ' '.repeat(REASON_MINIMUM), message: 'Reason must be at least 10 characters.' },
+        { reason: '   Short!   ', message: 'Reason must be at least 10 characters.' },
+        { reason: 'r'.repeat(REASON_MAXIMUM + 1), message: 'Reason must be 500 characters or fewer.' },
+    ])('blocks the request and displays $message', async ({ reason, message }) => {
+        const element = fixture.nativeElement as HTMLElement;
+        const textarea = element.querySelector('textarea');
+        if (textarea === null) {
+            throw new Error('Expected the impersonation reason.');
+        }
+        textarea.value = reason;
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        element.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(usersService.startImpersonation).not.toHaveBeenCalled();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        expect(element.querySelector('[role="alert"]')?.textContent).toContain(message);
+    });
 });
 
 describe('AdminUserImpersonationDialogComponent', () => {

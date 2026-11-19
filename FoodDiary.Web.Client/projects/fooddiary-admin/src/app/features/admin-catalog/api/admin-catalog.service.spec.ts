@@ -102,6 +102,19 @@ describe('AdminCatalogService generated requests', () => {
         expect(results).toEqual([productResult, recipeResult]);
     });
 
+    it('imports a recipe with its nested reference and a generated idempotency key', () => {
+        const results: CatalogResult[] = [];
+        service.importItem('recipes', recipe).subscribe(value => results.push(value));
+
+        const request = http.expectOne(candidate => candidate.method === 'POST' && candidate.url.endsWith('/admin/catalog/recipes/import'));
+        expect(request.request.headers.get('Idempotency-Key')).toBeTruthy();
+        expect(request.request.body).toEqual(recipe);
+        const imported = { id: recipe.id, status: 'imported', errors: [] };
+        request.flush(imported);
+
+        expect(results).toEqual([imported]);
+    });
+
     it('retains the import idempotency key and original nutrient payload across retry', () => {
         let result: CatalogResult | undefined;
         service

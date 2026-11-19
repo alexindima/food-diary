@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function -- Service contract spec intentionally groups endpoint cases. */
+import { DOCUMENT } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserCreate } from '../models/admin-user.models';
 import { AdminUsersService } from './admin-users.service';
 
@@ -121,6 +123,39 @@ describe('AdminUsersService', () => {
         const second = httpMock.expectOne(`${baseUrl}/selected-user/notifications/test`);
         expect(second.request.headers.get('Idempotency-Key')).toBe(key);
         second.flush({});
+    });
+
+    it('fails locally instead of sending a notification without a secure browser idempotency key', () => {
+        const crypto = TestBed.inject(DOCUMENT).defaultView?.crypto;
+        if (crypto === undefined) {
+            throw new Error('Expected a browser Crypto object.');
+        }
+        const descriptor = Object.getOwnPropertyDescriptor(crypto, 'randomUUID');
+        Object.defineProperty(crypto, 'randomUUID', { configurable: true, value: undefined });
+        onTestFinished(() => {
+            if (descriptor === undefined) {
+                Reflect.deleteProperty(crypto, 'randomUUID');
+            } else {
+                Object.defineProperty(crypto, 'randomUUID', descriptor);
+            }
+        });
+
+        const user = adminId<'user'>('selected-user');
+        expect(() => service.scheduleTestNotification(user, { type: 'EatingWindowStarted', delaySeconds: 30 })).toThrow(
+            'A secure browser context is required.',
+        );
+        httpMock.expectNone(`${baseUrl}/${user}/notifications/test`);
+    });
+
+    it('uses the default active status and omits empty account filters and searches', async () => {
+        const page = { data: [], page: USERS_PAGE, limit: USERS_LIMIT, totalPages: 1, totalItems: 0 };
+        const result = firstValueFrom(service.getUsers(USERS_PAGE, USERS_LIMIT, '', { role: '', emailConfirmed: '' }));
+        const request = httpMock.expectOne(candidate => candidate.url === baseUrl);
+        expect(request.request.params.keys().sort()).toEqual(['limit', 'page', 'status']);
+        expect(request.request.params.get('status')).toBe('active');
+        request.flush(page);
+        const { data: items, ...expected } = page;
+        await expect(result).resolves.toEqual({ ...expected, items });
     });
 
     it('should patch user update payload', () => {
@@ -281,6 +316,24 @@ describe('AdminUsersService', () => {
         });
     });
 
+    it('lists the selected account sessions without free-text search and preserves a missing actor email', async () => {
+        const target = adminId<'user'>('selected-user');
+        const loaded = firstValueFrom(service.getImpersonationSessions(1, USERS_LIMIT, null, { targetId: target }));
+        const request = httpMock.expectOne(candidate => candidate.url === `${baseUrl}/impersonation-sessions`);
+        expect(request.request.params.has('search')).toBe(false);
+        expect(request.request.params.get('targetId')).toBe(target);
+        const session = {
+            id: 'session-fixture',
+            actorUserId: 'admin-user',
+            targetUserId: target,
+            targetEmail: 'selected@example.test',
+            reason: 'Support case review',
+            startedAtUtc: '2026-01-02T03:04:05Z',
+        };
+        request.flush({ data: [session], page: 1, limit: USERS_LIMIT, totalPages: 1, totalItems: 1 });
+        await expect(loaded).resolves.toMatchObject({ items: [{ ...session, actorEmail: null }] });
+    });
+
     it('keeps masked login audit metadata and maps role audit and device summaries', async () => {
         const userId = adminId<'user'>('selected-user');
         const at = '2026-01-02T03:04:05Z';
@@ -305,7 +358,7 @@ describe('AdminUsersService', () => {
         await expect(audit).resolves.toEqual([auditEntry]);
 
         const device = { key: 'Mobile', count: 1, lastSeenAtUtc: at };
-        const summary = firstValueFrom(service.getLoginSummary());
+        const summary = firstValueFrom(TestBed.inject(AdminUsersFacade).getLoginSummary());
         httpMock.expectOne({ method: 'GET', url: `${baseUrl}/login-summary` }).flush([device]);
         await expect(summary).resolves.toEqual([device]);
     });

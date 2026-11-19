@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { adminId } from '../../../shared/models/semantics/admin-meaning';
+import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
+import type { AdminMailInboxMessagePage } from '../models/admin-mail-inbox.data';
 import { AdminMailInboxService } from './admin-mail-inbox.service';
 
 const MESSAGE_LIMIT = 25;
@@ -42,7 +44,7 @@ const messageDetailsResponse = {
 };
 
 describe('AdminMailInboxService', () => {
-    let service: AdminMailInboxService;
+    let service: AdminMailInboxFacade;
     let httpMock: HttpTestingController;
 
     const baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages`;
@@ -52,7 +54,7 @@ describe('AdminMailInboxService', () => {
             providers: [AdminMailInboxService, provideHttpClient(), provideHttpClientTesting()],
         });
 
-        service = TestBed.inject(AdminMailInboxService);
+        service = TestBed.inject(AdminMailInboxFacade);
         httpMock = TestBed.inject(HttpTestingController);
     });
 
@@ -132,19 +134,35 @@ describe('AdminMailInboxService pagination', () => {
         const baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages`;
         const page = 6;
         const pageSize = 50;
-        const response = { items: [messageDetailsResponse], totalItems: 327 };
+        const fromUtc = '2026-04-24T00:00:00Z';
+        const toUtc = '2026-04-26T00:00:00Z';
+        const response = { items: [messageDetailsResponse], totalItems: 327, readCount: 54, unreadCount: 273 };
+        const results: AdminMailInboxMessagePage[] = [];
         service
-            .getMessagePage(page, pageSize, { recipient: ' bugs@example.com ', category: 'general', unread: false })
-            .subscribe(result => {
-                expect(result).toEqual(response);
-            });
+            .getMessagePage(page, pageSize, {
+                recipient: ' bugs@example.com ',
+                category: 'general',
+                unread: false,
+                fromUtc,
+                toUtc,
+                search: 'Feedback',
+                fromAddress: 'user@example.com',
+                id: '',
+            })
+            .subscribe(result => results.push(result));
         const request = httpMock.expectOne(req => req.url === `${baseUrl}/page`);
         expect(request.request.params.get('page')).toBe('6');
         expect(request.request.params.get('limit')).toBe('50');
         expect(request.request.params.get('recipient')).toBe('bugs@example.com');
         expect(request.request.params.get('category')).toBe('general');
         expect(request.request.params.get('unread')).toBe('false');
+        expect(request.request.params.get('fromUtc')).toBe(fromUtc);
+        expect(request.request.params.get('toUtc')).toBe(toUtc);
+        expect(request.request.params.get('search')).toBe('Feedback');
+        expect(request.request.params.get('fromAddress')).toBe('user@example.com');
+        expect(request.request.params.has('id')).toBe(false);
         request.flush(response);
+        expect(results).toEqual([response]);
         httpMock.verify();
     });
 });

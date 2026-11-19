@@ -92,13 +92,14 @@ export class AdminModerationComponent {
     protected loadReports(): void {
         this.request?.unsubscribe();
         const range = adminPeriod(this.route.snapshot.queryParamMap);
+        this.loadFailed.set(false);
         if (range === null) {
             this.reports.set([]);
+            this.totalPages.set(1);
             this.totalItems.set(0);
             this.isLoading.set(false);
             return;
         }
-        this.loadFailed.set(false);
         this.isLoading.set(true);
         this.request = this.moderationFacade
             .getReports(this.page(), this.limit, this.resolveStatusFilter(), {
@@ -128,11 +129,6 @@ export class AdminModerationComponent {
             });
     }
 
-    protected onStatusChange(status: string): void {
-        this.statusFilter.set(status);
-        this.applyFilters();
-    }
-
     protected applyFilters(): void {
         void this.router.navigate([], {
             relativeTo: this.route,
@@ -145,10 +141,6 @@ export class AdminModerationComponent {
                 targetId: adminQueryValue(this.targetId()),
             },
         });
-    }
-
-    protected getSelectValue(event: Event): string {
-        return event.target instanceof HTMLSelectElement ? event.target.value : '';
     }
 
     protected goToPage(page: number): void {

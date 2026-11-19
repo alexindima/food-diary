@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, maxLength, minLengthError, required, validate } from '@angular/forms/signals';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -47,7 +47,9 @@ export class AdminUserImpersonationDialogComponent {
         path => {
             disabled(path, { when: () => this.isSubmitting() });
             required(path.reason);
-            minLength(path.reason, REASON_MIN_LENGTH);
+            validate(path.reason, ({ value }) =>
+                value().trim().length >= REASON_MIN_LENGTH ? undefined : minLengthError(REASON_MIN_LENGTH),
+            );
             maxLength(path.reason, ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH);
         },
         {

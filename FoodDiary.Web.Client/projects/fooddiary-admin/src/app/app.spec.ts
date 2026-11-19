@@ -25,6 +25,7 @@ async function createShellAsync(): Promise<ComponentFixture<AppComponent>> {
         providers: [
             provideRouter([
                 { path: '', component: AdminSectionStubComponent },
+                { path: 'users', component: AdminSectionStubComponent },
                 { path: 'users/login-activity', component: AdminSectionStubComponent },
                 { path: 'mail-inbox', component: AdminSectionStubComponent },
                 { path: 'outgoing-emails', component: AdminSectionStubComponent },
@@ -66,6 +67,34 @@ describe('AppComponent', () => {
         expect(options).toHaveLength(ADMIN_ROUTE_COUNT);
         expect(Array.from(options).some(option => option.textContent.includes('ADMIN_FEEDBACK.TITLE'))).toBe(true);
     });
+});
+
+it('keeps the Users navigation expanded on account pages and restores its previous preference after leaving', async () => {
+    const fixture = await createShellAsync();
+    const router = TestBed.inject(Router);
+    const host = fixture.nativeElement as HTMLElement;
+    fixture.detectChanges();
+    const toggle = host.querySelector<HTMLButtonElement>('fd-ui-sidebar button.fd-ui-sidebar__section-header');
+    if (toggle === null) {
+        throw new Error('Missing Users sidebar disclosure');
+    }
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    toggle.click();
+    fixture.detectChanges();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(host.querySelector('fd-ui-sidebar a[href="/users/login-activity"]')).toBeNull();
+
+    await router.navigateByUrl('/users');
+    await renderShellAsync(fixture);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(host.querySelector('fd-ui-sidebar a[href="/users/login-activity"]')).not.toBeNull();
+    expect(host.querySelector('.admin-shell__page-header')).toBeNull();
+    expect(host.querySelector('main')?.textContent).toContain('Section content');
+
+    await router.navigateByUrl('/');
+    await renderShellAsync(fixture);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(host.querySelector('h1')?.textContent.trim()).toBe('ADMIN_NAV.DASHBOARD');
 });
 
 describe('admin shell navigation', () => {

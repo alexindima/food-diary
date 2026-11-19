@@ -29,6 +29,15 @@ afterEach(() => {
 });
 
 describe('Admin generated client transport', () => {
+    it.each([
+        { url: '/admin/users', error: 'API URL must include /api/v{version}.' },
+        { url: '/api/v/admin/users', error: 'API URL must include a version.' },
+    ])('rejects a misconfigured API base URL $url before requesting data', ({ url, error }) => {
+        const client = TestBed.inject(HttpClient);
+        expect(() => createSdkConnection(AdminUsersSdk, url, client)).toThrow(error);
+        http.expectNone(() => true);
+    });
+
     it('retains repeated filters, false, zero and decoded Unicode through the existing interceptor chain', () => {
         const sdk = createSdkConnection(AdminUsersSdk, '/api/v1/admin/users', TestBed.inject(HttpClient));
         const params = new HttpParams()

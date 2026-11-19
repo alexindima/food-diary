@@ -15,25 +15,19 @@ import type { MarketingAttributionRange } from '../models/admin-acquisition-rang
 })
 export class AdminAcquisitionComparisonComponent {
     public readonly report = input.required<MarketingAttributionRange | null>();
-    protected readonly hasComparison = computed(() => {
-        const from = this.report()?.fromUtc;
-        return from !== undefined && Date.parse(from) !== 0;
-    });
-    private readonly trend = computed(() => {
-        const report = this.report();
-        return report === null ? [] : acquisitionTrend(report);
-    });
-    protected readonly metrics = computed(() => {
+    protected readonly comparison = computed(() => {
         const report = this.report();
         if (report === null) {
-            return [];
+            return null;
         }
-        return (['visits', 'signups', 'premiumStarts'] as const).map(key => ({
+        const trend = acquisitionTrend(report);
+        const metrics = (['visits', 'signups', 'premiumStarts'] as const).map(key => ({
             key,
             current: report.current[key],
             previous: report.previous[key],
             delta: report.current[key] - report.previous[key],
-            points: this.trend().map(day => ({ label: day.date, value: day[key] })),
+            points: trend.map(day => ({ label: day.date, value: day[key] })),
         }));
+        return { report, metrics, hasComparison: Date.parse(report.fromUtc) !== 0 };
     });
 }

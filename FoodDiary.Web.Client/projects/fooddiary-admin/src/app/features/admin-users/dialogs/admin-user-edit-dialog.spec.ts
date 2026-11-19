@@ -5,7 +5,7 @@ import { NEVER, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from './admin-user-edit-dialog';
 
 let component: AdminUserEditDialogComponent;
@@ -32,7 +32,7 @@ async function setupDialogAsync(account: Omit<typeof user, 'language'> & { langu
         imports: [AdminUserEditDialogComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: AdminUsersFacade, useValue: usersService },
+            { provide: AdminUsersService, useValue: usersService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: account },
         ],

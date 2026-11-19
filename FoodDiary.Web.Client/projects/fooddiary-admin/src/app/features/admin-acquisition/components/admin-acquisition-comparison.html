@@ -1,16 +1,16 @@
-@if (report(); as data) {
-    @if (hasComparison()) {
+@if (comparison(); as view) {
+    @if (view.hasComparison) {
         <p>
-            {{ 'ADMIN_ACQUISITION.COMPARE' | translate }}: {{ data.previousFromUtc | date: 'mediumDate' : 'UTC' }} —
-            {{ data.fromUtc | date: 'mediumDate' : 'UTC' }} ({{ 'ADMIN_ACQUISITION.EXCLUSIVE_END' | translate }})
+            {{ 'ADMIN_ACQUISITION.COMPARE' | translate }}: {{ view.report.previousFromUtc | date: 'mediumDate' : 'UTC' }} —
+            {{ view.report.fromUtc | date: 'mediumDate' : 'UTC' }} ({{ 'ADMIN_ACQUISITION.EXCLUSIVE_END' | translate }})
         </p>
     }
-    @for (metric of metrics(); track metric.key) {
+    @for (metric of view.metrics; track metric.key) {
         <fd-ui-card>
             <h2>{{ `ADMIN_ACQUISITION.${metric.key}` | translate }}</h2>
             <p>
                 {{ metric.current | number }}
-                @if (hasComparison()) {
+                @if (view.hasComparison) {
                     · {{ 'ADMIN_ACQUISITION.PREVIOUS' | translate }}: {{ metric.previous | number }} · Δ {{ metric.delta | number }}
                 }
             </p>

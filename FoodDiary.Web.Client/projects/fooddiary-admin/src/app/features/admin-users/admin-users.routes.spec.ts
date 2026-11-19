@@ -5,10 +5,11 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../src/testing/translate-testing.module';
+import { ADMIN_DEVELOPMENT_SCREENS, type AdminDevelopmentScreen } from '../../shared/development/admin-development-screen';
 import { adminId, adminUtcInstant } from '../../shared/models/semantics/admin-meaning';
 import { AdminAuthService } from '../admin-auth/contracts/admin-session';
 import { adminUsersRoutes } from './admin-users.routes';
-import { AdminUsersFacade } from './lib/admin-users.facade';
+import { AdminUsersService } from './api/admin-users.service';
 import type { PagedResponse } from './models/admin-user.models';
 
 const PAGE_SIZE = 20;
@@ -19,11 +20,14 @@ const TWO_PAGES_OF_ITEMS = 21;
 const RECOVERY_REQUESTS = 3;
 const EMPTY_PAGE = { items: [], page: FIRST_PAGE, limit: PAGE_SIZE, totalPages: 1, totalItems: 0 };
 
-const getLoginEvents = vi.fn<AdminUsersFacade['getLoginEvents']>();
-const getImpersonationSessions = vi.fn<AdminUsersFacade['getImpersonationSessions']>();
-const getUsers = vi.fn<AdminUsersFacade['getUsers']>();
-const getUser = vi.fn<AdminUsersFacade['getUser']>();
-const getUserRoleAudit = vi.fn<AdminUsersFacade['getUserRoleAudit']>();
+const getLoginEvents = vi.fn<AdminUsersService['getLoginEvents']>();
+const getImpersonationSessions = vi.fn<AdminUsersService['getImpersonationSessions']>();
+const getUsers = vi.fn<AdminUsersService['getUsers']>();
+const getUser = vi.fn<AdminUsersService['getUser']>();
+const getUserRoleAudit = vi.fn<AdminUsersService['getUserRoleAudit']>();
+const getPremiumGrant = vi.fn<AdminUsersService['getPremiumGrant']>();
+const attachScreen = vi.fn<(screen: AdminDevelopmentScreen) => () => void>();
+const detachScreen = vi.fn<() => void>();
 
 const historyRoutes = [
     {
@@ -48,6 +52,8 @@ beforeEach(() => {
     getImpersonationSessions.mockReturnValue(of(EMPTY_PAGE));
     getUsers.mockReturnValue(of(EMPTY_PAGE));
     getUserRoleAudit.mockReturnValue(of([]));
+    getPremiumGrant.mockReturnValue(of(null));
+    attachScreen.mockReturnValue(detachScreen);
     TestBed.configureTestingModule({
         providers: [
             provideTranslateTesting(),
@@ -61,7 +67,11 @@ beforeEach(() => {
                     isAdmin: (): boolean => true,
                 },
             },
-            { provide: AdminUsersFacade, useValue: { getLoginEvents, getImpersonationSessions, getUsers, getUser, getUserRoleAudit } },
+            { provide: ADMIN_DEVELOPMENT_SCREENS, useValue: { attach: attachScreen } },
+            {
+                provide: AdminUsersService,
+                useValue: { getLoginEvents, getImpersonationSessions, getUsers, getUser, getUserRoleAudit, getPremiumGrant },
+            },
         ],
     });
 });
@@ -123,6 +133,69 @@ describe.each(historyRoutes)('Protected history route $path', ({ path, filters, 
         expect(harness.routeNativeElement?.querySelector('.summary')?.textContent.trim()).toMatch(/: 0$/u);
         expect(request).toHaveBeenCalledTimes(RECOVERY_REQUESTS);
     });
+});
+
+it('publishes the visible account list and allows opening only an account on the current page', async () => {
+    const account = {
+        id: adminId<'user'>('current-account'),
+        email: 'current@example.test',
+        isActive: true,
+        isEmailConfirmed: true,
+        roles: ['User'],
+        createdOnUtc: adminUtcInstant('2026-01-01T12:00:00Z'),
+    };
+    const harness = await RouterTestingHarness.create('/users');
+    const router = TestBed.inject(Router);
+    const screen = attachScreen.mock.lastCall?.[0];
+    if (screen?.setFiltersAsync === undefined || screen.openEntityAsync === undefined) {
+        throw new Error('Expected the registered Users screen actions.');
+    }
+    expect(screen.kind).toBe('admin-users');
+    expect(screen.read()).toMatchObject({ filters: { status: null }, loading: false, items: [], totalItems: 0 });
+    getUsers.mockReturnValueOnce(of({ ...EMPTY_PAGE, items: [account], totalItems: 1 }));
+    await screen.setFiltersAsync({ status: 'inactive', search: 'current' });
+    expect(getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, 'current', expect.objectContaining({ status: 'inactive' }));
+    expect(screen.read()).toMatchObject({
+        filters: { status: 'inactive', search: 'current' },
+        loading: false,
+        items: [{ id: account.id }],
+        totalItems: 1,
+    });
+    const openEntityAsync = screen.openEntityAsync;
+    await expect(async () => {
+        await openEntityAsync('off-page-account');
+    }).rejects.toThrow('ID is not in the current list.');
+    expect(getUser).not.toHaveBeenCalled();
+    expect(router.url).toBe('/users?status=inactive&search=current');
+
+    getUser.mockReturnValueOnce(of(account));
+    await openEntityAsync(account.id);
+    harness.detectChanges();
+    expect(router.url).toBe('/users/current-account?status=inactive&search=current');
+    expect(getUser).toHaveBeenCalledExactlyOnceWith(account.id);
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe(account.email);
+    expect(detachScreen).toHaveBeenCalledOnce();
+});
+
+it('renders a list load error and retries the same account filters with native controls', async () => {
+    const pending = new Subject<PagedResponse<never>>();
+    getUsers.mockReturnValueOnce(pending);
+    const harness = await RouterTestingHarness.create('/users?status=inactive&search=support');
+    expect(harness.routeNativeElement?.textContent).toContain('Loading users...');
+    pending.error(new Error('Accounts request failed'));
+    harness.detectChanges();
+    const retry = harness.routeNativeElement?.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+    expect(retry).toBeDefined();
+    retry?.click();
+    harness.detectChanges();
+
+    const expectedFilters = { status: 'inactive', role: '', emailConfirmed: '', lastActiveFrom: '', lastActiveTo: '' };
+    expect(getUsers.mock.calls).toEqual([
+        [FIRST_PAGE, PAGE_SIZE, 'support', expectedFilters],
+        [FIRST_PAGE, PAGE_SIZE, 'support', expectedFilters],
+    ]);
+    expect(harness.routeNativeElement?.querySelector('fd-admin-load-error')).toBeNull();
+    expect(harness.routeNativeElement?.textContent).toContain('No users found.');
 });
 
 it('corrects an obsolete user list page and opens the account from the native row while keeping list filters', async () => {
@@ -191,6 +264,39 @@ describe.each(historyRoutes)('Search and request replacement $path', ({ path, se
         for (const [key, value] of Object.entries(filters)) {
             expect(applied.get(key)).toBe(value);
         }
+    });
+});
+
+describe.each(historyRoutes)('History pagination $path', ({ path, filters, request }) => {
+    it('requests both pages through native navigation while preserving the audit filters', async () => {
+        request.mockReturnValue(of({ ...EMPTY_PAGE, totalPages: SECOND_PAGE, totalItems: TWO_PAGES_OF_ITEMS }));
+        const params = new URLSearchParams({ ...filters, search: 'admin' });
+        const harness = await RouterTestingHarness.create(`${path}?${params}`);
+        const router = TestBed.inject(Router);
+        const buttons = (): NodeListOf<HTMLButtonElement> | undefined =>
+            harness.routeNativeElement?.querySelectorAll<HTMLButtonElement>('fd-ui-pagination button');
+        const next = Array.from(buttons() ?? []).at(-1);
+        expect(next?.disabled).toBe(false);
+        next?.click();
+        await vi.waitFor(() => {
+            expect(request).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, 'admin', filters);
+        });
+        harness.detectChanges();
+
+        const query = router.parseUrl(router.url).queryParamMap;
+        expect(query.get('page')).toBe(String(SECOND_PAGE));
+        for (const [key, value] of Object.entries(filters)) {
+            expect(query.get(key)).toBe(value);
+        }
+        expect(next?.disabled).toBe(true);
+        next?.click();
+        expect(request).toHaveBeenCalledTimes(SECOND_PAGE);
+        const previous = buttons()?.item(0);
+        expect(previous?.disabled).toBe(false);
+        previous?.click();
+        await vi.waitFor(() => {
+            expect(request).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, 'admin', filters);
+        });
     });
 });
 

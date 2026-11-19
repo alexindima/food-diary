@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -4789,43 +4789,6 @@
         {
           "name": "sections",
           "type": "PlaybookSection[]",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminCatalogFilterComponent",
-      "selector": "fd-admin-catalog-filter",
-      "feature": "fooddiary-admin",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.html",
-      "stylePaths": [],
-      "inputs": [
-        {
-          "name": "categories",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "showLocale",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "showState",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "activeLabel",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "inactiveLabel",
-          "type": "",
           "required": false
         }
       ],

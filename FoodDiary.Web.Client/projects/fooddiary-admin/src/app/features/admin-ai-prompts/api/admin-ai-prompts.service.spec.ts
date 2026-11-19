@@ -1,8 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import { type HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished } from 'vitest';
 
 import type { AdminAiPromptScenarioHttpResponse } from '../../../shared/api/sdk/generated/model/admin-ai-prompt-scenario-http-response';
 import type { AdminAiPromptDraft } from '../models/admin-ai-prompt-scenario';
@@ -41,6 +42,30 @@ describe('AdminAiPromptsService sample upload', () => {
         expect(confirm.request.headers.has('Authorization')).toBe(true);
         confirm.flush({ assetId: 'asset' });
         expect(result).toBe('asset');
+    });
+});
+
+describe('AdminAiPromptsService secure browser requirement', () => {
+    it('fails before a billed test request when secure UUID generation is unavailable', () => {
+        const service = TestBed.inject(AdminAiPromptsService);
+        const http = TestBed.inject(HttpTestingController);
+        const crypto = TestBed.inject(DOCUMENT).defaultView?.crypto;
+        if (crypto === undefined) {
+            throw new Error('Expected a browser Crypto object.');
+        }
+        const descriptor = Object.getOwnPropertyDescriptor(crypto, 'randomUUID');
+        Object.defineProperty(crypto, 'randomUUID', { configurable: true, value: undefined });
+        onTestFinished(() => {
+            if (descriptor === undefined) {
+                Reflect.deleteProperty(crypto, 'randomUUID');
+            } else {
+                Object.defineProperty(crypto, 'randomUUID', descriptor);
+            }
+        });
+
+        const draft: AdminAiPromptDraft = { key: 'text-parse', locale: 'en', promptText: 'Parse {{userText}}', text: 'an apple' };
+        expect(() => service.test(draft)).toThrow('A secure browser context is required.');
+        http.expectNone(`${promptsUrl}/test`);
     });
 });
 

@@ -125,6 +125,24 @@ describe('AdminModerationComponent filters', () => {
         expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
         expect(element(fixture).textContent).toContain('ADMIN_COMMON.EMPTY');
     });
+
+    it('replaces an obsolete request error with period validation when the URL becomes invalid', async () => {
+        const pending = new Subject<ReportPage>();
+        getReports.mockReturnValueOnce(pending);
+        const fixture = await renderAsync('?status=Reviewed');
+        pending.error(new Error('unavailable'));
+        await settleAsync(fixture);
+        expect(element(fixture).querySelector('fd-admin-load-error')).toBeTruthy();
+
+        const router = TestBed.inject(Router);
+        await router.navigateByUrl('/?status=Reviewed&period=custom&from=2026-08-04&to=2026-08-01');
+        await settleAsync(fixture);
+
+        expect(getReports).toHaveBeenCalledOnce();
+        expect(element(fixture).querySelector('fd-admin-load-error')).toBeNull();
+        expect(element(fixture).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
+        expect(element(fixture).textContent).toContain('ADMIN_COMMON.EMPTY');
+    });
 });
 
 describe('AdminModerationComponent loading and pagination', () => {

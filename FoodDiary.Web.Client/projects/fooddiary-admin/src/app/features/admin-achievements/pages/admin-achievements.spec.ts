@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId } from '../../../shared/models/semantics/admin-meaning';
+import { AdminAchievementsService } from '../api/admin-achievements.service';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
 import type { AdminAchievementDefinition } from '../models/admin-achievement.data';
 import { AdminAchievementsComponent } from './admin-achievements';
@@ -227,4 +228,65 @@ describe('AdminAchievementsComponent pending mutation ownership', () => {
         expect(component['isSaving']()).toBe(false);
         expect(component['form'].titleEn().disabled()).toBe(false);
     });
+});
+
+function writeAchievementField(root: HTMLElement, key: string, value: string): void {
+    const label = Array.from(root.querySelectorAll<HTMLLabelElement>('form label')).find(
+        item => item.firstElementChild?.textContent.trim() === `ADMIN_ACHIEVEMENTS.FIELDS.${key}`,
+    );
+    const field = label?.control;
+    if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement)) {
+        throw new Error(`Missing achievement control ${key}`);
+    }
+    field.value = value;
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+it('creates a new bilingual achievement from the rendered draft and displays the saved definition', async () => {
+    const created: AdminAchievementDefinition = {
+        ...DEFINITION,
+        key: 'first_week',
+        category: 'habits',
+        metric: 'LongestStreak',
+        threshold: 1,
+        sortOrder: 0,
+        icon: 'emoji_events',
+        titleRu: 'Начало',
+        titleEn: 'Getting started',
+        version: 1,
+    };
+    const service = {
+        getAll: vi
+            .fn<AdminAchievementsService['getAll']>()
+            .mockReturnValueOnce(of([]))
+            .mockReturnValueOnce(of([created])),
+        create: vi.fn<AdminAchievementsService['create']>().mockReturnValue(of(created)),
+    };
+    await TestBed.configureTestingModule({
+        imports: [AdminAchievementsComponent],
+        providers: [provideRouter([]), provideTranslateTesting(), { provide: AdminAchievementsService, useValue: service }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminAchievementsComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const save = root.querySelector<HTMLButtonElement>('form button[type="submit"]');
+    if (save === null) {
+        throw new Error('Missing achievement save button');
+    }
+    expect(root.querySelector('.definition-list')?.textContent).toContain('ADMIN_ACHIEVEMENTS.EMPTY');
+    expect(save.disabled).toBe(true);
+    writeAchievementField(root, 'KEY', created.key);
+    writeAchievementField(root, 'TITLE_RU', created.titleRu);
+    writeAchievementField(root, 'TITLE_EN', created.titleEn);
+    writeAchievementField(root, 'DESCRIPTION_RU', created.descriptionRu);
+    writeAchievementField(root, 'DESCRIPTION_EN', created.descriptionEn);
+    fixture.detectChanges();
+
+    save.click();
+    fixture.detectChanges();
+    const { id: _id, version: _version, ...definition } = created;
+    expect(service.create).toHaveBeenCalledExactlyOnceWith(definition);
+    expect(root.querySelector('.definition-card strong')?.textContent).toBe(created.titleEn);
+    expect(root.querySelector<HTMLInputElement>('form input')?.value).toBe('');
+    expect(save.disabled).toBe(true);
 });

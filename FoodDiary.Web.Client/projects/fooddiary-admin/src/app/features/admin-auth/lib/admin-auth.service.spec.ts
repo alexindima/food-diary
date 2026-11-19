@@ -66,6 +66,43 @@ describe('administrative session restoration recovery', () => {
     });
 });
 
+describe('overlapping administrative handoffs', () => {
+    it('keeps a newer cookie restoration in flight when an invalidated restoration finishes', async () => {
+        const oldRestore = service.restoreSessionAsync();
+        const obsolete = requests.expectOne(`${base}/session`);
+        service.invalidateSession();
+        const newRestore = service.restoreSessionAsync();
+        const fresh = requests.expectOne(`${base}/session`);
+        obsolete.flush(response);
+        await oldRestore;
+
+        const joined = service.restoreSessionAsync();
+        requests.expectNone(`${base}/session`);
+        fresh.flush({ ...response, sessionId: 'fresh-session' });
+        await Promise.all([newRestore, joined]);
+
+        expect(service.getSessionId()).toBe('fresh-session');
+        expect(service.isAdmin()).toBe(true);
+    });
+
+    it.each([false, true])('keeps the current session when a replaced SSO exchange succeeds: %s', async oldExchangeSucceeded => {
+        const oldExchange = service.exchangeSsoCodeAsync('obsolete-code');
+        const obsolete = requests.expectOne(`${base}/admin-sso/exchange`);
+        const newExchange = service.exchangeSsoCodeAsync('new-code');
+        requests.expectOne(`${base}/admin-sso/exchange`).flush({ ...response, sessionId: 'fresh-session' });
+        expect(await newExchange).toBe(true);
+
+        if (oldExchangeSucceeded) {
+            obsolete.flush(response);
+        } else {
+            obsolete.flush({}, { status: HttpStatusCode.TooManyRequests, statusText: 'Too Many Requests' });
+        }
+        expect(await oldExchange).toBe(false);
+        expect(service.getSessionId()).toBe('fresh-session');
+        expect(service.ssoRateLimited()).toBe(false);
+    });
+});
+
 describe('administrative browser sessions', () => {
     it('gets its administrative identity from the SSO response without persisting a token', async () => {
         const exchanged = service.exchangeSsoCodeAsync('one-use-code');
@@ -256,6 +293,33 @@ describe('administrative sign-in and URL cleanup', () => {
         } finally {
             storage.mockRestore();
         }
+    });
+});
+
+describe('administrative recovery URLs', () => {
+    it.each(['/users?page=3', '/users?code=', 'http://[invalid'])('skips exchange without a usable code in %s', async returnUrl => {
+        expect(await service.tryApplySsoFromReturnUrlAsync(returnUrl)).toBeNull();
+        requests.expectNone(`${base}/admin-sso/exchange`);
+    });
+
+    it('returns no redirected route when the exchange from an older query link is rejected', async () => {
+        const recovered = service.tryApplySsoFromReturnUrlAsync('/users?page=3&code=expired#activity');
+        const exchange = requests.expectOne(`${base}/admin-sso/exchange`);
+        expect(exchange.request.body).toEqual({ code: 'expired' });
+        exchange.flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Expired' });
+
+        expect(await recovered).toBeNull();
+        expect(service.isAuthenticated()).toBe(false);
+    });
+
+    it('removes the query separator when a successful link only supplied the exchange code', async () => {
+        window.history.replaceState({}, '', '/users?code=one-use-code');
+        const applied = service.applySsoFromQueryAsync();
+        requests.expectOne(`${base}/admin-sso/exchange`).flush(response);
+        await applied;
+
+        expect(window.location.pathname + window.location.search).toBe('/users');
+        expect(service.isAdmin()).toBe(true);
     });
 });
 

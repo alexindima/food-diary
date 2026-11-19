@@ -182,6 +182,20 @@ describe('AdminUsersComponent dialogs', () => {
         await setupComponentAsync();
     });
 
+    it('keeps the current page and filters after cancelling account creation', async () => {
+        const router = TestBed.inject(Router);
+        await router.navigate([], { queryParams: { page: SECOND_PAGE, status: 'inactive' } });
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const loadsBeforeDialog = usersService.getUsers.mock.calls.length;
+        findControl(root, 'header fd-ui-button button').click();
+        await fixture.whenStable();
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(usersService.getUsers).toHaveBeenCalledTimes(loadsBeforeDialog);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ page: '2', status: 'inactive' });
+    });
+
     it('should reload users after successful dialog close', () => {
         const close$ = new Subject<boolean>();
         dialogService.open.mockReturnValue({

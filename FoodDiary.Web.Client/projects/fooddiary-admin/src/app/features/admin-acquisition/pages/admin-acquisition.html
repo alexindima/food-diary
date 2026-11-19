@@ -203,7 +203,7 @@
                         </thead>
                         <tbody>
                             <!-- Read-only page snapshots expose no event ID; each position must retain its own row. -->
-                            @for (event of filteredRecentEvents(); track $index) {
+                            @for (event of data.recentEvents; track $index) {
                                 <tr>
                                     <td>{{ formatRelativeDate(event.occurredAtUtc) }}</td>
                                     <td>

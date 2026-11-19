@@ -72,6 +72,34 @@ const catalogProduct: CatalogProduct = {
     alcoholPerBase: 0,
 };
 const catalogFile: CatalogFile = { format: 'fooddiary-catalog', version: 1, products: [catalogProduct], recipes: [] };
+const baseRecipe: CatalogRecipe = {
+    id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    name: 'Porridge',
+    description: null,
+    category: null,
+    imageUrl: null,
+    prepTime: null,
+    cookTime: null,
+    servings: 2,
+    language: 'en',
+    languageConfirmed: true,
+    calculateNutritionAutomatically: true,
+    manualCalories: null,
+    manualProteins: null,
+    manualFats: null,
+    manualCarbs: null,
+    manualFiber: null,
+    manualAlcohol: null,
+    steps: [
+        {
+            order: 1,
+            description: 'Cook the oats',
+            title: null,
+            imageUrl: null,
+            ingredients: [{ productId: catalogProduct.id, nestedRecipeId: null, amount: 50 }],
+        },
+    ],
+};
 
 function catalogButton(root: HTMLElement, suffix: string): HTMLButtonElement {
     const result = Array.from(root.querySelectorAll('button')).find(item => item.textContent.trim() === `ADMIN_CATALOG_TRANSFER.${suffix}`);
@@ -113,35 +141,40 @@ async function readFileAsync(blob: Blob | undefined): Promise<unknown> {
     return JSON.parse(contents) as unknown;
 }
 
-describe('AdminCatalog import and file downloads', () => {
-    const service = {
-        exportCatalog: vi.fn<AdminCatalogService['exportCatalog']>(),
-        preview: vi.fn<AdminCatalogService['preview']>(),
-        importItem: vi.fn<AdminCatalogService['importItem']>(),
+async function setupFileTransferAsync(): Promise<{
+    fixture: ComponentFixture<AdminCatalogComponent>;
+    root: HTMLElement;
+    service: {
+        exportCatalog: ReturnType<typeof vi.fn<AdminCatalogService['exportCatalog']>>;
+        preview: ReturnType<typeof vi.fn<AdminCatalogService['preview']>>;
+        importItem: ReturnType<typeof vi.fn<AdminCatalogService['importItem']>>;
     };
-    const blobUrl = 'blob:catalog-test';
-    let fixture: ComponentFixture<AdminCatalogComponent>;
-    let root: HTMLElement;
+}> {
+    const service = {
+        exportCatalog: vi.fn<AdminCatalogService['exportCatalog']>().mockReturnValue(of({ products: [], recipes: [] })),
+        preview: vi.fn<AdminCatalogService['preview']>().mockReturnValue(of({ id: catalogProduct.id, status: 'ready', errors: [] })),
+        importItem: vi
+            .fn<AdminCatalogService['importItem']>()
+            .mockReturnValue(of({ id: catalogProduct.id, status: 'imported', errors: [] })),
+    };
+    await TestBed.configureTestingModule({
+        imports: [AdminCatalogComponent],
+        providers: [...provideTranslateTesting(), { provide: AdminCatalogService, useValue: service }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminCatalogComponent);
+    fixture.detectChanges();
+    return { fixture, root: fixture.nativeElement as HTMLElement, service };
+}
 
-    beforeEach(async () => {
-        vi.resetAllMocks();
-        service.exportCatalog.mockReturnValue(of({ products: [], recipes: [] }));
-        service.preview.mockReturnValue(of({ id: catalogProduct.id, status: 'ready', errors: [] }));
-        service.importItem.mockReturnValue(of({ id: catalogProduct.id, status: 'imported', errors: [] }));
-        await TestBed.configureTestingModule({
-            imports: [AdminCatalogComponent],
-            providers: [...provideTranslateTesting(), { provide: AdminCatalogService, useValue: service }],
-        }).compileComponents();
-        fixture = TestBed.createComponent(AdminCatalogComponent);
-        fixture.detectChanges();
-        root = fixture.nativeElement as HTMLElement;
-    });
+describe('AdminCatalog import and file downloads', () => {
+    const blobUrl = 'blob:catalog-test';
 
     afterEach(() => {
         vi.restoreAllMocks();
     });
 
     it('requires explicit confirmation after file preview and downloads the completed import report', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync();
         const objectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue(blobUrl);
         const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
         const download = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
@@ -179,6 +212,7 @@ describe('AdminCatalog import and file downloads', () => {
     });
 
     it('exports a reusable versioned catalog containing the products returned by the service', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync();
         const objectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue(blobUrl);
         const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
         const download = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
@@ -195,5 +229,69 @@ describe('AdminCatalog import and file downloads', () => {
         expect(revoke).toHaveBeenCalledExactlyOnceWith(blobUrl);
         const blob = objectUrl.mock.calls[0]?.[0];
         expect(await readFileAsync(blob instanceof Blob ? blob : undefined)).toEqual(catalogFile);
+    });
+});
+
+describe('AdminCatalog file transfer failures', () => {
+    it('blocks recipe preview when an ingredient product is absent from both catalogs', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync();
+        chooseFile(root, JSON.stringify({ ...catalogFile, products: [], recipes: [baseRecipe] }));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(service.exportCatalog).toHaveBeenCalledOnce();
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_CATALOG_TRANSFER.PRODUCT_LINKS');
+        expect(root.querySelector('article')).toBeNull();
+        expect(service.preview).not.toHaveBeenCalled();
+        expect(service.importItem).not.toHaveBeenCalled();
+    });
+
+    it('orders recipe dependencies and stops before importing a dependent recipe when an earlier row is invalid', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync();
+        const dependentRecipe: CatalogRecipe = {
+            ...baseRecipe,
+            id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+            name: 'Fruit porridge',
+            steps: [
+                {
+                    ...baseRecipe.steps[0],
+                    ingredients: [{ productId: null, nestedRecipeId: baseRecipe.id, amount: 1 }],
+                },
+            ],
+        };
+        service.exportCatalog.mockReturnValueOnce(of({ products: [catalogProduct], recipes: [] }));
+        service.preview.mockImplementation((_kind, item) => of({ id: item.id, status: 'ready', errors: [] }));
+        service.importItem.mockReturnValueOnce(of({ id: baseRecipe.id, status: 'invalid', errors: ['Ingredient no longer available'] }));
+        chooseFile(root, JSON.stringify({ ...catalogFile, products: [], recipes: [dependentRecipe, baseRecipe] }));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(catalogButton(root, 'CONFIRM').disabled).toBe(false);
+
+        catalogButton(root, 'CONFIRM').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(service.importItem).toHaveBeenCalledExactlyOnceWith('recipes', baseRecipe);
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_CATALOG_TRANSFER.IMPORT_STOPPED');
+        expect(root.textContent).toContain('Ingredient no longer available');
+        expect(catalogButton(root, 'CONFIRM').disabled).toBe(true);
+    });
+
+    it('renders a preview service failure and starts over with the next selected file', async () => {
+        const { fixture, root, service } = await setupFileTransferAsync();
+        service.preview.mockReturnValueOnce(throwError(() => new Error('Preview unavailable')));
+        chooseFile(root, JSON.stringify(catalogFile));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_CATALOG_TRANSFER.PREVIEW_FAILED');
+        expect(root.querySelector('article')).toBeNull();
+        expect(service.importItem).not.toHaveBeenCalled();
+
+        chooseFile(root, JSON.stringify(catalogFile));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(root.querySelector('[role="alert"]')).toBeNull();
+        expect(root.querySelector('article strong')?.textContent).toBe(catalogProduct.name);
+        expect(catalogButton(root, 'CONFIRM').disabled).toBe(false);
     });
 });

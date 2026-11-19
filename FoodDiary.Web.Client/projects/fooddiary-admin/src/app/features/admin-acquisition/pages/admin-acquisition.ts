@@ -102,8 +102,6 @@ export class AdminAcquisitionComponent {
 
         return ((data.attributedVisits / data.visits) * PERCENT_SCALE).toFixed(1);
     });
-    protected readonly filteredRecentEvents = computed(() => this.summary()?.recentEvents ?? []);
-
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             const eventType = params.get('eventType') ?? 'all';
@@ -252,17 +250,6 @@ export class AdminAcquisitionComponent {
             hour: '2-digit',
             minute: '2-digit',
         }).format(new Date(value));
-    }
-
-    protected isTrackedEvent(event: MarketingAttributionRecentEvent): boolean {
-        return (
-            event.referrerHost !== null ||
-            event.utmSource !== null ||
-            event.utmMedium !== null ||
-            event.utmCampaign !== null ||
-            event.utmContent !== null ||
-            event.utmTerm !== null
-        );
     }
 
     private buildCampaignUrl(): string {

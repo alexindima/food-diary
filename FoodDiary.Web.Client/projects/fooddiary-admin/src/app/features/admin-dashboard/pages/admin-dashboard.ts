@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ const PRESET_OFFSET = { today: 0, '7d': 6, '30d': 29, month: 0, all: 0, custom: 
 const PRESETS = ['today', '7d', '30d', 'month', 'all', 'custom'] as const;
 type Preset = (typeof PRESETS)[number];
 const isoDate = (date: Date): string => date.toISOString().slice(0, DATE_LENGTH);
+const dashboardPreset = (value: string | null): Preset => PRESETS.find(item => item === value) ?? 'month';
 
 @Component({
     selector: 'fd-admin-dashboard',
@@ -38,6 +39,8 @@ export class AdminDashboardComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly appliedRange = signal<DashboardRange | null>(null);
+    protected readonly allTime = computed(() => this.appliedRange()?.allTime === true);
     protected readonly preset = signal<Preset>('month');
     protected readonly from = signal<string | Date | null>(null);
     protected readonly to = signal<string | Date | null>(null);
@@ -47,38 +50,41 @@ export class AdminDashboardComponent {
 
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-            const preset = params.get('period');
-            this.preset.set(PRESETS.find(item => item === preset) ?? 'month');
+            this.preset.set(dashboardPreset(params.get('period')));
             this.from.set(params.get('from'));
             this.to.set(params.get('to'));
+            this.appliedRange.set(this.range());
             this.reload();
         });
     }
 
     protected setPreset(value: string | null): void {
-        this.preset.set(PRESETS.find(item => item === value) ?? 'month');
-        if (value !== 'custom') {
+        const preset = dashboardPreset(value);
+        this.preset.set(preset);
+        if (preset !== 'custom') {
             this.apply();
         }
     }
 
     protected apply(): void {
-        if (this.range() === null) {
+        const range = this.range();
+        if (range === null) {
             return;
         }
+        const preset = this.preset();
         void this.router.navigate([], {
             relativeTo: this.route,
             queryParams: {
-                period: this.preset(),
-                from: this.preset() === 'custom' ? this.dateValue(this.from()) : null,
-                to: this.preset() === 'custom' ? this.dateValue(this.to()) : null,
+                period: preset,
+                from: preset === 'custom' ? range.from : null,
+                to: preset === 'custom' ? range.to : null,
             },
             queryParamsHandling: 'merge',
         });
     }
 
     protected reload(): void {
-        const range = this.range();
+        const range = this.appliedRange();
         if (range !== null) {
             this.dashboard.load(range);
         } else {

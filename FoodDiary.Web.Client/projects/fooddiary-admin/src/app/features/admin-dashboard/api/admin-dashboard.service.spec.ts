@@ -22,25 +22,25 @@ const overview = {
     pendingReportsNow: 0,
 };
 
+let service: AdminDashboardService;
+let httpMock: HttpTestingController;
+
+const baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/dashboard`;
+
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [AdminDashboardService, provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    service = TestBed.inject(AdminDashboardService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+
+afterEach(() => {
+    httpMock.verify();
+});
+
 describe('AdminDashboardService', () => {
-    let service: AdminDashboardService;
-    let httpMock: HttpTestingController;
-
-    const baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/dashboard`;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [AdminDashboardService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(AdminDashboardService);
-        httpMock = TestBed.inject(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
-    });
-
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
@@ -77,6 +77,17 @@ describe('AdminDashboardService', () => {
         const req = httpMock.expectOne(`${baseUrl}/overview?allTime=true`);
         expect(req.request.params.has('from')).toBe(false);
         req.flush(overview);
+    });
+
+    it('lets the API choose its default reporting period when no bounds are supplied', () => {
+        const receive = vi.fn();
+        service.getOverview({}).subscribe(receive);
+
+        const request = httpMock.expectOne(`${baseUrl}/overview`);
+        expect(request.request.params.keys()).toEqual([]);
+        request.flush(overview);
+
+        expect(receive).toHaveBeenCalledExactlyOnceWith(overview);
     });
 
     it('preserves monthly revenue by currency, including the previous period', () => {

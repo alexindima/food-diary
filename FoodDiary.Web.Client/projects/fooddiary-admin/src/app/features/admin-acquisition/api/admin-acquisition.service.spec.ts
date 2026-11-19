@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
 import type { MarketingAttributionSummary } from '../models/admin-acquisition.data';
 import { AdminAcquisitionService, DEFAULT_ACQUISITION_WINDOW_HOURS } from './admin-acquisition.service';
 
@@ -28,7 +29,7 @@ const summary: MarketingAttributionSummary = {
     recentEvents: [],
 };
 
-let service: AdminAcquisitionService;
+let service: AdminAcquisitionFacade;
 let httpMock: HttpTestingController;
 
 const summaryUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/acquisition/summary`;
@@ -38,7 +39,7 @@ beforeEach(() => {
         providers: [AdminAcquisitionService, provideHttpClient(), provideHttpClientTesting()],
     });
 
-    service = TestBed.inject(AdminAcquisitionService);
+    service = TestBed.inject(AdminAcquisitionFacade);
     httpMock = TestBed.inject(HttpTestingController);
 });
 
@@ -76,11 +77,19 @@ describe('AdminAcquisitionService summary', () => {
         });
 
         const request = httpMock.expectOne(candidate => candidate.url === summaryUrl);
-        request.flush({ ...summary, visits: 52, attributedVisits: undefined, organicVisits: undefined });
+        const direct = {
+            occurredAtUtc: '2026-10-06T11:25:00Z',
+            eventType: 'page_landing',
+            anonymousId: 'direct-id',
+            sessionId: 'direct-session',
+            landingPath: '/',
+        };
+        request.flush({ ...summary, visits: 52, attributedVisits: undefined, organicVisits: undefined, recentEvents: [direct] });
 
         expect(result).toMatchObject({
             attributedVisits: 0,
             organicVisits: 52,
+            recentEvents: [{ ...direct, utmSource: null, referrerHost: null }],
         });
     });
 });

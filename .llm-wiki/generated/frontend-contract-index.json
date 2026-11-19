@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "summary": {
     "components": 526,
-    "componentsWithoutDirectSpecs": 131,
-    "inputs": 1680,
+    "componentsWithoutDirectSpecs": 130,
+    "inputs": 1681,
     "outputs": 564,
     "apiCalls": 336,
     "templatesWithTranslations": 381,
@@ -591,6 +591,11 @@
           "name": "data",
           "type": "AdminDashboardOverview",
           "required": true
+        },
+        {
+          "name": "allTime",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [],
@@ -8597,7 +8602,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.spec.ts"
     },
     {
       "class": "AdminLoadErrorComponent",
@@ -18067,7 +18072,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/ai-prompts/test",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 39,
+      "line": 40,
       "publicMethod": "test",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18079,7 +18084,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/images/upload-url",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 44,
+      "line": 45,
       "publicMethod": "uploadImage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18091,7 +18096,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/images/{assetId}/confirm",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 63,
+      "line": 64,
       "publicMethod": "uploadImage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18103,7 +18108,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/ai-prompts",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 73,
+      "line": 74,
       "publicMethod": "getAll",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18115,7 +18120,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/ai-prompts/{key}/{locale}",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts",
-      "line": 79,
+      "line": 80,
       "publicMethod": "save",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18823,7 +18828,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/notifications/test",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 127,
+      "line": 128,
       "publicMethod": "scheduleTestNotification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18835,7 +18840,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/role-audit",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 139,
+      "line": 140,
       "publicMethod": "getUserRoleAudit",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18847,7 +18852,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/impersonation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 145,
+      "line": 146,
       "publicMethod": "startImpersonation",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18859,7 +18864,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/impersonation-sessions",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 162,
+      "line": 163,
       "publicMethod": "getImpersonationSessions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18871,7 +18876,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/login-events",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 188,
+      "line": 189,
       "publicMethod": "getLoginEvents",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -18883,7 +18888,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/login-summary",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 203,
+      "line": 204,
       "publicMethod": "getLoginSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -27319,6 +27324,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.html",
       "occurrences": 1,
       "inputsUsed": [
+        "allTime",
         "data"
       ],
       "outputsHandled": []

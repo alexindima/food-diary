@@ -1,10 +1,12 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { type Observable, of, Subject, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import type { AdminTemplateRevision } from '../../admin-template-history/contracts/history';
 import { AdminTemplateHistoryFacade } from '../../admin-template-history/lib/admin-template-history.facade';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog';
@@ -32,7 +34,10 @@ type EmailTemplateDialogContext = {
     service: EmailTemplatesServiceMock;
 };
 
-async function setupEmailTemplateDialogAsync(): Promise<EmailTemplateDialogContext> {
+async function setupEmailTemplateDialogAsync(
+    template = TEMPLATE,
+    revisions: AdminTemplateRevision[] = [],
+): Promise<EmailTemplateDialogContext> {
     const service = {
         upsert: vi.fn().mockReturnValue(of(TEMPLATE)),
         sendTest: vi.fn().mockReturnValue(of(void 0)),
@@ -44,9 +49,12 @@ async function setupEmailTemplateDialogAsync(): Promise<EmailTemplateDialogConte
         providers: [
             provideTranslateTesting(),
             { provide: AdminEmailTemplatesFacade, useValue: service },
-            { provide: AdminTemplateHistoryFacade, useValue: { getRevisions: (): Observable<never[]> => of([]) } },
+            {
+                provide: AdminTemplateHistoryFacade,
+                useValue: { getRevisions: (): ReturnType<AdminTemplateHistoryFacade['getRevisions']> => of(revisions) },
+            },
             { provide: FdUiDialogRef, useValue: dialogRef },
-            { provide: FD_UI_DIALOG_DATA, useValue: TEMPLATE },
+            { provide: FD_UI_DIALOG_DATA, useValue: template },
         ],
     }).compileComponents();
 
@@ -56,6 +64,133 @@ async function setupEmailTemplateDialogAsync(): Promise<EmailTemplateDialogConte
 
     return { component, dialogRef, fixture, service };
 }
+
+function emailField(root: HTMLElement, caption: string): HTMLInputElement | HTMLTextAreaElement {
+    const label = [...root.querySelectorAll('label')].find(candidate => candidate.textContent.trim().startsWith(caption));
+    const field = label?.control;
+    if (!(field instanceof HTMLInputElement) && !(field instanceof HTMLTextAreaElement)) {
+        throw new Error(`Expected email template field ${caption}.`);
+    }
+    return field;
+}
+
+function setEmailField(root: HTMLElement, caption: string, value: string): void {
+    const field = emailField(root, caption);
+    field.value = value;
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function emailButton(root: ParentNode, text: string): HTMLButtonElement {
+    const button = [...root.querySelectorAll('button')].find(candidate => candidate.textContent.trim() === text);
+    if (button === undefined) {
+        throw new Error(`Expected email template button ${text}.`);
+    }
+    return button;
+}
+
+describe('Email template preview fallback', () => {
+    it('shows a plain subject in both preview modes when both bodies are empty', async () => {
+        const { fixture, service } = await setupEmailTemplateDialogAsync();
+        const root = fixture.nativeElement as HTMLElement;
+        setEmailField(root, 'Subject', 'Compare <strong>Plans</strong> & {{BRAND}} {{unsupported}}');
+        setEmailField(root, 'HTML body', '');
+        setEmailField(root, 'Text body', '');
+        fixture.detectChanges();
+        const expected = 'Compare <strong>Plans</strong> & FoodDiary {{unsupported}}';
+        const htmlPreview = root.querySelector('.preview--html');
+        expect(htmlPreview?.textContent).toContain(expected);
+        expect(htmlPreview?.querySelector('strong')).toBeNull();
+        emailButton(root, 'Text').click();
+        fixture.detectChanges();
+        expect(root.querySelector('.preview--text')?.textContent).toBe(expected);
+        expect(emailButton(root, 'Save').disabled).toBe(true);
+        expect(service.upsert).not.toHaveBeenCalled();
+    });
+});
+
+describe('Email template preview links', () => {
+    it.each([
+        { key: 'subscription_cancellation', link: 'https://fooddiary.club/premium' },
+        { key: 'account_created', link: 'https://fooddiary.club/login' },
+        { key: 'password_reset', link: 'https://fooddiary.club/reset-password?userId=demo&token=demo' },
+        { key: 'dietologist_invitation', link: 'https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo' },
+    ])('uses the appropriate example link for $key', async ({ key, link }) => {
+        const { fixture } = await setupEmailTemplateDialogAsync({ ...TEMPLATE, key });
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('.preview--html a')?.getAttribute('href')).toBe(link);
+        expect(root.querySelector('.token-list')?.textContent).toContain('{{link}}');
+    });
+});
+
+it('requires a valid recipient before sending an edited test email', async () => {
+    const { fixture, service } = await setupEmailTemplateDialogAsync();
+    const root = fixture.nativeElement as HTMLElement;
+    setEmailField(root, 'Send test to', 'editor@example.test');
+    fixture.detectChanges();
+    const send = emailButton(root, 'Send test');
+    expect(send.disabled).toBe(false);
+    setEmailField(root, 'Send test to', 'invalid address');
+    send.click();
+    fixture.detectChanges();
+    expect(send.disabled).toBe(true);
+    expect(service.sendTest).not.toHaveBeenCalled();
+    expect(root.querySelector('.test-send [role="alert"]')?.textContent).toContain('FORM_ERRORS.EMAIL');
+
+    setEmailField(root, 'Subject', 'Current draft');
+    setEmailField(root, 'Send test to', 'editor@example.test');
+    fixture.detectChanges();
+    send.click();
+    fixture.detectChanges();
+    expect(service.sendTest).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ toEmail: 'editor@example.test', subject: 'Current draft' }),
+    );
+    expect(root.querySelector('.test-send__status--sent')?.textContent).toContain('Test email sent.');
+});
+
+describe('Email template revision restoration', () => {
+    it.each([true, false])('restores a revision into the draft with both bodies present: %s', async hasBodies => {
+        const subject = hasBodies ? 'Archived invitation' : null;
+        const htmlBody = hasBodies ? '<p>Archived copy</p>' : null;
+        const revision: AdminTemplateRevision = {
+            id: adminId<'template-revision'>('revision-1'),
+            subject,
+            htmlBody,
+            textBody: 'Archived copy {{brand}}',
+            isActive: false,
+            version: 1,
+            savedOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+            archivedOnUtc: adminUtcInstant('2026-01-02T00:00:00Z'),
+        };
+        const { fixture, service, dialogRef } = await setupEmailTemplateDialogAsync(TEMPLATE, [revision]);
+        const root = fixture.nativeElement as HTMLElement;
+        await fixture.whenStable();
+        fixture.detectChanges();
+        root.querySelector<HTMLElement>('fd-admin-template-history details > summary')?.click();
+        emailButton(root, 'ADMIN_TEMPLATE_HISTORY.RESTORE').click();
+        fixture.detectChanges();
+        expect(emailField(root, 'Subject').value).toBe(subject ?? '');
+        expect(emailField(root, 'HTML body').value).toBe(htmlBody ?? '');
+        expect(emailField(root, 'Text body').value).toBe(revision.textBody);
+        expect(service.upsert).not.toHaveBeenCalled();
+
+        const save = emailButton(root, 'Save');
+        expect(save.disabled).toBe(!hasBodies);
+        save.click();
+        await fixture.whenStable();
+        if (hasBodies) {
+            expect(service.upsert).toHaveBeenCalledExactlyOnceWith(TEMPLATE.key, TEMPLATE.locale, {
+                subject,
+                htmlBody,
+                textBody: revision.textBody,
+                isActive: false,
+            });
+            expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
+        } else {
+            expect(service.upsert).not.toHaveBeenCalled();
+            expect(dialogRef.close).not.toHaveBeenCalled();
+        }
+    });
+});
 
 describe('AdminEmailTemplateEditDialogComponent', () => {
     it('should create', async () => {

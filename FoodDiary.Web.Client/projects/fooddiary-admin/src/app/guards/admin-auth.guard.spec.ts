@@ -105,6 +105,21 @@ describe('adminAuthGuard', () => {
         });
     });
 
+    it('lands on recovery after a throttled handoff and keeps the return route and account', async () => {
+        authService.isAuthenticated.mockReturnValue(false);
+        authService.ssoRateLimited.set(true);
+        state = Object.assign(Object.create(RouterStateSnapshot.prototype), {
+            url: '/users?page=2#account=diary-admin&code=one-time-code',
+        }) as RouterStateSnapshot;
+
+        await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
+
+        expect(router.createUrlTree).toHaveBeenCalledExactlyOnceWith(['/unauthorized'], {
+            queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' },
+            fragment: 'account=diary-admin',
+        });
+    });
+
     it.each([
         ['diary-admin', true],
         ['other-admin', false],

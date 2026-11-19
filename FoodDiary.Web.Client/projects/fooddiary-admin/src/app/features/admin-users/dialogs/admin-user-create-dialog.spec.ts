@@ -1,9 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserCreateDialogComponent } from './admin-user-create-dialog';
 
 const PASSWORD_MAXIMUM = 256;
@@ -16,7 +17,7 @@ describe('AdminUserCreateDialogComponent credential options', () => {
             imports: [AdminUserCreateDialogComponent],
             providers: [
                 { provide: FdUiDialogRef, useValue: { close: vi.fn() } },
-                { provide: AdminUsersFacade, useValue: {} },
+                { provide: AdminUsersService, useValue: {} },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(AdminUserCreateDialogComponent);
@@ -93,7 +94,7 @@ describe('AdminUserCreateDialogComponent manual password maximum', () => {
             imports: [AdminUserCreateDialogComponent],
             providers: [
                 { provide: FdUiDialogRef, useValue: { close: vi.fn() } },
-                { provide: AdminUsersFacade, useValue: { createUser } },
+                { provide: AdminUsersService, useValue: { createUser } },
             ],
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminUserCreateDialogComponent);
@@ -125,7 +126,7 @@ describe('AdminUserCreateDialogComponent pending creation', () => {
             imports: [AdminUserCreateDialogComponent],
             providers: [
                 { provide: FdUiDialogRef, useValue: { close } },
-                { provide: AdminUsersFacade, useValue: { createUser } },
+                { provide: AdminUsersService, useValue: { createUser } },
             ],
         }).compileComponents();
         const fixture = TestBed.createComponent(AdminUserCreateDialogComponent);
@@ -151,5 +152,113 @@ describe('AdminUserCreateDialogComponent pending creation', () => {
         });
         expect(component['formModel']().email).toBe('admin-qa@example.com');
         expect(component['submitError']()).not.toBeNull();
+    });
+});
+
+async function renderAccountCreationAsync(): Promise<{
+    fixture: ComponentFixture<AdminUserCreateDialogComponent>;
+    createUser: ReturnType<typeof vi.fn<AdminUsersService['createUser']>>;
+    close: ReturnType<typeof vi.fn<(created: boolean) => void>>;
+}> {
+    const createUser = vi.fn<AdminUsersService['createUser']>();
+    const close = vi.fn<(created: boolean) => void>();
+    await TestBed.configureTestingModule({
+        imports: [AdminUserCreateDialogComponent],
+        providers: [
+            { provide: FdUiDialogRef, useValue: { close } },
+            { provide: AdminUsersService, useValue: { createUser } },
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminUserCreateDialogComponent);
+    fixture.detectChanges();
+    return { fixture, createUser, close };
+}
+
+function writeInput(root: HTMLElement, labelText: string, value: string): void {
+    const label = [...root.querySelectorAll('label')].find(
+        entry => entry.querySelector('.fd-ui-input__label-text')?.textContent.trim() === labelText,
+    );
+    const input = label?.control;
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error(`Expected the ${labelText} input.`);
+    }
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function pressButton(root: HTMLElement, name: string): void {
+    const button = [...root.querySelectorAll('button')].find(entry => entry.textContent.trim() === name);
+    if (button === undefined) {
+        throw new Error(`Expected the ${name} button.`);
+    }
+    button.click();
+}
+
+describe('Account creation form submission', () => {
+    it.each([
+        { generated: true, inputPassword: null, message: 'Credentials email has been queued.' },
+        { generated: false, inputPassword: 'manual-fixture-password', message: 'Send the temporary password' },
+    ])('returns a successful result using generated password $generated', async ({ generated, inputPassword, message }) => {
+        const { fixture, createUser, close } = await renderAccountCreationAsync();
+        const root = fixture.nativeElement as HTMLElement;
+        const email = 'new-account@example.test';
+        const password = inputPassword ?? 'generated-fixture-password';
+        createUser.mockReturnValue(
+            of({
+                user: {
+                    id: adminId<'user'>('new-account'),
+                    email,
+                    isActive: true,
+                    isEmailConfirmed: true,
+                    createdOnUtc: adminUtcInstant('2026-01-01T00:00:00Z'),
+                    roles: ['Support'],
+                },
+                temporaryPassword: password,
+                credentialsEmailQueued: generated,
+            }),
+        );
+
+        writeInput(root, 'Email', email);
+        writeInput(root, 'First name', ' Casey ');
+        writeInput(root, 'Last name', ' Example ');
+        for (const role of ['Support', 'Admin', 'Admin']) {
+            root.querySelector<HTMLInputElement>(`input#admin-user-create-role-${role}`)?.click();
+            fixture.detectChanges();
+        }
+        if (inputPassword !== null) {
+            root.querySelector<HTMLInputElement>('input#admin-user-create-generate-password')?.click();
+            fixture.detectChanges();
+            writeInput(root, 'Temporary password', inputPassword);
+            root.querySelector<HTMLInputElement>('input#admin-user-create-send-credentials')?.click();
+        }
+        fixture.detectChanges();
+        pressButton(root, 'Create user');
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(createUser).toHaveBeenCalledExactlyOnceWith({
+            email,
+            firstName: 'Casey',
+            lastName: 'Example',
+            language: 'ru',
+            roles: ['Support'],
+            temporaryPassword: inputPassword,
+            generatePassword: generated,
+            isEmailConfirmed: true,
+            sendCredentialsEmail: generated,
+            requirePasswordChange: true,
+        });
+        expect(root.querySelector('[role="status"]')?.textContent).toContain(message);
+        expect(root.querySelector('code')?.textContent).toBe(password);
+        expect(close).not.toHaveBeenCalled();
+        pressButton(root, 'Done');
+        expect(close).toHaveBeenCalledExactlyOnceWith(true);
+    });
+
+    it('closes without creating an account when cancelled', async () => {
+        const { fixture, createUser, close } = await renderAccountCreationAsync();
+        pressButton(fixture.nativeElement as HTMLElement, 'Cancel');
+        expect(createUser).not.toHaveBeenCalled();
+        expect(close).toHaveBeenCalledExactlyOnceWith(false);
     });
 });

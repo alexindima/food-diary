@@ -57,6 +57,22 @@ describe('catalog transfer files', () => {
         ).toThrow();
     });
 
+    it('preserves optional preparation and manual nutrition numbers, including zero', () => {
+        const portable = { ...recipe(firstId), calculateNutritionAutomatically: false, prepTime: 5, manualFats: 0 };
+        const parsed = parseCatalogFile(serialize([portable]));
+
+        expect(parsed.recipes[0]).toMatchObject({ prepTime: 5, manualFats: 0, calculateNutritionAutomatically: false });
+    });
+
+    it('accepts an empty asset list but rejects asset references from a different installation', () => {
+        const portable = recipe(firstId);
+        const steps = [{ ...portable.steps[0], imageAssetIds: [] }];
+        expect(parseCatalogFile(serialize([{ ...portable, steps }])).recipes).toHaveLength(1);
+
+        const withAsset = { ...portable, steps: [{ ...portable.steps[0], imageAssetIds: [secondId] }] };
+        expect(() => parseCatalogFile(serialize([withAsset]))).toThrow('ADMIN_CATALOG_TRANSFER.INVALID_FILE');
+    });
+
     it('rejects case-insensitive duplicate IDs', () => {
         expect(() => parseCatalogFile(serialize([recipe(firstId), recipe(firstId.toUpperCase())]))).toThrow(
             'ADMIN_CATALOG_TRANSFER.DUPLICATE_IDS',

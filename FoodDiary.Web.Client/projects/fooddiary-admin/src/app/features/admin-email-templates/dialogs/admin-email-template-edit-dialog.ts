@@ -97,20 +97,11 @@ export class AdminEmailTemplateEditDialogComponent {
             },
         },
     );
-    protected readonly previewHtml = computed(() => {
-        const { htmlBody, subject } = this.formModel();
-        const html = this.applyTokens(
-            htmlBody !== '' ? htmlBody : `<div style="font-family:Segoe UI,Arial,sans-serif;">${subject}</div>`,
-            this.previewLink(),
-            this.previewBrand(),
-            this.previewClientName(),
-        );
-
-        return html;
-    });
+    protected readonly previewSubject = computed(() => this.applyTokens(this.formModel().subject));
+    protected readonly previewHtml = computed(() => this.applyTokens(this.formModel().htmlBody));
     protected readonly previewText = computed(() => {
-        const { subject, textBody } = this.formModel();
-        return this.applyTokens(textBody !== '' ? textBody : subject, this.previewLink(), this.previewBrand(), this.previewClientName());
+        const { textBody } = this.formModel();
+        return textBody !== '' ? this.applyTokens(textBody) : this.previewSubject();
     });
     protected readonly supportedVariables = computed(() => emailTemplateVariables(this.formModel().key));
 
@@ -203,11 +194,11 @@ export class AdminEmailTemplateEditDialogComponent {
             });
     }
 
-    private applyTokens(value: string, link: string, brand: string, clientName: string): string {
+    private applyTokens(value: string): string {
         const samples: Record<string, string> = {
-            link,
-            brand,
-            clientname: clientName,
+            link: this.previewLink(),
+            brand: this.previewBrand(),
+            clientname: this.previewClientName(),
             email: 'example@example.com',
             temporarypassword: 'Demo-only-password',
             loginlink: 'https://fooddiary.club/login',

@@ -1,10 +1,14 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import enCore from '../../../../../../../assets/i18n/en/core.json';
+import ruCore from '../../../../../../../assets/i18n/ru/core.json';
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserSetPasswordDialogComponent } from './admin-user-set-password-dialog';
 
 const user = {
@@ -30,15 +34,48 @@ beforeEach(async () => {
     await TestBed.configureTestingModule({
         imports: [AdminUserSetPasswordDialogComponent],
         providers: [
-            { provide: AdminUsersFacade, useValue: usersService },
+            provideTranslateTesting({ lang: 'en' }),
+            { provide: AdminUsersService, useValue: usersService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: user },
         ],
     }).compileComponents();
 
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { FORM_ERRORS: enCore.FORM_ERRORS });
+    translate.setTranslation('ru', { FORM_ERRORS: ruCore.FORM_ERRORS });
     fixture = TestBed.createComponent(AdminUserSetPasswordDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+});
+
+describe('Admin password validation through the form', () => {
+    const PASSWORD_MAXIMUM = 256;
+    const oversizedPassword = 'p'.repeat(PASSWORD_MAXIMUM + 1);
+
+    it.each([
+        { password: '       ', confirmation: '       ', lang: 'en', message: 'New password must be at least 6 characters.' },
+        { password: '   five!  ', confirmation: '   five!  ', lang: 'en', message: 'New password must be at least 6 characters.' },
+        { password: oversizedPassword, confirmation: oversizedPassword, lang: 'en', message: 'Use 256 characters or fewer' },
+        { password: oversizedPassword, confirmation: oversizedPassword, lang: 'ru', message: 'Не больше 256 символов' },
+        { password: 'test-password', confirmation: '', lang: 'en', message: 'Confirm password is required.' },
+    ])('blocks the request and displays $message', async ({ password, confirmation, lang, message }) => {
+        await firstValueFrom(TestBed.inject(TranslateService).use(lang));
+        const element = fixture.nativeElement as HTMLElement;
+        const inputs = element.querySelectorAll<HTMLInputElement>('input[type="password"]');
+        for (const [index, value] of [password, confirmation].entries()) {
+            inputs[index].value = value;
+            inputs[index].dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        fixture.detectChanges();
+        element.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(usersService.setPassword).not.toHaveBeenCalled();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        expect(element.textContent).toContain(message);
+    });
 });
 
 describe('AdminUserSetPasswordDialogComponent', () => {

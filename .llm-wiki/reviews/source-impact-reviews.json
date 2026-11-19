@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "dd3c5aa35785a2a5e1b169c4b3d5ba344f17f9fe592991fbac9e2f54ebf70fa9",
-          "reviewReason": "Verified the 202 Admin coverage source paths and exact Admin thresholds. Angular project discovery, build entry points and coverage includes and excludes are unchanged."
+          "sha256": "b58d0e53114b4cc0df2e7c0f400a17b302294c7a0e5288b2954b275827f5916a",
+          "reviewReason": "The Admin 98/98/97/97 thresholds passed on Node 22 across 202 unchanged source paths. Project discovery, entry points and coverage selection remain as documented."
         }
       ],
-      "reason": "Verified the 202 Admin coverage source paths and exact Admin thresholds. Angular project discovery, build entry points and coverage includes and excludes are unchanged.",
-      "baseRef": "8cc282ed5",
-      "gitHead": "8cc282ed54897f5e3e68cce508da84d6a683deae",
-      "reviewedAtUtc": "2026-11-19T18:10:01.7131646Z"
+      "reason": "The Admin 98/98/97/97 thresholds passed on Node 22 across 202 unchanged source paths. Project discovery, entry points and coverage selection remain as documented.",
+      "baseRef": "652f5ad7a",
+      "gitHead": "652f5ad7a3c14f9400184908cec254e6ef80ffe2",
+      "reviewedAtUtc": "2026-11-19T19:20:40.6042422Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "dd3c5aa35785a2a5e1b169c4b3d5ba344f17f9fe592991fbac9e2f54ebf70fa9",
-          "reviewReason": "Updated the coverage thresholds on the existing Admin test target. The Angular project and target inventory remains correct."
+          "sha256": "b58d0e53114b4cc0df2e7c0f400a17b302294c7a0e5288b2954b275827f5916a",
+          "reviewReason": "Verified the new thresholds on the existing Angular Admin test target and the current Angular project inventory."
         }
       ],
-      "reason": "Updated the coverage thresholds on the existing Admin test target. The Angular project and target inventory remains correct.",
-      "baseRef": "8cc282ed5",
-      "gitHead": "8cc282ed54897f5e3e68cce508da84d6a683deae",
-      "reviewedAtUtc": "2026-11-19T18:10:02.0623041Z"
+      "reason": "Verified the new thresholds on the existing Angular Admin test target and the current Angular project inventory.",
+      "baseRef": "652f5ad7a",
+      "gitHead": "652f5ad7a3c14f9400184908cec254e6ef80ffe2",
+      "reviewedAtUtc": "2026-11-19T19:20:40.8948073Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -1714,14 +1714,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "aeda9f43e88d0eb26caff82491ee70f02d3090ebad6cbc80ea2825069fe0af8f",
-          "reviewReason": "Verified the Admin 94/94/90/91 floors with 572 passing Admin tests and the existing smoke command with 16 passing Chromium scenarios."
+          "sha256": "2b7f100fc82cd05157d54d99fb8d7c03566bcd15d065e8d489ef58f32cc7bf69",
+          "reviewReason": "Verified the documented Admin floors against the complete 738-test coverage run and the Admin verification commands against the successful build and 16 Chromium scenarios."
         }
       ],
-      "reason": "Verified the Admin 94/94/90/91 floors with 572 passing Admin tests and the existing smoke command with 16 passing Chromium scenarios.",
-      "baseRef": "8cc282ed5",
-      "gitHead": "8cc282ed54897f5e3e68cce508da84d6a683deae",
-      "reviewedAtUtc": "2026-11-19T18:10:02.7995380Z"
+      "reason": "Verified the documented Admin floors against the complete 738-test coverage run and the Admin verification commands against the successful build and 16 Chromium scenarios.",
+      "baseRef": "652f5ad7a",
+      "gitHead": "652f5ad7a3c14f9400184908cec254e6ef80ffe2",
+      "reviewedAtUtc": "2026-11-19T19:20:41.2363646Z"
     },
     {
       "pageId": "workflow-trace-feature",

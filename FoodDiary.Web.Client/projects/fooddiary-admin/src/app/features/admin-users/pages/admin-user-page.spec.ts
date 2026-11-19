@@ -7,11 +7,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminCalendarDate, adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
 import { AdminUserNotificationDialogComponent } from '../dialogs/admin-user-notification-dialog';
 import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
-import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserLoginEvent, AdminUserRoleAuditEvent, PagedResponse } from '../models/admin-user.models';
 import { AdminUserPageComponent } from './admin-user-page';
 
@@ -19,7 +19,7 @@ const EXPECTED_ACTION_COUNT = 3;
 
 const ACTIVITY_PREVIEW_LIMIT = 3;
 
-type UsersFacadeMock = {
+type UsersServiceMock = {
     getUser: ReturnType<typeof vi.fn>;
     getPremiumGrant: ReturnType<typeof vi.fn>;
     getLoginEvents: ReturnType<typeof vi.fn>;
@@ -33,7 +33,7 @@ type DialogServiceMock = {
 type TestContext = {
     component: AdminUserPageComponent;
     fixture: ComponentFixture<AdminUserPageComponent>;
-    usersFacade: UsersFacadeMock;
+    usersService: UsersServiceMock;
     dialogs: DialogServiceMock;
     routeParams: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
 };
@@ -130,7 +130,7 @@ function host(fixture: ComponentFixture<AdminUserPageComponent>): HTMLElement {
     return fixture.nativeElement as HTMLElement;
 }
 
-function createUsersFacadeMock(): UsersFacadeMock {
+function createUsersServiceMock(): UsersServiceMock {
     return {
         getUser: vi.fn().mockReturnValue(of(baseUser)),
         getPremiumGrant: vi.fn().mockReturnValue(of(null)),
@@ -139,17 +139,17 @@ function createUsersFacadeMock(): UsersFacadeMock {
     };
 }
 
-async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => void, initialUser = baseUser): Promise<TestContext> {
+async function createContextAsync(configure?: (usersService: UsersServiceMock) => void, initialUser = baseUser): Promise<TestContext> {
     const routeParams = new BehaviorSubject(convertToParamMap({ id: initialUser.id }));
-    const usersFacade = createUsersFacadeMock();
+    const usersService = createUsersServiceMock();
     const dialogs: DialogServiceMock = { open: vi.fn().mockReturnValue({ afterClosed: () => of(false) }) };
-    configure?.(usersFacade);
+    configure?.(usersService);
 
     await TestBed.configureTestingModule({
         imports: [AdminUserPageComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: AdminUsersFacade, useValue: usersFacade },
+            { provide: AdminUsersService, useValue: usersService },
             provideRouter([]),
             { provide: FdUiDialogService, useValue: dialogs },
             { provide: ActivatedRoute, useValue: { paramMap: routeParams } },
@@ -160,7 +160,7 @@ async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => 
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { component, fixture, usersFacade, dialogs, routeParams };
+    return { component, fixture, usersService, dialogs, routeParams };
 }
 
 describe('AdminUserPageComponent avatars', () => {
@@ -196,11 +196,11 @@ describe('AdminUserPageComponent avatars', () => {
     it('does not apply an old avatar error to a different account', async () => {
         const avatar = 'https://images.example.test/avatar.png';
         const first = { ...baseUser, profileImage: avatar };
-        const { component, fixture, usersFacade, routeParams } = await createContextAsync(users => {
+        const { component, fixture, usersService, routeParams } = await createContextAsync(users => {
             users.getUser.mockReturnValueOnce(of(first));
         });
         const next = { ...baseUser, id: adminId<'user'>('next-user'), profileImage: avatar };
-        usersFacade.getUser.mockReturnValueOnce(of(next));
+        usersService.getUser.mockReturnValueOnce(of(next));
         routeParams.next(convertToParamMap({ id: next.id }));
         fixture.detectChanges();
 
@@ -221,8 +221,8 @@ describe('AdminUserPageComponent', () => {
             hasPassword: false,
             isEmailConfirmed: false,
         };
-        const { component, fixture } = await createContextAsync(usersFacade => {
-            usersFacade.getUser.mockReturnValueOnce(of(telegramUser));
+        const { component, fixture } = await createContextAsync(usersService => {
+            usersService.getUser.mockReturnValueOnce(of(telegramUser));
         }, telegramUser);
 
         expect(component['initials']()).toBe('?');
@@ -232,12 +232,12 @@ describe('AdminUserPageComponent', () => {
     });
 
     it('loads user details and activity preview', async () => {
-        const { fixture, component, usersFacade } = await createContextAsync();
+        const { fixture, component, usersService } = await createContextAsync();
 
         expect(component).toBeTruthy();
-        expect(usersFacade.getUser).toHaveBeenCalledWith(baseUser.id);
-        expect(usersFacade.getLoginEvents).toHaveBeenCalledWith(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: baseUser.id });
-        expect(usersFacade.getUserRoleAudit).toHaveBeenCalledWith(baseUser.id);
+        expect(usersService.getUser).toHaveBeenCalledWith(baseUser.id);
+        expect(usersService.getLoginEvents).toHaveBeenCalledWith(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: baseUser.id });
+        expect(usersService.getUserRoleAudit).toHaveBeenCalledWith(baseUser.id);
         expect(component['activityLoading']()).toBe(false);
         expect(component['failed']()).toBe(false);
         expect(host(fixture).textContent).toContain(baseUser.email);
@@ -245,8 +245,8 @@ describe('AdminUserPageComponent', () => {
     });
 
     it('keeps details visible when activity loading fails', async () => {
-        const { component } = await createContextAsync(usersFacade => {
-            usersFacade.getLoginEvents.mockReturnValueOnce(throwError(() => new Error('activity failed')));
+        const { component } = await createContextAsync(usersService => {
+            usersService.getLoginEvents.mockReturnValueOnce(throwError(() => new Error('activity failed')));
         });
 
         expect(component['activityLoading']()).toBe(false);
@@ -258,8 +258,8 @@ describe('AdminUserPageComponent', () => {
     });
 
     it('shows an error when user details fail to load', async () => {
-        const { component, fixture } = await createContextAsync(usersFacade => {
-            usersFacade.getUser.mockReturnValueOnce(throwError(() => new Error('details failed')));
+        const { component, fixture } = await createContextAsync(usersService => {
+            usersService.getUser.mockReturnValueOnce(throwError(() => new Error('details failed')));
         });
 
         expect(component['activityLoading']()).toBe(false);
@@ -288,13 +288,13 @@ describe('AdminUserPageComponent actions and navigation', () => {
         expect(dialogs.open).not.toHaveBeenCalled();
     });
     it('exposes edit, password and impersonation actions directly on the page', async () => {
-        const { component, dialogs, usersFacade } = await createContextAsync();
+        const { component, dialogs, usersService } = await createContextAsync();
         dialogs.open.mockReturnValue({ afterClosed: () => of(true) });
         component['edit'](baseUser);
         component['setPassword'](baseUser);
         expect(dialogs.open).toHaveBeenCalledWith(AdminUserEditDialogComponent, { size: 'sm', data: baseUser });
         expect(dialogs.open).toHaveBeenCalledWith(AdminUserSetPasswordDialogComponent, { size: 'sm', data: baseUser });
-        expect(usersFacade.getUser).toHaveBeenCalledTimes(EXPECTED_ACTION_COUNT);
+        expect(usersService.getUser).toHaveBeenCalledTimes(EXPECTED_ACTION_COUNT);
         dialogs.open.mockReturnValue({ afterClosed: () => of(null) });
         component['impersonate'](baseUser);
         expect(dialogs.open).toHaveBeenCalledWith(AdminUserImpersonationDialogComponent, { size: 'sm', data: baseUser });
@@ -320,14 +320,14 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
     it('drops stale activity when navigating to a different account', async () => {
         const pendingLogins = new Subject<PagedResponse<AdminUserLoginEvent>>();
-        const { component, usersFacade, routeParams } = await createContextAsync(facade => {
+        const { component, usersService, routeParams } = await createContextAsync(facade => {
             facade.getLoginEvents.mockReturnValueOnce(pendingLogins);
         });
         expect(component['activityLoading']()).toBe(true);
         const nextUser = { ...baseUser, id: 'user-2', email: 'second@example.com' };
-        usersFacade.getUser.mockReturnValueOnce(of(nextUser));
-        usersFacade.getLoginEvents.mockReturnValueOnce(of(pagedLogins([])));
-        usersFacade.getUserRoleAudit.mockReturnValueOnce(of([]));
+        usersService.getUser.mockReturnValueOnce(of(nextUser));
+        usersService.getLoginEvents.mockReturnValueOnce(of(pagedLogins([])));
+        usersService.getUserRoleAudit.mockReturnValueOnce(of([]));
         routeParams.next(convertToParamMap({ id: nextUser.id }));
         pendingLogins.next(pagedLogins([loginEvent]));
         pendingLogins.complete();
@@ -338,8 +338,8 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
     it('disables impersonation for admin and deleted users', async () => {
         const adminUser: AdminUser = { ...baseUser, roles: ['Admin'] };
-        const { component } = await createContextAsync(usersFacade => {
-            usersFacade.getUser.mockReturnValueOnce(of(adminUser));
+        const { component } = await createContextAsync(usersService => {
+            usersService.getUser.mockReturnValueOnce(of(adminUser));
         }, adminUser);
 
         expect(component['canImpersonate']()).toBe(false);
@@ -363,21 +363,40 @@ describe('AdminUserPageComponent actions and navigation', () => {
 });
 
 describe('Admin account detail action results', () => {
+    it('ignores a click on a stale impersonation button while changing to an admin account', async () => {
+        const { fixture, dialogs, usersService, routeParams } = await createContextAsync();
+        const action = [...host(fixture).querySelectorAll('button')].find(button => button.textContent.trim() === 'ADMIN_USER.IMPERSONATE');
+        if (action === undefined) {
+            throw new Error('Expected the impersonation action.');
+        }
+        const admin = { ...baseUser, id: adminId<'user'>('other-admin'), email: 'other-admin@example.test', roles: ['Admin'] };
+        usersService.getUser.mockReturnValueOnce(of(admin));
+        routeParams.next(convertToParamMap({ id: admin.id }));
+
+        expect(action.disabled).toBe(false);
+        action.click();
+        expect(dialogs.open).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
+        expect(action.disabled).toBe(true);
+        expect(host(fixture).querySelector('h1')?.textContent).toBe(admin.email);
+    });
+
     it.each([
         { label: 'ADMIN_USER.EDIT', dialog: AdminUserEditDialogComponent },
         { label: 'ADMIN_USER.SET_PASSWORD', dialog: AdminUserSetPasswordDialogComponent },
     ])('reloads the visible account after a successful $label but keeps it on cancellation', async ({ label, dialog }) => {
-        const { fixture, dialogs, usersFacade } = await createContextAsync();
+        const { fixture, dialogs, usersService } = await createContextAsync();
         const action = [...host(fixture).querySelectorAll('button')].find(button => button.textContent.trim() === label);
         if (action === undefined) {
             throw new Error(`Expected the ${label} action.`);
         }
         action.click();
         expect(dialogs.open).toHaveBeenCalledWith(dialog, { size: 'sm', data: baseUser });
-        expect(usersFacade.getUser).toHaveBeenCalledOnce();
+        expect(usersService.getUser).toHaveBeenCalledOnce();
 
         const pending = new Subject<AdminUser>();
-        usersFacade.getUser.mockReturnValueOnce(pending);
+        usersService.getUser.mockReturnValueOnce(pending);
         dialogs.open.mockReturnValueOnce({ afterClosed: () => of(true) });
         action.click();
         fixture.detectChanges();
@@ -387,7 +406,7 @@ describe('Admin account detail action results', () => {
         pending.complete();
         fixture.detectChanges();
         expect(host(fixture).querySelector('h1')?.textContent).toBe('updated@example.test');
-        expect(usersFacade.getUser).toHaveBeenLastCalledWith(baseUser.id);
+        expect(usersService.getUser).toHaveBeenLastCalledWith(baseUser.id);
     });
 
     it('does not open dialogs or show Premium grant controls for a deleted account', async () => {

@@ -21,6 +21,12 @@ describe('Admin calendar period', () => {
     it('uses seven calendar days including today', () => {
         expect(adminPeriod(convertToParamMap({ period: '7d' }), 'all', now)).toEqual({ from: '2026-09-02', to: '2026-09-08' });
     });
+    it.each([
+        ['month', '2026-09-01'],
+        ['today', '2026-09-08'],
+    ])('starts %s at the applicable UTC calendar boundary', (period, from) => {
+        expect(adminPeriod(convertToParamMap({ period }), 'all', now)).toEqual({ from, to: '2026-09-08' });
+    });
     it('includes the final selected day through an exclusive UTC midnight boundary', () => {
         expect(adminUtcPeriod({ from: '2026-03-28', to: '2026-03-29' })).toEqual({
             fromUtc: '2026-03-28T00:00:00Z',

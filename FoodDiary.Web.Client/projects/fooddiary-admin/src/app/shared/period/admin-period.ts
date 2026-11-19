@@ -4,7 +4,7 @@ import { ADMIN_DATE_TEXT_LENGTH } from './admin-query';
 
 const DAY_MS = 86_400_000;
 const MAX_RANGE_DAYS = 3660;
-const PRESET_DAYS: Readonly<Partial<Record<string, number>>> = { '7d': 7, '30d': 30, '90d': 90 };
+const PRESET_DAYS: ReadonlyMap<string, number> = new Map(Object.entries({ '7d': 7, '30d': 30, '90d': 90 }));
 export type AdminPeriod = { from?: string; to?: string };
 
 export function adminExclusiveDatePeriod(range: AdminPeriod, now = new Date()): { from: string; to: string } {
@@ -60,10 +60,11 @@ export function adminPeriod(params: ParamMap, defaultPeriod = 'all', now = new D
         return customPeriod(params, today);
     }
     const start = new Date(`${today}T00:00:00Z`);
+    const days = PRESET_DAYS.get(period);
     if (period === 'month') {
         start.setUTCDate(1);
-    } else if (PRESET_DAYS[period] !== undefined) {
-        start.setUTCDate(start.getUTCDate() - PRESET_DAYS[period] + 1);
+    } else if (days !== undefined) {
+        start.setUTCDate(start.getUTCDate() - days + 1);
     } else if (period !== 'today') {
         return null;
     }

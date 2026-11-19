@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2862,
+    "typescriptFiles": 2873,
     "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 878,
+    "specs": 889,
     "localeFiles": 5,
     "roles": {
       "Component": 516,
@@ -56,6 +56,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/admin-acquisition.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/api/admin-acquisition.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/lib/admin-acquisition-trend.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition-builder.spec.ts",
@@ -79,6 +80,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/admin-ai-prompts.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-context.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-workbench.spec.ts",
@@ -157,6 +159,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-subscriptions-table.spec.ts",
@@ -224,6 +227,7 @@
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/components/daily-advice-group-card.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/admin-daily-advices.facade.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/lib/daily-advice-import.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices-files.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-daily-advices/pages/admin-daily-advices.spec.ts"
       ]
     },
@@ -242,6 +246,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/admin-dashboard.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-dashboard.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-telemetry.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.spec.ts",
@@ -262,6 +267,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/admin-email-templates.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/api/admin-email-templates.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.spec.ts"
@@ -281,6 +287,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/api/admin-lessons.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.spec.ts"
       ]
@@ -403,6 +410,7 @@
       ],
       "routes": [],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-template-history/api/admin-template-history.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-template-history/components/admin-template-history.spec.ts"
       ]
     },
@@ -2639,7 +2647,7 @@
       "role": "Component",
       "selector": "fd-admin-dashboard",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "AdminEmailTemplatesService",
@@ -2926,7 +2934,7 @@
       "role": "Component",
       "selector": "fd-admin-user-set-password-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "AdminUsersFacade",

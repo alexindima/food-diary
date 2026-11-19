@@ -4,7 +4,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminUserNotificationDialogComponent } from './admin-user-notification-dialog';
 
 let fixture: ComponentFixture<AdminUserNotificationDialogComponent>;
@@ -19,7 +19,7 @@ beforeEach(async () => {
         imports: [AdminUserNotificationDialogComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: AdminUsersFacade, useValue: users },
+            { provide: AdminUsersService, useValue: users },
             { provide: FdUiDialogRef, useValue: dialog },
             { provide: FD_UI_DIALOG_DATA, useValue: { id: 'selected-user', email: 'notification-test@example.com' } },
         ],

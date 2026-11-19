@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import { AdminUsersService } from '../api/admin-users.service';
 import { AdminLoginActivityPageComponent } from './admin-login-activity-page';
 
 const FIRST_PAGE = 1;
@@ -32,7 +32,7 @@ describe('AdminLoginActivityPageComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [AdminLoginActivityPageComponent],
-            providers: [...provideTranslateTesting(), provideRouter([]), { provide: AdminUsersFacade, useValue: usersService }],
+            providers: [...provideTranslateTesting(), provideRouter([]), { provide: AdminUsersService, useValue: usersService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminLoginActivityPageComponent);

@@ -5,6 +5,7 @@ import { of, Subject } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { ADMIN_DEVELOPMENT_SCREENS, type AdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminOutgoingEmailsFacade } from '../lib/admin-outgoing-emails.facade';
 import type { OutgoingEmail, OutgoingEmailPage } from '../models/outgoing-email';
@@ -65,12 +66,14 @@ const MAIL: OutgoingEmail = {
 async function setupOutboxAsync(
     url: string,
     getPage: Mock<AdminOutgoingEmailsFacade['getPage']>,
+    attach?: (screen: AdminDevelopmentScreen) => () => void,
 ): Promise<{ harness: RouterTestingHarness; element: HTMLElement; router: Router }> {
     await TestBed.configureTestingModule({
         providers: [
             provideRouter([{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }]),
             ...provideTranslateTesting(),
             { provide: AdminOutgoingEmailsFacade, useValue: { getPage } },
+            { provide: ADMIN_DEVELOPMENT_SCREENS, useValue: attach === undefined ? null : { attach } },
         ],
     }).compileComponents();
     const harness = await RouterTestingHarness.create(url);
@@ -158,5 +161,35 @@ describe('outgoing mail route state', () => {
         expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
         expect(element.textContent).toContain('ADMIN_OUTGOING.EMPTY');
         expect(getPage).toHaveBeenCalledWith(1, '', '', expect.objectContaining({ id: 'missing' }));
+    });
+});
+
+describe('outgoing mail applied filters', () => {
+    it('reports visible rows without their bodies and refreshes the same canonical URL after filtering', async () => {
+        const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(vi.fn());
+        const getPage = vi
+            .fn<AdminOutgoingEmailsFacade['getPage']>()
+            .mockReturnValue(of({ items: [MAIL], totalItems: 1, statusCounts: { sent: 1 } }));
+        const { element, harness, router } = await setupOutboxAsync(OUTBOX, getPage, attach);
+        const screen = attach.mock.lastCall?.[0];
+        expect(screen?.kind).toBe('admin-outgoing-emails');
+        await screen?.setFiltersAsync?.({ page: '1', status: 'sent', recipient: RECIPIENT });
+        await renderOutboxAsync(harness);
+
+        const state = screen?.read();
+        expect(state).toMatchObject({
+            filters: { page: '1', status: 'sent', recipient: RECIPIENT },
+            statusCounts: { sent: 1 },
+            items: [{ id: MAIL.id, correlationId: MAIL.correlationId }],
+        });
+        expect(state).not.toMatchObject({ items: [{ textBody: MAIL.textBody }] });
+        const appliedUrl = router.url;
+        const callsBeforeRefresh = getPage.mock.calls.length;
+        requireOutboxButton(element, 'ADMIN_OUTGOING.REFRESH').click();
+        await renderOutboxAsync(harness);
+
+        expect(router.url).toBe(appliedUrl);
+        expect(getPage).toHaveBeenCalledTimes(callsBeforeRefresh + 1);
+        expect(getPage).toHaveBeenLastCalledWith(1, '', 'sent', expect.objectContaining({ recipient: RECIPIENT }));
     });
 });

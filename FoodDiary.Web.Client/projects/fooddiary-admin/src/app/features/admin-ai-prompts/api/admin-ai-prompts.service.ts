@@ -32,7 +32,8 @@ export class AdminAiPromptsService {
             .pipe(map(value => requireSdkFields(value, ['text'])));
     }
     public test(draft: AdminAiPromptDraft): Observable<{ text: string }> {
-        const key = this.document.defaultView?.crypto.randomUUID();
+        const crypto: Partial<Pick<Crypto, 'randomUUID'>> | undefined = this.document.defaultView?.crypto;
+        const key = crypto?.randomUUID?.();
         if (key === undefined) {
             throw new Error('A secure browser context is required.');
         }

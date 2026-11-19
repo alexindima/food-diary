@@ -29,6 +29,6 @@
     } @else if (dashboard.failed()) {
         <p role="alert">{{ 'ADMIN_OVERVIEW.ERROR' | translate }}</p>
     } @else if (data(); as overview) {
-        <fd-admin-dashboard-content [data]="overview" />
+        <fd-admin-dashboard-content [data]="overview" [allTime]="allTime()" />
     }
 </div>

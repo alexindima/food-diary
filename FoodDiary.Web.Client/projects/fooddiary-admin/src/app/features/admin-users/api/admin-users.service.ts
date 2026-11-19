@@ -120,7 +120,8 @@ export class AdminUsersService {
     }
 
     public scheduleTestNotification(userId: AdminId<'user'>, payload: AdminTestNotification): Observable<void> {
-        const key = this.document.defaultView?.crypto.randomUUID();
+        const crypto: Partial<Pick<Crypto, 'randomUUID'>> | undefined = this.document.defaultView?.crypto;
+        const key = crypto?.randomUUID?.();
         if (key === undefined) {
             throw new Error('A secure browser context is required.');
         }

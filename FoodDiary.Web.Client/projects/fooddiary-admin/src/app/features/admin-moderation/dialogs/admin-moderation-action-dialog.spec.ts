@@ -1,3 +1,5 @@
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -64,5 +66,54 @@ describe('AdminModerationActionDialogComponent failure recovery', () => {
         retry.next();
         retry.complete();
         expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({ confirmed: true });
+    });
+});
+
+function renderModerationAction(action: 'review' | 'dismiss'): { host: HTMLElement; close: ReturnType<typeof vi.fn> } {
+    const close = vi.fn();
+    TestBed.configureTestingModule({
+        imports: [AdminModerationActionDialogComponent],
+        providers: [
+            provideTranslateTesting(),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            {
+                provide: FD_UI_DIALOG_DATA,
+                useValue: { action, report: { id: 'owned-report', targetType: 'Recipe', targetId: 'owned-recipe', reason: 'Test report' } },
+            },
+            { provide: FdUiDialogRef, useValue: { close } },
+        ],
+    });
+    const fixture = TestBed.createComponent(AdminModerationActionDialogComponent);
+    fixture.detectChanges();
+    return { host: fixture.nativeElement as HTMLElement, close };
+}
+
+describe('Admin moderation confirmation controls', () => {
+    it.each(['review', 'dismiss'] as const)('performs %s through the real endpoint with no optional note', action => {
+        const { host, close } = renderModerationAction(action);
+        const confirm = [...host.querySelectorAll<HTMLButtonElement>('.dialog-actions button')].at(-1);
+        expect(confirm).toBeTruthy();
+        confirm?.click();
+
+        const http = TestBed.inject(HttpTestingController);
+        const request = http.expectOne(current => current.url.endsWith(`/admin/moderation/owned-report/${action}`));
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toEqual({ adminNote: null });
+        expect(close).not.toHaveBeenCalled();
+        request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+
+        expect(close).toHaveBeenCalledExactlyOnceWith({ confirmed: true });
+        http.verify();
+    });
+
+    it('cancels through the native button without sending an action', () => {
+        const { host, close } = renderModerationAction('review');
+        const cancel = host.querySelector<HTMLButtonElement>('.dialog-actions button');
+        expect(cancel?.textContent).toContain('Cancel');
+        cancel?.click();
+
+        expect(close).toHaveBeenCalledExactlyOnceWith({ confirmed: false });
+        TestBed.inject(HttpTestingController).verify();
     });
 });

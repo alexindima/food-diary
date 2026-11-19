@@ -351,6 +351,19 @@ describe('AdminBillingComponent metadata', () => {
         expect(billing.selectedMetadata()).toContain('"payment_id": "pay_123"');
     });
 
+    it('removes the previous receipt from the panel when the next provider response omits metadata', async () => {
+        const { billing, fixture } = await setupBillingAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        billing.showMetadata('{"receipt":"prior"}');
+        fixture.detectChanges();
+        expect(host.querySelector('fd-admin-billing-metadata-panel pre')?.textContent).toContain('"receipt": "prior"');
+
+        billing.showMetadata(null);
+        fixture.detectChanges();
+
+        expect(host.querySelector('fd-admin-billing-metadata-panel')).toBeNull();
+    });
+
     it('opens malformed provider metadata as plain text and closes the panel from the toolbar', async () => {
         const api = createBillingServiceMock();
         const providerMetadataJson = '<b>legacy receipt</b>';

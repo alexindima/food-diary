@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -152,5 +154,61 @@ describe('AdminLessonEditDialogComponent save recovery', () => {
         fixture.detectChanges();
         expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(true);
         expect(operation).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('Admin lesson edit and preview', () => {
+    it('previews an older lesson and saves the edited summary with its published default', async () => {
+        const close = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [AdminLessonEditDialogComponent],
+            providers: [
+                provideTranslateTesting(),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                {
+                    provide: FD_UI_DIALOG_DATA,
+                    useValue: { ...LESSON, locale: '', category: '', difficulty: '', estimatedReadMinutes: 0, isPublished: undefined },
+                },
+                { provide: FdUiDialogRef, useValue: { close } },
+            ],
+        });
+        const fixture = TestBed.createComponent(AdminLessonEditDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const preview = host.querySelector<HTMLButtonElement>('.preview-toggle button');
+        preview?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('.preview p')?.textContent).toBe('Retained lesson content');
+        preview?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('.preview')).toBeNull();
+        expect(host.querySelector<HTMLInputElement>('input[type="checkbox"]')?.checked).toBe(true);
+
+        const summary = host.querySelector('textarea');
+        if (summary === null) {
+            throw new Error('Expected the summary field.');
+        }
+        summary.value = 'Updated summary';
+        summary.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const save = [...host.querySelectorAll<HTMLButtonElement>('.dialog-actions button')].at(-1);
+        save?.click();
+
+        const http = TestBed.inject(HttpTestingController);
+        const request = http.expectOne(candidate => candidate.method === 'PUT' && candidate.url.endsWith(`/admin/lessons/${LESSON.id}`));
+        expect(request.request.body).toMatchObject({
+            summary: 'Updated summary',
+            content: LESSON.content,
+            locale: 'ru',
+            category: 'NutritionBasics',
+            difficulty: 'Beginner',
+            estimatedReadMinutes: 5,
+            isPublished: true,
+        });
+        request.flush({ ...LESSON, summary: 'Updated summary' });
+        await fixture.whenStable();
+        expect(close).toHaveBeenCalledExactlyOnceWith(true);
+        http.verify();
     });
 });

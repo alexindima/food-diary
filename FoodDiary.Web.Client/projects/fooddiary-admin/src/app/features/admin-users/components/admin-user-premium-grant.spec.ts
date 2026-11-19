@@ -1,12 +1,12 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormRoot } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { of, Subject, throwError } from 'rxjs';
+import { defer, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
-import { AdminUsersFacade } from '../lib/admin-users.facade';
+import { AdminUsersService } from '../api/admin-users.service';
 import type { AdminUserPremiumGrant } from '../models/admin-user.models';
 import { AdminUserPremiumGrantComponent } from './admin-user-premium-grant';
 
@@ -24,21 +24,21 @@ const PREVIOUS_GRANT: AdminUserPremiumGrant = {
 
 type GrantFixture = ComponentFixture<AdminUserPremiumGrantComponent>;
 type GrantApi = {
-    [Method in 'getPremiumGrant' | 'setPremiumGrant' | 'revokePremiumGrant']: Mock<AdminUsersFacade[Method]>;
+    [Method in 'getPremiumGrant' | 'setPremiumGrant' | 'revokePremiumGrant']: Mock<AdminUsersService[Method]>;
 };
 
 function api(): GrantApi {
     return {
-        getPremiumGrant: vi.fn<AdminUsersFacade['getPremiumGrant']>().mockReturnValue(of(null)),
-        setPremiumGrant: vi.fn<AdminUsersFacade['setPremiumGrant']>().mockReturnValue(of(NEW_GRANT)),
-        revokePremiumGrant: vi.fn<AdminUsersFacade['revokePremiumGrant']>().mockReturnValue(of(null)),
+        getPremiumGrant: vi.fn<AdminUsersService['getPremiumGrant']>().mockReturnValue(of(null)),
+        setPremiumGrant: vi.fn<AdminUsersService['setPremiumGrant']>().mockReturnValue(of(NEW_GRANT)),
+        revokePremiumGrant: vi.fn<AdminUsersService['revokePremiumGrant']>().mockReturnValue(of(null)),
     };
 }
 
 async function renderAsync(users: GrantApi): Promise<GrantFixture> {
     await TestBed.configureTestingModule({
         imports: [AdminUserPremiumGrantComponent],
-        providers: [provideTranslateTesting(), { provide: AdminUsersFacade, useValue: users }],
+        providers: [provideTranslateTesting(), { provide: AdminUsersService, useValue: users }],
     }).compileComponents();
     const fixture = TestBed.createComponent(AdminUserPremiumGrantComponent);
     fixture.componentRef.setInput('userId', ACCOUNT);
@@ -213,6 +213,28 @@ describe('Manual Premium grant editor', () => {
 });
 
 describe('Manual Premium grant revocation', () => {
+    it('submits only one revocation when the confirmation receives two clicks before rendering', async () => {
+        const users = api();
+        const pending = new Subject<AdminUserPremiumGrant | null>();
+        const subscribe = vi.fn(() => pending);
+        users.getPremiumGrant.mockReturnValue(of(PREVIOUS_GRANT));
+        users.revokePremiumGrant.mockReturnValue(defer(subscribe));
+        const fixture = await renderAsync(users);
+        click(fixture, 'ADMIN_USER_PREMIUM.REVOKE');
+        const confirm = button(fixture, 'ADMIN_USER_PREMIUM.REVOKE');
+
+        confirm.click();
+        confirm.click();
+        expect(subscribe).toHaveBeenCalledOnce();
+        fixture.detectChanges();
+        expect(confirm.disabled).toBe(true);
+
+        pending.next(null);
+        await renderUpdateAsync(fixture);
+        expect(host(fixture).textContent).toContain('ADMIN_USER_PREMIUM.EMPTY');
+        expect(host(fixture).querySelector('[role="alert"]')).toBeNull();
+    });
+
     it('requires confirmation, preserves the current grant on error and clears it after retry', async () => {
         const users = api();
         users.getPremiumGrant.mockReturnValue(of(PREVIOUS_GRANT));

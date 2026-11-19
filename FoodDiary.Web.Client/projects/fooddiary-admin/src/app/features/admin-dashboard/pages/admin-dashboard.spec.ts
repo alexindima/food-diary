@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -78,30 +77,24 @@ describe('Admin dashboard overview', () => {
 });
 
 describe('dashboard calendar validation', () => {
-    it.each(['2026-02-31', '2026-04-31', '2025-02-29', '2026-13-01'])('blocks impossible calendar date %s before loading', date => {
-        const load = vi.fn();
-        const clear = vi.fn();
-        TestBed.configureTestingModule({
-            imports: [AdminDashboardComponent],
-            providers: [
-                provideRouter([]),
-                provideTranslateTesting(),
-                {
-                    provide: AdminDashboardFacade,
-                    useValue: { load, clear, overview: signal(null), isLoading: signal(false), failed: signal(false) },
-                },
-            ],
-        });
-        const fixture = TestBed.createComponent(AdminDashboardComponent);
-        load.mockClear();
-        fixture.componentInstance['preset'].set('custom');
-        fixture.componentInstance['from'].set(date);
-        fixture.componentInstance['to'].set('2026-10-01');
-        fixture.componentInstance['reload']();
+    it.each([
+        ['2026-02-31', '2026-10-01'],
+        ['2026-04-31', '2026-10-01'],
+        ['2025-02-29', '2026-10-01'],
+        ['2026-13-01', '2026-10-01'],
+        ['1969-12-31', '1970-01-01'],
+        ['2024-01-01', '2999-01-01'],
+        ['2000-01-01', '2011-01-01'],
+    ])('rejects out-of-bounds URL range %s to %s without issuing a report request', async (from, to) => {
+        const getOverview = vi.fn().mockReturnValue(of(overview));
+        const fixture = renderDashboard(getOverview);
+        getOverview.mockClear();
+        await TestBed.inject(Router).navigateByUrl(`/?period=custom&from=${from}&to=${to}`);
         fixture.detectChanges();
-        expect(load).not.toHaveBeenCalled();
-        expect(clear).toHaveBeenCalled();
-        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.INVALID');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(getOverview).not.toHaveBeenCalled();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_OVERVIEW.INVALID');
+        expect(host.querySelector('fd-admin-dashboard-content')).toBeNull();
     });
 });
 

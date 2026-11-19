@@ -8,6 +8,7 @@ import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { ADMIN_DEVELOPMENT_SCREENS, type AdminDevelopmentScreen } from '../../../shared/development/admin-development-screen';
 import { adminId, adminUtcInstant, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailMessageDialogComponent, type AdminMailMessageDialogData } from '../dialogs/admin-mail-message-dialog';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
@@ -94,12 +95,21 @@ type InboxTest = {
     open: Mock<OpenMessage>;
 };
 
-async function setupInboxAsync(url: string, getMessagePage: Mock<AdminMailInboxFacade['getMessagePage']>): Promise<InboxTest> {
+async function setupInboxAsync(
+    url: string,
+    getMessagePage: Mock<AdminMailInboxFacade['getMessagePage']>,
+    attach?: (screen: AdminDevelopmentScreen) => () => void,
+): Promise<InboxTest> {
     const open = vi.fn<OpenMessage>();
     await TestBed.configureTestingModule({
         providers: [
             provideTranslateTesting(),
-            provideRouter([{ path: 'mail-inbox', component: AdminMailInboxComponent }]),
+            provideRouter([
+                { path: 'mail-inbox', component: AdminMailInboxComponent },
+                { path: 'feedback', component: AdminMailInboxComponent, data: { feedbackMailbox: true } },
+                { path: 'exit', children: [] },
+            ]),
+            { provide: ADMIN_DEVELOPMENT_SCREENS, useValue: attach === undefined ? null : { attach } },
             { provide: AdminMailInboxFacade, useValue: { getMessagePage } },
             { provide: FdUiDialogService, useValue: { open } },
         ],
@@ -225,5 +235,62 @@ describe('admin inbox navigation', () => {
             PAGE_SIZE,
             expect.objectContaining({ category: 'dmarc-report', search: 'Current' }),
         );
+
+        for (const [label, categoryFilter] of [
+            ['ADMIN_MAIL_INBOX.MAIL', 'general'],
+            ['ADMIN_MAIL_INBOX.ALL', ''],
+        ]) {
+            trigger?.click();
+            await renderInboxAsync(harness);
+            const choice = [...overlay.querySelectorAll<HTMLElement>('[role="option"]')].find(item => item.textContent.trim() === label);
+            expect(choice).toBeTruthy();
+            choice?.click();
+            await renderInboxAsync(harness);
+            expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ category: categoryFilter }));
+        }
+    });
+
+    it('restores a bookmarked page that no longer exists, then resets it when choosing the read count', async () => {
+        const getMessagePage = vi
+            .fn<AdminMailInboxFacade['getMessagePage']>()
+            .mockReturnValue(of({ items: [currentMail], totalItems: INBOX_TOTAL, readCount: 1 }));
+        const { element, harness, router } = await setupInboxAsync(`${INBOX}?page=99&search=Current`, getMessagePage);
+
+        expect(router.parseUrl(router.url).queryParamMap.get('page')).toBe('2');
+        expect(getMessagePage).toHaveBeenLastCalledWith(PAGE_TWO, PAGE_SIZE, expect.objectContaining({ search: 'Current' }));
+        requireNamedButton(element, 'ADMIN_MAIL_INBOX.READ: 1').click();
+        await renderInboxAsync(harness);
+
+        const params = router.parseUrl(router.url).queryParamMap;
+        expect(params.get('page')).toBe('1');
+        expect(params.get('unread')).toBe('false');
+        expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ unread: false, search: 'Current' }));
+    });
+});
+
+describe('admin inbox screen state', () => {
+    it.each([
+        { path: INBOX, recipient: 'alternate@example.test' },
+        { path: '/feedback', recipient: 'feedback@fooddiary.club' },
+    ])('reports and filters $path while respecting its mailbox scope', async ({ path, recipient }) => {
+        const detach = vi.fn();
+        const attach = vi.fn<(screen: AdminDevelopmentScreen) => () => void>().mockReturnValue(detach);
+        const getMessagePage = vi.fn<AdminMailInboxFacade['getMessagePage']>().mockReturnValue(of({ items: [currentMail], totalItems: 1 }));
+        const { harness } = await setupInboxAsync(path, getMessagePage, attach);
+        const screen = attach.mock.lastCall?.[0];
+        expect(screen?.kind).toBe('admin-mail-inbox');
+        await screen?.setFiltersAsync?.({ recipient: 'alternate@example.test', search: 'Current' });
+        await renderInboxAsync(harness);
+
+        expect(getMessagePage).toHaveBeenLastCalledWith(1, PAGE_SIZE, expect.objectContaining({ recipient, search: 'Current' }));
+        expect(screen?.read()).toMatchObject({
+            filters: { recipient, search: 'Current' },
+            page: 1,
+            loading: false,
+            error: false,
+            items: [{ id: currentMail.id, status: currentMail.status }],
+        });
+        await harness.navigateByUrl('/exit');
+        expect(detach).toHaveBeenCalledOnce();
     });
 });

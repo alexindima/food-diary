@@ -24,38 +24,37 @@ function choosePhoto(root: HTMLElement, file: File | null): void {
     input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
+const visionApi = {
+    preview: vi.fn<AdminAiPromptsFacade['preview']>(),
+    test: vi.fn<AdminAiPromptsFacade['test']>(),
+    uploadImage: vi.fn<AdminAiPromptsFacade['uploadImage']>(),
+};
+
+async function renderVisionWorkbenchAsync(): Promise<{ fixture: ComponentFixture<AdminAiPromptWorkbenchComponent>; root: HTMLElement }> {
+    vi.resetAllMocks();
+    visionApi.preview.mockReturnValue(of({ text: 'Preview with selected photo' }));
+    visionApi.test.mockReturnValue(of({ text: '{"items":[]}' }));
+    await TestBed.configureTestingModule({
+        imports: [AdminAiPromptWorkbenchComponent],
+        providers: [...provideTranslateTesting(), { provide: AdminAiPromptsFacade, useValue: visionApi }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminAiPromptWorkbenchComponent);
+    fixture.componentRef.setInput('scenarioKey', 'vision');
+    fixture.componentRef.setInput('locale', 'en');
+    fixture.componentRef.setInput('promptText', 'Recognize food');
+    fixture.detectChanges();
+    return { fixture, root: fixture.nativeElement as HTMLElement };
+}
+
 describe('AdminAiPromptWorkbenchComponent rendered interactions', () => {
-    const api = {
-        preview: vi.fn<AdminAiPromptsFacade['preview']>(),
-        test: vi.fn<AdminAiPromptsFacade['test']>(),
-        uploadImage: vi.fn<AdminAiPromptsFacade['uploadImage']>(),
-    };
-    let fixture: ComponentFixture<AdminAiPromptWorkbenchComponent>;
-    let root: HTMLElement;
-
-    beforeEach(async () => {
-        vi.resetAllMocks();
-        api.preview.mockReturnValue(of({ text: 'Preview with selected photo' }));
-        api.test.mockReturnValue(of({ text: '{"items":[]}' }));
-        await TestBed.configureTestingModule({
-            imports: [AdminAiPromptWorkbenchComponent],
-            providers: [...provideTranslateTesting(), { provide: AdminAiPromptsFacade, useValue: api }],
-        }).compileComponents();
-        fixture = TestBed.createComponent(AdminAiPromptWorkbenchComponent);
-        fixture.componentRef.setInput('scenarioKey', 'vision');
-        fixture.componentRef.setInput('locale', 'en');
-        fixture.componentRef.setInput('promptText', 'Recognize food');
-        fixture.detectChanges();
-        root = fixture.nativeElement as HTMLElement;
-    });
-
     it('drops a preview that was started before leaving and reopening the same scenario', async () => {
+        const { fixture, root } = await renderVisionWorkbenchAsync();
         const pending = new Subject<{ text: string }>();
         const verified = vi.fn<(text: string) => void>();
         fixture.componentInstance.verified.subscribe(verified);
-        api.preview.mockReturnValueOnce(pending);
+        visionApi.preview.mockReturnValueOnce(pending);
         workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
-        expect(api.preview).toHaveBeenCalledTimes(1);
+        expect(visionApi.preview).toHaveBeenCalledTimes(1);
 
         fixture.componentRef.setInput('scenarioKey', 'nutrition');
         fixture.detectChanges();
@@ -71,11 +70,12 @@ describe('AdminAiPromptWorkbenchComponent rendered interactions', () => {
     });
 
     it('drops a photo uploaded before leaving and reopening the same locale', async () => {
+        const { fixture, root } = await renderVisionWorkbenchAsync();
         const pending = new Subject<{ assetId: string }>();
         const photo = new File(['photo'], 'previous-visit.png', { type: 'image/png' });
-        api.uploadImage.mockReturnValueOnce(pending);
+        visionApi.uploadImage.mockReturnValueOnce(pending);
         choosePhoto(root, photo);
-        expect(api.uploadImage).toHaveBeenCalledExactlyOnceWith(photo);
+        expect(visionApi.uploadImage).toHaveBeenCalledExactlyOnceWith(photo);
 
         fixture.componentRef.setInput('locale', 'ru');
         fixture.detectChanges();
@@ -90,9 +90,88 @@ describe('AdminAiPromptWorkbenchComponent rendered interactions', () => {
         workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
         await fixture.whenStable();
         fixture.detectChanges();
-        expect(api.preview.mock.lastCall?.[0].imageAssetId).toBeUndefined();
+        expect(visionApi.preview.mock.lastCall?.[0].imageAssetId).toBeUndefined();
         expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(true);
     });
+});
+
+describe('Workbench file handling', () => {
+    it('ignores cancellation, rejects incompatible files, and previews only the finished upload', async () => {
+        const { fixture, root } = await renderVisionWorkbenchAsync();
+        const invalid = new File(['text'], 'sample.txt', { type: 'text/plain' });
+        const oversized = new File(['photo'], 'oversized.png', { type: 'image/png' });
+        const MAX_IMAGE_BYTES = 20_971_520;
+        Object.defineProperty(oversized, 'size', { value: MAX_IMAGE_BYTES + 1 });
+        choosePhoto(root, null);
+        expect(root.querySelector('[role="alert"]')).toBeNull();
+        for (const file of [invalid, oversized]) {
+            choosePhoto(root, file);
+            fixture.detectChanges();
+            expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_PROMPTS.IMAGE_ERROR');
+        }
+        expect(visionApi.uploadImage).not.toHaveBeenCalled();
+
+        const pending = new Subject<{ assetId: string }>();
+        const photo = new File(['photo'], 'usable.webp', { type: 'image/webp' });
+        visionApi.uploadImage.mockReturnValueOnce(pending);
+        choosePhoto(root, photo);
+        choosePhoto(root, new File(['another'], 'another.png', { type: 'image/png' }));
+        fixture.detectChanges();
+        expect(visionApi.uploadImage).toHaveBeenCalledExactlyOnceWith(photo);
+        expect(workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').disabled).toBe(true);
+
+        pending.next({ assetId: 'uploaded-photo' });
+        pending.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(root.textContent).toContain(photo.name);
+        expect(root.querySelector('[role="alert"]')).toBeNull();
+        workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(visionApi.preview).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ imageAssetId: 'uploaded-photo' }));
+        expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(false);
+    });
+
+    it.each([false, true])('shows a failed upload only for a current locale (changed: %s)', async changed => {
+        const { fixture, root } = await renderVisionWorkbenchAsync();
+        const pending = new Subject<{ assetId: string }>();
+        visionApi.uploadImage.mockReturnValueOnce(pending);
+        choosePhoto(root, new File(['photo'], 'upload.png', { type: 'image/png' }));
+        if (changed) {
+            fixture.componentRef.setInput('locale', 'ru');
+            fixture.detectChanges();
+        }
+        pending.error(new Error('Upload temporarily failed'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        if (changed) {
+            expect(root.querySelector('[role="alert"]')).toBeNull();
+        } else {
+            expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_PROMPTS.IMAGE_ERROR');
+        }
+        expect(workbenchButton(root, 'ADMIN_PROMPTS.UPLOAD_PHOTO').disabled).toBe(false);
+        expect(root.textContent).not.toContain('upload.png');
+    });
+});
+
+it('ignores a preview error for an old draft and displays a current preview failure', async () => {
+    const { fixture, root } = await renderVisionWorkbenchAsync();
+    const pending = new Subject<{ text: string }>();
+    visionApi.preview.mockReturnValueOnce(pending).mockReturnValueOnce(throwError(() => new Error('Preview unavailable')));
+    workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+    fixture.componentRef.setInput('promptText', 'Describe ingredients only');
+    fixture.detectChanges();
+    pending.error(new Error('Obsolete preview failed'));
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(root.querySelector('[role="alert"]')).toBeNull();
+
+    workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(root.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_PROMPTS.PREVIEW_ERROR');
+    expect(workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').disabled).toBe(false);
 });
 
 describe('AdminAiPromptWorkbenchComponent', () => {

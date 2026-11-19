@@ -52,4 +52,24 @@ describe('Admin bug journal decoder', () => {
     it('requires audit coverage and staleness metadata instead of defaulting to a healthy result', () => {
         expect(() => adminAuditRunFromSdk({ status: 'clean' })).toThrow();
     });
+
+    it('distinguishes a failed run completing now from the last successful audit', () => {
+        const completedAtUtc = '2026-10-12T06:00:00Z';
+        const lastSuccessfulAtUtc = '2026-10-11T06:00:00Z';
+        const audit = adminAuditRunFromSdk({
+            id: 'run-12',
+            fromUtc: '2026-10-11T06:00:00Z',
+            toUtc: '2026-10-12T06:00:00Z',
+            startedAtUtc: '2026-10-12T05:55:00Z',
+            completedAtUtc,
+            lastSuccessfulAtUtc,
+            status: 'failed',
+            findingCount: 0,
+            contentExpired: false,
+            isStale: true,
+            summary: 'Audit window incomplete',
+        });
+
+        expect(audit).toMatchObject({ completedAtUtc, lastSuccessfulAtUtc, status: 'failed', isStale: true });
+    });
 });
