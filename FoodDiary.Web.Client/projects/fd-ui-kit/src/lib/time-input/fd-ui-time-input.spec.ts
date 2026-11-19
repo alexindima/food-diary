@@ -2,6 +2,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
+import { FD_VALIDATION_ERRORS } from '../form-error/fd-ui-form-error';
 import { FdUiTimeInputComponent } from './fd-ui-time-input';
 
 const HOURS_PER_DAY = 24;
@@ -388,3 +390,30 @@ function pickerOption(overlay: HTMLElement, groupLabel: string, value: string): 
     }
     return option;
 }
+
+describe('FdUiTimeInputComponent scoped validation', () => {
+    it('announces the local required-time message after leaving the control', async () => {
+        await TestBed.configureTestingModule({
+            imports: [FdUiTimeInputComponent],
+            providers: [provideTranslateTesting()],
+        })
+            .overrideComponent(FdUiTimeInputComponent, {
+                add: { providers: [{ provide: FD_VALIDATION_ERRORS, useValue: { required: (): string => 'Select a meal time' } }] },
+            })
+            .compileComponents();
+
+        const fixture = TestBed.createComponent(FdUiTimeInputComponent);
+        fixture.componentRef.setInput('errors', [{ kind: 'required' }]);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const control = element.querySelector('input');
+        expect(element.querySelector('[role="alert"]')).toBeNull();
+
+        control?.focus();
+        control?.blur();
+        fixture.detectChanges();
+        const error = element.querySelector('[role="alert"]');
+        expect(error?.textContent.trim()).toBe('Select a meal time');
+        expect(control?.getAttribute('aria-describedby')).toBe(error?.id);
+    });
+});

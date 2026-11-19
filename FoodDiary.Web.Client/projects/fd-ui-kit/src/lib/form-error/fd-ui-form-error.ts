@@ -82,7 +82,15 @@ export function resolveSignalFormFieldError(
         return null;
     }
 
-    const error = state.errors()[0];
+    return resolveSignalValidationMessage(state.errors()[0], validationErrors, translateService);
+}
+
+/** @internal Resolves an error whose field state has already been checked by the caller. */
+export function resolveSignalValidationMessage(
+    error: ValidationError,
+    validationErrors: Partial<FdValidationErrors> | null | undefined,
+    translateService: TranslateService,
+): string {
     const key = mapSignalValidationErrorKey(error);
     const resolver = validationErrors?.[key];
     if (resolver === undefined) {
@@ -205,7 +213,7 @@ export class FdUiFormErrorComponent {
             }
 
             const controlError: unknown = controlErrors[key];
-            const controlParams = this.getValidationParams(controlError);
+            const controlParams = isRecord(controlError) ? controlError : {};
             const result = resolver(controlError);
 
             return this.translateValidationResult(result, controlParams);
@@ -221,13 +229,5 @@ export class FdUiFormErrorComponent {
     private translateMessage(key: string, params?: Record<string, unknown>): string {
         const translated: unknown = this.translate.instant(key, params);
         return typeof translated === 'string' ? translated : key;
-    }
-
-    private getValidationParams(error: unknown): Record<string, unknown> {
-        return this.isRecord(error) ? error : {};
-    }
-
-    private isRecord(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
     }
 }

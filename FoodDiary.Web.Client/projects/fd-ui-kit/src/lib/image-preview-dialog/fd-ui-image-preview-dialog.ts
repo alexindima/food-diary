@@ -21,6 +21,10 @@ export type FdUiImagePreviewDialogCollageImage = {
 
 const SWIPE_THRESHOLD = 40;
 
+function resolveInitialIndex(index: number, imageCount: number): number {
+    return Number.isInteger(index) && index >= 0 && index < imageCount ? index : 0;
+}
+
 @Component({
     selector: 'fd-ui-image-preview-dialog',
     imports: [CommonModule, FdUiDialogComponent, FdUiButtonComponent, TranslatePipe],
@@ -37,13 +41,7 @@ export class FdUiImagePreviewDialogComponent {
         this.imageUrl.length > 0
             ? [{ url: this.imageUrl, alt: this.dialogData.alt }]
             : (this.dialogData.collageImages ?? []).filter(image => image.url.trim().length > 0);
-    protected readonly activeIndex = signal(
-        Number.isInteger(this.dialogData.initialIndex) &&
-            (this.dialogData.initialIndex ?? -1) >= 0 &&
-            (this.dialogData.initialIndex ?? 0) < this.images.length
-            ? (this.dialogData.initialIndex ?? 0)
-            : 0,
-    );
+    protected readonly activeIndex = signal(resolveInitialIndex(this.dialogData.initialIndex ?? 0, this.images.length));
     protected readonly activeImage = computed(() => this.images[this.activeIndex()]);
     private touchStart: { x: number; y: number } | null = null;
 

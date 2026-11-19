@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2853,
+    "typescriptFiles": 2855,
     "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 870,
+    "specs": 872,
     "localeFiles": 5,
     "roles": {
       "Component": 516,
@@ -1802,7 +1802,7 @@
       "role": "Component",
       "selector": "fd-ui-datetime-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
-      "line": 45
+      "line": 35
     },
     {
       "name": "FdUiDialogShellComponent",
@@ -1907,7 +1907,7 @@
       "role": "Component",
       "selector": "fd-ui-form-error",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
-      "line": 145
+      "line": 153
     },
     {
       "name": "FdUiFormDirective",
@@ -1942,7 +1942,7 @@
       "role": "Component",
       "selector": "fd-ui-image-preview-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.ts",
-      "line": 32
+      "line": 36
     },
     {
       "name": "FdUiInlineAlertActionsComponent",
@@ -2033,7 +2033,7 @@
       "role": "Component",
       "selector": "fd-ui-line-chart",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-      "line": 158
+      "line": 157
     },
     {
       "name": "FdUiLoaderComponent",
@@ -2075,7 +2075,7 @@
       "role": "Component",
       "selector": "fd-ui-nutrient-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/nutrient-input/fd-ui-nutrient-input.ts",
-      "line": 33
+      "line": 31
     },
     {
       "name": "FdUiPaginationComponent",
@@ -2152,7 +2152,7 @@
       "role": "Component",
       "selector": "fd-ui-select",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "line": 45
+      "line": 46
     },
     {
       "name": "FdUiSidebarItemComponent",
@@ -2229,7 +2229,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.service.ts",
-      "line": 86
+      "line": 91
     },
     {
       "name": "FdUiTopLoaderComponent",

@@ -58,7 +58,7 @@ export class FdUiActivateDirective {
     private isNestedControl(event: Event): boolean {
         for (const target of event.composedPath()) {
             if (target === this.element.nativeElement) {
-                return false;
+                break;
             }
             if (target instanceof Element && target.matches(INTERACTIVE_SELECTOR)) {
                 return true;

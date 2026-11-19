@@ -541,7 +541,7 @@ contracts including invalid responses and rejected mutations.
 Admin and all three libraries also enforce project-wide minimums in their Angular
 coverage configurations. These floors preserve the measured baseline; they do
 not imply that every important scenario has a test. In lines/statements/branches/
-functions order, the minimums are Admin 75/76/72/67, UI kit 99/99/98/98, tour
+functions order, the minimums are Admin 75/76/72/67, UI kit 100/99/100/99, tour
 100/100/100/100, and WebMCP 96/96/96/95. Raise the relevant floor after closing a
 meaningful gap rather than compensating for a regression in another project.
 

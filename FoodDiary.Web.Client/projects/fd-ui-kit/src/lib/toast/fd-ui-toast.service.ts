@@ -82,29 +82,29 @@ export class FdUiToastRef {
     }
 }
 
+type ToastEntry = {
+    toast: FdUiToastInstance;
+    ref: FdUiToastRef;
+};
+
 @Service()
 export class FdUiToastService {
     private readonly enterAnimationMs = ENTER_ANIMATION_MS;
     private readonly exitAnimationMs = EXIT_ANIMATION_MS;
-    private readonly toastState = signal<FdUiToastInstance[]>([]);
-    private readonly refs = new Map<string, FdUiToastRef>();
+    private readonly entries = signal<ToastEntry[]>([]);
     private readonly dismissTimers = new Map<string, ReturnType<typeof setTimeout>>();
-    private readonly removeTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
-    public readonly toasts = computed(() => this.toastState());
+    public readonly toasts = computed(() => this.entries().map(entry => entry.toast));
 
     public open(message: string, options: FdUiToastOptions = {}): FdUiToastRef {
-        const existingToast = this.findDuplicate(message, options);
-        if (existingToast !== undefined) {
-            this.clearDismissTimer(existingToast.id);
-            this.toastState.update(current =>
-                current.map(item => (item.id === existingToast.id ? this.refreshToast(item, message, options) : item)),
+        const existing = this.findDuplicate(message, options);
+        if (existing !== undefined) {
+            this.clearDismissTimer(existing.toast.id);
+            this.entries.update(current =>
+                current.map(entry => (entry === existing ? { ...entry, toast: this.refreshToast(entry.toast, message, options) } : entry)),
             );
-            this.scheduleDismiss(existingToast.id, options.duration ?? DEFAULT_DURATION_MS);
-            const existingRef = this.refs.get(existingToast.id);
-            if (existingRef !== undefined) {
-                return existingRef;
-            }
+            this.scheduleDismiss(existing.toast.id, options.duration ?? DEFAULT_DURATION_MS);
+            return existing.ref;
         }
 
         const id = this.generateId();
@@ -125,8 +125,7 @@ export class FdUiToastService {
         const ref = new FdUiToastRef(() => {
             this.dismiss(id);
         });
-        this.refs.set(id, ref);
-        this.toastState.update(current => [...current, toast]);
+        this.entries.update(current => [...current, { toast, ref }]);
         this.scheduleDismiss(id, toast.duration);
         return ref;
     }
@@ -144,51 +143,47 @@ export class FdUiToastService {
     }
 
     public dismiss(id: string, dismissedByAction = false): void {
-        const toast = this.toastState().find(item => item.id === id);
-        if (toast === undefined || toast.leaving) {
+        const entry = this.entries().find(({ toast }) => toast.id === id);
+        if (entry === undefined || entry.toast.leaving) {
             return;
         }
 
         this.clearDismissTimer(id);
-        this.toastState.update(current => current.map(item => (item.id === id ? { ...item, leaving: true } : item)));
+        this.entries.update(current =>
+            current.map(item => (item === entry ? { ...entry, toast: { ...entry.toast, leaving: true } } : item)),
+        );
 
-        const removeTimer = setTimeout(() => {
-            this.toastState.update(current => current.filter(item => item.id !== id));
-            this.clearRemoveTimer(id);
-
-            const ref = this.refs.get(id);
-            ref?.notifyDismiss(dismissedByAction);
-            this.refs.delete(id);
+        setTimeout(() => {
+            this.entries.update(current => current.filter(item => item.ref !== entry.ref));
+            entry.ref.notifyDismiss(dismissedByAction);
         }, this.exitAnimationMs);
-
-        this.removeTimers.set(id, removeTimer);
     }
 
     public dismissAll(): void {
-        this.toastState().forEach(toast => {
+        this.entries().forEach(({ toast }) => {
             this.dismiss(toast.id);
         });
     }
 
     public triggerAction(id: string): void {
-        const toast = this.toastState().find(item => item.id === id);
-        if (toast === undefined || toast.leaving || toast.action === undefined) {
+        const entry = this.entries().find(({ toast }) => toast.id === id);
+        if (entry === undefined || entry.toast.leaving || entry.toast.action === undefined) {
             return;
         }
         this.dismiss(id, true);
-        this.refs.get(id)?.notifyAction();
+        entry.ref.notifyAction();
     }
 
-    private findDuplicate(message: string, options: FdUiToastOptions): FdUiToastInstance | undefined {
+    private findDuplicate(message: string, options: FdUiToastOptions): ToastEntry | undefined {
         if (options.key !== undefined) {
-            return this.toastState().find(toast => !toast.leaving && toast.key === options.key);
+            return this.entries().find(({ toast }) => !toast.leaving && toast.key === options.key);
         }
         const appearance = options.appearance ?? 'default';
         const horizontalPosition = options.horizontalPosition ?? 'center';
         const verticalPosition = options.verticalPosition ?? 'bottom';
 
-        return this.toastState().find(
-            toast =>
+        return this.entries().find(
+            ({ toast }) =>
                 !toast.leaving &&
                 toast.key === undefined &&
                 toast.message === message &&
@@ -229,14 +224,6 @@ export class FdUiToastService {
         if (timer !== undefined) {
             clearTimeout(timer);
             this.dismissTimers.delete(id);
-        }
-    }
-
-    private clearRemoveTimer(id: string): void {
-        const timer = this.removeTimers.get(id);
-        if (timer !== undefined) {
-            clearTimeout(timer);
-            this.removeTimers.delete(id);
         }
     }
 

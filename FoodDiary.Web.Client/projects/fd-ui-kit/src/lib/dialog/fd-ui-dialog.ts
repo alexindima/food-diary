@@ -60,13 +60,14 @@ export class FdUiDialogComponent {
 
     private readonly footerSlot = contentChild(FdUiDialogFooterDirective, { descendants: true });
     private readonly headerSlot = contentChild(FdUiDialogHeaderDirective, { descendants: true });
-    private readonly body = viewChild<ElementRef<HTMLElement>>('body');
-    private readonly root = viewChild<ElementRef<HTMLElement>>('dialogRoot');
+    private readonly body = viewChild.required<ElementRef<HTMLElement>>('body');
+    private readonly root = viewChild.required<ElementRef<HTMLElement>>('dialogRoot');
     private readonly customHeader = viewChild<ElementRef<HTMLElement>>('customHeader');
     private readonly isBodyScrollable = signal(false);
     private containerHasExplicitName: boolean | undefined;
 
-    protected readonly usesOverlayContainer = Boolean(this.dialogRef?.id);
+    private readonly overlayContainerId = this.dialogRef?.id;
+    protected readonly usesOverlayContainer = Boolean(this.overlayContainerId);
 
     public readonly title = input<string | undefined>(this.injectedData?.title);
     public readonly subtitle = input<string | undefined>(this.injectedData?.subtitle);
@@ -108,11 +109,7 @@ export class FdUiDialogComponent {
             }
         });
         afterNextRender(() => {
-            const body = this.body()?.nativeElement;
-
-            if (body === undefined) {
-                return;
-            }
+            const body = this.body().nativeElement;
 
             const updateScrollableState = (): void => {
                 this.isBodyScrollable.set(body.scrollHeight > body.clientHeight + 1);
@@ -135,8 +132,9 @@ export class FdUiDialogComponent {
     }
 
     private syncAccessibleName(heading: HTMLElement | null, title: string | undefined): void {
-        const container = this.usesOverlayContainer ? this.document.getElementById(this.dialogRef?.id ?? '') : this.root()?.nativeElement;
-        if (container === null || container === undefined) {
+        const id = this.overlayContainerId;
+        const container = id === undefined || id.length === 0 ? this.root().nativeElement : this.document.getElementById(id);
+        if (container === null) {
             return;
         }
         if (this.hasExplicitAccessibleName(container)) {

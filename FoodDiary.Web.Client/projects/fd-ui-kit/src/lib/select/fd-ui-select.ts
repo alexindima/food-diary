@@ -18,6 +18,7 @@ import {
 } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
 import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
@@ -45,8 +46,7 @@ export type FdUiSelectOption<T = unknown> = {
 export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | null> {
     private readonly injector = inject(Injector);
     protected readonly isEqual = Object.is;
-    protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
-    protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
+    private readonly controlWrapRef = viewChild.required<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
 
     public readonly id = input(`fd-ui-select-${uniqueId++}`);
@@ -73,9 +73,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     protected readonly overlayMinWidth = signal(0);
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
-    public focus(): void {
-        this.controlRef()?.nativeElement.focus();
-    }
+    public readonly focus = injectFdUiControlFocus();
 
     public constructor() {
         effect(() => {
@@ -99,24 +97,24 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         () =>
             `fd-ui-select fd-ui-select--appearance-${this.appearance()} ${this.sizeClass()}${this.hasError() ? ' fd-ui-select--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-select--floating' : ''}`,
     );
-    protected readonly selectedIndex = computed(() => this.options().findIndex(option => this.isEqual(option.value, this.internalValue())));
+    private readonly selection = computed(() => {
+        const options = this.options();
+        const index = options.findIndex(option => this.isEqual(option.value, this.internalValue()));
+        return { index, label: index === NO_ACTIVE_OPTION_INDEX ? null : options[index].label };
+    });
 
     protected readonly shouldFloatLabel = computed(() => {
         const label = this.label();
 
-        return label !== undefined && label.trim().length > 0 && (this.isFocused() || this.selectedIndex() >= 0);
+        return label !== undefined && label.trim().length > 0 && (this.isFocused() || this.selection().index >= 0);
     });
 
     protected readonly selectedLabel = computed(() => {
-        const selectedIndex = this.selectedIndex();
-        if (selectedIndex < 0) {
-            return this.isFocused() ? (this.placeholder() ?? '') : '';
-        }
-
-        return this.options()[selectedIndex]?.label ?? '';
+        const label = this.selection().label;
+        return label ?? (this.isFocused() ? (this.placeholder() ?? '') : '');
     });
 
-    protected readonly hasValue = computed(() => this.selectedIndex() >= 0);
+    protected readonly hasValue = computed(() => this.selection().index >= 0);
 
     protected readonly activeOptionId = computed(() => {
         const activeIndex = this.activeIndex();
@@ -136,7 +134,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         this.touched.set(true);
         this.touch.emit();
         this.closeMenu();
-        this.controlRef()?.nativeElement.focus();
+        this.focus();
     }
 
     protected onFocus(): void {
@@ -158,10 +156,10 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
             return;
         }
 
-        this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
+        this.overlayMinWidth.set(this.controlWrapRef().nativeElement.getBoundingClientRect().width);
         this.isOpen.set(true);
         this.isFocused.set(true);
-        this.activeIndex.set(this.options().length === 0 ? NO_ACTIVE_OPTION_INDEX : Math.max(this.selectedIndex(), FIRST_OPTION_INDEX));
+        this.activeIndex.set(this.options().length === 0 ? NO_ACTIVE_OPTION_INDEX : Math.max(this.selection().index, FIRST_OPTION_INDEX));
     }
 
     protected closeMenu(): void {
@@ -179,17 +177,12 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
         this.openMenu(event);
     }
 
-    protected onControlWrapClick(event: MouseEvent): void {
-        if (this.disabled()) {
+    protected onControlWrapClick(event: MouseEvent, control: HTMLButtonElement): void {
+        if (this.disabled() || event.composedPath().includes(control)) {
             return;
         }
 
-        const target = event.target instanceof HTMLElement ? event.target : null;
-        if (target?.closest('.fd-ui-select__control') !== null) {
-            return;
-        }
-
-        this.controlRef()?.nativeElement.focus();
+        control.focus();
         this.toggleMenu(event);
     }
 
@@ -215,7 +208,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     protected onListboxKeydown(event: KeyboardEvent): void {
         if (event.key === 'Tab') {
             this.closeMenu();
-            this.controlRef()?.nativeElement.focus();
+            this.focus();
             return;
         }
 
@@ -246,7 +239,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
             },
             Escape: () => {
                 this.closeMenu();
-                this.controlRef()?.nativeElement.focus();
+                this.focus();
             },
         };
 

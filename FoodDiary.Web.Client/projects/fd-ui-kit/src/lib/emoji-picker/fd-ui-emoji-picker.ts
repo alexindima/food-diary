@@ -150,12 +150,7 @@ export class FdUiEmojiPickerComponent {
             return;
         }
 
-        const option = this.options().at(index);
-        if (option === undefined || option.disabled === true) {
-            return;
-        }
-
-        this.select(option);
+        this.select(this.options()[index]);
         this.optionButtons()[index]?.nativeElement.focus();
     }
 }

@@ -1,38 +1,39 @@
-@if (routeItem(); as item) {
+@let entry = item();
+@if (isRouteItem(entry)) {
     <a
         routerLinkActive="is-active"
         fdUiHintPosition="right"
-        [routerLink]="item.route"
-        [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
-        [class]="itemClasses(item)"
+        [routerLink]="entry.route"
+        [routerLinkActiveOptions]="{ exact: entry.exact ?? false }"
+        [class]="itemClasses(entry)"
         [class.is-pending]="isPending()"
         [class.fd-ui-sidebar__link--collapsed]="collapsed()"
-        [attr.aria-label]="collapsed() ? item.label : null"
-        [fdUiHint]="item.label"
+        [attr.aria-label]="collapsed() ? entry.label : null"
+        [fdUiHint]="entry.label"
         [fdUiHintDisabled]="!collapsed()"
-        (click)="routeSelected.emit(item)"
+        (click)="routeSelected.emit(entry)"
     >
-        <fd-ui-icon [name]="item.icon" />
-        <span class="fd-ui-action-text" [hidden]="collapsed()">{{ item.label }}</span>
-        @if (hasBadge(item)) {
-            <span class="fd-ui-sidebar__badge fd-ui-caption" [class.fd-ui-sidebar__badge--collapsed]="collapsed()">{{ item.badge }}</span>
+        <fd-ui-icon [name]="entry.icon" />
+        <span class="fd-ui-action-text" [hidden]="collapsed()">{{ entry.label }}</span>
+        @if (hasBadge(entry)) {
+            <span class="fd-ui-sidebar__badge fd-ui-caption" [class.fd-ui-sidebar__badge--collapsed]="collapsed()">{{ entry.badge }}</span>
         }
     </a>
-} @else if (actionItem(); as item) {
+} @else {
     <button
         type="button"
         fdUiHintPosition="right"
-        [class]="itemClasses(item)"
+        [class]="itemClasses(entry)"
         [class.fd-ui-sidebar__link--collapsed]="collapsed()"
-        [attr.aria-label]="collapsed() ? item.label : null"
-        [fdUiHint]="item.label"
+        [attr.aria-label]="collapsed() ? entry.label : null"
+        [fdUiHint]="entry.label"
         [fdUiHintDisabled]="!collapsed()"
-        (click)="actionSelected.emit(item)"
+        (click)="actionSelected.emit(entry)"
     >
-        <fd-ui-icon [name]="item.icon" />
-        <span class="fd-ui-action-text" [hidden]="collapsed()">{{ item.label }}</span>
-        @if (hasBadge(item)) {
-            <span class="fd-ui-sidebar__badge fd-ui-caption" [class.fd-ui-sidebar__badge--collapsed]="collapsed()">{{ item.badge }}</span>
+        <fd-ui-icon [name]="entry.icon" />
+        <span class="fd-ui-action-text" [hidden]="collapsed()">{{ entry.label }}</span>
+        @if (hasBadge(entry)) {
+            <span class="fd-ui-sidebar__badge fd-ui-caption" [class.fd-ui-sidebar__badge--collapsed]="collapsed()">{{ entry.badge }}</span>
         }
     </button>
 }

@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, maxLengthError, type ValidationError } from '@angular/forms/signals';
 import { TranslateService, type TranslationObject } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import {
@@ -341,6 +341,18 @@ function registerSignalFormErrorTests(): void {
             const field = createSignalField(error);
 
             expect(resolveSignalFormFieldError(field, {}, translate)).toBe('FORM_ERRORS.UNKNOWN');
+        });
+
+        it('keeps positional values from a collection-shaped custom error out of translation parameters', () => {
+            TestBed.configureTestingModule({ providers: [provideTranslateTesting()] });
+            const error = Object.assign(['Breakfast', 'Dinner'], { kind: 'duplicateMealNames' });
+            const duplicateMealNames = vi.fn(() => 'FORM_ERRORS.DUPLICATE_MEAL_NAMES');
+            const field = createSignalField(error);
+
+            expect(resolveSignalFormFieldError(field, { duplicateMealNames }, TestBed.inject(TranslateService))).toBe(
+                'FORM_ERRORS.DUPLICATE_MEAL_NAMES',
+            );
+            expect(duplicateMealNames).toHaveBeenCalledExactlyOnceWith({});
         });
     });
 }

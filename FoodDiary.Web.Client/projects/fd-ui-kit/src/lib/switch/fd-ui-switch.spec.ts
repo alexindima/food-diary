@@ -42,10 +42,13 @@ describe('FdUiSwitchComponent', () => {
     it('does not emit when disabled', () => {
         const checkedChange = vi.fn();
         component['checkedChange'].subscribe(checkedChange);
-        fixture.componentRef.setInput('disabled', true);
-        fixture.detectChanges();
-
         const button = fixture.debugElement.query(By.css('.fd-ui-switch')).nativeElement as HTMLButtonElement;
+        fixture.componentRef.setInput('disabled', true);
+        // The controlled state changes before Angular updates the native disabled attribute.
+        expect(button.disabled).toBe(false);
+        button.click();
+        fixture.detectChanges();
+        expect(button.disabled).toBe(true);
         button.click();
         fixture.detectChanges();
 

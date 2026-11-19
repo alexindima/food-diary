@@ -46,9 +46,9 @@
             [attr.step]="step() ?? null"
             [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="hasError() ? 'true' : null"
-            (animationstart)="onAnimationStart($event, control.value)"
-            (input)="onInput(control.value)"
-            (focus)="onFocus()"
+            (animationstart)="onAnimationStart($event, control)"
+            (input)="onInput(control)"
+            (focus)="onFocus(control)"
             (blur)="onBlur()"
         />
 

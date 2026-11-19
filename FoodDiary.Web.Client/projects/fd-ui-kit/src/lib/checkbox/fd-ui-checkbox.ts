@@ -32,15 +32,6 @@ export class FdUiCheckboxComponent implements FormCheckboxControl {
         return (this.hint()?.length ?? 0) > 0 ? `${this.id()}-hint` : null;
     });
 
-    protected updateCheckedValue(event: Event): void {
-        if (!(event.target instanceof HTMLInputElement)) {
-            return;
-        }
-
-        const checkboxInput = event.target;
-        this.checked.set(checkboxInput.checked);
-    }
-
     protected touchControl(): void {
         this.touched.set(true);
         this.touch.emit();

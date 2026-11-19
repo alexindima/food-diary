@@ -283,3 +283,52 @@ describe('FdUiToastService feedback refresh and fallbacks', () => {
         expect(dismissed).toHaveBeenCalledExactlyOnceWith({ dismissedByAction: false });
     });
 });
+
+describe('FdUiToastService synchronous feedback observers', () => {
+    let service: FdUiToastService;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        service = setupToastService();
+    });
+
+    afterEach(() => {
+        service.dismissAll();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
+    });
+
+    it('leaves replacement feedback open when an action synchronously publishes another toast for the same key', () => {
+        const key = 'delete-draft';
+        const reference = service.open('Draft deleted', { key, duration: 0, action: 'Undo' });
+        const dismissed = vi.fn();
+        const callback = vi.fn(() => service.open('Draft restored', { key, duration: 0 }));
+        reference.onAction().subscribe(callback);
+        reference.afterDismissed().subscribe(dismissed);
+
+        service.triggerAction(service.toasts()[0].id);
+        expect(callback).toHaveBeenCalledOnce();
+        expect(callback.mock.results[0].value).not.toBe(reference);
+        expect(service.toasts()).toMatchObject([
+            { message: 'Draft deleted', leaving: true },
+            { message: 'Draft restored', leaving: false },
+        ]);
+
+        vi.advanceTimersByTime(EXIT_ANIMATION_MS);
+        expect(service.toasts()).toMatchObject([{ message: 'Draft restored', leaving: false }]);
+        expect(dismissed).toHaveBeenCalledExactlyOnceWith({ dismissedByAction: true });
+    });
+
+    it('lets the dismissal observer open new feedback after the old entry has been removed', () => {
+        const key = 'upload';
+        const original = service.open('Upload canceled', { key, duration: 0 });
+        const reopened = vi.fn(() => service.open('Upload restarted', { key, duration: 0 }));
+        original.afterDismissed().subscribe(reopened);
+
+        original.dismiss();
+        vi.advanceTimersByTime(EXIT_ANIMATION_MS);
+        expect(reopened).toHaveBeenCalledExactlyOnceWith({ dismissedByAction: false });
+        expect(service.toasts()).toMatchObject([{ message: 'Upload restarted', leaving: false }]);
+        expect(service.open('Upload complete', { key, duration: 0 })).toBe(reopened.mock.results[0].value);
+    });
+});

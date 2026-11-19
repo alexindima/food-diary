@@ -268,6 +268,12 @@ describe('native and custom focus targets', () => {
     });
 });
 
+@Component({
+    template: '',
+    hostDirectives: [{ directive: FdUiPreventUnloadDirective, inputs: ['fdUiPreventUnload'] }],
+})
+class UnloadGuardHostComponent {}
+
 describe('unload protection', () => {
     it('protects only dirty owners and releases the listener after save and destruction', async () => {
         const fixture = await setupAsync();
@@ -291,5 +297,24 @@ describe('unload protection', () => {
         fixture.detectChanges();
         fixture.destroy();
         expect(prevented()).toBe(false);
+    });
+
+    it('allows leaving immediately after a save while listener cleanup is pending', () => {
+        const fixture = TestBed.createComponent(UnloadGuardHostComponent);
+        const browserWindow = TestBed.inject(DOCUMENT).defaultView;
+        if (browserWindow === null) {
+            throw new Error('Expected browser document');
+        }
+        fixture.componentRef.setInput('fdUiPreventUnload', true);
+        fixture.detectChanges();
+
+        const dirtyEvent = new Event('beforeunload', { cancelable: true });
+        browserWindow.dispatchEvent(dirtyEvent);
+        expect(dirtyEvent.defaultPrevented).toBe(true);
+
+        fixture.componentRef.setInput('fdUiPreventUnload', false);
+        const savedEvent = new Event('beforeunload', { cancelable: true });
+        browserWindow.dispatchEvent(savedEvent);
+        expect(savedEvent.defaultPrevented).toBe(false);
     });
 });

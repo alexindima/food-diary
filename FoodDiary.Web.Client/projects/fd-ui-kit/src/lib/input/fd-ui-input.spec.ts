@@ -39,6 +39,7 @@ class ExplicitIdHostComponent {}
             (suffixButtonClicked)="clears = clears + 1"
         >
             <button fdInputSuffix type="button" (click)="scans = scans + 1">Scan barcode</button>
+            <a fdInputSuffix href="#scanner-help" tabindex="0">Scanner help</a>
         </fd-ui-input>
     `,
 })
@@ -100,14 +101,20 @@ const FRACTIONAL_HOURS = 1.5;
 const NEGATIVE_FRACTIONAL_VALUE = -1.5;
 
 describe('FdUiInputComponent browser form metadata', () => {
-    it('keeps a projected suffix action and the existing clear action independent without stealing focus', async () => {
+    it.each(['button', 'svg'])('keeps a projected %s action and the clear action independent without stealing focus', async target => {
         await TestBed.configureTestingModule({ imports: [ProjectedSuffixHostComponent] }).compileComponents();
         const fixture = TestBed.createComponent(ProjectedSuffixHostComponent);
         fixture.detectChanges();
         const element = fixture.nativeElement as HTMLElement;
         const focus = vi.spyOn(requireInput(element), 'focus');
 
-        element.querySelector<HTMLButtonElement>('.fd-ui-input__control-wrap [fdInputSuffix]')?.click();
+        const scanner = element.querySelector<HTMLButtonElement>('.fd-ui-input__control-wrap [fdInputSuffix]');
+        if (scanner === null) {
+            throw new Error('Expected the projected barcode scanner action.');
+        }
+        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        scanner.append(icon);
+        (target === 'svg' ? icon : scanner).dispatchEvent(new MouseEvent('click', { bubbles: true }));
         expect(fixture.componentInstance.scans).toBe(1);
         expect(fixture.componentInstance.clears).toBe(0);
 
@@ -757,8 +764,12 @@ describe('FdUiInputComponent delayed browser autofill', () => {
         await vi.advanceTimersByTimeAsync(0);
         expect(changed.mock.calls).toEqual([['initial native autofill'], ['late native autofill']]);
 
+        autofill.next({ target: control, isAutofilled: true });
         fixture.destroy();
+        control.value = 'native update after disposal';
+        await vi.advanceTimersByTimeAsync(delay);
         expect(autofill.observed).toBe(false);
+        expect(changed.mock.calls).toEqual([['initial native autofill'], ['late native autofill']]);
     });
 
     it('does not publish an autofill value received while disabled', async () => {
@@ -781,6 +792,17 @@ describe('FdUiInputComponent delayed browser autofill', () => {
 });
 
 describe('FdUiInputComponent rendered focused and cleared controls', () => {
+    it('allows a form to request focus before or after rendering the field', () => {
+        const fixture = TestBed.createComponent(FdUiInputComponent);
+        const component = fixture.componentInstance;
+        expect(() => {
+            component.focus();
+        }).not.toThrow();
+        fixture.detectChanges();
+        component.focus();
+        expect(document.activeElement).toBe(requireInput(fixture.nativeElement as HTMLElement));
+    });
+
     it('focuses through the control frame and programmatic contract only while enabled', async () => {
         const { component, fixture, input, el } = await setupInputAsync();
         const frame = el.querySelector<HTMLElement>('.fd-ui-input__control-wrap');
@@ -838,6 +860,34 @@ describe('FdUiInputComponent rendered focused and cleared controls', () => {
         expect(changed).toHaveBeenCalledExactlyOnceWith(null);
         expect(control.value).toBe('');
     });
+});
+
+it('does not move focus to projected help when a fieldset disables the native textbox', async () => {
+    await TestBed.configureTestingModule({ imports: [ProjectedSuffixHostComponent] }).compileComponents();
+    const fixture = TestBed.createComponent(ProjectedSuffixHostComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    document.body.append(fieldset);
+    fieldset.append(root);
+    onTestFinished(() => {
+        fieldset.remove();
+    });
+    const input = requireInput(root);
+    const help = root.querySelector<HTMLElement>('[href="#scanner-help"]');
+    const component = fixture.debugElement.query(By.directive(FdUiInputComponent)).componentInstance as FdUiInputComponent;
+    expect(input.matches(':disabled')).toBe(true);
+    expect(help).not.toBeNull();
+    expect(help?.matches(':disabled')).toBe(false);
+    help?.focus();
+    expect(document.activeElement).toBe(help);
+    help?.blur();
+
+    component.focus();
+
+    expect(document.activeElement).not.toBe(help);
+    expect(document.activeElement).not.toBe(input);
 });
 
 function dispatchAnimation(control: HTMLInputElement, name: string): void {

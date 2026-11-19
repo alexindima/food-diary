@@ -519,21 +519,20 @@ describe('FdUiSelectComponent keyboard and wrapper interactions', () => {
     });
 
     it('should close listbox on escape and return focus to the control', async () => {
-        const { component, fixture } = await setupSelectAsync();
+        const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
-        const focus = vi.fn();
-        Object.defineProperty(component, 'controlRef', {
-            value: vi.fn(() => ({
-                nativeElement: { focus },
-            })),
-        });
+        const control = requireElement('.fd-ui-select__control');
+        control.click();
+        fixture.detectChanges();
+        const listbox = document.querySelector<HTMLElement>('[role="listbox"]');
+        expect(listbox).not.toBeNull();
+        listbox?.focus();
+        listbox?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        fixture.detectChanges();
 
-        component['openMenu']();
-        component['onListboxKeydown'](new KeyboardEvent('keydown', { key: 'Escape' }));
-
-        expect(component['isOpen']()).toBe(false);
-        expect(focus).toHaveBeenCalledOnce();
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+        expect(document.activeElement).toBe(control);
     });
 
     it('should ignore unknown listbox keys without preventing default', async () => {
@@ -553,40 +552,37 @@ describe('FdUiSelectComponent keyboard and wrapper interactions', () => {
 
 describe('FdUiSelectComponent control wrapper interactions', () => {
     it('should toggle menu from control wrapper clicks outside the native button', async () => {
-        const { component, fixture, requireElement } = await setupSelectAsync();
-        fixture.componentRef.setInput('options', TEST_OPTIONS);
-        fixture.detectChanges();
-        const control = requireElement('.fd-ui-select__control') as HTMLButtonElement;
-        const focusSpy = vi.spyOn(control, 'focus');
-        const wrapper = requireElement('.fd-ui-select__control-wrap');
-        const event = new MouseEvent('click', { bubbles: true });
-
-        Object.defineProperty(event, 'target', { value: wrapper });
-        component['onControlWrapClick'](event);
-
-        expect(focusSpy).toHaveBeenCalledOnce();
-        expect(component['isOpen']()).toBe(true);
-    });
-
-    it('should ignore control wrapper clicks from the native button and when disabled', async () => {
-        const { component, fixture, requireElement } = await setupSelectAsync();
+        const { fixture, requireElement } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);
         fixture.detectChanges();
         const control = requireElement('.fd-ui-select__control');
-        const buttonEvent = new MouseEvent('click', { bubbles: true });
-        Object.defineProperty(buttonEvent, 'target', { value: control });
+        const wrapper = requireElement('.fd-ui-select__control-wrap');
+        wrapper.click();
+        expect(document.activeElement).toBe(control);
+        fixture.detectChanges();
+        expect(control.getAttribute('aria-expanded')).toBe('true');
+        wrapper.click();
+        fixture.detectChanges();
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+    });
 
-        component['onControlWrapClick'](buttonEvent);
-
-        expect(component['isOpen']()).toBe(false);
+    it('lets the native button handle its click and does not open from the disabled wrapper', async () => {
+        const { fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        control.click();
+        fixture.detectChanges();
+        expect(control.getAttribute('aria-expanded')).toBe('true');
+        control.click();
+        fixture.detectChanges();
+        expect(control.getAttribute('aria-expanded')).toBe('false');
 
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
-        const wrapperEvent = new MouseEvent('click', { bubbles: true });
-        Object.defineProperty(wrapperEvent, 'target', { value: requireElement('.fd-ui-select__control-wrap') });
-        component['onControlWrapClick'](wrapperEvent);
-
-        expect(component['isOpen']()).toBe(false);
+        requireElement('.fd-ui-select__control-wrap').click();
+        fixture.detectChanges();
+        expect(control.getAttribute('aria-expanded')).toBe('false');
     });
 });
 

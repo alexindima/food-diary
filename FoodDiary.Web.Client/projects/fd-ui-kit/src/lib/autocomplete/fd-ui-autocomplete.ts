@@ -48,8 +48,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
     public readonly focus = injectFdUiControlFocus();
     private readonly injector = inject(Injector);
-    protected readonly controlRef = viewChild<ElementRef<HTMLInputElement>>('control');
-    protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
+    private readonly controlWrapRef = viewChild.required<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
     protected readonly isEqual = Object.is;
 
@@ -183,7 +182,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         this.value.set('');
         this.queryChange.emit('');
         this.closeMenu();
-        this.controlRef()?.nativeElement.focus();
+        this.focus();
     }
 
     protected selectOption(option: FdUiAutocompleteOption<T>): void {
@@ -197,7 +196,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         this.touched.set(true);
         this.touch.emit();
         this.optionSelected.emit(option);
-        this.controlRef()?.nativeElement.focus();
+        this.focus();
         this.closeMenu();
     }
 
@@ -258,7 +257,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
             return;
         }
 
-        this.overlayMinWidth.set(this.controlWrapRef()?.nativeElement.getBoundingClientRect().width ?? 0);
+        this.overlayMinWidth.set(this.controlWrapRef().nativeElement.getBoundingClientRect().width);
         this.isOpen.set(true);
         const options = this.options();
         const selectedValue = this.internalValue() ?? this.value();

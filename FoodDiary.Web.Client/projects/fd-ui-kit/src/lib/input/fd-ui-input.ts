@@ -1,7 +1,7 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, untracked } from '@angular/core';
-import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
+import { afterNextRender, DestroyRef, ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
@@ -50,7 +50,8 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     private readonly destroyRef = inject(DestroyRef);
     private readonly autofillMonitor = inject(AutofillMonitor);
     private readonly autofillSyncDelaysMs = inject(FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS);
-    private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
+    private readonly control = viewChild.required<ElementRef<HTMLInputElement>>('control');
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
     public readonly name = input('');
@@ -101,7 +102,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
             ['email', 'username', 'current-password', 'new-password', 'one-time-code', 'url'].includes(this.autocomplete() ?? ''),
     );
 
-    private autofillSyncTimers: Array<ReturnType<typeof setTimeout>> = [];
+    private readonly autofillSyncTimers = new Set<ReturnType<typeof setTimeout>>();
 
     public constructor() {
         effect(() => {
@@ -114,13 +115,12 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         });
 
         afterNextRender(() => {
-            this.monitorAutofill();
-            this.syncNativeValue();
-            this.autofillSyncTimers = this.autofillSyncDelaysMs.map(delay =>
-                setTimeout(() => {
-                    this.syncNativeValue();
-                }, delay),
-            );
+            const control = this.control().nativeElement;
+            this.monitorAutofill(control);
+            this.syncValue(control);
+            this.autofillSyncDelaysMs.forEach(delay => {
+                this.scheduleAutofillSync(control, delay);
+            });
         });
 
         this.destroyRef.onDestroy(() => {
@@ -164,18 +164,18 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         return ids.length > 0 ? ids : null;
     });
 
-    protected onInput(value: string): void {
+    protected onInput(control: HTMLInputElement): void {
         if (this.disabled()) {
             return;
         }
 
-        this.updateInputValue(value);
+        this.updateInputValue(control);
     }
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Public focus contract used by interaction directives.
     public focus(): void {
         if (!this.disabled()) {
-            this.control()?.nativeElement.focus();
+            this.host.nativeElement.querySelector<HTMLInputElement>('.fd-ui-input__control')?.focus();
         }
     }
 
@@ -185,20 +185,20 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         this.touch.emit();
     }
 
-    protected onFocus(): void {
-        this.syncNativeValue();
+    protected onFocus(control: HTMLInputElement): void {
+        this.syncValue(control);
         this.isFocused.set(true);
         if (this.selectOnFocus() && this.type() === 'text') {
-            this.control()?.nativeElement.select();
+            control.select();
         }
     }
 
-    protected onAnimationStart(event: AnimationEvent, value: string): void {
+    protected onAnimationStart(event: AnimationEvent, control: HTMLInputElement): void {
         if (event.animationName !== 'fd-ui-input-autofill-start') {
             return;
         }
 
-        this.syncValue(value);
+        this.syncValue(control);
     }
 
     protected triggerSuffixButton(): void {
@@ -214,26 +214,18 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
             return;
         }
 
-        const target = event.target instanceof HTMLElement ? event.target : null;
-        const suffixAction = target?.closest('.fd-ui-input__suffix, .fd-ui-input__suffix-content');
-        if (suffixAction !== null && suffixAction !== undefined) {
+        const hasSuffixAction = event.composedPath().some(target => {
+            return target instanceof Element && target.matches('.fd-ui-input__suffix, .fd-ui-input__suffix-content');
+        });
+        if (hasSuffixAction) {
             return;
         }
 
         control.focus();
     }
 
-    private syncNativeValue(): void {
-        const nativeValue = this.control()?.nativeElement.value;
-
-        if (nativeValue === undefined) {
-            return;
-        }
-
-        this.syncValue(nativeValue);
-    }
-
-    private syncValue(value: string): void {
+    private syncValue(control: HTMLInputElement): void {
+        const value = control.value;
         if (value === String(this.internalValue())) {
             return;
         }
@@ -241,21 +233,19 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         this.internalValue.set(value);
 
         if (!this.disabled()) {
-            this.updateInputValue(value);
+            this.updateInputValue(control);
         }
     }
 
-    private updateInputValue(raw: string): void {
+    private updateInputValue(control: HTMLInputElement): void {
+        const raw = control.value;
         const parsed = this.toModelValue(raw);
         const normalizer = this.numberNormalizer();
         if (normalizer !== undefined && typeof parsed !== 'string' && this.type() === 'number') {
             const normalized = normalizer(parsed);
             const display = normalized === null ? '' : String(normalized);
             this.internalValue.set(display);
-            const control = this.control()?.nativeElement;
-            if (control !== undefined) {
-                control.value = display;
-            }
+            control.value = display;
             this.value.set(normalized);
             return;
         }
@@ -284,21 +274,21 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         return Number.isFinite(numberValue) ? numberValue : Number.NaN;
     }
 
-    private monitorAutofill(): void {
-        const control = this.control();
-
-        if (control === undefined) {
-            return;
-        }
-
+    private monitorAutofill(control: HTMLInputElement): void {
         this.autofillMonitor
             .monitor(control)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.syncNativeValue();
-                setTimeout(() => {
-                    this.syncNativeValue();
-                });
+                this.syncValue(control);
+                this.scheduleAutofillSync(control);
             });
+    }
+
+    private scheduleAutofillSync(control: HTMLInputElement, delay = 0): void {
+        const timer = setTimeout(() => {
+            this.autofillSyncTimers.delete(timer);
+            this.syncValue(control);
+        }, delay);
+        this.autofillSyncTimers.add(timer);
     }
 }

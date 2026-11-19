@@ -4,6 +4,7 @@ import type { FdUiChartSize } from '../chart/fd-ui-chart.types';
 import type { FdUiLineChartReferenceLine, FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 import { FdUiLineChartLegendComponent } from './fd-ui-line-chart-legend';
 import { FdUiLineChartXAxisComponent } from './fd-ui-line-chart-x-axis';
+import { resolveXAxisTicks } from './fd-ui-line-chart-x-axis-layout';
 import { FdUiLineChartYAxisComponent } from './fd-ui-line-chart-y-axis';
 
 export type { FdUiLineChartReferenceLine, FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
@@ -118,8 +119,6 @@ const LINE_CHART_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH - LINE_CHART_HORIZONTAL_PADD
 const LINE_CHART_SPARKLINE_LEFT_X = 0;
 const LINE_CHART_SPARKLINE_RIGHT_X = LINE_CHART_VIEWBOX_WIDTH;
 const LINE_CHART_GRID_LINE_COUNT = 5;
-const LINE_CHART_X_AXIS_LABEL_COUNT = 14;
-const LINE_CHART_MIN_X_AXIS_LABEL_GAP = 6.5;
 const LINE_CHART_PERCENTAGE_SCALE = 100;
 const REFERENCE_LABEL_TOP_THRESHOLD_PERCENT = 8;
 const REFERENCE_LABEL_TOP_THRESHOLD_Y = (LINE_CHART_VIEWBOX_HEIGHT * REFERENCE_LABEL_TOP_THRESHOLD_PERCENT) / LINE_CHART_PERCENTAGE_SCALE;
@@ -229,7 +228,6 @@ export class FdUiLineChartComponent {
             },
         ];
     });
-    private readonly xAxisPoints = computed(() => this.resolvedSeries().find(item => item.points.length > 0)?.points ?? []);
     private readonly numericValues = computed(() =>
         this.resolvedSeries()
             .flatMap(item => item.points.map(point => point.value))
@@ -317,77 +315,21 @@ export class FdUiLineChartComponent {
             };
         });
     });
-    private readonly xAxisLabelIndexes = computed<readonly number[]>(() => {
-        const points = this.xAxisPoints();
-        if (points.length === 0) {
-            return [];
-        }
-
-        if (points.length === 1) {
-            return [0];
-        }
-
-        const labelCount = Math.min(LINE_CHART_X_AXIS_LABEL_COUNT, points.length);
-        const indexes = Array.from({ length: labelCount }, (_, index) => Math.round((index * (points.length - 1)) / (labelCount - 1)));
-        const uniqueIndexes = [...new Set(indexes)];
-        const lastIndex = points.length - 1;
-        const visibleIndexes: number[] = [];
-
-        uniqueIndexes.forEach(index => {
-            if (index === 0 || index === lastIndex) {
-                visibleIndexes.push(index);
-                return;
-            }
-
-            const previousIndex = visibleIndexes.at(-1) ?? 0;
-            const previousX = this.resolvePointX(points[previousIndex], previousIndex, points.length);
-            const currentX = this.resolvePointX(points[index], index, points.length);
-            const lastX = this.resolvePointX(points[lastIndex], lastIndex, points.length);
-            if (currentX - previousX >= LINE_CHART_MIN_X_AXIS_LABEL_GAP && lastX - currentX >= LINE_CHART_MIN_X_AXIS_LABEL_GAP) {
-                visibleIndexes.push(index);
-            }
-        });
-
-        return [...new Set(visibleIndexes)];
-    });
-    protected readonly xAxisLabels = computed<readonly FdUiLineChartXAxisLabel[]>(() => {
-        const points = this.xAxisPoints();
-        const indexes = this.xAxisLabelIndexes();
-        if (points.length === 1) {
-            const label = points[0]?.label.trim() ?? '';
-            return label.length > 0 ? [{ label, xPercent: '50%', position: 'middle' }] : [];
-        }
-
-        return indexes.flatMap(index => {
-            const label = points[index]?.label.trim() ?? '';
-            if (label.length === 0) {
-                return [];
-            }
-
-            const x = this.resolvePointX(points[index], index, points.length);
-            const position = index === 0 ? 'start' : index === points.length - 1 ? 'end' : 'middle';
-
-            return [
-                {
-                    label,
-                    xPercent: `${x}%`,
-                    position,
-                },
-            ];
-        });
-    });
-    protected readonly verticalGridLines = computed<readonly FdUiLineChartVerticalGridLine[]>(() => {
-        const points = this.xAxisPoints();
-        if (points.length === 0) {
-            return [];
-        }
-
-        if (points.length === 1) {
-            return [{ x: LINE_CHART_VIEWBOX_WIDTH / 2 }];
-        }
-
-        return this.xAxisLabelIndexes().map(index => ({ x: this.resolvePointX(points[index], index, points.length) }));
-    });
+    private readonly xAxisTicks = computed(() =>
+        resolveXAxisTicks(
+            this.resolvedSeries(),
+            (point, index, count) => this.resolvePointX(point, index, count),
+            LINE_CHART_VIEWBOX_WIDTH / 2,
+        ),
+    );
+    protected readonly xAxisLabels = computed<readonly FdUiLineChartXAxisLabel[]>(() =>
+        this.xAxisTicks()
+            .filter(tick => tick.label.length > 0)
+            .map(tick => ({ label: tick.label, xPercent: `${tick.x}%`, position: tick.position })),
+    );
+    protected readonly verticalGridLines = computed<readonly FdUiLineChartVerticalGridLine[]>(() =>
+        this.xAxisTicks().map(({ x }) => ({ x })),
+    );
 
     protected readonly seriesViews = computed<readonly FdUiLineChartSeriesViewModel[]>(() => {
         const numeric = this.numericValues();
@@ -640,8 +582,8 @@ export class FdUiLineChartComponent {
         return groups;
     }
 
-    private resolvePointX(point: FdUiLineChartPoint, index: number, pointCount: number): number {
-        const explicitPosition = point.xPosition;
+    private resolvePointX(point: Pick<FdUiLineChartPoint, 'xPosition'> | undefined, index: number, pointCount: number): number {
+        const explicitPosition = point?.xPosition;
         if (explicitPosition !== undefined && Number.isFinite(explicitPosition)) {
             const normalizedPosition = this.clamp(explicitPosition, 0, 1);
             return this.chartLeft() + normalizedPosition * (this.chartRight() - this.chartLeft());

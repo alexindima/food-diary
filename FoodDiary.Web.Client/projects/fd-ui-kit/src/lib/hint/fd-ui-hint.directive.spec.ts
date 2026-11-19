@@ -1,6 +1,7 @@
 import '@angular/compiler';
 
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -88,6 +89,13 @@ class DynamicHintHostComponent {
     public readonly description = signal<string | null>(null);
 }
 
+@Component({
+    imports: [FdUiHintDirective],
+    providers: [{ provide: DOCUMENT, useFactory: (): Document => document.implementation.createHTMLDocument('Detached hint') }],
+    template: '<button type="button" fdUiHint="Details" aria-describedby="existing-description">Action</button>',
+})
+class HintWithoutWindowHostComponent {}
+
 type HintTestContext<TComponent> = {
     fixture: ComponentFixture<TComponent>;
     overlayRoot: HTMLElement;
@@ -165,6 +173,23 @@ describe('FdUiHintDirective', () => {
 
 function registerTimerTests(): void {
     describe('overlapping hint events', () => {
+        it('shows and removes its accessible description immediately when the document has no timer window', async () => {
+            const context = await createContextAsync(HintWithoutWindowHostComponent);
+            const ownerDocument = context.fixture.debugElement.injector.get(DOCUMENT);
+            expect(ownerDocument.defaultView).toBeNull();
+            context.trigger.dispatchEvent(new MouseEvent('mouseenter'));
+            context.fixture.detectChanges();
+
+            const tooltip = queryTooltip(context.overlayRoot);
+            expect(tooltipText(context.overlayRoot)).toBe('Details');
+            expect(context.trigger.getAttribute('aria-describedby')).toBe(`existing-description ${tooltip?.id}`);
+
+            context.trigger.dispatchEvent(new MouseEvent('mouseleave'));
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBeNull();
+            expect(context.trigger.getAttribute('aria-describedby')).toBe('existing-description');
+        });
+
         it('does not delay display or dismissal when a matching event arrives again', async () => {
             const context = await createContextAsync(TestHostComponent, component => {
                 component.hideDelayMs = HINT_HIDE_DELAY_MS;

@@ -1,9 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { findOverlappingXAxisLabels } from './fd-ui-line-chart-x-axis-layout';
+import { findOverlappingXAxisLabels, resolveXAxisTicks } from './fd-ui-line-chart-x-axis-layout';
 
 const CLEARANCE = 4;
 const CROWDED_LABEL_INDEX = 12;
+const AXIS_CENTER = 50;
+
+describe('line chart x-axis ticks', () => {
+    it('returns no ticks for empty series instead of inventing a date or grid position', () => {
+        const position = (): number => AXIS_CENTER;
+        expect(resolveXAxisTicks([], position, AXIS_CENTER)).toEqual([]);
+        expect(resolveXAxisTicks([{ points: [] }, { points: [] }], position, AXIS_CENTER)).toEqual([]);
+    });
+});
 
 describe('line chart x-axis label collisions', () => {
     it('keeps the final date readable when the preceding label overlaps it', () => {

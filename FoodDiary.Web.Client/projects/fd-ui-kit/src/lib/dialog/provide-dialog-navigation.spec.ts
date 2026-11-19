@@ -6,19 +6,19 @@ import { describe, expect, it, vi } from 'vitest';
 import { FD_UI_DIALOG_HISTORY } from './fd-ui-dialog-history';
 import { provideFdUiDialogNavigation } from './provide-dialog-navigation';
 
-function setupNavigation(): {
+function setupNavigation(injectedBaseHref: string | null = '/base/'): {
     location: Location;
     platform: MockPlatformLocation;
     strategy: LocationStrategy;
     handlePopState: ReturnType<typeof vi.fn>;
 } {
-    const platform = new MockPlatformLocation({ startUrl: 'https://fooddiary.test/base/current' });
+    const platform = new MockPlatformLocation({ startUrl: 'https://fooddiary.test/base/current', appBaseHref: '/base/' });
     const handlePopState = vi.fn().mockReturnValue(true);
     TestBed.configureTestingModule({
         providers: [
             provideFdUiDialogNavigation(),
             { provide: PlatformLocation, useValue: platform },
-            { provide: APP_BASE_HREF, useValue: '/base/' },
+            ...(injectedBaseHref === null ? [] : [{ provide: APP_BASE_HREF, useValue: injectedBaseHref }]),
             { provide: FD_UI_DIALOG_HISTORY, useValue: { handlePopState, recordPagePush: vi.fn() } },
         ],
     });
@@ -59,5 +59,15 @@ describe('dialog navigation provider', () => {
         location.replaceState('/next', 'page=3', { editor: 'updated' });
         expect(platform.search).toBe('?page=3');
         expect(location.getState()).toEqual({ editor: 'updated' });
+    });
+
+    it('uses the browser base href when APP_BASE_HREF is not supplied', () => {
+        const { location, platform, strategy } = setupNavigation(null);
+
+        expect(location.path()).toBe('/current');
+        expect(strategy.prepareExternalUrl('/archive')).toBe('/base/archive');
+        location.go('/archive', 'page=2');
+        expect(platform.pathname).toBe('/base/archive');
+        expect(platform.search).toBe('?page=2');
     });
 });

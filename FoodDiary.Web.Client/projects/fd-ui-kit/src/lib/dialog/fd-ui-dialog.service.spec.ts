@@ -3,8 +3,8 @@ import { type GlobalPositionStrategy, Overlay } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { Component, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { Subject, take } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
@@ -15,8 +15,15 @@ import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
 class DummyDialogComponent {}
 
 describe('FdUiDialogService background interaction', () => {
-    it('makes the page inert while a real dialog is open and restores it on close', () => {
+    beforeEach(() => {
         vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addListener: vi.fn(), removeListener: vi.fn() }));
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('makes the page inert while a real dialog is open and restores it on close', () => {
         const page = document.createElement('main');
         document.body.append(page);
         const service = TestBed.inject(FdUiDialogService);
@@ -28,7 +35,26 @@ describe('FdUiDialogService background interaction', () => {
         } finally {
             service.closeAll();
             page.remove();
-            vi.unstubAllGlobals();
+        }
+    });
+
+    it('leaves the page interactive when a CDK open observer closes the dialog synchronously', () => {
+        const page = document.createElement('main');
+        document.body.append(page);
+        const cdk = TestBed.inject(Dialog);
+        const service = TestBed.inject(FdUiDialogService);
+        cdk.afterOpened.pipe(take(1)).subscribe(ref => {
+            ref.close();
+        });
+        try {
+            const ref = service.open(DummyDialogComponent, { autoFocus: false, restoreFocus: false });
+
+            expect(ref.overlayRef.hasAttached()).toBe(false);
+            expect(cdk.openDialogs).toHaveLength(0);
+            expect(page.hasAttribute('inert')).toBe(false);
+        } finally {
+            service.closeAll();
+            page.remove();
         }
     });
 });

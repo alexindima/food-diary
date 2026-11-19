@@ -6,7 +6,7 @@
         class="fd-ui-select__control-wrap"
         role="presentation"
         [style.background]="fillColor() || null"
-        (click)="onControlWrapClick($event)"
+        (click)="onControlWrapClick($event, control)"
     >
         @if (label()) {
             <label class="fd-ui-select__label" [attr.for]="id()">

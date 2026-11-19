@@ -31,7 +31,20 @@ export * from './empty-state/fd-ui-empty-state';
 export * from './entity-card/fd-ui-entity-card';
 export * from './entity-card/fd-ui-entity-card-header.directive';
 export * from './form/fd-ui-form.directive';
-export * from './form-error/fd-ui-form-error';
+export {
+    FD_VALIDATION_ERRORS,
+    type FdSignalFormErrorOptions,
+    type FdSignalFormField,
+    type FdSignalFormFieldState,
+    FdUiFormErrorComponent,
+    type FdUiFormErrorControlState,
+    type FdValidationErrorConfig,
+    type FdValidationErrors,
+    getNumberProperty,
+    getSignalValidationParams,
+    mapSignalValidationErrorKey,
+    resolveSignalFormFieldError,
+} from './form-error/fd-ui-form-error';
 export * from './hint/fd-ui-hint.directive';
 export * from './hint/fd-ui-hint.tokens';
 export * from './icon/fd-ui-icon';

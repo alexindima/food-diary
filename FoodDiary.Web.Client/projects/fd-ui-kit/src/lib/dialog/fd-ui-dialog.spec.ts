@@ -1,8 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiDialogComponent, type FdUiDialogData } from './fd-ui-dialog';
@@ -216,5 +217,51 @@ describe('FdUiDialogComponent custom header', () => {
         const dialog = element.querySelector<HTMLElement>('[role="dialog"]');
         expect(dialog?.classList.contains('fd-ui-dialog--has-footer')).toBe(true);
         expect(dialog?.querySelector('footer button')?.textContent).toBe('Confirm');
+    });
+});
+
+describe('FdUiDialogComponent standalone document and scrolling', () => {
+    it('uses scoped dialog data and updates the scroll inset without a framing window', async () => {
+        const ownerDocument = document.implementation.createHTMLDocument('Detached dialog');
+        await TestBed.configureTestingModule({
+            imports: [FdUiDialogComponent],
+            providers: [provideTranslateTesting(), { provide: FD_UI_DIALOG_DATA, useValue: { title: 'Parent dialog' } }],
+        })
+            .overrideComponent(FdUiDialogComponent, {
+                add: {
+                    providers: [
+                        { provide: DOCUMENT, useValue: ownerDocument },
+                        { provide: FD_UI_DIALOG_DATA, useValue: { title: 'Scoped dialog' } },
+                    ],
+                },
+            })
+            .compileComponents();
+
+        const observer = { observe: vi.fn(), unobserve: vi.fn(), disconnect: vi.fn() } satisfies ResizeObserver;
+        const callbacks: ResizeObserverCallback[] = [];
+        vi.stubGlobal('ResizeObserver', function mockObserver(callback: ResizeObserverCallback) {
+            callbacks.push(callback);
+            return observer;
+        });
+        onTestFinished(() => {
+            vi.unstubAllGlobals();
+        });
+        const fixture = TestBed.createComponent(FdUiDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const body = host.querySelector('.fd-ui-dialog__body');
+        expect(host.querySelector('h2')?.textContent).toBe('Scoped dialog');
+        expect(fixture.debugElement.injector.get(DOCUMENT)).toBe(ownerDocument);
+        expect(observer.observe).toHaveBeenCalledExactlyOnceWith(body);
+        if (body === null) {
+            throw new Error('Expected an observable scroll region');
+        }
+
+        Object.defineProperties(body, { clientHeight: { value: 100 }, scrollHeight: { value: 180 } });
+        callbacks[0]([], observer);
+        fixture.detectChanges();
+        expect(host.querySelector('.fd-ui-dialog--body-scrollable')).not.toBeNull();
+        fixture.destroy();
+        expect(observer.disconnect).toHaveBeenCalledOnce();
     });
 });

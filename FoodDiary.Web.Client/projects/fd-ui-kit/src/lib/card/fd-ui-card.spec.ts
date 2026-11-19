@@ -1,14 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiCardComponent } from './fd-ui-card';
+import { FdUiCardActionsDirective } from './fd-ui-card-actions.directive';
 
 @Component({
     imports: [FdUiCardComponent],
     template: '<fd-ui-card><p class="projected">Projected content</p></fd-ui-card>',
 })
 class CardWithContentHostComponent {}
+
+@Component({
+    imports: [FdUiCardComponent, FdUiCardActionsDirective],
+    template: `
+        <fd-ui-card>
+            @if (canEdit()) {
+                <button fdUiCardActions type="button" (click)="canEdit.set(false)">Finish editing</button>
+            }
+            <p>Daily progress</p>
+        </fd-ui-card>
+    `,
+})
+class CardWithActionsHostComponent {
+    public readonly canEdit = signal(true);
+}
+
+describe('FdUiCardComponent header actions', () => {
+    it('shows a projected header action and removes the empty header when it disappears', () => {
+        const fixture = TestBed.createComponent(CardWithActionsHostComponent);
+        fixture.detectChanges();
+        const card = fixture.nativeElement as HTMLElement;
+        const action = card.querySelector<HTMLButtonElement>('header .fd-ui-card__actions button');
+
+        expect(action?.textContent.trim()).toBe('Finish editing');
+        action?.click();
+        fixture.detectChanges();
+
+        expect(card.querySelector('header')).toBeNull();
+        expect(card.querySelector('.fd-ui-card__content p')?.textContent).toBe('Daily progress');
+    });
+});
 
 describe('FdUiCardComponent', () => {
     let component: FdUiCardComponent;

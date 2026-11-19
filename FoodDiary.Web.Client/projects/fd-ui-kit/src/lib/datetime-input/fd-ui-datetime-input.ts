@@ -13,13 +13,7 @@ import {
 } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
-import {
-    fdUiFormatDateInputValue,
-    fdUiFormatTimeInputValue,
-    fdUiPadDatePart,
-    fdUiParseLocalDate,
-    fdUiParseLocalDateTime,
-} from '../date/fd-ui-date.utils';
+import { fdUiFormatDateInputValue, fdUiFormatTimeInputValue, fdUiParseLocalDate, fdUiParseLocalDateTime } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
 import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
 import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
@@ -27,11 +21,7 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
 const DEFAULT_TIME_VALUE = '00:00';
-const MIN_TIME_VALUE = 0;
-const MAX_HOURS_VALUE = 23;
-const MAX_MINUTES_VALUE = 59;
-const TIME_INDEX_HOURS = 1;
-const TIME_INDEX_MINUTES = 2;
+const NATIVE_MINUTE_TIME = /^(?:[01]\d|2[0-3]):[0-5]\d$/u;
 
 let uniqueId = 0;
 
@@ -120,14 +110,12 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
             return;
         }
 
-        const parsed = this.parseTime(value);
-        if (parsed === null) {
-            this.timeValue.set(value);
+        this.timeValue.set(value);
+        if (!NATIVE_MINUTE_TIME.test(value)) {
             return;
         }
 
-        this.timeValue.set(`${fdUiPadDatePart(parsed.hours)}:${fdUiPadDatePart(parsed.minutes)}`);
-        this.lastValidTime.set(this.timeValue());
+        this.lastValidTime.set(value);
         this.emitValue();
     }
 
@@ -135,15 +123,11 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
         const timeValue = this.timeValue();
         if (timeValue.length === 0) {
             this.lastValidTime.set(DEFAULT_TIME_VALUE);
-            this.timeValue.set(this.lastValidTime());
+            this.timeValue.set(DEFAULT_TIME_VALUE);
             this.emitValue();
-        } else {
-            const parsed = this.parseTime(timeValue);
-            if (parsed !== null) {
-                this.timeValue.set(`${fdUiPadDatePart(parsed.hours)}:${fdUiPadDatePart(parsed.minutes)}`);
-                this.lastValidTime.set(this.timeValue());
-                this.emitValue();
-            }
+        } else if (NATIVE_MINUTE_TIME.test(timeValue)) {
+            this.lastValidTime.set(timeValue);
+            this.emitValue();
         }
 
         this.touched.set(true);
@@ -181,24 +165,7 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
             return;
         }
 
-        const time = this.parseTime(this.timeValue()) ??
-            this.parseTime(this.lastValidTime()) ?? { hours: MIN_TIME_VALUE, minutes: MIN_TIME_VALUE };
-        const value = `${date}T${fdUiPadDatePart(time.hours)}:${fdUiPadDatePart(time.minutes)}`;
-        this.value.set(value);
-    }
-
-    private parseTime(value: string): { hours: number; minutes: number } | null {
-        const match = /^(\d{1,2}):?(\d{2})$/.exec(value);
-        if (match === null) {
-            return null;
-        }
-
-        const hours = Number(match[TIME_INDEX_HOURS]);
-        const minutes = Number(match[TIME_INDEX_MINUTES]);
-        if (hours < MIN_TIME_VALUE || hours > MAX_HOURS_VALUE || minutes < MIN_TIME_VALUE || minutes > MAX_MINUTES_VALUE) {
-            return null;
-        }
-
-        return { hours, minutes };
+        const time = this.timeValue();
+        this.value.set(`${date}T${NATIVE_MINUTE_TIME.test(time) ? time : this.lastValidTime()}`);
     }
 }

@@ -2,7 +2,7 @@
     [class]="hostClass"
     [style.--fd-nutrient-tint]="tintColor() || null"
     [style.--fd-nutrient-text-color]="textColor() || null"
-    (pointerdown)="focusControl($event)"
+    (pointerdown)="focusControl($event, control)"
 >
     @if (label()) {
         <div class="fd-ui-nutrient-input__label" [class.fd-ui-nutrient-input__label--uppercase]="labelUppercase()">
@@ -40,7 +40,7 @@
             [disabled]="disabled()"
             [value]="displayValue"
             (focus)="onFocus()"
-            (input)="onInput($event)"
+            (input)="onInput(control)"
             (blur)="onBlur()"
         />
     </div>

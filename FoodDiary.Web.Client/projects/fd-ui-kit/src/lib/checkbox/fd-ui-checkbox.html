@@ -8,7 +8,7 @@
         [disabled]="disabled()"
         [attr.aria-invalid]="resolvedError() ? 'true' : null"
         [attr.aria-describedby]="describedBy()"
-        (change)="updateCheckedValue($event)"
+        (change)="checked.set(control.checked)"
         (blur)="touchControl()"
     />
     <label class="fd-ui-checkbox__label" [attr.for]="id()" [class.fd-ui-checkbox__label--disabled]="disabled()">

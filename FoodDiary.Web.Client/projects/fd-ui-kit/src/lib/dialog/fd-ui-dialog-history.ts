@@ -34,7 +34,7 @@ function readEntry(state: unknown): DialogHistoryEntry | undefined {
 
 /** Owns one same-URL history entry for the entire stack, keeping dialog dismissal out of the router. */
 export class FdUiDialogHistory {
-    private readonly dialogs: HistoryDialog[] = [];
+    private dialogs: HistoryDialog[] = [];
     private readonly subscriptions = new Subscription();
     private readonly view: Window | null;
     private stopUrlListener: (() => void) | undefined;
@@ -112,10 +112,7 @@ export class FdUiDialogHistory {
     }
 
     private remove(dialog: HistoryDialog): void {
-        const index = this.dialogs.indexOf(dialog);
-        if (index !== -1) {
-            this.dialogs.splice(index, 1);
-        }
+        this.dialogs = this.dialogs.filter(candidate => candidate !== dialog);
         if (this.destroyed || this.handlingBack || this.dialogs.length > 0 || this.cleanupTimer !== undefined) {
             return;
         }

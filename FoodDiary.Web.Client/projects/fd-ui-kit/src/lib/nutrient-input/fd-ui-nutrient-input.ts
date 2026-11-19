@@ -1,4 +1,3 @@
-import type { ElementRef } from '@angular/core';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,7 +9,6 @@ import {
     model,
     output,
     signal,
-    viewChild,
 } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
@@ -34,7 +32,6 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
     public readonly focus = injectFdUiControlFocus();
     private readonly cdr = inject(ChangeDetectorRef);
-    private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
     public readonly label = input('');
     public readonly ariaLabel = input<string>();
@@ -102,27 +99,22 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
         return this.readonly() || this.controlReadonly();
     }
 
-    protected focusControl(event: Event): void {
+    protected focusControl(event: Event, control: HTMLInputElement): void {
         if (this.disabled() || this.isReadonly() || event.target instanceof HTMLInputElement) {
             return;
         }
 
         event.preventDefault();
-        this.control()?.nativeElement.focus();
+        control.focus();
     }
 
-    protected onInput(event: Event): void {
-        if (!(event.target instanceof HTMLInputElement)) {
-            return;
-        }
-
-        const target = event.target;
-        const rawValue = target.value;
+    protected onInput(control: HTMLInputElement): void {
+        const rawValue = control.value;
 
         if (this.type() === 'number') {
             const sanitized = this.sanitizeDecimalInput(rawValue);
             this.displayValue = sanitized;
-            target.value = sanitized;
+            control.value = sanitized;
             this.updateInputMeasure(sanitized);
             this.value.set(this.toNumericValue(sanitized));
             return;

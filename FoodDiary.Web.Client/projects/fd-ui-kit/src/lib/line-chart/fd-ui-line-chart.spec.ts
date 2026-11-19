@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FdUiLineChartComponent } from './fd-ui-line-chart';
+import { FdUiLineChartComponent, type FdUiLineChartPoint } from './fd-ui-line-chart';
 
 const TREND_POINT_COUNT = 3;
 const CHART_LEFT_X = 2;
@@ -626,6 +626,46 @@ describe('FdUiLineChartComponent', () => {
         expect(host().querySelector('.fd-ui-line-chart__x-axis span')).toBeNull();
         expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="50"][x2="50"]')).not.toBeNull();
         expect(host().querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('Trend: Unknown day 8');
+    });
+
+    it('reserves a grid position for a missing array slot without drawing a point or label there', () => {
+        const points: FdUiLineChartPoint[] = [{ label: ' Mon ', value: 2 }];
+        points[TREND_POINT_COUNT - 1] = { label: 'Fri', value: 4 };
+        fixture.componentRef.setInput('points', points);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('showGrid', true);
+        fixture.detectChanges();
+
+        expect([...host().querySelectorAll('.fd-ui-line-chart__x-axis span')].map(label => label.textContent.trim())).toEqual([
+            'Mon',
+            'Fri',
+        ]);
+        expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="50"][x2="50"]')).not.toBeNull();
+        expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(GRID_POINT_COUNT);
+    });
+
+    it('keeps endpoint labels and shared grid ticks when proportional dates crowd either edge', () => {
+        fixture.componentRef.setInput('points', [
+            { label: 'First day', value: 2, xPosition: 0 },
+            { label: 'Second day', value: 3, xPosition: 0.03 },
+            { label: 'Midpoint', value: 4, xPosition: 0.5 },
+            { label: 'Previous day', value: 5, xPosition: 0.97 },
+            { label: 'Last day', value: 6, xPosition: 1 },
+        ]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('showGrid', true);
+        fixture.detectChanges();
+
+        expect([...host().querySelectorAll('.fd-ui-line-chart__x-axis span')].map(label => label.textContent.trim())).toEqual([
+            'First day',
+            'Midpoint',
+            'Last day',
+        ]);
+        const verticalGrid = [...host().querySelectorAll('.fd-ui-line-chart__grid-line')]
+            .filter(line => line.getAttribute('x1') === line.getAttribute('x2'))
+            .map(line => line.getAttribute('x1'));
+        expect(verticalGrid).toEqual(['0', '50', '100']);
+        expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(GRID_LINE_COUNT);
     });
 
     it('keeps a terminal gap out of the trend and preserves the accessible data when markers are hidden', () => {

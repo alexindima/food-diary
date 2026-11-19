@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { FdUiHintDirective } from '../hint/fd-ui-hint.directive';
@@ -21,17 +21,9 @@ export class FdUiSidebarItemComponent {
     public readonly routeSelected = output<FdUiSidebarRouteItem>();
     public readonly actionSelected = output<FdUiSidebarActionItem>();
 
-    protected readonly routeItem = computed(() => {
-        const item = this.item();
-
-        return 'route' in item ? item : null;
-    });
-
-    protected readonly actionItem = computed(() => {
-        const item = this.item();
-
-        return 'action' in item ? item : null;
-    });
+    protected isRouteItem(item: FdUiSidebarItem): item is FdUiSidebarRouteItem {
+        return 'route' in item;
+    }
 
     protected itemClasses(item: FdUiSidebarItem): string {
         return [

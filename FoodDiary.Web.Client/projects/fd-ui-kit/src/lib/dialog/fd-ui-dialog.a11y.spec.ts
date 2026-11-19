@@ -81,6 +81,27 @@ describe('Overlay dialog accessible naming', () => {
         expect(document.getElementById(container.getAttribute('aria-labelledby') ?? '')?.textContent).toBe('Updated merge preview');
     });
 
+    it('updates the dialog name again after its overlay has been detached and reinserted', async () => {
+        const { container, host, renderAsync } = await openAccessibleDialogAsync();
+        const parent = container.parentElement;
+        if (parent === null) {
+            throw new Error('Expected the live overlay parent');
+        }
+        container.remove();
+        try {
+            host.title.set('Update while detached');
+            await renderAsync();
+            expect(document.getElementById(container.id)).toBeNull();
+        } finally {
+            parent.append(container);
+        }
+
+        host.title.set('Reattached preview');
+        await renderAsync();
+        const heading = document.getElementById(container.getAttribute('aria-labelledby') ?? '');
+        expect(heading?.textContent).toBe('Reattached preview');
+    });
+
     it.each([{ ariaLabel: 'Caller label' }, { ariaLabelledBy: 'caller-heading' }])(
         'preserves an explicit caller name: %j',
         async config => {
