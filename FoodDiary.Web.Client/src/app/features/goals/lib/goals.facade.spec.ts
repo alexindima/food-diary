@@ -41,7 +41,7 @@ let facade: GoalsFacade;
 let goalsService: {
     getGoals: ReturnType<typeof vi.fn>;
     getGoalsStrict: ReturnType<typeof vi.fn>;
-    updateGoals: ReturnType<typeof vi.fn>;
+    updateGoals: ReturnType<typeof vi.fn<GoalsService['updateGoals']>>;
 };
 let toastService: { error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn> };
 
@@ -63,7 +63,7 @@ describe('GoalsFacade', () => {
                     desiredWaistCm: SAVED_WAIST,
                 }),
             ),
-            updateGoals: vi.fn().mockReturnValue(of({})),
+            updateGoals: vi.fn<GoalsService['updateGoals']>().mockReturnValue(of({ calorieCyclingEnabled: false })),
         };
         toastService = {
             error: vi.fn(),
@@ -93,8 +93,11 @@ describe('GoalsFacade', () => {
 
     registerLoadTests();
     registerMacroTests();
+    registerCalorieCyclingTests();
+    registerInputTests();
     registerManualSaveTests();
     registerAutosaveTests();
+    registerQueuedAutosaveRecoveryTests();
 });
 
 function registerLoadTests(): void {
@@ -193,6 +196,134 @@ function registerMacroTests(): void {
             expect(facade.selectedPreset()).toBe('custom');
             expect(facade.macroValues().protein).toBe(CUSTOM_PROTEIN);
         });
+
+        it('keeps fiber separate and reports macro and water shortfalls', () => {
+            const lowProtein = 50;
+            const fiberTarget = 32;
+            const lowWater = 900;
+            const waterInRange = 1_800;
+            facade.updateMacroValue('protein', lowProtein);
+            facade.updateMacroValue('fiber', fiberTarget);
+            facade.updateWaterValue(lowWater);
+
+            expect(facade.coreMacroStates().map(macro => macro.key)).toEqual(['protein', 'fats', 'carbs']);
+            expect(facade.coreMacroStates()[0]).toMatchObject({ key: 'protein', value: lowProtein, shortfall: 30, inRange: false });
+            expect(facade.fiberMacroState()).toMatchObject({ key: 'fiber', value: fiberTarget, shortfall: 0, inRange: true });
+            expect(facade.waterState()).toMatchObject({ value: lowWater, shortfall: 300, inRange: false });
+
+            facade.updateWaterValue(waterInRange);
+            expect(facade.waterState()).toMatchObject({ value: waterInRange, shortfall: 0, inRange: true });
+        });
+    });
+}
+
+function registerCalorieCyclingTests(): void {
+    describe('weekly calorie cycling', () => {
+        it('starts an empty schedule from the daily goal and saves the edited day after the debounce', async () => {
+            facade.initialize();
+            const save = new Subject<GoalsResponse>();
+            goalsService.updateGoals.mockReturnValueOnce(save);
+
+            const fractionalMondayGoal = 2499.6;
+            const roundedMondayGoal = 2500;
+            facade.toggleCalorieCycling();
+            facade.updateDayCalories('mondayCalories', fractionalMondayGoal);
+            expect(facade.saveStatusKey()).toBe('GOALS_PAGE.STATUS_PENDING');
+            expect(goalsService.updateGoals).not.toHaveBeenCalled();
+
+            await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
+
+            expect(facade.saveStatusKey()).toBe('GOALS_PAGE.STATUS_SAVING');
+            expect(goalsService.updateGoals).toHaveBeenCalledExactlyOnceWith(
+                expect.objectContaining({
+                    calorieCyclingEnabled: true,
+                    dailyCalorieTarget: SAVED_CALORIES,
+                    mondayCalories: roundedMondayGoal,
+                    tuesdayCalories: SAVED_CALORIES,
+                    wednesdayCalories: SAVED_CALORIES,
+                    thursdayCalories: SAVED_CALORIES,
+                    fridayCalories: SAVED_CALORIES,
+                    saturdayCalories: SAVED_CALORIES,
+                    sundayCalories: SAVED_CALORIES,
+                }),
+            );
+            save.next({ calorieCyclingEnabled: true, dailyCalorieTarget: SAVED_CALORIES, mondayCalories: roundedMondayGoal });
+            save.complete();
+            expect(facade.saveStatusKey()).toBeNull();
+            expect(facade.dayCalories().mondayCalories).toBe(roundedMondayGoal);
+        });
+
+        it('keeps a loaded weekly schedule when re-enabled and omits day values when saved disabled', async () => {
+            goalsService.getGoalsStrict.mockReturnValueOnce(
+                of({ dailyCalorieTarget: SAVED_CALORIES, calorieCyclingEnabled: true, mondayCalories: 1800, sundayCalories: 2400 }),
+            );
+            facade.initialize();
+
+            facade.toggleCalorieCycling();
+            facade.toggleCalorieCycling();
+            expect(facade.dayCalories()).toMatchObject({ mondayCalories: 1800, sundayCalories: 2400 });
+            facade.toggleCalorieCycling();
+            await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
+
+            expect(goalsService.updateGoals).toHaveBeenCalledOnce();
+            const request = goalsService.updateGoals.mock.calls[0][0];
+            expect(request).toMatchObject({ calorieCyclingEnabled: false, dailyCalorieTarget: SAVED_CALORIES });
+            expect(request).not.toHaveProperty('mondayCalories');
+            expect(request).not.toHaveProperty('sundayCalories');
+        });
+
+        it('preserves zeros when cycling is enabled without a daily goal', () => {
+            goalsService.getGoalsStrict.mockReturnValueOnce(of(null));
+            facade.initialize();
+            facade.toggleCalorieCycling();
+
+            expect(facade.calorieCyclingEnabled()).toBe(true);
+            expect(Object.values(facade.dayCalories())).toEqual([0, 0, 0, 0, 0, 0, 0]);
+        });
+    });
+}
+
+function registerInputTests(): void {
+    describe('goal inputs', () => {
+        it('ignores incomplete numeric edits without replacing saved values or scheduling an update', async () => {
+            const savedMondayCalories = 1950;
+            goalsService.getGoalsStrict.mockReturnValueOnce(
+                of({
+                    dailyCalorieTarget: SAVED_CALORIES,
+                    calorieCyclingEnabled: true,
+                    mondayCalories: savedMondayCalories,
+                    waterGoal: SAVED_WATER,
+                }),
+            );
+            facade.initialize();
+            facade.updateCalories(Number.NaN);
+            facade.updateDayCalories('mondayCalories', Number.NaN);
+
+            expect(facade.updateMacroValue('protein', Number.NaN)).toBeNull();
+            expect(facade.updateBodyTarget('weight', Number.NaN)).toBeNull();
+            expect(facade.updateWaterValue(Number.NaN)).toBeNull();
+            expect(facade.calorieTarget()).toBe(SAVED_CALORIES);
+            expect(facade.dayCalories().mondayCalories).toBe(savedMondayCalories);
+            expect(facade.waterValue()).toBe(SAVED_WATER);
+            expect(facade.saveStatusKey()).toBeNull();
+            await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
+            expect(goalsService.updateGoals).not.toHaveBeenCalled();
+        });
+
+        it('sends bounded calories and clears a nonpositive body target', async () => {
+            const aboveCalorieLimit = 6500;
+            const calorieLimit = 5000;
+            const belowWaistMinimum = -20;
+            facade.initialize();
+            expect(facade.normalizeCaloriesInput(aboveCalorieLimit)).toBe(calorieLimit);
+            expect(facade.updateBodyTarget('waist', belowWaistMinimum)).toBe(0);
+
+            await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
+
+            expect(goalsService.updateGoals).toHaveBeenCalledExactlyOnceWith(
+                expect.objectContaining({ dailyCalorieTarget: calorieLimit, desiredWeightKg: SAVED_WEIGHT, desiredWaistCm: null }),
+            );
+        });
     });
 }
 
@@ -201,7 +332,9 @@ function registerManualSaveTests(): void {
         it.each(['error', 'null'] as const)('keeps the latest manual save after a previous %s response', async failure => {
             facade.initialize();
             const failedResponse = failure === 'error' ? throwError(() => new Error('save failed')) : of(null);
-            goalsService.updateGoals.mockReturnValueOnce(failedResponse).mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER }));
+            goalsService.updateGoals
+                .mockReturnValueOnce(failedResponse)
+                .mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER, calorieCyclingEnabled: false }));
 
             expect(await facade.saveManuallyAsync({ waterGoal: FAILED_MANUAL_WATER })).toBe(false);
             expect(facade.hasAutosaveError()).toBe(true);
@@ -221,7 +354,7 @@ function registerManualSaveTests(): void {
         it('supersedes a queued autosave with the submitted manual value', async () => {
             facade.initialize();
             facade.updateWaterValue(FAILED_MANUAL_WATER);
-            goalsService.updateGoals.mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER }));
+            goalsService.updateGoals.mockReturnValueOnce(of({ waterGoal: LATEST_MANUAL_WATER, calorieCyclingEnabled: false }));
 
             expect(await facade.saveManuallyAsync({ waterGoal: LATEST_MANUAL_WATER })).toBe(true);
             await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS * 2);
@@ -316,17 +449,26 @@ function registerAutosaveTests(): void {
             );
             expect(toastService.success).toHaveBeenCalledTimes(2);
         });
+    });
+}
 
-        it('preserves the latest queued payload when the in-flight autosave fails', async () => {
+function registerQueuedAutosaveRecoveryTests(): void {
+    describe('recovering autosave', () => {
+        it.each(['error', 'empty result'] as const)('preserves the latest queued payload after an in-flight %s', async result => {
             const inFlightUpdate = new Subject<GoalsResponse | null>();
-            goalsService.updateGoals.mockReturnValueOnce(inFlightUpdate.asObservable()).mockReturnValue(of({}));
+            goalsService.updateGoals.mockReturnValueOnce(inFlightUpdate.asObservable());
 
             facade.updateCalories(IN_FLIGHT_CALORIES);
             await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
             expect(goalsService.updateGoals).toHaveBeenCalledTimes(1);
 
             facade.updateWaterValue(RETRY_WATER);
-            inFlightUpdate.error(new Error('save failed'));
+            if (result === 'error') {
+                inFlightUpdate.error(new Error('save failed'));
+            } else {
+                inFlightUpdate.next(null);
+                inFlightUpdate.complete();
+            }
             await waitForAsyncTasksAsync();
             await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
 

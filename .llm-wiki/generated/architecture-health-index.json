@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 138,
+    "componentsWithoutDirectSpecs": 133,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -1937,19 +1937,6 @@
       "specPath": null
     },
     {
-      "class": "AdminSignInComponent",
-      "selector": "fd-admin-sign-in",
-      "feature": "admin-auth",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AdminBillingCancellationsTableComponent",
       "selector": "fd-admin-billing-cancellations-table",
       "feature": "admin-billing",
@@ -2126,25 +2113,6 @@
       "specPath": null
     },
     {
-      "class": "AdminDashboardContentComponent",
-      "selector": "fd-admin-dashboard-content",
-      "feature": "admin-dashboard",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.scss"
-      ],
-      "inputs": [
-        {
-          "name": "data",
-          "type": "AdminDashboardOverview",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AdminModerationContextComponent",
       "selector": "fd-admin-moderation-context",
       "feature": "admin-moderation",
@@ -2303,23 +2271,6 @@
           "type": "number"
         }
       ],
-      "specPath": null
-    },
-    {
-      "class": "AdminUserPremiumGrantComponent",
-      "selector": "fd-admin-user-premium-grant",
-      "feature": "admin-users",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.html",
-      "stylePaths": [],
-      "inputs": [
-        {
-          "name": "userId",
-          "type": "AdminId<'user'>",
-          "required": true
-        }
-      ],
-      "outputs": [],
       "specPath": null
     },
     {
@@ -2630,19 +2581,6 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "CycleTrackingPageComponent",
-      "selector": "fd-cycle-tracking-page",
-      "feature": "cycle-tracking",
-      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
-      ],
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -4311,45 +4249,6 @@
         }
       ],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FdUiChipSelectComponent",
-      "selector": "fd-ui-chip-select",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.scss"
-      ],
-      "inputs": [
-        {
-          "name": "options",
-          "type": "FdUiChipSelectOption[]",
-          "required": false
-        },
-        {
-          "name": "selectedValues",
-          "type": "string[]",
-          "required": false
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "size",
-          "type": "FdUiChipSelectSize",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "selectedValuesChange",
-          "type": "string[]"
-        }
-      ],
       "specPath": null
     },
     {

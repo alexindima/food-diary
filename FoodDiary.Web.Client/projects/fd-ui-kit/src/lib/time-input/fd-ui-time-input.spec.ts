@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { FdUiTimeInputComponent } from './fd-ui-time-input';
 
@@ -8,6 +8,7 @@ const HOURS_PER_DAY = 24;
 const LAST_HOUR_OF_DAY = 23;
 const SELECTED_HOUR = 21;
 const SELECTED_MINUTE = 35;
+const LAID_OUT_OPTION_WIDTH = 100;
 
 type TimeInputTestContext = {
     component: FdUiTimeInputComponent;
@@ -40,6 +41,54 @@ async function setupTimeInputAsync(): Promise<TimeInputTestContext> {
 }
 
 describe('FdUiTimeInputComponent', () => {
+    it.each(['Enter', ' ', 'ArrowDown'])('opens with %j, focuses the selected hour, and closes on Escape', async key => {
+        // CDK checks layout before focusing an option. jsdom supplies no layout metrics.
+        const geometry = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(LAID_OUT_OPTION_WIDTH);
+        onTestFinished(() => {
+            geometry.mockRestore();
+        });
+        const { fixture, requireElement, component } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('value', '21:35');
+        fixture.detectChanges();
+        const input = requireElement('[role="combobox"]');
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        input.focus();
+        const open = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+        input.dispatchEvent(open);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const active = overlay.querySelector('[role="group"] button[aria-pressed="true"]');
+        expect(open.defaultPrevented).toBe(true);
+        expect(input.getAttribute('aria-expanded')).toBe('true');
+        expect(active?.textContent.trim()).toBe('21');
+        expect(document.activeElement).toBe(active);
+
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        active?.dispatchEvent(escape);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(escape.defaultPrevented).toBe(true);
+        expect(overlay.querySelector('[role="dialog"]')).toBeNull();
+        expect(input.getAttribute('aria-expanded')).toBe('false');
+        expect(document.activeElement).toBe(input);
+        expect(component.value()).toBe('21:35');
+    });
+
+    it('closes an open picker when Escape is sent directly to the input', async () => {
+        const { fixture, component, requireElement } = await setupTimeInputAsync();
+        const input = requireElement('[role="combobox"]');
+        input.click();
+        fixture.detectChanges();
+        expect(input.getAttribute('aria-expanded')).toBe('true');
+
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        fixture.detectChanges();
+        expect(input.getAttribute('aria-expanded')).toBe('false');
+        expect(component.touched()).toBe(true);
+    });
+
     it('should create', async () => {
         const { component } = await setupTimeInputAsync();
 

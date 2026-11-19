@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
@@ -83,6 +84,58 @@ it.each(['ArrowUp', 'ArrowDown'])('leaves %s available for page scrolling', key 
     fixture.detectChanges();
     expect(event.defaultPrevented).toBe(false);
     expect(component.selectedValue()).toBe('products');
+});
+
+it.each([
+    { key: 'ArrowLeft', from: 0, to: 2 },
+    { key: 'ArrowRight', from: 2, to: 0 },
+    { key: 'Home', from: 1, to: 0 },
+    { key: 'End', from: 1, to: 2 },
+])('moves focus and selection with $key from tab $from to tab $to', ({ key, from, to }) => {
+    const buttons = tabs();
+    fixture.componentRef.setInput('selectedValue', testTabs[from].value);
+    fixture.detectChanges();
+    buttons[from].focus();
+
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    buttons[from].dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(component.selectedValue()).toBe(testTabs[to].value);
+    expect(document.activeElement).toBe(buttons[to]);
+    expect(buttons[to].getAttribute('aria-selected')).toBe('true');
+    expect(buttons[from].tabIndex).toBe(-1);
+});
+
+it.each(['Enter', ' '])('activates the focused tab with %j without the native button action', key => {
+    const [, recipes] = tabs();
+    recipes.focus();
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    recipes.dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(recipes);
+    expect(component.selectedValue()).toBe('recipes');
+    expect(recipes.getAttribute('aria-selected')).toBe('true');
+});
+
+it('updates translated tab names after switching language while preserving selection', () => {
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { RECIPES: 'Recipes' });
+    translate.setTranslation('fr', { RECIPES: 'Recettes' });
+    translate.use('en');
+    fixture.componentRef.setInput('tabs', [{ value: 'recipes', labelKey: 'RECIPES' }]);
+    fixture.componentRef.setInput('selectedValue', 'recipes');
+    fixture.detectChanges();
+    expect(tabs()[0].textContent.trim()).toBe('Recipes');
+
+    translate.use('fr');
+    fixture.detectChanges();
+
+    expect(tabs()[0].textContent.trim()).toBe('Recettes');
+    expect(tabs()[0].getAttribute('aria-selected')).toBe('true');
 });
 
 it('names a tablist and points each tab at its associated panel', () => {

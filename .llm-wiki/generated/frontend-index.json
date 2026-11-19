@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2842,
+    "typescriptFiles": 2849,
     "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 859,
+    "specs": 866,
     "localeFiles": 5,
     "roles": {
       "Component": 516,
@@ -132,7 +132,9 @@
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.interceptor.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.spec.ts",
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-restoration-transport.spec.ts"
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-google-sign-in.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-restoration-transport.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.spec.ts"
       ]
     },
     {
@@ -241,6 +243,7 @@
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-dashboard.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-telemetry.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.spec.ts"
       ]
     },
@@ -431,6 +434,7 @@
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.spec.ts",
@@ -556,7 +560,8 @@
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-overview-card/cycle-overview-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-prediction-block/cycle-prediction-block.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page-lib/cycle-tracking-page.mapper.spec.ts"
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page-lib/cycle-tracking-page.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.spec.ts"
       ]
     },
     {
@@ -1456,7 +1461,8 @@
         "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.spec.ts"
+        "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/shopping-lists/shopping-list.routes.spec.ts"
       ]
     },
     {

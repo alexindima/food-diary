@@ -49,36 +49,47 @@ async function flushOverlayFocusAsync(fixture: ComponentFixture<TestHostComponen
     fixture.detectChanges();
 }
 
+type MenuFixture = {
+    fixture: ComponentFixture<TestHostComponent>;
+    overlayRoot: HTMLElement;
+    trigger: HTMLButtonElement;
+};
+
+async function setUpMenuAsync(uiKitButton: boolean): Promise<MenuFixture> {
+    await TestBed.configureTestingModule({
+        imports: [TestHostComponent],
+        providers: [provideRouter([])],
+    }).compileComponents();
+
+    const overlayRoot = TestBed.inject(OverlayContainer).getContainerElement();
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.uiKitButton = uiKitButton;
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const trigger = host.querySelector('button');
+    if (trigger === null) {
+        throw new Error('Expected menu trigger to exist.');
+    }
+
+    return { fixture, overlayRoot, trigger };
+}
+
+function menuItems(overlayRoot: HTMLElement): HTMLButtonElement[] {
+    return Array.from(overlayRoot.querySelectorAll<HTMLButtonElement>('.fd-ui-menu__item'));
+}
+
 describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', uiKitButton => {
     let fixture: ComponentFixture<TestHostComponent>;
-    let overlayContainer: OverlayContainer;
     let overlayRoot: HTMLElement;
     let trigger: HTMLButtonElement;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [TestHostComponent],
-            providers: [provideRouter([])],
-        }).compileComponents();
-
-        overlayContainer = TestBed.inject(OverlayContainer);
-        overlayRoot = overlayContainer.getContainerElement();
-
-        fixture = TestBed.createComponent(TestHostComponent);
-        fixture.componentInstance.uiKitButton = uiKitButton;
-        fixture.detectChanges();
-
-        const host = fixture.nativeElement as HTMLElement;
-        const button = host.querySelector<HTMLButtonElement>('button');
-        if (button === null) {
-            throw new Error('Expected menu trigger to exist.');
-        }
-
-        trigger = button;
+        ({ fixture, overlayRoot, trigger } = await setUpMenuAsync(uiKitButton));
     });
 
     function getMenuItems(): HTMLButtonElement[] {
-        return Array.from(overlayRoot.querySelectorAll<HTMLButtonElement>('.fd-ui-menu__item'));
+        return menuItems(overlayRoot);
     }
 
     it('publishes menu semantics and expanded state on the focusable native trigger', async () => {
@@ -136,6 +147,54 @@ describe.each([false, true])('FdUiMenuTriggerDirective with UI kit trigger %s', 
 
     it.each([false, true])('anchors default Tab movement on the trigger (shift=%s)', async shiftKey => {
         await verifyTabDismissalAsync(fixture, trigger, overlayRoot, shiftKey);
+    });
+});
+
+describe.each([false, true])('FdUiMenuTriggerDirective dismissal with UI kit trigger %s', uiKitButton => {
+    it('opens and closes from the trigger and can reopen after a backdrop click', async () => {
+        const { fixture, overlayRoot, trigger } = await setUpMenuAsync(uiKitButton);
+        trigger.click();
+        await flushOverlayFocusAsync(fixture);
+        expect(menuItems(overlayRoot)).toHaveLength(MENU_ITEM_COUNT);
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+        trigger.click();
+        await flushOverlayFocusAsync(fixture);
+        expect(menuItems(overlayRoot)).toHaveLength(0);
+        expect(document.activeElement).toBe(trigger);
+
+        trigger.click();
+        await flushOverlayFocusAsync(fixture);
+        const backdrop = overlayRoot.querySelector<HTMLElement>('.cdk-overlay-backdrop');
+        expect(backdrop).toBeTruthy();
+        backdrop?.click();
+        await flushOverlayFocusAsync(fixture);
+        expect(menuItems(overlayRoot)).toHaveLength(0);
+        expect(document.activeElement).toBe(trigger);
+
+        trigger.click();
+        await flushOverlayFocusAsync(fixture);
+        expect(document.activeElement).toBe(menuItems(overlayRoot)[0]);
+    });
+
+    it('handles Escape on the trigger only while the menu is open', async () => {
+        const { fixture, overlayRoot, trigger } = await setUpMenuAsync(uiKitButton);
+        const pressEscape = (): KeyboardEvent => {
+            const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+            trigger.dispatchEvent(event);
+            return event;
+        };
+
+        expect(pressEscape().defaultPrevented).toBe(false);
+        dispatchTriggerKey(trigger, 'Enter');
+        await flushOverlayFocusAsync(fixture);
+        expect(menuItems(overlayRoot)).toHaveLength(MENU_ITEM_COUNT);
+
+        trigger.focus();
+        expect(pressEscape().defaultPrevented).toBe(true);
+        await flushOverlayFocusAsync(fixture);
+        expect(menuItems(overlayRoot)).toHaveLength(0);
+        expect(document.activeElement).toBe(trigger);
     });
 });
 

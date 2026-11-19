@@ -1,12 +1,14 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { imageSelection } from '../../../shared/models/image-upload.data';
+import { PrivacyConsentFacade } from '../../../shared/privacy/privacy-consent.facade';
 import { ImageUploadFieldComponent } from './image-upload-field';
 
 type ImageUploadFieldTestContext = {
@@ -18,6 +20,11 @@ type ImageUploadFieldTestContext = {
     };
     logger: {
         warn: ReturnType<typeof vi.fn>;
+    };
+    privacyConsent: {
+        ensureHealthConsentAsync: ReturnType<typeof vi.fn<() => Promise<boolean>>>;
+        failed: ReturnType<typeof vi.fn<() => boolean>>;
+        needsReload: ReturnType<typeof vi.fn<() => boolean>>;
     };
     translateService: TranslateService;
 };
@@ -41,6 +48,11 @@ async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext
         deleteAsset: vi.fn().mockReturnValue(of(void 0)),
     };
     const logger = { warn: vi.fn() };
+    const privacyConsent = {
+        ensureHealthConsentAsync: vi.fn<() => Promise<boolean>>().mockResolvedValue(true),
+        failed: vi.fn<() => boolean>().mockReturnValue(false),
+        needsReload: vi.fn<() => boolean>().mockReturnValue(false),
+    };
 
     await TestBed.configureTestingModule({
         imports: [ImageUploadFieldComponent],
@@ -48,13 +60,28 @@ async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext
             provideTranslateTesting(),
             { provide: ImageUploadFacade, useValue: imageUploadService },
             { provide: FrontendLoggerService, useValue: logger },
+            { provide: PrivacyConsentFacade, useValue: privacyConsent },
         ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ImageUploadFieldComponent);
     const component = fixture.componentInstance;
     const translateService = TestBed.inject(TranslateService);
-    return { component, fixture, imageUploadService, logger, translateService };
+    return { component, fixture, imageUploadService, logger, privacyConsent, translateService };
+}
+
+function requireElement<T extends Element>(host: ParentNode, selector: string, elementType: new () => T): T {
+    const element = host.querySelector(selector);
+    if (!(element instanceof elementType)) {
+        throw new Error(`Missing element ${selector}`);
+    }
+    return element;
+}
+
+function selectFiles(host: HTMLElement, ...files: File[]): void {
+    const input = requireElement(host, 'input[type="file"]', HTMLInputElement);
+    Object.defineProperty(input, 'files', { configurable: true, value: files });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 describe('ImageUploadFieldComponent control value', () => {
@@ -395,6 +422,222 @@ describe('ImageUploadFieldComponent multiple uploads', () => {
         });
         expect(component['error']()).toBeTruthy();
         expect(component['isUploading']()).toBe(false);
+    });
+});
+
+describe('ImageUploadFieldComponent health consent', () => {
+    it('waits for consent before sending a selected attachment', async () => {
+        const { fixture, imageUploadService, privacyConsent } = await setupImageUploadFieldAsync();
+        const consent = new Subject<boolean>();
+        privacyConsent.ensureHealthConsentAsync.mockReturnValueOnce(firstValueFrom(consent));
+        fixture.componentRef.setInput('requireHealthConsent', true);
+        fixture.detectChanges();
+
+        const photo = new File(['image'], 'attachment.png', { type: 'image/png' });
+        selectFiles(fixture.nativeElement as HTMLElement, photo);
+
+        expect(privacyConsent.ensureHealthConsentAsync).toHaveBeenCalledExactlyOnceWith(true);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        consent.next(true);
+        await vi.waitFor(() => {
+            expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(photo);
+        });
+    });
+
+    it.each([
+        { failed: false, needsReload: false, feedback: null },
+        { failed: true, needsReload: false, feedback: 'PRIVACY_CHOICES.ERROR' },
+        { failed: true, needsReload: true, feedback: 'PRIVACY_CHOICES.RELOAD' },
+    ])('keeps the attachment local after declined consent and shows $feedback', async ({ failed, needsReload, feedback }) => {
+        const { fixture, imageUploadService, privacyConsent, translateService } = await setupImageUploadFieldAsync();
+        vi.spyOn(translateService, 'instant').mockImplementation(key => String(key));
+        privacyConsent.ensureHealthConsentAsync.mockResolvedValueOnce(false);
+        privacyConsent.failed.mockReturnValue(failed);
+        privacyConsent.needsReload.mockReturnValue(needsReload);
+        fixture.componentRef.setInput('requireHealthConsent', true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+
+        selectFiles(host, new File(['image'], 'attachment.png', { type: 'image/png' }));
+        await waitForAsyncTasksAsync();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(host.querySelector('[role="alert"]')?.textContent.trim() ?? null).toBe(feedback);
+    });
+
+    it('ignores a late approval after the attachment was cleared', async () => {
+        const { fixture, imageUploadService, privacyConsent } = await setupImageUploadFieldAsync();
+        const consent = new Subject<boolean>();
+        privacyConsent.ensureHealthConsentAsync.mockReturnValueOnce(firstValueFrom(consent));
+        fixture.componentRef.setInput('requireHealthConsent', true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+
+        selectFiles(host, new File(['old'], 'old.png', { type: 'image/png' }));
+        fixture.componentRef.setInput('clearRequest', 1);
+        fixture.detectChanges();
+        consent.next(true);
+        await waitForAsyncTasksAsync();
+        await fixture.whenStable();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+
+        const replacement = new File(['new'], 'new.png', { type: 'image/png' });
+        selectFiles(host, replacement);
+        await vi.waitFor(() => {
+            expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(replacement);
+        });
+    });
+});
+
+function mockNativeDialogMethods(): () => void {
+    const dialogPrototype = HTMLDialogElement.prototype;
+    const showModal = Object.getOwnPropertyDescriptor(dialogPrototype, 'showModal');
+    const close = Object.getOwnPropertyDescriptor(dialogPrototype, 'close');
+
+    // jsdom exposes the dialog element without the modal methods.
+    Object.defineProperties(dialogPrototype, {
+        showModal: {
+            configurable: true,
+            value(this: HTMLDialogElement) {
+                this.open = true;
+            },
+        },
+        close: {
+            configurable: true,
+            value(this: HTMLDialogElement) {
+                this.open = false;
+            },
+        },
+    });
+
+    return () => {
+        for (const [method, descriptor] of [
+            ['showModal', showModal],
+            ['close', close],
+        ] as const) {
+            if (descriptor === undefined) {
+                Reflect.deleteProperty(dialogPrototype, method);
+            } else {
+                Object.defineProperty(dialogPrototype, method, descriptor);
+            }
+        }
+    };
+}
+
+async function openCropperAsync(
+    fixture: ComponentFixture<ImageUploadFieldComponent>,
+    fileName: string,
+): Promise<{ dialog: HTMLDialogElement; apply: HTMLButtonElement; surface: HTMLDivElement; image: HTMLImageElement }> {
+    fixture.componentRef.setInput('cropEnabled', true);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    selectFiles(host, new File(['source image'], fileName, { type: 'image/png' }));
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(host.querySelector('dialog[open]')).not.toBeNull();
+    });
+
+    const dialog = requireElement(host, 'dialog', HTMLDialogElement);
+    const apply = requireElement(dialog, '.image-upload-field__cropper-actions fd-ui-button:last-child button', HTMLButtonElement);
+    expect(apply.disabled).toBe(true);
+    const surface = requireElement(dialog, '.image-upload-field__cropper-body', HTMLDivElement);
+    const surfaceSize = { width: 400, height: 300 };
+    vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, surfaceSize.width, surfaceSize.height));
+    const image = requireElement(surface, 'img', HTMLImageElement);
+    Object.defineProperties(image, { naturalWidth: { value: 800 }, naturalHeight: { value: 600 } });
+    image.dispatchEvent(new Event('load'));
+    fixture.detectChanges();
+    expect(apply.disabled).toBe(false);
+    return { dialog, apply, surface, image };
+}
+
+describe('ImageUploadFieldComponent rendered cropper', () => {
+    beforeEach(mockNativeDialogMethods);
+    it('uploads the crop selected through the rendered drag and resize controls', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const changed = vi.fn();
+        component.imageChanged.subscribe(changed);
+        const { dialog, apply, surface, image } = await openCropperAsync(fixture, 'photo.png');
+        const capture = vi.fn();
+        const release = vi.fn();
+        Object.defineProperties(surface, { setPointerCapture: { value: capture }, releasePointerCapture: { value: release } });
+        const drawImage = vi.fn();
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage } as unknown as CanvasRenderingContext2D);
+        const cropped = new Blob(['cropped'], { type: 'image/png' });
+        vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(cropped);
+        });
+
+        const movePointer = 7;
+        const resizePointer = 8;
+        const selection = requireElement(surface, '[role="group"]', HTMLElement);
+        selection.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: movePointer, clientX: 100, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId: 9, clientX: 140, clientY: 80 }));
+        fixture.detectChanges();
+        expect(selection.style.left).toBe('50px');
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId: movePointer, clientX: 120, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointerup', { pointerId: movePointer }));
+        fixture.detectChanges();
+        expect(selection.style.left).toBe('70px');
+
+        const handle = requireElement(selection, '.image-upload-field__crop-handle--se', HTMLElement);
+        handle.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: resizePointer, clientX: 370, clientY: 300 }));
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId: resizePointer, clientX: 320, clientY: 250 }));
+        surface.dispatchEvent(new PointerEvent('pointercancel', { pointerId: resizePointer }));
+        fixture.detectChanges();
+        expect(selection.style.width).toBe('250px');
+        expect(selection.style.height).toBe('250px');
+        expect(capture.mock.calls).toEqual([[movePointer], [resizePointer]]);
+        expect(release.mock.calls).toEqual([[movePointer], [resizePointer]]);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+
+        apply.click();
+        fixture.detectChanges();
+
+        const sourceCrop = { left: 140, size: 500 };
+        const avatarSize = 512;
+        expect(drawImage).toHaveBeenCalledExactlyOnceWith(
+            image,
+            sourceCrop.left,
+            0,
+            sourceCrop.size,
+            sourceCrop.size,
+            0,
+            0,
+            avatarSize,
+            avatarSize,
+        );
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ name: 'photo.png', type: 'image/png', size: cropped.size }),
+        );
+        expect(dialog.open).toBe(false);
+        expect(component.value()).toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
+        expect(changed).toHaveBeenCalledExactlyOnceWith(component.value());
+    });
+
+    it('closes the dialog on native cancel and discards a late canvas result', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const previous = imageSelection('https://example.test/avatar.png', 'existing');
+        component.value.set(previous);
+        const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
+        const { dialog, apply } = await openCropperAsync(fixture, 'replacement.png');
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+        const toBlob = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(() => {});
+
+        apply.click();
+        expect(toBlob).toHaveBeenCalledOnce();
+        const cancel = new Event('cancel', { cancelable: true });
+        dialog.dispatchEvent(cancel);
+        fixture.detectChanges();
+        toBlob.mock.calls[0][0](new Blob(['finished late'], { type: 'image/png' }));
+
+        expect(cancel.defaultPrevented).toBe(true);
+        expect(dialog.open).toBe(false);
+        expect(component.value()).toEqual(previous);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
     });
 });
 

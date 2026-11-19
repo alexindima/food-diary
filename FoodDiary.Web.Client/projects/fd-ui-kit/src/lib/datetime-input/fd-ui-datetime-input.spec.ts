@@ -97,6 +97,52 @@ describe('FdUiDatetimeInputComponent model contract', () => {
     });
 });
 
+describe('FdUiDatetimeInputComponent native time interactions', () => {
+    it('keeps the committed value when blurring the time, then commits midnight for a cleared field', async () => {
+        const fixture = await setupAsync();
+        const component = fixture.componentInstance;
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        const input = timeInput(fixture);
+
+        input.dispatchEvent(new FocusEvent('blur'));
+        fixture.detectChanges();
+        expect(component.value()).toBe('2024-02-29T23:45');
+        expect(changed).not.toHaveBeenCalled();
+
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(component.value()).toBe('2024-02-29T23:45');
+        input.dispatchEvent(new FocusEvent('blur'));
+        fixture.detectChanges();
+
+        expect(input.value).toBe('00:00');
+        expect(changed).toHaveBeenCalledExactlyOnceWith('2024-02-29T00:00');
+        expect(component.touched()).toBe(true);
+    });
+
+    it('opens the native time picker from its button and preserves the current value', async () => {
+        const fixture = await setupAsync();
+        const input = timeInput(fixture);
+        const showPicker = vi.fn();
+        Object.defineProperty(input, 'showPicker', { configurable: true, value: showPicker });
+        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-datetime-input__suffix');
+
+        button?.click();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(input);
+        expect(showPicker).toHaveBeenCalledOnce();
+        expect(fixture.componentInstance.value()).toBe('2024-02-29T23:45');
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        expect(button?.disabled).toBe(true);
+        button?.click();
+        expect(showPicker).toHaveBeenCalledOnce();
+    });
+});
+
 describe('FdUiDatetimeInputComponent time drafts', () => {
     it('keeps an incomplete time draft and uses the last valid time when the date changes', async () => {
         const fixture = await setupAsync();

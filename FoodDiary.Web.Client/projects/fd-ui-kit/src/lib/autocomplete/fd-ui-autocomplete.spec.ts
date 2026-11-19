@@ -92,6 +92,77 @@ describe('FdUiAutocompleteComponent', () => {
     });
 });
 
+describe('FdUiAutocompleteComponent query editing', () => {
+    it('replaces a selected object with the typed query and clears it through the suffix button', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        const apple = { id: 'apple' };
+        fixture.componentRef.setInput('options', [{ value: apple, label: 'Apple' }]);
+        fixture.componentRef.setInput('value', apple);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const input = host.querySelector('input');
+        if (input === null) {
+            throw new Error('Expected the autocomplete input.');
+        }
+        const queryChanged = vi.fn();
+        const valueChanged = vi.fn();
+        fixture.componentInstance.queryChange.subscribe(queryChanged);
+        fixture.componentInstance.value.subscribe(valueChanged);
+
+        expect(input.value).toBe('Apple');
+        input.focus();
+        input.value = 'Pear';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.value()).toBe('Pear');
+        expect(queryChanged).toHaveBeenCalledExactlyOnceWith('Pear');
+        expect(document.querySelector('[role="option"]')?.getAttribute('aria-selected')).toBe('false');
+
+        host.querySelector<HTMLButtonElement>('button[aria-label="Clear"]')?.click();
+        fixture.detectChanges();
+
+        expect(input.value).toBe('');
+        expect(valueChanged.mock.calls).toEqual([['Pear'], ['']]);
+        expect(queryChanged.mock.calls).toEqual([['Pear'], ['']]);
+        expect(document.activeElement).toBe(input);
+        expect(input.getAttribute('aria-expanded')).toBe('false');
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('shows a loading state followed by no results and lets Escape dismiss it without changing the query', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('emptyText', 'No matches');
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector('input');
+        if (input === null) {
+            throw new Error('Expected the autocomplete input.');
+        }
+        const writeQuery = (query: string): void => {
+            input.value = query;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            fixture.detectChanges();
+        };
+
+        writeQuery('x');
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+        fixture.componentRef.setInput('loading', true);
+        writeQuery('xy');
+        expect(document.querySelector('[role="listbox"] fd-ui-loader')).not.toBeNull();
+
+        fixture.componentRef.setInput('loading', false);
+        fixture.detectChanges();
+        expect(document.querySelector('[role="listbox"]')?.textContent).toContain('No matches');
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        input.dispatchEvent(escape);
+        fixture.detectChanges();
+
+        expect(escape.defaultPrevented).toBe(true);
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+        expect(fixture.componentInstance.value()).toBe('xy');
+    });
+});
+
 describe('Autocomplete saved selection', () => {
     it('activates and scrolls the selected value on focus so Enter preserves it', async () => {
         const fixture = TestBed.createComponent(FdUiAutocompleteComponent);

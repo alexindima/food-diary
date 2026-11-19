@@ -1,15 +1,15 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog';
 import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
-import type { AdminLesson } from '../models/admin-lesson.data';
+import type { AdminLesson, AdminLessonsImportRequest, AdminLessonsImportResponse } from '../models/admin-lesson.data';
 import { AdminLessonsComponent } from './admin-lessons';
 
 const LESSON: AdminLesson = {
@@ -207,5 +207,106 @@ describe('AdminLessonsComponent refresh ordering', () => {
         expect(fixture.componentInstance['lessons']()).toEqual([LESSON]);
         expect(fixture.componentInstance['isLoading']()).toBe(false);
         expect(fixture.componentInstance['loadFailed']()).toBe(false);
+    });
+});
+
+const importPayload: AdminLessonsImportRequest = {
+    version: 1,
+    lessons: [
+        {
+            title: LESSON.title,
+            content: LESSON.content,
+            summary: LESSON.summary,
+            locale: LESSON.locale,
+            category: LESSON.category,
+            difficulty: LESSON.difficulty,
+            estimatedReadMinutes: LESSON.estimatedReadMinutes,
+            sortOrder: LESSON.sortOrder,
+            isPublished: false,
+        },
+    ],
+};
+
+function selectFile(fixture: ComponentFixture<AdminLessonsComponent>, contents: string): void {
+    const host = fixture.nativeElement as HTMLElement;
+    const input = host.querySelector<HTMLInputElement>('input[type="file"]');
+    if (input === null) {
+        throw new Error('Expected a lesson import input');
+    }
+    const file = new File([contents], 'lessons.json', { type: 'application/json' });
+    Object.defineProperty(file, 'text', { value: vi.fn<() => Promise<string>>().mockResolvedValue(contents) });
+    Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+}
+
+async function setupImportAsync(): Promise<{
+    fixture: ComponentFixture<AdminLessonsComponent>;
+    host: HTMLElement;
+    getAll: Mock<AdminLessonsFacade['getAll']>;
+    importLessons: Mock<AdminLessonsFacade['importLessons']>;
+}> {
+    const getAll = vi.fn<AdminLessonsFacade['getAll']>().mockReturnValue(of([]));
+    const importLessons = vi.fn<AdminLessonsFacade['importLessons']>();
+    await TestBed.configureTestingModule({
+        imports: [AdminLessonsComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            { provide: AdminLessonsFacade, useValue: { getAll, importLessons } },
+            { provide: FdUiDialogService, useValue: {} },
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminLessonsComponent);
+    fixture.detectChanges();
+    return { fixture, host: fixture.nativeElement as HTMLElement, getAll, importLessons };
+}
+
+describe('AdminLessonsComponent JSON import', () => {
+    it.each([
+        { contents: 'not JSON', message: 'Import file is not valid JSON.' },
+        { contents: '{"version":2,"lessons":[]}', message: 'Import file has an invalid lesson format.' },
+        { contents: '{"version":1,"lessons":[null]}', message: 'Import file has an invalid lesson format.' },
+        { contents: '{"version":1,"lessons":[{"title":"Missing required fields"}]}', message: 'Import file has an invalid lesson format.' },
+    ])('rejects $contents before making an API request', async ({ contents, message }) => {
+        const { fixture, host, getAll, importLessons } = await setupImportAsync();
+        selectFile(fixture, contents);
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(host.textContent).toContain(message);
+        expect(host.textContent).toContain('No lessons found.');
+        expect(importLessons).not.toHaveBeenCalled();
+        expect(getAll).toHaveBeenCalledOnce();
+    });
+
+    it('locks the import while it is pending and refreshes the lessons after a successful retry', async () => {
+        const { fixture, host, getAll, importLessons } = await setupImportAsync();
+        const pending = new Subject<AdminLessonsImportResponse>();
+        importLessons.mockReturnValueOnce(pending).mockReturnValueOnce(of({ importedCount: 1, lessons: [LESSON] }));
+        const contents = JSON.stringify(importPayload);
+
+        selectFile(fixture, contents);
+        await fixture.whenStable();
+        expect(host.textContent).toContain('Importing...');
+        selectFile(fixture, contents);
+        await fixture.whenStable();
+        expect(importLessons).toHaveBeenCalledExactlyOnceWith(importPayload);
+        expect(getAll).toHaveBeenCalledOnce();
+
+        pending.error(new Error('offline'));
+        fixture.detectChanges();
+        expect(host.textContent).toContain('Lesson import failed.');
+        expect(host.textContent).toContain('Import JSON');
+        expect(getAll).toHaveBeenCalledOnce();
+
+        getAll.mockReturnValueOnce(of([LESSON]));
+        selectFile(fixture, contents);
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(importLessons.mock.calls).toEqual([[importPayload], [importPayload]]);
+        expect(getAll).toHaveBeenCalledTimes(2);
+        expect(host.textContent).toContain('Imported 1 lessons.');
+        expect(host.querySelector('tbody')?.textContent).toContain(LESSON.title);
     });
 });

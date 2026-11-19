@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 526,
-    "componentsWithoutDirectSpecs": 138,
+    "componentsWithoutDirectSpecs": 133,
     "inputs": 1680,
     "outputs": 564,
     "apiCalls": 336,
@@ -205,7 +205,7 @@
       ],
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/pages/admin-sign-in.spec.ts"
     },
     {
       "class": "AdminBillingCancellationsTableComponent",
@@ -594,7 +594,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.spec.ts"
     },
     {
       "class": "AdminEmailTemplateEditDialogComponent",
@@ -1124,7 +1124,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.spec.ts"
     },
     {
       "class": "AdminUserSetPasswordDialogComponent",
@@ -2093,7 +2093,7 @@
       ],
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.spec.ts"
     },
     {
       "class": "CycleSummaryCardComponent",
@@ -5680,7 +5680,7 @@
           "type": "string[]"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.spec.ts"
     },
     {
       "class": "FdUiConfirmDialogComponent",

@@ -1603,6 +1603,159 @@ test.describe('dashboard nutrition trend geometry', () => {
     }
 });
 
+test('crops a profile photo in the browser and saves the resulting asset', async ({ page, baseURL }) => {
+    const runtimeErrors: string[] = [];
+    page.on('pageerror', error => runtimeErrors.push(error.message));
+    page.on('console', message => {
+        if (message.type() === 'error' && message.text().startsWith('ERROR ')) {
+            runtimeErrors.push(message.text());
+        }
+    });
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    const { imageUrl, uploads, profileUpdates } = await mockProfileAvatarUploadAsync(page, baseURL);
+
+    await page.goto('/profile');
+    const avatar = page.getByRole('button', { name: 'Change profile photo' });
+    await expect(avatar).toBeVisible();
+    await chooseTestAvatarAsync(page, avatar);
+
+    const cropper = page.getByRole('dialog', { name: 'Crop image' });
+    const apply = cropper.getByRole('button', { name: 'Apply' });
+    await expect(apply).toBeEnabled();
+    await dragAvatarCropAsync(page, cropper.getByRole('group', { name: 'Crop image' }));
+    expect(uploads).toHaveLength(0);
+
+    await apply.click();
+    await expect(cropper).toBeHidden();
+    const renderedAvatar = avatar.locator('img');
+    await expect(renderedAvatar).toHaveAttribute('src', imageUrl);
+    expect(uploads).toHaveLength(1);
+    await expectCroppedAvatarAsync(renderedAvatar, uploads[0]);
+
+    const save = page.locator('fd-unsaved-changes-bar').getByRole('button', { name: 'Save changes', exact: true });
+    await save.click();
+    await expect(save).toBeHidden();
+    expect(profileUpdates).toHaveLength(1);
+    await page.reload();
+    await expect(avatar.locator('img')).toHaveAttribute('src', imageUrl);
+    expect(runtimeErrors).toEqual([]);
+});
+
+async function mockProfileAvatarUploadAsync(
+    page: Page,
+    baseURL: string | undefined,
+): Promise<{ imageUrl: string; uploads: Buffer[]; profileUpdates: Array<{ profileImageAssetId?: string }> }> {
+    const assetId = fixtureUuid('profile-avatar-crop');
+    const imagePath = '/test-assets/profile-avatar.png';
+    const imageUrl = new URL(imagePath, baseURL).href;
+    const uploadPath = '/test-upload/profile-avatar';
+    const uploads: Buffer[] = [];
+    const profileUpdates: Array<{ profileImageAssetId?: string }> = [];
+    let user = createUser();
+
+    await page.route('**/api/v1/users/info', async route => {
+        if (route.request().method() === 'PATCH') {
+            const update = route.request().postDataJSON() as { profileImageAssetId?: string };
+            profileUpdates.push(update);
+            expect(update.profileImageAssetId).toBe(assetId);
+            user = { ...user, profileImage: imageUrl, profileImageAssetId: assetId };
+        }
+        await route.fulfill(jsonResponse(user));
+    });
+    await page.route('**/api/v1/users/overview', async route => route.fulfill(jsonResponse({ ...createUserOverview(), user })));
+    await page.route('**/api/v1/images/upload-url', async route => {
+        await route.fulfill(
+            jsonResponse({
+                assetId,
+                uploadUrl: new URL(uploadPath, page.url()).href,
+                fileUrl: imageUrl,
+                expiresAtUtc: '2099-01-01T00:00:00Z',
+            }),
+        );
+    });
+    await page.route(`**${uploadPath}`, async route => {
+        expect(route.request().method()).toBe('PUT');
+        const body = route.request().postDataBuffer();
+        if (body === null) {
+            throw new Error('The avatar upload was empty');
+        }
+        uploads.push(body);
+        await route.fulfill({ status: 200, body: '' });
+    });
+    await page.route(`**${imagePath}`, async route => route.fulfill({ contentType: 'image/png', body: uploads[0] }));
+    await page.route(`**/api/v1/images/${assetId}/confirm`, async route => route.fulfill(jsonResponse({ assetId, fileUrl: imageUrl })));
+    return { imageUrl, uploads, profileUpdates };
+}
+
+async function chooseTestAvatarAsync(page: Page, avatar: Locator): Promise<void> {
+    const png = await page.evaluate(() => {
+        const imageHeight = 400;
+        const canvas = document.createElement('canvas');
+        canvas.width = imageHeight * 2;
+        canvas.height = imageHeight;
+        const context = canvas.getContext('2d');
+        if (context === null) {
+            throw new Error('Canvas is unavailable');
+        }
+        context.fillStyle = '#e11d48';
+        context.fillRect(0, 0, imageHeight, imageHeight);
+        context.fillStyle = '#2563eb';
+        context.fillRect(imageHeight, 0, imageHeight, imageHeight);
+        return canvas.toDataURL('image/png').split(',')[1];
+    });
+    await avatar.click();
+    const choosePhoto = page.waitForEvent('filechooser');
+    await page.getByRole('menuitem', { name: 'Add photo' }).click();
+    const chooser = await choosePhoto;
+    await chooser.setFiles({ name: 'avatar.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
+}
+
+async function dragAvatarCropAsync(page: Page, selection: Locator): Promise<void> {
+    const before = await selection.boundingBox();
+    if (before === null) {
+        throw new Error('The crop selection is not displayed');
+    }
+    const x = before.x + before.width / 2;
+    const y = before.y + before.height / 2;
+    const dragDistance = 30;
+    const minimumShift = 10;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + dragDistance, y, { steps: 5 });
+    await page.mouse.up();
+    await expect
+        .poll(async () => {
+            const moved = await selection.boundingBox();
+            return moved?.x ?? 0;
+        })
+        .toBeGreaterThan(before.x + minimumShift);
+}
+
+async function expectCroppedAvatarAsync(renderedAvatar: Locator, upload: Buffer): Promise<void> {
+    // PNG's IHDR chunk stores width and height as big-endian values.
+    const header = { chunkType: 12, width: 16, height: 20 };
+    const cropSize = 512;
+    expect(upload.subarray(header.chunkType, header.width).toString('ascii')).toBe('IHDR');
+    expect([upload.readUInt32BE(header.width), upload.readUInt32BE(header.height)]).toEqual([cropSize, cropSize]);
+    const colorNearCenter = await renderedAvatar.evaluate(async (image: HTMLImageElement) => {
+        await image.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        const context = canvas.getContext('2d');
+        if (context === null) {
+            throw new Error('Canvas is unavailable');
+        }
+        context.drawImage(image, 0, 0);
+        const offsetFromCenter = 8;
+        const [red, green, blue, alpha] = context.getImageData(canvas.width / 2 - offsetFromCenter, canvas.height / 2, 1, 1).data;
+        return { red, green, blue, alpha };
+    });
+    // Dragging right brings the blue half past the center of the uploaded crop.
+    expect(colorNearCenter).toEqual({ red: 37, green: 99, blue: 235, alpha: 255 });
+}
+
 test('Telegram disconnection requires confirmation and keeps the profile open', async ({ page }) => {
     await authenticateUserAsync(page);
     await mockAuthenticatedClientApiAsync(page);
