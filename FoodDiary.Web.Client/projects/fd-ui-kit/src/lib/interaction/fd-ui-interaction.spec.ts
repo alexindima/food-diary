@@ -59,6 +59,14 @@ const EXPECTED_ACTIVATION_COUNT = 3;
         </fieldset>
         <fd-ui-textarea id="focus-textarea" label="Description" [disabled]="busy()" [fdUiFocusWhen]="textareaFocus()" />
         <input id="select-input" aria-label="Rename" [fdUiFocusWhen]="selectFocus()" fdUiFocusSelect [value]="draft()" />
+        <textarea
+            id="select-textarea"
+            aria-label="Notes"
+            [fdUiFocusWhen]="selectTextareaFocus()"
+            fdUiFocusSelect
+            [value]="draft()"
+        ></textarea>
+        <section id="focus-panel" aria-label="Details" tabindex="-1" [fdUiFocusWhen]="panelFocus()" fdUiFocusSelect></section>
         <div [fdUiPreventUnload]="dirty()"></div>
     `,
 })
@@ -75,6 +83,8 @@ class InteractionHostComponent {
     public readonly fieldsetCount = signal(0);
     public readonly textareaFocus = signal(false);
     public readonly selectFocus = signal(false);
+    public readonly selectTextareaFocus = signal(false);
+    public readonly panelFocus = signal(false);
     public readonly busy = signal(false);
     public readonly loading = signal(false);
     public readonly focusCount = signal(0);
@@ -135,6 +145,22 @@ describe('activation and nested actions', () => {
         expect(fixture.componentInstance.activated()).toBe(0);
         expect(card.getAttribute('tabindex')).toBe('-1');
         expect(card.getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('leaves arrow keys and typeahead available to an enclosing keyboard handler', async () => {
+        const fixture = await setupAsync();
+        const card = element(fixture, '#card');
+        const bubbles: string[] = [];
+        (fixture.nativeElement as HTMLElement).addEventListener('keydown', event => {
+            bubbles.push(event.key);
+        });
+        for (const key of ['ArrowRight', 'a']) {
+            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+            card.dispatchEvent(event);
+            expect(event.defaultPrevented).toBe(false);
+        }
+        expect(bubbles).toEqual(['ArrowRight', 'a']);
+        expect(fixture.componentInstance.activated()).toBe(0);
     });
 
     it('isolates nested actions while preserving native keyboard defaults and optional click bubbling', async () => {
@@ -221,6 +247,24 @@ describe('focus requests', () => {
         expect(TestBed.inject(DOCUMENT).activeElement).toBe(input);
         expect(input.selectionStart).toBe(0);
         expect(input.selectionEnd).toBe(input.value.length);
+    });
+});
+
+describe('native and custom focus targets', () => {
+    it('selects a native textarea draft and focuses a custom panel without attempting text selection', async () => {
+        const fixture = await setupAsync();
+        fixture.componentInstance.selectTextareaFocus.set(true);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const textarea = element(fixture, '#select-textarea') as HTMLTextAreaElement;
+        expect(document.activeElement).toBe(textarea);
+        expect(textarea.selectionStart).toBe(0);
+        expect(textarea.selectionEnd).toBe(textarea.value.length);
+
+        fixture.componentInstance.panelFocus.set(true);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(document.activeElement).toBe(element(fixture, '#focus-panel'));
     });
 });
 

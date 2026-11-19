@@ -322,6 +322,30 @@ describe('expired dialog history', () => {
 });
 
 describe('dialog history lifecycle', () => {
+    it('attaches only one router listener when connected again', () => {
+        const onUrlChange = vi.fn();
+        context.history.connect({ onUrlChange } as unknown as Location);
+        expect(onUrlChange).not.toHaveBeenCalled();
+
+        const dialog = context.open();
+        context.view.history.back();
+        vi.runAllTimers();
+        expect(dialog.close).toHaveBeenCalledOnce();
+        expect(context.navigated).not.toHaveBeenCalled();
+    });
+
+    it('preserves page state with an invalid dialog marker', () => {
+        const state = { __fdUiDialog: { id: 42, url: context.view.location.href, state: 'legacy' }, navigationId: 2 };
+        context.view.history.replaceState(state, '');
+        const dialog = context.open();
+        context.view.history.back();
+        vi.runAllTimers();
+
+        expect(dialog.close).toHaveBeenCalledOnce();
+        expect(context.view.history.state).toEqual(state);
+        expect(context.navigated).not.toHaveBeenCalled();
+    });
+
     it('does not alter route state when destroyed without any dialogs', () => {
         context.history.destroy();
         expect(context.view.history.state).toEqual({ navigationId: 2, editor: 'draft' });

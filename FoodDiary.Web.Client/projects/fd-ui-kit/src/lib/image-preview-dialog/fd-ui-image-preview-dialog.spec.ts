@@ -117,3 +117,41 @@ describe('Image preview initial selection', () => {
         expect(host.querySelector('img')?.alt).toBe('First photo');
     });
 });
+
+describe('Image preview gesture boundaries', () => {
+    it('ignores pinch gestures and unmatched touch ends, then accepts a fresh horizontal swipe', () => {
+        const { host, fixture } = setup({ collageImages: images });
+        const viewport = host.querySelector('.fd-ui-image-preview-dialog__viewport');
+        if (viewport === null) {
+            throw new Error('Expected the image preview gallery viewport.');
+        }
+        const initialTouch = { clientX: SWIPE_START, clientY: SWIPE_START };
+        const swipeEnd = { clientX: SWIPE_LEFT, clientY: SWIPE_START };
+
+        dispatchGalleryTouch(viewport, 'touchend', [swipeEnd]);
+        dispatchGalleryTouch(viewport, 'touchstart', [initialTouch, { clientX: SWIPE_RIGHT, clientY: SWIPE_START }]);
+        dispatchGalleryTouch(viewport, 'touchend', [swipeEnd]);
+        dispatchGalleryTouch(viewport, 'touchstart', [initialTouch]);
+        dispatchGalleryTouch(viewport, 'touchend', []);
+        dispatchGalleryTouch(viewport, 'touchend', [swipeEnd]);
+        fixture.detectChanges();
+        expect(host.querySelector('img')?.alt).toBe('First photo');
+        expect(host.querySelector('[aria-live="polite"]')?.textContent.trim()).toBe('1 / 2');
+
+        dispatchGalleryTouch(viewport, 'touchstart', [initialTouch]);
+        dispatchGalleryTouch(viewport, 'touchend', [swipeEnd]);
+        fixture.detectChanges();
+        expect(host.querySelector('img')?.alt).toBe('Second photo');
+        expect(host.querySelector('[aria-live="polite"]')?.textContent.trim()).toBe('2 / 2');
+    });
+});
+
+type GalleryTouch = { clientX: number; clientY: number };
+
+function dispatchGalleryTouch(viewport: Element, type: 'touchstart' | 'touchend', points: readonly GalleryTouch[]): void {
+    const event = new Event(type, { bubbles: true });
+    Object.defineProperty(event, type === 'touchstart' ? 'touches' : 'changedTouches', {
+        value: { length: points.length, item: (index: number): GalleryTouch | null => points[index] ?? null },
+    });
+    viewport.dispatchEvent(event);
+}

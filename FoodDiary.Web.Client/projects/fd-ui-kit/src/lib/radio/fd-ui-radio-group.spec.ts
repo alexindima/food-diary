@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiRadioGroupComponent, type FdUiRadioOption } from './fd-ui-radio-group';
 
@@ -158,5 +158,84 @@ describe('FdUiRadioGroupComponent helper text', () => {
 
         const hint = requireElement('.fd-ui-radio-group__hint');
         expect(hint.textContent).toContain('Select your preference');
+    });
+});
+
+describe('FdUiRadioGroupComponent native keyboard behavior', () => {
+    it.each([
+        { key: 'ArrowRight', start: 'c', target: 'a' },
+        { key: 'ArrowLeft', start: 'a', target: 'c' },
+        { key: 'ArrowUp', start: 'a', target: 'c' },
+        { key: 'Home', start: 'b', target: 'a' },
+        { key: 'End', start: 'b', target: 'c' },
+    ])('uses $key to select $target and move focus from $start', async ({ key, start, target }) => {
+        const { component, fixture, host } = await setupRadioGroupAsync();
+        setRadioOptions(fixture);
+        component.value.set(start);
+        fixture.detectChanges();
+        const focused = host().querySelector<HTMLInputElement>('input:checked');
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+
+        focused?.focus();
+        const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+        focused?.dispatchEvent(event);
+        fixture.detectChanges();
+
+        expect(event.defaultPrevented).toBe(true);
+        expect(changed).toHaveBeenCalledExactlyOnceWith(target);
+        expect(document.activeElement).toBe(host().querySelector('input:checked'));
+        expect(document.activeElement).not.toBe(focused);
+    });
+
+    it('lets Tab leave the radio group without selecting a different option', async () => {
+        const { component, fixture, requireElement } = await setupRadioGroupAsync();
+        setRadioOptions(fixture);
+        component.value.set('b');
+        fixture.detectChanges();
+        const selected = requireElement('input:checked');
+        selected.focus();
+        const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+        selected.dispatchEvent(tab);
+        fixture.detectChanges();
+
+        expect(tab.defaultPrevented).toBe(false);
+        expect(component.value()).toBe('b');
+    });
+});
+
+describe('FdUiRadioGroupComponent stale native events', () => {
+    it('does not select stale options after the group is cleared but before the native controls repaint', async () => {
+        const { component, fixture, host, requireElement } = await setupRadioGroupAsync();
+        setRadioOptions(fixture);
+        const first = requireElement('input[type="radio"]');
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+
+        fixture.componentRef.setInput('options', []);
+        const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+        first.dispatchEvent(event);
+        fixture.detectChanges();
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(host().querySelector('input[type="radio"]')).toBeNull();
+        expect(component.value()).toBeNull();
+        expect(changed).not.toHaveBeenCalled();
+    });
+
+    it('blocks a pending native selection after the host disables the group', async () => {
+        const { component, fixture, requireElement } = await setupRadioGroupAsync();
+        setRadioOptions(fixture);
+        const first = requireElement('input[type="radio"]');
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+
+        fixture.componentRef.setInput('disabled', true);
+        first.click();
+        fixture.detectChanges();
+
+        expect(component.value()).toBeNull();
+        expect(changed).not.toHaveBeenCalled();
+        expect(requireElement('input[type="radio"]').hasAttribute('disabled')).toBe(true);
     });
 });

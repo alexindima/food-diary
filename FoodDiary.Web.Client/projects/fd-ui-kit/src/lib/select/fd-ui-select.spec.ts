@@ -589,3 +589,56 @@ describe('FdUiSelectComponent control wrapper interactions', () => {
         expect(component['isOpen']()).toBe(false);
     });
 });
+
+describe('FdUiSelectComponent delayed keyboard interactions', () => {
+    it('keeps repeated open keys in a single menu and lets a parent handle Escape after it is closed', async () => {
+        const { fixture, requireElement, component } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        component.focus();
+        expect(document.activeElement).toBe(control);
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        const menu = document.querySelector('[role="listbox"]');
+        expect(menu).not.toBeNull();
+
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        expect(document.querySelectorAll('[role="listbox"]')).toHaveLength(1);
+        expect(document.querySelector('[role="listbox"]')).toBe(menu);
+        expect(component.value()).toBeNull();
+
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        const closedEscape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        control.dispatchEvent(closedEscape);
+        expect(closedEscape.defaultPrevented).toBe(false);
+        expect(control.getAttribute('aria-expanded')).toBe('false');
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+    });
+
+    it('ignores Enter before delayed options render and selects only after an active option appears', async () => {
+        const { fixture, requireElement, component } = await setupSelectAsync();
+        const control = requireElement('.fd-ui-select__control');
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        control.click();
+        fixture.detectChanges();
+        const menu = document.querySelector('[role="listbox"]');
+        expect(menu).not.toBeNull();
+        expect(menu?.hasAttribute('aria-activedescendant')).toBe(false);
+
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        menu?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        expect(changed).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
+        expect(menu?.getAttribute('aria-activedescendant')).toBe(`${control.id}-option-0`);
+        menu?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        expect(changed).toHaveBeenCalledExactlyOnceWith('apple');
+        expect(document.querySelector('[role="listbox"]')).toBeNull();
+        expect(document.activeElement).toBe(control);
+    });
+});

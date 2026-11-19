@@ -306,3 +306,25 @@ describe('FdUiNutrientInputComponent dynamic width', () => {
         expect(host().querySelector('.fd-ui-nutrient-input')?.classList).toContain('fd-ui-nutrient-input--value-x-dense');
     });
 });
+
+describe('FdUiNutrientInputComponent concrete field validation', () => {
+    it('uses the nutrient label alone without a unit and toggles the rendered error for programmatic validation', async () => {
+        const { fixture, input, host } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('label', 'Protein');
+        fixture.componentRef.setInput('unitLabel', ' ');
+        fixture.componentRef.setInput('ariaLabel', ' ');
+        const explanation = 'Enter the amount consumed';
+        fixture.componentRef.setInput('error', explanation);
+        fixture.detectChanges();
+
+        expect(input().getAttribute('aria-label')).toBe('Protein');
+        expect(host().querySelector('.fd-ui-nutrient-input--error')).not.toBeNull();
+        expect(host().querySelector('.fd-ui-nutrient-input__error')?.textContent).toContain(explanation);
+
+        fixture.componentRef.setInput('error', '');
+        fixture.detectChanges();
+        expect(host().querySelector('.fd-ui-nutrient-input--error')).toBeNull();
+        expect(host().querySelector('.fd-ui-nutrient-input__error')).toBeNull();
+        expect(input().getAttribute('aria-label')).toBe('Protein');
+    });
+});

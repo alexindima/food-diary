@@ -40,7 +40,7 @@
     </div>
 
     <div class="fd-ui-calendar__weekdays" aria-hidden="true">
-        @for (weekday of weekdayLabels(); track weekday) {
+        @for (weekday of weekdayLabels(); track $index) {
             <span class="fd-ui-calendar__weekday">{{ weekday }}</span>
         }
     </div>

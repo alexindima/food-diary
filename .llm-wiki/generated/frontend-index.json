@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2849,
+    "typescriptFiles": 2853,
     "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 866,
+    "specs": 870,
     "localeFiles": 5,
     "roles": {
       "Component": 516,
@@ -1725,7 +1725,7 @@
       "role": "Component",
       "selector": "fd-ui-bar-chart",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
-      "line": 91
+      "line": 95
     },
     {
       "name": "FdUiButtonComponent",
@@ -2061,7 +2061,7 @@
       "role": "Directive",
       "selector": "[fdUiMenuTrigger]",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-trigger.directive.ts",
-      "line": 32
+      "line": 33
     },
     {
       "name": "FdUiMenuComponent",
@@ -2229,7 +2229,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.service.ts",
-      "line": 93
+      "line": 86
     },
     {
       "name": "FdUiTopLoaderComponent",

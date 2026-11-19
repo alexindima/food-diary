@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiPaginationComponent } from './fd-ui-pagination';
@@ -73,5 +73,20 @@ describe('FdUiPaginationComponent', () => {
         buttons[2].click();
 
         expect(component['pageIndex']()).toBe(1);
+    });
+
+    it('does not request another page when the current page is clicked', () => {
+        fixture.componentRef.setInput('length', LONG_TOTAL_ITEMS);
+        fixture.componentRef.setInput('pageIndex', PAGE_INDEX);
+        fixture.detectChanges();
+        const pageChanged = vi.fn();
+        component.pageIndex.subscribe(pageChanged);
+
+        const activePage = host().querySelector<HTMLButtonElement>('button[aria-current="page"]');
+        expect(activePage).not.toBeNull();
+        activePage?.click();
+
+        expect(component.pageIndex()).toBe(PAGE_INDEX);
+        expect(pageChanged).not.toHaveBeenCalled();
     });
 });

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
-import { EMPTY } from 'rxjs';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from './fd-ui-segmented-toggle';
 
@@ -35,15 +35,7 @@ function requireElement(selector: string): HTMLElement {
 beforeEach(async () => {
     await TestBed.configureTestingModule({
         imports: [FdUiSegmentedToggleComponent],
-        providers: [
-            {
-                provide: TranslateService,
-                useValue: {
-                    instant: (key: string): string => key,
-                    onLangChange: EMPTY,
-                },
-            },
-        ],
+        providers: [provideTranslateService()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FdUiSegmentedToggleComponent);
@@ -51,6 +43,59 @@ beforeEach(async () => {
     fixture.componentRef.setInput('options', testOptions);
     fixture.componentRef.setInput('selectedValue', 'day');
     fixture.detectChanges();
+});
+
+describe('FdUiSegmentedToggleComponent changing inputs', () => {
+    it('refreshes translated option keys after the language changes and preserves explicit labels and selection', async () => {
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { PERIOD: { DAY: 'Today', WEEK: 'This week' } });
+        translate.setTranslation('ru', { PERIOD: { DAY: 'Сегодня', WEEK: 'Эта неделя' } });
+        await firstValueFrom(translate.use('en'));
+        fixture.componentRef.setInput('options', [
+            { value: 'day', labelKey: 'PERIOD.DAY' },
+            { value: 'week', label: 'Pinned caption', labelKey: 'PERIOD.WEEK' },
+            { value: 'month' },
+        ]);
+        fixture.detectChanges();
+        expect(radioButtons().map(button => button.textContent.trim())).toEqual(['Today', 'Pinned caption', '']);
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(radioButtons().map(button => button.textContent.trim())).toEqual(['Сегодня', 'Pinned caption', '']);
+        expect(radioButtons()[0].getAttribute('aria-checked')).toBe('true');
+    });
+
+    it('applies full-width and shrink behavior to the rendered control and removes both on reset', () => {
+        fixture.componentRef.setInput('fullWidth', true);
+        fixture.componentRef.setInput('shrinkItems', true);
+        fixture.detectChanges();
+
+        const container = requireElement('.fd-ui-segmented-toggle');
+        expect(host().classList).toContain('fd-ui-segmented-toggle-host--full-width');
+        expect(container.classList).toContain('fd-ui-segmented-toggle--full-width');
+        expect(container.classList).toContain('fd-ui-segmented-toggle--shrink-items');
+
+        fixture.componentRef.setInput('fullWidth', false);
+        fixture.componentRef.setInput('shrinkItems', false);
+        fixture.detectChanges();
+        expect(host().classList).not.toContain('fd-ui-segmented-toggle-host--full-width');
+        expect(container.classList).not.toContain('fd-ui-segmented-toggle--full-width');
+        expect(container.classList).not.toContain('fd-ui-segmented-toggle--shrink-items');
+    });
+
+    it('emits only when the selection changes', () => {
+        const changed = vi.fn<(value: string) => void>();
+        component.selectedValue.subscribe(changed);
+        const buttons = radioButtons();
+        buttons[0].click();
+        expect(changed).not.toHaveBeenCalled();
+
+        buttons[1].click();
+        buttons[1].click();
+        fixture.detectChanges();
+        expect(changed).toHaveBeenCalledExactlyOnceWith('week');
+        expect(buttons[1].getAttribute('aria-checked')).toBe('true');
+    });
 });
 
 describe('FdUiSegmentedToggleComponent', () => {

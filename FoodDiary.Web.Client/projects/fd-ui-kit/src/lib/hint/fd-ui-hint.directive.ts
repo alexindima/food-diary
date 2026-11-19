@@ -135,11 +135,12 @@ export class FdUiHintDirective {
             const context = this.fdUiHintContext();
             const html = this.fdUiHintHtml();
             const positions = this.getPositions();
+            const hintRef = this.hintRef;
             if (disabled || !this.hasContent()) {
                 this.clearTimers();
                 this.hide();
-            } else if (content !== null && this.hintRef !== null) {
-                this.updateContent(content, context, html);
+            } else if (content !== null && hintRef !== null) {
+                this.updateContent(hintRef, content, context, html);
                 this.positionStrategy?.withPositions(positions);
                 this.overlayRef?.updatePosition();
             }
@@ -252,17 +253,19 @@ export class FdUiHintDirective {
         }
 
         const portal = new ComponentPortal(FdUiHintOverlayComponent);
-        this.hintRef = this.overlayRef.attach(portal);
+        const hintRef = this.overlayRef.attach(portal);
+        this.hintRef = hintRef;
         this.overlayRef.overlayElement.style.pointerEvents = 'none';
-        this.updateContent(content, this.fdUiHintContext(), this.fdUiHintHtml());
+        this.updateContent(hintRef, content, this.fdUiHintContext(), this.fdUiHintHtml());
         this.syncAriaDescribedBy(true);
     }
 
-    private updateContent(content: Exclude<HintContent, null>, context: Record<string, unknown> | null, html: boolean): void {
-        const ref = this.hintRef;
-        if (ref === null) {
-            return;
-        }
+    private updateContent(
+        ref: ComponentRef<FdUiHintOverlayComponent>,
+        content: Exclude<HintContent, null>,
+        context: Record<string, unknown> | null,
+        html: boolean,
+    ): void {
         ref.setInput('tooltipId', this.tooltipId);
         ref.setInput('contentContext', context);
 

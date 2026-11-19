@@ -37,13 +37,13 @@ type FdUiLineChartPointViewModel = {
     tooltip: string;
 };
 
+type FdUiLineChartPointGroup = [FdUiLineChartPointViewModel, ...FdUiLineChartPointViewModel[]];
+
 type FdUiLineChartSeriesViewModel = {
     label: string;
     color: string;
     fillColor: string;
     points: readonly FdUiLineChartPointViewModel[];
-    path: string;
-    areaPath: string;
     paths: readonly string[];
     areaPaths: readonly string[];
 };
@@ -416,9 +416,8 @@ export class FdUiLineChartComponent {
                 return [];
             }
 
-            const paths = pointGroups.map(group => this.buildLinePath(group)).filter(path => path.length > 0);
-            const areaPaths = pointGroups.map(group => this.buildAreaPath(this.buildLinePath(group), group));
-            const path = paths.join(' ');
+            const paths = pointGroups.map(group => this.buildLinePath(group));
+            const areaPaths = pointGroups.map((group, index) => this.buildAreaPath(paths[index], group));
 
             return [
                 {
@@ -426,8 +425,6 @@ export class FdUiLineChartComponent {
                     color: series.color,
                     fillColor: series.fillColor,
                     points,
-                    path,
-                    areaPath: areaPaths.join(' '),
                     paths,
                     areaPaths,
                 },
@@ -544,14 +541,6 @@ export class FdUiLineChartComponent {
         );
     }
 
-    protected readonly linePath = computed(() => {
-        return this.seriesViews()[0]?.path ?? '';
-    });
-
-    protected readonly areaPath = computed(() => {
-        return this.seriesViews()[0]?.areaPath ?? '';
-    });
-
     protected readonly shouldShowSeriesLegend = computed(() => this.showLegend() && this.seriesViews().length > 1);
 
     protected readonly ariaLabel = computed(() => {
@@ -574,11 +563,7 @@ export class FdUiLineChartComponent {
         return hasTitle ? `${title}: ${details}` : details;
     });
 
-    private buildLinePath(points: readonly FdUiLineChartPointViewModel[]): string {
-        if (points.length === 0) {
-            return '';
-        }
-
+    private buildLinePath(points: FdUiLineChartPointGroup): string {
         if (points.length === 1) {
             const point = points[0];
             return `M ${point.x} ${point.y}`;
@@ -614,19 +599,15 @@ export class FdUiLineChartComponent {
         return [`M ${firstPoint.x} ${firstPoint.y}`, ...segments].join(' ');
     }
 
-    private buildPointGroups(
-        series: Required<FdUiLineChartSeries>,
-        options: FdUiLineChartPointGroupOptions,
-    ): FdUiLineChartPointViewModel[][] {
-        const groups: FdUiLineChartPointViewModel[][] = [];
-        let currentGroup: FdUiLineChartPointViewModel[] = [];
+    private buildPointGroups(series: Required<FdUiLineChartSeries>, options: FdUiLineChartPointGroupOptions): FdUiLineChartPointGroup[] {
+        const groups: FdUiLineChartPointGroup[] = [];
+        let currentGroup: FdUiLineChartPointGroup | null = null;
 
         series.points.forEach((point, index) => {
             const value = point.value;
             if (typeof value !== 'number' || !Number.isFinite(value)) {
-                if (!this.connectNulls() && currentGroup.length > 0) {
-                    groups.push(currentGroup);
-                    currentGroup = [];
+                if (!this.connectNulls()) {
+                    currentGroup = null;
                 }
 
                 return;
@@ -637,7 +618,7 @@ export class FdUiLineChartComponent {
             const label = point.label.trim().length > 0 ? point.label : this.emptyLabel();
             const tooltipPrefix = options.shouldPrefixTooltip ? `${series.label}, ` : '';
 
-            currentGroup.push({
+            const view: FdUiLineChartPointViewModel = {
                 label,
                 seriesLabel: series.label,
                 value,
@@ -647,12 +628,14 @@ export class FdUiLineChartComponent {
                 yPercent: `${(y / LINE_CHART_VIEWBOX_HEIGHT) * LINE_CHART_PERCENTAGE_SCALE}%`,
                 color: series.color,
                 tooltip: `${tooltipPrefix}${label}: ${this.formatDataValue(value)}`,
-            });
+            };
+            if (currentGroup === null) {
+                currentGroup = [view];
+                groups.push(currentGroup);
+            } else {
+                currentGroup.push(view);
+            }
         });
-
-        if (currentGroup.length > 0) {
-            groups.push(currentGroup);
-        }
 
         return groups;
     }
@@ -668,13 +651,10 @@ export class FdUiLineChartComponent {
         return pointCount > 1 ? this.chartLeft() + index * xStep : LINE_CHART_VIEWBOX_WIDTH / 2;
     }
 
-    private buildAreaPath(path: string, points: readonly FdUiLineChartPointViewModel[]): string {
+    private buildAreaPath(path: string, points: FdUiLineChartPointGroup): string {
         const first = points[0];
-        const last = points.at(-1);
-        if (last === undefined) {
-            return path;
-        }
-
+        // eslint-disable-next-line unicorn/prefer-at -- The point group is nonempty and direct indexing preserves its point type.
+        const last = points[points.length - 1];
         const baseline = this.areaBaseline();
 
         return `${path} L ${last.x} ${baseline} L ${first.x} ${baseline} Z`;
@@ -687,15 +667,7 @@ export class FdUiLineChartComponent {
     }
 
     private formatDataValue(value: number): string {
-        return this.formatValue(value, this.valueSuffix());
-    }
-
-    private formatValue(value: number, valueSuffix: string): string {
-        if (!Number.isFinite(value)) {
-            return '';
-        }
-
-        return this.withSuffix(this.formatNumericValue(value), valueSuffix);
+        return this.withSuffix(this.formatNumericValue(value), this.valueSuffix());
     }
 
     private formatNumericValue(value: number): string {

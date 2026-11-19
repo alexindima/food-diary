@@ -285,10 +285,10 @@
                             "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
                             "runnerConfig": "vitest.config.mjs",
                             "coverageThresholds": {
-                                "statements": 86,
-                                "lines": 85,
-                                "branches": 84,
-                                "functions": 87
+                                "statements": 99,
+                                "lines": 99,
+                                "branches": 98,
+                                "functions": 98
                             }
                         }
                     }

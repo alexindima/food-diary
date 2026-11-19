@@ -1,9 +1,11 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { disabled, form, FormField } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
 import { FdUiDatetimeInputComponent } from './fd-ui-datetime-input';
 
@@ -19,7 +21,10 @@ class DatetimeFormHost {
 }
 
 async function setupAsync(value: string | Date | null = '2024-02-29T23:45'): Promise<ComponentFixture<FdUiDatetimeInputComponent>> {
-    await TestBed.configureTestingModule({ imports: [FdUiDatetimeInputComponent] }).compileComponents();
+    await TestBed.configureTestingModule({
+        imports: [FdUiDatetimeInputComponent],
+        providers: [provideTranslateTesting()],
+    }).compileComponents();
     const fixture = TestBed.createComponent(FdUiDatetimeInputComponent);
     fixture.componentRef.setInput('value', value);
     fixture.detectChanges();
@@ -238,3 +243,147 @@ describe('FdUiDatetimeInputComponent signal forms integration', () => {
         expect(child.touched()).toBe(false);
     });
 });
+
+describe('FdUiDatetimeInputComponent calendar and native focus', () => {
+    it('recovers an invalid external date via the calendar using midnight or the last confirmed time', async () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(new Date('2024-02-20T12:00:00'));
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+        const fixture = await setupAsync('invalid imported datetime');
+        const changed = vi.fn();
+        fixture.componentInstance.value.subscribe(changed);
+        expect(timeInput(fixture).value).toBe('');
+
+        clickCalendarDate(fixture, '2024-02-21');
+        expect(changed).toHaveBeenCalledExactlyOnceWith('2024-02-21T00:00');
+
+        const time = timeInput(fixture);
+        time.value = '09:15';
+        time.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        fixture.componentRef.setInput('value', 'another invalid datetime');
+        fixture.detectChanges();
+        expect(time.value).toBe('');
+
+        clickCalendarDate(fixture, '2024-02-22');
+        expect(changed.mock.calls).toEqual([['2024-02-21T00:00'], ['2024-02-21T09:15'], ['2024-02-22T09:15']]);
+        expect(time.value).toBe('09:15');
+    });
+
+    it('keeps a disabled field unchanged if a pending child update and time-picker click arrive', async () => {
+        const fixture = await setupAsync();
+        const changed = vi.fn();
+        fixture.componentInstance.value.subscribe(changed);
+        const trigger = timeTrigger(fixture);
+        const showPicker = vi.fn();
+        Object.defineProperty(timeInput(fixture), 'showPicker', { value: showPicker });
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        dateInput(fixture).value.set('2024-03-01');
+        trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(trigger.disabled).toBe(true);
+        expect(showPicker).not.toHaveBeenCalled();
+        expect(changed).not.toHaveBeenCalled();
+        expect(fixture.componentInstance.value()).toBe('2024-02-29T23:45');
+    });
+
+    it('focuses the time input when native showPicker is missing and marks the composite field touched when leaving', async () => {
+        const fixture = await setupAsync(null);
+        const input = timeInput(fixture);
+        Object.defineProperty(input, 'showPicker', { value: undefined });
+        const region = fixture.nativeElement as HTMLElement;
+        const touch = vi.fn();
+        fixture.componentInstance.touch.subscribe(touch);
+        const outside = document.createElement('button');
+        document.body.append(outside);
+        onTestFinished(() => {
+            outside.remove();
+        });
+
+        expect(input.getAttribute('placeholder')).toBe('HH:mm');
+        const trigger = timeTrigger(fixture);
+        trigger.focus();
+        trigger.click();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(input);
+        expect(input.getAttribute('placeholder')).toBeNull();
+        expect(fixture.componentInstance.touched()).toBe(false);
+
+        outside.focus();
+        fixture.detectChanges();
+        expect(fixture.componentInstance.touched()).toBe(true);
+        expect(touch).toHaveBeenCalled();
+        expect(region.querySelector('.fd-ui-datetime-input--floating')).not.toBeNull();
+    });
+});
+
+describe('FdUiDatetimeInputComponent validation and reset', () => {
+    it('preserves the committed value if native time reports a draft with seconds', async () => {
+        const fixture = await setupAsync();
+        const input = timeInput(fixture);
+        const changed = vi.fn();
+        fixture.componentInstance.value.subscribe(changed);
+        input.focus();
+        input.value = '09:15:45';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.blur();
+        fixture.detectChanges();
+
+        expect(input.value).toBe('09:15:45');
+        expect(fixture.componentInstance.value()).toBe('2024-02-29T23:45');
+        expect(fixture.componentInstance.touched()).toBe(true);
+        expect(changed).not.toHaveBeenCalled();
+    });
+
+    it('shows a domain error and clears an uncommitted time draft when reset on an empty model', async () => {
+        const fixture = await setupAsync(null);
+        const host = fixture.nativeElement as HTMLElement;
+        const input = timeInput(fixture);
+        const changed = vi.fn();
+        fixture.componentInstance.value.subscribe(changed);
+        fixture.componentRef.setInput('error', 'Choose an appointment date');
+        fixture.detectChanges();
+        expect(host.querySelector('.fd-ui-datetime-input--has-error')?.textContent).toContain('Choose an appointment date');
+
+        input.value = '09:30';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(input.value).toBe('09:30');
+        expect(changed).not.toHaveBeenCalled();
+
+        fixture.componentInstance.reset();
+        fixture.componentRef.setInput('error', null);
+        fixture.detectChanges();
+        expect(input.value).toBe('');
+        expect(host.querySelector('.fd-ui-datetime-input--has-error')).toBeNull();
+        expect(fixture.componentInstance.value()).toBeNull();
+        expect(fixture.componentInstance.touched()).toBe(false);
+        expect(changed).not.toHaveBeenCalled();
+    });
+});
+
+function timeTrigger(fixture: ComponentFixture<FdUiDatetimeInputComponent>): HTMLButtonElement {
+    const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-datetime-input__suffix');
+    if (trigger === null) {
+        throw new Error('Expected the time picker trigger.');
+    }
+    return trigger;
+}
+
+function clickCalendarDate(fixture: ComponentFixture<FdUiDatetimeInputComponent>, date: string): void {
+    const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('fd-ui-date-input button');
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    trigger?.click();
+    fixture.detectChanges();
+    const day = overlay.querySelector<HTMLButtonElement>(`[data-date="${date}"]`);
+    if (day === null) {
+        throw new Error(`Expected ${date} in the date picker.`);
+    }
+    day.click();
+    fixture.detectChanges();
+}

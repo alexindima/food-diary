@@ -253,10 +253,6 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
         return `${this.id()}-option-${index}`;
     }
 
-    protected getOptionTrack(option: FdUiAutocompleteOption<T>, index: number): string | number {
-        return option.id ?? `${String(option.badge ?? '')}:${option.label}:${index}`;
-    }
-
     private openMenu(): void {
         if (this.disabled() || this.isOpen()) {
             return;

@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 133,
+    "componentsWithoutDirectSpecs": 131,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -4228,30 +4228,6 @@
       "specPath": null
     },
     {
-      "class": "FdUiChartLegendComponent",
-      "selector": "fd-ui-chart-legend",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.scss"
-      ],
-      "inputs": [
-        {
-          "name": "items",
-          "type": "readonly FdUiChartLegendItem[]",
-          "required": false
-        },
-        {
-          "name": "visible",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "FdUiHintOverlayComponent",
       "selector": "fd-ui-hint-overlay",
       "feature": "fd-ui-kit",
@@ -4370,35 +4346,6 @@
         {
           "name": "series",
           "type": "readonly FdUiLineChartLegendSeries[]",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FdUiLineChartXAxisComponent",
-      "selector": "fd-ui-line-chart-x-axis",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.scss"
-      ],
-      "inputs": [
-        {
-          "name": "show",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "labels",
-          "type": "readonly FdUiLineChartXAxisLabelView[]",
-          "required": false
-        },
-        {
-          "name": "layout",
-          "type": "FdUiLineChartXAxisLabelLayout",
           "required": false
         }
       ],

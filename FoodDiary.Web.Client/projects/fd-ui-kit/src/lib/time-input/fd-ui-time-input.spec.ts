@@ -5,9 +5,6 @@ import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { FdUiTimeInputComponent } from './fd-ui-time-input';
 
 const HOURS_PER_DAY = 24;
-const LAST_HOUR_OF_DAY = 23;
-const SELECTED_HOUR = 21;
-const SELECTED_MINUTE = 35;
 const LAID_OUT_OPTION_WIDTH = 100;
 
 type TimeInputTestContext = {
@@ -194,14 +191,6 @@ describe('FdUiTimeInputComponent signal form control', () => {
 
         expect(component['disabled']()).toBe(false);
     });
-
-    it('should mark touched on blur', async () => {
-        const { component } = await setupTimeInputAsync();
-
-        component['onBlur']();
-
-        expect(component.touched()).toBe(true);
-    });
 });
 
 describe('FdUiTimeInputComponent picker accessibility', () => {
@@ -270,82 +259,132 @@ describe('FdUiTimeInputComponent classes', () => {
     });
 });
 
-describe('FdUiTimeInputComponent input handling', () => {
-    it('should expose a 24-hour picker without a meridiem period', async () => {
-        const { component } = await setupTimeInputAsync();
-
-        expect(component['hours']).toHaveLength(HOURS_PER_DAY);
-        expect(component['hours'][0]).toBe(0);
-        expect(component['hours'][LAST_HOUR_OF_DAY]).toBe(LAST_HOUR_OF_DAY);
-    });
-
-    it('should select an hour and a five-minute value', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['onInput']('09:00');
-
-        component['selectHour'](SELECTED_HOUR);
-        component['selectMinute'](SELECTED_MINUTE);
-
-        expect(component.value()).toBe('21:35');
-        expect(component['isOpen']()).toBe(false);
-    });
-
-    it('should update value with formatted time on valid input', async () => {
-        const { component } = await setupTimeInputAsync();
-
-        component['onInput']('14:30');
-
-        expect(component.value()).toBe('14:30');
-        expect(component['internalValue']()).toBe('14:30');
-    });
-
-    it('should update value with null on empty input', async () => {
-        const { component } = await setupTimeInputAsync();
-
-        component['onInput']('');
-
-        expect(component.value()).toBeNull();
-        expect(component['internalValue']()).toBe('');
-    });
-
-    it('should not update value on invalid time input', async () => {
-        const { component } = await setupTimeInputAsync();
-
-        component['onInput']('abc');
-
-        expect(component.value()).toBeNull();
-        expect(component['internalValue']()).toBe('abc');
-    });
-
-    it('should not process input when disabled', async () => {
-        const { component, fixture } = await setupTimeInputAsync();
-        fixture.componentRef.setInput('disabled', true);
+describe('FdUiTimeInputComponent clock values', () => {
+    it('shows all 24 hours and commits a padded time through the readonly field picker', async () => {
+        const { fixture, component, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('value', '9:05');
         fixture.detectChanges();
+        const input = requireElement('[role="combobox"]');
+        expect(input.matches('[readonly]')).toBe(true);
+        input.click();
+        fixture.detectChanges();
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        const hours = [...overlay.querySelectorAll('[role="group"][aria-label="Hours"] button')];
+        expect(hours).toHaveLength(HOURS_PER_DAY);
+        expect(hours[0]?.textContent.trim()).toBe('00');
+        expect(hours.at(-1)?.textContent.trim()).toBe('23');
+        expect(pickerOption(overlay, 'Hours', '09').getAttribute('aria-pressed')).toBe('true');
+        expect(pickerOption(overlay, 'Minutes', '05').getAttribute('aria-pressed')).toBe('true');
 
-        component['onInput']('14:30');
-
-        expect(component.value()).toBeNull();
-    });
-
-    it('should pad single-digit hours and minutes', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['onInput']('9:05');
-
+        pickerOption(overlay, 'Minutes', '05').click();
+        fixture.detectChanges();
         expect(component.value()).toBe('09:05');
-        expect(component['internalValue']()).toBe('09:05');
+        expect(input.getAttribute('aria-expanded')).toBe('false');
     });
 
-    it('should reject hours above 23', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['onInput']('25:00');
+    it.each(['abc', '25:00', '12:60'])('does not select impossible external time %s and accepts a valid replacement', async invalid => {
+        const { fixture, component, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('value', invalid);
+        fixture.detectChanges();
+        requireElement('[role="combobox"]').click();
+        fixture.detectChanges();
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
 
-        expect(component.value()).toBeNull();
-    });
-
-    it('should reject minutes above 59', async () => {
-        const { component } = await setupTimeInputAsync();
-        component['onInput']('12:60');
-
-        expect(component.value()).toBeNull();
+        expect(pickerOption(overlay, 'Hours', '00').getAttribute('aria-pressed')).toBe('true');
+        expect(pickerOption(overlay, 'Minutes', '00').getAttribute('aria-pressed')).toBe('true');
+        expect(component.value()).toBe(invalid);
+        pickerOption(overlay, 'Minutes', '15').click();
+        fixture.detectChanges();
+        expect(component.value()).toBe('00:15');
     });
 });
+
+describe('FdUiTimeInputComponent rendered interactions', () => {
+    it('preserves a precise minute from the model while selecting an hour and then commits a picked minute', async () => {
+        const { component, fixture, requireElement } = await setupTimeInputAsync();
+        fixture.componentRef.setInput('value', '21:59');
+        fixture.detectChanges();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        const input = requireElement('[role="combobox"]');
+        input.click();
+        fixture.detectChanges();
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        expect(overlay.querySelector('[aria-label="Minutes"] [aria-pressed="true"]')).toBeNull();
+
+        const hour = pickerOption(overlay, 'Hours', '23');
+        hour.click();
+        fixture.detectChanges();
+        expect(hour.getAttribute('aria-pressed')).toBe('true');
+        expect(component.value()).toBe('23:59');
+        expect(input.getAttribute('aria-expanded')).toBe('true');
+
+        const arrow = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+        hour.dispatchEvent(arrow);
+        expect(arrow.defaultPrevented).toBe(false);
+        pickerOption(overlay, 'Minutes', '35').click();
+        fixture.detectChanges();
+        expect(input.getAttribute('aria-expanded')).toBe('false');
+        expect(changed.mock.calls).toEqual([['23:59'], ['23:35']]);
+        expect(component.touched()).toBe(true);
+    });
+
+    it('closes the picker when the consumer disables it and rejects subsequent keyboard activation', async () => {
+        const { component, fixture, requireElement } = await setupTimeInputAsync();
+        const input = requireElement('[role="combobox"]');
+        input.click();
+        fixture.detectChanges();
+        expect(input.getAttribute('aria-expanded')).toBe('true');
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+
+        expect(input.matches(':disabled')).toBe(true);
+        expect(input.getAttribute('aria-expanded')).toBe('false');
+        expect(component.value()).toBeNull();
+    });
+
+    it('focuses the actual control for Signal Forms and marks the field touched when focus leaves', async () => {
+        const { component, fixture, requireElement } = await setupTimeInputAsync();
+        const input = requireElement('[role="combobox"]');
+        const touch = vi.fn();
+        component.touch.subscribe(touch);
+        const outside = document.createElement('button');
+        document.body.append(outside);
+        onTestFinished(() => {
+            outside.remove();
+        });
+
+        component.focus();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(input);
+        expect(input.getAttribute('placeholder')).toBe('HH:mm');
+        expect(component.touched()).toBe(false);
+
+        const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+        input.dispatchEvent(tab);
+        expect(tab.defaultPrevented).toBe(false);
+
+        requireElement('.fd-ui-time-input__suffix').focus();
+        fixture.detectChanges();
+        expect(component.touched()).toBe(false);
+
+        outside.focus();
+        fixture.detectChanges();
+        expect(component.touched()).toBe(true);
+        expect(touch).toHaveBeenCalledOnce();
+        expect(input.getAttribute('placeholder')).toBeNull();
+    });
+});
+
+function pickerOption(overlay: HTMLElement, groupLabel: string, value: string): HTMLButtonElement {
+    const option = [...overlay.querySelectorAll<HTMLButtonElement>(`[role="group"][aria-label="${groupLabel}"] button`)].find(
+        element => element.textContent.trim() === value,
+    );
+    if (option === undefined) {
+        throw new Error(`Expected option ${value} in the ${groupLabel} group.`);
+    }
+    return option;
+}

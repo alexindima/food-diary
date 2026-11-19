@@ -22,6 +22,7 @@ import { FdUiSidebarSectionComponent } from './fd-ui-sidebar-section';
             brandTitle="FoodDiary"
             brandSubtitle="Admin"
             logoText="FD"
+            [logoMaskUrl]="logoMaskUrl()"
             notificationAriaLabel="Notifications"
             notificationHint="Open notifications"
             [notificationBadge]="2"
@@ -43,6 +44,7 @@ import { FdUiSidebarSectionComponent } from './fd-ui-sidebar-section';
 })
 class FdUiSidebarTestHostComponent {
     public readonly collapsed = signal(false);
+    public readonly logoMaskUrl = signal<string | undefined>(undefined);
     public collapseToggleCount = 0;
     public pendingRoute = '/reports';
     public notificationClicks = 0;
@@ -196,5 +198,51 @@ describe('FdUiSidebarComponent', () => {
         expect(fixture.componentInstance['selectedRouteIds']).toContain('reports');
         expect(fixture.componentInstance['selectedActionIds']).toContain('admin');
         expect(fixture.componentInstance['toggledSectionIds']).toContain('food');
+    });
+});
+
+describe('FdUiSidebarComponent brand and item metadata', () => {
+    it('uses a configured decorative logo mask and falls back to the brand text when cleared', () => {
+        const fixture = setup();
+        const root = host(fixture);
+        expect(root.querySelector('.fd-ui-sidebar__logo-text')?.textContent.trim()).toBe('FD');
+
+        fixture.componentInstance.logoMaskUrl.set('/brand-mark.svg');
+        fixture.detectChanges();
+        const mark = root.querySelector<HTMLElement>('.fd-ui-sidebar__logo-mark');
+        expect(mark?.style.getPropertyValue('--fd-ui-sidebar-logo-mask-url')).toBe("url('/brand-mark.svg')");
+        expect(mark?.getAttribute('aria-hidden')).toBe('true');
+        expect(root.querySelector('.fd-ui-sidebar__logo-text')).toBeNull();
+        expect(root.querySelector('nav')?.getAttribute('aria-label')).toBe('FoodDiary');
+
+        fixture.componentInstance.logoMaskUrl.set('');
+        fixture.detectChanges();
+        expect(root.querySelector('.fd-ui-sidebar__logo-mark')).toBeNull();
+        expect(root.querySelector('.fd-ui-sidebar__logo-text')?.textContent.trim()).toBe('FD');
+    });
+
+    it('renders only positive badges for branded routes and actions while preserving collapsed labels', () => {
+        const fixture = setup();
+        const pendingBadge = 3;
+        fixture.componentInstance.sections = [
+            {
+                id: 'primary',
+                items: [
+                    { id: 'queue', icon: 'inbox', label: 'Queue', route: '/queue', tone: 'brand', badge: pendingBadge },
+                    { id: 'admin', icon: 'admin_panel_settings', label: 'Admin panel', action: 'openAdminPanel', badge: 0 },
+                ],
+            },
+        ];
+        fixture.componentInstance.collapsed.set(true);
+        fixture.detectChanges();
+        const root = host(fixture);
+        const queue = root.querySelector('a[aria-label="Queue"]');
+        const admin = root.querySelector<HTMLButtonElement>('button[aria-label="Admin panel"]');
+
+        expect(queue?.classList).toContain('fd-ui-sidebar__link--brand');
+        expect(queue?.querySelector('.fd-ui-sidebar__badge--collapsed')?.textContent.trim()).toBe(String(pendingBadge));
+        expect(admin?.querySelector('.fd-ui-sidebar__badge')).toBeNull();
+        admin?.click();
+        expect(fixture.componentInstance.selectedActionIds).toEqual(['admin']);
     });
 });

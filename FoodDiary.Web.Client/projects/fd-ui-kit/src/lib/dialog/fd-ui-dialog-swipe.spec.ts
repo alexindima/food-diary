@@ -81,13 +81,15 @@ function touch(
     target: HTMLElement,
     type: string,
     [x, y, time]: readonly number[],
-    options: { count?: number; cancelable?: boolean } = {},
+    options: { count?: number; cancelable?: boolean; identifier?: number } = {},
 ): Event {
-    const { count = 1, cancelable = true } = options;
-    const point = { identifier: 1, clientX: x, clientY: y };
+    const { count = 1, cancelable = true, identifier = 1 } = options;
+    const point = { identifier, clientX: x, clientY: y };
     const event = new Event(type, { bubbles: true, cancelable });
     Object.defineProperties(event, {
-        touches: { value: type === 'touchend' ? [] : Array.from({ length: count }, (_, index) => ({ ...point, identifier: index + 1 })) },
+        touches: {
+            value: type === 'touchend' ? [] : Array.from({ length: count }, (_, index) => ({ ...point, identifier: identifier + index })),
+        },
         changedTouches: { value: [point] },
         timeStamp: { value: time },
     });
@@ -201,6 +203,46 @@ describe('Dialog scroll and touch ownership', () => {
             cancelable: reason !== 'uncancelable',
         });
         touch(header, 'touchend', [100, 400, 510]);
+        expect(root.style.translate).toBe('');
+        expect(closed).not.toHaveBeenCalled();
+    });
+});
+
+describe('Dialog touch sequence boundaries', () => {
+    it.each(['second contact', 'replacement contact'])('resets an active swipe when a %s arrives', async kind => {
+        const { header, root, closed } = await openAsync();
+        touch(header, 'touchstart', [100, 200, 0]);
+        touch(header, 'touchmove', [100, 380, 200]);
+        expect(root.style.translate).toMatch(/^0(?:px)? 180px$/u);
+
+        if (kind === 'second contact') {
+            touch(header, 'touchstart', [100, 380, 300], { count: 2 });
+        } else {
+            touch(header, 'touchmove', [100, 400, 300], { identifier: 2 });
+        }
+        touch(header, 'touchend', [100, 400, 500]);
+        expect(root.style.translate).toBe('');
+        expect(closed).not.toHaveBeenCalled();
+        drag(header);
+        expect(closed).toHaveBeenCalledOnce();
+    });
+
+    it('settles at the last owned position when touchend reports a different contact', async () => {
+        const { header, closed } = await openAsync();
+        touch(header, 'touchstart', [100, 200, 0]);
+        touch(header, 'touchmove', [100, 400, 500]);
+        touch(header, 'touchend', [100, 200, 600], { identifier: 2 });
+
+        expect(closed).toHaveBeenCalledOnce();
+    });
+
+    it('clears a canceled touch that did not begin dragging', async () => {
+        const { header, root, closed } = await openAsync();
+        touch(header, 'touchstart', [100, 200, 0]);
+        touch(header, 'touchcancel', [100, 202, 100]);
+        expect(touch(header, 'touchmove', [100, 400, 500]).defaultPrevented).toBe(false);
+        touch(header, 'touchend', [100, 400, 600]);
+
         expect(root.style.translate).toBe('');
         expect(closed).not.toHaveBeenCalled();
     });

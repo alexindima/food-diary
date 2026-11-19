@@ -3,11 +3,17 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FdUiEntityCardComponent } from './fd-ui-entity-card';
+import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.directive';
 
 @Component({
-    imports: [FdUiEntityCardComponent],
+    imports: [FdUiEntityCardComponent, FdUiEntityCardHeaderDirective],
     template: `
         <fd-ui-entity-card [title]="title()" [meta]="meta()" [imageUrl]="imageUrl()">
+            @if (showHeader()) {
+                <ng-template fdUiEntityCardHeader>
+                    <button type="button" (click)="headerActivated.set(true)">Manage</button>
+                </ng-template>
+            }
             <p class="projected-content">Body content</p>
         </fd-ui-entity-card>
     `,
@@ -16,6 +22,8 @@ class TestHostComponent {
     public readonly title = signal('Test Title');
     public readonly meta = signal('');
     public readonly imageUrl = signal<string | null>(null);
+    public readonly showHeader = signal(false);
+    public readonly headerActivated = signal(false);
 }
 
 describe('FdUiEntityCardComponent', () => {
@@ -69,6 +77,23 @@ describe('FdUiEntityCardComponent', () => {
         const projected = hostEl.querySelector('.projected-content');
         expect(projected).toBeTruthy();
         expect(projected?.textContent.trim()).toBe('Body content');
+    });
+
+    it('renders an interactive projected header on its own and removes it when the template is withdrawn', () => {
+        const host = fixture.componentInstance;
+        host.title.set('');
+        host.showHeader.set(true);
+        fixture.detectChanges();
+
+        const action = hostEl.querySelector<HTMLButtonElement>('.fd-ui-entity-card__header-extra button');
+        expect(action?.textContent.trim()).toBe('Manage');
+        action?.click();
+        expect(host.headerActivated()).toBe(true);
+
+        host.showHeader.set(false);
+        fixture.detectChanges();
+        expect(hostEl.querySelector('.fd-ui-entity-card__header')).toBeNull();
+        expect(hostEl.querySelector('.projected-content')?.textContent.trim()).toBe('Body content');
     });
 
     it('recovers from a failed image when its source is replaced', () => {

@@ -7,16 +7,18 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiDialogComponent, type FdUiDialogData } from './fd-ui-dialog';
 import { FD_UI_DIALOG_DISMISSAL_LOCK } from './fd-ui-dialog.tokens';
+import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 
 @Component({
-    imports: [FdUiDialogComponent, FdUiDialogHeaderDirective],
+    imports: [FdUiDialogComponent, FdUiDialogFooterDirective, FdUiDialogHeaderDirective],
     template: `
         <fd-ui-dialog title="Built In Title">
             <div fdUiDialogHeader>
                 <div class="custom-header">Custom Header Content</div>
             </div>
             <p>Body</p>
+            <div fdUiDialogFooter><button type="button">Confirm</button></div>
         </fd-ui-dialog>
     `,
 })
@@ -131,6 +133,12 @@ describe('FdUiDialogComponent dismiss button', () => {
 });
 
 describe('FdUiDialogComponent pending-operation dismissal', () => {
+    it('disables dismissal even when rendered outside the dialog service', () => {
+        const { fixture } = createDialogComponent({ title: 'Saving', disableClose: true });
+        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button');
+        expect(button?.disabled).toBe(true);
+    });
+
     it('blocks dismissal while pending and releases it when the operation settles', () => {
         const release = vi.fn<() => void>();
         const lock = vi.fn<() => () => void>().mockReturnValue(release);
@@ -201,5 +209,12 @@ describe('FdUiDialogComponent custom header', () => {
         expect(element.querySelector('.custom-header')?.textContent).toContain('Custom Header Content');
         expect(element.querySelector('.fd-ui-dialog__title')).toBeNull();
         expect(element.querySelector('.fd-ui-dialog__header--custom')).toBeTruthy();
+    });
+
+    it('adds the footer layout when projecting dialog actions', () => {
+        const element = createDialogCustomHeaderElement();
+        const dialog = element.querySelector<HTMLElement>('[role="dialog"]');
+        expect(dialog?.classList.contains('fd-ui-dialog--has-footer')).toBe(true);
+        expect(dialog?.querySelector('footer button')?.textContent).toBe('Confirm');
     });
 });

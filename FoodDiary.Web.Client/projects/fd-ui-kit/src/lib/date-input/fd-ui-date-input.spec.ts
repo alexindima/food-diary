@@ -1,6 +1,7 @@
+import { afterEveryRender, Component, Directive, inject } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { fdUiFormatDateInputValue } from '../date/fd-ui-date.utils';
@@ -13,6 +14,19 @@ const TEST_DAY = 15;
 const JUNE_DAY = 20;
 const MARCH_DATE_STRING = '2025-03-15';
 const JANUARY_DATE_STRING = '2025-01-01';
+
+@Directive({ selector: '[fdUiResetOnAttach]' })
+class ResetOnAttachDirective {
+    public constructor() {
+        inject(FdUiDateInputComponent).reset();
+    }
+}
+
+@Component({
+    imports: [FdUiDateInputComponent, ResetOnAttachDirective],
+    template: '<fd-ui-date-input fdUiResetOnAttach [allowManualInput]="true" value="2025-03-15" />',
+})
+class EarlyResetHost {}
 
 let component: FdUiDateInputComponent;
 let fixture: ComponentFixture<FdUiDateInputComponent>;
@@ -118,7 +132,141 @@ describe('FdUiDateInputComponent', () => {
     registerStateTests();
     registerCalendarFocusTests();
     registerInteractionTests();
+    registerRenderedInputTests();
+    registerAttachmentTests();
 });
+
+function registerAttachmentTests(): void {
+    describe('date control attachment and focus handoff', () => {
+        it('can reset during parent directive creation before the native input is attached', () => {
+            const parent = TestBed.createComponent(EarlyResetHost);
+            parent.detectChanges();
+
+            const rendered = parent.nativeElement as HTMLElement;
+            expect(rendered.querySelector('input')?.value).toBe(MARCH_DATE_STRING);
+            expect(rendered.querySelector('input')?.getAttribute('aria-invalid')).toBeNull();
+        });
+
+        it('marks the date field touched only after focus leaves its input and calendar button', () => {
+            const input = requireInputElement('input');
+            const picker = requireButtonElement('button[aria-haspopup="dialog"]');
+            const touch = vi.fn();
+            component.touch.subscribe(touch);
+            input.focus();
+            picker.focus();
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(picker);
+            expect(component.touched()).toBe(false);
+            expect(touch).not.toHaveBeenCalled();
+
+            picker.blur();
+            fixture.detectChanges();
+            expect(component.touched()).toBe(true);
+            expect(touch).toHaveBeenCalledOnce();
+        });
+
+        it('keeps focus on the opener when the backdrop dismisses the newly attached calendar', async () => {
+            const input = requireInputElement('input');
+            input.focus();
+            const dismissed = vi.fn();
+            const dismissFirstRender = TestBed.runInInjectionContext(() =>
+                afterEveryRender({
+                    write: () => {
+                        const backdrop = document.querySelector<HTMLElement>('.cdk-overlay-backdrop');
+                        if (backdrop !== null && document.getElementById(`${component.id()}-dialog`) !== null) {
+                            backdrop.click();
+                            dismissed();
+                        }
+                    },
+                }),
+            );
+            onTestFinished(() => {
+                dismissFirstRender.destroy();
+            });
+
+            input.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(dismissed).toHaveBeenCalled();
+            expect(document.getElementById(`${component.id()}-dialog`)).toBeNull();
+            expect(document.activeElement).toBe(input);
+            expect(component.value()).toBeNull();
+        });
+    });
+}
+
+function registerRenderedInputTests(): void {
+    describe('rendered input boundaries', () => {
+        it('leaves text editing keys with a manual input and opens its calendar with ArrowDown', () => {
+            const input = prepareManualDateInput();
+            const keys = [
+                new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, cancelable: true }),
+                new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }),
+                new KeyboardEvent('keydown', { key: ' ', cancelable: true }),
+            ];
+            for (const key of keys) {
+                input.dispatchEvent(key);
+                expect(key.defaultPrevented).toBe(false);
+            }
+            fixture.detectChanges();
+            expect(document.getElementById(`${component.id()}-dialog`)).toBeNull();
+
+            const down = new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true });
+            input.dispatchEvent(down);
+            fixture.detectChanges();
+            expect(down.defaultPrevented).toBe(true);
+            expect(document.getElementById(`${component.id()}-dialog`)).not.toBeNull();
+        });
+
+        it('enforces the earliest date for localized text, even when native validity allows it', () => {
+            fixture.componentRef.setInput('allowManualInput', true);
+            fixture.componentRef.setInput('manualInputFormat', 'localized');
+            fixture.componentRef.setInput('earliestDate', '2025-03-10');
+            fixture.componentRef.setInput('invalidDateLabel', 'Invalid date');
+            fixture.componentRef.setInput('value', MARCH_DATE_STRING);
+            fixture.detectChanges();
+            const input = requireInputElement('input');
+            const changed = vi.fn();
+            component.value.subscribe(changed);
+
+            input.value = '03/09/2025';
+            expect(input.validity.valid).toBe(true);
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            fixture.detectChanges();
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+            expect(component.value()).toBe(MARCH_DATE_STRING);
+            expect(changed).not.toHaveBeenCalled();
+
+            input.value = '03/10/2025';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            fixture.detectChanges();
+            expect(input.getAttribute('aria-invalid')).toBeNull();
+            expect(changed).toHaveBeenCalledExactlyOnceWith('2025-03-10');
+        });
+
+        it('blocks clear and open immediately when disabled, before the buttons repaint', () => {
+            fixture.componentRef.setInput('clearAriaLabel', 'Clear date');
+            fixture.componentRef.setInput('value', MARCH_DATE_STRING);
+            fixture.detectChanges();
+            const clear = requireButtonElement('button[aria-label="Clear date"]');
+            const calendar = requireButtonElement('button[aria-haspopup="dialog"]');
+            expect(clear.disabled).toBe(false);
+
+            fixture.componentRef.setInput('disabled', true);
+            clear.click();
+            calendar.click();
+            fixture.detectChanges();
+
+            expect(component.value()).toBe(MARCH_DATE_STRING);
+            expect(component.touched()).toBe(false);
+            expect(document.getElementById(`${component.id()}-dialog`)).toBeNull();
+            expect(clear.disabled).toBe(true);
+            expect(calendar.disabled).toBe(true);
+        });
+    });
+}
 
 function registerLocalizedInputTests(): void {
     describe('localized manual entry', () => {

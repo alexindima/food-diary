@@ -2,6 +2,7 @@ import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/o
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     afterNextRender,
+    ChangeDetectorRef,
     computed,
     DestroyRef,
     Directive,
@@ -31,6 +32,7 @@ const MENU_VIEWPORT_MARGIN = 8;
 })
 export class FdUiMenuTriggerDirective {
     private readonly overlay = inject(Overlay);
+    private readonly changeDetector = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -159,6 +161,7 @@ export class FdUiMenuTriggerDirective {
 
         overlayRef.updateSize({ minWidth: this.elementRef.nativeElement.getBoundingClientRect().width });
         overlayRef.attach(new TemplatePortal(menu.templateRef, this.viewContainerRef));
+        this.changeDetector.markForCheck();
         afterNextRender(
             () => {
                 if (overlayRef.hasAttached()) {
@@ -185,6 +188,7 @@ export class FdUiMenuTriggerDirective {
         }
 
         this.overlayRef.detach();
+        this.changeDetector.markForCheck();
         this.button?.setMenuState(false);
         if (restoreFocus) {
             if (this.button !== null) {

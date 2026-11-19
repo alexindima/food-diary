@@ -111,14 +111,15 @@ function registerInteractionTests(): void {
         });
 
         it('should not select when disabled', () => {
+            const button = buttons()[DISABLED_LEVEL_INDEX];
             fixture.componentRef.setInput('disabled', true);
-            fixture.detectChanges();
-
-            const levelButtons = buttons();
-            levelButtons[DISABLED_LEVEL_INDEX].click();
-            fixture.detectChanges();
-
+            button.click();
             expect(component.value()).toBeNull();
+            expect(component.touched()).toBe(false);
+
+            fixture.detectChanges();
+            expect(button.disabled).toBe(true);
+            expect(host().querySelector('[role="radiogroup"]')?.getAttribute('aria-disabled')).toBe('true');
         });
 
         it('should mark touched when level is selected', () => {
@@ -126,6 +127,23 @@ function registerInteractionTests(): void {
             levelButtons[LOW_LEVEL_INDEX].click();
 
             expect(component.touched()).toBe(true);
+        });
+
+        it('notifies the form when a level loses focus without committing any selection', () => {
+            const touch = vi.fn<() => void>();
+            const selected = vi.fn<(level: number) => void>();
+            component.touch.subscribe(touch);
+            component.levelSelected.subscribe(selected);
+            const button = buttons()[LOW_LEVEL_INDEX];
+            button.focus();
+            expect(document.activeElement).toBe(button);
+            expect(component.touched()).toBe(false);
+
+            button.blur();
+            expect(component.touched()).toBe(true);
+            expect(touch).toHaveBeenCalledOnce();
+            expect(component.value()).toBeNull();
+            expect(selected).not.toHaveBeenCalled();
         });
 
         it('should emit levelSelected output on click', () => {

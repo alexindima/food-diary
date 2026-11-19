@@ -1603,6 +1603,67 @@ test.describe('dashboard nutrition trend geometry', () => {
     }
 });
 
+test('restores keyboard focus after dismissing the meal time picker', async ({ page }, testInfo) => {
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    await page.goto('/meals/add');
+
+    const timeInput = page.locator('fd-ui-time-input');
+    const field = timeInput.getByRole('combobox');
+    const trigger = timeInput.getByRole('button');
+    await field.focus();
+    await page.keyboard.press('Tab');
+    await expect(trigger).toBeFocused();
+    await expect(field).toHaveAttribute('aria-expanded', 'false');
+
+    await trigger.press('Enter');
+    const panel = page.locator('.fd-ui-time-input__panel');
+    await expect(panel.getByRole('button', { pressed: true }).first()).toBeFocused();
+    await expect(field).toHaveAttribute('aria-expanded', 'true');
+    await page.screenshot({ path: testInfo.outputPath('time-picker-keyboard-focus.png') });
+
+    await page.keyboard.press('Escape');
+    await expect(panel).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await expect(field).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('keeps native menu focus and expanded state in sync with its overlay', async ({ page }, testInfo) => {
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    await page.goto('/profile');
+
+    const trigger = page.getByRole('button', { name: 'Change profile photo' });
+    const menu = page.getByRole('menu');
+    const addPhoto = menu.getByRole('menuitem', { name: 'Add photo' });
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await trigger.press('ArrowDown');
+    await expect(menu).toBeVisible();
+    await expect(addPhoto).toBeFocused();
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.screenshot({ path: testInfo.outputPath('native-menu-keyboard-focus.png') });
+
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await trigger.press('Space');
+    await expect(addPhoto).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(menu).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Manage subscription', exact: true })).toBeFocused();
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+    await trigger.click();
+    await expect(menu).toBeVisible();
+    await page.locator('.cdk-overlay-transparent-backdrop').click({ position: { x: 1, y: 1 } });
+    await expect(menu).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+});
+
 test('crops a profile photo in the browser and saves the resulting asset', async ({ page, baseURL }) => {
     const runtimeErrors: string[] = [];
     page.on('pageerror', error => runtimeErrors.push(error.message));

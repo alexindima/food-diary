@@ -47,6 +47,7 @@ describe('FdUiLineChartComponent', () => {
 
     const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
     const getText = (selector: string): string => getHostText(host(), selector);
+    const getPath = (selector: string): string => host().querySelector(selector)?.getAttribute('d') ?? '';
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -67,8 +68,7 @@ describe('FdUiLineChartComponent', () => {
         fixture.detectChanges();
 
         expect(component['pointViews']()).toHaveLength(TREND_POINT_COUNT);
-        expect(component['linePath']()).toContain('M');
-        expect(component['linePath']()).toContain('C');
+        expect(getPath('.fd-ui-line-chart__line')).toMatch(/^M .+ C /u);
         expect(component['pointViews']()[0]?.x).toBe(CHART_LEFT_X);
         expect(component['pointViews']()[TREND_POINT_COUNT - 1]?.x).toBe(CHART_RIGHT_X);
         expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(TREND_POINT_COUNT);
@@ -161,8 +161,7 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component['areaPath']()).toContain('Z');
-        expect(host().querySelector('.fd-ui-line-chart__area')).not.toBeNull();
+        expect(getPath('.fd-ui-line-chart__area')).toMatch(/^M .+ Z$/u);
     });
 
     it('shows an out-of-range target as a directional label without a misleading line', () => {
@@ -260,8 +259,9 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        expect(component['areaPath']()).toContain(`100 ${SPARKLINE_AREA_BASELINE_Y}`);
-        expect(component['areaPath']()).toContain(`0 ${SPARKLINE_AREA_BASELINE_Y}`);
+        const area = getPath('.fd-ui-line-chart__area');
+        expect(area).toContain(`100 ${SPARKLINE_AREA_BASELINE_Y}`);
+        expect(area).toContain(`0 ${SPARKLINE_AREA_BASELINE_Y}`);
     });
 
     it('can render multiple line series with a shared y-axis', () => {
@@ -321,12 +321,9 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        const series = component['seriesViews']()[0];
-
-        expect(series.paths).toHaveLength(1);
-        expect(series.areaPaths).toHaveLength(1);
         expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(1);
-        expect(component['linePath']().match(/\bM\b/g)).toHaveLength(1);
+        expect(host().querySelectorAll('.fd-ui-line-chart__area')).toHaveLength(1);
+        expect(getPath('.fd-ui-line-chart__line').match(/\bM\b/g)).toHaveLength(1);
     });
 
     it('can break line and area paths around null values', () => {
@@ -341,13 +338,12 @@ describe('FdUiLineChartComponent', () => {
         ]);
         fixture.detectChanges();
 
-        const series = component['seriesViews']()[0];
-
-        expect(series.paths).toHaveLength(GAP_SEGMENT_COUNT);
-        expect(series.areaPaths).toHaveLength(GAP_SEGMENT_COUNT);
-        expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(GAP_SEGMENT_COUNT);
+        const segments = [...host().querySelectorAll('.fd-ui-line-chart__line')];
+        expect(segments).toHaveLength(GAP_SEGMENT_COUNT);
         expect(host().querySelectorAll('.fd-ui-line-chart__area')).toHaveLength(GAP_SEGMENT_COUNT);
-        expect(component['linePath']().match(/\bM\b/g)).toHaveLength(GAP_SEGMENT_COUNT);
+        for (const segment of segments) {
+            expect(segment.getAttribute('d')?.match(/\bM\b/g)).toHaveLength(1);
+        }
     });
 
     it('can use an explicit value range', () => {
@@ -593,6 +589,151 @@ describe('FdUiLineChartComponent', () => {
         expect(component['pointViews']()).toHaveLength(0);
         expect(getText('.fd-ui-line-chart__empty')).toBe('No data');
     });
+
+    it.each([
+        { value: 0, minValue: null, maxValue: null, defaultMaxValue: null, top: '1', bottom: '0' },
+        { value: 10, minValue: 10, maxValue: 10, defaultMaxValue: 0, top: '11', bottom: '10' },
+    ])(
+        'keeps constant $value data visible when the upper bounds cannot define a range',
+        ({ value, minValue, maxValue, defaultMaxValue, top, bottom }) => {
+            fixture.componentRef.setInput('points', [{ label: 'Today', value }]);
+            fixture.componentRef.setInput('showGrid', true);
+            fixture.componentRef.setInput('showAxisLabels', true);
+            fixture.componentRef.setInput('minValue', minValue);
+            fixture.componentRef.setInput('maxValue', maxValue);
+            fixture.componentRef.setInput('defaultMaxValue', defaultMaxValue);
+            fixture.detectChanges();
+
+            const yLabels = [...host().querySelectorAll('.fd-ui-line-chart__y-axis-label')];
+            expect(yLabels.at(0)?.textContent).toBe(top);
+            expect(yLabels.at(-1)?.textContent).toBe(bottom);
+            expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="50"][x2="50"]')).not.toBeNull();
+            expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toBe(`Today: ${value}`);
+        },
+    );
+
+    it('keeps the point centered even when there is no usable x-axis label', () => {
+        fixture.componentRef.setInput('title', 'Trend');
+        fixture.componentRef.setInput('emptyLabel', 'Unknown day');
+        fixture.componentRef.setInput('points', [{ label: '   ', value: 8 }]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('showGrid', true);
+        fixture.detectChanges();
+
+        const point = host().querySelector<HTMLElement>('.fd-ui-line-chart__point');
+        expect(point?.style.left).toBe('50%');
+        expect(point?.getAttribute('title')).toBe('Unknown day: 8');
+        expect(host().querySelector('.fd-ui-line-chart__x-axis span')).toBeNull();
+        expect(host().querySelector('.fd-ui-line-chart__grid-line[x1="50"][x2="50"]')).not.toBeNull();
+        expect(host().querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('Trend: Unknown day 8');
+    });
+
+    it('keeps a terminal gap out of the trend and preserves the accessible data when markers are hidden', () => {
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('connectNulls', false);
+        fixture.componentRef.setInput('showArea', true);
+        fixture.componentRef.setInput('series', [
+            { label: 'Missing series', points: [] },
+            {
+                label: 'Recorded series',
+                points: [
+                    { label: 'Mon', value: 7 },
+                    { label: ' ', value: NaN },
+                    { label: 'Wed', value: null },
+                ],
+            },
+        ]);
+        fixture.detectChanges();
+
+        const graph = host().querySelector('[role="img"]');
+        expect([...host().querySelectorAll('.fd-ui-line-chart__x-axis span')].map(label => label.textContent.trim())).toEqual([
+            'Mon',
+            'Wed',
+        ]);
+        expect(host().querySelector('.fd-ui-line-chart__legend')).toBeNull();
+        expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(1);
+        expect(host().querySelector('.fd-ui-line-chart__line')?.getAttribute('d')).toMatch(/^M [\d.]+ [\d.]+$/u);
+        expect(host().querySelector('.fd-ui-line-chart__point')?.getAttribute('title')).toBe('Recorded series, Mon: 7');
+        expect(graph?.getAttribute('aria-label')).toBe('Recorded series Mon 7');
+
+        fixture.componentRef.setInput('showPoints', false);
+        fixture.detectChanges();
+        expect(host().querySelector('.fd-ui-line-chart__point')).toBeNull();
+        expect(host().querySelectorAll('.fd-ui-line-chart__area')).toHaveLength(1);
+        expect(graph?.getAttribute('aria-label')).toBe('Recorded series Mon 7');
+    });
+
+    it('uses the empty-state text when a named chart has only invalid data', () => {
+        fixture.componentRef.setInput('title', 'Weight trend');
+        fixture.componentRef.setInput('emptyLabel', 'No measurements yet');
+        fixture.componentRef.setInput('points', [{ label: 'Mon', value: Infinity }]);
+        fixture.componentRef.setInput('showGrid', true);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.detectChanges();
+
+        expect(host().querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('Weight trend: No measurements yet');
+        expect(getText('.fd-ui-line-chart__empty')).toBe('No measurements yet');
+        expect(host().querySelector('.fd-ui-line-chart__plot')).toBeNull();
+    });
+
+    it('pads flat readings toward a high target and distinguishes the directional cue from a reference line', () => {
+        fixture.componentRef.setInput('points', [{ label: 'Mon', value: 8 }]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.componentRef.setInput('referenceLines', [
+            { value: 20, label: ' Next target ' },
+            { value: 8, label: '  ', lineStyle: 'solid' },
+            { value: Infinity, label: 'Invalid target' },
+            { value: 40, label: 'Suppressed target', outOfRangeBehavior: 'hide' },
+        ]);
+        fixture.detectChanges();
+
+        const yLabels = [...host().querySelectorAll('.fd-ui-line-chart__y-axis-label')];
+        expect(yLabels.at(0)?.textContent).toBe('9');
+        expect(yLabels.at(-1)?.textContent).toBe('8');
+        expect(host().querySelectorAll('.fd-ui-line-chart__reference-label')).toHaveLength(1);
+        expect(getText('.fd-ui-line-chart__reference-label--top')).toBe('↑ Next target');
+        expect(host().querySelectorAll('.fd-ui-line-chart__reference-line')).toHaveLength(1);
+        expect(host().querySelector('.fd-ui-line-chart__reference-line--dashed')).toBeNull();
+    });
+
+    it('pads below a flat reading and keeps coordinates finite when the visible range collapses at an explicit minimum', () => {
+        const value = 8;
+        fixture.componentRef.setInput('points', [{ label: 'Mon', value }]);
+        fixture.componentRef.setInput('referenceLines', [{ value: 4, label: 'Lower target' }]);
+        fixture.componentRef.setInput('showAxisLabels', true);
+        fixture.detectChanges();
+
+        const point = host().querySelector<HTMLElement>('.fd-ui-line-chart__point');
+        expect(point?.style.top).toBe('9.375%');
+        expect(getText('.fd-ui-line-chart__y-axis-label:last-child')).toBe('7');
+        expect(getText('.fd-ui-line-chart__reference-label--bottom')).toBe('↓ Lower target');
+
+        fixture.componentRef.setInput('minValue', value);
+        fixture.detectChanges();
+        expect(getText('.fd-ui-line-chart__y-axis-label:last-child')).toBe('8');
+        expect(point?.style.top).toBe('90.625%');
+        expect(host().querySelector('.fd-ui-line-chart__line')?.getAttribute('d')).toBe('M 50 58');
+        expect(getText('.fd-ui-line-chart__reference-label--bottom')).toBe('↓ Lower target');
+    });
+
+    it.each([Number.MIN_VALUE, Number.MIN_VALUE * (GRID_LINE_COUNT - 1)])(
+        'keeps SVG coordinates and tick labels finite at the smallest positive scales (%s)',
+        value => {
+            fixture.componentRef.setInput('points', [
+                { label: 'Start', value: 0 },
+                { label: 'End', value },
+            ]);
+            fixture.componentRef.setInput('showAxisLabels', true);
+            fixture.componentRef.setInput('axisValueFormatter', String);
+            fixture.detectChanges();
+
+            expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(GRID_POINT_COUNT);
+            expect(host().querySelector('.fd-ui-line-chart__line')?.getAttribute('d')).toMatch(/^M [\d.]+ [\d.]+ C [\d., ]+$/u);
+            const ticks = [...host().querySelectorAll('.fd-ui-line-chart__y-axis-label')];
+            expect(ticks).toHaveLength(GRID_LINE_COUNT);
+            expect(ticks.every(tick => Number.isFinite(Number(tick.textContent)))).toBe(true);
+        },
+    );
 });
 
 function getHostText(host: HTMLElement, selector: string): string {

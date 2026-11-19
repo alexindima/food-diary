@@ -175,11 +175,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
             ? new Intl.DateTimeFormat(this.language(), { day: '2-digit', month: '2-digit', year: 'numeric' }).format(value)
             : fdUiFormatDateInputValue(value);
     });
-    protected onManualInput(event: Event): void {
-        const target = event.target;
-        if (!(target instanceof HTMLInputElement)) {
-            return;
-        }
+    protected onManualInput(target: HTMLInputElement): void {
         const parsed = this.parseManualDate(target.value);
         const min = this.minDate();
         const max = this.maxDate();
@@ -274,9 +270,9 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         this.isFocused.set(true);
     }
 
-    protected onFocusOut(): void {
-        const active = this.document.activeElement;
-        if (active !== null && this.host.nativeElement.contains(active)) {
+    protected onFocusOut(event: FocusEvent): void {
+        const nextTarget = event.relatedTarget;
+        if (nextTarget instanceof Node && this.host.nativeElement.contains(nextTarget)) {
             return;
         }
 

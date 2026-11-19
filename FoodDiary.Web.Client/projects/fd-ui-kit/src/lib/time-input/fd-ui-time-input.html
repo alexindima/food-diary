@@ -1,5 +1,5 @@
 <div [class]="hostClass()">
-    <div class="fd-ui-time-input__control-wrap" (focusout)="onFocusOut()">
+    <div class="fd-ui-time-input__control-wrap" (focusout)="onFocusOut($event)">
         @if (label()) {
             <label class="fd-ui-time-input__label" [attr.for]="id()">
                 <span class="fd-ui-time-input__label-text">{{ label() }}</span>

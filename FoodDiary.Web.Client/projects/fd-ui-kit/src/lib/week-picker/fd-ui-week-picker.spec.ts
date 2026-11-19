@@ -1,8 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { getDebugNode } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
+import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar';
 import { FdUiWeekPickerComponent } from './fd-ui-week-picker';
 
 const TEST_YEAR = 2026;
@@ -69,5 +71,87 @@ describe('FdUiWeekPickerComponent', () => {
 
         expect(component.value().getDate()).toBe(PREVIOUS_WEEK_DAY);
         expect(overlayContainer.getContainerElement().querySelector('.fd-ui-week-picker__panel')).toBeNull();
+    });
+});
+
+describe('FdUiWeekPickerComponent overlay month and current week', () => {
+    let fixture: ComponentFixture<FdUiWeekPickerComponent>;
+    const pastWeek = new Date('2026-07-06T00:00:00');
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({ providers: [provideTranslateTesting()] }).compileComponents();
+        fixture = TestBed.createComponent(FdUiWeekPickerComponent);
+        fixture.componentRef.setInput('value', pastWeek);
+        fixture.componentRef.setInput('max', new Date('2026-08-10T00:00:00'));
+        fixture.detectChanges();
+    });
+
+    function open(): HTMLElement {
+        const trigger = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="Choose a week"]');
+        trigger?.click();
+        fixture.detectChanges();
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        const panel = overlay.querySelector<HTMLElement>('.fd-ui-week-picker__panel');
+        if (panel === null) {
+            throw new Error('Expected a rendered week picker panel');
+        }
+        return panel;
+    }
+
+    it('moves across months without selecting a week and closes with Escape after an unrelated key', () => {
+        const panel = open();
+        panel.querySelector<HTMLButtonElement>('button[aria-label="CALENDAR.NEXT_MONTH"]')?.click();
+        fixture.detectChanges();
+        expect(panel.querySelector('.fd-ui-calendar__title')?.textContent.trim()).toBe('August 2026');
+        const cell = panel.querySelector<HTMLButtonElement>('[data-date="2026-08-10"]');
+        cell?.focus();
+        cell?.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }));
+        fixture.detectChanges();
+        expect(panel.isConnected).toBe(true);
+
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        cell?.dispatchEvent(escape);
+        fixture.detectChanges();
+
+        expect(panel.isConnected).toBe(false);
+        expect(escape.defaultPrevented).toBe(true);
+        expect(fixture.componentInstance.value()).toEqual(pastWeek);
+    });
+
+    it('returns to the current week from inside the calendar and emits a Monday', () => {
+        const additional = TestBed.createComponent(FdUiWeekPickerComponent);
+        additional.componentRef.setInput('value', pastWeek);
+        additional.detectChanges();
+        const host = additional.nativeElement as HTMLElement;
+        const changed = vi.fn();
+        additional.componentInstance.value.subscribe(changed);
+        host.querySelector<HTMLButtonElement>('button[aria-label="Choose a week"]')?.click();
+        additional.detectChanges();
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        const returnButton = [...overlay.querySelectorAll('button')].find(button => button.textContent.includes('Return to current week'));
+        expect(returnButton).toBeDefined();
+        returnButton?.click();
+        additional.detectChanges();
+
+        expect(host.querySelector('small')?.textContent.trim()).toBe('Current week');
+        expect(changed).toHaveBeenCalledExactlyOnceWith(additional.componentInstance.max());
+        expect(additional.componentInstance.value().getDay()).toBe(1);
+        expect(overlay.querySelector('.fd-ui-week-picker__panel')).toBeNull();
+    });
+
+    it('keeps the week selection and calendar open when the embedded model is reset', () => {
+        const panel = open();
+        const renderedCalendar = panel.querySelector('fd-ui-calendar');
+        if (renderedCalendar === null) {
+            throw new Error('Expected an embedded calendar');
+        }
+        const calendar = getDebugNode(renderedCalendar)?.injector.get(FdUiCalendarComponent);
+        expect(calendar).toBeDefined();
+        calendar?.displayMonth.set(null);
+        calendar?.value.set(null);
+        fixture.detectChanges();
+
+        expect(panel.isConnected).toBe(true);
+        expect(fixture.componentInstance.value()).toEqual(pastWeek);
     });
 });

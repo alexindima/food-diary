@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { FdUiToastService } from './fd-ui-toast.service';
 
@@ -204,5 +204,82 @@ describe('FdUiToastService semantic helpers', () => {
             duration: INFO_DURATION_MS,
             politeness: 'off',
         });
+    });
+});
+
+describe('FdUiToastService feedback refresh and fallbacks', () => {
+    let service: FdUiToastService;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        service = setupToastService();
+    });
+
+    afterEach(() => {
+        service.dismissAll();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
+    });
+
+    it('keeps unrelated toasts and uses the default timer when refreshing one without a duration', () => {
+        const status = service.open('Pending', { key: 'upload', duration: 0 });
+        const other = service.open('Background task', { duration: 0 });
+        const dismissed = vi.fn();
+        const otherDismissed = vi.fn();
+        status.afterDismissed().subscribe(dismissed);
+        other.afterDismissed().subscribe(otherDismissed);
+        const originalOther = service.toasts()[1];
+
+        const updated = service.open('Completed', { key: 'upload' });
+        expect(updated).toBe(status);
+        expect(service.toasts()[0]?.message).toBe('Completed');
+        expect(service.toasts()[1]).toBe(originalOther);
+        vi.advanceTimersByTime(DEFAULT_DURATION_MS);
+        expect(service.toasts()[0]?.leaving).toBe(false);
+        vi.advanceTimersByTime(EXIT_START_DELAY_MS + EXIT_ANIMATION_MS);
+
+        expect(dismissed).toHaveBeenCalledExactlyOnceWith({ dismissedByAction: false });
+        expect(otherDismissed).not.toHaveBeenCalled();
+        expect(service.toasts()).toEqual([originalOther]);
+    });
+
+    it('restarts the dismissal timer when a matching toast is refreshed just before its original deadline', () => {
+        const original = service.open('Saving', { key: 'save', duration: SHORT_DURATION_MS });
+        const dismissed = vi.fn();
+        const complete = vi.fn();
+        original.afterDismissed().subscribe({ next: dismissed, complete });
+        vi.advanceTimersByTime(SHORT_DURATION_MS);
+
+        expect(service.open('Saved', { key: 'save', duration: SHORT_DURATION_MS })).toBe(original);
+        vi.advanceTimersByTime(EXIT_START_DELAY_MS + EXIT_ANIMATION_MS);
+        expect(service.toasts()[0]).toMatchObject({ message: 'Saved', leaving: false });
+        expect(dismissed).not.toHaveBeenCalled();
+        expect(complete).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(SHORT_DURATION_MS);
+        expect(service.toasts()).toEqual([]);
+        expect(dismissed).toHaveBeenCalledExactlyOnceWith({ dismissedByAction: false });
+        expect(complete).toHaveBeenCalledOnce();
+    });
+
+    it.each([undefined, {}])('keeps notifications dismissible without crypto.randomUUID (%j)', crypto => {
+        vi.stubGlobal('crypto', crypto);
+        onTestFinished(() => {
+            vi.unstubAllGlobals();
+        });
+        const fallbackRandom = 0.5;
+        const random = vi.spyOn(Math, 'random').mockReturnValue(fallbackRandom);
+        onTestFinished(() => {
+            random.mockRestore();
+        });
+        const ref = service.open('Ready', { duration: 0 });
+        const dismissed = vi.fn();
+        ref.afterDismissed().subscribe(dismissed);
+        expect(service.toasts()[0]?.id).toMatch(/^fd-ui-toast-\d+-[a-z0-9]+$/);
+
+        ref.dismiss();
+        vi.advanceTimersByTime(EXIT_ANIMATION_MS);
+        expect(service.toasts()).toEqual([]);
+        expect(dismissed).toHaveBeenCalledExactlyOnceWith({ dismissedByAction: false });
     });
 });

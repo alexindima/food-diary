@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "2e153fe10b08a14adddfe1af01045ed5ead05186dc684b63022c35ad28f84fc7",
-          "reviewReason": "The fd-tour test target uses the same Angular unit-test builder, source include and exclusions. The four coverage thresholds increased, and the regenerated frontend index still discovers the same owner."
+          "sha256": "7425ad945930607a73a7ea4b5b5390c31cc757f1edd654dd2e721daca9054001",
+          "reviewReason": "Verified the UI kit coverage target on Node 22. The new aggregate thresholds leave Angular workspace membership, paths, and discovery behavior intact."
         }
       ],
-      "reason": "The fd-tour test target uses the same Angular unit-test builder, source include and exclusions. The four coverage thresholds increased, and the regenerated frontend index still discovers the same owner.",
-      "baseRef": "69e8534ed",
-      "gitHead": "69e8534ed08b8629aadb7d62efbd4a447dbd40c8",
-      "reviewedAtUtc": "2026-11-19T15:59:39.4505507Z"
+      "reason": "Verified the UI kit coverage target on Node 22. The new aggregate thresholds leave Angular workspace membership, paths, and discovery behavior intact.",
+      "baseRef": "d432dc16c",
+      "gitHead": "d432dc16cb9de2475d62d6aadf02a2ec41c238ba",
+      "reviewedAtUtc": "2026-11-19T16:29:25.3719889Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "2e153fe10b08a14adddfe1af01045ed5ead05186dc684b63022c35ad28f84fc7",
-          "reviewReason": "The Angular project inventory and target names are unchanged. The higher coverage thresholds belong to the existing Tour test target and add no build target."
+          "sha256": "7425ad945930607a73a7ea4b5b5390c31cc757f1edd654dd2e721daca9054001",
+          "reviewReason": "Compared the Angular configuration and regenerated the project catalog. Only UI kit test coverage thresholds changed. Angular workspace projects and target inventory match the catalog."
         }
       ],
-      "reason": "The Angular project inventory and target names are unchanged. The higher coverage thresholds belong to the existing Tour test target and add no build target.",
-      "baseRef": "69e8534ed",
-      "gitHead": "69e8534ed08b8629aadb7d62efbd4a447dbd40c8",
-      "reviewedAtUtc": "2026-11-19T15:59:40.0056756Z"
+      "reason": "Compared the Angular configuration and regenerated the project catalog. Only UI kit test coverage thresholds changed. Angular workspace projects and target inventory match the catalog.",
+      "baseRef": "d432dc16c",
+      "gitHead": "d432dc16cb9de2475d62d6aadf02a2ec41c238ba",
+      "reviewedAtUtc": "2026-11-19T16:29:25.6748163Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -1714,14 +1714,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "a12e31cb911561d9c558122a272868b103cd0eb6daf80d2f98333071f9e47820",
-          "reviewReason": "The documented Tour thresholds now match angular.json. The coverage plan still selects test:ci:tour and test:coverage:tour, and all four thresholds passed in the complete suite."
+          "sha256": "e69fac774967e5772a1707a6a9e1ba074cc18698e6bd2ff944e1e4eca4802c92",
+          "reviewReason": "Checked the documented UI kit minimums against angular.json and the passing 861-test Node 22 report. Only the threshold numbers changed. The existing Angular and Playwright planning commands still apply."
         }
       ],
-      "reason": "The documented Tour thresholds now match angular.json. The coverage plan still selects test:ci:tour and test:coverage:tour, and all four thresholds passed in the complete suite.",
-      "baseRef": "69e8534ed",
-      "gitHead": "69e8534ed08b8629aadb7d62efbd4a447dbd40c8",
-      "reviewedAtUtc": "2026-11-19T15:59:40.5401039Z"
+      "reason": "Checked the documented UI kit minimums against angular.json and the passing 861-test Node 22 report. Only the threshold numbers changed. The existing Angular and Playwright planning commands still apply.",
+      "baseRef": "d432dc16c",
+      "gitHead": "d432dc16cb9de2475d62d6aadf02a2ec41c238ba",
+      "reviewedAtUtc": "2026-11-19T16:29:26.1451959Z"
     },
     {
       "pageId": "workflow-trace-feature",

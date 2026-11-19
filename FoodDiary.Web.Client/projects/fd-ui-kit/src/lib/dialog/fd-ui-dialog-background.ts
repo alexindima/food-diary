@@ -16,20 +16,21 @@ class DialogBackground {
 
     public acquire(): () => void {
         this.count++;
-        if (this.count === 1 && this.body !== null) {
-            const style = this.body.ownerDocument.documentElement.style;
+        const body = this.body;
+        if (body !== null && this.count === 1) {
+            const style = body.ownerDocument.documentElement.style;
             this.previousOverscroll = {
                 value: style.getPropertyValue('overscroll-behavior-y'),
                 priority: style.getPropertyPriority('overscroll-behavior-y'),
             };
             style.setProperty('overscroll-behavior-y', 'none');
-            this.isolate();
-            const Observer = this.body.ownerDocument.defaultView?.MutationObserver;
+            this.isolate(body);
+            const Observer = body.ownerDocument.defaultView?.MutationObserver;
             if (Observer !== undefined) {
                 this.observer = new Observer(() => {
-                    this.isolate();
+                    this.isolate(body);
                 });
-                this.observer.observe(this.body, { childList: true });
+                this.observer.observe(body, { childList: true });
             }
         }
         let released = false;
@@ -65,8 +66,8 @@ class DialogBackground {
         this.previous.clear();
     }
 
-    private isolate(): void {
-        for (const element of Array.from(this.body?.children ?? [])) {
+    private isolate(body: HTMLElement): void {
+        for (const element of body.children) {
             if (element === this.overlays || ['SCRIPT', 'STYLE', 'LINK'].includes(element.tagName) || element.hasAttribute('aria-live')) {
                 continue;
             }

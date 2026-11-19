@@ -155,10 +155,46 @@ it('uses pressed buttons for selection without claiming tab panels', () => {
     expect(host().querySelector('[role="group"]')?.getAttribute('aria-label')).toBe('Period');
     expect(tabs()[0].getAttribute('aria-pressed')).toBe('true');
     expect(tabs()[1].tabIndex).toBe(0);
+    const arrow = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+    tabs()[0].dispatchEvent(arrow);
+    expect(arrow.defaultPrevented).toBe(false);
+    expect(component.selectedValue()).toBe('products');
     tabs()[1].click();
     fixture.detectChanges();
     expect(tabs()[1].getAttribute('aria-pressed')).toBe('true');
     expect(tabs()[1].hasAttribute('aria-controls')).toBe(false);
+});
+
+it('ignores outstanding interactions from rendered tabs when the source list is cleared', () => {
+    const [, staleTab] = tabs();
+    fixture.componentRef.setInput('tabs', []);
+
+    const key = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+    staleTab.dispatchEvent(key);
+    staleTab.click();
+    expect(key.defaultPrevented).toBe(false);
+    expect(component.selectedValue()).toBe('products');
+
+    fixture.detectChanges();
+    expect(tabs()).toHaveLength(0);
+});
+
+it('keeps stable panel associations while an option waits for its label', () => {
+    const value = 'meals/current';
+    fixture.componentRef.setInput('tabs', [{ value }]);
+    fixture.componentRef.setInput('selectedValue', value);
+    fixture.detectChanges();
+    const [tab] = tabs();
+    expect(tab.id).toBe(component.tabId(value));
+    expect(tab.id).toContain('meals%2Fcurrent');
+    expect(tab.getAttribute('aria-controls')).toBe(component.panelId(value));
+    expect(tab.textContent.trim()).toBe('');
+
+    fixture.componentRef.setInput('tabs', [{ value, label: 'Current meals' }]);
+    fixture.detectChanges();
+    expect(tabs()[0]).toBe(tab);
+    expect(tab.textContent.trim()).toBe('Current meals');
+    expect(tab.getAttribute('aria-selected')).toBe('true');
 });
 
 it('exposes real route links and identifies the current page', () => {

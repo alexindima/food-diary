@@ -1,6 +1,6 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -66,7 +66,6 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     protected readonly minuteOptionElements = viewChildren<ElementRef<HTMLButtonElement>>('minuteOption');
 
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly document = inject(DOCUMENT);
 
     public constructor() {
         effect(() => {
@@ -110,41 +109,6 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
             [this.pickerAriaLabel(), this.label()].find(label => label !== undefined && label.trim().length > 0)?.trim() ??
             `${this.hoursLabel()}, ${this.minutesLabel()}`,
     );
-
-    protected onInput(value: string): void {
-        if (this.disabled()) {
-            return;
-        }
-
-        if (value.length === 0) {
-            this.internalValue.set('');
-            this.value.set(null);
-            return;
-        }
-
-        const parsed = this.parseTime(value);
-        if (parsed === null) {
-            this.internalValue.set(value);
-            return;
-        }
-
-        this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
-        this.value.set(this.internalValue());
-    }
-
-    protected onBlur(): void {
-        this.isFocused.set(false);
-        const internalValue = this.internalValue();
-        if (internalValue.length > 0) {
-            const parsed = this.parseTime(internalValue);
-            if (parsed !== null) {
-                this.internalValue.set(`${this.padNumber(parsed.hours)}:${this.padNumber(parsed.minutes)}`);
-                this.value.set(this.internalValue());
-            }
-        }
-        this.touched.set(true);
-        this.touch.emit();
-    }
 
     protected onFocus(): void {
         this.isFocused.set(true);
@@ -199,9 +163,9 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
         }
     }
 
-    protected onFocusOut(): void {
-        const active = this.document.activeElement;
-        if (active !== null && this.host.nativeElement.contains(active)) {
+    protected onFocusOut(event: FocusEvent): void {
+        const nextTarget = event.relatedTarget;
+        if (nextTarget instanceof Node && this.host.nativeElement.contains(nextTarget)) {
             return;
         }
         if (this.isOpen()) {
@@ -220,10 +184,6 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
 
         const hours = Number(match[TIME_MATCH_HOURS_INDEX]);
         const minutes = Number(match[TIME_MATCH_MINUTES_INDEX]);
-        if (Number.isNaN(hours) || Number.isNaN(minutes)) {
-            return null;
-        }
-
         if (hours < MIN_TIME_VALUE || hours > MAX_HOURS_VALUE || minutes < MIN_TIME_VALUE || minutes > MAX_MINUTES_VALUE) {
             return null;
         }

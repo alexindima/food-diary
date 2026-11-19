@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { TranslateService } from '@ngx-translate/core';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../src/testing/async-testing';
 import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
@@ -89,7 +90,133 @@ describe('FdUiCalendarComponent', () => {
     registerSelectionTests();
     registerNavigationTests();
     registerWeekSelectionTests();
+    registerCalendarFallbackTests();
+    registerKeyboardContractTests();
 });
+
+function registerCalendarFallbackTests(): void {
+    describe('fallback month, language and year range', () => {
+        it('starts in the current month and follows an external date when no month was supplied', () => {
+            const additional = TestBed.createComponent(FdUiCalendarComponent);
+            additional.detectChanges();
+            const current = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date());
+            const rendered = additional.nativeElement as HTMLElement;
+            expect(rendered.querySelector('.fd-ui-calendar__title')?.textContent.trim()).toBe(current);
+
+            additional.componentRef.setInput('value', MARCH_DATE);
+            additional.detectChanges();
+            expect(rendered.querySelector('.fd-ui-calendar__title')?.textContent.trim()).toBe('March 2025');
+            expect(rendered.querySelector('[aria-selected="true"]')?.getAttribute('data-date')).toBe('2025-03-15');
+        });
+
+        it('recomputes localized labels when the language changes without shifting the active day', () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const slots = [...host().querySelectorAll('.fd-ui-calendar__weekday')];
+            const translate = TestBed.inject(TranslateService);
+            translate.setTranslation('de', {});
+            translate.use('de');
+            fixture.detectChanges();
+
+            expect(requireElement('.fd-ui-calendar__title').textContent.trim()).toBe('März 2025');
+            expect(weekdayLabels()[0]).toBe('Mo');
+            expect(requireElement('[tabindex="0"][role="gridcell"]').getAttribute('data-date')).toBe('2025-03-15');
+            for (const [index, slot] of host().querySelectorAll('.fd-ui-calendar__weekday').entries()) {
+                expect(slot).toBe(slots[index]);
+            }
+        });
+
+        it('includes an externally displayed year beyond the default range when no maximum is set', () => {
+            const scrollIntoView = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollIntoView');
+            Object.defineProperty(Element.prototype, 'scrollIntoView', { configurable: true, value: vi.fn() });
+            onTestFinished(() => {
+                if (scrollIntoView === undefined) {
+                    Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+                } else {
+                    Object.defineProperty(Element.prototype, 'scrollIntoView', scrollIntoView);
+                }
+            });
+            const farFuture = new Date('2190-03-01T00:00:00');
+            fixture.componentRef.setInput('allowYearSelection', true);
+            fixture.componentRef.setInput('min', new Date('2189-01-01T00:00:00'));
+            fixture.componentRef.setInput('displayMonth', farFuture);
+            fixture.detectChanges();
+            const year = requireElement('fd-ui-select button');
+            expect(year.textContent).toContain('2190');
+
+            year.click();
+            fixture.detectChanges();
+            const options = [...document.querySelectorAll<HTMLButtonElement>('button[role="option"]')];
+            expect(options.map(option => option.textContent.trim())).toEqual(['2189', '2190']);
+            options[0].click();
+            fixture.detectChanges();
+            expect(component.displayMonth()).toEqual(new Date('2189-03-01T00:00:00'));
+        });
+    });
+}
+
+function registerKeyboardContractTests(): void {
+    describe('native calendar keyboard behavior', () => {
+        it.each([
+            ['ArrowUp', '2025-03-08'],
+            ['ArrowDown', '2025-03-22'],
+            ['Home', '2025-03-10'],
+            ['End', '2025-03-16'],
+            ['PageUp', '2025-02-15'],
+        ])('moves the active date with %s and does not change selection until activation', (key, date) => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const original = requireElement('[data-date="2025-03-15"]');
+            original.focus();
+            const move = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+            original.dispatchEvent(move);
+            fixture.detectChanges();
+
+            const target = requireElement(`[data-date="${date}"]`);
+            expect(move.defaultPrevented).toBe(true);
+            expect(target.getAttribute('tabindex')).toBe('0');
+            expect(document.activeElement).toBe(target);
+            expect(component.value()).toEqual(MARCH_DATE);
+            target.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
+            fixture.detectChanges();
+            expect(target.getAttribute('aria-selected')).toBe('true');
+            expect(component.value()).toEqual(new Date(`${date}T00:00:00`));
+        });
+
+        it('lets Tab propagate and keeps the selected day when leaving the grid', () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const original = requireElement('[data-date="2025-03-15"]');
+            const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+            original.dispatchEvent(tab);
+            fixture.detectChanges();
+
+            expect(tab.defaultPrevented).toBe(false);
+            expect(original.getAttribute('aria-selected')).toBe('true');
+            expect(component.value()).toEqual(MARCH_DATE);
+        });
+
+        it('does not disturb outside focus when the parent replaces the displayed month before queued focus renders', () => {
+            component.value.set(MARCH_DATE);
+            fixture.detectChanges();
+            const original = requireElement('[data-date="2025-03-15"]');
+            const outside = document.createElement('button');
+            host().before(outside);
+            onTestFinished(() => {
+                outside.remove();
+            });
+
+            original.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+            fixture.componentRef.setInput('displayMonth', new Date('2025-08-01T00:00:00'));
+            outside.focus();
+            fixture.detectChanges();
+
+            expect(host().querySelector('[data-date="2025-03-16"]')).toBeNull();
+            expect(requireElement('.fd-ui-calendar__title').textContent.trim()).toBe('August 2025');
+            expect(document.activeElement).toBe(outside);
+        });
+    });
+}
 
 function weekdayLabels(): Array<string | null> {
     return Array.from(host().querySelectorAll('.fd-ui-calendar__weekday')).map(label => label.textContent.trim());

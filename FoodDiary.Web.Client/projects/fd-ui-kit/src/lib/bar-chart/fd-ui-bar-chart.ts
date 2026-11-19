@@ -80,6 +80,10 @@ const DEFAULT_BAR_COLOR = 'var(--fd-color-primary-500)';
 const DEFAULT_REFERENCE_LINE_COLOR = 'var(--fd-color-text-subtle)';
 const LABEL_CLEARANCE_PX = 4;
 
+function hasFiniteBarValue(item: FdUiBarChartValue): item is FdUiBarChartValue & { value: number } {
+    return item.value !== null && Number.isFinite(item.value);
+}
+
 @Component({
     selector: 'fd-ui-bar-chart',
     imports: [],
@@ -172,9 +176,7 @@ export class FdUiBarChartComponent {
         }
 
         const values = this.categories().map(category => {
-            const finiteValues = category.values
-                .filter(item => item.value !== null && Number.isFinite(item.value))
-                .map(item => item.value ?? 0);
+            const finiteValues = category.values.filter(hasFiniteBarValue).map(item => item.value);
             return this.layout() === 'stacked'
                 ? finiteValues.reduce((sum, value) => sum + Math.max(0, value), 0)
                 : Math.max(0, ...finiteValues);
@@ -201,14 +203,15 @@ export class FdUiBarChartComponent {
                     .filter(item => item.value !== null)
                     .map(item => `${item.label} ${item.value}`)
                     .join(', ')}`,
-            values: category.values
-                .filter(item => item.value !== null && Number.isFinite(item.value))
-                .map(item => ({
+            values: category.values.filter(hasFiniteBarValue).map(item => {
+                const value = Math.max(0, item.value);
+                return {
                     ...item,
-                    value: Math.max(0, item.value ?? 0),
-                    height: (Math.max(0, item.value ?? 0) / maximum) * PERCENTAGE_SCALE,
+                    value,
+                    height: (value / maximum) * PERCENTAGE_SCALE,
                     color: item.color ?? DEFAULT_BAR_COLOR,
-                })),
+                };
+            }),
         }));
     });
     protected readonly referenceLineViews = computed<readonly FdUiBarChartReferenceLineView[]>(() =>

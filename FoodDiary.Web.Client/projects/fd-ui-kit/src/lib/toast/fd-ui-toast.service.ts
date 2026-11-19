@@ -71,21 +71,14 @@ export class FdUiToastRef {
     }
 
     public notifyAction(): void {
-        if (!this.actionSubject.closed) {
-            this.actionSubject.next();
-            this.actionSubject.complete();
-        }
+        this.actionSubject.next();
+        this.actionSubject.complete();
     }
 
     public notifyDismiss(dismissedByAction: boolean): void {
-        if (!this.actionSubject.closed) {
-            this.actionSubject.complete();
-        }
-
-        if (!this.afterDismissedSubject.closed) {
-            this.afterDismissedSubject.next({ dismissedByAction });
-            this.afterDismissedSubject.complete();
-        }
+        this.actionSubject.complete();
+        this.afterDismissedSubject.next({ dismissedByAction });
+        this.afterDismissedSubject.complete();
     }
 }
 

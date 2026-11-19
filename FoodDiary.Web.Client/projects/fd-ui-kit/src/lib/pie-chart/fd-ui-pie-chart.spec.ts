@@ -69,4 +69,26 @@ describe('FdUiPieChartComponent', () => {
         expect(host().querySelector('.fd-ui-pie-chart__segment')?.getAttribute('r')).toBe('7.95775');
         expect(component['ariaLabel']()).toContain('Browsers: Opera 8, Chrome 2');
     });
+
+    it('keeps the title in the empty-state name and gives an unlabeled segment a readable fallback', () => {
+        fixture.componentRef.setInput('title', 'Browsers');
+        fixture.componentRef.setInput('emptyLabel', 'Unclassified');
+        fixture.componentRef.setInput('segments', [{ label: 'Invalid', value: NaN }]);
+        fixture.detectChanges();
+
+        const chart = host().querySelector('[role="img"]');
+        expect(chart?.getAttribute('aria-label')).toBe('Browsers: Unclassified');
+        expect(host().querySelector('.fd-ui-pie-chart__empty')?.textContent.trim()).toBe('Unclassified');
+        expect(host().querySelector('.fd-ui-pie-chart__segment')).toBeNull();
+
+        fixture.componentRef.setInput('segments', [
+            { label: '  ', value: 1 },
+            { label: 'Invalid', value: Infinity },
+        ]);
+        fixture.detectChanges();
+        expect(chart?.getAttribute('aria-label')).toBe('Browsers: Unclassified 1');
+        expect(host().querySelector('.fd-ui-pie-chart__legend-label')?.textContent.trim()).toBe('Unclassified');
+        expect(host().querySelector('circle.fd-ui-pie-chart__segment title')?.textContent).toBe('Unclassified: 1');
+        expect(host().querySelectorAll('circle.fd-ui-pie-chart__segment')).toHaveLength(1);
+    });
 });

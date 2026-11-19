@@ -125,6 +125,64 @@ describe('FdUiBarChartComponent', () => {
     }
 });
 
+describe('FdUiBarChartComponent data fallbacks', () => {
+    it('names an empty chart and gives an unlabeled bar a readable tooltip', () => {
+        const fixture = TestBed.createComponent(FdUiBarChartComponent);
+        const host = fixture.nativeElement as HTMLElement;
+        fixture.componentRef.setInput('title', 'Nutrition');
+        fixture.componentRef.setInput('emptyLabel', 'Unclassified');
+        fixture.componentRef.setInput('items', [{ label: 'Invalid', value: NaN }]);
+        fixture.detectChanges();
+
+        const chart = host.querySelector('[role="img"]');
+        expect(chart?.getAttribute('aria-label')).toBe('Nutrition: Unclassified');
+        expect(host.querySelector('.fd-ui-bar-chart__empty')?.textContent).toBe('Unclassified');
+
+        fixture.componentRef.setInput('items', [
+            { label: ' ', value: PROTEIN_VALUE },
+            { label: 'Invalid', value: Infinity },
+        ]);
+        fixture.detectChanges();
+        expect(chart?.getAttribute('aria-label')).toBe('Nutrition: Unclassified 50');
+        expect(host.querySelector('.fd-ui-bar-chart__bar title')?.textContent).toBe('Unclassified: 50');
+        expect(host.querySelector('.fd-ui-bar-chart__label')?.textContent).toBe('Unclassified');
+        expect(host.querySelectorAll('.fd-ui-bar-chart__bar')).toHaveLength(1);
+    });
+
+    it('measures overlapping category labels without ResizeObserver and preserves their data names', async () => {
+        vi.stubGlobal('ResizeObserver', undefined);
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement): DOMRect {
+            return measureCategoricalLabel(this, DENSE_LABEL_SPACING);
+        });
+        try {
+            const fixture = TestBed.createComponent(FdUiBarChartComponent);
+            const host = fixture.nativeElement as HTMLElement;
+            fixture.componentRef.setInput('categories', [
+                { label: 'Monday', values: [{ label: 'Protein', value: PROTEIN_VALUE }] },
+                {
+                    label: 'Tuesday',
+                    values: [
+                        { label: 'Protein', value: null },
+                        { label: 'Fat', value: FAT_VALUE },
+                    ],
+                },
+            ]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const labels = [...host.querySelectorAll<HTMLElement>('.fd-ui-bar-chart__categorical-labels span')];
+            expect(labels.map(label => label.style.visibility)).toEqual(['hidden', '']);
+            const chart = host.querySelector('[role="group"]');
+            expect(chart?.getAttribute('aria-label')).toBe('Monday: Protein 50, Tuesday: Fat 25');
+            expect(host.querySelectorAll('.fd-ui-bar-chart__categorical-segment')).toHaveLength(BAR_COUNT);
+        } finally {
+            vi.restoreAllMocks();
+            vi.unstubAllGlobals();
+        }
+    });
+});
+
 describe('FdUiBarChartComponent accessibility', () => {
     it('thins overlapping labels, restores them on resize, and retains every accessible bar', async () => {
         let spacing = DENSE_LABEL_SPACING;

@@ -35,7 +35,7 @@ let overlayContainer: OverlayContainer | null = null;
     `,
 })
 class TestHostComponent {
-    public hint = 'Notifications';
+    public hint: string | null = 'Notifications';
     public toggleOnClick = false;
     public hintContext: Record<string, unknown> | null = null;
     public disabled = false;
@@ -160,7 +160,60 @@ describe('FdUiHintDirective', () => {
     registerNestedFocusTests();
     registerContentTests();
     registerDismissTests();
+    registerTimerTests();
 });
+
+function registerTimerTests(): void {
+    describe('overlapping hint events', () => {
+        it('does not delay display or dismissal when a matching event arrives again', async () => {
+            const context = await createContextAsync(TestHostComponent, component => {
+                component.hideDelayMs = HINT_HIDE_DELAY_MS;
+            });
+            const enter = (): void => {
+                dispatchTriggerEvent(context.trigger, new MouseEvent('mouseenter'));
+            };
+            const leave = (): void => {
+                dispatchTriggerEvent(context.trigger, new MouseEvent('mouseleave'));
+            };
+
+            enter();
+            vi.advanceTimersByTime(HINT_SHOW_DELAY_MS / 2);
+            enter();
+            vi.advanceTimersByTime(HINT_SHOW_DELAY_MS / 2);
+            context.fixture.detectChanges();
+            const initialTooltip = queryTooltip(context.overlayRoot);
+            expect(initialTooltip).not.toBeNull();
+
+            enter();
+            vi.advanceTimersByTime(HINT_SHOW_DELAY_MS);
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBe(initialTooltip);
+
+            leave();
+            vi.advanceTimersByTime(HINT_HIDE_DELAY_MS / 2);
+            leave();
+            vi.advanceTimersByTime(HINT_HIDE_DELAY_MS / 2);
+            context.fixture.detectChanges();
+            expect(queryTooltip(context.overlayRoot)).toBeNull();
+        });
+
+        it.each([
+            { hint: null, disabled: false },
+            { hint: '  ', disabled: false },
+            { hint: 'Notifications', disabled: true },
+        ])('keeps a missing or disabled hint out of the overlay after clicking', async ({ hint, disabled }) => {
+            const { fixture, overlayRoot, trigger } = await createContextAsync(TestHostComponent, component => {
+                component.hint = hint;
+                component.disabled = disabled;
+                component.toggleOnClick = true;
+            });
+            trigger.click();
+            fixture.detectChanges();
+            expect(queryTooltip(overlayRoot)).toBeNull();
+            expect(trigger.getAttribute('aria-describedby')).toBeNull();
+        });
+    });
+}
 
 function registerDescriptionTests(): void {
     describe('descriptions', () => {

@@ -13,4 +13,8 @@ describe('localized calendar input', () => {
     it.each(['29.02.2023', '31.04.1990', '15.13.1990', '15.06.90', 'abc', '15.06', ''])('rejects %s without rolling the day', value => {
         expect(fdUiParseLocalizedDate(value, 'ru')).toBeNull();
     });
+
+    it('rejects a calendar that supplies a related year instead of a Gregorian year field', () => {
+        expect(fdUiParseLocalizedDate('12/26/1999', 'en-US-u-ca-chinese')).toBeNull();
+    });
 });

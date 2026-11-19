@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -96,7 +96,6 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
     );
 
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly document = inject(DOCUMENT);
 
     public reset(): void {
         const parsed = this.parsedValue();
@@ -165,9 +164,9 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
         this.isFocused.set(true);
     }
 
-    protected onFocusOut(): void {
-        const active = this.document.activeElement;
-        if (active !== null && this.host.nativeElement.contains(active)) {
+    protected onFocusOut(event: FocusEvent): void {
+        const nextTarget = event.relatedTarget;
+        if (nextTarget instanceof Node && this.host.nativeElement.contains(nextTarget)) {
             return;
         }
 
@@ -196,10 +195,6 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
 
         const hours = Number(match[TIME_INDEX_HOURS]);
         const minutes = Number(match[TIME_INDEX_MINUTES]);
-        if (Number.isNaN(hours) || Number.isNaN(minutes)) {
-            return null;
-        }
-
         if (hours < MIN_TIME_VALUE || hours > MAX_HOURS_VALUE || minutes < MIN_TIME_VALUE || minutes > MAX_MINUTES_VALUE) {
             return null;
         }

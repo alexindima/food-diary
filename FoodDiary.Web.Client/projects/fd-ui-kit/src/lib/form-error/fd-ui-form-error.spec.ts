@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import type { FieldTree, ValidationError } from '@angular/forms/signals';
-import { TranslateService } from '@ngx-translate/core';
+import { type FieldTree, maxLengthError, type ValidationError } from '@angular/forms/signals';
+import { TranslateService, type TranslationObject } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
@@ -78,6 +78,95 @@ describe('FdUiFormErrorComponent', () => {
     registerDirectErrorTests();
     registerControlErrorTests();
     registerSignalFormErrorTests();
+});
+
+function setTranslations(translations: TranslationObject): void {
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', translations);
+    translate.use('en').subscribe();
+}
+
+describe('shared validation message contracts', () => {
+    const messages = {
+        FORM_ERRORS: {
+            REQUIRED: 'Confirm this option',
+            INVALID_NUMBER: 'Enter a number',
+            MAX_LENGTH: 'Use up to {{ requiredLength }} characters',
+            NON_EMPTY_ARRAY: 'Add at least one item',
+            INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO: 'Enter at least {{ min }}',
+            INVALID_MAX_AMOUNT: 'Enter at most {{ max }}',
+            USER_EXISTS: 'Account already exists',
+            PASSWORD: { MIN_LENGTH: 'Use at least {{ requiredLength }} characters', MATCH: 'Passwords must match' },
+        },
+    };
+
+    it.each([
+        { key: 'requiredTrue', details: true, expected: 'Confirm this option' },
+        { key: 'invalidNumber', details: true, expected: 'Enter a number' },
+        { key: 'minlength', details: { requiredLength: 8 }, expected: 'Use at least 8 characters' },
+        { key: 'maxLength', details: { requiredLength: 12 }, expected: 'Use up to 12 characters' },
+        { key: 'nonEmptyArray', details: true, expected: 'Add at least one item' },
+        { key: 'min', details: { min: 1 }, expected: 'Enter at least 1' },
+        { key: 'max', details: { max: 100 }, expected: 'Enter at most 100' },
+        { key: 'userExists', details: true, expected: 'Account already exists' },
+        { key: 'matchField', details: true, expected: 'Passwords must match' },
+    ])('renders the localized $key error and its bounds', async ({ key, details, expected }) => {
+        const control = createControlState({ errors: { [key]: details }, invalid: true, touched: true });
+        const fixture = await createComponentAsync(component => {
+            component.error = null;
+            component.control = control;
+        });
+        setTranslations(messages);
+        control.emitChange();
+        fixture.detectChanges();
+
+        expect(requireElement(fixture, '[role="alert"]').textContent.trim()).toBe(expected);
+    });
+
+    it('renders a real Signal Forms maxLength error with the same limit interpolation', async () => {
+        await TestBed.configureTestingModule({ providers: [provideTranslateTesting()] }).compileComponents();
+        setTranslations(messages);
+        const field = createSignalField(maxLengthError(REQUIRED_LENGTH));
+        const errors = TestBed.inject(FD_VALIDATION_ERRORS);
+        const translate = TestBed.inject(TranslateService);
+
+        expect(resolveSignalFormFieldError(field, errors, translate)).toBe('Use up to 8 characters');
+    });
+});
+
+describe('form error rendering boundaries', () => {
+    it('waits for error details before announcing an otherwise invalid control', async () => {
+        const control = createControlState({ invalid: true, touched: true });
+        const fixture = await createComponentAsync(component => {
+            component.error = null;
+            component.control = control;
+        });
+        expect(host(fixture).querySelector('[role="alert"]')).toBeNull();
+
+        control.errors = { required: true };
+        control.emitChange();
+        fixture.detectChanges();
+        expect(requireElement(fixture, '[role="alert"]').textContent.trim()).toBe('FORM_ERRORS.REQUIRED');
+    });
+
+    it('uses a visible translation key when a browser locale provides a message group instead of text', async () => {
+        const control = createControlState({ errors: { required: true }, invalid: true, touched: true });
+        const fixture = await createComponentAsync(component => {
+            component.error = null;
+            component.control = control;
+        });
+        setTranslations({ FORM_ERRORS: { REQUIRED: { description: 'Message group' } } });
+        control.emitChange();
+        fixture.detectChanges();
+        expect(TestBed.inject(TranslateService).instant('FORM_ERRORS.REQUIRED')).toEqual({ description: 'Message group' });
+        expect(requireElement(fixture, '[role="alert"]').textContent.trim()).toBe('FORM_ERRORS.REQUIRED');
+
+        const direct = TestBed.createComponent(FdUiFormErrorComponent);
+        direct.componentRef.setInput('error', 'FORM_ERRORS.REQUIRED');
+        direct.detectChanges();
+        const rendered = direct.nativeElement as HTMLElement;
+        expect(rendered.querySelector('[role="alert"]')?.textContent.trim()).toBe('FORM_ERRORS.REQUIRED');
+    });
 });
 
 function registerDirectErrorTests(): void {

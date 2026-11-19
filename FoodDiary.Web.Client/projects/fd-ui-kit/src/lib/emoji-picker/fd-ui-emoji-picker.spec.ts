@@ -288,3 +288,43 @@ describe('FdUiEmojiPickerComponent dynamic tab stops', () => {
         expect(harness.changed).not.toHaveBeenCalled();
     });
 });
+
+describe('FdUiEmojiPickerComponent rich options', () => {
+    it('renders optional visible labels and descriptions while preserving the option accessible name', () => {
+        const harness = createHarness(null, [
+            { value: 'steady', emoji: '😐', ariaLabel: 'Moderate energy', label: 'Steady', description: 'Enough to finish the day' },
+        ]);
+        const group = harness.root.querySelector('[role="radiogroup"]');
+        const option = radio(harness, 'Moderate energy');
+        expect(option.textContent).not.toContain('Steady');
+        expect(group?.classList.contains('fd-ui-emoji-picker--full-width')).toBe(false);
+
+        harness.fixture.componentRef.setInput('fullWidth', true);
+        harness.fixture.componentRef.setInput('showLabels', true);
+        harness.fixture.componentRef.setInput('showDescriptions', true);
+        harness.fixture.detectChanges();
+
+        expect(group?.classList).toContain('fd-ui-emoji-picker--full-width');
+        expect(group?.classList).toContain('fd-ui-emoji-picker--with-labels');
+        expect(group?.classList).toContain('fd-ui-emoji-picker--with-descriptions');
+        expect(option.textContent).toContain('Steady');
+        expect(option.textContent).toContain('Enough to finish the day');
+        expect(option.getAttribute('aria-label')).toBe('Moderate energy');
+        expect(harness.changed).not.toHaveBeenCalled();
+    });
+
+    it('does not activate or move to vanished options while a parent update is pending render', () => {
+        const harness = createHarness();
+        const previous = radio(harness, 'Steady');
+        previous.focus();
+        harness.fixture.componentRef.setInput('options', []);
+
+        previous.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        previous.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true }));
+        harness.fixture.detectChanges();
+
+        expect(harness.changed).not.toHaveBeenCalled();
+        expect(harness.component.selectedValue()).toBeNull();
+        expect(radios(harness)).toEqual([]);
+    });
+});

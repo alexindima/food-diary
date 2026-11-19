@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { disabled, form, FormField } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiTextareaComponent } from './fd-ui-textarea';
 
@@ -311,5 +311,30 @@ describe('FdUiTextareaComponent with TestHost', () => {
         hostFixture.detectChanges();
 
         expect(textarea().disabled).toBe(true);
+    });
+});
+
+describe('FdUiTextareaComponent focus contract', () => {
+    it('focuses its textarea through the field frame and programmatic contract only while enabled', async () => {
+        const { component, el, fixture, textarea } = await setupTextareaAsync();
+        const control = textarea();
+        const frame = el.querySelector<HTMLElement>('.fd-ui-textarea__control-wrap');
+        if (frame === null) {
+            throw new Error('Expected the textarea control frame.');
+        }
+        frame.click();
+        expect(document.activeElement).toBe(control);
+        control.blur();
+        component.focus();
+        expect(document.activeElement).toBe(control);
+        control.blur();
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        const nativeFocus = vi.spyOn(control, 'focus');
+        frame.click();
+        component.focus();
+        expect(document.activeElement).not.toBe(control);
+        expect(nativeFocus).not.toHaveBeenCalled();
     });
 });

@@ -1,10 +1,13 @@
+import { type AutofillEvent, AutofillMonitor } from '@angular/cdk/text-field';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { disabled, form, FormField } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
-import { describe, expect, it, vi } from 'vitest';
+import { Subject } from 'rxjs';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { FdUiInputComponent } from './fd-ui-input';
+import { FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS } from './fd-ui-input.tokens';
 
 @Component({
     template: '<fd-ui-input [formField]="inputForm.value" />',
@@ -706,3 +709,139 @@ describe('FdUiInputComponent localized numbers', () => {
         expect(input().value).toBe('3');
     });
 });
+
+describe('FdUiInputComponent delayed browser autofill', () => {
+    it('accepts only the input autofill animation and mirrors a native background update to the model', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        const control = input();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        control.value = 'restored@example.test';
+
+        dispatchAnimation(control, 'unrelated-decoration');
+        fixture.detectChanges();
+        expect(component.value()).toBeNull();
+        expect(changed).not.toHaveBeenCalled();
+
+        dispatchAnimation(control, 'fd-ui-input-autofill-start');
+        fixture.detectChanges();
+        expect(changed).toHaveBeenCalledExactlyOnceWith('restored@example.test');
+        expect(control.value).toBe('restored@example.test');
+    });
+
+    it('captures late native values with both scheduled and CDK autofill checks, then tears down its subscription', async () => {
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+        const autofill = new Subject<AutofillEvent>();
+        const delay = 50;
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: AutofillMonitor, useValue: { monitor: vi.fn(() => autofill) } },
+                { provide: FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS, useValue: [delay] },
+            ],
+        });
+        const { component, fixture, input } = await setupInputAsync();
+        const control = input();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        expect(autofill.observed).toBe(true);
+
+        control.value = 'initial native autofill';
+        await vi.advanceTimersByTimeAsync(delay);
+        expect(changed).toHaveBeenCalledExactlyOnceWith('initial native autofill');
+
+        autofill.next({ target: control, isAutofilled: true });
+        control.value = 'late native autofill';
+        await vi.advanceTimersByTimeAsync(0);
+        expect(changed.mock.calls).toEqual([['initial native autofill'], ['late native autofill']]);
+
+        fixture.destroy();
+        expect(autofill.observed).toBe(false);
+    });
+
+    it('does not publish an autofill value received while disabled', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.componentRef.setInput('value', 'original@example.test');
+        fixture.detectChanges();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        const control = input();
+        control.value = 'autofilled@example.test';
+
+        dispatchAnimation(control, 'fd-ui-input-autofill-start');
+        fixture.detectChanges();
+
+        expect(control.disabled).toBe(true);
+        expect(component.value()).toBe('original@example.test');
+        expect(changed).not.toHaveBeenCalled();
+    });
+});
+
+describe('FdUiInputComponent rendered focused and cleared controls', () => {
+    it('focuses through the control frame and programmatic contract only while enabled', async () => {
+        const { component, fixture, input, el } = await setupInputAsync();
+        const frame = el.querySelector<HTMLElement>('.fd-ui-input__control-wrap');
+        if (frame === null) {
+            throw new Error('Expected the input control frame.');
+        }
+        frame.click();
+        expect(document.activeElement).toBe(input());
+        input().blur();
+        component.focus();
+        expect(document.activeElement).toBe(input());
+        input().blur();
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        const nativeFocus = vi.spyOn(input(), 'focus');
+        frame.click();
+        component.focus();
+        expect(document.activeElement).not.toBe(input());
+        expect(nativeFocus).not.toHaveBeenCalled();
+    });
+
+    it('ignores a suffix activation queued as the consumer removes that action', async () => {
+        const { component, fixture, el } = await setupInputAsync();
+        fixture.componentRef.setInput('suffixButtonIcon', 'close');
+        fixture.detectChanges();
+        const button = el.querySelector<HTMLButtonElement>('.fd-ui-input__suffix');
+        expect(button).not.toBeNull();
+        const action = vi.fn();
+        component.suffixButtonClicked.subscribe(action);
+
+        fixture.componentRef.setInput('suffixButtonIcon', undefined);
+        button?.click();
+        fixture.detectChanges();
+
+        expect(action).not.toHaveBeenCalled();
+        expect(el.querySelector('.fd-ui-input__suffix')).toBeNull();
+    });
+
+    it('renders an empty native number field when normalization clears its value', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        const normalizer = vi.fn(() => null);
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('value', NORMALIZED_MAX_HOURS);
+        fixture.componentRef.setInput('numberNormalizer', normalizer);
+        fixture.detectChanges();
+        const control = input();
+        const changed = vi.fn();
+        component.value.subscribe(changed);
+        control.value = '-1';
+        control.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(normalizer).toHaveBeenCalledExactlyOnceWith(-1);
+        expect(changed).toHaveBeenCalledExactlyOnceWith(null);
+        expect(control.value).toBe('');
+    });
+});
+
+function dispatchAnimation(control: HTMLInputElement, name: string): void {
+    const event = new Event('animationstart', { bubbles: true });
+    Object.defineProperty(event, 'animationName', { value: name });
+    control.dispatchEvent(event);
+}

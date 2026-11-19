@@ -86,8 +86,4 @@ export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T 
         this.selectOption(options[nextIndex]);
         this.host.nativeElement.querySelectorAll<HTMLInputElement>('input[type="radio"]').item(nextIndex).focus();
     }
-
-    protected trackByValue(_: number, option: FdUiRadioOption<T>): unknown {
-        return option.value;
-    }
 }

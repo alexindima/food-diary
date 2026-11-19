@@ -335,3 +335,111 @@ describe('Autocomplete changing suggestions', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('input')?.getAttribute('aria-expanded')).toBe('false');
     });
 });
+
+describe('Autocomplete external values and errors', () => {
+    it('renders the consumer-provided display text for a selection outside the current results', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        const saved = { code: 'C25' };
+        const displayWith = vi.fn((value: { code: string } | null) => (value === null ? '' : `Category ${value.code}`));
+        fixture.componentRef.setInput('displayWith', displayWith);
+        fixture.componentRef.setInput('value', saved);
+        fixture.detectChanges();
+        const input = requireAutocompleteInput(fixture);
+        expect(input.value).toBe('Category C25');
+        expect(displayWith).toHaveBeenCalledWith(saved);
+
+        fixture.componentRef.setInput('options', [{ value: saved, label: 'Fruit' }]);
+        fixture.detectChanges();
+        expect(input.value).toBe('Fruit');
+
+        fixture.componentRef.setInput('displayWith', undefined);
+        const externalCode = 25;
+        fixture.componentRef.setInput('value', externalCode);
+        fixture.detectChanges();
+        expect(input.value).toBe('25');
+    });
+
+    it('links a domain error to the input and removes its accessible invalid state when cleared', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('error', 'Choose an available product');
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const input = requireAutocompleteInput(fixture);
+        const error = root.querySelector('[role="alert"]');
+
+        expect(error?.textContent).toContain('Choose an available product');
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(input.getAttribute('aria-describedby')).toBe(error?.id);
+        expect(root.querySelector('.fd-ui-autocomplete--has-error')).not.toBeNull();
+
+        fixture.componentRef.setInput('error', null);
+        fixture.detectChanges();
+        expect(input.hasAttribute('aria-invalid')).toBe(false);
+        expect(input.hasAttribute('aria-describedby')).toBe(false);
+        expect(root.querySelector('[role="alert"]')).toBeNull();
+    });
+});
+
+describe('Autocomplete disabled and empty interactions', () => {
+    it('ignores a pending option selection, clear click and input event after being disabled', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('value', 'Search');
+        fixture.componentRef.setInput('options', [{ value: 'Apple', label: 'Apple' }]);
+        fixture.detectChanges();
+        const input = requireAutocompleteInput(fixture);
+        const queryChanged = vi.fn();
+        const selected = vi.fn();
+        const changed = vi.fn();
+        fixture.componentInstance.queryChange.subscribe(queryChanged);
+        fixture.componentInstance.optionSelected.subscribe(selected);
+        fixture.componentInstance.value.subscribe(changed);
+        fixture.componentInstance.focus();
+        fixture.detectChanges();
+        const option = document.querySelector<HTMLButtonElement>('[role="option"]');
+        const clear = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="Clear"]');
+        expect(document.activeElement).toBe(input);
+        expect(option).not.toBeNull();
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        option?.click();
+        clear?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(input.disabled).toBe(true);
+        expect(clear?.disabled).toBe(true);
+        expect(selected).not.toHaveBeenCalled();
+        expect(queryChanged).not.toHaveBeenCalled();
+        expect(changed).not.toHaveBeenCalled();
+        expect(fixture.componentInstance.value()).toBe('Search');
+    });
+
+    it('suppresses Escape only when open and leaves no active option when navigating empty results', () => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('value', 'Peaches');
+        fixture.componentRef.setInput('emptyText', 'No products');
+        fixture.detectChanges();
+        const input = requireAutocompleteInput(fixture);
+        const closedEscape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        input.dispatchEvent(closedEscape);
+        expect(closedEscape.defaultPrevented).toBe(false);
+
+        input.focus();
+        fixture.detectChanges();
+        const arrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+        input.dispatchEvent(arrowDown);
+        fixture.detectChanges();
+        expect(arrowDown.defaultPrevented).toBe(true);
+        expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+        expect(document.querySelector('[role="listbox"]')?.textContent).toContain('No products');
+    });
+});
+
+function requireAutocompleteInput(fixture: ComponentFixture<FdUiAutocompleteComponent>): HTMLInputElement {
+    const input = (fixture.nativeElement as HTMLElement).querySelector('input');
+    if (input === null) {
+        throw new Error('Expected the autocomplete input.');
+    }
+    return input;
+}

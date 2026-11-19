@@ -1,8 +1,10 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
+import { FD_UI_DIALOG_BACKGROUND } from './fd-ui-dialog-background';
 
 @Component({ template: '<button>Dialog action</button>' })
 class BackgroundDialogComponent {}
@@ -82,5 +84,46 @@ describe('modal background isolation', () => {
         canClose = true;
         dialog.close();
         expect(host.hasAttribute('inert')).toBe(true);
+    });
+});
+
+describe('dynamic modal background content', () => {
+    it('isolates new page content while preserving live announcements and the original background state', async () => {
+        const alreadyIsolated = document.createElement('aside');
+        alreadyIsolated.setAttribute('inert', 'owned');
+        const newContent = document.createElement('main');
+        const announcer = document.createElement('div');
+        announcer.setAttribute('aria-live', 'polite');
+        document.body.append(alreadyIsolated);
+
+        const dialog = TestBed.inject(FdUiDialogService).open(BackgroundDialogComponent);
+        try {
+            document.body.append(newContent, announcer);
+            await vi.waitFor(() => {
+                expect(newContent.hasAttribute('inert')).toBe(true);
+            });
+            expect(announcer.hasAttribute('inert')).toBe(false);
+
+            dialog.close();
+            expect(newContent.hasAttribute('inert')).toBe(false);
+            expect(alreadyIsolated.getAttribute('inert')).toBe('owned');
+        } finally {
+            dialog.close();
+            alreadyIsolated.remove();
+            newContent.remove();
+            announcer.remove();
+        }
+    });
+
+    it('isolates and restores existing content in a document without a viewport observer', () => {
+        const detachedDocument = document.implementation.createHTMLDocument('Detached overlay host');
+        const content = detachedDocument.createElement('main');
+        detachedDocument.body.append(content);
+        TestBed.configureTestingModule({ providers: [{ provide: DOCUMENT, useValue: detachedDocument }] });
+
+        const release = TestBed.inject(FD_UI_DIALOG_BACKGROUND).acquire();
+        expect(content.hasAttribute('inert')).toBe(true);
+        release();
+        expect(content.hasAttribute('inert')).toBe(false);
     });
 });

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, FormField } from '@angular/forms/signals';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiCheckboxComponent } from './fd-ui-checkbox';
 
@@ -14,15 +14,6 @@ class CheckboxFormHost {
     public readonly value = signal({ enabled: true });
     public readonly fields = form(this.value);
 }
-
-const dispatchCheckboxChange = (checked: boolean): Event => {
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.checked = checked;
-    const event = new Event('change');
-    input.dispatchEvent(event);
-    return event;
-};
 
 describe('FdUiCheckboxComponent', () => {
     let component: FdUiCheckboxComponent;
@@ -46,10 +37,6 @@ describe('FdUiCheckboxComponent', () => {
         fixture = TestBed.createComponent(FdUiCheckboxComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
-
-    it('should create', () => {
-        expect(component).toBeTruthy();
     });
 
     it('should render label text', () => {
@@ -80,22 +67,39 @@ describe('FdUiCheckboxComponent', () => {
         expect(input?.checked).toBe(false);
     });
 
-    it('should update checked model when checkbox changes', () => {
-        const changeEvent = dispatchCheckboxChange(true);
-        component['updateCheckedValue'](changeEvent);
-
+    it('updates the checked model through the label and native checkbox and ignores disabled label clicks', () => {
+        const input = requireElement('input');
+        const label = requireElement('label');
+        const changed = vi.fn();
+        component.checked.subscribe(changed);
+        label.click();
+        fixture.detectChanges();
         expect(component.checked()).toBe(true);
 
-        const uncheckEvent = dispatchCheckboxChange(false);
-        component['updateCheckedValue'](uncheckEvent);
-
+        input.click();
+        fixture.detectChanges();
         expect(component.checked()).toBe(false);
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        label.click();
+        fixture.detectChanges();
+        expect(input.matches(':disabled')).toBe(true);
+        expect(component.checked()).toBe(false);
+        expect(changed.mock.calls).toEqual([[true], [false]]);
     });
 
-    it('should mark touched on blur', () => {
-        component['touchControl']();
+    it('focuses the native checkbox for Signal Forms and marks it touched on blur', () => {
+        const touched = vi.fn();
+        component.touch.subscribe(touched);
+        component.focus();
+        const input = requireElement('input');
+        expect(document.activeElement).toBe(input);
+        expect(component.touched()).toBe(false);
 
+        input.blur();
         expect(component.touched()).toBe(true);
+        expect(touched).toHaveBeenCalledOnce();
     });
 
     it('should set disabled state from input', () => {

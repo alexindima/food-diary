@@ -44,3 +44,20 @@ describe('FdUiInlineAlert actions', () => {
         expect(document.activeElement).toBe(buttons[0]);
     });
 });
+
+describe('FdUiInlineAlert severity', () => {
+    it.each([
+        { severity: 'success', icon: 'task_alt' },
+        { severity: 'danger', icon: 'error' },
+    ])('renders the $severity message with its decorative icon', ({ severity, icon }) => {
+        const fixture = TestBed.createComponent(FdUiInlineAlertComponent);
+        fixture.componentRef.setInput('severity', severity);
+        fixture.componentRef.setInput('message', 'Sync finished');
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.classList.contains(`fd-ui-inline-alert--${severity}`)).toBe(true);
+        expect(host.querySelector('.fd-ui-inline-alert__icon[aria-hidden="true"]')?.textContent.trim()).toBe(icon);
+        expect(host.querySelector('.fd-ui-inline-alert__message')?.textContent).toBe('Sync finished');
+    });
+});

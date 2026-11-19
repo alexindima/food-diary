@@ -145,6 +145,40 @@ describe('FdUiDialogService panel classes', () => {
         expect(latestConfig(open).panelClass).toContain('fd-ui-dialog-panel--xl');
     });
 
+    it.each([
+        { preset: 'confirm', size: 'sm' },
+        { preset: 'list', size: 'lg' },
+    ] as const)('assigns the default $size width to the $preset preset', ({ preset, size }) => {
+        const { open, service } = setupDialogService(false);
+        service.open(DummyDialogComponent, { preset });
+
+        const config = latestConfig(open);
+        expect(config.panelClass).toContain(`fd-ui-dialog-panel--${size}`);
+        expect(config.width).toBe(`min(calc(100vw - var(--fd-size-dialog-panel-width-offset)), var(--fd-size-dialog-panel-width-${size}))`);
+    });
+
+    it('applies custom panel and backdrop classes alongside the preset classes', () => {
+        const { open, service } = setupDialogService(false);
+        service.open(DummyDialogComponent, {
+            preset: 'detail',
+            panelClass: 'customer-panel',
+            backdropClass: ['custom-shade', 'blur-shade'],
+        });
+
+        expect(latestConfig(open).panelClass).toEqual([
+            'fd-ui-dialog-panel--detail',
+            'fd-ui-dialog-panel',
+            'customer-panel',
+            'fd-ui-dialog-panel--lg',
+        ]);
+        expect(latestConfig(open).backdropClass).toEqual([
+            'fd-ui-dialog-backdrop--detail',
+            'fd-ui-dialog-backdrop',
+            'custom-shade',
+            'blur-shade',
+        ]);
+    });
+
     it('maps xl size to the matching panel class', () => {
         const { open, service } = setupDialogService(false);
         service.open(DummyDialogComponent, { size: 'xl' });

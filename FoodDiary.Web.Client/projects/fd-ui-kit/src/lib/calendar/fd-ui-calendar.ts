@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { map, of } from 'rxjs';
+import { map } from 'rxjs';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import {
@@ -77,9 +77,9 @@ type FdUiCalendarCell = {
 })
 export class FdUiCalendarComponent {
     private readonly defaultLocale = inject(LOCALE_ID);
-    private readonly translateService = inject(TranslateService, { optional: true });
-    private readonly language = toSignal(this.translateService?.onLangChange.pipe(map(event => event.lang)) ?? of(this.defaultLocale), {
-        initialValue: this.translateService?.getCurrentLang() ?? this.defaultLocale,
+    private readonly translateService = inject(TranslateService);
+    private readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
+        initialValue: this.translateService.getCurrentLang() ?? this.defaultLocale,
     });
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
@@ -358,15 +358,11 @@ export class FdUiCalendarComponent {
         return false;
     }
 
-    private stripTime(date: Date | null): Date {
-        if (date === null) {
-            return this.today;
-        }
-
+    private stripTime(date: Date): Date {
         return fdUiStartOfLocalDay(date);
     }
 
-    private toIsoDate(date: Date | null): string {
-        return fdUiFormatDateInputValue(this.stripTime(date));
+    private toIsoDate(date: Date): string {
+        return fdUiFormatDateInputValue(date);
     }
 }

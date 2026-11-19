@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 526,
-    "componentsWithoutDirectSpecs": 133,
+    "componentsWithoutDirectSpecs": 131,
     "inputs": 1680,
     "outputs": 564,
     "apiCalls": 336,
@@ -5574,7 +5574,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.spec.ts"
     },
     {
       "class": "FdUiCheckboxComponent",
@@ -6914,7 +6914,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.spec.ts"
     },
     {
       "class": "FdUiLineChartYAxisComponent",

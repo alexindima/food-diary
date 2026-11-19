@@ -135,3 +135,30 @@ describe('FdUiDateRangeInputComponent parent form', () => {
         expect(endpoints.map(endpoint => endpoint.value())).toEqual(['2026-10-01', null]);
     });
 });
+
+describe('FdUiDateRangeInputComponent stale endpoint updates', () => {
+    it('treats an invalid input Date as a missing endpoint and preserves the valid boundary', () => {
+        fixture.componentRef.setInput('value', { start: new Date(Number.NaN), end: END });
+        fixture.detectChanges();
+        const [start, end] = inputs();
+
+        expect(start.value()).toBeNull();
+        expect(start.latestDate()).toBe('2026-10-01');
+        expect(end.value()).toBe('2026-10-01');
+        expect(end.earliestDate()).toBeUndefined();
+    });
+
+    it('ignores an endpoint emission that arrives after the parent disables the range', () => {
+        const [start] = inputs();
+        const changed = vi.fn();
+        fixture.componentInstance.value.subscribe(changed);
+
+        fixture.componentRef.setInput('controlDisabled', true);
+        start.value.set('2026-09-20');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.value()).toEqual({ start: START, end: END });
+        expect(changed).not.toHaveBeenCalled();
+        expect(start.disabled()).toBe(true);
+    });
+});
