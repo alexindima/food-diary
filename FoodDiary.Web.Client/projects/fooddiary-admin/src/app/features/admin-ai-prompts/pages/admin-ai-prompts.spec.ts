@@ -153,6 +153,50 @@ it('keeps scenario navigation usable when the service returns no scenarios', asy
     expect(save).not.toHaveBeenCalled();
 });
 
+it('verifies the inherited prompt after disabling a custom draft and removes the editor for a missing scenario', async () => {
+    const [vision] = scenarios;
+    const custom = savedPrompt('Saved custom instructions');
+    const preview = vi.fn<AdminAiPromptsService['preview']>().mockReturnValue(of({ text: 'Inherited preview' }));
+    const save = vi.fn<AdminAiPromptsService['save']>();
+    const discard = vi.fn<() => Observable<boolean>>().mockReturnValue(of(true));
+    const getScenarios = vi
+        .fn<AdminAiPromptsService['getScenarios']>()
+        .mockReturnValue(of([{ ...vision, promptText: custom.promptText, source: 'custom', template: custom }]));
+    await TestBed.configureTestingModule({
+        imports: [AdminAiPromptsPageComponent],
+        providers: [
+            provideRouter([]),
+            ...provideTranslateTesting(),
+            { provide: AdminAiPromptsService, useValue: { getScenarios, preview, save } },
+            { provide: AdminTemplateHistoryService, useValue: { getRevisions: vi.fn().mockReturnValue(of([])) } },
+            { provide: FdUiDialogService, useValue: { open: (): { afterClosed: typeof discard } => ({ afterClosed: discard }) } },
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AdminAiPromptsPageComponent);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector<HTMLTextAreaElement>('form textarea')?.value).toBe(custom.promptText);
+    root.querySelector<HTMLInputElement>('form input[type="checkbox"]')?.click();
+    fixture.detectChanges();
+    expect(root.querySelector('form pre')?.textContent).toBe(vision.inheritedPromptText);
+    expect(button(root, 'ADMIN_PROMPTS.APPLY').disabled).toBe(true);
+
+    button(root, 'ADMIN_PROMPTS.PREVIEW').click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(preview).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ key: 'vision', locale: 'en', promptText: vision.inheritedPromptText }),
+    );
+    expect(button(root, 'ADMIN_PROMPTS.APPLY').disabled).toBe(false);
+
+    button(root, 'ADMIN_PROMPTS.SCENARIOS_nutrition').click();
+    fixture.detectChanges();
+    expect(discard).toHaveBeenCalledOnce();
+    expect(root.querySelector('form')).toBeNull();
+    expect(root.querySelector('fd-admin-ai-prompt-workbench')).toBeNull();
+    expect(save).not.toHaveBeenCalled();
+});
+
 function button(root: HTMLElement, text: string): HTMLButtonElement {
     const result = Array.from(root.querySelectorAll('button')).find(control => control.textContent.trim() === text);
     if (result === undefined) {

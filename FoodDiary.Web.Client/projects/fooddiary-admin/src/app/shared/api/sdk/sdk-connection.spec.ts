@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { AdminAuthSdk } from './generated/api/admin-auth.service';
 import { AdminUsersSdk } from './generated/api/admin-users.service';
+import { IdentityHttpParameterCodec } from './generated/encoder';
 import { createSdkConnection, sdkRequestOptions } from './sdk-connection';
 
 const bypassLoading = new HttpContextToken(() => false);
@@ -28,6 +29,18 @@ afterEach(() => {
     http.verify();
 });
 
+it('forwards empty, false and zero values supplied as a filter record', () => {
+    const sdk = createSdkConnection(AdminUsersSdk, '/api/v1/admin/users', TestBed.inject(HttpClient));
+    const options = sdkRequestOptions(undefined, { search: '', includeDeleted: false, limit: 0 });
+    sdk.client.getAdminUsers({ version: sdk.version, search: 'existing filter' }, 'body', false, options).subscribe();
+
+    const request = http.expectOne(value => value.url === '/api/v1/admin/users');
+    expect(request.request.params.getAll('search')).toEqual(['']);
+    expect(request.request.params.get('includeDeleted')).toBe('false');
+    expect(request.request.params.get('limit')).toBe('0');
+    request.flush({});
+});
+
 describe('Admin generated client transport', () => {
     it.each([
         { url: '/admin/users', error: 'API URL must include /api/v{version}.' },
@@ -38,32 +51,43 @@ describe('Admin generated client transport', () => {
         http.expectNone(() => true);
     });
 
-    it('retains repeated filters, false, zero and decoded Unicode through the existing interceptor chain', () => {
+    it('overlays generated filters and preserves repeated values, false, zero and Unicode', () => {
         const sdk = createSdkConnection(AdminUsersSdk, '/api/v1/admin/users', TestBed.inject(HttpClient));
-        const params = new HttpParams()
+        const search = 'план + ЗОЖ';
+        const filter = 'значение%26';
+        const params = new HttpParams({ encoder: new IdentityHttpParameterCodec() })
             .append('role', 'Admin & User')
             .append('role', 'Observer')
             .set('includeDeleted', false)
-            .set('custom', 'значение');
+            .set('custom', filter);
         sdk.client
-            .getAdminUsers({ version: sdk.version, page: 1, limit: 0 }, 'body', false, sdkRequestOptions(undefined, params))
+            .getAdminUsers(
+                { version: sdk.version, page: 1, limit: 0, role: 'Admin', includeDeleted: true, search },
+                'body',
+                false,
+                sdkRequestOptions(undefined, params),
+            )
             .subscribe();
         const request = http.expectOne(value => value.url === '/api/v1/admin/users');
         expect(request.request.params.getAll('role')).toEqual(['Admin & User', 'Observer']);
         expect(request.request.params.get('includeDeleted')).toBe('false');
         expect(request.request.params.get('limit')).toBe('0');
-        expect(request.request.params.get('custom')).toBe('значение');
+        expect(request.request.params.get('search')).toBe(search);
+        expect(request.request.params.get('custom')).toBe(filter);
         expect(request.request.headers.get('Authorization')).toBe('Bearer test-only');
         expect(request.request.withCredentials).toBe(false);
         request.flush({});
     });
 
-    it('preserves adapter headers and HttpContext flags', () => {
+    it('preserves repeated adapter headers, empty values, SDK defaults and HttpContext flags', () => {
         const sdk = createSdkConnection(AdminUsersSdk, '/api/v1/admin/users', TestBed.inject(HttpClient));
-        const options = sdkRequestOptions(new HttpHeaders({ 'X-Trace': 'trace' }), undefined, new HttpContext().set(bypassLoading, true));
+        const headers = new HttpHeaders({ aCcEpT: [], 'X-Trace': 'trace-one', 'X-Present-Empty': '' }).append('x-trace', 'trace-two');
+        const options = sdkRequestOptions(headers, undefined, new HttpContext().set(bypassLoading, true));
         sdk.client.getAdminUsersById({ version: sdk.version, id: 'id' }, 'body', false, options).subscribe();
         const request = http.expectOne('/api/v1/admin/users/id');
-        expect(request.request.headers.get('X-Trace')).toBe('trace');
+        expect(request.request.headers.getAll('x-TRACE')).toEqual(['trace-one', 'trace-two']);
+        expect(request.request.headers.getAll('X-Present-Empty')).toEqual(['']);
+        expect(request.request.headers.get('Accept')).toBe('application/json');
         expect(request.request.context.get(bypassLoading)).toBe(true);
         request.flush({});
     });

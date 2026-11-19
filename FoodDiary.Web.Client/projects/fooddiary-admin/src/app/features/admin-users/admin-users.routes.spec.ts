@@ -241,6 +241,35 @@ it('corrects an obsolete user list page and opens the account from the native ro
     expect(getLoginEvents).toHaveBeenCalledExactlyOnceWith(FIRST_PAGE, expect.any(Number), null, { userId: account.id });
 });
 
+it.each(['', 'other-account'])('uses the account path when the URL also has matrix id "%s"', async matrixId => {
+    const requested = {
+        id: adminId<'user'>('requested-account'),
+        email: 'requested@example.test',
+        isActive: true,
+        isEmailConfirmed: true,
+        roles: ['User'],
+        createdOnUtc: adminUtcInstant('2026-01-01T12:00:00Z'),
+    };
+    const next = { ...requested, id: adminId<'user'>('next-account'), email: 'next@example.test' };
+    getUser.mockImplementation(id => {
+        if (id === requested.id) {
+            return of(requested);
+        }
+        return id === next.id ? of(next) : throwError(() => new Error('Unexpected account'));
+    });
+    const harness = await RouterTestingHarness.create(`/users/${requested.id};id=${matrixId}`);
+    expect(getUser).toHaveBeenCalledExactlyOnceWith(requested.id);
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe(requested.email);
+
+    await harness.navigateByUrl(`/users/${requested.id};id=changed-matrix-id`);
+    expect(getUser).toHaveBeenCalledExactlyOnceWith(requested.id);
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe(requested.email);
+
+    await harness.navigateByUrl(`/users/${next.id};id=changed-matrix-id`);
+    expect(getUser.mock.calls).toEqual([[requested.id], [next.id]]);
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe(next.email);
+});
+
 describe.each(historyRoutes)('Search and request replacement $path', ({ path, searchLabel, filters, request }) => {
     it('starts the latest search on page one, preserves filters, and cancels the obsolete request', async () => {
         const pending = new Subject<PagedResponse<never>>();

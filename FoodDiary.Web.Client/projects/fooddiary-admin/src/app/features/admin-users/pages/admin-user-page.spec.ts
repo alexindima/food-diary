@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter, UrlSegment } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit';
 import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
@@ -35,7 +35,7 @@ type TestContext = {
     fixture: ComponentFixture<AdminUserPageComponent>;
     usersService: UsersServiceMock;
     dialogs: DialogServiceMock;
-    routeParams: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
+    routeSegments: BehaviorSubject<UrlSegment[]>;
 };
 
 const baseUser: AdminUser = {
@@ -145,7 +145,7 @@ function createUsersServiceMock(): UsersServiceMock {
 }
 
 async function createContextAsync(configure?: (usersService: UsersServiceMock) => void, initialUser = baseUser): Promise<TestContext> {
-    const routeParams = new BehaviorSubject(convertToParamMap({ id: initialUser.id }));
+    const routeSegments = new BehaviorSubject([new UrlSegment(initialUser.id, {})]);
     const usersService = createUsersServiceMock();
     const dialogs: DialogServiceMock = { open: vi.fn().mockReturnValue({ afterClosed: () => of(false) }) };
     configure?.(usersService);
@@ -157,7 +157,7 @@ async function createContextAsync(configure?: (usersService: UsersServiceMock) =
             { provide: AdminUsersService, useValue: usersService },
             provideRouter([]),
             { provide: FdUiDialogService, useValue: dialogs },
-            { provide: ActivatedRoute, useValue: { paramMap: routeParams } },
+            { provide: ActivatedRoute, useValue: { url: routeSegments } },
         ],
     }).compileComponents();
 
@@ -165,7 +165,7 @@ async function createContextAsync(configure?: (usersService: UsersServiceMock) =
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { component, fixture, usersService, dialogs, routeParams };
+    return { component, fixture, usersService, dialogs, routeSegments };
 }
 
 describe('AdminUserPageComponent avatars', () => {
@@ -201,12 +201,12 @@ describe('AdminUserPageComponent avatars', () => {
     it('does not apply an old avatar error to a different account', async () => {
         const avatar = 'https://images.example.test/avatar.png';
         const first = { ...baseUser, profileImage: avatar };
-        const { component, fixture, usersService, routeParams } = await createContextAsync(users => {
+        const { component, fixture, usersService, routeSegments } = await createContextAsync(users => {
             users.getUser.mockReturnValueOnce(of(first));
         });
         const next = { ...baseUser, id: adminId<'user'>('next-user'), profileImage: avatar };
         usersService.getUser.mockReturnValueOnce(of(next));
-        routeParams.next(convertToParamMap({ id: next.id }));
+        routeSegments.next([new UrlSegment(next.id, {})]);
         fixture.detectChanges();
 
         component['onAvatarError'](first.id, avatar);
@@ -325,7 +325,7 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
     it('drops stale activity when navigating to a different account', async () => {
         const pendingLogins = new Subject<PagedResponse<AdminUserLoginEvent>>();
-        const { component, usersService, routeParams } = await createContextAsync(facade => {
+        const { component, usersService, routeSegments } = await createContextAsync(facade => {
             facade.getLoginEvents.mockReturnValueOnce(pendingLogins);
         });
         expect(component['activityLoading']()).toBe(true);
@@ -333,7 +333,7 @@ describe('AdminUserPageComponent actions and navigation', () => {
         usersService.getUser.mockReturnValueOnce(of(nextUser));
         usersService.getLoginEvents.mockReturnValueOnce(of(pagedLogins([])));
         usersService.getUserRoleAudit.mockReturnValueOnce(of([]));
-        routeParams.next(convertToParamMap({ id: nextUser.id }));
+        routeSegments.next([new UrlSegment(nextUser.id, {})]);
         pendingLogins.next(pagedLogins([loginEvent]));
         pendingLogins.complete();
         expect(component['user']()?.id).toBe(nextUser.id);
@@ -357,7 +357,7 @@ describe('AdminUserPageComponent actions and navigation', () => {
 
 describe('Admin account detail fallback fields', () => {
     it('formats initials and fallback fields', async () => {
-        const { fixture, usersService, routeParams } = await createContextAsync();
+        const { fixture, usersService, routeSegments } = await createContextAsync();
 
         expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('JD');
         expect(detailField(fixture, 'Roles')).toBe('User');
@@ -371,7 +371,7 @@ describe('Admin account detail fallback fields', () => {
             roles: [],
         };
         usersService.getUser.mockReturnValueOnce(of(alternate));
-        routeParams.next(convertToParamMap({ id: alternate.id }));
+        routeSegments.next([new UrlSegment(alternate.id, {})]);
         fixture.detectChanges();
 
         expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('F');
@@ -381,14 +381,14 @@ describe('Admin account detail fallback fields', () => {
 
 describe('Admin account detail action results', () => {
     it('ignores a click on a stale impersonation button while changing to an admin account', async () => {
-        const { fixture, dialogs, usersService, routeParams } = await createContextAsync();
+        const { fixture, dialogs, usersService, routeSegments } = await createContextAsync();
         const action = [...host(fixture).querySelectorAll('button')].find(button => button.textContent.trim() === 'ADMIN_USER.IMPERSONATE');
         if (action === undefined) {
             throw new Error('Expected the impersonation action.');
         }
         const admin = { ...baseUser, id: adminId<'user'>('other-admin'), email: 'other-admin@example.test', roles: ['Admin'] };
         usersService.getUser.mockReturnValueOnce(of(admin));
-        routeParams.next(convertToParamMap({ id: admin.id }));
+        routeSegments.next([new UrlSegment(admin.id, {})]);
 
         expect(action.disabled).toBe(false);
         action.click();

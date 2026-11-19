@@ -7538,11 +7538,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.ts",
-      "nonBlankLines": 186,
+      "nonBlankLines": 193,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.22
+      "structuralRiskScore": 26.36
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-usage/admin-ai-usage.routes.ts",
@@ -8242,11 +8242,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
-      "nonBlankLines": 119,
-      "decisionPoints": 5,
+      "nonBlankLines": 115,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.88
+      "structuralRiskScore": 11.3
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/mail-message-content.ts",
@@ -8738,11 +8738,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.ts",
-      "nonBlankLines": 192,
-      "decisionPoints": 22,
+      "nonBlankLines": 197,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.84
+      "structuralRiskScore": 35.44
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users-table.ts",
@@ -10018,11 +10018,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/sdk-connection.ts",
-      "nonBlankLines": 74,
-      "decisionPoints": 14,
+      "nonBlankLines": 83,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.48
+      "structuralRiskScore": 19.66
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/sdk-response.ts",

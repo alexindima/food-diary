@@ -2721,7 +2721,7 @@
       "role": "Component",
       "selector": "fd-admin-mail-message-dialog",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
-      "line": 33
+      "line": 34
     },
     {
       "name": "AdminMailInboxFacade",

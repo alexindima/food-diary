@@ -7,9 +7,20 @@ type SdkConstructor<T> = new (http: HttpClient, basePath: string | string[], con
 const SDK_EXTRA_HEADERS = new HttpContextToken<HttpHeaders | null>(() => null);
 const SDK_EXTRA_PARAMS = new HttpContextToken<HttpParams | null>(() => null);
 
+function* httpEntries(source: HttpHeaders | HttpParams | null): Iterable<readonly [key: string, values: string[]]> {
+    if (source === null) {
+        return;
+    }
+
+    for (const key of source.keys()) {
+        const values = source.getAll(key);
+        yield [key, values !== null && values.length > 0 ? values : []];
+    }
+}
+
 function requestHeaders(headers: HttpHeaders, extra: HttpHeaders | null): HttpHeaders {
-    for (const key of extra?.keys() ?? []) {
-        headers = headers.set(key, extra?.getAll(key) ?? []);
+    for (const [key, values] of httpEntries(extra)) {
+        headers = headers.set(key, values);
     }
     return headers;
 }
@@ -17,9 +28,9 @@ function requestHeaders(headers: HttpHeaders, extra: HttpHeaders | null): HttpHe
 function decodedParams(source: HttpParams): HttpParams {
     const decoded = new HttpParams({ fromString: source.toString() });
     let params = new HttpParams();
-    for (const key of decoded.keys()) {
+    for (const [key, values] of httpEntries(decoded)) {
         const name = key.charAt(0).toLowerCase() + key.slice(1);
-        for (const value of decoded.getAll(key) ?? []) {
+        for (const value of values) {
             params = params.append(name, value);
         }
     }
@@ -29,9 +40,9 @@ function decodedParams(source: HttpParams): HttpParams {
 function requestParams(source: HttpParams, extra: HttpParams | null): HttpParams {
     let params = decodedParams(source);
     // Retain existing open filter records, including values outside the current schema.
-    for (const key of extra?.keys() ?? []) {
+    for (const [key, values] of httpEntries(extra)) {
         params = params.delete(key);
-        for (const value of extra?.getAll(key) ?? []) {
+        for (const value of values) {
             params = params.append(key, value);
         }
     }

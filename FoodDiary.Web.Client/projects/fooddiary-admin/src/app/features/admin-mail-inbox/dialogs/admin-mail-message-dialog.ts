@@ -7,6 +7,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
+import { take } from 'rxjs';
 
 import { type AdminId, type AdminUtcInstant, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
@@ -34,7 +35,8 @@ export class AdminMailMessageDialogComponent {
     protected readonly data = inject<AdminMailMessageDialogData>(FD_UI_DIALOG_DATA);
     private readonly mailInboxFacade = inject(AdminMailInboxFacade);
     private readonly destroyRef = inject(DestroyRef);
-    protected readonly selectedMessage = signal<AdminMailInboxMessageDetails | null>(null);
+    private readonly message = signal<AdminMailInboxMessageDetails | null>(null);
+    private readonly acknowledgedReadAtUtc = signal<AdminUtcInstant | null>(null);
     protected readonly isDetailsLoading = signal(true);
     protected readonly readFailed = signal(false);
     protected readonly markingRead = signal(false);
@@ -46,52 +48,45 @@ export class AdminMailMessageDialogComponent {
         { value: 'raw', labelKey: 'ADMIN_MAIL_INBOX.VIEW_RAW' },
     ];
     protected readonly content = computed(() => {
-        const message = this.selectedMessage();
+        const message = this.message();
         return mailMessageContent(message?.htmlBody, message?.textBody);
     });
     protected readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
-        const message = this.selectedMessage();
+        const message = this.message();
         if (message === null) {
             return null;
         }
 
+        const readAtUtc = this.acknowledgedReadAtUtc() ?? message.readAtUtc;
         return {
             ...message,
+            readAtUtc,
             categoryLabel: this.formatCategory(message.category),
             readStateLabel:
-                message.readAtUtc !== null && message.readAtUtc !== undefined
-                    ? 'ADMIN_MAIL_INBOX.MESSAGE_READ'
-                    : 'ADMIN_MAIL_INBOX.MESSAGE_UNREAD',
+                readAtUtc !== null && readAtUtc !== undefined ? 'ADMIN_MAIL_INBOX.MESSAGE_READ' : 'ADMIN_MAIL_INBOX.MESSAGE_UNREAD',
             toRecipientsLabel: this.formatRecipients(message.toRecipients),
         };
     });
     public constructor() {
-        this.loadMessage();
-    }
-    protected setBodyMode(mode: string): void {
-        this.selectedBodyMode.set(mode);
-    }
-
-    private loadMessage(): void {
-        this.isDetailsLoading.set(true);
-        this.selectedBodyMode.set('preview');
         this.mailInboxFacade
             .getMessage(this.data.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.selectedMessage.set(response);
+                    this.message.set(response);
+                    this.isDetailsLoading.set(false);
                     if (response.readAtUtc === null || response.readAtUtc === undefined) {
                         this.markMessageRead(response.id);
                     }
-
-                    this.isDetailsLoading.set(false);
                 },
                 error: () => {
-                    this.selectedMessage.set(null);
                     this.isDetailsLoading.set(false);
                 },
             });
+    }
+
+    protected setBodyMode(mode: string): void {
+        this.selectedBodyMode.set(mode);
     }
 
     private formatRecipients(recipients: string[]): string {
@@ -112,11 +107,11 @@ export class AdminMailMessageDialogComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
+                    const readAtUtc = adminUtcInstant(new Date().toISOString());
+                    this.acknowledgedReadAtUtc.set(readAtUtc);
                     this.markingRead.set(false);
                     this.readFailed.set(false);
-                    const readAtUtc = adminUtcInstant(new Date().toISOString());
                     this.data.onRead(id, readAtUtc);
-                    this.selectedMessage.update(message => (message?.id === id ? { ...message, readAtUtc } : message));
                 },
                 error: () => {
                     this.markingRead.set(false);

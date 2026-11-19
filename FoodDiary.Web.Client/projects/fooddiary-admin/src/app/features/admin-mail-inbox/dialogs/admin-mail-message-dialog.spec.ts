@@ -72,7 +72,7 @@ describe('mail message read state', () => {
         pending.next();
         fixture.detectChanges();
         expect(host.querySelector('[role="alert"]')).toBeNull();
-        expect(fixture.componentInstance['selectedMessage']()?.readAtUtc).toBeTruthy();
+        expect(host.querySelector('.mail-read-state')?.textContent.trim()).toBe('ADMIN_MAIL_INBOX.MESSAGE_READ');
         expect(onRead).toHaveBeenCalledOnce();
     });
 });
@@ -137,6 +137,33 @@ describe('mail message HTTP details', () => {
         fixture.destroy();
         expect(pending.cancelled).toBe(true);
         expect(onRead).not.toHaveBeenCalled();
+        requests.verify();
+    });
+
+    it('shows the read acknowledgement before a parent closes the dialog and reloads the message on reopening', () => {
+        const { fixture, requests, onRead } = renderMailOverHttp();
+        requests.expectOne({ method: 'GET', url }).flush(message);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const pending = requests.expectOne({ method: 'POST', url: `${url}/read` });
+        let badgeAtClose: string | undefined;
+        onRead.mockImplementationOnce(() => {
+            fixture.detectChanges();
+            badgeAtClose = host.querySelector('.mail-read-state')?.textContent.trim();
+            fixture.destroy();
+        });
+
+        pending.flush(null);
+
+        expect(badgeAtClose).toBe('ADMIN_MAIL_INBOX.MESSAGE_READ');
+        expect(onRead).toHaveBeenCalledExactlyOnceWith(message.id, expect.any(String));
+
+        const reopened = TestBed.createComponent(AdminMailMessageDialogComponent);
+        requests.expectOne({ method: 'GET', url }).flush({ ...message, readAtUtc: message.receivedAtUtc });
+        reopened.detectChanges();
+        const reopenedHost = reopened.nativeElement as HTMLElement;
+        expect(reopenedHost.querySelector('.mail-read-state')?.textContent.trim()).toBe('ADMIN_MAIL_INBOX.MESSAGE_READ');
+        requests.expectNone({ method: 'POST', url: `${url}/read` });
         requests.verify();
     });
 });

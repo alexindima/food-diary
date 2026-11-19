@@ -54,7 +54,7 @@ export class AdminAiPromptsPageComponent {
     protected readonly items = signal<AdminAiPromptScenario[]>([]);
     protected readonly key = signal<AdminAiPromptKey>('vision');
     protected readonly locale = signal('en');
-    protected readonly selected = computed(() => this.items().find(item => item.key === this.key() && item.locale === this.locale()));
+    private readonly selected = computed(() => this.items().find(item => item.key === this.key() && item.locale === this.locale()));
     protected readonly loading = signal(false);
     protected readonly failed = signal(false);
     protected readonly saving = signal(false);
@@ -64,10 +64,17 @@ export class AdminAiPromptsPageComponent {
     protected readonly formModel = signal({ promptText: '', isActive: false });
     private readonly baseline = signal(JSON.stringify(this.formModel()));
     private readonly dirty = computed(() => JSON.stringify(this.formModel()) !== this.baseline());
-    protected readonly draftText = computed(() =>
-        this.formModel().isActive ? this.formModel().promptText : (this.selected()?.inheritedPromptText ?? ''),
+    protected readonly editor = computed(() => {
+        const item = this.selected();
+        if (item === undefined) {
+            return;
+        }
+        const { promptText, isActive } = this.formModel();
+        return { item, promptText: isActive ? promptText : item.inheritedPromptText };
+    });
+    protected readonly canApply = computed(
+        () => this.dirty() && this.verifiedText() === this.editor()?.promptText && !this.form().invalid(),
     );
-    protected readonly canApply = computed(() => this.dirty() && this.verifiedText() === this.draftText() && !this.form().invalid());
     private readonly submitFormAsync = async (): Promise<void> => {
         await this.saveAsync();
     };

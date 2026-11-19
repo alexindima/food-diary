@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCardComponent, FdUiDialogService } from 'fd-ui-kit';
-import { catchError, combineLatest, forkJoin, type Observable, of, startWith, Subject, switchMap } from 'rxjs';
+import { catchError, combineLatest, distinctUntilChanged, forkJoin, map, type Observable, of, startWith, Subject, switchMap } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -91,9 +91,14 @@ export class AdminUserPageComponent {
     });
 
     public constructor() {
-        combineLatest([this.route.paramMap, this.refresh.pipe(startWith(undefined))])
+        // This page owns the :id segment. Matrix parameters must not replace its account ID.
+        const accountId = this.route.url.pipe(
+            map(([segment]) => adminId<'user'>(segment.path)),
+            distinctUntilChanged(),
+        );
+        combineLatest([accountId, this.refresh.pipe(startWith(undefined))])
             .pipe(
-                switchMap(([params]) => {
+                switchMap(([id]) => {
                     this.user.set(null);
                     this.avatarLoadFailure.set(null);
                     this.failed.set(false);
@@ -101,7 +106,7 @@ export class AdminUserPageComponent {
                     this.activityFailed.set(false);
                     this.loginEvents.set([]);
                     this.roleAuditEvents.set([]);
-                    return this.users.getUser(adminId<'user'>(params.get('id') ?? '')).pipe(
+                    return this.users.getUser(id).pipe(
                         catchError(() => {
                             this.failed.set(true);
                             return of(null);
