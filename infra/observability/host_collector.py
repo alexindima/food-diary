@@ -26,6 +26,8 @@ import urllib.parse
 
 from external_monitor import probes as public_probes
 
+PROC_ROOT = pathlib.Path("/proc")
+
 SERVICES = frozenset([
     "api", "job-manager", "telegram-bot", "client-ssr", "nginx", "postgres",
     "redis", "rabbitmq", "mail-relay", "mail-inbox", "mailrelay-postgres",
@@ -112,6 +114,8 @@ class Metrics:
             help_text = {
                 "fooddiary_collector_component_success": "One for a completed valid probe, zero on failure; failed observations are omitted.",
                 "fooddiary_container_restarts": "Current Docker restart-count snapshot; resets when the container is replaced.",
+                "fooddiary_container_process_open_fds": "Open file descriptors sampled for the container primary process.",
+                "fooddiary_container_process_max_fds": "Effective soft open-file limit of the same primary process; absent for an unlimited limit.",
                 "fooddiary_backup_verified": "One when the newest completed dump matches its SHA256 manifest; does not prove a full restore.",
                 "fooddiary_backup_last_success_timestamp_seconds": "Modification time of the newest checksum-verified dump; zero for a corrupt newest dump.",
                 "fooddiary_public_probe_tls_seconds_remaining": "Remaining verified public TLS certificate lifetime in seconds.",
@@ -224,6 +228,66 @@ def collect_container_resources(metrics, containers=None):
             metrics.add("container_" + key, value, kind, service=service)
 
 
+def process_file_descriptors(info):
+    state = info["State"]
+    pid = state["Pid"]
+    if not state["Running"] or type(pid) is not int or pid <= 0:
+        raise ValueError("Container primary process is not running")
+    process = PROC_ROOT / str(pid)
+
+    def start_time():
+        # Field 22 follows the parenthesized command, which can contain spaces,
+        # parentheses, and non-UTF-8 bytes.
+        fields = (process / "stat").read_bytes().rpartition(b") ")[2].split()
+        if len(fields) <= 19 or not fields[19].isdigit():
+            raise ValueError("Invalid primary process identity")
+        return fields[19]
+
+    started = start_time()
+    limits = (process / "limits").read_text(encoding="ascii")
+    limit = re.search(r"^Max open files[ \t]+([0-9]+|unlimited)[ \t]+(?:[0-9]+|unlimited)[ \t]+files[ \t]*$",
+                      limits, re.MULTILINE)
+    if limit is None:
+        raise ValueError("Missing primary process file limit")
+    # Count directory entries without exposing descriptor targets.
+    with os.scandir(process / "fd") as descriptors:
+        values = {"open_fds": sum(1 for _ in descriptors)}
+    if start_time() != started:
+        raise RuntimeError("Primary process changed during observation")
+    if limit[1] != "unlimited":
+        values["max_fds"] = int(limit[1])
+    return values
+
+
+def collect_container_file_descriptors(metrics, containers):
+    def observe(item):
+        service, container_id = item
+        path = f"/containers/{container_id}/json"
+        info = docker_get(path)
+        values = process_file_descriptors(info)
+        state = info["State"]
+        current = docker_get(path)["State"]
+        if not current["Running"] or current["Pid"] != state["Pid"] or current["StartedAt"] != state["StartedAt"]:
+            raise RuntimeError("Container restarted during observation")
+        raw_service = info["Config"]["Labels"]["com.docker.compose.service"]
+        slot = "primary"
+        if service in {"api", "client-ssr"}:
+            slot = "green" if raw_service.endswith("-green") else "blue"
+        return (service, slot), values
+
+    # Each slot has its own limit. A duplicate label set cannot be interpreted
+    # as one process, and no samples are published until the probe completes.
+    observations = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        for identity, values in executor.map(observe, containers):
+            if identity in observations:
+                raise ValueError("Duplicate container primary process slot")
+            observations[identity] = values
+    for (service, slot), values in observations.items():
+        for key, value in values.items():
+            metrics.add("container_process_" + key, value, service=service, slot=slot)
+
+
 def collect_postgres(metrics, alias, container):
     command = 'exec psql --no-password --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" -XqAt -c "$1"'
     values = json.loads(run(["docker", "exec", container, "sh", "-c", command, "probe", POSTGRES_SQL]))
@@ -333,6 +397,7 @@ def collect(root):
         docker_probes = [
             ("containers", lambda m: collect_containers(m, containers.result())),
             ("container_resources", lambda m: collect_container_resources(m, containers.result())),
+            ("container_file_descriptors", lambda m: collect_container_file_descriptors(m, containers.result())),
         ]
         for component, partial in executor.map(perform, docker_probes + probes):
             if partial is not None:

@@ -140,7 +140,8 @@ by its timer about once per minute after completion. It atomically replaces
 its HTTP listener remains on loopback. The service has a 128 MiB memory limit,
 a 55-second deadline and a fixed inventory of service/database labels.
 
-The collector observes Docker state/resources, four PostgreSQL servers, Redis
+The collector observes Docker state, resources and primary-process file
+descriptors, four PostgreSQL servers, Redis
 INFO counters, RabbitMQ queue totals in the application's default vhost, public
 HTTP/TLS availability and the three existing scheduled PostgreSQL backups.
 PostgreSQL probes use fixed aggregate SQL, read-only transactions and a three
@@ -291,6 +292,34 @@ counts and application readiness separately.
 Trace ingestion remains deliberately disabled by the user's decision on
 7 November 2026. A future external backend must satisfy the existing trace
 privacy, operator-access and maximum 14-day retention contract before ingestion.
+
+### Primary-process file descriptors
+
+**FoodDiary Operational Coverage** charts open file descriptors, the effective
+soft `RLIMIT_NOFILE`, and the fraction of that limit in use alongside container
+restart snapshots. The host collector counts entries and reads numeric limits
+from Linux procfs for each monitored running container's primary process. The
+probe excludes child processes and reads no descriptor targets or payloads.
+
+`fooddiary_container_process_open_fds` and `fooddiary_container_process_max_fds`
+use the same `service` and `slot` labels. The API and SSR blue and green slots
+retain separate limits. An unlimited soft limit has a count but no limit or
+utilization series. The probe reuses the cycle's Docker inventory and samples
+descriptors independently of the CPU and memory probe. A missing or restarted
+process invalidates the descriptor sample. The existing component-failure and
+collector-staleness alerts cover lost telemetry.
+
+Usage above 80% for two minutes raises a warning. Usage above 90% raises a
+critical alert at the next rule evaluation. Both rules retain the service and
+slot in notifications. Sampling runs about once per minute, so short spikes
+can fall between samples. Compare drops in descriptor usage with the restart
+snapshots when investigating exhaustion.
+
+Base Compose sets the soft and hard `nofile` limits to 65536 for both API slots
+and Job Manager. Docker applies these settings when it creates a container.
+Verify the effective Compose settings and the running process limits at rollout.
+Use the existing observability generation, tests and installation procedure
+above to provision the dashboard and rules.
 
 ### Telegram bot diagnostics
 

@@ -115,19 +115,22 @@ class ContainerAvailabilityTests(unittest.TestCase):
             "com.docker.compose.project": "fooddiary", "com.docker.compose.service": service,
         }} for service in services]
 
-    def info(self):
-        return {"State": {"Running": True, "StartedAt": "2026-11-08T14:59:34.123456789Z",
-                          "Health": {"Status": "healthy"}}, "RestartCount": 0}
+    def info(self, service="api-green"):
+        return {"State": {"Running": True, "Pid": 123, "StartedAt": "2026-11-08T14:59:34.123456789Z",
+                          "Health": {"Status": "healthy"}}, "RestartCount": 0,
+                "Config": {"Labels": {"com.docker.compose.service": service}}}
 
     def collect(self, docker):
         with patch.object(collector, "docker_get", side_effect=docker), patch.object(
+            collector, "process_file_descriptors", return_value={"open_fds": 9, "max_fds": 65536}
+        ), patch.object(
             collector, "collect_redis"
         ), patch.object(collector, "collect_rabbitmq"), patch.object(
             collector, "collect_public"
         ), patch.object(collector, "DATABASES", {}), patch.object(collector, "BACKUPS", []):
             return collector.collect(pathlib.Path("unused"))
 
-    def test_inventory_request_budget_preserves_both_docker_probes(self):
+    def test_inventory_request_budget_preserves_all_docker_probes(self):
         inventory_requests = 0
 
         def docker(path):
@@ -144,10 +147,13 @@ class ContainerAvailabilityTests(unittest.TestCase):
 
         with contextlib.redirect_stderr(io.StringIO()):
             text = self.collect(docker)
+        self.assertEqual(1, inventory_requests)
         self.assertIn('fooddiary_collector_component_success{component="containers"} 1', text)
         self.assertIn('fooddiary_collector_component_success{component="container_resources"} 1', text,
                       "one cycle must share Docker inventory instead of timing out a second request")
         self.assertIn('fooddiary_container_memory_working_set_bytes{service="api"} 100', text)
+        self.assertIn('fooddiary_collector_component_success{component="container_file_descriptors"} 1', text)
+        self.assertIn('fooddiary_container_process_open_fds{service="api",slot="green"} 9', text)
 
     def test_next_cycle_refreshes_the_container_inventory(self):
         inventories = iter([self.inventory("api-green"), []])
@@ -164,6 +170,8 @@ class ContainerAvailabilityTests(unittest.TestCase):
         second = self.collect(docker)
         self.assertIn('fooddiary_container_running{service="api"} 1', first)
         self.assertIn('fooddiary_container_running{service="api"} 0', second)
+        self.assertIn('fooddiary_container_process_open_fds{service="api",slot="green"} 9', first)
+        self.assertNotIn('fooddiary_container_process_open_fds', second)
 
     def test_resource_timeout_preserves_running_and_health_observations(self):
         def docker(path):
@@ -171,7 +179,7 @@ class ContainerAvailabilityTests(unittest.TestCase):
                 return self.inventory("api-green", "job-manager", "telegram-bot")
             if "/stats?" in path:
                 raise TimeoutError("private Docker response")
-            return self.info()
+            return self.info(path.split("/")[2])
 
         errors = io.StringIO()
         with contextlib.redirect_stderr(errors):
@@ -182,6 +190,8 @@ class ContainerAvailabilityTests(unittest.TestCase):
             self.assertIn(f'fooddiary_container_healthy{{service="{service}"}} 1', text)
         self.assertIn('fooddiary_collector_component_success{component="containers"} 1', text)
         self.assertIn('fooddiary_collector_component_success{component="container_resources"} 0', text)
+        self.assertIn('fooddiary_collector_component_success{component="container_file_descriptors"} 1', text)
+        self.assertIn('fooddiary_container_process_open_fds{service="job-manager",slot="primary"} 9', text)
         self.assertNotIn('fooddiary_container_memory_working_set_bytes', text)
         self.assertNotIn("private Docker response", errors.getvalue())
 
@@ -190,6 +200,7 @@ class ContainerAvailabilityTests(unittest.TestCase):
         with contextlib.redirect_stderr(errors):
             text = self.collect(lambda _: (_ for _ in ()).throw(TimeoutError()))
         self.assertIn('fooddiary_collector_component_success{component="containers"} 0', text)
+        self.assertIn('fooddiary_collector_component_success{component="container_file_descriptors"} 0', text)
         self.assertNotIn('fooddiary_container_running{', text)
 
     def test_successful_inventory_still_reports_a_missing_required_service(self):

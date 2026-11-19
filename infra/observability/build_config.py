@@ -8,6 +8,7 @@ import yaml
 ROOT = pathlib.Path(__file__).resolve().parent
 PROM = "cfhlwwx2t4w00a"
 LOKI = "cfhlezxl8fdvka"
+FD_UTILIZATION = "fooddiary_container_process_open_fds / clamp_min(fooddiary_container_process_max_fds, 1)"
 API = 'exported_job="FoodDiary.Web.Api",url_path=~"/api/.*",url_path!~"/api/v[^/]+/auth/telegram/bot/operations/.*|/api/v[^/]+/logs"'
 JOB_DEADLINE = '(fooddiary_job_last_success_age_seconds > on(fooddiary_job_name) (2*fooddiary_job_expected_interval_seconds+300)) or ((fooddiary_job_expected_interval_seconds unless on(fooddiary_job_name) fooddiary_job_last_success_age_seconds) and on(fooddiary_job_name) ((time()-scalar(max(fooddiary_container_started_timestamp_seconds{service="job-manager"}))) > fooddiary_job_expected_interval_seconds*2+300))'
 
@@ -27,6 +28,8 @@ NOTIFICATION_TITLES = {
     "fd-container-unhealthy": "Проверка здоровья контейнера завершилась ошибкой",
     "fd-container-restarted": "Контейнер приложения недавно перезапустился",
     "fd-container-oom": "Контейнер остановлен из-за ограничения памяти",
+    "fd-process-fds-warning": "Использовано более 80% файловых дескрипторов процесса",
+    "fd-process-fds-critical": "Использовано более 90% файловых дескрипторов процесса",
     "fd-kernel-oom": "Linux завершил процесс из-за нехватки памяти",
     "fd-db-command-errors": "Ошибки выполнения команд базы данных",
     "fd-backup-old": "Проверенной резервной копии PostgreSQL более 26 часов",
@@ -87,6 +90,8 @@ def alert(uid, title, expr, threshold=0, pending="5m", severity="warning", servi
                  "fooddiary_job_name" if uid == "fd-job-schedule-missed" else None)
     notification_title = NOTIFICATION_TITLES[uid]
     summary = notification_title + (": {{ $labels." + dimension + " }}" if dimension else "")
+    if uid in {"fd-process-fds-warning", "fd-process-fds-critical"}:
+        summary += " ({{ $labels.slot }})"
     return {
         "uid": uid, "title": title, "condition": "C",
         "data": [
@@ -174,6 +179,8 @@ def generate():
         alert("fd-container-unhealthy", "Application container health check is failing", '(fooddiary_container_running-fooddiary_container_healthy) unless (time()-fooddiary_container_started_timestamp_seconds{service="mail-inbox"} < 120)', pending="3m", severity="critical", service="containers"),
         alert("fd-container-restarted", "Application container restarted recently", 'delta(fooddiary_container_restarts[10m]) > bool 0', pending="0m", service="containers"),
         alert("fd-container-oom", "Container was killed by the memory limit", 'fooddiary_container_oom_killed', pending="0m", severity="critical", service="containers"),
+        alert("fd-process-fds-warning", "Process file descriptor usage exceeds 80%", FD_UTILIZATION, .8, "2m", service="containers"),
+        alert("fd-process-fds-critical", "Process file descriptor usage exceeds 90%", FD_UTILIZATION, .9, "0m", severity="critical", service="containers"),
         alert("fd-kernel-oom", "Linux OOM killer terminated a process", 'increase(node_vmstat_oom_kill[10m])', pending="0m", severity="critical", service="infrastructure"),
         alert("fd-db-command-errors", "Database commands are failing", 'sum(increase(fooddiary_db_command_failures_total{error_type!="canceled"}[5m]))', pending="0m", service="postgresql"),
         alert("fd-backup-old", "Verified PostgreSQL backup is older than 26 hours", 'time()-fooddiary_backup_last_success_timestamp_seconds', 93600, "5m", "critical", "backup", "Alerting"),
@@ -241,6 +248,26 @@ def generate():
         panel("CPU steal / I/O wait", 'sum by(mode) (rate(node_cpu_seconds_total{mode=~"steal|iowait"}[5m])) / scalar(count(node_cpu_seconds_total{mode="idle"}))', "percentunit"),
         panel("Free inode fraction", 'node_filesystem_files_free{mountpoint="/"}/node_filesystem_files{mountpoint="/"}', "percentunit"),
     ]
+    fd_counts = panel(
+        "Process open file descriptors / soft limit",
+        ["fooddiary_container_process_open_fds", "fooddiary_container_process_max_fds"],
+        description="Each slot shows its primary process and its effective soft limit. An unlimited limit is absent. Samples are collected once per cycle and can miss short peaks.",
+    )
+    for target, label in zip(fd_counts["targets"], ["open", "soft limit"]):
+        target["legendFormat"] = "{{service}} / {{slot}} / " + label
+    fd_utilization = panel(
+        "Process file descriptor limit used", FD_UTILIZATION, "percentunit",
+        description="Open descriptors divided by the effective soft limit for each primary process. Warning above 80%, critical above 90%. A zero soft limit uses a denominator of one. Use restart snapshots to correlate drops after a restart.",
+    )
+    fd_utilization["targets"][0]["legendFormat"] = "{{service}} / {{slot}}"
+    fd_utilization["fieldConfig"]["defaults"]["thresholds"] = {
+        "mode": "absolute", "steps": [
+            {"color": "green", "value": None},
+            {"color": "orange", "value": .8},
+            {"color": "red", "value": .9},
+        ],
+    }
+    infra_panels.extend([fd_counts, fd_utilization])
     write_json(ROOT / "grafana/fooddiary-operations.json", dashboard("fooddiary-operations", "FoodDiary Operational Coverage", infra_panels))
 
     telegram = '{compose_service="telegram-bot"} |= "Telegram loop telemetry " | regexp "Telegram loop telemetry (?P<loop>intake|discovery)\\\\." | loop!=""'

@@ -864,6 +864,98 @@
         "w": 12,
         "h": 8
       }
+    },
+    {
+      "title": "Process open file descriptors / soft limit",
+      "type": "timeseries",
+      "description": "Each slot shows its primary process and its effective soft limit. An unlimited limit is absent. Samples are collected once per cycle and can miss short peaks.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "fooddiary_container_process_open_fds",
+          "refId": "A",
+          "legendFormat": "{{service}} / {{slot}} / open"
+        },
+        {
+          "expr": "fooddiary_container_process_max_fds",
+          "refId": "B",
+          "legendFormat": "{{service}} / {{slot}} / soft limit"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 25,
+      "gridPos": {
+        "x": 0,
+        "y": 96,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "title": "Process file descriptor limit used",
+      "type": "timeseries",
+      "description": "Open descriptors divided by the effective soft limit for each primary process. Warning above 80%, critical above 90%. A zero soft limit uses a denominator of one. Use restart snapshots to correlate drops after a restart.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cfhlwwx2t4w00a"
+      },
+      "targets": [
+        {
+          "expr": "fooddiary_container_process_open_fds / clamp_min(fooddiary_container_process_max_fds, 1)",
+          "refId": "A",
+          "legendFormat": "{{service}} / {{slot}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.8
+              },
+              {
+                "color": "red",
+                "value": 0.9
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "id": 26,
+      "gridPos": {
+        "x": 12,
+        "y": 96,
+        "w": 12,
+        "h": 8
+      }
     }
   ]
 }

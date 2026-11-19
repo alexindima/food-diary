@@ -750,7 +750,7 @@
       "reason": "Reviewed the append-only observations emitted by the sealed USDA retrospective. They are unpromoted duration observations for the existing checks. No verification policy, calibration or durable guidance was applied.",
       "baseRef": "HEAD",
       "gitHead": "32ad16fb5500934316a4c8761056e474859d7308",
-      "reviewedAtUtc": "2026-11-16T10:53:57.9174370Z"
+      "reviewedAtUtc": "2026-11-16T10:53:57.917437Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1110,7 +1110,7 @@
       "reason": "The CI addition runs the isolated-environment Python regression suite. Existing staged index generation, smoke shards, and verification entrypoints remain consistent with the workflow.",
       "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
       "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:51.1245630Z"
+      "reviewedAtUtc": "2026-11-18T20:55:51.124563Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1510,14 +1510,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d58c9111808f0a120623d7f87e3be198d5b02c449f45c9569a0d0fdb5f61045c",
-          "reviewReason": "The topology now includes the reply worker and revised scoped service environment. Review checked cancellation, bounded retries, legacy hydration persistence, Stars intake and deployment ordering."
+          "sha256": "4d02a819d98019170e51d67d50781bf0ffc89220bd3d29d00ef80f22770699af",
+          "reviewReason": "The Compose open-file limits apply to the existing API and Job Manager services. The runtime topology change updates its source fingerprint and the workflow still describes how to query that topology."
         }
       ],
-      "reason": "The topology now includes the reply worker and revised scoped service environment. Review checked cancellation, bounded retries, legacy hydration persistence, Stars intake and deployment ordering.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:54.0328303Z"
+      "reason": "The Compose open-file limits apply to the existing API and Job Manager services. The runtime topology change updates its source fingerprint and the workflow still describes how to query that topology.",
+      "baseRef": "HEAD",
+      "gitHead": "98d3b8f69ccc58a6c703b449be8a0fda1645b837",
+      "reviewedAtUtc": "2026-11-19T16:06:38.5113365Z"
     },
     {
       "pageId": "workflow-security-review",
