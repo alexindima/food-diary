@@ -157,6 +157,11 @@ Docker statistics timeout therefore leaves running, health, restart and OOM
 observations available. Failed inventory/inspection still omits state rather
 than inventing stopped or healthy containers.
 
+Each collection cycle requests the Docker container inventory once and shares
+that result across container probes. The next cycle fetches a fresh inventory.
+An inventory failure marks all dependent probes as failed while other probes
+continue. Inspection and resource-statistics failures keep their own boundaries.
+
 The container-down rule requires three minutes of measured downtime. No Data
 resets that timer (`noDataState: OK`); unavailable telemetry must not start a
 timer that a brief migration stop later completes. A No Data resolution does

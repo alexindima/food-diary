@@ -50,7 +50,7 @@ class HostCollectorTests(unittest.TestCase):
             raise collector.subprocess.TimeoutExpired(["private-command", "sensitive-value"], 10, output="private-response")
 
         errors = io.StringIO()
-        with patch.object(collector, "collect_containers"), patch.object(collector, "collect_container_resources", create=True), patch.object(collector, "collect_redis"), patch.object(
+        with patch.object(collector, "running_containers", return_value=[]), patch.object(collector, "collect_containers"), patch.object(collector, "collect_container_resources", create=True), patch.object(collector, "collect_redis"), patch.object(
             collector, "collect_public"
         ), patch.object(collector, "collect_rabbitmq", side_effect=fail), patch.object(
             collector, "DATABASES", {}
@@ -126,6 +126,44 @@ class ContainerAvailabilityTests(unittest.TestCase):
             collector, "collect_public"
         ), patch.object(collector, "DATABASES", {}), patch.object(collector, "BACKUPS", []):
             return collector.collect(pathlib.Path("unused"))
+
+    def test_inventory_request_budget_preserves_both_docker_probes(self):
+        inventory_requests = 0
+
+        def docker(path):
+            nonlocal inventory_requests
+            if path == "/containers/json?all=true":
+                inventory_requests += 1
+                if inventory_requests > 1:
+                    raise TimeoutError("Docker inventory request backlog")
+                return self.inventory("api-green")
+            if "/stats?" in path:
+                return {"memory_stats": {"usage": 100},
+                        "cpu_stats": {"cpu_usage": {"total_usage": 1}}}
+            return self.info()
+
+        with contextlib.redirect_stderr(io.StringIO()):
+            text = self.collect(docker)
+        self.assertIn('fooddiary_collector_component_success{component="containers"} 1', text)
+        self.assertIn('fooddiary_collector_component_success{component="container_resources"} 1', text,
+                      "one cycle must share Docker inventory instead of timing out a second request")
+        self.assertIn('fooddiary_container_memory_working_set_bytes{service="api"} 100', text)
+
+    def test_next_cycle_refreshes_the_container_inventory(self):
+        inventories = iter([self.inventory("api-green"), []])
+
+        def docker(path):
+            if path == "/containers/json?all=true":
+                return next(inventories)
+            if "/stats?" in path:
+                return {"memory_stats": {"usage": 100},
+                        "cpu_stats": {"cpu_usage": {"total_usage": 1}}}
+            return self.info()
+
+        first = self.collect(docker)
+        second = self.collect(docker)
+        self.assertIn('fooddiary_container_running{service="api"} 1', first)
+        self.assertIn('fooddiary_container_running{service="api"} 0', second)
 
     def test_resource_timeout_preserves_running_and_health_observations(self):
         def docker(path):
