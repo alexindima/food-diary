@@ -88,13 +88,7 @@ public sealed partial class RecipeVideoProcessor(
             Error error = failure.InvalidSource ? AiErrors.InvalidRecipeVideoSource() : AiErrors.RecipeVideoUnavailable();
             return Fail(error, stage, failure.Reason);
         } catch (InvalidDataException) {
-            string reason = stage switch {
-                "download_source" => "invalid_source_media",
-                "read_upload" => "media_size_limit",
-                "extract_audio" => "no_supported_audio_track",
-                _ => "invalid_audio_container",
-            };
-            return Fail(AiErrors.InvalidRecipeVideo(), stage, reason);
+            return Fail(AiErrors.InvalidRecipeVideo(), stage, InvalidDataReason(stage));
         } catch (HttpRequestException failure) when (failure.GetBaseException() is RecipeSourceReader.NonPublicRecipeSourceException) {
             return Fail(AiErrors.InvalidRecipeVideoSource(), stage, "non_public_destination");
         } catch (HttpRequestException failure) when (failure.GetBaseException() is SocketException {
@@ -131,6 +125,19 @@ public sealed partial class RecipeVideoProcessor(
         LogLevel level = error.Kind == ErrorKind.Validation ? LogLevel.Information : LogLevel.Warning;
         logger.Log(level, "Recipe video import failed at {Stage}: {Reason}", stage, reason);
         return Result.Failure<RecipeAudio>(error);
+    }
+
+    private static string InvalidDataReason(string stage) {
+        if (string.Equals(stage, "download_source", StringComparison.Ordinal)) {
+            return "invalid_source_media";
+        }
+        if (string.Equals(stage, "read_upload", StringComparison.Ordinal)) {
+            return "media_size_limit";
+        }
+        if (string.Equals(stage, "extract_audio", StringComparison.Ordinal)) {
+            return "no_supported_audio_track";
+        }
+        return "invalid_audio_container";
     }
 
     [ExcludeFromWindowsCoverage]

@@ -9,7 +9,7 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [Collection("PowerShell Wiki process")]
 [ExcludeFromCodeCoverage]
-public sealed class NodeTaskProcessBoundaryTests {
+public sealed partial class NodeTaskProcessBoundaryTests {
     private static readonly TimeSpan TestWaitTimeout = TimeSpan.FromSeconds(5);
 
     [Fact]
@@ -196,8 +196,12 @@ public sealed class NodeTaskProcessBoundaryTests {
         var timeout = Stopwatch.StartNew();
         while (timeout.Elapsed < TestWaitTimeout) {
             if (File.Exists(identityPath)) {
-                string identity = await File.ReadAllTextAsync(identityPath);
-                return Process.GetProcessById(int.Parse(identity, CultureInfo.InvariantCulture));
+                try {
+                    string identity = await File.ReadAllTextAsync(identityPath);
+                    return Process.GetProcessById(int.Parse(identity, CultureInfo.InvariantCulture));
+                } catch (IOException exception) when (OperatingSystem.IsWindows() && (exception.HResult & 0xFFFF) is 32 or 33) {
+                    // Windows can briefly retain a sharing lock after atomic publication.
+                }
             }
             // Poll only the identity file published atomically by the owned child.
             await Task.Delay(TimeSpan.FromMilliseconds(10));

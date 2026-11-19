@@ -4314,6 +4314,79 @@
       },
       "reason": "",
       "eventHash": "7e7d9eeea6ce2ba5fda75e86b10afc5371849bb7a11e14b24103bbe5f8836d42"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 32,
+      "kind": "observed",
+      "candidateId": "learned-3b3065d6ece656e4",
+      "createdAtUtc": "2026-11-19T13:43:47.2929178Z",
+      "previousHash": "7e7d9eeea6ce2ba5fda75e86b10afc5371849bb7a11e14b24103bbe5f8836d42",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-coverage-cleanup-602",
+        "retrospectiveHash": "38fc68af7e2db8abc98177fb6212db9ad1f20a95a32a4e761585fbec93df5369",
+        "packetFingerprint": "b1d6dfec84c82ef958abbe39bbba34d82b48a9bb5d99c599f6dd79a4deb51e98",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=2083.87%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-3b3065d6ece656e4",
+          "changedPaths": [
+            "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
+            "FoodDiary.Telegram.Bot/Operations/TelegramReplyQueue.cs",
+            "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramReplyQueueTests.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+            "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+            "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
+            "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeVideoUploadTests.cs",
+            "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+            "Modules/Images/Infrastructure/Providers/Services/ImageMetadataSanitizer.cs",
+            "Modules/McpIntegration/Presentation/Extensions/McpIntegrationPresentationExtensions.cs",
+            "Modules/Users/Domain/Entities/User.cs",
+            "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
+            "Tooling/tests/FoodDiary.Development.Mcp.Tests/NodeTaskProcessBoundaryTests.cs",
+            "Tooling/tests/FoodDiary.Development.Mcp.Tests/NodeTaskProcessBoundaryTests.IdentityReadTests.cs"
+          ],
+          "expectedModules": [
+            "Ai",
+            "Billing",
+            "Images",
+            "Recipes",
+            "Users"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "deployment-rollout",
+            "domain-invariant",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "747fb5dbfb8d076a79959ab1bf2925b0acf52b8057fba23788943712cbac1269"
+      },
+      "reason": "",
+      "eventHash": "e7fa741b6ca64fe9b34c8241795e4015e4faa3949a47e436e03cb2fb2e692a67"
     }
   ]
 }

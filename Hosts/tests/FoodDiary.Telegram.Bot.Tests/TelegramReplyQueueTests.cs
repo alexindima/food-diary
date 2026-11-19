@@ -101,6 +101,47 @@ public sealed class TelegramReplyQueueTests {
     }
 
     [Fact]
+    public async Task HostedWorkerProcessesTheNextReplyAfterAPermanentRejection() {
+        using var queue = new TelegramReplyQueue(TimeProvider.System, NullLogger<TelegramReplyQueue>.Instance);
+        var workersStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var rejectFirst = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var nextDelivered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        int started = 0;
+        for (int sender = 1; sender <= 4; sender++) {
+            int ownedSender = sender;
+            Assert.True(queue.Enqueue(ownedSender, async token => {
+                if (Interlocked.Increment(ref started) == 4) {
+                    workersStarted.TrySetResult();
+                }
+                if (ownedSender == 1) {
+                    await rejectFirst.Task.WaitAsync(token);
+                    throw new ApiRequestException("recipient unavailable", 403);
+                }
+                await Task.Delay(Timeout.InfiniteTimeSpan, token);
+            }));
+        }
+        Assert.True(queue.Enqueue(5, _ => {
+            nextDelivered.TrySetResult();
+            throw new ApiRequestException("recipient unavailable", 403);
+        }));
+
+        await queue.StartAsync(CancellationToken.None);
+        try {
+            await workersStarted.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            Assert.False(nextDelivered.Task.IsCompleted);
+            rejectFirst.SetResult();
+
+            await nextDelivered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+
+            Assert.True(queue.Enqueue(1, _ => Task.CompletedTask));
+        } finally {
+            using var shutdown = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            await queue.StopAsync(shutdown.Token);
+        }
+        Assert.True(queue.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    [Fact]
     public async Task HostedQueueBoundsConcurrentSendsAndStopsItsWorkersCleanly() {
         using var queue = new TelegramReplyQueue(TimeProvider.System, NullLogger<TelegramReplyQueue>.Instance);
         var workersStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

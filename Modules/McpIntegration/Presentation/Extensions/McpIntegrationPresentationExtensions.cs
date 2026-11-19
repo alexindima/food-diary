@@ -102,11 +102,14 @@ public static class McpIntegrationPresentationExtensions {
         }
 
         CallToolResult result;
+        bool handlerCompleted = false;
         try {
             result = await next(context, cancellationToken);
-        } catch {
-            await store.ReleaseAsync(key, hash, acquired.Token, CancellationToken.None);
-            throw;
+            handlerCompleted = true;
+        } finally {
+            if (!handlerCompleted) {
+                await store.ReleaseAsync(key, hash, acquired.Token, CancellationToken.None);
+            }
         }
         if (result.IsError == true) {
             await store.ReleaseAsync(key, hash, acquired.Token, CancellationToken.None);

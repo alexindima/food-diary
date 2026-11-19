@@ -423,14 +423,6 @@
       "structuralRiskScore": 135.2
     },
     {
-      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 548,
-      "decisionPoints": 82,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 133.96
-    },
-    {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
       "nonBlankLines": 361,
       "decisionPoints": 83,
@@ -445,6 +437,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 132.6
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "nonBlankLines": 547,
+      "decisionPoints": 81,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 132.44
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
@@ -4194,11 +4194,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "nonBlankLines": 482,
-      "decisionPoints": 51,
+      "nonBlankLines": 488,
+      "decisionPoints": 56,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 86.14
+      "structuralRiskScore": 93.76
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilterOptions.cs",
@@ -5474,11 +5474,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramReplyQueue.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 10,
+      "nonBlankLines": 63,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.22
+      "structuralRiskScore": 17.76
     },
     {
       "path": "FoodDiary.Telegram.Bot/Program.cs",
@@ -26002,11 +26002,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 548,
-      "decisionPoints": 82,
+      "nonBlankLines": 547,
+      "decisionPoints": 81,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 133.96
+      "structuralRiskScore": 132.44
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodResponseDecoder.cs",
@@ -26058,11 +26058,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "nonBlankLines": 268,
-      "decisionPoints": 62,
+      "nonBlankLines": 274,
+      "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 98.36
+      "structuralRiskScore": 101.48
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoSourceException.cs",
@@ -26282,11 +26282,11 @@
     },
     {
       "path": "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
-      "nonBlankLines": 83,
+      "nonBlankLines": 82,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 10.64
     },
     {
       "path": "Modules/Ai/Presentation/Recipes/Requests/RecipeVideoImportHttpRequest.cs",
@@ -27226,11 +27226,11 @@
     },
     {
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "nonBlankLines": 87,
+      "nonBlankLines": 88,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.24
+      "structuralRiskScore": 27.26
     },
     {
       "path": "Modules/Billing/Domain/Entities/BillingDomainGuard.cs",
@@ -40250,11 +40250,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/Providers/Services/ImageMetadataSanitizer.cs",
-      "nonBlankLines": 190,
+      "nonBlankLines": 191,
       "decisionPoints": 63,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 98.3
+      "structuralRiskScore": 98.32
     },
     {
       "path": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
@@ -41298,11 +41298,11 @@
     },
     {
       "path": "Modules/McpIntegration/Presentation/Extensions/McpIntegrationPresentationExtensions.cs",
-      "nonBlankLines": 119,
+      "nonBlankLines": 122,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.38
+      "structuralRiskScore": 23.44
     },
     {
       "path": "Modules/MealPlanning/Application.Abstractions/MealPlans/Common/IMealPlanCatalogRecipeReader.cs",
@@ -51370,11 +51370,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "nonBlankLines": 586,
+      "nonBlankLines": 587,
       "decisionPoints": 46,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 80.72
+      "structuralRiskScore": 80.74
     },
     {
       "path": "Modules/Users/Domain/Entities/UserActivity.cs",
@@ -55610,11 +55610,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
-      "nonBlankLines": 141,
+      "nonBlankLines": 139,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.32
+      "structuralRiskScore": 25.28
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",

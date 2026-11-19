@@ -22,7 +22,8 @@ internal static class ImageMetadataSanitizer {
         int width = pixels.Width;
         int height = pixels.Height;
         SKEncodedOrigin origin = codec.EncodedOrigin;
-        if (origin == SKEncodedOrigin.TopLeft) {
+        SKMatrix orientation = OrientationMatrix(origin, width, height);
+        if (orientation.IsIdentity) {
             using SKData? encoded = pixels.Encode(codec.EncodedFormat, quality: 90);
             return encoded?.ToArray();
         }
@@ -33,7 +34,7 @@ internal static class ImageMetadataSanitizer {
         using var oriented = new SKBitmap(orientedInfo);
         using (var canvas = new SKCanvas(oriented)) {
             canvas.Clear(SKColors.Transparent);
-            canvas.SetMatrix(OrientationMatrix(origin, width, height));
+            canvas.SetMatrix(orientation);
             canvas.DrawBitmap(pixels, 0, 0, new SKSamplingOptions(SKFilterMode.Nearest));
         }
         using SKData? result = oriented.Encode(codec.EncodedFormat, quality: 90);

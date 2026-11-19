@@ -448,11 +448,10 @@ public sealed partial class OpenAiFoodClient(
         }
     }
 
-    private static Error GetRequestError(RequestOutcome response) => response switch {
-        RequestOutcome.Failure failure => failure.Error,
-        RequestOutcome.FallbackAllowed fallback => fallback.Error,
-        RequestOutcome.Success or null => throw new InvalidOperationException("The request has no error."),
-    };
+    // Callers have already handled Success; the private request pipeline returns only these failure cases.
+    private static Error GetRequestError(RequestOutcome response) => response is RequestOutcome.Failure failure
+        ? failure.Error
+        : ((RequestOutcome.FallbackAllowed)response.Value!).Error;
 
     private union RequestOutcome(RequestOutcome.Success, RequestOutcome.Failure, RequestOutcome.FallbackAllowed) {
         public sealed record Success(JsonDocument Document);

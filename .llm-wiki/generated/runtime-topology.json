@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "5d20fdec39b3db2df94f739054d0a4e40824cebb74be4653b36e4a4b402642d8",
+    "sourceFingerprint": "ddc8ec578330ecbf2aae1c224450feecd6253f036c9ab3eaaead311560758dfe",
     "sourceFileCount": 4875
   },
   "summary": {
@@ -721,8 +721,7 @@
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramReplyQueue.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
-        "concurrency-control",
-        "timeout-or-delay"
+        "concurrency-control"
       ],
       "behaviorSignalScope": "class-window"
     }

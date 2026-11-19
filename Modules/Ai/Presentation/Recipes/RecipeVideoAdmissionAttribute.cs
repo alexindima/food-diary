@@ -72,7 +72,6 @@ public sealed class RecipeVideoAdmissionAttribute : Attribute, IAsyncResourceFil
         public IFormCollection? Form { get => _inner.Form; set => _inner.Form = value; }
 
         public IFormCollection ReadForm() => ReadFormAsync(CancellationToken.None).GetAwaiter().GetResult();
-        public Task<IFormCollection> ReadFormAsync() => ReadFormAsync(CancellationToken.None);
 
         public async Task<IFormCollection> ReadFormAsync(CancellationToken cancellationToken) {
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellation.Token);

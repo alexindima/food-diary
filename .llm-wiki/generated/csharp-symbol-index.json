@@ -6599,21 +6599,21 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 458
+      "line": 457
     },
     {
       "name": "Failure",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 459
+      "line": 458
     },
     {
       "name": "FallbackAllowed",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 460
+      "line": 459
     },
     {
       "name": "OpenAiFoodClient",
@@ -7712,7 +7712,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BillingDomainGuard",
@@ -28614,7 +28614,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "User",

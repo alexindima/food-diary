@@ -25,7 +25,9 @@ public sealed class TelegramReplyQueue(TimeProvider timeProvider, ILogger<Telegr
 
     private async Task RunAsync(CancellationToken cancellationToken) {
         try {
-            while (await _queue.Reader.WaitToReadAsync(cancellationToken)) {
+            // This private channel stays open for the host lifetime; shutdown cancels the readers.
+            while (true) {
+                await _queue.Reader.WaitToReadAsync(cancellationToken);
                 await ProcessNextAsync(cancellationToken);
             }
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {

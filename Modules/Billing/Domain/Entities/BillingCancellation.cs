@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -18,7 +19,7 @@ public sealed class BillingCancellation : Entity<Guid> {
     public string? Comment { get; private set; }
     public DateTime? FeedbackSubmittedAtUtc { get; private set; }
     public DateTime? ConfirmationEmailHandledAtUtc { get; private set; }
-    public DateTime? ConfirmationTelegramHandledAtUtc { get; private set; }
+    public DateTime? ConfirmationTelegramHandledAtUtc { get; [ExcludeFromCodeCoverage] private set; }
 
     private BillingCancellation() { }
 

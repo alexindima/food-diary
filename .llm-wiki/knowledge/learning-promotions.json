@@ -15021,6 +15021,64 @@
       "targetId": "",
       "reason": "",
       "eventHash": "89f7c6c64c19d2a3e5791f42b72205e0643d07a307e067ac49914b0dae9444f4"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 126,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-19T13:43:45.4283174Z",
+      "previousHash": "89f7c6c64c19d2a3e5791f42b72205e0643d07a307e067ac49914b0dae9444f4",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/backend-coverage-cleanup-602",
+        "retrospectiveHash": "38fc68af7e2db8abc98177fb6212db9ad1f20a95a32a4e761585fbec93df5369",
+        "completionFingerprint": "e37643b5fa46ada8dd79684e706e98165093384281c630b6823cced71c86f3c4",
+        "packetFingerprint": "b1d6dfec84c82ef958abbe39bbba34d82b48a9bb5d99c599f6dd79a4deb51e98",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 2031s versus 93s, error 2083.87%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=2083.87%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 93.0,
+          "expectedSeconds": 2031.0,
+          "errorPercent": 2083.87
+        },
+        "changedPaths": [
+          "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
+          "FoodDiary.Telegram.Bot/Operations/TelegramReplyQueue.cs",
+          "Hosts/tests/FoodDiary.Telegram.Bot.Tests/TelegramReplyQueueTests.cs",
+          "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+          "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
+          "Modules/Ai/Presentation/Recipes/RecipeVideoAdmissionAttribute.cs",
+          "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeVideoUploadTests.cs",
+          "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+          "Modules/Images/Infrastructure/Providers/Services/ImageMetadataSanitizer.cs",
+          "Modules/McpIntegration/Presentation/Extensions/McpIntegrationPresentationExtensions.cs",
+          "Modules/Users/Domain/Entities/User.cs",
+          "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
+          "Tooling/tests/FoodDiary.Development.Mcp.Tests/NodeTaskProcessBoundaryTests.cs",
+          "Tooling/tests/FoodDiary.Development.Mcp.Tests/NodeTaskProcessBoundaryTests.IdentityReadTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "cb229ed452761c711ad2019f56d46585ae4641b8c1760e15b2b1b83e33676308"
     }
   ],
   "hashSchemaVersion": 2

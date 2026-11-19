@@ -69,25 +69,30 @@ public sealed class IdempotencyFilter(
         IdempotencyRequestContext.SetRetention(context.HttpContext, _options.ResponseTtl);
         IdempotencyReservation reservation = await idempotencyStore
             .ReserveAsync(
-                cacheKey,
-                requestHash,
+                cacheKey, requestHash,
                 _options.ResponseTtl,
                 _options.ProcessingTtl,
                 context.HttpContext.RequestAborted);
 
-        if (reservation is IdempotencyReservation.Acquired acquired) {
-            await ExecuteAndFinalizeAsync(context, next, cacheKey, requestHash, acquired.Token);
-            return;
+        switch (reservation) {
+            case IdempotencyReservation.Acquired acquired:
+                await ExecuteAndFinalizeAsync(context, next, cacheKey, requestHash, acquired.Token);
+                break;
+            case IdempotencyReservation.Conflict:
+                context.Result = CreateIdempotencyConflict(context);
+                break;
+            case IdempotencyReservation.InProgress:
+                context.Result = CreateIdempotencyInProgress(context);
+                break;
+            case IdempotencyReservation.CapacityExceeded:
+                context.Result = CreateIdempotencyCapacityExceeded(context);
+                break;
+            case IdempotencyReservation.Replay replay:
+                context.Result = CreateReplayResult(context, replay);
+                break;
+            case null:
+                throw new InvalidOperationException("An idempotency reservation must have an outcome.");
         }
-
-        context.Result = reservation switch {
-            IdempotencyReservation.Acquired => null,
-            IdempotencyReservation.Conflict => CreateIdempotencyConflict(context),
-            IdempotencyReservation.InProgress => CreateIdempotencyInProgress(context),
-            IdempotencyReservation.CapacityExceeded => CreateIdempotencyCapacityExceeded(context),
-            IdempotencyReservation.Replay replay => CreateReplayResult(context, replay),
-            null => throw new InvalidOperationException("An idempotency reservation must have an outcome."),
-        };
     }
 
     [ExcludeFromCodeCoverage]
