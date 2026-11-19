@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
     [string]$RepositoryRoot = (Split-Path -Parent $PSScriptRoot),
-    [string]$Image = 'nginx:1.31.3-alpine',
+    [string]$Image = 'nginx:1.31.9-alpine@sha256:90b6bd2aec278b16b98221d64deb1d6d35d164567f507ab0716e6053878315aa',
     [ValidateSet('missing', 'never')]
     [string]$PullPolicy = 'missing',
     [ValidateRange(0, 10)]

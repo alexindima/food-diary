@@ -395,8 +395,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "04acfcf748af54ffe4b58c7421c5aa114d37ed01a167c42c87bf27a78045d5fa",
-          "reviewReason": "The added service-environment test step leaves the CI API baseline selection and contract comparison commands intact. The security change introduces only internal query and persistence data."
+          "sha256": "5e0c6aeff83f16503929452d5cc83e7eb32c71fd1666e7e1e9dba560dccc1d64",
+          "reviewReason": "Reviewed the affected CI step. The NGINX handover fixture uses the updated production digest. The documented API compatibility, index verification and review report jobs use their existing commands and dependencies."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
@@ -424,10 +424,10 @@
           "reviewReason": "Reviewed Telegram disconnect OpenAPI change. Confirmation uses a new authenticated operation with an explicit authentication response and keeps the legacy response schema. The legacy operation prevents unconfirmed unlink and returns reauthentication required. Frontend SDK and full snapshot are regenerated from the host."
         }
       ],
-      "reason": "The added service-environment test step leaves the CI API baseline selection and contract comparison commands intact. The security change introduces only internal query and persistence data.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:48.7610077Z"
+      "reason": "Reviewed the affected CI step. The NGINX handover fixture uses the updated production digest. The documented API compatibility, index verification and review report jobs use their existing commands and dependencies.",
+      "baseRef": "HEAD",
+      "gitHead": "230cd2659ef4ab434b3eba9dfe5431fe7dd9fed1",
+      "reviewedAtUtc": "2026-11-19T21:21:49.3353473Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1103,14 +1103,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "04acfcf748af54ffe4b58c7421c5aa114d37ed01a167c42c87bf27a78045d5fa",
-          "reviewReason": "The CI addition runs the isolated-environment Python regression suite. Existing staged index generation, smoke shards, and verification entrypoints remain consistent with the workflow."
+          "sha256": "5e0c6aeff83f16503929452d5cc83e7eb32c71fd1666e7e1e9dba560dccc1d64",
+          "reviewReason": "Reviewed the affected CI step. The NGINX handover fixture uses the updated production digest. The documented API compatibility, index verification and review report jobs use their existing commands and dependencies."
         }
       ],
-      "reason": "The CI addition runs the isolated-environment Python regression suite. Existing staged index generation, smoke shards, and verification entrypoints remain consistent with the workflow.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:51.124563Z"
+      "reason": "Reviewed the affected CI step. The NGINX handover fixture uses the updated production digest. The documented API compatibility, index verification and review report jobs use their existing commands and dependencies.",
+      "baseRef": "HEAD",
+      "gitHead": "230cd2659ef4ab434b3eba9dfe5431fe7dd9fed1",
+      "reviewedAtUtc": "2026-11-19T21:21:50.7037879Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1468,14 +1468,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "04acfcf748af54ffe4b58c7421c5aa114d37ed01a167c42c87bf27a78045d5fa",
-          "reviewReason": "The CI workflow adds one deployment helper test. Existing artifact publication and report generation semantics described here still match the source."
+          "sha256": "5e0c6aeff83f16503929452d5cc83e7eb32c71fd1666e7e1e9dba560dccc1d64",
+          "reviewReason": "Reviewed the affected CI step. The NGINX handover fixture uses the updated production digest. The documented API compatibility, index verification and review report jobs use their existing commands and dependencies."
         }
       ],
-      "reason": "The CI workflow adds one deployment helper test. Existing artifact publication and report generation semantics described here still match the source.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:53.1284974Z"
+      "reason": "Reviewed the affected CI step. The NGINX handover fixture uses the updated production digest. The documented API compatibility, index verification and review report jobs use their existing commands and dependencies.",
+      "baseRef": "HEAD",
+      "gitHead": "230cd2659ef4ab434b3eba9dfe5431fe7dd9fed1",
+      "reviewedAtUtc": "2026-11-19T21:21:52.0556482Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1510,14 +1510,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4d02a819d98019170e51d67d50781bf0ffc89220bd3d29d00ef80f22770699af",
-          "reviewReason": "The Compose open-file limits apply to the existing API and Job Manager services. The runtime topology change updates its source fingerprint and the workflow still describes how to query that topology."
+          "sha256": "0cfa7af1667c4ce2c5546ffd5246be198cdc3acee82e3324bcbf68ff852273d2",
+          "reviewReason": "Compared the regenerated topology with the prior version. The edge service records the new Compose digest and the inventory has a new source fingerprint. The topology schema and service relationships continue to support the documented runtime queries."
         }
       ],
-      "reason": "The Compose open-file limits apply to the existing API and Job Manager services. The runtime topology change updates its source fingerprint and the workflow still describes how to query that topology.",
+      "reason": "Compared the regenerated topology with the prior version. The edge service records the new Compose digest and the inventory has a new source fingerprint. The topology schema and service relationships continue to support the documented runtime queries.",
       "baseRef": "HEAD",
-      "gitHead": "98d3b8f69ccc58a6c703b449be8a0fda1645b837",
-      "reviewedAtUtc": "2026-11-19T16:06:38.5113365Z"
+      "gitHead": "230cd2659ef4ab434b3eba9dfe5431fe7dd9fed1",
+      "reviewedAtUtc": "2026-11-19T21:21:54.0247720Z"
     },
     {
       "pageId": "workflow-security-review",
