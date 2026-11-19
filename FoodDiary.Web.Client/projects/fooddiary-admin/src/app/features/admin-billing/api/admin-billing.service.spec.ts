@@ -1,9 +1,7 @@
-const CANCELLATION_TOTAL = 41;
-const CANCELLATION_FEEDBACK_COUNT = 7;
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
@@ -15,7 +13,11 @@ const LIMIT = 20;
 const TOTAL_PAGES = 4;
 const TOTAL_ITEMS = 61;
 const NET_REVENUE = 95;
+const CANCELLATION_TOTAL = 41;
+const CANCELLATION_FEEDBACK_COUNT = 7;
 const BASE_URL = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/billing`;
+const createdOnUtc = '2026-04-28T00:00:00Z';
+const currentPeriodEndUtc = '2026-05-28T00:00:00Z';
 
 let service: AdminBillingService;
 let httpMock: HttpTestingController;
@@ -212,3 +214,118 @@ describe('Admin cancellation adapter', () => {
         });
     });
 });
+
+describe('Admin billing customer records', () => {
+    it('maps scheduled subscriptions without a customer email and retains provider lifecycle fields', () => {
+        const subscription = {
+            id: 'owned-subscription',
+            userId: 'owned-user',
+            provider: 'Paddle',
+            externalCustomerId: 'cus_owned',
+            externalSubscriptionId: 'sub_owned',
+            status: 'active',
+            cancelAtPeriodEnd: true,
+            currentPeriodStartUtc: createdOnUtc,
+            currentPeriodEndUtc,
+            nextBillingAttemptUtc: null,
+            lastWebhookEventId: 'owned-webhook',
+            createdOnUtc,
+        };
+        const receive = vi.fn();
+        service.getSubscriptions(1, LIMIT, { search: 'sub_owned' }).subscribe(receive);
+
+        const request = httpMock.expectOne(candidate => candidate.url === `${BASE_URL}/subscriptions`);
+        expect(request.request.params.get('search')).toBe('sub_owned');
+        request.flush(singleRecordPage(subscription));
+
+        expect(receive).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                items: [{ ...subscription, userEmail: null, lastSyncedAtUtc: undefined, modifiedOnUtc: undefined }],
+            }),
+        );
+    });
+
+    it('retains zero-valued payment receipt amounts and links when the email is absent', () => {
+        const payment = {
+            id: 'owned-receipt',
+            userId: 'owned-user',
+            provider: 'Stripe',
+            externalPaymentId: 'in_owned',
+            billingSubscriptionId: 'owned-subscription',
+            webhookEventId: 'owned-webhook',
+            status: 'paid',
+            kind: 'transaction',
+            amount: 0,
+            currency: 'EUR',
+            tax: 0,
+            payoutCurrency: 'USD',
+            payoutEarnings: 0,
+            providerMetadataJson: '{"invoice":"in_owned"}',
+            currentPeriodStartUtc: createdOnUtc,
+            currentPeriodEndUtc,
+            createdOnUtc,
+        };
+        const receive = vi.fn();
+        service.getPayments(1, LIMIT, { search: 'in_owned' }).subscribe(receive);
+
+        httpMock.expectOne(candidate => candidate.url === `${BASE_URL}/payments`).flush(singleRecordPage(payment));
+
+        expect(receive).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ items: [{ ...payment, userEmail: null, modifiedOnUtc: undefined }] }),
+        );
+    });
+});
+
+describe('Admin cancellation feedback details', () => {
+    it('distinguishes omitted feedback from an actual cancellation response', () => {
+        const cancellation = {
+            id: 'owned-cancellation',
+            userId: 'owned-user',
+            provider: 'Paddle',
+            externalSubscriptionId: 'sub_owned',
+            source: 'fooddiary',
+            outcome: 'scheduled',
+            requestedAtUtc: createdOnUtc,
+            effectiveAtUtc: currentPeriodEndUtc,
+        };
+        const feedback = {
+            ...cancellation,
+            id: 'with-feedback',
+            userEmail: 'owned@example.test',
+            plan: 'monthly',
+            reasonCode: 'too_expensive',
+            comment: 'Short-term budget change',
+            feedbackSubmittedAtUtc: '2026-04-29T00:00:00Z',
+        };
+        const receive = vi.fn();
+        service.getCancellations(1, LIMIT, {}).subscribe(receive);
+
+        httpMock
+            .expectOne(candidate => candidate.url === `${BASE_URL}/cancellations`)
+            .flush({
+                ...singleRecordPage(cancellation),
+                data: [cancellation, feedback],
+                totalItems: 2,
+                feedbackCount: 1,
+                reasons: [{ count: 1 }, { reasonCode: feedback.reasonCode, count: 1 }],
+            });
+
+        expect(receive).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                feedbackCount: 1,
+                items: [
+                    { ...cancellation, userEmail: null, plan: null, reasonCode: null, comment: null, feedbackSubmittedAtUtc: null },
+                    feedback,
+                ],
+                reasons: [
+                    { reasonCode: null, count: 1 },
+                    { reasonCode: feedback.reasonCode, count: 1 },
+                ],
+            }),
+        );
+    });
+});
+
+function singleRecordPage<T>(item: T): { data: T[]; page: number; limit: number; totalPages: number; totalItems: number } {
+    return { data: [item], page: 1, limit: LIMIT, totalPages: 1, totalItems: 1 };
+}

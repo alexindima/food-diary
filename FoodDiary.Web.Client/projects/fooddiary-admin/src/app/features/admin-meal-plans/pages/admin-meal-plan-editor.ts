@@ -57,7 +57,9 @@ export class AdminMealPlanEditorComponent {
     private readonly translate = inject(TranslateService);
     private recipeRequest?: Subscription;
     protected readonly saving = signal(false);
-    protected readonly error = signal<string | null>(null);
+    private readonly saveError = signal<string | null>(null);
+    private readonly recipeSearchError = signal<string | null>(null);
+    protected readonly error = computed(() => this.saveError() ?? this.recipeSearchError());
     protected readonly recipes = signal<CatalogRecipe[]>([]);
     protected readonly recipeSearch = signal('');
     protected readonly model = signal<EditorModel>(emptyModel());
@@ -100,7 +102,8 @@ export class AdminMealPlanEditorComponent {
     }
 
     private open(plan: CatalogPlan | null): void {
-        this.error.set(null);
+        this.saveError.set(null);
+        this.recipeSearchError.set(null);
         if (plan === null) {
             this.model.set(emptyModel());
             this.recipes.set([]);
@@ -180,6 +183,7 @@ export class AdminMealPlanEditorComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: recipes => {
+                    this.recipeSearchError.set(null);
                     const selected = new Set(this.model().days.flatMap(day => day.meals.map(meal => meal.recipeId)));
                     this.recipes.update(current => [
                         ...new Map(
@@ -188,7 +192,7 @@ export class AdminMealPlanEditorComponent {
                     ]);
                 },
                 error: () => {
-                    this.error.set(String(this.translate.instant('ADMIN_MEAL_PLANS.RECIPE_ERROR')));
+                    this.recipeSearchError.set(String(this.translate.instant('ADMIN_MEAL_PLANS.RECIPE_ERROR')));
                 },
             });
     }
@@ -199,18 +203,18 @@ export class AdminMealPlanEditorComponent {
     }
 
     protected save(): void {
-        this.error.set(null);
+        this.saveError.set(null);
         if (this.form().invalid() || this.saving()) {
-            this.error.set(String(this.translate.instant('ADMIN_MEAL_PLANS.INVALID')));
+            this.saveError.set(String(this.translate.instant('ADMIN_MEAL_PLANS.INVALID')));
             return;
         }
         const value = this.model();
         if (!Number.isInteger(value.durationDays) || value.days.some(day => day.meals.some(meal => !Number.isInteger(meal.servings)))) {
-            this.error.set(String(this.translate.instant('ADMIN_MEAL_PLANS.INVALID')));
+            this.saveError.set(String(this.translate.instant('ADMIN_MEAL_PLANS.INVALID')));
             return;
         }
         if (value.isPublished && value.days.some(day => day.meals.length === 0)) {
-            this.error.set(String(this.translate.instant('ADMIN_MEAL_PLANS.INCOMPLETE')));
+            this.saveError.set(String(this.translate.instant('ADMIN_MEAL_PLANS.INCOMPLETE')));
             return;
         }
         this.saving.set(true);
@@ -228,7 +232,7 @@ export class AdminMealPlanEditorComponent {
                     this.saved.emit();
                 },
                 error: () => {
-                    this.error.set(String(this.translate.instant('ADMIN_MEAL_PLANS.SAVE_ERROR')));
+                    this.saveError.set(String(this.translate.instant('ADMIN_MEAL_PLANS.SAVE_ERROR')));
                 },
             });
     }

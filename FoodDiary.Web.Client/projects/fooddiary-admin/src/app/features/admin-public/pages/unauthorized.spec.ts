@@ -1,9 +1,14 @@
-import { signal, type WritableSignal } from '@angular/core';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
+import { Component, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { environment } from '../../../../environments/environment';
+import { adminAuthGuard } from '../../../guards/admin-auth.guard';
 import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 import { UnauthorizedComponent } from './unauthorized';
 
@@ -151,3 +156,116 @@ describe('UnauthorizedComponent throttling feedback', () => {
         expect(element.querySelector('[role="alert"]')).toBeNull();
     });
 });
+
+@Component({ selector: 'fd-test-protected-users', template: '<h1>Protected users</h1>' })
+class ProtectedUsersFixture {}
+
+@Component({ selector: 'fd-test-confirm-sign-in', template: '<h1>Confirm sign-in</h1>' })
+class ConfirmSignInFixture {}
+
+const RETURN_URL = '/users?page=2';
+const EXPECTED_ACCOUNT = 'requested-admin';
+const ACCOUNT_FRAGMENT = `account=${EXPECTED_ACCOUNT}`;
+const RESTORE_ENDPOINT = `${environment.apiUrls.auth}/session`;
+
+describe('Native Admin recovery with the protected account guard', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideTranslateTesting(),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                provideRouter([
+                    { path: 'users', component: ProtectedUsersFixture, canActivate: [adminAuthGuard] },
+                    { path: 'unauthorized', component: UnauthorizedComponent },
+                    { path: 'sign-in', component: ConfirmSignInFixture },
+                ]),
+            ],
+        });
+    });
+
+    it.each([
+        { account: EXPECTED_ACCOUNT, title: 'Protected users', fragment: null, returnUrl: null },
+        { account: 'other-admin', title: 'Confirm sign-in', fragment: ACCOUNT_FRAGMENT, returnUrl: RETURN_URL },
+    ])('continues only for the intended account after retry succeeds as $account', async ({ account, title, fragment, returnUrl }) => {
+        const harness = await openUnavailableRouteAsync();
+        const http = TestBed.inject(HttpTestingController);
+        const router = TestBed.inject(Router);
+        const retry = recoveryButton(harness);
+        retry.click();
+        retry.click();
+        harness.detectChanges();
+        expect(retry.disabled).toBe(true);
+        const response = await nextRestoreAsync(http);
+        response.flush({ sessionId: 'restored-session', roles: ['Admin'], user: { id: account } });
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(harness.routeNativeElement?.querySelector('h1')?.textContent.trim()).toBe(title);
+        });
+
+        const result = router.parseUrl(router.url);
+        expect(result.fragment).toBe(fragment);
+        expect(result.queryParamMap.get('returnUrl')).toBe(returnUrl);
+        if (account === EXPECTED_ACCOUNT) {
+            expect(router.url).toBe(RETURN_URL);
+        }
+        http.verify();
+    });
+
+    it.each(['unavailable', 'forbidden'])('retains the intended account when the role recheck is %s', async reason => {
+        const harness = await RouterTestingHarness.create();
+        const http = TestBed.inject(HttpTestingController);
+        const router = TestBed.inject(Router);
+        const navigation = harness.navigateByUrl(`${RETURN_URL}#${ACCOUNT_FRAGMENT}`);
+        const initial = await nextRestoreAsync(http);
+        initial.flush({ sessionId: 'known-session', roles: ['User'], user: { id: EXPECTED_ACCOUNT } });
+        const recheck = await nextRestoreAsync(http);
+        expect(recheck.request.headers.get('X-FoodDiary-Session')).toBe('known-session');
+        if (reason === 'unavailable') {
+            recheck.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        } else {
+            recheck.flush({ sessionId: 'known-session', roles: ['User'], user: { id: EXPECTED_ACCOUNT } });
+        }
+        await navigation;
+
+        const button = recoveryButton(harness);
+        expect(button.textContent).toContain(reason === 'unavailable' ? 'SESSION_RECOVERY.RETRY' : 'Go to login');
+        const result = router.parseUrl(router.url);
+        expect(result.fragment).toBe(ACCOUNT_FRAGMENT);
+        expect(result.queryParamMap.get('returnUrl')).toBe(RETURN_URL);
+        expect(result.queryParamMap.get('reason')).toBe(reason);
+        if (reason === 'forbidden') {
+            button.click();
+            await vi.waitFor(() => {
+                harness.detectChanges();
+                expect(harness.routeNativeElement?.querySelector('h1')?.textContent.trim()).toBe('Confirm sign-in');
+            });
+            const signIn = router.parseUrl(router.url);
+            expect(signIn.fragment).toBe(ACCOUNT_FRAGMENT);
+            expect(signIn.queryParamMap.get('returnUrl')).toBe(RETURN_URL);
+            expect(signIn.queryParamMap.get('confirm')).toBe('1');
+        }
+        http.verify();
+    });
+});
+
+async function openUnavailableRouteAsync(): Promise<RouterTestingHarness> {
+    const harness = await RouterTestingHarness.create();
+    const navigation = harness.navigateByUrl(`${RETURN_URL}#${ACCOUNT_FRAGMENT}`);
+    const response = await nextRestoreAsync(TestBed.inject(HttpTestingController));
+    response.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+    await navigation;
+    return harness;
+}
+
+async function nextRestoreAsync(http: HttpTestingController): Promise<TestRequest> {
+    return vi.waitFor(() => http.expectOne({ method: 'POST', url: RESTORE_ENDPOINT }));
+}
+
+function recoveryButton(harness: RouterTestingHarness): HTMLButtonElement {
+    const button = harness.routeNativeElement?.querySelector('button');
+    if (button === null || button === undefined) {
+        throw new Error('Expected the native recovery button.');
+    }
+    return button;
+}

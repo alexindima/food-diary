@@ -1,30 +1,52 @@
 import { DOCUMENT } from '@angular/common';
+import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../src/testing/dom-testing';
 import { AppComponent } from './app';
 
 const ADMIN_ROUTE_COUNT = 21;
 
+@Component({ template: '<p>Section content</p>' })
+class AdminSectionStubComponent {}
+
+async function renderShellAsync(fixture: ComponentFixture<AppComponent>): Promise<void> {
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
+
+async function createShellAsync(): Promise<ComponentFixture<AppComponent>> {
+    stubScrollIntoView();
+    await TestBed.configureTestingModule({
+        imports: [AppComponent],
+        providers: [
+            provideRouter([
+                { path: '', component: AdminSectionStubComponent },
+                { path: 'users/login-activity', component: AdminSectionStubComponent },
+                { path: 'mail-inbox', component: AdminSectionStubComponent },
+                { path: 'outgoing-emails', component: AdminSectionStubComponent },
+                { path: 'sign-in', component: AdminSectionStubComponent },
+            ]),
+            provideTranslateService(),
+        ],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(AppComponent);
+    await fixture.whenStable();
+    return fixture;
+}
+
 describe('AppComponent', () => {
-    let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [AppComponent],
-            providers: [provideRouter([]), provideTranslateService()],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(AppComponent);
-        component = fixture.componentInstance;
-        await fixture.whenStable();
+        fixture = await createShellAsync();
     });
 
     it('should create', () => {
-        expect(component).toBeTruthy();
+        expect(fixture.componentInstance).toBeTruthy();
     });
 
     it('renders the current route as the page heading', () => {
@@ -43,5 +65,54 @@ describe('AppComponent', () => {
         const options = TestBed.inject(DOCUMENT).querySelectorAll('[role=option]');
         expect(options).toHaveLength(ADMIN_ROUTE_COUNT);
         expect(Array.from(options).some(option => option.textContent.includes('ADMIN_FEEDBACK.TITLE'))).toBe(true);
+    });
+});
+
+describe('admin shell navigation', () => {
+    it('uses the actual selected mobile route and preserves the filters in the skip link', async () => {
+        const fixture = await createShellAsync();
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const router = TestBed.inject(Router);
+        const routeSelector = element.querySelector<HTMLButtonElement>('button#admin-mobile-route');
+        routeSelector?.click();
+        fixture.detectChanges();
+        const loginOption = Array.from(document.querySelectorAll<HTMLElement>('[role="option"]')).find(option =>
+            option.textContent.includes('ADMIN_NAV.LOGINS'),
+        );
+        expect(loginOption).toBeDefined();
+        loginOption?.click();
+        await renderShellAsync(fixture);
+        expect(router.url).toBe('/users/login-activity');
+        expect(element.querySelector('h1')?.textContent.trim()).toBe('ADMIN_NAV.LOGINS');
+
+        await router.navigateByUrl('/users/login-activity?search=reader#old');
+        await renderShellAsync(fixture);
+        expect(element.querySelector('.admin-skip-nav')?.getAttribute('href')).toBe(
+            '/users/login-activity?search=reader#admin-main-content',
+        );
+        expect(TestBed.inject(DOCUMENT).documentElement.getAttribute('data-app-ready')).toBe('true');
+    });
+
+    it('keeps the mail tabs in sync and removes admin navigation on the sign-in screen', async () => {
+        const fixture = await createShellAsync();
+        const router = TestBed.inject(Router);
+        const element = fixture.nativeElement as HTMLElement;
+        await router.navigateByUrl('/mail-inbox');
+        await renderShellAsync(fixture);
+        expect(element.querySelector('h1')?.textContent.trim()).toBe('ADMIN_OUTGOING.MAIL');
+        expect(element.querySelector('fd-ui-tabs [aria-current="page"]')?.getAttribute('href')).toBe('/mail-inbox');
+
+        await router.navigateByUrl('/outgoing-emails');
+        await renderShellAsync(fixture);
+        expect(element.querySelector('fd-ui-tabs [aria-current="page"]')?.getAttribute('href')).toBe('/outgoing-emails');
+
+        await router.navigateByUrl('/sign-in');
+        await renderShellAsync(fixture);
+        expect(element.querySelector('.admin-shell--sign-in')).not.toBeNull();
+        expect(element.querySelector('fd-ui-sidebar')).toBeNull();
+        expect(element.querySelector('#admin-mobile-route')).toBeNull();
+        expect(element.querySelector('fd-ui-tabs')).toBeNull();
+        expect(element.querySelector('main')?.textContent).toContain('Section content');
     });
 });

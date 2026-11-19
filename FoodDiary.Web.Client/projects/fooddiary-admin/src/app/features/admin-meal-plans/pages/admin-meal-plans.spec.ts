@@ -105,3 +105,69 @@ describe('AdminMealPlansComponent editor selection', () => {
         expect(pending.observed).toBe(false);
     });
 });
+
+describe('Meal plan list and editor lifecycle', () => {
+    it('offers retry after a failed list request and distinguishes hidden and published plans', () => {
+        fixture.destroy();
+        const pending = new Subject<CatalogPlan[]>();
+        const published = { ...plan, id: adminId<'meal-plan'>('published'), name: 'Published menu', isCurated: true };
+        api.getAll.mockReturnValueOnce(pending).mockReturnValueOnce(of([plan, published]));
+        fixture = TestBed.createComponent(AdminMealPlansComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="status"]:not([hidden])')?.textContent).toContain('ADMIN_MEAL_PLANS.LOADING');
+        expect(host.querySelector('article')).toBeNull();
+
+        pending.error(new Error('list unavailable'));
+        fixture.detectChanges();
+        const retry = host.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+        expect(retry).not.toBeNull();
+        retry?.click();
+        fixture.detectChanges();
+
+        const rows = Array.from(host.querySelectorAll('article'), article => article.textContent);
+        expect(rows).toHaveLength(2);
+        expect(rows[0]).toContain('Old server plan');
+        expect(rows[0]).toContain('ADMIN_MEAL_PLANS.HIDDEN');
+        expect(rows[1]).toContain('Published menu');
+        expect(rows[1]).toContain('ADMIN_MEAL_PLANS.PUBLISHED');
+        expect(host.querySelector('fd-admin-load-error')).toBeNull();
+    });
+
+    it('recovers after an edit detail error, closes on cancel, and reloads the list after saving', () => {
+        const pending = new Subject<CatalogPlan>();
+        api.get.mockReturnValueOnce(pending).mockReturnValue(of(plan));
+        const host = fixture.nativeElement as HTMLElement;
+        const editSelector = 'article button';
+        host.querySelector<HTMLButtonElement>(editSelector)?.click();
+        fixture.detectChanges();
+        pending.error(new Error('detail unavailable'));
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MEAL_PLANS.LOAD_ERROR');
+        expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
+
+        host.querySelector<HTMLButtonElement>(editSelector)?.click();
+        fixture.detectChanges();
+        clickMealPlanAction(host, 'CANCEL');
+        fixture.detectChanges();
+        expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
+
+        host.querySelector<HTMLButtonElement>(editSelector)?.click();
+        fixture.detectChanges();
+        api.getAll.mockReturnValueOnce(of([{ ...plan, name: 'Saved server plan' }]));
+        clickMealPlanAction(host, 'SAVE');
+        fixture.detectChanges();
+        expect(api.save).toHaveBeenCalledExactlyOnceWith(plan.id, expect.objectContaining({ name: plan.name }));
+        expect(host.querySelector('fd-admin-meal-plan-editor')).toBeNull();
+        expect(host.querySelector('article h2')?.textContent).toBe('Saved server plan');
+        expect(host.querySelector('[role="status"]:not([hidden])')?.textContent).toContain('ADMIN_MEAL_PLANS.SAVED');
+    });
+});
+
+function clickMealPlanAction(host: HTMLElement, action: string): void {
+    const button = Array.from(host.querySelectorAll('button')).find(control => control.textContent.trim() === `ADMIN_MEAL_PLANS.${action}`);
+    if (button === undefined) {
+        throw new Error(`Missing meal plan action ${action}`);
+    }
+    button.click();
+}

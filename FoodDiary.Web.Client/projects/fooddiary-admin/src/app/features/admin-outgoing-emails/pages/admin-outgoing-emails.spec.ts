@@ -1,11 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { of, Subject } from 'rxjs';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminOutgoingEmailsFacade } from '../lib/admin-outgoing-emails.facade';
-import type { OutgoingEmailPage } from '../models/outgoing-email';
+import type { OutgoingEmail, OutgoingEmailPage } from '../models/outgoing-email';
 import { AdminOutgoingEmailsComponent } from './admin-outgoing-emails';
 
 describe('AdminOutgoingEmailsComponent', () => {
@@ -34,5 +36,127 @@ describe('AdminOutgoingEmailsComponent', () => {
         expect(element.textContent).toContain('ADMIN_OUTGOING.EMPTY');
         expect(getPage).toHaveBeenLastCalledWith(1, '', '', { recipient: '', id: '', correlationId: '' });
         fixture.destroy();
+    });
+});
+
+const OUTBOX = '/outgoing-emails';
+const OUTBOX_TOTAL = 51;
+const REQUESTED_PAGE = 4;
+const LAST_PAGE = 2;
+const RECIPIENT = 'customer@example.test';
+const MAIL: OutgoingEmail = {
+    id: adminId<'outgoing-email'>('mail-1'),
+    status: 'sent',
+    purpose: 'legacy-purpose',
+    fromAddress: 'feedback@example.test',
+    to: [RECIPIENT],
+    subject: 'Your request was received',
+    createdAtUtc: adminUtcInstant('2026-10-06T00:00:00Z'),
+    sentAtUtc: null,
+    attemptCount: 1,
+    maxAttempts: 1,
+    correlationId: 'request-1',
+    textBody: 'Thanks for writing.',
+    contentHidden: false,
+    replyTo: null,
+    inReplyTo: null,
+};
+
+async function setupOutboxAsync(
+    url: string,
+    getPage: Mock<AdminOutgoingEmailsFacade['getPage']>,
+): Promise<{ harness: RouterTestingHarness; element: HTMLElement; router: Router }> {
+    await TestBed.configureTestingModule({
+        providers: [
+            provideRouter([{ path: 'outgoing-emails', component: AdminOutgoingEmailsComponent }]),
+            ...provideTranslateTesting(),
+            { provide: AdminOutgoingEmailsFacade, useValue: { getPage } },
+        ],
+    }).compileComponents();
+    const harness = await RouterTestingHarness.create(url);
+    await renderOutboxAsync(harness);
+    const element = harness.routeNativeElement;
+    if (element === null) {
+        throw new Error('Expected the outgoing mail route');
+    }
+    return { harness, element, router: TestBed.inject(Router) };
+}
+
+async function renderOutboxAsync(harness: RouterTestingHarness): Promise<void> {
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+}
+
+function requireOutboxButton(element: HTMLElement, name: string): HTMLButtonElement {
+    const button = [...element.querySelectorAll('button')].find(candidate => candidate.textContent.trim() === name);
+    if (button === undefined) {
+        throw new Error(`Expected the ${name} button`);
+    }
+    return button;
+}
+
+describe('outgoing mail route state', () => {
+    it('skips an invalid period and preserves the corrected UTC bounds when recovering an out-of-range page', async () => {
+        const getPage = vi
+            .fn<AdminOutgoingEmailsFacade['getPage']>()
+            .mockImplementation(page => of({ items: page === LAST_PAGE ? [MAIL] : [], totalItems: OUTBOX_TOTAL }));
+        const { element, harness, router } = await setupOutboxAsync(`${OUTBOX}?period=custom&from=2026-10-07&to=2026-10-06`, getPage);
+        expect(getPage).not.toHaveBeenCalled();
+        expect(element.textContent).toContain('ADMIN_OUTGOING.EMPTY');
+
+        await harness.navigateByUrl(
+            `${OUTBOX}?page=${REQUESTED_PAGE}&period=custom&from=2026-10-06&to=2026-10-06&recipient=${RECIPIENT}&status=sent`,
+        );
+        await renderOutboxAsync(harness);
+
+        const filters = {
+            recipient: RECIPIENT,
+            fromUtc: '2026-10-06T00:00:00Z',
+            toUtc: '2026-10-07T00:00:00.000Z',
+            id: '',
+            correlationId: '',
+        };
+        expect(getPage).toHaveBeenNthCalledWith(1, REQUESTED_PAGE, '', 'sent', filters);
+        expect(getPage).toHaveBeenNthCalledWith(2, LAST_PAGE, '', 'sent', filters);
+        expect(router.parseUrl(router.url).queryParamMap.get('page')).toBe(String(LAST_PAGE));
+        expect(element.querySelector('tbody')?.textContent).toContain('ADMIN_OUTGOING.PURPOSES.other');
+    });
+
+    it('paginates, opens a message by its permalink and closes it without dropping list filters', async () => {
+        const getPage = vi.fn<AdminOutgoingEmailsFacade['getPage']>().mockImplementation((_page, _purpose, _status, filters) =>
+            of({
+                items: [{ ...MAIL, purpose: 'password_reset' }],
+                totalItems: filters?.['id'] === MAIL.id ? 1 : OUTBOX_TOTAL,
+                statusCounts: { sent: OUTBOX_TOTAL },
+            }),
+        );
+        const { element, harness, router } = await setupOutboxAsync(`${OUTBOX}?status=sent&recipient=${RECIPIENT}`, getPage);
+        requireOutboxButton(element, '2').click();
+        await renderOutboxAsync(harness);
+        expect(getPage).toHaveBeenLastCalledWith(LAST_PAGE, '', 'sent', expect.objectContaining({ recipient: RECIPIENT }));
+        expect(element.querySelector('tbody')?.textContent).toContain('ADMIN_OUTGOING.PURPOSES.password_reset');
+
+        const link = element.querySelector<HTMLAnchorElement>('tbody a');
+        expect(link).not.toBeNull();
+        link?.click();
+        await renderOutboxAsync(harness);
+        expect(getPage).toHaveBeenLastCalledWith(1, '', 'sent', expect.objectContaining({ id: MAIL.id, recipient: RECIPIENT }));
+        expect(element.querySelector('fd-outgoing-email-details .mail-body')?.textContent).toBe(MAIL.textBody);
+
+        requireOutboxButton(element, 'ADMIN_OUTGOING.CLOSE').click();
+        await renderOutboxAsync(harness);
+        const params = router.parseUrl(router.url).queryParamMap;
+        expect(params.has('id')).toBe(false);
+        expect(params.get('recipient')).toBe(RECIPIENT);
+        expect(params.get('status')).toBe('sent');
+        expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
+    });
+
+    it('keeps the empty state when a message permalink has no matching record', async () => {
+        const getPage = vi.fn<AdminOutgoingEmailsFacade['getPage']>().mockReturnValue(of({ items: [], totalItems: 0 }));
+        const { element } = await setupOutboxAsync(`${OUTBOX}?id=missing`, getPage);
+        expect(element.querySelector('fd-outgoing-email-details')).toBeNull();
+        expect(element.textContent).toContain('ADMIN_OUTGOING.EMPTY');
+        expect(getPage).toHaveBeenCalledWith(1, '', '', expect.objectContaining({ id: 'missing' }));
     });
 });

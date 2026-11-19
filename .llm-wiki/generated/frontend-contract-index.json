@@ -18679,7 +18679,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/outgoing-emails",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/api/admin-outgoing-emails.service.ts",
-      "line": 32,
+      "line": 33,
       "publicMethod": "getPage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,

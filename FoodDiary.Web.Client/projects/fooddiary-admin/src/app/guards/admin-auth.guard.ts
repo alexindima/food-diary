@@ -4,6 +4,8 @@ import { type CanActivateFn, Router, type UrlTree } from '@angular/router';
 import { AdminAuthService } from '../features/admin-auth/contracts/admin-session';
 import { adminSignInAccount, adminSignInAccountFragment } from '../features/admin-auth/contracts/admin-sign-in-navigation';
 
+type UnauthorizedReason = 'unavailable' | 'unauthenticated' | 'forbidden';
+
 export const adminAuthGuard: CanActivateFn = async (_route, state) => {
     const authService = inject(AdminAuthService);
     const router = inject(Router);
@@ -21,45 +23,33 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
             queryParams: { returnUrl, confirm: exchanged ? '1' : '0' },
             fragment,
         });
+    const unauthorized = (reason: UnauthorizedReason): UrlTree =>
+        router.createUrlTree(['/unauthorized'], { queryParams: { reason, returnUrl }, fragment });
 
     if (authService.sessionUnavailable()) {
-        return router.createUrlTree(['/unauthorized'], {
-            queryParams: { reason: 'unavailable', returnUrl },
-            fragment,
-        });
+        return unauthorized('unavailable');
     }
 
     if (!authService.isAuthenticated()) {
-        return authService.ssoRateLimited()
-            ? router.createUrlTree(['/unauthorized'], {
-                  queryParams: { reason: 'unauthenticated', returnUrl },
-                  fragment,
-              })
-            : signIn();
+        return authService.ssoRateLimited() ? unauthorized('unauthenticated') : signIn();
     }
 
     if (account !== null && authService.getUserId() !== account) {
         return signIn();
     }
 
-    return resolveAdminRoleAsync(authService, router, returnUrl, destination);
+    return resolveAdminRoleAsync(authService, destination, unauthorized);
 };
 
 async function resolveAdminRoleAsync(
     auth: AdminAuthService,
-    router: Router,
-    returnUrl: string,
     destination: true | UrlTree,
+    unauthorized: (reason: UnauthorizedReason) => UrlTree,
 ): Promise<true | UrlTree> {
     if (auth.isAdmin() || (await auth.tryUpgradeToAdminAsync())) {
         return destination;
     }
-    if (auth.sessionUnavailable()) {
-        return router.createUrlTree(['/unauthorized'], {
-            queryParams: { reason: 'unavailable', returnUrl },
-        });
-    }
-    return router.createUrlTree(['/unauthorized'], { queryParams: { reason: 'forbidden', returnUrl } });
+    return unauthorized(auth.sessionUnavailable() ? 'unavailable' : 'forbidden');
 }
 
 function sanitizedAdminDestination(destination: UrlTree, fragmentParams: URLSearchParams): true | UrlTree {

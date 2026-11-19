@@ -135,3 +135,89 @@ describe('AdminMealPlanEditorComponent pending saves', () => {
         expect(JSON.parse(JSON.stringify(request.days))).toEqual(plan.days);
     });
 });
+
+describe('Meal plan recipe search recovery', () => {
+    it('clears the failed search alert after a successful retry and keeps the selected recipe', () => {
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.componentRef.setInput('plan', plan);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const search = editorButton(host, 'SEARCH');
+        api.recipes.mockClear();
+        api.recipes.mockReturnValueOnce(throwError(() => new Error('recipe lookup unavailable')));
+        search.click();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MEAL_PLANS.RECIPE_ERROR');
+
+        const recovered = { id: adminId<'recipe'>('recovered-recipe'), name: 'Recovered recipe', servings: 1 };
+        api.recipes.mockReturnValueOnce(of([recovered]));
+        search.click();
+        fixture.detectChanges();
+
+        expect(api.recipes).toHaveBeenCalledTimes(2);
+        expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('');
+        expect(host.querySelector('.meal-fields')?.textContent).toContain('Rice');
+    });
+});
+
+describe('Meal plan draft editing', () => {
+    it('adds and removes a recipe slot on the new day and submits a trimmed draft', () => {
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.componentRef.setInput('plan', { ...plan, isCurated: false });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        enterValue(host.querySelector('input[type="number"]'), '2');
+        enterValue(host.querySelector('textarea'), '  Lunch for two  ');
+        fixture.detectChanges();
+
+        const days = host.querySelectorAll<HTMLElement>('section.plan-day');
+        expect(days).toHaveLength(2);
+        editorButton(days[1], 'ADD_RECIPE').click();
+        fixture.detectChanges();
+        expect(days[1].querySelectorAll('.meal-fields')).toHaveLength(1);
+        editorButton(days[1], 'REMOVE').click();
+        fixture.detectChanges();
+        expect(days[1].querySelectorAll('.meal-fields')).toHaveLength(0);
+
+        editorButton(host, 'SAVE').click();
+        expect(api.save).toHaveBeenCalledExactlyOnceWith(
+            plan.id,
+            expect.objectContaining({ description: 'Lunch for two', durationDays: 2 }),
+        );
+        const request = api.save.mock.lastCall?.[1] as { days: unknown };
+        expect(JSON.parse(JSON.stringify(request.days))).toEqual([...plan.days, { dayNumber: 2, meals: [] }]);
+    });
+
+    it.each([
+        ['duration', '1.5'],
+        ['servings', '2.5'],
+    ])('rejects fractional %s entered through the number field', (field, value) => {
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.componentRef.setInput('plan', plan);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const selector = field === 'duration' ? '.plan-fields input[type="number"]' : '.meal-fields input[type="number"]';
+        enterValue(host.querySelector(selector), value);
+        fixture.detectChanges();
+        editorButton(host, 'SAVE').click();
+        fixture.detectChanges();
+        expect(api.save).not.toHaveBeenCalled();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MEAL_PLANS.INVALID');
+    });
+});
+
+function enterValue(control: HTMLInputElement | HTMLTextAreaElement | null, value: string): void {
+    if (control === null) {
+        throw new Error('Missing meal plan input');
+    }
+    control.value = value;
+    control.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function editorButton(host: HTMLElement, action: string): HTMLButtonElement {
+    const control = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === `ADMIN_MEAL_PLANS.${action}`);
+    if (control === undefined) {
+        throw new Error(`Missing meal plan action ${action}`);
+    }
+    return control;
+}

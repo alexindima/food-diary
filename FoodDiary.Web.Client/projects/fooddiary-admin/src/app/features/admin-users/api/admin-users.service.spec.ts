@@ -2,11 +2,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
-import type { AdminUser } from '../models/admin-user.models';
+import type { AdminUser, AdminUserCreate } from '../models/admin-user.models';
 import { AdminUsersService } from './admin-users.service';
 
 const LOGIN_EVENTS_PAGE = 1;
@@ -207,5 +208,112 @@ describe('AdminUsersService', () => {
         const req = httpMock.expectOne(r => r.url === `${baseUrl}/u1/role-audit` && r.params.get('limit') === String(ROLE_AUDIT_LIMIT));
         expect(req.request.method).toBe('GET');
         req.flush([]);
+    });
+
+    it('sends account creation preferences and maps a returned account without an email address', async () => {
+        const payload: AdminUserCreate = {
+            email: 'created@example.test',
+            language: 'en',
+            roles: ['User'],
+            generatePassword: true,
+            isEmailConfirmed: false,
+            sendCredentialsEmail: true,
+            requirePasswordChange: true,
+        };
+        const result = firstValueFrom(service.createUser(payload));
+        const request = httpMock.expectOne({ method: 'POST', url: baseUrl });
+        expect(request.request.body).toEqual(payload);
+        request.flush({
+            user: {
+                id: 'created-user',
+                isActive: true,
+                isEmailConfirmed: false,
+                roles: ['User'],
+                createdOnUtc: '2026-01-01T00:00:00Z',
+            },
+            temporaryPassword: 'generated-fixture',
+            credentialsEmailQueued: true,
+        });
+
+        await expect(result).resolves.toMatchObject({
+            user: { id: 'created-user', email: null, roles: ['User'] },
+            temporaryPassword: 'generated-fixture',
+            credentialsEmailQueued: true,
+        });
+    });
+
+    it('maps one-use impersonation results and paged session audit data while retaining the selected identities', async () => {
+        const user = adminId<'user'>('selected-user');
+        const actor = 'current-admin';
+        const reason = 'Support case review';
+        const started = firstValueFrom(service.startImpersonation(user, reason));
+        const create = httpMock.expectOne({ method: 'POST', url: `${baseUrl}/${user}/impersonation` });
+        expect(create.request.body).toEqual({ reason });
+        create.flush({ code: 'one-use-fixture', targetUserId: user, actorUserId: actor, reason });
+        await expect(started).resolves.toEqual({
+            code: 'one-use-fixture',
+            targetUserId: user,
+            actorUserId: actor,
+            reason,
+            targetEmail: null,
+        });
+
+        const startedAtUtc = '2026-01-02T03:04:05Z';
+        const loaded = firstValueFrom(service.getImpersonationSessions(USERS_PAGE, USERS_LIMIT, reason, { actorId: actor }));
+        const list = httpMock.expectOne(request => request.url === `${baseUrl}/impersonation-sessions`);
+        expect(list.request.params.get('actorId')).toBe(actor);
+        expect(list.request.params.get('search')).toBe(reason);
+        const entry = {
+            id: 'session-fixture',
+            actorUserId: actor,
+            targetUserId: user,
+            reason,
+            startedAtUtc,
+            actorEmail: 'admin@example.test',
+        };
+        list.flush({ data: [entry], page: USERS_PAGE, limit: USERS_LIMIT, totalPages: USERS_TOTAL_PAGES, totalItems: USERS_TOTAL_ITEMS });
+        await expect(loaded).resolves.toEqual({
+            items: [{ ...entry, targetEmail: null }],
+            page: USERS_PAGE,
+            limit: USERS_LIMIT,
+            totalPages: USERS_TOTAL_PAGES,
+            totalItems: USERS_TOTAL_ITEMS,
+        });
+    });
+
+    it('keeps masked login audit metadata and maps role audit and device summaries', async () => {
+        const userId = adminId<'user'>('selected-user');
+        const at = '2026-01-02T03:04:05Z';
+        const login = {
+            id: 'login-fixture',
+            userId,
+            authProvider: 'Google',
+            loggedInAtUtc: at,
+            deviceType: 'Mobile',
+            maskedIpAddress: '192.0.2.*',
+        };
+        const history = firstValueFrom(service.getLoginEvents(LOGIN_EVENTS_PAGE, LOGIN_EVENTS_LIMIT, 'Mobile', { userId }));
+        const loginRequest = httpMock.expectOne(request => request.url === `${baseUrl}/login-events`);
+        expect(loginRequest.request.params.get('search')).toBe('Mobile');
+        expect(loginRequest.request.params.get('userId')).toBe(userId);
+        loginRequest.flush({ data: [login], page: LOGIN_EVENTS_PAGE, limit: LOGIN_EVENTS_LIMIT, totalPages: 1, totalItems: 1 });
+        await expect(history).resolves.toMatchObject({ items: [{ ...login, userEmail: null }] });
+
+        const auditEntry = { id: 'audit-fixture', userId, roleName: 'User', action: 'Grant', source: 'Administration', occurredAtUtc: at };
+        const audit = firstValueFrom(service.getUserRoleAudit(userId));
+        httpMock.expectOne(request => request.url === `${baseUrl}/${userId}/role-audit`).flush([auditEntry]);
+        await expect(audit).resolves.toEqual([auditEntry]);
+
+        const device = { key: 'Mobile', count: 1, lastSeenAtUtc: at };
+        const summary = firstValueFrom(service.getLoginSummary());
+        httpMock.expectOne({ method: 'GET', url: `${baseUrl}/login-summary` }).flush([device]);
+        await expect(summary).resolves.toEqual([device]);
+    });
+
+    it('rejects an incomplete manual grant instead of inventing a reason', async () => {
+        const selected = adminId<'user'>('selected-user');
+        const result = firstValueFrom(service.getPremiumGrant(selected));
+        httpMock.expectOne({ method: 'GET', url: `${baseUrl}/${selected}/premium-grant` }).flush({ endsAtUtc: '2026-07-01T12:00:00Z' });
+        await expect(result).rejects.toThrow('reason');
     });
 });

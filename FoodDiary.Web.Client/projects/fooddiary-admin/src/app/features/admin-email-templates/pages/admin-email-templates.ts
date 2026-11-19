@@ -7,6 +7,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
+import type { Subscription } from 'rxjs';
 
 import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
@@ -36,6 +37,7 @@ export class AdminEmailTemplatesComponent {
     private readonly templatesFacade = inject(AdminEmailTemplatesFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private loadRequest?: Subscription;
 
     protected readonly templates = signal<AdminEmailTemplate[]>([]);
     protected readonly isLoading = signal(false);
@@ -86,9 +88,10 @@ export class AdminEmailTemplatesComponent {
     }
 
     protected loadTemplates(): void {
+        this.loadRequest?.unsubscribe();
         this.loadFailed.set(false);
         this.isLoading.set(true);
-        this.templatesFacade
+        this.loadRequest = this.templatesFacade
             .getAll()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

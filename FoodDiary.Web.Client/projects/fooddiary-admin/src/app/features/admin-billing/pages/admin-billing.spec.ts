@@ -1,5 +1,4 @@
-const CANCELLATION_TOTAL = 41;
-const CANCELLATION_FEEDBACK_COUNT = 7;
+import { formatDate } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -9,7 +8,7 @@ import { provideTranslateTesting } from '../../../../../../../src/testing/transl
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminBillingService } from '../api/admin-billing.service';
 import { AdminBillingFacade } from '../lib/admin-billing.facade';
-import type { AdminBillingSubscription } from '../models/admin-billing.models';
+import type { AdminBillingPayment, AdminBillingSubscription, AdminBillingWebhookEvent } from '../models/admin-billing.models';
 import { AdminBillingComponent } from './admin-billing';
 
 const PAGE_SIZE = 20;
@@ -17,6 +16,8 @@ const TOTAL_PAGES = 2;
 const TOTAL_ITEMS = 21;
 const THREE_DECIMAL_AMOUNT = 7.991;
 const TWO_DECIMAL_AMOUNT = 7.99;
+const CANCELLATION_TOTAL = 41;
+const CANCELLATION_FEEDBACK_COUNT = 7;
 
 type BillingApiMock = {
     getRevenueSummary: ReturnType<typeof vi.fn>;
@@ -248,6 +249,34 @@ describe('AdminBillingComponent filters', () => {
         expect(billingApi.getPayments).toHaveBeenCalled();
         expect(new URL(router.url, 'http://localhost').searchParams.get('period')).toBe('all');
     });
+});
+
+describe('Billing refresh validation', () => {
+    it('does not refresh stale payment or revenue dates after opening an invalid period', async () => {
+        const { billingApi, fixture } = await setupBillingAsync();
+        const router = TestBed.inject(Router);
+        await router.navigateByUrl('/?tab=payments&period=custom&from=2026-04-01&to=2026-04-30');
+        await fixture.whenStable();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).toContain('pay_123');
+        billingApi.getPayments.mockClear();
+        billingApi.getRevenueSummary.mockClear();
+
+        await router.navigateByUrl('/?tab=payments&period=custom&from=2026-02-31&to=2026-04-30');
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const refresh = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === 'Refresh');
+        expect(refresh).toBeDefined();
+        refresh?.click();
+        await fixture.whenStable();
+
+        expect(billingApi.getPayments).not.toHaveBeenCalled();
+        expect(billingApi.getRevenueSummary).not.toHaveBeenCalled();
+        expect(host.textContent).not.toContain('pay_123');
+    });
+});
+
+describe('Billing API filters', () => {
     it('should switch to payments and include kind filter', async () => {
         const { billingApi, billing, fixture } = await setupBillingAsync();
         await fixture.whenStable();
@@ -320,6 +349,129 @@ describe('AdminBillingComponent metadata', () => {
         billing.showMetadata('{"payment_id":"pay_123"}');
 
         expect(billing.selectedMetadata()).toContain('"payment_id": "pay_123"');
+    });
+
+    it('opens malformed provider metadata as plain text and closes the panel from the toolbar', async () => {
+        const api = createBillingServiceMock();
+        const providerMetadataJson = '<b>legacy receipt</b>';
+        const payment: AdminBillingPayment = {
+            id: adminId<'billing-payment'>('receipt-1'),
+            userId: adminId<'user'>('user-1'),
+            userEmail: 'customer@example.test',
+            provider: 'Paddle',
+            externalPaymentId: 'pay_12345678901234567890',
+            status: 'paid',
+            kind: 'transaction',
+            createdOnUtc: adminUtcInstant('2026-04-28T00:00:00Z'),
+            providerMetadataJson,
+            amount: TWO_DECIMAL_AMOUNT,
+        };
+        api.getPayments.mockReturnValue(of({ items: [payment], totalPages: 1, totalItems: 1 }));
+        const { fixture } = await setupBillingAsync(api);
+        await TestBed.inject(Router).navigateByUrl('/?tab=payments');
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const row = host.querySelector('table[aria-label="Billing payments"] tbody tr');
+        if (row === null) {
+            throw new Error('The payment row was not rendered');
+        }
+        expect(row.textContent).toContain('pay_1234...567890');
+        expect(row.querySelectorAll('td')[5].textContent.trim()).toBe('7.99');
+        row.querySelector('button')?.click();
+        fixture.detectChanges();
+
+        const panel = host.querySelector('fd-admin-billing-metadata-panel');
+        if (panel === null) {
+            throw new Error('The receipt panel did not open');
+        }
+        expect(panel.querySelector('pre')?.textContent).toBe(providerMetadataJson);
+        expect(panel.querySelector('pre b')).toBeNull();
+        panel.querySelector('button')?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-admin-billing-metadata-panel')).toBeNull();
+    });
+});
+
+describe('Billing record and revenue failures', () => {
+    it.each([
+        ['payments', 'getPayments', 'No payments found.'],
+        ['webhook-events', 'getWebhookEvents', 'No webhook events found.'],
+        ['cancellations', 'getCancellations', 'ADMIN_BILLING.CANCELLATIONS.EMPTY'],
+    ] as const)('clears stale %s rows and uses a readable fallback after an opaque failure', async (tab, request, empty) => {
+        const { billingApi, fixture } = await setupBillingAsync();
+        const router = TestBed.inject(Router);
+        await router.navigateByUrl(`/?tab=${tab}`);
+        await fixture.whenStable();
+        billingApi[request].mockReturnValueOnce(throwError(() => ({ status: 503 })));
+        const host = fixture.nativeElement as HTMLElement;
+        const refresh = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === 'Refresh');
+        expect(refresh).toBeDefined();
+        refresh?.click();
+        fixture.detectChanges();
+
+        expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('Failed to load billing records.');
+        expect(host.textContent).toContain(empty);
+        expect(host.textContent).toContain('Total records: 0');
+    });
+
+    it('keeps payment rows visible when revenue loading fails independently', async () => {
+        const { billingApi, fixture } = await setupBillingAsync();
+        billingApi.getRevenueSummary.mockReturnValueOnce(throwError(() => new Error('revenue unavailable')));
+        await TestBed.inject(Router).navigateByUrl('/?tab=payments');
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('ADMIN_BILLING.SUMMARY_ERROR');
+        expect(host.querySelector('[aria-label="Billing payments"]')?.textContent).toContain('buyer@example.com');
+        expect(host.querySelector('#billing-revenue-title')).toBeNull();
+    });
+});
+
+describe('Webhook receipt details', () => {
+    it('prefers receipt time for an unprocessed retry and falls back to creation time on legacy records', async () => {
+        const api = createBillingServiceMock();
+        const receivedAtUtc = adminUtcInstant('2026-04-28T05:00:00Z');
+        const createdOnUtc = adminUtcInstant('2026-04-27T05:00:00Z');
+        const retry: AdminBillingWebhookEvent = {
+            id: adminId<'billing-webhook-event'>('retry-row'),
+            provider: 'Paddle',
+            eventId: 'evt_retry',
+            eventType: 'transaction.completed',
+            receivedAtUtc,
+            createdOnUtc,
+            status: 'retrying',
+            processedAtUtc: null,
+            attemptCount: 2,
+            nextAttemptAtUtc: adminUtcInstant('2026-04-29T05:00:00Z'),
+            errorMessage: 'Provider timeout',
+            payloadJson: '{"attempt":2}',
+        };
+        const legacy: AdminBillingWebhookEvent = {
+            id: adminId<'billing-webhook-event'>('legacy-row'),
+            provider: 'Paddle',
+            eventId: 'evt_legacy',
+            eventType: 'transaction.completed',
+            createdOnUtc,
+            status: 'queued',
+        };
+        api.getWebhookEvents.mockReturnValue(of({ items: [retry, legacy], totalPages: 1, totalItems: 2 }));
+        const { fixture } = await setupBillingAsync(api);
+        await TestBed.inject(Router).navigateByUrl('/?tab=webhook-events');
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const rows = host.querySelectorAll<HTMLTableRowElement>('table[aria-label="Billing webhook events"] tbody tr');
+        expect(rows).toHaveLength(2);
+        expect(rows[0].cells[0].textContent.trim()).toBe(formatDate(receivedAtUtc, 'short', 'en-US'));
+        expect(rows[1].cells[0].textContent.trim()).toBe(formatDate(createdOnUtc, 'short', 'en-US'));
+        expect(rows[0].textContent).toContain('Provider timeout');
+        expect(rows[0].textContent).toContain(retry.nextAttemptAtUtc);
+        expect(rows[1].querySelector('button')?.disabled).toBe(true);
+        rows[0].querySelector('button')?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-admin-billing-metadata-panel pre')?.textContent).toContain('"attempt": 2');
     });
 });
 

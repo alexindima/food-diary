@@ -70,29 +70,29 @@ describe('mail message read state', () => {
     });
 });
 
-describe('mail message reader', () => {
-    function renderMessage(content: Partial<AdminMailInboxMessageDetails>): ComponentFixture<AdminMailMessageDialogComponent> {
-        TestBed.configureTestingModule({
-            imports: [AdminMailMessageDialogComponent],
-            providers: [
-                provideRouter([]),
-                provideTranslateTesting(),
-                { provide: FD_UI_DIALOG_DATA, useValue: { id: message.id, onRead: vi.fn() } },
-                {
-                    provide: AdminMailInboxFacade,
-                    useValue: {
-                        getMessage: (): Observable<AdminMailInboxMessageDetails> =>
-                            of({ ...message, readAtUtc: message.receivedAtUtc, ...content }),
-                        markMessageRead: vi.fn(),
-                    },
+function renderMessage(content: Partial<AdminMailInboxMessageDetails>): ComponentFixture<AdminMailMessageDialogComponent> {
+    TestBed.configureTestingModule({
+        imports: [AdminMailMessageDialogComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            { provide: FD_UI_DIALOG_DATA, useValue: { id: message.id, onRead: vi.fn() } },
+            {
+                provide: AdminMailInboxFacade,
+                useValue: {
+                    getMessage: (): Observable<AdminMailInboxMessageDetails> =>
+                        of({ ...message, readAtUtc: message.receivedAtUtc, ...content }),
+                    markMessageRead: vi.fn(),
                 },
-            ],
-        });
-        const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
-        fixture.detectChanges();
-        return fixture;
-    }
+            },
+        ],
+    });
+    const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
+    fixture.detectChanges();
+    return fixture;
+}
 
+describe('mail message reader', () => {
     it('opens formatted HTML with paragraphs while keeping technical details collapsed', () => {
         const fixture = renderMessage({ htmlBody: '<p>Hello,&nbsp;Alex!</p><p>A <strong>new message</strong>.</p>' });
         const host = fixture.nativeElement as HTMLElement;
@@ -127,10 +127,10 @@ describe('mail message reader', () => {
         const htmlBody = '<p>Hello&nbsp;<strong>reader</strong></p>';
         const rawMime = `Content-Type: text/html\r\n\r\n${htmlBody}`;
         const fixture = renderMessage({ htmlBody, rawMime });
-        fixture.componentInstance['setBodyMode']('html');
+        selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_HTML');
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('pre')?.textContent).toBe(htmlBody);
-        fixture.componentInstance['setBodyMode']('raw');
+        selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_RAW');
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('pre')?.textContent).toBe(rawMime);
     });
@@ -152,5 +152,51 @@ describe('mail message reader', () => {
     it('shows an empty state when both body formats are absent', () => {
         const fixture = renderMessage({ textBody: null, htmlBody: null });
         expect((fixture.nativeElement as HTMLElement).querySelector('.mail-body')?.textContent).toBe('ADMIN_MAIL_INBOX.NO_BODY');
+
+        selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_HTML');
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('pre')?.textContent).toBe('ADMIN_MAIL_INBOX.NO_BODY');
+        selectBodyMode(fixture, 'ADMIN_MAIL_INBOX.VIEW_RAW');
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('pre')?.textContent).toBe('ADMIN_MAIL_INBOX.NO_BODY');
+    });
+});
+
+function selectBodyMode(fixture: ComponentFixture<AdminMailMessageDialogComponent>, label: string): void {
+    const element = fixture.nativeElement as HTMLElement;
+    const option = [...element.querySelectorAll<HTMLButtonElement>('button[role="radio"]')].find(
+        button => button.textContent.trim() === label,
+    );
+    if (option === undefined) {
+        throw new Error(`Expected the ${label} mail view`);
+    }
+    option.click();
+}
+
+describe('mail message loading', () => {
+    it('shows a loading status and reports a failed load without marking the message read', () => {
+        const details = new Subject<AdminMailInboxMessageDetails>();
+        const markMessageRead = vi.fn();
+        const onRead = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [AdminMailMessageDialogComponent],
+            providers: [
+                provideRouter([]),
+                provideTranslateTesting(),
+                { provide: FD_UI_DIALOG_DATA, useValue: { id: message.id, onRead } },
+                { provide: AdminMailInboxFacade, useValue: { getMessage: vi.fn().mockReturnValue(details), markMessageRead } },
+            ],
+        });
+        const fixture = TestBed.createComponent(AdminMailMessageDialogComponent);
+        const element = fixture.nativeElement as HTMLElement;
+        fixture.detectChanges();
+        expect(element.querySelector('[role="status"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LOADING_MESSAGE');
+
+        details.error(new Error('Details unavailable'));
+        fixture.detectChanges();
+        expect(element.querySelector('[role="status"]')).toBeNull();
+        expect(element.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_MAIL_INBOX.LOAD_ERROR');
+        expect(markMessageRead).not.toHaveBeenCalled();
+        expect(onRead).not.toHaveBeenCalled();
     });
 });

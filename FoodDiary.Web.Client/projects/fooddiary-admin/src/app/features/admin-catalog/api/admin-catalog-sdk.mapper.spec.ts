@@ -1,11 +1,45 @@
 import { describe, expect, it } from 'vitest';
 
-import { catalogRecipeExportFromSdk } from './admin-catalog-sdk.mapper';
+import { catalogProductFromSdk, catalogRecipeExportFromSdk, catalogRecipeImportFromSdk } from './admin-catalog-sdk.mapper';
 
 const manualProtein = 1.23456789;
 const ingredientAmount = 0.125;
 
 describe('Admin catalog wire mapping', () => {
+    it('keeps the base serving and normalizes optional product fields across exports', () => {
+        const product = {
+            id: 'water',
+            name: 'Water',
+            productType: 'beverage',
+            baseUnit: 'ml',
+            baseAmount: 100,
+            defaultPortionAmount: 250,
+            caloriesPerBase: 0,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        };
+        const details = {
+            barcode: '0123456789',
+            brand: 'Spring',
+            category: 'Drinks',
+            description: 'Still water',
+            imageUrl: 'https://images.example.test/water.png',
+        };
+
+        expect(catalogProductFromSdk(product)).toEqual({
+            ...product,
+            barcode: null,
+            brand: null,
+            category: null,
+            description: null,
+            imageUrl: null,
+        });
+        expect(catalogProductFromSdk({ ...product, ...details })).toEqual({ ...product, ...details });
+    });
+
     it('preserves manual zero, precision, nullability and nested ingredient quantities', () => {
         const recipe = catalogRecipeExportFromSdk({
             id: 'recipe',
@@ -32,5 +66,13 @@ describe('Admin catalog wire mapping', () => {
         expect(recipe.steps[0].ingredients[0].amount).toBe(ingredientAmount);
         expect(recipe.steps[0].ingredients[0].nestedRecipeId).toBeNull();
         expect(recipe.steps[0].ingredients[0].amountText).toBeNull();
+    });
+
+    it('keeps recipe import errors associated with the corresponding item', () => {
+        expect(catalogRecipeImportFromSdk({ id: 'recipe', status: 'invalid', errors: ['Ingredient is missing'] })).toEqual({
+            id: 'recipe',
+            status: 'invalid',
+            errors: ['Ingredient is missing'],
+        });
     });
 });

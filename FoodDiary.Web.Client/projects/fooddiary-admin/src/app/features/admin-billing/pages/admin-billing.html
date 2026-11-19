@@ -1,7 +1,7 @@
 <div class="admin-billing fd-grid fd-gap-md">
     <p role="alert" [hidden]="!billing.revenueFailed()">{{ 'ADMIN_BILLING.SUMMARY_ERROR' | translate }}</p>
     <div class="admin-billing__header fd-row fd-justify-end">
-        <fd-ui-button type="button" variant="secondary" (click)="billing.load()"> Refresh </fd-ui-button>
+        <fd-ui-button type="button" variant="secondary" (click)="loadPeriod()"> Refresh </fd-ui-button>
     </div>
 
     <fd-ui-tabs

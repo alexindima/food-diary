@@ -18,13 +18,14 @@ export class AdminOutgoingEmailsService {
     private readonly sdk = createSdkConnection(AdminOutgoingEmailsSdk, this.url, this.http);
 
     public getPage(page: number, purpose: string, status: string, filters: Record<string, string> = {}): Observable<OutgoingEmailPage> {
+        const { recipient = '', ...additionalFilters } = filters;
         let params = new HttpParams()
             .set('page', page)
             .set('limit', PAGE_SIZE)
             .set('purpose', purpose)
             .set('status', status)
-            .set('recipient', (filters['recipient'] ?? '').trim());
-        for (const [key, value] of Object.entries(filters)) {
+            .set('recipient', recipient.trim());
+        for (const [key, value] of Object.entries(additionalFilters)) {
             if (value.length > 0) {
                 params = params.set(key, value);
             }

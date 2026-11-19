@@ -284,14 +284,11 @@ export class AdminLessonsComponent {
             }
 
             return (
-                typeof lesson['title'] === 'string' &&
-                typeof lesson['content'] === 'string' &&
+                ['title', 'content', 'locale', 'category', 'difficulty'].every(field => typeof lesson[field] === 'string') &&
                 (typeof lesson['summary'] === 'string' || lesson['summary'] === null) &&
-                typeof lesson['locale'] === 'string' &&
-                typeof lesson['category'] === 'string' &&
-                typeof lesson['difficulty'] === 'string' &&
-                typeof lesson['estimatedReadMinutes'] === 'number' &&
-                typeof lesson['sortOrder'] === 'number'
+                Number.isInteger(lesson['estimatedReadMinutes']) &&
+                Number.isInteger(lesson['sortOrder']) &&
+                (lesson['isPublished'] === undefined || typeof lesson['isPublished'] === 'boolean')
             );
         });
     }

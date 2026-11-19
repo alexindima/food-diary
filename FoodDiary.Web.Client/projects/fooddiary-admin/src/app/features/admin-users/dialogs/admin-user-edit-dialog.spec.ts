@@ -23,7 +23,7 @@ const user = {
     roles: ['Admin'],
 };
 
-beforeEach(async () => {
+async function setupDialogAsync(account: Omit<typeof user, 'language'> & { language?: string | null } = user): Promise<void> {
     usersService = { updateUser: vi.fn() };
     dialogRef = { close: vi.fn() };
     usersService.updateUser.mockReturnValue(of(user));
@@ -34,16 +34,20 @@ beforeEach(async () => {
             provideTranslateTesting(),
             { provide: AdminUsersFacade, useValue: usersService },
             { provide: FdUiDialogRef, useValue: dialogRef },
-            { provide: FD_UI_DIALOG_DATA, useValue: user },
+            { provide: FD_UI_DIALOG_DATA, useValue: account },
         ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminUserEditDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-});
+}
 
 describe('AdminUserEditDialogComponent', () => {
+    beforeEach(async () => {
+        await setupDialogAsync();
+    });
+
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -125,5 +129,34 @@ describe('AdminUserEditDialogComponent', () => {
         expect(usersService.updateUser).toHaveBeenLastCalledWith('u1', expect.objectContaining({ roles: ['Admin', 'Support'] }));
         expect(dialogRef.close).toHaveBeenCalledWith(true);
         expect(component['saveFailed']()).toBe(false);
+    });
+});
+
+describe('Admin edit dialog language', () => {
+    it.each([
+        { language: undefined, label: 'English' },
+        { language: null, label: 'English' },
+        { language: '  ', label: 'English' },
+        { language: 'de-DE', label: 'English' },
+        { language: ' EN-GB ', label: 'English' },
+        { language: 'ru', label: 'Russian' },
+        { language: ' RU-RU ', label: 'Russian' },
+    ])('renders $label for $language without overwriting the stored language on unrelated edits', async ({ language, label }) => {
+        await setupDialogAsync({ ...user, language });
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('fd-ui-select button')?.textContent).toContain(label);
+        element.querySelector<HTMLInputElement>('#admin-user-edit-is-email-confirmed')?.click();
+        const save = [...element.querySelectorAll('button')].find(button => button.textContent.trim() === 'Save');
+        if (save === undefined) {
+            throw new Error('Expected the Save button.');
+        }
+        save.click();
+
+        expect(usersService.updateUser).toHaveBeenCalledExactlyOnceWith('u1', {
+            isActive: true,
+            isEmailConfirmed: true,
+            roles: ['Admin'],
+        });
+        expect(dialogRef.close).toHaveBeenCalledWith(true);
     });
 });

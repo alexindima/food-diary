@@ -2,9 +2,10 @@ import { DOCUMENT } from '@angular/common';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
 import type { MarketingAttributionSummary } from '../models/admin-acquisition.data';
@@ -65,6 +66,7 @@ describe('AdminAcquisitionComponent', () => {
     });
 
     it('filters the event log by attribution state', async () => {
+        stubScrollIntoView();
         const element = fixture.nativeElement as HTMLElement;
         const select = element.querySelector<HTMLButtonElement>('button#admin-acquisition-channel');
         expect(select).not.toBeNull();
@@ -97,6 +99,110 @@ describe('AdminAcquisitionComponent', () => {
         }
     });
 });
+
+describe('Acquisition reporting boundaries', () => {
+    it('hides stale journal results and aborts the pending leap-day report when the URL range becomes invalid', async () => {
+        const pending = new Subject<MarketingAttributionRange>();
+        const getRange = vi.fn().mockReturnValue(pending);
+        const fixture = createReportingFixture(getRange);
+        const router = TestBed.inject(Router);
+        const host = fixture.nativeElement as HTMLElement;
+        await router.navigateByUrl('/?period=custom&from=2024-02-29&to=2024-02-29&eventType=unknown&channel=unknown');
+        fixture.detectChanges();
+        expect(getRange).toHaveBeenLastCalledWith(
+            expect.objectContaining({ fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00.000Z', eventType: '', channel: '' }),
+        );
+        expect(host.textContent).toContain('Loading acquisition data...');
+        getRange.mockClear();
+
+        await router.navigateByUrl('/?period=custom&from=2024-02-30&to=2024-03-01');
+        pending.next(createRange(createSummary(), { fromUtc: '2024-02-29T00:00:00Z', toUtc: '2024-03-01T00:00:00.000Z' }));
+        fixture.detectChanges();
+        expect(getRange).not.toHaveBeenCalled();
+        expect(host.textContent).not.toContain('Loading acquisition data...');
+        expect(host.querySelector('[aria-labelledby="acquisition-events-title"]')).toBeNull();
+    });
+
+    it('retains filtered dates at the last page and shows a referral without UTM tags', async () => {
+        const summary = createSummary();
+        const referral = { ...summary.recentEvents[1], eventType: 'premium_started', referrerHost: 'partner.example.test' };
+        const getRange = vi.fn((params: Record<string, string | number>) =>
+            of({
+                ...createRange({ ...summary, recentEvents: params['page'] === 2 ? [referral] : summary.recentEvents }, params),
+                eventTotal: 51,
+            }),
+        );
+        const fixture = createReportingFixture(getRange);
+        const router = TestBed.inject(Router);
+        await router.navigateByUrl('/?period=7d&search=partner');
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const next = Array.from(host.querySelectorAll('button')).find(button => button.textContent.includes('ADMIN_COMMON.NEXT'));
+        expect(next).toBeDefined();
+        next?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(router.parseUrl(router.url).queryParams).toMatchObject({ period: '7d', search: 'partner', page: '2' });
+        expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ search: 'partner', page: 2, limit: 50 }));
+        const journal = host.querySelector('[aria-labelledby="acquisition-events-title"]');
+        expect(journal?.querySelectorAll('tbody tr')).toHaveLength(1);
+        expect(journal?.textContent).toContain('partner.example.test / referral / none');
+        expect(journal?.textContent).toContain('Premium');
+        const finalNext = Array.from(host.querySelectorAll('button')).find(button => button.textContent.includes('ADMIN_COMMON.NEXT'));
+        expect(finalNext?.disabled).toBe(true);
+    });
+});
+
+describe('Acquisition event selector', () => {
+    it('restores an out-of-range journal page and filters through the displayed event menu', async () => {
+        stubScrollIntoView();
+        const summary = createSummary();
+        const getRange = vi.fn((params: Record<string, string | number>) => {
+            const recentEvents = params['eventType'] === 'premium_started' ? [] : summary.recentEvents;
+            return of(createRange({ ...summary, recentEvents }, params));
+        });
+        const fixture = createReportingFixture(getRange);
+        const router = TestBed.inject(Router);
+        const host = fixture.nativeElement as HTMLElement;
+        await router.navigateByUrl('/?period=7d&page=9&channel=tracked');
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(getRange).toHaveBeenCalledWith(expect.objectContaining({ page: 9, channel: 'tracked' }));
+        expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, channel: 'tracked' }));
+        expect(host.querySelector('[aria-labelledby="acquisition-events-title"]')?.textContent).toContain('/pricing');
+
+        const select = host.querySelector<HTMLButtonElement>('button#admin-acquisition-event-type');
+        expect(select).not.toBeNull();
+        select?.click();
+        fixture.detectChanges();
+        const options = TestBed.inject(DOCUMENT).querySelectorAll<HTMLElement>('[role="option"]');
+        const premium = Array.from(options).find(option => option.textContent.trim() === 'Premium starts');
+        expect(premium).toBeDefined();
+        premium?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(router.parseUrl(router.url).queryParams).toMatchObject({
+            period: '7d',
+            channel: 'tracked',
+            eventType: 'premium_started',
+            page: '1',
+        });
+        expect(getRange).toHaveBeenLastCalledWith(expect.objectContaining({ eventType: 'premium_started', channel: 'tracked', page: 1 }));
+        expect(host.querySelector('[aria-labelledby="acquisition-events-title"]')?.textContent).toContain('No events match these filters.');
+    });
+});
+
+function createReportingFixture(getRange: ReturnType<typeof vi.fn>): ComponentFixture<AdminAcquisitionComponent> {
+    TestBed.configureTestingModule({
+        imports: [AdminAcquisitionComponent],
+        providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAcquisitionFacade, useValue: { getRange } }],
+    });
+    const fixture = TestBed.createComponent(AdminAcquisitionComponent);
+    fixture.detectChanges();
+    return fixture;
+}
 
 function assertTiedJournalRows(element: HTMLElement): void {
     const rows = element.querySelectorAll('[aria-labelledby="acquisition-events-title"] tbody tr');

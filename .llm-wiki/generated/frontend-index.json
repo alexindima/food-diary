@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2855,
+    "typescriptFiles": 2862,
     "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 872,
+    "specs": 878,
     "localeFiles": 5,
     "roles": {
       "Component": 516,
@@ -180,6 +180,7 @@
       "routes": [],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/api/admin-bugs-sdk.mapper.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/api/admin-bugs.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-audit-status.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/pages/admin-bugs.spec.ts"
@@ -318,6 +319,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/api/admin-meal-plans.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plan-editor.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.spec.ts"
       ]
@@ -357,6 +359,7 @@
         ""
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/api/admin-outgoing-emails.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.spec.ts"
       ]
     },
@@ -432,6 +435,7 @@
         "login-activity"
       ],
       "tests": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/admin-users.routes.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-details-body.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/components/admin-user-premium-grant.spec.ts",
@@ -2663,7 +2667,7 @@
       "role": "Component",
       "selector": "fd-admin-email-templates",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "AdminLessonsService",

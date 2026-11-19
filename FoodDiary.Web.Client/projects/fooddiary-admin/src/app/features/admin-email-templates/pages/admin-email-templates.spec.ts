@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -105,5 +105,67 @@ describe('AdminEmailTemplatesComponent', () => {
         expect(serializedDialogConfig).toContain('"locale":""');
         expect(serializedDialogConfig).toContain('"isNew":true');
         expect(templatesService.getAll).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('AdminEmailTemplatesComponent rendered loading and recovery', () => {
+    const getAll = vi.fn<AdminEmailTemplatesFacade['getAll']>();
+    const closed = vi.fn<() => Observable<boolean>>();
+
+    beforeEach(async () => {
+        vi.resetAllMocks();
+        closed.mockReturnValue(of(false));
+        await TestBed.configureTestingModule({
+            imports: [AdminEmailTemplatesComponent],
+            providers: [
+                provideRouter([]),
+                ...provideTranslateTesting(),
+                { provide: AdminEmailTemplatesFacade, useValue: { getAll } },
+                { provide: FdUiDialogService, useValue: { open: (): { afterClosed: typeof closed } => ({ afterClosed: closed }) } },
+            ],
+        }).compileComponents();
+    });
+
+    it('keeps the newly created template visible when the original load later fails', () => {
+        const oldRequest = new Subject<AdminEmailTemplate[]>();
+        const created = { ...templates[0], subject: 'New verification message' };
+        const saved = new Subject<boolean>();
+        getAll.mockReturnValueOnce(oldRequest).mockReturnValueOnce(of([created]));
+        closed.mockReturnValueOnce(saved);
+        const fixture = TestBed.createComponent(AdminEmailTemplatesComponent);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.textContent).toContain('Loading templates...');
+        const createButton = Array.from(element.querySelectorAll('button')).find(button => button.textContent.trim() === 'Create template');
+        if (createButton === undefined) {
+            throw new Error('Missing create template button');
+        }
+        createButton.click();
+        saved.next(true);
+        saved.complete();
+        fixture.detectChanges();
+        expect(element.querySelector('tbody')?.textContent).toContain(created.subject);
+
+        oldRequest.error(new Error('Obsolete request failed'));
+        fixture.detectChanges();
+        expect(element.querySelector('fd-admin-load-error')).toBeNull();
+        expect(element.querySelector('tbody')?.textContent).toContain(created.subject);
+        expect(getAll).toHaveBeenCalledTimes(2);
+    });
+
+    it('retries a current list failure from the rendered error action', () => {
+        getAll.mockReturnValueOnce(throwError(() => new Error('Offline'))).mockReturnValueOnce(of(templates));
+        const fixture = TestBed.createComponent(AdminEmailTemplatesComponent);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const retry = element.querySelector<HTMLButtonElement>('fd-admin-load-error button');
+        if (retry === null) {
+            throw new Error('Missing retry button for failed template load');
+        }
+        retry.click();
+        fixture.detectChanges();
+        expect(element.querySelector('fd-admin-load-error')).toBeNull();
+        expect(element.querySelector('tbody')?.textContent).toContain(templates[0].subject);
+        expect(getAll).toHaveBeenCalledTimes(2);
     });
 });

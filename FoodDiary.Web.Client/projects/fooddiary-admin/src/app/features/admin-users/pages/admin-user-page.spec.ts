@@ -361,3 +361,50 @@ describe('AdminUserPageComponent actions and navigation', () => {
         expect(component['sections']()[0]?.fields.some(field => field.label === 'Roles' && field.value === '-')).toBe(true);
     });
 });
+
+describe('Admin account detail action results', () => {
+    it.each([
+        { label: 'ADMIN_USER.EDIT', dialog: AdminUserEditDialogComponent },
+        { label: 'ADMIN_USER.SET_PASSWORD', dialog: AdminUserSetPasswordDialogComponent },
+    ])('reloads the visible account after a successful $label but keeps it on cancellation', async ({ label, dialog }) => {
+        const { fixture, dialogs, usersFacade } = await createContextAsync();
+        const action = [...host(fixture).querySelectorAll('button')].find(button => button.textContent.trim() === label);
+        if (action === undefined) {
+            throw new Error(`Expected the ${label} action.`);
+        }
+        action.click();
+        expect(dialogs.open).toHaveBeenCalledWith(dialog, { size: 'sm', data: baseUser });
+        expect(usersFacade.getUser).toHaveBeenCalledOnce();
+
+        const pending = new Subject<AdminUser>();
+        usersFacade.getUser.mockReturnValueOnce(pending);
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of(true) });
+        action.click();
+        fixture.detectChanges();
+        expect(host(fixture).querySelector('[role="status"]')?.textContent).toContain('ADMIN_COMMON.LOADING');
+
+        pending.next({ ...baseUser, email: 'updated@example.test' });
+        pending.complete();
+        fixture.detectChanges();
+        expect(host(fixture).querySelector('h1')?.textContent).toBe('updated@example.test');
+        expect(usersFacade.getUser).toHaveBeenLastCalledWith(baseUser.id);
+    });
+
+    it('does not open dialogs or show Premium grant controls for a deleted account', async () => {
+        const account = { ...baseUser, deletedAt: adminUtcInstant('2026-03-01T00:00:00Z') };
+        const { fixture, dialogs } = await createContextAsync(users => {
+            users.getUser.mockReturnValueOnce(of(account));
+        });
+        const root = host(fixture);
+        for (const label of ['ADMIN_NOTIFICATION.TITLE', 'ADMIN_USER.IMPERSONATE']) {
+            const action = [...root.querySelectorAll('button')].find(button => button.textContent.trim() === label);
+            if (action === undefined) {
+                throw new Error(`Expected the ${label} action.`);
+            }
+            expect(action.disabled).toBe(true);
+            action.click();
+        }
+        expect(dialogs.open).not.toHaveBeenCalled();
+        expect(root.querySelector('fd-admin-user-premium-grant')).toBeNull();
+    });
+});

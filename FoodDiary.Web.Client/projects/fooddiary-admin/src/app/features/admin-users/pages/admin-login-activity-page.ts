@@ -90,6 +90,9 @@ export class AdminLoginActivityPageComponent {
         const range = adminPeriod(this.route.snapshot.queryParamMap);
         if (range === null) {
             this.loginEvents.set([]);
+            this.loginEventsTotalPages.set(1);
+            this.loginEventsTotalItems.set(0);
+            this.loadFailed.set(false);
             this.isLoginEventsLoading.set(false);
             return;
         }

@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "76130788d7eeb781e9001d42ba2c75b3b61faa64f4616e7f118cd77b34ccf39b",
-          "reviewReason": "Verified the fd-ui-kit aggregate coverage thresholds on Node 22.23.4 for all 101 source files. The Angular workspace membership, test target, and source selection match the generated frontend index."
+          "sha256": "dd3c5aa35785a2a5e1b169c4b3d5ba344f17f9fe592991fbac9e2f54ebf70fa9",
+          "reviewReason": "Verified the 202 Admin coverage source paths and exact Admin thresholds. Angular project discovery, build entry points and coverage includes and excludes are unchanged."
         }
       ],
-      "reason": "Verified the fd-ui-kit aggregate coverage thresholds on Node 22.23.4 for all 101 source files. The Angular workspace membership, test target, and source selection match the generated frontend index.",
-      "baseRef": "1885d6d24",
-      "gitHead": "1885d6d240e34f0235a4e1ffacf097ccb59993f0",
-      "reviewedAtUtc": "2026-11-19T16:53:10.4157606Z"
+      "reason": "Verified the 202 Admin coverage source paths and exact Admin thresholds. Angular project discovery, build entry points and coverage includes and excludes are unchanged.",
+      "baseRef": "8cc282ed5",
+      "gitHead": "8cc282ed54897f5e3e68cce508da84d6a683deae",
+      "reviewedAtUtc": "2026-11-19T18:10:01.7131646Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "76130788d7eeb781e9001d42ba2c75b3b61faa64f4616e7f118cd77b34ccf39b",
-          "reviewReason": "Compared the Angular configuration and regenerated the catalog. The threshold changes are confined to the existing fd-ui-kit test target; the project and target inventory still matches."
+          "sha256": "dd3c5aa35785a2a5e1b169c4b3d5ba344f17f9fe592991fbac9e2f54ebf70fa9",
+          "reviewReason": "Updated the coverage thresholds on the existing Admin test target. The Angular project and target inventory remains correct."
         }
       ],
-      "reason": "Compared the Angular configuration and regenerated the catalog. The threshold changes are confined to the existing fd-ui-kit test target; the project and target inventory still matches.",
-      "baseRef": "1885d6d24",
-      "gitHead": "1885d6d240e34f0235a4e1ffacf097ccb59993f0",
-      "reviewedAtUtc": "2026-11-19T16:53:10.9939449Z"
+      "reason": "Updated the coverage thresholds on the existing Admin test target. The Angular project and target inventory remains correct.",
+      "baseRef": "8cc282ed5",
+      "gitHead": "8cc282ed54897f5e3e68cce508da84d6a683deae",
+      "reviewedAtUtc": "2026-11-19T18:10:02.0623041Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -1714,14 +1714,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "8bcb98dd92a3f563d7b841108fbdbb5cfc6dbb5e404a38a370f6201f89bc4732",
-          "reviewReason": "The documented UI kit thresholds match angular.json and the successful complete Node 22 run with 880 tests. Confirmed the existing Angular and Chromium planning commands apply."
+          "sha256": "aeda9f43e88d0eb26caff82491ee70f02d3090ebad6cbc80ea2825069fe0af8f",
+          "reviewReason": "Verified the Admin 94/94/90/91 floors with 572 passing Admin tests and the existing smoke command with 16 passing Chromium scenarios."
         }
       ],
-      "reason": "The documented UI kit thresholds match angular.json and the successful complete Node 22 run with 880 tests. Confirmed the existing Angular and Chromium planning commands apply.",
-      "baseRef": "1885d6d24",
-      "gitHead": "1885d6d240e34f0235a4e1ffacf097ccb59993f0",
-      "reviewedAtUtc": "2026-11-19T16:53:11.9236756Z"
+      "reason": "Verified the Admin 94/94/90/91 floors with 572 passing Admin tests and the existing smoke command with 16 passing Chromium scenarios.",
+      "baseRef": "8cc282ed5",
+      "gitHead": "8cc282ed54897f5e3e68cce508da84d6a683deae",
+      "reviewedAtUtc": "2026-11-19T18:10:02.7995380Z"
     },
     {
       "pageId": "workflow-trace-feature",

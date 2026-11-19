@@ -90,6 +90,9 @@ export class AdminImpersonationSessionsPageComponent {
         const range = adminPeriod(this.route.snapshot.queryParamMap);
         if (range === null) {
             this.sessions.set([]);
+            this.sessionsTotalPages.set(1);
+            this.sessionsTotalItems.set(0);
+            this.loadFailed.set(false);
             this.isSessionsLoading.set(false);
             return;
         }

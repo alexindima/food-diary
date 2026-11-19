@@ -1,64 +1,94 @@
-import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
+import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 import { AdminAiUsageComponent } from './admin-ai-usage';
 
-const TOTAL_TOKENS = 1000;
-const INPUT_TOKENS = 600;
-const OUTPUT_TOKENS = 400;
+const summary: AdminAiUsageSummary = {
+    totalTokens: 100,
+    inputTokens: 60,
+    outputTokens: 40,
+    byDay: [{ date: '2026-01-15', totalTokens: 100, inputTokens: 60, outputTokens: 40 }],
+    byOperation: [{ key: 'recipe-analysis', totalTokens: 100, inputTokens: 60, outputTokens: 40 }],
+    byModel: [{ key: 'analysis-model', totalTokens: 100, inputTokens: 60, outputTokens: 40 }],
+    byUser: [{ id: 'account-1', email: 'member@example.test', totalTokens: 100, inputTokens: 60, outputTokens: 40 }],
+};
 
 describe('AdminAiUsageComponent', () => {
-    let component: AdminAiUsageComponent;
-    let fixture: ComponentFixture<AdminAiUsageComponent>;
-    let aiUsageService: { getSummary: ReturnType<typeof vi.fn> };
+    let getSummary: ReturnType<typeof vi.fn<AdminAiUsageFacade['getSummary']>>;
 
     beforeEach(async () => {
-        aiUsageService = { getSummary: vi.fn() };
-        aiUsageService.getSummary.mockReturnValue(
-            of({
-                totalTokens: TOTAL_TOKENS,
-                inputTokens: INPUT_TOKENS,
-                outputTokens: OUTPUT_TOKENS,
-                byDay: [],
-                byOperation: [],
-                byModel: [],
-                byUser: [],
-            }),
-        );
+        getSummary = vi.fn<AdminAiUsageFacade['getSummary']>().mockReturnValue(of(summary));
 
         await TestBed.configureTestingModule({
-            imports: [AdminAiUsageComponent],
-            providers: [...provideTranslateTesting(), provideRouter([]), { provide: AdminAiUsageFacade, useValue: aiUsageService }],
+            providers: [
+                ...provideTranslateTesting(),
+                provideRouter([{ path: 'ai-usage', component: AdminAiUsageComponent }]),
+                { provide: AdminAiUsageFacade, useValue: { getSummary } },
+            ],
         }).compileComponents();
-
-        fixture = TestBed.createComponent(AdminAiUsageComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    it('loads a filtered account and renders the daily chart and usage breakdowns', async () => {
+        const harness = await RouterTestingHarness.create('/ai-usage?userId=account-1&period=custom&from=2026-01-15&to=2026-01-16');
+
+        expect(getSummary).toHaveBeenCalledExactlyOnceWith({ from: '2026-01-15', to: '2026-01-17', userId: 'account-1' });
+        expect(harness.routeNativeElement?.querySelector('fd-ui-line-chart')).toBeTruthy();
+        expect(harness.routeNativeElement?.textContent).toContain('recipe-analysis');
+        expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
+        expect(harness.routeNativeElement?.querySelector('a[href^="/users/account-1?"]')?.textContent).toBe('member@example.test');
     });
 
-    it('should load ai usage on init', () => {
-        expect(aiUsageService.getSummary).toHaveBeenCalledTimes(1);
-        expect(component['usage']()?.totalTokens).toBe(TOTAL_TOKENS);
-        expect(component['isLoading']()).toBe(false);
+    it('retries the current period after a request fails', async () => {
+        getSummary.mockReturnValueOnce(throwError(() => new Error('ai usage failed')));
+        const harness = await RouterTestingHarness.create('/ai-usage?period=custom&from=2026-01-15&to=2026-01-16');
+
+        expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeTruthy();
+        expect(harness.routeNativeElement?.querySelector('fd-ui-line-chart')).toBeNull();
+
+        harness.routeNativeElement?.querySelector<HTMLButtonElement>(':scope > fd-ui-button button')?.click();
+        harness.detectChanges();
+
+        const period = { from: '2026-01-15', to: '2026-01-17' };
+        expect(getSummary.mock.calls).toEqual([[period], [period]]);
+        expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
+        expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
     });
 
-    it('should reset usage and loading state on error', async () => {
-        aiUsageService.getSummary.mockReturnValueOnce(throwError(() => new Error('ai usage failed')));
+    it('clears stale usage and ignores a late response after switching to an invalid period', async () => {
+        const obsolete = new Subject<AdminAiUsageSummary>();
+        getSummary.mockReturnValueOnce(of(summary)).mockReturnValueOnce(obsolete);
+        const harness = await RouterTestingHarness.create('/ai-usage');
+        expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
 
-        fixture = TestBed.createComponent(AdminAiUsageComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-        await fixture.whenStable();
+        await harness.navigateByUrl('/ai-usage?userId=account-1', AdminAiUsageComponent);
+        expect(harness.routeNativeElement?.querySelector('[role="status"]')).toBeTruthy();
 
-        expect(component['usage']()).toBeNull();
-        expect(component['isLoading']()).toBe(false);
+        await harness.navigateByUrl('/ai-usage?period=custom&from=2026-01-16&to=2026-01-15', AdminAiUsageComponent);
+        obsolete.next(summary);
+        harness.detectChanges();
+
+        expect(getSummary).toHaveBeenCalledTimes(2);
+        expect(harness.routeNativeElement?.querySelector('[role="status"]')).toBeNull();
+        expect(harness.routeNativeElement?.querySelector('[role="alert"]')?.textContent).toContain('ADMIN_COMMON.INVALID_PERIOD');
+        expect(harness.routeNativeElement?.querySelector('fd-ui-line-chart')).toBeNull();
+    });
+
+    it('keeps current usage visible when an older account request fails', async () => {
+        const obsolete = new Subject<AdminAiUsageSummary>();
+        getSummary.mockReturnValueOnce(obsolete);
+        const harness = await RouterTestingHarness.create('/ai-usage?userId=older-account');
+
+        await harness.navigateByUrl('/ai-usage?userId=account-1', AdminAiUsageComponent);
+        obsolete.error(new Error('older account failed'));
+        harness.detectChanges();
+
+        expect(harness.routeNativeElement?.querySelector('[role="alert"]')).toBeNull();
+        expect(harness.routeNativeElement?.textContent).toContain('analysis-model');
     });
 });

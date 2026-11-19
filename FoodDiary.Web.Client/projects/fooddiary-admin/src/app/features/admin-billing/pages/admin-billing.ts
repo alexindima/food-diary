@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, type ParamMap } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiTabsComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -42,6 +42,16 @@ export class AdminBillingComponent {
         }
     }
 
+    protected loadPeriod(params: ParamMap = this.route.snapshot.queryParamMap): void {
+        const range = adminPeriod(params);
+        if (range === null) {
+            this.billing.clearInvalidPeriod();
+            return;
+        }
+        this.billing.setPeriod(range);
+        this.billing.load();
+    }
+
     public constructor() {
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.billing.search.set(params.get('search') ?? '');
@@ -51,13 +61,7 @@ export class AdminBillingComponent {
             const tab = params.get('tab');
             this.billing.activeTab.set(tab === 'payments' || tab === 'webhook-events' || tab === 'cancellations' ? tab : 'subscriptions');
             this.billing.page.set(adminPage(params.get('page')));
-            const range = adminPeriod(params);
-            if (range === null) {
-                this.billing.clearInvalidPeriod();
-                return;
-            }
-            this.billing.setPeriod(range);
-            this.billing.load();
+            this.loadPeriod(params);
         });
     }
 }

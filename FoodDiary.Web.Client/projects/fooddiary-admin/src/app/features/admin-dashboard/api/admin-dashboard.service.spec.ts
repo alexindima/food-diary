@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { AdminDashboardService } from './admin-dashboard.service';
@@ -77,5 +77,41 @@ describe('AdminDashboardService', () => {
         const req = httpMock.expectOne(`${baseUrl}/overview?allTime=true`);
         expect(req.request.params.has('from')).toBe(false);
         req.flush(overview);
+    });
+
+    it('preserves monthly revenue by currency, including the previous period', () => {
+        const revenue = [
+            { currency: 'USD', gross: 12.34 },
+            { currency: 'EUR', gross: 0 },
+        ];
+        const period = {
+            ...overview.period,
+            metrics: {
+                registrations: 2,
+                payingUsers: 1,
+                aiTokens: 73,
+                trend: [{ date: '2026-08-01', registrations: 2, aiTokens: 73, revenue }],
+            },
+            currencies: [{ currency: 'USD', gross: 12.34, net: 10.34, refunds: 2, chargebacks: 0, successfulPayments: 1 }],
+        };
+        const previous = { ...overview.period, fromUtc: '2026-07-01T00:00:00Z', toUtc: period.fromUtc };
+        const response = { ...overview, interval: 'month', period, previous };
+        const receive = vi.fn();
+        service.getOverview({ allTime: true }).subscribe(receive);
+
+        httpMock.expectOne(`${baseUrl}/overview?allTime=true`).flush(response);
+
+        expect(receive).toHaveBeenCalledExactlyOnceWith(response);
+    });
+
+    it('preserves a recent user with withheld email', () => {
+        const user = { id: 'owned-user', isActive: false, createdOnUtc: '2026-08-12T09:00:00Z', roles: ['User'] };
+        const response = { totalUsers: 1, activeUsers: 0, premiumUsers: 0, deletedUsers: 0, pendingReportsCount: 0, recentUsers: [user] };
+        const receive = vi.fn();
+        service.getSummary().subscribe(receive);
+
+        httpMock.expectOne(baseUrl).flush(response);
+
+        expect(receive).toHaveBeenCalledExactlyOnceWith({ ...response, recentUsers: [{ ...user, email: null }] });
     });
 });

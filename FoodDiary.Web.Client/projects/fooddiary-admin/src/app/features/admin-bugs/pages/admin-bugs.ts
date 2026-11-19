@@ -165,16 +165,4 @@ export class AdminBugsPageComponent {
     protected retry(): void {
         this.refresh.next();
     }
-
-    protected safePullRequestUrl(value: string | null): string | null {
-        if (value === null || value.length === 0) {
-            return null;
-        }
-        try {
-            const url = new URL(value);
-            return url.protocol === 'https:' && url.username.length === 0 && url.password.length === 0 ? url.href : null;
-        } catch {
-            return null;
-        }
-    }
 }

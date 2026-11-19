@@ -7,6 +7,94 @@ import { provideTranslateTesting } from '../../../../../../../src/testing/transl
 import { AdminAiPromptsFacade } from '../lib/admin-ai-prompts.facade';
 import { AdminAiPromptWorkbenchComponent } from './admin-ai-prompt-workbench';
 
+function workbenchButton(root: HTMLElement, key: string): HTMLButtonElement {
+    const result = Array.from(root.querySelectorAll('button')).find(button => button.textContent.trim() === key);
+    if (result === undefined) {
+        throw new Error(`Missing workbench button ${key}`);
+    }
+    return result;
+}
+
+function choosePhoto(root: HTMLElement, file: File | null): void {
+    const input = root.querySelector<HTMLInputElement>('input[type="file"]');
+    if (input === null) {
+        throw new Error('Missing workbench photo input');
+    }
+    Object.defineProperty(input, 'files', { configurable: true, value: { item: (): File | null => file } });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+describe('AdminAiPromptWorkbenchComponent rendered interactions', () => {
+    const api = {
+        preview: vi.fn<AdminAiPromptsFacade['preview']>(),
+        test: vi.fn<AdminAiPromptsFacade['test']>(),
+        uploadImage: vi.fn<AdminAiPromptsFacade['uploadImage']>(),
+    };
+    let fixture: ComponentFixture<AdminAiPromptWorkbenchComponent>;
+    let root: HTMLElement;
+
+    beforeEach(async () => {
+        vi.resetAllMocks();
+        api.preview.mockReturnValue(of({ text: 'Preview with selected photo' }));
+        api.test.mockReturnValue(of({ text: '{"items":[]}' }));
+        await TestBed.configureTestingModule({
+            imports: [AdminAiPromptWorkbenchComponent],
+            providers: [...provideTranslateTesting(), { provide: AdminAiPromptsFacade, useValue: api }],
+        }).compileComponents();
+        fixture = TestBed.createComponent(AdminAiPromptWorkbenchComponent);
+        fixture.componentRef.setInput('scenarioKey', 'vision');
+        fixture.componentRef.setInput('locale', 'en');
+        fixture.componentRef.setInput('promptText', 'Recognize food');
+        fixture.detectChanges();
+        root = fixture.nativeElement as HTMLElement;
+    });
+
+    it('drops a preview that was started before leaving and reopening the same scenario', async () => {
+        const pending = new Subject<{ text: string }>();
+        const verified = vi.fn<(text: string) => void>();
+        fixture.componentInstance.verified.subscribe(verified);
+        api.preview.mockReturnValueOnce(pending);
+        workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+        expect(api.preview).toHaveBeenCalledTimes(1);
+
+        fixture.componentRef.setInput('scenarioKey', 'nutrition');
+        fixture.detectChanges();
+        fixture.componentRef.setInput('scenarioKey', 'vision');
+        fixture.detectChanges();
+        pending.next({ text: 'Preview from the previous scenario visit' });
+        pending.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(root.textContent).not.toContain('Preview from the previous scenario visit');
+        expect(verified).not.toHaveBeenCalled();
+    });
+
+    it('drops a photo uploaded before leaving and reopening the same locale', async () => {
+        const pending = new Subject<{ assetId: string }>();
+        const photo = new File(['photo'], 'previous-visit.png', { type: 'image/png' });
+        api.uploadImage.mockReturnValueOnce(pending);
+        choosePhoto(root, photo);
+        expect(api.uploadImage).toHaveBeenCalledExactlyOnceWith(photo);
+
+        fixture.componentRef.setInput('locale', 'ru');
+        fixture.detectChanges();
+        fixture.componentRef.setInput('locale', 'en');
+        fixture.detectChanges();
+        pending.next({ assetId: 'previous-visit' });
+        pending.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(root.textContent).not.toContain(photo.name);
+        workbenchButton(root, 'ADMIN_PROMPTS.PREVIEW').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(api.preview.mock.lastCall?.[0].imageAssetId).toBeUndefined();
+        expect(workbenchButton(root, 'ADMIN_PROMPTS.TEST').disabled).toBe(true);
+    });
+});
+
 describe('AdminAiPromptWorkbenchComponent', () => {
     const api = { preview: vi.fn(), test: vi.fn(), uploadImage: vi.fn() };
     beforeEach(async () => {

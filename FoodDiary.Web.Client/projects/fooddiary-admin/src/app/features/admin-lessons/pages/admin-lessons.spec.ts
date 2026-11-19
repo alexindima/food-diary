@@ -1,9 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
@@ -247,7 +248,7 @@ async function setupImportAsync(): Promise<{
     importLessons: Mock<AdminLessonsFacade['importLessons']>;
 }> {
     const getAll = vi.fn<AdminLessonsFacade['getAll']>().mockReturnValue(of([]));
-    const importLessons = vi.fn<AdminLessonsFacade['importLessons']>();
+    const importLessons = vi.fn<AdminLessonsFacade['importLessons']>().mockReturnValue(throwError(() => new Error('Invalid import data')));
     await TestBed.configureTestingModule({
         imports: [AdminLessonsComponent],
         providers: [
@@ -268,6 +269,14 @@ describe('AdminLessonsComponent JSON import', () => {
         { contents: '{"version":2,"lessons":[]}', message: 'Import file has an invalid lesson format.' },
         { contents: '{"version":1,"lessons":[null]}', message: 'Import file has an invalid lesson format.' },
         { contents: '{"version":1,"lessons":[{"title":"Missing required fields"}]}', message: 'Import file has an invalid lesson format.' },
+        {
+            contents: JSON.stringify({ ...importPayload, lessons: [{ ...importPayload.lessons[0], isPublished: 'false' }] }),
+            message: 'Import file has an invalid lesson format.',
+        },
+        {
+            contents: JSON.stringify({ ...importPayload, lessons: [{ ...importPayload.lessons[0], sortOrder: 1.5 }] }),
+            message: 'Import file has an invalid lesson format.',
+        },
     ])('rejects $contents before making an API request', async ({ contents, message }) => {
         const { fixture, host, getAll, importLessons } = await setupImportAsync();
         selectFile(fixture, contents);
@@ -308,5 +317,79 @@ describe('AdminLessonsComponent JSON import', () => {
         expect(getAll).toHaveBeenCalledTimes(2);
         expect(host.textContent).toContain('Imported 1 lessons.');
         expect(host.querySelector('tbody')?.textContent).toContain(LESSON.title);
+    });
+});
+
+async function readLessonFileAsync(value: Blob | MediaSource | undefined): Promise<unknown> {
+    if (!(value instanceof Blob)) {
+        throw new Error('Expected a lesson export file');
+    }
+    const json = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', () => {
+            if (typeof reader.result === 'string') {
+                resolve(reader.result);
+            } else {
+                reject(new Error('Could not read lesson export'));
+            }
+        });
+        reader.readAsText(value);
+    });
+    return JSON.parse(json) as unknown;
+}
+
+describe('AdminLessonsComponent filtered JSON export', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('exports all matching pages in the reusable file format and excludes other locales', async () => {
+        const matching = Array.from({ length: 21 }, (_, index) => ({
+            ...LESSON,
+            id: adminId<'lesson'>(`lesson-${index}`),
+            title: `English lesson ${index + 1}`,
+            sortOrder: index,
+            isPublished: index === 0 ? undefined : false,
+        }));
+        const russian = { ...LESSON, id: adminId<'lesson'>('ru-lesson'), locale: 'ru', title: 'Урок по питанию' };
+        const getAll = vi.fn<AdminLessonsFacade['getAll']>().mockReturnValue(of([...matching, russian]));
+        await TestBed.configureTestingModule({
+            providers: [
+                provideRouter([{ path: 'lessons', component: AdminLessonsComponent }]),
+                provideTranslateTesting(),
+                { provide: AdminLessonsFacade, useValue: { getAll } },
+                { provide: FdUiDialogService, useValue: {} },
+            ],
+        }).compileComponents();
+        const harness = await RouterTestingHarness.create('/lessons?locale=en&page=2');
+        const root = harness.routeNativeElement;
+        const exportButton = Array.from(root?.querySelectorAll('button') ?? []).find(button => button.textContent.trim() === 'Export JSON');
+        if (exportButton === undefined) {
+            throw new Error('Missing lesson export button');
+        }
+        expect(root?.querySelector('tbody tr')?.textContent).toContain('English lesson 21');
+        expect(root?.querySelectorAll('tbody tr')).toHaveLength(1);
+
+        const link = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+        const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:lesson-export');
+        const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+        exportButton.click();
+
+        const anchor = link.mock.contexts[0];
+        if (!(anchor instanceof HTMLAnchorElement)) {
+            throw new Error('Missing lesson download link');
+        }
+        expect(anchor.download).toMatch(/^fooddiary-lessons-\d{4}-\d{2}-\d{2}\.json$/);
+        expect(revoke).toHaveBeenCalledExactlyOnceWith('blob:lesson-export');
+        const file = await readLessonFileAsync(create.mock.calls[0]?.[0]);
+        expect(file).toEqual({
+            version: 1,
+            lessons: matching.map(lesson => ({
+                ...importPayload.lessons[0],
+                title: lesson.title,
+                sortOrder: lesson.sortOrder,
+                isPublished: lesson.isPublished ?? true,
+            })),
+        });
     });
 });

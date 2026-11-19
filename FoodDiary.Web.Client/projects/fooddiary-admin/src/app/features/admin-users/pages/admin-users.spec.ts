@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -6,6 +7,7 @@ import { firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import ruCore from '../../../../../../../assets/i18n/ru/core.json';
+import { stubScrollIntoView } from '../../../../../../../src/testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
@@ -238,6 +240,82 @@ describe('AdminUsersComponent dialogs', () => {
         expect(dialogService.open).not.toHaveBeenCalled();
     });
 });
+
+describe('Admin users filters and pagination', () => {
+    beforeEach(async () => {
+        await setupComponentAsync();
+    });
+
+    it('applies role and confirmation changes while clearing both activity filters and returning to page one', async () => {
+        stubScrollIntoView();
+        const router = TestBed.inject(Router);
+        await router.navigate([], {
+            queryParams: { page: SECOND_PAGE, lastActiveFrom: '2026-01-02', lastActiveTo: '2026-01-03' },
+        });
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const roleLabel = [...root.querySelectorAll<HTMLLabelElement>('fd-ui-input label')].find(
+            label => label.textContent.trim() === 'ADMIN_USER.ROLES',
+        );
+        const role = roleLabel?.control;
+        if (!(role instanceof HTMLInputElement)) {
+            throw new Error('Expected the Roles input.');
+        }
+        role.value = 'Support';
+        role.dispatchEvent(new Event('input', { bubbles: true }));
+        findControl(root, 'fd-ui-select:has(button[id="admin-users-field-1"]) button').click();
+        fixture.detectChanges();
+        findControl(TestBed.inject(DOCUMENT), '[role="option"]:has(span[title="ADMIN_USER.NO"])').click();
+        fixture.detectChanges();
+        for (const clearButton of root.querySelectorAll<HTMLButtonElement>('fd-ui-date-input button[aria-label^="COMMON.CLEAR:"]')) {
+            clearButton.click();
+        }
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(
+            SECOND_PAGE,
+            PAGE_SIZE,
+            null,
+            expect.objectContaining({ role: '', lastActiveFrom: '2026-01-02', lastActiveTo: '2026-01-03' }),
+        );
+        findControl(root, '.admin-filter-bar > fd-ui-button button').click();
+        await fixture.whenStable();
+
+        expect(router.parseUrl(router.url).queryParams).toEqual({ page: '1', status: 'active', role: 'Support', emailConfirmed: 'false' });
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, null, {
+            status: 'active',
+            role: 'Support',
+            emailConfirmed: 'false',
+            lastActiveFrom: '',
+            lastActiveTo: '',
+        });
+    });
+
+    it('clears the table for an invalid period and reloads when the period is restored', async () => {
+        const router = TestBed.inject(Router);
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('.summary')?.textContent).toContain('Total users: 21');
+
+        await router.navigate([], { queryParams: { period: 'custom', from: '2026-01-03', to: '2026-01-02' } });
+        fixture.detectChanges();
+        expect(usersService.getUsers).toHaveBeenCalledOnce();
+        expect(root.querySelector('.summary')?.textContent).toContain('Total users: 0');
+        expect(root.querySelector('tbody')?.textContent).toContain('No users found.');
+        expect(root.querySelector('fd-ui-pagination nav')).toBeNull();
+        expect(root.querySelector('fd-admin-load-error')).toBeNull();
+
+        await router.navigate([], { queryParams: { period: 'all' } });
+        fixture.detectChanges();
+        expect(usersService.getUsers).toHaveBeenCalledTimes(SECOND_PAGE);
+        expect(root.querySelector('tbody')?.textContent).toContain(pagedUsers.items[0].email);
+    });
+});
+
+function findControl(root: ParentNode, selector: string): HTMLButtonElement {
+    const control = root.querySelector<HTMLButtonElement>(selector);
+    if (control === null) {
+        throw new Error(`Expected control matching ${selector}.`);
+    }
+    return control;
+}
 
 async function setupComponentAsync(): Promise<void> {
     usersService = {

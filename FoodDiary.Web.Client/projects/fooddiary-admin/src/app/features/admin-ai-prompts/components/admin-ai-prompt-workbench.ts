@@ -36,15 +36,14 @@ export class AdminAiPromptWorkbenchComponent {
     protected readonly errorKey = signal('');
     protected readonly preview = signal('');
     protected readonly result = signal('');
-    private readonly revision = computed(() => JSON.stringify(this.draft()));
-    private readonly verifiedRevision = signal('');
+    private readonly context = computed(() => ({ key: this.scenarioKey(), locale: this.locale() }));
+    private readonly verifiedDraft = signal<AdminAiPromptDraft | null>(null);
     protected readonly requiresImage = computed(() => this.scenarioKey() === 'vision' || this.scenarioKey() === 'product-label');
     protected readonly canTest = computed(
-        () => this.verifiedRevision() === this.revision() && (!this.requiresImage() || Boolean(this.imageAssetId())),
+        () => this.verifiedDraft() === this.draft() && (!this.requiresImage() || Boolean(this.imageAssetId())),
     );
     protected readonly draft = computed<AdminAiPromptDraft>(() => ({
-        key: this.scenarioKey(),
-        locale: this.locale(),
+        ...this.context(),
         promptText: this.promptText(),
         text: this.text(),
         imageAssetId: this.imageAssetId(),
@@ -55,8 +54,7 @@ export class AdminAiPromptWorkbenchComponent {
 
     public constructor() {
         effect(() => {
-            this.scenarioKey();
-            this.locale();
+            this.context();
             untracked(() => {
                 this.text.set('');
                 this.foodName.set('');
@@ -65,10 +63,10 @@ export class AdminAiPromptWorkbenchComponent {
             });
         });
         effect(() => {
-            this.revision();
+            this.draft();
             this.preview.set('');
             this.result.set('');
-            this.verifiedRevision.set('');
+            this.verifiedDraft.set(null);
             this.errorKey.set('');
         });
     }
@@ -77,7 +75,6 @@ export class AdminAiPromptWorkbenchComponent {
         if (this.busy() || (run && !this.canTest())) {
             return;
         }
-        const revision = this.revision();
         const draft = this.draft();
         this.busy.set(true);
         this.errorKey.set('');
@@ -85,18 +82,18 @@ export class AdminAiPromptWorkbenchComponent {
             const response = await firstValueFrom(
                 (run ? this.api.test(draft) : this.api.preview(draft)).pipe(takeUntilDestroyed(this.destroyRef)),
             );
-            if (revision !== this.revision()) {
+            if (draft !== this.draft()) {
                 return;
             }
             if (run) {
                 this.result.set(response.text);
             } else {
                 this.preview.set(response.text);
-                this.verifiedRevision.set(revision);
+                this.verifiedDraft.set(draft);
                 this.verified.emit(draft.promptText);
             }
         } catch (error: unknown) {
-            if (revision === this.revision()) {
+            if (draft === this.draft()) {
                 this.errorKey.set(adminAiPromptFailureKey(error, run));
             }
         } finally {
@@ -112,19 +109,19 @@ export class AdminAiPromptWorkbenchComponent {
             this.errorKey.set('ADMIN_PROMPTS.IMAGE_ERROR');
             return;
         }
-        const identity = `${this.scenarioKey()}:${this.locale()}`;
+        const context = this.context();
         this.uploading.set(true);
         this.imageAssetId.set(undefined);
         this.imageName.set('');
         try {
             const response = await firstValueFrom(this.api.uploadImage(file).pipe(takeUntilDestroyed(this.destroyRef)));
-            if (identity !== `${this.scenarioKey()}:${this.locale()}`) {
+            if (context !== this.context()) {
                 return;
             }
             this.imageAssetId.set(response.assetId);
             this.imageName.set(file.name);
         } catch {
-            if (identity === `${this.scenarioKey()}:${this.locale()}`) {
+            if (context === this.context()) {
                 this.errorKey.set('ADMIN_PROMPTS.IMAGE_ERROR');
             }
         } finally {
