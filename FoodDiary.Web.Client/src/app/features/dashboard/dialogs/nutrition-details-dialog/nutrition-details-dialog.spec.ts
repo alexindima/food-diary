@@ -45,7 +45,9 @@ async function setupAsync(
 describe('Nutrition details dialog', () => {
     it('shows loading, retries a failed full-day request, then renders an empty day', async () => {
         const pending = new Subject<DashboardSnapshot>();
-        const request = vi.fn().mockReturnValueOnce(pending).mockReturnValueOnce(of(nutritionSnapshotFixture()));
+        const empty = nutritionSnapshotFixture();
+        empty.statistics.averageProteins = 0;
+        const request = vi.fn().mockReturnValueOnce(pending).mockReturnValueOnce(of(empty));
         const { fixture, host } = await setupAsync({}, request);
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.LOADING');
         pending.error(new Error('offline'));
@@ -97,6 +99,34 @@ describe('Nutrition details dialog', () => {
         const { host } = await setupAsync({}, vi.fn().mockReturnValue(throwError(() => new Error('offline'))));
         expect(host.querySelector('.nutrition-details__summary')).toBeNull();
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
+    });
+});
+
+describe('Nutrition detail totals after a concurrent diary edit', () => {
+    it.each(['save', 'remove'] as const)('retries when statistics and meals straddle a %s', async operation => {
+        const protein = 12.34;
+        const meal = nutritionMealFixture({ isNutritionAutoCalculated: false, totalProteins: protein, manualProteins: protein });
+        const stable = nutritionSnapshotFixture([meal]);
+        stable.statistics.averageProteins = protein;
+        stable.statistics.proteinGoal = 40;
+        const inconsistent = nutritionSnapshotFixture(operation === 'save' ? [meal] : []);
+        inconsistent.statistics.averageProteins = operation === 'save' ? 0 : protein;
+        const request = vi.fn().mockReturnValueOnce(of(inconsistent)).mockReturnValueOnce(of(stable));
+        const { fixture, host } = await setupAsync({}, request);
+
+        expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
+        expect(host.querySelector('.nutrition-details__summary')).toBeNull();
+        expect(host.querySelector('.nutrition-details__source')).toBeNull();
+
+        const retry = host.querySelector<HTMLButtonElement>('fd-ui-section-error-state button');
+        expect(retry).not.toBeNull();
+        retry?.click();
+        fixture.detectChanges();
+
+        expect(request.mock.calls[1]).toEqual(request.mock.calls[0]);
+        expect(host.textContent).not.toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
+        expect(host.querySelector('fd-ui-progress-ring')?.textContent).toContain('31%');
+        expect(host.querySelector('.nutrition-details__source')?.textContent).toContain('100%');
     });
 });
 

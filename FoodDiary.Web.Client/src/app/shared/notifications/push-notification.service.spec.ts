@@ -2013,6 +2013,104 @@ describe('PushNotificationService actions when signed out', () => {
     });
 });
 
+describe('Push notification cleanup during logout', () => {
+    useSessionCleanupTimers();
+
+    it('waits for the original device cleanup after authentication publishes the end of the session', async () => {
+        const subscription = createPushSubscription('https://push.example.com/subscriptions/session-ending');
+        confirmSubscriptionOwner(subscription, 'user-a');
+        swPush.subscription = of(subscription);
+        subscription$.next(subscription);
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('already-subscribed');
+        const removing = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValue(removing);
+
+        const cleanup = sessionEvents.prepareSessionEnd();
+        const finished = vi.fn();
+        void cleanup?.then(finished);
+        // AuthService publishes this event before it clears its current session and awaits cleanup.
+        sessionEvents.notifySessionEnded();
+        authService.isAuthenticated.mockReturnValue(false);
+        authService.getUserId.mockReturnValue(null);
+        authService.getSessionKey.mockReturnValue(null);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(service.isSubscribed()).toBe(false);
+        expect(subscription.unsubscribeMock).toHaveBeenCalledOnce();
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(subscription.endpoint, 'token-a');
+        expect(finished).not.toHaveBeenCalled();
+
+        removing.next();
+        removing.complete();
+        await cleanup;
+
+        expect(finished).toHaveBeenCalledOnce();
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledOnce();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBeNull();
+    });
+});
+
+describe('Push notification key rotation during manual enable', () => {
+    it('lets browser resume rotate the device while an earlier enable request is still waiting for configuration', async () => {
+        swPush.subscription = of(null);
+        subscription$.next(null);
+        await finishInitialPushReadAsync();
+
+        const manualConfiguration = new Subject<{ enabled: boolean; publicKey: string }>();
+        const configuration = { enabled: true, publicKey: 'bmV3' };
+        notificationService.getWebPushConfiguration.mockReturnValueOnce(manualConfiguration).mockReturnValue(of(configuration));
+        const enabling = service.ensureSubscriptionAsync();
+        await vi.waitFor(() => {
+            expect(manualConfiguration.observed).toBe(true);
+        });
+
+        const old = createPushSubscription(
+            'https://push.example.com/subscriptions/older-key-in-another-tab',
+            new TextEncoder().encode('old').buffer,
+        );
+        const renewed = createPushSubscription('https://push.example.com/subscriptions/rotated-by-focus');
+        confirmSubscriptionOwner(old, 'user-a');
+        swPush.subscription = of(old);
+        const renewing = new Subject<PushSubscription>();
+        swPush.requestSubscription.mockImplementation(async () => {
+            const result = await firstValueFrom(renewing);
+            swPush.subscription = of(result);
+            return result;
+        });
+        const capability = vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+
+        try {
+            window.dispatchEvent(new Event('focus'));
+            await vi.waitFor(() => {
+                expect(renewing.observed).toBe(true);
+            });
+            expect(old.unsubscribeMock).toHaveBeenCalledOnce();
+            expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(old.endpoint);
+
+            manualConfiguration.next(configuration);
+            manualConfiguration.complete();
+            await expect(enabling).resolves.toBe('unavailable');
+            expect(swPush.requestSubscription).toHaveBeenCalledOnce();
+            expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+
+            renewing.next(renewed);
+            renewing.complete();
+            await vi.waitFor(() => {
+                expect(service.currentSubscriptionEndpoint()).toBe(renewed.endpoint);
+            });
+            expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledExactlyOnceWith(
+                expect.objectContaining({ endpoint: renewed.endpoint }),
+            );
+            expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: renewed.endpoint, userId: 'user-a' }));
+        } finally {
+            capability.mockRestore();
+            visibility.mockRestore();
+        }
+    });
+});
+
 describe('PushNotificationService same-account return', () => {
     it('does not prompt when permission changes while automatic restoration is waiting for configuration', async () => {
         const permission = vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');

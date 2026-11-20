@@ -11,6 +11,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import type { ClientTask, ClientTaskStatus, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
@@ -46,6 +47,7 @@ type RecommendationViewModel = DietologistRecommendation & {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecommendationsPageComponent {
+    protected readonly locale = injectCurrentLanguage();
     private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
     private readonly recommendationsFacade = inject(RecommendationsFacade);

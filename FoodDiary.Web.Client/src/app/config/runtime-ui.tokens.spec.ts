@@ -29,7 +29,7 @@ describe('runtime UI tokens', () => {
 
     it('should provide viewport and debounce defaults', () => {
         expect(TestBed.inject(APP_MOBILE_VIEWPORT_QUERY)).toBe('(max-width: 768px)');
-        expect(TestBed.inject(SIDEBAR_MOBILE_VIEWPORT_QUERY)).toBe('(max-width: 767px)');
+        expect(TestBed.inject(SIDEBAR_MOBILE_VIEWPORT_QUERY)).toBe(TestBed.inject(APP_MOBILE_VIEWPORT_QUERY));
         expect(TestBed.inject(APP_SEARCH_DEBOUNCE_MS)).toBe(DEFAULT_DEBOUNCE_MS);
         expect(TestBed.inject(APP_FILTER_DEBOUNCE_MS)).toBe(DEFAULT_DEBOUNCE_MS);
         expect(TestBed.inject(EXPLORE_SEARCH_DEBOUNCE_MS)).toBe(DEFAULT_EXPLORE_SEARCH_DEBOUNCE_MS);

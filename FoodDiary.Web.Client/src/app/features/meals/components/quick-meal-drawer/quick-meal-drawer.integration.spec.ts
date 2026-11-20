@@ -181,6 +181,74 @@ describe('Quick meal quantity editing with the real dialog', () => {
     });
 });
 
+describe('Quick meal with recipes that have no computable serving mass', () => {
+    const editedServings = 2.5;
+    const recipes = [
+        { kind: 'an instruction-only step', ingredients: [] },
+        {
+            kind: 'a mix of weight and volume',
+            ingredients: [
+                { amount: GRAMS_PER_SERVING, productBaseUnit: 'G' },
+                { amount: GRAMS_PER_SERVING, productBaseUnit: 'ML' },
+            ],
+        },
+    ];
+
+    it.each(recipes)('corrects and saves decimal servings for a recipe with $kind', async ({ ingredients }) => {
+        const { fixture, lookupRecipe, createMeal, showError } = await renderDrawerAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        lookupRecipe.mockReturnValueOnce(of({ id: RECIPE.id, servings: RECIPE_SERVINGS, steps: [{ ingredients }] }));
+
+        editButton(host).click();
+        const dialog = await visibleEditorAsync();
+        const amount = amountInput(dialog);
+        expect(amount.getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
+        expect(amount.valueAsNumber).toBe(INITIAL_SERVINGS);
+
+        const confirm = editorAction(dialog, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE');
+        setAmount(dialog, 0);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(confirm.disabled).toBe(true);
+        });
+        confirm.click();
+        expect(dialog.isConnected).toBe(true);
+        expect(createMeal).not.toHaveBeenCalled();
+
+        setAmount(dialog, editedServings);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(confirm.disabled).toBe(false);
+        });
+        confirm.click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(editButton(host).disabled).toBe(false);
+            expect(host.querySelector('.quick-meal__meta')?.textContent).toContain('2.5 servings');
+        });
+
+        editButton(host).click();
+        const reopened = await visibleEditorAsync();
+        expect(amountInput(reopened).getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
+        expect(amountInput(reopened).valueAsNumber).toBe(editedServings);
+        expect(lookupRecipe).toHaveBeenCalledExactlyOnceWith(RECIPE.id);
+        editorAction(reopened, 'PRODUCT_MANAGE.CANCEL_BUTTON').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(draftSaveButton(host).disabled).toBe(false);
+        });
+
+        draftSaveButton(host).click();
+        expect(createMeal).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ items: [{ recipeId: RECIPE.id, productId: null, amount: editedServings }] }),
+            expect.any(String),
+        );
+        fixture.detectChanges();
+        expect(host.querySelector('[role="region"]')).toBeNull();
+        expect(showError).not.toHaveBeenCalled();
+    });
+});
+
 describe('Quick meal draft actions during a pending save', () => {
     it.each([
         { action: 'clear', selector: 'button[aria-label="QUICK_MEAL.CLEAR"]', accepted: true },

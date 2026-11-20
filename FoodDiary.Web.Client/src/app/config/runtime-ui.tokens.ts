@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { inject, InjectionToken } from '@angular/core';
 
 import { AUTH_EMAIL_RESEND_COOLDOWN_SECONDS_DEFAULT, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS_DEFAULT } from '../shared/auth/auth.constants';
 
@@ -64,7 +64,7 @@ export const APP_MOBILE_VIEWPORT_QUERY = new InjectionToken<string>('APP_MOBILE_
 
 export const SIDEBAR_MOBILE_VIEWPORT_QUERY = new InjectionToken<string>('SIDEBAR_MOBILE_VIEWPORT_QUERY', {
     providedIn: 'root',
-    factory: (): string => '(max-width: 767px)',
+    factory: (): string => inject(APP_MOBILE_VIEWPORT_QUERY),
 });
 
 export const APP_SEARCH_DEBOUNCE_MS = new InjectionToken<number>('APP_SEARCH_DEBOUNCE_MS', {

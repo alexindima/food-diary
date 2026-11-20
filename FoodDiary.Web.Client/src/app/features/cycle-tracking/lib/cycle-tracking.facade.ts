@@ -142,7 +142,7 @@ export class CycleTrackingFacade {
             this.state.clearCycle();
             this.day.cancelDayEdit();
             this.factor.clearAfterProfileDeletion();
-            this.episode.cancelMenstrualEpisodeEdit();
+            this.episode.clearAfterProfileDeletion();
         } catch {
             this.state.settingsError.set('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
         } finally {

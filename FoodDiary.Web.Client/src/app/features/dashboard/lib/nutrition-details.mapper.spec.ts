@@ -3,7 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { nutritionMealFixture, nutritionSnapshotFixture } from '../../../../testing/nutrition-details.fixtures';
 import { createEmptyRecipeSnapshot, mealItemFromStored } from '../../../shared/models/meal.data';
 import { entityId } from '../../../shared/models/semantics/entity-id';
-import { buildNutritionSources, nutritionDayProgress, nutritionMetricPresentation } from './nutrition-details.mapper';
+import {
+    buildNutritionSources,
+    hasMatchingNutritionTotal,
+    nutritionDayProgress,
+    nutritionMetricPresentation,
+} from './nutrition-details.mapper';
 
 const LARGER_CALORIES = 500;
 const SMALLER_CALORIES = 200;
@@ -169,6 +174,17 @@ describe('Daily nutrition metric presentation', () => {
         });
 
         expect(buildNutritionSources([meal], 'fats', 'en')).toMatchObject([{ kind: 'unavailable', value: 8, name: null }]);
+    });
+});
+
+describe('Daily nutrition consistency', () => {
+    it('accepts the rounded dashboard total for a more precise recorded meal', () => {
+        const meals = [nutritionMealFixture({ totalProteins: 0.105 })];
+        const dashboardTotal = 0.1;
+        const outdatedTotal = 0.09;
+
+        expect(hasMatchingNutritionTotal(meals, 'protein', dashboardTotal)).toBe(true);
+        expect(hasMatchingNutritionTotal(meals, 'protein', outdatedTotal)).toBe(false);
     });
 });
 

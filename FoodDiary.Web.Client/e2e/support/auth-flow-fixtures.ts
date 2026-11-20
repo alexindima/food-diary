@@ -149,7 +149,7 @@ export async function installVerificationHubAsync(page: Page): Promise<{
     return state;
 }
 
-async function installNotificationHubAsync(page: Page): Promise<void> {
+export async function installNotificationHubAsync(page: Page): Promise<void> {
     await installHubNegotiationAsync(page, 'notifications');
     await page.routeWebSocket(/\/hubs\/notifications(?:\?|$)/u, socket => {
         socket.onMessage(message => {

@@ -65,14 +65,15 @@ export class NutritionDetailsDialogComponent {
         if (progress === null) {
             return null;
         }
-        const hasGoal = progress.goal !== null && progress.goal > 0;
+        const goal = progress.goal ?? 0;
+        const hasGoal = goal > 0;
         return {
             ...progress,
             hasGoal,
-            goal: hasGoal ? (progress.goal ?? 0) : 0,
-            percent: hasGoal ? Math.round((progress.current / (progress.goal ?? 1)) * PERCENT) : 0,
-            difference: Math.abs((progress.goal ?? 0) - progress.current),
-            balanceKey: progress.current > (progress.goal ?? 0) ? 'DASHBOARD.DAY_SUMMARY.EXCEEDED_BY' : 'DASHBOARD.DAY_SUMMARY.REMAINING',
+            goal: hasGoal ? goal : 0,
+            percent: hasGoal ? Math.round((progress.current / goal) * PERCENT) : 0,
+            difference: Math.abs(goal - progress.current),
+            balanceKey: progress.current > goal ? 'DASHBOARD.DAY_SUMMARY.EXCEEDED_BY' : 'DASHBOARD.DAY_SUMMARY.REMAINING',
         };
     });
     protected readonly sources = computed(() => {

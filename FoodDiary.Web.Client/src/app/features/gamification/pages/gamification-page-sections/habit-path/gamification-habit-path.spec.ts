@@ -1,3 +1,5 @@
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,18 +24,19 @@ const BADGES: Badge[] = [
 const TOTAL_MEALS_LOGGED = 37;
 const HEALTH_SCORE = 9;
 const LONGEST_STREAK = 3;
+const STREAK_DAYS = 2;
+const LONGER_STREAK_BADGE: Badge = { key: 'streak_14', category: 'streak', threshold: 14, isEarned: false };
+const openDialog = vi.fn<(...args: DialogOpenCall) => unknown>();
+
+beforeEach(() => {
+    openDialog.mockReset();
+    TestBed.configureTestingModule({
+        imports: [GamificationHabitPathComponent],
+        providers: [provideTranslateTesting(), { provide: FdUiDialogService, useValue: { open: openDialog } }],
+    });
+});
 
 describe('GamificationHabitPathComponent', () => {
-    const openDialog = vi.fn<(...args: DialogOpenCall) => unknown>();
-
-    beforeEach(() => {
-        openDialog.mockReset();
-        TestBed.configureTestingModule({
-            imports: [GamificationHabitPathComponent],
-            providers: [provideTranslateTesting(), { provide: FdUiDialogService, useValue: { open: openDialog } }],
-        });
-    });
-
     it('renders real progress and preserves earned and upcoming rewards', () => {
         const fixture = createComponent();
         const element = getElement(fixture);
@@ -102,6 +105,40 @@ describe('GamificationHabitPathComponent', () => {
         fixture.detectChanges();
 
         expect(element.querySelectorAll('.habit-path__badge')).toHaveLength(2);
+    });
+});
+
+describe('Mounted gamification progress', () => {
+    it('updates the earned badge date and streak label when switching languages', () => {
+        registerLocaleData(localeRu);
+        const translate = TestBed.inject(TranslateService);
+        translate.use('en');
+        const fixture = createComponent();
+        fixture.componentRef.setInput('currentStreak', STREAK_DAYS);
+        fixture.detectChanges();
+        const element = getElement(fixture);
+        const earnedDate = element.querySelector('.habit-path__recent-item time');
+
+        expect(element.querySelector('.habit-path__streak-value')?.textContent).toContain('GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW_OTHER');
+        expect(earnedDate?.textContent).toContain('Aug');
+
+        translate.use('ru');
+        fixture.detectChanges();
+
+        expect(element.querySelector('.habit-path__streak-value')?.textContent).toContain('GAMIFICATION.HABIT_PATH.DAYS_IN_A_ROW_FEW');
+        expect(element.querySelector('.habit-path__recent-item time')).toBe(earnedDate);
+        expect(earnedDate?.getAttribute('datetime')).toBe('2026-08-09T12:00:00Z');
+        expect(earnedDate?.textContent).toContain('авг');
+    });
+
+    it('shows the nearest locked streak goal when a farther reward appears first', () => {
+        const fixture = createComponent();
+        fixture.componentRef.setInput('badges', [LONGER_STREAK_BADGE, ...BADGES]);
+        fixture.detectChanges();
+
+        const nextStreak = getElement(fixture).querySelector('.habit-path__goal');
+        expect(nextStreak?.textContent).toContain('GAMIFICATION.BADGE_STREAK_7');
+        expect(nextStreak?.textContent).toContain('/ 7');
     });
 });
 

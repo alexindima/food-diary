@@ -611,6 +611,68 @@ describe('recognition hub ownership during connection startup', () => {
     });
 });
 
+describe('recognition hub across account switches', () => {
+    it('connects the new account when it resumes a job before the previous SignalR import settles', async () => {
+        hub.start.mockResolvedValue(undefined);
+        const old = entityId<'food-recognition'>('older-account-load');
+        const cancelled = expect(firstValueFrom(service.resume(old))).rejects.toMatchObject({ status: HttpStatusCode.Unauthorized });
+
+        user.set('user-2');
+        TestBed.tick();
+        const active = entityId<'food-recognition'>('active-account-load');
+        const endpoint = `${url}/${active}`;
+        const result = firstValueFrom(service.resume(active));
+        await cancelled;
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectNone(`${url}/${old}`);
+        http.expectOne({ method: 'GET', url: endpoint }).flush(job(active));
+
+        expect(hub.start).toHaveBeenCalledOnce();
+        hub.handlers.get('RecognitionChanged')?.(active);
+        http.expectOne({ method: 'GET', url: endpoint }).flush(job(active, 'Succeeded'));
+        await vi.advanceTimersByTimeAsync(0);
+
+        await expect(result).resolves.toMatchObject({ recognition: { id: active } });
+        expect(hub.stop).not.toHaveBeenCalled();
+        http.expectNone({ method: 'POST', url });
+    });
+
+    it('keeps the current hub after the previous account’s connection start rejects', async () => {
+        const pendingStart = new Subject<void>();
+        hub.start.mockReturnValueOnce(firstValueFrom(pendingStart)).mockResolvedValue(undefined);
+        const old = entityId<'food-recognition'>('previous-start');
+        const cancelled = expect(firstValueFrom(service.resume(old))).rejects.toMatchObject({ status: HttpStatusCode.Unauthorized });
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/${old}`).flush(job(old));
+        expect(hub.start).toHaveBeenCalledOnce();
+
+        user.set('user-2');
+        TestBed.tick();
+        const active = entityId<'food-recognition'>('active-start');
+        const activeEndpoint = `${url}/${active}`;
+        const first = firstValueFrom(service.resume(active));
+        await cancelled;
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(activeEndpoint).flush(job(active));
+        expect(hub.start).toHaveBeenCalledTimes(2);
+
+        pendingStart.error(new Error('Previous hub start failed'));
+        await vi.advanceTimersByTimeAsync(0);
+        const additional = entityId<'food-recognition'>('second-active-job');
+        const second = firstValueFrom(service.resume(additional));
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/${additional}`).flush(job(additional, 'Succeeded'));
+        expect(hub.start).toHaveBeenCalledTimes(2);
+
+        hub.handlers.get('RecognitionChanged')?.(active);
+        http.expectOne(activeEndpoint).flush(job(active, 'Succeeded'));
+        await vi.advanceTimersByTimeAsync(0);
+        await expect(first).resolves.toMatchObject({ recognition: { id: active } });
+        await expect(second).resolves.toMatchObject({ recognition: { id: additional } });
+        expect(hub.stop).toHaveBeenCalledOnce();
+    });
+});
+
 it('stops polling an invalid saved recognition response and retries the same job on request', async () => {
     const id = entityId<'food-recognition'>('saved-recognition');
     const endpoint = `${url}/${id}`;

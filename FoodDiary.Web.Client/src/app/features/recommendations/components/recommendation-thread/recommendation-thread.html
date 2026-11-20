@@ -18,7 +18,7 @@
                             <strong class="fd-ui-body-sm">{{
                                 authorName(comment) ?? ('RECOMMENDATIONS.DISCUSSION.UNNAMED_AUTHOR' | translate)
                             }}</strong>
-                            <span class="fd-ui-caption">{{ comment.createdAtUtc | localizedDate: 'short' }}</span>
+                            <span class="fd-ui-caption">{{ comment.createdAtUtc | localizedDate: 'short' : undefined : locale() }}</span>
                         </div>
                         <p class="fd-ui-body-sm">{{ comment.text }}</p>
                     </article>

@@ -115,6 +115,7 @@ function createDraft(): GoalsDraft {
         macros: { protein: 220, fats: 75, carbs: 113, fiber: 11 },
         preset: 'custom',
         water: 2000,
+        incompleteNumbers: new Set(),
         bodyTargets: { weight: WEIGHT, waist: 0 },
         invalidBodyTargets: { weight: false, waist: false },
         cyclingEnabled: false,

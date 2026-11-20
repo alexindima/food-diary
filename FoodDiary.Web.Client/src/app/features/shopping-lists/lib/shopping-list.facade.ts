@@ -157,7 +157,7 @@ export class ShoppingListFacade {
             .subscribe({
                 next: overview => {
                     this.initialPage.set(overview.lists);
-                    this.lists.set(overview.lists.items);
+                    this.replaceDirectorySummaries(overview.lists.items);
                     if (overview.selectedList !== null) {
                         this.applyList(overview.selectedList);
                     } else {
@@ -518,7 +518,7 @@ export class ShoppingListFacade {
                         nextPage: lists.length === pageSize ? 2 : null,
                     });
                     const selected = this.list();
-                    this.lists.set(lists);
+                    this.replaceDirectorySummaries(lists);
                     if (selected !== null && !lists.some(entry => entry.id === selected.id)) {
                         this.upsertListSummary(selected);
                     }
@@ -534,6 +534,20 @@ export class ShoppingListFacade {
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
             });
+    }
+
+    private replaceDirectorySummaries(summaries: ShoppingListSummary[]): void {
+        this.listCounts.update(counts => {
+            const compatible = { ...counts };
+            for (const summary of summaries) {
+                // Keep an older detail count only when the new summary omits it and the total still agrees.
+                if (summary.remainingCount !== undefined || compatible[summary.id]?.total !== summary.itemsCount) {
+                    Reflect.deleteProperty(compatible, summary.id);
+                }
+            }
+            return compatible;
+        });
+        this.lists.set(summaries);
     }
 
     private loadListById(id: ShoppingListId): void {

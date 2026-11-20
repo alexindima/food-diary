@@ -1,13 +1,16 @@
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { type LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { type Observable, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../testing/translate-testing.module';
+import { injectCurrentLanguage } from './inject-current-language';
 import { LocalizedDatePipe } from './localized-date.pipe';
 
 type TranslateServiceStub = {
     getCurrentLang: ReturnType<typeof vi.fn<() => string>>;
-    onLangChange: Observable<LangChangeEvent>;
 };
 
 const TEST_YEAR = 2026;
@@ -17,16 +20,11 @@ const EXPECTED_CUSTOM_DATE = '2026-01-15';
 
 describe('LocalizedDatePipe', () => {
     let pipe: LocalizedDatePipe;
-    let onLangChange: Subject<LangChangeEvent>;
 
     beforeEach(() => {
-        onLangChange = new Subject<LangChangeEvent>();
-
         const translateSpy: TranslateServiceStub = {
-            getCurrentLang: vi.fn(),
-            onLangChange: onLangChange.asObservable(),
+            getCurrentLang: vi.fn().mockReturnValue('en'),
         };
-        translateSpy.getCurrentLang.mockReturnValue('en');
 
         TestBed.configureTestingModule({
             providers: [LocalizedDatePipe, { provide: TranslateService, useValue: translateSpy }],
@@ -69,5 +67,39 @@ describe('LocalizedDatePipe', () => {
         const date = new Date(TEST_YEAR, JANUARY_INDEX, TEST_DAY);
         const result = pipe.transform(date, 'yyyy-MM-dd');
         expect(result).toBe(EXPECTED_CUSTOM_DATE);
+    });
+});
+
+@Component({
+    template: '<time [attr.datetime]="date">{{ date | localizedDate: "d MMMM y" : "UTC" : locale() }}</time>',
+    imports: [LocalizedDatePipe],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LocalizedDateHostComponent {
+    protected readonly date = '2026-08-09T00:00:00Z';
+    protected readonly locale = injectCurrentLanguage();
+}
+
+describe('Mounted localized date', () => {
+    it('updates an OnPush calendar date using its requested UTC day after changing language', async () => {
+        registerLocaleData(localeRu);
+        TestBed.configureTestingModule({
+            imports: [LocalizedDateHostComponent],
+            providers: [provideTranslateTesting()],
+        });
+        const translate = TestBed.inject(TranslateService);
+        translate.use('en');
+        const fixture = TestBed.createComponent(LocalizedDateHostComponent);
+        fixture.autoDetectChanges();
+        await fixture.whenStable();
+
+        const date = (fixture.nativeElement as HTMLElement).querySelector('time');
+        expect(date?.textContent).toBe('9 August 2026');
+
+        translate.use('ru');
+        await fixture.whenStable();
+
+        expect(date?.textContent).toBe('9 августа 2026');
+        expect(date?.getAttribute('datetime')).toBe('2026-08-09T00:00:00Z');
     });
 });

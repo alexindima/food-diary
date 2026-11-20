@@ -15,7 +15,9 @@
                         <span class="client-dashboard__detail-label fd-ui-caption">
                             {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.STARTED' | translate }}
                         </span>
-                        <strong class="client-dashboard__detail-value">{{ fastingView.startedAtUtc | localizedDate: 'short' }}</strong>
+                        <strong class="client-dashboard__detail-value">{{
+                            fastingView.startedAtUtc | localizedDate: 'short' : undefined : locale()
+                        }}</strong>
                     </div>
                     <div class="client-dashboard__detail">
                         <span class="client-dashboard__detail-label fd-ui-caption">

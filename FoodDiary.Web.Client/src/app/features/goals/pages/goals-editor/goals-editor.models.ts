@@ -7,11 +7,14 @@ import {
 import type { DayCalorieKey, UpdateGoalsRequest } from '../../../../shared/models/goals.data';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
 
+export type GoalNumberKey = 'calories' | 'water' | MacroKey;
+
 export type GoalsDraft = {
     calories: number;
     macros: Record<MacroKey, number>;
     preset: MacroPresetKey;
     water: number;
+    incompleteNumbers: ReadonlySet<GoalNumberKey>;
     bodyTargets: Record<BodyTargetKey, number>;
     invalidBodyTargets: Record<BodyTargetKey, boolean>;
     cyclingEnabled: boolean;
@@ -44,9 +47,14 @@ export function applyMacroPreset(draft: GoalsDraft, preset: MacroPreset): GoalsD
         return { ...draft, preset: preset.key };
     }
 
+    const incompleteNumbers = new Set(draft.incompleteNumbers);
+    incompleteNumbers.delete('protein');
+    incompleteNumbers.delete('fats');
+    incompleteNumbers.delete('carbs');
     return {
         ...draft,
         preset: preset.key,
+        incompleteNumbers,
         macros: {
             ...draft.macros,
             protein: Math.round((draft.calories * preset.percent.protein) / PROTEIN_CALORIES_PER_GRAM),
@@ -99,6 +107,7 @@ export function isGoalNumberValid(value: number): boolean {
 
 export function isGoalsDraftValid(draft: GoalsDraft): boolean {
     return (
+        draft.incompleteNumbers.size === 0 &&
         !draft.invalidBodyTargets.weight &&
         !draft.invalidBodyTargets.waist &&
         [draft.calories, draft.water, ...Object.values(draft.macros), ...Object.values(draft.dayCalories)].every(isGoalNumberValid) &&

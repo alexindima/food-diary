@@ -18,7 +18,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { take } from 'rxjs';
+import { finalize, take } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import type { Product } from '../../../../shared/models/product.data';
@@ -73,14 +73,24 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
     }
 
     protected override onAddProductClick(): void {
-        this.fdDialogService
-            .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
-                preset: 'fullscreen',
-                ariaLabel: String(this.translateService.instant('PRODUCT_MANAGE.ADD_TITLE')),
-            })
+        const creation = this.fdDialogService.open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
+            preset: 'fullscreen',
+            ariaLabel: String(this.translateService.instant('PRODUCT_MANAGE.ADD_TITLE')),
+        });
+        let receivedResult = false;
+        creation
             .afterClosed()
-            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                take(1),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    if (!receivedResult && this.destroyRef.destroyed) {
+                        creation.close();
+                    }
+                }),
+            )
             .subscribe(product => {
+                receivedResult = true;
                 if (product !== null && product !== undefined) {
                     this.handleSelection(product);
                 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../../shared/i18n/localized-date.pipe';
 import type { ClientFastingView } from '../client-dashboard-lib/client-dashboard.mapper';
 
@@ -13,6 +14,7 @@ import type { ClientFastingView } from '../client-dashboard-lib/client-dashboard
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientDashboardFastingCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     public readonly fasting = input<ClientFastingView | null>(null);
     public readonly visible = input(false);
 }

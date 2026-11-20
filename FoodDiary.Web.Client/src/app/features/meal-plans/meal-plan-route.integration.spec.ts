@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
@@ -130,6 +131,44 @@ async function waitForPlanAsync(harness: RouterTestingHarness, plan: MealPlan): 
     });
     return pageHost(harness);
 }
+
+describe('Meal Plans help controls', () => {
+    it.each([
+        {
+            route: CATALOGUE_URL,
+            label: 'MEAL_PLANS.TOUR.START_TOUR',
+            tourId: 'meal-plans-list',
+            step: { id: 'filters', target: '[data-tour-id="meal-plans-filters"]', title: 'MEAL_PLANS.TOUR.FILTERS_TITLE' },
+        },
+        {
+            route: CURATED_PLAN_URL,
+            label: 'MEAL_PLANS.DETAIL_TOUR.START_TOUR',
+            tourId: 'meal-plan-detail',
+            step: { id: 'header', target: '[data-tour-id="meal-plan-detail-header"]', title: 'MEAL_PLANS.DETAIL_TOUR.HEADER_TITLE' },
+        },
+    ])('reopens the completed $tourId guide from its visible help button', async ({ route, label, tourId, step }) => {
+        setupMealPlans();
+        const harness = await RouterTestingHarness.create(route);
+        const host = pageHost(harness);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(host.querySelector(step.target)).not.toBeNull();
+        });
+        const help = renderedAction(host, label);
+        const tour = TestBed.inject(FdTourService);
+
+        help.click();
+        expect(tour.activeTour()?.id).toBe(tourId);
+        expect(tour.activeStep()).toMatchObject(step);
+        tour.complete();
+        expect(tour.activeTour()).toBeNull();
+
+        help.click();
+        expect(tour.activeTour()?.id).toBe(tourId);
+        expect(tour.activeStep()).toMatchObject(step);
+        tour.close();
+    });
+});
 
 describe('Meal plan route ownership', () => {
     it('clears the previously opened plan and confirmation for an invalid detail URL, then recovers on a valid URL', async () => {

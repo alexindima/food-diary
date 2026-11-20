@@ -13,6 +13,7 @@ import {
     applyMacroPreset,
     buildDraftRequest,
     calculateMacroPercent,
+    type GoalNumberKey,
     type GoalsDraft,
     type GoalsMacroDraft,
     isGoalsDraftValid,
@@ -84,15 +85,21 @@ export class GoalsEditorComponent {
         });
     }
 
-    protected updateCalories(value: number): void {
-        const current = { ...this.requireDraft(), calories: value };
+    protected updateCalories(value: number | null): void {
+        const draft = this.withNumberEdit('calories', value);
+        if (value === null) {
+            this.replaceDraft(draft);
+            return;
+        }
+        const current = { ...draft, calories: value };
         const preset = this.presets().find(item => item.key === current.preset);
         this.replaceDraft(preset === undefined ? current : applyMacroPreset(current, preset));
     }
 
-    protected updateMacro(change: { key: MacroKey; value: number }): void {
-        const current = this.requireDraft();
-        this.updateDraft({ macros: { ...current.macros, [change.key]: change.value }, preset: 'custom' });
+    protected updateMacro({ key, value }: { key: MacroKey; value: number | null }): void {
+        const draft = this.withNumberEdit(key, value);
+        const macros = value === null ? draft.macros : { ...draft.macros, [key]: value };
+        this.replaceDraft({ ...draft, macros, preset: 'custom' });
     }
 
     protected updatePreset(value: MacroPresetKey): void {
@@ -100,8 +107,9 @@ export class GoalsEditorComponent {
         this.replaceDraft(preset === undefined ? { ...this.requireDraft(), preset: value } : applyMacroPreset(this.requireDraft(), preset));
     }
 
-    protected updateWater(value: number): void {
-        this.updateDraft({ water: value });
+    protected updateWater(value: number | null): void {
+        const draft = this.withNumberEdit('water', value);
+        this.replaceDraft({ ...draft, water: value ?? draft.water });
     }
 
     protected updateBodyTarget(change: { key: BodyTargetKey; value: number | null }): void {
@@ -162,6 +170,17 @@ export class GoalsEditorComponent {
         this.dirty.set(true);
     }
 
+    private withNumberEdit(key: GoalNumberKey, value: number | null): GoalsDraft {
+        const draft = this.requireDraft();
+        const incompleteNumbers = new Set(draft.incompleteNumbers);
+        if (value === null) {
+            incompleteNumbers.add(key);
+        } else {
+            incompleteNumbers.delete(key);
+        }
+        return { ...draft, incompleteNumbers };
+    }
+
     private requireDraft(): GoalsDraft {
         return this.draft() ?? this.sourceDraft();
     }
@@ -182,6 +201,7 @@ export class GoalsEditorComponent {
             macros,
             preset: this.preset(),
             water: this.water(),
+            incompleteNumbers: new Set(),
             bodyTargets: { ...this.bodyTargets() },
             invalidBodyTargets: { weight: false, waist: false },
             cyclingEnabled: this.cyclingEnabled(),

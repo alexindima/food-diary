@@ -851,7 +851,9 @@ describe('Dashboard nutrition detail from the day summary', () => {
         expect(dialog.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
         expect(dialog.querySelector('.nutrition-details__summary')).toBeNull();
 
-        refreshSnapshot.mockReturnValueOnce(of(makeSnapshot()));
+        const empty = makeSnapshot();
+        empty.statistics.totalCalories = 0;
+        refreshSnapshot.mockReturnValueOnce(of(empty));
         button(dialog, 'DASHBOARD.NUTRITION_DETAILS.RETRY').click();
         redraw(harness);
         expect(dialog.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.EMPTY');

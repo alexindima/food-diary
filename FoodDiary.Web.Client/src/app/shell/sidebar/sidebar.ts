@@ -110,9 +110,11 @@ export class SidebarComponent {
         const mobileMediaQuery = this.browserWindow.matchMedia(this.mobileViewportQuery);
         if (mobileMediaQuery !== null) {
             const updateMobileViewport = (): void => {
-                if (!mobileMediaQuery.matches) {
-                    this.closeMobileMenus();
+                if (mobileMediaQuery.matches) {
+                    this.closeUserMenu(false);
+                    return;
                 }
+                this.closeMobileMenus();
             };
             mobileMediaQuery.addEventListener('change', updateMobileViewport);
             this.destroyRef.onDestroy(() => {

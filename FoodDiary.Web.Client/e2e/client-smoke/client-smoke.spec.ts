@@ -4,6 +4,7 @@ import { expect, type Locator, type Page, type Request, type Route, test } from 
 
 import type { UserHttpResponse } from '../../src/app/shared/api/sdk/generated/model/user-http-response';
 import { consentingPrivacyFixture, hydrationEntryFixture, userFixture } from '../../src/testing/api-fixtures';
+import { installNotificationHubAsync } from '../support/auth-flow-fixtures';
 import { fixtureUuid, jsonFixture, OpenApiFixtures } from '../support/openapi-fixtures.mjs';
 
 const fixtureContract = new OpenApiFixtures();
@@ -1077,6 +1078,19 @@ test('blocks goal saving while a native number field contains an unfinished weig
     await expect(weight).toHaveValue(String(savedWeight));
     await expect(weight).toHaveAttribute('aria-invalid', 'false');
     await expect(page.locator('fd-unsaved-changes-bar')).toHaveCount(0);
+});
+
+test.describe('goals native incomplete number', () => {
+    test.use({ serviceWorkers: 'block' });
+
+    test.describe('nutrition', () => {
+        testIncompleteGoalNumber({ field: 'calories', target: 'dailyCalorieTarget', corrected: 1950.5 });
+        testIncompleteGoalNumber({ field: 'protein', target: 'proteinTarget', corrected: 123.5 });
+    });
+
+    test.describe('hydration', () => {
+        testIncompleteGoalNumber({ field: 'water', target: 'waterGoal', corrected: 2210.5 });
+    });
 });
 
 test.describe('deterministic authenticated feature fixtures', () => {
@@ -2306,6 +2320,95 @@ async function expectNoHorizontalOverflowAsync(page: Page): Promise<void> {
     }));
 
     expect(dimensions.scrollWidth).toBe(dimensions.clientWidth);
+}
+
+type IncompleteGoalNumberCase = {
+    field: 'calories' | 'protein' | 'water';
+    target: 'dailyCalorieTarget' | 'proteinTarget' | 'waterGoal';
+    corrected: number;
+};
+
+const INCOMPLETE_GOAL_NUMBER_FIXTURE = {
+    dailyCalorieTarget: 1900,
+    proteinTarget: 124,
+    waterGoal: 2200,
+    desiredWeightKg: null,
+    desiredWaistCm: null,
+    calorieCyclingEnabled: false,
+};
+
+function testIncompleteGoalNumber({ field, target, corrected }: IncompleteGoalNumberCase): void {
+    test(`keeps unfinished ${field} out of saved goals and accepts the corrected decimal`, async ({ page, baseURL }, testInfo) => {
+        const writes: unknown[] = [];
+        const errors: string[] = [];
+        page.on('pageerror', error => errors.push(error.message));
+        page.on('console', message => {
+            if (message.type() === 'error') {
+                errors.push(message.text());
+            }
+        });
+        await page.route('**/*', async route => {
+            if (new URL(route.request().url()).origin === baseURL) {
+                await route.continue();
+                return;
+            }
+            await route.abort();
+        });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+        await installNotificationHubAsync(page);
+        await page.route('**/api/v1/goals', async route => {
+            const request = route.request();
+            if (request.method() === 'PATCH') {
+                writes.push(request.postDataJSON());
+                await route.fulfill(
+                    jsonFixture(fixtureContract, 'PATCH', request.url(), { ...INCOMPLETE_GOAL_NUMBER_FIXTURE, [target]: corrected }),
+                );
+                return;
+            }
+            await route.fulfill(jsonFixture(fixtureContract, 'GET', request.url(), INCOMPLETE_GOAL_NUMBER_FIXTURE));
+        });
+
+        await page.goto('/goals');
+        const input = page.locator(`#goals-editor-${field}`);
+        const changeBar = page.locator('fd-unsaved-changes-bar');
+        const save = changeBar.getByRole('button', { name: 'Save changes' });
+        await expect(input).toHaveValue(String(INCOMPLETE_GOAL_NUMBER_FIXTURE[target]));
+        await input.selectText();
+        await input.pressSequentially('-');
+
+        await expect(input).toHaveAttribute('aria-invalid', 'true');
+        const nativeAfterMinus = await input.evaluate((element: HTMLInputElement) => ({
+            value: element.value,
+            badInput: element.validity.badInput,
+        }));
+        expect(nativeAfterMinus).toEqual({ value: '', badInput: true });
+        await expect(save).toBeDisabled();
+        expect(writes).toEqual([]);
+        await testInfo.attach('native-minus', { body: JSON.stringify(nativeAfterMinus), contentType: 'application/json' });
+
+        if (field === 'calories') {
+            await page.screenshot({ path: testInfo.outputPath('01-incomplete-calories.png') });
+        }
+        if (field === 'water') {
+            await input.press('Backspace');
+            await expect(input).toHaveAttribute('aria-invalid', 'false');
+            await expect(save).toBeEnabled();
+        }
+
+        await input.fill(String(corrected));
+        await expect(input).toHaveAttribute('aria-invalid', 'false');
+        await expect(input).toHaveValue(String(corrected));
+        await expect(save).toBeEnabled();
+        await save.click();
+        await expect(changeBar).toHaveCount(0);
+        expect(writes).toEqual([expect.objectContaining({ [target]: corrected })]);
+        await expect(input).toHaveValue(String(Math.round(corrected)));
+        expect(errors).toEqual([]);
+        if (field === 'calories') {
+            await page.screenshot({ path: testInfo.outputPath('02-corrected-calories.png') });
+        }
+    });
 }
 
 async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {

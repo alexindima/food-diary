@@ -255,8 +255,14 @@ describe('Cycle diary', () => {
         await stabilizeAsync();
         input(requiredElementOfType(document.body, '.cycle-drawer textarea', HTMLTextAreaElement), note);
         await stabilizeAsync();
+        const cancel = button('COMMON.CANCEL', requiredElement(document.body, '.cycle-drawer'));
         click('CYCLE_TRACKING.SAVE_DAY');
+        expect(pending.observed).toBe(true);
+        expect(cancel.disabled).toBe(false);
+        cancel.click();
         await stabilizeAsync();
+        expect(cancel.isConnected).toBe(true);
+        expect(cancel.disabled).toBe(true);
         expect(button('CYCLE_TRACKING.SAVE_DAY').disabled).toBe(true);
         click('CYCLE_TRACKING.SAVE_DAY');
         expect(upsertDay).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, expect.objectContaining({ date: TODAY, notes: note }));
@@ -278,7 +284,9 @@ describe('Cycle diary', () => {
         await stabilizeAsync();
         expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
     });
+});
 
+describe('Cycle diary history', () => {
     it('shows five recent days until expanded and removes only the confirmed day', async () => {
         const dates = ['2026-08-11', '2026-08-12', '2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16'];
         const dayNotes = dates.map((date, index) => ({ date: calendarDate(date), notes: `Diary entry ${index + 1}` }));
@@ -313,7 +321,7 @@ describe('Cycle diary', () => {
     });
 });
 
-describe('Cycle preferences and exports', () => {
+describe('Cycle preferences', () => {
     it('retains a changed cycle length after an unsuccessful save and reopens with the persisted setting', async () => {
         const updatedLength = 32;
         updateSettings
@@ -345,8 +353,9 @@ describe('Cycle preferences and exports', () => {
         );
     });
 
-    it('keeps the cycle after canceling deletion and returns to setup after confirmed deletion', async () => {
-        deleteCycle.mockReturnValue(of(void 0));
+    it('keeps the cycle after cancellation and locks its settings while confirmed deletion is pending', async () => {
+        const pending = new Subject<void>();
+        deleteCycle.mockReturnValue(pending);
         await renderAsync();
         click('CYCLE_TRACKING.SETTINGS_TITLE', page);
         await stabilizeAsync();
@@ -356,30 +365,58 @@ describe('Cycle preferences and exports', () => {
         click('COMMON.CANCEL', requiredElement(document.body, 'fd-ui-confirm-dialog'));
         await stabilizeAsync();
         expect(deleteCycle).not.toHaveBeenCalled();
-        expect(document.querySelector('#cycle-settings-title')).not.toBeNull();
+        const drawer = requiredElement(document.body, '.cycle-drawer');
+        const deleteButton = button('CYCLE_TRACKING.DELETE_CYCLE', drawer);
+        const backdrop = requiredElementOfType(drawer, '.cycle-drawer__backdrop', HTMLButtonElement);
 
-        click('CYCLE_TRACKING.DELETE_CYCLE');
+        deleteButton.click();
         await stabilizeAsync();
-        click('CYCLE_TRACKING.DELETE_CYCLE', requiredElement(document.body, 'fd-ui-confirm-dialog'));
+        click('CYCLE_TRACKING.DELETE_CYCLE', requiredElement(document.body, CONFIRM_DIALOG));
+        expect(pending.observed).toBe(true);
+        expect(deleteButton.disabled).toBe(false);
+        deleteButton.click();
+        backdrop.click();
         await stabilizeAsync();
+
         expect(deleteCycle).toHaveBeenCalledExactlyOnceWith(CYCLE_ID);
+        expect(document.querySelector(CONFIRM_DIALOG)).toBeNull();
+        expect(drawer.isConnected).toBe(true);
+        expect(deleteButton.disabled).toBe(true);
+
+        pending.next(undefined);
+        pending.complete();
+        await waitForDrawerCloseAsync('#cycle-settings-title');
         expect(document.querySelector('#cycle-settings-title')).toBeNull();
         expect(page.querySelector<HTMLElement>('.cycle-tracking__setup-card')?.hidden).toBe(false);
     });
+});
 
+describe('Cycle exports', () => {
     it('routes regular and password-protected exports separately and surfaces failures on the page', async () => {
-        exportCycle.mockReturnValue(throwError(() => API_ERROR));
+        const pending = new Subject<void>();
+        exportCycle.mockReturnValue(pending);
         exportSensitiveCycle.mockReturnValue(of(void 0));
         const range = { dateFrom: TRACKING_START, dateTo: TODAY, timeZoneOffsetMinutes: -new Date().getTimezoneOffset() };
         await renderAsync();
 
         click('CYCLE_TRACKING.EXPORT_CYCLE', page);
         await stabilizeAsync();
+        const sensitiveExport = button('CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE', page);
         click('CYCLE_TRACKING.EXPORT_CYCLE', requiredElement(document.body, 'fd-cycle-export-dialog'));
+        expect(pending.observed).toBe(true);
+        expect(sensitiveExport.disabled).toBe(false);
+        sensitiveExport.click();
         await stabilizeAsync();
+
         expect(exportCycle).toHaveBeenCalledExactlyOnceWith(range);
-        expect(page.textContent).toContain('CYCLE_TRACKING.EXPORT_FAILED');
+        expect(document.querySelector('fd-cycle-export-dialog')).toBeNull();
+        expect(sensitiveExport.disabled).toBe(true);
         expect(exportSensitiveCycle).not.toHaveBeenCalled();
+
+        pending.error(API_ERROR);
+        await stabilizeAsync();
+        expect(page.textContent).toContain('CYCLE_TRACKING.EXPORT_FAILED');
+        expect(sensitiveExport.disabled).toBe(false);
 
         click('CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE', page);
         await stabilizeAsync();
@@ -683,6 +720,134 @@ describe('Cycle factor failures queued during profile deletion', () => {
         expect(button('CYCLE_TRACKING.SAVE_FACTOR', card).disabled).toBe(false);
     });
 });
+
+describe('Cycle episode results after profile deletion', () => {
+    it.each([
+        { action: 'save', queued: false, replace: false },
+        { action: 'exclude', queued: true, replace: false },
+        { action: 'delete', queued: false, replace: true },
+    ] as const)('discards an old episode $action after removing the profile', async ({ action, queued, replace }) => {
+        const initial = profileWithEpisode();
+        const pendingEpisode = new Subject<CycleResponse>();
+        const pendingDelete = new Subject<void>();
+        getCurrent.mockReturnValueOnce(of(initial));
+        deleteCycle.mockReturnValueOnce(pendingDelete);
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        await startPendingEpisodeActionAsync(harness, action, pendingEpisode);
+        confirmCycleDeletion(harness);
+        expect(pendingDelete.observed).toBe(true);
+
+        pendingDelete.next(undefined);
+        pendingDelete.complete();
+        if (queued) {
+            pendingEpisode.next(initial);
+            pendingEpisode.complete();
+        }
+        const host = cycleRouteHost(harness);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(requiredElement(host, '.cycle-tracking__setup-card').hidden).toBe(false);
+        });
+        const requestCancelled = !pendingEpisode.observed;
+        const replacementLength = 32;
+        if (replace) {
+            await replaceDeletedCycleAsync(
+                harness,
+                cycleProfile({ id: entityId<'cycle-profile'>('replacement-cycle'), averageCycleLength: replacementLength }),
+            );
+        }
+        if (!queued) {
+            pendingEpisode.next(initial);
+            pendingEpisode.complete();
+        }
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+
+        if (replace) {
+            click('CYCLE_TRACKING.SETTINGS_TITLE', host);
+            harness.detectChanges();
+            const length = requiredElementOfType(
+                document.body,
+                '.cycle-drawer input[aria-label="CYCLE_TRACKING.AVG_LENGTH"]',
+                HTMLInputElement,
+            );
+            expect(length.value).toBe(String(replacementLength));
+        } else {
+            expect(host.querySelector('fd-cycle-overview-card')).toBeNull();
+        }
+        expect(requestCancelled).toBe(true);
+    });
+
+    it('keeps episode history clear of an old error queued after deletion', async () => {
+        const pendingEpisode = new Subject<CycleResponse>();
+        const pendingDelete = new Subject<void>();
+        getCurrent.mockReturnValueOnce(of(profileWithEpisode()));
+        deleteCycle.mockReturnValueOnce(pendingDelete);
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        await startPendingEpisodeActionAsync(harness, 'exclude', pendingEpisode);
+        confirmCycleDeletion(harness);
+        expect(pendingDelete.observed).toBe(true);
+
+        pendingDelete.next(undefined);
+        pendingDelete.complete();
+        pendingEpisode.error(API_ERROR);
+        await waitForCycleDeletedAsync(harness);
+        await replaceDeletedCycleAsync(harness, cycleProfile({ id: entityId<'cycle-profile'>('replacement-without-episodes') }));
+
+        const history = openRoutedEpisodeHistory(harness);
+        expect(history.textContent).toContain('CYCLE_TRACKING.EPISODE_HISTORY_EMPTY');
+        expect(history.textContent).not.toContain('CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
+    });
+});
+
+function profileWithEpisode(): CycleResponse {
+    return cycleProfile({
+        menstrualEpisodes: [
+            {
+                id: EPISODE_ID,
+                cycleProfileId: CYCLE_ID,
+                startDate: calendarDate(TRACKING_START),
+                endDate: null,
+                status: MENSTRUAL_EPISODE_STATUS_CONFIRMED,
+                excludedFromPredictions: false,
+            },
+        ],
+    });
+}
+
+function openRoutedEpisodeHistory(harness: RouterTestingHarness): HTMLElement {
+    const host = cycleRouteHost(harness);
+    requiredElement(host, 'details.cycle-tracking__details summary').click();
+    harness.detectChanges();
+    return requiredElement(host, '[data-tour-id="cycle-tracking-episode-history"]');
+}
+
+async function startPendingEpisodeActionAsync(
+    harness: RouterTestingHarness,
+    action: 'save' | 'exclude' | 'delete',
+    pending: Subject<CycleResponse>,
+): Promise<void> {
+    const history = openRoutedEpisodeHistory(harness);
+    if (action === 'delete') {
+        deleteMenstrualEpisode.mockReturnValueOnce(pending);
+        click('CYCLE_TRACKING.DELETE_EPISODE', history);
+        harness.detectChanges();
+        click('CYCLE_TRACKING.DELETE_EPISODE', requiredElement(document.body, CONFIRM_DIALOG));
+    } else {
+        updateMenstrualEpisode.mockReturnValueOnce(pending);
+        if (action === 'save') {
+            click('CYCLE_TRACKING.EDIT_EPISODE', history);
+            harness.detectChanges();
+            click('CYCLE_TRACKING.SAVE_EPISODE', history);
+        } else {
+            click('CYCLE_TRACKING.EXCLUDE_EPISODE', history);
+        }
+    }
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(pending.observed).toBe(true);
+    });
+}
 
 async function submitPendingFactorActionAsync(
     harness: RouterTestingHarness,
@@ -1269,8 +1434,13 @@ describe('Cycle journal deletion recovery', () => {
 
         click('CYCLE_TRACKING.CLEAR_DAY', target);
         await stabilizeAsync();
+        const competingRemoval = button('CYCLE_TRACKING.CLEAR_DAY', retained);
         click('CYCLE_TRACKING.CLEAR_DAY', requiredElement(document.body, '[role="dialog"]'));
+        expect(pending.observed).toBe(true);
+        expect(competingRemoval.disabled).toBe(false);
+        competingRemoval.click();
         await stabilizeAsync();
+        expect(document.querySelector(CONFIRM_DIALOG)).toBeNull();
         expect(clearDay).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, targetDate);
         expect(button('CYCLE_TRACKING.CLEAR_DAY', target).disabled).toBe(true);
         expect(button('CYCLE_TRACKING.CLEAR_DAY', retained).disabled).toBe(true);

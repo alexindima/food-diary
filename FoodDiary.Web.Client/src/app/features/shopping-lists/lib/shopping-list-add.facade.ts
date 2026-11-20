@@ -1,9 +1,11 @@
 import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
+import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import type { ShoppingListId } from '../../../shared/models/semantics/entity-id';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItemDto } from '../../../shared/models/shopping-list.data';
@@ -21,6 +23,7 @@ export class ShoppingListAddFacade {
     private readonly authDialog = inject(PublicAuthDialogService);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly sessionEvents = inject(SessionEventsService);
     private scope = '';
     private scopeRevision = 0;
     private name = '';
@@ -31,6 +34,10 @@ export class ShoppingListAddFacade {
     public readonly message = signal<string | null>(null);
 
     public constructor() {
+        this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.scopeRevision += 1;
+            this.reset();
+        });
         this.destroyRef.onDestroy(() => {
             this.closePicker?.();
         });
@@ -98,25 +105,29 @@ export class ShoppingListAddFacade {
                 return;
             }
             const list = await this.saveAsync(
+                scopeRevision,
                 target,
                 pending.map(entry => entry.item),
             );
-            if (!this.isCurrent(scopeRevision)) {
-                return;
-            }
-            this.target.set({ id: list.id, name: list.name });
-            this.added.update(keys => new Set([...keys, ...pending.map(entry => `${list.id}:${entry.index}`)]));
-            this.message.set('PUBLIC_RECIPES.SHOPPING_SUCCESS');
+            this.applySavedAddition(scopeRevision, list, pending);
         } catch {
             this.message.update(message => (this.isCurrent(scopeRevision) ? 'PUBLIC_RECIPES.SHOPPING_ERROR' : message));
         } finally {
             this.busy.set(false);
         }
     }
-    private async saveAsync(target: ShoppingListTarget, items: ShoppingListItemDto[]): Promise<ShoppingList> {
+    private applySavedAddition(scopeRevision: number, list: ShoppingList | null, entries: ReadonlyArray<{ index: number }>): void {
+        if (list === null || !this.isCurrent(scopeRevision)) {
+            return;
+        }
+        this.target.set({ id: list.id, name: list.name });
+        this.added.update(keys => new Set([...keys, ...entries.map(entry => `${list.id}:${entry.index}`)]));
+        this.message.set('PUBLIC_RECIPES.SHOPPING_SUCCESS');
+    }
+    private async saveAsync(scopeRevision: number, target: ShoppingListTarget, items: ShoppingListItemDto[]): Promise<ShoppingList | null> {
         return target.id === null
             ? firstValueFrom(this.api.create({ name: target.name, items: appendShoppingItems([], items) }))
-            : this.appendAsync(entityId<'shopping-list'>(target.id), items);
+            : this.appendAsync(scopeRevision, entityId<'shopping-list'>(target.id), items);
     }
     private async prepareAsync(scopeRevision: number, item: ShoppingListItemDto, count: number, confirm: boolean): Promise<boolean> {
         await this.authenticateAsync();
@@ -127,8 +138,11 @@ export class ShoppingListAddFacade {
             ? this.chooseTargetAsync(scopeRevision, undefined, count)
             : this.target() !== null || this.chooseTargetAsync(scopeRevision, item);
     }
-    private async appendAsync(id: ShoppingListId, items: ShoppingListItemDto[]): Promise<ShoppingList> {
+    private async appendAsync(scopeRevision: number, id: ShoppingListId, items: ShoppingListItemDto[]): Promise<ShoppingList | null> {
         const list = await firstValueFrom(this.api.getById(id));
+        if (!this.isCurrent(scopeRevision)) {
+            return null;
+        }
         if (list === null) {
             this.target.set(null);
             throw new Error('Shopping list unavailable');

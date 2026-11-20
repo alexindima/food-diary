@@ -1005,6 +1005,47 @@ describe('Native account restoration and sign-in ownership', () => {
     });
 });
 
+describe('Native form state while the authentication destination loads', () => {
+    it.each([
+        { mode: 'login', destination: 'navigateToReturnUrlAsync', submitLabel: 'AUTH.LOGIN.LOGIN' },
+        { mode: 'register', destination: 'navigateToEmailVerificationPendingAsync', submitLabel: 'AUTH.REGISTER.REGISTER' },
+    ] as const)('keeps the $mode form busy until navigation completes', async ({ mode, destination, submitLabel }) => {
+        const { fixture, authFlowFacadeSpy, navigationServiceSpy, dialogRefSpy } = createComponent(mode, true);
+        const host = fixture.nativeElement as HTMLElement;
+        const pendingNavigation = new Subject<void>();
+        const navigate = navigationServiceSpy[destination];
+        navigate.mockReturnValueOnce(firstValueFrom(pendingNavigation));
+        const request = authFlowFacadeSpy[mode];
+        request.mockReturnValue(of('success'));
+        const submitButton = authButton(host, 'button[type="submit"]', submitLabel);
+
+        if (mode === 'login') {
+            submitRenderedLogin(fixture);
+        } else {
+            fillRenderedRegistration(fixture);
+            submitButton.click();
+        }
+        await vi.waitFor(() => {
+            expect(navigate).toHaveBeenCalledOnce();
+        });
+        fixture.detectChanges();
+        const busyDuringNavigation = host.querySelector('form')?.getAttribute('aria-busy');
+        const disabledDuringNavigation = submitButton.disabled;
+        submitButton.click();
+        expect(dialogRefSpy.close).not.toHaveBeenCalled();
+
+        pendingNavigation.next();
+        pendingNavigation.complete();
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledOnce();
+        });
+        expect(busyDuringNavigation).toBe('true');
+        expect(disabledDuringNavigation).toBe(true);
+        expect(request).toHaveBeenCalledOnce();
+        expect(navigate).toHaveBeenCalledOnce();
+    });
+});
+
 describe('Account restoration after browser autofill', () => {
     it.each(['sign-in', 'restore'])('does not reuse a silently cleared native password for %s', async action => {
         const { fixture, authFlowFacadeSpy, host } = await createDeletedAccountPromptAsync();
@@ -1065,6 +1106,40 @@ async function createDeletedAccountPromptAsync(): Promise<AuthComponentTestConte
     });
     return { ...context, host };
 }
+
+describe('Authentication controls during an in-flight Google result', () => {
+    it('leaves the existing Google request in control when the registration button is clicked before redraw', async () => {
+        const { fixture, authFlowFacadeSpy, initializeGoogle } = createComponent('register', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const pending = new Subject<GoogleLoginResult>();
+        authFlowFacadeSpy.loginWithGoogle.mockReturnValueOnce(pending);
+        authFlowFacadeSpy.register.mockReturnValueOnce(of('rateLimited'));
+        fillRenderedRegistration(fixture);
+        const register = authButton(host, 'button[type="submit"]', 'AUTH.REGISTER.REGISTER');
+
+        initializeGoogle.mock.calls[0][0]('google-fixture');
+        register.click();
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+
+        expect(authFlowFacadeSpy.loginWithGoogle).toHaveBeenCalledOnce();
+        expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
+        expect(register.disabled).toBe(true);
+
+        pending.next('unknown');
+        pending.complete();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(register.disabled).toBe(false);
+        });
+        register.click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('[role="alert"]')?.textContent).toContain('FORM_ERRORS.RATE_LIMITED');
+        });
+        expect(authFlowFacadeSpy.register).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ email: 'register@example.test' }));
+    });
+});
 
 describe('AuthComponent pending form results after destruction', () => {
     it('leaves navigation to the current view when registration finishes after the old form closes', async () => {

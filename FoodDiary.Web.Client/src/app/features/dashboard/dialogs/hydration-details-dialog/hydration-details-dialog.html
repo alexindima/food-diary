@@ -13,7 +13,9 @@
                     <ol class="hydration-history__entries">
                         @for (entry of history.entries; track entry.id) {
                             <li class="hydration-history__entry fd-row fd-justify-between fd-gap-sm">
-                                <time [attr.datetime]="entry.timestampUtc">{{ entry.timestampUtc | localizedDate: 'HH:mm' }}</time>
+                                <time [attr.datetime]="entry.timestampUtc">{{
+                                    entry.timestampUtc | localizedDate: 'HH:mm' : undefined : language()
+                                }}</time>
                                 <span class="hydration-history__amount"
                                     >{{ entry.amountMl | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}</span
                                 >

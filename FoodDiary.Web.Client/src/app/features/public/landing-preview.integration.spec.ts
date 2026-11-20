@@ -112,6 +112,10 @@ describe('Public landing demo sign-in', () => {
         ['button.meals-preview__placeholder-main', 'register'],
         ['button.nutrition-trend__details', 'register'],
         ['.hero__cta--primary button', 'register'],
+        ['.landing-steps__cta-actions fd-ui-button[variant="primary"] button', 'register'],
+        ['.landing-steps__cta-actions fd-ui-button[variant="secondary"] button', 'login'],
+        ['.dietologist-promo__actions fd-ui-button[variant="primary"] button', 'register'],
+        ['.dietologist-promo__actions fd-ui-button[variant="secondary"] button', 'login'],
     ] as const)('keeps the guest draft after %s opens and dismisses %s', async (selector, mode) => {
         const { harness, root, dialog, closed } = await renderLandingAsync('/ru');
         const router = TestBed.inject(Router);

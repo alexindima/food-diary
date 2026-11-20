@@ -48,7 +48,7 @@ const RECENT_ACHIEVEMENT_LIMIT = 2;
 export class GamificationHabitPathComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
-    private readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
+    protected readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
         initialValue: this.translate.getCurrentLang() ?? 'en',
     });
     protected readonly streakDayLabelKey = computed(

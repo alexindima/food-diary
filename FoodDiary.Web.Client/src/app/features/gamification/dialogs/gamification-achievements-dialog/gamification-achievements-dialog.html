@@ -13,7 +13,9 @@
                 <div class="achievements-dialog__meta">
                     <span>{{ 'GAMIFICATION.HABIT_PATH.RECEIVED' | translate }}</span>
                     @if (badge.earnedAtUtc) {
-                        <time [attr.datetime]="badge.earnedAtUtc">{{ badge.earnedAtUtc | localizedDate: 'mediumDate' }}</time>
+                        <time [attr.datetime]="badge.earnedAtUtc">{{
+                            badge.earnedAtUtc | localizedDate: 'mediumDate' : undefined : locale()
+                        }}</time>
                     }
                 </div>
             </article>

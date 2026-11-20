@@ -55,7 +55,7 @@ type SidebarIntegrationContext = {
 };
 
 async function setupSidebarAsync(
-    options: { decision?: Subject<boolean>; productDecision?: Subject<boolean>; realDialogs?: boolean } = {},
+    options: { decision?: Subject<boolean>; productDecision?: Subject<boolean>; realDialogs?: boolean; mediaQuery?: MediaQueryList } = {},
 ): Promise<SidebarIntegrationContext> {
     const auth = {
         isAdmin: signal(false),
@@ -81,11 +81,13 @@ async function setupSidebarAsync(
     });
     vi.stubGlobal(
         'matchMedia',
-        vi.fn().mockReturnValue({
-            matches: false,
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-        }),
+        vi.fn().mockReturnValue(
+            options.mediaQuery ?? {
+                matches: false,
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+            },
+        ),
     );
     await TestBed.configureTestingModule({
         imports: [SidebarComponent],
@@ -279,6 +281,43 @@ describe('rendered sidebar menu and notification overlay', () => {
         fixture.destroy();
         await vi.dynamicImportSettled();
         expect(open).not.toHaveBeenCalled();
+    });
+});
+
+describe('Sidebar navigation across viewport changes', () => {
+    it('closes the desktop account menu when entering the mobile viewport', async () => {
+        const viewport = Object.assign(new EventTarget(), { matches: false });
+        const { fixture } = await setupSidebarAsync({ mediaQuery: viewport as unknown as MediaQueryList });
+        const trigger = desktopElement(fixture, '.sidebar__user');
+        trigger.click();
+        fixture.detectChanges();
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+        viewport.matches = true;
+        viewport.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+        viewport.matches = false;
+        viewport.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-sidebar-desktop [role="menu"]')).toBeNull();
+    });
+
+    it('keeps the active grouped link selected without showing a pending navigation on click', async () => {
+        const { fixture, router } = await setupSidebarAsync();
+        await router.navigateByUrl('/meals');
+        fixture.detectChanges();
+        const diary = desktopElement(fixture, 'a[href="/meals"]');
+        await vi.waitFor(() => {
+            expect(diary.classList).toContain('is-active');
+        });
+
+        diary.click();
+        fixture.detectChanges();
+        expect(diary.classList).not.toContain('is-pending');
+        expect(diary.classList).toContain('is-active');
+        expect(router.url).toBe('/meals');
     });
 });
 

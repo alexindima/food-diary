@@ -39,6 +39,12 @@ const POLL_INTERVAL_MS = 5000;
 const POST_RETRY_MS = 1000;
 const HEX_RADIX = 16;
 
+type RecognitionHubOwner = {
+    readonly userId: UserId | null;
+    connection: HubConnection | null;
+    pending: Promise<void> | null;
+};
+
 function unauthorizedRecognition(): Observable<never> {
     return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
 }
@@ -51,22 +57,11 @@ export class FoodRecognitionService {
     private readonly baseUrl = `${environment.apiUrls.ai}/food/recognitions`;
     private readonly sdk = createSdkConnection(AiSdk, this.baseUrl, this.http);
     private readonly changes = new Subject<FoodRecognitionId | null>();
-    private connection: HubConnection | null = null;
-    private connecting: Promise<void> | null = null;
-    private sessionUser: UserId | null = null;
+    private hubOwner: RecognitionHubOwner = { userId: null, connection: null, pending: null };
 
     public constructor() {
         effect(() => {
-            const user = this.currentUserId();
-            if (user !== this.sessionUser) {
-                this.sessionUser = user;
-                const old = this.connection;
-                this.connection = null;
-                if (old !== null) {
-                    void old.stop();
-                }
-                this.changes.next(null);
-            }
+            this.synchronizeHubOwner();
         });
     }
 
@@ -163,23 +158,38 @@ export class FoodRecognitionService {
         });
     }
 
-    private async connectAsync(user: UserId): Promise<void> {
-        if (this.connection !== null) {
-            return;
+    private synchronizeHubOwner(): RecognitionHubOwner {
+        const userId = this.currentUserId();
+        if (userId !== this.hubOwner.userId) {
+            const old = this.hubOwner.connection;
+            this.hubOwner = { userId, connection: null, pending: null };
+            if (old !== null) {
+                void old.stop();
+            }
+            this.changes.next(null);
         }
-        if (this.connecting !== null) {
-            return this.connecting;
-        }
-        this.connecting = this.openConnectionAsync(user).finally(() => {
-            this.connecting = null;
-        });
-        return this.connecting;
+        return this.hubOwner;
     }
 
-    private async openConnectionAsync(user: UserId): Promise<void> {
+    private isCurrentHubOwner(owner: RecognitionHubOwner): boolean {
+        return this.hubOwner === owner && this.currentUserId() === owner.userId;
+    }
+
+    private async connectAsync(user: UserId): Promise<void> {
+        const owner = this.synchronizeHubOwner();
+        if (owner.userId !== user || owner.connection !== null) {
+            return;
+        }
+        owner.pending ??= this.openConnectionAsync(owner).finally(() => {
+            owner.pending = null;
+        });
+        return owner.pending;
+    }
+
+    private async openConnectionAsync(owner: RecognitionHubOwner): Promise<void> {
         try {
             const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
-            if (this.currentUserId() !== user) {
+            if (!this.isCurrentHubOwner(owner)) {
                 return;
             }
             const connection = new HubConnectionBuilder()
@@ -190,7 +200,7 @@ export class FoodRecognitionService {
                 .withAutomaticReconnect()
                 .configureLogging(LogLevel.None)
                 .build();
-            this.connection = connection;
+            owner.connection = connection;
             connection.on('RecognitionChanged', (id: string) => {
                 this.changes.next(entityId<'food-recognition'>(id));
             });
@@ -198,18 +208,18 @@ export class FoodRecognitionService {
                 this.changes.next(null);
             });
             connection.onclose(() => {
-                if (this.connection === connection) {
-                    this.connection = null;
+                if (owner.connection === connection) {
+                    owner.connection = null;
                 }
             });
             await connection.start();
-            if (this.currentUserId() !== user) {
+            if (!this.isCurrentHubOwner(owner)) {
                 await connection.stop();
                 return;
             }
             this.changes.next(null);
         } catch {
-            this.connection = null;
+            owner.connection = null;
             // HTTP polling remains active when SignalR cannot connect.
         }
     }

@@ -1,7 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 import { userFixture } from '../../src/testing/api-fixtures';
 import { installClientAuthApiAsync } from '../support/auth-flow-fixtures';
+
+const DESKTOP_WIDTH = 1440;
+const MOBILE_WIDTH = 767;
+const MOBILE_BOUNDARY = 768;
+const FIRST_DESKTOP_WIDTH = 769;
+const VIEWPORT_HEIGHT = 900;
 
 test('shows complete account menu labels with collapsed desktop navigation', async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -38,3 +44,53 @@ test('shows complete account menu labels with collapsed desktop navigation', asy
     await expect(menu).toBeHidden();
     await expect(trigger).toBeFocused();
 });
+
+test.describe('sidebar viewport transitions', () => {
+    test('dismisses the desktop account menu at the mobile breakpoint', async ({ page }) => {
+        await openSidebarAtWidthAsync(page, DESKTOP_WIDTH);
+        const trigger = page.locator('fd-sidebar-desktop .sidebar__user');
+        const menu = page.locator('fd-sidebar-desktop [role="menu"]');
+        await trigger.click();
+        await expect(menu).toBeVisible();
+
+        await page.setViewportSize({ width: MOBILE_BOUNDARY, height: VIEWPORT_HEIGHT });
+        await expect(page.locator('fd-sidebar-mobile nav')).toBeVisible();
+        await expect(menu).toHaveCount(0);
+
+        await page.setViewportSize({ width: DESKTOP_WIDTH, height: VIEWPORT_HEIGHT });
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('keeps an open mobile sheet at the last mobile width and dismisses it on desktop', async ({ page }) => {
+        await openSidebarAtWidthAsync(page, MOBILE_WIDTH);
+        const food = page.locator('button[data-mobile-sheet="food"]');
+        const sheet = page.locator('.sidebar-mobile__sheet');
+        await food.click();
+        await expect(sheet).toBeVisible();
+
+        await page.setViewportSize({ width: MOBILE_BOUNDARY, height: VIEWPORT_HEIGHT });
+        await page.evaluate(async () => {
+            await new Promise<void>(resolve => {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        resolve();
+                    });
+                });
+            });
+        });
+        await expect(food).toHaveAttribute('aria-expanded', 'true');
+        await expect(sheet).toBeVisible();
+
+        await page.setViewportSize({ width: FIRST_DESKTOP_WIDTH, height: VIEWPORT_HEIGHT });
+        await expect(sheet).toHaveCount(0);
+        await expect(page.locator('fd-sidebar-desktop .sidebar__user')).toBeVisible();
+    });
+});
+
+async function openSidebarAtWidthAsync(page: Page, width: number): Promise<void> {
+    await page.setViewportSize({ width, height: VIEWPORT_HEIGHT });
+    const session = await installClientAuthApiAsync(page, userFixture());
+    session.authenticated = true;
+    await page.goto('/dashboard');
+    await expect(page.locator('fd-dashboard')).toBeVisible();
+}

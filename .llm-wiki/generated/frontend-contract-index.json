@@ -3,7 +3,7 @@
   "summary": {
     "components": 525,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1683,
+    "inputs": 1685,
     "outputs": 564,
     "apiCalls": 336,
     "templatesWithTranslations": 380,
@@ -8927,6 +8927,11 @@
           "required": true
         },
         {
+          "name": "incompleteNumbers",
+          "type": "ReadonlySet<GoalNumberKey>",
+          "required": true
+        },
+        {
           "name": "preset",
           "type": "MacroPresetKey",
           "required": true
@@ -8939,12 +8944,12 @@
       ],
       "outputs": [
         {
-          "name": "macroChange",
-          "type": "{ key: MacroKey; value: number }"
+          "name": "caloriesChange",
+          "type": "number | null"
         },
         {
-          "name": "caloriesChange",
-          "type": "number"
+          "name": "macroChange",
+          "type": "{ key: MacroKey; value: number | null }"
         },
         {
           "name": "presetChange",
@@ -8982,6 +8987,11 @@
           "required": true
         },
         {
+          "name": "waterIncomplete",
+          "type": "boolean",
+          "required": true
+        },
+        {
           "name": "bodyTargets",
           "type": "Record<BodyTargetKey, number>",
           "required": true
@@ -8994,12 +9004,12 @@
       ],
       "outputs": [
         {
-          "name": "bodyTargetChange",
-          "type": "{ key: BodyTargetKey; value: number | null }"
+          "name": "waterChange",
+          "type": "number | null"
         },
         {
-          "name": "waterChange",
-          "type": "number"
+          "name": "bodyTargetChange",
+          "type": "{ key: BodyTargetKey; value: number | null }"
         }
       ],
       "specPath": null
@@ -20961,7 +20971,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 96,
+      "line": 91,
       "publicMethod": "submit",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20973,7 +20983,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 119,
+      "line": 114,
       "publicMethod": "deleteRecognition",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20985,7 +20995,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/page",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 123,
+      "line": 118,
       "publicMethod": "list",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -20997,7 +21007,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/ai/food/recognitions/{id}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 135,
+      "line": 130,
       "publicMethod": "waitForResult",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.ai}/food/recognitions`",
@@ -43272,6 +43282,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "calories",
+        "incompleteNumbers",
         "macros",
         "preset",
         "presetOptions"
@@ -43292,7 +43303,8 @@
       "inputsUsed": [
         "bodyTargets",
         "invalidBodyTargets",
-        "water"
+        "water",
+        "waterIncomplete"
       ],
       "outputsHandled": [
         "bodyTargetChange",

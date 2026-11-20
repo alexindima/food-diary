@@ -4,6 +4,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
+import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../../shared/i18n/localized-date.pipe';
 import type { ClientMealView } from '../client-dashboard-lib/client-dashboard.mapper';
 
@@ -15,6 +16,7 @@ import type { ClientMealView } from '../client-dashboard-lib/client-dashboard.ma
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientDashboardMealsCardComponent {
+    protected readonly locale = injectCurrentLanguage();
     private readonly translateService = inject(TranslateService);
 
     public readonly meals = input<readonly ClientMealView[]>([]);

@@ -1,6 +1,5 @@
 import { formatDate } from '@angular/common';
-import { DestroyRef, inject, Pipe, type PipeTransform } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { inject, Pipe, type PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { resolveTranslateLanguage } from './translate-language.utils';
@@ -9,21 +8,20 @@ import { resolveTranslateLanguage } from './translate-language.utils';
     name: 'localizedDate',
 })
 export class LocalizedDatePipe implements PipeTransform {
-    private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
-    private locale = resolveTranslateLanguage(this.translateService);
+    private readonly translate = inject(TranslateService);
 
-    public constructor() {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(e => (this.locale = e.lang));
-    }
-
-    public transform(value: Date | string | number | null | undefined, pattern = 'mediumDate', timezone?: string): string | undefined {
+    public transform(
+        value: Date | string | number | null | undefined,
+        pattern = 'mediumDate',
+        timezone?: string,
+        locale?: string,
+    ): string | undefined {
         if (value === null || value === undefined) {
             return undefined;
         }
 
         try {
-            return formatDate(value, pattern, this.locale, timezone);
+            return formatDate(value, pattern, locale ?? resolveTranslateLanguage(this.translate), timezone);
         } catch {
             return undefined;
         }

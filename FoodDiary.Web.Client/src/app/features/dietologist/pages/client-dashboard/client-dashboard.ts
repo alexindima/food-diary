@@ -34,6 +34,7 @@ import {
 
 import { devDay, devEnum, devRecord, devText } from '../../../../shared/development/development-input';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, normalizeEndOfLocalDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
@@ -152,6 +153,7 @@ type TaskFormModel = {
     styleUrls: ['./client-dashboard.scss'],
 })
 export class ClientDashboardComponent {
+    protected readonly locale = injectCurrentLanguage();
     private readonly templateNameInput = viewChild<FdUiInputComponent>('templateNameInput');
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);

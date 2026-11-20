@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -190,6 +191,54 @@ describe('MealItemsListComponent actions', () => {
     });
 });
 
+describe('MealItemsListComponent archived sources without display names', () => {
+    it('identifies both sources and keeps their original row actions after omitting an empty draft row', async () => {
+        const { component, fixture } = await setupComponentAsync({
+            items: [
+                createItemState(),
+                createItemState({ product: { ...createProduct(), name: '' }, amount: PRODUCT_AMOUNT }),
+                createItemState({
+                    sourceType: MealSourceType.Recipe,
+                    recipe: { ...createRecipe(), name: '  ' },
+                    amount: RECIPE_AMOUNT_GRAMS,
+                }),
+            ],
+        });
+        const edit = vi.fn();
+        const remove = vi.fn();
+        component.editItem.subscribe(edit);
+        component.removeItemEvent.subscribe(remove);
+        const host = fixture.nativeElement as HTMLElement;
+        const rows = Array.from(host.querySelectorAll('.meal-manage__manual-summary'));
+        const sourceLabels = (): Array<string | undefined> =>
+            rows.map(row => row.querySelector('.meal-manage__ai-summary-name')?.textContent.trim());
+
+        const translations = TestBed.inject(TranslateService);
+        translations.setTranslation('en', { MEAL_MANAGE: { ITEM_TYPE_OPTIONS: { Product: 'Product', Recipe: 'Recipe' } } });
+        translations.setTranslation('ru', { MEAL_MANAGE: { ITEM_TYPE_OPTIONS: { Product: 'Продукт', Recipe: 'Рецепт' } } });
+        await firstValueFrom(translations.use('ru'));
+        fixture.detectChanges();
+
+        expect(sourceLabels()).toEqual(['Продукт', 'Рецепт']);
+        expect(rows.map(row => row.querySelector('.meal-manage__ai-summary-amount')?.textContent.trim())).toEqual([
+            '150 GENERAL.UNITS.G',
+            '120 GENERAL.UNITS.G',
+        ]);
+
+        await firstValueFrom(translations.use('en'));
+        fixture.detectChanges();
+        expect(sourceLabels()).toEqual(['Product', 'Recipe']);
+
+        const editButton = rows[0].querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.MANUAL_ITEM_EDIT"]');
+        const removeButton = rows[1].querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]');
+        expect(editButton).not.toBeNull();
+        expect(removeButton).not.toBeNull();
+        editButton?.click();
+        removeButton?.click();
+        expect(edit).toHaveBeenCalledExactlyOnceWith(EDIT_ITEM_INDEX);
+        expect(remove).toHaveBeenCalledExactlyOnceWith(REMOVE_ITEM_INDEX);
+    });
+});
 type MealItemsListSetupOptions = {
     arrayError?: string | null;
     hasExternalItems?: boolean;

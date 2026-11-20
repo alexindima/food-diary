@@ -113,7 +113,6 @@ export class ProductManageFormComponent implements UnsavedEditor {
     public readonly cancelled = output();
     protected readonly globalError = signal<string | null>(null);
     protected readonly photoImportLimitReached = signal(false);
-    private populatedProduct: Product | null = null;
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
     protected readonly isDeleting = signal(false);
@@ -136,24 +135,28 @@ export class ProductManageFormComponent implements UnsavedEditor {
             validate(path.comment, ({ value }) => validateNullableMaxLength(value(), PRODUCT_COMMENT_MAX_LENGTH));
             required(path.baseAmount);
             min(path.baseAmount, PRODUCT_MIN_AMOUNT);
-            validate(path.baseAmount, ({ value }) => validateProductAmountMax(value(), this.productFormModel().baseUnit));
+            validate(path.baseAmount, ({ value }) =>
+                validateProductNumericMaximum(value(), getProductMaxAmountForUnit(this.productFormModel().baseUnit)),
+            );
             required(path.defaultPortionAmount);
             min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
-            validate(path.defaultPortionAmount, ({ value }) => validateProductAmountMax(value(), this.productFormModel().baseUnit));
+            validate(path.defaultPortionAmount, ({ value }) =>
+                validateProductNumericMaximum(value(), getProductMaxAmountForUnit(this.productFormModel().baseUnit)),
+            );
             required(path.baseUnit);
             required(path.caloriesPerBase);
             min(path.caloriesPerBase, 0);
-            validate(path.caloriesPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxCalories()));
+            validate(path.caloriesPerBase, ({ value }) => validateProductNumericMaximum(value(), this.getCurrentMaxCalories()));
             min(path.proteinsPerBase, 0);
-            validate(path.proteinsPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
+            validate(path.proteinsPerBase, ({ value }) => validateProductNumericMaximum(value(), this.getCurrentMaxNutrient()));
             min(path.fatsPerBase, 0);
-            validate(path.fatsPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
+            validate(path.fatsPerBase, ({ value }) => validateProductNumericMaximum(value(), this.getCurrentMaxNutrient()));
             min(path.carbsPerBase, 0);
-            validate(path.carbsPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
+            validate(path.carbsPerBase, ({ value }) => validateProductNumericMaximum(value(), this.getCurrentMaxNutrient()));
             min(path.fiberPerBase, 0);
-            validate(path.fiberPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
+            validate(path.fiberPerBase, ({ value }) => validateProductNumericMaximum(value(), this.getCurrentMaxNutrient()));
             min(path.alcoholPerBase, 0);
-            validate(path.alcoholPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
+            validate(path.alcoholPerBase, ({ value }) => validateProductNumericMaximum(value(), this.getCurrentMaxNutrient()));
             required(path.visibility);
         },
         {
@@ -235,16 +238,13 @@ export class ProductManageFormComponent implements UnsavedEditor {
         effect(() => {
             const currentProduct = this.product();
             if (currentProduct !== null) {
-                if (this.populatedProduct === currentProduct) {
-                    return;
-                }
-                this.populateForm(currentProduct);
-                this.populatedProduct = currentProduct;
+                untracked(() => {
+                    this.populateForm(currentProduct);
+                });
                 this.appliedPrefillKey = null;
                 return;
             }
 
-            this.populatedProduct = null;
             this.applyPrefillIfNeeded(this.prefill());
         });
         effect(() => {
@@ -629,9 +629,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
             return;
         }
 
-        if (previousFdcId !== null) {
-            await firstValueFrom(this.externalFoodFacade.unlinkUsdaProduct(savedProduct.id));
-        }
+        await firstValueFrom(this.externalFoodFacade.unlinkUsdaProduct(savedProduct.id));
     }
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
@@ -736,25 +734,12 @@ function validateNullableMaxLength(value: string | null, maximumLength: number):
     return value !== null && value.length > maximumLength ? { kind: 'maxLength', maxLength: maximumLength } : undefined;
 }
 
-function validateProductAmountMax(
-    value: number | string | null,
-    unit: ProductFormValues['baseUnit'],
-): { kind: 'max'; max: number } | { kind: 'invalid' } | undefined {
-    const maximumAmount = getProductMaxAmountForUnit(unit);
-    const numericValue = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
-    if (numericValue !== null && !Number.isFinite(numericValue)) {
-        return { kind: 'invalid' };
-    }
-    return numericValue !== null && numericValue > maximumAmount ? { kind: 'max', max: maximumAmount } : undefined;
-}
-
-function validateProductNutritionMax(
-    value: number | string | null,
+function validateProductNumericMaximum(
+    value: number | null,
     maximumAmount: number,
 ): { kind: 'max'; max: number } | { kind: 'invalid' } | undefined {
-    const numericValue = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
-    if (numericValue !== null && !Number.isFinite(numericValue)) {
+    if (value !== null && !Number.isFinite(value)) {
         return { kind: 'invalid' };
     }
-    return numericValue !== null && numericValue > maximumAmount ? { kind: 'max', max: maximumAmount } : undefined;
+    return value !== null && value > maximumAmount ? { kind: 'max', max: maximumAmount } : undefined;
 }

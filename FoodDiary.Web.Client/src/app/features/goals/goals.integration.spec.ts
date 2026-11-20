@@ -279,6 +279,46 @@ describe('Routed body goal validation before departure', () => {
     });
 });
 
+describe('Routed nutrition goal number edits', () => {
+    it.each([
+        { field: 'calories', target: 'dailyCalorieTarget', correction: 1950.5 },
+        { field: 'protein', target: 'proteinTarget', correction: 123.5 },
+        { field: 'water', target: 'waterGoal', correction: 2210.5 },
+    ] as const)('blocks saving an unfinished $field value until it is corrected', async ({ field, target, correction }) => {
+        const { api } = configureGoals();
+        api.updateGoals.mockReturnValueOnce(of({ ...GOALS, [target]: correction }));
+        const harness = await RouterTestingHarness.create('/goals');
+        const host = page(harness);
+        const input = requiredInput(host, `#goals-editor-${field}`);
+        const saveSelector = 'fd-unsaved-changes-bar fd-ui-button:last-child button';
+        expect(input.value).toBe(String(GOALS[target]));
+
+        // jsdom cannot type a lone minus into a number field. Chrome verifies the same scenario with real keystrokes.
+        const badInput = vi.spyOn(input.validity, 'badInput', 'get').mockReturnValue(true);
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        redraw(harness);
+        badInput.mockRestore();
+
+        const save = requiredButton(host, saveSelector);
+        expect(input.value).toBe('');
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(save.disabled).toBe(true);
+        save.click();
+        expect(api.updateGoals).not.toHaveBeenCalled();
+
+        editNumber(input, correction);
+        redraw(harness);
+        expect(input.getAttribute('aria-invalid')).toBe('false');
+        requiredButton(host, saveSelector).click();
+        await harness.fixture.whenStable();
+        redraw(harness);
+
+        expect(api.updateGoals).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ [target]: correction }));
+        expect(host.querySelector('fd-unsaved-changes-bar')).toBeNull();
+    });
+});
+
 describe('Routed goals load', () => {
     it('renders loading, lets the user retry an unsuccessful read and restores the editor', async () => {
         const { api } = configureGoals();

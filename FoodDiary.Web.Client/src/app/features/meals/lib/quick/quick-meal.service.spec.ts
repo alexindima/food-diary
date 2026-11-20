@@ -426,6 +426,19 @@ describe('QuickMealService portion defaults and preview actions', () => {
         expect(service.items()[0].amount).toBe(product.baseAmount);
     });
 
+    it('saves a positive fallback quantity when a legacy product has no base or default portion', () => {
+        const legacy = { ...product, baseAmount: 0, defaultPortionAmount: 0 };
+        service.addProduct(legacy);
+
+        expect(service.items()).toEqual([expect.objectContaining({ product: legacy, amount: 1 })]);
+
+        service.saveDraft();
+
+        expect(mealService.create).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ items: [{ productId: legacy.id, recipeId: null, amount: 1 }] }),
+            expect.any(String),
+        );
+    });
     it('keeps a preview draft editable without toast or persistence until the preview exits', () => {
         service.setPreviewItems([]);
         service.addProduct(product);

@@ -43,7 +43,8 @@
                                 }
                                 @if (task.dueAtUtc) {
                                     <span class="fd-ui-caption">
-                                        {{ 'CLIENT_TASKS.DUE' | translate }} {{ task.dueAtUtc | localizedDate: 'mediumDate' }}
+                                        {{ 'CLIENT_TASKS.DUE' | translate }}
+                                        {{ task.dueAtUtc | localizedDate: 'mediumDate' : undefined : locale() }}
                                         @if (task.isOverdue) {
                                             · {{ 'CLIENT_TASKS.OVERDUE' | translate }}
                                         }
@@ -132,7 +133,7 @@
                                         }
                                     </span>
                                     <span class="recommendations-page__date fd-ui-caption">
-                                        {{ recommendation.createdAtUtc | localizedDate: 'mediumDate' }}
+                                        {{ recommendation.createdAtUtc | localizedDate: 'mediumDate' : undefined : locale() }}
                                     </span>
                                 </div>
                                 <span class="recommendations-page__status fd-ui-pill fd-ui-pill--compact fd-ui-caption">

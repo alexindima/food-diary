@@ -1068,6 +1068,82 @@ describe('Shopping list creation with a full first page', () => {
     });
 });
 
+describe('Shopping directory totals after creating another list', () => {
+    const cases = [
+        { change: 'remotely completed', initiallyChecked: false, itemCount: 1, remainingCount: 0, tabCount: '✓' },
+        { change: 'remotely reopened', initiallyChecked: true, itemCount: 1, remainingCount: 1, tabCount: '1' },
+        {
+            change: 'legacy summary after the item count changes',
+            initiallyChecked: true,
+            itemCount: 2,
+            remainingCount: undefined,
+            tabCount: '…',
+        },
+        {
+            change: 'legacy summary with the same item count',
+            initiallyChecked: false,
+            itemCount: 1,
+            remainingCount: undefined,
+            tabCount: '1',
+        },
+    ];
+    it.each(cases)(
+        'shows the expected count for a $change list without reloading its rows',
+        async ({ initiallyChecked, itemCount, remainingCount, tabCount }) => {
+            const initial = {
+                ...GROCERIES,
+                items: GROCERIES.items.map(item => ({
+                    ...item,
+                    isChecked: initiallyChecked,
+                    checkedOnUtc: initiallyChecked ? CREATED_AT : null,
+                })),
+            };
+            const pantry = makeList('pantry', 'Pantry');
+            const created = makeList('spring-market', 'Spring Market');
+            const initialOverview: ShoppingListOverview = {
+                selectedList: initial,
+                lists: { items: [summary(initial), summary(TRAVEL), summary(pantry)], hasMore: false, nextPage: null },
+            };
+            const { harness, api } = await renderShoppingAsync(initialOverview, true);
+            const host = page(harness);
+            const groceryTab = (): HTMLButtonElement => nativeButton(requiredElement(host, '.shopping-list__list-tabs'), initial.name);
+            expect(groceryTab().querySelector('.shopping-list__tab-count')?.textContent).toBe(initiallyChecked ? '✓' : '1');
+
+            api.create.mockReturnValueOnce(of(created));
+            api.getById.mockReturnValueOnce(of(created));
+            api.getPage.mockReturnValueOnce(
+                of([
+                    summary(created),
+                    { ...summary(initial), itemsCount: itemCount, remainingCount },
+                    { ...summary(TRAVEL), remainingCount: undefined },
+                    summary(pantry),
+                ]),
+            );
+            nativeButton(host, 'SHOPPING_LIST.NEW_LIST_BUTTON').click();
+            harness.detectChanges();
+            const name = requiredInput(host, '.shopping-list__list-card-rename-input');
+            name.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            harness.detectChanges();
+
+            expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(created.name);
+            expect(groceryTab().querySelector('.shopping-list__tab-count')?.textContent).toBe(tabCount);
+            expect(api.getById).toHaveBeenCalledExactlyOnceWith(created.id);
+
+            const picker = openMobilePicker(harness);
+            expect(nativeButton(picker, TRAVEL.name).querySelector('.list-browser__status')?.textContent).toBe('…');
+            if (tabCount === '✓') {
+                expect(picker.textContent).not.toContain(initial.name);
+                nativeButton(picker, 'SHOPPING_LIST.COMPLETED_GROUP').click();
+                harness.detectChanges();
+            }
+            const status = tabCount === '✓' ? 'SHOPPING_LIST.DONE_STATUS' : tabCount;
+            expect(nativeButton(picker, initial.name).querySelector('.list-browser__status')?.textContent).toBe(status);
+            expect(api.getPage).toHaveBeenCalledOnce();
+            expect(api.update).not.toHaveBeenCalled();
+        },
+    );
+});
+
 describe('Shopping list directory recovery', () => {
     it('keeps an editable first list when the post-create directory is still empty', async () => {
         const overview: ShoppingListOverview = { selectedList: null, lists: { items: [], hasMore: false, nextPage: null } };

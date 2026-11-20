@@ -64,8 +64,11 @@ describe('AuthGoogleManager initialization', () => {
         expect(manager.ready()).toBe(false);
     });
 
-    it('should keep manager not ready when Google client id is not configured', async () => {
-        environment.googleClientId = '';
+    it.each([
+        { clientId: '', configuration: 'empty' },
+        { clientId: undefined, configuration: 'omitted' },
+    ])('keeps Google disabled when the client id is $configuration', async ({ clientId }) => {
+        environment.googleClientId = clientId;
         const manager = TestBed.inject(AuthGoogleManager);
 
         await manager.initializeAsync(vi.fn());
@@ -102,10 +105,35 @@ describe('AuthGoogleManager render', () => {
 
         expect(googleIdentityServiceSpy.renderButton).toHaveBeenCalledWith(loginButton, 'filled_blue', 'ru');
     });
+
+    it('waits for the browser provider and an active form before rendering a Google button', async () => {
+        const manager = TestBed.inject(AuthGoogleManager);
+        const pending = new Subject<void>();
+        googleIdentityServiceSpy.initializeAsync.mockReturnValueOnce(firstValueFrom(pending));
+        const initialization = manager.initializeAsync(vi.fn());
+        await vi.waitFor(() => {
+            expect(pending.observed).toBe(true);
+        });
+        const loginTarget = document.createElement('div');
+        manager.renderButton('login', loginTarget, undefined);
+        expect(manager.ready()).toBe(false);
+        expect(googleIdentityServiceSpy.renderButton).not.toHaveBeenCalled();
+
+        pending.next();
+        await initialization;
+        expect(manager.ready()).toBe(true);
+        // The password reset view can temporarily replace both Google button targets.
+        manager.renderButton('login', undefined, undefined);
+        expect(googleIdentityServiceSpy.renderButton).not.toHaveBeenCalled();
+
+        const registerTarget = document.createElement('div');
+        manager.renderButton('register', undefined, registerTarget);
+        expect(googleIdentityServiceSpy.renderButton).toHaveBeenCalledExactlyOnceWith(registerTarget, 'filled_blue', 'en');
+    });
 });
 
 type NativeResult = { provider: 'google'; result?: { idToken: string } | null };
-function nativeGoogle(): {
+function nativeGoogle({ hasPlugin = true } = {}): {
     initialize: Mock<(options: { google: { webClientId: string } }) => Promise<void>>;
     login: Mock<(options: { provider: 'google' }) => Promise<NativeResult>>;
 } {
@@ -114,7 +142,7 @@ function nativeGoogle(): {
     const original = Object.getOwnPropertyDescriptor(window, 'Capacitor');
     Object.defineProperty(window, 'Capacitor', {
         configurable: true,
-        value: { isNativePlatform: (): boolean => true, Plugins: { SocialLogin: { initialize, login } } },
+        value: { isNativePlatform: (): boolean => true, Plugins: hasPlugin ? { SocialLogin: { initialize, login } } : {} },
     });
     onTestFinished(() => {
         if (original === undefined) {
@@ -182,22 +210,25 @@ describe('AuthGoogleManager native buttons', () => {
         });
     });
 
-    it.each(['native unavailable', 'server platform'])('uses browser adapter initialization for %s', async reason => {
-        const { initialize, login } = nativeGoogle();
-        if (reason === 'server platform') {
-            TestBed.overrideProvider(PLATFORM_ID, { useValue: 'server' });
-        } else {
-            initialize.mockRejectedValueOnce(new Error('Native initialization unavailable'));
-        }
-        const manager = TestBed.inject(AuthGoogleManager);
-        const callback = vi.fn<(credential: string) => void>();
-        await manager.initializeAsync(callback);
-        expect(initialize).toHaveBeenCalledTimes(Number(reason === 'native unavailable'));
-        expect(googleIdentityServiceSpy.initializeAsync).toHaveBeenCalledOnce();
-        expect(googleIdentityServiceSpy.initializeAsync.mock.calls[0][0].clientId).toBe('google-client-id');
-        expect(googleIdentityServiceSpy.prompt).toHaveBeenCalledOnce();
-        expect(login).not.toHaveBeenCalled();
-    });
+    it.each(['native initialization failure', 'missing native plugin', 'server platform'])(
+        'uses browser adapter initialization for %s',
+        async reason => {
+            const { initialize, login } = nativeGoogle({ hasPlugin: reason !== 'missing native plugin' });
+            if (reason === 'server platform') {
+                TestBed.overrideProvider(PLATFORM_ID, { useValue: 'server' });
+            } else if (reason === 'native initialization failure') {
+                initialize.mockRejectedValueOnce(new Error('Native initialization unavailable'));
+            }
+            const manager = TestBed.inject(AuthGoogleManager);
+            const callback = vi.fn<(credential: string) => void>();
+            await manager.initializeAsync(callback);
+            expect(initialize).toHaveBeenCalledTimes(Number(reason === 'native initialization failure'));
+            expect(googleIdentityServiceSpy.initializeAsync).toHaveBeenCalledOnce();
+            expect(googleIdentityServiceSpy.initializeAsync.mock.calls[0][0].clientId).toBe('google-client-id');
+            expect(googleIdentityServiceSpy.prompt).toHaveBeenCalledOnce();
+            expect(login).not.toHaveBeenCalled();
+        },
+    );
 });
 
 describe('AuthGoogleManager component lifetime', () => {

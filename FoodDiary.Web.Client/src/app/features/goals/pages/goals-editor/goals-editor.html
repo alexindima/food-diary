@@ -6,6 +6,7 @@
                 data-tour-id="goals-macros"
                 [calories]="model.calories"
                 [macros]="macroDrafts()"
+                [incompleteNumbers]="model.incompleteNumbers"
                 [preset]="model.preset"
                 [presetOptions]="presetOptions()"
                 (caloriesChange)="updateCalories($event)"
@@ -15,6 +16,7 @@
             <div class="goals-editor__side">
                 <fd-goals-side-cards
                     [water]="model.water"
+                    [waterIncomplete]="model.incompleteNumbers.has('water')"
                     [bodyTargets]="model.bodyTargets"
                     [invalidBodyTargets]="model.invalidBodyTargets"
                     (waterChange)="updateWater($event)"

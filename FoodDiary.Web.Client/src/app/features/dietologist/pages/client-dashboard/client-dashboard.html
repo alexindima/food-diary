@@ -170,7 +170,8 @@
                                     }
                                     @if (task.dueAtUtc) {
                                         <span class="fd-ui-caption">
-                                            {{ 'CLIENT_TASKS.DUE' | translate }} {{ task.dueAtUtc | localizedDate: 'mediumDate' }}
+                                            {{ 'CLIENT_TASKS.DUE' | translate }}
+                                            {{ task.dueAtUtc | localizedDate: 'mediumDate' : undefined : locale() }}
                                             @if (task.isOverdue) {
                                                 · {{ 'CLIENT_TASKS.OVERDUE' | translate }}
                                             }
@@ -281,7 +282,9 @@
                             @for (item of recommendationItems(); track item.id) {
                                 <article class="client-dashboard__recommendation">
                                     <div class="fd-row fd-justify-between fd-gap-sm">
-                                        <span class="fd-ui-caption">{{ item.createdAtUtc | localizedDate: 'mediumDate' }}</span>
+                                        <span class="fd-ui-caption">{{
+                                            item.createdAtUtc | localizedDate: 'mediumDate' : undefined : locale()
+                                        }}</span>
                                         <span class="client-dashboard__recommendation-status fd-ui-pill fd-ui-overline">
                                             {{ item.statusKey | translate }}
                                         </span>

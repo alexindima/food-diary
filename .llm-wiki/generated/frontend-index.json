@@ -8,15 +8,15 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2940,
-    "symbols": 889,
+    "typescriptFiles": 2942,
+    "symbols": 890,
     "routes": 113,
     "features": 46,
-    "specs": 957,
+    "specs": 958,
     "localeFiles": 5,
     "roles": {
       "Component": 515,
-      "Directive": 20,
+      "Directive": 21,
       "Facade": 91,
       "Other": 41,
       "Pipe": 5,
@@ -859,6 +859,7 @@
         "GoalsCyclingRowComponent",
         "GoalsEditorComponent",
         "GoalsFacade",
+        "GoalsNumberInputDirective",
         "GoalsNutritionCardComponent",
         "GoalsPageComponent",
         "GoalsService",
@@ -1516,6 +1517,7 @@
         "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/shopping-lists/shopping-list-add-http.integration.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/shopping-list-interactions.integration.spec.ts",
         "FoodDiary.Web.Client/src/app/features/shopping-lists/shopping-list.routes.spec.ts"
       ]
@@ -4001,7 +4003,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-episode.facade.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CycleExportFacade",
@@ -4456,14 +4458,14 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 154
+      "line": 155
     },
     {
       "name": "ClientDashboardFastingCardComponent",
       "role": "Component",
       "selector": "fd-client-dashboard-fasting-card",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "ClientDashboardHeaderComponent",
@@ -4484,7 +4486,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard-meals-card",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "ClientDashboardMetricListComponent",
@@ -4505,7 +4507,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard-summary-card",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-summary-card.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "DietologistClientCardComponent",
@@ -4848,7 +4850,7 @@
       "role": "Component",
       "selector": "fd-gamification-achievements-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.ts",
-      "line": 21
+      "line": 22
     },
     {
       "name": "GamificationFacade",
@@ -4918,14 +4920,21 @@
       "role": "Component",
       "selector": "fd-goals-editor",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
-      "line": 39
+      "line": 40
+    },
+    {
+      "name": "GoalsNumberInputDirective",
+      "role": "Directive",
+      "selector": "input[fdGoalsNumber]",
+      "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-number-input.directive.ts",
+      "line": 10
     },
     {
       "name": "GoalsNutritionCardComponent",
       "role": "Component",
       "selector": "fd-goals-nutrition-card",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "GoalsSideCardsComponent",
@@ -6444,7 +6453,7 @@
       "role": "Component",
       "selector": "fd-recommendation-thread",
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/components/recommendation-thread/recommendation-thread.ts",
-      "line": 20
+      "line": 21
     },
     {
       "name": "RecommendationsFacade",
@@ -6458,7 +6467,7 @@
       "role": "Component",
       "selector": "fd-recommendations-page",
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.ts",
-      "line": 48
+      "line": 49
     },
     {
       "name": "ShoppingListService",
@@ -6507,7 +6516,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/lib/shopping-list-add.facade.ts",
-      "line": 17
+      "line": 19
     },
     {
       "name": "ShoppingListBrowserFacade",
@@ -7039,7 +7048,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/food-recognition.service.ts",
-      "line": 47
+      "line": 53
     },
     {
       "name": "ImageUploadService",
@@ -7550,7 +7559,7 @@
       "role": "Pipe",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/localized-date.pipe.ts",
-      "line": 11
+      "line": 10
     },
     {
       "name": "LocalizedNumberPipe",

@@ -2,14 +2,14 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
-import { catchError, EMPTY, finalize, Subject, switchMap } from 'rxjs';
+import { catchError, EMPTY, finalize, map, Subject, switchMap } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { DashboardService } from '../api/dashboard.service';
 import type { NutritionDetailsData } from '../models/nutrition-details.types';
 import { getDashboardDateUtc } from './dashboard-date.utils';
 import { loadNutritionDay, type NutritionDay } from './nutrition-details.loader';
-import { nutritionDayProgress } from './nutrition-details.mapper';
+import { hasMatchingNutritionTotal, nutritionDayProgress } from './nutrition-details.mapper';
 
 @Injectable()
 export class NutritionDetailsFacade {
@@ -41,6 +41,14 @@ export class NutritionDetailsFacade {
                         },
                         query => this.service.getSnapshotSilentlyStrict(query),
                     ).pipe(
+                        map(day => {
+                            const metric = this.data.metric;
+                            const { current } = nutritionDayProgress(day.snapshot, metric);
+                            if (!hasMatchingNutritionTotal(day.meals, metric, current)) {
+                                throw new Error('Nutrition statistics and meals describe different versions of the day');
+                            }
+                            return day;
+                        }),
                         catchError(() => {
                             this.failed.set(true);
                             return EMPTY;

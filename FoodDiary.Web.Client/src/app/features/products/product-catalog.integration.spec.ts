@@ -1512,7 +1512,8 @@ describe('Rendered product selection', () => {
     it('does not select a newly created item after its original picker has closed', () => {
         const { closePicker, openDialog } = configureCatalog();
         const closed = new Subject<Product>();
-        openDialog.mockReturnValueOnce({ afterClosed: () => closed });
+        const closeEditor = vi.fn();
+        openDialog.mockReturnValueOnce({ afterClosed: () => closed, close: closeEditor });
         const picker = TestBed.createComponent(ProductListDialogComponent);
         picker.detectChanges();
         button(picker.nativeElement as HTMLElement, '.product-select__footer button').click();
@@ -1525,6 +1526,39 @@ describe('Rendered product selection', () => {
 
         expect(closePicker).not.toHaveBeenCalled();
         expect(listenerSurvived).toBe(false);
+        expect(closeEditor).toHaveBeenCalledExactlyOnceWith();
+    });
+});
+
+describe('Nested product creation owned by the catalogue picker', () => {
+    it('closes the open creation editor when its picker is closed and leaves another overlay open', async () => {
+        configureRealCatalogDialogs();
+        const dialogs = TestBed.inject(FdUiDialogService);
+        const picker = dialogs.open<ProductListDialogComponent, undefined, Product | null>(ProductListDialogComponent, { preset: 'list' });
+        TestBed.tick();
+        const pickerElement = document.querySelector('fd-product-list-dialog');
+        if (!(pickerElement instanceof HTMLElement)) {
+            throw new Error('Expected the native product picker');
+        }
+
+        button(pickerElement, '.product-select__footer button').click();
+        TestBed.tick();
+        const editor = document.querySelector('fd-product-add-dialog');
+        if (!(editor instanceof HTMLElement)) {
+            throw new Error('Expected the nested product editor');
+        }
+        expect(editor.querySelector('fd-product-manage-form')).not.toBeNull();
+        expect(editor.isConnected).toBe(true);
+        const independent = dialogs.open(IndependentDialogComponent, { closeOnNavigation: false });
+
+        picker.close();
+
+        expect(pickerElement.isConnected).toBe(false);
+        await vi.waitFor(() => {
+            expect(editor.isConnected).toBe(false);
+        });
+        expect(document.querySelector('fd-test-independent-dialog')?.textContent).toContain('Independent dialog');
+        independent.close();
     });
 });
 

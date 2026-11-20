@@ -99,7 +99,9 @@
                         <div class="habit-path__received-meta">
                             <span>{{ 'GAMIFICATION.HABIT_PATH.RECEIVED' | translate }}</span>
                             @if (badge.earnedAtUtc) {
-                                <time [attr.datetime]="badge.earnedAtUtc">{{ badge.earnedAtUtc | localizedDate: 'mediumDate' }}</time>
+                                <time [attr.datetime]="badge.earnedAtUtc">{{
+                                    badge.earnedAtUtc | localizedDate: 'mediumDate' : undefined : language()
+                                }}</time>
                             }
                         </div>
                     </article>

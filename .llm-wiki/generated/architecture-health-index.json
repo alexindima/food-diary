@@ -4945,6 +4945,11 @@
           "required": true
         },
         {
+          "name": "incompleteNumbers",
+          "type": "ReadonlySet<GoalNumberKey>",
+          "required": true
+        },
+        {
           "name": "preset",
           "type": "MacroPresetKey",
           "required": true
@@ -4957,12 +4962,12 @@
       ],
       "outputs": [
         {
-          "name": "macroChange",
-          "type": "{ key: MacroKey; value: number }"
+          "name": "caloriesChange",
+          "type": "number | null"
         },
         {
-          "name": "caloriesChange",
-          "type": "number"
+          "name": "macroChange",
+          "type": "{ key: MacroKey; value: number | null }"
         },
         {
           "name": "presetChange",
@@ -4987,6 +4992,11 @@
           "required": true
         },
         {
+          "name": "waterIncomplete",
+          "type": "boolean",
+          "required": true
+        },
+        {
           "name": "bodyTargets",
           "type": "Record<BodyTargetKey, number>",
           "required": true
@@ -4999,12 +5009,12 @@
       ],
       "outputs": [
         {
-          "name": "bodyTargetChange",
-          "type": "{ key: BodyTargetKey; value: number | null }"
+          "name": "waterChange",
+          "type": "number | null"
         },
         {
-          "name": "waterChange",
-          "type": "number"
+          "name": "bodyTargetChange",
+          "type": "{ key: BodyTargetKey; value: number | null }"
         }
       ],
       "specPath": null

@@ -224,26 +224,29 @@ export class AuthComponent {
 
         const loginValues = this.loginModel();
         const tabVersion = this.authTabVersion;
-        const result = await firstValueFrom(
-            this.authFlowFacade.login({ ...loginValues, expectedUserId: this.confirmationUserId() ?? undefined }),
-        );
-        if (this.destroyRef.destroyed) {
-            return;
-        }
-        this.isSubmitting.set(false);
-        if (result === 'success') {
-            if (this.pendingGoogleLinkCredential !== null) {
-                await this.completeGoogleLinkAsync(this.pendingGoogleLinkCredential);
+        try {
+            const result = await firstValueFrom(
+                this.authFlowFacade.login({ ...loginValues, expectedUserId: this.confirmationUserId() ?? undefined }),
+            );
+            if (this.destroyRef.destroyed) {
                 return;
             }
-            await this.completeAuthenticatedNavigationAsync();
-            this.closeDialogIfAny();
-            return;
-        }
+            if (result === 'success') {
+                if (this.pendingGoogleLinkCredential !== null) {
+                    await this.completeGoogleLinkAsync(this.pendingGoogleLinkCredential);
+                    return;
+                }
+                await this.completeAuthenticatedNavigationAsync();
+                this.closeDialogIfAny();
+                return;
+            }
 
-        if (tabVersion === this.authTabVersion) {
-            this.failedLoginValues = loginValues;
-            this.handleLoginResult(result);
+            if (tabVersion === this.authTabVersion) {
+                this.failedLoginValues = loginValues;
+                this.handleLoginResult(result);
+            }
+        } finally {
+            this.isSubmitting.set(false);
         }
     }
 
@@ -306,19 +309,22 @@ export class AuthComponent {
         this.isSubmitting.set(true);
 
         const tabVersion = this.authTabVersion;
-        const result = await firstValueFrom(this.authFlowFacade.register(this.registerModel()));
-        if (this.destroyRef.destroyed) {
-            return;
-        }
-        this.isSubmitting.set(false);
-        if (result === 'success') {
-            await this.navigationService.navigateToEmailVerificationPendingAsync();
-            this.closeDialogIfAny();
-            return;
-        }
+        try {
+            const result = await firstValueFrom(this.authFlowFacade.register(this.registerModel()));
+            if (this.destroyRef.destroyed) {
+                return;
+            }
+            if (result === 'success') {
+                await this.navigationService.navigateToEmailVerificationPendingAsync();
+                this.closeDialogIfAny();
+                return;
+            }
 
-        if (tabVersion === this.authTabVersion) {
-            this.handleRegisterResult(result);
+            if (tabVersion === this.authTabVersion) {
+                this.handleRegisterResult(result);
+            }
+        } finally {
+            this.isSubmitting.set(false);
         }
     }
 

@@ -6,7 +6,6 @@ import {
     type ElementRef,
     inject,
     input,
-    model,
     output,
     viewChild,
 } from '@angular/core';
@@ -20,13 +19,14 @@ import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-lang
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { BodyTargetKey } from '../../lib/goals.facade';
 import { BODY_TARGET_MAXIMUMS, isBodyTargetValid, isGoalNumberValid } from './goals-editor.models';
+import { GoalsNumberInputDirective } from './goals-number-input.directive';
 
 const BODY_TARGET_FRACTION_DIGITS = 2;
 const DISPLAY_PRECISION_FACTOR = 100;
 
 @Component({
     selector: 'fd-goals-side-cards',
-    imports: [TranslatePipe, LocalizedNumberPipe, FdUiFormErrorComponent],
+    imports: [TranslatePipe, LocalizedNumberPipe, FdUiFormErrorComponent, GoalsNumberInputDirective],
     templateUrl: './goals-side-cards.html',
     styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,10 +34,12 @@ const DISPLAY_PRECISION_FACTOR = 100;
 export class GoalsSideCardsComponent {
     private readonly translateService = inject(TranslateService);
     protected readonly measurements = inject(MeasurementSystemService);
-    public readonly water = model.required<number>();
+    public readonly water = input.required<number>();
+    public readonly waterIncomplete = input.required<boolean>();
     public readonly bodyTargets = input.required<Record<BodyTargetKey, number>>();
     public readonly invalidBodyTargets = input.required<Record<BodyTargetKey, boolean>>();
 
+    public readonly waterChange = output<number | null>();
     public readonly bodyTargetChange = output<{ key: BodyTargetKey; value: number | null }>();
     private readonly weightField = viewChild.required<ElementRef<HTMLInputElement>>('weightField');
     private readonly waistField = viewChild.required<ElementRef<HTMLInputElement>>('waistField');
@@ -52,7 +54,7 @@ export class GoalsSideCardsComponent {
     protected readonly weightInvalid = computed(
         () => this.invalidBodyTargets().weight || !isBodyTargetValid('weight', this.bodyTargets().weight),
     );
-    protected readonly waterInvalid = computed(() => !isGoalNumberValid(this.water()));
+    protected readonly waterInvalid = computed(() => this.waterIncomplete() || !isGoalNumberValid(this.water()));
     protected readonly waistInvalid = computed(
         () => this.invalidBodyTargets().waist || !isBodyTargetValid('waist', this.bodyTargets().waist),
     );
@@ -88,17 +90,6 @@ export class GoalsSideCardsComponent {
         return canonical > limit
             ? Math.round((displayed - 1 / DISPLAY_PRECISION_FACTOR) * DISPLAY_PRECISION_FACTOR) / DISPLAY_PRECISION_FACTOR
             : displayed;
-    }
-
-    protected numberValue(event: Event): number | null {
-        return event.target instanceof HTMLInputElement ? Number(event.target.value) : null;
-    }
-
-    protected updateWater(event: Event): void {
-        const value = this.numberValue(event);
-        if (value !== null) {
-            this.water.set(value);
-        }
     }
 
     protected updateBodyTarget(key: BodyTargetKey, field: HTMLInputElement): void {

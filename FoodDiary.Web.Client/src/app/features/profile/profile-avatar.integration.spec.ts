@@ -210,7 +210,12 @@ function avatarUrl(router: RouterTestingHarness): string | null | undefined {
 function chooseAvatarAction(router: RouterTestingHarness, action: string): void {
     getButton(profilePage(router), 'USER_MANAGE.COMPARISON.AVATAR_ACTIONS').click();
     router.detectChanges();
-    getButton(document, action).click();
+    const menuButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menu"] button[role="menuitem"]'));
+    const button = menuButtons.find(item => item.textContent.trim().endsWith(action));
+    if (button === undefined) {
+        throw new Error(`Expected avatar menu item ${action}`);
+    }
+    button.click();
     router.detectChanges();
 }
 

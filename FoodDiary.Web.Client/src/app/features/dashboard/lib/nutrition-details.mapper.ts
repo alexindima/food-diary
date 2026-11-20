@@ -3,6 +3,8 @@ import type { Meal, MealItem } from '../../../shared/models/meal.data';
 import type { NutritionMetric, NutritionSource } from '../models/nutrition-details.types';
 
 const TOTAL_ROUNDING_TOLERANCE = 0.011;
+// Dashboard statistics round to two decimals. Allow for that rounding and floating-point sums.
+const DAILY_TOTAL_ROUNDING_TOLERANCE = 0.005001;
 
 const METRIC_FIELDS = {
     calories: {
@@ -63,6 +65,12 @@ export function nutritionDayProgress(snapshot: DashboardSnapshot, metric: Nutrit
             return { current: statistics.averageFiber, goal: statistics.fiberGoal ?? null };
         }
     }
+}
+
+export function hasMatchingNutritionTotal(meals: readonly Meal[], metric: NutritionMetric, dailyTotal: number): boolean {
+    const totalField = METRIC_FIELDS[metric].total;
+    const mealsTotal = meals.reduce((total, meal) => total + meal[totalField], 0);
+    return Math.abs(mealsTotal - dailyTotal) <= DAILY_TOTAL_ROUNDING_TOLERANCE;
 }
 
 export function buildNutritionSources(meals: readonly Meal[], metric: NutritionMetric, language: string): NutritionSource[] {

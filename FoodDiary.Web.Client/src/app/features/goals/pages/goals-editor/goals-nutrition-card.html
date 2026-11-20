@@ -28,8 +28,9 @@
                 min="0"
                 [attr.aria-invalid]="caloriesInvalid()"
                 [attr.aria-describedby]="caloriesInvalid() ? 'goals-editor-calories-error' : null"
-                [value]="calories()"
-                (input)="emitNumber($event, value => calories.set(value))"
+                [fdGoalsNumber]="calories()"
+                [fdGoalsNumberIncomplete]="caloriesIncomplete()"
+                (fdGoalsNumberChange)="caloriesChange.emit($event)"
             /><span>{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
         </div>
     </div>
@@ -53,8 +54,9 @@
                     [id]="`goals-editor-${macro.key}`"
                     [attr.aria-invalid]="macro.invalid"
                     [attr.aria-describedby]="macro.invalid ? `goals-editor-${macro.key}-error` : null"
-                    [value]="macro.value"
-                    (input)="emitNumber($event, value => macroChange.emit({ key: macro.key, value }))"
+                    [fdGoalsNumber]="macro.value"
+                    [fdGoalsNumberIncomplete]="macro.incomplete"
+                    (fdGoalsNumberChange)="macroChange.emit({ key: macro.key, value: $event })"
                 /><span>{{ 'GENERAL.UNITS.G' | translate }}</span>
             </div>
             @if (macro.key !== 'fiber') {

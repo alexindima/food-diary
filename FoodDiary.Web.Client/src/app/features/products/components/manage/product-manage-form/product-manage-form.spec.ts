@@ -1578,6 +1578,66 @@ describe('Product editor nutrition input', () => {
     });
 });
 
+describe('Product editor rendered nutrition precision', () => {
+    const baseProtein = 0.1;
+    const portionProtein = 0.001;
+    const portionAmount = 1;
+    const proteinPrecision = 7;
+
+    it.each([
+        { basis: 'base', displayedProtein: baseProtein },
+        { basis: 'portion', displayedProtein: portionProtein },
+    ] as const)('preserves the saved nutrition when submitting with the $basis basis selected', async ({ basis, displayedProtein }) => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', { ...PRODUCT, defaultPortionAmount: portionAmount, proteinsPerBase: baseProtein });
+        fixture.detectChanges();
+        const base = requiredFormButton(el, 'fd-ui-segmented-toggle button[role="radio"]:first-child');
+        const portion = requiredFormButton(el, 'fd-ui-segmented-toggle button[role="radio"]:last-child');
+        const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+        const selected = basis === 'base' ? base : portion;
+
+        for (const option of [portion, base, portion, base, selected, selected]) {
+            option.click();
+            fixture.detectChanges();
+        }
+        expect(selected.getAttribute('aria-checked')).toBe('true');
+        proteins.focus();
+        proteins.blur();
+        expect(Number(proteins.value)).toBeCloseTo(displayedProtein, proteinPrecision);
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({ defaultPortionAmount: portionAmount, proteinsPerBase: baseProtein }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+
+    it('keeps the edited nutrition in the same product when an unrelated prefill arrives', async () => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+        enterProductValue(proteins, '12,34');
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('prefill', { barcode: '12345678' });
+        fixture.detectChanges();
+        expect(proteins.value).toBe('12,34');
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+        const expectedProtein = 12.3;
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({ proteinsPerBase: expectedProtein }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
 describe('Product editor legacy cover actions', () => {
     it('removes the previous URL-only cover and saves an explicit empty gallery', async () => {
         const { el, fixture, productManageFacade } = await setupComponentAsync();

@@ -1,10 +1,11 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, required, validate } from '@angular/forms/signals';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Observable, Subject, takeUntil } from 'rxjs';
 
-import { calendarDate } from '../../../shared/models/semantics/date-value';
-import type { MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
+import type { CycleResponse } from '../../../shared/models/cycle.data';
+import { type CalendarDate, calendarDate } from '../../../shared/models/semantics/date-value';
+import type { CycleProfileId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import type { MenstrualEpisodeFormModel } from './cycle-tracking.form-models';
 import { toCycleDateKey } from './cycle-tracking.mapper';
@@ -16,6 +17,7 @@ export class CycleEpisodeFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly state = inject(CycleTrackingStateFacade);
+    private readonly profileDeleted = new Subject<void>();
     public readonly episodeModel = signal<MenstrualEpisodeFormModel>({
         startDate: null,
         endDate: null,
@@ -71,6 +73,12 @@ export class CycleEpisodeFacade {
         this.resetMenstrualEpisodeEdit();
     }
 
+    public clearAfterProfileDeletion(): void {
+        this.profileDeleted.next();
+        this.state.episodeError.set(null);
+        this.resetMenstrualEpisodeEdit();
+    }
+
     private resetMenstrualEpisodeEdit(): void {
         this.state.editingEpisodeId.set(null);
         this.episodeModel.set({ startDate: null, endDate: null });
@@ -96,20 +104,19 @@ export class CycleEpisodeFacade {
         this.state.isSavingEpisode.set(true);
         try {
             const cycle = await firstValueFrom(
-                this.cyclesService
-                    .updateMenstrualEpisode(currentCycle.id, episodeId, {
+                this.trackEpisodeResponse(
+                    this.cyclesService.updateMenstrualEpisode(currentCycle.id, episodeId, {
                         startDate: calendarDate(toCycleDateKey(formValue.startDate)),
-                        endDate:
-                            formValue.endDate === null || formValue.endDate.length === 0
-                                ? null
-                                : calendarDate(toCycleDateKey(formValue.endDate)),
-                    })
-                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                        endDate: episodeEndDate(formValue.endDate),
+                    }),
+                ),
+                { defaultValue: null },
             );
-            this.state.cycle.set(cycle);
-            this.resetMenstrualEpisodeEdit();
+            if (this.applyEpisodeResponse(cycle)) {
+                this.resetMenstrualEpisodeEdit();
+            }
         } catch {
-            this.state.episodeError.set('CYCLE_TRACKING.EPISODE_SAVE_FAILED');
+            this.setEpisodeErrorForProfile(currentCycle.id, 'CYCLE_TRACKING.EPISODE_SAVE_FAILED');
         } finally {
             this.state.isSavingEpisode.set(false);
         }
@@ -126,20 +133,18 @@ export class CycleEpisodeFacade {
         this.state.excludingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
-                this.cyclesService
-                    .updateMenstrualEpisode(currentCycle.id, episodeId, {
+                this.trackEpisodeResponse(
+                    this.cyclesService.updateMenstrualEpisode(currentCycle.id, episodeId, {
                         startDate: calendarDate(toCycleDateKey(episode.startDate)),
-                        endDate:
-                            episode.endDate === undefined || episode.endDate === null
-                                ? null
-                                : calendarDate(toCycleDateKey(episode.endDate)),
+                        endDate: episodeEndDate(episode.endDate),
                         excludedFromPredictions: !episode.excludedFromPredictions,
-                    })
-                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                    }),
+                ),
+                { defaultValue: null },
             );
-            this.state.cycle.set(cycle);
+            this.applyEpisodeResponse(cycle);
         } catch {
-            this.state.episodeError.set('CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
+            this.setEpisodeErrorForProfile(currentCycle.id, 'CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
         } finally {
             this.state.excludingEpisodeId.set(null);
         }
@@ -155,20 +160,44 @@ export class CycleEpisodeFacade {
         this.state.deletingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
-                this.cyclesService.deleteMenstrualEpisode(currentCycle.id, episodeId).pipe(takeUntilDestroyed(this.destroyRef)),
+                this.trackEpisodeResponse(this.cyclesService.deleteMenstrualEpisode(currentCycle.id, episodeId)),
+                {
+                    defaultValue: null,
+                },
             );
-            this.state.cycle.set(cycle);
-            if (this.state.editingEpisodeId() === episodeId) {
+            if (this.applyEpisodeResponse(cycle) && this.state.editingEpisodeId() === episodeId) {
                 this.resetMenstrualEpisodeEdit();
             }
         } catch {
-            this.state.episodeError.set('CYCLE_TRACKING.EPISODE_DELETE_FAILED');
+            this.setEpisodeErrorForProfile(currentCycle.id, 'CYCLE_TRACKING.EPISODE_DELETE_FAILED');
         } finally {
             this.state.deletingEpisodeId.set(null);
+        }
+    }
+
+    private trackEpisodeResponse(response: Observable<CycleResponse>): Observable<CycleResponse> {
+        return response.pipe(takeUntil(this.profileDeleted), takeUntilDestroyed(this.destroyRef));
+    }
+
+    private applyEpisodeResponse(cycle: CycleResponse | null): boolean {
+        if (cycle === null || cycle.id !== this.state.cycle()?.id) {
+            return false;
+        }
+        this.state.cycle.set(cycle);
+        return true;
+    }
+
+    private setEpisodeErrorForProfile(profileId: CycleProfileId, message: string): void {
+        if (this.state.cycle()?.id === profileId) {
+            this.state.episodeError.set(message);
         }
     }
 
     private hasPendingEpisodeAction(): boolean {
         return this.state.isEpisodeBusy();
     }
+}
+
+function episodeEndDate(value: string | null | undefined): CalendarDate | null {
+    return value === null || value === undefined || value.length === 0 ? null : calendarDate(toCycleDateKey(value));
 }

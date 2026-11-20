@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import type { RecommendationComment } from '../../../../shared/models/dietologist.data';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
@@ -18,6 +19,7 @@ const COMMENT_MAX_LENGTH = 2000;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecommendationThreadComponent {
+    protected readonly locale = injectCurrentLanguage();
     private readonly recommendationsFacade = inject(RecommendationsFacade);
     private readonly destroyRef = inject(DestroyRef);
 

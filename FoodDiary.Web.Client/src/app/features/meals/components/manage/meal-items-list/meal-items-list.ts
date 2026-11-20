@@ -70,10 +70,13 @@ export class MealItemsListComponent {
     }
 
     private getItemSourceName(item: MealItemsListItemState): string {
-        if (item.sourceType === MealSourceType.Recipe) {
-            return item.recipe?.name ?? '';
+        const isRecipe = item.sourceType === MealSourceType.Recipe;
+        const name = isRecipe ? item.recipe?.name : item.product?.name;
+        if (name !== undefined && name.trim().length > 0) {
+            return name;
         }
-        return item.product?.name ?? '';
+
+        return this.translateService.instant(isRecipe ? 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe' : 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product');
     }
 
     private getItemSourceIcon(item: MealItemsListItemState): string {
