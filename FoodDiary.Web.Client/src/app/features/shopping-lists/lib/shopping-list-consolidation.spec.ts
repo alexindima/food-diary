@@ -60,3 +60,18 @@ describe('explicit shopping consolidation', () => {
         ).toHaveLength(2);
     });
 });
+
+describe('Consolidation preview for three matching shopping rows', () => {
+    it('lists each original row in one group and keeps the first row identity in the summed list', () => {
+        const second = { ...ITEM, id: entityId<'shopping-list-item'>('b'), amount: 300, sortOrder: 2 };
+        const third = { ...ITEM, id: entityId<'shopping-list-item'>('c'), amount: 400, sortOrder: 3 };
+        const other = { ...ITEM, id: entityId<'shopping-list-item'>('d'), name: 'Oat milk', sortOrder: 4 };
+        const expected = { ...ITEM, amount: 900 };
+
+        const plan = planShoppingConsolidation([ITEM, second, third, other]);
+
+        expect(plan.groups).toEqual([{ before: [ITEM, second, third], after: expected }]);
+        expect(plan.items).toEqual([expected, { ...other, sortOrder: 2 }]);
+        expect(ITEM.amount).toBe(ORIGINAL_AMOUNT);
+    });
+});

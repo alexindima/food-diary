@@ -11,8 +11,10 @@ import { ConfirmDeleteDialogComponent } from '../../../../components/shared/conf
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserService } from '../../../../shared/api/user.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
+import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import type { WeightEntrySummaryPoint } from '../../../../shared/models/weight-entry.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { WeightEntriesService } from '../../api/weight-entries.service';
@@ -159,24 +161,49 @@ describe('Weight history page retry actions', () => {
         expect(load).toHaveBeenCalledTimes(initialLoadCount + 2);
     });
 
-    it('retries the failed chart from the rendered button without reloading measurements', () => {
-        const { fixture, facade } = context;
+    it('retries the selected chart once before repaint and keeps the measurement list visible', () => {
+        const { fixture } = context;
         const service = TestBed.inject(WeightEntriesService);
         const load = vi.spyOn(service, 'getSummary');
         const pageLoad = vi.spyOn(service, 'getPageSummary');
-        const entries = facade.entries();
         const pageLoadCount = pageLoad.mock.calls.length;
-        load.mockReturnValueOnce(throwError(() => new Error('Chart unavailable')));
-        facade.changeRange('week');
+        const pending = new Subject<WeightEntrySummaryPoint[]>();
+        load.mockReturnValueOnce(throwError(() => new Error('Chart unavailable'))).mockReturnValueOnce(pending);
+        const root = fixture.nativeElement as HTMLElement;
+        const week = Array.from(root.querySelectorAll<HTMLButtonElement>('fd-period-filter button')).find(
+            button => button.textContent.trim() === 'WEIGHT_HISTORY.RANGE_WEEK',
+        );
+        if (week === undefined) {
+            throw new Error('Expected the weekly chart filter');
+        }
+        week.click();
         TestBed.tick();
         fixture.detectChanges();
-        const banner = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.weight-history-page__chart-section > div');
-        expect(banner?.hidden).toBe(false);
-        banner?.querySelector<HTMLButtonElement>('button')?.click();
+        const failedFilters = load.mock.lastCall?.[0];
+        expect(week.getAttribute('aria-checked')).toBe('true');
+        expect(failedFilters).toBeDefined();
+        const banner = root.querySelector<HTMLElement>('.weight-history-page__chart-section > div');
+        if (banner === null) {
+            throw new Error('Expected the chart error banner');
+        }
+        expect(banner.hidden).toBe(false);
+        const retry = banner.querySelector<HTMLButtonElement>('button');
+        expect(retry?.disabled).toBe(false);
+        retry?.click();
+        retry?.click();
         fixture.detectChanges();
-        expect(facade.summaryLoadError()).toBe(false);
-        expect(banner?.hidden).toBe(true);
-        expect(facade.entries()).toEqual(entries);
+        expect(load.mock.calls.map(([filters]) => filters)).toEqual([failedFilters, failedFilters]);
+        expect(banner.hidden).toBe(true);
+        expect(root.querySelector('fd-weight-history-chart-card [role="status"]')).not.toBeNull();
+        expect(root.querySelector('fd-weight-history-entries-card')?.textContent).toContain(String(ENTRY.weightKg));
+
+        const today = calendarDate(formatDateInputValue(new Date()));
+        pending.next([{ startDate: today, endDate: today, averageWeightKg: FIXTURE_CURRENT_MEASUREMENT }]);
+        pending.complete();
+        fixture.detectChanges();
+        const chart = root.querySelector('fd-ui-line-chart [role="img"]');
+        expect(chart?.getAttribute('aria-label')).toContain(String(FIXTURE_CURRENT_MEASUREMENT));
+        expect(root.querySelector('fd-weight-history-chart-card [role="status"]')).toBeNull();
         expect(pageLoad).toHaveBeenCalledTimes(pageLoadCount);
     });
 });

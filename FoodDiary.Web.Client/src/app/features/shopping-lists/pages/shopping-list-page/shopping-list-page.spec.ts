@@ -53,11 +53,9 @@ const SHOPPING_LISTS: ShoppingListSummary[] = [
 
 type ShoppingListFacadeMock = {
     addItem: ReturnType<typeof vi.fn>;
-    clearCurrentList: ReturnType<typeof vi.fn>;
     clearListById: ReturnType<typeof vi.fn>;
     clearRenameRequest: ReturnType<typeof vi.fn>;
     createNewList: ReturnType<typeof vi.fn>;
-    deleteCurrentList: ReturnType<typeof vi.fn>;
     deleteListById: ReturnType<typeof vi.fn>;
     editItem: ReturnType<typeof vi.fn>;
     initialize: ReturnType<typeof vi.fn>;
@@ -125,9 +123,7 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
         editItem: vi.fn(),
         removePurchased: vi.fn(),
         toggleItemChecked: vi.fn(),
-        clearCurrentList: vi.fn(),
         clearListById: vi.fn(),
-        deleteCurrentList: vi.fn(),
         deleteListById: vi.fn(),
         renameListById: vi.fn(),
     };
@@ -524,29 +520,37 @@ describe('ShoppingListPageComponent list management', () => {
         expect(component['canClearList']()).toBe(true);
     });
 
-    it('confirms before deleting current list', async () => {
-        const { component, dialogService, facade } = await setupShoppingListPageAsync();
+    it('allows deleting the only list after confirmation from its menu', async () => {
+        const { dialogService, facade, fixture } = await setupShoppingListPageAsync();
+        facade.navigationLists.set([SHOPPING_LISTS[0]]);
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-        component['deleteCurrentList']();
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.DELETE_LIST_BUTTON').click();
 
         expect(dialogService.open).toHaveBeenCalledOnce();
         expect(facade.deleteListById).toHaveBeenCalledWith(FIRST_LIST_ID);
     });
 
     it('does not delete when confirmation is cancelled', async () => {
-        const { component, dialogService, facade } = await setupShoppingListPageAsync();
+        const { dialogService, facade, fixture } = await setupShoppingListPageAsync();
+        await fixture.whenStable();
+        fixture.detectChanges();
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
 
-        component['deleteCurrentList']();
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.DELETE_LIST_BUTTON').click();
 
+        expect(dialogService.open).toHaveBeenCalledOnce();
         expect(facade.deleteListById).not.toHaveBeenCalled();
     });
 
     it('confirms before clearing the only current list', async () => {
-        const { component, dialogService, facade } = await setupShoppingListPageAsync();
-        facade.lists.set([SHOPPING_LISTS[0]]);
+        const { dialogService, facade, fixture } = await setupShoppingListPageAsync();
+        facade.navigationLists.set([SHOPPING_LISTS[0]]);
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-        component['clearCurrentList']();
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.CLEAR_LIST_BUTTON').click();
 
         expect(dialogService.open).toHaveBeenCalledOnce();
         expect(facade.clearListById).toHaveBeenCalledWith(FIRST_LIST_ID);

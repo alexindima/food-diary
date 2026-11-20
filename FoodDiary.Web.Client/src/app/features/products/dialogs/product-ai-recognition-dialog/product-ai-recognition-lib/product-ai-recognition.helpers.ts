@@ -11,7 +11,13 @@ import type { ProductAiRecognitionFormModel, ProductAiRecognitionResult } from '
 
 const MILLILITERS_PER_LITER = 1000;
 
-export function isProductAiRecognitionModelValid(model: ProductAiRecognitionFormModel): boolean {
+type ValidProductAiRecognitionModel = ProductAiRecognitionFormModel & {
+    portionAmount: number;
+    baseUnit: MeasurementUnit;
+    caloriesPerBase: number;
+};
+
+export function isProductAiRecognitionModelValid(model: ProductAiRecognitionFormModel): model is ValidProductAiRecognitionModel {
     const nutrients = [model.proteinsPerBase, model.fatsPerBase, model.carbsPerBase, model.fiberPerBase, model.alcoholPerBase];
     return (
         model.name.trim().length > 0 &&
@@ -43,33 +49,28 @@ export function createProductAiRecognitionFormModel(): ProductAiRecognitionFormM
 }
 
 export type ProductAiRecognitionResultBuildParams = {
-    model: ProductAiRecognitionFormModel;
+    model: ValidProductAiRecognitionModel;
     selection: ImageSelection | null;
-    itemNames: readonly string[];
-    results: readonly FoodVisionItem[];
     description: string | null;
 };
 
 export function buildProductAiRecognitionResult(params: ProductAiRecognitionResultBuildParams): ProductAiRecognitionResult {
-    const { model, selection, itemNames, results, description } = params;
-    const name = model.name.trim();
-    const baseUnit = model.baseUnit ?? MeasurementUnit.G;
-    const requestedBaseAmount = getNumericValue(model.portionAmount ?? 0);
-    const baseAmount = requestedBaseAmount > 0 ? requestedBaseAmount : getRecognizedAmount(results, baseUnit);
+    const { model, selection, description } = params;
+    const brand = model.brand.trim();
 
     return {
-        name: name.length > 0 ? name : (itemNames[0] ?? ''),
+        name: model.name.trim(),
         description,
-        ...(model.brand.trim().length > 0 ? { brand: model.brand.trim() } : {}),
+        ...(brand.length > 0 ? { brand } : {}),
         image: selection !== null ? { ...selection } : null,
-        baseAmount,
-        baseUnit,
-        caloriesPerBase: getNumericValue(model.caloriesPerBase ?? 0),
-        proteinsPerBase: getOptionalNumericValue(model.proteinsPerBase),
-        fatsPerBase: getOptionalNumericValue(model.fatsPerBase),
-        carbsPerBase: getOptionalNumericValue(model.carbsPerBase),
-        fiberPerBase: getOptionalNumericValue(model.fiberPerBase),
-        alcoholPerBase: getOptionalNumericValue(model.alcoholPerBase),
+        baseAmount: model.portionAmount,
+        baseUnit: model.baseUnit,
+        caloriesPerBase: model.caloriesPerBase,
+        proteinsPerBase: model.proteinsPerBase,
+        fatsPerBase: model.fatsPerBase,
+        carbsPerBase: model.carbsPerBase,
+        fiberPerBase: model.fiberPerBase,
+        alcoholPerBase: model.alcoholPerBase,
     };
 }
 

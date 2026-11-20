@@ -199,19 +199,26 @@ function publishBobAfterGuestSubscription(subscription: PushSubscription | null)
 }
 
 describe('PushNotificationService subscription support', () => {
-    it('preserves the real browser endpoint and marker during token-only impersonation', async () => {
+    it('preserves the real browser endpoint and marker during token-only impersonation and logout', async () => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/real-bob');
         confirmSubscriptionOwner(subscription, 'real-bob');
         authService.isImpersonating.mockReturnValue(true);
         authService.getUserId.mockReturnValue('impersonated-alice');
         authService.getSessionKey.mockReturnValue('impersonation-token');
+        sessionEvents.notifyAuthenticated();
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('unavailable');
+
+        const logoutReady = vi.fn();
+        const logout = sessionEvents.prepareSessionEnd();
+        void logout?.then(logoutReady);
+        await nextBrowserTaskAsync();
+        expect(logoutReady).toHaveBeenCalledOnce();
+
         swPush.subscription = of(subscription);
         subscription$.next(subscription);
-        sessionEvents.notifyAuthenticated();
         subscriptionChanges$.next({ oldSubscription: subscription, newSubscription: subscription });
         await waitForAsyncTasksAsync();
 
-        await expect(service.ensureSubscriptionAsync()).resolves.toBe('unavailable');
         expect(subscription.unsubscribeMock).not.toHaveBeenCalled();
         expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
         expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
@@ -1045,6 +1052,62 @@ function expectBrowserPreservedWithScopedCleanup(subscription: ReturnType<typeof
     expect(service.currentSubscriptionEndpoint()).toBeNull();
 }
 
+describe('Push notification device operations after account ownership changes', () => {
+    useSessionCleanupTimers();
+
+    it('does not revoke a newly published browser endpoint after the previous tab invalidates itself', async () => {
+        swPush.subscription = of(null);
+        subscription$.next(null);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        invalidateAliceLocally();
+
+        const shared = createPushSubscription('https://push.example.com/subscriptions/newly-published-b');
+        confirmSubscriptionOwner(shared, 'user-b');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        swPush.subscription = of(shared);
+        subscription$.next(shared);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(shared.unsubscribeMock).not.toHaveBeenCalled();
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(shared.endpoint, 'token-a');
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: shared.endpoint, userId: 'user-b' }));
+        expect(service.currentSubscriptionEndpoint()).toBeNull();
+    });
+
+    it('drops the old server removal after the browser finishes unsubscribing under a different account', async () => {
+        const previous = createPushSubscription('https://push.example.com/subscriptions/unsubscribing-a');
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        subscription$.next(previous);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service.currentSubscriptionEndpoint()).toBe(previous.endpoint);
+        notificationService.upsertWebPushSubscription.mockClear();
+
+        const browserRelease = new Subject<boolean>();
+        previous.unsubscribeMock.mockReturnValueOnce(firstValueFrom(browserRelease));
+        const removal = service.removeSubscriptionAsync(previous.endpoint);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(previous.unsubscribeMock).toHaveBeenCalledOnce();
+        expect(browserRelease.observed).toBe(true);
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/replacement-account-b');
+        confirmSubscriptionOwner(replacement, 'user-b');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        swPush.subscription = of(replacement);
+        browserRelease.next(true);
+
+        await expect(removal).resolves.toBe(false);
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-b' }));
+    });
+});
+
 describe('PushNotificationService local account invalidation', () => {
     useSessionCleanupTimers();
 
@@ -1631,6 +1694,231 @@ describe('PushNotificationService browser changes during enable', () => {
         expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: latest.endpoint, userId: 'user-a' }));
     });
 });
+
+describe('Push notification registration while the browser endpoint changes', () => {
+    useSessionCleanupTimers();
+
+    it('rolls back an old account registration after another tab publishes its own endpoint', async () => {
+        swPush.subscription = of(null);
+        subscription$.next(null);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+
+        const former = createPushSubscription('https://push.example.com/subscriptions/registering-a');
+        const registration = new Subject<void>();
+        resolveRequestedSubscription(former);
+        notificationService.upsertWebPushSubscription.mockReturnValueOnce(registration);
+        const enabling = service.ensureSubscriptionAsync();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(registration.observed).toBe(true);
+        expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ endpoint: former.endpoint }),
+        );
+
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/current-b');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        confirmSubscriptionOwner(replacement, 'user-b');
+        swPush.subscription = of(replacement);
+        registration.next();
+
+        await expect(enabling).resolves.toBe('unavailable');
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(former.endpoint, 'token-a');
+        expect(former.unsubscribeMock).not.toHaveBeenCalled();
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(service.currentSubscriptionEndpoint()).toBeNull();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-b' }));
+    });
+
+    it('replaces an unconfirmed endpoint that appears before the push key arrives', async () => {
+        swPush.subscription = of(null);
+        subscription$.next(null);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+
+        const configuration = new Subject<{ enabled: boolean; publicKey: string }>();
+        notificationService.getWebPushConfiguration.mockReturnValueOnce(configuration);
+        const enabling = service.ensureSubscriptionAsync();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(configuration.observed).toBe(true);
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+
+        const unconfirmed = createPushSubscription('https://push.example.com/subscriptions/not-yet-confirmed');
+        swPush.subscription = of(unconfirmed);
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/confirmed-a');
+        resolveRequestedSubscription(replacement);
+        configuration.next({ enabled: true, publicKey: 'public-key' });
+
+        await expect(enabling).resolves.toBe('subscribed');
+        expect(unconfirmed.unsubscribeMock).toHaveBeenCalledOnce();
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).toHaveBeenCalledExactlyOnceWith({ serverPublicKey: 'public-key' });
+        expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ endpoint: replacement.endpoint }),
+        );
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(service.currentSubscriptionEndpoint()).toBe(replacement.endpoint);
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-a' }));
+    });
+});
+
+describe('Push notification cleanup after another account is published', () => {
+    useSessionCleanupTimers();
+
+    it('retains the original owner marker when a worker renewal finishes its server deletion late', async () => {
+        const previous = createPushSubscription('https://push.example.com/subscriptions/previous-worker-device');
+        const renewed = createPushSubscription('https://push.example.com/subscriptions/queued-worker-renewal');
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service.currentSubscriptionEndpoint()).toBe(previous.endpoint);
+        notificationService.upsertWebPushSubscription.mockClear();
+
+        const deletion = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deletion);
+        swPush.subscription = of(renewed);
+        subscriptionChanges$.next({ oldSubscription: previous, newSubscription: renewed });
+        await vi.advanceTimersByTimeAsync(0);
+        expect(deletion.observed).toBe(true);
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(previous.endpoint);
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        deletion.next();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: previous.endpoint, userId: 'user-a' }));
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledOnce();
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(renewed.unsubscribeMock).not.toHaveBeenCalled();
+    });
+
+    it('ends an owner-conflict recovery after late browser revocation without prompting for the old session', async () => {
+        swPush.subscription = of(null);
+        subscription$.next(null);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+
+        const rejected = createPushSubscription('https://push.example.com/subscriptions/rejected-previous-device');
+        const revocation = new Subject<boolean>();
+        rejected.unsubscribeMock.mockReturnValueOnce(firstValueFrom(revocation));
+        swPush.subscription = of(rejected);
+        confirmSubscriptionOwner(rejected, 'user-a');
+        notificationService.upsertWebPushSubscription.mockReturnValueOnce(throwError(ownerConflict));
+
+        const enabling = service.ensureSubscriptionAsync();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(revocation.observed).toBe(true);
+        expect(rejected.unsubscribeMock).toHaveBeenCalledOnce();
+        expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ endpoint: rejected.endpoint }),
+        );
+
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/confirmed-new-account');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        confirmSubscriptionOwner(replacement, 'user-b');
+        swPush.subscription = of(replacement);
+        revocation.next(true);
+
+        await expect(enabling).resolves.toBe('unavailable');
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledOnce();
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-b' }));
+    });
+});
+
+describe('PushNotificationService account switches during worker discovery', () => {
+    it.each(['manual enable', 'focus resume'] as const)('ignores a worker result for the former account during %s', async trigger => {
+        vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        swPush.subscription = of(null);
+        await finishInitialPushReadAsync();
+        localStorage.setItem('webPushDeviceOptIn:user-a', 'true');
+
+        const readFinished = new Subject<void>();
+        const releaseLock = new Subject<void>();
+        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockImplementationOnce(
+            async <T>(_name: string, operation: () => Promise<T>): Promise<T> => {
+                const result = await operation();
+                readFinished.next();
+                await firstValueFrom(releaseLock);
+                return result;
+            },
+        );
+        const browserSnapshot = firstValueFrom(readFinished);
+
+        const enabling = trigger === 'manual enable' ? service.ensureSubscriptionAsync() : null;
+        if (trigger === 'focus resume') {
+            window.dispatchEvent(new Event('focus'));
+        }
+        await browserSnapshot;
+
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/active-b');
+        confirmSubscriptionOwner(replacement, 'user-b');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        swPush.subscription = of(replacement);
+        releaseLock.next();
+
+        if (enabling !== null) {
+            await expect(enabling).resolves.toBe('unavailable');
+        } else {
+            await nextBrowserTaskAsync();
+        }
+        expect(notificationService.getNotificationPreferences).not.toHaveBeenCalled();
+        expect(notificationService.getWebPushConfiguration).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-b' }));
+    });
+});
+
+describe('PushNotificationService account switch during key rotation', () => {
+    it('stops rotating a former account endpoint after its pending server deletion finishes', async () => {
+        swPush.subscription = of(null);
+        await finishInitialPushReadAsync();
+
+        const previous = createPushSubscription(
+            'https://push.example.com/subscriptions/obsolete-a',
+            new TextEncoder().encode('old').buffer,
+        );
+        const deletion = new Subject<void>();
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        notificationService.getWebPushConfiguration.mockReturnValue(of({ enabled: true, publicKey: 'bmV3' }));
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(deletion);
+
+        const enabling = service.ensureSubscriptionAsync();
+        await vi.waitFor(() => {
+            expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(previous.endpoint);
+            expect(deletion.observed).toBe(true);
+        });
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/replacement-b');
+        confirmSubscriptionOwner(replacement, 'user-b');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        swPush.subscription = of(replacement);
+        deletion.next();
+
+        await expect(enabling).resolves.toBe('unavailable');
+        expect(previous.unsubscribeMock).toHaveBeenCalledOnce();
+        expect(replacement.unsubscribeMock).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBe(JSON.stringify({ endpoint: replacement.endpoint, userId: 'user-b' }));
+    });
+});
+
+async function finishInitialPushReadAsync(): Promise<void> {
+    TestBed.tick();
+    await nextBrowserTaskAsync();
+}
+
+async function nextBrowserTaskAsync(): Promise<void> {
+    await new Promise<void>(resolve => {
+        setTimeout(resolve, 0);
+    });
+}
 
 describe('PushNotificationService browser refusal to replace a subscription', () => {
     it('leaves a different account endpoint intact when the initial browser check cannot remove it', async () => {

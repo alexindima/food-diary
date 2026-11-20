@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { GuardsCheckStart, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { isObservable, type Observable, of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, isObservable, type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
@@ -250,6 +250,80 @@ describe('Shopping route list creation', () => {
         expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe('Weekly market');
         expect(host.querySelector('.shopping-list__list-card-rename-input')).toBeNull();
     });
+
+    it('keeps a newly created list selected when the refreshed first page omits it', async () => {
+        const initial = pagedOverview();
+        const { harness, api } = await renderShoppingAsync(initial);
+        const created = makeList('new-outside-first-page', 'Newly created list');
+        const pageRefresh = new Subject<ShoppingListSummary[]>();
+        api.create.mockReturnValueOnce(of(created));
+        api.getPage.mockReturnValueOnce(pageRefresh);
+        api.getById.mockReturnValueOnce(of(created));
+        const host = page(harness);
+
+        nativeButton(host, 'SHOPPING_LIST.NEW_LIST_BUTTON').click();
+        harness.detectChanges();
+        expect(api.getPage).toHaveBeenCalledOnce();
+        expect(api.getById).not.toHaveBeenCalled();
+        expect(requiredElement(host, '.shopping-list__workspace').getAttribute('aria-busy')).toBe('true');
+
+        pageRefresh.next(initial.lists.items);
+        pageRefresh.complete();
+        harness.detectChanges();
+
+        expect(api.getById).toHaveBeenCalledExactlyOnceWith(created.id);
+        const selectedTab = requiredElement(host, '.shopping-list__list-tab--active button');
+        expect(selectedTab.getAttribute('aria-current')).toBe('true');
+        expect(selectedTab.textContent).toContain(created.name);
+        expect(requiredInput(host, '.shopping-list__list-card-rename-input').value).toBe(created.name);
+        expect(host.textContent).not.toContain('Red apples');
+    });
+});
+
+describe('Shopping list creation without a cached overview', () => {
+    it('retries an explicit creation and can delete the saved list even when refreshing its overview fails', async () => {
+        const initial = throwError(() => new Error('Initial overview unavailable'));
+        const { harness, api, toastError } = await renderShoppingAsync(initial);
+        const saved = makeList('recovered', 'Recovered list');
+        api.create
+            .mockReturnValueOnce(throwError(() => new Error('Creation unavailable')))
+            .mockImplementationOnce(({ name }) => of({ ...saved, name }));
+        api.getPage.mockReturnValueOnce(throwError(() => new Error('Index unavailable'))).mockReturnValueOnce(of([]));
+        api.deleteById.mockReturnValueOnce(of(void 0));
+        const host = page(harness);
+        const create = nativeButton(host, 'SHOPPING_LIST.NEW_LIST_BUTTON');
+        const loadError = 'SHOPPING_LIST.LOAD_ERROR';
+        expect(requiredElement(host, 'fd-ui-inline-alert[role="alert"]').textContent).toContain(loadError);
+
+        create.click();
+        harness.detectChanges();
+        expect(api.create).toHaveBeenCalledOnce();
+        expect(api.getPage).not.toHaveBeenCalled();
+        expect(toastError).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.CREATE_ERROR');
+        expect(requiredElement(host, 'fd-ui-inline-alert[role="alert"]').textContent).toContain(loadError);
+        expect(create.disabled).toBe(false);
+
+        create.click();
+        harness.detectChanges();
+        expect(api.create).toHaveBeenCalledTimes(2);
+        expect(api.getPage).toHaveBeenCalledOnce();
+        expect(toastError).toHaveBeenLastCalledWith(loadError);
+        expect(host.querySelector('fd-ui-inline-alert[role="alert"]')).toBeNull();
+        requiredInput(host, '.shopping-list__list-card-rename-input').dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+        );
+        harness.detectChanges();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(api.create.mock.calls[1][0].name);
+
+        chooseSummaryAction(harness, 'SHOPPING_LIST.DELETE_LIST_BUTTON');
+        nativeButton(requiredElement(document, 'fd-confirm-delete-dialog'), 'CONFIRM_DELETE.CONFIRM').click();
+        harness.detectChanges();
+        expect(api.deleteById).toHaveBeenCalledExactlyOnceWith(saved.id);
+        expect(api.getPage).toHaveBeenCalledTimes(2);
+        expect(api.getById).not.toHaveBeenCalled();
+        expect(host.querySelector('fd-ui-inline-alert[role="alert"]')).toBeNull();
+        expect(host.textContent).toContain('SHOPPING_LIST.NO_LISTS_TITLE');
+    });
 });
 
 describe('Shopping route list selection', () => {
@@ -320,6 +394,88 @@ describe('Shopping existing list rename', () => {
     });
 });
 
+describe('Shopping inline name validation', () => {
+    it('keeps the name editor open when Enter submits whitespace and saves a corrected name', async () => {
+        const { harness, api } = await renderShoppingAsync();
+        const host = page(harness);
+        chooseSummaryAction(harness, 'SHOPPING_LIST.RENAME_LIST_BUTTON');
+        const name = requiredInput(host, '.shopping-list__list-card-rename-input');
+
+        inputText(name, '   ');
+        harness.detectChanges();
+        name.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        harness.detectChanges();
+
+        expect(name.isConnected).toBe(true);
+        expect(name.value).toBe('   ');
+        expect(nativeButton(host, 'SHOPPING_LIST.SAVE_NAME_BUTTON').disabled).toBe(true);
+        expect(api.update).not.toHaveBeenCalled();
+
+        const correctedName = 'Market groceries';
+        api.update.mockReturnValueOnce(of({ ...GROCERIES, name: correctedName, revision: SAVED_REVISION }));
+        inputText(name, `  ${correctedName}  `);
+        harness.detectChanges();
+        name.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        harness.detectChanges();
+
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, {
+            expectedRevision: FIRST_REVISION,
+            name: correctedName,
+        });
+        expect(name.isConnected).toBe(false);
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(correctedName);
+    });
+});
+
+describe('Shopping list rename while an item autosave is pending', () => {
+    it.each(['Enter', 'blur'] as const)('retains the typed list name after %s and lets the user save after autosave', async finish => {
+        const { harness, api } = await renderShoppingAsync();
+        const host = page(harness);
+        const itemSave = new Subject<ShoppingList>();
+        const saved = shoppingListWithAddedItem(GROCERIES, 'market-snacks', 'Trail snacks', SAVED_REVISION);
+        const newName = 'Weekend market';
+        const renamed = { ...saved, name: newName, revision: 'c'.repeat(REVISION_LENGTH) };
+        const editorSelector = '.shopping-list__list-card-rename-input';
+        const saveNameLabel = 'SHOPPING_LIST.SAVE_NAME_BUTTON';
+        api.update.mockReturnValueOnce(itemSave).mockReturnValueOnce(of(renamed));
+
+        addNativeItem(harness, 'Trail snacks');
+        chooseSummaryAction(harness, 'SHOPPING_LIST.RENAME_LIST_BUTTON');
+        const editor = requiredInput(host, editorSelector);
+        const draft = '  Weekend market  ';
+        inputText(editor, draft);
+        editor.focus();
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        expect(api.update.mock.calls[0][1].name).toBe(GROCERIES.name);
+
+        if (finish === 'Enter') {
+            editor.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        } else {
+            editor.blur();
+        }
+        harness.detectChanges();
+
+        expect(host.querySelector<HTMLInputElement>(editorSelector)?.value).toBe(draft);
+        expect(nativeButton(host, saveNameLabel).disabled).toBe(true);
+        expect(api.update).toHaveBeenCalledOnce();
+
+        itemSave.next(saved);
+        itemSave.complete();
+        harness.detectChanges();
+        expect(requiredInput(host, editorSelector).value).toBe(draft);
+        const saveName = nativeButton(host, saveNameLabel);
+        expect(saveName.disabled).toBe(false);
+        saveName.click();
+        harness.detectChanges();
+
+        expect(api.update.mock.calls).toHaveLength(2);
+        expect(api.update).toHaveBeenNthCalledWith(2, saved.id, { expectedRevision: saved.revision, name: newName });
+        expect(host.querySelector(editorSelector)).toBeNull();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(newName);
+        expect(host.textContent).toContain('Trail snacks');
+    });
+});
+
 describe('Shopping item changes while a list name is saving', () => {
     it.each(['accepted', 'rejected'] as const)('saves the item edit after the server %s the pending rename', async outcome => {
         const { harness, api, toastError } = await renderShoppingAsync();
@@ -372,6 +528,50 @@ describe('Shopping item changes while a list name is saving', () => {
     });
 });
 
+describe('Shopping departure while a list name is saving', () => {
+    it('retains a queued item edit until the rename settles and uses its new revision to leave safely', async () => {
+        const { harness, api } = await renderShoppingAsync();
+        const rename = new Subject<ShoppingList>();
+        const saving = new Subject<ShoppingList>();
+        const renamed = { ...GROCERIES, name: 'Renamed market list', revision: SAVED_REVISION };
+        api.update.mockReturnValueOnce(rename).mockReturnValueOnce(saving);
+        const host = page(harness);
+        chooseSummaryAction(harness, 'SHOPPING_LIST.RENAME_LIST_BUTTON');
+        const name = requiredInput(host, '.shopping-list__list-card-rename-input');
+        inputText(name, renamed.name);
+        name.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        harness.detectChanges();
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, { expectedRevision: FIRST_REVISION, name: renamed.name });
+        const purchased = requiredInput(host, 'fd-shopping-list-items-panel input[type="checkbox"]');
+        purchased.click();
+        harness.detectChanges();
+
+        const router = TestBed.inject(Router);
+        await expect(router.navigateByUrl(HOME_URL)).resolves.toBe(false);
+        expect(router.url).toBe(SHOPPING_URL);
+        expect(purchased.checked).toBe(true);
+        expect(api.update).toHaveBeenCalledOnce();
+
+        rename.next(renamed);
+        rename.complete();
+        const departure = router.navigateByUrl(HOME_URL);
+        await waitForShoppingAutosaveAsync(harness, api.update, 2);
+        expect(router.url).toBe(SHOPPING_URL);
+        expect(api.update).toHaveBeenLastCalledWith(
+            GROCERIES.id,
+            expect.objectContaining({
+                expectedRevision: SAVED_REVISION,
+                name: renamed.name,
+                items: [expect.objectContaining({ id: GROCERIES.items[0].id, isChecked: true })],
+            }),
+        );
+        saving.next({ ...renamed, items: renamed.items.map(item => ({ ...item, isChecked: true })) });
+        saving.complete();
+        await expect(departure).resolves.toBe(true);
+        expect(router.url).toBe(HOME_URL);
+    });
+});
+
 describe('Shopping list picker while list changes are pending', () => {
     it.each([
         { viewport: 'desktop', mobile: false },
@@ -419,6 +619,114 @@ describe('Shopping list picker while list changes are pending', () => {
             expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
         });
         expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
+    });
+});
+
+describe('Shopping list picker during autosave', () => {
+    it.each([
+        { viewport: 'desktop', mobile: false },
+        { viewport: 'mobile', mobile: true },
+    ])('opens a list chosen from the $viewport picker once the existing save completes', async ({ mobile }) => {
+        const overview = firstOverview();
+        overview.lists.items = [
+            summary(GROCERIES),
+            summary(makeList('camping', 'Camping')),
+            summary(makeList('pantry', 'Pantry')),
+            summary(TRAVEL),
+        ];
+        const { harness, api } = await renderShoppingAsync(overview, mobile);
+        const saving = new Subject<ShoppingList>();
+        api.update.mockReturnValueOnce(saving);
+        const host = page(harness);
+        const allLists = nativeButton(host, 'SHOPPING_LIST.ALL_LISTS');
+
+        addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+        expect(allLists.disabled).toBe(false);
+        allLists.click();
+        harness.detectChanges();
+        const picker = requiredElement(document, mobile ? REVIEW_BROWSER : '[role="menu"]');
+        const chooseTravel = nativeButton(picker, TRAVEL.name);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        expect(allLists.disabled).toBe(true);
+        expect(chooseTravel.disabled).toBe(false);
+        chooseTravel.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(picker.isConnected).toBe(false);
+        });
+
+        expect(api.getById).not.toHaveBeenCalled();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(GROCERIES.name);
+        saving.next(shoppingListWithAddedItem(GROCERIES, 'saved-before-travel', CREATED_SHOPPING_ITEM_NAME, SAVED_REVISION));
+        saving.complete();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
+            expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
+        });
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, expect.objectContaining({ expectedRevision: FIRST_REVISION }));
+        expect(api.update.mock.calls[0][1].items?.map(item => item.name)).toEqual([GROCERIES.items[0].name, CREATED_SHOPPING_ITEM_NAME]);
+        expect(host.textContent).toContain(TRAVEL.items[0].name);
+    });
+});
+
+describe('Shopping open picker during a revision conflict', () => {
+    it.each([
+        { viewport: 'desktop', mobile: false },
+        { viewport: 'mobile', mobile: true },
+    ])('preserves the draft when the open $viewport picker cannot switch lists before a confirmed reload', async ({ mobile }) => {
+        const overview = firstOverview();
+        overview.lists.items = [
+            summary(GROCERIES),
+            summary(makeList('camping', 'Camping')),
+            summary(makeList('pantry', 'Pantry')),
+            summary(TRAVEL),
+        ];
+        const { harness, api } = await renderShoppingAsync(overview, mobile);
+        const saving = new Subject<ShoppingList>();
+        api.update.mockReturnValueOnce(saving);
+        const host = page(harness);
+        const allLists = nativeButton(host, 'SHOPPING_LIST.ALL_LISTS');
+        const browserSelector = mobile ? REVIEW_BROWSER : '[role="menu"]';
+
+        addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+        allLists.click();
+        harness.detectChanges();
+        const picker = requiredElement(document, browserSelector);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        saving.error(new HttpErrorResponse({ status: 409 }));
+        harness.detectChanges();
+
+        expect(requiredElement(host, 'fd-ui-inline-alert').textContent).toContain('SHOPPING_LIST.CONFLICT_MESSAGE');
+        expect(allLists.disabled).toBe(true);
+        nativeButton(picker, TRAVEL.name).click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(picker.isConnected).toBe(false);
+        });
+
+        expect(api.getById).not.toHaveBeenCalled();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(GROCERIES.name);
+        expect(host.textContent).toContain(CREATED_SHOPPING_ITEM_NAME);
+
+        const reloaded = { ...makeList(GROCERIES.id, GROCERIES.name, ['Fresh pears']), revision: SAVED_REVISION };
+        api.getById.mockReturnValueOnce(of(reloaded));
+        nativeButton(openConflictConfirmation(harness), 'SHOPPING_LIST.CONFLICT_RELOAD').click();
+        harness.detectChanges();
+        expect(host.querySelector('fd-ui-inline-alert')).toBeNull();
+        expect(host.textContent).toContain(reloaded.items[0].name);
+        expect(host.textContent).not.toContain(CREATED_SHOPPING_ITEM_NAME);
+        expect(allLists.disabled).toBe(false);
+
+        allLists.click();
+        harness.detectChanges();
+        nativeButton(requiredElement(document, browserSelector), TRAVEL.name).click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
+        });
+        expect(api.getById.mock.calls).toEqual([[GROCERIES.id], [TRAVEL.id]]);
+        expect(api.update).toHaveBeenCalledTimes(1);
     });
 });
 
@@ -760,6 +1068,70 @@ describe('Shopping list creation with a full first page', () => {
     });
 });
 
+describe('Shopping list directory recovery', () => {
+    it('keeps an editable first list when the post-create directory is still empty', async () => {
+        const overview: ShoppingListOverview = { selectedList: null, lists: { items: [], hasMore: false, nextPage: null } };
+        const { harness, api, toastError } = await renderShoppingAsync(overview);
+        const directory = new Subject<ShoppingListSummary[]>();
+        const created = makeList('new-picnic', 'New list');
+        const renamed = { ...created, name: 'Picnic list', revision: SAVED_REVISION };
+        api.create.mockReturnValueOnce(of(created));
+        api.getPage.mockReturnValueOnce(directory);
+        api.update.mockReturnValueOnce(of(renamed));
+        const host = page(harness);
+
+        nativeButton(host, 'SHOPPING_LIST.NEW_LIST_BUTTON').click();
+        harness.detectChanges();
+        expect(api.create).toHaveBeenCalledOnce();
+        expect(api.getPage).toHaveBeenCalledOnce();
+        directory.next([]);
+        directory.complete();
+        harness.detectChanges();
+
+        expect(host.textContent).not.toContain('SHOPPING_LIST.NO_LISTS_TITLE');
+        const name = requiredInput(host, '.shopping-list__list-card-rename-input');
+        expect(name.value).toBe(created.name);
+        inputText(name, renamed.name);
+        name.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        harness.detectChanges();
+
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(created.id, { expectedRevision: FIRST_REVISION, name: renamed.name });
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(renamed.name);
+        expect(toastError).not.toHaveBeenCalled();
+    });
+
+    it('keeps the current list visible when another list fails to load and retries that selection', async () => {
+        const { harness, api, toastError } = await renderShoppingAsync();
+        const pending = new Subject<ShoppingList>();
+        api.getById.mockReturnValueOnce(pending);
+        const host = page(harness);
+        const travel = nativeButton(requiredElement(host, '.shopping-list__list-tabs'), TRAVEL.name);
+
+        travel.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
+            expect(travel.disabled).toBe(true);
+        });
+        pending.error(new Error('List unavailable'));
+        harness.detectChanges();
+
+        expect(toastError).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.LOAD_ERROR');
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(GROCERIES.name);
+        expect(host.textContent).toContain(GROCERIES.items[0].name);
+        expect(travel.disabled).toBe(false);
+
+        travel.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
+        });
+        expect(host.textContent).toContain(TRAVEL.items[0].name);
+        expect(api.getById.mock.calls).toEqual([[TRAVEL.id], [TRAVEL.id]]);
+        expect(api.update).not.toHaveBeenCalled();
+    });
+});
+
 describe('Shopping mobile list browser', () => {
     it('loads near the scroll end, waits during loading, and requires explicit retry after failure', async () => {
         const { harness, api } = await renderShoppingAsync(pagedOverview(), true);
@@ -1007,16 +1379,74 @@ describe('Shopping purchased confirmation during the first item save', () => {
     });
 });
 
+describe('Shopping purchased confirmation after undoing the last check', () => {
+    it('saves the unchecked item and leaves the list intact without asking to clear it', async () => {
+        const { harness, api } = await renderShoppingAsync();
+        const firstWrite = new Subject<ShoppingList>();
+        const secondWrite = new Subject<ShoppingList>();
+        const checked = purchasedDraftResult();
+        const unchecked = {
+            ...checked,
+            revision: 'c'.repeat(REVISION_LENGTH),
+            items: checked.items.map(item => ({ ...item, isChecked: false, checkedOnUtc: null })),
+        };
+        api.update.mockReturnValueOnce(firstWrite).mockReturnValueOnce(secondWrite);
+        addAndCheckShoppingDraft(harness);
+        openPurchasedConfirmation(harness);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        expect(api.update.mock.calls[0][1].items?.find(item => item.name === CREATED_SHOPPING_ITEM_NAME)).toMatchObject({
+            isChecked: true,
+        });
+
+        const checkbox = draftItemCheckbox(harness);
+        expect(checkbox.checked).toBe(true);
+        expect(checkbox.matches(':enabled')).toBe(true);
+        checkbox.click();
+        harness.detectChanges();
+        expect(draftItemCheckbox(harness).checked).toBe(false);
+        expect(document.querySelector('fd-confirm-delete-dialog')).toBeNull();
+
+        firstWrite.next(checked);
+        firstWrite.complete();
+        await waitForShoppingAutosaveAsync(harness, api.update, 2);
+        const [listId, payload] = api.update.mock.calls[1];
+        expect(listId).toBe(checked.id);
+        expect(payload.expectedRevision).toBe(checked.revision);
+        expect(payload.items?.find(item => item.name === CREATED_SHOPPING_ITEM_NAME)).toMatchObject({
+            id: checked.items[1].id,
+            isChecked: false,
+        });
+        expect(document.querySelector('fd-confirm-delete-dialog')).toBeNull();
+
+        secondWrite.next(unchecked);
+        secondWrite.complete();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+
+        expect(document.querySelector('fd-confirm-delete-dialog')).toBeNull();
+        expect(page(harness).textContent).toContain(GROCERIES.items[0].name);
+        expect(draftItemCheckbox(harness).checked).toBe(false);
+        nativeButton(requiredElement(page(harness), '.shopping-list__summary'), 'COMMON.MORE_ACTIONS').click();
+        harness.detectChanges();
+        expect(nativeButton(requiredElement(document, '[role="menu"]'), 'SHOPPING_LIST.CLEAR_PURCHASED').disabled).toBe(true);
+        expect(api.update).toHaveBeenCalledTimes(2);
+    });
+});
+
 function addAndCheckShoppingDraft(harness: RouterTestingHarness): void {
     addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+    draftItemCheckbox(harness).click();
+    harness.detectChanges();
+}
+
+function draftItemCheckbox(harness: RouterTestingHarness): HTMLInputElement {
     const row = Array.from(page(harness).querySelectorAll<HTMLElement>('.shopping-list__item')).find(item =>
         item.textContent.includes(CREATED_SHOPPING_ITEM_NAME),
     );
     if (row === undefined) {
         throw new Error('Expected a new shopping item');
     }
-    requiredInput(row, 'input[type="checkbox"]').click();
-    harness.detectChanges();
+    return requiredInput(row, 'input[type="checkbox"]');
 }
 
 describe('Shopping purchased confirmation route ownership', () => {
@@ -1028,7 +1458,11 @@ describe('Shopping purchased confirmation route ownership', () => {
         openPurchasedConfirmation(harness);
         await waitForShoppingAutosaveAsync(harness, api.update, 1);
 
-        const navigation = TestBed.inject(Router).navigateByUrl(HOME_URL);
+        const router = TestBed.inject(Router);
+        const guardStarted = firstValueFrom(router.events.pipe(filter(event => event instanceof GuardsCheckStart)));
+        const navigation = router.navigateByUrl(HOME_URL);
+        await guardStarted;
+        expect(router.url).toBe(SHOPPING_URL);
         write.next(purchasedDraftResult());
         write.complete();
         await expect(navigation).resolves.toBe(true);
@@ -1168,6 +1602,47 @@ describe('Shopping consolidation preview', () => {
             }),
         );
     });
+});
+
+it('shows localized fractional quantities and persists a combined quantity only after confirmation', async () => {
+    const source = makeList('dried-fruit', 'Market', ['Raisins', 'Raisins']);
+    const firstAmount = 1.25;
+    const secondAmount = 2.5;
+    const combinedAmount = 3.75;
+    const first = { ...source.items[0], amount: firstAmount, unit: MeasurementUnit.G };
+    const second = { ...source.items[1], amount: secondAmount, unit: MeasurementUnit.G };
+    const list = { ...source, items: [first, second] };
+    const { harness, api } = await renderShoppingAsync({
+        selectedList: list,
+        lists: { items: [summary(list)], hasMore: false, nextPage: null },
+    });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('ru', { GENERAL: { UNITS: { G: 'г' } } });
+    await firstValueFrom(translate.use('ru'));
+    harness.detectChanges();
+
+    const preview = openMergePreview(harness);
+    expect(requiredElement(preview, 'li div').textContent.trim()).toBe('1,25 г + 2,5 г → 3,75 г');
+    nativeButton(preview, 'PUBLIC_RECIPES.SHOPPING_CANCEL').click();
+    harness.detectChanges();
+
+    expect(document.querySelector('fd-shopping-merge-preview')).toBeNull();
+    expect(page(harness).querySelectorAll('.shopping-list__item')).toHaveLength(2);
+    expect(api.update).not.toHaveBeenCalled();
+
+    const saved = { ...list, revision: SAVED_REVISION, items: [{ ...first, amount: combinedAmount }] };
+    api.update.mockReturnValueOnce(of(saved));
+    nativeButton(openMergePreview(harness), 'SHOPPING_LIST.MERGE_CONFIRM').click();
+    await waitForShoppingAutosaveAsync(harness, api.update, 1);
+
+    expect(api.update).toHaveBeenCalledExactlyOnceWith(
+        list.id,
+        expect.objectContaining({
+            expectedRevision: FIRST_REVISION,
+            items: [expect.objectContaining({ id: first.id, amount: combinedAmount, unit: MeasurementUnit.G })],
+        }),
+    );
+    expect(page(harness).querySelectorAll('.shopping-list__item')).toHaveLength(1);
 });
 
 describe('Shopping list deletion recovery', () => {
@@ -1570,5 +2045,57 @@ describe('Shopping saved edits before selecting another list', () => {
         expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
         expect(host.textContent).not.toContain(secondName);
         expect(host.textContent).toContain(TRAVEL.items[0].name);
+    });
+});
+
+describe('Shopping list selection after deleting the previous list', () => {
+    it('lets the user reopen the remaining list after its first detail request fails', async () => {
+        const { harness, api, toastError } = await renderShoppingAsync();
+        const firstDetail = new Subject<ShoppingList | null>();
+        const travel = { ...TRAVEL, revision: SAVED_REVISION };
+        api.deleteById.mockReturnValueOnce(of(void 0));
+        api.getPage.mockReturnValueOnce(of([summary(travel)]));
+        api.getById.mockReturnValueOnce(firstDetail).mockReturnValueOnce(of(travel));
+        const host = page(harness);
+        const confirm = openShoppingListConfirmation(harness, 'SHOPPING_LIST.DELETE_LIST_BUTTON');
+        nativeButton(confirm, 'CONFIRM_DELETE.CONFIRM').click();
+        harness.detectChanges();
+
+        expect(api.deleteById).toHaveBeenCalledExactlyOnceWith(GROCERIES.id);
+        expect(api.getById).toHaveBeenCalledExactlyOnceWith(travel.id);
+        const tabs = requiredElement(host, '.shopping-list__list-tabs');
+        const travelTab = nativeButton(tabs, travel.name);
+        expect(travelTab.disabled).toBe(true);
+
+        firstDetail.next(null);
+        firstDetail.complete();
+        harness.detectChanges();
+        expect(toastError).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.LOAD_ERROR');
+        expect(host.textContent).not.toContain(travel.items[0].name);
+        expect(travelTab.disabled).toBe(false);
+
+        addNativeItem(harness, 'Unassigned ingredient');
+        expect(api.update).not.toHaveBeenCalled();
+        travelTab.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.getById.mock.calls).toEqual([[travel.id], [travel.id]]);
+            expect(travelTab.getAttribute('aria-current')).toBe('true');
+            expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(travel.name);
+            expect(host.textContent).toContain(travel.items[0].name);
+        });
+
+        const ingredient = 'Extra trail snacks';
+        const saved = shoppingListWithAddedItem(travel, 'travel-extra', ingredient, FIRST_REVISION);
+        api.update.mockReturnValueOnce(of(saved));
+        addNativeItem(harness, ingredient);
+        await expect(TestBed.inject(Router).navigateByUrl(HOME_URL)).resolves.toBe(true);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            travel.id,
+            expect.objectContaining({
+                expectedRevision: SAVED_REVISION,
+                items: [expect.objectContaining({ name: travel.items[0].name }), expect.objectContaining({ name: ingredient })],
+            }),
+        );
     });
 });

@@ -6,7 +6,6 @@ import {
     APP_MOBILE_VIEWPORT_QUERY,
     APP_SEARCH_DEBOUNCE_MS,
     AUTH_EMAIL_RESEND_COOLDOWN_SECONDS,
-    AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS,
     AUTH_PASSWORD_RESET_COOLDOWN_SECONDS,
     DASHBOARD_LAYOUT_CONFIG,
     EXPLORE_SEARCH_DEBOUNCE_MS,
@@ -54,6 +53,5 @@ describe('runtime UI tokens', () => {
     it('should provide auth timing defaults', () => {
         expect(TestBed.inject(AUTH_PASSWORD_RESET_COOLDOWN_SECONDS)).toBeGreaterThan(0);
         expect(TestBed.inject(AUTH_EMAIL_RESEND_COOLDOWN_SECONDS)).toBeGreaterThan(0);
-        expect(TestBed.inject(AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS).length).toBeGreaterThan(0);
     });
 });

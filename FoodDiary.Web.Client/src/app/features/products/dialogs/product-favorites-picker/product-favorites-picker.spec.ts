@@ -223,7 +223,7 @@ function registerUndoTests(): void {
 
 function registerUndoRenderingTests(): void {
     it('renders several inline undo rows and restores the clicked row in place', async () => {
-        const second = { ...favorite, id: entityId<'favorite-product'>('f2'), name: 'Dinner' };
+        const second = { ...favorite, id: entityId<'favorite-product'>('f2'), productId: entityId<'product'>('m2'), name: 'Dinner' };
         api.getPage.mockReturnValue(of({ data: [favorite, second], totalItems: 2 }));
         const fixture = TestBed.createComponent(ProductFavoritesPickerComponent);
         fixture.detectChanges();

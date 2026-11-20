@@ -7,7 +7,7 @@ import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { filter, type Observable, switchMap, tap } from 'rxjs';
+import { filter, finalize, type Observable, switchMap, tap } from 'rxjs';
 
 import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
@@ -197,26 +197,29 @@ export class MealListComponent {
         if (this.destroyRef.destroyed) {
             return;
         }
-        this.fdDialogService
-            .open(MealFavoritesPickerComponent, {
-                preset: 'list',
-                size: 'md',
-                data: {
-                    remove: (favorite: FavoriteMeal) => this.mealListFacade.removeFavoriteRequest(favorite),
-                    restore: (favorite: FavoriteMeal) => this.mealListFacade.restoreFavoriteRequest(favorite),
-                    repeat: (favorite: FavoriteMeal, mealType: string) => {
-                        const date = new Date();
-                        return this.mealListFacade.repeatMeal(
-                            favorite.mealId,
-                            utcInstant(date.toISOString()),
-                            mealType,
-                            this.structuredFilters,
-                        );
-                    },
-                },
-            })
+        const picker = this.fdDialogService.open(MealFavoritesPickerComponent, {
+            preset: 'list',
+            size: 'md',
+            data: {
+                remove: (favorite: FavoriteMeal) => this.mealListFacade.removeFavoriteRequest(favorite),
+                restore: (favorite: FavoriteMeal) => this.mealListFacade.restoreFavoriteRequest(favorite),
+                repeat: (favorite: FavoriteMeal, mealType: string) =>
+                    this.mealListFacade.repeatMeal(favorite.mealId, utcInstant(new Date().toISOString()), mealType, this.structuredFilters),
+            },
+        });
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            picker.close();
+        });
+        picker
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    if (!this.destroyRef.destroyed) {
+                        unregisterClose();
+                    }
+                }),
+            )
             .subscribe(added => {
                 if (added === true) {
                     this.scrollToTop();

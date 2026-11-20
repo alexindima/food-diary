@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
@@ -27,35 +27,36 @@ const VALID_BOUNDS: Array<[CalorieValue, CalorieValue]> = [
     [FRACTIONAL_BOUND, FRACTIONAL_BOUND],
 ];
 
+let component: ProductListFiltersDialogComponent;
+let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
+
+const defaultData: ProductListFiltersDialogData = {
+    onlyMine: false,
+    productTypes: [ProductType.Meat, ProductType.Fruit],
+    caloriesFrom: null,
+    caloriesTo: null,
+    hasImage: null,
+};
+
+function createComponent(data: ProductListFiltersDialogData = defaultData): ComponentFixture<ProductListFiltersDialogComponent> {
+    dialogRefSpy = { close: vi.fn() };
+
+    TestBed.configureTestingModule({
+        imports: [ProductListFiltersDialogComponent],
+        providers: [
+            provideTranslateTesting(),
+            { provide: FdUiDialogRef, useValue: dialogRefSpy as Partial<FdUiDialogRef<ProductListFiltersDialogComponent>> },
+            { provide: FD_UI_DIALOG_DATA, useValue: data },
+        ],
+    });
+
+    const fixture = TestBed.createComponent(ProductListFiltersDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    return fixture;
+}
+
 describe('ProductListFiltersDialogComponent', () => {
-    let component: ProductListFiltersDialogComponent;
-    let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
-
-    const defaultData: ProductListFiltersDialogData = {
-        onlyMine: false,
-        productTypes: [ProductType.Meat, ProductType.Fruit],
-        caloriesFrom: null,
-        caloriesTo: null,
-        hasImage: null,
-    };
-
-    function createComponent(data: ProductListFiltersDialogData = defaultData): void {
-        dialogRefSpy = { close: vi.fn() };
-
-        TestBed.configureTestingModule({
-            imports: [ProductListFiltersDialogComponent],
-            providers: [
-                provideTranslateTesting(),
-                { provide: FdUiDialogRef, useValue: dialogRefSpy as Partial<FdUiDialogRef<ProductListFiltersDialogComponent>> },
-                { provide: FD_UI_DIALOG_DATA, useValue: data },
-            ],
-        });
-
-        const fixture = TestBed.createComponent(ProductListFiltersDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }
-
     it('should create', () => {
         createComponent();
         expect(component).toBeTruthy();
@@ -120,3 +121,40 @@ describe('ProductListFiltersDialogComponent', () => {
         expect(dialogRefSpy.close).toHaveBeenCalledWith(null);
     });
 });
+
+describe('ProductListFiltersDialogComponent rendered filters', () => {
+    it.each([
+        { option: 'PRODUCT_LIST.FILTER_IMAGE_WITHOUT', expectedImage: false },
+        { option: 'PRODUCT_LIST.FILTER_IMAGE_ANY', expectedImage: null },
+    ])('applies all products and $option using the dialog controls', ({ option, expectedImage }) => {
+        const initial = { ...defaultData, onlyMine: true, caloriesTo: FILTER_MAX, hasImage: true };
+        const fixture = createComponent(initial);
+        const host = fixture.nativeElement as HTMLElement;
+        const all = filterButton(host, 'PRODUCT_LIST.FILTER_ALL_PRODUCTS');
+        const mine = filterButton(host, 'PRODUCT_LIST.FILTER_MY_PRODUCTS');
+        const withPhoto = filterButton(host, 'PRODUCT_LIST.FILTER_IMAGE_WITH');
+        const photoChoice = filterButton(host, option);
+        expect(mine.getAttribute('aria-checked')).toBe('true');
+        expect(withPhoto.getAttribute('aria-checked')).toBe('true');
+
+        all.click();
+        photoChoice.click();
+        fixture.detectChanges();
+        expect(all.getAttribute('aria-checked')).toBe('true');
+        expect(photoChoice.getAttribute('aria-checked')).toBe('true');
+        expect(mine.getAttribute('aria-checked')).toBe('false');
+        expect(withPhoto.getAttribute('aria-checked')).toBe('false');
+        expect(dialogRefSpy.close).not.toHaveBeenCalled();
+
+        filterButton(host, 'PRODUCT_LIST.FILTER_APPLY_BUTTON').click();
+        expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith({ ...initial, onlyMine: false, hasImage: expectedImage });
+    });
+});
+
+function filterButton(host: HTMLElement, label: string): HTMLButtonElement {
+    const button = [...host.querySelectorAll('button')].find(candidate => candidate.textContent.trim() === label);
+    if (button === undefined) {
+        throw new Error(`Expected product filter control ${label}`);
+    }
+    return button;
+}

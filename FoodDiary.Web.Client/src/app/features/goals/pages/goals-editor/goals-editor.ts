@@ -104,9 +104,12 @@ export class GoalsEditorComponent {
         this.updateDraft({ water: value });
     }
 
-    protected updateBodyTarget(change: { key: BodyTargetKey; value: number }): void {
+    protected updateBodyTarget(change: { key: BodyTargetKey; value: number | null }): void {
         const current = this.requireDraft();
-        this.updateDraft({ bodyTargets: { ...current.bodyTargets, [change.key]: change.value } });
+        this.updateDraft({
+            bodyTargets: change.value === null ? current.bodyTargets : { ...current.bodyTargets, [change.key]: change.value },
+            invalidBodyTargets: { ...current.invalidBodyTargets, [change.key]: change.value === null },
+        });
     }
 
     protected updateCycling(enabled: boolean): void {
@@ -180,6 +183,7 @@ export class GoalsEditorComponent {
             preset: this.preset(),
             water: this.water(),
             bodyTargets: { ...this.bodyTargets() },
+            invalidBodyTargets: { weight: false, waist: false },
             cyclingEnabled: this.cyclingEnabled(),
             dayCalories: { ...this.dayCalories() },
         };

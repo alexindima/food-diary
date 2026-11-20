@@ -34,6 +34,7 @@ export class NotificationsDialogComponent {
     private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
     private readonly languageVersion = signal(0);
+    private navigationRevision = 0;
 
     protected readonly notifications = this.notificationService.notifications;
     protected readonly isLoading = computed(
@@ -54,12 +55,14 @@ export class NotificationsDialogComponent {
     }
 
     protected openNotification(notification: NotificationItem): void {
+        const targetUrl = notification.targetUrl;
+        const destination = targetUrl === null || targetUrl.trim().length === 0 ? null : { targetUrl, revision: ++this.navigationRevision };
         const navigate = (): void => {
-            if (notification.targetUrl === null || notification.targetUrl.trim().length === 0) {
+            if (destination?.revision !== this.navigationRevision) {
                 return;
             }
 
-            void this.router.navigateByUrl(notification.targetUrl);
+            void this.router.navigateByUrl(destination.targetUrl);
             this.dialogRef.close();
         };
 

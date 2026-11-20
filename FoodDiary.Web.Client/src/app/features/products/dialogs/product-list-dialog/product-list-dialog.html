@@ -35,20 +35,24 @@
         </fd-ui-button>
     </div>
 
-    <fd-product-list-dialog-content
-        [isLoading]="productData.isLoading()"
-        [items]="productItems()"
-        (productSelected)="onProductClick($event)"
-    />
-
-    @if (productData.totalPages > 1) {
-        <fd-ui-pagination
-            class="product-select__pagination"
-            [length]="productData.totalItems"
-            [pageSize]="pageSize"
-            [pageIndex]="currentPageIndex"
-            (pageIndexChange)="onPageChange($event)"
+    @if (errorKey()) {
+        <fd-error-state (retry)="retryLoad()" />
+    } @else {
+        <fd-product-list-dialog-content
+            [isLoading]="productData.isLoading()"
+            [items]="productItems()"
+            (productSelected)="onProductClick($event)"
         />
+
+        @if (productData.totalPages > 1) {
+            <fd-ui-pagination
+                class="product-select__pagination"
+                [length]="productData.totalItems"
+                [pageSize]="pageSize"
+                [pageIndex]="currentPageIndex"
+                (pageIndexChange)="onPageChange($event)"
+            />
+        }
     }
     @if (!embedded()) {
         <div class="product-select__footer fd-row fd-justify-end">

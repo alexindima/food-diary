@@ -14,6 +14,7 @@ import { TdeeInsightDialogComponent } from './tdee-insight-dialog';
 const ADAPTIVE_TDEE = 2400;
 const SUGGESTED_TARGET = 2200;
 const FOOTER_ACTION_COUNT = 4;
+const SETUP_ITEM_COUNT = 3;
 registerLocaleData(ru);
 
 describe('TDEE dialog number localization', () => {
@@ -71,6 +72,39 @@ describe('TdeeInsightDialogComponent', () => {
         expect(component['summaryKey']).toBe('TDEE_DIALOG.SUMMARY.EMPTY');
         expect(component['showSuggestion']).toBe(false);
         expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+});
+
+describe('TDEE dialog estimate and setup status', () => {
+    const profileOnly: TdeeInsight = {
+        ...createInsight(),
+        adaptiveTdee: null,
+        suggestedCalorieTarget: null,
+        dataDaysUsed: 0,
+        weightTrendPerWeek: null,
+        confidence: 'none',
+        goalAdjustmentHint: null,
+    };
+    it.each([
+        { scenario: 'missing insight', insight: null, state: 'EMPTY', completed: [] },
+        { scenario: 'profile estimate', insight: profileOnly, state: 'ESTIMATED', completed: ['PROFILE'] },
+        {
+            scenario: 'measured stability',
+            insight: { ...profileOnly, weightTrendPerWeek: 0 },
+            state: 'ESTIMATED',
+            completed: ['PROFILE', 'WEIGHT'],
+        },
+    ])('shows the evidence actually available for $scenario', async ({ insight, state, completed }) => {
+        const { fixture } = await setupComponentAsync(insight, true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.tdee-dialog__state')?.textContent.trim()).toBe(`TDEE_DIALOG.STATE.${state}`);
+        expect(host.querySelector('.tdee-dialog__summary-text')?.textContent.trim()).toBe(`TDEE_DIALOG.SUMMARY.${state}`);
+        expect(host.querySelectorAll('.tdee-dialog__setup-item')).toHaveLength(SETUP_ITEM_COUNT);
+        const completedTitles = [...host.querySelectorAll('.tdee-dialog__setup-item--complete .tdee-dialog__setup-title')].map(item =>
+            item.textContent.trim(),
+        );
+        expect(completedTitles).toEqual(completed.map(key => `TDEE_DIALOG.SETUP.${key}_TITLE`));
     });
 });
 
@@ -141,7 +175,10 @@ describe('TDEE dialog footer actions', () => {
     });
 });
 
-async function setupComponentAsync(insight: TdeeInsight | null): Promise<{
+async function setupComponentAsync(
+    insight: TdeeInsight | null,
+    withDialogData = insight !== null,
+): Promise<{
     component: TdeeInsightDialogComponent;
     fixture: ComponentFixture<TdeeInsightDialogComponent>;
     dialogRef: { close: ReturnType<typeof vi.fn>; disableClose: boolean | undefined };
@@ -156,7 +193,7 @@ async function setupComponentAsync(insight: TdeeInsight | null): Promise<{
             providers: [
                 provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
-                { provide: FD_UI_DIALOG_DATA, useValue: insight === null ? null : { insight, applyGoalAsync: applyGoal } },
+                { provide: FD_UI_DIALOG_DATA, useValue: withDialogData ? { insight, applyGoalAsync: applyGoal } : null },
             ],
         })
         .compileComponents();

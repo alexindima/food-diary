@@ -193,8 +193,13 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private toDisplayName(item: FoodVisionItem): string {
-        const rawName = item.nameLocal?.trim() ?? item.nameEn;
+        const rawName = this.usableLocalName(item.nameLocal) ?? item.nameEn;
         return this.capitalizeLabel(rawName);
+    }
+
+    private usableLocalName(value: string | null | undefined): string | null {
+        const trimmed = value?.trim() ?? '';
+        return trimmed.length > 0 ? trimmed : null;
     }
 
     private capitalizeLabel(value?: string | null): string {
@@ -323,7 +328,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private resolveReviewItemName(match: FoodVisionItem | null, fallback: string): string {
-        return match?.nameLocal ?? match?.nameEn ?? fallback;
+        return this.usableLocalName(match?.nameLocal) ?? match?.nameEn ?? fallback;
     }
 
     private resolveReviewItemNameEn(match: FoodVisionItem | null, fallback: string): string {
@@ -331,7 +336,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private resolveReviewItemNameLocal(match: FoodVisionItem | null): string | null {
-        return match?.nameLocal ?? null;
+        return this.usableLocalName(match?.nameLocal);
     }
 
     private resolveReviewItemConfidence(match: FoodVisionItem | null): number {
@@ -547,23 +552,26 @@ export class MealPhotoRecognitionDialogComponent {
         this.results.set(
             session.items.map(item => ({
                 nameEn: item.nameEn,
-                nameLocal: item.nameLocal ?? null,
+                nameLocal: this.usableLocalName(item.nameLocal),
                 amount: item.amount,
                 unit: item.unit,
                 confidence: item.confidence ?? 1,
             })),
         );
         this.reviewItems.set(
-            session.items.map(item => ({
-                id: this.createEditId(),
-                name: item.nameLocal ?? item.nameEn,
-                nameEn: item.nameEn,
-                nameLocal: item.nameLocal ?? null,
-                amount: item.amount,
-                unit: item.unit,
-                confidence: item.confidence ?? 1,
-                resolution: this.normalizeResolution(item.resolution),
-            })),
+            session.items.map(item => {
+                const nameLocal = this.usableLocalName(item.nameLocal);
+                return {
+                    id: this.createEditId(),
+                    name: nameLocal ?? item.nameEn,
+                    nameEn: item.nameEn,
+                    nameLocal,
+                    amount: item.amount,
+                    unit: item.unit,
+                    confidence: item.confidence ?? 1,
+                    resolution: this.normalizeResolution(item.resolution),
+                };
+            }),
         );
         this.hasAnalyzed.set(true);
         this.isLoading.set(false);
@@ -590,7 +598,7 @@ export class MealPhotoRecognitionDialogComponent {
         return {
             ...totals,
             items: activeItems.map(item => ({
-                name: item.nameLocal ?? item.nameEn,
+                name: this.usableLocalName(item.nameLocal) ?? item.nameEn,
                 amount: item.amount,
                 unit: item.unit,
                 calories: item.calories,

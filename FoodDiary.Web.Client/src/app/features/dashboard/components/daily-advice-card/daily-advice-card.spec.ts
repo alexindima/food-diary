@@ -35,6 +35,29 @@ describe('DailyAdviceCardComponent', () => {
 
         expect(component['adviceState']()).toEqual({ value: 'No tag', tagKey: null });
     });
+
+    it('hides the previous category while loading and shows new untagged advice without a category', async () => {
+        const { fixture } = await setupComponentAsync(createAdvice());
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const advice = (): string | undefined => host.querySelector('.daily-advice-card__text')?.textContent.trim();
+        const category = (): string | undefined => host.querySelector('.daily-advice-card__chip')?.textContent.trim();
+        expect(advice()).toBe('Eat more vegetables');
+        expect(category()).toBe('DASHBOARD.ADVICE_TAGS.NUTRITION');
+
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        expect(host.textContent).toContain('DASHBOARD.ADVICE_LOADING');
+        expect(category()).toBeUndefined();
+        expect(advice()).toBeUndefined();
+
+        fixture.componentRef.setInput('advice', createAdvice({ value: 'Take a short walk', tag: null }));
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.detectChanges();
+        expect(advice()).toBe('Take a short walk');
+        expect(category()).toBeUndefined();
+        expect(host.textContent).not.toContain('DASHBOARD.ADVICE_LOADING');
+    });
 });
 
 async function setupComponentAsync(advice: DailyAdvice | null): Promise<{

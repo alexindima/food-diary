@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
+import type { NutrientBar } from '../nutrition-summary/nutrition-summary.types';
 import { DayNutritionSummaryComponent } from './day-nutrition-summary';
 
 const originalScrollTo = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollTo');
@@ -9,6 +10,8 @@ const NO_GOAL_DATA = { dailyGoal: 0, dailyConsumed: 500, weeklyConsumed: 0, week
 const SUMMARY_RECT = { x: 20, y: 30, width: 400, height: 400 };
 const INITIAL_NUTRIENT_LABEL_RECT = { x: 460, y: 130, width: 100, height: 32 };
 const MOVED_NUTRIENT_LABEL_RECT = { ...INITIAL_NUTRIENT_LABEL_RECT, y: 200 };
+const PROTEIN_BAR = { id: 'protein', label: 'Protein', current: 20, target: 100, unit: 'g', colorStart: 'green', colorEnd: 'green' };
+const SODIUM_BAR = { id: 'sodium', label: 'Sodium', current: 250, target: 500, unit: 'mg', colorStart: 'blue', colorEnd: 'blue' };
 beforeAll(() => {
     Object.defineProperty(HTMLElement.prototype, 'scrollTo', { configurable: true, value: vi.fn() });
 });
@@ -28,7 +31,7 @@ function getElement(fixture: ComponentFixture<DayNutritionSummaryComponent>, sel
     return element;
 }
 
-async function createSummaryAsync(): Promise<ComponentFixture<DayNutritionSummaryComponent>> {
+async function createSummaryAsync(nutrientBars: NutrientBar[] = [PROTEIN_BAR]): Promise<ComponentFixture<DayNutritionSummaryComponent>> {
     await TestBed.configureTestingModule({
         imports: [DayNutritionSummaryComponent],
         providers: [provideTranslateTesting()],
@@ -40,7 +43,7 @@ async function createSummaryAsync(): Promise<ComponentFixture<DayNutritionSummar
         dailyConsumed: 500,
         weeklyConsumed: 0,
         weeklyGoal: null,
-        nutrientBars: [{ id: 'protein', label: 'Protein', current: 20, target: 100, unit: 'g', colorStart: 'green', colorEnd: 'green' }],
+        nutrientBars,
     });
     fixture.detectChanges();
     await fixture.whenStable();
@@ -70,6 +73,38 @@ describe('Day summary empty state', () => {
         expect(host.textContent).not.toContain(
             mealCount === 0 ? 'DASHBOARD.DAY_SUMMARY.PULSE_CALORIES' : 'DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE',
         );
+    });
+
+    it('keeps an empty diary prompt with a fiber goal until the diary contains a fiber entry', async () => {
+        const fixture = await createSummaryAsync();
+        const fiberGoal = {
+            id: 'fiber',
+            label: 'Fiber',
+            current: 0,
+            target: 25,
+            unit: 'g',
+            colorStart: 'purple',
+            colorEnd: 'purple',
+        };
+        const diary = {
+            mealCount: 0,
+            dailyGoal: 2000,
+            dailyConsumed: 0,
+            weeklyConsumed: 0,
+            weeklyGoal: null,
+        };
+        fixture.componentRef.setInput('data', { ...diary, nutrientBars: [fiberGoal] });
+        fixture.detectChanges();
+
+        const announcement = getElement(fixture, '[aria-live="polite"]');
+        expect(announcement.textContent).toContain('DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE');
+        expect(getElement(fixture, '.day-summary__nutrient--fiber').textContent).toContain('Fiber');
+
+        fixture.componentRef.setInput('data', { ...diary, nutrientBars: [{ ...fiberGoal, current: 5 }] });
+        fixture.detectChanges();
+
+        expect(announcement.textContent).toContain('DASHBOARD.DAY_SUMMARY.PULSE_CALORIES');
+        expect(getElement(fixture, '.day-summary__pulse-content').textContent).toContain('Fiber');
     });
 });
 
@@ -136,7 +171,7 @@ describe('Day summary user interaction and missing goals', () => {
 });
 
 describe('Day summary nutrient connectors', () => {
-    it('updates a connector from measured label geometry and disconnects on teardown', async () => {
+    it('connects measured core nutrients while keeping extra nutrients visible without a connector', async () => {
         const observers: SummaryResizeObserver[] = [];
         class SummaryResizeObserver implements ResizeObserver {
             public readonly observe = vi.fn<(target: Element) => void>();
@@ -154,7 +189,7 @@ describe('Day summary nutrient connectors', () => {
         vi.stubGlobal('ResizeObserver', SummaryResizeObserver);
 
         try {
-            const fixture = await createSummaryAsync();
+            const fixture = await createSummaryAsync([PROTEIN_BAR, SODIUM_BAR]);
             const host = fixture.nativeElement as HTMLElement;
             const chart = getElement(fixture, '.day-summary__visual');
             const protein = getElement(fixture, '.day-summary__nutrient--protein');
@@ -170,6 +205,8 @@ describe('Day summary nutrient connectors', () => {
             const labelBounds = vi.spyOn(protein, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect(INITIAL_NUTRIENT_LABEL_RECT));
             observer.notify();
             fixture.detectChanges();
+            expect(getElement(fixture, '.day-summary__nutrient--sodium').textContent).toMatch(/Sodium\s+250\s*\/\s*500\s+mg/u);
+            expect(host.querySelectorAll('.day-summary__connector')).toHaveLength(1);
             const connector = host.querySelector('.day-summary__connector');
             if (connector === null) {
                 throw new Error('Expected a connector after the chart becomes measurable');

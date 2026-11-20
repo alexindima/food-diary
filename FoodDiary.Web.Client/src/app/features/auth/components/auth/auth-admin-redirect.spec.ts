@@ -5,7 +5,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AuthComponent } from './auth';
@@ -36,7 +35,6 @@ function createComponent(): {
             { provide: AuthFlowFacade, useValue: {} },
             { provide: NavigationService, useValue: {} },
             { provide: FdUiDialogRef, useValue: { close: vi.fn() } },
-            { provide: AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, useValue: [] },
         ],
     });
     TestBed.overrideComponent(AuthComponent, {

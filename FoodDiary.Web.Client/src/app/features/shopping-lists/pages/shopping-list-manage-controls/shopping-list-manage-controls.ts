@@ -51,9 +51,11 @@ export class ShoppingListManageControlsComponent {
     public readonly initialPage = input<ShoppingListPage | null>(null);
     public readonly lists = input.required<readonly ShoppingListSummary[]>();
     public readonly isLoading = input.required<boolean>();
+    public readonly isSaving = input(false);
     public readonly canDeleteList = input.required<boolean>();
     public readonly isMobile = input(false);
     public readonly renameRequestedListId = input<ShoppingListId | null>(null);
+    protected readonly isBusy = computed(() => this.isLoading() || this.isSaving());
     protected readonly selectedListId = computed(() => optionalEntityId<'shopping-list'>(this.listSelectField()().value()));
     protected readonly selectedList = computed(() => this.lists().find(list => list.id === this.selectedListId()));
     protected readonly quickLists = computed(() => {
@@ -104,6 +106,7 @@ export class ShoppingListManageControlsComponent {
     }
 
     protected selectList(listId: ShoppingListId): void {
+        // A list chosen from an open picker can wait for the current autosave in the facade.
         if (this.isLoading() || listId === this.selectedListId()) {
             return;
         }
@@ -167,7 +170,7 @@ export class ShoppingListManageControlsComponent {
     }
 
     protected canClearListCard(list: ShoppingListSummary): boolean {
-        return list.itemsCount > 0 && !this.isLoading();
+        return list.itemsCount > 0 && !this.isBusy();
     }
 
     protected updateRenameDraft(event: Event): void {
@@ -191,6 +194,9 @@ export class ShoppingListManageControlsComponent {
 
         const list = this.lists().find(entry => entry.id === listId);
         if (list !== undefined && name !== list.name) {
+            if (this.isBusy()) {
+                return;
+            }
             this.renameListById.emit({ listId, name });
         }
         this.editingListId.set(null);

@@ -84,6 +84,24 @@ describe('BarcodeScannerComponent delayed camera permission', () => {
     });
 });
 
+describe('Barcode scanner camera setup cancellation', () => {
+    it('closes the camera after acquisition before the preview starts playing', async () => {
+        const camera = createCamera();
+        const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+        const { host, closed } = await openScannerAsync(camera.browserWindow);
+
+        closeFromHeader(host);
+        expect(camera.stop).toHaveBeenCalledOnce();
+        await new Promise<void>(resolve => {
+            setTimeout(resolve, 0);
+        });
+
+        expect(play).not.toHaveBeenCalled();
+        expect(camera.browserWindow.requestAnimationFrame).not.toHaveBeenCalled();
+        expect(closed).toHaveBeenCalledExactlyOnceWith(undefined);
+    });
+});
+
 describe('Barcode scanner camera errors', () => {
     it('shows a camera error when permission is denied and never starts scanning', async () => {
         const camera = createCamera();
@@ -126,7 +144,7 @@ describe('Barcode scanner camera errors', () => {
         expect(closed).not.toHaveBeenCalled();
     });
 
-    it('does not start scanning if the dialog is closed while playback starts', async () => {
+    it.each(['resolves', 'rejects'] as const)('keeps the scanner closed when pending playback %s', async outcome => {
         const camera = createCamera();
         const playback = new Subject<void>();
         const playing = firstValueFrom(playback);
@@ -138,9 +156,15 @@ describe('Barcode scanner camera errors', () => {
 
         expect(camera.browserWindow.requestAnimationFrame).not.toHaveBeenCalled();
         closeFromHeader(host);
-        playback.next();
-        playback.complete();
-        await playing;
+        if (outcome === 'resolves') {
+            playback.next();
+            playback.complete();
+            await playing;
+        } else {
+            const rejected = expect(playing).rejects.toMatchObject({ name: 'AbortError' });
+            playback.error(new DOMException('Playback interrupted by close', 'AbortError'));
+            await rejected;
+        }
 
         expect(closed).toHaveBeenCalledOnce();
         expect(camera.stop).toHaveBeenCalledOnce();
@@ -186,7 +210,7 @@ describe('Barcode scanner frame lifecycle', () => {
         expect(camera.hasPendingFrame()).toBe(false);
     });
 
-    it('releases the camera on header close and discards an in-flight detection', async () => {
+    it.each(['resolves', 'rejects'] as const)('keeps the camera released when a closed dialog detection %s', async outcome => {
         const camera = createCamera();
         vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
         const frameResult = new Subject<DetectedBarcode[]>();
@@ -202,10 +226,17 @@ describe('Barcode scanner frame lifecycle', () => {
         expect(camera.detect).toHaveBeenCalledExactlyOnceWith(video);
 
         closeFromHeader(host);
-        frameResult.next([BARCODE]);
-        frameResult.complete();
-        await detection;
+        if (outcome === 'resolves') {
+            frameResult.next([BARCODE]);
+            frameResult.complete();
+            await detection;
+        } else {
+            const rejected = expect(detection).rejects.toThrow('Frame no longer available');
+            frameResult.error(new Error('Frame no longer available'));
+            await rejected;
+        }
 
+        expect(camera.browserWindow.requestAnimationFrame).toHaveBeenCalledOnce();
         expect(closed).toHaveBeenCalledOnce();
         expect(camera.stop).toHaveBeenCalledOnce();
         expect(camera.hasPendingFrame()).toBe(false);

@@ -61,6 +61,7 @@ describe('AuthFlowFacade login', () => {
         authServiceMock.login.mockReturnValue(of(createAuthResponse('ru')));
 
         await expect(firstValueFrom(facade.login({ email: 'user@example.com', password: 'password' }))).resolves.toBe('success');
+        expect(authServiceMock.login).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ rememberMe: false }));
         expect(localizationServiceMock.applyLanguagePreferenceAsync).toHaveBeenCalledWith('ru');
         expect(localizationServiceMock.loadApplicationTranslationsAsync).toHaveBeenCalledOnce();
         expect(localizationServiceMock.applyLanguagePreferenceAsync.mock.invocationCallOrder[0]).toBeLessThan(

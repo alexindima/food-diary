@@ -22,6 +22,7 @@ export class ShoppingListAddFacade {
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
     private scope = '';
+    private scopeRevision = 0;
     private name = '';
     private readonly added = signal<ReadonlySet<string>>(new Set());
     public readonly target = signal<ShoppingListTarget | null>(null);
@@ -37,8 +38,9 @@ export class ShoppingListAddFacade {
     }
     public setScope(scope: string, name: string): void {
         if (scope !== this.scope) {
-            this.reset();
             this.scope = scope;
+            this.scopeRevision += 1;
+            this.reset();
         }
         this.name = name;
     }
@@ -51,11 +53,14 @@ export class ShoppingListAddFacade {
         }
         this.busy.set(true);
         this.message.set(null);
-        const scope = this.scope;
+        const scopeRevision = this.scopeRevision;
         try {
-            await this.chooseTargetAsync();
+            await this.authenticateAsync();
+            if (this.isCurrent(scopeRevision)) {
+                await this.chooseTargetAsync(scopeRevision);
+            }
         } catch {
-            if (this.isCurrent(scope)) {
+            if (this.isCurrent(scopeRevision)) {
                 this.message.set('PUBLIC_RECIPES.SHOPPING_ERROR');
             }
         } finally {
@@ -75,9 +80,9 @@ export class ShoppingListAddFacade {
         }
         this.busy.set(true);
         this.message.set(null);
-        const scope = this.scope;
+        const scopeRevision = this.scopeRevision;
         try {
-            if (!(await this.prepareAsync(remaining[0].item, remaining.length, confirm)) || !this.isCurrent(scope)) {
+            if (!(await this.prepareAsync(scopeRevision, remaining[0].item, remaining.length, confirm)) || !this.isCurrent(scopeRevision)) {
                 return;
             }
             const target = this.target();
@@ -92,14 +97,14 @@ export class ShoppingListAddFacade {
                 target,
                 pending.map(entry => entry.item),
             );
-            if (!this.isCurrent(scope)) {
+            if (!this.isCurrent(scopeRevision)) {
                 return;
             }
             this.target.set({ id: list.id, name: list.name });
             this.added.update(keys => new Set([...keys, ...pending.map(entry => `${list.id}:${entry.index}`)]));
             this.message.set('PUBLIC_RECIPES.SHOPPING_SUCCESS');
         } catch {
-            this.message.update(message => (this.isCurrent(scope) ? 'PUBLIC_RECIPES.SHOPPING_ERROR' : message));
+            this.message.update(message => (this.isCurrent(scopeRevision) ? 'PUBLIC_RECIPES.SHOPPING_ERROR' : message));
         } finally {
             this.busy.set(false);
         }
@@ -109,14 +114,14 @@ export class ShoppingListAddFacade {
             ? firstValueFrom(this.api.create({ name: target.name, items: appendShoppingItems([], items) }))
             : this.appendAsync(entityId<'shopping-list'>(target.id), items);
     }
-    private async prepareAsync(item: ShoppingListItemDto, count: number, confirm: boolean): Promise<boolean> {
-        if (!(await this.ensureAuthenticatedAsync())) {
+    private async prepareAsync(scopeRevision: number, item: ShoppingListItemDto, count: number, confirm: boolean): Promise<boolean> {
+        await this.authenticateAsync();
+        if (!this.isCurrent(scopeRevision)) {
             return false;
         }
-        return !confirm ? this.ensureTargetAsync(item) : this.chooseTargetAsync(undefined, count);
-    }
-    private async ensureTargetAsync(item: ShoppingListItemDto): Promise<boolean> {
-        return this.target() !== null || this.chooseTargetAsync(item);
+        return confirm
+            ? this.chooseTargetAsync(scopeRevision, undefined, count)
+            : this.target() !== null || this.chooseTargetAsync(scopeRevision, item);
     }
     private async appendAsync(id: ShoppingListId, items: ShoppingListItemDto[]): Promise<ShoppingList> {
         const list = await firstValueFrom(this.api.getById(id));
@@ -131,14 +136,10 @@ export class ShoppingListAddFacade {
             }),
         );
     }
-    private async chooseTargetAsync(item?: ShoppingListItemDto, count?: number): Promise<boolean> {
-        if (!(await this.ensureAuthenticatedAsync())) {
-            return false;
-        }
-        const scope = this.scope;
+    private async chooseTargetAsync(scopeRevision: number, item?: ShoppingListItemDto, count?: number): Promise<boolean> {
         const lists = await firstValueFrom(this.api.getSelectionPage());
         const { ShoppingListPickerComponent } = await import('../dialogs/shopping-list-picker/shopping-list-picker');
-        if (!this.isCurrent(scope)) {
+        if (!this.isCurrent(scopeRevision)) {
             return false;
         }
         const ref = this.dialogs.open<InstanceType<typeof ShoppingListPickerComponent>, ShoppingListPickerData, ShoppingListTarget>(
@@ -150,23 +151,22 @@ export class ShoppingListAddFacade {
             },
         );
         const target = await firstValueFrom(ref.afterClosed());
-        if (target === undefined || !this.isCurrent(scope)) {
+        if (target === undefined || !this.isCurrent(scopeRevision)) {
             return false;
         }
         this.target.set(target);
         return true;
     }
-    private async ensureAuthenticatedAsync(): Promise<boolean> {
+    private async authenticateAsync(): Promise<void> {
         if (!this.auth.isAuthenticated()) {
             const ref = await this.authDialog.openAsync({ mode: 'login', returnUrl: this.router.url, destroyRef: this.destroyRef });
             if (ref !== null) {
                 await firstValueFrom(ref.afterClosed());
             }
         }
-        return !this.destroyRef.destroyed && this.auth.isAuthenticated();
     }
-    private isCurrent(scope: string): boolean {
-        return scope === this.scope && !this.destroyRef.destroyed && this.auth.isAuthenticated();
+    private isCurrent(scopeRevision: number): boolean {
+        return scopeRevision === this.scopeRevision && !this.destroyRef.destroyed && this.auth.isAuthenticated();
     }
     private reset(): void {
         this.target.set(null);

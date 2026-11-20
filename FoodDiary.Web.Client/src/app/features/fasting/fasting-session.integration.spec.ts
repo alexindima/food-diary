@@ -1,3 +1,5 @@
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -482,6 +484,63 @@ describe('Rendered fasting check-in during an ending request', () => {
     });
 });
 
+describe('Mounted fasting check-in translations', () => {
+    it('updates the open check-in when the active language receives its application dictionary', async () => {
+        registerLocaleData(localeRu);
+        const session = makeSession({ startedAtUtc: utcInstant('2026-05-19T08:00:00Z') });
+        const { harness, api } = await renderFastingAsync(session);
+        const translate = TestBed.inject(TranslateService);
+        const dialog = openFastingCheckIn(harness);
+        const hunger = dialog.querySelector<HTMLButtonElement>('button[role="radio"][aria-label^="FASTING.CHECK_IN.HUNGER_LEVEL_4."]');
+        if (hunger === null) {
+            throw new Error('Expected the native hunger option');
+        }
+        hunger.click();
+        const headache = getButton(dialog, 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE');
+        headache.click();
+        const notes = checkInNotesField(dialog);
+        notes.value = SAVED_NOTE;
+        notes.dispatchEvent(new Event('input', { bubbles: true }));
+
+        translate.setTranslation('ru', { COMMON: { CANCEL: 'Отмена' } });
+        vi.spyOn(TestBed.inject(LocalizationService), 'getCurrentLanguage').mockReturnValue('ru');
+        await firstValueFrom(translate.use('ru'));
+        redraw(harness);
+        expect(hunger.getAttribute('aria-checked')).toBe('true');
+        expect(headache.getAttribute('aria-pressed')).toBe('true');
+        expect(hunger.getAttribute('aria-label')).toContain('FASTING.CHECK_IN.HUNGER_LEVEL_4');
+
+        translate.setTranslation(
+            'ru',
+            {
+                FASTING: {
+                    CHECK_IN: {
+                        HUNGER_LEVEL_4: 'Сильный голод',
+                        HUNGER_LEVEL_4_DESCRIPTION: 'Сложно отвлечься',
+                        SYMPTOMS: { HEADACHE: 'Головная боль' },
+                        SYMPTOM_HINTS: { HEADACHE: 'Боль или давление в голове' },
+                    },
+                },
+            },
+            true,
+        );
+        redraw(harness);
+        expect(document.querySelector('fd-fasting-check-in-dialog')).toBe(dialog);
+        expect(hunger.getAttribute('aria-label')).toBe('Сильный голод. Сложно отвлечься');
+        expect(headache.textContent.trim()).toBe('Головная боль');
+        expect(hunger.getAttribute('aria-checked')).toBe('true');
+        expect(headache.getAttribute('aria-pressed')).toBe('true');
+        expect(notes.value).toBe(SAVED_NOTE);
+
+        const saved = { ...session, hungerLevel: 4, symptoms: ['headache'], checkInNotes: SAVED_NOTE } satisfies FastingSession;
+        api.updateCheckIn.mockReturnValueOnce(of(saved));
+        getButton(dialog, 'FASTING.CHECK_IN.SAVE').click();
+        expect(api.updateCheckIn).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ hungerLevel: 4, symptoms: ['headache'], checkInNotes: SAVED_NOTE }),
+        );
+    });
+});
+
 describe('Recording another check-in from the fasting route', () => {
     it('records the next check-in without carrying over the note or symptoms', async () => {
         const session = makeSession({
@@ -522,6 +581,90 @@ describe('Recording another check-in from the fasting route', () => {
         expect(getButton(reopened, 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE').getAttribute('aria-pressed')).toBe('false');
     });
 });
+
+describe('Fasting actions with an older overview request pending', () => {
+    it('shows the most recently saved check-in when the first overview responds after the second', async () => {
+        const session = makeSession({ startedAtUtc: utcInstant('2026-05-19T08:00:00Z') });
+        const { harness, api } = await renderFastingAsync(session);
+        const olderOverview = new Subject<FastingOverview>();
+        const older = { ...session, checkInAtUtc: utcInstant('2026-05-19T10:00:00Z'), checkInNotes: 'First check-in note' };
+        const latest = { ...session, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: 'Second check-in note' };
+        api.updateCheckIn.mockReturnValueOnce(of(older)).mockReturnValueOnce(of(latest));
+        api.getOverviewStrict.mockReturnValueOnce(olderOverview).mockReturnValueOnce(of(makeOverview(latest)));
+
+        submitFastingCheckInNote(harness, older.checkInNotes);
+        expect(olderOverview.observed).toBe(true);
+        submitFastingCheckInNote(harness, latest.checkInNotes);
+        expect(api.updateCheckIn.mock.calls.map(([payload]) => payload.checkInNotes)).toEqual([older.checkInNotes, latest.checkInNotes]);
+        expect(api.getOverviewStrict).toHaveBeenCalledTimes(2);
+
+        olderOverview.next(makeOverview(older));
+        olderOverview.complete();
+        redraw(harness);
+
+        const reopened = openFastingCheckIn(harness);
+        expect(checkInNotesField(reopened).value).toBe(latest.checkInNotes);
+    });
+
+    it('keeps a confirmed target extension when a check-in overview responds afterward', async () => {
+        const originalHours = 36;
+        const session = makeSession({
+            planType: 'Extended',
+            protocol: 'Fast36',
+            plannedDurationHours: originalHours,
+            initialPlannedDurationHours: originalHours,
+        });
+        const { harness, api } = await renderFastingAsync(session);
+        const olderOverview = new Subject<FastingOverview>();
+        const checkedIn = { ...session, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: SAVED_NOTE };
+        const extended = {
+            ...checkedIn,
+            plannedDurationHours: originalHours + EXTEND_ONE_DAY_HOURS,
+            addedDurationHours: EXTEND_ONE_DAY_HOURS,
+        };
+        api.updateCheckIn.mockReturnValueOnce(of(checkedIn));
+        api.getOverviewStrict.mockReturnValueOnce(olderOverview);
+        api.extend.mockReturnValueOnce(of(extended));
+
+        submitFastingCheckInNote(harness, SAVED_NOTE);
+        expect(olderOverview.observed).toBe(true);
+        const page = pageRoot(harness);
+        getButton(page, 'FASTING.REDESIGN.MANAGE').click();
+        redraw(harness);
+        const management = getDialog('fd-fasting-session-management-dialog');
+        const extendPanel = management.querySelector<HTMLButtonElement>(
+            '.fasting-controls__extend-panel:not(.fasting-controls__extend-panel--subtle) > button',
+        );
+        if (extendPanel === null) {
+            throw new Error('Expected the fasting extension panel');
+        }
+        extendPanel.click();
+        redraw(harness);
+        getButton(management, 'FASTING.ADD_DAY').click();
+        redraw(harness);
+        expect(api.extend).toHaveBeenCalledExactlyOnceWith({ additionalHours: EXTEND_ONE_DAY_HOURS });
+        const extendedTarget = `${extended.plannedDurationHours} FASTING.HOURS`;
+        expect(page.querySelector('.fasting-redesign__protocol')?.textContent.trim()).toBe(extendedTarget);
+
+        olderOverview.next(makeOverview(checkedIn));
+        olderOverview.complete();
+        redraw(harness);
+
+        expect(page.querySelector('.fasting-redesign__protocol')?.textContent.trim()).toBe(extendedTarget);
+        expect(api.getOverviewStrict).toHaveBeenCalledOnce();
+    });
+});
+
+function submitFastingCheckInNote(harness: RouterTestingHarness, note: string): void {
+    const dialog = openFastingCheckIn(harness);
+    const notes = checkInNotesField(dialog);
+    notes.value = note;
+    notes.dispatchEvent(new Event('input', { bubbles: true }));
+    redraw(harness);
+    getButton(dialog, 'FASTING.CHECK_IN.SAVE').click();
+    redraw(harness);
+    expect(document.querySelector('fd-fasting-check-in-dialog')).toBeNull();
+}
 
 describe('Fasting check-in when leaving the route', () => {
     it('closes the dialog and cancels its pending save when navigating away', async () => {
@@ -622,6 +765,46 @@ describe('Rendered fasting actions during a session update', () => {
 
         expect(api.end).toHaveBeenCalledTimes(2);
         expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.READY');
+    });
+});
+
+describe('Fasting end confirmation during an overview refresh', () => {
+    it.each(['replaced', 'ended'] as const)('does not end a fast from a confirmation after its session was %s', async change => {
+        const session = makeSession({ startedAtUtc: utcInstant('2026-05-19T08:00:00Z') });
+        const { harness, api } = await renderFastingAsync(session);
+        const overview = new Subject<FastingOverview>();
+        const saved = { ...session, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: SAVED_NOTE };
+        api.updateCheckIn.mockReturnValueOnce(of(saved));
+        api.getOverviewStrict.mockReturnValueOnce(overview);
+        api.end.mockReturnValue(NEVER);
+
+        submitFastingCheckInNote(harness, SAVED_NOTE);
+        expect(overview.observed).toBe(true);
+        getButton(pageRoot(harness), 'FASTING.END_FAST').click();
+        redraw(harness);
+        const originalConfirmation = getDialog('fd-fasting-end-confirm-dialog');
+        const confirm = getButton(originalConfirmation, 'FASTING.END_FAST');
+
+        const ended = { ...saved, endedAtUtc: utcInstant(FIXTURE_TIME), status: 'Completed', isCompleted: true } satisfies FastingSession;
+        const replacement = makeSession({ id: REPLACEMENT_SESSION_ID, startedAtUtc: utcInstant(FIXTURE_TIME) });
+        overview.next(change === 'replaced' ? makeOverview(replacement, [replacement, ended]) : makeOverview(null, [ended]));
+        overview.complete();
+        redraw(harness);
+
+        confirm.click();
+        redraw(harness);
+        expect(originalConfirmation.isConnected).toBe(false);
+        expect(api.end).not.toHaveBeenCalled();
+
+        if (change === 'replaced') {
+            getButton(pageRoot(harness), 'FASTING.END_FAST').click();
+            redraw(harness);
+            getButton(getDialog('fd-fasting-end-confirm-dialog'), 'FASTING.END_FAST').click();
+            redraw(harness);
+            expect(api.end).toHaveBeenCalledOnce();
+        } else {
+            expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.READY');
+        }
     });
 });
 

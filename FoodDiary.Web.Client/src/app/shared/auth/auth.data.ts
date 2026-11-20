@@ -2,6 +2,7 @@ import type { UserId } from '../models/semantics/entity-id';
 import type { User } from '../models/user.data';
 
 export type AuthMode = 'login' | 'register';
+export type LoginRequestInput = Omit<LoginRequest, 'rememberMe'> & { rememberMe?: boolean };
 
 export class LoginRequest {
     public email: string;
@@ -9,9 +10,9 @@ export class LoginRequest {
     public rememberMe: boolean;
     public expectedUserId?: UserId;
 
-    public constructor(formValue: Partial<LoginRequest>) {
-        this.email = formValue.email ?? '';
-        this.password = formValue.password ?? '';
+    public constructor(formValue: LoginRequestInput) {
+        this.email = formValue.email;
+        this.password = formValue.password;
         this.rememberMe = formValue.rememberMe ?? false;
         this.expectedUserId = formValue.expectedUserId;
     }
@@ -23,9 +24,9 @@ export class RegisterRequest {
     public language?: string;
     public clientOrigin?: string;
 
-    public constructor(formValue: Partial<RegisterRequest>) {
-        this.email = formValue.email ?? '';
-        this.password = formValue.password ?? '';
+    public constructor(formValue: RegisterRequest) {
+        this.email = formValue.email;
+        this.password = formValue.password;
         this.language = formValue.language;
         this.clientOrigin = formValue.clientOrigin;
     }
@@ -35,9 +36,9 @@ export class RestoreAccountRequest {
     public email: string;
     public password: string;
 
-    public constructor(formValue: Partial<RestoreAccountRequest>) {
-        this.email = formValue.email ?? '';
-        this.password = formValue.password ?? '';
+    public constructor(formValue: RestoreAccountRequest) {
+        this.email = formValue.email;
+        this.password = formValue.password;
     }
 }
 
@@ -45,8 +46,8 @@ export class PasswordResetRequest {
     public email: string;
     public clientOrigin?: string;
 
-    public constructor(formValue: Partial<PasswordResetRequest>) {
-        this.email = formValue.email ?? '';
+    public constructor(formValue: PasswordResetRequest) {
+        this.email = formValue.email;
         this.clientOrigin = formValue.clientOrigin;
     }
 }
@@ -56,10 +57,10 @@ export class ConfirmPasswordResetRequest {
     public token: string;
     public newPassword: string;
 
-    public constructor(formValue: Partial<ConfirmPasswordResetRequest>) {
-        this.userId = formValue.userId ?? '';
-        this.token = formValue.token ?? '';
-        this.newPassword = formValue.newPassword ?? '';
+    public constructor(formValue: ConfirmPasswordResetRequest) {
+        this.userId = formValue.userId;
+        this.token = formValue.token;
+        this.newPassword = formValue.newPassword;
     }
 }
 

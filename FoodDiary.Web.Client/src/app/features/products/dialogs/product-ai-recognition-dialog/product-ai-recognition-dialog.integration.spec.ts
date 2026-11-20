@@ -162,7 +162,8 @@ it('shows the estimating step and keeps the original photo editable when refinin
     expect(requiredElement(wizard.host, '.product-ai-dialog__history-link button', HTMLButtonElement).disabled).toBe(true);
     expect(wizard.host.querySelector('fd-product-ai-recognition-result')).toBeNull();
 
-    estimate.next({ calories: 52, protein: 0.3, fat: 0.2, carbs: 14, fiber: 2, alcohol: 0, items: [] });
+    const estimateNote = 'Estimate assumes the peel is included.';
+    estimate.next({ calories: 52, protein: 0.3, fat: 0.2, carbs: 14, fiber: 2, alcohol: 0, items: [], notes: estimateNote });
     estimate.complete();
     wizard.detectChanges();
 
@@ -170,11 +171,19 @@ it('shows the estimating step and keeps the original photo editable when refinin
     expect(wizard.host.querySelector('.product-ai-dialog__item-chip')?.textContent).toBe('Apple');
     expect(requiredElement(wizard.host, 'fd-product-ai-recognition-result input', HTMLInputElement).value).toBe('Apple');
     expect(action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').disabled).toBe(false);
+    const details = requiredElement(wizard.host, 'details.product-ai-dialog__details', HTMLDetailsElement);
+    expect(details.open).toBe(false);
+    requiredElement(details, 'summary', HTMLElement).click();
+    expect(details.open).toBe(true);
+    expect(details.querySelector('.product-ai-dialog__note')?.textContent).toBe(estimateNote);
+    const displayedNotes = Array.from(wizard.host.querySelectorAll('.product-ai-dialog__note'));
+    expect(displayedNotes.filter(note => note.textContent === estimateNote)).toHaveLength(1);
 
     action(wizard.host, 'PRODUCT_AI_DIALOG.REFINE').click();
     wizard.detectChanges();
 
     expect(wizard.host.querySelector('fd-product-ai-recognition-result')).toBeNull();
+    expect(wizard.host.querySelector('details.product-ai-dialog__details')).toBeNull();
     expect(wizard.host.querySelector<HTMLImageElement>('.recognition-photos__preview img')?.getAttribute('src')).toBe(photo.url);
     const hint = requiredElement(wizard.host, 'textarea', HTMLTextAreaElement);
     expect(hint.disabled).toBe(false);
@@ -197,6 +206,100 @@ it('uses the recognized English name when the localized product name is blank', 
     expect(requiredElement(wizard.host, 'fd-product-ai-recognition-result input', HTMLInputElement).value).toBe('Apple');
     expect(action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').disabled).toBe(false);
 
+    action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').click();
+
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ name: 'Apple', baseAmount: 100, baseUnit: MeasurementUnit.G, caloriesPerBase: 52 }),
+    );
+});
+
+it('allows filling in an unreadable label name without estimating nutrients again', async () => {
+    const photo = imageSelection('https://images.example.test/label.jpg', 'label-photo');
+    const wizard = await openWizardAsync({ initialPhotos: [photo] });
+    wizard.analyzeFoodImage.mockReturnValue(
+        of({
+            items: [],
+            productLabel: {
+                name: null,
+                brand: 'Farm',
+                baseAmount: 100,
+                baseUnit: 'g',
+                calories: 75,
+                protein: 5,
+                fat: 2,
+                carbs: 9,
+                fiber: null,
+                alcohol: null,
+                notes: null,
+            },
+        }),
+    );
+
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+    const name = requiredElement(wizard.host, 'fd-product-ai-recognition-result input', HTMLInputElement);
+    expect(name.value).toBe('');
+    expect(action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').disabled).toBe(true);
+
+    name.value = 'Yogurt';
+    name.dispatchEvent(new Event('input', { bubbles: true }));
+    wizard.detectChanges();
+    action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').click();
+
+    expect(wizard.calculateNutrition).not.toHaveBeenCalled();
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ name: 'Yogurt', brand: 'Farm', baseAmount: 100, baseUnit: MeasurementUnit.G, caloriesPerBase: 75 }),
+    );
+});
+
+it('lets the user name an unidentified estimate and preserves the reviewed zero calories', async () => {
+    const photo = imageSelection('https://images.example.test/water.jpg', 'water-photo');
+    const wizard = await openWizardAsync({ initialPhotos: [photo] });
+    const portionMilliliters = 500;
+    const item: FoodVisionItem = { nameEn: '', nameLocal: ' ', amount: portionMilliliters, unit: 'ml', confidence: 0.5 };
+    wizard.analyzeFoodImage.mockReturnValue(of({ items: [item] }));
+    wizard.calculateNutrition.mockReturnValue(of({ calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, alcohol: 0, items: [] }));
+
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+
+    const name = requiredElement(wizard.host, 'fd-product-ai-recognition-result input', HTMLInputElement);
+    expect(name.value).toBe('');
+    expect(wizard.host.querySelector('.product-ai-dialog__item-chip')).toBeNull();
+    const apply = action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY');
+    expect(apply.disabled).toBe(true);
+    apply.click();
+    expect(wizard.closed).not.toHaveBeenCalled();
+
+    name.value = '  Sparkling water  ';
+    name.dispatchEvent(new Event('input', { bubbles: true }));
+    wizard.detectChanges();
+    expect(apply.disabled).toBe(false);
+    apply.click();
+
+    expect(wizard.calculateNutrition).toHaveBeenCalledExactlyOnceWith({ items: [item] });
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+            name: 'Sparkling water',
+            baseAmount: portionMilliliters,
+            baseUnit: MeasurementUnit.ML,
+            caloriesPerBase: 0,
+        }),
+    );
+});
+
+it('uses the gram basis for an estimate when the recognition provider supplies no usable unit or amount', async () => {
+    const photo = imageSelection('https://images.example.test/apple.jpg', 'apple-photo');
+    const wizard = await openWizardAsync({ initialPhotos: [photo] });
+    const item: FoodVisionItem = { nameEn: 'apple', amount: 0, unit: '', confidence: 0.9 };
+    wizard.analyzeFoodImage.mockReturnValue(of({ items: [item] }));
+    wizard.calculateNutrition.mockReturnValue(of({ calories: 52, protein: 0.3, fat: 0.2, carbs: 14, fiber: 2, alcohol: 0, items: [] }));
+
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+
+    expect(wizard.calculateNutrition).toHaveBeenCalledExactlyOnceWith({ items: [{ ...item, amount: 100, unit: 'g' }] });
+    expect(action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').disabled).toBe(false);
     action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').click();
 
     expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(

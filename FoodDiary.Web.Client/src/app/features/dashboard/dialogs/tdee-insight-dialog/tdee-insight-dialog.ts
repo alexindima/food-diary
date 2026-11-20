@@ -118,7 +118,7 @@ export class TdeeInsightDialogComponent {
     }
 
     private hasBodyTrendValue(): boolean {
-        return (this.insight?.adaptiveTdee ?? 0) > 0 || this.insight?.weightTrendPerWeek !== null;
+        return (this.insight?.adaptiveTdee ?? 0) > 0 || typeof this.insight?.weightTrendPerWeek === 'number';
     }
 
     private buildTdeeStateKey(section: 'STATE' | 'SUMMARY'): string {

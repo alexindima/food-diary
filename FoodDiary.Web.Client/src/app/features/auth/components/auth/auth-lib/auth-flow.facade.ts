@@ -6,7 +6,14 @@ import { AuthService } from '../../../../../services/auth.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import { getRecordProperty, getStringProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { MarketingAttributionService } from '../../../../../shared/marketing/marketing-attribution.service';
-import { type AuthResponse, LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
+import {
+    type AuthResponse,
+    LoginRequest,
+    type LoginRequestInput,
+    PasswordResetRequest,
+    RegisterRequest,
+    RestoreAccountRequest,
+} from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
 export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'rateLimited' | 'accountMismatch' | 'unknown';
@@ -20,7 +27,7 @@ export class AuthFlowFacade {
     private readonly marketingAttribution = inject(MarketingAttributionService);
     private readonly localizationService = inject(LocalizationService);
 
-    public login(formValue: Partial<LoginRequest>): Observable<AuthLoginResult> {
+    public login(formValue: LoginRequestInput): Observable<AuthLoginResult> {
         return this.authService.login(new LoginRequest(formValue)).pipe(
             concatMap(response => this.prepareAuthenticatedLocalization(response)),
             map(() => 'success' as const),
@@ -34,7 +41,7 @@ export class AuthFlowFacade {
         );
     }
 
-    public restoreAccount(formValue: Partial<RestoreAccountRequest>, rememberMe: boolean): Observable<boolean> {
+    public restoreAccount(formValue: RestoreAccountRequest, rememberMe: boolean): Observable<boolean> {
         return this.authService.restoreAccount(new RestoreAccountRequest(formValue), rememberMe).pipe(
             concatMap(response => this.prepareAuthenticatedLocalization(response)),
             map(() => true),
@@ -42,12 +49,14 @@ export class AuthFlowFacade {
         );
     }
 
-    public register(formValue: Partial<RegisterRequest>): Observable<AuthRegisterResult> {
+    public register(formValue: RegisterRequest): Observable<AuthRegisterResult> {
         return this.authService
             .register(
                 new RegisterRequest({
-                    ...formValue,
+                    email: formValue.email,
+                    password: formValue.password,
                     language: this.localizationService.getCurrentLanguage(),
+                    clientOrigin: formValue.clientOrigin,
                 }),
             )
             .pipe(
@@ -89,7 +98,7 @@ export class AuthFlowFacade {
         );
     }
 
-    public requestPasswordReset(formValue: Partial<PasswordResetRequest>): Observable<AuthPasswordResetResult> {
+    public requestPasswordReset(formValue: PasswordResetRequest): Observable<AuthPasswordResetResult> {
         return this.authService.requestPasswordReset(new PasswordResetRequest(formValue)).pipe(
             map(() => 'success' as const),
             catchError((error: unknown) =>

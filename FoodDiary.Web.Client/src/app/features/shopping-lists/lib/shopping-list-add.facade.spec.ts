@@ -12,7 +12,7 @@ import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { ShoppingListService } from '../api/shopping-list.service';
-import type { ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
+import type { ShoppingListPickerData, ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
 import { ShoppingListAddFacade } from './shopping-list-add.facade';
 
 const REVISION_LENGTH = 64;
@@ -212,6 +212,26 @@ describe('shopping list selection and request lifetime', () => {
         expect(api.update).not.toHaveBeenCalled();
     });
 
+    it('retains an in-progress destination lookup when the current recipe title refreshes', async () => {
+        const response = new Subject<ShoppingListSummary[]>();
+        api.getSelectionPage.mockReturnValueOnce(response);
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of({ id: list.id, name: list.name }) });
+        const choosing = facade.chooseAsync();
+        await vi.waitFor(() => {
+            expect(response.observed).toBe(true);
+        });
+
+        facade.setScope('recipe-1', 'Winter soup');
+        response.next([]);
+        response.complete();
+        await choosing;
+
+        const options = dialogs.open.mock.calls[0][1] as { data: ShoppingListPickerData };
+        expect(options.data.name).toBe('Winter soup');
+        expect(facade.target()).toEqual({ id: list.id, name: list.name });
+        expect(facade.busy()).toBe(false);
+    });
+
     it.each(['navigation', 'logout'])('keeps stale save errors out of the current view after %s', async transition => {
         const response = new Subject<ShoppingList>();
         api.create.mockReturnValueOnce(response);
@@ -299,5 +319,125 @@ describe('shopping list add recovery', () => {
         expect(facade.target()).toBeNull();
         expect(dialogs.open).not.toHaveBeenCalled();
         expect(facade.busy()).toBe(false);
+    });
+});
+
+describe('shopping list additions across recipe changes', () => {
+    it.each(['choose a list', 'add an ingredient'])('does not resume an obsolete request to %s after signing in', async action => {
+        authenticated.set(false);
+        TestBed.tick();
+        const closed = new Subject<void>();
+        authDialog.openAsync.mockResolvedValueOnce({ afterClosed: () => closed });
+        const pending = action === 'choose a list' ? facade.chooseAsync() : facade.addAsync(0, { name: 'Rice' });
+        await vi.waitFor(() => {
+            expect(closed.observed).toBe(true);
+        });
+
+        facade.setScope('recipe-2', 'Salad');
+        authenticated.set(true);
+        TestBed.tick();
+        closed.next();
+        closed.complete();
+        await pending;
+
+        expect(api.getSelectionPage).not.toHaveBeenCalled();
+        expect(dialogs.open).not.toHaveBeenCalled();
+        expect(api.create).not.toHaveBeenCalled();
+        expect(facade.target()).toBeNull();
+        expect(facade.message()).toBeNull();
+        expect(facade.busy()).toBe(false);
+
+        const saladList = { ...list, name: 'Salad' };
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of({ id: null, name: saladList.name }) });
+        api.create.mockReturnValueOnce(of(saladList));
+        await facade.addAsync(0, { name: 'Lettuce' });
+
+        expect(dialogs.open).toHaveBeenCalledOnce();
+        const options = dialogs.open.mock.calls[0][1] as { data: ShoppingListPickerData };
+        expect(options.data).toMatchObject({ name: 'Salad', item: { name: 'Lettuce' } });
+        expect(api.create).toHaveBeenCalledExactlyOnceWith({ name: 'Salad', items: [{ name: 'Lettuce', sortOrder: 1 }] });
+        expect(facade.isAdded(0)).toBe(true);
+    });
+
+    it('coalesces repeated list selection and suppresses a finished lookup after the recipe changes', async () => {
+        const response = new Subject<ShoppingListSummary[]>();
+        api.getSelectionPage.mockReturnValueOnce(response);
+        const choosing = facade.chooseAsync();
+        await vi.waitFor(() => {
+            expect(response.observed).toBe(true);
+        });
+        await facade.chooseAsync();
+        expect(api.getSelectionPage).toHaveBeenCalledOnce();
+
+        facade.setScope('recipe-2', 'Salad');
+        response.next([]);
+        response.complete();
+        await choosing;
+
+        expect(dialogs.open).not.toHaveBeenCalled();
+        expect(facade.target()).toBeNull();
+        expect(facade.busy()).toBe(false);
+    });
+
+    it('keeps a successful save for the previous recipe out of the next recipe’s ingredient state', async () => {
+        const response = new Subject<ShoppingList>();
+        api.create.mockReturnValueOnce(response);
+        const adding = facade.addAsync(0, { name: 'Rice' });
+        await vi.waitFor(() => {
+            expect(api.create).toHaveBeenCalledExactlyOnceWith({ name: 'Soup', items: [{ name: 'Rice', sortOrder: 1 }] });
+        });
+
+        facade.setScope('recipe-2', 'Salad');
+        response.next(list);
+        response.complete();
+        await adding;
+
+        expect(facade.target()).toBeNull();
+        expect(facade.isAdded(0)).toBe(false);
+        expect(facade.message()).toBeNull();
+        expect(facade.busy()).toBe(false);
+    });
+});
+
+describe('Recipe ingredient additions at the shopping quantity limit', () => {
+    it.each([
+        { incomingAmount: 100, savedAmount: 1_000_000, separateAmount: null },
+        { incomingAmount: 200, savedAmount: 999_900, separateAmount: 200 },
+    ])('adds $incomingAmount grams without changing the linked to-taste row', async ({ incomingAmount, savedAmount, separateAmount }) => {
+        const productId = entityId<'product'>('sea-salt');
+        const toTaste = {
+            id: entityId<'shopping-list-item'>('salt-to-taste'),
+            shoppingListId: list.id,
+            productId,
+            name: 'Sea salt',
+            note: 'to taste',
+            amount: null,
+            unit: 'G',
+            sortOrder: 1,
+            isChecked: false,
+        };
+        const measured = {
+            ...toTaste,
+            id: entityId<'shopping-list-item'>('salt-measured'),
+            note: null,
+            amount: 999_900,
+            sortOrder: 2,
+        };
+        const ingredient = { productId, name: 'Sea salt', amount: incomingAmount, unit: 'G', isChecked: false };
+        const target: ShoppingListTarget = { id: list.id, name: list.name };
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of(target) });
+        api.getById.mockReturnValueOnce(of({ ...list, items: [toTaste, measured] }));
+
+        await facade.addAsync(0, ingredient);
+
+        const quantities = [
+            expect.objectContaining({ id: toTaste.id, productId, amount: null, note: 'to taste', sortOrder: 1 }),
+            expect.objectContaining({ id: measured.id, productId, amount: savedAmount, note: null, sortOrder: 2 }),
+        ];
+        if (separateAmount !== null) {
+            quantities.push(expect.objectContaining({ productId, amount: separateAmount, sortOrder: 3 }));
+        }
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(list.id, { expectedRevision: list.revision, items: quantities });
+        expect(facade.isAdded(0)).toBe(true);
     });
 });

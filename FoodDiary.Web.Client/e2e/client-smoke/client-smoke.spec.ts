@@ -1046,6 +1046,39 @@ test.describe('authenticated feature smoke', () => {
     });
 });
 
+test('blocks goal saving while a native number field contains an unfinished weight', async ({ page }) => {
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    const savedWeight = 72;
+    await page.route('**/api/v1/goals', async route => {
+        if (route.request().method() !== 'GET') {
+            await route.fallback();
+            return;
+        }
+        await route.fulfill(
+            jsonFixture(fixtureContract, 'GET', route.request().url(), {
+                dailyCalorieTarget: 1900,
+                calorieCyclingEnabled: false,
+                desiredWeightKg: savedWeight,
+            }),
+        );
+    });
+
+    await page.goto('/goals');
+    const weight = page.getByRole('spinbutton', { name: 'Weight', exact: true });
+    await expect(weight).toHaveValue(String(savedWeight));
+    await weight.selectText();
+    await weight.pressSequentially('-');
+    await expect(weight).toHaveAttribute('aria-invalid', 'true');
+    await expect.poll(async () => weight.evaluate((field: HTMLInputElement) => field.validity.badInput)).toBe(true);
+    await expect(page.locator('fd-unsaved-changes-bar').getByRole('button', { name: 'Save changes' })).toBeDisabled();
+
+    await page.getByRole('button', { name: 'Discard changes' }).click();
+    await expect(weight).toHaveValue(String(savedWeight));
+    await expect(weight).toHaveAttribute('aria-invalid', 'false');
+    await expect(page.locator('fd-unsaved-changes-bar')).toHaveCount(0);
+});
+
 test.describe('deterministic authenticated feature fixtures', () => {
     test('renders deterministic meal plan detail data', async ({ page }) => {
         await authenticateUserAsync(page);

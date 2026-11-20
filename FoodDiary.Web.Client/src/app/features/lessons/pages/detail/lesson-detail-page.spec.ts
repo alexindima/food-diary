@@ -15,7 +15,7 @@ describe('LessonDetailPageComponent', () => {
     it('loads the current lesson when Angular reuses the detail route', async () => {
         const facade = createFacadeStub(null);
         facade.loadLesson.mockImplementation(id => {
-            facade.selectedLesson.set(createDetail({ id: entityId<'lesson'>(id), title: id }));
+            facade.selectedLesson.set(id === null ? null : createDetail({ id, title: id }));
         });
         TestBed.configureTestingModule({
             imports: [LessonDetailPageComponent],
@@ -46,12 +46,12 @@ describe('LessonDetailPageComponent', () => {
         });
     });
 
-    it('does not load lesson when route id is missing', () => {
+    it('clears the selected lesson when the route id is missing', () => {
         const facade = createFacadeStub(null);
 
         createComponent(facade, null);
 
-        expect(facade.loadLesson).not.toHaveBeenCalled();
+        expect(facade.loadLesson).toHaveBeenCalledExactlyOnceWith(null);
     });
 
     it('marks unread lesson as read', () => {
@@ -86,7 +86,7 @@ describe('LessonDetailPageComponent', () => {
 type FacadeStub = {
     selectedLesson: ReturnType<typeof signal<LessonDetail | null>>;
     isDetailLoading: ReturnType<typeof signal<boolean>>;
-    loadLesson: ReturnType<typeof vi.fn<(id: string) => void>>;
+    loadLesson: ReturnType<typeof vi.fn<LessonFacade['loadLesson']>>;
     markRead: ReturnType<typeof vi.fn<(id: string) => void>>;
 };
 

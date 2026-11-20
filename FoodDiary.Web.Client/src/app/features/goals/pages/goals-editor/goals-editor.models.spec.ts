@@ -116,6 +116,7 @@ function createDraft(): GoalsDraft {
         preset: 'custom',
         water: 2000,
         bodyTargets: { weight: WEIGHT, waist: 0 },
+        invalidBodyTargets: { weight: false, waist: false },
         cyclingEnabled: false,
         dayCalories: {
             mondayCalories: CALORIES,

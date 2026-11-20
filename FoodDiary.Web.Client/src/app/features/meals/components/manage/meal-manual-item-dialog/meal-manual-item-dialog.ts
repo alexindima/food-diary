@@ -21,8 +21,6 @@ import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-s
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 
 const MIN_AMOUNT = 0.01;
-const PRODUCT_SOURCE_VALUE = 'Product';
-const RECIPE_SOURCE_VALUE = 'Recipe';
 
 export type MealManualItemDialogData = {
     item: MealItemFormValues;
@@ -63,7 +61,6 @@ export class MealManualItemDialogComponent {
         return `${this.translateService.instant('MEAL_MANAGE.ADD_ITEM_ROW.AMOUNT')} (${this.translateService.instant(`PRODUCT_AMOUNT_UNITS.${unit.toUpperCase()}`)})`;
     });
     protected readonly sourceType = signal(this.data.item.sourceType);
-    protected readonly sourceTypeValue = signal(this.toSourceTypeValue(this.data.item.sourceType));
     protected readonly product = signal<Product | null>(this.data.item.product);
     protected readonly recipe = signal<Recipe | null>(this.data.item.recipe);
     private readonly sourceTouched = signal(false);
@@ -81,7 +78,6 @@ export class MealManualItemDialogComponent {
     });
 
     protected readonly selectedItemName = computed(() => this.recipe()?.name ?? this.product()?.name ?? null);
-    protected readonly itemSourceName = computed(() => this.selectedItemName() ?? '');
 
     protected readonly sourceActionLabelKey = computed(() =>
         this.sourceType() === MealSourceType.Recipe ? 'MEAL_MANAGE.MANUAL_ITEM_CHOOSE_RECIPE' : 'MEAL_MANAGE.MANUAL_ITEM_CHOOSE_PRODUCT',
@@ -163,24 +159,6 @@ export class MealManualItemDialogComponent {
         () => !this.isLoadingRecipeAmount() && (this.product() !== null || this.recipe() !== null) && !this.amount().invalid(),
     );
 
-    protected onSourceTypeChange(value: string): void {
-        const nextSourceType = value === RECIPE_SOURCE_VALUE ? MealSourceType.Recipe : MealSourceType.Product;
-        if (nextSourceType === this.sourceType()) {
-            this.sourceTypeValue.set(this.toSourceTypeValue(nextSourceType));
-            return;
-        }
-
-        this.servingWeightSubscription?.unsubscribe();
-        this.isLoadingRecipeAmount.set(false);
-        this.usesRecipeGrams.set(false);
-        this.sourceType.set(nextSourceType);
-        this.sourceTypeValue.set(this.toSourceTypeValue(nextSourceType));
-        this.sourceTouched.set(false);
-        this.product.set(null);
-        this.recipe.set(null);
-        this.amount().value.set(null);
-    }
-
     protected showItemPicker(): void {
         this.showPicker.set(true);
     }
@@ -200,7 +178,6 @@ export class MealManualItemDialogComponent {
         this.usesRecipeGrams.set(false);
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);
-            this.sourceTypeValue.set(PRODUCT_SOURCE_VALUE);
             this.product.set(selection.product);
             this.recipe.set(null);
             this.amount().value.set(this.resolveProductAmount(selection.product));
@@ -208,7 +185,6 @@ export class MealManualItemDialogComponent {
         }
 
         this.sourceType.set(MealSourceType.Recipe);
-        this.sourceTypeValue.set(RECIPE_SOURCE_VALUE);
         this.recipe.set(selection.recipe);
         this.product.set(null);
         this.amount().value.set(1);
@@ -267,9 +243,5 @@ export class MealManualItemDialogComponent {
         }
 
         return 1;
-    }
-
-    private toSourceTypeValue(sourceType: MealSourceType): string {
-        return sourceType === MealSourceType.Recipe ? RECIPE_SOURCE_VALUE : PRODUCT_SOURCE_VALUE;
     }
 }

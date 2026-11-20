@@ -16,16 +16,11 @@ import { MealService } from '../../api/meal.service';
 import { getDateInputValue, getTimeInputValue, isExistingMealLocalDateTime } from '../meal-date-input.utils';
 import { QUICK_MEAL_DEFAULT_ITEM_AMOUNT } from './quick-meal.config';
 
-export type QuickMealItemType = 'product' | 'recipe';
-
 export type QuickMealItem = {
     key: string;
-    type: QuickMealItemType;
-    product?: Product;
-    recipe?: Recipe;
     amount: number;
     flashId?: number;
-};
+} & ({ type: 'product'; product: Product } | { type: 'recipe'; recipe: Recipe });
 
 export type QuickMealDetails = {
     mealType?: MealTypeOption;
@@ -115,7 +110,7 @@ export class QuickMealService {
         this.itemsSignal.update(items => items.filter(item => item.key !== key));
     }
 
-    public updateItem(key: string, item: Omit<QuickMealItem, 'flashId'>): void {
+    public updateItem(key: string, item: QuickMealItem): void {
         this.itemsSignal.update(items => {
             const flashId = ++this.nextFlashId;
             const withoutCurrent = items.filter(current => current.key !== key);
@@ -296,26 +291,11 @@ export class QuickMealService {
     }
 
     private toMealDto(items: QuickMealItem[], date: Date): MealManageDto {
-        const mappedItems = items.reduce<MealItemManageDto[]>((result, item) => {
-            if (item.type === 'product' && item.product !== undefined) {
-                result.push({
-                    productId: item.product.id,
-                    recipeId: null,
-                    amount: item.amount,
-                });
-                return result;
-            }
-
-            if (item.type === 'recipe' && item.recipe !== undefined) {
-                result.push({
-                    recipeId: item.recipe.id,
-                    productId: null,
-                    amount: item.amount,
-                });
-            }
-
-            return result;
-        }, []);
+        const mappedItems = items.map((item): MealItemManageDto =>
+            item.type === 'product'
+                ? { productId: item.product.id, recipeId: null, amount: item.amount }
+                : { productId: null, recipeId: item.recipe.id, amount: item.amount },
+        );
 
         return {
             date,

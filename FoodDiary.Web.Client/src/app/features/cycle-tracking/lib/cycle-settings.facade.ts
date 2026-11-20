@@ -62,7 +62,6 @@ export class CycleSettingsFacade {
         this.startCycleModel,
         path => {
             required(path.trackingStartDate);
-            required(path.mode);
             required(path.goal);
             required(path.reproductiveState);
             required(path.cycleTrackingConsentGranted);
@@ -111,7 +110,6 @@ export class CycleSettingsFacade {
         this.settingsModel,
         path => {
             disabled(path, { when: () => this.state.isSettingsBusy() });
-            required(path.mode);
             required(path.goal);
             required(path.reproductiveState);
             validate(path.averageCycleLength, ({ value }) =>
@@ -197,7 +195,7 @@ export class CycleSettingsFacade {
         }
         return {
             trackingStartDate: toCycleDateKey(formValue.trackingStartDate),
-            mode: formValue.mode ?? CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+            mode: formValue.mode,
             averageCycleLength: formValue.averageCycleLength ?? undefined,
             averagePeriodLength: formValue.averagePeriodLength ?? undefined,
             lutealLength: formValue.lutealLength ?? undefined,
@@ -205,8 +203,8 @@ export class CycleSettingsFacade {
             isOnboardingComplete: true,
             showFertilityEstimates: formValue.showFertilityEstimates,
             discreetNotifications: formValue.discreetNotifications,
-            goal: formValue.goal ?? CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
-            reproductiveState: formValue.reproductiveState ?? CYCLE_REPRODUCTIVE_STATE_CYCLING,
+            goal: formValue.goal,
+            reproductiveState: formValue.reproductiveState,
             hideFromDashboard: formValue.hideFromDashboard,
             cycleTrackingConsentGranted: formValue.cycleTrackingConsentGranted,
             nutritionInsightsConsentGranted: formValue.nutritionInsightsConsentGranted,
@@ -263,23 +261,15 @@ export class CycleSettingsFacade {
         }
     }
 
-    private hasSettingsChanges(cycle: CycleResponse, payload: UpdateCycleSettingsPayload): boolean {
-        // The server derives the legacy mode from an explicit goal or reproductive state.
-        const usesLegacyMode = payload.goal === undefined && payload.reproductiveState === undefined;
+    private hasSettingsChanges(cycle: CycleResponse, payload: Required<UpdateCycleSettingsPayload>): boolean {
+        // The server derives the legacy mode from the explicit goal and reproductive state.
         const persisted: Readonly<Record<string, unknown>> = cycle;
         const requested: Array<[string, unknown]> = Object.entries(payload);
-        return requested.some(
-            ([field, value]) => (field !== 'mode' || usesLegacyMode) && value !== undefined && value !== persisted[field],
-        );
+        return requested.some(([field, value]) => field !== 'mode' && value !== persisted[field]);
     }
 
-    private buildSettingsPayload(formValue: CycleSettingsFormModel): UpdateCycleSettingsPayload | null {
-        if (
-            formValue.mode === null ||
-            formValue.averageCycleLength === null ||
-            formValue.averagePeriodLength === null ||
-            formValue.lutealLength === null
-        ) {
+    private buildSettingsPayload(formValue: CycleSettingsFormModel): Required<UpdateCycleSettingsPayload> | null {
+        if (formValue.averageCycleLength === null || formValue.averagePeriodLength === null || formValue.lutealLength === null) {
             return null;
         }
 
@@ -291,8 +281,8 @@ export class CycleSettingsFacade {
             isRegular: formValue.isRegular,
             showFertilityEstimates: formValue.showFertilityEstimates,
             discreetNotifications: formValue.discreetNotifications,
-            goal: formValue.goal ?? undefined,
-            reproductiveState: formValue.reproductiveState ?? undefined,
+            goal: formValue.goal,
+            reproductiveState: formValue.reproductiveState,
             hideFromDashboard: formValue.hideFromDashboard,
         };
     }

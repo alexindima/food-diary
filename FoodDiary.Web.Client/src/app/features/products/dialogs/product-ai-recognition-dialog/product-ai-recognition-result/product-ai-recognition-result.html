@@ -12,9 +12,6 @@
             {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
         </div>
     }
-    @if (showNotes() && notes()) {
-        <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">{{ notes() }}</div>
-    }
 
     <div class="product-ai-dialog__form-grid fd-grid fd-gap-md">
         <fd-ui-input

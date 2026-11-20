@@ -39,9 +39,7 @@ describe('ProductListBaseComponent', () => {
         component['onAddToMeal'](createProduct());
         component['loadFavorites']();
         component['onProductFavoriteToggle'](createProduct());
-        component['toggleFavorites']();
         component['addFavoriteProductToMeal'](createFavoriteProduct());
-        component['removeFavorite'](createFavoriteProduct());
 
         expect(facade.retryLoad).toHaveBeenCalled();
         expect(facade.onAddProductClick).toHaveBeenCalled();
@@ -54,9 +52,7 @@ describe('ProductListBaseComponent', () => {
         expect(facade.onAddToMeal).toHaveBeenCalledWith(createProduct());
         expect(facade.loadFavorites).toHaveBeenCalled();
         expect(facade.onProductFavoriteToggle).toHaveBeenCalledWith(createProduct());
-        expect(facade.toggleFavorites).toHaveBeenCalled();
         expect(facade.addFavoriteProductToMeal).toHaveBeenCalledWith(createFavoriteProduct());
-        expect(facade.removeFavorite).toHaveBeenCalledWith(createFavoriteProduct());
     });
 
     it('scrolls to top before loading selected page', () => {
@@ -67,20 +63,6 @@ describe('ProductListBaseComponent', () => {
 
         expect(scrollSpy).toHaveBeenCalled();
         expect(facade.onPageChange).toHaveBeenCalledWith(PAGE_INDEX);
-    });
-
-    it('opens favorite product through regular product click flow', () => {
-        const { component, facade } = setupComponent();
-        const product = createProduct({ id: entityId<'product'>('favorite-product') });
-        const clickSpy = vi.spyOn(component as unknown as { onProductClick: (value: Product) => void }, 'onProductClick');
-        facade.openFavoriteProduct.mockImplementation((_favorite: FavoriteProduct, openProduct: (value: Product) => void) => {
-            openProduct(product);
-        });
-
-        component['openFavoriteProduct'](createFavoriteProduct());
-
-        expect(facade.openFavoriteProduct).toHaveBeenCalledWith(createFavoriteProduct(), expect.any(Function));
-        expect(clickSpy).toHaveBeenCalledWith(product);
     });
 
     it('exposes current page index and image resolver from facade', () => {
@@ -126,12 +108,9 @@ type ProductListFacadeMock = Omit<ProductListFacade, 'fdDialogService' | 'naviga
     onPageChange: ReturnType<typeof vi.fn>;
     onProductFavoriteToggle: ReturnType<typeof vi.fn>;
     openBarcodeScanner: ReturnType<typeof vi.fn>;
-    openFavoriteProduct: ReturnType<typeof vi.fn>;
     openFilters: ReturnType<typeof vi.fn>;
-    removeFavorite: ReturnType<typeof vi.fn>;
     resolveImage: ReturnType<typeof vi.fn>;
     retryLoad: ReturnType<typeof vi.fn>;
-    toggleFavorites: ReturnType<typeof vi.fn>;
     toggleMobileSearch: ReturnType<typeof vi.fn>;
     toggleOnlyMine: ReturnType<typeof vi.fn>;
 };
@@ -148,9 +127,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         productData: new PagedData<Product>(),
         favorites: signal<FavoriteProduct[]>([]),
         favoriteTotalCount: signal(0),
-        isFavoritesOpen: signal(false),
         favoriteLoadingIds: signal<ReadonlySet<string>>(new Set<string>()),
-        isFavoritesLoadingMore: signal(false),
         errorKey: signal<string | null>(null),
         searchValue: signal<string | null>(null),
         onlyMineFilter: signal(false),
@@ -184,10 +161,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         onAddToMeal: vi.fn(),
         loadFavorites: vi.fn(),
         onProductFavoriteToggle: vi.fn(),
-        toggleFavorites: vi.fn(),
-        openFavoriteProduct: vi.fn(),
         addFavoriteProductToMeal: vi.fn(),
-        removeFavorite: vi.fn(),
         reloadCurrentPage: vi.fn(),
     } as unknown as ProductListFacadeMock;
 }

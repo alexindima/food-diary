@@ -27,7 +27,8 @@ export function connectStatisticsDevelopmentScreen(facade: StatisticsFacade): vo
             const selected = period(facade.currentRange());
             const applied = facade.appliedRange();
             const current = applied !== null && JSON.stringify(period(applied)) === JSON.stringify(selected);
-            const available = current && !facade.isLoading() && !facade.hasLoadError();
+            const statistics = facade.chartStatisticsData();
+            const available = statistics !== null && current && !facade.isLoading() && !facade.hasLoadError();
             return {
                 filterFields: ['range', 'dateFrom', 'dateTo', 'nutritionTab'],
                 range: facade.selectedRange(),
@@ -47,8 +48,8 @@ export function connectStatisticsDevelopmentScreen(facade: StatisticsFacade): vo
                 aggregates: available
                     ? {
                           ...facade.dashboardCardsView().overview,
-                          totalCalories: facade.chartStatisticsData()?.calories.reduce((sum, value) => sum + value, 0) ?? 0,
-                          nutrients: facade.chartStatisticsData()?.aggregatedNutrients ?? null,
+                          totalCalories: statistics.calories.reduce<number>((sum, value) => sum + (value ?? 0), 0),
+                          nutrients: statistics.aggregatedNutrients,
                           mealStructure: facade.dashboardCardsView().mealStructure,
                       }
                     : null,

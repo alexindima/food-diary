@@ -271,6 +271,57 @@ describe('Routed meal diary search controls', () => {
     });
 });
 
+describe('Routed meal diary persisted media filters', () => {
+    it('opens the saved photo and AI choices and removes only the photo restriction', async () => {
+        const { api } = configureDiary();
+        api.queryOverview.mockReturnValueOnce(of(overview([MEAL], LAST_PAGE, LAST_PAGE)));
+        const router = TestBed.inject(Router);
+        const harness = await RouterTestingHarness.create(`/meals?page=${LAST_PAGE}&hasImage=true&hasAiSession=false&campaign=summer`);
+        expect(api.queryOverview.mock.lastCall?.[2]).toMatchObject({ hasImage: true, hasAiSession: false });
+        requiredButton(routeHost(harness), 'button[aria-label="MEAL_LIST.DATE_FILTER_BUTTON"]').click();
+        redraw(harness);
+        const dialog = document.querySelector('fd-meal-list-filters-dialog');
+        if (!(dialog instanceof HTMLElement)) {
+            throw new Error('Expected the real meal diary filter dialog');
+        }
+
+        const yesPhotos = mediaFilterChoice(dialog, 'MEAL_LIST.FILTER_HAS_IMAGE', 'MEAL_LIST.FILTER_YES');
+        const anyPhotos = mediaFilterChoice(dialog, 'MEAL_LIST.FILTER_HAS_IMAGE', 'MEAL_LIST.FILTER_ANY');
+        const noAi = mediaFilterChoice(dialog, 'MEAL_LIST.FILTER_HAS_AI', 'MEAL_LIST.FILTER_NO');
+        expect(yesPhotos.getAttribute('aria-checked')).toBe('true');
+        expect(noAi.getAttribute('aria-checked')).toBe('true');
+        anyPhotos.click();
+        redraw(harness);
+        expect(anyPhotos.getAttribute('aria-checked')).toBe('true');
+        expect(noAi.getAttribute('aria-checked')).toBe('true');
+        expect(api.queryOverview).toHaveBeenCalledOnce();
+
+        requiredButton(dialog, 'button[type="submit"]').click();
+        await vi.waitFor(() => {
+            redraw(harness);
+            expect(router.parseUrl(router.url).queryParams).toEqual({ hasAiSession: 'false', campaign: 'summer' });
+            expect(dialog.isConnected).toBe(false);
+        });
+        expect(api.queryOverview).toHaveBeenCalledTimes(2);
+        expect(api.queryOverview).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ hasAiSession: false }),
+            expect.objectContaining({ include: false }),
+        );
+        expect(api.queryOverview.mock.lastCall?.[2].hasImage).toBeUndefined();
+    });
+});
+
+function mediaFilterChoice(dialog: HTMLElement, group: string, label: string): HTMLButtonElement {
+    const options = dialog.querySelectorAll<HTMLButtonElement>(`[role="radiogroup"][aria-label="${group}"] button[role="radio"]`);
+    const option = Array.from(options).find(button => button.textContent.trim() === label);
+    if (option === undefined) {
+        throw new Error(`Expected meal filter choice ${label}`);
+    }
+    return option;
+}
+
 describe('Routed meal diary development controls', () => {
     it('reports the current diary, applies local-day filters and opens only a listed meal', async () => {
         const { api, developmentScreens, legacyScreens } = configureDiary();

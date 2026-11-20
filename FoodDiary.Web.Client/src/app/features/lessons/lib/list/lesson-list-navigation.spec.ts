@@ -19,6 +19,7 @@ const changes = new Subject<LessonListQuery>();
 const getAll = vi.fn();
 const TOTAL_PAGES = 3;
 const commitAsync = vi.fn<() => Promise<boolean>>().mockResolvedValue(true);
+const normalizePageAsync = vi.fn<() => Promise<boolean>>().mockResolvedValue(false);
 const writeAsync = vi.fn(async (query: LessonListQuery, _options?: { replaceUrl?: boolean }): Promise<boolean> => {
     if (lessonListQueryKey(query) === lessonListQueryKey(current())) {
         return false;
@@ -53,6 +54,8 @@ beforeEach(() => {
     current.set({ ...initial });
     locale.set('ru');
     writeAsync.mockClear();
+    commitAsync.mockReset().mockResolvedValue(true);
+    normalizePageAsync.mockReset().mockResolvedValue(false);
     getAll.mockReset().mockImplementation((query: LessonQuery) => of(response(query.page)));
     TestBed.configureTestingModule({
         providers: [
@@ -61,7 +64,7 @@ beforeEach(() => {
             { provide: TranslateService, useValue: { getCurrentLang: (): string => locale(), getFallbackLang: (): string => 'en' } },
             {
                 provide: LESSON_LIST_QUERY_STATE,
-                useValue: { initial, current, changes, writeAsync, normalizePageAsync: vi.fn().mockResolvedValue(false) },
+                useValue: { initial, current, changes, writeAsync, normalizePageAsync },
             },
         ],
     });
@@ -82,6 +85,27 @@ function cachedPage(): LessonPage {
         ],
     };
 }
+
+it('keeps the catalogue usable when restoring or updating the browser URL fails', async () => {
+    normalizePageAsync.mockRejectedValueOnce(new Error('Cannot replace the browser history entry'));
+    getAll.mockReturnValueOnce(of(cachedPage()));
+    const facade = TestBed.inject(LessonFacade);
+    await settleAsync();
+    expect(normalizePageAsync).toHaveBeenCalledOnce();
+    expect(facade.lessons()).toEqual(cachedPage().items);
+
+    commitAsync.mockRejectedValueOnce(new Error('Cannot write the new browser history entry'));
+    getAll.mockReturnValueOnce(of(cachedPage()));
+    facade.sortOrder.set('recommended');
+    await settleAsync();
+    expect(getAll).toHaveBeenLastCalledWith(expect.objectContaining({ search: initial.search, sort: 'recommended' }));
+    expect(facade.lessons()).toEqual(cachedPage().items);
+
+    facade.sortOrder.set(initial.sort);
+    await settleAsync();
+    expect(getAll).toHaveBeenLastCalledWith(expect.objectContaining({ search: initial.search, sort: initial.sort }));
+    expect(facade.hasLoadError()).toBe(false);
+});
 
 describe('LessonFacade result identity', () => {
     it('never reuses a previous category while the new category loads or fails', async () => {

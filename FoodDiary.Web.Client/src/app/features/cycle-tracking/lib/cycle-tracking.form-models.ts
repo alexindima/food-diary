@@ -13,15 +13,15 @@ import {
 
 export type StartCycleFormModel = {
     trackingStartDate: string | null;
-    mode: CycleTrackingMode | null;
+    mode: CycleTrackingMode;
     averageCycleLength: number | null;
     averagePeriodLength: number | null;
     lutealLength: number | null;
     isRegular: boolean;
     showFertilityEstimates: boolean;
     discreetNotifications: boolean;
-    goal: CycleTrackingGoal | null;
-    reproductiveState: CycleReproductiveState | null;
+    goal: CycleTrackingGoal;
+    reproductiveState: CycleReproductiveState;
     hideFromDashboard: boolean;
     cycleTrackingConsentGranted: boolean;
     nutritionInsightsConsentGranted: boolean;

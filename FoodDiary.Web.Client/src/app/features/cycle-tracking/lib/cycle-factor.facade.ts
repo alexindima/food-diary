@@ -1,11 +1,15 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, required, validate } from '@angular/forms/signals';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
-import { CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION, type UpsertCycleFactorPayload } from '../../../shared/models/cycle.data';
+import {
+    CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    type CycleResponse,
+    type UpsertCycleFactorPayload,
+} from '../../../shared/models/cycle.data';
 import { calendarDate } from '../../../shared/models/semantics/date-value';
 import type { CycleFactorId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
@@ -21,6 +25,7 @@ export class CycleFactorFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly state = inject(CycleTrackingStateFacade);
+    private readonly profileDeleted = new Subject<void>();
     public readonly factorModel = signal<CycleFactorFormModel>({
         type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
         startDate: formatDateInputValue(new Date()),
@@ -82,12 +87,21 @@ export class CycleFactorFacade {
         this.state.isSavingFactor.set(true);
         try {
             const cycle = await firstValueFrom(
-                this.cyclesService.upsertFactor(currentCycle.id, payload).pipe(takeUntilDestroyed(this.destroyRef)),
+                this.cyclesService
+                    .upsertFactor(currentCycle.id, payload)
+                    .pipe(takeUntil(this.profileDeleted), takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: null },
             );
+            if (!this.isCurrentProfile(cycle)) {
+                return;
+            }
             this.state.cycle.set(cycle);
             this.resetFactorForm();
             this.state.loadNutritionSummary(cycle);
         } catch (error: unknown) {
+            if (!this.isCurrentProfile(currentCycle)) {
+                return;
+            }
             this.state.factorError.set(
                 getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Cycle.FactorIdentityConflict'
                     ? 'CYCLE_TRACKING.FACTOR_IDENTITY_CONFLICT'
@@ -141,6 +155,16 @@ export class CycleFactorFacade {
         this.resetFactorForm();
     }
 
+    public clearAfterProfileDeletion(): void {
+        this.profileDeleted.next();
+        this.state.factorError.set(null);
+        this.resetFactorForm();
+    }
+
+    private isCurrentProfile(profile: CycleResponse | null): profile is CycleResponse {
+        return profile !== null && profile.id === this.state.cycle()?.id;
+    }
+
     private resetFactorForm(): void {
         this.state.editingFactorId.set(null);
         this.factorForm().reset({
@@ -181,15 +205,21 @@ export class CycleFactorFacade {
                         notes: factor.notes ?? undefined,
                         clearNotes: false,
                     })
-                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                    .pipe(takeUntil(this.profileDeleted), takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: null },
             );
+            if (!this.isCurrentProfile(cycle)) {
+                return;
+            }
             this.state.cycle.set(cycle);
             if (this.state.editingFactorId() === factorId) {
                 this.resetFactorForm();
             }
             this.state.loadNutritionSummary(cycle);
         } catch {
-            this.state.factorError.set('CYCLE_TRACKING.END_FACTOR_FAILED');
+            if (this.isCurrentProfile(currentCycle)) {
+                this.state.factorError.set('CYCLE_TRACKING.END_FACTOR_FAILED');
+            }
         } finally {
             this.state.isSavingFactor.set(false);
         }

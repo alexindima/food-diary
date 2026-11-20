@@ -1,10 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-import {
-    AUTH_EMAIL_RESEND_COOLDOWN_SECONDS_DEFAULT,
-    AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS_DEFAULT,
-    AUTH_PASSWORD_RESET_COOLDOWN_SECONDS_DEFAULT,
-} from '../shared/auth/auth.constants';
+import { AUTH_EMAIL_RESEND_COOLDOWN_SECONDS_DEFAULT, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS_DEFAULT } from '../shared/auth/auth.constants';
 
 export type LoadingTimingConfig = {
     showDelayMs: number;
@@ -125,9 +121,4 @@ export const AUTH_PASSWORD_RESET_COOLDOWN_SECONDS = new InjectionToken<number>('
 export const AUTH_EMAIL_RESEND_COOLDOWN_SECONDS = new InjectionToken<number>('AUTH_EMAIL_RESEND_COOLDOWN_SECONDS', {
     providedIn: 'root',
     factory: (): number => AUTH_EMAIL_RESEND_COOLDOWN_SECONDS_DEFAULT,
-});
-
-export const AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS = new InjectionToken<readonly number[]>('AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS', {
-    providedIn: 'root',
-    factory: (): readonly number[] => AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS_DEFAULT,
 });

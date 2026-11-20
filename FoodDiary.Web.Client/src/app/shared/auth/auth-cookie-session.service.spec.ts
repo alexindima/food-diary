@@ -1,7 +1,7 @@
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, Subject, take, tap } from 'rxjs';
+import { firstValueFrom, Observable, of, Subject, take, tap } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BrowserWindowService } from '../platform/browser-window.service';
@@ -113,5 +113,25 @@ describe('AuthCookieSessionService lock completion', () => {
             .pipe(take(1))
             .subscribe();
         expect(disposed).toHaveBeenCalledOnce();
+    });
+
+    it('releases a queued HTTP writer after the browser declines the earlier cookie lock', async () => {
+        const denied = new DOMException('The document is not fully active', 'InvalidStateError');
+        const lock = vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockRejectedValueOnce(denied);
+        const http = TestBed.inject(HttpClient);
+        const requests = TestBed.inject(HttpTestingController);
+        const restorePath = '/api/v1/auth/session';
+        const loginPath = '/api/v1/auth/login';
+        const rejected = expect(firstValueFrom(service.run(() => http.post(restorePath, {})))).rejects.toBe(denied);
+        const next = firstValueFrom(service.run(() => http.post(loginPath, {})));
+        requests.expectNone(restorePath);
+        requests.expectNone(loginPath);
+
+        await rejected;
+
+        requests.expectNone(restorePath);
+        requests.expectOne({ method: 'POST', url: loginPath }).flush({ sessionId: 'fresh-session' });
+        await expect(next).resolves.toEqual({ sessionId: 'fresh-session' });
+        expect(lock).toHaveBeenCalledTimes(2);
     });
 });

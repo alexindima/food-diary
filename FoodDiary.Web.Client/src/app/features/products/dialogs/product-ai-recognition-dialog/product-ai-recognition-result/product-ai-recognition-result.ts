@@ -3,9 +3,7 @@ import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { EMPTY, type Observable } from 'rxjs';
 
-import type { FoodNutritionResponse } from '../../../../../shared/models/ai.data';
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import type { ProductAiRecognitionFormModel } from '../product-ai-recognition-dialog.types';
 
@@ -20,12 +18,8 @@ export class ProductAiRecognitionResultComponent {
     private readonly translateService = inject(TranslateService);
 
     public readonly form = input.required<FieldTree<ProductAiRecognitionFormModel>>();
-    public readonly nutrition = input<FoodNutritionResponse | null>(null);
     public readonly itemNames = input.required<readonly string[]>();
-    public readonly showNotes = input(true);
-    public readonly labelNotes = input<string | null>(null);
     public readonly fromLabel = input(false);
-    protected readonly notes = computed(() => this.labelNotes() ?? this.nutrition()?.notes);
     public readonly isValid = input(true);
     public readonly hasExistingData = input(false);
     public readonly useAsCover = model(false);
@@ -35,13 +29,12 @@ export class ProductAiRecognitionResultComponent {
 
     public constructor() {
         effect(onCleanup => {
-            const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
             const refresh = (): void => {
                 this.buildUnitOptions();
             };
 
             refresh();
-            const subscription = languageChanges.subscribe(() => {
+            const subscription = this.translateService.onLangChange.subscribe(() => {
                 refresh();
             });
             onCleanup(() => {

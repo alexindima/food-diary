@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, debounceTime, map, of, Subject, switchMap } from 'rxjs';
+import { catchError, map, of, Subject, switchMap, timer } from 'rxjs';
 
 import { NAME_SEARCH_DEBOUNCE_MS as NAME_SEARCH_DEBOUNCE_MS_TOKEN } from '../../../../config/runtime-ui.tokens';
 import type { ProductSearchSuggestion } from '../../../../shared/models/product.data';
@@ -23,7 +23,7 @@ export class ProductNameSearchFacade {
     }
 
     public search(query: string): void {
-        this.nameQuery$.next(query);
+        this.nameQuery$.next(query.trim());
     }
 
     public setSelectedSuggestion(suggestion: ProductSearchSuggestion): void {
@@ -33,20 +33,18 @@ export class ProductNameSearchFacade {
     private bindNameSearch(): void {
         this.nameQuery$
             .pipe(
-                debounceTime(this.nameSearchDebounceMs),
                 switchMap(query => {
-                    const trimmed = query.trim();
-                    if (trimmed.length < PRODUCT_NAME_SEARCH_MIN_LENGTH) {
-                        this.isLoading.set(false);
-                        this.options.set([]);
+                    this.options.set([]);
+                    if (query.length < PRODUCT_NAME_SEARCH_MIN_LENGTH) {
                         return of<ProductNameAutocompleteOption[]>([]);
                     }
 
                     this.isLoading.set(true);
-                    return this.productService
-                        .searchSuggestions(trimmed, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT)
-                        .pipe(map(suggestions => suggestions.map(suggestion => this.toProductNameOption(suggestion))))
-                        .pipe(catchError(() => of<ProductNameAutocompleteOption[]>([])));
+                    return timer(this.nameSearchDebounceMs).pipe(
+                        switchMap(() => this.productService.searchSuggestions(query, PRODUCT_NAME_SEARCH_SUGGESTION_LIMIT)),
+                        map(suggestions => suggestions.map(suggestion => this.toProductNameOption(suggestion))),
+                        catchError(() => of<ProductNameAutocompleteOption[]>([])),
+                    );
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )

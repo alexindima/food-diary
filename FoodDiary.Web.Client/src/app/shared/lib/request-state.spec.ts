@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { RequestStateController } from './request-state';
 
@@ -33,6 +33,18 @@ describe('RequestStateController', () => {
         request.fail(refreshId, 'LOAD_FAILED');
 
         expect(request.state()).toEqual({ status: 'error', data: 'cached', error: 'LOAD_FAILED' });
+    });
+
+    it('does not apply a confirmed item mutation to a page cleared by a failed refresh', () => {
+        const request = new RequestStateController<string[]>();
+        request.succeed(request.begin(), ['existing']);
+        request.fail(request.begin(), 'LOAD_FAILED', { preserveData: false });
+
+        const update = vi.fn((items: string[]) => [...items, 'confirmed']);
+        request.updateData(update);
+
+        expect(update).not.toHaveBeenCalled();
+        expect(request.state()).toEqual({ status: 'error', data: null, error: 'LOAD_FAILED' });
     });
 
     it('supports silent refresh without exposing a loading state', () => {

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { type CanActivateFn, type ParamMap, provideRouter, Router, type Routes, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -16,7 +17,14 @@ import { APP_SEARCH_DEBOUNCE_MS } from '../../config/runtime-ui.tokens';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
 import type { PageOf } from '../../shared/models/page-of.data';
-import { type FavoriteProduct, MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../shared/models/product.data';
+import {
+    type FavoriteProduct,
+    MeasurementUnit,
+    type Product,
+    type ProductOverview,
+    ProductType,
+    ProductVisibility,
+} from '../../shared/models/product.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../shared/platform/viewport.service';
@@ -136,6 +144,7 @@ function configureCatalog(realDialogs = false, queryGuard?: CanActivateFn): Cata
                 provide: FavoriteProductService,
                 useValue: {
                     getPage: favorites.readFavorites,
+                    isFavorite: vi.fn<FavoriteProductService['isFavorite']>().mockReturnValue(of(false)),
                     remove: favorites.removeFavorite,
                     getLookupPage: favorites.lookupFavorites,
                     add: favorites.addFavorite,
@@ -238,6 +247,29 @@ async function waitForCatalogAsync(harness: RouterTestingHarness, text: string):
         expect(catalogRoot(harness).textContent).toContain(text);
     });
 }
+
+it('reopens a completed tour from the catalogue help action and highlights the toolbar again', async () => {
+    configureCatalog();
+    const harness = await RouterTestingHarness.create('/products');
+    await waitForCatalogAsync(harness, CATALOG_ITEM.name);
+    const tour = TestBed.inject(FdTourService);
+    onTestFinished(() => {
+        tour.close();
+    });
+    const help = button(catalogRoot(harness), 'button[aria-label="PRODUCT_LIST.TOUR.START_TOUR"]');
+
+    help.click();
+    harness.detectChanges();
+    expect(tour.activeTour()?.id).toBe('product-list');
+    expect(tour.target()?.getAttribute('data-tour-id')).toBe('product-list-actions');
+    tour.complete();
+    expect(tour.activeTour()).toBeNull();
+
+    help.click();
+    harness.detectChanges();
+    expect(tour.activeStep()?.id).toBe('actions');
+    expect(tour.target()?.getAttribute('data-tour-id')).toBe('product-list-actions');
+});
 
 describe('Routed product catalog state', () => {
     it('opens with URL filters and refreshes the unfiltered first page when the user clears them', async () => {
@@ -679,6 +711,33 @@ describe('Rendered catalog favorites picker', () => {
     });
 });
 
+describe('Catalog favorites picker ownership', () => {
+    it('closes the picker and cancels a pending add when the user leaves the catalog', async () => {
+        const { products, addToMeal } = configureFavoritesPicker();
+        const pending = new Subject<Product | null>();
+        products.getById.mockReturnValueOnce(pending);
+        const harness = await RouterTestingHarness.create('/products');
+        const picker = openFavoritesPicker(harness);
+
+        try {
+            dialogButton(picker, 'PRODUCT_FAVORITES.ADD').click();
+            expect(pending.observed).toBe(true);
+
+            await harness.navigateByUrl('/other');
+            expect(catalogRoot(harness).textContent).toContain('Other page');
+            await vi.waitFor(() => {
+                expect(picker.isConnected).toBe(false);
+            });
+            expect(pending.observed).toBe(false);
+            pending.next(CATALOG_ITEM);
+            pending.complete();
+            expect(addToMeal).not.toHaveBeenCalled();
+        } finally {
+            TestBed.inject(FdUiDialogService).closeAll();
+        }
+    });
+});
+
 describe('Catalog favorite load recovery', () => {
     it('keeps the current header count when the detail refresh fails and restores it on the next refresh', async () => {
         const { openDialog, products, readFavorites, showError } = configureCatalog();
@@ -911,6 +970,70 @@ describe('Catalog request lifecycle', () => {
         await waitForCatalogAsync(harness, COFFEE_ITEM.name);
         expect(host.querySelector('fd-error-state')).toBeNull();
         expect(products.query.mock.calls.map(call => call[2]?.search)).toEqual(['coffee', 'coffee']);
+    });
+});
+
+describe('Catalog responses before a typed search commits', () => {
+    it.each(['results', 'error'] as const)('keeps obsolete %s hidden while the latest search loads', async previousOutcome => {
+        const { products } = configureCatalog();
+        const oldSearch = new Subject<PageOf<Product>>();
+        const oldResult = makeProduct('aged-olives', 'Aged green olives');
+        products.query.mockReturnValueOnce(oldSearch).mockReturnValueOnce(of(page([COFFEE_ITEM])));
+        const harness = await RouterTestingHarness.create('/products');
+        const router = TestBed.inject(Router);
+        await harness.navigateByUrl('/products?search=olive');
+        expect(oldSearch.observed).toBe(true);
+
+        const input = searchInput(harness);
+        input.value = 'coffee';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        expect(router.parseUrl(router.url).queryParams).toEqual({ search: 'olive' });
+        expect(oldSearch.observed).toBe(true);
+
+        if (previousOutcome === 'results') {
+            oldSearch.next(page([oldResult]));
+            oldSearch.complete();
+        } else {
+            oldSearch.error(new Error('Previous catalog search failed'));
+        }
+        harness.detectChanges();
+
+        const host = catalogRoot(harness);
+        expect(host.textContent).not.toContain(oldResult.name);
+        expect(host.querySelector('fd-error-state')).toBeNull();
+        expect(searchInput(harness).value).toBe('coffee');
+
+        await waitForCatalogAsync(harness, COFFEE_ITEM.name);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ search: 'coffee' });
+        expect(products.query.mock.calls.map(call => call[2]?.search)).toEqual(['olive', 'coffee']);
+        expect(host.querySelector('fd-error-state')).toBeNull();
+        expect(host.textContent).not.toContain(oldResult.name);
+    });
+
+    it('keeps an obsolete overview failure hidden after the user starts searching', async () => {
+        const { products } = configureCatalog();
+        const overview = new Subject<ProductOverview>();
+        products.queryOverview.mockReturnValueOnce(overview);
+        products.query.mockReturnValueOnce(of(page([COFFEE_ITEM])));
+        const harness = await RouterTestingHarness.create('/products');
+        const router = TestBed.inject(Router);
+
+        const input = searchInput(harness);
+        input.value = 'coffee';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        expect(router.url).toBe('/products');
+        expect(overview.observed).toBe(true);
+        overview.error(new Error('Previous catalog overview failed'));
+        harness.detectChanges();
+
+        expect(catalogRoot(harness).querySelector('fd-error-state')).toBeNull();
+        expect(searchInput(harness).value).toBe('coffee');
+        await waitForCatalogAsync(harness, COFFEE_ITEM.name);
+        expect(products.queryOverview).toHaveBeenCalledOnce();
+        expect(products.query.mock.calls.map(call => call[2]?.search)).toEqual(['coffee']);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ search: 'coffee' });
     });
 });
 
@@ -1179,6 +1302,156 @@ describe('Product dialog actions', () => {
         expect(navigateToEdit).not.toHaveBeenCalled();
         expect(listenerSurvived).toBe(false);
         expect(catalogRoot(harness).textContent).toContain('Other page');
+    });
+
+    it('abandons an open request when the catalog is destroyed before the detail component loads', async () => {
+        const { openDialog, navigateToEdit } = configureCatalog();
+        const harness = await RouterTestingHarness.create('/products');
+        button(catalogRoot(harness), '.recent-products__open').click();
+        harness.fixture.destroy();
+        await import('./components/detail/product-detail/product-detail');
+        await waitForAsyncTasksAsync();
+
+        expect(openDialog).not.toHaveBeenCalled();
+        expect(navigateToEdit).not.toHaveBeenCalled();
+    });
+});
+
+describe('Catalog product gallery details', () => {
+    const cover = 'https://images.example.test/product-cover.png';
+    const side = 'https://images.example.test/product-side.png';
+
+    it.each([
+        { description: 'a legacy cover without a gallery', images: undefined, thumbnails: [], finalCover: cover },
+        {
+            description: 'a gallery that repeats its main cover',
+            images: [
+                { imageAssetId: null, imageUrl: cover },
+                { imageAssetId: null, imageUrl: side },
+            ],
+            thumbnails: [cover, side],
+            finalCover: side,
+        },
+    ])('opens readonly details with $description', async ({ images, thumbnails, finalCover }) => {
+        const { products, navigateToEdit } = configureRealCatalogDialogs();
+        const product: Product = {
+            ...RECENT_ITEM,
+            productType: undefined,
+            imageUrl: cover,
+            images,
+            isOwnedByCurrentUser: false,
+            visibility: ProductVisibility.Public,
+        };
+        products.queryOverview.mockReturnValueOnce(
+            of({ allProducts: page([]), recentItems: [product], favoriteItems: [], favoriteTotalCount: 0 }),
+        );
+        const harness = await RouterTestingHarness.create('/products');
+        button(catalogRoot(harness), '.recent-products__open').click();
+        const detail = await vi.waitFor(() => {
+            const opened = document.querySelector('fd-product-detail');
+            if (!(opened instanceof HTMLElement)) {
+                throw new Error('Expected the opened product details');
+            }
+            return opened;
+        });
+        const gallery = detail.querySelector('fd-public-product-gallery');
+        if (gallery === null) {
+            throw new Error('Expected a photo gallery for the selected product');
+        }
+
+        expect(detail.querySelector('h2')?.textContent).toContain(product.name);
+        expect(detail.textContent).toContain('PRODUCT_DETAIL.WARNING_NOT_OWNER');
+        expect(detail.textContent).not.toContain('PRODUCT_DETAIL.EDIT_BUTTON');
+        expect(detail.textContent).not.toContain('PRODUCT_DETAIL.DELETE_BUTTON');
+        expect(gallery.querySelector('.cover img')?.getAttribute('src')).toBe(cover);
+        const choices = [...gallery.querySelectorAll<HTMLButtonElement>('.thumbnails button')];
+        expect(choices.map(choice => choice.querySelector('img')?.getAttribute('src'))).toEqual(thumbnails);
+        choices.at(-1)?.click();
+        TestBed.tick();
+        expect(gallery.querySelector('.cover img')?.getAttribute('src')).toBe(finalCover);
+
+        button(detail, 'button[aria-label="COMMON.CLOSE"]').click();
+        await vi.waitFor(() => {
+            expect(document.querySelector('fd-product-detail')).toBeNull();
+        });
+        expect(TestBed.inject(Router).url).toBe('/products');
+        expect(navigateToEdit).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product picker catalog load recovery', () => {
+    it('offers retry after an initial failure and shows the empty state only after a successful response', () => {
+        const { products, closePicker } = configureCatalog();
+        products.queryOverview
+            .mockReturnValueOnce(throwError(() => new Error('Catalog unavailable')))
+            .mockReturnValueOnce(of({ allProducts: page([]), recentItems: [], favoriteItems: [], favoriteTotalCount: 0 }));
+        const fixture = TestBed.createComponent(ProductListDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
+        expect(host.textContent).toContain('ERRORS.LOAD_FAILED_TITLE');
+        expect(host.querySelector('.product-select__no-results')).toBeNull();
+
+        button(host, 'fd-error-state button').click();
+        fixture.detectChanges();
+        expect(products.queryOverview.mock.calls.map(([query]) => query.page)).toEqual([1, 1]);
+        expect(products.query).not.toHaveBeenCalled();
+        expect(host.querySelector('fd-error-state')).toBeNull();
+        expect(host.querySelector('.product-select__no-results')?.textContent).toContain('PRODUCT_LIST.NO_PRODUCTS_FOUND');
+        expect(closePicker).not.toHaveBeenCalled();
+    });
+
+    it('retries page one with the chosen filters after a failed change from a later picker page', () => {
+        const { products, closePicker } = configureRealCatalogDialogs();
+        const fruit = { ...makeProduct('apples', 'Apples'), productType: ProductType.Fruit };
+        products.queryOverview.mockReturnValueOnce(
+            of({
+                allProducts: page([CATALOG_ITEM], 1, LAST_AVAILABLE_PAGE),
+                recentItems: [],
+                favoriteItems: [],
+                favoriteTotalCount: 0,
+            }),
+        );
+        products.query
+            .mockReturnValueOnce(of(page([COFFEE_ITEM], LAST_AVAILABLE_PAGE, LAST_AVAILABLE_PAGE)))
+            .mockReturnValueOnce(throwError(() => new Error('Filtered catalog unavailable')))
+            .mockReturnValueOnce(of(page([fruit])));
+        const fixture = TestBed.createComponent(ProductListDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const pagination = host.querySelector('fd-ui-pagination');
+        if (!(pagination instanceof HTMLElement)) {
+            throw new Error('Expected pagination in the product picker');
+        }
+        dialogButton(pagination, String(LAST_AVAILABLE_PAGE)).click();
+        fixture.detectChanges();
+        expect(host.textContent).toContain(COFFEE_ITEM.name);
+
+        button(host, '.product-select__filter-button button').click();
+        TestBed.tick();
+        const filters = document.querySelector('fd-product-list-filters-dialog');
+        if (!(filters instanceof HTMLElement)) {
+            throw new Error('Expected the product picker filter dialog');
+        }
+        button(filters, 'button[aria-label="PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.FRUIT"]').click();
+        dialogButton(filters, 'PRODUCT_LIST.FILTER_APPLY_BUTTON').click();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-error-state [role="alert"]')).not.toBeNull();
+        expect(host.textContent).toContain('ERRORS.LOAD_FAILED_TITLE');
+        expect(host.querySelector('.product-select__item button')).toBeNull();
+        expect(host.querySelector('.product-select__filter-count')?.textContent.trim()).toBe('1');
+
+        button(host, 'fd-error-state button').click();
+        fixture.detectChanges();
+        expect(products.query.mock.calls.map(([pageNumber, , queryFilters]) => [pageNumber, queryFilters?.productTypes ?? []])).toEqual([
+            [LAST_AVAILABLE_PAGE, []],
+            [1, [ProductType.Fruit]],
+            [1, [ProductType.Fruit]],
+        ]);
+        expect(host.querySelector('fd-error-state')).toBeNull();
+        expect(host.textContent).toContain(fruit.name);
+        button(host, '.product-select__item button').click();
+        expect(closePicker).toHaveBeenCalledExactlyOnceWith(fruit);
     });
 });
 

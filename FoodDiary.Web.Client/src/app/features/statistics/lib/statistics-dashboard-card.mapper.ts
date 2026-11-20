@@ -50,7 +50,7 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
 
     return {
         overview: {
-            daysWithinGoal: countDaysWithinGoal(statistics, trackedIndexes, calorieGoal),
+            daysWithinGoal: countDaysWithinGoal(days, calorieGoal),
             trackedDays: trackedDayCount,
             periodDays,
             averageCalories,
@@ -81,17 +81,18 @@ function buildMealStructure(statistics: MappedStatistics | null): StatisticsMeal
     if (totals === undefined) {
         return buildEmptyMealStructure();
     }
+    const otherCalories = totals.otherCalories ?? 0;
     const source: ReadonlyArray<{ key: StatisticsMealStructureData['items'][number]['key']; calories: number }> = [
         { key: 'breakfast', calories: totals.breakfastCalories },
         { key: 'lunch', calories: totals.lunchCalories },
         { key: 'dinner', calories: totals.dinnerCalories },
         { key: 'snack', calories: totals.snackCalories },
-        ...((totals.otherCalories ?? 0) > 0 ? [{ key: 'other' as const, calories: totals.otherCalories ?? 0 }] : []),
+        ...(otherCalories > 0 ? [{ key: 'other' as const, calories: otherCalories }] : []),
     ];
     const periodCalories = source.reduce((sum, item) => sum + item.calories, 0);
     const trackedDayCount = totals.trackedDayCount;
     const percentages = allocatePercentages(source.map(item => item.calories));
-    const items = source.map((item, index) => buildMealStructureItem(item, trackedDayCount, percentages[index] ?? 0));
+    const items = source.map((item, index) => buildMealStructureItem(item, trackedDayCount, percentages[index]));
     const dominant = getDominantMeal(items);
 
     return {
@@ -208,14 +209,14 @@ function buildRecordedDayAverages(
     trackedIndexes: readonly number[],
 ): { trackedDayCount: number; averageCalories: number } {
     const trackedDayCount = statistics?.mealStructure?.trackedDayCount ?? trackedIndexes.length;
-    const totalCalories = statistics?.calories.reduce((total, value) => total + value, 0) ?? 0;
+    const totalCalories = statistics?.calories.reduce<number>((total, value) => total + (value ?? 0), 0) ?? 0;
     return { trackedDayCount, averageCalories: totalCalories / Math.max(1, trackedDayCount) };
 }
 
 function getTrackedIndexes(statistics: MappedStatistics | null): number[] {
     return (
         statistics?.calories.reduce<number[]>((indexes, calories, index) => {
-            if (calories > 0) {
+            if (calories !== null) {
                 indexes.push(index);
             }
             return indexes;
@@ -260,32 +261,31 @@ function buildNutrients(
         current:
             statistics?.mealStructure !== undefined
                 ? item.total / Math.max(1, statistics.mealStructure.trackedDayCount)
-                : average(trackedIndexes.map(index => item.values[index] ?? 0)),
+                : average(trackedIndexes.map(index => item.values[index])),
         goal: item.goal,
     }));
 }
 
-function countDaysWithinGoal(statistics: MappedStatistics | null, indexes: readonly number[], goal: number): number {
+function countDaysWithinGoal(days: readonly StatisticsNutritionDay[], goal: number): number {
     if (goal <= 0) {
         return 0;
     }
-    return indexes.filter(index => Math.abs((statistics?.calories[index] ?? 0) - goal) <= goal * CALORIE_GOAL_TOLERANCE).length;
+    return days.filter(day => day.calories !== null && Math.abs(day.calories - goal) <= goal * CALORIE_GOAL_TOLERANCE).length;
 }
 
 function buildDays(statistics: MappedStatistics | null, formatDate: (date: Date) => string): StatisticsNutritionDay[] {
-    // eslint-disable-next-line complexity -- Every optional nutrient series is independently normalized for a chart day.
-    return (statistics?.date ?? []).map((date, index) => {
-        const calories = statistics?.calories[index] ?? 0;
-        return {
-            date: date.toISOString(),
-            label: formatDate(date),
-            calories: calories > 0 ? calories : null,
-            protein: statistics?.nutrientsStatistic.proteins[index] ?? 0,
-            fat: statistics?.nutrientsStatistic.fats[index] ?? 0,
-            carbs: statistics?.nutrientsStatistic.carbs[index] ?? 0,
-            fiber: statistics?.nutrientsStatistic.fiber[index] ?? 0,
-        };
-    });
+    if (statistics === null) {
+        return [];
+    }
+    return statistics.date.map((date, index) => ({
+        date: date.toISOString(),
+        label: formatDate(date),
+        calories: statistics.calories[index],
+        protein: statistics.nutrientsStatistic.proteins[index],
+        fat: statistics.nutrientsStatistic.fats[index],
+        carbs: statistics.nutrientsStatistic.carbs[index],
+        fiber: statistics.nutrientsStatistic.fiber[index],
+    }));
 }
 
 function buildInsights(items: readonly StatisticsNutrientBalanceItem[], calories: number | null): StatisticsTrendInsight[] {

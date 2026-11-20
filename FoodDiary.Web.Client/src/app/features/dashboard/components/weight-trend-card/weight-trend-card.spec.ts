@@ -19,6 +19,7 @@ const WEIGHT_CHANGE = -1.24;
 const EXPECTED_FORMATTED_CHANGE = '-1.2';
 const INTERMEDIATE_WEIGHT_OFFSET = 0.5;
 const MINIMUM_CHART_POINTS = 3;
+const EXPECTED_DAY_FRACTION = 0.25;
 const MINIMUM_CHART_BOUND_OFFSET = 1;
 const MAXIMUM_CHART_BOUND_OFFSET = 2;
 const TARGET_WEIGHT = 72;
@@ -69,6 +70,49 @@ describe('WeightTrendCardComponent calendar encoding', () => {
         expect(chart?.getAttribute('aria-label')).toContain(
             ['November 5', 'November 6', 'November 7'].map(day => `${day} ${CURRENT_WEIGHT} GENERAL.UNITS.KG`).join(', '),
         );
+    });
+});
+
+describe('WeightTrendCardComponent chart coordinates', () => {
+    it('orders adjacent calendar days before plotting points that use different timestamp offsets', async () => {
+        const { fixture } = await setupComponentAsync({
+            points: [
+                { date: '2026-11-09', value: CURRENT_WEIGHT },
+                { date: '2026-11-06T00:00:00+14:00', value: CURRENT_WEIGHT + INTERMEDIATE_WEIGHT_OFFSET },
+                { date: '2026-11-05T00:00:00-11:00', value: CURRENT_WEIGHT + 1 },
+            ],
+        });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const chartLabel = host.querySelector('fd-ui-line-chart [role="img"]')?.getAttribute('aria-label');
+        expect(chartLabel).toContain(
+            [
+                `November 5 ${CURRENT_WEIGHT + 1} GENERAL.UNITS.KG`,
+                `November 6 ${CURRENT_WEIGHT + INTERMEDIATE_WEIGHT_OFFSET} GENERAL.UNITS.KG`,
+                `November 9 ${CURRENT_WEIGHT} GENERAL.UNITS.KG`,
+            ].join(', '),
+        );
+        const markers = Array.from(host.querySelectorAll<HTMLElement>('.fd-ui-line-chart__point'));
+        expect(markers).toHaveLength(MINIMUM_CHART_POINTS);
+        const [first, intermediate, last] = markers.map(marker => Number.parseFloat(marker.style.left));
+        expect((intermediate - first) / (last - first)).toBeCloseTo(EXPECTED_DAY_FRACTION);
+    });
+
+    it('keeps valid measurements visible when a saved chart point has no valid calendar date', async () => {
+        const { fixture } = await setupComponentAsync({
+            points: [
+                FIRST_MEASUREMENT,
+                { date: new Date(Number.NaN), value: CURRENT_WEIGHT },
+                { date: '2026-02-29', value: CURRENT_WEIGHT },
+                { date: '2026-05-02', value: CURRENT_WEIGHT },
+                { date: '2026-05-03', value: CURRENT_WEIGHT },
+            ],
+        });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(MINIMUM_CHART_POINTS);
+        expect(host.querySelector('.weight-trend-card__value')?.textContent.trim()).toBe(String(CURRENT_WEIGHT));
+        expect(host.querySelector('fd-ui-line-chart [role="img"]')?.getAttribute('aria-label')).toContain('May 1');
     });
 });
 

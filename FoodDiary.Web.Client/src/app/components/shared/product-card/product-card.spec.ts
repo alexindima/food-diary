@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -87,6 +88,33 @@ describe('ProductCardComponent', () => {
                     { url: '/label.jpg', alt: MOCK_PRODUCT.name },
                 ],
             }),
+        );
+        expect(opened).not.toHaveBeenCalled();
+    });
+
+    it('opens the only cover of a community product without opening its details', async () => {
+        const { component, el, fixture } = await setupProductCardAsync();
+        const cover = '/community-product-cover.jpg';
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.componentRef.setInput('imageUrl', cover);
+        fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, isOwnedByCurrentUser: false });
+        const dialogOpen = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+        fixture.detectChanges();
+
+        expect(el.querySelector('.entity-card__ownership-badge-icon')?.textContent.trim()).toBe('groups');
+        expect(el.querySelector('.entity-card__photo-count')).toBeNull();
+        const thumbnail = el.querySelector<HTMLElement>('.entity-card__thumb[role="button"]');
+        if (thumbnail === null) {
+            throw new Error('Expected the community product cover to be interactive');
+        }
+        thumbnail.click();
+
+        expect(dialogOpen).toHaveBeenCalledOnce();
+        expect(dialogOpen.mock.calls[0]?.[0]).toBe(FdUiImagePreviewDialogComponent);
+        expect(dialogOpen.mock.calls[0]?.[1]?.data).toEqual(
+            expect.objectContaining({ imageUrl: cover, collageImages: undefined, title: MOCK_PRODUCT.name }),
         );
         expect(opened).not.toHaveBeenCalled();
     });

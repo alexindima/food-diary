@@ -166,6 +166,44 @@ function createRecipe(): Recipe {
     };
 }
 
+it('keeps free-form ingredient quantities as written while navigating cooking steps', () => {
+    const recipe = createRecipe();
+    const halfServing = 0.5;
+    recipe.steps[0].ingredients = [
+        recipeIngredientFromStored({ id: 'salt', textName: 'salt', amountText: 'to taste', amount: 0 }),
+        recipeIngredientFromStored({ id: 'basil', textName: 'fresh basil', amount: 0 }),
+        recipeIngredientFromStored({ id: 'sauce', nestedRecipeId: 'sauce', nestedRecipeName: 'Sauce', amount: halfServing }),
+    ];
+    const { fixture } = setupComponent(recipe);
+    const root = fixture.nativeElement as HTMLElement;
+    const [previous, next] = root.querySelectorAll<HTMLButtonElement>('.recipe-cook-mode__actions button');
+    const ingredientAmounts = (): string[] =>
+        Array.from(root.querySelectorAll('.recipe-cook-mode__ingredient-row strong'), amount => amount.textContent.trim());
+
+    expect(previous.disabled).toBe(true);
+    expect(next.disabled).toBe(false);
+    expect(Array.from(root.querySelectorAll('.recipe-cook-mode__ingredient-row span'), name => name.textContent.trim())).toEqual([
+        'Salt',
+        'Fresh basil',
+        'Sauce',
+    ]);
+    expect(ingredientAmounts()).toEqual(['to taste', '', '0.5 RECIPE_DETAIL.SUMMARY.SERVINGS_FEW']);
+
+    next.click();
+    fixture.detectChanges();
+
+    expect(root.querySelector('.recipe-cook-mode__instruction')?.textContent.trim()).toBe('Bake');
+    expect(root.querySelector('.recipe-cook-mode__ingredients')).toBeNull();
+    expect(previous.disabled).toBe(false);
+    expect(next.disabled).toBe(true);
+
+    previous.click();
+    fixture.detectChanges();
+
+    expect(root.querySelector('.recipe-cook-mode__instruction')?.textContent.trim()).toBe('Mix');
+    expect(ingredientAmounts()).toEqual(['to taste', '', '0.5 RECIPE_DETAIL.SUMMARY.SERVINGS_FEW']);
+});
+
 describe('RecipeCookModeComponent boundaries', () => {
     it('handles a recipe without instructions without allowing navigation', () => {
         const { component } = setupComponent({ ...createRecipe(), steps: [] });

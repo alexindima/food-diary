@@ -477,6 +477,57 @@ describe('Email verification manual refresh recovery', () => {
     });
 });
 
+describe('Email verification recovery through the rendered controls', () => {
+    it('keeps a failed automatic resend quiet and lets the user recheck and resend explicitly', async () => {
+        TestBed.overrideProvider(ActivatedRoute, {
+            useValue: { snapshot: { queryParamMap: convertToParamMap({ autoResend: 'true' }) } },
+        });
+        const automatic = new Subject<void>();
+        resend.mockReturnValueOnce(automatic);
+        const root = await renderPageAsync();
+        const resendButton = findButton(root, 'AUTH.VERIFY_PENDING.RESEND');
+        expect(resend).toHaveBeenCalledOnce();
+        expect(automatic.observed).toBe(true);
+        expect(resendButton.disabled).toBe(true);
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.INITIAL');
+
+        automatic.error(new Error('Mail service unavailable'));
+        fixture?.detectChanges();
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.INITIAL');
+        expect(resendButton.disabled).toBe(false);
+
+        findButton(root, 'AUTH.VERIFY_PENDING.REFRESH').click();
+        fixture?.detectChanges();
+        expect(getInfo).toHaveBeenCalledTimes(2);
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.NOT_CONFIRMED');
+        expect(resend).toHaveBeenCalledOnce();
+
+        resendButton.click();
+        fixture?.detectChanges();
+        expect(resend).toHaveBeenCalledTimes(2);
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.RESENT');
+        expect(goHome).not.toHaveBeenCalled();
+    });
+
+    it('shows fallback instructions when the profile is unavailable and completes a later manual recheck', async () => {
+        getInfo.mockReturnValueOnce(of(null)).mockReturnValueOnce(of({ ...PROFILE, isEmailConfirmed: true }));
+        translateEmailDescription();
+        const root = await renderPageAsync();
+        const description = root.querySelector('.email-verify-pending__description');
+        expect(description?.textContent).toContain('AUTH.VERIFY_PENDING.DESCRIPTION_FALLBACK');
+        expect(setEmailConfirmed).not.toHaveBeenCalled();
+        expect(resend).not.toHaveBeenCalled();
+
+        findButton(root, 'AUTH.VERIFY_PENDING.REFRESH').click();
+        fixture?.detectChanges();
+        expect(getInfo).toHaveBeenCalledTimes(2);
+        expect(description?.textContent).toContain(PROFILE.email);
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.SUCCESS');
+        expect(setEmailConfirmed).toHaveBeenCalledExactlyOnceWith(true);
+        expect(goHome).toHaveBeenCalledOnce();
+    });
+});
+
 async function renderPageAsync(): Promise<HTMLElement> {
     fixture = TestBed.createComponent(EmailVerificationPendingComponent);
     fixture.detectChanges();

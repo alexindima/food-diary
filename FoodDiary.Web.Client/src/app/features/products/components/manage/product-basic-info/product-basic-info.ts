@@ -109,7 +109,6 @@ export class ProductBasicInfoComponent {
     public readonly nameQueryChange = output<string>();
     public readonly nameSuggestionSelected = output<ProductNameSuggestion>();
 
-    protected readonly displayNameValue = (value: string | null): string => value ?? '';
     protected readonly nameMaxLength = PRODUCT_NAME_MAX_LENGTH;
     protected readonly barcodeMaxLength = PRODUCT_BARCODE_MAX_LENGTH;
     protected readonly brandMaxLength = PRODUCT_BRAND_MAX_LENGTH;

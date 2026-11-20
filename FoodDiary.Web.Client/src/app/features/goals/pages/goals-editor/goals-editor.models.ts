@@ -13,6 +13,7 @@ export type GoalsDraft = {
     preset: MacroPresetKey;
     water: number;
     bodyTargets: Record<BodyTargetKey, number>;
+    invalidBodyTargets: Record<BodyTargetKey, boolean>;
     cyclingEnabled: boolean;
     dayCalories: Record<DayCalorieKey, number>;
 };
@@ -98,6 +99,8 @@ export function isGoalNumberValid(value: number): boolean {
 
 export function isGoalsDraftValid(draft: GoalsDraft): boolean {
     return (
+        !draft.invalidBodyTargets.weight &&
+        !draft.invalidBodyTargets.waist &&
         [draft.calories, draft.water, ...Object.values(draft.macros), ...Object.values(draft.dayCalories)].every(isGoalNumberValid) &&
         areBodyTargetsValid(draft.bodyTargets)
     );

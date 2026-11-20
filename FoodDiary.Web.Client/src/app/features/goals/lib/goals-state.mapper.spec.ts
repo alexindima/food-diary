@@ -1,17 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-    buildGoalsRequest,
-    calculateGoalProgressPercent,
-    clampGoalValue,
-    createDayCalories,
-    createDayCaloriesFromGoals,
-} from './goals-state.mapper';
+import { buildGoalsRequest, clampGoalValue, createDayCalories, createDayCaloriesFromGoals } from './goals-state.mapper';
 
 const MAX_VALUE = 5000;
 const CALORIE_TARGET = 2000;
-const MIDPOINT_PROGRESS = 50;
-const FULL_PROGRESS = 100;
 const DECIMAL_VALUE = 10.6;
 const ROUNDED_VALUE = 11;
 const WAIST_TARGET = 80;
@@ -21,13 +13,6 @@ describe('goals state mapper', () => {
         expect(clampGoalValue(-1, MAX_VALUE)).toBe(0);
         expect(clampGoalValue(MAX_VALUE + 1, MAX_VALUE)).toBe(MAX_VALUE);
         expect(clampGoalValue(DECIMAL_VALUE, MAX_VALUE)).toBe(ROUNDED_VALUE);
-    });
-
-    it('calculates bounded progress and handles invalid ranges', () => {
-        expect(calculateGoalProgressPercent(CALORIE_TARGET, 0, CALORIE_TARGET * 2)).toBe(MIDPOINT_PROGRESS);
-        expect(calculateGoalProgressPercent(-1, 0, CALORIE_TARGET)).toBe(0);
-        expect(calculateGoalProgressPercent(MAX_VALUE, 0, CALORIE_TARGET)).toBe(FULL_PROGRESS);
-        expect(calculateGoalProgressPercent(1, 1, 1)).toBe(0);
     });
 
     it('creates independent weekly calorie records and maps partial API values', () => {

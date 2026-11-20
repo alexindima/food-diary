@@ -14,6 +14,7 @@ import { provideTranslateTesting } from '../../../testing/translate-testing.modu
 import { AuthService } from '../../services/auth.service';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
 import { type UserProfileOverview, UserService } from '../../shared/api/user.service';
+import { GoogleIdentityService } from '../../shared/auth/google-identity.service';
 import { TelegramBackupEmailFlowService } from '../../shared/auth/telegram-backup-email-flow.service';
 import { TelegramUnlinkFlowService } from '../../shared/auth/telegram-unlink-flow.service';
 import { TelegramWebAppService } from '../../shared/auth/telegram-web-app.service';
@@ -416,29 +417,57 @@ describe('Profile measurements and route ownership', () => {
 });
 
 describe('Profile measurement recovery', () => {
-    it('keeps the account visible after a measurement read fails and shows measurements on return', async () => {
+    it('preserves and saves the username draft after a measurement failure, then reloads the measurements on return', async () => {
         const response = new Subject<ProfileMeasurementSummary>();
+        const firstAccount = profileOverview({ username: 'alex-example' });
+        const updatedUsername = 'alex-hikes';
+        const savedAccount = profileOverview({ username: updatedUsername });
+        const getAccount = vi.fn<UserService['getOverview']>().mockReturnValueOnce(of(firstAccount)).mockReturnValueOnce(of(savedAccount));
         const getLatest = vi
             .fn<ProfileMeasurementsService['getLatest']>()
             .mockReturnValueOnce(response)
             .mockReturnValueOnce(of({ weightKg: WEIGHT_KG, waistCm: WAIST_CM }));
-        const { router, update } = await renderProfileAsync({ measurements: defer(getLatest) });
+        const { router, update } = await renderProfileAsync({ account: defer(getAccount), measurements: defer(getLatest) });
         const profile = profilePage(router);
+        const usernameSelector = '[data-user-field="username"] input';
+        const username = accountField(profile, usernameSelector);
+        expect(username.value).toBe(firstAccount.user.username);
+        typeIntoProfile(username, updatedUsername, router);
+
         response.error(new Error('Measurements temporarily unavailable'));
         router.detectChanges();
 
         expect(accountField(profile, '[data-user-field="firstName"] input').value).toBe('Alex');
+        expect(username.value).toBe(savedAccount.user.username);
         expect(measurementValue(profile, 'weight').textContent.trim()).toBe('—');
         expect(measurementValue(profile, 'waist').textContent.trim()).toBe('—');
         expect(profile.querySelector('.user-manage__form > .user-manage__error')).toBeNull();
+        expect(update).not.toHaveBeenCalled();
+
+        update.mockReturnValueOnce(of(savedAccount.user));
+        getButton(profile, 'UNSAVED_CHANGES.SAVE').click();
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        });
+        expect(update).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                username: savedAccount.user.username,
+                firstName: firstAccount.user.firstName,
+                heightCm: firstAccount.user.heightCm,
+            }),
+        );
+        expect(getLatest).toHaveBeenCalledOnce();
 
         await router.navigateByUrl(OTHER_URL, OtherPageComponent);
         await router.navigateByUrl(PROFILE_URL);
         const reopened = profilePage(router);
+        expect(accountField(reopened, usernameSelector).value).toBe(savedAccount.user.username);
         expect(measurementValue(reopened, 'weight').textContent.trim().replaceAll(/\s+/gu, ' ')).toBe(`${WEIGHT_KG} GENERAL.UNITS.KG`);
         expect(measurementValue(reopened, 'waist').textContent.trim().replaceAll(/\s+/gu, ' ')).toBe(`${WAIST_CM} GENERAL.UNITS.CM`);
+        expect(getAccount).toHaveBeenCalledTimes(2);
         expect(getLatest).toHaveBeenCalledTimes(2);
-        expect(update).not.toHaveBeenCalled();
+        expect(update).toHaveBeenCalledOnce();
     });
 });
 
@@ -765,6 +794,75 @@ describe('Profile password setup and replacement', () => {
             });
         },
     );
+});
+
+describe('Profile Google connection', () => {
+    it('deduplicates the open connection request and keeps the rendered Google control available for retry', async () => {
+        const originalClientId = environment.googleClientId;
+        environment.googleClientId = 'fixture-profile-google-client';
+        onTestFinished(() => {
+            environment.googleClientId = originalClientId;
+        });
+        const credential = 'synthetic-profile-google-response';
+        const googleLabel = 'Connect test Google account';
+        const initializeAsync = vi.fn<GoogleIdentityService['initializeAsync']>().mockResolvedValue(undefined);
+        const renderButton: GoogleIdentityService['renderButton'] = host => {
+            const link = document.createElement('button');
+            link.type = 'button';
+            link.textContent = googleLabel;
+            link.addEventListener('click', () => {
+                initializeAsync.mock.lastCall?.[0].callback(credential);
+            });
+            host.replaceChildren(link);
+        };
+        const pending = new Subject<User>();
+        const account = profileOverview({ hasGoogleIdentity: false });
+        const linked = { ...account.user, hasGoogleIdentity: true };
+        const connect = vi.fn<AuthService['linkGoogle']>().mockReturnValueOnce(pending).mockReturnValueOnce(of(linked));
+        const { router, update } = await renderProfileAsync({
+            account: of(account),
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                { provide: GoogleIdentityService, useValue: { initializeAsync, renderButton } },
+                { provide: AuthService, useValue: { isAdmin: (): boolean => false, linkGoogle: connect } },
+            ],
+        });
+        const http = TestBed.inject(HttpTestingController);
+        http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.auth}/sessions`).flush([]);
+        const profile = profilePage(router);
+        const security = profile.querySelector('fd-user-manage-security-card');
+        const summary = security?.closest('details')?.querySelector('summary');
+        if (security === null || !(summary instanceof HTMLElement)) {
+            throw new Error('Expected the rendered profile security section');
+        }
+        summary.click();
+        const google = await vi.waitFor(() => {
+            router.detectChanges();
+            return getButton(security, googleLabel);
+        });
+
+        google.click();
+        google.click();
+        router.detectChanges();
+        expect(connect).toHaveBeenCalledExactlyOnceWith(credential);
+        expect(google.closest('[aria-busy]')?.getAttribute('aria-busy')).toBe('true');
+
+        pending.error(new Error('Connection unavailable'));
+        router.detectChanges();
+        expect(profile.querySelector('.user-manage__form > .user-manage__error')?.textContent).toContain('USER_MANAGE.GOOGLE_LINK_ERROR');
+        expect(google.closest('[aria-busy]')?.getAttribute('aria-busy')).toBe('false');
+        expect(security.textContent).toContain('USER_MANAGE.GOOGLE_NOT_CONNECTED');
+
+        google.click();
+        router.detectChanges();
+        expect(connect.mock.calls).toEqual([[credential], [credential]]);
+        expect(google.isConnected).toBe(false);
+        expect(security.textContent).toContain('USER_MANAGE.GOOGLE_CONNECTED_AS');
+        expect(profile.querySelector('.user-manage__form > .user-manage__error')).toBeNull();
+        expect(update).not.toHaveBeenCalled();
+        http.verify();
+    });
 });
 
 function openProfilePasswordDialog(router: RouterTestingHarness, action: string): HTMLElement {

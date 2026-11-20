@@ -197,6 +197,33 @@ describe('GoogleIdentityService browser script errors', () => {
 
         await expect(initialized).rejects.toThrow('Failed to load Google Identity script');
     });
+
+    it('can initialize on a later visit after a shared script load failure', async () => {
+        const service = setupBrowserService();
+        const options = { clientId: CLIENT_ID, callback: vi.fn() };
+        const failed = Promise.all([
+            expect(service.initializeAsync(options)).rejects.toThrow('Failed to load Google Identity script'),
+            expect(service.initializeAsync(options)).rejects.toThrow('Failed to load Google Identity script'),
+        ]);
+        const interruptedScript = getGoogleScript();
+        expect(document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]')).toHaveLength(1);
+        interruptedScript.dispatchEvent(new Event('error'));
+        await failed;
+
+        const retried = service.initializeAsync(options).catch(() => 'failed');
+        const replacement = getGoogleScript();
+        expect(replacement).not.toBe(interruptedScript);
+        expect(interruptedScript.isConnected).toBe(false);
+        expect(document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]')).toHaveLength(1);
+
+        const googleApi = createGoogleIdentityApiMock();
+        googleWindow.google = { accounts: { id: googleApi } };
+        replacement.dispatchEvent(new Event('load'));
+
+        await expect(retried).resolves.toBeUndefined();
+        expect(googleApi.initialize).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ client_id: CLIENT_ID }));
+        expect(options.callback).not.toHaveBeenCalled();
+    });
 });
 
 describe('GoogleIdentityService server guards', () => {

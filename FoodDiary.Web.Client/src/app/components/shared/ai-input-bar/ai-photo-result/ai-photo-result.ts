@@ -215,8 +215,8 @@ export class AiPhotoResultComponent {
     private readonly sourceItems = signal<EditableAiItem[]>([]);
 
     private resolveDisplayName(item: FoodVisionItem): string {
-        const rawName = item.nameLocal?.trim() ?? item.nameEn;
-        return this.capitalizeLabel(rawName);
+        const localName = item.nameLocal?.trim() ?? '';
+        return this.capitalizeLabel(localName.length > 0 ? localName : item.nameEn);
     }
 
     private resolveAmountLabel(item: FoodVisionItem): string {

@@ -7,7 +7,7 @@
                 class="shopping-list__list-tab"
                 [class.shopping-list__list-tab--active]="list.id === selectedListId()"
                 [ariaCurrent]="list.id === selectedListId() ? 'true' : null"
-                [disabled]="isLoading()"
+                [disabled]="isBusy()"
                 [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                 [title]="list.name"
                 (click)="selectList(list.id)"
@@ -25,7 +25,7 @@
             fill="text"
             class="shopping-list__all-lists-button"
             [hidden]="listsCount() <= 3"
-            [disabled]="isLoading()"
+            [disabled]="isBusy()"
             [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
             [fdUiMenuTrigger]="isMobile() ? null : allListsMenu"
             (click)="openMobileLists()"
@@ -67,8 +67,8 @@
                         fill="text"
                         icon="check"
                         [ariaLabel]="'SHOPPING_LIST.SAVE_NAME_BUTTON' | translate"
-                        [disabled]="renameDraft().trim().length === 0"
-                        [disabledReason]="'DISABLED_HINTS.LIST_NAME_REQUIRED' | translate"
+                        [disabled]="isBusy() || renameDraft().trim().length === 0"
+                        [disabledReason]="(isBusy() ? 'DISABLED_HINTS.OPERATION_BUSY' : 'DISABLED_HINTS.LIST_NAME_REQUIRED') | translate"
                         (click)="saveRename(list.id)"
                     />
                 </div>
@@ -81,7 +81,7 @@
                 variant="ghost"
                 fill="text"
                 icon="more_horiz"
-                [disabled]="isLoading()"
+                [disabled]="isBusy()"
                 [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                 [ariaLabel]="'COMMON.MORE_ACTIONS' | translate"
                 [fdUiMenuTrigger]="listMenu"
@@ -97,14 +97,14 @@
                     ><fd-ui-icon name="delete_sweep" /><span>{{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}</span></fd-ui-menu-item
                 >
                 <fd-ui-menu-item
-                    [disabled]="isLoading()"
+                    [disabled]="isBusy()"
                     [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                     (itemClick)="mergeDuplicates.emit()"
                 >
                     <fd-ui-icon name="merge" /><span>{{ 'SHOPPING_LIST.MERGE_TITLE' | translate }}</span>
                 </fd-ui-menu-item>
                 <fd-ui-menu-item
-                    [disabled]="!canClearPurchased() || isLoading()"
+                    [disabled]="!canClearPurchased() || isBusy()"
                     [disabledReason]="'SHOPPING_LIST.NO_PURCHASED' | translate"
                     (itemClick)="clearPurchased.emit()"
                 >

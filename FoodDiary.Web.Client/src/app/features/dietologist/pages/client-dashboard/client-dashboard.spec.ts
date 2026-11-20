@@ -9,9 +9,16 @@ import type { Observable } from 'rxjs';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { nutritionMealFixture, nutritionSnapshotFixture } from '../../../../../testing/nutrition-details.fixtures';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { fastingSessionFromSdk } from '../../../../shared/api/sdk/fasting-sdk.mapper';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
-import type { ClientTask, DietologistRecommendation, RecommendationTemplate } from '../../../../shared/models/dietologist.data';
+import type {
+    ClientSummary,
+    ClientTask,
+    DietologistRecommendation,
+    RecommendationTemplate,
+} from '../../../../shared/models/dietologist.data';
 import type { Meal } from '../../../../shared/models/meal.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
@@ -192,7 +199,7 @@ describe('ClientDashboardComponent rendered recommendation and task actions', ()
         expect(draft?.disabled).toBe(false);
     });
 
-    it('keeps a task open after a rejected cancellation, then renders its cancelled status on retry', () => {
+    it('deduplicates task cancellation before repaint and renders the cancelled status on retry', () => {
         const task: ClientTask = {
             id: entityId<'client-task'>('check-lunch'),
             dietologistUserId: entityId<'user'>('diet-1'),
@@ -212,9 +219,10 @@ describe('ClientDashboardComponent rendered recommendation and task actions', ()
         const host = fixture.nativeElement as HTMLElement;
         const cancel = dashboardButton('CLIENT_TASKS.CANCEL');
         cancel.click();
+        expect(cancel.disabled).toBe(false);
+        cancel.click();
         fixture.detectChanges();
         expect(cancel.disabled).toBe(true);
-        cancel.click();
         expect(dietologistService.cancelTask).toHaveBeenCalledExactlyOnceWith(task.id);
 
         pending.error(new Error('temporarily unavailable'));
@@ -455,7 +463,100 @@ describe('ClientDashboardComponent registered development screen', () => {
     });
 });
 
+describe('ClientDashboardComponent development period and due date', () => {
+    it('keeps development period changes free of dashboard requests while loading or sharing only a profile', async () => {
+        const client = createClient({ permissions: { ...createClient().permissions, shareMeals: false } });
+        const directory = new Subject<ClientSummary[]>();
+        dietologistService.getMyClients.mockReturnValueOnce(directory);
+        const { screen } = createDevelopmentDashboard(false);
+        const host = fixture.nativeElement as HTMLElement;
+        const noMeals = { available: false, permissionGranted: false, items: [] };
+        const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const pendingPeriod = { dateFrom: '2026-05-16', dateTo: '2026-05-22' };
+
+        expect(screen.read()).toMatchObject({ clientId: null, permissions: null, loading: true, meals: noMeals });
+        screen.setFilters?.({ ...pendingPeriod, timeZone });
+        expect(screen.read()).toMatchObject({ ...pendingPeriod, loading: true, meals: noMeals });
+        expect(dietologistService.getClientDashboard).not.toHaveBeenCalled();
+
+        directory.next([client]);
+        directory.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.textContent).toContain(client.email);
+        expect(screen.read()).toMatchObject({
+            ...pendingPeriod,
+            clientId: client.userId,
+            permissions: client.permissions,
+            loading: false,
+            meals: noMeals,
+        });
+
+        const nextPeriod = { dateFrom: '2026-05-23', dateTo: '2026-05-29' };
+        screen.setFilters?.({ ...nextPeriod, timeZone });
+        await fixture.whenStable();
+        expect(screen.read()).toMatchObject({ ...nextPeriod, loading: false, meals: noMeals });
+        expect(dietologistService.getClientDashboard).not.toHaveBeenCalled();
+    });
+
+    it('validates the registered task due day and only submits it through the rendered form', async () => {
+        dietologistService.createTask.mockReturnValueOnce(new Subject<ClientTask>());
+        const { screen } = createDevelopmentDashboard();
+        const draft = { type: 'task', title: 'Plan dinner', details: 'Include vegetables', dueDate: '2026-10-25' };
+
+        expect(() => screen.fillDraft?.({ ...draft, dueDate: '2026-02-30' })).toThrow('Expected a valid calendar date');
+        expect(screen.isDirty?.()).toBe(false);
+        screen.fillDraft?.(draft);
+        fixture.detectChanges();
+        expect(screen.read()).toMatchObject({ task: { title: draft.title, details: draft.details, dueDate: draft.dueDate } });
+        expect(dietologistService.createTask).not.toHaveBeenCalled();
+
+        dashboardButton('CLIENT_TASKS.FORM.CREATE').click();
+        await vi.waitFor(() => {
+            expect(dietologistService.createTask).toHaveBeenCalledExactlyOnceWith('client-1', {
+                title: draft.title,
+                details: draft.details,
+                dueAtUtc: new Date('2026-10-25T23:59:59.999').toISOString(),
+            });
+        });
+    });
+});
+
 describe('ClientDashboardComponent pending template draft ownership', () => {
+    it('keeps the draft during a native template selection before repaint and unlocks it after failure', () => {
+        const pending = new Subject<RecommendationTemplate>();
+        const saved = recommendationTemplate('saved', 'Existing template');
+        dietologistService.searchRecommendationTemplates.mockReturnValueOnce(of([saved]));
+        dietologistService.createRecommendationTemplate.mockReturnValueOnce(pending);
+        const { screen } = createDevelopmentDashboard();
+        const draft = { name: 'Protein guide', text: 'Add beans to your next lunch.' };
+        screen.fillDraft?.({ type: 'recommendation', text: draft.text });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const text = host.querySelector<HTMLTextAreaElement>('.client-dashboard__recommendation-form textarea');
+        const name = templateNameField();
+        name.value = draft.name;
+        name.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const selectTemplate = dashboardButton(saved.name);
+
+        dashboardButton('RECOMMENDATION_TEMPLATES.SAVE').click();
+        expect(selectTemplate.disabled).toBe(false);
+        selectTemplate.click();
+        fixture.detectChanges();
+
+        expect(dietologistService.createRecommendationTemplate).toHaveBeenCalledExactlyOnceWith(draft);
+        expect(selectTemplate.disabled).toBe(true);
+        expect(text?.value).toBe(draft.text);
+
+        pending.error(new Error('Template save unavailable'));
+        fixture.detectChanges();
+        expect(selectTemplate.disabled).toBe(false);
+        selectTemplate.click();
+        fixture.detectChanges();
+        expect(text?.value).toBe(saved.text);
+    });
+
     it.each(['clear', 'replace'] as const)('rejects a development %s while the native template save is pending', attempt => {
         const pending = new Subject<RecommendationTemplate>();
         dietologistService.createRecommendationTemplate.mockReturnValueOnce(pending);
@@ -510,6 +611,28 @@ describe('ClientDashboardComponent rendered template validation', () => {
     });
 });
 
+describe('ClientDashboardComponent shared profile', () => {
+    it.each([
+        { gender: 'F', shareProfile: true },
+        { gender: 'Female', shareProfile: true },
+        { gender: 'Female', shareProfile: false },
+    ])('shows the localized profile for $gender with sharing set to $shareProfile', ({ gender, shareProfile }) => {
+        dietologistService.getMyClients.mockReturnValueOnce(
+            of([createClient({ gender, permissions: { ...createClient().permissions, shareProfile } })]),
+        );
+        createComponent('client-1', false, 'ru');
+
+        const host = fixture.nativeElement as HTMLElement;
+        const labels = (selector: string): string[] => Array.from(host.querySelectorAll(selector), node => node.textContent.trim());
+        const profileValues = ['180 см', 'Женский', 'Умеренная'];
+        expect(host.querySelector('h1')?.textContent.trim()).toBe('Alex Ivanov');
+        expect(labels('.client-dashboard__chip')).toEqual(shareProfile ? profileValues : []);
+        expect(labels('.client-dashboard__metrics--wide .client-dashboard__metric-value')).toEqual(
+            shareProfile ? ['client@example.com', ...profileValues, '-'] : [],
+        );
+    });
+});
+
 describe('ClientDashboardComponent private client dashboard', () => {
     it('shows the unnamed client safely and denies a recommendation draft without a sharing permission', () => {
         dietologistService.getMyClients.mockReturnValueOnce(
@@ -537,6 +660,50 @@ describe('ClientDashboardComponent private client dashboard', () => {
             'Client permissions do not allow recommendations.',
         );
         expect(screen.isDirty?.()).toBe(false);
+    });
+});
+
+describe('ClientDashboardComponent shared diary details', () => {
+    it.each([
+        { shareMeals: true, shareFasting: true },
+        { shareMeals: true, shareFasting: false },
+        { shareMeals: false, shareFasting: true },
+    ])('applies meal and fasting permissions independently ($shareMeals, $shareFasting)', ({ shareMeals, shareFasting }) => {
+        const recipeName = 'Garden soup';
+        const meal = nutritionMealFixture({
+            items: [{ id: 'recipe-item', mealId: 'meal-1', amount: 2, recipeId: 'shared-recipe', recipeName }],
+        });
+        const checkInAtUtc = '2026-10-28T10:00:00Z';
+        const sharedFasting = fastingSessionFromSdk({
+            id: 'shared-fast',
+            startedAtUtc: '2026-10-28T06:00:00Z',
+            initialPlannedDurationHours: 16,
+            addedDurationHours: 0,
+            plannedDurationHours: 16,
+            protocol: 'Fast16Eat8',
+            planType: 'Intermittent',
+            occurrenceKind: 'FastingWindow',
+            isCompleted: false,
+            status: 'Active',
+            symptoms: [],
+            checkIns: [],
+            checkInAtUtc,
+            hungerLevel: 6,
+            moodLevel: 3,
+        });
+        dietologistService.getMyClients.mockReturnValueOnce(
+            of([createClient({ permissions: { ...createClient().permissions, shareMeals, shareFasting } })]),
+        );
+        dietologistService.getClientDashboard.mockReturnValueOnce(
+            of(nutritionSnapshotFixture([meal], { currentFastingSession: sharedFasting })),
+        );
+        createComponent('client-1');
+        const host = fixture.nativeElement as HTMLElement;
+        const items = host.querySelector('fd-client-dashboard-meals-card article .client-dashboard__row-text');
+        const checkIn = host.querySelector('fd-client-dashboard-fasting-card .client-dashboard__row-text');
+
+        expect(items?.textContent.trim() ?? null).toBe(shareMeals ? `${recipeName} — 2 QUICK_MEAL.SERVINGS_OTHER` : null);
+        expect(checkIn?.textContent.trim() ?? null).toBe(shareFasting ? '6 / - / 3' : null);
     });
 });
 
@@ -1489,7 +1656,7 @@ describe('ClientDashboardComponent recommendation permissions', () => {
     });
 });
 
-function createComponent(clientId: string, fullAccess = false): void {
+function createComponent(clientId: string, fullAccess = false, language: 'en' | 'ru' = 'en'): void {
     if (fullAccess) {
         dietologistService.getMyClients.mockReturnValueOnce(
             of([
@@ -1538,7 +1705,11 @@ function createComponent(clientId: string, fullAccess = false): void {
             NUTRIENTS: { PROTEIN: 'Protein', FAT: 'Fats', CARB: 'Carbs' },
         },
     });
-    translate.use('en');
+    translate.setTranslation('ru', {
+        GENERAL: { UNITS: { CM: 'см' } },
+        USER_MANAGE: { GENDER_OPTIONS: { F: 'Женский' }, ACTIVITY_LEVEL_OPTIONS: { MODERATE: 'Умеренная' } },
+    });
+    translate.use(language);
 
     fixture = TestBed.createComponent(ClientDashboardComponent);
     component = fixture.componentInstance;

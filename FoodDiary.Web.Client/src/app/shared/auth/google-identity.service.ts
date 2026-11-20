@@ -133,9 +133,13 @@ export class GoogleIdentityService {
                 resolve();
             };
             script.onerror = (): void => {
+                script.remove();
                 reject(new Error('Failed to load Google Identity script'));
             };
             this.renderer.appendChild(this.document.head, script);
+        }).catch((error: unknown) => {
+            this.initializationPromise = null;
+            throw error;
         });
         return this.initializationPromise;
     }

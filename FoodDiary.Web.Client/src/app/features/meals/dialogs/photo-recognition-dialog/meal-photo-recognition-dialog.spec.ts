@@ -628,13 +628,52 @@ describe('Meal photo rendered nutrition recovery', () => {
     });
 });
 
+describe('Meal photo review resolution', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+
+    it.each([
+        { previous: 'Split', updated: 'Merged' },
+        { previous: 'Merged', updated: 'Split' },
+    ])('saves a changed review resolution from $previous to $updated without recalculating nutrition', async ({ previous, updated }) => {
+        const session = createSession();
+        const { fixture } = await setupComponentAsync({
+            initialSession: { ...session, items: [{ ...session.items[0], resolution: previous }] },
+            mode: 'edit',
+        });
+        const host = fixture.nativeElement as HTMLElement;
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        fixture.detectChanges();
+        const resolution = host.querySelector<HTMLSelectElement>('.photo-ai-dialog__edit-select--resolution');
+        if (resolution === null) {
+            throw new Error('Resolution selector is missing');
+        }
+        expect(resolution.value).toBe(previous);
+
+        resolution.value = updated;
+        resolution.dispatchEvent(new Event('change', { bubbles: true }));
+        fixture.detectChanges();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        fixture.detectChanges();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ items: [{ ...session.items[0], resolution: updated }] }),
+        );
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+    });
+});
+
 describe('Meal photo rendered saved history and annotations', () => {
     beforeEach(() => {
         aiFoodService = createAiFoodServiceMock();
         dialogRef = { close: vi.fn() };
     });
 
-    it('restores an older session without a photo, displays fractional nutrition, and saves defaulted optional fields', async () => {
+    it.each([null, '   '])('restores an older session without a photo or a usable localized name (%j)', async nameLocal => {
         const original = createSession();
         const session: MealAiSessionManageDto = {
             ...original,
@@ -644,7 +683,7 @@ describe('Meal photo rendered saved history and annotations', () => {
                 {
                     ...original.items[0],
                     nameEn: 'oat flakes',
-                    nameLocal: null,
+                    nameLocal,
                     confidence: null,
                     resolution: null,
                     proteins: PARTIAL_PROTEIN_GRAMS,
@@ -659,6 +698,7 @@ describe('Meal photo rendered saved history and annotations', () => {
         expect(host.querySelector('.photo-ai-dialog__status')).toBeNull();
         photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
         fixture.detectChanges();
+        expect(host.querySelector<HTMLInputElement>('.photo-ai-dialog__edit-input--name')?.value).toBe('oat flakes');
         expect(host.querySelector<HTMLSelectElement>('.photo-ai-dialog__edit-select--resolution')?.value).toBe('Accepted');
         photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
         fixture.detectChanges();
@@ -670,7 +710,7 @@ describe('Meal photo rendered saved history and annotations', () => {
             {
                 imageAssetId: null,
                 imageUrl: null,
-                items: [{ nameEn: 'oat flakes', confidence: 1, resolution: 'Accepted', proteins: PARTIAL_PROTEIN_GRAMS }],
+                items: [{ nameEn: 'oat flakes', nameLocal: null, confidence: 1, resolution: 'Accepted', proteins: PARTIAL_PROTEIN_GRAMS }],
             },
         ]);
     });

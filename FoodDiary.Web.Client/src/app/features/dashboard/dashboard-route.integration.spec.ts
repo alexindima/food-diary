@@ -342,7 +342,107 @@ describe('Dashboard native layout editing', () => {
     });
 });
 
+it('changes fasting card visibility by keyboard in edit mode and opens fasting outside edit mode', async () => {
+    const durationHours = 16;
+    const snapshot: DashboardSnapshot = {
+        ...makeSnapshot(),
+        currentFastingSession: {
+            id: entityId<'fasting-session'>('dashboard-active-fast'),
+            startedAtUtc: utcInstant(new Date().toISOString()),
+            endedAtUtc: null,
+            initialPlannedDurationHours: durationHours,
+            addedDurationHours: 0,
+            plannedDurationHours: durationHours,
+            protocol: 'Fast16Eat8',
+            planType: 'Intermittent',
+            occurrenceKind: 'FastingWindow',
+            cyclicFastDays: null,
+            cyclicEatDays: null,
+            cyclicEatDayFastHours: null,
+            cyclicEatDayEatingWindowHours: null,
+            cyclicPhaseDayNumber: null,
+            cyclicPhaseDayTotal: null,
+            isCompleted: false,
+            status: 'Active',
+            notes: null,
+            checkInAtUtc: null,
+            hungerLevel: null,
+            energyLevel: null,
+            moodLevel: null,
+            symptoms: [],
+            checkInNotes: null,
+            checkIns: [],
+        },
+    };
+    const { harness, router, updateLayout } = await renderDashboardAsync(
+        snapshot,
+        { ...savedUser(), dashboardLayout: { ...BASE_LAYOUT, mobile: BASE_LAYOUT.web } },
+        { startUrl: '/dashboard' },
+    );
+    const fasting = (): HTMLElement => element(harness, '.dashboard__block--fasting[role="button"]');
+    const dashboard = element(harness, '.dashboard');
+    const edit = button(dashboard, EDIT_ACTION);
+    expect(fasting().getAttribute('aria-label')).toBe('FASTING.TITLE');
+
+    edit.click();
+    redraw(harness);
+    expect(fasting().getAttribute('aria-pressed')).toBe('true');
+    fasting().focus();
+    expect(document.activeElement).toBe(fasting());
+    fasting().dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true, bubbles: true }));
+    redraw(harness);
+    expect(fasting().getAttribute('aria-pressed')).toBe('false');
+    expect(router.url).toBe('/dashboard');
+
+    fasting().dispatchEvent(new KeyboardEvent('keydown', { key: ' ', cancelable: true, bubbles: true }));
+    redraw(harness);
+    expect(fasting().getAttribute('aria-pressed')).toBe('true');
+    edit.click();
+    redraw(harness);
+    expect(updateLayout).not.toHaveBeenCalled();
+    expect(fasting().getAttribute('aria-pressed')).toBeNull();
+
+    fasting().focus();
+    expect(document.activeElement).toBe(fasting());
+    fasting().dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true, bubbles: true }));
+    await vi.waitFor(() => {
+        expect(router.url).toBe('/fasting');
+    });
+});
+
 describe('Dashboard layout initialization', () => {
+    it('keeps the first customized layout visible when the save response omits the saved layout', async () => {
+        const { harness, updateLayout } = await renderDashboardAsync({ ...makeSnapshot(), dashboardLayout: null });
+        updateLayout.mockReturnValueOnce(of({ ...savedUser(), dashboardLayout: null }));
+        const dashboard = element(harness, '.dashboard');
+        expect(dashboard.querySelector('fd-nutrition-weekly-trend-card')).not.toBeNull();
+        expect(dashboard.querySelector(HYDRATION_TILE)).not.toBeNull();
+        expect(dashboard.querySelector('[data-tour-id="dashboard-summary"]')).not.toBeNull();
+
+        const edit = button(dashboard, EDIT_ACTION);
+        edit.click();
+        redraw(harness);
+        const nutrition = element(harness, '[role="button"][aria-label="NUTRITION_TREND.TITLE"]');
+        expect(nutrition.getAttribute('aria-pressed')).toBe('true');
+        nutrition.click();
+        redraw(harness);
+        expect(nutrition.getAttribute('aria-pressed')).toBe('false');
+
+        button(dashboard, 'DASHBOARD.SETTINGS.SAVE').click();
+        await vi.waitFor(() => {
+            redraw(harness);
+            expect(edit.getAttribute('aria-pressed')).toBe('false');
+        });
+
+        expect(updateLayout).toHaveBeenCalledOnce();
+        const savedLayout = updateLayout.mock.lastCall?.[0];
+        expect(savedLayout?.web).toEqual(expect.arrayContaining(['summary', 'meals', 'hydration', 'nutrition-hidden']));
+        expect(savedLayout?.mobile).toEqual(expect.arrayContaining(['summary', 'meals', 'hydration']));
+        expect(savedLayout?.mobile).not.toContain('nutrition-hidden');
+        expect(dashboard.querySelector('fd-nutrition-weekly-trend-card')).toBeNull();
+        expect(dashboard.querySelector(HYDRATION_TILE)).not.toBeNull();
+    });
+
     it('keeps editing clean when the saved layout arrives after the settings button was opened', async () => {
         const pending = new Subject<DashboardSnapshot>();
         const { harness, updateLayout } = await renderDashboardAsync(makeSnapshot(), null, { initialRead: pending });
@@ -719,6 +819,20 @@ describe('Dashboard lazy toolbar dialogs', () => {
 });
 
 describe('Dashboard nutrition detail from the day summary', () => {
+    it('leaves nutrition details unopened when the dashboard is destroyed during the lazy import', async () => {
+        const { harness, dialogs, refreshSnapshot } = await renderDashboardAsync();
+        const open = vi.spyOn(dialogs, 'open');
+        const calories = element(harness, '[aria-label="DASHBOARD.NUTRITION_DETAILS.OPEN_CALORIES"]');
+
+        calories.click();
+        harness.fixture.destroy();
+        await import('./dialogs/nutrition-details-dialog/nutrition-details-dialog');
+
+        expect(open).not.toHaveBeenCalled();
+        expect(refreshSnapshot).not.toHaveBeenCalled();
+        expect(document.querySelector(NUTRITION_DIALOG_SELECTOR)).toBeNull();
+    });
+
     it('retries the selected historical day and closes back to the same dashboard', async () => {
         const { harness, router, readSnapshot, refreshSnapshot } = await renderDashboardAsync();
         const dashboard = element(harness, '.dashboard');
@@ -795,6 +909,56 @@ describe('Dashboard hydration details', () => {
     });
 });
 
+describe('Mounted Dashboard dialog ownership', () => {
+    const anotherDashboardDay = '/dashboard?date=2026-05-17';
+
+    it.each([
+        ['DASHBOARD.ACTIONS.OPEN_APPEARANCE', 'fd-appearance-dialog'],
+        ['DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS', 'fd-dashboard-notification-settings-dialog'],
+    ])('keeps %s while changing the Dashboard date and closes it on route departure', async (action, selector) => {
+        const { harness } = await renderDashboardAsync();
+        const dashboard = element(harness, '.dashboard');
+        button(dashboard, action).click();
+        const dialog = await vi.waitFor(() => {
+            redraw(harness);
+            const mounted = document.querySelector(selector);
+            expect(mounted).not.toBeNull();
+            return mounted;
+        });
+
+        await harness.navigateByUrl(anotherDashboardDay, DashboardComponent);
+        redraw(harness);
+        expect(element(harness, '.dashboard')).toBe(dashboard);
+        expect(document.querySelector(selector)).toBe(dialog);
+
+        await harness.navigateByUrl(OTHER_URL, OtherPageComponent);
+        redraw(harness);
+        expect(harness.routeNativeElement?.textContent).toContain('Another page');
+        expect(document.querySelector(selector)).toBeNull();
+    });
+
+    it('keeps a mounted nutrition details request through Dashboard date changes and cancels it on departure', async () => {
+        const { harness, refreshSnapshot } = await renderDashboardAsync();
+        const pending = new Subject<DashboardSnapshot>();
+        refreshSnapshot.mockReturnValueOnce(pending);
+        element(harness, '[aria-label="DASHBOARD.NUTRITION_DETAILS.OPEN_CALORIES"]').click();
+        const dialog = await findNutritionDialogAsync(harness);
+        expect(dialog.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.LOADING');
+        expect(pending.observed).toBe(true);
+
+        await harness.navigateByUrl(anotherDashboardDay, DashboardComponent);
+        redraw(harness);
+        expect(document.querySelector(NUTRITION_DIALOG_SELECTOR)).toBe(dialog);
+        expect(pending.observed).toBe(true);
+
+        await harness.navigateByUrl(OTHER_URL, OtherPageComponent);
+        redraw(harness);
+        expect(harness.routeNativeElement?.textContent).toContain('Another page');
+        expect(document.querySelector(NUTRITION_DIALOG_SELECTOR)).toBeNull();
+        expect(pending.observed).toBe(false);
+    });
+});
+
 describe('Dashboard controls with partial data', () => {
     it('offers a hydration goal when the snapshot omits hydration without refetching a cached account', async () => {
         const snapshot = { ...makeSnapshot(), hydration: null };
@@ -820,6 +984,9 @@ describe('Dashboard controls with partial data', () => {
         expect(start).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: 'dashboard-welcome' }), { force: true });
 
         button(dashboard, EDIT_ACTION).click();
+        expect(launch.disabled).toBe(false);
+        launch.click();
+        expect(start).toHaveBeenCalledOnce();
         redraw(harness);
         expect(launch.disabled).toBe(true);
         launch.click();
@@ -952,6 +1119,42 @@ describe('Dashboard native layout by measured content width', () => {
 });
 
 describe('Dashboard native meal navigation', () => {
+    it('shows a historical meal without a recorded slot once and leaves out the current-day placeholders', async () => {
+        useDashboardDay();
+        const historicalDate = '2026-05-17';
+        const meal: Meal = {
+            id: entityId<'meal'>('historical-meal-without-slot'),
+            date: utcInstant(`${historicalDate}T12:00:00.000Z`),
+            mealType: null,
+            comment: 'Imported lunch note',
+            totalCalories: 300,
+            totalProteins: 14,
+            totalFats: 8,
+            totalCarbs: 35,
+            totalFiber: 5,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            items: [],
+        };
+        const snapshot = {
+            ...makeSnapshot(),
+            date: historicalDate,
+            dateTo: historicalDate,
+            meals: { items: [meal], total: 1 },
+        };
+        const { harness, router, readSnapshot } = await renderDashboardAsync(snapshot, null, {
+            startUrl: `/dashboard?date=${historicalDate}`,
+        });
+        const mealPreview = element(harness, '[data-tour-id="dashboard-meals"]');
+        const mealCards = mealPreview.querySelectorAll('fd-meal-card');
+
+        expect(mealCards).toHaveLength(1);
+        expect(mealCards[0].textContent).toContain('Imported lunch note');
+        expect(mealPreview.querySelector('.meals-preview__placeholder')).toBeNull();
+        expect(router.url).toBe(`/dashboard?date=${historicalDate}`);
+        expect(readSnapshot).toHaveBeenCalledOnce();
+    });
+
     it('routes an expanded breakfast placeholder to the manual meal editor with its meal slot', async () => {
         useDashboardDay();
         const { harness, router } = await renderDashboardAsync();

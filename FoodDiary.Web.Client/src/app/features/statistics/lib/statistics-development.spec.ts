@@ -8,7 +8,7 @@ import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../shared/development/development-tools';
 import { StatisticsService } from '../api/statistics.service';
-import type { StatisticsSummary } from '../models/statistics.data';
+import type { AggregatedStatistics, StatisticsSummary } from '../models/statistics.data';
 import { StatisticsFacade } from './statistics.facade';
 import { connectStatisticsDevelopmentScreen } from './statistics-development';
 
@@ -92,6 +92,14 @@ describe('live statistics audit context', () => {
             units: { calories: 'kcal', nutrients: 'g' },
         });
     });
+    it('reports one recorded day when a zero-calorie meal shares a period with an empty day', () => {
+        const nutrition = [calorieFreeDay('2025-02-01', 0), calorieFreeDay('2025-02-02', 1)];
+        getSummary.mockReturnValueOnce(of({ ...summary, nutrition }));
+        screen.setFilters?.({ dateFrom: '2025-02-01', dateTo: '2025-02-02' });
+        TestBed.tick();
+
+        expect(screen.read()).toMatchObject({ available: true, aggregates: { trackedDays: 1, totalCalories: 0, averageCalories: 0 } });
+    });
     it('hides old aggregates while a new period is loading or has failed', () => {
         const pending = new Subject<StatisticsSummary>();
         getSummary.mockReturnValueOnce(pending);
@@ -114,3 +122,21 @@ describe('live statistics audit context', () => {
         expect(facade.selectedNutritionTab()).toBe('calories');
     });
 });
+
+function calorieFreeDay(day: string, mealCount: 0 | 1): AggregatedStatistics {
+    return {
+        dateFrom: new Date(`${day}T00:00:00`),
+        dateTo: new Date(`${day}T23:59:59`),
+        totalCalories: 0,
+        averageProteins: 0,
+        averageFats: 0,
+        averageCarbs: 0,
+        averageFiber: 0,
+        totalProteins: 0,
+        totalFats: 0,
+        totalCarbs: 0,
+        totalFiber: 0,
+        mealCount,
+        trackedDayCount: mealCount,
+    };
+}

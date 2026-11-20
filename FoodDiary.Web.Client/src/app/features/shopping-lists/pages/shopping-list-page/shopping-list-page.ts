@@ -77,8 +77,6 @@ export class ShoppingListPageComponent {
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
     protected readonly checkedItemsCount = computed(() => this.items().filter(item => item.isChecked).length);
-    protected readonly totalItemsCount = computed(() => this.items().length);
-    protected readonly remainingItemsCount = computed(() => this.totalItemsCount() - this.checkedItemsCount());
     protected readonly hasLists = computed(() => this.lists().length > 0);
     protected readonly canDeleteList = computed(
         () => this.list() !== null && this.conflictListId() === null && !this.isSaving() && !this.isLoading(),
@@ -227,15 +225,6 @@ export class ShoppingListPageComponent {
         this.isMobileManageOpen.update(value => !value);
     }
 
-    protected deleteCurrentList(): void {
-        const current = this.list();
-        if (current === null || !this.canDeleteList()) {
-            return;
-        }
-
-        this.confirmDeleteList(current.id, current.name);
-    }
-
     protected deleteListById(listId: ShoppingListId): void {
         if (!this.canDeleteList()) {
             return;
@@ -277,15 +266,6 @@ export class ShoppingListPageComponent {
                 });
             }
         });
-    }
-
-    protected clearCurrentList(): void {
-        const current = this.list();
-        if (current === null || !this.canClearList()) {
-            return;
-        }
-
-        this.confirmClearList(current.id, current.name);
     }
 
     protected clearListById(listId: ShoppingListId): void {

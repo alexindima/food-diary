@@ -477,6 +477,28 @@ describe('Telegram action completion', () => {
     });
 });
 
+describe('Telegram linking account labels', () => {
+    it.each([
+        { email: 'nameless@example.test', username: 'available-name', label: 'nameless@example.test' },
+        { email: null, username: 'available-name', label: 'available-name' },
+        { email: null, username: undefined, label: 'AUTH.TELEGRAM.CURRENT_ACCOUNT' },
+    ])('shows $label before confirming the link when the profile has no name', async ({ email, username, label }) => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.auth.isAuthenticated.set(true);
+        doubles.facade.intent.set(INTENT);
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        expect(button(harness, 'AUTH.TELEGRAM.LINK').disabled).toBe(true);
+
+        doubles.users.user.set({ ...USER, firstName: ' ', lastName: undefined, email, username });
+        await settleAsync(harness);
+
+        expect(harness.root.querySelector('strong')?.textContent).toBe(label);
+        expect(button(harness, 'AUTH.TELEGRAM.LINK').disabled).toBe(false);
+        expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('Telegram registration', () => {
     it('uses the selected timezone for explicit registration', async () => {
         const harness = await createIntentHarnessAsync();

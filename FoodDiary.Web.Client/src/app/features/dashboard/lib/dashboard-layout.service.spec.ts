@@ -111,6 +111,29 @@ describe('DashboardLayoutService', () => {
     });
 });
 
+describe('Dashboard layout for partial profiles', () => {
+    it('uses desktop defaults and keeps the stored mobile layout when the user saves a desktop change', async () => {
+        const { service, userService } = setupService();
+        const mobile = ['summary', 'fasting'];
+        service.initializeLayout({ mobile, setupHintDismissed: true });
+        service.updateViewportWidth(DESKTOP_WIDTH);
+        expect(service.isBlockVisible('hydration')).toBe(true);
+        expect(service.layoutSettings().setupHintDismissed).toBe(true);
+
+        service.openSettings();
+        service.toggleBlock('hydration');
+        await expect(service.saveAsync()).resolves.toBe(true);
+
+        expect(userService.updateDashboardLayout).toHaveBeenCalledOnce();
+        const [saved] = userService.updateDashboardLayout.mock.calls[0];
+        expect(saved.web).toEqual(['summary', 'meals', 'fasting', 'cycle', 'weight', 'waist', 'tdee', 'advice']);
+        expect(saved.mobile).toEqual(mobile);
+        expect(service.isBlockVisible('hydration')).toBe(false);
+        service.updateViewportWidth(MOBILE_WIDTH);
+        expect(service.visibleBlocks()).toEqual(mobile);
+    });
+});
+
 describe('Dashboard layout invariants', () => {
     it('does not hide the summary or change visibility outside editing mode', () => {
         const { service, userService } = setupService();

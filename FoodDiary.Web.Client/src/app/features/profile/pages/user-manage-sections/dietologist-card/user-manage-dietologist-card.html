@@ -15,7 +15,7 @@
 
         <fd-user-manage-dietologist-permissions
             [permissions]="dietologistPermissions()"
-            [isSavingDietologist]="isSavingDietologistPermissions()"
+            [isSavingDietologist]="isSavingDietologistPermissions() || isSavingDietologistRelationshipAction()"
             (permissionChange)="changeDietologistPermission($event)"
         />
 

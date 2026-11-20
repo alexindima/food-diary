@@ -8,9 +8,11 @@ import { firstValueFrom, of, Subject } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
+import type { ClientTask, DietologistRecommendation } from '../../shared/models/dietologist.data';
+import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
+import { DietologistService } from './api/dietologist.service';
 import { dietologistRoutes } from './dietologist.routes';
-import { DietologistFacade } from './lib/dietologist.facade';
 import type { DietologistDashboardSnapshot } from './lib/dietologist-dashboard.data';
 import { createClient } from './pages/clients/dietologist-clients-lib/dietologist-clients.test-data';
 
@@ -36,41 +38,61 @@ afterEach(() => {
 });
 
 function setupDashboardRouter(): {
-    listClients: ReturnType<typeof vi.fn<DietologistFacade['getMyClients']>>;
-    loadDashboard: Mock<DietologistFacade['getClientDashboard']>;
-    disconnect: Mock<DietologistFacade['disconnectClient']>;
+    listClients: Mock<DietologistService['getMyClients']>;
+    loadDashboard: Mock<DietologistService['getClientDashboard']>;
+    disconnect: Mock<DietologistService['disconnectClient']>;
+    createTask: Mock<DietologistService['createTask']>;
+    loadRecommendations: Mock<DietologistService['getRecommendationsForClient']>;
+    createRecommendation: Mock<DietologistService['createRecommendation']>;
     toastError: Mock<FdUiToastService['error']>;
     toastInfo: Mock<FdUiToastService['info']>;
+    toastSuccess: Mock<FdUiToastService['success']>;
 } {
     vi.stubGlobal(
         'matchMedia',
         vi.fn(() => ({ matches: false })),
     );
-    const listClients = vi.fn<DietologistFacade['getMyClients']>().mockReturnValue(of([FIRST_CLIENT, SECOND_CLIENT]));
-    const loadDashboard = vi.fn<DietologistFacade['getClientDashboard']>();
-    const disconnect = vi.fn<DietologistFacade['disconnectClient']>().mockReturnValue(of(void 0));
+    const listClients = vi.fn<DietologistService['getMyClients']>().mockReturnValue(of([FIRST_CLIENT, SECOND_CLIENT]));
+    const loadDashboard = vi.fn<DietologistService['getClientDashboard']>();
+    const disconnect = vi.fn<DietologistService['disconnectClient']>().mockReturnValue(of(void 0));
+    const createTask = vi.fn<DietologistService['createTask']>();
+    const loadRecommendations = vi.fn<DietologistService['getRecommendationsForClient']>().mockReturnValue(of([]));
+    const createRecommendation = vi.fn<DietologistService['createRecommendation']>();
     const toastError = vi.fn<FdUiToastService['error']>();
     const toastInfo = vi.fn<FdUiToastService['info']>();
+    const toastSuccess = vi.fn<FdUiToastService['success']>();
     TestBed.configureTestingModule({
         providers: [
             provideTranslateTesting(),
             provideRouter([{ path: 'dietologist', children: dietologistRoutes }]),
             {
-                provide: DietologistFacade,
+                provide: DietologistService,
                 useValue: {
                     getMyClients: listClients,
                     getClientDashboard: loadDashboard,
                     getAttentionSignals: vi.fn(() => of([])),
                     getTasksForClient: vi.fn(() => of([])),
-                    getRecommendationsForClient: vi.fn(() => of([])),
+                    createTask,
+                    getRecommendationsForClient: loadRecommendations,
+                    createRecommendation,
                     searchRecommendationTemplates: vi.fn(() => of([])),
                     disconnectClient: disconnect,
                 },
             },
-            { provide: FdUiToastService, useValue: { info: toastInfo, error: toastError } },
+            { provide: FdUiToastService, useValue: { info: toastInfo, error: toastError, success: toastSuccess } },
         ],
     });
-    return { listClients, loadDashboard, disconnect, toastError, toastInfo };
+    return {
+        listClients,
+        loadDashboard,
+        disconnect,
+        createTask,
+        loadRecommendations,
+        createRecommendation,
+        toastError,
+        toastInfo,
+        toastSuccess,
+    };
 }
 
 describe('Dietologist dashboard route interactions', () => {
@@ -132,6 +154,163 @@ describe('Dietologist dashboard route interactions', () => {
 function openDisconnect(harness: RouterTestingHarness): void {
     buttonByLabel(dashboardHost(harness), DISCONNECT_ACTION).click();
     harness.detectChanges();
+}
+
+describe('Dietologist dashboard task ownership', () => {
+    it('cancels the old task request when switching clients and keeps only the active client’s saved task', async () => {
+        const { createTask, toastSuccess } = setupDashboardRouter();
+        const firstSave = new Subject<ClientTask>();
+        const secondSave = new Subject<ClientTask>();
+        createTask.mockReturnValueOnce(firstSave).mockReturnValueOnce(secondSave);
+        const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
+        const firstTitle = 'Log breakfast';
+        const secondTitle = 'Track water';
+
+        submitDashboardTask(harness, firstTitle);
+        expect(createTask).toHaveBeenCalledExactlyOnceWith(FIRST_CLIENT.userId, { title: firstTitle, details: null, dueAtUtc: null });
+        expect(firstSave.observed).toBe(true);
+
+        await harness.navigateByUrl(SECOND_DASHBOARD_URL);
+        expect(dashboardHost(harness).querySelector('h1')?.textContent).toContain('Mira');
+        expect(firstSave.observed).toBe(false);
+        submitDashboardTask(harness, secondTitle);
+        expect(createTask).toHaveBeenLastCalledWith(SECOND_CLIENT.userId, { title: secondTitle, details: null, dueAtUtc: null });
+        expect(secondSave.observed).toBe(true);
+
+        const saved: ClientTask = {
+            id: entityId<'client-task'>('saved-task'),
+            dietologistUserId: entityId<'user'>('coach'),
+            clientUserId: SECOND_CLIENT.userId,
+            title: secondTitle,
+            details: null,
+            dueAtUtc: null,
+            status: 'Open',
+            isOverdue: false,
+            createdAtUtc: utcInstant('2026-05-20T00:00:00Z'),
+            statusChangedAtUtc: null,
+        };
+        firstSave.next({ ...saved, clientUserId: FIRST_CLIENT.userId, title: firstTitle });
+        firstSave.complete();
+        expect(toastSuccess).not.toHaveBeenCalled();
+        secondSave.next(saved);
+        secondSave.complete();
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(
+                dashboardHost(harness).querySelector('[aria-labelledby="dietologist-client-tasks-title"] article')?.textContent,
+            ).toContain(secondTitle);
+        });
+        expect(dashboardHost(harness).textContent).not.toContain(firstTitle);
+        expect(toastSuccess).toHaveBeenCalledExactlyOnceWith('CLIENT_TASKS.CREATED');
+    });
+});
+
+function submitDashboardTask(harness: RouterTestingHarness, title: string): void {
+    const host = dashboardHost(harness);
+    const form = host.querySelector<HTMLFormElement>('[aria-labelledby="dietologist-client-tasks-title"] form');
+    const input = form?.querySelector<HTMLInputElement>('fd-ui-input input') ?? null;
+    if (form === null || input === null) {
+        throw new Error('Expected the client task form');
+    }
+    input.value = title;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    harness.detectChanges();
+    form.requestSubmit();
+}
+
+describe('Dietologist dashboard recommendation delivery', () => {
+    it('retries the draft and retains the saved recommendation when the initial list arrives late', async () => {
+        const { loadRecommendations, createRecommendation, toastError, toastSuccess } = setupDashboardRouter();
+        const initialRead = new Subject<DietologistRecommendation[]>();
+        const firstSave = new Subject<DietologistRecommendation>();
+        const note = 'Check in again next week';
+        const saved: DietologistRecommendation = {
+            id: entityId<'recommendation'>('new-recommendation'),
+            dietologistUserId: entityId<'user'>('coach'),
+            dietologistFirstName: null,
+            dietologistLastName: null,
+            text: note,
+            isRead: false,
+            createdAtUtc: utcInstant('2026-05-20T00:00:00Z'),
+            readAtUtc: null,
+        };
+        const earlier = {
+            ...saved,
+            id: entityId<'recommendation'>('earlier-recommendation'),
+            createdAtUtc: utcInstant('2026-05-19T00:00:00Z'),
+            text: 'Earlier recommendation',
+        };
+        loadRecommendations.mockReturnValueOnce(initialRead);
+        createRecommendation.mockReturnValueOnce(firstSave).mockReturnValueOnce(of(saved));
+
+        const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
+        const host = dashboardHost(harness);
+        const form = host.querySelector('.client-dashboard__recommendation-form');
+        const draft = form?.querySelector('textarea');
+        const send = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+        if (draft === null || draft === undefined || send === null || send === undefined) {
+            throw new Error('Expected the client recommendation form');
+        }
+        expect(initialRead.observed).toBe(true);
+
+        enterRecommendation(harness, draft, '   ');
+        send.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(draft.value).toBe('');
+        });
+        expect(createRecommendation).not.toHaveBeenCalled();
+        await harness.fixture.whenStable();
+
+        enterRecommendation(harness, draft, `  ${note}  `);
+        send.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(createRecommendation).toHaveBeenCalledOnce();
+            expect(firstSave.observed).toBe(true);
+            expect(send.disabled).toBe(true);
+        });
+        expect(draft.disabled).toBe(true);
+        send.click();
+        expect(createRecommendation).toHaveBeenCalledExactlyOnceWith(FIRST_CLIENT.userId, { text: note });
+
+        firstSave.error(new Error('Recommendation delivery unavailable'));
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(send.disabled).toBe(false);
+        });
+        expect(draft.value).toBe(`  ${note}  `);
+        expect(toastError).toHaveBeenCalledExactlyOnceWith('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR');
+        await harness.fixture.whenStable();
+
+        send.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(draft.value).toBe('');
+            expect(recommendationTexts(host)).toEqual([note]);
+        });
+        expect(createRecommendation.mock.calls).toEqual([
+            [FIRST_CLIENT.userId, { text: note }],
+            [FIRST_CLIENT.userId, { text: note }],
+        ]);
+
+        initialRead.next([saved, earlier]);
+        initialRead.complete();
+        harness.detectChanges();
+        expect(recommendationTexts(host)).toEqual([note, earlier.text]);
+        expect(toastSuccess).toHaveBeenCalledExactlyOnceWith('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT');
+    });
+});
+
+function enterRecommendation(harness: RouterTestingHarness, draft: HTMLTextAreaElement, value: string): void {
+    draft.value = value;
+    draft.dispatchEvent(new Event('input', { bubbles: true }));
+    harness.detectChanges();
+}
+
+function recommendationTexts(host: HTMLElement): string[] {
+    return Array.from(host.querySelectorAll('.client-dashboard__recommendation > p'), item => item.textContent.trim());
 }
 
 describe('Dietologist dashboard period retry', () => {

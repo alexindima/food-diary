@@ -1,4 +1,3 @@
-import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
@@ -15,16 +14,6 @@ type GoalsState = {
 
 export function clampGoalValue(value: number, max: number, min = 0): number {
     return Math.min(max, Math.max(min, Math.round(value)));
-}
-
-export function calculateGoalProgressPercent(value: number, min: number, max: number): number {
-    const span = max - min;
-    if (span <= 0) {
-        return 0;
-    }
-
-    const normalized = Math.min(Math.max(value - min, 0), span);
-    return Math.round((normalized / span) * PERCENT_MULTIPLIER);
 }
 
 export function createDayCalories(value: number): Record<DayCalorieKey, number> {

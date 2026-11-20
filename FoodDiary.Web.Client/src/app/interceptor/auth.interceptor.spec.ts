@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
@@ -16,6 +16,7 @@ import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
+import { SessionEventsService } from '../shared/auth/session-events.service';
 import { PrivacyConsentFacade } from '../shared/privacy/privacy-consent.facade';
 import { AuthInterceptor } from './auth.interceptor';
 
@@ -221,5 +222,64 @@ describe('health consent recovery', () => {
         requests.expectNone(path);
         expect(privacy.ensureHealthConsentAsync).toHaveBeenCalledOnce();
         expect(failed).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Authentication for binary exports', () => {
+    const unauthorized = { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' };
+
+    it('preserves the sensitive export password error without refreshing or resending the request', async () => {
+        const path = `${environment.apiUrls.export}/cycle/sensitive`;
+        const error = new Blob([JSON.stringify({ error: 'User.InvalidPassword' })], { type: 'application/json' });
+        const exportRequest = firstValueFrom(
+            http.post(path, { dateFrom: '2026-05-01', dateTo: '2026-05-14', currentPassword: 'test-password' }, { responseType: 'blob' }),
+        );
+        const rejected = expect(exportRequest).rejects.toMatchObject({ status: HttpStatusCode.Unauthorized, error });
+
+        requests.expectOne({ method: 'POST', url: path }).flush(error, unauthorized);
+
+        await rejected;
+        expect(auth.refreshSession).not.toHaveBeenCalled();
+        requests.expectNone(path);
+    });
+
+    it('recovers an unreadable 401 response and retries the download with the refreshed access token', async () => {
+        const path = `${environment.apiUrls.export}/personal-data`;
+        auth.getToken.mockReturnValue('expired-test-access');
+        auth.refreshSession.mockImplementation(() => {
+            auth.getToken.mockReturnValue('refreshed-test-access');
+            return of(true);
+        });
+        const download = firstValueFrom(http.get(path, { responseType: 'blob', headers: { Accept: 'application/zip' } }));
+        const original = requests.expectOne({ method: 'GET', url: path });
+        expect(original.request.headers.get('Authorization')).toBe('Bearer expired-test-access');
+
+        original.flush(new Blob(['Authentication needed'], { type: 'text/plain' }), unauthorized);
+        await vi.waitFor(() => {
+            expect(auth.refreshSession).toHaveBeenCalledOnce();
+        });
+
+        const retry = requests.expectOne({ method: 'GET', url: path });
+        expect(retry.request.headers.get('Authorization')).toBe('Bearer refreshed-test-access');
+        expect(retry.request.headers.get('Accept')).toBe('application/zip');
+        expect(retry.request.responseType).toBe('blob');
+        const archive = new Blob(['archive'], { type: 'application/zip' });
+        retry.flush(archive);
+        expect(await download).toBe(archive);
+    });
+
+    it('does not refresh or replay a previous account download when the Blob starts decoding before a switch', async () => {
+        const path = `${environment.apiUrls.export}/personal-data`;
+        const error = new Blob([JSON.stringify({ error: 'Authentication.Unauthorized' })], { type: 'application/json' });
+        const download = firstValueFrom(http.get(path, { responseType: 'blob' }));
+        const rejected = expect(download).rejects.toMatchObject({ status: HttpStatusCode.Unauthorized, error });
+
+        requests.expectOne({ method: 'GET', url: path }).flush(error, unauthorized);
+        auth.getUserId.mockReturnValue('user-b');
+        TestBed.inject(SessionEventsService).notifyAuthenticated();
+
+        await rejected;
+        expect(auth.refreshSession).not.toHaveBeenCalled();
+        requests.expectNone(path);
     });
 });

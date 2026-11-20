@@ -16,7 +16,7 @@ import { planDurationDaysFromStored } from '../models/meal-plan-values';
 import { plannedServingsFromStored } from '../models/meal-plan-values';
 import { plannedMealTypeFromStored } from '../models/meal-plan-values';
 import type { MealPlanListQuery } from './list/meal-plan-list-query';
-import { MEAL_PLAN_LIST_QUERY_STATE } from './list/meal-plan-list-query-state';
+import { MEAL_PLAN_LIST_QUERY_STATE, type MealPlanListQueryState } from './list/meal-plan-list-query-state';
 import { MealPlanFacade } from './meal-plan.facade';
 
 const PAGE_SIZE = 50;
@@ -159,6 +159,27 @@ describe('MealPlanFacade selection action lifetime', () => {
             expect(facade.actionErrorKey()).toBeNull();
         },
     );
+
+    it('finishes adding a recipe when the same meal plan is selected again', async () => {
+        const planId = entityId<'meal-plan'>('plan-1');
+        facade.loadPlan(planId);
+        await waitForAsync(() => facade.selectedPlan()?.id === planId);
+        const recipe = { id: 'recipe-1' };
+        const lookup = new Subject<typeof recipe>();
+        recipeLookup.getById.mockReturnValueOnce(lookup);
+        const meal = createPlannedMeal();
+        facade.addMealToDiary(meal);
+
+        facade.loadPlan(planId);
+        expect(facade.addingMealId()).toBe(meal.id);
+        expect(lookup.observed).toBe(true);
+        lookup.next(recipe);
+        lookup.complete();
+
+        expect(quickMeal.addRecipe).toHaveBeenCalledExactlyOnceWith(recipe, meal.servings);
+        expect(facade.addingMealId()).toBeNull();
+        expect(facade.actionErrorKey()).toBeNull();
+    });
 
     it('cancels an old recipe lookup without applying its error to the new plan', async () => {
         facade.loadPlan(entityId<'meal-plan'>('plan-1'));
@@ -363,6 +384,55 @@ describe('MealPlanFacade pagination', () => {
         await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
         expect(facade.pageIndex()).toBe(1);
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
+    });
+
+    it('keeps the current page when either active filter is selected again', async () => {
+        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
+        facade.changePage(1);
+        await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
+
+        facade.loadPlans(null);
+        TestBed.tick();
+        expect(facade.pageIndex()).toBe(1);
+        facade.filterBySource('all');
+        TestBed.tick();
+
+        expect(facade.pageIndex()).toBe(1);
+        expect(facade.plans()[0]?.id).toBe('page-2');
+        expect(mealPlanService.getPage).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('MealPlanFacade catalogue navigation', () => {
+    it('keeps the filtered catalogue available when normalizing and writing its URL fail', async () => {
+        TestBed.resetTestingModule();
+        const query: MealPlanListQuery = { page: 1, dietType: 'Keto', source: 'curated' };
+        const routeState: MealPlanListQueryState = {
+            initial: query,
+            current: signal(query),
+            changes: EMPTY,
+            normalizePageAsync: vi.fn().mockRejectedValue(new Error('Could not normalize the catalogue URL')),
+            writeAsync: vi.fn().mockRejectedValue(new Error('Could not update the catalogue URL')),
+        };
+        TestBed.configureTestingModule({
+            providers: [
+                MealPlanFacade,
+                { provide: MealPlanService, useValue: mealPlanService },
+                { provide: RECIPE_LOOKUP, useValue: recipeLookup },
+                { provide: QuickMealService, useValue: quickMeal },
+                { provide: MEAL_PLAN_LIST_QUERY_STATE, useValue: routeState },
+            ],
+        });
+        facade = TestBed.inject(MealPlanFacade);
+        await waitForAsync(() => facade.plans().length > 0);
+        await waitForAsyncTasksAsync();
+
+        expect(routeState.normalizePageAsync).toHaveBeenCalledOnce();
+        expect(routeState.writeAsync).toHaveBeenCalledWith(query, { replaceUrl: false });
+        expect(mealPlanService.getPage).toHaveBeenCalledExactlyOnceWith('Keto', 1, PAGE_SIZE, true);
+        expect(facade.plans()).toEqual([createSummary()]);
+        expect(facade.hasLoadError()).toBe(false);
     });
 });
 

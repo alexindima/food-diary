@@ -118,6 +118,15 @@ function renderedButton(parent: ParentNode, label: string): HTMLButtonElement {
     return match;
 }
 
+async function chooseDeleteActionAsync(harness: RouterTestingHarness, label: string): Promise<void> {
+    const action = await vi.waitFor(() => {
+        harness.detectChanges();
+        return renderedButton(renderedSurface(document, DELETE_DIALOG), label);
+    });
+    action.click();
+    await redrawAsync(harness);
+}
+
 function agree(dialog: HTMLElement, selector: string): void {
     const checkbox = dialog.querySelector(selector);
     if (!(checkbox instanceof HTMLInputElement)) {
@@ -243,16 +252,12 @@ describe('Routed privacy account actions', () => {
         const actions = renderedSurface(document, ACCOUNT_ACTIONS);
         const remove = renderedButton(actions, 'PRIVACY_CHOICES.DELETE_ACCOUNT');
         remove.click();
-        await redrawAsync(harness);
-        renderedButton(renderedSurface(document, DELETE_DIALOG), 'COMMON.CANCEL').click();
-        await redrawAsync(harness);
+        await chooseDeleteActionAsync(harness, 'COMMON.CANCEL');
         expect(deleteCurrentUser).not.toHaveBeenCalled();
         expect(onLogoutAsync).not.toHaveBeenCalled();
 
         remove.click();
-        await redrawAsync(harness);
-        renderedButton(renderedSurface(document, DELETE_DIALOG), 'PRIVACY_CHOICES.DELETE_ACCOUNT').click();
-        await redrawAsync(harness);
+        await chooseDeleteActionAsync(harness, 'PRIVACY_CHOICES.DELETE_ACCOUNT');
         expect(remove.getAttribute('aria-busy')).toBe('true');
         expect(deleteCurrentUser).toHaveBeenCalledOnce();
         expect(onLogoutAsync).not.toHaveBeenCalled();
@@ -267,9 +272,7 @@ describe('Routed privacy account actions', () => {
         });
         expect(onLogoutAsync).not.toHaveBeenCalled();
         remove.click();
-        await redrawAsync(harness);
-        renderedButton(renderedSurface(document, DELETE_DIALOG), 'PRIVACY_CHOICES.DELETE_ACCOUNT').click();
-        await redrawAsync(harness);
+        await chooseDeleteActionAsync(harness, 'PRIVACY_CHOICES.DELETE_ACCOUNT');
 
         expect(deleteCurrentUser).toHaveBeenCalledTimes(2);
         expect(onLogoutAsync).toHaveBeenCalledExactlyOnceWith(true);

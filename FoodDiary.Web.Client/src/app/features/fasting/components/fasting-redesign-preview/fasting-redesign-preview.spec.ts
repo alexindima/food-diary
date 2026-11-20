@@ -395,6 +395,18 @@ describe('FastingRedesignPreviewComponent notes', () => {
                 title: 'A stable pattern',
                 body: 'Your recent sessions are consistent.',
             },
+            {
+                message: { id: 'symptom-dizziness', titleKey: 'symptom', bodyKey: 'body', tone: 'warning', bodyParams: null },
+                severity: 'warning',
+                title: 'Recurring symptom',
+                body: 'Dizziness was recorded in several check-ins.',
+            },
+            {
+                message: { id: 'shorter-fasts', titleKey: 'shorter', bodyKey: 'body', tone: 'neutral', bodyParams: null },
+                severity: 'info',
+                title: 'Shorter sessions',
+                body: 'Your check-in ratings differed by session length.',
+            },
         ]);
         fixture.detectChanges();
 
@@ -406,6 +418,15 @@ describe('FastingRedesignPreviewComponent notes', () => {
         const text = (fixture.nativeElement as HTMLElement).textContent;
         expect(text).toContain('Check how you feel');
         expect(text).toContain('A stable pattern');
+        expect(text).toContain('Dizziness was recorded in several check-ins.');
+        expect(text).toContain('Your check-in ratings differed by session length.');
+        const observations = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('article.fasting-redesign__observation'));
+        expect(observations.map(card => card.querySelector('fd-ui-icon')?.textContent.trim())).toEqual([
+            'trending_up',
+            'warning_amber',
+            'lightbulb_outline',
+        ]);
+        expect(observations.map(card => card.classList.contains('fasting-redesign__observation--warning'))).toEqual([false, true, false]);
         expect(text).toContain('75%');
         expect(dismissRequested).toHaveBeenCalledWith('alert-1');
     });

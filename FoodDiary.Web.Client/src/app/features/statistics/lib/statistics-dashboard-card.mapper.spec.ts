@@ -67,7 +67,7 @@ describe('statistics calorie interval goals', () => {
 
     it('keeps missing intervals separate from deviations in a partial final interval', () => {
         const view = buildIntervalView(25, 2, calories => {
-            calories[0] = 0;
+            calories[0] = null;
             calories[calories.length - 1] = 77;
         });
 
@@ -99,7 +99,7 @@ describe('statistics dashboard card mapper', () => {
     it('maps tracked days, real goals, missing days, nutrients, and body change', () => {
         const statistics: MappedStatistics = {
             date: [new Date('2026-08-02T00:00:00Z'), new Date('2026-08-03T00:00:00Z')],
-            calories: [1900, 0],
+            calories: [1900, null],
             nutrientsStatistic: { proteins: [90, 0], fats: [60, 0], carbs: [220, 0], fiber: [20, 0] },
             aggregatedNutrients: { proteins: 90, fats: 60, carbs: 220, fiber: 20 },
             mealStructure: {
@@ -164,13 +164,13 @@ describe('statistics dashboard card mapper', () => {
 function buildIntervalView(
     periodDays: number,
     quantizationDays: number,
-    adjust?: (calories: number[]) => void,
+    adjust?: (calories: Array<number | null>) => void,
 ): ReturnType<typeof buildStatisticsDashboardCardsView> {
     const date = Array.from(
         { length: Math.ceil(periodDays / quantizationDays) },
         (_, index) => new Date(Date.UTC(2025, 0, 1 + index * quantizationDays)),
     );
-    const calories = date.map((_, index) => 154 * Math.min(quantizationDays, periodDays - index * quantizationDays));
+    const calories = date.map<number | null>((_, index) => 154 * Math.min(quantizationDays, periodDays - index * quantizationDays));
     adjust?.(calories);
     const zeros = date.map(() => 0);
     return buildStatisticsDashboardCardsView({
@@ -269,7 +269,7 @@ describe('statistics nutrition insight availability', () => {
             { key: 'completeness', value: null, detailKey: 'STATISTICS.DASHBOARD.TREND.INCOMPLETE_DATA_HINT' },
         ]);
 
-        const missingDay = buildInsightView([1800, 0, 2200], USER);
+        const missingDay = buildInsightView([1800, null, 2200], USER);
         expect(missingDay.overview.trackedDays).toBe(2);
         expect(missingDay.insights).toEqual([]);
     });
@@ -295,7 +295,7 @@ describe('statistics nutrition insight availability', () => {
     });
 });
 
-function buildInsightView(calories: number[], user: User | null): ReturnType<typeof buildStatisticsDashboardCardsView> {
+function buildInsightView(calories: Array<number | null>, user: User | null): ReturnType<typeof buildStatisticsDashboardCardsView> {
     return buildStatisticsDashboardCardsView({
         statistics: {
             date: ['2026-08-02', '2026-08-03', '2026-08-04'].map(date => new Date(`${date}T00:00:00`)),

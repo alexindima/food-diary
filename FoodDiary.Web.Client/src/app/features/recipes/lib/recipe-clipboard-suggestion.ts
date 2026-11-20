@@ -88,19 +88,21 @@ export class RecipeClipboardSuggestion {
     }
 
     private async readSuggestionAsync(): Promise<void> {
-        if (this.reading) {
+        if (!this.enabled() || this.reading) {
             return;
         }
         this.reading = true;
         try {
             const text = await this.clipboard.readTextAsync();
-            const url = instagramRecipeUrl(text);
-            this.unavailable.set(false);
             if (this.enabled()) {
+                const url = instagramRecipeUrl(text);
+                this.unavailable.set(false);
                 this.suggestion.set(url !== this.storage.getItem('session', dismissedKey) ? url : null);
             }
         } catch {
-            this.unavailable.set(true);
+            if (this.enabled()) {
+                this.unavailable.set(true);
+            }
         } finally {
             this.reading = false;
         }

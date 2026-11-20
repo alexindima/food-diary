@@ -19,7 +19,6 @@ import {
 const HALF_LITER_ML = 500;
 const RECOGNIZED_GRAMS = 120;
 const RECOGNIZED_MILLILITERS = 200;
-const DEFAULT_GRAMS = 100;
 
 const ITEMS: FoodVisionItem[] = [
     {
@@ -87,23 +86,32 @@ describe('product AI recognition helpers', () => {
         expect(model.caloriesPerBase).toBe(NUTRITION.calories);
     });
 
-    it('should build dialog result with fallback name and copied image', () => {
-        const model = createProductAiRecognitionFormModel();
+    it('preserves reviewed quantities and zero calories alongside a trimmed product name and copied image', () => {
+        const model = {
+            ...createProductAiRecognitionFormModel(),
+            name: '  Still water  ',
+            portionAmount: HALF_LITER_ML,
+            baseUnit: MeasurementUnit.ML,
+            caloriesPerBase: 0,
+            fiberPerBase: null,
+        };
         const image = imageSelection('https://example.test/image.jpg', 'asset-1');
 
         const result = buildProductAiRecognitionResult({
             model,
             selection: image,
-            itemNames: ['Fallback name'],
-            results: ITEMS,
             description: 'fresh',
         });
 
-        expect(result.name).toBe('Fallback name');
+        expect(result.name).toBe('Still water');
+        expect(result).not.toHaveProperty('brand');
         expect(result.description).toBe('fresh');
         expect(result.image).toEqual(image);
         expect(result.image).not.toBe(image);
-        expect(result.baseAmount).toBe(DEFAULT_GRAMS);
+        expect(result.baseAmount).toBe(HALF_LITER_ML);
+        expect(result.baseUnit).toBe(MeasurementUnit.ML);
+        expect(result.caloriesPerBase).toBe(0);
+        expect(result.fiberPerBase).toBeNull();
     });
 
     it('should map API errors to translation keys', () => {

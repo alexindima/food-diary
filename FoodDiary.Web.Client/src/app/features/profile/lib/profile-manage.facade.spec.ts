@@ -1,13 +1,15 @@
+import { createEnvironmentInjector, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
+import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
 import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
@@ -83,6 +85,7 @@ let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
 const telegram = { initializeAsync: vi.fn(), getInitData: vi.fn() };
 const backupEmailFlow = { startAsync: vi.fn(), markSent: vi.fn(), read: vi.fn().mockReturnValue(null), clear: vi.fn() };
 const browser = { open: vi.fn() };
+const syncProfileTheme = vi.fn<ThemeService['syncWithUserPreferences']>();
 const STATE_LENGTH = 43;
 const BACKUP_EMAIL_RECORD_TTL_MS = 900_000;
 
@@ -100,6 +103,7 @@ function createStorageMock(session: Map<string, unknown>): Pick<BrowserStorageSe
 
 beforeEach(() => {
     vi.useFakeTimers();
+    syncProfileTheme.mockClear();
     const session = new Map<string, unknown>();
     userService = {
         getOverview: vi.fn().mockReturnValue(of(overview)),
@@ -154,7 +158,7 @@ beforeEach(() => {
             },
             ProfileManageFacade,
             { provide: TelegramBackupEmailFlowService, useValue: backupEmailFlow },
-            { provide: ThemeService, useValue: { syncWithUserPreferences: vi.fn() } },
+            { provide: ThemeService, useValue: { syncWithUserPreferences: syncProfileTheme } },
             {
                 provide: ProfileMeasurementsService,
                 useValue: { getLatest: vi.fn().mockReturnValue(of({ weightKg: null, waistCm: null })) },
@@ -519,6 +523,71 @@ describe('ProfileManageFacade saved language defaults', () => {
     });
 });
 
+describe('ProfileManageFacade save session ownership', () => {
+    it('keeps the new account preferences when the previous account save is accepted late', async () => {
+        const app = TestBed.inject(EnvironmentInjector);
+        const firstPage = createEnvironmentInjector([ProfileManageFacade], app);
+        const nextPage = createEnvironmentInjector([ProfileManageFacade], app);
+        onTestFinished(() => {
+            if (!firstPage.destroyed) {
+                firstPage.destroy();
+            }
+            nextPage.destroy();
+        });
+        const sessions = TestBed.inject(SessionEventsService);
+        const firstProfile = firstPage.get(ProfileManageFacade);
+        firstProfile.initialize();
+
+        const pending = new Subject<User | null>();
+        userService.update.mockReturnValueOnce(pending);
+        const saving = firstProfile.saveProfileAsync(new UpdateUserDto({ theme: 'dark' }));
+        expect(pending.observed).toBe(true);
+
+        sessions.notifySessionEnded();
+        firstPage.destroy();
+        const newUser = { ...user, id: entityId<'user'>('new-account'), language: 'en', theme: 'light' };
+        authService.getUserId.mockReturnValue(newUser.id);
+        sessions.notifyAuthenticated();
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: newUser }));
+        nextPage.get(ProfileManageFacade).initialize();
+        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
+        expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
+
+        expect(pending.observed).toBe(true);
+        pending.next({ ...user, theme: 'dark' });
+        pending.complete();
+        const saved = await saving;
+
+        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
+        expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
+        expect(firstProfile.profileSavedVersion()).toBe(0);
+        expect(saved).toBe(false);
+    });
+
+    it('applies an accepted save after ordinary navigation within the same session', async () => {
+        const page = createEnvironmentInjector([ProfileManageFacade], TestBed.inject(EnvironmentInjector));
+        onTestFinished(() => {
+            if (!page.destroyed) {
+                page.destroy();
+            }
+        });
+        const profile = page.get(ProfileManageFacade);
+        profile.initialize();
+        const pending = new Subject<User | null>();
+        userService.update.mockReturnValueOnce(pending);
+        const saving = profile.saveProfileAsync(new UpdateUserDto({ language: 'en', theme: 'dark' }));
+
+        page.destroy();
+        expect(pending.observed).toBe(true);
+        pending.next({ ...user, language: 'en', theme: 'dark' });
+        pending.complete();
+
+        expect(await saving).toBe(true);
+        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
+        expect(syncProfileTheme).toHaveBeenLastCalledWith('dark', undefined, undefined);
+    });
+});
+
 describe('ProfileManageFacade explicit profile save', () => {
     it('reports a successful save after updating the user without a success dialog', async () => {
         facade.initialize();
@@ -621,5 +690,106 @@ describe('ProfileManageFacade pending overview', () => {
         result.next(overview);
         result.complete();
         expect(facade.user()).toEqual(user);
+    });
+});
+
+describe('ProfileManageFacade pending account actions', () => {
+    it('keeps the first backup email request when another address is submitted while it is pending', async () => {
+        const linked = { ...user, email: null, hasTelegramIdentity: true };
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: linked }));
+        const delivery = new Subject<void>();
+        authService.requestTelegramBackupEmail.mockReturnValueOnce(delivery);
+        facade.initialize();
+
+        const firstRequest = facade.requestBackupEmailAsync('first@example.test');
+        await facade.requestBackupEmailAsync('second@example.test');
+        expect(authService.requestTelegramBackupEmail).toHaveBeenCalledExactlyOnceWith('first@example.test', 'signed-proof');
+        expect(facade.isRequestingBackupEmail()).toBe(true);
+        expect(facade.backupEmailSentTo()).toBeNull();
+
+        delivery.next();
+        delivery.complete();
+        await firstRequest;
+        expect(facade.isRequestingBackupEmail()).toBe(false);
+        expect(facade.backupEmailSentTo()).toBe('first@example.test');
+        expect(facade.user()?.email).toBeNull();
+    });
+
+    it('opens one Telegram disconnect confirmation at a time and allows another attempt after dismissal', async () => {
+        const linked = { ...user, hasTelegramIdentity: true, hasGoogleIdentity: true };
+        const unlinked = { ...linked, hasTelegramIdentity: false };
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: linked }));
+        const confirmation = new Subject<User | undefined>();
+        dialogService.open
+            .mockReturnValueOnce({ afterClosed: () => confirmation })
+            .mockReturnValueOnce({ afterClosed: () => of(unlinked) });
+        facade.initialize();
+
+        const firstAttempt = facade.unlinkTelegramAsync();
+        await facade.unlinkTelegramAsync();
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(facade.isUnlinkingTelegram()).toBe(true);
+
+        confirmation.next(undefined);
+        confirmation.complete();
+        await firstAttempt;
+        expect(facade.isUnlinkingTelegram()).toBe(false);
+        expect(facade.user()?.hasTelegramIdentity).toBe(true);
+        expect(toastService.success).not.toHaveBeenCalled();
+
+        await facade.unlinkTelegramAsync();
+        expect(dialogService.open).toHaveBeenCalledTimes(2);
+        expect(facade.user()).toEqual(unlinked);
+        expect(toastService.success).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.TELEGRAM_DISCONNECT_SUCCESS');
+    });
+});
+
+describe('ProfileManageFacade pending notification changes', () => {
+    it('preserves the current profile while preferences save and accepts a later change', async () => {
+        const saved = { ...overview.notificationPreferences, pushNotificationsEnabled: false };
+        const saving = new Subject<typeof saved>();
+        notificationService.updateNotificationPreferences
+            .mockReturnValueOnce(saving)
+            .mockReturnValueOnce(of({ ...saved, socialPushNotificationsEnabled: false }));
+        facade.initialize();
+
+        const firstUpdate = facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: false });
+        expect(await facade.updateNotificationPreferencesAsync({ socialPushNotificationsEnabled: false })).toEqual(user);
+        expect(notificationService.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith({ pushNotificationsEnabled: false });
+        expect(facade.isUpdatingNotifications()).toBe(true);
+
+        saving.next(saved);
+        saving.complete();
+        await firstUpdate;
+        expect(facade.isUpdatingNotifications()).toBe(false);
+        expect(facade.user()?.pushNotificationsEnabled).toBe(false);
+        expect(facade.user()?.socialPushNotificationsEnabled).toBe(true);
+
+        await facade.updateNotificationPreferencesAsync({ socialPushNotificationsEnabled: false });
+        expect(notificationService.updateNotificationPreferences).toHaveBeenLastCalledWith({ socialPushNotificationsEnabled: false });
+        expect(facade.user()?.socialPushNotificationsEnabled).toBe(false);
+    });
+
+    it('keeps both devices after a pending removal fails and can remove the other device afterward', async () => {
+        const first = overview.webPushSubscriptions[0];
+        const second = { ...first, endpoint: 'https://push.example.com/subscriptions/other' };
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, webPushSubscriptions: [first, second] }));
+        const removal = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(removal);
+        facade.initialize();
+
+        const firstRemoval = facade.removeWebPushSubscriptionAsync(first.endpoint);
+        expect(await facade.removeWebPushSubscriptionAsync(second.endpoint)).toBe(false);
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(first.endpoint);
+        expect(facade.removingWebPushSubscriptionEndpoint()).toBe(first.endpoint);
+
+        removal.error(new Error('Device removal unavailable'));
+        expect(await firstRemoval).toBe(false);
+        expect(facade.removingWebPushSubscriptionEndpoint()).toBeNull();
+        expect(facade.webPushSubscriptions()).toEqual([first, second]);
+
+        expect(await facade.removeWebPushSubscriptionAsync(second.endpoint)).toBe(true);
+        expect(notificationService.removeWebPushSubscription).toHaveBeenLastCalledWith(second.endpoint);
+        expect(facade.webPushSubscriptions()).toEqual([first]);
     });
 });

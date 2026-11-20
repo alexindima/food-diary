@@ -14,19 +14,10 @@ import {
 import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../api/goals.service';
-import {
-    GOALS_AUTOSAVE_DEBOUNCE_MS,
-    GOALS_DEFAULT_ZONE_ALPHA,
-    GOALS_HIGH_CALORIE_THRESHOLD,
-    GOALS_LOW_CALORIE_THRESHOLD,
-    GOALS_MAX_CALORIES,
-    GOALS_NORMAL_CALORIE_THRESHOLD,
-    MAX_BODY_TARGET,
-} from './goals.constants';
+import { GOALS_AUTOSAVE_DEBOUNCE_MS, GOALS_DEFAULT_ZONE_ALPHA, GOALS_MAX_CALORIES, MAX_BODY_TARGET } from './goals.constants';
 import {
     type BodyTargetKey,
     buildGoalsRequest,
-    calculateGoalProgressPercent,
     clampGoalValue,
     createDayCalories,
     createDayCaloriesFromGoals,
@@ -73,8 +64,6 @@ type SliderConfig = {
     greenTo: number;
     zones: MacroZone[];
 };
-
-const CIRCLE_DEGREES = 360;
 
 @Injectable()
 export class GoalsFacade {
@@ -266,23 +255,6 @@ export class GoalsFacade {
 
     public readonly coreMacroStates = computed(() => this.macroStates().filter(macro => macro.key !== 'fiber'));
     public readonly fiberMacroState = computed(() => this.macroStates().find(macro => macro.key === 'fiber'));
-    public readonly progressPercent = computed(() => {
-        return calculateGoalProgressPercent(this.calorieTarget(), this.minCalories, this.maxCalories);
-    });
-    public readonly knobAngle = computed(() => (this.progressPercent() / PERCENT_MULTIPLIER) * CIRCLE_DEGREES);
-    public readonly accentColor = computed(() => {
-        const value = this.calorieTarget();
-        if (value < GOALS_LOW_CALORIE_THRESHOLD) {
-            return this.colorBlue;
-        }
-        if (value <= GOALS_NORMAL_CALORIE_THRESHOLD) {
-            return this.colorGreen;
-        }
-        if (value <= GOALS_HIGH_CALORIE_THRESHOLD) {
-            return this.colorOrange;
-        }
-        return this.colorRed;
-    });
     public readonly saveStatusKey = computed(() => {
         if (this.isLoadingGoals()) {
             return 'GOALS_PAGE.STATUS_LOADING';

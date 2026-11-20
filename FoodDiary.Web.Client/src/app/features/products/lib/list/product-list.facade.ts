@@ -100,9 +100,7 @@ export class ProductListFacade {
     public readonly recentProducts = signal<Product[]>([]);
     public readonly favorites = signal<FavoriteProduct[]>([]);
     public readonly favoriteTotalCount = signal(0);
-    public readonly isFavoritesOpen = signal(false);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
-    public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = computed(() => this.navigationError() ?? this.productData.error());
     public readonly searchValue = computed(() => this.searchModel().search);
     public readonly onlyMineFilter = computed(() => this.searchModel().onlyMine);
@@ -377,9 +375,11 @@ export class ProductListFacade {
                 }),
                 map(() => void 0),
                 catchError((_error: unknown) => {
-                    if (!this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE')) {
+                    if (!this.isCurrentPageRequest(requestId, query)) {
                         return of(void 0);
                     }
+                    this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE');
+                    this.currentPageIndex = query.page - 1;
                     this.recentProducts.set([]);
 
                     return of(void 0);
@@ -424,9 +424,11 @@ export class ProductListFacade {
                 }),
                 map(() => void 0),
                 catchError((_error: unknown) => {
-                    if (!this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE')) {
+                    if (!this.isCurrentPageRequest(requestId, query)) {
                         return of(void 0);
                     }
+                    this.productData.fail(requestId, 'ERRORS.LOAD_FAILED_TITLE');
+                    this.currentPageIndex = query.page - 1;
                     this.recentProducts.set([]);
                     this.favorites.set([]);
                     this.favoriteTotalCount.set(0);
@@ -462,38 +464,47 @@ export class ProductListFacade {
     }
 
     public openFavorites(): void {
-        this.fdDialogService.open<ProductFavoritesPickerComponent, ProductFavoritesPickerData, boolean>(ProductFavoritesPickerComponent, {
-            size: 'md',
-            data: {
-                repeat: favorite =>
-                    this.productService.getById(favorite.productId).pipe(
-                        map(product => {
-                            if (product === null) {
-                                return false;
-                            }
-                            this.quickMealService.addProduct(product, favorite.preferredPortionAmount);
-                            return true;
-                        }),
-                    ),
-                remove: favorite =>
-                    this.favoriteProductService.remove(favorite.id).pipe(
-                        tap(() => {
-                            this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                            this.syncProductFavoriteState(favorite.productId, false, null);
-                        }),
-                        map(() => true),
-                    ),
-                restore: favorite =>
-                    this.favoriteProductService.add(favorite.productId, favorite.name ?? undefined, favorite.preferredPortionAmount).pipe(
-                        tap(restored => {
-                            favorite.id = restored.id;
-                            this.favoriteTotalCount.update(count => count + 1);
-                            this.syncProductFavoriteState(favorite.productId, true, restored.id);
-                        }),
-                        map(() => true),
-                    ),
+        const dialog = this.fdDialogService.open<ProductFavoritesPickerComponent, ProductFavoritesPickerData, boolean>(
+            ProductFavoritesPickerComponent,
+            {
+                size: 'md',
+                data: {
+                    repeat: favorite =>
+                        this.productService.getById(favorite.productId).pipe(
+                            map(product => {
+                                if (product === null) {
+                                    return false;
+                                }
+                                this.quickMealService.addProduct(product, favorite.preferredPortionAmount);
+                                return true;
+                            }),
+                        ),
+                    remove: favorite =>
+                        this.favoriteProductService.remove(favorite.id).pipe(
+                            tap(() => {
+                                this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                                this.syncProductFavoriteState(favorite.productId, false, null);
+                            }),
+                            map(() => true),
+                        ),
+                    restore: favorite =>
+                        this.favoriteProductService
+                            .add(favorite.productId, favorite.name ?? undefined, favorite.preferredPortionAmount)
+                            .pipe(
+                                tap(restored => {
+                                    favorite.id = restored.id;
+                                    this.favoriteTotalCount.update(count => count + 1);
+                                    this.syncProductFavoriteState(favorite.productId, true, restored.id);
+                                }),
+                                map(() => true),
+                            ),
+                },
             },
+        );
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
         });
+        dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose)).subscribe();
     }
 
     public onProductFavoriteToggle(product: Product): void {
@@ -525,46 +536,8 @@ export class ProductListFacade {
             });
     }
 
-    public toggleFavorites(): void {
-        this.isFavoritesOpen.update(value => !value);
-    }
-
-    public openFavoriteProduct(favorite: FavoriteProduct, onProduct: (product: Product) => void): void {
-        this.productService
-            .getById(favorite.productId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(product => {
-                if (product !== null) {
-                    onProduct(product);
-                }
-            });
-    }
-
     public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
         this.quickMealService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.preferredPortionAmount);
-    }
-
-    public removeFavorite(favorite: FavoriteProduct): void {
-        if (this.favoriteLoadingIds().has(favorite.productId)) {
-            return;
-        }
-
-        this.setFavoriteLoading(favorite.productId, true);
-        this.favoriteProductService
-            .remove(favorite.id)
-            .pipe(
-                take(1),
-                finalize(() => {
-                    this.setFavoriteLoading(favorite.productId, false);
-                }),
-            )
-            .subscribe({
-                next: () => {
-                    this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
-                    this.favoriteTotalCount.update(count => Math.max(0, count - 1));
-                    this.syncProductFavoriteState(favorite.productId, false, null);
-                },
-            });
     }
 
     public reloadCurrentPage(): void {

@@ -488,18 +488,32 @@ export class MealManageFormComponent implements UnsavedEditor {
     }
 
     protected openManualItemDialog(index: number): void {
+        const meal = this.meal();
         const item = this.items[index];
         const dialog = this.fdDialogService.open<MealManualItemDialogComponent, MealManualItemDialogData, MealItemFormValues | null>(
             MealManualItemDialogComponent,
             { preset: 'form', data: { item } },
         );
-        const unregisterClose = this.destroyRef.onDestroy(() => {
+        const closeDialog = (): void => {
             dialog.close(null);
-        });
-        void firstValueFrom(dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose)), {
+        };
+        const unregisterClose = this.destroyRef.onDestroy(closeDialog);
+        const closeOnMealChange = effect(
+            () => {
+                if (!this.isCurrentMeal(meal)) {
+                    untracked(closeDialog);
+                }
+            },
+            { injector: this.injector },
+        );
+        const cleanup = (): void => {
+            closeOnMealChange.destroy();
+            unregisterClose();
+        };
+        void firstValueFrom(dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(cleanup)), {
             defaultValue: null,
         }).then(selectedItem => {
-            if (selectedItem === null || selectedItem === undefined || this.destroyRef.destroyed) {
+            if (selectedItem === null || selectedItem === undefined || !this.isCurrentMeal(meal)) {
                 return;
             }
 
@@ -549,9 +563,25 @@ export class MealManageFormComponent implements UnsavedEditor {
         if (session === undefined) {
             return;
         }
+        void this.editAiSessionAsync(session);
+    }
 
-        void this.mealManageFacade.openEditAiPhotoSessionDialogAsync(session).then(updated => {
-            if (updated === null || this.destroyRef.destroyed) {
+    private async editAiSessionAsync(session: MealAiSessionManageDto): Promise<void> {
+        const meal = this.meal();
+        const reviewScope = new AbortController();
+        const closeOnMealChange = effect(
+            () => {
+                if (!this.isCurrentMeal(meal)) {
+                    untracked(() => {
+                        reviewScope.abort();
+                    });
+                }
+            },
+            { injector: this.injector },
+        );
+        try {
+            const updated = await this.mealManageFacade.openEditAiPhotoSessionDialogAsync(session, this.destroyRef, reviewScope.signal);
+            if (updated === null || !this.isCurrentMeal(meal)) {
                 return;
             }
             const currentIndex = this.aiSessions().indexOf(session);
@@ -561,7 +591,9 @@ export class MealManageFormComponent implements UnsavedEditor {
             this.mealSignalForm().markAsDirty();
             this.aiSessions.update(current => this.mealManageFacade.replaceAiSession(current, currentIndex, updated));
             this.updateSummary();
-        });
+        } finally {
+            closeOnMealChange.destroy();
+        }
     }
 
     // --- Nutrition mode (delegated from MealNutritionSidebarComponent events) ---

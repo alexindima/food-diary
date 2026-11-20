@@ -74,6 +74,24 @@ describe('RecipeStepFormManager', () => {
         expect(state.steps.length).toBe(1);
         expect(manager.expandedSteps.has(0)).toBe(true);
     });
+
+    it('opens a collapsed step without closing the first step or replacing ingredient edits', () => {
+        const state = createStepState();
+        const manager = createManager(state);
+        manager.populateRecipeSteps(createRecipe());
+        expect([...manager.expandedSteps]).toEqual([0]);
+
+        manager.toggleStepExpanded(1);
+        expect([...manager.expandedSteps]).toEqual([0, 1]);
+        const editedAmount = 180;
+        manager.patchIngredient({ stepIndex: 1, ingredientIndex: 0 }, { amount: editedAmount });
+        manager.toggleStepExpanded(1);
+        expect([...manager.expandedSteps]).toEqual([0]);
+
+        manager.toggleStepExpanded(1);
+        expect([...manager.expandedSteps]).toEqual([0, 1]);
+        expect(state.steps[1]?.ingredients[0]).toMatchObject({ foodName: 'Flour', amount: editedAmount });
+    });
 });
 
 function createManager(state: RecipeStepState): RecipeStepFormManager {

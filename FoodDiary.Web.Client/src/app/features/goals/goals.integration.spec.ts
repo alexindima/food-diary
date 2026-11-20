@@ -42,6 +42,7 @@ const IMPERIAL_WAIST = 31.5;
 const CANONICAL_WEIGHT = 70;
 const CANONICAL_WAIST = 80.01;
 const IMPERIAL_LIMIT_EXCESS = 0.02;
+const IMPERIAL_WEIGHT_INCREMENT = 0.01;
 
 type GoalsApi = {
     [Method in 'getGoalsStrict' | 'updateGoals']: Mock<GoalsService[Method]>;
@@ -234,6 +235,50 @@ describe('Routed goal save before departure', () => {
     });
 });
 
+describe('Routed body goal validation before departure', () => {
+    it('blocks Save and Leave for a negative waist that would round to zero, then saves a corrected target', async () => {
+        const { api } = configureGoals();
+        const dialogs = TestBed.inject(FdUiDialogService);
+        vi.stubGlobal(
+            'matchMedia',
+            vi.fn(() => ({ matches: false })),
+        );
+        onTestFinished(() => {
+            dialogs.closeAll();
+            vi.unstubAllGlobals();
+        });
+        TestBed.inject(MeasurementSystemService).setSystem('imperial');
+        const harness = await RouterTestingHarness.create('/goals');
+        const router = TestBed.inject(Router);
+        const waist = requiredInput(page(harness), '#goals-editor-waist');
+        const belowMinimum = -0.001;
+        editNumber(waist, belowMinimum);
+        redraw(harness);
+        expect(waist.validity.rangeUnderflow).toBe(true);
+
+        const invalidDeparture = router.navigateByUrl('/other');
+        await confirmGoalsDepartureAsync(harness, '.unsaved-changes-dialog__action--primary button');
+        await expect(invalidDeparture).resolves.toBe(false);
+        redraw(harness);
+        expect(router.url).toBe('/goals');
+        expect(waist.value).toBe(String(belowMinimum));
+        expect(waist.getAttribute('aria-describedby')).toBe('goals-editor-waist-error');
+        expect(api.updateGoals).not.toHaveBeenCalled();
+
+        api.updateGoals.mockReturnValueOnce(of({ ...GOALS, desiredWaistCm: CANONICAL_WAIST }));
+        editNumber(waist, IMPERIAL_WAIST);
+        redraw(harness);
+        expect(waist.getAttribute('aria-describedby')).toBeNull();
+        const correctedDeparture = router.navigateByUrl('/other');
+        await confirmGoalsDepartureAsync(harness, '.unsaved-changes-dialog__action--primary button');
+        await expect(correctedDeparture).resolves.toBe(true);
+        expect(page(harness).textContent).toContain('Other page');
+        expect(api.updateGoals).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ desiredWaistCm: CANONICAL_WAIST, desiredWeightKg: GOALS.desiredWeightKg }),
+        );
+    });
+});
+
 describe('Routed goals load', () => {
     it('renders loading, lets the user retry an unsuccessful read and restores the editor', async () => {
         const { api } = configureGoals();
@@ -354,6 +399,68 @@ describe('Routed goal preset', () => {
 });
 
 describe('Routed body goals in imperial units', () => {
+    it('blocks saving a weight one hundredth of a pound above the rendered field maximum', async () => {
+        const { api } = configureGoals();
+        TestBed.inject(MeasurementSystemService).setSystem('imperial');
+        const harness = await RouterTestingHarness.create('/goals');
+        const host = page(harness);
+        const weight = requiredInput(host, '#goals-editor-weight');
+        const maximum = Number(weight.max);
+        editNumber(weight, maximum);
+        redraw(harness);
+        expect(weight.validity.rangeOverflow).toBe(false);
+
+        const aboveMaximum = maximum + IMPERIAL_WEIGHT_INCREMENT;
+        editNumber(weight, aboveMaximum);
+        redraw(harness);
+        expect(weight.validity.rangeOverflow).toBe(true);
+        const save = requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:last-child button');
+        save.click();
+        await harness.fixture.whenStable();
+
+        expect(api.updateGoals).not.toHaveBeenCalled();
+        expect(weight.getAttribute('aria-invalid')).toBe('true');
+        expect(weight.valueAsNumber).toBe(aboveMaximum);
+        expect(save.disabled).toBe(true);
+
+        const canonicalMaximum = 500;
+        api.updateGoals.mockReturnValueOnce(of({ ...GOALS, desiredWeightKg: canonicalMaximum }));
+        editNumber(weight, maximum);
+        redraw(harness);
+        expect(weight.validity.valid).toBe(true);
+        expect(save.disabled).toBe(false);
+        save.click();
+        await harness.fixture.whenStable();
+        redraw(harness);
+        expect(api.updateGoals).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ desiredWeightKg: canonicalMaximum }));
+        expect(weight.valueAsNumber).toBe(maximum);
+        expect(weight.getAttribute('aria-invalid')).toBe('false');
+    });
+});
+
+describe('Routed out-of-range body goal editing', () => {
+    it('restores the loaded value on discard after an invalid edit that left the canonical target untouched', async () => {
+        const { api } = configureGoals();
+        const harness = await RouterTestingHarness.create('/goals');
+        const host = page(harness);
+        const weight = requiredInput(host, '#goals-editor-weight');
+        const loaded = weight.value;
+        expect(loaded).toBe(String(GOALS.desiredWeightKg));
+
+        editNumber(weight, Number(weight.max) + IMPERIAL_WEIGHT_INCREMENT);
+        redraw(harness);
+        expect(weight.validity.rangeOverflow).toBe(true);
+        expect(weight.getAttribute('aria-invalid')).toBe('true');
+
+        requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:first-child button').click();
+        redraw(harness);
+        expect(weight.value).toBe(loaded);
+        expect(weight.validity.valid).toBe(true);
+        expect(weight.getAttribute('aria-invalid')).toBe('false');
+        expect(host.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        expect(api.updateGoals).not.toHaveBeenCalled();
+    });
+
     it('shows out-of-range errors and saves corrected body goals in kilograms and centimeters', async () => {
         const { api } = configureGoals();
         TestBed.inject(MeasurementSystemService).setSystem('imperial');
@@ -380,6 +487,8 @@ describe('Routed body goals in imperial units', () => {
         redraw(harness);
         expect(weight.getAttribute('aria-invalid')).toBe('false');
         expect(waist.getAttribute('aria-invalid')).toBe('false');
+        expect(weight.validity.stepMismatch).toBe(false);
+        expect(waist.validity.stepMismatch).toBe(false);
         save.click();
         await harness.fixture.whenStable();
 

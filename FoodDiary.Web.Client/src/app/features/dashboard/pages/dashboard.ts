@@ -19,6 +19,7 @@ import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
@@ -399,13 +400,8 @@ export class DashboardComponent {
             return;
         }
 
-        this.dialogService
-            .open(DashboardNotificationSettingsDialogComponent, {
-                preset: 'form',
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        const dialog = this.dialogService.open(DashboardNotificationSettingsDialogComponent, { preset: 'form' });
+        this.closeDialogOnDestroy(dialog);
     }
 
     protected async openAppearanceDialogAsync(): Promise<void> {
@@ -414,17 +410,21 @@ export class DashboardComponent {
             return;
         }
 
-        this.dialogService
-            .open(AppearanceDialogComponent, {
-                size: 'md',
-                data: {
-                    theme: this.themeService.theme(),
-                    uiStyle: this.themeService.uiStyle(),
-                },
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        const dialog = this.dialogService.open(AppearanceDialogComponent, {
+            size: 'md',
+            data: {
+                theme: this.themeService.theme(),
+                uiStyle: this.themeService.uiStyle(),
+            },
+        });
+        this.closeDialogOnDestroy(dialog);
+    }
+
+    private closeDialogOnDestroy<T, R>(dialog: FdUiDialogRef<T, R>): void {
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        dialog.afterClosed().subscribe({ complete: unregisterClose });
     }
 
     protected startDashboardWelcomeTour(force = true): void {
@@ -516,15 +516,7 @@ export class DashboardComponent {
             return;
         }
 
-        void this.openFastingAsync();
-    }
-
-    protected async openFastingAsync(): Promise<void> {
-        if (this.layout.isEditingLayout()) {
-            return;
-        }
-
-        await this.navigationService.navigateToFastingAsync();
+        void this.navigationService.navigateToFastingAsync();
     }
 
     private observeDashboardWidth(): void {

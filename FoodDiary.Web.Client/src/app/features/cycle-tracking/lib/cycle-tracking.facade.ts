@@ -141,7 +141,7 @@ export class CycleTrackingFacade {
             await firstValueFrom(this.cyclesService.deleteCycle(currentCycle.id).pipe(takeUntilDestroyed(this.destroyRef)));
             this.state.clearCycle();
             this.day.cancelDayEdit();
-            this.factor.cancelFactorEdit();
+            this.factor.clearAfterProfileDeletion();
             this.episode.cancelMenstrualEpisodeEdit();
         } catch {
             this.state.settingsError.set('CYCLE_TRACKING.DELETE_CYCLE_FAILED');

@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { EMPTY, type Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import {
@@ -179,11 +179,9 @@ export class FastingControlsComponent {
     });
 
     public constructor() {
-        ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.currentLanguage.set(this.localizationService.getCurrentLanguage());
-            });
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.currentLanguage.set(this.localizationService.getCurrentLanguage());
+        });
     }
 
     protected onModeChange(mode: string): void {

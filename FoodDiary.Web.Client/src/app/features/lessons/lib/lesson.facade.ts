@@ -103,6 +103,9 @@ export class LessonFacade {
     public readonly isDetailLoading = computed(() => this.selectedLessonResource.isLoading());
     public readonly hasDetailError = computed(() => this.selectedLessonResource.error() !== undefined);
     public readonly isLessonMissing = computed(() => {
+        if (this.selectedLessonId() === null) {
+            return true;
+        }
         const error = this.selectedLessonResource.error();
         return error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.NotFound);
     });
@@ -123,7 +126,7 @@ export class LessonFacade {
         this.lessonsResource.reload();
     }
 
-    public loadLesson(id: LessonId): void {
+    public loadLesson(id: LessonId | null): void {
         if (id !== this.selectedLessonId()) {
             this.selectionChanged.next();
         }

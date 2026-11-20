@@ -125,14 +125,13 @@ export class SeoService {
             return '/';
         }
 
-        const withoutHash = path.split('#', 1)[0] ?? '/';
-        const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
+        const pathname = path.split(/[?#]/u, 1)[0];
 
-        if (withoutQuery === '/' || withoutQuery.length === 0) {
+        if (pathname === '/' || pathname.length === 0) {
             return '/';
         }
 
-        return withoutQuery.endsWith('/') ? withoutQuery.slice(0, -1) : withoutQuery;
+        return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     }
 
     private getOpenGraphLocale(): string {
@@ -164,15 +163,11 @@ export class SeoService {
         ];
 
         for (const alternate of alternates) {
-            let link = this.document.querySelector(`link[rel="alternate"][hreflang="${alternate.hreflang}"]`) ?? null;
-            if (link === null) {
-                link = this.document.createElement('link');
-                link.setAttribute('rel', 'alternate');
-                link.setAttribute('hreflang', alternate.hreflang);
-                this.document.head.appendChild(link);
-            }
-
+            const link = this.document.createElement('link');
+            link.setAttribute('rel', 'alternate');
+            link.setAttribute('hreflang', alternate.hreflang);
             link.setAttribute('href', alternate.href);
+            this.document.head.appendChild(link);
         }
     }
 

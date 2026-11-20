@@ -60,7 +60,7 @@ const OBSERVATIONS = [
     { date: TO_DAY, weightKg: LAST_WEIGHT },
 ];
 
-it('retries the same local report after a failed measurement request and renders the recovered dates and observations', async () => {
+function configureReportHttp(): HttpTestingController {
     TestBed.configureTestingModule({
         providers: [
             provideRouter([{ path: 'statistics', children: statisticsRoutes }]),
@@ -70,7 +70,11 @@ it('retries the same local report after a failed measurement request and renders
             { provide: UserService, useValue: { user: signal(null) } },
         ],
     });
-    const http = TestBed.inject(HttpTestingController);
+    return TestBed.inject(HttpTestingController);
+}
+
+it('retries the same local report after a failed measurement request and renders the recovered dates and observations', async () => {
+    const http = configureReportHttp();
     TestBed.inject(MeasurementSystemService).setSystem('metric');
     const harness = await RouterTestingHarness.create(REPORT_ROUTE);
     const host = harness.routeNativeElement;
@@ -110,6 +114,47 @@ it('retries the same local report after a failed measurement request and renders
     expect(current.textContent).toContain('72,4');
     expect(axis.textContent).toMatch(/25\s*окт/u);
     expect(axis.textContent).toMatch(/8\s*ноя/u);
+    http.verify();
+});
+
+it('shows a logged zero-calorie interval in the chart and leaves an empty interval blank', async () => {
+    const http = configureReportHttp();
+    const harness = await RouterTestingHarness.create(REPORT_ROUTE);
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the Statistics route');
+    }
+    const requests = expectReportRequests(http);
+    const logged = {
+        ...SUMMARY.nutrition[0],
+        totalCalories: 0,
+        averageProteins: 0,
+        averageFats: 0,
+        averageCarbs: 0,
+        averageFiber: 0,
+        totalProteins: 0,
+        totalFats: 0,
+        totalCarbs: 0,
+        totalFiber: 0,
+    };
+    const empty = {
+        ...logged,
+        dateFrom: new Date(`${LATE_BUCKET_START_DAY}T00:00:00.000`).toISOString(),
+        dateTo: new Date(`${TO_DAY}T23:59:59.999`).toISOString(),
+        trackedDayCount: 0,
+        mealCount: 0,
+    };
+    requests.report.flush({ nutrition: [logged, empty], waist: [], weight: [] } satisfies StatisticsSummaryHttpResponse);
+    requests.weight.flush([]);
+    requests.waist.flush([]);
+    harness.detectChanges();
+
+    const trend = requireElement(host, '.statistics__nutrition-group:not([hidden]) fd-statistics-nutrition-trend-card');
+    const categories = trend.querySelectorAll('.fd-ui-bar-chart__category');
+    expect(categories).toHaveLength(2);
+    expect(trend.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(1);
+    expect(categories[0].querySelector('[role="img"]')?.getAttribute('aria-label')).toMatch(/Oct\s*25: 0/u);
+    expect(categories[1].querySelector('[role="img"]')).toBeNull();
     http.verify();
 });
 

@@ -645,7 +645,189 @@ describe('Meal diary rendered favorite update', () => {
     });
 });
 
-async function openRenderedMealDetailsAsync(): Promise<{
+describe('Meal diary stale favorite recovery', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('clears a stale favorite star when the lookup page contains only a different meal', async () => {
+        const { harness, meal, favoriteService, mealService } = await openRenderedMealDetailsAsync({
+            isFavorite: true,
+            favoriteMealId: null,
+        });
+        const otherFavorite = createFavorite({ mealId: entityId<'meal'>('other-favorite-meal') });
+        favoriteService.getLookupPage.mockReturnValueOnce(of([otherFavorite]));
+        const remove = requireButton(document, 'fd-meal-detail button[aria-label="MEAL_DETAIL.REMOVE_FAVORITE"]');
+        remove.click();
+        harness.detectChanges();
+
+        expect(favoriteService.getLookupPage).toHaveBeenCalledOnce();
+        expect(favoriteService.remove).not.toHaveBeenCalled();
+        expect(remove.getAttribute('aria-label')).toBe('MEAL_DETAIL.ADD_FAVORITE');
+        mealService.queryOverview.mockReturnValueOnce(
+            of({
+                ...createOverview([{ ...meal, isFavorite: false }]),
+                favoriteItems: [otherFavorite],
+                favoriteTotalCount: 1,
+            }),
+        );
+        requireButton(document, 'fd-meal-detail button[aria-label="COMMON.CLOSE"]').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(harness.routeNativeElement?.querySelector('fd-meal-card button[aria-label="MEAL_DETAIL.ADD_FAVORITE"]')).not.toBeNull();
+        });
+        expect(document.querySelector('fd-meal-detail')).toBeNull();
+        expect(mealService.queryOverview).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('Meal diary favorite repeat recovery', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.useRealTimers();
+    });
+
+    it('keeps the chosen meal type after a failed repeat and scrolls the updated diary on retry', async () => {
+        const now = new Date('2026-05-04T08:00:00');
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(now);
+        const { harness, meal, mealService, favoriteService } = await renderMealDiaryAsync();
+        const favorite = createFavorite({ mealId: meal.id, name: 'Saved breakfast' });
+        const repeated = createMockMeal({ id: entityId<'meal'>('repeated-favorite'), mealType: 'DINNER' });
+        favoriteService.getPage.mockReturnValueOnce(of({ data: [favorite], page: 1, limit: PAGE_LIMIT, totalItems: 1, totalPages: 1 }));
+        mealService.repeat.mockReturnValueOnce(throwError(() => new Error('Repeat unavailable'))).mockReturnValueOnce(of(repeated));
+        mealService.queryOverview.mockReturnValueOnce(of(createOverview([meal, repeated])));
+        for (const block of await harness.fixture.getDeferBlocks()) {
+            await block.render(DeferBlockState.Complete);
+        }
+        harness.detectChanges();
+        const list = harness.routeNativeElement?.querySelector<HTMLElement>('.meal-list');
+        if (!(list instanceof HTMLElement)) {
+            throw new Error('Expected the rendered meal diary');
+        }
+        const scroll = vi.fn();
+        list.scrollIntoView = scroll;
+        requireButton(list, '[data-tour-id="meal-list-favorites"] button').click();
+        await vi.dynamicImportSettled();
+        harness.detectChanges();
+        const picker = document.querySelector<HTMLElement>('fd-meal-favorites-picker');
+        if (picker === null) {
+            throw new Error('Expected the rendered meal favorites picker');
+        }
+        const type = requireButton(picker, 'fd-ui-select button[aria-haspopup="listbox"]');
+        expect(type.textContent).toContain('MEAL_TYPES.BREAKFAST');
+        type.click();
+        harness.detectChanges();
+        const dinner = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="option"]')).find(
+            option => option.textContent.trim() === 'MEAL_TYPES.DINNER',
+        );
+        if (dinner === undefined) {
+            throw new Error('Expected Dinner in the meal type picker');
+        }
+        dinner.click();
+        harness.detectChanges();
+
+        clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.ADD');
+        harness.detectChanges();
+        expect(picker.querySelector('[role="alert"]')?.textContent).toBe('MEAL_FAVORITES.ADD_ERROR');
+        expect(type.textContent).toContain('MEAL_TYPES.DINNER');
+        expect(mealService.queryOverview).toHaveBeenCalledOnce();
+        expect(scroll).not.toHaveBeenCalled();
+
+        clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.ADD');
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(picker.isConnected).toBe(false);
+            expect(list.querySelectorAll('fd-meal-card')).toHaveLength(2);
+        });
+        expect(mealService.repeat.mock.calls).toEqual([
+            [meal.id, now.toISOString(), 'DINNER'],
+            [meal.id, now.toISOString(), 'DINNER'],
+        ]);
+        expect(scroll).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Meal diary favorite undo ownership', () => {
+    afterEach(() => {
+        TestBed.inject(FdUiDialogService).closeAll();
+        vi.unstubAllGlobals();
+    });
+
+    it('announces a failed undo and restores the same favorite on retry', async () => {
+        const diary = await renderMealDiaryAsync({ isFavorite: true });
+        const { harness, meal, favoriteService } = diary;
+        const favorite = createFavorite({ mealId: meal.id, name: 'Saved breakfast' });
+        favoriteService.remove.mockReturnValueOnce(of(undefined));
+        favoriteService.restore.mockReturnValueOnce(throwError(() => new Error('Restore unavailable'))).mockReturnValueOnce(of(favorite));
+        const picker = await openRenderedFavoritesPickerAsync(diary, favorite);
+
+        requireButton(picker, 'button[aria-label="MEAL_DETAIL.REMOVE_FAVORITE"]').click();
+        harness.detectChanges();
+        expect(picker.querySelector('[role="status"]')?.textContent).toContain('MEAL_FAVORITES.REMOVED');
+        clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.UNDO');
+        harness.detectChanges();
+
+        expect(picker.querySelector('[role="status"]')?.textContent).toContain('MEAL_FAVORITES.RESTORE_ERROR');
+        expect(picker.querySelector('[role="status"]')?.textContent).toContain(favorite.name);
+        expect(requireButton(picker, '.favorite-row__undo button').disabled).toBe(false);
+        expect(harness.routeNativeElement?.querySelector('fd-meal-card button[aria-label="MEAL_DETAIL.ADD_FAVORITE"]')).not.toBeNull();
+
+        clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.UNDO');
+        harness.detectChanges();
+        expect(picker.querySelector('.favorite-row__undo')).toBeNull();
+        expect(picker.querySelector('.favorite-row__heading strong')?.textContent).toBe(favorite.name);
+        expect(favoriteService.remove).toHaveBeenCalledExactlyOnceWith(favorite.id);
+        expect(favoriteService.restore.mock.calls).toEqual([[favorite.id], [favorite.id]]);
+        expect(harness.routeNativeElement?.querySelector('fd-meal-card button[aria-label="MEAL_DETAIL.REMOVE_FAVORITE"]')).not.toBeNull();
+    });
+
+    it('dismisses the open picker and cancels its pending undo when leaving the diary', async () => {
+        const diary = await renderMealDiaryAsync();
+        const { harness, meal, favoriteService } = diary;
+        const favorite = createFavorite({ mealId: meal.id, name: 'Saved lunch' });
+        const pendingUndo = new Subject<FavoriteMeal>();
+        favoriteService.remove.mockReturnValueOnce(of(undefined));
+        favoriteService.restore.mockReturnValueOnce(pendingUndo);
+        const picker = await openRenderedFavoritesPickerAsync(diary, favorite);
+
+        requireButton(picker, 'button[aria-label="MEAL_DETAIL.REMOVE_FAVORITE"]').click();
+        harness.detectChanges();
+        clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.UNDO');
+        harness.detectChanges();
+        expect(pendingUndo.observed).toBe(true);
+
+        await harness.navigateByUrl('/statistics', DiaryDestinationTestPage);
+        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Statistics');
+        expect(picker.isConnected).toBe(false);
+        expect(pendingUndo.observed).toBe(false);
+    });
+});
+
+async function openRenderedFavoritesPickerAsync(
+    { harness, favoriteService }: RenderedMealDiary,
+    favorite: FavoriteMeal,
+): Promise<HTMLElement> {
+    favoriteService.getPage.mockReturnValue(of({ data: [favorite], page: 1, limit: PAGE_LIMIT, totalItems: 1, totalPages: 1 }));
+    for (const block of await harness.fixture.getDeferBlocks()) {
+        await block.render(DeferBlockState.Complete);
+    }
+    harness.detectChanges();
+    const route = harness.routeNativeElement;
+    if (route === null) {
+        throw new Error('Meal diary was not rendered');
+    }
+    requireButton(route, '[data-tour-id="meal-list-favorites"] button').click();
+    await vi.dynamicImportSettled();
+    harness.detectChanges();
+    const picker = document.querySelector<HTMLElement>('fd-meal-favorites-picker');
+    if (picker === null) {
+        throw new Error('Expected meal favorites picker');
+    }
+    return picker;
+}
+
+type RenderedMealDiary = {
     harness: RouterTestingHarness;
     meal: Meal;
     mealService: {
@@ -655,17 +837,27 @@ async function openRenderedMealDetailsAsync(): Promise<{
     };
     favoriteService: {
         add: ReturnType<typeof vi.fn<FavoriteMealService['add']>>;
+        getLookupPage: ReturnType<typeof vi.fn<FavoriteMealService['getLookupPage']>>;
+        getPage: ReturnType<typeof vi.fn<FavoriteMealService['getPage']>>;
+        remove: ReturnType<typeof vi.fn<FavoriteMealService['remove']>>;
+        restore: ReturnType<typeof vi.fn<FavoriteMealService['restore']>>;
     };
-}> {
-    const meal = createMockMeal({ id: entityId<'meal'>('diary-meal') });
+};
+
+async function renderMealDiaryAsync(overrides: Partial<Meal> = {}): Promise<RenderedMealDiary> {
+    const meal = createMockMeal({ id: entityId<'meal'>('diary-meal'), ...overrides });
     const mealService = {
         queryOverview: vi.fn<MealService['queryOverview']>().mockReturnValue(of(createOverview([meal]))),
         repeat: vi.fn<MealService['repeat']>().mockReturnValue(of(meal)),
         deleteById: vi.fn<MealService['deleteById']>().mockReturnValue(of(undefined)),
     };
     const favoriteService = {
-        isFavorite: vi.fn<FavoriteMealService['isFavorite']>().mockReturnValue(of(false)),
+        isFavorite: vi.fn<FavoriteMealService['isFavorite']>().mockReturnValue(of(meal.isFavorite ?? false)),
         add: vi.fn<FavoriteMealService['add']>(),
+        getLookupPage: vi.fn<FavoriteMealService['getLookupPage']>(),
+        getPage: vi.fn<FavoriteMealService['getPage']>(),
+        remove: vi.fn<FavoriteMealService['remove']>(),
+        restore: vi.fn<FavoriteMealService['restore']>(),
     };
     vi.stubGlobal('matchMedia', (media: string) => ({ matches: false, media }));
     TestBed.configureTestingModule({
@@ -678,13 +870,19 @@ async function openRenderedMealDetailsAsync(): Promise<{
             ]),
             provideHttpClient(),
             provideHttpClientTesting(),
-            { provide: AuthService, useValue: { isAuthenticated: signal(true) } },
+            { provide: AuthService, useValue: { isAuthenticated: signal(true), isPremium: signal(false), getUserId: (): null => null } },
             { provide: MealService, useValue: mealService },
             { provide: FavoriteMealService, useValue: favoriteService },
             { provide: BreakpointObserver, useValue: mockBreakpointObserver },
         ],
     });
     const harness = await RouterTestingHarness.create('/meals');
+    return { harness, meal, mealService, favoriteService };
+}
+
+async function openRenderedMealDetailsAsync(overrides: Partial<Meal> = {}): Promise<RenderedMealDiary> {
+    const diary = await renderMealDiaryAsync(overrides);
+    const { harness } = diary;
     const route = harness.routeNativeElement;
     if (route === null) {
         throw new Error('Meal diary was not rendered');
@@ -694,7 +892,7 @@ async function openRenderedMealDetailsAsync(): Promise<{
     await harness.fixture.whenStable();
     harness.detectChanges();
     expect(document.querySelector('fd-meal-detail .meal-detail__title')?.textContent).toBe('MEAL_DETAIL.TITLE');
-    return { harness, meal, mealService, favoriteService };
+    return diary;
 }
 
 function clickDetailAction(selector: string, label: string): void {
@@ -807,6 +1005,7 @@ function registerFavoritesPickerWiringTests(context: TestContext): void {
         expect(scroll).not.toHaveBeenCalled();
 
         closed.next(true);
+        closed.complete();
 
         expect(scroll).toHaveBeenCalledOnce();
     });

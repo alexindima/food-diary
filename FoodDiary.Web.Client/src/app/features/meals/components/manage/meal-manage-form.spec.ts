@@ -577,7 +577,11 @@ describe('MealManageFormComponent item and AI behavior', () => {
         component['onEditAiSession'](0);
         await waitForAsyncTasksAsync();
 
-        expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledWith(session);
+        expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledWith(
+            session,
+            expect.anything(),
+            expect.any(AbortSignal),
+        );
         expect(component['aiSessions']()).toEqual([updatedSession]);
     });
 });
@@ -1429,7 +1433,7 @@ it('does not redirect from a newer page when a pending save completes after the 
 });
 
 describe('Meal editor launch and item picker', () => {
-    it('opens the manual picker from the route and applies the normalized meal type', async () => {
+    it('opens the meal-type bookmark and reports removal of its last item', async () => {
         const picker = new Subject<MealItemFormValues | null>();
         const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(undefined, {
             query: { manual: '1', mealType: ' dinner ' },
@@ -1449,6 +1453,16 @@ describe('Meal editor launch and item picker', () => {
 
         expect(mealManageFacade.configureItemType).toHaveBeenCalledExactlyOnceWith(chosen, MealSourceType.Product);
         expect(host.querySelector('.meal-manage__manual-summary')?.textContent).toContain('Apple');
+        const save = requiredMealButton(host, 'button[type="submit"]');
+        expect(save.disabled).toBe(false);
+
+        requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]').click();
+        fixture.detectChanges();
+
+        expect(host.querySelector('.meal-manage__manual-summary')).toBeNull();
+        expect(host.querySelector('.meal-item__error')?.textContent).toContain('FORM_ERRORS.NON_EMPTY_ARRAY');
+        expect(save.disabled).toBe(true);
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
     });
 
     it('adds a distinct second item through the manual action and edits the visible list', async () => {

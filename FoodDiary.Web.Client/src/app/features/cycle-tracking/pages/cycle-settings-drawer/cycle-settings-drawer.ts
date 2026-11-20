@@ -10,7 +10,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { DEVELOPMENT_SCREENS } from '../../../../shared/development/development-tools';
-import type { CycleReproductiveState, CycleTrackingGoal, CycleTrackingMode } from '../../../../shared/models/cycle.data';
+import type { CycleReproductiveState, CycleTrackingGoal } from '../../../../shared/models/cycle.data';
 import { cycleSettingsDevelopmentScreen } from '../../lib/cycle-development';
 import type { CycleSettingsFormModel } from '../../lib/cycle-tracking.facade';
 
@@ -35,7 +35,6 @@ export class CycleSettingsDrawerComponent {
     private readonly developmentScreens = inject(DEVELOPMENT_SCREENS, { optional: true });
     private readonly translate = inject(TranslateService);
     public readonly settingsForm = input.required<FieldTree<CycleSettingsFormModel>>();
-    public readonly modeOptions = input.required<Array<FdUiSelectOption<CycleTrackingMode>>>();
     public readonly goalOptions = input.required<Array<FdUiSelectOption<CycleTrackingGoal>>>();
     public readonly reproductiveStateOptions = input.required<Array<FdUiSelectOption<CycleReproductiveState>>>();
     public readonly isSaving = input.required<boolean>();

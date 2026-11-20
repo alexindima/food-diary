@@ -9,14 +9,13 @@ import { map } from 'rxjs';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
-import { compareDatesAsc, formatDateValue, parseCalendarDateUtc, parseDateValue } from '../../../../shared/lib/local-date.utils';
+import { formatDateValue, parseCalendarDateUtc, parseDateValue } from '../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import {
     WEIGHT_TREND_CHART_MINIMUM_PADDING,
     WEIGHT_TREND_CHART_RANGE_PADDING_RATIO,
     WEIGHT_TREND_DISPLAY_FRACTION_DIGITS,
     WEIGHT_TREND_FILL_COLOR_PERCENT,
-    WEIGHT_TREND_ISO_DATE_LENGTH,
     WEIGHT_TREND_MINIMUM_CHART_POINTS,
 } from './weight-trend-card.config';
 
@@ -67,20 +66,30 @@ export class WeightTrendCardComponent {
     public readonly targetValue = input<number | null>(null);
 
     protected readonly measurementPoints = computed<ReadonlyArray<FdUiLineChartPoint & { value: number }>>(() => {
-        const points = [...this.points()]
-            .sort((a, b) => compareDatesAsc(a.date, b.date))
-            .filter(
-                (point): point is WeightTrendPoint & { value: number } => typeof point.value === 'number' && Number.isFinite(point.value),
-            );
-        const timestamps = points.map(point => this.toTimestamp(point.date));
-        const firstTimestamp = timestamps[0] ?? 0;
-        const lastTimestamp = timestamps.at(-1) ?? firstTimestamp;
-        const range = lastTimestamp - firstTimestamp;
+        const points = this.points()
+            .flatMap(({ date, value }) => {
+                if (value === null || !Number.isFinite(value)) {
+                    return [];
+                }
 
-        return points.map((point, index) => ({
-            label: this.formatPointLabel(point.date),
+                const encodedDate = typeof date === 'string' ? date : parseDateValue(date)?.toISOString();
+                const calendarDate = parseCalendarDateUtc(encodedDate);
+                return calendarDate === null ? [] : [{ timestamp: calendarDate.getTime(), value }];
+            })
+            .sort((left, right) => left.timestamp - right.timestamp);
+        const firstTimestamp = points[0]?.timestamp ?? 0;
+        const lastTimestamp = points.at(-1)?.timestamp ?? firstTimestamp;
+        const range = lastTimestamp - firstTimestamp;
+        const formatter = new Intl.DateTimeFormat(this.locale(), {
+            day: 'numeric',
+            month: 'long',
+            timeZone: 'UTC',
+        });
+
+        return points.map(point => ({
+            label: formatter.format(point.timestamp),
             value: this.displayValue(point.value),
-            xPosition: range > 0 ? ((timestamps[index] ?? firstTimestamp) - firstTimestamp) / range : undefined,
+            xPosition: range > 0 ? (point.timestamp - firstTimestamp) / range : undefined,
         }));
     });
     protected readonly measurementCount = computed(() => this.measurementPoints().length);
@@ -123,16 +132,17 @@ export class WeightTrendCardComponent {
                   },
               ];
     });
-    protected readonly goalLabel = computed(() =>
-        this.targetValue() === null
+    protected readonly goalLabel = computed(() => {
+        const targetValue = this.targetValue();
+        return targetValue === null
             ? null
             : this.translateService.instant('WEIGHT_TREND_CARD.CHART_GOAL', {
                   value: new Intl.NumberFormat(this.locale(), {
                       maximumFractionDigits: 1,
-                  }).format(this.displayValue(this.targetValue() ?? 0)),
+                  }).format(this.displayValue(targetValue)),
                   unit: this.translateService.instant(this.displayUnitKey()),
-              }),
-    );
+              });
+    });
 
     protected readonly formattedChangeValue = computed(() => {
         const delta = this.displayValue(this.change() ?? 0, WEIGHT_TREND_DISPLAY_FRACTION_DIGITS);
@@ -147,10 +157,9 @@ export class WeightTrendCardComponent {
         return `${sign}${formattedDelta}`;
     });
 
-    protected readonly hasValue = computed(() => this.currentWeight() !== null && Number.isFinite(this.currentWeight()));
     protected readonly displayCurrentValue = computed(() => {
         const value = this.currentWeight();
-        return value === null ? null : this.displayValue(value);
+        return value === null || !Number.isFinite(value) ? null : this.displayValue(value);
     });
     protected readonly displayUnitKey = computed(() =>
         this.measurementKind() === 'weight' ? this.measurements.weightUnitKey() : this.measurements.lengthUnitKey(),
@@ -160,20 +169,6 @@ export class WeightTrendCardComponent {
         if (!this.isLoading()) {
             void this.router.navigateByUrl(this.router.createUrlTree([this.actionRoute()], { queryParams: { addEntry: true } }));
         }
-    }
-
-    private formatPointLabel(date: string | Date): string {
-        return (
-            formatDateValue(typeof date === 'string' ? parseCalendarDateUtc(date) : date, this.locale(), {
-                day: 'numeric',
-                month: 'long',
-                timeZone: 'UTC',
-            }) ?? (date instanceof Date ? date.toISOString().slice(0, WEIGHT_TREND_ISO_DATE_LENGTH) : date)
-        );
-    }
-
-    private toTimestamp(date: string | Date): number {
-        return (typeof date === 'string' ? parseCalendarDateUtc(date) : parseDateValue(date))?.getTime() ?? 0;
     }
 
     private displayValue(value: number, fractionDigits?: number): number {

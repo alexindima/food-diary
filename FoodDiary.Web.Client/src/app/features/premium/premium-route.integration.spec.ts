@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
@@ -92,6 +93,26 @@ describe('Premium checkout return stays with its owning screen', () => {
 });
 
 describe('Premium activation return ownership', () => {
+    it('clears an unfamiliar checkout return code and renders normal Premium without an activation result', async () => {
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(overview()));
+        const { harness, router, refreshSession, createCheckout, toast } = await renderPremiumAsync(
+            '/premium?checkout=unrecognized',
+            readOverview,
+        );
+        await vi.waitFor(async () => {
+            await redrawAsync(harness);
+            expect(readOverview).toHaveBeenCalledOnce();
+            expect(premiumRoot(harness).querySelector(PLANS)).not.toBeNull();
+        });
+        const root = premiumRoot(harness);
+
+        expect(router.url).toBe(PREMIUM_ROUTE);
+        expect(root.querySelector('fd-premium-access-banners fd-notice-banner')).toBeNull();
+        expect(toast.toasts()).toEqual([]);
+        expect(refreshSession).not.toHaveBeenCalled();
+        expect(createCheckout).not.toHaveBeenCalled();
+    });
+
     it('abandons a pending activation check when leaving the return screen', async () => {
         const pending = new Subject<BillingOverview>();
         const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(overview())).mockReturnValueOnce(pending);
@@ -113,6 +134,28 @@ describe('Premium activation return ownership', () => {
 });
 
 describe('Premium rendered account and plan controls', () => {
+    it('starts the Premium help tour again after the user completed it', async () => {
+        const { harness, createCheckout } = await renderPremiumAsync(PREMIUM_ROUTE);
+        const tour = TestBed.inject(FdTourService);
+        const help = premiumRoot(harness).querySelector<HTMLButtonElement>('button[aria-label="PREMIUM_PAGE.TOUR.START_TOUR"]');
+        expect(help).not.toBeNull();
+        try {
+            help?.click();
+            expect(tour.activeTour()?.id).toBe('premium-access');
+            expect(tour.activeStep()?.id).toBe('overview');
+            tour.complete();
+            expect(tour.activeTour()).toBeNull();
+
+            help?.click();
+            expect(tour.activeTour()?.id).toBe('premium-access');
+            expect(tour.activeStep()?.id).toBe('overview');
+            expect(createCheckout).not.toHaveBeenCalled();
+        } finally {
+            tour.close();
+            tour.resetCompletion('premium-access');
+        }
+    });
+
     it('recovers from a failed account read and renders the available prices without starting a checkout', async () => {
         const readOverview = vi
             .fn<PremiumBillingService['getOverview']>()
@@ -158,6 +201,61 @@ describe('Premium rendered account and plan controls', () => {
         expect(document.activeElement).toBe(plans);
         expect(scroll).toHaveBeenCalledExactlyOnceWith({ behavior: 'smooth', block: 'start' });
         expect(createCheckout).not.toHaveBeenCalled();
+    });
+});
+
+describe('Premium payment recovery details', () => {
+    it('relocalizes outstanding billing dates and opens payment help without starting a billing action', async () => {
+        const periodStart = '2026-11-04T12:00:00Z';
+        const retryDate = '2026-11-18T12:00:00Z';
+        const account = overview({
+            subscriptionStatus: 'past_due',
+            subscriptionProvider: 'paddle',
+            currentPeriodStartUtc: periodStart,
+            currentPeriodEndUtc: null,
+            nextBillingAttemptUtc: retryDate,
+            renewalEnabled: true,
+            canStartPremiumTrial: false,
+            availableProviders: [],
+        });
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(account));
+        const { harness, createCheckout, createPortal, openWidget, startTrial } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        const root = premiumRoot(harness);
+        const details = root.querySelector('.premium-access-page__details');
+        const terms = root.querySelector<HTMLElement>('#premium-subscription-terms');
+        const disclosure = root.querySelector<HTMLButtonElement>('button[aria-controls="premium-subscription-terms"]');
+        if (details === null || terms === null || disclosure === null) {
+            throw new Error('Expected the dates and support controls on the Premium route');
+        }
+        const english = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
+        const russian = new Intl.DateTimeFormat('ru-RU', { dateStyle: 'medium' });
+        const billingDates = [new Date(periodStart), new Date(retryDate)];
+        expect(details.textContent).toContain('PREMIUM_PAGE.OVERVIEW.PERIOD_START');
+        expect(details.textContent).toContain('PREMIUM_PAGE.OVERVIEW.NEXT_CHARGE');
+        for (const date of billingDates) {
+            expect(details.textContent).toContain(english.format(date));
+        }
+
+        await firstValueFrom(TestBed.inject(TranslateService).use('ru'));
+        await redrawAsync(harness);
+        for (const date of billingDates) {
+            expect(details.textContent).toContain(russian.format(date));
+            expect(details.textContent).not.toContain(english.format(date));
+        }
+        expect(readOverview).toHaveBeenCalledOnce();
+
+        expect(terms.hidden).toBe(true);
+        const help = nativeButton(root, 'PREMIUM_PAGE.OVERVIEW.PAYMENT_HELP_ACTION');
+        expect(help.closest('[hidden]')).toBeNull();
+        help.click();
+        await redrawAsync(harness);
+        expect(terms.hidden).toBe(false);
+        expect(disclosure.getAttribute('aria-expanded')).toBe('true');
+        expect(document.activeElement).toBe(disclosure);
+        expect(createCheckout).not.toHaveBeenCalled();
+        expect(createPortal).not.toHaveBeenCalled();
+        expect(startTrial).not.toHaveBeenCalled();
+        expect(openWidget).not.toHaveBeenCalled();
     });
 });
 
@@ -316,6 +414,44 @@ describe('Premium purchase and trial actions', () => {
     });
 });
 
+describe('Premium billing error recovery', () => {
+    it('handles an empty portal URL and enables the same billing action for a successful retry', async () => {
+        const subscriber = overview({ isPremium: true, subscriptionStatus: 'active', manageBillingAvailable: true });
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(subscriber));
+        const { harness, createPortal, toast } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        const root = premiumRoot(harness);
+        const manage = nativeButton(root, 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION');
+        const portalResponse = new Subject<PortalSessionResponse>();
+        const startingUrl = document.location.href;
+        const destination = new URL(startingUrl);
+        destination.hash = 'fixture-billing-portal';
+        createPortal.mockReturnValueOnce(portalResponse).mockReturnValueOnce(of({ url: destination.href }));
+
+        manage.click();
+        await redrawAsync(harness);
+        expect(portalResponse.observed).toBe(true);
+        expect(manage.disabled).toBe(true);
+
+        portalResponse.next({ url: '' });
+        portalResponse.complete();
+        await redrawAsync(harness);
+        expect(root.textContent).toContain('PREMIUM_PAGE.ERROR_PORTAL');
+        expect(toast.toasts().map(item => item.message)).toEqual(['PREMIUM_PAGE.ERROR_PORTAL']);
+        expect(manage.disabled).toBe(false);
+        expect(document.location.href).toBe(startingUrl);
+
+        try {
+            manage.click();
+            await redrawAsync(harness);
+            expect(createPortal).toHaveBeenCalledTimes(2);
+            expect(document.location.href).toBe(destination.href);
+            expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_PORTAL');
+        } finally {
+            history.replaceState(history.state, '', startingUrl);
+        }
+    });
+});
+
 describe('Premium billing and trial ownership', () => {
     it('abandons the portal request on departure and does not toast a late failure', async () => {
         const subscriber = overview({ isPremium: true, subscriptionStatus: 'active', manageBillingAvailable: true });
@@ -382,6 +518,90 @@ describe('Premium billing and trial ownership', () => {
 function activeTrial(): BillingOverview {
     return overview({ isPremium: true, premiumTrialActive: true, premiumTrialUsed: true, canStartPremiumTrial: false });
 }
+
+describe('Premium actions when the host is destroyed after a response', () => {
+    it('does not open a Stars invoice once the checkout view has been destroyed', async () => {
+        const readOverview = vi
+            .fn<PremiumBillingService['getOverview']>()
+            .mockReturnValue(of(overview({ availableProviders: ['telegramstars'], telegramStarsPrice: 300 })));
+        const { harness, createCheckout, openInvoice, toast } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview, true);
+        const response = new Subject<CheckoutSessionResponse>();
+        createCheckout.mockReturnValueOnce(response);
+        nativeButton(premiumRoot(harness), 'PREMIUM_PAGE.STARS.SUBSCRIBE').click();
+        expect(createCheckout).toHaveBeenCalledExactlyOnceWith('monthly', 'telegramstars');
+        expect(response.observed).toBe(true);
+
+        response.next({ sessionId: 'fixture-session', plan: 'monthly', url: 'https://example.test/stars-invoice' });
+        expect(response.observed).toBe(false);
+        harness.fixture.destroy();
+        await waitForAsyncTasksAsync();
+
+        expect(openInvoice).not.toHaveBeenCalled();
+        expect(toast.toasts()).toEqual([]);
+    });
+
+    it('does not redirect to the billing portal once the account view has been destroyed', async () => {
+        const subscriber = overview({ isPremium: true, subscriptionStatus: 'active', manageBillingAvailable: true });
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(subscriber));
+        const { harness, createPortal, toast } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        const response = new Subject<PortalSessionResponse>();
+        const startingUrl = document.location.href;
+        const destination = new URL(startingUrl);
+        destination.hash = 'fixture-departed-billing';
+        createPortal.mockReturnValueOnce(response);
+        nativeButton(premiumRoot(harness), 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION').click();
+        expect(createPortal).toHaveBeenCalledOnce();
+        expect(response.observed).toBe(true);
+
+        try {
+            response.next({ url: destination.href });
+            expect(response.observed).toBe(false);
+            harness.fixture.destroy();
+            await waitForAsyncTasksAsync();
+
+            expect(document.location.href).toBe(startingUrl);
+            expect(toast.toasts()).toEqual([]);
+        } finally {
+            history.replaceState(history.state, '', startingUrl);
+        }
+    });
+
+    it('does not refresh shared access or announce a trial after the trial view is destroyed', async () => {
+        const { harness, startTrial, refreshSession, previewPrices, toast } = await renderPremiumAsync(PREMIUM_ROUTE);
+        const response = new Subject<BillingOverview>();
+        startTrial.mockReturnValueOnce(response);
+        previewPrices.mockClear();
+        nativeButton(premiumRoot(harness), 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION').click();
+        expect(startTrial).toHaveBeenCalledOnce();
+        expect(response.observed).toBe(true);
+
+        response.next(activeTrial());
+        expect(response.observed).toBe(false);
+        harness.fixture.destroy();
+        await waitForAsyncTasksAsync();
+
+        expect(refreshSession).not.toHaveBeenCalled();
+        expect(previewPrices).not.toHaveBeenCalled();
+        expect(toast.toasts()).toEqual([]);
+    });
+
+    it('does not refresh shared access from an overview received just before the host closes', async () => {
+        const response = new Subject<BillingOverview>();
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValueOnce(response);
+        const { harness, refreshSession, previewPrices, toast } = await renderPremiumAsync(PREMIUM_ROUTE, readOverview);
+        expect(premiumRoot(harness).textContent).toContain('PREMIUM_PAGE.STATUS_LOADING');
+        expect(response.observed).toBe(true);
+
+        response.next(overview({ isPremium: true, subscriptionStatus: 'active' }));
+        expect(response.observed).toBe(false);
+        harness.fixture.destroy();
+        await waitForAsyncTasksAsync();
+
+        expect(refreshSession).not.toHaveBeenCalled();
+        expect(previewPrices).not.toHaveBeenCalled();
+        expect(toast.toasts()).toEqual([]);
+    });
+});
 
 async function renderPremiumAsync(
     target: string,

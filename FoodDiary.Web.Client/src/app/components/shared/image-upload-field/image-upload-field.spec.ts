@@ -549,6 +549,39 @@ describe('ImageUploadFieldComponent native preparation ownership', () => {
     });
 });
 
+describe('ImageUploadFieldComponent disabled preparation', () => {
+    it('blocks a photo still being prepared when the owner disables the picker and accepts a later selection', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, image, revokeObjectUrl } = prepareNativeResize(fixture);
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+        const saved = imageSelection('https://example.test/saved.png', 'saved-photo');
+        component.value.set(saved);
+        fixture.detectChanges();
+        const first = new File(['first photo'], 'first.png', { type: 'image/png' });
+
+        selectFiles(host, first);
+        expect(image.src).toBe(DECODE_URL);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        expect(requireElement(host, 'input[type="file"]', HTMLInputElement).disabled).toBe(true);
+        image.dispatchEvent(new Event('load'));
+        await waitForAsyncTasksAsync();
+
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(component.value()).toEqual(saved);
+        expect(revokeObjectUrl).toHaveBeenCalledWith(DECODE_URL);
+
+        fixture.componentRef.setInput('disabled', false);
+        fixture.detectChanges();
+        const replacement = new File(['replacement photo'], 'replacement.png', { type: 'image/png' });
+        selectFiles(host, replacement);
+        image.dispatchEvent(new Event('load'));
+        await vi.waitFor(() => {
+            expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(replacement);
+        });
+    });
+});
+
 describe('ImageUploadFieldComponent interactions', () => {
     it('removes hidden upload controls from the accessibility tree and tab order', async () => {
         const { fixture } = await setupImageUploadFieldAsync();
@@ -563,21 +596,39 @@ describe('ImageUploadFieldComponent interactions', () => {
         expect(dropzone.getAttribute('aria-hidden')).toBe('true');
     });
 
-    it('does not open file picker when disabled or already selected', async () => {
+    it.each([
+        { action: 'pointer', key: null },
+        { action: 'Enter', key: 'Enter' },
+        { action: 'Space', key: ' ' },
+    ])('opens the empty file picker by $action and blocks activation when disabled or filled', async ({ key }) => {
         const { component, fixture } = await setupImageUploadFieldAsync();
-        const clickSpy = vi.fn();
-        const fileInput = { click: clickSpy } as unknown as HTMLInputElement;
         fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const dropzone = requireElement(host, '.image-upload-field__dropzone', HTMLElement);
+        const fileInput = requireElement(host, 'input[type="file"]', HTMLInputElement);
+        const activated = vi.fn();
+        fileInput.addEventListener('click', activated);
+        const activate = (): void => {
+            if (key === null) {
+                dropzone.click();
+            } else {
+                dropzone.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+            }
+        };
 
+        activate();
+        expect(activated).toHaveBeenCalledOnce();
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
-        component['onZoneClick'](fileInput);
+        expect(dropzone.getAttribute('aria-disabled')).toBe('true');
+        activate();
+        expect(activated).toHaveBeenCalledOnce();
+
         fixture.componentRef.setInput('disabled', false);
         component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.detectChanges();
-        component['onZoneClick'](fileInput);
-
-        expect(clickSpy).not.toHaveBeenCalled();
+        activate();
+        expect(activated).toHaveBeenCalledOnce();
     });
 });
 
@@ -993,6 +1044,58 @@ describe('ImageUploadFieldComponent rendered cropper dismissal', () => {
         expect(imageUploadService.upload).not.toHaveBeenCalled();
         expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
     });
+
+    it('retains the existing image when the field is disabled before the pending crop finishes', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const previous = imageSelection('https://example.test/avatar.png', 'existing');
+        component.value.set(previous);
+        const changed = vi.fn();
+        component.imageChanged.subscribe(changed);
+        const { dialog, apply } = await openCropperAsync(fixture, 'replacement.png');
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+        const toBlob = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(() => {});
+        apply.click();
+        expect(toBlob).toHaveBeenCalledOnce();
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        toBlob.mock.calls[0][0](new Blob(['finished after disabling'], { type: 'image/png' }));
+        fixture.detectChanges();
+
+        expect(dialog.open).toBe(false);
+        expect(component.value()).toEqual(previous);
+        expect(changed).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+describe('ImageUploadFieldComponent dimensionless crop preview', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('rejects a loaded image without an intrinsic width and preserves the saved image', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('cropEnabled', true);
+        fixture.componentRef.setInput('acceptedTypes', 'image/svg+xml');
+        const saved = imageSelection('https://example.test/avatar.png', 'saved-avatar');
+        component.value.set(saved);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="128"></svg>';
+        selectFiles(host, new File([svg], 'empty-width.svg', { type: 'image/svg+xml' }));
+        const preview = await vi.waitFor(() => {
+            fixture.detectChanges();
+            return requireElement(host, 'dialog[open] img', HTMLImageElement);
+        });
+        Object.defineProperties(preview, { naturalWidth: { value: 0 }, naturalHeight: { value: 128 } });
+
+        preview.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+
+        expect(host.querySelector('dialog')).toBeNull();
+        expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED');
+        expect(component.value()).toEqual(saved);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
 });
 
 describe('ImageUploadFieldComponent reading crop files', () => {
@@ -1115,6 +1218,49 @@ describe('ImageUploadFieldComponent crop failures', () => {
 
         expect(component['canConfirmCrop']()).toBe(false);
         expect(component['isProcessingCrop']()).toBe(false);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+describe('ImageUploadFieldComponent crop preview without layout', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('keeps Apply disabled if the decoded image has no visible area to crop', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, readers } = captureCropReads(fixture);
+        const saved = imageSelection('https://example.test/saved.png', 'saved-photo');
+        component.value.set(saved);
+        fixture.detectChanges();
+        selectFiles(host, new File(['source photo'], 'source.png', { type: 'image/png' }));
+        expect(readers).toHaveLength(1);
+        const [reader] = readers;
+        Object.defineProperty(reader, 'result', { value: 'data:image/png;base64,c291cmNl' });
+        reader.dispatchEvent(new ProgressEvent('load'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('dialog[open]')).not.toBeNull();
+        });
+
+        const dialog = requireElement(host, 'dialog[open]', HTMLDialogElement);
+        const surface = requireElement(dialog, '.image-upload-field__cropper-body', HTMLDivElement);
+        const image = requireElement(surface, 'img', HTMLImageElement);
+        Object.defineProperties(image, {
+            naturalWidth: { value: RESIZED_IMAGE_SIZE.width },
+            naturalHeight: { value: RESIZED_IMAGE_SIZE.height },
+        });
+        vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect());
+        image.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+
+        const apply = requireElement(dialog, '.image-upload-field__cropper-actions fd-ui-button:last-child button', HTMLButtonElement);
+        expect(apply.disabled).toBe(true);
+        expect(dialog.querySelector('.image-upload-field__crop-selection')).toBeNull();
+        apply.click();
+        dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+        fixture.detectChanges();
+
+        expect(dialog.open).toBe(false);
+        expect(component.value()).toEqual(saved);
         expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
 });

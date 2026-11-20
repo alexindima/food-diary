@@ -154,7 +154,8 @@ describe('Profile dietologist invitation submission', () => {
         const summary = host.querySelector('details:has(fd-user-manage-dietologist-card) > summary');
         const email = host.querySelector<HTMLInputElement>('fd-user-manage-dietologist-summary input[type="email"]');
         const send = host.querySelector<HTMLButtonElement>('.user-manage__dietologist-summary-button button');
-        if (email === null || send === null || !(summary instanceof HTMLElement)) {
+        const permission = host.querySelector<HTMLButtonElement>('fd-user-manage-dietologist-permissions button[role="switch"]');
+        if (email === null || send === null || permission === null || !(summary instanceof HTMLElement)) {
             throw new Error('Expected the profile invitation controls');
         }
         summary.click();
@@ -164,6 +165,7 @@ describe('Profile dietologist invitation submission', () => {
         email.dispatchEvent(new Event('input', { bubbles: true }));
         fixture.detectChanges();
         expect(send.disabled).toBe(false);
+        expect(permission.disabled).toBe(false);
 
         const request = new Subject<void>();
         const permissions = {
@@ -193,6 +195,7 @@ describe('Profile dietologist invitation submission', () => {
         send.click();
         fixture.detectChanges();
         expect(send.disabled).toBe(true);
+        expect(permission.disabled).toBe(true);
         send.click();
         expect(dietologistService.invite).toHaveBeenCalledExactlyOnceWith({ dietologistEmail: email.value, permissions });
         expect(dietologistService.getRelationship).not.toHaveBeenCalled();
@@ -204,6 +207,7 @@ describe('Profile dietologist invitation submission', () => {
         );
         expect(email.value).toBe('diet@example.com');
         expect(send.disabled).toBe(false);
+        expect(permission.disabled).toBe(false);
 
         send.click();
         fixture.detectChanges();
@@ -525,11 +529,13 @@ describe('Profile pending dietologist invitation recovery', () => {
         expect(card.querySelector<HTMLInputElement>('input[type="email"]')?.disabled).toBe(true);
 
         revoke.click();
+        expect(revoke.disabled).toBe(false);
+        revoke.click();
+        expect(dietologistService.revokeRelationship).toHaveBeenCalledOnce();
+
         fixture.detectChanges();
         expect(dialogService.open).not.toHaveBeenCalled();
         expect(revoke.disabled).toBe(true);
-        revoke.click();
-        expect(dietologistService.revokeRelationship).toHaveBeenCalledOnce();
         pendingCancel.error(new Error('Cancellation temporarily unavailable'));
         fixture.detectChanges();
         expect(dietologistError(card)).toBe('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');
@@ -599,6 +605,10 @@ describe('Profile dietologist client profile sharing', () => {
         expect(dietologistService.updatePermissions).not.toHaveBeenCalled();
         confirmation.next(true);
         confirmation.complete();
+        expect(share.disabled).toBe(false);
+        share.click();
+        expect(dialogService.open).toHaveBeenCalledTimes(2);
+
         fixture.detectChanges();
         expect(dietologistService.updatePermissions).toHaveBeenCalledExactlyOnceWith({ ...relationship.permissions, shareProfile: false });
         expect(share.getAttribute('aria-checked')).toBe('false');
@@ -641,7 +651,7 @@ describe('Profile dietologist client profile sharing', () => {
 });
 
 describe('Profile dietologist invitation draft controls', () => {
-    it('keeps the permission draft stable while an invitation is being sent', async () => {
+    it('keeps the permission draft stable and sends only one invitation before the controls lock', async () => {
         await createComponentAsync(null);
         const card = openDietologistCard();
         const email = card.querySelector<HTMLInputElement>('input[type="email"]');
@@ -657,13 +667,16 @@ describe('Profile dietologist invitation draft controls', () => {
         const pending = new Subject<void>();
         dietologistService.invite.mockReturnValueOnce(pending);
         invite.click();
+        expect(invite.disabled || shareMeals.disabled).toBe(false);
+        invite.click();
+        shareMeals.click();
+        expect(dietologistService.invite).toHaveBeenCalledExactlyOnceWith({ dietologistEmail: email.value, permissions });
+
         fixture.detectChanges();
 
         expect(invite.disabled).toBe(true);
-        shareMeals.click();
-        fixture.detectChanges();
+        expect(shareMeals.disabled).toBe(true);
         expect(shareMeals.getAttribute('aria-checked')).toBe('true');
-        expect(dietologistService.invite).toHaveBeenCalledExactlyOnceWith({ dietologistEmail: email.value, permissions });
 
         pending.error(new Error('Invitation temporarily unavailable'));
         fixture.detectChanges();
@@ -1266,6 +1279,91 @@ describe('UserManageComponent profile normalization and intents', () => {
     });
 });
 
+describe('Profile draft and security actions after account updates', () => {
+    const profile: User = {
+        id: entityId<'user'>('fbc0f99e-fca7-419c-8f6b-1eec02c19313'),
+        email: 'profile@example.com',
+        lastName: 'Saved surname',
+        hasPassword: true,
+        hasTelegramIdentity: true,
+        hasGoogleIdentity: true,
+        pushNotificationsEnabled: false,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: false,
+        fastingCheckInReminderHours: DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
+        fastingCheckInFollowUpReminderHours: DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
+        isActive: true,
+        isEmailConfirmed: true,
+    };
+
+    it('keeps manual edits through a notification preference update and lets navigation discard them', async () => {
+        await createComponentAsync(null, false, profile);
+        const host = fixture.nativeElement as HTMLElement;
+        const surname = host.querySelector<HTMLInputElement>('[data-user-field="lastName"] input');
+        const navigationHandler = TestBed.inject(UnsavedChangesService).getHandler();
+        if (surname === null || navigationHandler === null) {
+            throw new Error('Expected the surname input and its navigation protection');
+        }
+        expect(surname.value).toBe('Saved surname');
+        surname.value = 'Edited surname';
+        surname.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(navigationHandler.hasChanges()).toBe(true);
+
+        facade.user.set({ ...profile, pushNotificationsEnabled: true });
+        fixture.detectChanges();
+        expect(notificationsFacade.syncFromUser).toHaveBeenLastCalledWith(expect.objectContaining({ pushNotificationsEnabled: true }));
+        expect(surname.value).toBe('Edited surname');
+        expect(profileSaveButton()).not.toBeNull();
+
+        navigationHandler.discard();
+        fixture.detectChanges();
+        expect(surname.value).toBe('Saved surname');
+        expect(navigationHandler.hasChanges()).toBe(false);
+        expect(profileSaveButton()).toBeNull();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
+    });
+
+    it('clears an old set-password intent when the account already has a password and keeps the explicit action available', async () => {
+        await createComponentAsync(null, false, null, { intent: 'set-password', section: 'security' });
+        expect(router.navigate).not.toHaveBeenCalled();
+
+        facade.user.set(profile);
+        fixture.detectChanges();
+        expect(router.navigate).toHaveBeenCalledExactlyOnceWith(
+            [],
+            expect.objectContaining({ queryParams: { intent: null }, queryParamsHandling: 'merge', replaceUrl: true }),
+        );
+        expect(facade.openChangePasswordDialog).not.toHaveBeenCalled();
+
+        securityButton('USER_MANAGE.CHANGE_PASSWORD').click();
+        expect(facade.openChangePasswordDialog).toHaveBeenCalledOnce();
+    });
+
+    it('forwards the enabled Telegram disconnect button to the profile account flow', async () => {
+        await createComponentAsync(null, false, profile);
+        const disconnect = securityButton('USER_MANAGE.TELEGRAM_UNLINK');
+        expect(disconnect.disabled).toBe(false);
+
+        disconnect.click();
+        expect(facade.unlinkTelegramAsync).toHaveBeenCalledOnce();
+        expect(facade.openChangePasswordDialog).not.toHaveBeenCalled();
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
+    });
+});
+
+function securityButton(label: string): HTMLButtonElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const section = host.querySelector('fd-user-manage-security-card')?.closest('details');
+    section?.querySelector('summary')?.click();
+    fixture.detectChanges();
+    const button = [...(section?.querySelectorAll('button') ?? [])].find(candidate => candidate.textContent.trim() === label);
+    if (button === undefined || section?.open !== true) {
+        throw new Error('Expected an action in the open security section');
+    }
+    return button;
+}
+
 type DietologistServiceMock = {
     getRelationship: ReturnType<typeof vi.fn>;
     invite: ReturnType<typeof vi.fn>;
@@ -1332,6 +1430,7 @@ type ProfileManageFacadeMock = {
     submitUpdate: ReturnType<typeof vi.fn>;
     saveProfileAsync: ReturnType<typeof vi.fn<ProfileManageFacade['saveProfileAsync']>>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
+    unlinkTelegramAsync: ReturnType<typeof vi.fn<ProfileManageFacade['unlinkTelegramAsync']>>;
     linkGoogle: ReturnType<typeof vi.fn>;
     updateNotificationPreferences: ReturnType<typeof vi.fn>;
     refreshWebPushSubscriptions: ReturnType<typeof vi.fn>;
@@ -1534,6 +1633,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         submitUpdate: vi.fn(),
         saveProfileAsync: vi.fn<ProfileManageFacade['saveProfileAsync']>().mockResolvedValue(true),
         openChangePasswordDialog: vi.fn(),
+        unlinkTelegramAsync: vi.fn<ProfileManageFacade['unlinkTelegramAsync']>().mockResolvedValue(undefined),
         linkGoogle: vi.fn(),
         updateNotificationPreferences: vi.fn(),
         refreshWebPushSubscriptions: vi.fn(),

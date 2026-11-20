@@ -10,7 +10,6 @@ import { describe, expect, it, type Mock, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
-import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS } from '../../config/runtime-ui.tokens';
 import { AuthService } from '../../services/auth.service';
 import { AuthCookieSessionService } from '../../shared/auth/auth-cookie-session.service';
 import { EmailVerificationCooldownService } from '../../shared/auth/email-verification-cooldown.service';
@@ -160,7 +159,6 @@ function configureAuthRoutes(authenticated = false, requiresPasswordChange = fal
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
-            { provide: AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, useValue: [] },
             { provide: AuthService, useValue: auth },
             { provide: UserFacade, useValue: users },
             { provide: TelegramAuthService, useValue: telegramApi },

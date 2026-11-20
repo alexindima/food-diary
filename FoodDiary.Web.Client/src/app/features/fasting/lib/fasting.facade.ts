@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject, Injectable, signal, type WritableSignal }
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import type { Observable } from 'rxjs';
+import type { Observable, Subscription } from 'rxjs';
 
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
@@ -71,6 +71,7 @@ export class FastingFacade {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private timerInterval: ReturnType<typeof setInterval> | null = null;
+    private overviewRefresh: Subscription | undefined;
 
     public readonly isLoading = signal(false);
     public readonly isStarting = signal(false);
@@ -476,7 +477,7 @@ export class FastingFacade {
     }
 
     private refreshOverview(): void {
-        this.fastingService
+        this.overviewRefresh = this.fastingService
             .getOverviewStrict()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -485,6 +486,11 @@ export class FastingFacade {
                 },
                 error: (): void => undefined,
             });
+    }
+
+    private cancelOverviewRefresh(): void {
+        this.overviewRefresh?.unsubscribe();
+        this.overviewRefresh = undefined;
     }
 
     private applyOverview(overview: FastingOverview): void {
@@ -506,6 +512,7 @@ export class FastingFacade {
     }
 
     private applyCurrentSessionUpdate(session: FastingSession): void {
+        this.cancelOverviewRefresh();
         this.currentSession.set(session);
         this.syncCheckInFromSession(session);
         this.upsertHistorySession(session);
@@ -513,6 +520,7 @@ export class FastingFacade {
     }
 
     private applyCompletedSessionUpdate(session: FastingSession): void {
+        this.cancelOverviewRefresh();
         this.stopTimer();
         this.currentSession.set(null);
         this.syncCheckInFromSession(null);

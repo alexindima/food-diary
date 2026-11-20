@@ -23,6 +23,7 @@ import { BrowserSessionStateService } from '../shared/auth/browser-session-state
 import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { telegramOAuthCode, telegramOAuthState } from '../shared/auth/telegram-oidc-values';
+import { TelegramWebAppService } from '../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { entityId } from '../shared/models/semantics/entity-id';
 import { AuthService } from './auth.service';
@@ -618,9 +619,15 @@ it('logs out the selected support session and keeps the ordinary browser account
     try {
         TestBed.inject(BrowserSessionStateService).setContext(contextId);
         const supportSession = firstValueFrom(service.refreshSession());
-        requests.expectOne(`${base}/session`).flush({ ...response, sessionId: null, impersonationContext: contextId });
+        requests.expectOne(`${base}/session`).flush({
+            ...response,
+            sessionId: null,
+            impersonationContext: contextId,
+            impersonationReason: 'Support request',
+        });
         expect(await supportSession).toBe(true);
         expect(service.isImpersonating()).toBe(true);
+        expect(service.impersonationReason()).toBe('Support request');
 
         const logout = service.onLogoutAsync();
         const request = requests.expectOne({ method: 'POST', url: `${base}/logout` });
@@ -633,6 +640,7 @@ it('logs out the selected support session and keeps the ordinary browser account
 
         expect(service.isAuthenticated()).toBe(false);
         expect(service.isImpersonating()).toBe(false);
+        expect(service.impersonationReason()).toBeNull();
         expect(sessionStorage.getItem('pendingImpersonationLogout')).toBeNull();
         expect(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY)).toBe(browserAccess);
         expect(clearLanguage).not.toHaveBeenCalled();
@@ -693,6 +701,27 @@ describe('browser session policy and explicit Telegram mode', () => {
 });
 
 describe('cross-tab browser session ownership', () => {
+    it('keeps a restored guest tab signed out when another tab publishes account access', async () => {
+        const restored = service.restoreSessionAsync();
+        requests.expectOne({ method: 'POST', url: `${base}/session` }).flush(null, {
+            status: HttpStatusCode.NoContent,
+            statusText: 'No Content',
+        });
+        await restored;
+
+        publishAccountAccess(['other-tab-user', 'Admin']);
+        await waitForAsyncTasksAsync();
+
+        expect(service.isAuthReady()).toBe(true);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getUserId()).toBeNull();
+        expect(service.isAdmin()).toBe(false);
+        expect(service.isEmailConfirmed()).toBe(true);
+        expect(service.requiresEmailVerification()).toBe(false);
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        requests.expectNone(`${base}/session`);
+    });
+
     it('refreshes privileges for the same account using server metadata', async () => {
         signIn();
         expect(service.isAdmin()).toBe(false);
@@ -737,6 +766,51 @@ describe('cross-tab browser session ownership', () => {
         expect(navigation.navigateToLandingAsync).toHaveBeenCalledOnce();
         requests.expectNone(`${base}/logout`);
     });
+});
+
+it('retries the original browser logout after the document is denied its cookie lock', async () => {
+    signIn();
+    const recovery = TestBed.inject(AuthRecoveryStateService);
+    const blocked = new Subject<never>();
+    const lock = vi.fn(async () => firstValueFrom(blocked));
+    const navigator = window.navigator;
+    const previousLocks = Object.getOwnPropertyDescriptor(navigator, 'locks');
+    Object.defineProperty(navigator, 'locks', { configurable: true, value: { request: lock } });
+    try {
+        const logout = service.onLogoutAsync(true);
+        expect(lock).toHaveBeenCalledOnce();
+        expect(service.isAuthenticated()).toBe(false);
+        expect(recovery.busy()).toBe(true);
+        requests.expectNone({ method: 'POST', url: `${base}/logout` });
+
+        blocked.error(new DOMException('The document is not fully active', 'InvalidStateError'));
+        await logout;
+
+        expect(recovery.busy()).toBe(false);
+        expect(recovery.issue()).toBe('logout');
+        expect(recovery.pendingLogout()).toEqual({ sessionId, contextId: null, telegram: false });
+        expect(localStorage.getItem('pendingBrowserLogout')).toContain(sessionId);
+        requests.expectNone({ method: 'POST', url: `${base}/logout` });
+    } finally {
+        if (previousLocks === undefined) {
+            Reflect.deleteProperty(navigator, 'locks');
+        } else {
+            Object.defineProperty(navigator, 'locks', previousLocks);
+        }
+    }
+
+    const retry = service.retryPendingLogoutAsync();
+    const request = requests.expectOne({ method: 'POST', url: `${base}/logout` });
+    expect(request.request.headers.get('X-FoodDiary-Session')).toBe(sessionId);
+    expect(request.request.headers.get('X-FoodDiary-Client')).toBe('web');
+    request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+    await retry;
+
+    expect(service.isAuthReady()).toBe(true);
+    expect(service.isAuthenticated()).toBe(false);
+    expect(recovery.pendingLogout()).toBeNull();
+    expect(recovery.issue()).toBeNull();
+    expect(localStorage.getItem('pendingBrowserLogout')).toBeNull();
 });
 
 describe('browser session recovery boundaries', () => {
@@ -1043,3 +1117,80 @@ function dispatchAccountStorageChange(key: string, value: string): void {
     Object.defineProperty(event, 'storageArea', { value: window.localStorage });
     window.dispatchEvent(event);
 }
+
+describe('Authentication with a consumed impersonation handoff', () => {
+    it('keeps public URL state and finishes as a guest when the exchange returns 401', async () => {
+        const logError = vi.spyOn(console, 'error').mockImplementation(() => {});
+        try {
+            window.history.replaceState({}, '', '/?view=food#impersonationCode=already-used&tab=notes');
+            const restoration = service.restoreSessionAsync();
+            const exchange = requests.expectOne({ method: 'POST', url: `${base}/impersonation/exchange` });
+            expect(exchange.request.body).toEqual({ code: 'already-used' });
+            expect(window.location.search).toBe('?view=food');
+            expect(window.location.hash).toBe('#tab=notes');
+
+            exchange.flush(
+                { error: 'Authentication.InvalidToken', message: 'Invalid authorization token.' },
+                { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' },
+            );
+            await restoration;
+
+            expect(service.isAuthReady()).toBe(true);
+            expect(service.isAuthenticated()).toBe(false);
+            expect(TestBed.inject(BrowserSessionStateService).contextId()).toBeNull();
+            expect(sessionStorage.getItem('impersonationContext')).toBeNull();
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+            requests.expectNone(`${base}/session`);
+            await service.restoreSessionAsync();
+            requests.expectNone(`${base}/impersonation/exchange`);
+        } finally {
+            logError.mockRestore();
+        }
+    });
+});
+
+describe('Telegram Mini App pending logout restoration', () => {
+    it('keeps the same launch signed out while resuming a failed logout on reload', async () => {
+        TestBed.resetTestingModule();
+        window.history.replaceState({}, '', '/#tgWebAppData=synthetic-launch');
+        configureAuthTesting();
+        const payload = window
+            .btoa(JSON.stringify({ refresh_session_id: sessionId }))
+            .replaceAll('+', '-')
+            .replaceAll('/', '_')
+            .replace(/=+$/u, '');
+        const accessToken = `eyJhbGciOiJIUzI1NiJ9.${payload}.synthetic-signature`;
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne({ method: 'POST', url: `${base}/refresh` }).flush({ user: response.user, accessToken });
+        expect(await restored).toBe(true);
+        expect(await TestBed.inject(TelegramWebAppService).isAutomaticSignInAllowedAsync()).toBe(true);
+
+        const logout = service.onLogoutAsync();
+        const logoutRequest = await vi.waitFor(() => requests.expectOne({ method: 'POST', url: `${base}/logout` }));
+        expect(logoutRequest.request.headers.get('X-FoodDiary-Client')).toBe('telegram');
+        expect(logoutRequest.request.headers.get('X-FoodDiary-Session')).toBe(sessionId);
+        expect(await TestBed.inject(TelegramWebAppService).isAutomaticSignInAllowedAsync()).toBe(false);
+        logoutRequest.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        await logout;
+
+        expect(localStorage.getItem('pendingTelegramLogout')).toBe(JSON.stringify({ sessionId, contextId: null, telegram: true }));
+        expect(localStorage.getItem('pendingBrowserLogout')).toBeNull();
+        expect(service.getToken()).toBeNull();
+        TestBed.resetTestingModule();
+        configureAuthTesting();
+
+        const resumed = service.restoreSessionAsync();
+        const resumedLogout = await vi.waitFor(() => requests.expectOne({ method: 'POST', url: `${base}/logout` }));
+        expect(resumedLogout.request.headers.get('X-FoodDiary-Client')).toBe('telegram');
+        expect(resumedLogout.request.headers.get('X-FoodDiary-Session')).toBe(sessionId);
+        resumedLogout.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await resumed;
+
+        expect(service.isAuthReady()).toBe(true);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(localStorage.getItem('pendingTelegramLogout')).toBeNull();
+        expect(await TestBed.inject(TelegramWebAppService).isAutomaticSignInAllowedAsync()).toBe(false);
+        requests.expectNone(`${base}/refresh`);
+        requests.expectNone(`${base}/session`);
+    });
+});

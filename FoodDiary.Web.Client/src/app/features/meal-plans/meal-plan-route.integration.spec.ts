@@ -224,6 +224,155 @@ describe('Meal plan adoption lifecycle', () => {
     });
 });
 
+describe('Meal plan catalogue recovery', () => {
+    it('retries the selected catalogue page and lets the user clear a filter after the page becomes empty', async () => {
+        const api = setupMealPlans();
+        const firstPage = new Subject<PageOf<MealPlanSummary>>();
+        api.getPage
+            .mockImplementation((_diet, page = 1, _limit, curated) =>
+                of(curated === true ? cataloguePage(CURATED_PLAN, page) : emptyCataloguePage(page)),
+            )
+            .mockReturnValueOnce(firstPage);
+        const harness = await RouterTestingHarness.create('/meal-plans?source=saved&dietType=Mediterranean&page=2&from=dashboard');
+        const router = TestBed.inject(Router);
+        const host = pageHost(harness);
+
+        await vi.waitFor(() => {
+            expect(api.getPage).toHaveBeenCalledExactlyOnceWith('Mediterranean', SECOND_PAGE, PAGE_SIZE, false);
+        });
+        firstPage.error(new Error('Meal plan catalogue temporarily unavailable'));
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(host.querySelector('[role="alert"]')?.textContent).toContain('MEAL_PLANS.ERROR_LOAD');
+        });
+        renderedAction(host, 'MEAL_PLANS.RETRY').click();
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.getPage.mock.calls).toEqual([
+                ['Mediterranean', SECOND_PAGE, PAGE_SIZE, false],
+                ['Mediterranean', SECOND_PAGE, PAGE_SIZE, false],
+                ['Mediterranean', 1, PAGE_SIZE, false],
+            ]);
+            expect(router.parseUrl(router.url).queryParams).toEqual({ source: 'saved', dietType: 'Mediterranean', from: 'dashboard' });
+            expect(host.querySelector('[role="alert"]')).toBeNull();
+            expect(host.querySelector('.meal-plans-list__empty')?.textContent).toContain('MEAL_PLANS.EMPTY_FILTERED');
+        });
+        renderedAction(host, 'MEAL_PLANS.RESET_FILTER').click();
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.getPage).toHaveBeenLastCalledWith(undefined, 1, PAGE_SIZE, false);
+            expect(router.parseUrl(router.url).queryParams).toEqual({ source: 'saved', from: 'dashboard' });
+            expect(host.querySelector('.meal-plans-list__empty')?.textContent).toContain('MEAL_PLANS.EMPTY_SAVED');
+        });
+        const curated = Array.from(host.querySelectorAll<HTMLButtonElement>('button[role="radio"]')).find(
+            radio => radio.textContent.trim() === 'MEAL_PLANS.SOURCE.CURATED',
+        );
+        if (curated === undefined) {
+            throw new Error('Expected the curated meal plan source radio');
+        }
+        curated.click();
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.getPage).toHaveBeenLastCalledWith(undefined, 1, PAGE_SIZE, true);
+            expect(router.parseUrl(router.url).queryParams).toEqual({ source: 'curated', from: 'dashboard' });
+            expect(curated.getAttribute('aria-checked')).toBe('true');
+            expect(host.querySelector(CARD)?.textContent).toContain(CURATED_PLAN.name);
+        });
+    });
+});
+
+describe('Meal plan removal and recovery', () => {
+    it('keeps a personal plan after cancellation and a failed delete, then returns to the saved catalogue after retry', async () => {
+        const api = setupMealPlans();
+        const firstDelete = new Subject<void>();
+        api.deletePlan.mockReturnValueOnce(firstDelete).mockReturnValueOnce(of(undefined));
+        api.getPage.mockImplementation((_diet, page = 1) => of(emptyCataloguePage(page)));
+        const planUrl = '/meal-plans/personal?source=saved';
+        const harness = await RouterTestingHarness.create(planUrl);
+        const router = TestBed.inject(Router);
+        const detail = await waitForPlanAsync(harness, PERSONAL_PLAN);
+        const remove = renderedAction(detail, DELETE_ACTION);
+
+        remove.click();
+        await clickDeleteConfirmationAsync('CONFIRM_DELETE.CANCEL');
+        expect(api.deletePlan).not.toHaveBeenCalled();
+        expect(router.url).toBe(planUrl);
+        expect(detail.querySelector(TITLE)?.textContent).toBe(PERSONAL_PLAN.name);
+
+        remove.click();
+        await clickDeleteConfirmationAsync(DELETE_ACTION);
+        harness.detectChanges();
+        expect(remove.disabled).toBe(true);
+        expect(remove.getAttribute('aria-busy')).toBe('true');
+        expect(renderedAction(detail, SHOPPING_ACTION).disabled).toBe(true);
+        expect(api.deletePlan).toHaveBeenCalledExactlyOnceWith(PERSONAL_PLAN.id);
+
+        firstDelete.error(new Error('Meal plan removal temporarily unavailable'));
+        harness.detectChanges();
+        expect(remove.disabled).toBe(false);
+        expect(detail.querySelector('[role="alert"]')?.textContent).toContain('MEAL_PLANS.ERROR_DELETE');
+        expect(detail.querySelector(TITLE)?.textContent).toBe(PERSONAL_PLAN.name);
+        remove.click();
+        await clickDeleteConfirmationAsync(DELETE_ACTION);
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(router.url).toBe(SAVED_PLANS_URL);
+            expect(pageHost(harness).querySelector('.meal-plans-list__empty')?.textContent).toContain('MEAL_PLANS.EMPTY_SAVED');
+        });
+        expect(api.deletePlan.mock.calls).toEqual([[PERSONAL_PLAN.id], [PERSONAL_PLAN.id]]);
+    });
+});
+
+function emptyCataloguePage(page: number): PageOf<MealPlanSummary> {
+    return { data: [], page, limit: PAGE_SIZE, totalItems: 0, totalPages: 0 };
+}
+
+async function clickDeleteConfirmationAsync(label: string): Promise<void> {
+    const action = await vi.waitFor(() => {
+        const dialog = document.querySelector(DELETE_CONFIRMATION);
+        if (dialog === null) {
+            throw new Error('Expected the rendered delete confirmation');
+        }
+        return renderedAction(dialog, label);
+    });
+    action.click();
+}
+
+describe('Meal plan diary entry handoff recovery', () => {
+    it('keeps a meal available to retry after its recipe fails to load', async () => {
+        const planned = mealPlanRecipe('recovered-lunch', 'Planned lunch');
+        const plan = planWithRecipe(CURATED_PLAN, planned, 'Lunch');
+        const lookup = new Subject<Recipe | null>();
+        const getRecipe = vi.fn<RecipeLookup['getById']>().mockReturnValueOnce(lookup).mockReturnValueOnce(of(planned));
+        const api = setupMealPlans(getRecipe);
+        api.getById.mockReturnValueOnce(of(plan));
+        const harness = await RouterTestingHarness.create(CURATED_PLAN_URL);
+        const detail = await waitForPlanAsync(harness, plan);
+        const add = renderedAction(detail, ADD_TO_DIARY);
+        const draft = TestBed.inject(QuickMealService);
+
+        add.click();
+        harness.detectChanges();
+        expect(add.disabled).toBe(true);
+        lookup.error(new Error('Recipe module unavailable'));
+        harness.detectChanges();
+
+        expect(draft.items()).toEqual([]);
+        expect(detail.querySelector('[role="alert"]')?.textContent).toContain('MEAL_PLANS.ERROR_ADD_MEAL');
+        expect(add.disabled).toBe(false);
+        add.click();
+        harness.detectChanges();
+
+        expect(getRecipe.mock.calls).toEqual([[planned.id], [planned.id]]);
+        expect(draft.items()).toMatchObject([{ recipe: planned, amount: PLANNED_SERVINGS }]);
+        expect(detail.querySelector('[role="alert"]')).toBeNull();
+    });
+});
+
 describe('Meal plan diary entry handoff', () => {
     it('preserves a diary draft added during recipe loading, then retries with the planned servings and a legacy meal type', async () => {
         const planned = mealPlanRecipe('planned-salad', 'Planned salad');

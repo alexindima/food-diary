@@ -43,14 +43,6 @@ function createComponent(data: RecipeListFiltersDialogData = DEFAULT_DIALOG_DATA
 }
 
 describe('RecipeListFiltersDialogComponent', () => {
-    it.each([-1, 0, FRACTIONAL_RECIPE_TIME, MAX_RECIPE_TIME + 1])('rejects unsupported maximum time %s without closing', value => {
-        createComponent();
-        component['maxTotalTimeValue'] = value;
-        component['onApply']();
-        expect(dialogRefSpy.close).not.toHaveBeenCalled();
-        expect(component['maxTotalTimeError']()).toBe(true);
-    });
-
     it.each([null, '', 1, MAX_RECIPE_TIME])('allows empty or supported integer time %s', value => {
         createComponent();
         component['maxTotalTimeValue'] = value;
@@ -105,6 +97,28 @@ describe('RecipeListFiltersDialogComponent', () => {
 });
 
 describe('RecipeListFiltersDialogComponent rendered filters', () => {
+    it.each([-1, 0, FRACTIONAL_RECIPE_TIME, MAX_RECIPE_TIME + 1])(
+        'rejects and then applies a corrected maximum time after entering %s',
+        value => {
+            createComponent();
+            const root = fixture.nativeElement as HTMLElement;
+            const timeField = 'RECIPE_LIST.FILTER_MAX_TOTAL_TIME';
+            const validTime = 30;
+            const apply = filterButton(root, 'RECIPE_LIST.FILTER_APPLY_BUTTON');
+            changeNumberField(root, timeField, value);
+            apply.click();
+            fixture.detectChanges();
+            expect(root.textContent).toContain('FORM_ERRORS.INVALID_NUMBER');
+            expect(dialogRefSpy.close).not.toHaveBeenCalled();
+
+            changeNumberField(root, timeField, validTime);
+            apply.click();
+            fixture.detectChanges();
+            expect(root.textContent).not.toContain('FORM_ERRORS.INVALID_NUMBER');
+            expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith({ ...DEFAULT_DIALOG_DATA, maxTotalTime: validTime });
+        },
+    );
+
     it.each([
         [null, 'RECIPE_LIST.FILTER_IMAGE_WITH', true],
         [true, 'RECIPE_LIST.FILTER_IMAGE_WITHOUT', false],
@@ -123,15 +137,15 @@ describe('RecipeListFiltersDialogComponent rendered filters', () => {
     it('keeps a reversed calorie range open, then submits the corrected range and chosen category', () => {
         createComponent();
         const root = fixture.nativeElement as HTMLElement;
-        changeCalories(root, 'RECIPE_LIST.FILTER_CALORIES_FROM', REVERSED_CALORIES_FROM);
-        changeCalories(root, 'RECIPE_LIST.FILTER_CALORIES_TO', CALORIES_TO);
+        changeNumberField(root, 'RECIPE_LIST.FILTER_CALORIES_FROM', REVERSED_CALORIES_FROM);
+        changeNumberField(root, 'RECIPE_LIST.FILTER_CALORIES_TO', CALORIES_TO);
         const apply = filterButton(root, 'RECIPE_LIST.FILTER_APPLY_BUTTON');
         apply.click();
         fixture.detectChanges();
         expect(root.textContent).toContain('RECIPE_LIST.FILTER_CALORIES_ORDER_ERROR');
         expect(dialogRefSpy.close).not.toHaveBeenCalled();
 
-        changeCalories(root, 'RECIPE_LIST.FILTER_CALORIES_FROM', CALORIES_FROM);
+        changeNumberField(root, 'RECIPE_LIST.FILTER_CALORIES_FROM', CALORIES_FROM);
         root.querySelector<HTMLButtonElement>('button[aria-haspopup="listbox"]')?.click();
         fixture.detectChanges();
         filterButton(document.body, 'RECIPE_CATEGORIES.desserts').click();
@@ -159,7 +173,7 @@ function filterButton(root: HTMLElement, label: string): HTMLButtonElement {
     return button;
 }
 
-function changeCalories(root: HTMLElement, label: string, value: number): void {
+function changeNumberField(root: HTMLElement, label: string, value: number): void {
     const field = Array.from(root.querySelectorAll('label')).find(control => control.textContent.trim() === label)?.control;
     if (!(field instanceof HTMLInputElement)) {
         throw new Error(`Expected recipe filter field "${label}"`);

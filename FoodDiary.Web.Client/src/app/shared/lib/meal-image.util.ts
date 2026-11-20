@@ -6,7 +6,7 @@ const MEAL_STUBS: Record<string, string> = {
     OTHER: 'assets/images/stubs/meals/other.svg',
 };
 
-export function resolveMealImageUrl(imageUrl: string | null | undefined, mealType: string | null | undefined): string | undefined {
+export function resolveMealImageUrl(imageUrl: string | null | undefined, mealType: string | null | undefined): string {
     if (imageUrl !== null && imageUrl !== undefined && imageUrl.trim().length > 0) {
         return imageUrl;
     }

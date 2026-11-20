@@ -36,14 +36,15 @@
             <label for="goals-editor-weight">{{ 'GOALS_PAGE.BODY_TARGET_WEIGHT' | translate }}</label>
             <span class="goals-editor-input"
                 ><input
+                    #weightField
                     id="goals-editor-weight"
                     type="number"
                     min="0"
+                    step="any"
                     [attr.aria-describedby]="weightInvalid() ? 'goals-editor-weight-error' : null"
                     [max]="weightMaximum()"
                     [attr.aria-invalid]="weightInvalid()"
-                    [value]="displayBodyTargets().weight"
-                    (input)="updateBodyTarget('weight', $event)"
+                    (input)="updateBodyTarget('weight', weightField)"
                 /><span>{{ measurements.weightUnitKey() | translate }}</span></span
             >
             @if (weightInvalid()) {
@@ -62,14 +63,15 @@
             <label for="goals-editor-waist">{{ 'GOALS_PAGE.BODY_TARGET_WAIST' | translate }}</label>
             <span class="goals-editor-input"
                 ><input
+                    #waistField
                     id="goals-editor-waist"
                     type="number"
                     min="0"
+                    step="any"
                     [attr.aria-describedby]="waistInvalid() ? 'goals-editor-waist-error' : null"
                     [max]="waistMaximum()"
                     [attr.aria-invalid]="waistInvalid()"
-                    [value]="displayBodyTargets().waist"
-                    (input)="updateBodyTarget('waist', $event)"
+                    (input)="updateBodyTarget('waist', waistField)"
                 /><span>{{ measurements.lengthUnitKey() | translate }}</span></span
             >
             @if (waistInvalid()) {

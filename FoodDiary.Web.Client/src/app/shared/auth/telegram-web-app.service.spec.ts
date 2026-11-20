@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { TelegramWebAppService } from './telegram-web-app.service';
@@ -87,5 +87,63 @@ describe('TelegramWebAppService', () => {
         const assertion = expect(initialization).rejects.toThrow('Telegram Mini App initialization failed');
         document.head.querySelector('script[src*="telegram-web-app"]')?.dispatchEvent(new Event('load'));
         await assertion;
+    });
+});
+
+describe('Telegram SDK load recovery', () => {
+    const sdkTimeoutMs = 10_000;
+    const sdkScriptSelector = 'script[src*="telegram-web-app"]';
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it.each([
+        { failure: 'script error', message: 'Telegram Mini App SDK unavailable' },
+        { failure: 'timeout', message: 'Telegram Mini App initialization timed out' },
+    ])('discards a failed SDK after $failure and retries with a fresh script', async ({ failure, message }) => {
+        vi.useFakeTimers();
+        const document = window.document.implementation.createHTMLDocument();
+        const browser = {
+            getTelegramInitData: vi.fn<BrowserWindowService['getTelegramInitData']>().mockReturnValue(null),
+            getHref: (): string => 'https://fooddiary.example/auth/telegram#tgWebAppData=test-proof',
+            setTimeout: (callback: () => void, delay: number): number => window.setTimeout(callback, delay),
+            clearTimeout: (id: number): void => {
+                window.clearTimeout(id);
+            },
+        };
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: DOCUMENT, useValue: document },
+                { provide: BrowserWindowService, useValue: browser },
+            ],
+        });
+        const service = TestBed.inject(TelegramWebAppService);
+        const denied = Promise.all([
+            expect(service.initializeAsync()).rejects.toThrow(message),
+            expect(service.initializeAsync()).rejects.toThrow(message),
+        ]);
+        const original = document.head.querySelector(sdkScriptSelector);
+        expect(document.head.querySelectorAll(sdkScriptSelector)).toHaveLength(1);
+
+        if (failure === 'timeout') {
+            await vi.advanceTimersByTimeAsync(sdkTimeoutMs);
+        } else {
+            original?.dispatchEvent(new Event('error'));
+        }
+
+        await denied;
+        expect(document.head.querySelector(sdkScriptSelector)).toBeNull();
+        expect(vi.getTimerCount()).toBe(0);
+
+        const retried = service.initializeAsync();
+        const replacement = document.head.querySelector(sdkScriptSelector);
+        expect(document.head.querySelectorAll(sdkScriptSelector)).toHaveLength(1);
+        expect(replacement).not.toBe(original);
+        browser.getTelegramInitData.mockReturnValue('test-proof');
+        replacement?.dispatchEvent(new Event('load'));
+
+        await expect(retried).resolves.toBeUndefined();
+        expect(vi.getTimerCount()).toBe(0);
     });
 });

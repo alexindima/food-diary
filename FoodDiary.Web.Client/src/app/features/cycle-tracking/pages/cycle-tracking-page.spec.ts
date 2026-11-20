@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { WebmcpScreenRegistry } from 'fd-webmcp';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
@@ -13,10 +14,13 @@ import { ExportService } from '../../../shared/api/export.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../shared/development/development-tools';
 import {
     BLEEDING_TYPE_BLEEDING,
+    BLEEDING_TYPE_SPOTTING,
+    type BleedingEntry,
     CYCLE_CONSENT_PURPOSE_CYCLE_TRACKING,
     CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
     CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FLOW_HEAVY,
     CYCLE_FLOW_MEDIUM,
     CYCLE_REPRODUCTIVE_STATE_CYCLING,
     CYCLE_REPRODUCTIVE_STATE_POSTPARTUM,
@@ -29,8 +33,13 @@ import {
     type CycleFactor,
     type CycleLogDay,
     type CycleResponse,
+    type CycleSymptomEntry,
+    type FertilitySignal,
     MENSTRUAL_EPISODE_STATUS_CONFIRMED,
     MENSTRUAL_EPISODE_STATUS_INFERRED,
+    OVULATION_TEST_RESULT_NEGATIVE,
+    OVULATION_TEST_RESULT_UNKNOWN,
+    type OvulationTestResult,
 } from '../../../shared/models/cycle.data';
 import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
@@ -173,6 +182,52 @@ describe('Cycle tracking setup', () => {
         await stabilizeAsync();
         expect(create).toHaveBeenCalledTimes(2);
         expect(page.querySelector('.cycle-tracking__setup-card')).toBeNull();
+        expect(page.querySelector('fd-cycle-overview-card')).not.toBeNull();
+    });
+});
+
+describe('Cycle onboarding preferences', () => {
+    it('starts tracking with the selected day and preferences and prevents a second submit while saving', async () => {
+        const startDate = calendarDate('2026-08-15');
+        const pending = new Subject<CycleResponse>();
+        getCurrent.mockReturnValue(of(null));
+        create.mockReturnValue(pending);
+        await renderAsync();
+
+        const setup = requiredElement(page, '.cycle-tracking__setup-card');
+        const dateInput = requiredElement(setup, 'fd-ui-date-input');
+        await pickDateAsync(dateInput, startDate);
+        await selectCyclePreferenceAsync(setup, 'CYCLE_TRACKING.GOAL', 'CYCLE_TRACKING.GOAL_TRYING_TO_CONCEIVE');
+        await selectCyclePreferenceAsync(setup, 'CYCLE_TRACKING.REPRODUCTIVE_STATE', 'CYCLE_TRACKING.STATE_POSTPARTUM');
+        requiredElementOfType(setup, 'input[type="checkbox"]', HTMLInputElement).click();
+        await stabilizeAsync();
+
+        const submit = button('CYCLE_TRACKING.SAVE_CYCLE', setup);
+        submit.click();
+        await stabilizeAsync();
+        expect(submit.disabled).toBe(true);
+        submit.click();
+        expect(create).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                trackingStartDate: startDate,
+                mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+                goal: CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE,
+                reproductiveState: CYCLE_REPRODUCTIVE_STATE_POSTPARTUM,
+                cycleTrackingConsentGranted: true,
+            }),
+        );
+
+        pending.next(
+            cycleProfile({
+                trackingStartDate: startDate,
+                mode: CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION,
+                goal: CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE,
+                reproductiveState: CYCLE_REPRODUCTIVE_STATE_POSTPARTUM,
+            }),
+        );
+        pending.complete();
+        await stabilizeAsync();
+        expect(setup.isConnected).toBe(false);
         expect(page.querySelector('fd-cycle-overview-card')).not.toBeNull();
     });
 });
@@ -531,6 +586,162 @@ describe('Cycle factors', () => {
     });
 });
 
+describe('Cycle factor response ownership after profile deletion', () => {
+    it.each([
+        { action: 'update', recreate: false },
+        { action: 'end', recreate: true },
+    ] as const)('ignores a late factor $action from the deleted profile', async ({ action, recreate }) => {
+        const factor: CycleFactor = {
+            id: FACTOR_ID,
+            cycleProfileId: CYCLE_ID,
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: calendarDate(TRACKING_START),
+            endDate: null,
+            notes: 'Note from the old profile',
+        };
+        const pending = new Subject<CycleResponse>();
+        const initial = cycleProfile({ factors: [factor] });
+        getCurrent.mockReturnValueOnce(of(initial));
+        upsertFactor.mockReturnValueOnce(pending);
+        deleteCycle.mockReturnValueOnce(of(undefined));
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        const host = cycleRouteHost(harness);
+        await submitPendingFactorActionAsync(harness, action, pending);
+
+        await deleteCycleDuringFactorRequestAsync(harness);
+        expect(pending.observed).toBe(false);
+        const replacementLength = 32;
+        const replacement = cycleProfile({ id: entityId<'cycle-profile'>('new-cycle'), averageCycleLength: replacementLength });
+        if (recreate) {
+            await replaceDeletedCycleAsync(harness, replacement);
+        }
+        const savedFactor = action === 'update' ? { ...factor, notes: 'Edited note' } : { ...factor, endDate: calendarDate(TODAY) };
+        pending.next({ ...initial, factors: [savedFactor] });
+        pending.complete();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+
+        if (recreate) {
+            click('CYCLE_TRACKING.SETTINGS_TITLE', host);
+            harness.detectChanges();
+            const lengthInput = requiredElementOfType(
+                document.body,
+                '.cycle-drawer input[aria-label="CYCLE_TRACKING.AVG_LENGTH"]',
+                HTMLInputElement,
+            );
+            expect(lengthInput.value).toBe(String(replacement.averageCycleLength));
+        } else {
+            expect(host.querySelector('fd-cycle-overview-card')).toBeNull();
+            expect(requiredElement(host, '.cycle-tracking__setup-card').hidden).toBe(false);
+            await replaceDeletedCycleAsync(harness, replacement);
+            requiredElement(host, 'details.cycle-tracking__details summary').click();
+            expect(requiredElementOfType(host, '[data-tour-id="cycle-tracking-factors"] textarea', HTMLTextAreaElement).value).toBe('');
+        }
+    });
+});
+
+describe('Cycle factor failures queued during profile deletion', () => {
+    it.each([
+        { action: 'update', errorKey: 'CYCLE_TRACKING.SAVE_FACTOR_FAILED' },
+        { action: 'end', errorKey: 'CYCLE_TRACKING.END_FACTOR_FAILED' },
+    ] as const)('keeps the replacement profile free from an obsolete factor $action error', async ({ action, errorKey }) => {
+        const factor: CycleFactor = {
+            id: FACTOR_ID,
+            cycleProfileId: CYCLE_ID,
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: calendarDate(TRACKING_START),
+            endDate: null,
+            notes: 'Old profile factor',
+        };
+        const pendingFactor = new Subject<CycleResponse>();
+        const pendingDelete = new Subject<void>();
+        getCurrent.mockReturnValueOnce(of(cycleProfile({ factors: [factor] })));
+        upsertFactor.mockReturnValueOnce(pendingFactor);
+        deleteCycle.mockReturnValueOnce(pendingDelete);
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        await submitPendingFactorActionAsync(harness, action, pendingFactor);
+        confirmCycleDeletion(harness);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(pendingDelete.observed).toBe(true);
+            expect(pendingFactor.observed).toBe(true);
+        });
+
+        pendingDelete.next(undefined);
+        pendingFactor.error(API_ERROR);
+        await waitForCycleDeletedAsync(harness);
+        await replaceDeletedCycleAsync(harness, cycleProfile({ id: entityId<'cycle-profile'>('replacement-cycle') }));
+
+        const host = cycleRouteHost(harness);
+        requiredElement(host, 'details.cycle-tracking__details summary').click();
+        harness.detectChanges();
+        const card = requiredElement(host, '[data-tour-id="cycle-tracking-factors"]');
+        expect(card.textContent).not.toContain(errorKey);
+        expect(button('CYCLE_TRACKING.SAVE_FACTOR', card).disabled).toBe(false);
+    });
+});
+
+async function submitPendingFactorActionAsync(
+    harness: RouterTestingHarness,
+    action: 'update' | 'end',
+    pending: Subject<CycleResponse>,
+): Promise<void> {
+    const host = cycleRouteHost(harness);
+    requiredElement(host, 'details.cycle-tracking__details summary').click();
+    const card = requiredElement(host, '[data-tour-id="cycle-tracking-factors"]');
+    if (action === 'update') {
+        click('CYCLE_TRACKING.EDIT_FACTOR', card);
+        harness.detectChanges();
+        input(requiredElementOfType(card, 'textarea', HTMLTextAreaElement), 'Edited note');
+        harness.detectChanges();
+        click('CYCLE_TRACKING.UPDATE_FACTOR', card);
+    } else {
+        click('CYCLE_TRACKING.END_FACTOR', card);
+    }
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(pending.observed).toBe(true);
+    });
+    expect(upsertFactor).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, expect.objectContaining({ factorId: FACTOR_ID }));
+}
+
+async function deleteCycleDuringFactorRequestAsync(harness: RouterTestingHarness): Promise<void> {
+    confirmCycleDeletion(harness);
+    await waitForCycleDeletedAsync(harness);
+}
+
+function confirmCycleDeletion(harness: RouterTestingHarness): void {
+    const host = cycleRouteHost(harness);
+    click('CYCLE_TRACKING.SETTINGS_TITLE', host);
+    harness.detectChanges();
+    click('CYCLE_TRACKING.DELETE_CYCLE');
+    harness.detectChanges();
+    click('CYCLE_TRACKING.DELETE_CYCLE', requiredElement(document.body, CONFIRM_DIALOG));
+}
+
+async function waitForCycleDeletedAsync(harness: RouterTestingHarness): Promise<void> {
+    const host = cycleRouteHost(harness);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(requiredElement(host, '.cycle-tracking__setup-card').hidden).toBe(false);
+    });
+    expect(deleteCycle).toHaveBeenCalledExactlyOnceWith(CYCLE_ID);
+}
+
+async function replaceDeletedCycleAsync(harness: RouterTestingHarness, replacement: CycleResponse): Promise<void> {
+    const host = cycleRouteHost(harness);
+    create.mockReturnValueOnce(of(replacement));
+    const setup = requiredElement(host, '.cycle-tracking__setup-card');
+    requiredElementOfType(setup, 'input[type="checkbox"]', HTMLInputElement).click();
+    harness.detectChanges();
+    click('CYCLE_TRACKING.SAVE_CYCLE', setup);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(host.querySelector('fd-cycle-overview-card')).not.toBeNull();
+    });
+    expect(create).toHaveBeenCalledOnce();
+}
+
 describe('Cycle journal input validation', () => {
     it('shows advanced field errors and blocks a save until the day entries are valid', async () => {
         getCurrent.mockReturnValue(
@@ -730,6 +941,226 @@ describe('Cycle journal help', () => {
     });
 });
 
+describe('Cycle day bleeding and pain correction', () => {
+    it('keeps saved spotting after cancel and reopens with the corrected bleeding flow and pain after saving', async () => {
+        const date = calendarDate(TODAY);
+        const spotting: BleedingEntry = {
+            id: entityId<'bleeding-entry'>('saved-spotting'),
+            cycleProfileId: CYCLE_ID,
+            date,
+            type: BLEEDING_TYPE_SPOTTING,
+            flow: CYCLE_FLOW_MEDIUM,
+            painImpact: 3,
+        };
+        const painImpact = 9;
+        const bleeding: BleedingEntry = {
+            ...spotting,
+            id: entityId<'bleeding-entry'>('corrected-bleeding'),
+            type: BLEEDING_TYPE_BLEEDING,
+            flow: CYCLE_FLOW_HEAVY,
+            painImpact,
+        };
+        const saved: CycleLogDay = { date, cycleProfileId: CYCLE_ID, bleedingEntries: [bleeding], symptoms: [], fertilitySignal: null };
+        getCurrent
+            .mockReturnValueOnce(of(cycleProfile({ bleedingEntries: [spotting] })))
+            .mockReturnValueOnce(of(cycleProfile({ bleedingEntries: [bleeding] })));
+        upsertDay.mockReturnValueOnce(of(saved));
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        const host = cycleRouteHost(harness);
+        const drawer = (): HTMLElement => requiredElement(document.body, '.cycle-drawer');
+        const setCorrection = (): void => {
+            click('CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING', drawer());
+            harness.detectChanges();
+            click('CYCLE_TRACKING.FLOW_HEAVY', drawer());
+            click('CYCLE_TRACKING.PAIN_LEVEL_9', drawer());
+            harness.detectChanges();
+        };
+
+        click('CYCLE_TRACKING.EDIT_TODAY', host);
+        harness.detectChanges();
+        setCorrection();
+        expect(button('CYCLE_TRACKING.FLOW_HEAVY', drawer()).getAttribute('aria-pressed')).toBe('true');
+        expect(button('CYCLE_TRACKING.PAIN_LEVEL_9', drawer()).getAttribute('aria-pressed')).toBe('true');
+        click('COMMON.CANCEL', drawer());
+        harness.detectChanges();
+        expect(upsertDay).not.toHaveBeenCalled();
+
+        click('CYCLE_TRACKING.EDIT_TODAY', host);
+        harness.detectChanges();
+        expect(button('CYCLE_TRACKING.BLEEDING_TYPE_SPOTTING', drawer()).getAttribute('aria-pressed')).toBe('true');
+        expect(button('CYCLE_TRACKING.FLOW_MEDIUM', drawer()).getAttribute('aria-pressed')).toBe('true');
+        expect(button('CYCLE_TRACKING.PAIN_LEVEL_3', drawer()).getAttribute('aria-pressed')).toBe('true');
+        setCorrection();
+        click('CYCLE_TRACKING.UPDATE_DAY', drawer());
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
+        });
+
+        expect(upsertDay).toHaveBeenCalledExactlyOnceWith(
+            CYCLE_ID,
+            expect.objectContaining({
+                date,
+                clearBleeding: true,
+                bleeding: { type: BLEEDING_TYPE_BLEEDING, flow: CYCLE_FLOW_HEAVY, painImpact, clearNotes: true },
+            }),
+        );
+        expect(getCurrent).toHaveBeenCalledTimes(2);
+        click('CYCLE_TRACKING.EDIT_TODAY', host);
+        harness.detectChanges();
+        expect(button('CYCLE_TRACKING.BLEEDING_TYPE_SPOTTING', drawer()).getAttribute('aria-pressed')).toBe('false');
+        expect(button('CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING', drawer()).getAttribute('aria-pressed')).toBe('true');
+        expect(button('CYCLE_TRACKING.FLOW_HEAVY', drawer()).getAttribute('aria-pressed')).toBe('true');
+        expect(button('CYCLE_TRACKING.PAIN_LEVEL_9', drawer()).getAttribute('aria-pressed')).toBe('true');
+    });
+});
+
+describe('Cycle advanced day editing', () => {
+    it.each([
+        { action: 'replaces the recorded temperature', temperature: 36.72, ovulationTestResult: OVULATION_TEST_RESULT_UNKNOWN },
+        { action: 'clears the last tracked value', temperature: null, ovulationTestResult: OVULATION_TEST_RESULT_UNKNOWN },
+        {
+            action: 'keeps a tracked test when clearing the temperature',
+            temperature: null,
+            ovulationTestResult: OVULATION_TEST_RESULT_NEGATIVE,
+        },
+    ] as const)('$action and keeps other diary data', async ({ temperature, ovulationTestResult }) => {
+        const { earlierSignal, earlierNote, todaySignal, todayNote, symptom, profile } = cycleAdvancedDayFixture(ovulationTestResult);
+        const clearsSignal = temperature === null && ovulationTestResult === OVULATION_TEST_RESULT_UNKNOWN;
+        const savedSignal = clearsSignal ? null : { ...todaySignal, basalBodyTemperatureCelsius: temperature };
+        const savedDay: CycleLogDay = {
+            cycleProfileId: CYCLE_ID,
+            date: todaySignal.date,
+            bleedingEntries: [],
+            symptoms: [symptom],
+            fertilitySignal: savedSignal,
+            notes: todayNote,
+        };
+        const savedSignals = savedSignal === null ? [earlierSignal] : [earlierSignal, savedSignal];
+        const result = new Subject<CycleLogDay>();
+        upsertDay.mockReturnValueOnce(result);
+        getCurrent.mockReturnValueOnce(of(profile)).mockReturnValueOnce(of({ ...profile, fertilitySignals: savedSignals }));
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        const host = cycleRouteHost(harness);
+        const editor = openTodayAdvancedEditor(harness, host);
+        const firstTemperature = cycleTemperatureInput(editor);
+        expect(firstTemperature.value).toBe(String(todaySignal.basalBodyTemperatureCelsius));
+
+        const intensity = requiredElement(editor, 'fieldset[aria-label="CYCLE_TRACKING.SYMPTOM_INTENSITY_LABEL"]');
+        const currentSeverity = button('CYCLE_TRACKING.PAIN_LEVEL_6', intensity);
+        expect(currentSeverity.getAttribute('aria-pressed')).toBe('true');
+        currentSeverity.click();
+        editField(firstTemperature, temperature === null ? '' : String(temperature));
+        harness.detectChanges();
+        click('CYCLE_TRACKING.UPDATE_DAY', editor);
+        await vi.waitFor(() => {
+            expect(upsertDay).toHaveBeenCalledOnce();
+        });
+
+        const [profileId, payload] = upsertDay.mock.calls[0];
+        expect(profileId).toBe(CYCLE_ID);
+        expect(payload.date).toBe(todaySignal.date);
+        expect(payload.notes).toBe(todayNote);
+        expect(payload.symptoms).toMatchObject([{ category: symptom.category, intensity: symptom.intensity }]);
+        expect(payload.clearFertilitySignal).toBe(clearsSignal);
+        if (clearsSignal) {
+            expect(payload.fertilitySignal).toBeNull();
+        } else {
+            expect(payload.fertilitySignal).toMatchObject({ basalBodyTemperatureCelsius: temperature, ovulationTestResult });
+        }
+
+        result.next(savedDay);
+        result.complete();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
+        });
+        const today = cycleHistoryDayWithNote(host, todayNote);
+        expect(today.textContent.includes('CYCLE_TRACKING.BBT_SUMMARY')).toBe(temperature !== null);
+        expect(today.textContent.includes('CYCLE_TRACKING.OVULATION_TEST_NEGATIVE_SUMMARY')).toBe(
+            ovulationTestResult === OVULATION_TEST_RESULT_NEGATIVE,
+        );
+        const earlierDay = cycleHistoryDayWithNote(host, earlierNote);
+        expect(earlierDay.textContent).toContain('CYCLE_TRACKING.BBT_SUMMARY');
+        click('CYCLE_TRACKING.EDIT_DAY', earlierDay);
+        harness.detectChanges();
+        click('CYCLE_TRACKING.SHOW_ADVANCED');
+        harness.detectChanges();
+        expect(cycleTemperatureInput(requiredElement(document.body, '.cycle-drawer')).value).toBe(
+            String(earlierSignal.basalBodyTemperatureCelsius),
+        );
+    });
+});
+
+function cycleAdvancedDayFixture(ovulationTestResult: OvulationTestResult): {
+    earlierSignal: FertilitySignal;
+    earlierNote: string;
+    todaySignal: FertilitySignal;
+    todayNote: string;
+    symptom: CycleSymptomEntry;
+    profile: CycleResponse;
+} {
+    const todayDate = calendarDate(TODAY);
+    const earlierDate = calendarDate('2026-08-16');
+    const earlierNote = 'Earlier morning note';
+    const todayNote = 'Today’s morning note';
+    const earlierSignal: FertilitySignal = {
+        id: entityId<'fertility-signal'>('earlier-temperature'),
+        cycleProfileId: CYCLE_ID,
+        date: earlierDate,
+        basalBodyTemperatureCelsius: 36.51,
+        ovulationTestResult: OVULATION_TEST_RESULT_UNKNOWN,
+    };
+    const todaySignal: FertilitySignal = {
+        ...earlierSignal,
+        id: entityId<'fertility-signal'>('today-temperature'),
+        date: todayDate,
+        basalBodyTemperatureCelsius: 36.61,
+        ovulationTestResult,
+    };
+    const symptom: CycleSymptomEntry = {
+        id: entityId<'cycle-symptom-entry'>('today-headache'),
+        cycleProfileId: CYCLE_ID,
+        date: todayDate,
+        category: 7,
+        intensity: 5,
+        tags: [],
+    };
+    const profile = cycleProfile({
+        consents: [
+            cycleConsent('tracking', CYCLE_CONSENT_PURPOSE_CYCLE_TRACKING),
+            cycleConsent('fertility', CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS),
+        ],
+        fertilitySignals: [earlierSignal, todaySignal],
+        dayNotes: [
+            { date: earlierDate, notes: earlierNote },
+            { date: todayDate, notes: todayNote },
+        ],
+        symptoms: [symptom],
+    });
+    return { earlierSignal, earlierNote, todaySignal, todayNote, symptom, profile };
+}
+
+function openTodayAdvancedEditor(harness: RouterTestingHarness, host: HTMLElement): HTMLElement {
+    click('CYCLE_TRACKING.EDIT_TODAY', host);
+    harness.detectChanges();
+    click('CYCLE_TRACKING.SHOW_ADVANCED');
+    harness.detectChanges();
+    return requiredElement(document.body, '.cycle-drawer');
+}
+
+function cycleTemperatureInput(editor: HTMLElement): HTMLInputElement {
+    return requiredElementOfType(editor, '.cycle-drawer__advanced-fields input[type="number"]', HTMLInputElement);
+}
+
+function cycleHistoryDayWithNote(host: HTMLElement, note: string): HTMLElement {
+    const row = Array.from(host.querySelectorAll<HTMLElement>('fd-cycle-day-item')).find(element => element.textContent.includes(note));
+    if (row === undefined) {
+        throw new Error(`Expected to find the cycle day with note ${note}`);
+    }
+    return row;
+}
+
 describe('Cycle history refresh after saving a journal day', () => {
     it.each(['network error', 'no profile'] as const)('keeps the saved entry and retries only the read after %s', async failure => {
         const date = calendarDate(TODAY);
@@ -818,12 +1249,12 @@ describe('Cycle history refresh after removal', () => {
 });
 
 describe('Cycle journal deletion recovery', () => {
-    it('locks both rows during deletion, then keeps the failed entry available for a confirmed retry', async () => {
+    it('blocks day editing during deletion and restores calendar actions and the same rows on failure', async () => {
         const targetDate = calendarDate('2026-08-16');
         const retainedNote = { date: calendarDate('2026-08-15'), notes: 'Retained journal entry' };
         const targetNote = { date: targetDate, notes: 'Journal entry to remove' };
         getCurrent
-            .mockReturnValueOnce(of(cycleProfile({ dayNotes: [retainedNote, targetNote] })))
+            .mockReturnValueOnce(of(cycleProfile({ dayNotes: [retainedNote, targetNote], menstrualEpisodes: undefined })))
             .mockReturnValueOnce(of(cycleProfile({ dayNotes: [retainedNote] })));
         const pending = new Subject<void>();
         clearDay.mockReturnValueOnce(pending).mockReturnValueOnce(of(void 0));
@@ -842,6 +1273,13 @@ describe('Cycle journal deletion recovery', () => {
         expect(button('CYCLE_TRACKING.CLEAR_DAY', retained).disabled).toBe(true);
         expect(button('CYCLE_TRACKING.EDIT_DAY', retained).disabled).toBe(true);
 
+        const overview = requiredElement(page, 'fd-cycle-overview-card');
+        click('CYCLE_TRACKING.LOG_TODAY', overview);
+        requiredElementOfType(overview, 'button[aria-current="date"]', HTMLButtonElement).click();
+        await stabilizeAsync();
+        expect(page.querySelector('fd-cycle-day-editor-drawer')).toBeNull();
+        expect(upsertDay).not.toHaveBeenCalled();
+
         pending.error(API_ERROR);
         await stabilizeAsync();
         expect(getCurrent).toHaveBeenCalledOnce();
@@ -850,6 +1288,13 @@ describe('Cycle journal deletion recovery', () => {
         expect(page.textContent).toContain('CYCLE_TRACKING.CLEAR_DAY_FAILED');
         expect(button('CYCLE_TRACKING.CLEAR_DAY', target).disabled).toBe(false);
         expect(button('CYCLE_TRACKING.EDIT_DAY', retained).disabled).toBe(false);
+
+        click('CYCLE_TRACKING.LOG_TODAY', overview);
+        await stabilizeAsync();
+        expect(page.querySelector('fd-cycle-day-editor-drawer')).not.toBeNull();
+        click('COMMON.CANCEL', requiredElement(document.body, '.cycle-drawer'));
+        await stabilizeAsync();
+        expect(page.querySelector('fd-cycle-day-editor-drawer')).toBeNull();
 
         click('CYCLE_TRACKING.CLEAR_DAY', target);
         await stabilizeAsync();
@@ -867,20 +1312,29 @@ describe('Cycle journal deletion recovery', () => {
 });
 
 describe('Cycle episode calendar dates', () => {
-    it('keeps the same start and end days when the history language changes', async () => {
+    it('shows the newest episode first and keeps both date ranges when the history language changes', async () => {
         const start = calendarDate(TRACKING_START);
         const end = calendarDate('2026-08-05');
+        const laterStart = calendarDate('2026-08-10');
+        const laterEnd = calendarDate('2026-08-13');
+        const episode = {
+            id: EPISODE_ID,
+            cycleProfileId: CYCLE_ID,
+            startDate: calendarDate(`${start}T00:00:00Z`),
+            endDate: calendarDate(`${end}T00:00:00Z`),
+            status: MENSTRUAL_EPISODE_STATUS_CONFIRMED,
+            excludedFromPredictions: false,
+        };
         getCurrent.mockReturnValue(
             of(
                 cycleProfile({
                     menstrualEpisodes: [
+                        episode,
                         {
-                            id: EPISODE_ID,
-                            cycleProfileId: CYCLE_ID,
-                            startDate: calendarDate(`${start}T00:00:00Z`),
-                            endDate: calendarDate(`${end}T00:00:00Z`),
-                            status: MENSTRUAL_EPISODE_STATUS_CONFIRMED,
-                            excludedFromPredictions: false,
+                            ...episode,
+                            id: entityId<'menstrual-episode'>('later-episode'),
+                            startDate: laterStart,
+                            endDate: laterEnd,
                         },
                     ],
                 }),
@@ -893,13 +1347,19 @@ describe('Cycle episode calendar dates', () => {
         await firstValueFrom(translate.use('en'));
         await renderAsync();
         requiredElement(page, 'details.cycle-tracking__details summary').click();
-        const displayedRange = requiredElement(page, '.cycle-tracking__episode strong');
-        expect(displayedRange.textContent.trim()).toBe(cycleEpisodeRange('en-US', start, end));
+        const displayedRanges = Array.from(page.querySelectorAll('.cycle-tracking__episode strong'));
+        expect(displayedRanges.map(range => range.textContent.trim())).toEqual([
+            cycleEpisodeRange('en-US', laterStart, laterEnd),
+            cycleEpisodeRange('en-US', start, end),
+        ]);
 
         await firstValueFrom(translate.use('ru'));
         await stabilizeAsync();
 
-        expect(displayedRange.textContent.trim()).toBe(cycleEpisodeRange('ru-RU', start, end));
+        expect(displayedRanges.map(range => range.textContent.trim())).toEqual([
+            cycleEpisodeRange('ru-RU', laterStart, laterEnd),
+            cycleEpisodeRange('ru-RU', start, end),
+        ]);
     });
 });
 
@@ -1109,7 +1569,10 @@ describe('Cycle settings validation and selections', () => {
         await selectCyclePreferenceAsync(drawer, 'CYCLE_TRACKING.REPRODUCTIVE_STATE', reproductiveStateOption);
         click('CYCLE_TRACKING.SAVE_SETTINGS', drawer);
         await waitForDrawerCloseAsync('#cycle-settings-title');
-        expect(updateSettings).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, expect.objectContaining({ goal, reproductiveState }));
+        expect(updateSettings).toHaveBeenCalledExactlyOnceWith(
+            CYCLE_ID,
+            expect.objectContaining({ mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING, goal, reproductiveState }),
+        );
         expect(updateConsent).not.toHaveBeenCalled();
 
         click('CYCLE_TRACKING.SETTINGS_TITLE', page);
@@ -1157,6 +1620,34 @@ describe('Cycle settings request ownership', () => {
 });
 
 describe('Cycle settings draft registration', () => {
+    it('blocks WebMCP navigation with edited settings and closes a clean drawer before navigation', async () => {
+        const screens = new WebmcpScreenRegistry<DevelopmentScreen>();
+        TestBed.configureTestingModule({ providers: [{ provide: DEVELOPMENT_SCREENS, useValue: screens }] });
+        await renderAsync();
+        expect(screens.current()?.kind).toBe('cycle-tracking');
+
+        click('CYCLE_TRACKING.SETTINGS_TITLE', page);
+        await stabilizeAsync();
+        const drawer = requiredElement(document.body, '.cycle-drawer');
+        expect(screens.current()?.kind).toBe('cycle-settings');
+        input(requiredElementOfType(drawer, 'input[type="number"]', HTMLInputElement), '32');
+        await stabilizeAsync();
+        expect(() => {
+            screens.prepareNavigation(true);
+        }).toThrow('Unsaved draft exists.');
+        expect(drawer.isConnected).toBe(true);
+
+        click('COMMON.CANCEL', drawer);
+        await waitForDrawerCloseAsync('#cycle-settings-title');
+        click('CYCLE_TRACKING.SETTINGS_TITLE', page);
+        await stabilizeAsync();
+        screens.prepareNavigation(true);
+        await waitForDrawerCloseAsync('#cycle-settings-title');
+        expect(screens.current()?.kind).toBe('cycle-tracking');
+        expect(updateSettings).not.toHaveBeenCalled();
+        expect(updateConsent).not.toHaveBeenCalled();
+    });
+
     it('declines the settings action when the profile does not exist and detaches with the page', async () => {
         getCurrent.mockReturnValue(of(null));
         const { attach, detach } = registerCycleScreen();

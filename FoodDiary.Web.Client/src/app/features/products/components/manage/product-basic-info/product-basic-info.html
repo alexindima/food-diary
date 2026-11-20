@@ -22,8 +22,7 @@
                 [loading]="isNameSearchLoading()"
                 [emptyText]="'PRODUCT_MANAGE.NAME_NO_SUGGESTIONS' | translate"
                 [clearAriaLabel]="'COMMON.CLEAR' | translate"
-                [showEmptyState]="false"
-                [displayWith]="displayNameValue"
+                [showEmptyState]="isNameSearchLoading()"
                 (queryChange)="nameQueryChange.emit($event)"
                 (optionSelected)="onNameOptionSelected($event)"
             />

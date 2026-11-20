@@ -123,7 +123,6 @@ export class ShoppingListFacade {
         }));
     }
     public readonly selectedListId = signal<ShoppingListId | null>(null);
-    public readonly listName = signal('');
     public readonly renameRequestedListId = signal<ShoppingListId | null>(null);
 
     private readonly pendingCreate = signal(false);
@@ -188,25 +187,17 @@ export class ShoppingListFacade {
         this.loadListById(entityId<'shopping-list'>(id));
     }
 
-    public setListName(name: string): void {
-        this.listName.set(name);
-        this.scheduleSave();
-    }
-
     public renameListById(listId: ShoppingListId, name: string): void {
         const trimmedName = name.trim();
         if (this.conflictListId() !== null || listId.length === 0 || trimmedName.length === 0 || this.isSaving() || this.isLoading()) {
             return;
         }
 
-        const current = this.list();
-        const previousList = current;
+        const previousList = this.list();
         const previousLists = this.lists();
-        const previousListName = this.listName();
         this.lists.set(previousLists.map(entry => (entry.id === listId ? { ...entry, name: trimmedName } : entry)));
-        if (current?.id === listId) {
-            this.list.set({ ...current, name: trimmedName });
-            this.listName.set(trimmedName);
+        if (previousList?.id === listId) {
+            this.list.set({ ...previousList, name: trimmedName });
         }
 
         this.isSaving.set(true);
@@ -220,9 +211,6 @@ export class ShoppingListFacade {
                     this.isSaving.set(false);
                     if (this.selectedListId() === list.id) {
                         this.list.set(list);
-                        if (this.listName() === trimmedName) {
-                            this.listName.set(list.name);
-                        }
                     }
                     this.updateListSummary(list);
                     this.pendingSave = false;
@@ -235,9 +223,6 @@ export class ShoppingListFacade {
                     }
                     this.lists.set(previousLists);
                     this.list.set(previousList);
-                    if (this.listName() === trimmedName) {
-                        this.listName.set(previousListName);
-                    }
                     this.pendingSave = false;
                     this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
@@ -383,15 +368,6 @@ export class ShoppingListFacade {
         this.scheduleSave();
     }
 
-    public clearCurrentList(): void {
-        const current = this.list();
-        if (current === null) {
-            return;
-        }
-
-        this.clearListById(current.id);
-    }
-
     public clearListById(listId: ShoppingListId): void {
         const current = this.list();
         const summary = this.lists().find(entry => entry.id === listId);
@@ -435,15 +411,6 @@ export class ShoppingListFacade {
             });
     }
 
-    public deleteCurrentList(): void {
-        const current = this.list();
-        if (current === null || this.conflictListId() !== null) {
-            return;
-        }
-
-        this.deleteSelectedList(current);
-    }
-
     public deleteListById(listId: ShoppingListId): void {
         if (this.conflictListId() !== null) {
             return;
@@ -481,14 +448,12 @@ export class ShoppingListFacade {
     private deleteSelectedList(current: ShoppingList): void {
         const previousItems = this.items();
         const previousSelectedListId = this.selectedListId();
-        const previousListName = this.listName();
         this.suppressAutosave = true;
         this.pendingSave = false;
         this.list.set(null);
         this.items.set([]);
         this.lastLoadedListId.set(null);
         this.selectedListId.set(null);
-        this.listName.set('');
         this.isSaving.set(true);
 
         this.shoppingListService
@@ -508,7 +473,6 @@ export class ShoppingListFacade {
                     this.items.set(previousItems);
                     this.lastLoadedListId.set(current.id);
                     this.selectedListId.set(previousSelectedListId);
-                    this.listName.set(previousListName);
                     this.suppressAutosave = false;
                     this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
@@ -540,7 +504,10 @@ export class ShoppingListFacade {
                 next: lists => {
                     this.isLoading.set(false);
                     if (lists.length === 0) {
-                        this.applyEmptyListState();
+                        // The create response may arrive before the new list appears in the directory.
+                        if (this.list() === null) {
+                            this.applyEmptyListState();
+                        }
                         return;
                     }
 
@@ -560,8 +527,6 @@ export class ShoppingListFacade {
                         currentSelection !== null && this.lists().some(list => list.id === currentSelection)
                             ? currentSelection
                             : lists[0].id;
-                    this.selectedListId.set(selectedId);
-
                     this.loadListById(entityId<'shopping-list'>(selectedId));
                 },
                 error: () => {
@@ -609,7 +574,6 @@ export class ShoppingListFacade {
             this.lists.set([]);
             this.list.set(null);
             this.items.set([]);
-            this.listName.set('');
             this.selectedListId.set(null);
             this.lastLoadedListId.set(null);
         });
@@ -624,7 +588,6 @@ export class ShoppingListFacade {
         this.runWithAutosaveSuppressed(() => {
             this.list.set(list);
             this.items.set(rebuildShoppingListSortOrder(list.items));
-            this.listName.set(list.name);
             this.selectedListId.set(list.id);
             this.lastLoadedListId.set(list.id);
         });
@@ -696,7 +659,7 @@ export class ShoppingListFacade {
             return;
         }
 
-        const name = this.listName().trim();
+        const name = current.name.trim();
         if (name.length === 0) {
             return;
         }

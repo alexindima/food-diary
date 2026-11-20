@@ -47,7 +47,7 @@ export type StatisticsBodyMeasurements = {
 
 export type MappedStatistics = {
     date: Date[];
-    calories: number[];
+    calories: Array<number | null>;
     nutrientsStatistic: NutrientsStatistics;
     aggregatedNutrients: AggregatedNutrients;
     mealStructure?: MealStructureTotals;

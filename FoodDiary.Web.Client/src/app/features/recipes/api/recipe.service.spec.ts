@@ -1,9 +1,10 @@
 import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import type { Observable } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { RecipeHttpResponse } from '../../../shared/api/sdk/generated/model/recipe-http-response';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
@@ -144,6 +145,84 @@ describe('RecipeService reads', () => {
 
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/r1` && r.method === 'GET');
         req.flush('Not Found', { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
+    });
+});
+
+it('loads a private cooked recipe with ordered galleries and distinct ingredient quantities', async () => {
+    const id = entityId<'recipe'>('00000000-0000-4000-8000-000000000100');
+    const productId = '00000000-0000-4000-8000-000000000200';
+    const nestedRecipeId = '00000000-0000-4000-8000-000000000300';
+    const recipePhotos = [
+        { imageAssetId: '00000000-0000-4000-8000-000000000401', imageUrl: '/recipes/salad-cover.jpg' },
+        { imageAssetId: '00000000-0000-4000-8000-000000000402', imageUrl: '/recipes/salad-served.jpg' },
+    ];
+    const stepPhotos = [
+        { imageAssetId: '00000000-0000-4000-8000-000000000501', imageUrl: '/recipes/chicken-grilling.jpg' },
+        { imageAssetId: '00000000-0000-4000-8000-000000000502', imageUrl: '/recipes/chicken-grilled.jpg' },
+    ];
+    const response: RecipeHttpResponse = {
+        ...MOCK_RECIPE,
+        id,
+        category: 'salads',
+        cookTime: NEW_RECIPE_COOK_MINUTES,
+        imageUrl: recipePhotos[0].imageUrl,
+        imageAssetId: recipePhotos[0].imageAssetId,
+        images: recipePhotos,
+        qualityGrade: 'yellow',
+        qualityScore: 62,
+        steps: [
+            {
+                id: '00000000-0000-4000-8000-000000000600',
+                stepNumber: 1,
+                title: 'Grill the chicken',
+                instruction: 'Grill the chicken, then toss with dressing and salt.',
+                imageUrl: stepPhotos[0].imageUrl,
+                imageAssetId: stepPhotos[0].imageAssetId,
+                images: stepPhotos,
+                ingredients: [
+                    {
+                        id: '00000000-0000-4000-8000-000000000601',
+                        productId,
+                        productName: 'Chicken',
+                        amount: 180,
+                        productBaseUnit: 'G',
+                    },
+                    {
+                        id: '00000000-0000-4000-8000-000000000602',
+                        nestedRecipeId,
+                        nestedRecipeName: 'Dressing',
+                        nestedRecipeServings: 4,
+                        amount: 1.5,
+                    },
+                    { id: '00000000-0000-4000-8000-000000000603', textName: 'Salt', amount: 0, amountText: 'to taste' },
+                ],
+            },
+        ],
+    };
+    const result = firstValueFrom(service.getById(id, false));
+    const request = httpMock.expectOne(req => req.url === `${BASE_URL}/${id}` && req.method === 'GET');
+    expect(request.request.params.get('includePublic')).toBe('false');
+    request.flush(response);
+
+    await expect(result).resolves.toMatchObject({
+        id,
+        category: 'salads',
+        visibility: RecipeVisibility.Private,
+        qualityGrade: 'yellow',
+        cookTime: NEW_RECIPE_COOK_MINUTES,
+        imageAssetId: recipePhotos[0].imageAssetId,
+        images: recipePhotos,
+        steps: [
+            {
+                imageAssetId: stepPhotos[0].imageAssetId,
+                images: stepPhotos,
+                ingredients: [
+                    { kind: 'product', productId, amount: 180, productBaseUnit: 'G' },
+                    { kind: 'recipe', nestedRecipeId, amount: 1.5, nestedRecipeServings: 4 },
+                    { kind: 'text', textName: 'Salt', amount: 0, amountText: 'to taste' },
+                ],
+            },
+        ],
     });
 });
 

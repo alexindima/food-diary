@@ -7,6 +7,7 @@ import { mapRecognizedRecipe } from './recipe-recognition.mapper';
 const OUT_OF_RANGE_STEP_INDEX = 4;
 const FRACTIONAL_STEP_INDEX = 0.5;
 const FRACTIONAL_SERVINGS = 1.5;
+const NO_COOK_PREP_MINUTES = 10;
 
 const salad: RecipeImportResult = {
     name: 'Салат с огурцом',
@@ -23,6 +24,16 @@ const salad: RecipeImportResult = {
     authorNutrition: '100 ккал; 20 г белка (порция не указана)',
     sourceUrl: 'https://www.instagram.com/reel/example/',
 };
+
+it('keeps a no-cook import time empty in the editor and its save payload while preserving prep minutes', () => {
+    const draft = mapRecognizedRecipe({ ...salad, prepMinutes: NO_COOK_PREP_MINUTES, cookMinutes: 0 }, 'Источник', 'Со слов автора');
+    expect(draft.prepTime).toBe(NO_COOK_PREP_MINUTES);
+    expect(draft.cookTime).toBeNull();
+
+    const payload = buildRecipeDto({ ...createRecipeFormValue(), ...draft }, 'recipe', 1, value => value ?? 0);
+    expect(payload.prepTime).toBe(NO_COOK_PREP_MINUTES);
+    expect(payload.cookTime).toBeNull();
+});
 
 describe('recognized recipe mapping', () => {
     it('keeps ingredient names separate from quantity text in the editor and save payload', () => {

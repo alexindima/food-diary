@@ -24,6 +24,29 @@ describe('RecipeListFavoritesComponent', () => {
         expect(component['hasMoreFavorites']()).toBe(true);
     });
 
+    it('opens the saved recipe when its nickname, time and calories are unavailable', () => {
+        const favorite: FavoriteRecipe = { ...createFavoriteRecipe(), name: null, totalTimeMinutes: null, totalCalories: null };
+        const { component, fixture } = setupComponent({ favorites: [favorite] });
+        const opened: FavoriteRecipe[] = [];
+        component.favoriteOpen.subscribe(item => opened.push(item));
+
+        const root = fixture.nativeElement as HTMLElement;
+        const card = root.querySelector('fd-recipe-card');
+        if (card === null) {
+            throw new Error('Saved recipe card was not rendered');
+        }
+        expect(card.querySelector('.entity-card__name')?.textContent.trim()).toBe(favorite.recipeName);
+        expect(card.querySelector('.entity-card__calories-value')?.textContent.trim()).toBe('—');
+        const description = card.querySelector('.entity-card__description')?.textContent;
+        expect(description).toContain('RECIPE_CARD.INGREDIENTS_');
+        expect(description).not.toContain('RECIPE_DETAIL.MIN');
+
+        const openButton = card.querySelector<HTMLButtonElement>('.entity-card__open-button');
+        expect(openButton?.getAttribute('aria-label')).toBe(favorite.recipeName);
+        openButton?.click();
+        expect(opened).toEqual([favorite]);
+    });
+
     it('renders favorite as recipe card and emits card actions', () => {
         const favorite = createFavoriteRecipe();
         const { component, fixture } = setupComponent({ favorites: [favorite] });

@@ -210,6 +210,22 @@ describe('rendered sidebar navigation and account status', () => {
 });
 
 describe('rendered sidebar menu and notification overlay', () => {
+    it('closes the desktop account menu when its trigger is selected again', async () => {
+        const { fixture } = await setupSidebarAsync();
+        const trigger = desktopElement(fixture, '.sidebar__user');
+        trigger.click();
+        fixture.detectChanges();
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        expect(desktopElement(fixture, '[role="menu"]')).toBeTruthy();
+
+        trigger.click();
+        fixture.detectChanges();
+
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-sidebar-desktop [role="menu"]')).toBeNull();
+        expect(document.activeElement).toBe(trigger);
+    });
+
     it('dismisses the account menu on Escape and restores focus to its trigger', async () => {
         const { fixture } = await setupSidebarAsync();
         const trigger = desktopElement(fixture, '.sidebar__user');
@@ -449,6 +465,48 @@ describe('rendered sidebar mobile navigation', () => {
             TestBed.tick();
             expect(document.querySelector('fd-notifications-dialog')).not.toBeNull();
         });
+    });
+});
+
+describe('rendered sidebar mobile logout', () => {
+    it.each([
+        { decision: 'cancelled', label: 'COMMON.CANCEL', logoutCalls: 0 },
+        { decision: 'confirmed', label: 'HEADER.LOGOUT_CONFIRM_ACTION', logoutCalls: 1 },
+    ])('closes the mobile user sheet and honors $decision logout', async ({ label, logoutCalls }) => {
+        const { fixture, auth } = await setupSidebarAsync({ realDialogs: true });
+        const host = fixture.nativeElement as HTMLElement;
+        const trigger = host.querySelector<HTMLButtonElement>('button[data-mobile-sheet="user"]');
+        if (trigger === null) {
+            throw new Error('Expected the mobile account navigation control');
+        }
+
+        trigger.click();
+        fixture.detectChanges();
+        const signOut = document.querySelector<HTMLButtonElement>('.sidebar-mobile__sheet-logout');
+        if (signOut === null) {
+            throw new Error('Expected the mobile logout control');
+        }
+        signOut.click();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.sidebar-mobile__sheet')).toBeNull();
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(auth.onLogoutAsync).not.toHaveBeenCalled();
+        const action = await vi.waitFor(() => {
+            TestBed.tick();
+            const button = [...document.querySelectorAll<HTMLButtonElement>('fd-ui-confirm-dialog button')].find(
+                item => item.textContent.trim() === label,
+            );
+            if (button === undefined) {
+                throw new Error(`Expected logout confirmation action ${label}`);
+            }
+            return button;
+        });
+        action.click();
+        await fixture.whenStable();
+
+        expect(auth.onLogoutAsync).toHaveBeenCalledTimes(logoutCalls);
+        expect(document.querySelector('fd-ui-confirm-dialog')).toBeNull();
     });
 });
 

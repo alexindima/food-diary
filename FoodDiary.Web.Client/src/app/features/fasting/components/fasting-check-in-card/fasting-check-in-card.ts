@@ -1,25 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    inject,
-    input,
-    output,
-    signal,
-    type WritableSignal,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, type WritableSignal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { EMPTY, type Observable } from 'rxjs';
 
-import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FASTING_SYMPTOM_OPTIONS } from '../../../../shared/models/fasting.data';
 import {
     FASTING_CHECK_IN_NOTES_MAX_LENGTH,
@@ -49,9 +36,6 @@ import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fast
 })
 export class FastingCheckInCardComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly localizationService = inject(LocalizationService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
 
     public readonly isActive = input.required<boolean>();
     public readonly presentation = input<'card' | 'dialog'>('card');
@@ -79,8 +63,6 @@ export class FastingCheckInCardComponent {
     protected readonly energyOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.ENERGY', FASTING_ENERGY_EMOJI_SCALE));
     protected readonly moodOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.MOOD', FASTING_MOOD_EMOJI_SCALE));
     protected readonly symptomOptions = computed(() => {
-        this.currentLanguage();
-
         return FASTING_SYMPTOM_OPTIONS.filter(symptom => symptom.value !== 'good').map<FdUiChipSelectOption>(symptom => {
             const label = this.translateService.instant(symptom.labelKey);
             const description = this.translateService.instant(symptom.descriptionKey);
@@ -93,7 +75,6 @@ export class FastingCheckInCardComponent {
         });
     });
     protected readonly noSymptomsOptions = computed(() => {
-        this.currentLanguage();
         const option = FASTING_SYMPTOM_OPTIONS.find(symptom => symptom.value === 'good');
         if (option === undefined) {
             return [];
@@ -103,14 +84,6 @@ export class FastingCheckInCardComponent {
         const description = this.translateService.instant(option.descriptionKey);
         return [{ value: option.value, label, ariaLabel: `${label}. ${description}`, hint: description }];
     });
-
-    public constructor() {
-        ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.currentLanguage.set(this.localizationService.getCurrentLanguage());
-            });
-    }
 
     protected setHungerLevel(value: FdUiEmojiPickerValue | null): void {
         this.setNumericLevel(this.hungerLevel(), value);
@@ -155,8 +128,6 @@ export class FastingCheckInCardComponent {
     }
 
     private buildEmojiPickerOptions(labelKey: string, scale: FastingEmojiScaleOption[]): Array<FdUiEmojiPickerOption<number>> {
-        this.currentLanguage();
-
         return scale.map(option => {
             const label = this.translateService.instant(`${labelKey}_LEVEL_${option.value}`);
             const description = this.translateService.instant(`${labelKey}_LEVEL_${option.value}_DESCRIPTION`);
@@ -172,7 +143,6 @@ export class FastingCheckInCardComponent {
     }
 
     private getSelectedScaleLabel(labelKey: string, value: number): string {
-        this.currentLanguage();
         return this.translateService.instant(`${labelKey}_LEVEL_${value}`);
     }
 }

@@ -101,7 +101,7 @@ beforeEach(() => {
         navigateToProductEditAsync: vi.fn().mockResolvedValue(true),
     };
     dialogService = {
-        open: vi.fn(),
+        open: vi.fn().mockReturnValue({ afterClosed: () => of(undefined), close: vi.fn() }),
     };
     toastService = {
         error: vi.fn(),

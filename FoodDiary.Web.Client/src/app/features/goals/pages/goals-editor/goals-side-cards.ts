@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
+import {
+    afterRenderEffect,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    type ElementRef,
+    inject,
+    input,
+    model,
+    output,
+    viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -25,8 +36,11 @@ export class GoalsSideCardsComponent {
     protected readonly measurements = inject(MeasurementSystemService);
     public readonly water = model.required<number>();
     public readonly bodyTargets = input.required<Record<BodyTargetKey, number>>();
+    public readonly invalidBodyTargets = input.required<Record<BodyTargetKey, boolean>>();
 
-    public readonly bodyTargetChange = output<{ key: BodyTargetKey; value: number }>();
+    public readonly bodyTargetChange = output<{ key: BodyTargetKey; value: number | null }>();
+    private readonly weightField = viewChild.required<ElementRef<HTMLInputElement>>('weightField');
+    private readonly waistField = viewChild.required<ElementRef<HTMLInputElement>>('waistField');
     protected readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
         initialValue: resolveTranslateLanguage(this.translateService),
     });
@@ -35,11 +49,34 @@ export class GoalsSideCardsComponent {
         waist: this.measurements.displayLength(this.bodyTargets().waist, BODY_TARGET_FRACTION_DIGITS),
     }));
 
-    protected readonly weightInvalid = computed(() => !isBodyTargetValid('weight', this.bodyTargets().weight));
+    protected readonly weightInvalid = computed(
+        () => this.invalidBodyTargets().weight || !isBodyTargetValid('weight', this.bodyTargets().weight),
+    );
     protected readonly waterInvalid = computed(() => !isGoalNumberValid(this.water()));
-    protected readonly waistInvalid = computed(() => !isBodyTargetValid('waist', this.bodyTargets().waist));
+    protected readonly waistInvalid = computed(
+        () => this.invalidBodyTargets().waist || !isBodyTargetValid('waist', this.bodyTargets().waist),
+    );
     protected readonly weightMaximum = computed(() => this.displayMaximum('weight'));
     protected readonly waistMaximum = computed(() => this.displayMaximum('waist'));
+
+    public constructor() {
+        afterRenderEffect({
+            write: () => {
+                this.syncBodyTarget('weight', this.weightField().nativeElement);
+                this.syncBodyTarget('waist', this.waistField().nativeElement);
+            },
+        });
+    }
+
+    private syncBodyTarget(key: BodyTargetKey, field: HTMLInputElement): void {
+        // Writing a value would replace the browser's in-progress invalid edit.
+        if (!this.invalidBodyTargets()[key]) {
+            const value = String(this.displayBodyTargets()[key]);
+            if (field.value !== value) {
+                field.value = value;
+            }
+        }
+    }
 
     private displayMaximum(key: BodyTargetKey): number {
         const limit = BODY_TARGET_MAXIMUMS[key];
@@ -64,11 +101,13 @@ export class GoalsSideCardsComponent {
         }
     }
 
-    protected updateBodyTarget(key: BodyTargetKey, event: Event): void {
-        const value = this.numberValue(event);
-        if (value !== null) {
-            const canonicalValue = key === 'weight' ? this.measurements.canonicalWeight(value) : this.measurements.canonicalLength(value);
-            this.bodyTargetChange.emit({ key, value: canonicalValue });
+    protected updateBodyTarget(key: BodyTargetKey, field: HTMLInputElement): void {
+        if (!field.validity.valid) {
+            this.bodyTargetChange.emit({ key, value: null });
+            return;
         }
+        const value = field.value === '' ? 0 : field.valueAsNumber;
+        const canonicalValue = key === 'weight' ? this.measurements.canonicalWeight(value) : this.measurements.canonicalLength(value);
+        this.bodyTargetChange.emit({ key, value: canonicalValue });
     }
 }

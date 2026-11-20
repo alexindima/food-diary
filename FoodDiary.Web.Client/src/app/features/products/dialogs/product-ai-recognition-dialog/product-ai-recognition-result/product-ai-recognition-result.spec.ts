@@ -5,16 +5,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { FoodNutritionResponse } from '../../../../../shared/models/ai.data';
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
 import { createProductAiRecognitionFormModel } from '../product-ai-recognition-lib/product-ai-recognition.helpers';
 import { ProductAiRecognitionResultComponent } from './product-ai-recognition-result';
-
-const PRODUCT_CALORIES = 150;
-const PRODUCT_PROTEINS = 4;
-const PRODUCT_FATS = 2;
-const PRODUCT_CARBS = 25;
-const PRODUCT_FIBER = 3;
 
 let fixture: ComponentFixture<ProductAiRecognitionResultComponent>;
 let component: ProductAiRecognitionResultComponent;
@@ -86,18 +79,5 @@ function setRequiredInputs(itemNames: readonly string[]): void {
         'form',
         TestBed.runInInjectionContext(() => form(model)),
     );
-    fixture.componentRef.setInput('nutrition', createNutrition());
     fixture.componentRef.setInput('itemNames', itemNames);
-}
-
-function createNutrition(): FoodNutritionResponse {
-    return {
-        calories: PRODUCT_CALORIES,
-        protein: PRODUCT_PROTEINS,
-        fat: PRODUCT_FATS,
-        carbs: PRODUCT_CARBS,
-        fiber: PRODUCT_FIBER,
-        alcohol: 0,
-        items: [],
-    };
 }

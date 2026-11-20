@@ -7,9 +7,10 @@ import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
-import { catchError, firstValueFrom, of } from 'rxjs';
+import { catchError, finalize, firstValueFrom, type Observable, of } from 'rxjs';
 
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
 import type { ConfirmDeleteDialogData } from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
@@ -277,46 +278,33 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     private applyPrefillIfNeeded(prefill: ProductManagePrefill | null): void {
-        const key = this.getPrefillKey(prefill);
-        if (key === null || key === this.appliedPrefillKey || this.productForm().dirty()) {
+        const source = this.resolvePrefillSource(prefill);
+        if (source === null || source.key === this.appliedPrefillKey || this.productForm().dirty()) {
             return;
         }
 
-        this.appliedPrefillKey = key;
-        if (prefill === null) {
+        this.appliedPrefillKey = source.key;
+        if ('offProduct' in source) {
+            this.prefillFromOffProduct(source.offProduct);
             return;
         }
 
-        if (prefill.offProduct !== null && prefill.offProduct !== undefined) {
-            this.prefillFromOffProduct(prefill.offProduct);
-            return;
-        }
-
-        this.applyBarcodePrefill(prefill.barcode ?? null);
+        this.patchProductForm({ barcode: source.barcode });
+        this.lookupOpenFoodFacts(source.barcode);
     }
 
-    private applyBarcodePrefill(barcodeValue: string | null): void {
-        const barcode = barcodeValue?.trim();
-        if (barcode === undefined || barcode.length === 0) {
-            return;
-        }
-
-        this.patchProductForm({ barcode });
-        this.lookupOpenFoodFacts(barcode);
-    }
-
-    private getPrefillKey(prefill: ProductManagePrefill | null): string | null {
+    private resolvePrefillSource(prefill: ProductManagePrefill | null): ResolvedProductPrefill | null {
         if (prefill === null) {
             return null;
         }
 
         const offProduct = prefill.offProduct;
         if (offProduct !== null && offProduct !== undefined) {
-            return `off:${offProduct.barcode}`;
+            return { key: `off:${offProduct.barcode}`, offProduct };
         }
 
         const barcode = prefill.barcode?.trim();
-        return barcode === undefined || barcode.length === 0 ? null : `barcode:${barcode}`;
+        return barcode === undefined || barcode.length === 0 ? null : { key: `barcode:${barcode}`, barcode };
     }
 
     protected readonly canShowDeleteButton = computed(() => {
@@ -334,16 +322,13 @@ export class ProductManageFormComponent implements UnsavedEditor {
     });
 
     protected openBarcodeScanner(): void {
-        this.fdDialogService
-            .open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, { size: 'lg' })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(barcode => {
-                if (barcode !== null && barcode !== undefined && barcode.length > 0) {
-                    this.setBarcodeFromUserAction(barcode);
-                    this.lookupOpenFoodFacts(barcode);
-                }
-            });
+        const dialog = this.fdDialogService.open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, { size: 'lg' });
+        this.afterEditorDialogClosed(dialog).subscribe(barcode => {
+            if (barcode !== null && barcode !== undefined && barcode.length > 0) {
+                this.setBarcodeFromUserAction(barcode);
+                this.lookupOpenFoodFacts(barcode);
+            }
+        });
     }
 
     private setBarcodeFromUserAction(barcode: string): void {
@@ -386,27 +371,32 @@ export class ProductManageFormComponent implements UnsavedEditor {
         const product = this.product();
         const currentPhotos = this.productFormModel().images;
         const currentCover = this.productFormModel().imageUrl;
-        this.fdDialogService
-            .open<ProductAiRecognitionDialogComponent, ProductAiDialogData, ProductAiRecognitionResult | null>(
-                ProductAiRecognitionDialogComponent,
-                {
-                    size: 'lg',
-                    data: {
-                        initialDescription: this.productFormModel().description ?? null,
-                        initialPhotos: currentPhotos ?? (currentCover !== null ? [currentCover] : []),
-                        hasExistingData: this.productForm().dirty() || product !== null || this.productFormModel().name.trim().length > 0,
-                    },
-                },
-            )
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(result => {
-                if (result === null || result === undefined || this.product() !== product) {
-                    return;
-                }
+        const dialog = this.fdDialogService.open<
+            ProductAiRecognitionDialogComponent,
+            ProductAiDialogData,
+            ProductAiRecognitionResult | null
+        >(ProductAiRecognitionDialogComponent, {
+            size: 'lg',
+            data: {
+                initialDescription: this.productFormModel().description ?? null,
+                initialPhotos: currentPhotos ?? (currentCover !== null ? [currentCover] : []),
+                hasExistingData: this.productForm().dirty() || product !== null || this.productFormModel().name.trim().length > 0,
+            },
+        });
+        this.afterEditorDialogClosed(dialog).subscribe(result => {
+            if (result === null || result === undefined || this.product() !== product) {
+                return;
+            }
 
-                this.applyAiResult(result);
-            });
+            this.applyAiResult(result);
+        });
+    }
+
+    private afterEditorDialogClosed<T, R>(dialog: FdUiDialogRef<T, R>): Observable<R | undefined> {
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        return dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose));
     }
 
     protected async onCancelAsync(): Promise<void> {
@@ -726,6 +716,8 @@ export class ProductManageFormComponent implements UnsavedEditor {
         );
     }
 }
+
+type ResolvedProductPrefill = { key: string; offProduct: OpenFoodFactsProduct } | { key: string; barcode: string };
 
 type ProductManageHeaderState = {
     titleKey: string;

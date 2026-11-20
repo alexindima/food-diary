@@ -110,3 +110,16 @@ describe('FavoriteRecipeRowComponent', () => {
         expect(restore).toHaveBeenCalledExactlyOnceWith(recipe);
     });
 });
+
+it('keeps a saved recipe selectable when the API does not supply ingredient names', () => {
+    const fixture = setup({ ingredientNames: undefined });
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('strong')?.textContent).toBe(recipe.recipeName);
+    expect(root.querySelector('.favorite-row__composition')).toBeNull();
+    const added = vi.fn();
+    fixture.componentInstance.add.subscribe(added);
+
+    [...root.querySelectorAll('button')].find(button => button.textContent.includes('RECIPE_FAVORITES.ADD'))?.click();
+
+    expect(added).toHaveBeenCalledExactlyOnceWith({ ...recipe, ingredientNames: undefined });
+});

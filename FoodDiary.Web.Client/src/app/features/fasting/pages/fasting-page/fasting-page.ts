@@ -221,7 +221,13 @@ export class FastingPageComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (result === 'confirm' && !this.isSessionMutationPending()) {
+                const currentSession = this.currentSession();
+                if (
+                    result === 'confirm' &&
+                    currentSession?.id === session.id &&
+                    currentSession.endedAtUtc === null &&
+                    !this.isSessionMutationPending()
+                ) {
                     this.facade.endFasting();
                 }
             });
@@ -448,11 +454,6 @@ export class FastingPageComponent {
         return this.isHistorySessionExpanded(session.id) ? 'FASTING.HIDE_HISTORY_CHECK_INS' : 'FASTING.SHOW_HISTORY_CHECK_INS';
     }
 
-    protected getLatestSessionCheckIn(session: FastingSession): FastingCheckIn | null {
-        const checkIns = this.getSessionCheckIns(session);
-        return checkIns.length > 0 ? (checkIns[0] ?? null) : null;
-    }
-
     protected getSessionCheckInCount(session: FastingSession): number {
         return this.getSessionCheckIns(session).length;
     }
@@ -463,9 +464,9 @@ export class FastingPageComponent {
 
     protected getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {
         return this.translateService.instant('FASTING.CHECK_IN.SUMMARY', {
-            hunger: this.getHungerSummaryValue(hunger),
-            energy: this.getEnergySummaryValue(energy),
-            mood: this.getMoodSummaryValue(mood),
+            hunger: this.getHungerEmoji(hunger),
+            energy: this.getEnergyEmoji(energy),
+            mood: this.getMoodEmoji(mood),
         });
     }
 
@@ -685,29 +686,5 @@ export class FastingPageComponent {
             confirmLabel: this.translateService.instant(isIntermittent ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST'),
             cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
         };
-    }
-
-    private getHungerSummaryValue(level: number | null): string {
-        if (level === null) {
-            return '—';
-        }
-
-        return this.getHungerEmoji(level);
-    }
-
-    private getEnergySummaryValue(level: number | null): string {
-        if (level === null) {
-            return '—';
-        }
-
-        return this.getEnergyEmoji(level);
-    }
-
-    private getMoodSummaryValue(level: number | null): string {
-        if (level === null) {
-            return '—';
-        }
-
-        return this.getMoodEmoji(level);
     }
 }

@@ -18,7 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, FdUiInlineAlertComponent, FdUiTextEnterDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -556,10 +556,15 @@ export class AiInputBarComponent {
             return true;
         }
 
-        this.fdDialogService
-            .open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, { preset: 'confirm' })
+        const dialog = this.fdDialogService.open<PremiumRequiredDialogComponent, never, boolean>(PremiumRequiredDialogComponent, {
+            preset: 'confirm',
+        });
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        dialog
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose))
             .subscribe(confirmed => {
                 if (confirmed === true) {
                     this.drafts.save(this.authService.getUserId(), this.browserWindow.getPathname(), this.voiceText());

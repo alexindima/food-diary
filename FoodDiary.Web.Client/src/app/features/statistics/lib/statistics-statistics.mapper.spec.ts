@@ -23,6 +23,30 @@ const FIRST_TOTAL_FIBER = 40;
 const SECOND_TOTAL_FIBER = 75;
 
 describe('statistics-statistics.mapper', () => {
+    it('keeps older records visible when only the meal count or calorie total identifies a logged bucket', () => {
+        const loggedWithCalories = createStat('2026-05-01');
+        const loggedWithoutCalories = {
+            ...createStat('2026-05-02'),
+            totalCalories: 0,
+            averageProteins: 0,
+            averageFats: 0,
+            averageCarbs: 0,
+            averageFiber: 0,
+            totalProteins: 0,
+            totalFats: 0,
+            totalCarbs: 0,
+            totalFiber: 0,
+            mealCount: 1,
+        };
+        const { dateFrom, dateTo } = createStat('2026-05-03');
+        const unlogged = { ...loggedWithoutCalories, dateFrom, dateTo, mealCount: 0 };
+
+        const result = mapStatistics([loggedWithCalories, loggedWithoutCalories, unlogged]);
+
+        expect(result.calories).toEqual([FIRST_CALORIES, 0, null]);
+        expect(result.mealStructure?.trackedDayCount).toBe(2);
+    });
+
     it('sums other meal calories across buckets and accepts older responses', () => {
         const result = mapStatistics([{ ...createStat('2026-05-01'), otherCalories: FIRST_CALORIES }, createStat('2026-05-02', true)]);
 

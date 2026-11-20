@@ -6,42 +6,44 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FrontendObservabilityService } from '../../../services/frontend-observability.service';
 import { UserService } from '../../../shared/api/user.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../shared/development/development-tools';
+import type { FastingSession } from '../../../shared/models/fasting.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { FastingService } from '../api/fasting.service';
 import { FastingFacade } from './fasting.facade';
-import { connectFastingDevelopmentSetup, readFastingDevelopmentContext } from './fasting-development';
+import { connectFastingDevelopmentSetup, hasFastingDevelopmentDraft, readFastingDevelopmentContext } from './fasting-development';
 
-describe('unsaved fasting preparation', () => {
-    let facade: FastingFacade;
-    let screen: DevelopmentScreen;
-    const start = vi.fn();
-    beforeEach(() => {
-        start.mockReset();
-        TestBed.configureTestingModule({
-            providers: [
-                FastingFacade,
-                { provide: FastingService, useValue: { start } },
-                { provide: FrontendObservabilityService, useValue: {} },
-                { provide: UserService, useValue: { user: (): null => null } },
-                { provide: TranslateService, useValue: {} },
-                { provide: FdUiToastService, useValue: {} },
-                {
-                    provide: DEVELOPMENT_SCREENS,
-                    useValue: {
-                        attach: (value: DevelopmentScreen) => {
-                            screen = value;
-                            return (): void => {};
-                        },
+let facade: FastingFacade;
+let screen: DevelopmentScreen;
+const start = vi.fn();
+beforeEach(() => {
+    start.mockReset();
+    TestBed.configureTestingModule({
+        providers: [
+            FastingFacade,
+            { provide: FastingService, useValue: { start } },
+            { provide: FrontendObservabilityService, useValue: {} },
+            { provide: UserService, useValue: { user: (): null => null } },
+            { provide: TranslateService, useValue: {} },
+            { provide: FdUiToastService, useValue: {} },
+            {
+                provide: DEVELOPMENT_SCREENS,
+                useValue: {
+                    attach: (value: DevelopmentScreen) => {
+                        screen = value;
+                        return (): void => {};
                     },
                 },
-            ],
-        });
-        facade = TestBed.inject(FastingFacade);
-        TestBed.runInInjectionContext(() => {
-            connectFastingDevelopmentSetup(facade);
-        });
+            },
+        ],
     });
+    facade = TestBed.inject(FastingFacade);
+    TestBed.runInInjectionContext(() => {
+        connectFastingDevelopmentSetup(facade);
+    });
+});
+
+describe('unsaved fasting preparation', () => {
     it('prepares cyclic 1:2 using owner selections and restores the previous setup without starting', () => {
         const baseline = screen.read();
         screen.fillDraft?.({ mode: 'cyclic', fastHours: 16, fastDays: 1, eatDays: 2 });
@@ -70,6 +72,46 @@ describe('unsaved fasting preparation', () => {
         expect(() => screen.fillDraft?.({ mode: 'extended', fastHours: 48 })).toThrow('idle');
         expect(start).not.toHaveBeenCalled();
     });
+
+    it('restores a custom cyclic setup after previewing a suggested preset', () => {
+        const customFastDays = 2;
+        const customEatDays = 3;
+        facade.selectMode('cyclic');
+        facade.setCyclicFastDays(customFastDays);
+        facade.setCyclicEatDays(customEatDays);
+        TestBed.runInInjectionContext(() => {
+            connectFastingDevelopmentSetup(facade);
+        });
+        const baseline = screen.read();
+        expect(baseline).toMatchObject({ mode: 'cyclic', fastDays: customFastDays, eatDays: customEatDays, customPreset: true });
+
+        screen.fillDraft?.({ mode: 'cyclic', fastHours: 16, fastDays: 1, eatDays: 1 });
+        expect(screen.read()).toMatchObject({ fastDays: 1, eatDays: 1, customPreset: false });
+        expect(screen.isDirty?.()).toBe(true);
+        screen.clearDraft?.();
+
+        expect(screen.read()).toEqual(baseline);
+        expect(screen.isDirty?.()).toBe(false);
+        expect(start).not.toHaveBeenCalled();
+    });
+});
+
+describe('active fasting development state', () => {
+    it.each([
+        { label: 'no saved ratings', checkIn: { hungerLevel: null, energyLevel: null, moodLevel: null, checkInNotes: null } },
+        { label: 'saved ratings and notes', checkIn: { hungerLevel: 4, energyLevel: 2, moodLevel: 3, checkInNotes: 'Saved check-in' } },
+    ])('compares check-in edits with the active session baseline for $label', ({ checkIn }) => {
+        setActiveSessionWithPrivateDetails(facade, { ...checkIn, symptoms: [] });
+        facade.resetCheckInDraft();
+        expect(hasFastingDevelopmentDraft(facade)).toBe(false);
+
+        facade.setCheckInNotes('Pending check-in');
+        expect(hasFastingDevelopmentDraft(facade)).toBe(true);
+        facade.resetCheckInDraft();
+
+        expect(facade.checkInNotes()).toBe(checkIn.checkInNotes ?? '');
+        expect(hasFastingDevelopmentDraft(facade)).toBe(false);
+    });
     it('publishes active phase and duration while omitting private notes and symptoms', () => {
         setActiveSessionWithPrivateDetails(facade);
         const context = readFastingDevelopmentContext(facade);
@@ -81,8 +123,8 @@ describe('unsaved fasting preparation', () => {
     });
 });
 
-function setActiveSessionWithPrivateDetails(facade: FastingFacade): void {
-    facade.currentSession.set({
+function setActiveSessionWithPrivateDetails(owner: FastingFacade, overrides: Partial<FastingSession> = {}): void {
+    owner.currentSession.set({
         id: entityId<'fasting-session'>('session-1'),
         startedAtUtc: utcInstant('2026-10-18T12:00:00Z'),
         endedAtUtc: null,
@@ -108,5 +150,6 @@ function setActiveSessionWithPrivateDetails(facade: FastingFacade): void {
         symptoms: ['private-symptom'],
         checkInNotes: 'private-check-in',
         checkIns: [],
+        ...overrides,
     });
 }

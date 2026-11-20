@@ -1096,9 +1096,9 @@ describe('Product editor gallery departure', () => {
 });
 
 describe('Product editor rendered source prefill', () => {
-    it('uses a supplied Open Food Facts entry without fetching it again and submits a private creation', async () => {
+    it('prefers the supplied Open Food Facts entry over a raw barcode and submits a private creation', async () => {
         const { el, fixture, productManageFacade, externalFoodFacade } = await setupComponentAsync();
-        fixture.componentRef.setInput('prefill', { offProduct: OFF_PRODUCT });
+        fixture.componentRef.setInput('prefill', { barcode: ' 4006381333931 ', offProduct: OFF_PRODUCT });
         fixture.detectChanges();
 
         expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(OFF_PRODUCT.name);
@@ -1155,7 +1155,7 @@ describe('Product editor rendered source prefill', () => {
 });
 
 describe('Product editor native deletion controls', () => {
-    it('locks the form while deletion confirmation is pending and re-enables the same product on cancellation', async () => {
+    it('honors only the first action before repaint and restores the editor after deletion is cancelled', async () => {
         const { el, fixture, productManageFacade } = await setupComponentAsync();
         const confirm = new Subject<ProductDeleteResult>();
         const result = firstValueFrom(confirm);
@@ -1166,14 +1166,16 @@ describe('Product editor native deletion controls', () => {
         const save = requiredFormButton(el, 'button[type="submit"]');
 
         button.click();
+        button.click();
+        save.click();
         fixture.detectChanges();
         expect(button.matches(':disabled')).toBe(true);
         expect(save.matches(':disabled')).toBe(true);
-        button.click();
         expect(productManageFacade.deleteProductAsync).toHaveBeenCalledExactlyOnceWith(
             PRODUCT,
             expect.objectContaining({ name: PRODUCT.name }),
         );
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
 
         confirm.next('cancelled');
         confirm.complete();
@@ -1186,21 +1188,39 @@ describe('Product editor native deletion controls', () => {
     });
 });
 
-describe('Product editor scanner ownership', () => {
-    it('releases a pending barcode and never requests external product data after the editor is destroyed', async () => {
+describe('Product editor dialog ownership', () => {
+    it('closes the scanner and ignores a late barcode after the editor is destroyed', async () => {
         const { el, fixture, dialogService, externalFoodFacade } = await setupComponentAsync();
         const closed = new Subject<string | null>();
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => closed });
+        const close = vi.fn();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => closed, close });
         fixture.detectChanges();
         requiredFormButton(el, 'button[aria-label="PRODUCT_MANAGE.SCAN_BARCODE"]').click();
         expect(closed.observed).toBe(true);
 
         fixture.destroy();
 
+        expect(close).toHaveBeenCalledOnce();
         expect(closed.observed).toBe(false);
         closed.next(OFF_PRODUCT.barcode);
         closed.complete();
         expect(externalFoodFacade.searchByBarcode).not.toHaveBeenCalled();
+    });
+
+    it('closes the pending photo review when its product editor is destroyed', async () => {
+        const { el, fixture, dialogService, productManageFacade } = await setupComponentAsync();
+        const closed = new Subject<ProductAiRecognitionResult | null>();
+        const close = vi.fn();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => closed, close });
+        fixture.detectChanges();
+        requiredFormButton(el, '.product-manage__ai button').click();
+        expect(closed.observed).toBe(true);
+
+        fixture.destroy();
+
+        expect(close).toHaveBeenCalledOnce();
+        expect(closed.observed).toBe(false);
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
     });
 });
 
@@ -1380,13 +1400,15 @@ describe('Product editor refresh while recognition is pending', () => {
     it('releases the open AI dialog result subscription when its editor leaves', async () => {
         const editor = await setupComponentAsync();
         const result = new Subject<ProductAiRecognitionResult>();
-        editor.dialogService.open.mockReturnValueOnce({ afterClosed: (): Subject<ProductAiRecognitionResult> => result });
+        const close = vi.fn();
+        editor.dialogService.open.mockReturnValueOnce({ afterClosed: (): Subject<ProductAiRecognitionResult> => result, close });
         editor.fixture.detectChanges();
         requiredFormButton(editor.el, '.product-manage__ai button').click();
         expect(result.observed).toBe(true);
 
         editor.fixture.destroy();
 
+        expect(close).toHaveBeenCalledOnce();
         expect(result.observed).toBe(false);
         expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
     });
@@ -1614,6 +1636,58 @@ describe('Product editor legacy cover actions', () => {
         expect(payload).not.toHaveProperty('imageAssetIds');
     });
 });
+
+describe('Product editor first recognized photos', () => {
+    it('saves the selected cover and gallery when the existing product has no photos', async () => {
+        const { el, fixture, dialogService, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        expect(el.querySelector('fd-image-gallery-editor img')).toBeNull();
+
+        const cover = imageSelection('https://images.example.test/recognized-front.jpg', 'front-photo');
+        const otherPhoto = imageSelection('https://images.example.test/recognized-back.jpg', 'back-photo');
+        const recognized: ProductAiRecognitionResult = {
+            name: 'Recognized product with photos',
+            image: cover,
+            images: [cover, otherPhoto],
+            baseUnit: MeasurementUnit.G,
+            baseAmount: PORTION_AMOUNT,
+            caloriesPerBase: PORTION_CALORIES,
+            proteinsPerBase: 5,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        };
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(recognized) });
+        requiredFormButton(el, '.product-manage__ai button').click();
+        fixture.detectChanges();
+
+        expect(requiredProductInput(el, 'fd-ui-autocomplete input').value).toBe(recognized.name);
+        expect(Array.from(el.querySelectorAll('fd-image-gallery-editor img'), image => image.getAttribute('src'))).toEqual([
+            cover.url,
+            otherPhoto.url,
+        ]);
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({
+                name: recognized.name,
+                defaultPortionAmount: PORTION_AMOUNT,
+                caloriesPerBase: BASE_CALORIES,
+                imageUrl: cover.url,
+                imageAssetId: cover.assetId,
+                imageAssetIds: [cover.assetId, otherPhoto.assetId],
+            }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
 async function chooseProductSuggestionAsync(editor: ProductManageFormSetup, suggestion: ProductSearchSuggestion): Promise<void> {
     stubScrollIntoView();
     editor.searchSuggestions.mockReturnValueOnce(of([suggestion]));

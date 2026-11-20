@@ -2,7 +2,7 @@ import type { AggregatedStatistics, MappedStatistics } from '../models/statistic
 
 export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatistics {
     const dates: Date[] = [];
-    const calories: number[] = [];
+    const calories: Array<number | null> = [];
     const proteins: number[] = [];
     const fats: number[] = [];
     const carbs: number[] = [];
@@ -20,8 +20,9 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
     let trackedDayCount = 0;
 
     statistics.forEach(stat => {
+        const trackedDays = getTrackedDayCount(stat);
         dates.push(new Date(stat.dateFrom));
-        calories.push(stat.totalCalories);
+        calories.push(trackedDays > 0 ? stat.totalCalories : null);
         proteins.push(stat.averageProteins);
         fats.push(stat.averageFats);
         carbs.push(stat.averageCarbs);
@@ -37,7 +38,7 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
         snackCalories += stat.snackCalories ?? 0;
         otherCalories += stat.otherCalories ?? 0;
         mealCount += stat.mealCount ?? 0;
-        trackedDayCount += stat.trackedDayCount ?? 0;
+        trackedDayCount += trackedDays;
     });
 
     return {
@@ -65,4 +66,8 @@ export function mapStatistics(statistics: AggregatedStatistics[]): MappedStatist
             trackedDayCount,
         },
     };
+}
+
+function getTrackedDayCount(statistics: AggregatedStatistics): number {
+    return statistics.trackedDayCount ?? ((statistics.mealCount ?? 0) > 0 || statistics.totalCalories > 0 ? 1 : 0);
 }

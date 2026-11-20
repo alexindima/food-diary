@@ -400,6 +400,55 @@ describe('AiInputBarComponent speech ownership', () => {
     });
 });
 
+describe('Rendered AI composer entry points', () => {
+    it('leaves another composer’s microphone active when the first consent check returns late', async () => {
+        const { fixture, speechRecognition } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        const firstConsent = new Subject<boolean>();
+        const checkConsent = vi
+            .spyOn(TestBed.inject(PrivacyConsentFacade), 'ensureHealthConsentAsync')
+            .mockReturnValueOnce(firstValueFrom(firstConsent));
+        const other = TestBed.createComponent(AiInputBarComponent);
+        fixture.detectChanges();
+        other.detectChanges();
+        const selector = 'button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]';
+        const firstMic = selectRecognitionControl(fixture, selector, HTMLButtonElement);
+        const otherMic = selectRecognitionControl(other, selector, HTMLButtonElement);
+
+        firstMic.click();
+        expect(checkConsent).toHaveBeenCalledOnce();
+        otherMic.click();
+        await vi.waitFor(() => {
+            expect(speechRecognition.start).toHaveBeenCalledOnce();
+        });
+
+        firstConsent.next(true);
+        firstConsent.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        other.detectChanges();
+
+        expect(speechRecognition.start).toHaveBeenCalledOnce();
+        expect(firstMic.disabled).toBe(true);
+        expect(otherMic.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('ignores blank input on Enter and recognizes only the next nonempty description', async () => {
+        const { fixture, aiFoodService } = await setupAiInputBarAsync();
+        const checkConsent = vi.spyOn(TestBed.inject(PrivacyConsentFacade), 'ensureHealthConsentAsync');
+        fixture.detectChanges();
+        enterRecognitionText(fixture, '   ');
+        await fixture.whenStable();
+
+        expect(checkConsent).not.toHaveBeenCalled();
+        expect(aiFoodService.parseFoodText).not.toHaveBeenCalled();
+        enterRecognitionText(fixture, '  eggs  ');
+
+        await vi.waitFor(() => {
+            expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: 'eggs' });
+        });
+    });
+});
+
 describe('AiInputBarComponent history access', () => {
     it('opens recent recognitions from the food input', async () => {
         const { dialogService, fixture } = await setupAiInputBarAsync();
@@ -547,6 +596,73 @@ describe('AiInputBarComponent access gates and errors', () => {
         expect(component['textErrorKey']()).toBe('AI_INPUT_BAR.TEXT_ERROR_QUOTA');
         expect(component['textIsAnalyzing']()).toBe(false);
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+    });
+});
+
+describe('Premium prompts from the rendered AI composer', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    it('dismisses the camera upgrade prompt without opening the file picker or requesting consent', async () => {
+        vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+        const { fixture, navigationService } = await setupAiInputBarAsync('emit', { isPremium: false, overlayUpload: NEVER });
+        const askHealthConsent = vi.spyOn(TestBed.inject(PrivacyConsentFacade), 'ensureHealthConsentAsync');
+        const dialogs = TestBed.inject(FdUiDialogService);
+        fixture.detectChanges();
+        const camera = selectRecognitionControl(fixture, 'button[aria-label="AI_INPUT_BAR.PHOTO_TITLE"]', HTMLButtonElement);
+        const fileInput = selectRecognitionControl(fixture, 'input[type="file"]', HTMLInputElement);
+        const openNativePicker = vi.spyOn(fileInput, 'click').mockImplementation(() => {});
+
+        try {
+            camera.click();
+            await vi.waitFor(() => {
+                expect(document.querySelector('fd-premium-required-dialog')?.textContent).toContain('AI.PREMIUM_DIALOG.TITLE');
+            });
+            const cancel = Array.from(document.querySelectorAll<HTMLButtonElement>('fd-premium-required-dialog button')).find(button =>
+                button.textContent.includes('AI.PREMIUM_DIALOG.CANCEL'),
+            );
+            expect(cancel).toBeDefined();
+            cancel?.click();
+            await vi.waitFor(() => {
+                expect(document.querySelector('fd-premium-required-dialog')).toBeNull();
+            });
+            expect(askHealthConsent).not.toHaveBeenCalled();
+            expect(openNativePicker).not.toHaveBeenCalled();
+            expect(navigationService.navigateToPremiumAccessAsync).not.toHaveBeenCalled();
+        } finally {
+            dialogs.closeAll();
+        }
+    });
+
+    it('closes the microphone upgrade prompt when the composer is removed', async () => {
+        vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+        const { fixture, navigationService, speechRecognition } = await setupAiInputBarAsync('emit', {
+            isPremium: false,
+            speechSupported: true,
+            overlayUpload: NEVER,
+        });
+        const askHealthConsent = vi.spyOn(TestBed.inject(PrivacyConsentFacade), 'ensureHealthConsentAsync');
+        const dialogs = TestBed.inject(FdUiDialogService);
+        fixture.detectChanges();
+        const microphone = selectRecognitionControl(fixture, 'button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]', HTMLButtonElement);
+
+        try {
+            microphone.click();
+            await vi.waitFor(() => {
+                expect(document.querySelector('fd-premium-required-dialog')?.textContent).toContain('AI.PREMIUM_DIALOG.TITLE');
+            });
+            fixture.destroy();
+            await vi.waitFor(() => {
+                expect(document.querySelector('fd-premium-required-dialog')).toBeNull();
+            });
+            expect(askHealthConsent).not.toHaveBeenCalled();
+            expect(speechRecognition.start).not.toHaveBeenCalled();
+            expect(navigationService.navigateToPremiumAccessAsync).not.toHaveBeenCalled();
+        } finally {
+            dialogs.closeAll();
+        }
     });
 });
 
@@ -1333,6 +1449,45 @@ describe('AI input photo upload dismissal', () => {
     });
 });
 
+describe('AI input photo overlay keyboard dismissal', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    it('closes a pending photo with Escape and analyzes only the next selected file', async () => {
+        const abandoned = new Subject<ImageSelection>();
+        const nextUpload = new Subject<ImageSelection>();
+        const { fixture, aiFoodService } = await setupPhotoUploadPreviewAsync(abandoned, nextUpload);
+        selectPreviewImage(fixture, 'abandoned.gif');
+        await waitForPhotoPreviewAsync('blob:food-preview');
+        expect(abandoned.observed).toBe(true);
+
+        const escapeKeyCode = 27;
+        const cancel = photoPreviewButton('button[aria-label="COMMON.CANCEL"]');
+        cancel.focus();
+        cancel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: escapeKeyCode, bubbles: true, cancelable: true }));
+        await vi.waitFor(() => {
+            TestBed.tick();
+            expect(document.querySelector('fd-ai-photo-result')).toBeNull();
+            expect(abandoned.observed).toBe(false);
+        });
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+
+        selectPreviewImage(fixture, 'next.gif');
+        await waitForPhotoPreviewAsync('blob:food-preview');
+        expect(nextUpload.observed).toBe(true);
+        nextUpload.next(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
+        nextUpload.complete();
+        await waitForPhotoPreviewAsync(RECENT_JOB.imageUrl);
+
+        expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledExactlyOnceWith({ imageAssetId: RECENT_JOB.imageAssetId });
+        photoPreviewButton('button[aria-label="COMMON.CANCEL"]').click();
+        TestBed.tick();
+        expect(document.querySelector('fd-ai-photo-result')).toBeNull();
+    });
+});
+
 describe('AI input uploaded asset retention', () => {
     afterEach(() => {
         vi.restoreAllMocks();
@@ -1396,6 +1551,115 @@ function photoPreviewButton(selector: string): HTMLButtonElement {
     const button = document.querySelector(`fd-ai-photo-result ${selector}`);
     if (!(button instanceof HTMLButtonElement)) {
         throw new Error(`Expected a photo preview button matching ${selector}`);
+    }
+    return button;
+}
+
+describe('AI input meal review before submission', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    it.each(['text', 'photo'] as const)('recalculates a renamed %s item before submitting the reviewed meal', async source => {
+        const uploaded = new Subject<ImageSelection>();
+        const { aiFoodService, component, fixture } =
+            source === 'photo' ? await setupPhotoUploadPreviewAsync(uploaded) : await setupAiInputBarAsync();
+        const recognized = vi.fn<(value: AiInputBarResult) => void>();
+        component.mealRecognized.subscribe(recognized);
+        const recalculation = new Subject<FoodNutritionResponse>();
+        aiFoodService.calculateNutrition.mockReturnValueOnce(of(NUTRITION)).mockReturnValueOnce(recalculation);
+        if (source === 'photo') {
+            selectPreviewImage(fixture, 'meal-to-review.gif');
+            await waitForPhotoPreviewAsync('blob:food-preview');
+            uploaded.next(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
+            uploaded.complete();
+        } else {
+            enterRecognitionText(fixture, 'egg');
+        }
+
+        const owner: ParentNode = source === 'photo' ? document : (fixture.nativeElement as HTMLElement);
+        const result = await vi.waitFor(() => {
+            TestBed.tick();
+            fixture.detectChanges();
+            const panel = owner.querySelector<HTMLElement>('fd-ai-photo-result');
+            expect(panel?.querySelector<HTMLButtonElement>('.ai-photo-result__submit-action button')?.disabled).toBe(false);
+            if (panel === null) {
+                throw new Error('Expected a rendered recognition result');
+            }
+            return panel;
+        });
+        reviewAction(result, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        TestBed.tick();
+        fixture.detectChanges();
+        const name = result.querySelector<HTMLInputElement>('fd-ai-photo-edit-list input[type="text"]');
+        if (name === null) {
+            throw new Error('Expected the recognized food name input');
+        }
+        expect(name.value).toBe('egg');
+        name.value = 'oatmeal';
+        name.dispatchEvent(new Event('input', { bubbles: true }));
+        reviewAction(result, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        TestBed.tick();
+        fixture.detectChanges();
+
+        expect(aiFoodService.calculateNutrition).toHaveBeenCalledTimes(2);
+        expect(aiFoodService.calculateNutrition).toHaveBeenLastCalledWith({
+            items: [expect.objectContaining({ nameEn: 'oatmeal' })],
+        });
+        expect(recalculation.observed).toBe(true);
+        const waitingSubmit = result.querySelector<HTMLButtonElement>('.ai-photo-result__submit-action button');
+        expect(waitingSubmit?.disabled).toBe(true);
+        waitingSubmit?.click();
+        expect(recognized).not.toHaveBeenCalled();
+
+        const correctedCalories = 68;
+        recalculation.next({
+            ...NUTRITION,
+            calories: correctedCalories,
+            items: [{ ...NUTRITION.items[0], name: 'oatmeal', calories: correctedCalories }],
+        });
+        recalculation.complete();
+        TestBed.tick();
+        fixture.detectChanges();
+        const submit = result.querySelector<HTMLButtonElement>('.ai-photo-result__submit-action button');
+        expect(submit?.disabled).toBe(false);
+        submit?.click();
+        expect(recognized).toHaveBeenCalledOnce();
+        expect(recognized.mock.calls[0][0].items).toMatchObject([{ nameEn: 'oatmeal', calories: correctedCalories }]);
+    });
+});
+
+describe('AI input after an empty recognition result', () => {
+    it('skips calculation when the text response has no items and accepts a new description', async () => {
+        const { aiFoodService, fixture } = await setupAiInputBarAsync();
+        aiFoodService.parseFoodText.mockReturnValueOnce(of({ items: [] }));
+        enterRecognitionText(fixture, 'no recognized food');
+        const host = fixture.nativeElement as HTMLElement;
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: 'no recognized food' });
+            expect(host.querySelector('fd-ai-photo-result')).not.toBeNull();
+        });
+
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(host.querySelector('.ai-photo-result__submit-action button')).toBeNull();
+
+        enterRecognitionText(fixture, 'egg');
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(aiFoodService.calculateNutrition).toHaveBeenCalledExactlyOnceWith({ items: VISION_ITEMS });
+            expect(host.querySelector<HTMLButtonElement>('.ai-photo-result__submit-action button')?.disabled).toBe(false);
+        });
+    });
+});
+
+function reviewAction(result: HTMLElement, label: string): HTMLButtonElement {
+    const button = [...result.querySelectorAll<HTMLButtonElement>('fd-ai-photo-result-actions button')].find(
+        action => action.textContent.trim() === label,
+    );
+    if (button === undefined) {
+        throw new Error(`Expected the recognition review action ${label}`);
     }
     return button;
 }

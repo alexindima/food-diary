@@ -104,9 +104,6 @@
             @if (hasResult()) {
                 <fd-product-ai-recognition-result
                     [form]="resultForm"
-                    [showNotes]="false"
-                    [nutrition]="nutrition()"
-                    [labelNotes]="productLabel()?.notes ?? null"
                     [fromLabel]="productLabel() !== null"
                     [itemNames]="itemNames()"
                     [isValid]="isResultValid()"

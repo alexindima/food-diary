@@ -11,6 +11,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { TelegramDiaryGoals, TelegramDiaryPreview } from '../../../../shared/auth/telegram-diary.data';
+import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { AuthComponent } from '../../components/auth/auth';
 import { AuthFlowFacade } from '../../components/auth/auth-lib/auth-flow.facade';
 import { AuthFormManager } from '../../components/auth/auth-lib/auth-form.manager';
@@ -50,10 +51,17 @@ const PREVIEW: TelegramDiaryPreview = {
 })
 class DiaryDestinationFixture {}
 
+@Component({
+    selector: 'fd-verification-sign-in-destination-fixture',
+    template: '<h1>Sign in</h1>',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SignInDestinationFixture {}
+
 type VerificationSetup = {
     backup?: Observable<string | null>;
     standard?: Observable<void>;
-    owner?: string;
+    owner?: string | null;
 };
 
 type VerificationAuthMethod =
@@ -74,10 +82,11 @@ type VerificationMocks = {
 };
 
 function createVerificationMocks(options: VerificationSetup): VerificationMocks {
+    const owner = options.owner === undefined ? ACCOUNT : options.owner;
     return {
         auth: {
-            getUserId: vi.fn<AuthService['getUserId']>().mockReturnValue(options.owner ?? ACCOUNT),
-            isAuthenticated: signal(true),
+            getUserId: vi.fn<AuthService['getUserId']>().mockReturnValue(owner),
+            isAuthenticated: signal(owner !== null),
             requiresEmailVerification: vi.fn<AuthService['requiresEmailVerification']>().mockReturnValue(false),
             mustChangePassword: vi.fn<AuthService['mustChangePassword']>().mockReturnValue(false),
             onLogoutAsync: vi.fn<AuthService['onLogoutAsync']>().mockResolvedValue(undefined),
@@ -322,6 +331,38 @@ describe('Telegram diary transfer authorization errors', () => {
 });
 
 describe('Choosing another email on the verification route', () => {
+    it('sends a signed-out reader to sign in with a profile return path to choose a different backup email', async () => {
+        const { auth } = createVerificationMocks({ owner: null });
+        TestBed.configureTestingModule({
+            providers: [
+                provideTranslateTesting(),
+                provideRouter([
+                    { path: 'verify-email', component: EmailVerificationComponent },
+                    { path: '', component: SignInDestinationFixture },
+                ]),
+                { provide: AuthService, useValue: auth },
+                { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } },
+            ],
+        });
+        const harness = await RouterTestingHarness.create(`${VERIFY_URL}?userId=${SOURCE}&token=${PROOF}`);
+        const router = TestBed.inject(Router);
+        await vi.waitFor(() => {
+            expect(router.url).toBe(VERIFY_URL);
+        });
+
+        verificationControl(harness, 'AUTH.TELEGRAM_DIARY.USE_ANOTHER_EMAIL').click();
+
+        await vi.waitFor(() => {
+            expect(router.url).toBe('/?auth=login&returnUrl=%2Fprofile');
+        });
+        harness.detectChanges();
+        expect(verificationPage(harness).querySelector('h1')?.textContent).toBe('Sign in');
+        expect(auth.verifyTelegramBackupEmail).toHaveBeenCalledExactlyOnceWith(SOURCE, PROOF);
+        expect(auth.logoutForAccountSwitchAsync).not.toHaveBeenCalled();
+        expect(auth.onLogoutAsync).not.toHaveBeenCalled();
+        expect(auth.transferTelegramDiary).not.toHaveBeenCalled();
+    });
+
     it('takes the current backup-email owner straight to their profile', async () => {
         const { auth, harness, navigation } = await openVerificationAsync({ owner: SOURCE });
         verificationControl(harness, 'AUTH.TELEGRAM_DIARY.USE_ANOTHER_EMAIL').click();

@@ -151,9 +151,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         productData: new PagedData<Product>(),
         favorites: signal<FavoriteProduct[]>([]),
         favoriteTotalCount: signal(0),
-        isFavoritesOpen: signal(false),
         favoriteLoadingIds: signal<ReadonlySet<string>>(new Set<string>()),
-        isFavoritesLoadingMore: signal(false),
         errorKey: signal<string | null>(null),
         searchValue: signal<string | null>(null),
         onlyMineFilter: signal(false),
@@ -185,10 +183,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         onAddToMeal: vi.fn(),
         loadFavorites: vi.fn(),
         onProductFavoriteToggle: vi.fn(),
-        toggleFavorites: vi.fn(),
-        openFavoriteProduct: vi.fn(),
         addFavoriteProductToMeal: vi.fn(),
-        removeFavorite: vi.fn(),
         reloadCurrentPage: vi.fn(),
     } as unknown as ProductListFacadeMock;
 }

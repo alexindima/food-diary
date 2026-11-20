@@ -181,6 +181,73 @@ const historyJob: FoodRecognitionJob = {
     nutritionErrorCode: null,
 };
 
+describe('recent recognition history states', () => {
+    it('loads inline history on demand and shows an inline message for an empty result', () => {
+        const pending = new Subject<PageOf<FoodRecognitionJob>>();
+        listRecognitions.mockReturnValueOnce(pending).mockReturnValueOnce(of(pageOf([historyJob])));
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const showRecent = requiredElement(host, 'fd-ui-button:first-child button');
+        const visibleStatus = 'p[role="status"]:not([hidden])';
+        expect(showRecent.textContent).toContain('AI_RECOGNITION.SHOW_RECENT');
+        expect(listRecognitions).not.toHaveBeenCalled();
+
+        showRecent.click();
+        fixture.detectChanges();
+        expect(listRecognitions).toHaveBeenCalledWith(1, PAGE_SIZE, false);
+        expect(requiredElement(host, visibleStatus).textContent).toContain('AI_RECOGNITION.LOADING');
+
+        pending.next(pageOf([]));
+        pending.complete();
+        fixture.detectChanges();
+        expect(requiredElement(host, visibleStatus).textContent.trim()).toBe('AI_RECOGNITION.EMPTY');
+        expect(requiredElement(host, '.history-list__empty').style.display).toBe('none');
+
+        showRecent.click();
+        fixture.detectChanges();
+        expect(listRecognitions).toHaveBeenCalledTimes(2);
+        expect(host.querySelector(visibleStatus)).toBeNull();
+        expect(host.querySelectorAll('.history-list__row')).toHaveLength(1);
+    });
+
+    it('marks a failed job as failed and keeps it available to reopen', () => {
+        vi.useFakeTimers();
+        try {
+            const running: FoodRecognitionJob = { ...historyJob, status: 'Running' };
+            const failed: FoodRecognitionJob = { ...historyJob, status: 'Failed', errorCode: 'Ai.RecognitionInterrupted' };
+            listRecognitions.mockReturnValueOnce(of(pageOf([running]))).mockReturnValue(of(pageOf([failed])));
+            const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+            fixture.componentRef.setInput('screen', true);
+            const selected = vi.fn();
+            fixture.componentInstance.recognitionSelected.subscribe(selected);
+            fixture.detectChanges();
+            const host = fixture.nativeElement as HTMLElement;
+            const deleteButton = '[aria-label="AI_RECOGNITION.DELETE"]';
+            expect(requiredElement(host, 'fd-ui-status-badge').textContent).toContain('AI_RECOGNITION.STATUS.Running');
+            expect(host.querySelector(deleteButton)).toBeNull();
+
+            vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            fixture.detectChanges();
+            const title = requiredElement(host, '.history-list__title');
+            expect(title.textContent.trim()).toBe('AI_RECOGNITION.STATUS.Failed');
+            expect(title.getAttribute('title')).toBe('AI_RECOGNITION.STATUS.Failed');
+            expect(requiredElement(host, 'fd-ui-status-badge.fd-ui-status-badge--danger').textContent).toContain(
+                'AI_RECOGNITION.STATUS.Failed',
+            );
+            expect(host.querySelector(deleteButton)).not.toBeNull();
+
+            requiredElement(host, '.history-list__open').click();
+            expect(selected).toHaveBeenCalledExactlyOnceWith(failed);
+            vi.advanceTimersByTime(HISTORY_POLL_INTERVAL);
+            expect(listRecognitions).toHaveBeenCalledTimes(2);
+            fixture.destroy();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
 describe('recognition history rendered interactions', () => {
     it('shows empty state only after loading and returns through the actual button', () => {
         const pending = new Subject<PageOf<FoodRecognitionJob>>();

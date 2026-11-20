@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -119,6 +119,57 @@ describe('DashboardNotificationSettingsDialogComponent actions', () => {
         expect(navigationService.navigateToProfileAsync).toHaveBeenCalledTimes(1);
     });
 });
+
+it('keeps the Fasting switch unchanged after a rejected save, then retries without altering the Social switch', async () => {
+    const { fixture, notificationService } = await setupNotificationSettingsAsync();
+    const host = fixture.nativeElement as HTMLElement;
+    const fasting = notificationSwitch(host, 'USER_MANAGE.FASTING_NOTIFICATIONS');
+    const social = notificationSwitch(host, 'USER_MANAGE.SOCIAL_NOTIFICATIONS');
+    const pending = new Subject<ReturnType<typeof createNotificationPreferences>>();
+    notificationService.updateNotificationPreferences.mockReturnValueOnce(pending);
+
+    expect(fasting.getAttribute('aria-checked')).toBe('true');
+    expect(social.getAttribute('aria-checked')).toBe('false');
+    fasting.click();
+    fixture.detectChanges();
+    expect(notificationService.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith({ fastingPushNotificationsEnabled: false });
+    expect(fasting.disabled).toBe(true);
+    expect(social.disabled).toBe(true);
+    social.click();
+    expect(notificationService.updateNotificationPreferences).toHaveBeenCalledOnce();
+
+    pending.error(new Error('Preference update rejected'));
+    fixture.detectChanges();
+    expect(host.querySelector('[role="alert"]')?.textContent).toContain('DASHBOARD.NOTIFICATIONS.ERROR');
+    expect(fasting.getAttribute('aria-checked')).toBe('true');
+    expect(fasting.disabled).toBe(false);
+
+    const fastingDisabled = { ...createNotificationPreferences(), fastingPushNotificationsEnabled: false };
+    notificationService.updateNotificationPreferences.mockReturnValueOnce(of(fastingDisabled));
+    fasting.click();
+    fixture.detectChanges();
+    expect(notificationService.updateNotificationPreferences).toHaveBeenNthCalledWith(2, { fastingPushNotificationsEnabled: false });
+    expect(host.querySelector('[role="alert"]')).toBeNull();
+    expect(fasting.getAttribute('aria-checked')).toBe('false');
+    expect(social.getAttribute('aria-checked')).toBe('false');
+
+    notificationService.updateNotificationPreferences.mockReturnValueOnce(of({ ...fastingDisabled, socialPushNotificationsEnabled: true }));
+    social.click();
+    fixture.detectChanges();
+    const preferenceUpdates = 3;
+    expect(notificationService.updateNotificationPreferences).toHaveBeenCalledTimes(preferenceUpdates);
+    expect(notificationService.updateNotificationPreferences).toHaveBeenLastCalledWith({ socialPushNotificationsEnabled: true });
+    expect(social.getAttribute('aria-checked')).toBe('true');
+    expect(fasting.getAttribute('aria-checked')).toBe('false');
+});
+
+function notificationSwitch(host: HTMLElement, label: string): HTMLButtonElement {
+    const control = host.querySelector<HTMLButtonElement>(`[role="switch"][aria-label="${label}"]`);
+    if (control === null) {
+        throw new Error(`Missing notification switch: ${label}`);
+    }
+    return control;
+}
 
 function createNotificationPreferences(): {
     fastingCheckInFollowUpReminderHours: number;

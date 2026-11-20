@@ -116,10 +116,15 @@ export class ProductAiRecognitionDialogComponent {
         }
         return null;
     });
-    protected readonly isResultValid = computed(() => isProductAiRecognitionModelValid(this.resultFormModel()));
-    protected readonly canApply = computed(
-        () => this.hasResult() && !this.isBusy() && this.isResultValid() && (!this.hasExistingData || this.replacementAccepted()),
+    private readonly validResultModel = computed(() => {
+        const model = this.resultFormModel();
+        return isProductAiRecognitionModelValid(model) ? model : null;
+    });
+    private readonly applicableResultModel = computed(() =>
+        this.hasResult() && !this.isBusy() && (!this.hasExistingData || this.replacementAccepted()) ? this.validResultModel() : null,
     );
+    protected readonly isResultValid = computed(() => this.validResultModel() !== null);
+    protected readonly canApply = computed(() => this.applicableResultModel() !== null);
     protected readonly isEmpty = computed(
         () =>
             this.hasAnalyzed() &&
@@ -215,15 +220,14 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected apply(): void {
-        if (!this.canApply()) {
+        const model = this.applicableResultModel();
+        if (model === null) {
             return;
         }
 
         const result = buildProductAiRecognitionResult({
-            model: this.resultFormModel(),
+            model,
             selection: this.useAsCover() ? (this.cover() ?? this.photos().at(0) ?? null) : null,
-            itemNames: this.itemNames(),
-            results: this.results(),
             description: null,
         });
 

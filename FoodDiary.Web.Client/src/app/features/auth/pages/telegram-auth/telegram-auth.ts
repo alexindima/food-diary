@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -49,6 +49,7 @@ import { telegramTimeZoneOptions } from '../../lib/telegram-time-zone-options';
 export class TelegramAuthComponent {
     protected readonly facade = inject(TelegramAuthFacade);
     protected readonly auth = inject(AuthService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly users = inject(UserFacade);
     private readonly navigation = inject(NavigationService);
     private readonly locale = inject(LocalizationService);
@@ -204,6 +205,10 @@ export class TelegramAuthComponent {
     }
 
     private async navigateAfterAuthenticationAsync(): Promise<void> {
+        if (this.destroyRef.destroyed) {
+            return;
+        }
+
         if (this.auth.requiresEmailVerification()) {
             await this.navigation.navigateToEmailVerificationPendingAsync();
         } else if (this.auth.mustChangePassword()) {

@@ -25,6 +25,7 @@ const EXTENDED_BASE_HOURS = 36;
 const INTERMITTENT_BASE_HOURS = 14;
 const ADJUSTMENT_HOURS = 4;
 const ENERGY_RATING = 4;
+const WELLBEING_METRIC_COUNT = 3;
 const HISTORY_ROW = '.fasting-history-dialog__row';
 const DETAILS_DIALOG = 'fd-fasting-session-details-dialog';
 
@@ -88,6 +89,63 @@ describe('Fasting history with a protocol newer than the client catalogue', () =
         expect(details.querySelector('.fasting__history-notes')?.textContent).toContain(OLD_NOTES);
         expect(details.querySelector('.fasting__history-checkin-summary')?.textContent).toBe('Hunger — · Energy ⚡ · Mood —');
         expect(details.querySelector('fd-fasting-check-in-chart')).toBeNull();
+    });
+});
+
+describe('Fasting wellbeing history', () => {
+    it('plots both check-ins when their server timestamps fall within the same millisecond', async () => {
+        const firstNote = 'Check-in before a glass of water';
+        const secondNote = 'Check-in after a glass of water';
+        const harness = await renderFastingHistoryAsync({
+            id: 'b1a34167-6127-4238-8c99-a7faca04491a',
+            startedAtUtc: STARTED_AT,
+            endedAtUtc: '2026-05-18T22:00:00.000Z',
+            protocol: 'Fast14Eat10',
+            planType: 'Intermittent',
+            occurrenceKind: 'FastingWindow',
+            initialPlannedDurationHours: INTERMITTENT_BASE_HOURS,
+            addedDurationHours: 0,
+            plannedDurationHours: INTERMITTENT_BASE_HOURS,
+            isCompleted: true,
+            status: 'Completed',
+            symptoms: [],
+            checkIns: [
+                {
+                    id: 'b7410a8f-8962-4918-994d-8b084803a788',
+                    checkedInAtUtc: '2026-05-18T12:00:00.308400Z',
+                    hungerLevel: 4,
+                    energyLevel: 2,
+                    moodLevel: 3,
+                    symptoms: [],
+                    notes: firstNote,
+                },
+                {
+                    id: '637c70a8-18a5-4528-85e3-ea24bb3e69f9',
+                    checkedInAtUtc: '2026-05-18T12:00:00.308900Z',
+                    hungerLevel: 2,
+                    energyLevel: 3,
+                    moodLevel: 4,
+                    symptoms: [],
+                    notes: secondNote,
+                },
+            ],
+        });
+        const history = requireFastingElement(document, 'fd-fasting-history-dialog');
+        requireFastingElement(history, HISTORY_ROW).click();
+        harness.detectChanges();
+
+        const details = requireFastingElement(document, DETAILS_DIALOG);
+        const entries = details.querySelectorAll('fd-fasting-history-check-in-entry');
+        expect(entries).toHaveLength(2);
+        expect(details.textContent).toContain(firstNote);
+        expect(details.textContent).toContain(secondNote);
+
+        const chart = requireFastingElement(details, 'fd-fasting-check-in-chart');
+        const points = Array.from(chart.querySelectorAll<HTMLElement>('.fd-ui-line-chart__point'));
+        expect(points).toHaveLength(entries.length * WELLBEING_METRIC_COUNT);
+        const [firstHunger, secondHunger] = points;
+        expect(firstHunger.style.left).not.toBe(secondHunger.style.left);
+        expect(firstHunger.style.top).not.toBe(secondHunger.style.top);
     });
 });
 

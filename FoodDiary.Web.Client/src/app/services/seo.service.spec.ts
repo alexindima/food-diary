@@ -140,6 +140,29 @@ describe('SeoService alternate links', () => {
         expect(document.querySelector('link[hreflang="x-default"]')?.getAttribute('href')).toBe('https://fooddiary.club/calorie-counter');
     });
 
+    it('replaces all alternate links and updates canonical metadata when switching localized public pages', () => {
+        translateService.getCurrentLang.mockReturnValue('ru');
+        service.update({ path: '/ru/calorie-counter' });
+        expect(document.head.querySelector('link[rel="alternate"][hreflang="ru"]')?.getAttribute('href')).toBe(
+            'https://fooddiary.club/ru/calorie-counter',
+        );
+
+        service.update({ path: '/ru/pricing/?utm_source=food-diary#plans' });
+
+        const canonical = 'https://fooddiary.club/ru/pricing';
+        const alternateLinks = Array.from(document.head.querySelectorAll('link[rel="alternate"][hreflang]'), link => [
+            link.getAttribute('hreflang'),
+            link.getAttribute('href'),
+        ]);
+        expect(alternateLinks).toEqual([
+            ['en', 'https://fooddiary.club/pricing'],
+            ['ru', canonical],
+            ['x-default', 'https://fooddiary.club/pricing'],
+        ]);
+        expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(canonical);
+        expect(metaService.getTag('property="og:url"')?.content).toBe(canonical);
+    });
+
     it('removes public alternates when navigating to an account route', () => {
         service.update({ path: '/calorie-counter' });
         service.update({ path: '/products', noIndex: true });

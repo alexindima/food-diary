@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { FoodNutritionResponse, FoodVisionItem } from '../models/ai.data';
 import {
     type AiEditableFoodItem,
+    aiEditableItemError,
     buildAiEditableItems,
     createEmptyAiEditableItem,
     normalizeAiEditableItems,
@@ -144,4 +145,16 @@ describe('ai photo edit utils', () => {
         expect(resolveAiPhotoUnitKey('piece')).toBe('GENERAL.UNITS.PCS');
         expect(resolveAiPhotoUnitKey('unknown')).toBeNull();
     });
+});
+
+it('requires a nonblank unit before a named and measured draft item can be applied', () => {
+    const incomplete = createEditableItem({ unit: ' ' });
+    expect(aiEditableItemError(incomplete)).toBe('unit');
+
+    const [corrected] = updateAiEditableItem([incomplete], 0, 'unit', 'ml');
+
+    expect(aiEditableItemError(corrected)).toBeNull();
+    expect(normalizeAiEditableItems([corrected])).toEqual([
+        { nameEn: incomplete.nameEn, nameLocal: null, amount: SOURCE_AMOUNT, unit: 'ml', confidence: 1 },
+    ]);
 });

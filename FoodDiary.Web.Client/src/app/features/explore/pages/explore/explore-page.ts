@@ -10,7 +10,7 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { debounceTime, distinctUntilChanged, finalize, skip } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, skip, type Subscription } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -54,6 +54,7 @@ export class ExplorePageComponent {
     private readonly searchDebounceMs = inject(EXPLORE_SEARCH_DEBOUNCE_MS);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
+    private recipeRequest: Subscription | null = null;
 
     protected readonly searchModel = signal({ search: '' });
     protected readonly searchForm = form(this.searchModel);
@@ -107,13 +108,14 @@ export class ExplorePageComponent {
     }
 
     private loadRecipes(): void {
+        this.recipeRequest?.unsubscribe();
         const filters: ExploreFilters = {
             search: this.searchValue(),
             sortBy: this.sortBy(),
         };
 
         this.recipeData.setLoading(true);
-        this.exploreInteractionsFacade
+        this.recipeRequest = this.exploreInteractionsFacade
             .queryRecipes(this.currentPageIndex() + 1, this.pageSize, filters)
             .pipe(
                 finalize(() => {

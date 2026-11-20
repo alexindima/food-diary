@@ -1,24 +1,31 @@
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
+import type { RecipeId } from '../../../../shared/models/semantics/entity-id';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
 import { PublicAuthDialogService } from '../../../public/contracts/auth-dialog';
 import { ShoppingListAddFacade } from '../../../shopping-lists/contracts/shopping-list-add';
 import { PublicRecipeService } from '../../api/public-recipe.service';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
+import type { PublicRecipe } from '../../models/public-recipe.data';
 import { publicRecipeResolver } from '../../resolvers/public-recipe.resolver';
 import { PublicRecipeDetailComponent } from './public-detail';
 
 const SELECTED_DIARY_SERVINGS = 3;
+const PREP_ONLY_MINUTES = 12;
+const COOK_ONLY_MINUTES = 25;
 
 const authenticated = signal(false);
 const facade = { isFavorite: vi.fn(() => of(false)), saveAsync: vi.fn(), addToDiaryAsync: vi.fn() };
@@ -168,6 +175,52 @@ describe('Public recipe actions when the route selects another recipe', () => {
     });
 });
 
+describe('Public recipe data from the active route', () => {
+    it.each([
+        { prepTime: PREP_ONLY_MINUTES, cookTime: null, minutes: PREP_ONLY_MINUTES, label: 'PUBLIC_RECIPES.PREP_DETAIL' },
+        { prepTime: null, cookTime: COOK_ONLY_MINUTES, minutes: COOK_ONLY_MINUTES, label: 'PUBLIC_RECIPES.COOK_DETAIL' },
+    ])('shows the available time total and only $label', async ({ prepTime, cookTime, minutes, label }) => {
+        getById.mockReturnValueOnce(of({ ...publicRecipeFixture(), prepTime, cookTime }));
+        const harness = await RouterTestingHarness.create('/explore/recipe');
+        const summary = harness.routeNativeElement?.querySelector('.recipe-summary');
+        expect(summary?.querySelector('.recipe-facts .recipe-fact:first-child:not([hidden]) strong')?.textContent).toContain(
+            `${minutes.toString()} PUBLIC_RECIPES.MIN`,
+        );
+        const visibleParts = Array.from(summary?.querySelectorAll('.recipe-time-breakdown:not([hidden]) span:not([hidden])') ?? []);
+        expect(visibleParts.map(part => part.textContent.trim())).toEqual([label]);
+    });
+
+    it('keeps Save available after the initial favorite lookup fails and replaces the error after saving', async () => {
+        authenticated.set(true);
+        facade.isFavorite.mockReturnValueOnce(throwError(() => new Error('Favorite status unavailable')));
+        const pending = new Subject<void>();
+        facade.saveAsync.mockReturnValueOnce(firstValueFrom(pending));
+        const harness = await RouterTestingHarness.create('/explore/recipe');
+        const status = harness.routeNativeElement?.querySelector<HTMLElement>('.recipe-summary [role="status"]');
+        expect(facade.isFavorite).toHaveBeenCalledExactlyOnceWith('recipe');
+        expect(status?.hidden).toBe(false);
+        expect(status?.textContent).toContain('PUBLIC_RECIPES.ACTION_ERROR');
+        const save = recipeAction(harness, 'PUBLIC_RECIPES.SAVE');
+        expect(save.disabled).toBe(false);
+
+        save.click();
+        harness.detectChanges();
+        expect(save.disabled).toBe(true);
+        expect(recipeAction(harness, 'PUBLIC_RECIPES.ADD_DIARY').disabled).toBe(true);
+        expect(facade.saveAsync).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: 'recipe' }));
+        expect(status?.hidden).toBe(true);
+
+        pending.next();
+        pending.complete();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+        expect(status?.hidden).toBe(false);
+        expect(status?.textContent).toContain('PUBLIC_RECIPES.SAVED');
+        expect(recipeAction(harness, 'PUBLIC_RECIPES.SAVED').disabled).toBe(true);
+        expect(recipeAction(harness, 'PUBLIC_RECIPES.ADD_DIARY').disabled).toBe(false);
+    });
+});
+
 describe('Public recipe loading feedback', () => {
     it('shows the active save failure and allows a successful retry', async () => {
         authenticated.set(true);
@@ -276,11 +329,123 @@ describe('public recipe account actions', () => {
         expect(facade.addToDiaryAsync).toHaveBeenCalledWith('recipe', SELECTED_DIARY_SERVINGS);
         expect(dialog.openAsync).not.toHaveBeenCalled();
     });
-    it('keeps the hero servings in sync with the ingredient control', async () => {
+    it('keeps the hero serving count in sync and updates its label when the language changes', async () => {
         const harness = await RouterTestingHarness.create('/explore/recipe');
         harness.routeNativeElement?.querySelector<HTMLButtonElement>('[aria-label="PUBLIC_RECIPES.MORE"]')?.click();
         harness.detectChanges();
         expect(harness.routeNativeElement?.querySelector('.recipe-facts')?.textContent).toContain('3 PUBLIC_RECIPES.SERVINGS_OTHER');
         expect(harness.routeNativeElement?.querySelector('.nutrition-warning fd-ui-icon')).not.toBeNull();
+
+        await firstValueFrom(TestBed.inject(TranslateService).use('ru'));
+        harness.detectChanges();
+        expect(harness.routeNativeElement?.querySelector('.recipe-facts')?.textContent).toContain('3 PUBLIC_RECIPES.SERVINGS_FEW');
     });
 });
+
+describe('Shopping from successive visits to a public recipe', () => {
+    const firstRecipeUrl = '/explore/recipe';
+    const otherRecipeUrl = '/explore/other-recipe';
+    const listUrl = environment.apiUrls.shoppingLists;
+    let http: HttpTestingController | null;
+
+    beforeEach(() => {
+        http = null;
+        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+        TestBed.overrideComponent(PublicRecipeDetailComponent, {
+            set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }, ShoppingListAddFacade] },
+        });
+        vi.stubGlobal(
+            'matchMedia',
+            vi.fn(() => ({ matches: false })),
+        );
+        getById.mockImplementation(id => of(shoppingRecipe(id)));
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        http?.match(request => request.url.startsWith('./assets/i18n/'));
+        http?.verify();
+    });
+
+    it.each(['choose', 'add'])('does not resume an old shopping %s after leaving and reopening a recipe', async action => {
+        const loginClosed = new Subject<void>();
+        dialog.openAsync.mockResolvedValueOnce({ afterClosed: () => loginClosed });
+        const harness = await RouterTestingHarness.create(firstRecipeUrl);
+        http = TestBed.inject(HttpTestingController);
+        for (const translation of http.match(request => request.url.startsWith('./assets/i18n/'))) {
+            translation.flush({});
+        }
+
+        shoppingAction(harness, action).click();
+        await vi.waitFor(() => {
+            expect(loginClosed.observed).toBe(true);
+        });
+
+        await harness.navigateByUrl(otherRecipeUrl);
+        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Salad');
+        await harness.navigateByUrl(firstRecipeUrl);
+        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Soup');
+
+        authenticated.set(true);
+        loginClosed.next();
+        loginClosed.complete();
+        await harness.fixture.whenStable();
+        await waitForAsyncTasksAsync();
+        harness.detectChanges();
+
+        http.expectNone(request => request.url.startsWith(listUrl), 'shopping destinations requested by the earlier recipe visit');
+        expect(document.querySelector('fd-shopping-list-picker')).toBeNull();
+
+        const fresh = shoppingAction(harness, action);
+        expect(fresh.disabled).toBe(false);
+        fresh.click();
+        await waitForAsyncTasksAsync();
+        const lookup = http.expectOne(request => request.method === 'GET' && request.url === `${listUrl}/page`);
+        lookup.flush([]);
+        const close = await vi.waitFor(() => {
+            const button = Array.from(document.querySelectorAll<HTMLButtonElement>('fd-shopping-list-picker button')).find(item =>
+                item.textContent.includes('PUBLIC_RECIPES.SHOPPING_CANCEL'),
+            );
+            if (button === undefined) {
+                throw new Error('Expected the shopping destination picker for a fresh action');
+            }
+            return button;
+        });
+        close.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(shoppingAction(harness, action).disabled).toBe(false);
+        });
+        http.expectNone(request => request.method !== 'GET');
+    });
+});
+
+function shoppingRecipe(id: RecipeId): PublicRecipe {
+    const recipe = publicRecipeFixture();
+    const first = id === 'recipe';
+    const ingredient = {
+        name: first ? 'Rice' : 'Lettuce',
+        amount: null,
+        unit: null,
+        amountText: null,
+        recipeId: null,
+        isAvailable: true,
+    };
+    return {
+        ...recipe,
+        id,
+        name: first ? recipe.name : 'Salad',
+        steps: recipe.steps.map(step => ({ ...step, ingredients: [ingredient] })),
+    };
+}
+
+function shoppingAction(harness: RouterTestingHarness, action: string): HTMLButtonElement {
+    if (action === 'choose') {
+        return recipeAction(harness, 'PUBLIC_RECIPES.SHOPPING_SELECT_LIST');
+    }
+    const button = harness.routeNativeElement?.querySelector<HTMLButtonElement>('button[aria-label="PUBLIC_RECIPES.SHOPPING_ADD"]');
+    if (button === null || button === undefined) {
+        throw new Error('Expected the native ingredient shopping button');
+    }
+    return button;
+}

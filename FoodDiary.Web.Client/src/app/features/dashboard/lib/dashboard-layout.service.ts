@@ -6,7 +6,9 @@ import { DASHBOARD_LAYOUT_CONFIG } from '../../../config/runtime-ui.tokens';
 import { UserService } from '../../../shared/api/user.service';
 import type { DashboardLayoutSettings } from '../../../shared/models/user.data';
 
-const DEFAULT_LAYOUT: DashboardLayoutSettings = {
+type NormalizedDashboardLayout = DashboardLayoutSettings & { web: string[]; mobile: string[] };
+
+const DEFAULT_LAYOUT: NormalizedDashboardLayout = {
     web: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
     mobile: ['summary', 'meals', 'fasting', 'hydration', 'cycle', 'weight', 'waist', 'tdee', 'advice'],
 };
@@ -22,14 +24,15 @@ export class DashboardLayoutService {
     private readonly config = inject(DASHBOARD_LAYOUT_CONFIG);
 
     private readonly layoutInitialized = signal<boolean>(false);
-    private readonly layoutSnapshot = signal<DashboardLayoutSettings | null>(null);
+    private readonly layoutSnapshot = signal<NormalizedDashboardLayout | null>(null);
     private readonly viewportWidth = signal<number>(this.config.defaultViewportWidth);
     private saveRequest: Promise<boolean> | null = null;
 
-    public readonly layoutSettings = signal<DashboardLayoutSettings>({
-        web: [...(DEFAULT_LAYOUT.web ?? [])],
-        mobile: [...(DEFAULT_LAYOUT.mobile ?? [])],
+    private readonly normalizedLayout = signal<NormalizedDashboardLayout>({
+        web: [...DEFAULT_LAYOUT.web],
+        mobile: [...DEFAULT_LAYOUT.mobile],
     });
+    public readonly layoutSettings = this.normalizedLayout.asReadonly();
 
     public readonly isEditingLayout = signal<boolean>(false);
     public readonly isSaving = signal(false);
@@ -70,7 +73,7 @@ export class DashboardLayoutService {
         }
 
         const normalized = this.normalizeLayout(layout);
-        this.layoutSettings.set(normalized);
+        this.normalizedLayout.set(normalized);
         if (this.isEditingLayout()) {
             this.layoutSnapshot.set(normalized);
         }
@@ -116,7 +119,7 @@ export class DashboardLayoutService {
 
         const snapshot = this.layoutSnapshot();
         if (snapshot !== null) {
-            this.layoutSettings.set(this.normalizeLayout(snapshot));
+            this.normalizedLayout.set(this.normalizeLayout(snapshot));
         }
         this.finishEditing();
     }
@@ -142,7 +145,7 @@ export class DashboardLayoutService {
         }
 
         const key = this.layoutKey();
-        const baseOrder = [...(DEFAULT_LAYOUT[key] ?? []), HIDDEN_NUTRITION_BLOCK];
+        const baseOrder = [...DEFAULT_LAYOUT[key], HIDDEN_NUTRITION_BLOCK];
         const storedBlockId = blockId === 'nutrition' ? HIDDEN_NUTRITION_BLOCK : blockId;
         const current = this.getLayoutForKey(key);
         const isVisible = current.includes(storedBlockId);
@@ -151,24 +154,20 @@ export class DashboardLayoutService {
             ? current.filter(item => item !== storedBlockId)
             : baseOrder.filter(item => item === storedBlockId || current.includes(item));
 
-        this.layoutSettings.update(layout => ({
+        this.normalizedLayout.update(layout => ({
             ...layout,
             [key]: this.ensureSummary(next, baseOrder),
         }));
     }
 
     private getLayoutForKey(key: 'web' | 'mobile'): string[] {
-        const layout = this.layoutSettings();
-        const fallback = DEFAULT_LAYOUT[key] ?? [];
-        const configured = layout[key];
-        const values = configured !== undefined && configured.length > 0 ? configured : fallback;
-        return this.ensureSummary(values, fallback);
+        return this.layoutSettings()[key];
     }
 
-    private normalizeLayout(layout: DashboardLayoutSettings | null): DashboardLayoutSettings {
+    private normalizeLayout(layout: DashboardLayoutSettings | null): NormalizedDashboardLayout {
         return {
-            web: this.normalizeLayoutList(layout?.web, DEFAULT_LAYOUT.web ?? []),
-            mobile: this.normalizeLayoutList(layout?.mobile, DEFAULT_LAYOUT.mobile ?? []),
+            web: this.normalizeLayoutList(layout?.web, DEFAULT_LAYOUT.web),
+            mobile: this.normalizeLayoutList(layout?.mobile, DEFAULT_LAYOUT.mobile),
             ...(layout?.setupHintDismissed === undefined ? {} : { setupHintDismissed: layout.setupHintDismissed }),
         };
     }
@@ -192,7 +191,7 @@ export class DashboardLayoutService {
         return ['summary', ...values.filter(item => item !== 'summary' && (fallback.includes(item) || item === HIDDEN_NUTRITION_BLOCK))];
     }
 
-    private async persistLayoutAsync(layout: DashboardLayoutSettings): Promise<boolean> {
+    private async persistLayoutAsync(layout: NormalizedDashboardLayout): Promise<boolean> {
         try {
             const user = await firstValueFrom(
                 this.userService
@@ -204,7 +203,7 @@ export class DashboardLayoutService {
                 this.saveFailed.set(true);
                 return false;
             }
-            this.layoutSettings.set(this.normalizeLayout(user.dashboardLayout ?? layout));
+            this.normalizedLayout.set(this.normalizeLayout(user.dashboardLayout ?? layout));
             this.finishEditing();
             return true;
         } catch {
@@ -221,13 +220,13 @@ export class DashboardLayoutService {
         this.saveFailed.set(false);
     }
 
-    private areLayoutsEqual(a: DashboardLayoutSettings, b: DashboardLayoutSettings): boolean {
+    private areLayoutsEqual(a: NormalizedDashboardLayout, b: NormalizedDashboardLayout): boolean {
         return this.layoutToKey(a) === this.layoutToKey(b);
     }
 
-    private layoutToKey(layout: DashboardLayoutSettings): string {
-        const web = (layout.web ?? []).join('|');
-        const mobile = (layout.mobile ?? []).join('|');
+    private layoutToKey(layout: NormalizedDashboardLayout): string {
+        const web = layout.web.join('|');
+        const mobile = layout.mobile.join('|');
         return `${web}::${mobile}`;
     }
 }

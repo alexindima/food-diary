@@ -15,6 +15,7 @@ const HTTP_OK = 200;
 const INITIAL_HTTP_ID = 11;
 const FAILED_HTTP_ID = 12;
 const LATE_HTTP_ID = 13;
+const REPLACEMENT_HTTP_ID = 14;
 
 describe('HTTP response application provenance', () => {
     it('keeps the newer applied response when both HTTP requests return 200 in reverse order', () => {
@@ -73,10 +74,20 @@ describe('HTTP response application provenance', () => {
         owner.fail(failed, 'failed');
         expect(owner.provenance().lastAppliedRequestId).toBe(INITIAL_HTTP_ID);
         const late = owner.begin();
-        owner.bindRequest(late)(LATE_HTTP_ID);
+        const bindLateTransport = owner.bindRequest(late);
         owner.reset();
         expect(owner.succeed(late, 'late')).toBe(false);
         expect(owner.provenance().lastAppliedRequestId).toBeNull();
         expect(owner.data()).toBeNull();
+
+        const replacement = owner.begin();
+        owner.bindRequest(replacement)(REPLACEMENT_HTTP_ID);
+        bindLateTransport(LATE_HTTP_ID);
+        expect(owner.succeed(replacement, 'replacement')).toBe(true);
+        expect(owner.provenance()).toEqual({
+            queryRevision: replacement,
+            lastAppliedQueryRevision: replacement,
+            lastAppliedRequestId: REPLACEMENT_HTTP_ID,
+        });
     });
 });

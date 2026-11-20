@@ -51,16 +51,9 @@ import {
     CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
     CYCLE_TRACKING_GOAL_SYMPTOM_AWARENESS,
     CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE,
-    CYCLE_TRACKING_MODE_NO_PERIOD,
-    CYCLE_TRACKING_MODE_PERIMENOPAUSE,
-    CYCLE_TRACKING_MODE_PERIOD_TRACKING,
-    CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION,
-    CYCLE_TRACKING_MODE_PREGNANCY,
-    CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     type CycleFactorType,
     type CycleReproductiveState,
     type CycleTrackingGoal,
-    type CycleTrackingMode,
     OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_POSITIVE,
     OVULATION_TEST_RESULT_UNKNOWN,
@@ -240,17 +233,6 @@ export class CycleTrackingPageComponent {
     protected readonly recentDayItems = computed(() =>
         this.isHistoryExpanded() ? this.dayItems() : this.dayItems().slice(0, RECENT_DAY_LIMIT),
     );
-    protected readonly modeOptions = computed<Array<FdUiSelectOption<CycleTrackingMode>>>(() => {
-        this.languageVersion();
-        return [
-            this.option(CYCLE_TRACKING_MODE_PERIOD_TRACKING, 'CYCLE_TRACKING.MODE_PERIOD_TRACKING'),
-            this.option(CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE, 'CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE'),
-            this.option(CYCLE_TRACKING_MODE_PREGNANCY, 'CYCLE_TRACKING.MODE_PREGNANCY'),
-            this.option(CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION, 'CYCLE_TRACKING.MODE_POSTPARTUM_LACTATION'),
-            this.option(CYCLE_TRACKING_MODE_PERIMENOPAUSE, 'CYCLE_TRACKING.MODE_PERIMENOPAUSE'),
-            this.option(CYCLE_TRACKING_MODE_NO_PERIOD, 'CYCLE_TRACKING.MODE_NO_PERIOD'),
-        ];
-    });
     protected readonly goalOptions = computed<Array<FdUiSelectOption<CycleTrackingGoal>>>(() => {
         this.languageVersion();
         return [
@@ -348,18 +330,6 @@ export class CycleTrackingPageComponent {
             }
         });
         this.facade.initialize();
-    }
-
-    protected startCycle(): void {
-        this.facade.startCycle();
-    }
-
-    protected saveDay(): void {
-        this.facade.saveDay();
-    }
-
-    protected saveFactor(): void {
-        this.facade.saveFactor();
     }
 
     protected retryLoad(): void {

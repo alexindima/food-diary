@@ -52,7 +52,6 @@ beforeEach(() => {
     facade = TestBed.inject(CycleTrackingFacade);
     fixture = TestBed.createComponent(CycleSettingsDrawerComponent);
     fixture.componentRef.setInput('settingsForm', facade.settingsForm);
-    fixture.componentRef.setInput('modeOptions', []);
     fixture.componentRef.setInput('goalOptions', []);
     fixture.componentRef.setInput('reproductiveStateOptions', []);
     fixture.componentRef.setInput('isSaving', false);

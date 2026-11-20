@@ -3,11 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize, firstValueFrom, type Subscription } from 'rxjs';
+import { finalize, firstValueFrom, merge, type Subscription, take } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
+import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
 import { TelegramUnlinkFlowService } from '../../../shared/auth/telegram-unlink-flow.service';
 import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
@@ -45,6 +46,7 @@ export class ProfileManageFacade {
     private readonly toastService = inject(FdUiToastService);
     private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
+    private readonly sessionEvents = inject(SessionEventsService);
     private readonly localizationService = inject(LocalizationService);
     private readonly notificationService = inject(NotificationService);
     private readonly themeService = inject(ThemeService);
@@ -285,8 +287,13 @@ export class ProfileManageFacade {
 
         this.cancelProfileRead();
         this.isSavingProfile.set(true);
+        // A submitted update and its session check outlive ordinary Profile navigation.
+        const sessionChange = merge(this.sessionEvents.authenticated$, this.sessionEvents.sessionEnded$).pipe(take(1)).subscribe();
         try {
             const user = await firstValueFrom(this.userService.update(updateData));
+            if (sessionChange.closed) {
+                return false;
+            }
             if (user === null) {
                 this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
                 return false;
@@ -299,9 +306,12 @@ export class ProfileManageFacade {
             this.clearGlobalError();
             return true;
         } catch {
-            this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+            if (!sessionChange.closed) {
+                this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
+            }
             return false;
         } finally {
+            sessionChange.unsubscribe();
             this.isSavingProfile.set(false);
         }
     }

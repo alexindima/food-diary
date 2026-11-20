@@ -7,7 +7,7 @@ import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NavigationService } from '../../../services/navigation.service';
-import { type FavoriteRecipe, RecipeVisibility } from '../../../shared/models/recipe.data';
+import { type FavoriteRecipe, type RecipeOverview, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { QuickMealService } from '../../meals/contracts/quick-meal';
@@ -186,6 +186,39 @@ describe('RecipeListFacade favorites', () => {
         expect(facade.favoriteTotalCount()).toBe(0);
         expect(facade.recipeData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteRecipeId: null }));
     });
+});
+
+it('reconciles a stale favorite marker without deleting the unrelated saved recipe returned by lookup', async () => {
+    const otherFavorite: FavoriteRecipe = {
+        ...createFavoriteRecipe(),
+        id: entityId<'favorite-recipe'>('favorite-2'),
+        recipeId: entityId<'recipe'>('recipe-2'),
+    };
+    const staleRecipe = { ...recipe, isFavorite: true, favoriteRecipeId: null };
+    const otherRecipe = { ...recipe, id: otherFavorite.recipeId, isFavorite: true, favoriteRecipeId: otherFavorite.id };
+    const items = [staleRecipe, otherRecipe];
+    const overview: RecipeOverview = {
+        recentItems: items,
+        favoriteItems: [otherFavorite],
+        favoriteTotalCount: 1,
+        allRecipes: { data: items, page: 1, limit: PAGE_LIMIT, totalPages: 1, totalItems: items.length },
+    };
+    recipeService.queryOverview.mockReturnValueOnce(of(overview));
+    favoriteRecipeService.getLookupPage.mockReturnValueOnce(of([otherFavorite]));
+    favoriteRecipeService.getPage.mockReturnValueOnce(of({ data: [otherFavorite], page: 1, limit: 1, totalItems: 1, totalPages: 1 }));
+    await firstValueFrom(facade.loadInitialOverview(1, PAGE_LIMIT, {}, false));
+
+    await firstValueFrom(facade.toggleRecipeFavorite(staleRecipe));
+
+    expect(favoriteRecipeService.getLookupPage).toHaveBeenCalledOnce();
+    expect(favoriteRecipeService.remove).not.toHaveBeenCalled();
+    expect(favoriteRecipeService.getPage).toHaveBeenCalledExactlyOnceWith(1, 1);
+    const expectedRecipes = [{ ...staleRecipe, isFavorite: false }, otherRecipe];
+    expect(facade.recipeData.items()).toEqual(expectedRecipes);
+    expect(facade.recentRecipes()).toEqual(expectedRecipes);
+    expect(facade.favoriteTotalCount()).toBe(1);
+    expect(facade.favoriteLoadingIds().size).toBe(0);
+    expect(toastService.error).not.toHaveBeenCalled();
 });
 
 describe('RecipeListFacade overview', () => {

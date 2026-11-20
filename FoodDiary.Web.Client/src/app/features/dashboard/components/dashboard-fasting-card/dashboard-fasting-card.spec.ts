@@ -1,5 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
@@ -67,15 +69,7 @@ describe('extended fasting day ticks', () => {
 describe('DashboardFastingCardComponent', () => {
     let fixture: ComponentFixture<DashboardFastingCardComponent>;
     beforeEach(() => {
-        vi.useFakeTimers();
-        vi.setSystemTime(new Date('2026-04-12T12:00:00Z'));
-        TestBed.configureTestingModule({
-            imports: [DashboardFastingCardComponent],
-            providers: [provideTranslateTesting(), { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } }],
-        });
-        fixture = TestBed.createComponent(DashboardFastingCardComponent);
-        fixture.componentRef.setInput('session', createSession());
-        fixture.detectChanges();
+        fixture = createRenderedCard();
     });
     afterEach(() => {
         fixture.destroy();
@@ -124,6 +118,74 @@ describe('DashboardFastingCardComponent', () => {
     });
 });
 
+describe('Dashboard fasting card timing and older cyclic plans', () => {
+    let fixture: ComponentFixture<DashboardFastingCardComponent>;
+    beforeEach(() => {
+        fixture = createRenderedCard();
+    });
+    afterEach(() => {
+        fixture.destroy();
+        vi.useRealTimers();
+    });
+    it('caps the displayed progress and labels overtime after an extended fast reaches its target', () => {
+        fixture.componentRef.setInput('session', { ...createSession(), startedAtUtc: utcInstant('2026-04-11T12:00:00Z') });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const progress = host.querySelector('[role="progressbar"]');
+        const stage = host.querySelector('.dashboard-fasting-card__stage');
+
+        expect(progress?.getAttribute('aria-valuenow')).toBe('100');
+        expect(progress?.getAttribute('aria-valuetext')).toBe('24:00:00');
+        expect(stage?.textContent).not.toContain('FASTING.REDESIGN.PAST_TARGET');
+
+        vi.advanceTimersByTime(MS_PER_SECOND);
+        fixture.detectChanges();
+
+        expect(progress?.getAttribute('aria-valuenow')).toBe('100');
+        expect(progress?.getAttribute('aria-valuetext')).toBe('24:00:01');
+        expect(stage?.textContent).toContain('FASTING.REDESIGN.PAST_TARGET');
+    });
+
+    it('stays at zero until the browser clock catches up to the starting instant', () => {
+        fixture.componentRef.setInput('session', { ...createSession(), startedAtUtc: utcInstant('2026-04-12T12:00:01Z') });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const progress = host.querySelector('[role="progressbar"]');
+
+        expect(progress?.getAttribute('aria-valuenow')).toBe('0');
+        expect(progress?.getAttribute('aria-valuetext')).toBe('00:00:00');
+
+        vi.advanceTimersByTime(MS_PER_SECOND);
+        fixture.detectChanges();
+        expect(progress?.getAttribute('aria-valuetext')).toBe('00:00:00');
+
+        vi.advanceTimersByTime(MS_PER_SECOND);
+        fixture.detectChanges();
+        expect(progress?.getAttribute('aria-valuetext')).toBe('00:00:01');
+    });
+
+    it('shows one fasting day and one eating day when an older cyclic plan has no day counts', () => {
+        fixture.componentRef.setInput('session', {
+            ...createSession(),
+            planType: 'Cyclic',
+            occurrenceKind: 'FastDay',
+            cyclicPhaseDayNumber: 1,
+            cyclicPhaseDayTotal: 1,
+        });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const cycle = host.querySelector('.dashboard-fasting-card__cycle');
+        const days = [...host.querySelectorAll('.dashboard-fasting-card__days li')];
+
+        expect(cycle?.textContent).toContain('1:1');
+        expect(days).toHaveLength(2);
+        expect(days[0].textContent).toContain('FASTING.REDESIGN.FAST_DAY_SHORT');
+        expect(days[0].getAttribute('aria-current')).toBe('step');
+        expect(days[1].textContent).toContain('FASTING.REDESIGN.EAT_DAY_SHORT');
+        expect(days[1].hasAttribute('aria-current')).toBe(false);
+    });
+});
+
 describe('dashboard fasting timeline', () => {
     it('keeps the 24-hour position distinct from current-phase progress', () => {
         const session = {
@@ -153,6 +215,46 @@ describe('dashboard fasting timeline', () => {
         ).toBe(CYCLE_LENGTH);
     });
 });
+
+it('translates the existing past-target state without resetting the running dashboard timer', async () => {
+    const fixture = createRenderedCard();
+    onTestFinished(() => {
+        fixture.destroy();
+        vi.useRealTimers();
+    });
+    const translations = TestBed.inject(TranslateService);
+    const currentLanguage = vi.spyOn(TestBed.inject(LocalizationService), 'getCurrentLanguage').mockReturnValue('en');
+    translations.setTranslation('en', { FASTING: { REDESIGN: { PAST_TARGET: 'Past target' } } });
+    translations.setTranslation('ru', { FASTING: { REDESIGN: { PAST_TARGET: 'Цель уже достигнута' } } });
+    await firstValueFrom(translations.use('en'));
+    fixture.componentRef.setInput('session', { ...createSession(), startedAtUtc: utcInstant('2026-04-10T00:00:00Z') });
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const stage = host.querySelector('.dashboard-fasting-card__stage');
+    const progress = host.querySelector('[role="progressbar"]');
+    expect(stage?.textContent).toContain('Past target');
+    expect(progress?.getAttribute('aria-valuetext')).toBe('60:00:00');
+
+    currentLanguage.mockReturnValue('ru');
+    await firstValueFrom(translations.use('ru'));
+    fixture.detectChanges();
+
+    expect(stage?.textContent).toContain('Цель уже достигнута');
+    expect(progress?.getAttribute('aria-valuetext')).toBe('60:00:00');
+});
+
+function createRenderedCard(): ComponentFixture<DashboardFastingCardComponent> {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-12T12:00:00Z'));
+    TestBed.configureTestingModule({
+        imports: [DashboardFastingCardComponent],
+        providers: [provideTranslateTesting(), { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } }],
+    });
+    const fixture = TestBed.createComponent(DashboardFastingCardComponent);
+    fixture.componentRef.setInput('session', createSession());
+    fixture.detectChanges();
+    return fixture;
+}
 
 function createSession(): FastingSession {
     return {

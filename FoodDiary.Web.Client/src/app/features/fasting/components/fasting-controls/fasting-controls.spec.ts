@@ -1,9 +1,10 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { type Observable, of, Subject } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -203,6 +204,40 @@ describe('FastingControlsComponent rendered configuration', () => {
         expect(host(fixture).textContent).toContain('FASTING.REDESIGN.CYCLIC_SELECTION_SUMMARY');
         expect(host(fixture).textContent).not.toContain('FASTING.START_FAST');
     });
+});
+
+it('updates the visible settings summary when the language changes and retains the custom fasting selection', async () => {
+    fixture.componentRef.setInput('presentation', 'dialog');
+    const translations = TestBed.inject(TranslateService);
+    const currentLanguage = vi.spyOn(TestBed.inject(LocalizationService), 'getCurrentLanguage').mockReturnValue('en');
+    translations.setTranslation('en', {
+        FASTING: { REDESIGN: { INTERMITTENT_SELECTION_SUMMARY: '{{hours}} hours fasting, {{eatHours}} hours eating' } },
+    });
+    translations.setTranslation('ru', {
+        FASTING: { REDESIGN: { INTERMITTENT_SELECTION_SUMMARY: '{{hours}} ч без еды, {{eatHours}} ч для еды' } },
+    });
+    await firstValueFrom(translations.use('en'));
+    facade.selectProtocol.mockImplementation((protocol: FastingProtocol) => {
+        facade.selectedProtocol.set(protocol);
+    });
+    facade.setCustomIntermittentFastHours.mockImplementation((hours: number) => {
+        facade.customIntermittentFastHours.set(hours);
+    });
+    fixture.detectChanges();
+
+    clickRadio('FASTING.INTERMITTENT_GROUP', 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT');
+    enterNumber('FASTING.FAST_HOURS_SHORT', CUSTOM_EAT_DAY_FAST_HOURS);
+    const summary = host(fixture).querySelector('.fasting-controls__selection-summary strong');
+    expect(summary?.textContent).toBe('18 hours fasting, 6 hours eating');
+
+    currentLanguage.mockReturnValue('ru');
+    await firstValueFrom(translations.use('ru'));
+    fixture.detectChanges();
+
+    expect(summary?.textContent).toBe('18 ч без еды, 6 ч для еды');
+    expect(facade.selectedProtocol()).toBe('CustomIntermittent');
+    expect(facade.customIntermittentFastHours()).toBe(CUSTOM_EAT_DAY_FAST_HOURS);
+    expect(facade.startFasting).not.toHaveBeenCalled();
 });
 
 describe('FastingControlsComponent rendered active actions', () => {

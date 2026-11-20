@@ -261,6 +261,57 @@ describe('Notifications inbox row actions', () => {
     });
 });
 
+describe('Notifications inbox destination ownership', () => {
+    it.each(['success', 'failure'] as const)('ignores the former destination when its acknowledgement ends in %s', outcome => {
+        const older = createInvitationNotification();
+        const newer = createRecommendationNotification();
+        const { fixture, dialogRef, notificationService, router } = setupNotificationsDialog([older, newer]);
+        const oldAcknowledgement = new Subject<void>();
+        const newAcknowledgement = new Subject<void>();
+        notificationService.markAsRead.mockReturnValueOnce(oldAcknowledgement).mockReturnValueOnce(newAcknowledgement);
+        const host = fixture.nativeElement as HTMLElement;
+
+        noticeButton(host, `.notifications-dialog__item[aria-label^="${older.title}"]`).click();
+        noticeButton(host, `.notifications-dialog__item[aria-label^="${newer.title}"]`).click();
+        expect(notificationService.markAsRead.mock.calls).toEqual([[older.id], [newer.id]]);
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+
+        if (outcome === 'success') {
+            oldAcknowledgement.next();
+            oldAcknowledgement.complete();
+        } else {
+            oldAcknowledgement.error(new Error('Earlier read request failed'));
+        }
+
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        newAcknowledgement.next();
+        newAcknowledgement.complete();
+        expect(router.navigateByUrl).toHaveBeenCalledExactlyOnceWith(newer.targetUrl);
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+    });
+
+    it('preserves a pending destination when the next action only marks a targetless row read', () => {
+        const destination = createInvitationNotification();
+        const notice = { ...createRecommendationNotification(), targetUrl: null };
+        const { fixture, dialogRef, notificationService, router } = setupNotificationsDialog([destination, notice]);
+        const pending = new Subject<void>();
+        notificationService.markAsRead.mockReturnValueOnce(pending);
+        const host = fixture.nativeElement as HTMLElement;
+
+        noticeButton(host, `.notifications-dialog__item[aria-label^="${destination.title}"]`).click();
+        noticeButton(host, `.notifications-dialog__item[aria-label^="${notice.title}"]`).click();
+        expect(notificationService.markAsRead.mock.calls).toEqual([[destination.id], [notice.id]]);
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+
+        pending.next();
+        pending.complete();
+        expect(router.navigateByUrl).toHaveBeenCalledExactlyOnceWith(destination.targetUrl);
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+    });
+});
+
 describe('Notifications inbox locale', () => {
     it('reformats a retained row when the language changes without loading the inbox again', async () => {
         const entry = {
@@ -285,6 +336,15 @@ describe('Notifications inbox locale', () => {
         expect(date?.textContent.trim()).not.toBe(originalDate);
         expect(noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item')).toBe(originalRow);
         expect(notificationService.ensureNotificationsLoaded).toHaveBeenCalledOnce();
+    });
+
+    it('retains the notification when a stored timestamp cannot be formatted', () => {
+        const notice = { ...createPasswordSetupNotification(), createdAtUtc: utcInstant('timestamp unavailable') };
+        const { fixture, router } = setupNotificationsDialog([notice]);
+        const row = noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item');
+        expect(row.querySelector('.notifications-dialog__item-date')?.textContent.trim()).toBe(notice.createdAtUtc);
+        row.click();
+        expect(router.navigateByUrl).toHaveBeenCalledExactlyOnceWith(notice.targetUrl);
     });
 });
 

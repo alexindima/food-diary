@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 526,
+    "components": 525,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1684,
+    "inputs": 1682,
     "outputs": 564,
     "apiCalls": 336,
-    "templatesWithTranslations": 381,
-    "translationKeys": 2308,
-    "consumerEdges": 1359,
-    "consumedComponents": 332,
+    "templatesWithTranslations": 380,
+    "translationKeys": 2304,
+    "consumerEdges": 1357,
+    "consumedComponents": 331,
     "unconsumedComponents": 193
   },
   "components": [
@@ -2042,11 +2042,6 @@
         {
           "name": "settingsForm",
           "type": "FieldTree<CycleSettingsFormModel>",
-          "required": true
-        },
-        {
-          "name": "modeOptions",
-          "type": "Array<FdUiSelectOption<CycleTrackingMode>>",
           "required": true
         },
         {
@@ -8990,12 +8985,17 @@
           "name": "bodyTargets",
           "type": "Record<BodyTargetKey, number>",
           "required": true
+        },
+        {
+          "name": "invalidBodyTargets",
+          "type": "Record<BodyTargetKey, boolean>",
+          "required": true
         }
       ],
       "outputs": [
         {
           "name": "bodyTargetChange",
-          "type": "{ key: BodyTargetKey; value: number }"
+          "type": "{ key: BodyTargetKey; value: number | null }"
         },
         {
           "name": "waterChange",
@@ -10313,19 +10313,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-satiety-card/meal-satiety-card.spec.ts"
     },
     {
-      "class": "MealSatietyLevelDialogComponent",
-      "selector": "fd-meal-satiety-level-dialog",
-      "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.spec.ts"
-    },
-    {
       "class": "QuickMealDrawerComponent",
       "selector": "fd-quick-meal-drawer",
       "feature": "meals",
@@ -10801,24 +10788,9 @@
           "required": true
         },
         {
-          "name": "nutrition",
-          "type": "FoodNutritionResponse | null",
-          "required": false
-        },
-        {
           "name": "itemNames",
           "type": "readonly string[]",
           "required": true
-        },
-        {
-          "name": "showNotes",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "labelNotes",
-          "type": "string | null",
-          "required": false
         },
         {
           "name": "fromLabel",
@@ -16975,6 +16947,11 @@
           "name": "isLoading",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "isSaving",
+          "type": "",
+          "required": false
         },
         {
           "name": "canDeleteList",
@@ -24543,15 +24520,6 @@
     },
     {
       "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
-      "keys": [
-        "DISABLED_HINTS.SELECT_VALUE",
-        "MEAL_MANAGE.SATIETY_DIALOG_APPLY",
-        "MEAL_MANAGE.SATIETY_DIALOG_CANCEL"
-      ]
-    },
-    {
-      "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog/meal-list-filters-dialog.html",
       "keys": [
         "COMMON.CANCEL",
@@ -26496,7 +26464,6 @@
       "keys": [
         "COMMON.MORE_ACTIONS",
         "DISABLED_HINTS.LIST_EMPTY",
-        "DISABLED_HINTS.LIST_NAME_REQUIRED",
         "DISABLED_HINTS.OPERATION_BUSY",
         "SHOPPING_LIST.ALL_LISTS",
         "SHOPPING_LIST.CLEAR_LIST_BUTTON",
@@ -28570,7 +28537,6 @@
         "goalOptions",
         "isDeleting",
         "isSaving",
-        "modeOptions",
         "reproductiveStateOptions",
         "settingsForm"
       ],
@@ -29448,6 +29414,18 @@
       "component": "ErrorStateComponent",
       "selector": "fd-error-state",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/error-state/error-state.ts",
+      "consumerFeature": "products",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "ErrorStateComponent",
+      "selector": "fd-error-state",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/error-state/error-state.ts",
       "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.html",
       "occurrences": 1,
@@ -29995,7 +29973,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "clearAriaLabel",
-        "displayWith",
         "emptyText",
         "error",
         "label",
@@ -32752,21 +32729,6 @@
         "fill",
         "icon",
         "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "meals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "disabled",
-        "disabledReason",
-        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -36443,20 +36405,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "size",
-        "subtitle",
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiDialogComponent",
-      "selector": "fd-ui-dialog",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "consumerFeature": "meals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "size",
@@ -41405,21 +41353,6 @@
       ]
     },
     {
-      "component": "FdUiSatietyScaleComponent",
-      "selector": "fd-ui-satiety-scale",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.ts",
-      "consumerFeature": "meals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "layout",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
-    },
-    {
       "component": "FdUiSectionErrorStateComponent",
       "selector": "fd-ui-section-error-state",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-error-state.ts",
@@ -43353,6 +43286,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "bodyTargets",
+        "invalidBodyTargets",
         "water"
       ],
       "outputsHandled": [
@@ -45505,10 +45439,7 @@
         "hasExistingData",
         "isValid",
         "itemNames",
-        "labelNotes",
-        "nutrition",
         "replacementAccepted",
-        "showNotes",
         "useAsCover"
       ],
       "outputsHandled": [
@@ -46486,6 +46417,7 @@
         "initialPage",
         "isLoading",
         "isMobile",
+        "isSaving",
         "listSelectField",
         "lists",
         "renameRequestedListId"

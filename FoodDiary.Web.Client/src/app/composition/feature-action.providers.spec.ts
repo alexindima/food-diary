@@ -3,8 +3,8 @@ import { firstValueFrom, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PREMIUM_TRIAL_ACTIONS } from '../components/shared/premium-required-dialog/premium-trial-actions';
+import { DietologistService } from '../features/dietologist/api/dietologist.service';
 import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../features/dietologist/contracts/relationship-actions';
-import { DietologistFacade } from '../features/dietologist/lib/dietologist.facade';
 import { GoalsService } from '../features/goals/api/goals.service';
 import { CALORIE_GOAL_ACTIONS } from '../features/goals/contracts/calorie-goal-actions';
 import { HydrationService } from '../features/hydration/api/hydration.service';
@@ -37,8 +37,9 @@ const relationshipOwner = {
 describe('Lazy capability composition', () => {
     beforeEach(() => {
         hydrationOwner.addEntry.mockClear();
-        relationshipOwner.getRelationship.mockClear();
-        relationshipOwner.revokeRelationship.mockClear();
+        for (const method of Object.values(relationshipOwner)) {
+            method.mockClear();
+        }
         TestBed.configureTestingModule({
             providers: [
                 ...FEATURE_ACTION_PROVIDERS,
@@ -47,7 +48,7 @@ describe('Lazy capability composition', () => {
                     useValue: hydrationOwner,
                 },
                 {
-                    provide: DietologistFacade,
+                    provide: DietologistService,
                     useValue: relationshipOwner,
                 },
             ],
@@ -62,9 +63,11 @@ describe('Lazy capability composition', () => {
         expect(hydrationOwner.addEntry).toHaveBeenCalledExactlyOnceWith(HYDRATION_AMOUNT, timestamp);
     });
 
-    it('delegates relationship actions to the same owner registered in DI', async () => {
+    it('reads and revokes the relationship through the lazy feature', async () => {
         const actions = TestBed.inject(DIETOLOGIST_RELATIONSHIP_ACTIONS);
-        expect(await firstValueFrom(actions.getRelationship())).toBeNull();
+        const relationship = actions.getRelationship();
+        expect(relationshipOwner.getRelationship).not.toHaveBeenCalled();
+        expect(await firstValueFrom(relationship)).toBeNull();
         await firstValueFrom(actions.revokeRelationship());
         expect(relationshipOwner.getRelationship).toHaveBeenCalledOnce();
         expect(relationshipOwner.revokeRelationship).toHaveBeenCalledOnce();

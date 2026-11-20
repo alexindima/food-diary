@@ -138,20 +138,20 @@ export class QuickMealDrawerComponent {
     private imageFor(item: QuickMealItem): string {
         if (item.type === 'product') {
             const product = item.product;
-            const type = normalizeProductType(product?.productType) ?? ProductType.Unknown;
-            return resolveProductImageUrl(product?.imageUrl ?? undefined, type) ?? this.fallbackImage;
+            const type = normalizeProductType(product.productType) ?? ProductType.Unknown;
+            return resolveProductImageUrl(product.imageUrl, type) ?? this.fallbackImage;
         }
 
-        return resolveRecipeImageUrl(item.recipe?.imageUrl ?? undefined) ?? this.fallbackImage;
+        return resolveRecipeImageUrl(item.recipe.imageUrl) ?? this.fallbackImage;
     }
 
     private itemName(item: QuickMealItem): string {
-        return item.type === 'product' ? (item.product?.name ?? '') : (item.recipe?.name ?? '');
+        return item.type === 'product' ? item.product.name : item.recipe.name;
     }
 
     private unitKeyFor(item: QuickMealItem): string {
         if (item.type === 'product') {
-            return `GENERAL.UNITS.${item.product?.baseUnit ?? 'G'}`;
+            return `GENERAL.UNITS.${item.product.baseUnit}`;
         }
 
         const category = new Intl.PluralRules(this.language(), { maximumFractionDigits: 1 }).select(item.amount);
@@ -267,21 +267,20 @@ export class QuickMealDrawerComponent {
     }
 
     private async createDialogItemAsync(item: QuickMealItem): Promise<MealItemFormValues> {
-        const sourceType = item.type === 'recipe' ? MealSourceType.Recipe : MealSourceType.Product;
-        const amount =
-            sourceType === MealSourceType.Recipe
-                ? await this.mealManageFacade.resolveRecipeDisplayValueAsync(item.recipe ?? null, recipeServingsFromStored(item.amount))
-                : item.amount;
+        if (item.type === 'product') {
+            return { sourceType: MealSourceType.Product, product: item.product, recipe: null, amount: item.amount };
+        }
 
+        const amount = await this.mealManageFacade.resolveRecipeDisplayValueAsync(item.recipe, recipeServingsFromStored(item.amount));
         return {
-            sourceType,
-            product: sourceType === MealSourceType.Product ? (item.product ?? null) : null,
-            recipe: sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null,
+            sourceType: MealSourceType.Recipe,
+            product: null,
+            recipe: item.recipe,
             amount,
         };
     }
 
-    private toQuickMealItem(item: MealItemFormValues): Omit<QuickMealItem, 'flashId'> | null {
+    private toQuickMealItem(item: MealItemFormValues): QuickMealItem | null {
         const amount = item.amount ?? 0;
 
         if (item.sourceType === MealSourceType.Product) {

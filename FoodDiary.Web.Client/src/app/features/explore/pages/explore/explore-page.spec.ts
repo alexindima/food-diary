@@ -1,7 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -10,13 +11,14 @@ import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { RecipeDetailComponent } from '../../../recipes/contracts/recipe-detail';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ExploreRecipe } from '../../models/explore.data';
 import { ExplorePageComponent } from './explore-page';
 import { EXPLORE_PAGE_SIZE } from './explore-page-lib/explore-page.constants';
 
-const TOTAL_ITEMS = 1;
-const TOTAL_PAGES = 1;
+const TOTAL_ITEMS = EXPLORE_PAGE_SIZE * 2 + 1;
+const TOTAL_PAGES = 3;
 const RECIPE_SERVINGS = 2;
 const RECIPE_CALORIES = 350;
 const SELECTED_PAGE_INDEX = 2;
@@ -72,6 +74,52 @@ describe('ExplorePageComponent', () => {
             search: '',
             sortBy: 'newest',
         });
+    });
+
+    it('restarts pagination on a search and keeps the matching recipes after a late page response', async () => {
+        const previousPage = new Subject<PageOf<ExploreRecipe>>();
+        const matchingPage = new Subject<PageOf<ExploreRecipe>>();
+        exploreService.queryRecipes.mockReturnValueOnce(previousPage).mockReturnValueOnce(matchingPage);
+        const host = fixture.nativeElement as HTMLElement;
+        const nextPage = host.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
+        const search = host.querySelector<HTMLInputElement>('.explore-search input');
+        if (nextPage === null || search === null) {
+            throw new Error('Expected recipe pagination and search controls');
+        }
+
+        nextPage.click();
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(2, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
+
+        search.value = 'ramen';
+        search.dispatchEvent(new Event('input', { bubbles: true }));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: 'ramen', sortBy: 'newest' });
+        });
+        expect(host.querySelector('.explore-loader')).not.toBeNull();
+        expect(previousPage.observed).toBe(false);
+
+        const matchingRecipe = { ...createRecipe(), id: entityId<'recipe'>('ramen'), name: 'Miso ramen' };
+        matchingPage.next({ ...createPage(), data: [matchingRecipe], totalPages: 1, totalItems: 1 });
+        matchingPage.complete();
+        previousPage.next({ ...createPage(), page: 2 });
+        previousPage.complete();
+        fixture.detectChanges();
+
+        const card = host.querySelector<HTMLElement>('.explore-grid .entity-card');
+        expect(card?.textContent).toContain('Miso ramen');
+        expect(host.querySelector('.explore-loader')).toBeNull();
+        expect(host.querySelector('fd-ui-pagination')).toBeNull();
+        card?.click();
+        expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(RecipeDetailComponent, { preset: 'detail', data: matchingRecipe });
+    });
+
+    it('replays the Explore tour from the rendered help button', () => {
+        const start = vi.spyOn(TestBed.inject(FdTourService), 'start').mockReturnValue(true);
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelector<HTMLButtonElement>('[data-tour-id="explore-tour-help"] button')?.click();
+
+        expect(start).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: 'explore' }), { force: true });
     });
 });
 

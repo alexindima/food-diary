@@ -1,6 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
-    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -13,7 +12,6 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -22,7 +20,7 @@ import { FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
-import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
+import { AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
@@ -38,7 +36,7 @@ import { AuthFlowFacade, type AuthLoginResult, type AuthRegisterResult } from '.
 import { AUTH_TABS } from './auth-lib/auth-form.config';
 import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
-import { getLoginAutofillFieldValues, hasCompleteLoginAutofill } from './auth-lib/auth-login-autofill.utils';
+import { getLoginAutofillFieldValues } from './auth-lib/auth-login-autofill.utils';
 import { AuthLoginFormComponent } from './auth-login-form/auth-login-form';
 import { AuthPasswordResetFormComponent } from './auth-password-reset-form/auth-password-reset-form';
 import { AuthRegisterFormComponent } from './auth-register-form/auth-register-form';
@@ -82,7 +80,6 @@ export class AuthComponent {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly dialogRef = inject(FdUiDialogRef<AuthComponent>, { optional: true });
     private readonly passwordResetCooldownSecondsDefault = inject(AUTH_PASSWORD_RESET_COOLDOWN_SECONDS);
-    private readonly loginAutofillCheckDelaysMs = inject(AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS);
     private readonly formManager = inject(AuthFormManager);
     private readonly googleManager = inject(AuthGoogleManager);
     private readonly authFlowFacade = inject(AuthFlowFacade);
@@ -108,7 +105,6 @@ export class AuthComponent {
     protected readonly isPasswordResetting = signal<boolean>(false);
     protected readonly passwordResetSent = signal<boolean>(false);
     protected readonly passwordResetCooldownSeconds = signal<number>(0);
-    protected readonly loginAutofillDetected = signal<boolean>(false);
     protected readonly loginFieldErrors = this.formManager.loginFieldErrors;
     protected readonly registerFieldErrors = this.formManager.registerFieldErrors;
     protected readonly passwordResetFieldErrors = this.formManager.passwordResetFieldErrors;
@@ -116,8 +112,6 @@ export class AuthComponent {
     private stopPasswordResetCooldown: (() => void) | null = null;
     private passwordResetViewVersion = 0;
     private authTabVersion = 0;
-    private loginAutofillCheckTimerIds: number[] = [];
-    private hasLoginNativeInteraction = false;
     protected readonly authTabs = AUTH_TABS;
 
     private returnUrl: string | null = null;
@@ -134,9 +128,6 @@ export class AuthComponent {
         });
         this.subscribeFormChanges();
         this.registerRenderingEffects();
-        afterNextRender(() => {
-            this.startLoginAutofillDetection();
-        });
         void this.googleManager.initializeAsync(credential => {
             this.onGoogleCredential(credential);
         });
@@ -161,7 +152,6 @@ export class AuthComponent {
             if (values.email !== failed?.email || values.password !== failed.password || values.rememberMe !== failed.rememberMe) {
                 this.clearGlobalError();
             }
-            this.updateLoginAutofillState();
         });
         effect(() => {
             this.registerModel();
@@ -210,24 +200,15 @@ export class AuthComponent {
     }
 
     protected async onTabChangeAsync(mode: 'login' | 'register'): Promise<void> {
-        if (this.authMode === mode) {
-            return;
-        }
         this.authMode = mode;
         this.authTabVersion++;
         this.formManager.resetAll();
         this.pendingGoogleLinkCredential = null;
         this.googleLinkRequired.set(false);
         this.onPasswordResetClose();
-        this.hasLoginNativeInteraction = false;
-        this.loginAutofillDetected.set(false);
         if (this.useRouting() && this.router !== null) {
             await this.router.navigate(['/'], { queryParams: { auth: mode } });
         }
-    }
-
-    protected onLoginSubmit(): void {
-        void submit(this.loginForm);
     }
 
     private async loginAsync(): Promise<void> {
@@ -271,9 +252,7 @@ export class AuthComponent {
     }
 
     protected onLoginNativeInput(): void {
-        this.hasLoginNativeInteraction = true;
         this.syncLoginNativeValues();
-        this.updateLoginAutofillState();
     }
 
     protected onRestoreSubmit(): void {
@@ -317,10 +296,6 @@ export class AuthComponent {
         });
     }
 
-    protected onRegisterSubmit(): void {
-        void submit(this.registerForm);
-    }
-
     private async registerAsync(): Promise<void> {
         if (this.registerForm().invalid() || this.isSubmitting()) {
             this.registerForm().markAsTouched();
@@ -356,6 +331,9 @@ export class AuthComponent {
     }
 
     private onGoogleCredential(credential: string): void {
+        if (this.isSubmitting()) {
+            return;
+        }
         this.isSubmitting.set(true);
         const tabVersion = this.authTabVersion;
         const request: GoogleLoginRequest = { credential, rememberMe: true, expectedUserId: this.confirmationUserId() ?? undefined };
@@ -427,16 +405,7 @@ export class AuthComponent {
         this.clearGlobalError();
     }
 
-    protected onPasswordResetSubmit(): void {
-        void submit(this.passwordResetForm);
-    }
-
     private async requestPasswordResetAsync(): Promise<void> {
-        if (this.passwordResetForm().invalid() || this.isPasswordResetting()) {
-            this.passwordResetForm().markAsTouched();
-            this.formManager.updateFieldErrors();
-            return;
-        }
         if (this.passwordResetCooldownSeconds() > 0) {
             return;
         }
@@ -607,44 +576,7 @@ export class AuthComponent {
             return;
         }
 
-        const fields = getLoginAutofillFieldValues(form);
-
-        this.loginModel.update(value => {
-            const email = fields.email.length > 0 ? fields.email : value.email;
-            const password = fields.password.length > 0 ? fields.password : value.password;
-            return email === value.email && password === value.password ? value : { ...value, email, password };
-        });
-    }
-
-    private startLoginAutofillDetection(): void {
-        if (!this.isBrowser) {
-            return;
-        }
-
-        this.updateLoginAutofillState();
-        this.loginAutofillCheckTimerIds = this.loginAutofillCheckDelaysMs.flatMap(delay => {
-            const timeoutId = this.browserWindow.setTimeout(() => {
-                this.updateLoginAutofillState();
-            }, delay);
-            return timeoutId === null ? [] : [timeoutId];
-        });
-
-        this.destroyRef.onDestroy(() => {
-            this.loginAutofillCheckTimerIds.forEach(timerId => {
-                this.browserWindow.clearTimeout(timerId);
-            });
-            this.loginAutofillCheckTimerIds = [];
-        });
-    }
-
-    private updateLoginAutofillState(): void {
-        const form = this.loginFormComponent()?.formElement()?.nativeElement;
-        const hasAutofill = hasCompleteLoginAutofill(form, this.hasLoginNativeInteraction);
-
-        if (this.loginAutofillDetected() === hasAutofill) {
-            return;
-        }
-
-        this.loginAutofillDetected.set(hasAutofill);
+        const { email, password } = getLoginAutofillFieldValues(form);
+        this.loginModel.update(value => (email === value.email && password === value.password ? value : { ...value, email, password }));
     }
 }

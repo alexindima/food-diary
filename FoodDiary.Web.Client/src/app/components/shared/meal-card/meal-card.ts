@@ -88,22 +88,13 @@ export class MealCardComponent {
 
         return normalizeQualityScore(score);
     });
-    private readonly fallbackMealImage = 'assets/images/stubs/meals/other.svg';
-
     protected readonly coverImage = computed(() => {
         const image = this.resolvePreviewImage();
-        const resolved = resolveMealImageUrl(image ?? undefined, this.meal().mealType ?? undefined) ?? image;
-        const itemImages = image !== undefined ? [] : this.resolveItemImages();
-
-        if (image === undefined && itemImages.length === 1) {
-            return itemImages[0].url;
-        }
-
-        if (image === undefined && itemImages.length > 1) {
+        if (image === undefined && this.resolveItemImages().length > 1) {
             return null;
         }
 
-        return resolved ?? this.fallbackMealImage;
+        return resolveMealImageUrl(image, this.meal().mealType);
     });
     protected readonly collageImages = computed<readonly EntityCardCollageImage[]>(() => {
         if (this.resolvePreviewImage() !== undefined) {
@@ -218,17 +209,13 @@ export class MealCardComponent {
     private appendItemImages(result: EntityCardCollageImage[], seen: Set<string>): void {
         for (const item of this.meal().items ?? []) {
             const image = this.resolveMealItemCollageImage(item);
-            if (!this.appendCollageImage(result, seen, image.url, image.alt)) {
-                break;
-            }
+            this.appendCollageImage(result, seen, image.url, image.alt);
         }
     }
 
     private appendAiSessionImages(result: EntityCardCollageImage[], seen: Set<string>): void {
         for (const session of this.meal().aiSessions ?? []) {
-            if (!this.appendCollageImage(result, seen, session?.imageUrl?.trim(), session?.notes?.trim())) {
-                break;
-            }
+            this.appendCollageImage(result, seen, session?.imageUrl?.trim(), session?.notes?.trim());
         }
     }
 
@@ -237,9 +224,9 @@ export class MealCardComponent {
         seen: Set<string>,
         imageUrl: string | undefined,
         alt: string | undefined,
-    ): boolean {
+    ): void {
         if (imageUrl === undefined || imageUrl.length === 0 || seen.has(imageUrl)) {
-            return true;
+            return;
         }
 
         seen.add(imageUrl);
@@ -247,8 +234,6 @@ export class MealCardComponent {
             url: imageUrl,
             alt: alt ?? this.mealTitle(),
         });
-
-        return true;
     }
 
     private resolveMealItemCollageImage(item: NonNullable<NonNullable<MealCardItem['items']>[number]> | null): {

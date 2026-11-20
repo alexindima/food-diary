@@ -79,4 +79,29 @@ describe('saved logout selectors in browser tabs', () => {
         expect(recovery.pendingLogout()).toBeNull();
         expect(recovery.issue()).toBeNull();
     });
+
+    it('preserves a cross-tab logout when an earlier restoration settles', () => {
+        const recovery = TestBed.inject(AuthRecoveryStateService);
+        recovery.restorationFailed(null);
+        expect(recovery.issue()).toBe('restore');
+
+        const key = 'pendingBrowserLogout';
+        const logout = { sessionId: 'previous-session', contextId: null, telegram: false };
+        const saved = JSON.stringify(logout);
+        localStorage.setItem(key, saved);
+        const published = new StorageEvent('storage', { key, newValue: saved });
+        Object.defineProperty(published, 'storageArea', { value: window.localStorage });
+        window.dispatchEvent(published);
+        expect(recovery.issue()).toBe('logout');
+
+        recovery.restorationSucceeded();
+
+        expect(recovery.pendingLogout()).toEqual(logout);
+        expect(recovery.issue()).toBe('logout');
+        expect(localStorage.getItem(key)).toBe(saved);
+        recovery.confirmLogout(logout);
+        expect(recovery.pendingLogout()).toBeNull();
+        expect(recovery.issue()).toBeNull();
+        expect(localStorage.getItem(key)).toBeNull();
+    });
 });

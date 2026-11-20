@@ -127,6 +127,27 @@ describe('AiPhotoResultComponent localization', () => {
             expect(element.querySelector('.ai-photo-result__item-calories')?.textContent.replaceAll('\u00A0', ' ')).toContain(item);
         }
     });
+
+    it('uses the available food name and preserves an unfamiliar or omitted amount unit', async () => {
+        const { fixture, translateService } = await setupAiPhotoResultAsync();
+        translateService.use('en');
+        fixture.componentRef.setInput('nutrition', null);
+        fixture.componentRef.setInput('results', [
+            { ...VISION_ITEMS[0], nameEn: 'salt', nameLocal: '   ', amount: 1, unit: 'pinch' },
+            { ...VISION_ITEMS[0], nameEn: 'pear', nameLocal: null, amount: 1, unit: '' },
+        ]);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const rows = Array.from(host.querySelectorAll('.ai-photo-result__table-row'), row => ({
+            name: row.querySelector('.ai-photo-result__item-name')?.textContent.trim(),
+            amount: row.querySelector('.ai-photo-result__item-amount')?.textContent.trim(),
+        }));
+        expect(rows).toEqual([
+            { name: 'Salt', amount: '1 pinch' },
+            { name: 'Pear', amount: '1' },
+        ]);
+    });
 });
 
 describe('AiPhotoResultComponent view models', () => {

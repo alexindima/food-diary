@@ -1,3 +1,4 @@
+import { createEnvironmentInjector, DestroyRef, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -440,7 +441,9 @@ function registerManageDialogTests(): void {
     it.each(['/photo', null])('opens an existing AI session with image %s and preserves cancellation', async imageUrl => {
         const session = { imageUrl, imageAssetId: 'asset', items: [] };
         dialogService.open.mockReturnValue({ afterClosed: () => of(undefined) });
-        expect(await facade.openEditAiPhotoSessionDialogAsync(session)).toBeNull();
+        expect(
+            await facade.openEditAiPhotoSessionDialogAsync(session, TestBed.inject(DestroyRef), new AbortController().signal),
+        ).toBeNull();
         expect(dialogService.open).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({
@@ -455,7 +458,29 @@ function registerManageDialogTests(): void {
     it('returns the modified AI session', async () => {
         const session = AI_RECOGNITION_SESSIONS[0];
         dialogService.open.mockReturnValue({ afterClosed: () => of(session) });
-        expect(await facade.openEditAiPhotoSessionDialogAsync(session)).toBe(session);
+        expect(await facade.openEditAiPhotoSessionDialogAsync(session, TestBed.inject(DestroyRef), new AbortController().signal)).toBe(
+            session,
+        );
+    });
+    it('does not mount the review if the editor is destroyed while the lazy module loads', async () => {
+        const editor = createEnvironmentInjector([], TestBed.inject(EnvironmentInjector));
+        const result = facade.openEditAiPhotoSessionDialogAsync(
+            AI_RECOGNITION_SESSIONS[0],
+            editor.get(DestroyRef),
+            new AbortController().signal,
+        );
+        editor.destroy();
+
+        await expect(result).resolves.toBeNull();
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+    it('does not mount the review if the meal changes while the lazy module loads', async () => {
+        const reviewScope = new AbortController();
+        const result = facade.openEditAiPhotoSessionDialogAsync(AI_RECOGNITION_SESSIONS[0], TestBed.inject(DestroyRef), reviewScope.signal);
+        reviewScope.abort();
+
+        await expect(result).resolves.toBeNull();
+        expect(dialogService.open).not.toHaveBeenCalled();
     });
     it.each([null, undefined])('cancelling product selection returns null: %s', async selection => {
         dialogService.open.mockReturnValue({ afterClosed: () => of(selection) });

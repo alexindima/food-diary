@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -28,6 +28,8 @@ const draft: RecipeImportResult = {
 };
 const ai = { importRecipe: vi.fn<AiFoodService['importRecipe']>(), importRecipeVideo: vi.fn<AiFoodService['importRecipeVideo']>() };
 const clipboardRead = vi.fn<BrowserClipboardService['readTextAsync']>();
+const clipboardPermission = vi.fn<BrowserClipboardService['canReadWithoutPromptAsync']>();
+const onClipboardReturn = vi.fn<BrowserClipboardService['onReturn']>();
 const storePreference = vi.fn<BrowserStorageService['setItem']>();
 let fixture: ComponentFixture<RecipeRecognitionComponent>;
 
@@ -35,6 +37,8 @@ beforeEach(async () => {
     ai.importRecipe.mockReset().mockReturnValue(of(draft));
     ai.importRecipeVideo.mockReset().mockReturnValue(of(draft));
     clipboardRead.mockReset().mockResolvedValue('');
+    clipboardPermission.mockReset().mockResolvedValue(false);
+    onClipboardReturn.mockClear().mockReturnValue(vi.fn());
     storePreference.mockClear();
     await TestBed.configureTestingModule({
         imports: [RecipeRecognitionComponent],
@@ -53,9 +57,9 @@ beforeEach(async () => {
             {
                 provide: BrowserClipboardService,
                 useValue: {
-                    onReturn: vi.fn().mockReturnValue(vi.fn()),
+                    onReturn: onClipboardReturn,
                     readTextAsync: clipboardRead,
-                    canReadWithoutPromptAsync: vi.fn().mockResolvedValue(false),
+                    canReadWithoutPromptAsync: clipboardPermission,
                 },
             },
             { provide: BrowserStorageService, useValue: { getItem: vi.fn().mockReturnValue(null), setItem: storePreference } },
@@ -71,13 +75,7 @@ describe('RecipeRecognitionComponent clipboard and review', () => {
         fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
         clipboardRead.mockResolvedValueOnce('https://www.instagram.com/reel/example/?igsh=sharing');
         const host = fixture.nativeElement as HTMLElement;
-        const label = Array.from(host.querySelectorAll('label')).find(candidate =>
-            candidate.textContent.includes('RECIPE_MANAGE.IMPORT.CLIPBOARD_LABEL'),
-        );
-        if (!(label?.control instanceof HTMLInputElement)) {
-            throw new Error('Expected the clipboard suggestions checkbox');
-        }
-        label.control.click();
+        clipboardCheckbox().click();
         await fixture.whenStable();
         fixture.detectChanges();
 
@@ -91,7 +89,62 @@ describe('RecipeRecognitionComponent clipboard and review', () => {
         expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
         expect(ai.importRecipe).not.toHaveBeenCalled();
     });
+});
 
+describe('RecipeRecognitionComponent clipboard opt-out', () => {
+    it('keeps the clipboard unread after opting out during a permission check and still allows an explicit paste', async () => {
+        const permission = new Subject<boolean>();
+        clipboardPermission.mockReturnValueOnce(firstValueFrom(permission));
+        const suggested = vi.fn();
+        fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
+        const checkbox = clipboardCheckbox();
+        checkbox.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(checkbox.checked).toBe(true);
+        expect(clipboardRead).toHaveBeenCalledOnce();
+
+        expect(onClipboardReturn).toHaveBeenCalledOnce();
+        onClipboardReturn.mock.calls[0][0]();
+        expect(clipboardPermission).toHaveBeenCalledOnce();
+        checkbox.click();
+        fixture.detectChanges();
+        expect(checkbox.checked).toBe(false);
+        expect(storePreference).toHaveBeenLastCalledWith('local', 'recipe.clipboardSuggestions', 'false');
+        permission.next(true);
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(clipboardRead).toHaveBeenCalledOnce();
+        expect(suggested).not.toHaveBeenCalled();
+
+        clipboardRead.mockResolvedValueOnce(reportedUrl);
+        recipeAction('RECIPE_MANAGE.IMPORT.PASTE_LINK').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(suggested).toHaveBeenCalledExactlyOnceWith(reportedUrl);
+    });
+
+    it('does not show a clipboard warning when a pending suggestion read is rejected after opting out', async () => {
+        const pendingRead = new Subject<string>();
+        clipboardRead.mockReturnValueOnce(firstValueFrom(pendingRead));
+        const checkbox = clipboardCheckbox();
+        checkbox.click();
+        fixture.detectChanges();
+        expect(clipboardRead).toHaveBeenCalledOnce();
+
+        checkbox.click();
+        fixture.detectChanges();
+        pendingRead.error(new DOMException('Permission denied', 'NotAllowedError'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(checkbox.checked).toBe(false);
+        expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_UNAVAILABLE');
+    });
+});
+
+describe('RecipeRecognitionComponent manual paste and review', () => {
     it('reacts to clipboard permission denial and allows a later explicit paste', async () => {
         const suggested = vi.fn();
         fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
@@ -276,6 +329,15 @@ function setInputs(sourceUrl: string, text = ''): void {
 
 function videoCheckbox(): HTMLInputElement {
     return inputElement('fd-recipe-video-input input[type="checkbox"]');
+}
+
+function clipboardCheckbox(): HTMLInputElement {
+    const labels = (fixture.nativeElement as HTMLElement).querySelectorAll('label');
+    const label = Array.from(labels).find(candidate => candidate.textContent.includes('RECIPE_MANAGE.IMPORT.CLIPBOARD_LABEL'));
+    if (!(label?.control instanceof HTMLInputElement)) {
+        throw new Error('Expected the clipboard suggestions checkbox');
+    }
+    return label.control;
 }
 
 function setVideoEnabled(enabled: boolean): void {

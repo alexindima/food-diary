@@ -45,8 +45,12 @@ export function buildSymptomClearCategories(
 export function buildFertilitySignalPayload(formValue: CycleDayFormModel): FertilitySignalPayload | null {
     const basalBodyTemperatureCelsius = toNullableCycleNumber(formValue.basalBodyTemperatureCelsius);
     const cervicalFluid = toOptionalCycleText(formValue.cervicalFluid);
+    const ovulationTestResult = formValue.ovulationTestResult ?? OVULATION_TEST_RESULT_UNKNOWN;
     const hasSignal =
-        basalBodyTemperatureCelsius !== null || formValue.ovulationTestResult !== null || cervicalFluid !== undefined || formValue.hadSex;
+        basalBodyTemperatureCelsius !== null ||
+        ovulationTestResult !== OVULATION_TEST_RESULT_UNKNOWN ||
+        cervicalFluid !== undefined ||
+        formValue.hadSex;
 
     if (!hasSignal) {
         return null;
@@ -54,7 +58,7 @@ export function buildFertilitySignalPayload(formValue: CycleDayFormModel): Ferti
 
     return {
         basalBodyTemperatureCelsius,
-        ovulationTestResult: formValue.ovulationTestResult ?? OVULATION_TEST_RESULT_UNKNOWN,
+        ovulationTestResult,
         cervicalFluid,
         hadSex: formValue.hadSex,
         notes: undefined,

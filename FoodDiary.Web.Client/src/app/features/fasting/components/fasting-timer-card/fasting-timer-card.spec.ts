@@ -31,6 +31,7 @@ let localizationLanguage: string;
 describe('FastingTimerCardComponent', () => {
     registerLayoutTests();
     registerContentTests();
+    registerSummaryStateTests();
     registerProgressTests();
     registerTimerDisplayTests();
     registerAccessibilityTests();
@@ -146,6 +147,53 @@ function registerContentTests(): void {
             const separator = requireElement(fixture, '.fasting-timer-card__summary-protocol-separator');
             expect(separator.textContent.trim()).toBe('\u00B7');
             expect(host(fixture).textContent).not.toContain('\u00C2');
+        });
+    });
+}
+
+function registerSummaryStateTests(): void {
+    describe('summary state', () => {
+        beforeEach(() => {
+            localizationLanguage = 'ru';
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2026-04-12T06:00:00Z'));
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('shows the completed fast and final stage in the dashboard summary', async () => {
+            const fixture = await createHostFixtureWithoutFacadeAsync();
+            fixture.componentInstance['session'].set(
+                createExtendedSession({
+                    startedAtUtc: utcInstant(getStartedAtUtc(DEFAULT_EXTENDED_HOURS)),
+                    endedAtUtc: utcInstant('2026-04-12T06:00:00Z'),
+                    isCompleted: true,
+                    status: 'Completed',
+                }),
+            );
+            fixture.detectChanges();
+
+            expect(requireElement(fixture, '.fasting-timer-card__percent').textContent.trim()).toBe('100%');
+            expect(requireElement(fixture, '.fasting-timer-card__summary-completed').textContent).toContain('FASTING.COMPLETED');
+            expect(requireElement(fixture, '.fasting-timer-card__summary-stage').textContent).toContain('FASTING.STAGES.');
+            expect(host(fixture).querySelector('.fasting-timer-card__summary-next')).toBeNull();
+        });
+
+        it('shows the eating-window description and progress after the intermittent fast has elapsed', async () => {
+            const fixture = await createHostFixtureWithoutFacadeAsync();
+            const hoursIntoCycle = DEFAULT_FASTING_HOURS + 2;
+            fixture.componentInstance['session'].set(createSession({ startedAtUtc: utcInstant(getStartedAtUtc(hoursIntoCycle)) }));
+            fixture.detectChanges();
+
+            expect(requireElement(fixture, '.fasting-timer-card__percent').textContent.trim()).toBe('25%');
+            expect(requireElement(fixture, '.fasting-timer-card__summary-meta').textContent).toContain('FASTING.NEXT_FAST');
+            expect(requireElement(fixture, '.fasting-timer-card__summary-description').textContent).toContain(
+                'FASTING.EATING_WINDOW_DESCRIPTION',
+            );
+            expect(host(fixture).querySelector('.fasting-timer-card__summary-stage')).toBeNull();
+            expect(host(fixture).querySelector('.fasting-timer-card__summary-next')).toBeNull();
         });
     });
 }

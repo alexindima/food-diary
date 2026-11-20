@@ -252,20 +252,26 @@ function deviceRemoveButton(profile: ParentNode, deviceName: string): HTMLButton
 }
 
 describe('Profile notification settings', () => {
-    it('disables other changes while saving a category and applies the server state', async () => {
+    it('rejects competing clicks before the switches render as disabled and applies the server state', async () => {
         const { fixture, account, toast } = setup();
         const save = new Subject<NotificationPreferences>();
         account.updateNotificationPreferences.mockReturnValueOnce(save);
         const fasting = categorySwitch(fixture, 'FASTING');
         const social = categorySwitch(fixture, 'SOCIAL');
+        const accountSwitch = notificationButton(fixture, '[role="switch"][aria-label="USER_MANAGE.PUSH_NOTIFICATIONS"]');
 
         fasting.click();
+        expect(fasting.disabled || social.disabled || accountSwitch.disabled).toBe(false);
+        fasting.click();
+        social.click();
+        accountSwitch.click();
+        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith({ fastingPushNotificationsEnabled: false });
+
         fixture.detectChanges();
         expect(fasting.disabled).toBe(true);
         expect(social.disabled).toBe(true);
+        expect(accountSwitch.disabled).toBe(true);
         expect(fasting.getAttribute('aria-checked')).toBe('true');
-        social.click();
-        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith({ fastingPushNotificationsEnabled: false });
 
         save.next({ ...initialPreferences, fastingPushNotificationsEnabled: false });
         await fixture.whenStable();
@@ -276,34 +282,55 @@ describe('Profile notification settings', () => {
         expect(toast.info).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_FASTING_DISABLED_TOAST');
     });
 
-    it('keeps the saved social switch on failure, then clears the visible error after retry', async () => {
+    it.each([
+        { category: 'FASTING', key: 'fastingPushNotificationsEnabled' },
+        { category: 'SOCIAL', key: 'socialPushNotificationsEnabled' },
+    ] as const)('keeps the saved $category switch on failure, then clears the visible error after retry', async ({ category, key }) => {
         const { fixture, account, toast } = setup();
         const failed = new Subject<NotificationPreferences>();
-        account.updateNotificationPreferences
-            .mockReturnValueOnce(failed)
-            .mockReturnValueOnce(of({ ...initialPreferences, socialPushNotificationsEnabled: false }));
-        const social = categorySwitch(fixture, 'SOCIAL');
+        const disabled = { [key]: false };
+        account.updateNotificationPreferences.mockReturnValueOnce(failed).mockReturnValueOnce(of({ ...initialPreferences, ...disabled }));
+        const toggle = categorySwitch(fixture, category);
 
-        social.click();
+        toggle.click();
         failed.error(new Error('Connection lost'));
         await fixture.whenStable();
         fixture.detectChanges();
-        expect(social.getAttribute('aria-checked')).toBe('true');
+        expect(toggle.getAttribute('aria-checked')).toBe('true');
         expect(element(fixture, '.user-manage__form > .user-manage__error [role="alert"]').textContent).toContain(
             'USER_MANAGE.UPDATE_ERROR',
         );
         expect(toast.info).not.toHaveBeenCalled();
 
-        social.click();
+        toggle.click();
         await fixture.whenStable();
         fixture.detectChanges();
-        expect(social.getAttribute('aria-checked')).toBe('false');
+        expect(toggle.getAttribute('aria-checked')).toBe('false');
         expect((fixture.nativeElement as HTMLElement).querySelector('.user-manage__form > .user-manage__error')).toBeNull();
-        expect(account.updateNotificationPreferences.mock.calls).toEqual([
-            [{ socialPushNotificationsEnabled: false }],
-            [{ socialPushNotificationsEnabled: false }],
-        ]);
-        expect(toast.info).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_SOCIAL_DISABLED_TOAST');
+        expect(account.updateNotificationPreferences.mock.calls).toEqual([[disabled], [disabled]]);
+        expect(toast.info).toHaveBeenCalledExactlyOnceWith(`USER_MANAGE.NOTIFICATIONS_${category}_DISABLED_TOAST`);
+    });
+});
+
+describe('Profile notification category reactivation', () => {
+    it.each([
+        { category: 'FASTING', otherCategory: 'SOCIAL', field: 'fastingPushNotificationsEnabled' },
+        { category: 'SOCIAL', otherCategory: 'FASTING', field: 'socialPushNotificationsEnabled' },
+    ] as const)('enables only $category after the account confirms the change', async ({ category, otherCategory, field }) => {
+        const disabled = { ...initialPreferences, fastingPushNotificationsEnabled: false, socialPushNotificationsEnabled: false };
+        const { fixture, account, toast } = setup(disabled);
+        account.updateNotificationPreferences.mockReturnValueOnce(of({ ...disabled, [field]: true }));
+        const selected = categorySwitch(fixture, category);
+        expect(selected.getAttribute('aria-checked')).toBe('false');
+
+        selected.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith({ [field]: true });
+        expect(selected.getAttribute('aria-checked')).toBe('true');
+        expect(categorySwitch(fixture, otherCategory).getAttribute('aria-checked')).toBe('false');
+        expect(toast.info).toHaveBeenCalledExactlyOnceWith(`USER_MANAGE.NOTIFICATIONS_${category}_ENABLED_TOAST`);
     });
 });
 
@@ -324,12 +351,14 @@ describe('Profile connected notification devices', () => {
         );
 
         remoteButton.click();
+        expect(localButton.disabled).toBe(false);
+        localButton.click();
+        expect(browser.push.removeSubscriptionAsync).not.toHaveBeenCalled();
+
         fixture.detectChanges();
         expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(remoteDevice.endpoint);
         expect(remoteButton.disabled).toBe(true);
         expect(localButton.disabled).toBe(true);
-        localButton.click();
-        expect(browser.push.removeSubscriptionAsync).not.toHaveBeenCalled();
 
         pendingRemoval.next();
         await vi.waitFor(() => {
@@ -640,6 +669,32 @@ describe('Profile current-device enrollment', () => {
         expect(account.updateNotificationPreferences).not.toHaveBeenCalled();
         expect(toast.success).toHaveBeenCalledExactlyOnceWith('DASHBOARD.ACTIONS.PUSH_ENABLED');
         expect((fixture.nativeElement as HTMLElement).querySelector(enableSelector)).toBeNull();
+    });
+
+    it('shows the blocked hint if system permission is revoked while current-device enrollment is pending', async () => {
+        const { fixture, account, browser, toast } = setup();
+        browser.push.isSubscribed.set(false);
+        browser.push.currentSubscriptionEndpoint.set(null);
+        browser.capability.requestPermissionAsync.mockResolvedValueOnce('granted');
+        const enrolling = new Subject<'unavailable'>();
+        browser.push.ensureSubscriptionAsync.mockReturnValueOnce(firstValueFrom(enrolling));
+        fixture.detectChanges();
+
+        const enableSelector = '.user-manage__notifications-enable-device button';
+        notificationButton(fixture, enableSelector).click();
+        await vi.waitFor(() => {
+            expect(browser.push.ensureSubscriptionAsync).toHaveBeenCalledOnce();
+        });
+        browser.capability.getPermission.mockReturnValue('denied');
+        enrolling.next('unavailable');
+        enrolling.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(element(fixture, 'fd-user-manage-notifications-card').textContent).toContain('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT');
+        expect(toast.info).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_BLOCKED_HINT');
+        expect(account.updateNotificationPreferences).not.toHaveBeenCalled();
+        expect(account.getWebPushSubscriptions).not.toHaveBeenCalled();
     });
 });
 

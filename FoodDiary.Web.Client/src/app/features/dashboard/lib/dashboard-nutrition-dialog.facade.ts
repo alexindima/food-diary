@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { isNutritionMetric, type NutritionDetailsAction, type NutritionDetailsData } from '../models/nutrition-details.types';
@@ -28,20 +28,21 @@ export class DashboardNutritionDialogFacade {
             if (this.destroyRef.destroyed) {
                 return;
             }
-            const action = await firstValueFrom(
-                this.dialogs
-                    .open<InstanceType<typeof NutritionDetailsDialogComponent>, NutritionDetailsData, NutritionDetailsAction>(
-                        NutritionDetailsDialogComponent,
-                        {
-                            preset: 'detail',
-                            size: 'md',
-                            data: { date, metric },
-                        },
-                    )
-                    .afterClosed()
-                    .pipe(takeUntilDestroyed(this.destroyRef)),
-                { defaultValue: undefined },
-            );
+            const dialog = this.dialogs.open<
+                InstanceType<typeof NutritionDetailsDialogComponent>,
+                NutritionDetailsData,
+                NutritionDetailsAction
+            >(NutritionDetailsDialogComponent, {
+                preset: 'detail',
+                size: 'md',
+                data: { date, metric },
+            });
+            const unregisterClose = this.destroyRef.onDestroy(() => {
+                dialog.close();
+            });
+            const action = await firstValueFrom(dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose)), {
+                defaultValue: undefined,
+            });
             if (action !== undefined) {
                 await this.handleActionAsync(action, date);
             }

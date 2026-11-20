@@ -1261,6 +1261,14 @@
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/image-preview-dialog/fd-ui-image-preview-dialog.spec.ts"
     },
     {
+      "class": "FdUiSatietyScaleComponent",
+      "selector": "fd-ui-satiety-scale",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.html",
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.spec.ts"
+    },
+    {
       "class": "FormValidationExample",
       "selector": "fd-form-validation-example",
       "feature": "fd-ui-kit",
@@ -1363,14 +1371,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.spec.ts"
-    },
-    {
-      "class": "MealSatietyLevelDialogComponent",
-      "selector": "fd-meal-satiety-level-dialog",
-      "feature": "meals",
-      "path": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.spec.ts"
     },
     {
       "class": "PremiumCancelDialogComponent",
@@ -4990,12 +4990,17 @@
           "name": "bodyTargets",
           "type": "Record<BodyTargetKey, number>",
           "required": true
+        },
+        {
+          "name": "invalidBodyTargets",
+          "type": "Record<BodyTargetKey, boolean>",
+          "required": true
         }
       ],
       "outputs": [
         {
           "name": "bodyTargetChange",
-          "type": "{ key: BodyTargetKey; value: number }"
+          "type": "{ key: BodyTargetKey; value: number | null }"
         },
         {
           "name": "waterChange",

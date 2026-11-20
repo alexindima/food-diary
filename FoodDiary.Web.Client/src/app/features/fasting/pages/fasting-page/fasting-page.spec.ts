@@ -195,6 +195,39 @@ describe('FastingPageComponent rendered dialogs', () => {
     });
 });
 
+describe('FastingPageComponent rendered legacy check-in', () => {
+    beforeEach(createComponentAsync);
+
+    it('shows recorded energy and notes without inventing missing ratings', async () => {
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { FASTING: { CHECK_IN: { SUMMARY: '{{hunger}} / {{energy}} / {{mood}}' } } });
+        await firstValueFrom(translate.use('en'));
+        facade.history.set([
+            {
+                ...createHistorySession('legacy-partial-check-in', 0),
+                status: 'Completed',
+                endedAtUtc: utcInstant('2026-04-12T19:00:00Z'),
+                checkInAtUtc: utcInstant('2026-04-12T18:00:00Z'),
+                energyLevel: CHECK_IN_ENERGY_LEVEL,
+                checkInNotes: 'Recorded during the fast',
+            },
+        ]);
+        fixture.detectChanges();
+
+        pageHost().querySelector<HTMLButtonElement>('button[aria-label="FASTING.REDESIGN.OPEN_SESSION_DETAILS"]')?.click();
+        dialogData = (dialogService.open.mock.calls[0][1] as { data: FastingSessionDetailsDialogData }).data;
+        const dialog = TestBed.createComponent(FastingSessionDetailsDialogComponent);
+        dialog.detectChanges();
+
+        const host = dialog.nativeElement as HTMLElement;
+        const entries = host.querySelectorAll('fd-fasting-history-check-in-entry');
+        expect(entries).toHaveLength(1);
+        expect(entries[0].textContent).toContain('— / ⚡ / —');
+        expect(entries[0].textContent).toContain('Recorded during the fast');
+        expect(host.querySelector('fd-fasting-check-in-chart')).toBeNull();
+    });
+});
+
 describe('FastingPageComponent rendered history and alerts', () => {
     beforeEach(createComponentAsync);
 

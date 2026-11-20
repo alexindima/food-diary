@@ -234,6 +234,10 @@ describe('LessonFacade catalogue', () => {
             pageSize: 18,
         });
     });
+});
+
+describe('LessonFacade detail and reading progress', () => {
+    beforeEach(setupFacade);
 
     it('loads selected lesson detail and returns null for empty selection', async () => {
         expect(facade.selectedLesson()).toBeNull();
@@ -243,9 +247,17 @@ describe('LessonFacade catalogue', () => {
 
         expect(lessonService.getById).toHaveBeenCalledWith('lesson-1');
         expect(facade.selectedLesson()).toEqual(createDetail());
+
+        facade.loadLesson(null);
+        await waitForAsync(() => !facade.isDetailLoading());
+        expect(facade.selectedLesson()).toBeNull();
+        expect(lessonService.getById).toHaveBeenCalledExactlyOnceWith('lesson-1');
     });
 
     it('marks loaded lessons and selected lesson as read after service succeeds', async () => {
+        const unrelated = { ...createSummary(), id: entityId<'lesson'>('lesson-2'), title: 'Choosing a snack' };
+        const items = [createSummary(), unrelated];
+        lessonService.getAll.mockReturnValueOnce(of({ ...createPage(), items, totalCount: items.length, totalLessonCount: items.length }));
         facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.selectedLesson() !== null);
 
@@ -254,7 +266,7 @@ describe('LessonFacade catalogue', () => {
 
         expect(lessonService.markRead).toHaveBeenCalledWith('lesson-1');
         expect(facade.selectedLesson()?.isRead).toBe(true);
-        expect(facade.lessons().at(0)?.isRead).toBe(true);
+        expect(facade.lessons()).toEqual([{ ...createSummary(), isRead: true }, unrelated]);
     });
 });
 

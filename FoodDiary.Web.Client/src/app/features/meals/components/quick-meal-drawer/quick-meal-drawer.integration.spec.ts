@@ -11,6 +11,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
 import type { Meal } from '../../../../shared/models/meal.data';
+import { MeasurementUnit, type Product, ProductVisibility } from '../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
@@ -34,6 +35,27 @@ const RECIPE: Recipe = {
     isNutritionAutoCalculated: true,
     steps: [],
 };
+const PRODUCT_PORTION_ML = 125;
+const EDITED_PRODUCT_ML = 175;
+const PRODUCT: Product = {
+    id: entityId<'product'>('oat-milk'),
+    name: 'Oat milk',
+    baseUnit: MeasurementUnit.ML,
+    baseAmount: 100,
+    defaultPortionAmount: PRODUCT_PORTION_ML,
+    caloriesPerBase: 40,
+    proteinsPerBase: 1,
+    fatsPerBase: 2,
+    carbsPerBase: 5,
+    fiberPerBase: 0,
+    alcoholPerBase: 0,
+    usageCount: 0,
+    visibility: ProductVisibility.Private,
+    createdAt: new Date('2026-05-14T08:00:00Z'),
+    isOwnedByCurrentUser: true,
+    qualityScore: 80,
+    qualityGrade: 'green',
+};
 const CREATED: Meal = {
     id: entityId<'meal'>('saved-quick-meal'),
     date: utcInstant('2026-05-14T08:00:00Z'),
@@ -49,6 +71,45 @@ const CREATED: Meal = {
     items: [],
     aiSessions: [],
 };
+
+describe('Quick meal product quantities in a mixed draft', () => {
+    it('edits a product in its units while retaining the recipe servings in the same draft', async () => {
+        const { fixture, lookupRecipe, createMeal } = await renderDrawerAsync();
+        TestBed.inject(QuickMealService).addProduct(PRODUCT);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const productEdit = requiredElement(
+            host.querySelector<HTMLButtonElement>(`button[aria-label="Edit ${PRODUCT.name}"]`),
+            'the product edit button',
+        );
+        const productRow = requiredElement(productEdit.closest('.quick-meal__item'), 'the product draft row');
+        expect(productRow.querySelector('.quick-meal__name')?.textContent).toBe(PRODUCT.name);
+        expect(productRow.querySelector('img')?.getAttribute('src')).toBe('assets/images/stubs/receipt.png');
+        expect(productRow.querySelector('.quick-meal__meta')?.textContent).toContain(`${PRODUCT_PORTION_ML} GENERAL.UNITS.ML`);
+
+        productEdit.click();
+        const dialog = await visibleEditorAsync();
+        expect(amountInput(dialog).valueAsNumber).toBe(PRODUCT_PORTION_ML);
+        setAmount(dialog, EDITED_PRODUCT_ML);
+        editorAction(dialog, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.textContent).toContain(`${EDITED_PRODUCT_ML} GENERAL.UNITS.ML`);
+        });
+
+        draftSaveButton(host).click();
+        expect(lookupRecipe).not.toHaveBeenCalled();
+        expect(createMeal).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                items: [
+                    { recipeId: RECIPE.id, productId: null, amount: INITIAL_SERVINGS },
+                    { productId: PRODUCT.id, recipeId: null, amount: EDITED_PRODUCT_ML },
+                ],
+            }),
+            expect.any(String),
+        );
+    });
+});
 
 describe('Quick meal quantity editing with the real dialog', () => {
     it('waits for recipe mass, edits in grams and only stores servings when saving the meal', async () => {
@@ -162,6 +223,40 @@ describe('Quick meal draft actions during a pending save', () => {
             expect(host.querySelector('[role="region"]')).toBeNull();
         }
         expect(createMeal).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Quick meal inline hunger and satiety', () => {
+    it('clears a hunger choice without dropping the independent satiety answer when saving', async () => {
+        const satiety = 4;
+        const { fixture, createMeal } = await renderDrawerAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        openMealDetails(host);
+        const fields = requiredElement(host.querySelector('fd-meal-satiety-fields'), 'the inline meal details controls');
+        const hungerOption = requiredElement(
+            fields.querySelector<HTMLButtonElement>('button[role="radio"][aria-label^="HUNGER_BEFORE_SCALE.LEVEL_2.TITLE."]'),
+            'the hunger option',
+        );
+        const satietyOption = requiredElement(
+            fields.querySelector<HTMLButtonElement>('button[role="radio"][aria-label^="SATIETY_AFTER_SCALE.LEVEL_4.TITLE."]'),
+            'the satiety option',
+        );
+        hungerOption.click();
+        satietyOption.click();
+        fixture.detectChanges();
+        expect(hungerOption.getAttribute('aria-checked')).toBe('true');
+        expect(satietyOption.getAttribute('aria-checked')).toBe('true');
+
+        editorAction(host, 'MEAL_DETAILS.CLEAR_HUNGER').click();
+        fixture.detectChanges();
+        expect(hungerOption.getAttribute('aria-checked')).toBe('false');
+        expect(satietyOption.getAttribute('aria-checked')).toBe('true');
+
+        draftSaveButton(host).click();
+        expect(createMeal).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ preMealSatietyLevel: null, postMealSatietyLevel: satiety }),
+            expect.any(String),
+        );
     });
 });
 

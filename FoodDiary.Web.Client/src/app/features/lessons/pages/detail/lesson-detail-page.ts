@@ -49,9 +49,7 @@ export class LessonDetailPageComponent {
                 takeUntilDestroyed(),
             )
             .subscribe(id => {
-                if (id !== null && id.trim().length > 0) {
-                    this.facade.loadLesson(entityId<'lesson'>(id));
-                }
+                this.facade.loadLesson(id === null || id.trim().length === 0 ? null : entityId<'lesson'>(id));
             });
     }
 

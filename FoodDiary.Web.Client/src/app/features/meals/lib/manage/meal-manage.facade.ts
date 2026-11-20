@@ -1,8 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { type DestroyRef, inject, Service } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, forkJoin, map, type Observable, of } from 'rxjs';
+import { finalize, firstValueFrom, forkJoin, map, type Observable, of } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -100,28 +101,41 @@ export class MealManageFacade {
         await this.navigationService.navigateToMealListAsync();
     }
 
-    public async openEditAiPhotoSessionDialogAsync(session: MealAiSessionManageDto): Promise<MealAiSessionManageDto | null> {
+    public async openEditAiPhotoSessionDialogAsync(
+        session: MealAiSessionManageDto,
+        owner: DestroyRef,
+        reviewScope: AbortSignal,
+    ): Promise<MealAiSessionManageDto | null> {
         const { MealPhotoRecognitionDialogComponent } =
             await import('../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog');
-        const selection: ImageSelection | null =
-            session.imageUrl !== null && session.imageUrl !== undefined && session.imageUrl.length > 0
-                ? imageSelection(session.imageUrl ?? null, session.imageAssetId ?? null)
-                : null;
+        if (owner.destroyed || reviewScope.aborted) {
+            return null;
+        }
 
-        return (
-            (await firstValueFrom(
-                this.fdDialogService
-                    .open<
-                        MealPhotoRecognitionDialogComponent,
-                        { initialSelection: ImageSelection | null; initialSession: MealAiSessionManageDto | null; mode: 'edit' },
-                        MealAiSessionManageDto | null
-                    >(MealPhotoRecognitionDialogComponent, {
-                        size: 'lg',
-                        data: { initialSelection: selection, initialSession: session, mode: 'edit' },
-                    })
-                    .afterClosed(),
-            )) ?? null
-        );
+        const url = session.imageUrl;
+        const selection: ImageSelection | null =
+            url !== null && url !== undefined && url.length > 0 ? imageSelection(url, session.imageAssetId ?? null) : null;
+        const dialog = this.fdDialogService.open<
+            MealPhotoRecognitionDialogComponent,
+            { initialSelection: ImageSelection | null; initialSession: MealAiSessionManageDto | null; mode: 'edit' },
+            MealAiSessionManageDto | null
+        >(MealPhotoRecognitionDialogComponent, {
+            size: 'lg',
+            data: { initialSelection: selection, initialSession: session, mode: 'edit' },
+        });
+        const closeDialog = (): void => {
+            dialog.close(null);
+        };
+        const unregisterClose = owner.onDestroy(closeDialog);
+        reviewScope.addEventListener('abort', closeDialog, { once: true });
+        const cleanup = (): void => {
+            unregisterClose();
+            reviewScope.removeEventListener('abort', closeDialog);
+        };
+        const result = await firstValueFrom(dialog.afterClosed().pipe(takeUntilDestroyed(owner), finalize(cleanup)), {
+            defaultValue: null,
+        });
+        return result ?? null;
     }
 
     public addAiSession(sessions: MealAiSessionManageDto[], session: MealAiSessionManageDto): MealAiSessionManageDto[] {

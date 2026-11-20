@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/c
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -489,5 +489,100 @@ describe('recognition hub lifecycle', () => {
         http.expectOne(`${url}/next-job`);
         expect(hub.start).toHaveBeenCalledTimes(2);
         next.unsubscribe();
+    });
+});
+
+describe('recognition request recovery across browser and API changes', () => {
+    it('stops polling a deleted task and opens an available saved result without resubmitting photos', async () => {
+        const missingId = entityId<'food-recognition'>('e65dea27-c63b-419b-927a-519a7ebb58cb');
+        const missingUrl = `${url}/${missingId}`;
+        const next = vi.fn<(value: FoodVisionResponse) => void>();
+        const error = vi.fn<(failure: unknown) => void>();
+        const missing = service.resume(missingId).subscribe({ next, error });
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne({ method: 'GET', url: missingUrl }).flush(
+            { error: 'Ai.RecognitionNotFound' },
+            { status: HttpStatusCode.NotFound, statusText: 'Not Found' },
+        );
+        await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS);
+
+        expect(error).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ status: HttpStatusCode.NotFound, error: { error: 'Ai.RecognitionNotFound' } }),
+        );
+        expect(missing.closed).toBe(true);
+        expect(next).not.toHaveBeenCalled();
+        http.expectNone(missingUrl);
+
+        const availableId = entityId<'food-recognition'>('fa676f6f-16d1-4a21-8181-4b64782ee41c');
+        service.resume(availableId).subscribe({ next, error });
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne({ method: 'GET', url: `${url}/${availableId}` }).flush(job(availableId, 'Succeeded'));
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(next).toHaveBeenCalledOnce();
+        expect(next.mock.calls[0][0].recognition?.id).toBe(availableId);
+        expect(error).toHaveBeenCalledOnce();
+        http.expectNone({ method: 'POST', url });
+    });
+
+    it('clears the durable single-label request when the server returns an empty extra-photo list', async () => {
+        const digest = vi.spyOn(crypto.subtle, 'digest');
+        const productRequest = { ...request, isProductLabel: true };
+        const result = vi.fn<(value: FoodVisionResponse) => void>();
+        service.start(productRequest).subscribe(result);
+        await vi.advanceTimersByTimeAsync(0);
+        const submitted = http.expectOne({ method: 'POST', url });
+        const id = (submitted.request.body as { id: string }).id;
+        expect(submitted.request.body).toEqual({ id, ...productRequest });
+        expect([...storage.values()]).toEqual([id]);
+
+        const saved = { ...job(id, 'Succeeded'), isProductLabel: true, additionalImages: [] } satisfies FoodRecognitionJobHttpResponse;
+        submitted.flush(saved);
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne({ method: 'GET', url: `${url}/${id}` }).flush(saved);
+        await vi.advanceTimersByTimeAsync(0);
+
+        const fingerprints = digest.mock.calls.map(([, bytes]) => new TextDecoder().decode(bytes));
+        const normalized = JSON.stringify({ ...request, description: null, isProductLabel: true, additionalImageAssetIds: [] });
+        expect(fingerprints).toEqual([normalized, normalized]);
+        expect(result).toHaveBeenCalledOnce();
+        expect(storage.size).toBe(0);
+    });
+});
+
+describe('recognition hub ownership during connection startup', () => {
+    it('stops a hub that finishes connecting after the active account has changed', async () => {
+        const connected = new Subject<void>();
+        const connectionStart = firstValueFrom(connected);
+        hub.start.mockReturnValueOnce(connectionStart).mockResolvedValue(undefined);
+        const original = entityId<'food-recognition'>('before-account-change');
+        const originalResult = vi.fn<(value: FoodVisionResponse) => void>();
+        const originalError = vi.fn<(failure: unknown) => void>();
+        service.resume(original).subscribe({ next: originalResult, error: originalError });
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/${original}`).flush(job(original));
+        expect(connected.observed).toBe(true);
+
+        connected.next();
+        user.set('user-2');
+        await connectionStart;
+        expect(hub.stop).toHaveBeenCalledOnce();
+
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(originalError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
+        expect(originalResult).not.toHaveBeenCalled();
+        http.expectNone(`${url}/${original}`);
+
+        const active = entityId<'food-recognition'>('after-account-change');
+        const activeResult = vi.fn<(value: FoodVisionResponse) => void>();
+        service.resume(active).subscribe(activeResult);
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/${active}`).flush(job(active, 'Succeeded'));
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(hub.start).toHaveBeenCalledTimes(2);
+        expect(activeResult).toHaveBeenCalledOnce();
+        expect(activeResult.mock.calls[0][0].recognition?.id).toBe(active);
     });
 });

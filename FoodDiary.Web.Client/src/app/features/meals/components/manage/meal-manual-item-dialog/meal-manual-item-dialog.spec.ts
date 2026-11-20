@@ -37,6 +37,7 @@ class ItemSelectStub {
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 125;
 const RECIPE_SERVING_WEIGHT = 80;
 const RECIPE_FALLBACK_SERVINGS = 1.5;
+const LEGACY_AMOUNT = 75;
 
 type DialogSetup = {
     component: MealManualItemDialogComponent;
@@ -292,10 +293,11 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
         const { component, fixture } = await setupComponentAsync();
         const weight = new Subject<ServingMassResult>();
         vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingMass').mockReturnValue(weight);
-        component['onRecipeSelected'](createRecipe());
+        embeddedPicker(fixture).recipeSelected.emit(createRecipe());
+        fixture.detectChanges();
         if (action === 'product') {
-            component['onSourceTypeChange']('Product');
-            component['onProductSelected'](createProduct());
+            reopenEmbeddedPicker(fixture).productSelected.emit(createProduct());
+            fixture.detectChanges();
         } else if (action === 'amount') {
             component['amount']().value.set(PRODUCT_DEFAULT_PORTION_AMOUNT);
         } else {
@@ -342,24 +344,16 @@ describe('MealManualItemDialogComponent validation and selection boundaries', ()
         expect(component['amountError']()).not.toBeNull();
         expect(dialogRef.close).not.toHaveBeenCalled();
     });
-    it('preserves the selection when choosing the same type and clears it on a type change', async () => {
+    it('keeps the saved portion while reopening the picker and cancels without applying another item', async () => {
         const product = createProduct();
-        const { component } = await setupComponentAsync({ product, amount: PRODUCT_DEFAULT_PORTION_AMOUNT });
-        component['onSourceTypeChange']('Product');
-        expect(component['product']()).toBe(product);
-        component['onSourceTypeChange']('Recipe');
-        expect(component['product']()).toBeNull();
-        expect(component['amountModel']()).toBeNull();
-        expect(component['sourceError']()).toBeNull();
-        expect(component['sourceActionLabelKey']()).toBe('MEAL_MANAGE.MANUAL_ITEM_CHOOSE_RECIPE');
-        expect(component['sourceTypeLabelKey']()).toBe('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe');
-    });
-    it('keeps the current item when selection is cancelled', async () => {
-        const product = createProduct();
-        const { component } = await setupComponentAsync({ product, amount: PRODUCT_DEFAULT_PORTION_AMOUNT });
-        component['showItemPicker']();
-        expect(component['product']()).toBe(product);
-        expect(component['amountModel']()).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
+        const { fixture, dialogRef } = await setupComponentAsync({ product, amount: PRODUCT_DEFAULT_PORTION_AMOUNT });
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-manual-item-dialog__source-name')?.textContent).toBe(product.name);
+        expect(reopenEmbeddedPicker(fixture).embedded()).toBe(true);
+        expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.valueAsNumber).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
+
+        dialogAction(host, 'PRODUCT_MANAGE.CANCEL_BUTTON').click();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(null);
     });
     it.each([null, 0, -1])('keeps the fallback amount when serving weight is %s', async weight => {
         const { component } = await setupComponentAsync();
@@ -370,6 +364,29 @@ describe('MealManualItemDialogComponent validation and selection boundaries', ()
 });
 
 describe('Meal item picker legacy portions', () => {
+    it.each([
+        { source: { product: { ...createProduct(), name: '' } }, label: 'MEAL_MANAGE.MANUAL_ITEM_CHOOSE_PRODUCT' },
+        { source: { recipe: { ...createRecipe(), name: '' } }, label: 'MEAL_MANAGE.MANUAL_ITEM_CHOOSE_RECIPE' },
+    ])('offers $label for a saved source whose name is unavailable, then applies a replacement', async ({ source, label }) => {
+        const { fixture, dialogRef } = await setupComponentAsync({ ...source, amount: LEGACY_AMOUNT });
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-manual-item-dialog__source-placeholder')?.textContent.trim()).toBe(label);
+        expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.valueAsNumber).toBe(LEGACY_AMOUNT);
+
+        const replacement = { ...createProduct(), id: entityId<'product'>('replacement-product'), name: 'Pear' };
+        reopenEmbeddedPicker(fixture).productSelected.emit(replacement);
+        fixture.detectChanges();
+        expect(host.querySelector('.meal-manual-item-dialog__source-name')?.textContent).toBe(replacement.name);
+        expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.valueAsNumber).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
+        dialogAction(host, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE').click();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({
+            sourceType: MealSourceType.Product,
+            product: replacement,
+            recipe: null,
+            amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
+        });
+    });
+
     it.each([
         [100, 100],
         [0, 1],
@@ -398,3 +415,28 @@ describe('Meal item picker legacy portions', () => {
         });
     });
 });
+
+function embeddedPicker(fixture: ComponentFixture<MealManualItemDialogComponent>): ItemSelectStub {
+    return fixture.debugElement.query(By.directive(ItemSelectStub)).injector.get(ItemSelectStub);
+}
+
+function reopenEmbeddedPicker(fixture: ComponentFixture<MealManualItemDialogComponent>): ItemSelectStub {
+    const host = fixture.nativeElement as HTMLElement;
+    const source = host.querySelector<HTMLButtonElement>('.meal-manual-item-dialog__source-selector');
+    if (source === null) {
+        throw new Error('Expected the native source picker button');
+    }
+    source.click();
+    fixture.detectChanges();
+    return embeddedPicker(fixture);
+}
+
+function dialogAction(host: HTMLElement, label: string): HTMLButtonElement {
+    const button = Array.from(host.querySelectorAll('button')).find(
+        control => control.querySelector('.fd-ui-button__label')?.textContent.trim() === label,
+    );
+    if (button === undefined) {
+        throw new Error(`Expected the native ${label} action`);
+    }
+    return button;
+}

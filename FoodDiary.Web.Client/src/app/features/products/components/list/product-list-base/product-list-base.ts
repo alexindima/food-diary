@@ -64,9 +64,7 @@ export class ProductListBaseComponent {
     protected readonly productData = this.productListFacade.productData;
     protected readonly favorites = this.productListFacade.favorites;
     protected readonly favoriteTotalCount = this.productListFacade.favoriteTotalCount;
-    protected readonly isFavoritesOpen = this.productListFacade.isFavoritesOpen;
     protected readonly favoriteLoadingIds = this.productListFacade.favoriteLoadingIds;
-    protected readonly isFavoritesLoadingMore = this.productListFacade.isFavoritesLoadingMore;
     protected readonly errorKey = this.productListFacade.errorKey;
     protected readonly onlyMineFilter = this.productListFacade.onlyMineFilter;
     protected readonly caloriesFromFilter = this.productListFacade.caloriesFromFilter;
@@ -162,22 +160,8 @@ export class ProductListBaseComponent {
         this.productListFacade.openFavorites();
     }
 
-    protected toggleFavorites(): void {
-        this.productListFacade.toggleFavorites();
-    }
-
-    protected openFavoriteProduct(favorite: FavoriteProduct): void {
-        this.productListFacade.openFavoriteProduct(favorite, product => {
-            this.onProductClick(product);
-        });
-    }
-
     protected addFavoriteProductToMeal(favorite: FavoriteProduct): void {
         this.productListFacade.addFavoriteProductToMeal(favorite);
-    }
-
-    protected removeFavorite(favorite: FavoriteProduct): void {
-        this.productListFacade.removeFavorite(favorite);
     }
 
     protected reloadCurrentPage(): void {

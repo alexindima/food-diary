@@ -4,7 +4,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of, throwError } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, of, throwError } from 'rxjs';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -19,6 +20,7 @@ class InvitationDestinationComponent {}
 
 const INVITATION = 'invitation-initial';
 const NEXT_INVITATION = 'invitation-next';
+const INVITATION_EXPIRY = '2026-05-24T09:00:00.000Z';
 const URL_ROOT = '/dietologist-invitations';
 const ACCEPT = 'DIETOLOGIST_INVITATION.ACCEPT';
 const DECLINE = 'DIETOLOGIST_INVITATION.DECLINE';
@@ -111,11 +113,70 @@ it('cancels the old decline request on navigation and submits only the newly dis
     });
 });
 
+it.each([
+    {
+        first: ACCEPT,
+        later: DECLINE,
+        ownedAction: 'accept-current-user',
+        rejectedAction: 'decline-current-user',
+        status: 'DIETOLOGIST_INVITATION.SUCCESS_ACCEPT',
+        refreshCount: 1,
+    },
+    {
+        first: DECLINE,
+        later: ACCEPT,
+        ownedAction: 'decline-current-user',
+        rejectedAction: 'accept-current-user',
+        status: 'DIETOLOGIST_INVITATION.SUCCESS_DECLINE',
+        refreshCount: 0,
+    },
+] as const)('executes only $first when both rendered actions are activated before repaint', async input => {
+    const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
+    respondToInvitation(INVITATION);
+    harness.detectChanges();
+    const first = button(harness, input.first);
+    const later = button(harness, input.later);
+
+    first.click();
+    later.click();
+    const request = actionRequest(INVITATION, input.ownedAction);
+    http.expectNone({ method: 'POST', url: `${invitationApi(INVITATION)}/${input.rejectedAction}` });
+    harness.detectChanges();
+    expect(first.disabled).toBe(true);
+    expect(later.disabled).toBe(true);
+    expect(refresh).not.toHaveBeenCalled();
+
+    request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.textContent).toContain(input.status);
+    expect(refresh).toHaveBeenCalledTimes(input.refreshCount);
+});
+
+it('shows an unnamed sender and a localized expiry using the configured fallback language', async () => {
+    const translate = TestBed.inject(TranslateService);
+    const unnamedClient = 'Клиент без имени';
+    translate.setTranslation('ru', {
+        ATTENTION: { UNNAMED_CLIENT: unnamedClient },
+        DIETOLOGIST_INVITATION: { DESCRIPTION: '{{name}}', EXPIRES: '{{date}}' },
+    });
+    await firstValueFrom(translate.setFallbackLang('ru'));
+    const harness = await RouterTestingHarness.create(`${URL_ROOT}/${INVITATION}`);
+    respondToInvitation(INVITATION, { clientEmail: null, clientFirstName: null, clientLastName: null });
+    harness.detectChanges();
+
+    const host = harness.routeNativeElement;
+    expect(host?.querySelector('.dietologist-invitation__description')?.textContent.trim()).toBe(unnamedClient);
+    const expectedDate = new Intl.DateTimeFormat('ru-RU', { dateStyle: 'medium' }).format(new Date(INVITATION_EXPIRY));
+    expect(host?.querySelector('.dietologist-invitation__meta')?.textContent.trim()).toBe(expectedDate);
+    expect(button(harness, ACCEPT).disabled).toBe(false);
+    expect(button(harness, DECLINE).disabled).toBe(false);
+});
+
 function invitationApi(id: string): string {
     return `${environment.apiUrls.dietologist}/invitations/${id}`;
 }
 
-function respondToInvitation(invitationId: string): void {
+function respondToInvitation(invitationId: string, overrides: Partial<DietologistInvitationForCurrentUserHttpResponse> = {}): void {
     http.expectOne({ method: 'GET', url: `${invitationApi(invitationId)}/current-user` }).flush({
         invitationId,
         clientUserId: 'fixture-client',
@@ -124,7 +185,8 @@ function respondToInvitation(invitationId: string): void {
         clientLastName: null,
         status: 'Pending',
         createdAtUtc: '2026-05-17T09:00:00.000Z',
-        expiresAtUtc: '2026-05-24T09:00:00.000Z',
+        expiresAtUtc: INVITATION_EXPIRY,
+        ...overrides,
     } satisfies DietologistInvitationForCurrentUserHttpResponse);
 }
 
