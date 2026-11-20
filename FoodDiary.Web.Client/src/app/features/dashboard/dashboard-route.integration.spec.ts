@@ -10,7 +10,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { type Observable, of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
@@ -910,6 +910,64 @@ describe('Dashboard hydration details', () => {
         expect(document.querySelector(HYDRATION_DETAILS_DIALOG)).toBeNull();
     });
 });
+
+describe('Dashboard hydration details localization', () => {
+    it('updates the recorded amounts in the same open history dialog when the app language changes', async () => {
+        const timestampUtc = utcInstant('2026-05-18T08:15:00Z');
+        const totalMl = 1500;
+        const amountMl = 1250;
+        const snapshot: DashboardSnapshot = {
+            ...makeSnapshot(),
+            hydration: { dateUtc: calendarDate(DASHBOARD_DATE), totalMl, goalMl: 2000 },
+            hydrationHistory: {
+                entries: [{ id: entityId<'hydration-entry'>('00000000-0000-4000-8000-000000000001'), timestampUtc, amountMl }],
+                hasMore: false,
+            },
+        };
+        const { harness, readSnapshot } = await renderDashboardAsync(snapshot);
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { HYDRATION_CARD: { RECORDED: 'Recorded' } }, true);
+        translate.setTranslation('ru', { HYDRATION_CARD: { RECORDED: 'Выпито' } }, true);
+        await firstValueFrom(translate.use('en'));
+
+        button(element(harness, HYDRATION_TILE), 'HYDRATION_CARD.OPEN_DETAILS').click();
+        redraw(harness);
+        const dialog = document.querySelector(HYDRATION_DETAILS_DIALOG);
+        if (dialog === null) {
+            throw new Error('Expected hydration details');
+        }
+        const english = readHydrationDetails(dialog);
+        expect(english.recorded).toContain('Recorded');
+        expect(english.total).toContain('1,500');
+        expect(english.amount).toContain('1,250');
+        expect(english.timestamp).toBe(timestampUtc);
+
+        await firstValueFrom(translate.use('ru'));
+        redraw(harness);
+
+        expect(document.querySelector(HYDRATION_DETAILS_DIALOG)).toBe(dialog);
+        const russian = readHydrationDetails(dialog);
+        expect(russian.recorded).toContain('Выпито');
+        expect(russian.total).toContain('1\u00A0500');
+        expect(russian.amount).toContain('1\u00A0250');
+        expect(russian.timestamp).toBe(timestampUtc);
+        expect(readSnapshot).toHaveBeenCalledOnce();
+    });
+});
+
+function readHydrationDetails(dialog: Element): {
+    recorded: string | undefined;
+    total: string | undefined;
+    amount: string | undefined;
+    timestamp: string | null | undefined;
+} {
+    return {
+        recorded: dialog.querySelector('dt')?.textContent,
+        total: dialog.querySelector('dd')?.textContent,
+        amount: dialog.querySelector('.hydration-history__amount')?.textContent,
+        timestamp: dialog.querySelector('time')?.getAttribute('datetime'),
+    };
+}
 
 describe('Mounted Dashboard dialog ownership', () => {
     const anotherDashboardDay = '/dashboard?date=2026-05-17';

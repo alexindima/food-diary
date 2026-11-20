@@ -47,8 +47,7 @@ export class GoalsPageComponent {
     protected readonly hasLoadError = this.facade.hasLoadError;
     protected readonly saveStatusKey = this.facade.saveStatusKey;
     protected readonly macroPresets = this.facade.macroPresets;
-    protected readonly selectedPreset = this.facade.selectedPreset;
-    protected readonly waterState = this.facade.waterState;
+    protected readonly waterValue = this.facade.waterValue;
     protected readonly calorieCyclingEnabled = this.facade.calorieCyclingEnabled;
     protected readonly dayCalories = this.facade.dayCalories;
     protected readonly bodyTargetDraftValues = this.facade.bodyTargetValues;

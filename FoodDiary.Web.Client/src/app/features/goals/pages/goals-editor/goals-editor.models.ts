@@ -7,7 +7,7 @@ import {
 import type { DayCalorieKey, UpdateGoalsRequest } from '../../../../shared/models/goals.data';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
 
-export type GoalNumberKey = 'calories' | 'water' | MacroKey;
+export type GoalNumberKey = 'calories' | 'water' | MacroKey | DayCalorieKey;
 
 export type GoalsDraft = {
     calories: number;

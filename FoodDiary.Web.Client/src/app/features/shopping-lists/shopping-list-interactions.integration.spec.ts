@@ -1735,6 +1735,52 @@ describe('Shopping consolidation preview', () => {
     });
 });
 
+describe('Shopping existing confirmations after a revision conflict', () => {
+    const actions = [
+        { action: 'merge', open: openMergePreview, confirm: 'SHOPPING_LIST.MERGE_CONFIRM' },
+        {
+            action: 'clear',
+            open: (harness: RouterTestingHarness): HTMLElement => openShoppingListConfirmation(harness, 'SHOPPING_LIST.CLEAR_LIST_BUTTON'),
+            confirm: 'SHOPPING_LIST.CLEAR_LIST_BUTTON',
+        },
+        {
+            action: 'delete',
+            open: (harness: RouterTestingHarness): HTMLElement => openShoppingListConfirmation(harness, 'SHOPPING_LIST.DELETE_LIST_BUTTON'),
+            confirm: 'CONFIRM_DELETE.CONFIRM',
+        },
+    ];
+
+    it.each(actions)('does not $action the unresolved list from an already open confirmation', async ({ open, confirm }) => {
+        const list = mergeableList();
+        const { harness, api } = await renderShoppingAsync({
+            selectedList: list,
+            lists: { items: [summary(list)], hasMore: false, nextPage: null },
+        });
+        const host = page(harness);
+        const saving = new Subject<ShoppingList>();
+        api.update.mockReturnValueOnce(saving);
+        requiredInput(host, '.shopping-list__item:nth-child(3) input[type="checkbox"]').click();
+        harness.detectChanges();
+
+        const confirmation = open(harness);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        expect(confirmation.isConnected).toBe(true);
+        saving.error(new HttpErrorResponse({ status: 409 }));
+        harness.detectChanges();
+        expect(requiredElement(host, 'fd-ui-inline-alert').textContent).toContain('SHOPPING_LIST.CONFLICT_MESSAGE');
+
+        nativeButton(confirmation, confirm).click();
+        harness.detectChanges();
+        expect(confirmation.isConnected).toBe(false);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(list.id, expect.objectContaining({ expectedRevision: FIRST_REVISION }));
+        expect(api.deleteById).not.toHaveBeenCalled();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(list.name);
+        expect(requiredElement(host, '.shopping-list__purchased').textContent).toContain('Oat milk');
+        expect(host.querySelectorAll('.shopping-list__item')).toHaveLength(list.items.length);
+        expect(requiredElement(host, 'fd-ui-inline-alert').textContent).toContain('SHOPPING_LIST.CONFLICT_MESSAGE');
+    });
+});
+
 it('shows localized fractional quantities and persists a combined quantity only after confirmation', async () => {
     const source = makeList('dried-fruit', 'Market', ['Raisins', 'Raisins']);
     const firstAmount = 1.25;
@@ -1812,6 +1858,79 @@ describe('Shopping list deletion recovery', () => {
         });
         expect(host.textContent).toContain('Bread');
         expect(api.getById).toHaveBeenCalledExactlyOnceWith(shifted.id);
+    });
+});
+
+describe('Shopping item workspace while deleting the selected list', () => {
+    it('does not carry an item entered without a list into the next list after deletion', async () => {
+        const { harness, api } = await renderShoppingAsync();
+        const deleting = new Subject<void>();
+        api.deleteById.mockReturnValueOnce(deleting);
+        api.getPage.mockReturnValueOnce(of([summary(TRAVEL)]));
+        const host = page(harness);
+        const name = requiredInput(host, '.shopping-list__quick-add-input input');
+        name.focus();
+        expect(document.activeElement).toBe(name);
+
+        const confirmation = openShoppingListConfirmation(harness, 'SHOPPING_LIST.DELETE_LIST_BUTTON');
+        nativeButton(confirmation, 'CONFIRM_DELETE.CONFIRM').click();
+        harness.detectChanges();
+        expect(api.deleteById).toHaveBeenCalledExactlyOnceWith(GROCERIES.id);
+        expect(deleting.observed).toBe(true);
+        expect(host.querySelector('.shopping-list__summary-title')).toBeNull();
+
+        name.focus();
+        if (document.activeElement === name) {
+            addNativeItem(harness, 'Was this meant for the deleted list?');
+        }
+        expect(api.update).not.toHaveBeenCalled();
+
+        deleting.next();
+        deleting.complete();
+        harness.detectChanges();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
+        expect(name.value).toBe('');
+        expect(name.matches(':disabled')).toBe(false);
+
+        api.update.mockReturnValueOnce(of(shoppingListWithAddedItem(TRAVEL, 'travel-new', CREATED_SHOPPING_ITEM_NAME, SAVED_REVISION)));
+        addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            TRAVEL.id,
+            expect.objectContaining({
+                items: [
+                    expect.objectContaining({ name: TRAVEL.items[0].name }),
+                    expect.objectContaining({ name: CREATED_SHOPPING_ITEM_NAME }),
+                ],
+            }),
+        );
+    });
+
+    it('locks the item controls until a failed deletion restores the original list', async () => {
+        const { harness, api, toastError } = await renderShoppingAsync();
+        const deleting = new Subject<void>();
+        api.deleteById.mockReturnValueOnce(deleting);
+        const host = page(harness);
+        const workspace = requiredElement(host, '.shopping-list__workspace');
+        const name = requiredInput(workspace, '.shopping-list__quick-add-input input');
+        const add = nativeButton(workspace, 'SHOPPING_LIST.ADD_ITEM_BUTTON');
+        expect(name.matches(':disabled')).toBe(false);
+
+        const confirmation = openShoppingListConfirmation(harness, 'SHOPPING_LIST.DELETE_LIST_BUTTON');
+        nativeButton(confirmation, 'CONFIRM_DELETE.CONFIRM').click();
+        harness.detectChanges();
+        expect(api.deleteById).toHaveBeenCalledExactlyOnceWith(GROCERIES.id);
+        expect([name, add].every(control => control.matches(':disabled'))).toBe(true);
+        expect(workspace.getAttribute('aria-busy')).toBe('true');
+
+        deleting.error(new Error('Delete interrupted'));
+        harness.detectChanges();
+        expect(toastError).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.DELETE_ERROR');
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(GROCERIES.name);
+        expect(workspace.textContent).toContain(GROCERIES.items[0].name);
+        expect([name, add].every(control => !control.matches(':disabled'))).toBe(true);
+        expect(workspace.getAttribute('aria-busy')).toBe('false');
+        expect(api.update).not.toHaveBeenCalled();
     });
 });
 

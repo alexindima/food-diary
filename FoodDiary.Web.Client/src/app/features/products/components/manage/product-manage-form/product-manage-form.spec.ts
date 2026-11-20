@@ -12,6 +12,8 @@ import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens
 import { NavigationService } from '../../../../../services/navigation.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
+import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
+import { USDA_NUTRIENT_IDS } from '../../../../../shared/lib/usda-nutrient.constants';
 import { type ImageSelection, imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     MeasurementUnit,
@@ -1336,6 +1338,144 @@ describe('Product editor external source handoff', () => {
     });
 });
 
+describe('Product editor USDA nutrition basis', () => {
+    it.each(['before', 'during'])('uses the selected 50 g portion when portion mode is chosen %s the lookup', async when => {
+        const editor = await setupComponentAsync();
+        const pending = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(pending);
+        editor.fixture.detectChanges();
+        const portion = requiredProductInput(editor.el, 'input[aria-label="PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT"]');
+        enterProductValue(portion, String(PORTION_AMOUNT));
+        editor.fixture.detectChanges();
+        if (when === 'before') {
+            selectProductPortionMode(editor);
+        }
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        if (when === 'during') {
+            selectProductPortionMode(editor);
+        }
+        const providerProtein = 20;
+        pending.next(createUsdaNutritionDetail(providerProtein));
+        pending.complete();
+        editor.fixture.detectChanges();
+
+        const portionEnergy = 50;
+        const portionProtein = 10;
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--calories input').value).toBe(String(portionEnergy));
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--proteins input').value).toBe(String(portionProtein));
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await editor.fixture.whenStable();
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            null,
+            expect.objectContaining({
+                baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+                baseUnit: MeasurementUnit.G,
+                defaultPortionAmount: PORTION_AMOUNT,
+                caloriesPerBase: BASE_CALORIES,
+                proteinsPerBase: providerProtein,
+            }),
+            false,
+            expect.any(Function),
+        );
+    });
+
+    it('keeps a manually entered zero and imports the remaining nutrients on the same gram basis', async () => {
+        const editor = await setupComponentAsync();
+        const pending = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(pending);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        const proteins = requiredProductInput(editor.el, '.nutrition-editor__input--proteins input');
+        expect(proteins.value).toBe('');
+        enterProductValue(proteins, '0');
+        editor.fixture.detectChanges();
+
+        pending.next(createUsdaNutritionDetail(USDA_PROTEIN_PER_100G));
+        pending.complete();
+        editor.fixture.detectChanges();
+
+        expect(proteins.value).toBe('0');
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--calories input').value).toBe(String(BASE_CALORIES));
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await editor.fixture.whenStable();
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            null,
+            expect.objectContaining({ baseUnit: MeasurementUnit.G, caloriesPerBase: BASE_CALORIES, proteinsPerBase: 0 }),
+            false,
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor USDA unit ownership', () => {
+    it('keeps the piece unit and manual per-piece values chosen during a gram lookup', async () => {
+        const editor = await setupComponentAsync();
+        const pending = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(pending);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        const unit = requiredFormButton(editor.el, '.product-manage__serving-row fd-ui-select button');
+        unit.click();
+        editor.fixture.detectChanges();
+        const pieces = Array.from(document.body.querySelectorAll<HTMLButtonElement>('.fd-ui-select__menu button[role="option"]')).find(
+            option => option.textContent.trim() === 'PRODUCT_AMOUNT_UNITS.PCS',
+        );
+        if (pieces === undefined) {
+            throw new Error('Expected the piece unit option');
+        }
+        pieces.click();
+        const calories = requiredProductInput(editor.el, '.nutrition-editor__input--calories input');
+        const caloriesPerPiece = 35;
+        enterProductValue(calories, String(caloriesPerPiece));
+        editor.fixture.detectChanges();
+        expect(unit.textContent.trim()).toBe('PRODUCT_AMOUNT_UNITS.PCS');
+
+        pending.next(createUsdaNutritionDetail(USDA_PROTEIN_PER_100G));
+        pending.complete();
+        editor.fixture.detectChanges();
+
+        expect(unit.textContent.trim()).toBe('PRODUCT_AMOUNT_UNITS.PCS');
+        expect(calories.value).toBe(String(caloriesPerPiece));
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--proteins input').value).toBe('');
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await editor.fixture.whenStable();
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            null,
+            expect.objectContaining({ baseAmount: 1, baseUnit: MeasurementUnit.PCS, caloriesPerBase: caloriesPerPiece }),
+            false,
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor USDA lookup from a piece product', () => {
+    it.each([false, true])('retains a compatible nutrition basis when the existing piece draft was edited=%s', async edited => {
+        const editor = await setupComponentAsync();
+        const existing = { ...PRODUCT, baseUnit: MeasurementUnit.PCS, baseAmount: 1, defaultPortionAmount: 1 };
+        editor.fixture.componentRef.setInput('product', existing);
+        const pending = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(pending);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        const unit = requiredFormButton(editor.el, '.product-manage__serving-row fd-ui-select button');
+        const calories = requiredProductInput(editor.el, '.nutrition-editor__input--calories input');
+        const pieceEnergy = 35;
+        expect(unit.textContent.trim()).toBe('PRODUCT_AMOUNT_UNITS.PCS');
+        expect(calories.value).toBe('');
+        if (edited) {
+            enterProductValue(calories, String(pieceEnergy));
+            editor.fixture.detectChanges();
+        }
+
+        pending.next(createUsdaNutritionDetail(USDA_PROTEIN_PER_100G));
+        pending.complete();
+        editor.fixture.detectChanges();
+
+        expect(unit.textContent.trim()).toBe(edited ? 'PRODUCT_AMOUNT_UNITS.PCS' : 'PRODUCT_AMOUNT_UNITS.G');
+        expect(calories.value).toBe(String(edited ? pieceEnergy : BASE_CALORIES));
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--proteins input').value).toBe(
+            edited ? '' : String(EXPECTED_ROUNDED_USDA_PROTEIN),
+        );
+    });
+});
+
 describe('Product editor refresh while recognition is pending', () => {
     it.each([
         ['opening another product', SECOND_PRODUCT],
@@ -1748,6 +1888,17 @@ describe('Product editor first recognized photos', () => {
     });
 });
 
+function selectProductPortionMode(editor: ProductManageFormSetup): void {
+    const buttons = Array.from(editor.el.querySelectorAll<HTMLButtonElement>('.product-manage__nutrition-toggle button[role="radio"]'));
+    const portion = buttons.find(button => button.textContent.trim() === 'PRODUCT_MANAGE.NUTRITION_MODE.PORTION');
+    if (portion === undefined) {
+        throw new Error('Expected the portion nutrition mode');
+    }
+    portion.click();
+    editor.fixture.detectChanges();
+    expect(portion.getAttribute('aria-checked')).toBe('true');
+}
+
 async function chooseProductSuggestionAsync(editor: ProductManageFormSetup, suggestion: ProductSearchSuggestion): Promise<void> {
     stubScrollIntoView();
     editor.searchSuggestions.mockReturnValueOnce(of([suggestion]));
@@ -1923,6 +2074,24 @@ function createUsdaFoodDetail(fdcId: number, description: string): UsdaFoodDetai
                 name: 'Protein',
                 unit: 'g',
                 amountPer100g: USDA_PROTEIN_PER_100G,
+                dailyValue: null,
+                percentDailyValue: null,
+            },
+        ],
+    };
+}
+
+function createUsdaNutritionDetail(proteins: number): UsdaFoodDetail {
+    const detail = createUsdaFoodDetail(USDA_FDC_ID, 'Provider description');
+    return {
+        ...detail,
+        nutrients: [
+            ...detail.nutrients.map(nutrient => ({ ...nutrient, amountPer100g: proteins })),
+            {
+                nutrientId: USDA_NUTRIENT_IDS.energy,
+                name: 'Energy',
+                unit: 'kcal',
+                amountPer100g: BASE_CALORIES,
                 dailyValue: null,
                 percentDailyValue: null,
             },

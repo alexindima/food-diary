@@ -1,16 +1,7 @@
-import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
+import type { DayCalorieKey, GoalsResponse } from '../../../shared/models/goals.data';
 
 export type MacroKey = 'protein' | 'fats' | 'carbs' | 'fiber';
 export type BodyTargetKey = 'weight' | 'waist';
-
-type GoalsState = {
-    calorieTarget: number;
-    macros: Record<MacroKey, number>;
-    waterValue: number;
-    bodyTargets: Record<BodyTargetKey, number>;
-    calorieCyclingEnabled: boolean;
-    dayCalories: Record<DayCalorieKey, number>;
-};
 
 export function clampGoalValue(value: number, max: number, min = 0): number {
     return Math.min(max, Math.max(min, Math.round(value)));
@@ -42,23 +33,4 @@ export function createDayCaloriesFromGoals(goals: Partial<Pick<GoalsResponse, Da
         saturdayCalories: goals.saturdayCalories ?? 0,
         sundayCalories: goals.sundayCalories ?? 0,
     };
-}
-
-export function buildGoalsRequest(state: GoalsState): UpdateGoalsRequest {
-    return {
-        dailyCalorieTarget: state.calorieTarget,
-        proteinTarget: state.macros.protein,
-        fatTarget: state.macros.fats,
-        carbTarget: state.macros.carbs,
-        fiberTarget: state.macros.fiber,
-        waterGoal: state.waterValue,
-        desiredWeightKg: normalizeDesiredBodyTarget(state.bodyTargets.weight),
-        desiredWaistCm: normalizeDesiredBodyTarget(state.bodyTargets.waist),
-        calorieCyclingEnabled: state.calorieCyclingEnabled,
-        ...(state.calorieCyclingEnabled && state.dayCalories),
-    };
-}
-
-function normalizeDesiredBodyTarget(value: number): number | null {
-    return value > 0 ? value : null;
 }

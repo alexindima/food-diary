@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 121,
+    "selectorUnreferencedComponents": 119,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 126,
+    "componentsWithoutDirectSpecs": 125,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -1485,14 +1485,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts"
     },
     {
-      "class": "LandingCtaComponent",
-      "selector": "fd-landing-cta",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
-      "specPath": null
-    },
-    {
       "class": "RecipeDetailComponent",
       "selector": "fd-recipe-detail",
       "feature": "recipes",
@@ -1579,14 +1571,6 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.html",
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.spec.ts"
-    },
-    {
-      "class": "CardComponent",
-      "selector": "fd-card",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/card/card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/card/card.html",
-      "specPath": "FoodDiary.Web.Client/src/app/components/shared/card/card.spec.ts"
     },
     {
       "class": "ConfirmDeleteDialogComponent",
@@ -4832,6 +4816,11 @@
           "required": true
         },
         {
+          "name": "incomplete",
+          "type": "boolean",
+          "required": true
+        },
+        {
           "name": "barPercent",
           "type": "number",
           "required": true
@@ -4850,7 +4839,7 @@
       "outputs": [
         {
           "name": "valueChange",
-          "type": "{ key: DayCalorieKey; value: number }"
+          "type": "{ key: DayCalorieKey; value: number | null }"
         }
       ],
       "specPath": null
@@ -5323,19 +5312,6 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.html",
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "LandingCtaComponent",
-      "selector": "fd-landing-cta",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.scss"
       ],
       "inputs": [],
       "outputs": [],

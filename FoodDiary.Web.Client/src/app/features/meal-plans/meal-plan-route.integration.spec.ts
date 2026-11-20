@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -13,6 +14,7 @@ import type { PageOf } from '../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../shared/models/recipe.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
+import type { ShoppingList } from '../../shared/models/shopping-list.data';
 import { QuickMealService } from '../meals/contracts/quick-meal';
 import { RECIPE_LOOKUP, type RecipeLookup } from '../recipes/contracts/recipe-lookup';
 import { MealPlanService } from './api/meal-plan.service';
@@ -30,6 +32,7 @@ const CURATED_PLAN_URL = '/meal-plans/curated';
 const PERSONAL_PLAN_URL = '/meal-plans/personal';
 const INVALID_PLAN_URL = '/meal-plans/%20';
 const SAVED_PLANS_URL = '/meal-plans?source=saved';
+const SHOPPING_URL = '/shopping-lists';
 const BACK = 'MEAL_PLANS.BACK';
 const ADOPT = 'MEAL_PLANS.ADOPT';
 const DELETE_ACTION = 'MEAL_PLANS.DELETE_PLAN';
@@ -58,8 +61,19 @@ const PERSONAL_PLAN: MealPlan = {
     isCurated: false,
 };
 
+const GENERATED_LIST: ShoppingList = {
+    id: entityId<'shopping-list'>('from-meal-plan'),
+    name: 'Mediterranean groceries',
+    createdAt: utcInstant('2026-11-20T12:00:00Z'),
+    revision: 'generated',
+    items: [],
+};
+
+@Component({ template: '<h1>Shopping lists opened</h1>', changeDetection: ChangeDetectionStrategy.OnPush })
+class MealPlanShoppingDestinationComponent {}
+
 type MealPlansApi = {
-    [Method in 'getPage' | 'getById' | 'adopt' | 'deletePlan']: Mock<MealPlanService[Method]>;
+    [Method in 'getPage' | 'getById' | 'adopt' | 'deletePlan' | 'generateShoppingList']: Mock<MealPlanService[Method]>;
 };
 
 afterEach(() => {
@@ -82,10 +96,14 @@ function setupMealPlans(getRecipe = vi.fn<RecipeLookup['getById']>()): MealPlans
         getById: vi.fn<MealPlanService['getById']>().mockImplementation(id => of(id === PERSONAL_PLAN.id ? PERSONAL_PLAN : CURATED_PLAN)),
         adopt: vi.fn<MealPlanService['adopt']>().mockReturnValue(of(PERSONAL_PLAN)),
         deletePlan: vi.fn<MealPlanService['deletePlan']>(),
+        generateShoppingList: vi.fn<MealPlanService['generateShoppingList']>(),
     };
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([{ path: 'meal-plans', children: mealPlanRoutes }]),
+            provideRouter([
+                { path: 'meal-plans', children: mealPlanRoutes },
+                { path: 'shopping-lists', component: MealPlanShoppingDestinationComponent },
+            ]),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -260,6 +278,75 @@ describe('Meal plan adoption lifecycle', () => {
         expect(api.adopt.mock.calls).toEqual([[CURATED_PLAN.id], [CURATED_PLAN.id]]);
         expect(api.getPage).toHaveBeenLastCalledWith(undefined, 1, PAGE_SIZE, false);
         expect(pageHost(harness).textContent).not.toContain(CURATED_PLAN.name);
+    });
+});
+
+describe('Meal plan shopping generation', () => {
+    it.each([
+        { plan: CURATED_PLAN, url: CURATED_PLAN_URL, otherAction: ADOPT },
+        { plan: PERSONAL_PLAN, url: PERSONAL_PLAN_URL, otherAction: DELETE_ACTION },
+    ])('retains $plan.name after a failure and opens shopping lists only after a successful retry', async ({ plan, url, otherAction }) => {
+        const api = setupMealPlans();
+        const firstWrite = new Subject<ShoppingList>();
+        const secondWrite = new Subject<ShoppingList>();
+        api.generateShoppingList.mockReturnValueOnce(firstWrite).mockReturnValueOnce(secondWrite);
+        const harness = await RouterTestingHarness.create(url);
+        const detail = await waitForPlanAsync(harness, plan);
+        const router = TestBed.inject(Router);
+        const generate = renderedAction(detail, SHOPPING_ACTION);
+
+        generate.click();
+        harness.detectChanges();
+        expect(generate.disabled).toBe(true);
+        expect(generate.getAttribute('aria-busy')).toBe('true');
+        expect(renderedAction(detail, otherAction).disabled).toBe(true);
+        generate.click();
+        expect(api.generateShoppingList).toHaveBeenCalledExactlyOnceWith(plan.id);
+
+        firstWrite.error(new Error('Shopping list generation temporarily unavailable'));
+        harness.detectChanges();
+        expect(router.url).toBe(url);
+        expect(detail.querySelector(TITLE)?.textContent).toBe(plan.name);
+        expect(detail.querySelector('[role="alert"]')?.textContent).toContain('MEAL_PLANS.ERROR_SHOPPING_LIST');
+        expect(generate.disabled).toBe(false);
+        expect(renderedAction(detail, otherAction).disabled).toBe(false);
+
+        generate.click();
+        harness.detectChanges();
+        expect(api.generateShoppingList.mock.calls).toEqual([[plan.id], [plan.id]]);
+        expect(detail.querySelector('[role="alert"]')).toBeNull();
+        expect(router.url).toBe(url);
+        secondWrite.next(GENERATED_LIST);
+        secondWrite.complete();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(router.url).toBe(SHOPPING_URL);
+            expect(pageHost(harness).querySelector('h1')?.textContent).toBe('Shopping lists opened');
+        });
+    });
+
+    it('cancels a pending generation when the detail route opens a different plan', async () => {
+        const api = setupMealPlans();
+        const pending = new Subject<ShoppingList>();
+        api.generateShoppingList.mockReturnValueOnce(pending);
+        const harness = await RouterTestingHarness.create(CURATED_PLAN_URL);
+        const first = await waitForPlanAsync(harness, CURATED_PLAN);
+        renderedAction(first, SHOPPING_ACTION).click();
+        harness.detectChanges();
+        expect(pending.observed).toBe(true);
+
+        await harness.navigateByUrl(PERSONAL_PLAN_URL);
+        const current = await waitForPlanAsync(harness, PERSONAL_PLAN);
+        expect(pending.observed).toBe(false);
+        pending.next(GENERATED_LIST);
+        pending.complete();
+        await harness.fixture.whenStable();
+        harness.detectChanges();
+
+        expect(TestBed.inject(Router).url).toBe(PERSONAL_PLAN_URL);
+        expect(renderedAction(current, SHOPPING_ACTION).disabled).toBe(false);
+        expect(current.querySelector('[role="alert"]')).toBeNull();
+        expect(api.generateShoppingList).toHaveBeenCalledExactlyOnceWith(CURATED_PLAN.id);
     });
 });
 

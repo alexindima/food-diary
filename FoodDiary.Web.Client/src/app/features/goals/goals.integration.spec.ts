@@ -109,6 +109,14 @@ function editNumber(input: HTMLInputElement, value: number): void {
     input.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
+function enterIncompleteNumber(input: HTMLInputElement): void {
+    // jsdom cannot type a lone minus into number fields. Chrome proves the native keystroke.
+    const badInput = vi.spyOn(input.validity, 'badInput', 'get').mockReturnValue(true);
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    badInput.mockRestore();
+}
+
 function redraw(harness: RouterTestingHarness): void {
     TestBed.tick();
     harness.detectChanges();
@@ -293,12 +301,8 @@ describe('Routed nutrition goal number edits', () => {
         const saveSelector = 'fd-unsaved-changes-bar fd-ui-button:last-child button';
         expect(input.value).toBe(String(GOALS[target]));
 
-        // jsdom cannot type a lone minus into a number field. Chrome verifies the same scenario with real keystrokes.
-        const badInput = vi.spyOn(input.validity, 'badInput', 'get').mockReturnValue(true);
-        input.value = '';
-        input.dispatchEvent(new Event('input', { bubbles: true }));
+        enterIncompleteNumber(input);
         redraw(harness);
-        badInput.mockRestore();
 
         const save = requiredButton(host, saveSelector);
         expect(input.value).toBe('');
@@ -396,8 +400,16 @@ describe('Routed goal preset', () => {
         expect(requiredInput(host, '#goals-editor-fiber').value).toBe(String(GOALS.fiberTarget));
         expect(api.updateGoals).not.toHaveBeenCalled();
 
-        editNumber(protein, EDITED_PROTEIN_GRAMS);
-        redraw(harness);
+        vi.useFakeTimers();
+        try {
+            editNumber(protein, EDITED_PROTEIN_GRAMS);
+            redraw(harness);
+            const draftObservationMs = 1000;
+            await vi.advanceTimersByTimeAsync(draftObservationMs);
+            expect(api.updateGoals).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
         expect(presetControl.textContent).toContain('GOALS_PAGE.MACRO_PRESET_CUSTOM');
         requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:last-child button').click();
         await harness.fixture.whenStable();
@@ -586,6 +598,69 @@ const WEEKLY_TARGETS: Record<DayCalorieKey, number> = {
     saturdayCalories: 2600,
     sundayCalories: 0,
 };
+
+describe('Routed weekly calorie cycling validation', () => {
+    it('keeps an incomplete Monday out of saves and weekday copying until Reset replaces it', async () => {
+        const { api } = configureGoals();
+        api.getGoalsStrict.mockReturnValueOnce(of({ ...GOALS, ...WEEKLY_TARGETS, calorieCyclingEnabled: true }));
+        const harness = await RouterTestingHarness.create('/goals');
+        const host = page(harness);
+        const monday = requiredInput(host, '#goals-editor-cycling-mondayCalories');
+        const repeat = weeklyAction(host, 'GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS');
+
+        enterIncompleteNumber(monday);
+        redraw(harness);
+        const save = requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:last-child button');
+        expect(monday.value).toBe('');
+        expect(monday.getAttribute('aria-describedby')).toBe('goals-editor-cycling-error');
+        expect(host.querySelector('#goals-editor-cycling-error')?.textContent).toContain('GOALS_PAGE.EDITOR.NUMBER_RANGE');
+        expect(save.disabled).toBe(true);
+        expect(repeat.disabled).toBe(true);
+        expect(repeat.getAttribute('title')).toBe('GOALS_PAGE.EDITOR.NUMBER_RANGE');
+        save.click();
+        repeat.click();
+        expect(requiredInput(host, '#goals-editor-cycling-tuesdayCalories').value).toBe(String(WEEKLY_TARGETS.tuesdayCalories));
+        expect(api.updateGoals).not.toHaveBeenCalled();
+
+        weeklyAction(host, 'GOALS_PAGE.EDITOR.RESET_DAYS').click();
+        redraw(harness);
+        expect(visibleWeeklyTargets(host)).toEqual(DAYS_OF_WEEK.map(() => GOALS.dailyCalorieTarget));
+        expect(monday.getAttribute('aria-invalid')).toBe('false');
+        expect(host.querySelector('#goals-editor-cycling-error')).toBeNull();
+        expect(save.disabled).toBe(false);
+        expect(repeat.disabled).toBe(false);
+        expect(repeat.getAttribute('title')).toBeNull();
+    });
+
+    it('discards hidden incomplete weekday edits when cycling is toggled off and keeps unrelated validation', async () => {
+        const { api } = configureGoals();
+        api.getGoalsStrict.mockReturnValueOnce(of({ ...GOALS, ...WEEKLY_TARGETS, calorieCyclingEnabled: true }));
+        const harness = await RouterTestingHarness.create('/goals');
+        const host = page(harness);
+        const water = requiredInput(host, '#goals-editor-water');
+        const toggle = requiredButton(host, 'fd-goals-cycling-row button[role="switch"]');
+        enterIncompleteNumber(requiredInput(host, '#goals-editor-cycling-mondayCalories'));
+        enterIncompleteNumber(water);
+        redraw(harness);
+
+        toggle.click();
+        redraw(harness);
+        const save = requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:last-child button');
+        expect(host.querySelector('fd-goals-cycling-day')).toBeNull();
+        expect(water.getAttribute('aria-invalid')).toBe('true');
+        expect(save.disabled).toBe(true);
+        toggle.click();
+        redraw(harness);
+        expectWeeklyTargets(host, WEEKLY_TARGETS);
+        expect(host.querySelector('#goals-editor-cycling-error')).toBeNull();
+        expect(save.disabled).toBe(true);
+
+        editNumber(water, GOALS.waterGoal ?? 0);
+        redraw(harness);
+        expect(save.disabled).toBe(false);
+        expect(api.updateGoals).not.toHaveBeenCalled();
+    });
+});
 
 describe('Routed weekly calorie cycling', () => {
     it('copies the entered Monday target to weekdays, keeps both weekend targets and saves the displayed week', async () => {

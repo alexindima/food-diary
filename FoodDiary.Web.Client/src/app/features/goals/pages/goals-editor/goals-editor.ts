@@ -5,7 +5,7 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
-import type { DayCalorieKey, UpdateGoalsRequest } from '../../../../shared/models/goals.data';
+import { type DayCalorieKey, DAYS_OF_WEEK, type UpdateGoalsRequest } from '../../../../shared/models/goals.data';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
 import { createDayCalories } from '../../lib/goals-state.mapper';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
@@ -123,15 +123,23 @@ export class GoalsEditorComponent {
     protected updateCycling(enabled: boolean): void {
         const current = this.requireDraft();
         const shouldInitializeDays = enabled && current.calories > 0 && Object.values(current.dayCalories).every(value => value === 0);
+        const incompleteNumbers = new Set(current.incompleteNumbers);
+        if (!enabled) {
+            for (const day of DAYS_OF_WEEK) {
+                incompleteNumbers.delete(day.key);
+            }
+        }
         this.updateDraft({
             cyclingEnabled: enabled,
             dayCalories: shouldInitializeDays ? createDayCalories(current.calories) : current.dayCalories,
+            incompleteNumbers,
         });
     }
 
-    protected updateDayCalories(change: { key: DayCalorieKey; value: number }): void {
-        const current = this.requireDraft();
-        this.updateDraft({ dayCalories: { ...current.dayCalories, [change.key]: change.value } });
+    protected updateDayCalories({ key, value }: { key: DayCalorieKey; value: number | null }): void {
+        const draft = this.withNumberEdit(key, value);
+        const dayCalories = value === null ? draft.dayCalories : { ...draft.dayCalories, [key]: value };
+        this.replaceDraft({ ...draft, dayCalories });
     }
 
     protected discard(): void {

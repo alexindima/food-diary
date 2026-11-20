@@ -1,4 +1,6 @@
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -410,6 +412,62 @@ describe('Rendered photo correction', () => {
                 { amount: largerPortion.amount, calories: largerPortion.calories, protein: largerPortion.protein },
             ],
         });
+    });
+});
+
+describe('Rendered recognition draft order', () => {
+    it('preserves an unchanged drop and delivers reordered amounts with their original nutrition on save', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const applied = vi.fn<(result: AiPhotoEditApplied) => void>();
+        component.editApplied.subscribe(applied);
+        const egg = { ...VISION_ITEMS[0], nameLocal: null };
+        const pear = { ...egg, nameEn: 'pear', amount: HALF_AMOUNT };
+        const eggNutrition = NUTRITION.items[0];
+        const pearNutrition = { ...eggNutrition, name: 'pear', amount: HALF_AMOUNT, calories: HALF_CALORIES };
+        fixture.componentRef.setInput('results', [egg, pear]);
+        fixture.componentRef.setInput('nutrition', {
+            ...NUTRITION,
+            calories: eggNutrition.calories + pearNutrition.calories,
+            items: [eggNutrition, pearNutrition],
+        });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const action = '.ai-photo-result__items-header > fd-ui-button:nth-child(2) button';
+        photoButton(host, action).click();
+        fixture.detectChanges();
+
+        const container = fixture.debugElement.query(By.directive(CdkDropList)).injector.get<CdkDropList<unknown>>(CdkDropList);
+        const item = fixture.debugElement.queryAll(By.directive(CdkDrag))[1].injector.get<CdkDrag<unknown>>(CdkDrag);
+        const drop = {
+            previousIndex: 1,
+            container,
+            previousContainer: container,
+            item,
+            isPointerOverContainer: true,
+            distance: { x: 0, y: 0 },
+            dropPoint: { x: 0, y: 0 },
+            event: new MouseEvent('mouseup'),
+        };
+        container.dropped.emit({ ...drop, currentIndex: 1 });
+        fixture.detectChanges();
+        expect(Array.from(host.querySelectorAll<HTMLInputElement>('.ai-photo-result__edit-input--name'), input => input.value)).toEqual([
+            'egg',
+            'pear',
+        ]);
+
+        container.dropped.emit({ ...drop, currentIndex: 0 });
+        fixture.detectChanges();
+        expect(Array.from(host.querySelectorAll<HTMLInputElement>('.ai-photo-result__edit-input--name'), input => input.value)).toEqual([
+            'pear',
+            'egg',
+        ]);
+        expect(applied).not.toHaveBeenCalled();
+        photoButton(host, action).click();
+
+        expect(applied).toHaveBeenCalledOnce();
+        const result = applied.mock.calls[0][0];
+        expect(result.items).toEqual([pear, egg]);
+        expect(result.nutrition?.items).toEqual([pearNutrition, eggNutrition]);
     });
 });
 

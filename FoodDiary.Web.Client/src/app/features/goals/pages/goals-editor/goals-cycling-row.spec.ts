@@ -63,7 +63,7 @@ describe('GoalsCyclingRowComponent', () => {
 
     it('emits the base target for every day when reset is selected', () => {
         const fixture = createComponent(createDayCalories(CHANGED_WEDNESDAY_CALORIES));
-        const changes: Array<{ key: DayCalorieKey; value: number }> = [];
+        const changes: Array<{ key: DayCalorieKey; value: number | null }> = [];
         fixture.componentInstance.dayCaloriesChange.subscribe(change => changes.push(change));
 
         fixture.debugElement.queryAll(By.css('fd-ui-button'))[1].triggerEventHandler('click');
@@ -86,7 +86,7 @@ describe('GoalsCyclingRowComponent', () => {
         { entered: '1.4', initial: 1, expected: 1 },
     ])('shows the saved calorie value after entering $entered', ({ entered, initial, expected }) => {
         const fixture = createComponent(createDayCalories(initial));
-        const changes: Array<{ key: DayCalorieKey; value: number }> = [];
+        const changes: Array<{ key: DayCalorieKey; value: number | null }> = [];
         fixture.componentInstance.dayCaloriesChange.subscribe(change => changes.push(change));
         const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('#goals-editor-cycling-wednesdayCalories');
         expect(input).not.toBeNull();
@@ -108,6 +108,7 @@ function createComponent(dayCalories: Record<DayCalorieKey, number>): ComponentF
     fixture.componentRef.setInput('enabled', true);
     fixture.componentRef.setInput('baseCalories', BASE_CALORIES);
     fixture.componentRef.setInput('dayCalories', dayCalories);
+    fixture.componentRef.setInput('incompleteNumbers', new Set());
     fixture.detectChanges();
     return fixture;
 }

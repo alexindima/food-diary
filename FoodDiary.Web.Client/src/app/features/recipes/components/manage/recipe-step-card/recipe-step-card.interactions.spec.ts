@@ -2,12 +2,14 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { expect, it, vi } from 'vitest';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { type ImageSelection, imageSelection } from '../../../../../shared/models/image-upload.data';
 import { RecipeStepCardComponent, type RecipeStepCardState, type RecipeStepIngredientState } from './recipe-step-card';
 
-function stepFixture(): ComponentFixture<RecipeStepCardComponent> {
+function stepFixture(overrides: Partial<RecipeStepCardState> = {}): ComponentFixture<RecipeStepCardComponent> {
     TestBed.configureTestingModule({
         imports: [RecipeStepCardComponent],
         providers: [provideRouter([]), provideTranslateTesting({ fallbackLang: 'en' })],
@@ -18,6 +20,7 @@ function stepFixture(): ComponentFixture<RecipeStepCardComponent> {
         imageUrl: { value: null, error: null },
         description: { value: '', error: null },
         ingredients: [ingredient('Rice')],
+        ...overrides,
     };
     fixture.componentRef.setInput('step', initial);
     fixture.componentRef.setInput('stepIndex', 0);
@@ -151,3 +154,121 @@ it('updates the empty description of the same collapsed step when the language c
     fixture.detectChanges();
     expect(summary.textContent.trim()).toBe('Описание пока отсутствует');
 });
+
+describe('Recipe step photo actions', () => {
+    it('removes a URL-only photo from a legacy step and leaves its empty gallery editable', () => {
+        const legacy = imageSelection('https://example.test/legacy.jpg', null);
+        const fixture = stepFixture({ imageUrl: { value: legacy, error: null } });
+        const root = fixture.nativeElement as HTMLElement;
+        const changed = bindGalleryPhotos(fixture);
+        expect(visibleStepPhotoUrls(root)).toEqual([legacy.url]);
+
+        chooseStepPhotoAction(fixture, root, 0, 'IMAGE_UPLOAD_FIELD.REMOVE');
+
+        expect(changed).toHaveBeenCalledExactlyOnceWith([]);
+        expect(visibleStepPhotoUrls(root)).toEqual([]);
+        expect(root.querySelector('fd-image-upload-field input[type="file"]')).not.toBeNull();
+    });
+
+    it('promotes a selected photo to cover and keeps the original when the new cover is removed', () => {
+        const original = imageSelection('https://example.test/start.jpg', 'start-image');
+        const alternate = imageSelection('https://example.test/final.jpg', 'final-image');
+        const fixture = stepFixture({ images: [original, alternate], imageUrl: { value: original, error: null } });
+        const root = fixture.nativeElement as HTMLElement;
+        const changed = bindGalleryPhotos(fixture);
+        expect(visibleStepPhotoUrls(root)).toEqual([original.url, alternate.url]);
+
+        chooseStepPhotoAction(fixture, root, 1, 'PRODUCT_AI_DIALOG.CHOOSE_COVER');
+        expect(changed).toHaveBeenCalledExactlyOnceWith([alternate, original]);
+        expect(visibleStepPhotoUrls(root)).toEqual([alternate.url, original.url]);
+
+        chooseStepPhotoAction(fixture, root, 0, 'IMAGE_UPLOAD_FIELD.REMOVE');
+        expect(changed).toHaveBeenLastCalledWith([original]);
+        expect(visibleStepPhotoUrls(root)).toEqual([original.url]);
+    });
+});
+
+describe('Recipe step native field choices', () => {
+    it('switches a product placeholder to a text ingredient through its actual select', () => {
+        stubScrollIntoView();
+        const fixture = stepFixture({ ingredients: [{ ...ingredient(''), textName: null, amountText: null }] });
+        const root = fixture.nativeElement as HTMLElement;
+        const step = fixture.componentInstance;
+        const selected = vi.fn();
+        step.selectProduct.subscribe(event => {
+            selected(event);
+            if (event.itemType === 'Text') {
+                fixture.componentRef.setInput('step', { ...step.step(), ingredients: [ingredient('Sea salt')] });
+            }
+        });
+        const picker = element(root, 'button[aria-label="RECIPE_MANAGE.INGREDIENT_TYPE"]', HTMLButtonElement);
+        expect(picker.textContent.trim()).toBe('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product');
+        picker.click();
+        fixture.detectChanges();
+        const option = [...document.querySelectorAll<HTMLButtonElement>('[role="option"]')].find(
+            button => button.textContent.trim() === 'RECIPE_MANAGE.TEXT_INGREDIENT',
+        );
+        if (option === undefined) {
+            throw new Error('Expected the rendered text ingredient option');
+        }
+        option.click();
+        fixture.detectChanges();
+
+        expect(selected).toHaveBeenCalledExactlyOnceWith({ ingredientIndex: 0, itemType: 'Text' });
+        expect(picker.textContent.trim()).toBe('RECIPE_MANAGE.TEXT_INGREDIENT');
+        expect(element(root, '.recipe-ingredient__name input', HTMLInputElement).value).toBe('Sea salt');
+    });
+
+    it('keeps the default numbered title when an unnamed step is opened and left untouched', async () => {
+        const fixture = stepFixture({ title: { value: null, error: null } });
+        const root = fixture.nativeElement as HTMLElement;
+        const changed = vi.fn();
+        fixture.componentInstance.stepTitleChange.subscribe(changed);
+        const title = openTitleEditor(fixture, root);
+        await fixture.whenStable();
+        expect(document.activeElement).toBe(title);
+        expect(title.value).toBe('');
+
+        title.blur();
+        fixture.detectChanges();
+
+        expect(changed).toHaveBeenCalledExactlyOnceWith(null);
+        expect(root.querySelector('.recipe-step-card__title-input')).toBeNull();
+        expect(element(root, '.recipe-step-card__title', HTMLElement).textContent.trim()).toBe('RECIPE_MANAGE.STEP_TITLE');
+    });
+});
+
+function bindGalleryPhotos(fixture: ComponentFixture<RecipeStepCardComponent>): Mock<(photos: ImageSelection[]) => void> {
+    const step = fixture.componentInstance;
+    const changed = vi.fn<(photos: ImageSelection[]) => void>();
+    step.stepPhotosChange.subscribe(photos => {
+        changed(photos);
+        fixture.componentRef.setInput('step', {
+            ...step.step(),
+            images: photos,
+            imageUrl: { value: photos[0] ?? null, error: null },
+        });
+    });
+    return changed;
+}
+
+function visibleStepPhotoUrls(root: HTMLElement): Array<string | null> {
+    return [...root.querySelectorAll('.recognition-photos__preview img')].map(image => image.getAttribute('src'));
+}
+
+function chooseStepPhotoAction(fixture: ComponentFixture<RecipeStepCardComponent>, root: HTMLElement, index: number, label: string): void {
+    const trigger = [...root.querySelectorAll<HTMLButtonElement>('.recognition-photos__preview button')].at(index);
+    if (trigger === undefined) {
+        throw new Error('Expected a rendered step photo action button');
+    }
+    trigger.click();
+    fixture.detectChanges();
+    const action = [...document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]')].find(
+        button => button.textContent.trim() === label,
+    );
+    if (action === undefined) {
+        throw new Error(`Expected the native step photo menu action: ${label}`);
+    }
+    action.click();
+    fixture.detectChanges();
+}

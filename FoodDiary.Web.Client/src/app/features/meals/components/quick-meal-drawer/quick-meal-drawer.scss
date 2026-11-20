@@ -160,6 +160,13 @@
     }
 }
 
+.quick-meal__details {
+    min-inline-size: 0;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
 .quick-meal__details-toggle {
     justify-self: start;
     --fd-button-padding-x: 0;

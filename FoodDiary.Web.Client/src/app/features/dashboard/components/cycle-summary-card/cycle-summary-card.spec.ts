@@ -110,12 +110,14 @@ describe('CycleSummaryCardComponent', () => {
             },
         });
 
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { CYCLE_CARD: { NEXT_PERIOD_IN: 'Next period in {{days}} days' } });
+        await firstValueFrom(translate.use('en'));
         fixture.detectChanges();
 
         expect(component['hasCycle']()).toBe(true);
         expect(component['cycleDay']()).toBe(CYCLE_DAY);
-        expect(component['statusKey']()).toBe('CYCLE_CARD.NEXT_PERIOD_IN');
-        expect(component['statusDays']()).toBe(DAYS_TO_PERIOD);
+        expect(getText(fixture)).toContain(`Next period in ${DAYS_TO_PERIOD} days`);
         expect(component['modeKey']()).toBe('CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE');
         expect(component['confidence']()).toBe('Moderate');
         expect(component['metaPills']()).toContainEqual({ id: 'confidence', labelKey: 'CYCLE_CARD.CONFIDENCE_MODERATE' });
@@ -226,6 +228,43 @@ describe('CycleSummaryCard prediction presentation', () => {
         expect(card.querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
         expect(card.querySelector('.cycle-summary-card__status')).toBeNull();
         expect(card.querySelector('a[href="/cycle-tracking"]')).not.toBeNull();
+    });
+});
+
+describe('CycleSummaryCard forecast across selected local days', () => {
+    it('switches from ovulation to period without shifting cycle dates encoded at UTC midnight', async () => {
+        const { fixture } = await setupComponentAsync({
+            startDate: '2026-03-01',
+            referenceDate: new Date('2026-03-07T23:45:00'),
+            predictions: {
+                ovulationFrom: calendarDate('2026-03-09T00:00:00.000Z'),
+                nextPeriodStartFrom: calendarDate('2026-03-11T00:00:00.000Z'),
+                confidence: 'Learning',
+                rationale: 'Based on journal data',
+            },
+        });
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            CYCLE_CARD: {
+                OVULATION_IN: 'Ovulation in {{days}} days',
+                NEXT_PERIOD_IN: 'Next period in {{days}} days',
+                NEXT_PERIOD_TODAY: 'Period expected today',
+            },
+        });
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+        expect(getText(fixture)).toContain('Ovulation in 2 days');
+
+        for (const [localDate, headline] of [
+            ['2026-03-09T00:10:00', 'Ovulation in 0 days'],
+            ['2026-03-10T00:10:00', 'Next period in 1 days'],
+            ['2026-03-11T00:10:00', 'Period expected today'],
+        ]) {
+            fixture.componentRef.setInput('referenceDate', new Date(localDate));
+            fixture.detectChanges();
+            const card = fixture.nativeElement as HTMLElement;
+            expect(card.querySelector('.cycle-summary-card__status')?.textContent.trim()).toBe(headline);
+        }
     });
 });
 

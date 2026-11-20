@@ -1,17 +1,18 @@
+@let goalProgress = progress();
 <div
     class="hydration-card fd-min-w-0"
     [class.hydration-card--loading]="isLoading()"
-    [class.hydration-card--goal-reached]="isGoalReached()"
+    [class.hydration-card--goal-reached]="goalProgress?.reached"
     [attr.aria-busy]="isLoading()"
 >
     <fd-dashboard-widget-frame iconName="water_drop" iconTone="info" [title]="'HYDRATION_CARD.TITLE' | translate">
-        @if (hasGoal()) {
+        @if (goalProgress) {
             <span fdDashboardWidgetHeaderEnd class="hydration-card__percent fd-ui-caption">
-                {{ percent() | localizedNumber: language() }}%
+                {{ goalProgress.percent | localizedNumber: language() }}%
             </span>
         }
 
-        @if (hasGoal()) {
+        @if (goalProgress) {
             <div class="hydration-card__overview">
                 <div class="hydration-card__vessel-wrap">
                     <div
@@ -19,14 +20,14 @@
                         role="progressbar"
                         [attr.aria-label]="'HYDRATION_CARD.PROGRESS_LABEL' | translate"
                         [attr.aria-valuemin]="0"
-                        [attr.aria-valuemax]="goal()"
-                        [attr.aria-valuenow]="progressValue()"
+                        [attr.aria-valuemax]="goalProgress.goal"
+                        [attr.aria-valuenow]="goalProgress.value"
                     >
                         <div class="hydration-card__vessel-inner">
                             <div
                                 class="hydration-card__water"
                                 [class.hydration-card__water--empty]="total() <= 0"
-                                [style.height]="fillLevel()"
+                                [style.height]="goalProgress.fillLevel"
                             >
                                 <span class="hydration-card__bubble hydration-card__bubble--one"></span>
                                 <span class="hydration-card__bubble hydration-card__bubble--two"></span>
@@ -57,13 +58,13 @@
                         <span class="hydration-card__unit fd-ui-metric-unit">{{ 'GENERAL.UNITS.ML' | translate }}</span>
                     </div>
                     <div class="hydration-card__goal fd-ui-caption">
-                        {{ 'HYDRATION_CARD.OF_GOAL' | translate: { goal: (goal() | localizedNumber: language()) } }}
+                        {{ 'HYDRATION_CARD.OF_GOAL' | translate: { goal: (goalProgress.goal | localizedNumber: language()) } }}
                     </div>
                     <div class="hydration-card__remaining fd-ui-body-sm">
-                        @if (isGoalReached()) {
+                        @if (goalProgress.reached) {
                             {{ 'HYDRATION_CARD.GOAL_REACHED' | translate }}
                         } @else {
-                            {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (remaining() | localizedNumber: language()) } }}
+                            {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (goalProgress.remaining | localizedNumber: language()) } }}
                         }
                     </div>
                 </div>

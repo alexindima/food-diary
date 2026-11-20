@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, type Observable } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
@@ -38,21 +38,7 @@ export class PremiumCancellationActionsComponent {
         }
         this.loading.set(true);
         try {
-            const feedback = await firstValueFrom(
-                this.dialog
-                    .open<PremiumCancelDialogComponent, PremiumCancelDialogData, CancellationFeedback>(PremiumCancelDialogComponent, {
-                        preset: 'confirm',
-                        data: {
-                            periodEnd: formatDateValue(
-                                this.overview()?.currentPeriodEndUtc,
-                                resolveAppLocale(resolveTranslateLanguage(this.translate)),
-                                { dateStyle: 'medium', timeStyle: 'short' },
-                            ),
-                            immediate: this.isImmediateCancellation(),
-                        },
-                    })
-                    .afterClosed(),
-            );
+            const feedback = await firstValueFrom(this.openCancellationDialog());
             if (feedback === undefined) {
                 return;
             }
@@ -69,6 +55,30 @@ export class PremiumCancellationActionsComponent {
         } finally {
             this.loading.set(false);
         }
+    }
+
+    private openCancellationDialog(): Observable<CancellationFeedback | undefined> {
+        const dialog = this.dialog.open<PremiumCancelDialogComponent, PremiumCancelDialogData, CancellationFeedback>(
+            PremiumCancelDialogComponent,
+            {
+                preset: 'confirm',
+                data: {
+                    periodEnd: formatDateValue(
+                        this.overview()?.currentPeriodEndUtc,
+                        resolveAppLocale(resolveTranslateLanguage(this.translate)),
+                        {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                        },
+                    ),
+                    immediate: this.isImmediateCancellation(),
+                },
+            },
+        );
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        return dialog.afterClosed().pipe(finalize(unregisterClose));
     }
 
     private isImmediateCancellation(): boolean {

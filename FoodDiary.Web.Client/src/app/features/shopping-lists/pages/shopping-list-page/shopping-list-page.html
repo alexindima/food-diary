@@ -79,8 +79,8 @@
                 (renameListById)="renameListById($event.listId, $event.name)"
                 (renameRequestHandled)="clearRenameRequest($event)"
             />
-            <div class="shopping-list__workspace" [attr.aria-busy]="isLoading() || isClearing()">
-                <fieldset class="shopping-list__content" [disabled]="isLoading() || isClearing()">
+            <div class="shopping-list__workspace" [attr.aria-busy]="isItemWorkspaceBusy()">
+                <fieldset class="shopping-list__content" [disabled]="list() === null || isItemWorkspaceBusy()">
                     <fd-shopping-list-items-panel
                         data-tour-id="shopping-list-items"
                         [itemForm]="itemForm"

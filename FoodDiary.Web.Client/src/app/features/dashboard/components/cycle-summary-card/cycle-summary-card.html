@@ -5,13 +5,9 @@
                 <div class="cycle-summary-card__day fd-ui-metric-lg" [hidden]="cycleDay() === null">
                     {{ 'CYCLE_CARD.DAY_LABEL' | translate: { day: cycleDay() } }}
                 </div>
-                @if (statusKey()) {
+                @if (predictionStatus(); as status) {
                     <div class="cycle-summary-card__status fd-ui-body-sm fd-ui-text-muted">
-                        @if (statusDays() !== null) {
-                            {{ statusKey() | translate: { days: statusDays() } }}
-                        } @else {
-                            {{ statusKey() | translate }}
-                        }
+                        {{ status.labelKey | translate: status.params }}
                     </div>
                 }
                 @if (hasMeta()) {

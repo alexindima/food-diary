@@ -96,7 +96,7 @@
                 <p class="quick-meal__empty fd-ui-body-sm">{{ 'QUICK_MEAL.PREVIEW_EMPTY' | translate }}</p>
             }
 
-            <div class="quick-meal__details fd-grid fd-gap-xs">
+            <fieldset class="quick-meal__details fd-grid fd-gap-xs" [disabled]="isSaving()" [attr.aria-busy]="isSaving()">
                 <fd-ui-select
                     [label]="'MEAL_MANAGE.MEAL_TYPE_LABEL' | translate"
                     [options]="mealTypeOptions()"
@@ -130,7 +130,7 @@
                         (postMealSatietyLevelChange)="updatePostMealSatietyLevel($event)"
                     />
                 }
-            </div>
+            </fieldset>
 
             <div class="quick-meal__actions fd-grid fd-gap-xs">
                 <fd-ui-button

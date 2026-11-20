@@ -11,6 +11,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { EmailVerificationCooldownService } from '../../../../shared/auth/email-verification-cooldown.service';
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
+import { MS_PER_SECOND } from '../../../../shared/lib/time.constants';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { User } from '../../../../shared/models/user.data';
@@ -18,6 +19,7 @@ import { EmailVerificationRealtimeService } from '../../lib/email-verification-r
 import { EmailVerificationPendingComponent } from './email-verification-pending';
 
 const TOTAL_PROFILE_REQUESTS = 3;
+const RESEND_COOLDOWN_SECONDS = 60;
 const PROFILE: User = {
     id: entityId<'user'>('verification-user'),
     email: 'pending@example.test',
@@ -445,6 +447,76 @@ describe('Email verification completed by manual refresh', () => {
     );
 });
 
+describe('Email verification manual refresh ownership', () => {
+    it('keeps one refresh in flight before repaint and retries after the profile request fails', async () => {
+        const response = new Subject<User | null>();
+        getInfo
+            .mockReturnValueOnce(of(PROFILE))
+            .mockReturnValueOnce(response)
+            .mockReturnValueOnce(of({ ...PROFILE, isEmailConfirmed: true }));
+        const root = await renderPageAsync();
+        const refresh = findButton(root, 'AUTH.VERIFY_PENDING.REFRESH');
+        setEmailConfirmed.mockClear();
+
+        refresh.click();
+        refresh.click();
+        fixture?.detectChanges();
+        expect(getInfo).toHaveBeenCalledTimes(2);
+        expect(response.observed).toBe(true);
+        expect(refresh.disabled).toBe(true);
+        expect(goHome).not.toHaveBeenCalled();
+
+        // The user service maps a failed profile GET to a null response.
+        response.next(null);
+        response.complete();
+        fixture?.detectChanges();
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.ERROR');
+        expect(refresh.disabled).toBe(false);
+        expect(setEmailConfirmed).not.toHaveBeenCalled();
+
+        refresh.click();
+        fixture?.detectChanges();
+        expect(getInfo).toHaveBeenCalledTimes(TOTAL_PROFILE_REQUESTS);
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.SUCCESS');
+        expect(setEmailConfirmed).toHaveBeenCalledExactlyOnceWith(true);
+        expect(goHome).toHaveBeenCalledOnce();
+        refresh.click();
+        expect(getInfo).toHaveBeenCalledTimes(TOTAL_PROFILE_REQUESTS);
+    });
+
+    it('discards a confirmed refresh response for a different account and accepts a new check for this account', async () => {
+        const otherProfile: User = {
+            ...PROFILE,
+            id: entityId<'user'>('other-verification-user'),
+            email: 'other-account@example.test',
+            isEmailConfirmed: true,
+        };
+        getInfo
+            .mockReturnValueOnce(of(PROFILE))
+            .mockReturnValueOnce(of(otherProfile))
+            .mockReturnValueOnce(of({ ...PROFILE, isEmailConfirmed: true }));
+        translateEmailDescription();
+        const root = await renderPageAsync();
+        const refresh = findButton(root, 'AUTH.VERIFY_PENDING.REFRESH');
+        setEmailConfirmed.mockClear();
+
+        refresh.click();
+        fixture?.detectChanges();
+        expect(root.textContent).toContain(PROFILE.email);
+        expect(root.textContent).not.toContain(otherProfile.email);
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.INITIAL');
+        expect(refresh.disabled).toBe(false);
+        expect(setEmailConfirmed).not.toHaveBeenCalled();
+        expect(goHome).not.toHaveBeenCalled();
+
+        refresh.click();
+        fixture?.detectChanges();
+        expect(getInfo).toHaveBeenCalledTimes(TOTAL_PROFILE_REQUESTS);
+        expect(setEmailConfirmed).toHaveBeenCalledExactlyOnceWith(true);
+        expect(goHome).toHaveBeenCalledOnce();
+    });
+});
+
 describe('Email verification manual refresh recovery', () => {
     it('ends a null-result refresh with a recoverable error and accepts the next confirmed profile', async () => {
         const response = new Subject<User | null>();
@@ -474,6 +546,41 @@ describe('Email verification manual refresh recovery', () => {
         expect(setEmailConfirmed).toHaveBeenCalledExactlyOnceWith(true);
         expect(root.querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.SUCCESS');
         expect(goHome).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Email verification cooldown ownership', () => {
+    it('clears the previous account when its countdown ticks before session events arrive', async () => {
+        const cooldown = vi
+            .spyOn(TestBed.inject(EmailVerificationCooldownService), 'remainingSeconds')
+            .mockReturnValue(RESEND_COOLDOWN_SECONDS);
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+        try {
+            translateEmailDescription();
+            const root = await renderPageAsync();
+            expect(root.textContent).toContain(PROFILE.email);
+            expect(root.querySelector('.email-verify-pending__cooldown')).not.toBeNull();
+            expect(vi.getTimerCount()).toBe(1);
+            const checkCount = cooldown.mock.calls.length;
+            setEmailConfirmed.mockClear();
+
+            currentUserId.set(entityId<'user'>('replacement-verification-user'));
+            vi.advanceTimersByTime(MS_PER_SECOND);
+            fixture?.detectChanges();
+
+            expect(root.textContent).not.toContain(PROFILE.email);
+            expect(root.querySelector('.email-verify-pending__cooldown')).toBeNull();
+            expect(vi.getTimerCount()).toBe(0);
+            expect(cooldown).toHaveBeenCalledTimes(checkCount);
+            expect(disconnect).toHaveBeenCalledOnce();
+            findButton(root, 'AUTH.VERIFY_PENDING.REFRESH').click();
+            findButton(root, 'AUTH.VERIFY_PENDING.RESEND').click();
+            expect(getInfo).toHaveBeenCalledOnce();
+            expect(resend).not.toHaveBeenCalled();
+            expect(setEmailConfirmed).not.toHaveBeenCalled();
+        } finally {
+            vi.useRealTimers();
+        }
     });
 });
 

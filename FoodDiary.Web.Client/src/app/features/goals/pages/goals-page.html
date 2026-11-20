@@ -32,12 +32,12 @@
             </div>
         } @else {
             <fd-goals-editor
+                preset="custom"
                 [calories]="calorieTarget()"
                 [macros]="allMacroViewStates()"
-                [preset]="selectedPreset()"
                 [presets]="macroPresets"
                 [presetOptions]="macroPresetOptions()"
-                [water]="waterState().value"
+                [water]="waterValue()"
                 [bodyTargets]="bodyTargetDraftValues()"
                 [cyclingEnabled]="calorieCyclingEnabled()"
                 [dayCalories]="dayCalories()"

@@ -125,6 +125,48 @@ describe('FastingService start encoding', () => {
     });
 });
 
+describe('FastingService start notes', () => {
+    const notes = 'A note for this fasting plan';
+
+    it.each([
+        {
+            intent: intermittentFastingStart('Fast16Eat8', fastingDailyWindow(INTERMITTENT_FAST_HOURS), notes),
+            expectedBody: { planType: 'Intermittent', protocol: 'Fast16Eat8', plannedDurationHours: INTERMITTENT_FAST_HOURS, notes },
+            response: { ...SESSION_RESPONSE, notes },
+        },
+        {
+            intent: cyclicFastingStart(fastingCycleDays(2), fastingCycleDays(1), fastingDailyWindow(CYCLIC_EAT_DAY_FAST_HOURS), notes),
+            expectedBody: {
+                planType: 'Cyclic',
+                cyclicFastDays: 2,
+                cyclicEatDays: 1,
+                cyclicEatDayFastHours: CYCLIC_EAT_DAY_FAST_HOURS,
+                cyclicEatDayEatingWindowHours: 6,
+                notes,
+            },
+            response: {
+                ...SESSION_RESPONSE,
+                ...NEXT_CYCLIC_PHASE_SESSION,
+                initialPlannedDurationHours: 24,
+                plannedDurationHours: 24,
+                occurrenceKind: 'FastDay',
+                cyclicEatDayFastHours: CYCLIC_EAT_DAY_FAST_HOURS,
+                cyclicEatDayEatingWindowHours: 6,
+                cyclicPhaseDayTotal: 2,
+                notes,
+            },
+        },
+    ])('round-trips an explicit note on a $intent.planType plan', async ({ intent, expectedBody, response }) => {
+        const saved = firstValueFrom(service.start(intent));
+        const request = httpMock.expectOne(`${BASE_URL}/start`);
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toEqual(expectedBody);
+        request.flush(response);
+
+        await expect(saved).resolves.toMatchObject({ planType: intent.planType, notes });
+    });
+});
+
 describe('FastingService overview', () => {
     it('should request fasting overview', () => {
         const overview = createOverview();

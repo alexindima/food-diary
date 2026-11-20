@@ -116,11 +116,10 @@ export class ProfileDietologistFacade {
             return;
         }
 
-        const previousPermissions = getDietologistPermissions(this.dietologistFormModel());
         this.dietologistForm[controlName]().value.set(nextValue);
         this.updateDietologistPermissionsState();
         if (this.hasDietologistRelationship()) {
-            this.persistDietologistPermissions(previousPermissions);
+            this.persistDietologistPermissions();
         }
     }
 
@@ -128,7 +127,7 @@ export class ProfileDietologistFacade {
         this.updateDietologistPermission(change.controlName, change.value);
     }
 
-    public persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
+    private persistDietologistPermissions(): void {
         const invitationId = this.dietologistRelationship()?.invitationId;
         if (invitationId === undefined || this.isSavingDietologistPermissions()) {
             return;
@@ -148,26 +147,22 @@ export class ProfileDietologistFacade {
             )
             .subscribe({
                 next: () => {
-                    if (this.dietologistRelationship()?.invitationId !== invitationId) {
+                    const relationship = this.dietologistRelationship();
+                    if (relationship?.invitationId !== invitationId) {
                         return;
                     }
 
                     this.dietologistError.set(null);
-                    this.updateDietologistRelationshipPermissions(nextPermissions);
+                    this.facade.dietologistRelationship.set({ ...relationship, permissions: nextPermissions });
+                    this.refreshPendingRelationshipRead();
                 },
                 error: () => {
-                    if (this.dietologistRelationship()?.invitationId !== invitationId) {
+                    const relationship = this.dietologistRelationship();
+                    if (relationship?.invitationId !== invitationId) {
                         return;
                     }
 
-                    if (previousPermissions !== undefined) {
-                        this.dietologistForm().reset({
-                            ...this.dietologistFormModel(),
-                            ...previousPermissions,
-                        });
-                        this.updateDietologistPermissionsState();
-                    }
-
+                    this.syncDietologistFormFromRelationship(relationship);
                     this.setDietologistError('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
                 },
             });
@@ -211,10 +206,7 @@ export class ProfileDietologistFacade {
         if (nextValue) {
             this.dietologistForm.shareProfile().value.set(nextValue);
             if (this.hasDietologistRelationship()) {
-                this.persistDietologistPermissions({
-                    ...getDietologistPermissions(this.dietologistFormModel()),
-                    shareProfile: !nextValue,
-                });
+                this.persistDietologistPermissions();
             }
             return;
         }
@@ -234,10 +226,9 @@ export class ProfileDietologistFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed === true && this.dietologistRelationship()?.invitationId === invitationId) {
-                    const previousPermissions = getDietologistPermissions(this.dietologistFormModel());
                     this.dietologistForm.shareProfile().value.set(false);
                     if (this.hasDietologistRelationship()) {
-                        this.persistDietologistPermissions(previousPermissions);
+                        this.persistDietologistPermissions();
                     }
                 }
             });
@@ -274,6 +265,13 @@ export class ProfileDietologistFacade {
         this.relationshipRequest.reset();
     }
 
+    private refreshPendingRelationshipRead(): void {
+        // A refresh started before the write was acknowledged may return an older relationship.
+        if (this.isLoadingDietologist()) {
+            this.loadDietologistRelationship();
+        }
+    }
+
     public syncDietologistFormFromRelationship(relationship: DietologistRelationship | null): void {
         const model = mapDietologistRelationshipToForm(relationship);
         this.dietologistForm().reset(model);
@@ -282,18 +280,6 @@ export class ProfileDietologistFacade {
 
     public updateDietologistPermissionsState(): void {
         this.dietologistPermissions.set(getDietologistPermissions(this.dietologistFormModel()));
-    }
-
-    public updateDietologistRelationshipPermissions(permissions: DietologistPermissions): void {
-        const relationship = this.facade.dietologistRelationship();
-        if (relationship === null) {
-            return;
-        }
-
-        this.facade.dietologistRelationship.set({
-            ...relationship,
-            permissions,
-        });
     }
 
     public setDietologistError(errorKey: string): void {
@@ -320,6 +306,7 @@ export class ProfileDietologistFacade {
                     this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));
                     this.facade.dietologistRelationship.set(null);
                     this.dietologistError.set(null);
+                    this.refreshPendingRelationshipRead();
                 },
                 error: () => {
                     if (this.dietologistRelationship()?.invitationId === invitationId) {

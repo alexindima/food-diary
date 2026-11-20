@@ -1,3 +1,5 @@
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
@@ -6,11 +8,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
-import { describe, expect, it, type Mock, vi } from 'vitest';
+import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
+import { stubScrollIntoView } from '../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { AuthService } from '../../services/auth.service';
+import type { BillingOverviewHttpResponse } from '../../shared/api/sdk/generated/model/billing-overview-http-response';
 import { TelegramWebAppService } from '../../shared/auth/telegram-web-app.service';
 import type { BillingOverview, CheckoutSessionResponse, PortalSessionResponse } from '../../shared/models/billing.models';
 import { PremiumBillingService } from './api/premium-billing.service';
@@ -27,6 +32,8 @@ const OTHER_ROUTE = '/other?tab=details';
 const PLANS = 'fd-premium-plans-card';
 const PRICED_MONTHLY = '$8.00';
 const PRICED_YEARLY = '$80.00';
+const BILLING_URL = environment.apiUrls.billing;
+const CANCELLATION_KEY = 'PREMIUM_PAGE.CANCELLATION';
 
 type PremiumFixture = {
     harness: RouterTestingHarness;
@@ -515,6 +522,113 @@ describe('Premium billing and trial ownership', () => {
     });
 });
 
+describe('Premium cancellation on the billing route', () => {
+    it('keeps renewal disabled after confirmation even if feedback and session refresh fail', async () => {
+        const active = cancellableSubscription();
+        const { harness, refreshSession, toast } = await renderPremiumCancellationAsync(active);
+        refreshSession.mockReturnValueOnce(throwError(() => new DOMException('Cookie session lock unavailable', 'SecurityError')));
+        const http = TestBed.inject(HttpTestingController);
+        const root = premiumRoot(harness);
+        const action = nativeButton(root, `${CANCELLATION_KEY}.ACTION`);
+        expect(action.closest('[hidden]')).toBeNull();
+        action.click();
+        action.click();
+        await redrawAsync(harness);
+
+        const dialog = cancellationDialog();
+        expect(document.body.querySelectorAll('fd-premium-cancel-dialog')).toHaveLength(1);
+        const comment = dialog.querySelector('textarea');
+        if (comment === null) {
+            throw new Error('Expected the optional cancellation feedback field');
+        }
+        comment.value = '  Prefer to renew later  ';
+        comment.dispatchEvent(new Event('input', { bubbles: true }));
+        await redrawAsync(harness);
+        nativeButton(dialog, `${CANCELLATION_KEY}.CONFIRM`).click();
+        await redrawAsync(harness);
+
+        const write = http.expectOne({ method: 'POST', url: `${BILLING_URL}/cancel` });
+        expect(write.request.body).toBeNull();
+        expect(action.disabled).toBe(true);
+        expect(root.querySelector('.premium-access-page__renewal-note')).toBeNull();
+        write.flush({
+            cancellationId: 'local-cancellation',
+            overview: { ...active, cancellationAvailable: false, renewalEnabled: false, cancelAtPeriodEnd: true },
+        });
+        await redrawAsync(harness);
+
+        const feedback = http.expectOne({ method: 'POST', url: `${BILLING_URL}/cancellations/local-cancellation/feedback` });
+        expect(feedback.request.body).toEqual({ reasonCode: null, comment: 'Prefer to renew later' });
+        expect(refreshSession).toHaveBeenCalledOnce();
+        expect(root.querySelector('.premium-access-page__renewal-note')?.textContent).toContain(
+            'PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE',
+        );
+        expect(action.isConnected).toBe(false);
+        feedback.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        await redrawAsync(harness);
+
+        expect(toast.toasts().map(item => item.message)).toEqual([`${CANCELLATION_KEY}.SUCCESS`, `${CANCELLATION_KEY}.FEEDBACK_ERROR`]);
+        expect(root.querySelector('.premium-access-page__renewal-note')).not.toBeNull();
+        http.verify();
+    });
+
+    it('closes an unconfirmed cancellation when leaving its billing route', async () => {
+        const { harness, router, refreshSession, toast } = await renderPremiumCancellationAsync(cancellableSubscription());
+        const http = TestBed.inject(HttpTestingController);
+        nativeButton(premiumRoot(harness), `${CANCELLATION_KEY}.ACTION`).click();
+        await redrawAsync(harness);
+        expect(cancellationDialog().isConnected).toBe(true);
+
+        await harness.navigateByUrl(OTHER_ROUTE);
+        await redrawAsync(harness);
+
+        expect(router.url).toBe(OTHER_ROUTE);
+        expect(harness.routeNativeElement?.textContent).toContain('Another page');
+        expect(document.body.querySelector('fd-premium-cancel-dialog')).toBeNull();
+        http.expectNone({ method: 'POST', url: `${BILLING_URL}/cancel` });
+        expect(refreshSession).not.toHaveBeenCalled();
+        expect(toast.toasts()).toEqual([]);
+        http.verify();
+    });
+});
+
+async function renderPremiumCancellationAsync(active: BillingOverview): Promise<PremiumFixture> {
+    stubScrollIntoView();
+    vi.stubGlobal(
+        'matchMedia',
+        vi.fn(() => ({ matches: false })),
+    );
+    // RouterTestingHarness owns its location separately from the dialog's browser history entry.
+    const pushHistory = vi.spyOn(window.history, 'pushState').mockImplementation(() => {});
+    onTestFinished(() => {
+        pushHistory.mockRestore();
+        vi.unstubAllGlobals();
+    });
+    return renderPremiumAsync(PREMIUM_ROUTE, undefined, false, active);
+}
+
+function cancellableSubscription(): BillingOverview {
+    return overview({
+        isPremium: true,
+        subscriptionProvider: 'paddle',
+        subscriptionStatus: 'active',
+        plan: 'monthly',
+        currentPeriodEndUtc: '2026-12-01T10:00:00Z',
+        canStartPremiumTrial: false,
+        manageBillingAvailable: true,
+        cancellationAvailable: true,
+        renewalEnabled: true,
+    });
+}
+
+function cancellationDialog(): HTMLElement {
+    const dialog = document.body.querySelector<HTMLElement>('fd-premium-cancel-dialog');
+    if (dialog === null) {
+        throw new Error('Expected the visible Premium cancellation dialog');
+    }
+    return dialog;
+}
+
 function activeTrial(): BillingOverview {
     return overview({ isPremium: true, premiumTrialActive: true, premiumTrialUsed: true, canStartPremiumTrial: false });
 }
@@ -607,6 +721,7 @@ async function renderPremiumAsync(
     target: string,
     readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValue(of(overview())),
     isTelegram = false,
+    billingHttpResponse?: BillingOverviewHttpResponse,
 ): Promise<PremiumFixture> {
     const createCheckout = vi.fn<PremiumBillingService['createCheckoutSession']>();
     const createPortal = vi.fn<PremiumBillingService['createPortalSession']>();
@@ -618,6 +733,20 @@ async function renderPremiumAsync(
         yearly: { formattedTotal: PRICED_YEARLY, currencyCode: 'USD' },
     });
     const refreshSession = vi.fn<AuthService['refreshSession']>().mockReturnValue(of(true));
+    const billingProviders =
+        billingHttpResponse === undefined
+            ? [
+                  {
+                      provide: PremiumBillingService,
+                      useValue: {
+                          getOverview: readOverview,
+                          createCheckoutSession: createCheckout,
+                          createPortalSession: createPortal,
+                          startPremiumTrial: startTrial,
+                      },
+                  },
+              ]
+            : [provideHttpClient(), provideHttpClientTesting()];
     TestBed.configureTestingModule({
         providers: [
             provideRouter([
@@ -625,25 +754,21 @@ async function renderPremiumAsync(
                 { path: 'other', component: OtherPageComponent },
             ]),
             provideTranslateTesting(),
-            {
-                provide: PremiumBillingService,
-                useValue: {
-                    getOverview: readOverview,
-                    createCheckoutSession: createCheckout,
-                    createPortalSession: createPortal,
-                    startPremiumTrial: startTrial,
-                },
-            },
+            ...billingProviders,
             { provide: TelegramWebAppService, useValue: { isMiniAppLaunch: (): boolean => isTelegram, openInvoiceAsync: openInvoice } },
             {
                 provide: PaddleCheckoutService,
                 useValue: { openTransactionCheckoutAsync: openWidget, previewPlanPricesAsync: previewPrices },
             },
-            { provide: AuthService, useValue: { isPremium: signal(false), refreshSession } },
+            { provide: AuthService, useValue: { isPremium: signal(billingHttpResponse?.isPremium ?? false), refreshSession } },
         ],
     });
     await firstValueFrom(TestBed.inject(TranslateService).use('en'));
     const harness = await RouterTestingHarness.create(target);
+    if (billingHttpResponse !== undefined) {
+        const http = TestBed.inject(HttpTestingController);
+        http.expectOne({ method: 'GET', url: `${BILLING_URL}/overview` }).flush(billingHttpResponse);
+    }
     await redrawAsync(harness);
     return {
         harness,

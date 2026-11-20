@@ -12,6 +12,8 @@ type ProductNutritionPatchField = keyof Pick<
     ProductFormValues,
     'caloriesPerBase' | 'proteinsPerBase' | 'fatsPerBase' | 'carbsPerBase' | 'fiberPerBase' | 'alcoholPerBase'
 >;
+type UsdaFoodDetailPrefillPatch = Pick<ProductFormValues, 'name' | 'usdaFdcId' | 'baseUnit' | 'baseAmount'> &
+    Partial<Record<ProductNutritionPatchField, number>>;
 
 export function buildOpenFoodFactsLookupPatch(values: ProductFormValues, offProduct: OpenFoodFactsProduct): Partial<ProductFormValues> {
     const patch: Partial<ProductFormValues> = {};
@@ -50,7 +52,7 @@ export function buildSourceProductPrefillPatch(product: NutritionSourceProduct):
     return patch;
 }
 
-export function buildUsdaFoodDetailPrefillPatch(detail: UsdaFoodDetail): Partial<ProductFormValues> {
+export function buildUsdaFoodDetailPrefillPatch(detail: UsdaFoodDetail): UsdaFoodDetailPrefillPatch {
     const nutrients = detail.nutrients;
     const calories = getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.energy], [/^energy$/i]);
     const proteins = getUsdaNutrientAmount(nutrients, [USDA_NUTRIENT_IDS.protein], [/^protein$/i]);

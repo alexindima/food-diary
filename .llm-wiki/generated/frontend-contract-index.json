@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 525,
-    "componentsWithoutDirectSpecs": 126,
-    "inputs": 1685,
-    "outputs": 564,
+    "components": 523,
+    "componentsWithoutDirectSpecs": 125,
+    "inputs": 1687,
+    "outputs": 563,
     "apiCalls": 336,
-    "templatesWithTranslations": 380,
+    "templatesWithTranslations": 379,
     "translationKeys": 2304,
     "consumerEdges": 1357,
     "consumedComponents": 331,
-    "unconsumedComponents": 193
+    "unconsumedComponents": 191
   },
   "components": [
     {
@@ -8776,6 +8776,11 @@
           "required": true
         },
         {
+          "name": "incomplete",
+          "type": "boolean",
+          "required": true
+        },
+        {
           "name": "barPercent",
           "type": "number",
           "required": true
@@ -8794,7 +8799,7 @@
       "outputs": [
         {
           "name": "valueChange",
-          "type": "{ key: DayCalorieKey; value: number }"
+          "type": "{ key: DayCalorieKey; value: number | null }"
         }
       ],
       "specPath": null
@@ -8823,12 +8828,17 @@
           "name": "dayCalories",
           "type": "Record<DayCalorieKey, number>",
           "required": true
+        },
+        {
+          "name": "incompleteNumbers",
+          "type": "ReadonlySet<GoalNumberKey>",
+          "required": true
         }
       ],
       "outputs": [
         {
           "name": "dayCaloriesChange",
-          "type": "{ key: DayCalorieKey; value: number }"
+          "type": "{ key: DayCalorieKey; value: number | null }"
         },
         {
           "name": "enabledChange",
@@ -12119,19 +12129,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.spec.ts"
     },
     {
-      "class": "LandingCtaComponent",
-      "selector": "fd-landing-cta",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "LandingFaqComponent",
       "selector": "fd-landing-faq",
       "feature": "public",
@@ -14151,24 +14148,6 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.spec.ts"
-    },
-    {
-      "class": "CardComponent",
-      "selector": "fd-card",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/card/card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/card/card.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/components/shared/card/card.scss"
-      ],
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "cardClick",
-          "type": ""
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/components/shared/card/card.spec.ts"
     },
     {
       "class": "ConfirmDeleteDialogComponent",
@@ -24120,6 +24099,7 @@
         "GOALS_PAGE.EDITOR.CYCLING_NOTE",
         "GOALS_PAGE.EDITOR.DISABLED",
         "GOALS_PAGE.EDITOR.ENABLED",
+        "GOALS_PAGE.EDITOR.NUMBER_RANGE",
         "GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS",
         "GOALS_PAGE.EDITOR.RESET_DAYS",
         "GOALS_PAGE.EDITOR.WEEKLY_AVERAGE",
@@ -25252,16 +25232,6 @@
         "LANDING_HERO.RECIPES",
         "LANDING_HERO.REGISTER",
         "LANDING_HERO.SUBTITLE"
-      ]
-    },
-    {
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
-      "keys": [
-        "LANDING_CTA.LOGIN",
-        "LANDING_CTA.REGISTER",
-        "LANDING_CTA.SUBTITLE",
-        "LANDING_CTA.TITLE"
       ]
     },
     {
@@ -32345,6 +32315,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "variant"
@@ -33383,20 +33355,6 @@
       "occurrences": 2,
       "inputsUsed": [
         "appearance",
-        "fill",
-        "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "public",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
-      "occurrences": 2,
-      "inputsUsed": [
         "fill",
         "size",
         "variant"
@@ -37347,6 +37305,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "goals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
       "occurrences": 1,
       "inputsUsed": [
         "error"
@@ -43225,6 +43195,7 @@
       "inputsUsed": [
         "barPercent",
         "dayKey",
+        "incomplete",
         "labelKey",
         "value",
         "weekend",
@@ -43244,7 +43215,8 @@
       "inputsUsed": [
         "baseCalories",
         "dayCalories",
-        "enabled"
+        "enabled",
+        "incompleteNumbers"
       ],
       "outputsHandled": [
         "dayCaloriesChange",

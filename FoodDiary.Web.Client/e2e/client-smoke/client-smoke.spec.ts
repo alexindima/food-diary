@@ -1093,6 +1093,47 @@ test.describe('goals native incomplete number', () => {
     });
 });
 
+test.describe('goals native cycling weekday', () => {
+    test.use({ serviceWorkers: 'block' });
+
+    test('blocks saving an incomplete weekday and saves rounded and explicit zero values', async ({ page, baseURL }, testInfo) => {
+        const { monday, save, changeBar, writes, errors } = await openCyclingWeekdayAsync(page, baseURL);
+        await monday.selectText();
+        await monday.pressSequentially('-');
+        const nativeDraft = await readCyclingWeekdayAsync(monday, save);
+        await testInfo.attach('incomplete-weekday', { body: JSON.stringify(nativeDraft), contentType: 'application/json' });
+        expect(nativeDraft).toEqual({ value: '', badInput: true, ariaInvalid: 'true', saveDisabled: true });
+        await expect(monday).toHaveAccessibleDescription('Enter a number greater than or equal to 0.');
+        const repeat = page.getByRole('button', { name: 'Repeat weekdays' });
+        await expect(repeat).toBeDisabled();
+        await expect(repeat).toHaveAttribute('title', 'Enter a number greater than or equal to 0.');
+        await expect(page.locator('.goals-editor-cycling__summary')).toContainText('3,940');
+        expect(writes).toEqual([]);
+        await page.screenshot({ path: testInfo.outputPath('incomplete-weekday.png') });
+
+        const corrected = '2075.6';
+        const normalizedCalories = 2076;
+        await monday.fill(corrected);
+        await expect(monday).toHaveValue(String(normalizedCalories));
+        await expect(monday).toHaveAttribute('aria-invalid', 'false');
+        await expect(save).toBeEnabled();
+        await save.click();
+        await expect(changeBar).toHaveCount(0);
+        expect(writes).toEqual([expect.objectContaining({ mondayCalories: normalizedCalories, tuesdayCalories: SAVED_TUESDAY_CALORIES })]);
+
+        await monday.fill('0');
+        await expect(save).toBeEnabled();
+        await save.click();
+        await expect(changeBar).toHaveCount(0);
+        expect(writes).toEqual([
+            expect.objectContaining({ mondayCalories: normalizedCalories }),
+            expect.objectContaining({ mondayCalories: 0, tuesdayCalories: SAVED_TUESDAY_CALORIES }),
+        ]);
+        await expect(monday).toHaveValue('0');
+        expect(errors).toEqual([]);
+    });
+});
+
 test.describe('deterministic authenticated feature fixtures', () => {
     test('renders deterministic meal plan detail data', async ({ page }) => {
         await authenticateUserAsync(page);
@@ -2327,6 +2368,80 @@ type IncompleteGoalNumberCase = {
     target: 'dailyCalorieTarget' | 'proteinTarget' | 'waterGoal';
     corrected: number;
 };
+
+const SAVED_MONDAY_CALORIES = 1840;
+const SAVED_TUESDAY_CALORIES = 2100;
+
+type CyclingWeekdayTestPage = {
+    monday: Locator;
+    save: Locator;
+    changeBar: Locator;
+    writes: unknown[];
+    errors: string[];
+};
+
+async function openCyclingWeekdayAsync(page: Page, baseURL: string | undefined): Promise<CyclingWeekdayTestPage> {
+    const writes: unknown[] = [];
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => {
+        if (message.type() === 'error') {
+            errors.push(message.text());
+        }
+    });
+    await page.route('**/*', async route => {
+        if (new URL(route.request().url()).origin === baseURL) {
+            await route.continue();
+            return;
+        }
+        await route.abort();
+    });
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    await installNotificationHubAsync(page);
+    let goals = {
+        ...INCOMPLETE_GOAL_NUMBER_FIXTURE,
+        calorieCyclingEnabled: true,
+        mondayCalories: SAVED_MONDAY_CALORIES,
+        tuesdayCalories: SAVED_TUESDAY_CALORIES,
+    };
+    await page.route('**/api/v1/goals', async route => {
+        const request = route.request();
+        if (request.method() === 'PATCH') {
+            const changes: unknown = request.postDataJSON();
+            writes.push(changes);
+            if (typeof changes === 'object' && changes !== null) {
+                goals = { ...goals, ...changes };
+            }
+            await route.fulfill(jsonFixture(fixtureContract, 'PATCH', request.url(), goals));
+            return;
+        }
+        await route.fulfill(jsonFixture(fixtureContract, 'GET', request.url(), goals));
+    });
+
+    await page.goto('/goals');
+    const monday = page.locator('#goals-editor-cycling-mondayCalories');
+    await expect(monday).toHaveValue(String(SAVED_MONDAY_CALORIES));
+    const changeBar = page.locator('fd-unsaved-changes-bar');
+    const save = changeBar.getByRole('button', { name: 'Save changes' });
+    return { monday, save, changeBar, writes, errors };
+}
+
+type CyclingWeekdayDraft = {
+    value: string;
+    badInput: boolean;
+    ariaInvalid: string | null;
+    saveDisabled: boolean;
+};
+
+async function readCyclingWeekdayAsync(day: Locator, save: Locator): Promise<CyclingWeekdayDraft> {
+    const input = await day.evaluate((element: HTMLInputElement) => ({
+        value: element.value,
+        badInput: element.validity.badInput,
+        ariaInvalid: element.getAttribute('aria-invalid'),
+    }));
+    return { ...input, saveDisabled: await save.isDisabled() };
+}
 
 const INCOMPLETE_GOAL_NUMBER_FIXTURE = {
     dailyCalorieTarget: 1900,

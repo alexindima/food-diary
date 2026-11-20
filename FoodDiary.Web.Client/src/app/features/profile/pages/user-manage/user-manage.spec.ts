@@ -412,6 +412,82 @@ describe('UserManageComponent dietologist disconnect', () => {
     });
 });
 
+describe('Profile dietologist writes during notification refresh', () => {
+    it('keeps a saved permission when an older notification refresh completes later', async () => {
+        const original = dietologistRelationship('Accepted');
+        const saved = { ...original, permissions: { ...original.permissions, shareMeals: false } };
+        await createComponentAsync(original);
+        const card = openDietologistCard();
+        const meals = 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS"]';
+        const save = new Subject<void>();
+        const stale = new Subject<DietologistRelationship | null>();
+        dietologistService.updatePermissions.mockReturnValueOnce(save);
+
+        dietologistButton(card, meals).click();
+        expect(dietologistService.updatePermissions).toHaveBeenCalledExactlyOnceWith(saved.permissions);
+        startDietologistRelationshipRefresh(stale);
+        dietologistService.getRelationship.mockReturnValueOnce(of(saved));
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_LOADING');
+
+        save.next();
+        save.complete();
+        stale.next(original);
+        stale.complete();
+        fixture.detectChanges();
+
+        expect(dietologistButton(card, meals).getAttribute('aria-checked')).toBe('false');
+        expect(dietologistError(card)).toBeNull();
+    });
+
+    it('restores the latest known permissions when a save fails after a notification refresh', async () => {
+        const original = dietologistRelationship('Accepted');
+        const updated = { ...original, permissions: { ...original.permissions, shareWeight: false } };
+        await createComponentAsync(original);
+        const card = openDietologistCard();
+        const meals = 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS"]';
+        const weight = 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT"]';
+        const save = new Subject<void>();
+        dietologistService.updatePermissions.mockReturnValueOnce(save);
+
+        dietologistButton(card, meals).click();
+        await refreshDietologistRelationshipAsync(updated);
+        expect(dietologistButton(card, weight).getAttribute('aria-checked')).toBe('false');
+
+        save.error(new Error('Permission service temporarily unavailable'));
+        fixture.detectChanges();
+
+        expect(dietologistButton(card, meals).getAttribute('aria-checked')).toBe('true');
+        expect(dietologistButton(card, weight).getAttribute('aria-checked')).toBe('false');
+        expect(dietologistError(card)).toBe('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
+    });
+
+    it('keeps the invitation form visible when an older notification refresh completes after disconnect', async () => {
+        const original = dietologistRelationship('Accepted');
+        await createComponentAsync(original, true);
+        const card = openDietologistCard();
+        const action = '.user-manage__dietologist-summary-button button';
+        const disconnect = new Subject<void>();
+        const stale = new Subject<DietologistRelationship | null>();
+        dietologistService.revokeRelationship.mockReturnValueOnce(disconnect);
+
+        dietologistButton(card, action).click();
+        expect(dietologistService.revokeRelationship).toHaveBeenCalledOnce();
+        startDietologistRelationshipRefresh(stale);
+        dietologistService.getRelationship.mockReturnValueOnce(of(null));
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_LOADING');
+
+        disconnect.next();
+        disconnect.complete();
+        stale.next(original);
+        stale.complete();
+        fixture.detectChanges();
+
+        expect(dietologistButton(card, action).textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
+        expect(card.querySelector<HTMLInputElement>('input[type="email"]')?.disabled).toBe(false);
+        expect(dietologistError(card)).toBeNull();
+    });
+});
+
 describe('Profile dietologist requests after the relationship changes', () => {
     it.each(['success', 'error'] as const)('keeps the current permissions after the previous save returns %s', async outcome => {
         const original = dietologistRelationship('Accepted');
@@ -510,12 +586,16 @@ function replacementDietologistRelationship(): DietologistRelationship {
 }
 
 async function refreshDietologistRelationshipAsync(relationship: DietologistRelationship): Promise<void> {
-    dietologistService.getRelationship.mockReturnValueOnce(of(relationship));
-    notificationService.notificationsChangedVersion.update(version => version + 1);
-    fixture.detectChanges();
+    startDietologistRelationshipRefresh(of(relationship));
     await fixture.whenStable();
     fixture.detectChanges();
     expect(facade.dietologistRelationship()).toEqual(relationship);
+}
+
+function startDietologistRelationshipRefresh(response: Observable<DietologistRelationship | null>): void {
+    dietologistService.getRelationship.mockReturnValueOnce(response);
+    notificationService.notificationsChangedVersion.update(version => version + 1);
+    fixture.detectChanges();
 }
 
 describe('Profile pending dietologist invitation recovery', () => {

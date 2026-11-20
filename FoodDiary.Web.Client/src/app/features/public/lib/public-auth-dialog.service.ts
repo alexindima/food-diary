@@ -39,11 +39,18 @@ export class PublicAuthDialogService {
             return null;
         }
 
-        return this.fdDialogService.open(AuthDialogComponent, {
+        const dialog = this.fdDialogService.open(AuthDialogComponent, {
             preset: 'form',
             ariaLabel: this.translate.instant('AUTH.DIALOG_TITLE'),
             autoFocus: mode === 'login' ? '#auth-login-email' : '#auth-register-email',
             data: { mode, returnUrl, adminReturnUrl, messageKey },
         });
+        if (destroyRef !== undefined) {
+            const unregisterClose = destroyRef.onDestroy(() => {
+                dialog.close();
+            });
+            dialog.afterClosed().subscribe({ complete: unregisterClose });
+        }
+        return dialog;
     }
 }

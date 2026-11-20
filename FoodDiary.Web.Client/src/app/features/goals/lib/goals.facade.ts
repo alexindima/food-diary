@@ -1,28 +1,15 @@
-import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
-import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
-import {
-    CARB_CALORIES_PER_GRAM,
-    FAT_CALORIES_PER_GRAM,
-    PERCENT_MULTIPLIER,
-    PROTEIN_CALORIES_PER_GRAM,
-} from '../../../shared/lib/nutrition.constants';
+import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import type { DayCalorieKey, GoalsResponse, UpdateGoalsRequest } from '../../../shared/models/goals.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { GoalsService } from '../api/goals.service';
-import { GOALS_AUTOSAVE_DEBOUNCE_MS, GOALS_DEFAULT_ZONE_ALPHA, GOALS_MAX_CALORIES, MAX_BODY_TARGET } from './goals.constants';
-import {
-    type BodyTargetKey,
-    buildGoalsRequest,
-    clampGoalValue,
-    createDayCalories,
-    createDayCaloriesFromGoals,
-    type MacroKey,
-} from './goals-state.mapper';
+import { GOALS_DEFAULT_ZONE_ALPHA, GOALS_MAX_CALORIES } from './goals.constants';
+import { type BodyTargetKey, clampGoalValue, createDayCalories, createDayCaloriesFromGoals, type MacroKey } from './goals-state.mapper';
 
 export type { BodyTargetKey, MacroKey } from './goals-state.mapper';
 
@@ -54,15 +41,6 @@ export type MacroPreset = {
     key: MacroPresetKey;
     labelKey: string;
     percent?: MacroPercent;
-};
-
-type SliderConfig = {
-    labelKey: string;
-    unit: string;
-    max: number;
-    greenFrom: number;
-    greenTo: number;
-    zones: MacroZone[];
 };
 
 @Injectable()
@@ -137,30 +115,6 @@ export class GoalsFacade {
         },
     ];
 
-    private readonly waterConfig: SliderConfig = {
-        labelKey: 'GOALS_PAGE.WATER_LABEL',
-        unit: 'ml',
-        max: GOALS_MAX_CALORIES,
-        greenFrom: 1200,
-        greenTo: 2500,
-        zones: [
-            { from: 0, to: 1200, color: this.colorBlue },
-            { from: 1200, to: 2500, color: this.colorGreen },
-            { from: 2500, to: 3500, color: this.colorOrange },
-            { from: 3500, to: GOALS_MAX_CALORIES, color: this.colorRed },
-        ],
-    };
-
-    private readonly autosaveQueue: AutosaveQueue<UpdateGoalsRequest> = createAutosaveQueue({
-        debounceMs: GOALS_AUTOSAVE_DEBOUNCE_MS,
-        isBusy: () => this.isSavingGoals(),
-        persist: request => {
-            this.persistGoals(request);
-        },
-    });
-
-    public readonly minCalories = 0;
-    public readonly maxCalories = GOALS_MAX_CALORIES;
     public readonly calorieTarget = signal(0);
     public readonly calorieCyclingEnabled = signal(false);
     public readonly dayCalories = signal<Record<DayCalorieKey, number>>(createDayCalories(0));
@@ -178,10 +132,6 @@ export class GoalsFacade {
     public readonly isLoadingGoals = signal(true);
     public readonly isSavingGoals = signal(false);
     public readonly hasLoadError = signal(false);
-    public readonly selectedPreset = signal<MacroPresetKey>('custom');
-    public readonly hasPendingAutosave = signal(false);
-    public readonly hasAutosaveError = signal(false);
-
     public readonly macroPresets: MacroPreset[] = [
         { key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' },
         {
@@ -211,22 +161,6 @@ export class GoalsFacade {
         },
     ];
 
-    public constructor() {
-        effect(() => {
-            const presetKey = this.selectedPreset();
-            if (presetKey === 'custom') {
-                return;
-            }
-
-            const preset = this.macroPresets.find(item => item.key === presetKey);
-            if (preset?.percent === undefined) {
-                return;
-            }
-
-            this.applyPresetPercent(preset.percent);
-        });
-    }
-
     public readonly macroStates = computed(() =>
         this.macroConfigs.map(cfg => {
             const rawValue = this.macroValues()[cfg.key];
@@ -241,34 +175,11 @@ export class GoalsFacade {
         }),
     );
 
-    public readonly waterState = computed(() => {
-        const rawValue = this.waterValue();
-        const value = this.clampValue(rawValue, this.waterConfig.max);
-        const percent = Math.min(PERCENT_MULTIPLIER, Math.max(0, Math.round((value / this.waterConfig.max) * PERCENT_MULTIPLIER)));
-        const accent = this.pickZoneColor(this.waterConfig, value);
-        const gradient = this.buildZoneGradient(this.waterConfig);
-        const shortfall = Math.max(0, Math.ceil(this.waterConfig.greenFrom - value));
-        const inRange = value >= this.waterConfig.greenFrom && value <= this.waterConfig.greenTo;
-
-        return { ...this.waterConfig, value, percent, accent, gradient, shortfall, inRange };
-    });
-
-    public readonly coreMacroStates = computed(() => this.macroStates().filter(macro => macro.key !== 'fiber'));
-    public readonly fiberMacroState = computed(() => this.macroStates().find(macro => macro.key === 'fiber'));
     public readonly saveStatusKey = computed(() => {
         if (this.isLoadingGoals()) {
             return 'GOALS_PAGE.STATUS_LOADING';
         }
-        if (this.isSavingGoals()) {
-            return 'GOALS_PAGE.STATUS_SAVING';
-        }
-        if (this.hasAutosaveError()) {
-            return null;
-        }
-        if (this.hasPendingAutosave()) {
-            return 'GOALS_PAGE.STATUS_PENDING';
-        }
-        return null;
+        return this.isSavingGoals() ? 'GOALS_PAGE.STATUS_SAVING' : null;
     });
 
     public initialize(): void {
@@ -282,104 +193,31 @@ export class GoalsFacade {
     }
 
     public async saveManuallyAsync(request: UpdateGoalsRequest): Promise<boolean> {
-        this.autosaveQueue.clearPending();
-        this.hasAutosaveError.set(false);
-        this.hasPendingAutosave.set(false);
-        return new Promise(resolve => {
-            this.persistGoals(request, resolve);
-        });
-    }
-
-    public updateCalories(rawValue: number): void {
-        if (Number.isNaN(rawValue)) {
-            return;
-        }
-
-        this.calorieTarget.set(this.clampCalories(rawValue));
-        this.reapplyPresetIfNeeded();
-        this.queueAutosave();
-    }
-
-    public normalizeCaloriesInput(value: number): number {
-        const clamped = this.clampCalories(value);
-        this.calorieTarget.set(clamped);
-        this.reapplyPresetIfNeeded();
-        this.queueAutosave();
-        return clamped;
-    }
-
-    public updateBodyTarget(key: BodyTargetKey, value: number, max = MAX_BODY_TARGET): number | null {
-        if (Number.isNaN(value)) {
-            return null;
-        }
-
-        const clamped = this.clampValue(value, max);
-        this.bodyTargetValues.update(current => ({
-            ...current,
-            [key]: clamped,
-        }));
-        this.queueAutosave();
-        return clamped;
-    }
-
-    public changeMacroPreset(next: MacroPresetKey): void {
-        const preset = this.macroPresets.find(item => item.key === next);
-        if (preset?.percent !== undefined) {
-            this.applyPresetPercent(preset.percent);
-        }
-        this.selectedPreset.set(next);
-        this.queueAutosave();
-    }
-
-    public updateMacroValue(key: MacroKey, value: number): number | null {
-        const cfg = this.macroConfigs.find(item => item.key === key);
-        if (cfg === undefined || Number.isNaN(value)) {
-            return null;
-        }
-
-        const clamped = this.clampValue(value, cfg.max);
-        this.macroValues.update(current => ({
-            ...current,
-            [key]: clamped,
-        }));
-        this.selectedPreset.set('custom');
-        this.queueAutosave();
-        return clamped;
-    }
-
-    public updateWaterValue(value: number): number | null {
-        if (Number.isNaN(value)) {
-            return null;
-        }
-
-        const clamped = this.clampValue(value, this.waterConfig.max);
-        this.waterValue.set(clamped);
-        this.queueAutosave();
-        return clamped;
-    }
-
-    public toggleCalorieCycling(): void {
-        const next = !this.calorieCyclingEnabled();
-        this.calorieCyclingEnabled.set(next);
-        if (next) {
-            const base = this.calorieTarget();
-            const current = this.dayCalories();
-            const allZero = Object.values(current).every(v => v === 0);
-            if (allZero && base > 0) {
-                this.dayCalories.set(createDayCalories(base));
+        this.isSavingGoals.set(true);
+        try {
+            const goals = await firstValueFrom(this.goalsService.updateGoals(request));
+            if (goals === null) {
+                return this.reportSaveFailure();
             }
+
+            this.applyLoadedGoals(goals);
+            this.invalidation.reportGoalMutation();
+            if (!this.destroyRef.destroyed) {
+                this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
+            }
+            return true;
+        } catch {
+            return this.reportSaveFailure();
+        } finally {
+            this.isSavingGoals.set(false);
         }
-        this.queueAutosave();
     }
 
-    public updateDayCalories(key: DayCalorieKey, value: number): void {
-        if (Number.isNaN(value)) {
-            return;
+    private reportSaveFailure(): false {
+        if (!this.destroyRef.destroyed) {
+            this.toastService.error(this.translateService.instant('GOALS_PAGE.STATUS_ERROR'));
         }
-
-        const clamped = this.clampCalories(value);
-        this.dayCalories.update(current => ({ ...current, [key]: clamped }));
-        this.queueAutosave();
+        return false;
     }
 
     private loadGoals(): void {
@@ -404,144 +242,49 @@ export class GoalsFacade {
     }
 
     private applyLoadedGoals(goals: GoalsResponse | null): void {
-        this.selectedPreset.set('custom');
         this.applyLoadedCalorieTarget(goals);
         this.applyLoadedMacroTargets(goals);
-        this.waterValue.set(this.clampOptionalValue(goals?.waterGoal, this.waterConfig.max));
+        this.waterValue.set(this.clampOptionalValue(goals?.waterGoal, GOALS_MAX_CALORIES));
         this.bodyTargetValues.set({
             weight: goals?.desiredWeightKg ?? 0,
             waist: goals?.desiredWaistCm ?? 0,
         });
         this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
         this.dayCalories.set(createDayCaloriesFromGoals(goals));
-        this.hasAutosaveError.set(false);
-        this.hasPendingAutosave.set(false);
     }
 
     private applyLoadedCalorieTarget(goals: GoalsResponse | null): void {
-        this.calorieTarget.set(this.clampOptionalValue(goals?.dailyCalorieTarget, this.maxCalories));
+        this.calorieTarget.set(this.clampOptionalValue(goals?.dailyCalorieTarget, GOALS_MAX_CALORIES));
     }
 
     private applyLoadedMacroTargets(goals: GoalsResponse | null): void {
-        const macroInputs: Array<[MacroKey, number | null | undefined]> = [
-            ['protein', goals?.proteinTarget],
-            ['fats', goals?.fatTarget],
-            ['carbs', goals?.carbTarget],
-            ['fiber', goals?.fiberTarget],
-        ];
+        const loaded: Record<MacroKey, number | null | undefined> = {
+            protein: goals?.proteinTarget,
+            fats: goals?.fatTarget,
+            carbs: goals?.carbTarget,
+            fiber: goals?.fiberTarget,
+        };
         const nextMacros = { ...this.macroValues() };
-
-        macroInputs.forEach(([key, value]) => {
-            this.applyLoadedMacroTarget(nextMacros, key, value);
-        });
-
-        this.macroValues.set(nextMacros);
-    }
-
-    private applyLoadedMacroTarget(nextMacros: Record<MacroKey, number>, key: MacroKey, value: number | null | undefined): void {
-        const cfg = this.macroConfigs.find(item => item.key === key);
-        if (cfg !== undefined) {
-            nextMacros[key] = this.clampOptionalValue(value, cfg.max);
+        for (const { key, max } of this.macroConfigs) {
+            nextMacros[key] = this.clampOptionalValue(loaded[key], max);
         }
+        this.macroValues.set(nextMacros);
     }
 
     private clampOptionalValue(value: number | null | undefined, max: number): number {
         return value !== undefined && value !== null ? this.clampValue(value, max) : 0;
     }
 
-    private queueAutosave(): void {
-        this.hasAutosaveError.set(false);
-        this.hasPendingAutosave.set(true);
-        this.autosaveQueue.schedule(
-            buildGoalsRequest({
-                calorieTarget: this.calorieTarget(),
-                macros: this.macroValues(),
-                waterValue: this.waterValue(),
-                bodyTargets: this.bodyTargetValues(),
-                calorieCyclingEnabled: this.calorieCyclingEnabled(),
-                dayCalories: this.dayCalories(),
-            }),
-        );
-    }
-
-    private persistGoals(request: UpdateGoalsRequest, completed?: (saved: boolean) => void): void {
-        this.hasPendingAutosave.set(false);
-        this.isSavingGoals.set(true);
-        this.goalsService
-            .updateGoals(request)
-            .pipe(
-                finalize(() => {
-                    this.isSavingGoals.set(false);
-                }),
-            )
-            .subscribe({
-                next: goals => {
-                    if (goals === null) {
-                        const hasQueuedUpdate = this.autosaveQueue.hasPending();
-                        if (!hasQueuedUpdate) {
-                            this.autosaveQueue.restore(request);
-                        } else {
-                            this.autosaveQueue.scheduleIfPending();
-                        }
-
-                        this.showSaveError();
-                        this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
-                        completed?.(false);
-                        return;
-                    }
-
-                    const hasQueuedUpdate = this.autosaveQueue.hasPending();
-                    if (!hasQueuedUpdate) {
-                        this.applyLoadedGoals(goals);
-                    }
-
-                    this.hasAutosaveError.set(false);
-                    this.invalidation.reportGoalMutation();
-                    if (!this.destroyRef.destroyed) {
-                        this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
-                    }
-                    this.autosaveQueue.scheduleIfPending();
-                    this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
-                    completed?.(true);
-                },
-                error: () => {
-                    const hasQueuedUpdate = this.autosaveQueue.hasPending();
-                    if (!hasQueuedUpdate) {
-                        this.autosaveQueue.restore(request);
-                    } else {
-                        this.autosaveQueue.scheduleIfPending();
-                    }
-
-                    this.showSaveError();
-                    this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
-                    completed?.(false);
-                },
-            });
-    }
-
-    private showSaveError(): void {
-        if (this.destroyRef.destroyed) {
-            return;
-        }
-
-        this.hasAutosaveError.set(true);
-        this.toastService.error(this.translateService.instant('GOALS_PAGE.STATUS_ERROR'));
-    }
-
-    private clampCalories(value: number): number {
-        return Math.min(this.maxCalories, Math.max(this.minCalories, Math.round(value)));
-    }
-
     private clampValue(value: number, max: number): number {
         return clampGoalValue(value, max);
     }
 
-    private pickZoneColor(cfg: SliderConfig | MacroItem, value: number): string {
+    private pickZoneColor(cfg: MacroItem, value: number): string {
         const zone = cfg.zones.find(item => value >= item.from && value <= item.to);
         return zone?.color ?? this.colorGreen;
     }
 
-    private buildZoneGradient(cfg: SliderConfig | MacroItem): string {
+    private buildZoneGradient(cfg: MacroItem): string {
         const parts = cfg.zones.map(zone => {
             const start = Math.max(0, Math.min(PERCENT_MULTIPLIER, (zone.from / cfg.max) * PERCENT_MULTIPLIER));
             const end = Math.max(0, Math.min(PERCENT_MULTIPLIER, (zone.to / cfg.max) * PERCENT_MULTIPLIER));
@@ -552,44 +295,5 @@ export class GoalsFacade {
 
     private withAlpha(color: string, alpha: number): string {
         return `color-mix(in srgb, ${color} ${Math.round(alpha * PERCENT_MULTIPLIER)}%, transparent)`;
-    }
-
-    private applyPresetPercent(percent: MacroPercent): void {
-        const calories = this.calorieTarget();
-        const targetValues: Partial<Record<MacroKey, number>> = {
-            protein: (calories * percent.protein) / PROTEIN_CALORIES_PER_GRAM,
-            fats: (calories * percent.fats) / FAT_CALORIES_PER_GRAM,
-            carbs: (calories * percent.carbs) / CARB_CALORIES_PER_GRAM,
-        };
-
-        this.macroValues.update(current => {
-            const next = { ...current };
-
-            for (const cfg of this.macroConfigs) {
-                const raw = targetValues[cfg.key];
-                if (raw === undefined) {
-                    continue;
-                }
-
-                const clamped = this.clampValue(Math.round(raw), cfg.max);
-                if (next[cfg.key] !== clamped) {
-                    next[cfg.key] = clamped;
-                }
-            }
-
-            return next;
-        });
-    }
-
-    private reapplyPresetIfNeeded(): void {
-        const presetKey = this.selectedPreset();
-        if (presetKey === 'custom') {
-            return;
-        }
-
-        const preset = this.macroPresets.find(item => item.key === presetKey);
-        if (preset?.percent !== undefined) {
-            this.applyPresetPercent(preset.percent);
-        }
     }
 }

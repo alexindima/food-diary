@@ -89,7 +89,7 @@ export class MainComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.authDialogOpen = false;
-                if (this.authService.isAuthenticated()) {
+                if (this.destroyRef.destroyed || this.authService.isAuthenticated()) {
                     return;
                 }
 

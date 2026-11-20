@@ -26,14 +26,23 @@
                 <strong>{{ total() | localizedNumber: language() }} {{ 'GENERAL.UNITS.KCAL' | translate }}</strong>
             </div>
             <div class="goals-editor-cycling__actions">
-                <fd-ui-button variant="secondary" fill="ghost" icon="repeat" (click)="repeatWeekdays()">{{
-                    'GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS' | translate
-                }}</fd-ui-button>
+                <fd-ui-button
+                    variant="secondary"
+                    fill="ghost"
+                    icon="repeat"
+                    [disabled]="incompleteNumbers().has('mondayCalories')"
+                    [disabledReason]="'GOALS_PAGE.EDITOR.NUMBER_RANGE' | translate"
+                    (click)="repeatWeekdays()"
+                    >{{ 'GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS' | translate }}</fd-ui-button
+                >
                 <fd-ui-button variant="secondary" fill="ghost" icon="restart_alt" (click)="resetDays()">{{
                     'GOALS_PAGE.EDITOR.RESET_DAYS' | translate
                 }}</fd-ui-button>
             </div>
         </div>
+        @if (hasIncompleteDay()) {
+            <fd-ui-form-error id="goals-editor-cycling-error" [error]="'GOALS_PAGE.EDITOR.NUMBER_RANGE' | translate" />
+        }
         <div class="goals-editor-cycling__days-scroll">
             <div class="goals-editor-cycling__days">
                 <span class="goals-editor-cycling__average-line" aria-hidden="true"></span>
@@ -42,6 +51,7 @@
                         [dayKey]="day.key"
                         [labelKey]="day.labelKey"
                         [value]="day.value"
+                        [incomplete]="incompleteNumbers().has(day.key)"
                         [barPercent]="day.barPercent"
                         [weekend]="day.weekend"
                         [weekendPosition]="day.weekendPosition"

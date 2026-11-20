@@ -48,21 +48,23 @@ export class HydrationCardComponent {
     public readonly undoEntryId = input<string | null>(null);
     public readonly goalAction = output();
 
-    protected readonly hasGoal = computed(() => {
+    protected readonly progress = computed(() => {
         const goal = this.goal();
-        return goal !== null && goal > 0;
-    });
-    protected readonly percent = computed(() => {
-        if (!this.hasGoal()) {
-            return 0;
+        if (goal !== null && goal > 0) {
+            const total = this.total();
+            const percent = Math.max(0, Math.min((total / goal) * PERCENT_MULTIPLIER, HYDRATION_CARD_MAX_PERCENT));
+            const remaining = Math.max(0, goal - total);
+            return {
+                goal,
+                percent,
+                fillLevel: `${Math.min(percent, PERCENT_MULTIPLIER)}%`,
+                value: Math.min(Math.max(0, total), goal),
+                remaining,
+                reached: remaining === 0,
+            };
         }
-        const value = (this.total() / (this.goal() ?? 1)) * PERCENT_MULTIPLIER;
-        return Math.max(0, Math.min(value, HYDRATION_CARD_MAX_PERCENT)); // allow slight overflow visualization
+        return null;
     });
-    protected readonly fillLevel = computed(() => `${Math.min(this.percent(), PERCENT_MULTIPLIER)}%`);
-    protected readonly progressValue = computed(() => Math.min(Math.max(0, this.total()), this.goal() ?? 0));
-    protected readonly remaining = computed(() => Math.max(0, (this.goal() ?? 0) - this.total()));
-    protected readonly isGoalReached = computed(() => this.hasGoal() && this.remaining() === 0);
     protected readonly addedAmount = signal<number | null>(null);
 
     public constructor() {

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, model, out
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch';
 import { map } from 'rxjs';
 
@@ -10,6 +11,7 @@ import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-lang
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
 import { type DayCalorieKey, DAYS_OF_WEEK } from '../../../../shared/models/goals.data';
 import { GoalsCyclingDayComponent } from './goals-cycling-day';
+import type { GoalNumberKey } from './goals-editor.models';
 
 const DAYS_PER_WEEK = 7;
 const WEEKDAY_COUNT = 5;
@@ -18,7 +20,14 @@ const AVERAGE_SCALE_MULTIPLIER = 2;
 
 @Component({
     selector: 'fd-goals-cycling-row',
-    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, FdUiSwitchComponent, GoalsCyclingDayComponent],
+    imports: [
+        TranslatePipe,
+        LocalizedNumberPipe,
+        FdUiButtonComponent,
+        FdUiSwitchComponent,
+        FdUiFormErrorComponent,
+        GoalsCyclingDayComponent,
+    ],
     templateUrl: './goals-cycling-row.html',
     styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,13 +37,15 @@ export class GoalsCyclingRowComponent {
     public readonly enabled = model.required<boolean>();
     public readonly baseCalories = input.required<number>();
     public readonly dayCalories = input.required<Record<DayCalorieKey, number>>();
+    public readonly incompleteNumbers = input.required<ReadonlySet<GoalNumberKey>>();
 
-    public readonly dayCaloriesChange = output<{ key: DayCalorieKey; value: number }>();
+    public readonly dayCaloriesChange = output<{ key: DayCalorieKey; value: number | null }>();
     protected readonly language = toSignal(this.translateService.onLangChange.pipe(map(event => event.lang)), {
         initialValue: resolveTranslateLanguage(this.translateService),
     });
     protected readonly total = computed(() => DAYS_OF_WEEK.reduce((sum, day) => sum + this.dayCalories()[day.key], 0));
     protected readonly average = computed(() => Math.round(this.total() / DAYS_PER_WEEK));
+    protected readonly hasIncompleteDay = computed(() => DAYS_OF_WEEK.some(day => this.incompleteNumbers().has(day.key)));
     protected readonly days = computed(() => {
         const values = this.dayCalories();
         const maximum = Math.max(this.average() * AVERAGE_SCALE_MULTIPLIER, 1);

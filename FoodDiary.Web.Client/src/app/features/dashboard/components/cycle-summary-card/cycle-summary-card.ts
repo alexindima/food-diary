@@ -35,6 +35,11 @@ type CycleSummaryPill = {
     params?: Record<string, number | string>;
 };
 
+type CyclePredictionStatus = {
+    labelKey: string;
+    params?: { days: number };
+};
+
 const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
     Learning: 'CYCLE_CARD.CONFIDENCE_LEARNING',
     Low: 'CYCLE_CARD.CONFIDENCE_LOW',
@@ -71,59 +76,28 @@ export class CycleSummaryCardComponent {
         return calculateCycleDayNumber(resolveCycleStartDateKey(cycle, dateKey), dateKey, cycle.averageCycleLength);
     });
 
-    protected readonly statusKey = computed(() => {
+    protected readonly predictionStatus = computed<CyclePredictionStatus | null>(() => {
         const reference = this.normalizedReference();
         if (reference === null) {
             return null;
         }
 
         const predictions = this.predictions();
-        const ovulation = this.normalizeDate(predictions?.ovulationFrom ?? null);
-        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStartFrom ?? null);
-
+        const ovulation = this.normalizeDate(predictions?.ovulationFrom);
         if (ovulation !== null) {
             const days = this.daysBetween(reference, ovulation);
             if (days >= 0) {
-                return 'CYCLE_CARD.OVULATION_IN';
+                return { labelKey: 'CYCLE_CARD.OVULATION_IN', params: { days } };
             }
         }
 
-        if (nextPeriod !== null) {
-            const days = this.daysBetween(reference, nextPeriod);
-            if (days <= 0) {
-                return 'CYCLE_CARD.NEXT_PERIOD_TODAY';
-            }
-            return 'CYCLE_CARD.NEXT_PERIOD_IN';
-        }
-
-        return null;
-    });
-
-    protected readonly statusDays = computed(() => {
-        const reference = this.normalizedReference();
-        if (reference === null) {
+        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStartFrom);
+        if (nextPeriod === null) {
             return null;
         }
 
-        const predictions = this.predictions();
-        const ovulation = this.normalizeDate(predictions?.ovulationFrom ?? null);
-        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStartFrom ?? null);
-
-        if (ovulation !== null) {
-            const days = this.daysBetween(reference, ovulation);
-            if (days >= 0) {
-                return days;
-            }
-        }
-
-        if (nextPeriod !== null) {
-            const days = this.daysBetween(reference, nextPeriod);
-            if (days > 0) {
-                return days;
-            }
-        }
-
-        return null;
+        const days = this.daysBetween(reference, nextPeriod);
+        return days <= 0 ? { labelKey: 'CYCLE_CARD.NEXT_PERIOD_TODAY' } : { labelKey: 'CYCLE_CARD.NEXT_PERIOD_IN', params: { days } };
     });
 
     protected readonly modeKey = computed(() => {

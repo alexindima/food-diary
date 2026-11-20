@@ -10,9 +10,8 @@ import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_FEEDBACK_MS } from './hyd
 
 const TOTAL_ML = 1500;
 const GOAL_ML = 2000;
-const EXPECTED_PERCENT = 75;
 const OVER_GOAL_TOTAL_ML = 3000;
-const FULL_LEVEL = '100%';
+const ABOVE_PROGRESS_DISPLAY_LIMIT_ML = 5000;
 const VALID_ADD_AMOUNT_ML = 250;
 
 describe('HydrationCardComponent saved feedback', () => {
@@ -164,22 +163,6 @@ describe('HydrationCardComponent amount and progress', () => {
         expect(host.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(String(GOAL_ML));
         expect(host.textContent).toContain('HYDRATION_CARD.GOAL_REACHED');
     });
-    it('calculates progress, remaining amount, and caps the vessel fill level', async () => {
-        const { component, fixture } = await setupComponentAsync({ total: TOTAL_ML, goal: GOAL_ML });
-
-        fixture.detectChanges();
-
-        expect(component['hasGoal']()).toBe(true);
-        expect(component['percent']()).toBe(EXPECTED_PERCENT);
-        expect(component['remaining']()).toBe(GOAL_ML - TOTAL_ML);
-
-        fixture.componentRef.setInput('total', OVER_GOAL_TOTAL_ML);
-        fixture.detectChanges();
-
-        expect(component['fillLevel']()).toBe(FULL_LEVEL);
-        expect(component['isGoalReached']()).toBe(true);
-    });
-
     it('renders all quick amounts and emits the selected valid amount', async () => {
         const { component, fixture } = await setupComponentAsync();
         const addSpy = vi.fn();
@@ -209,6 +192,35 @@ describe('HydrationCardComponent amount and progress', () => {
         component['onAdd'](1);
 
         expect(addSpy).not.toHaveBeenCalled();
+    });
+});
+
+describe('Rendered hydration progress', () => {
+    it('keeps the recorded amount and rebuilds the progress view when a goal is cleared and restored', async () => {
+        const { fixture } = await setupComponentAsync({ total: TOTAL_ML, goal: GOAL_ML });
+        const host = fixture.nativeElement as HTMLElement;
+        fixture.detectChanges();
+        expect(host.querySelector('.hydration-card__percent')?.textContent).toContain('75%');
+        expect(host.querySelector<HTMLElement>('.hydration-card__water')?.style.height).toBe('75%');
+
+        fixture.componentRef.setInput('total', ABOVE_PROGRESS_DISPLAY_LIMIT_ML);
+        fixture.detectChanges();
+        expect(host.querySelector('.hydration-card__percent')?.textContent).toContain('200%');
+        expect(host.querySelector<HTMLElement>('.hydration-card__water')?.style.height).toBe('100%');
+        expect(host.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(String(GOAL_ML));
+        expect(host.querySelector('.hydration-card--goal-reached')).not.toBeNull();
+
+        fixture.componentRef.setInput('goal', null);
+        fixture.detectChanges();
+        expect(host.querySelector('.hydration-card__total')?.textContent.trim()).toBe('5,000');
+        expect(host.querySelector('.hydration-card__percent')).toBeNull();
+        expect(host.querySelector('[role="progressbar"]')).toBeNull();
+        expect(host.querySelector('.hydration-card--goal-reached')).toBeNull();
+
+        fixture.componentRef.setInput('goal', GOAL_ML);
+        fixture.detectChanges();
+        expect(host.querySelector('[role="progressbar"]')?.getAttribute('aria-valuemax')).toBe(String(GOAL_ML));
+        expect(host.querySelector('.hydration-card--goal-reached')).not.toBeNull();
     });
 });
 

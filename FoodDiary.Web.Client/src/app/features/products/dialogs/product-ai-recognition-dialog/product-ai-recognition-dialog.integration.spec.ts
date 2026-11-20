@@ -140,6 +140,60 @@ it('allows retry after an unavailable provider and an empty reply with the same 
     expect(wizard.calculateNutrition).not.toHaveBeenCalled();
 });
 
+it('retains the same photo and hint after a provider nutrition failure and lets the user apply a successful retry', async () => {
+    const photo = imageSelection('https://images.example.test/apple.jpg', 'apple-photo');
+    const description = 'Apple with peel';
+    const wizard = await openWizardAsync({ initialPhotos: [photo], initialDescription: description });
+    const item: FoodVisionItem = { nameEn: 'apple', amount: 100, unit: 'g', confidence: 0.9 };
+    const retry = new Subject<FoodVisionResponse>();
+    wizard.analyzeFoodImage
+        .mockReturnValueOnce(
+            of({
+                items: [item],
+                recognition: { id: entityId<'food-recognition'>('failed-estimate'), nutrition: null, errorCode: 'Ai.EstimateUnavailable' },
+            }),
+        )
+        .mockReturnValueOnce(retry);
+
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+
+    expect(wizard.host.querySelector('.product-ai-dialog__status')?.textContent).toContain('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+    expect(wizard.host.querySelector('fd-product-ai-recognition-result')).toBeNull();
+    expect(requiredElement(wizard.host, '.recognition-photos__preview img', HTMLImageElement).getAttribute('src')).toBe(photo.url);
+    expect(requiredElement(wizard.host, 'textarea', HTMLTextAreaElement).value).toBe(description);
+    expect(action(wizard.host, 'PRODUCT_AI_DIALOG.REANALYZE').disabled).toBe(false);
+    expect(wizard.closed).not.toHaveBeenCalled();
+
+    action(wizard.host, 'PRODUCT_AI_DIALOG.REANALYZE').click();
+    wizard.detectChanges();
+    expect(wizard.host.querySelector('.product-ai-dialog__status')?.textContent).toContain('PRODUCT_AI_DIALOG.STATUS_ANALYZING');
+    expect(wizard.host.querySelector('.product-ai-dialog__status')?.textContent).not.toContain('PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+    expect(wizard.analyzeFoodImage.mock.calls).toEqual([
+        [{ imageAssetId: photo.assetId, additionalImageAssetIds: [], description, isProductLabel: true }],
+        [{ imageAssetId: photo.assetId, additionalImageAssetIds: [], description, isProductLabel: true }],
+    ]);
+
+    const nutrients = { calories: 52, protein: 0.3, fat: 0.2, carbs: 14, fiber: 2, alcohol: 0 };
+    retry.next({
+        items: [item],
+        recognition: {
+            id: entityId<'food-recognition'>('successful-estimate'),
+            nutrition: { ...nutrients, items: [{ ...nutrients, name: 'Apple', amount: item.amount, unit: item.unit }] },
+            errorCode: null,
+        },
+    });
+    retry.complete();
+    wizard.detectChanges();
+
+    expect(wizard.host.querySelector('.product-ai-dialog__status')?.textContent).toContain('PRODUCT_AI_DIALOG.STATUS_DONE');
+    expect(requiredElement(wizard.host, 'fd-product-ai-recognition-result input', HTMLInputElement).value).toBe('Apple');
+    expect(wizard.calculateNutrition).not.toHaveBeenCalled();
+    action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').click();
+
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ name: 'Apple', caloriesPerBase: 52, images: [photo] }));
+});
+
 it('shows the estimating step and keeps the original photo editable when refining an estimate', async () => {
     const photo = imageSelection('https://images.example.test/apple.jpg', 'apple-photo');
     const wizard = await openWizardAsync({ initialPhotos: [photo], initialDescription: '   ' });
@@ -494,6 +548,78 @@ it('resumes a saved product photo with no hint and offers retry when the saved e
     expect(wizard.host.querySelector('.recognition-photos__preview img')?.getAttribute('src')).toBe(job.imageUrl);
     expect(requiredElement(wizard.host, 'textarea', HTMLTextAreaElement).value).toBe('');
     expect(action(wizard.host, 'PRODUCT_AI_DIALOG.REANALYZE').disabled).toBe(false);
+});
+
+it('restores the saved primary and additional photos in order and forwards them when applying the result', async () => {
+    const timestamp = utcInstant('2025-05-10T08:00:00Z');
+    const vision: FoodVisionResponse = {
+        items: [],
+        productLabel: {
+            name: 'Yogurt',
+            brand: null,
+            baseAmount: 100,
+            baseUnit: 'g',
+            calories: 75,
+            protein: 5,
+            fat: 2,
+            carbs: 9,
+            fiber: null,
+            alcohol: null,
+            notes: null,
+        },
+    };
+    const job: FoodRecognitionJob = {
+        id: entityId<'food-recognition'>('saved-label-recognition'),
+        isProductLabel: true,
+        imageAssetId: entityId<'image-asset'>('saved-front'),
+        imageUrl: publicImageUrl('https://images.example.test/saved-front.jpg'),
+        additionalImages: [
+            {
+                imageAssetId: entityId<'image-asset'>('saved-ingredients'),
+                imageUrl: publicImageUrl('https://images.example.test/saved-ingredients.jpg'),
+            },
+            {
+                imageAssetId: entityId<'image-asset'>('saved-nutrition'),
+                imageUrl: publicImageUrl('https://images.example.test/saved-nutrition.jpg'),
+            },
+        ],
+        createdOnUtc: timestamp,
+        updatedOnUtc: timestamp,
+        description: 'Saved yogurt label',
+        status: 'Succeeded',
+        vision,
+        nutrition: null,
+        errorCode: null,
+        nutritionErrorCode: null,
+    };
+    const wizard = await openWizardAsync({ initialPhotos: [imageSelection('https://images.example.test/current.jpg', 'current')] }, [job]);
+    wizard.resumeRecognition.mockReturnValue(of({ ...vision, recognition: { id: job.id, nutrition: job.nutrition, errorCode: null } }));
+    requiredElement(wizard.host, '.product-ai-dialog__history-link button', HTMLButtonElement).click();
+    wizard.detectChanges();
+    requiredElement(wizard.host, 'button.history-list__open', HTMLButtonElement).click();
+    wizard.detectChanges();
+
+    const expected = [
+        imageSelection('https://images.example.test/saved-front.jpg', 'saved-front'),
+        imageSelection('https://images.example.test/saved-ingredients.jpg', 'saved-ingredients'),
+        imageSelection('https://images.example.test/saved-nutrition.jpg', 'saved-nutrition'),
+    ];
+    const previews = Array.from(wizard.host.querySelectorAll('.recognition-photos__preview img'), image => image.getAttribute('src'));
+    expect(previews).toEqual(expected.map(photo => photo.url));
+    expect(requiredElement(wizard.host, 'textarea', HTMLTextAreaElement).value).toBe(job.description);
+    expect(wizard.host.querySelector('.product-ai-dialog__status')?.textContent).toContain('PRODUCT_AI_DIALOG.STATUS_DONE');
+    expect(wizard.resumeRecognition).toHaveBeenCalledExactlyOnceWith(job.id);
+    expect(wizard.analyzeFoodImage).not.toHaveBeenCalled();
+    expect(wizard.calculateNutrition).not.toHaveBeenCalled();
+
+    requiredElement(wizard.host, '#product-ai-cover', HTMLInputElement).click();
+    wizard.detectChanges();
+    expect(action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').disabled).toBe(false);
+    action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').click();
+
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ name: 'Yogurt', image: expected[0], images: expected }),
+    );
 });
 
 type RecognitionWizard = {

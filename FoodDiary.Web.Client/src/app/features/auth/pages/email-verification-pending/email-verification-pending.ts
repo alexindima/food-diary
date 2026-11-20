@@ -71,7 +71,7 @@ export class EmailVerificationPendingComponent {
     }
 
     protected onRefreshStatus(): void {
-        if (!this.ensureCurrentOwner() || this.verificationCompleted) {
+        if (!this.ensureCurrentOwner() || this.verificationCompleted || this.isChecking()) {
             return;
         }
         this.isChecking.set(true);

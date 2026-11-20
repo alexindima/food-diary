@@ -68,6 +68,9 @@ export class ShoppingListPageComponent {
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
     protected readonly isClearing = this.facade.isClearing;
+    protected readonly isItemWorkspaceBusy = computed(
+        () => this.isLoading() || this.isClearing() || (this.list() === null && this.isSaving()),
+    );
     protected readonly saveError = this.facade.saveError;
     protected readonly conflictListId = this.facade.conflictListId;
     protected readonly isCreating = this.facade.isCreating;

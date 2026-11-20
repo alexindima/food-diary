@@ -284,8 +284,7 @@ type GoalsFacadeMock = {
     hasLoadError: WritableSignal<boolean>;
     saveStatusKey: Signal<string | null>;
     macroPresets: MacroPreset[];
-    selectedPreset: WritableSignal<'custom'>;
-    waterState: WritableSignal<{ value: number }>;
+    waterValue: WritableSignal<number>;
     macroStates: WritableSignal<MacroState[]>;
     calorieCyclingEnabled: WritableSignal<boolean>;
     dayCalories: WritableSignal<Record<DayCalorieKey, number>>;
@@ -313,8 +312,7 @@ function createFacadeMock(): GoalsFacadeMock {
         hasLoadError: signal(false),
         saveStatusKey: computed(() => null),
         macroPresets: [{ key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' }],
-        selectedPreset: signal<'custom'>('custom'),
-        waterState: signal({ value: WATER_TARGET }),
+        waterValue: signal(WATER_TARGET),
         macroStates: signal([createMacroState('protein'), createMacroState('fiber')]),
         calorieCyclingEnabled: signal(false),
         dayCalories: signal(days),

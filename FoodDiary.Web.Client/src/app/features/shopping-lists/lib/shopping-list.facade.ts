@@ -104,7 +104,13 @@ export class ShoppingListFacade {
     );
 
     public applyConsolidation(listId: ShoppingListId, expected: readonly ShoppingListItem[], items: ShoppingListItem[]): boolean {
-        if (this.list()?.id !== listId || this.items() !== expected || this.isLoading() || this.isSaving()) {
+        if (
+            this.conflictListId() !== null ||
+            this.list()?.id !== listId ||
+            this.items() !== expected ||
+            this.isLoading() ||
+            this.isSaving()
+        ) {
             this.toastService.error(this.translateService.instant('SHOPPING_LIST.MERGE_STALE'));
             return false;
         }

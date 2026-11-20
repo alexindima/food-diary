@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildGoalsRequest, clampGoalValue, createDayCalories, createDayCaloriesFromGoals } from './goals-state.mapper';
+import { clampGoalValue, createDayCalories, createDayCaloriesFromGoals } from './goals-state.mapper';
 
 const MAX_VALUE = 5000;
 const CALORIE_TARGET = 2000;
 const DECIMAL_VALUE = 10.6;
 const ROUNDED_VALUE = 11;
-const WAIST_TARGET = 80;
 
 describe('goals state mapper', () => {
     it('clamps and rounds values to explicit boundaries', () => {
@@ -26,24 +25,5 @@ describe('goals state mapper', () => {
             tuesdayCalories: 0,
         });
         expect(createDayCaloriesFromGoals(null)).toEqual(createDayCalories(0));
-    });
-
-    it('includes weekday targets only when calorie cycling is enabled', () => {
-        const baseState = {
-            calorieTarget: CALORIE_TARGET,
-            macros: { protein: 100, fats: 70, carbs: 250, fiber: 30 },
-            waterValue: 2200,
-            bodyTargets: { weight: 0, waist: WAIST_TARGET },
-            dayCalories: createDayCalories(CALORIE_TARGET),
-        };
-
-        const regular = buildGoalsRequest({ ...baseState, calorieCyclingEnabled: false });
-        const cycling = buildGoalsRequest({ ...baseState, calorieCyclingEnabled: true });
-
-        expect(regular.desiredWeightKg).toBeNull();
-        expect(regular.desiredWaistCm).toBe(WAIST_TARGET);
-        expect(regular.mondayCalories).toBeUndefined();
-        expect(cycling.mondayCalories).toBe(CALORIE_TARGET);
-        expect(cycling.sundayCalories).toBe(CALORIE_TARGET);
     });
 });

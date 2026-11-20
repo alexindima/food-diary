@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { HttpStatusCode } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
@@ -663,6 +664,45 @@ describe('Meal photo review resolution', () => {
         expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(
             expect.objectContaining({ items: [{ ...session.items[0], resolution: updated }] }),
         );
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal photo rendered recognition order', () => {
+    it('saves the reordered draft with each recognized portion and its original nutrients', async () => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+        const original = createSession();
+        const apple = { ...original.items[0], nameLocal: null };
+        const pear = { ...apple, nameEn: 'Pear', amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES };
+        const session = { ...original, items: [apple, pear] };
+        const { fixture } = await setupComponentAsync({ initialSession: session, mode: 'edit' });
+        const host = fixture.nativeElement as HTMLElement;
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        fixture.detectChanges();
+
+        const container = fixture.debugElement.query(By.directive(CdkDropList)).injector.get<CdkDropList<unknown>>(CdkDropList);
+        const item = fixture.debugElement.queryAll(By.directive(CdkDrag))[1].injector.get<CdkDrag<unknown>>(CdkDrag);
+        container.dropped.emit({
+            previousIndex: 1,
+            currentIndex: 0,
+            container,
+            previousContainer: container,
+            item,
+            isPointerOverContainer: true,
+            distance: { x: 0, y: 0 },
+            dropPoint: { x: 0, y: 0 },
+            event: new MouseEvent('mouseup'),
+        });
+        fixture.detectChanges();
+        const draftNames = Array.from(host.querySelectorAll<HTMLInputElement>('.photo-ai-dialog__edit-input--name'), input => input.value);
+        expect(draftNames).toEqual(['Pear', 'Apple']);
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        fixture.detectChanges();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ items: [pear, apple] }));
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
     });
 });

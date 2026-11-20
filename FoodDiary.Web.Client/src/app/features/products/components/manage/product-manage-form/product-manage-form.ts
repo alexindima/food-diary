@@ -19,6 +19,7 @@ import { PageHeaderComponent } from '../../../../../components/shared/page-heade
 import { NavigationService } from '../../../../../services/navigation.service';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../../shared/development/development-tools';
 import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
+import { scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { Product } from '../../../../../shared/models/product.data';
@@ -64,6 +65,7 @@ import {
     createProductForm,
     getDefaultProductBaseAmount,
     getProductControlNumberValue,
+    PRODUCT_NUTRITION_FIELDS,
 } from '../product-manage-lib/product-manage-form.mapper';
 import type {
     NutritionMode,
@@ -357,10 +359,29 @@ export class ProductManageFormComponent implements UnsavedEditor {
         this.patchProductForm(buildSourceProductPrefillPatch(offProduct));
     }
 
-    private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail, selectedName: string): void {
-        const patch = buildUsdaFoodDetailPrefillPatch(detail);
-        const currentName = this.productFormModel().name;
-        this.patchProductForm(currentName === selectedName ? patch : { ...patch, name: currentName });
+    private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail, selectedName: string, selectedUnit: ProductFormValues['baseUnit']): void {
+        this.synchronizePortionNutrition();
+        const draft = this.productFormModel();
+        const imported = buildUsdaFoodDetailPrefillPatch(detail);
+        const identity = { name: draft.name === selectedName ? imported.name : draft.name, usdaFdcId: imported.usdaFdcId };
+        if (
+            draft.baseUnit !== imported.baseUnit &&
+            (draft.baseUnit !== selectedUnit || PRODUCT_NUTRITION_FIELDS.some(field => draft[field] !== null))
+        ) {
+            // A USDA amount per 100 g cannot fill a volume or piece draft the user has started editing.
+            this.patchProductForm(identity);
+            return;
+        }
+
+        const factor = (this.nutritionPortionBasis ?? imported.baseAmount) / imported.baseAmount;
+        const nutrients: Partial<ProductFormValues> = {};
+        for (const field of PRODUCT_NUTRITION_FIELDS) {
+            const amount = imported[field];
+            if (amount !== undefined && draft[field] === null) {
+                nutrients[field] = scaleNutrientInput(amount, factor);
+            }
+        }
+        this.patchProductForm({ ...identity, baseUnit: imported.baseUnit, baseAmount: imported.baseAmount, ...nutrients });
     }
 
     protected openAiRecognitionDialog(): void {
@@ -533,7 +554,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
             });
             this.patchProductForm(buildResetNutritionPatch());
             this.nameSearch.setSelectedSuggestion(suggestion);
-            const product = this.product();
+            const selection = { product: this.product(), unit: this.productFormModel().baseUnit };
             const requestId = ++this.usdaDetailRequestId;
             this.externalFoodFacade
                 .getUsdaFoodDetail(usdaFoodId(fdcId))
@@ -545,10 +566,10 @@ export class ProductManageFormComponent implements UnsavedEditor {
                     if (
                         detail !== null &&
                         requestId === this.usdaDetailRequestId &&
-                        this.product() === product &&
+                        this.product() === selection.product &&
                         this.productFormModel().usdaFdcId === fdcId
                     ) {
-                        this.prefillFromUsdaFoodDetail(detail, suggestion.name);
+                        this.prefillFromUsdaFoodDetail(detail, suggestion.name, selection.unit);
                     }
                 });
             return;

@@ -294,6 +294,94 @@ describe('Quick meal draft actions during a pending save', () => {
     });
 });
 
+describe('Quick meal detail fields during a pending save', () => {
+    it('keeps the submitted comment read-only until the successful write removes the draft', async () => {
+        const { fixture, createMeal } = await renderDrawerAsync();
+        const pending = new Subject<Meal>();
+        createMeal.mockReturnValueOnce(pending);
+        const host = fixture.nativeElement as HTMLElement;
+        const submittedComment = 'Lunch with a friend';
+        openMealDetails(host);
+        const comment = quickMealComment(host);
+        comment.focus();
+        expect(document.activeElement).toBe(comment);
+        setQuickMealComment(comment, submittedComment);
+
+        draftSaveButton(host).click();
+        TestBed.tick();
+        expect(pending.observed).toBe(true);
+        expect(createMeal).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ comment: submittedComment }), expect.any(String));
+
+        comment.blur();
+        comment.focus();
+        if (document.activeElement === comment) {
+            setQuickMealComment(comment, 'Correction made while saving');
+        }
+        const commentWhenSaved = TestBed.inject(QuickMealService).details().comment;
+
+        pending.next(CREATED);
+        pending.complete();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="region"]')).toBeNull();
+        expect(commentWhenSaved).toBe(submittedComment);
+    });
+
+    it('locks the editable controls during the write and restores them after failure', async () => {
+        const { fixture, createMeal, showError } = await renderDrawerAsync();
+        const pending = new Subject<Meal>();
+        createMeal.mockReturnValueOnce(pending);
+        const host = fixture.nativeElement as HTMLElement;
+        const originalComment = 'Dinner after work';
+        const revisedComment = 'Dinner at home';
+        openMealDetails(host);
+        const controls = quickMealDetailControls(host);
+        const details = requiredElement(host.querySelector('fieldset.quick-meal__details'), 'the meal details fieldset');
+        const comment = quickMealComment(host);
+        expect(controls.every(control => !control.matches(':disabled'))).toBe(true);
+        setQuickMealComment(comment, originalComment);
+
+        draftSaveButton(host).click();
+        TestBed.tick();
+        expect(controls.filter(control => !control.matches(':disabled'))).toHaveLength(0);
+        expect(details.getAttribute('aria-busy')).toBe('true');
+
+        pending.error(new Error('Could not save the draft'));
+        TestBed.tick();
+        expect(showError).toHaveBeenCalledExactlyOnceWith('QUICK_MEAL.SAVE_ERROR');
+        expect(controls.every(control => !control.matches(':disabled'))).toBe(true);
+        expect(comment.value).toBe(originalComment);
+        expect(details.getAttribute('aria-busy')).toBe('false');
+
+        setQuickMealComment(comment, revisedComment);
+        draftSaveButton(host).click();
+        TestBed.tick();
+        expect(createMeal).toHaveBeenCalledTimes(2);
+        expect(createMeal).toHaveBeenLastCalledWith(expect.objectContaining({ comment: revisedComment }), expect.any(String));
+        expect(host.querySelector('[role="region"]')).toBeNull();
+    });
+});
+
+function quickMealComment(drawer: HTMLElement): HTMLTextAreaElement {
+    return requiredElement(drawer.querySelector<HTMLTextAreaElement>('fd-meal-details-fields textarea'), 'the meal comment');
+}
+
+function quickMealDetailControls(drawer: HTMLElement): Array<HTMLButtonElement | HTMLInputElement | HTMLTextAreaElement> {
+    return [
+        requiredElement(drawer.querySelector<HTMLButtonElement>('fd-ui-select button[aria-haspopup="listbox"]'), 'the meal type picker'),
+        requiredElement(drawer.querySelector<HTMLButtonElement>('fd-ui-date-input button[aria-haspopup="dialog"]'), 'the meal date picker'),
+        quickMealTimeControl(drawer),
+        quickMealComment(drawer),
+        requiredElement(drawer.querySelector<HTMLButtonElement>('button[aria-label^="HUNGER_BEFORE_SCALE.LEVEL_2.TITLE."]'), 'hunger'),
+        requiredElement(drawer.querySelector<HTMLButtonElement>('button[aria-label^="SATIETY_AFTER_SCALE.LEVEL_4.TITLE."]'), 'satiety'),
+    ];
+}
+
+function setQuickMealComment(input: HTMLTextAreaElement, comment: string): void {
+    input.value = comment;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    TestBed.tick();
+}
+
 describe('Quick meal inline hunger and satiety', () => {
     it('clears a hunger choice without dropping the independent satiety answer when saving', async () => {
         const satiety = 4;

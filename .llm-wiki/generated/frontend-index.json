@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2942,
-    "symbols": 890,
+    "typescriptFiles": 2940,
+    "symbols": 888,
     "routes": 113,
     "features": 46,
-    "specs": 958,
+    "specs": 959,
     "localeFiles": 5,
     "roles": {
-      "Component": 515,
+      "Component": 513,
       "Directive": 21,
       "Facade": 91,
       "Other": 41,
@@ -1292,7 +1292,6 @@
         "DietologistPromoComponent",
         "FeaturesComponent",
         "HeroComponent",
-        "LandingCtaComponent",
         "LandingFaqComponent",
         "LandingPreviewTourComponent",
         "LandingStepsComponent",
@@ -3404,13 +3403,6 @@
       "line": 17
     },
     {
-      "name": "CardComponent",
-      "role": "Component",
-      "selector": "fd-card",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/card/card.ts",
-      "line": 11
-    },
-    {
       "name": "ConfirmDeleteDialogComponent",
       "role": "Component",
       "selector": "fd-confirm-delete-dialog",
@@ -4143,7 +4135,7 @@
       "role": "Component",
       "selector": "fd-cycle-summary-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.ts",
-      "line": 53
+      "line": 58
     },
     {
       "name": "DailyAdviceCardComponent",
@@ -4899,21 +4891,21 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/goals/lib/goals.facade.ts",
-      "line": 69
+      "line": 47
     },
     {
       "name": "GoalsCyclingDayComponent",
       "role": "Component",
       "selector": "fd-goals-cycling-day",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "GoalsCyclingRowComponent",
       "role": "Component",
       "selector": "fd-goals-cycling-row",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.ts",
-      "line": 26
+      "line": 35
     },
     {
       "name": "GoalsEditorComponent",
@@ -5585,7 +5577,7 @@
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 98
+      "line": 100
     },
     {
       "name": "ProductNutritionEditorComponent",
@@ -5957,13 +5949,6 @@
       "selector": "fd-hero",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.ts",
       "line": 18
-    },
-    {
-      "name": "LandingCtaComponent",
-      "role": "Component",
-      "selector": "fd-landing-cta",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.ts",
-      "line": 15
     },
     {
       "name": "LandingFaqComponent",
