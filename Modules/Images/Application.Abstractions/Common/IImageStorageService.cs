@@ -20,4 +20,10 @@ public interface IImageStorageService {
 
     Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
         ValidateUploadedObjectAsync(key, cancellationToken);
+
+    Task<ImageObjectValidationResult> ConfirmPrivateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
+        Task.FromException<ImageObjectValidationResult>(new InvalidOperationException("Private image storage is not configured."));
+
+    Task<ImageObjectValidationResult> PromotePrivateImageAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
+        Task.FromException<ImageObjectValidationResult>(new InvalidOperationException("Private image storage is not configured."));
 }

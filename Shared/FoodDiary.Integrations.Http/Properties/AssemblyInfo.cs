@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Wearables.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Usda.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.OpenFoodFacts.Infrastructure")]
+[assembly: InternalsVisibleTo("FoodDiary.Modules.Recipes.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Images.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Billing.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Integrations.Http.Tests")]

@@ -17,4 +17,9 @@ public static class RecipeErrors {
         "Recipe.InvalidData",
         message,
         Kind: ErrorKind.Internal);
+
+    public static Error PublicationImageRequiresPrivateUpload => new(
+        "Recipe.PublicationImageRequiresPrivateUpload",
+        "Upload new public recipe photos through the recipe editor.",
+        Kind: ErrorKind.Validation);
 }

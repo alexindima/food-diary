@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 293,
-    "entities": 95,
+    "domainTypes": 297,
+    "entities": 99,
     "valueObjects": 143,
-    "invariants": 661,
-    "persistenceMappings": 102,
-    "indexes": 186,
-    "relationships": 42
+    "invariants": 662,
+    "persistenceMappings": 106,
+    "indexes": 193,
+    "relationships": 44
   },
   "domainTypes": [
     {
@@ -569,6 +569,34 @@
       "role": "entity",
       "path": "Modules/RecipeCommunity/Domain/Entities/Social/RecipeLike.cs",
       "line": 7
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipeModerationBudget",
+      "role": "entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipeModerationBudget.cs",
+      "line": 2
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipePublicationImageReference",
+      "role": "entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipePublicationImageReference.cs",
+      "line": 4
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipePublicationPolicy",
+      "role": "entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipePublicationPolicy.cs",
+      "line": 2
+    },
+    {
+      "area": "FoodDiary",
+      "name": "RecipePublicationRevision",
+      "role": "entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipePublicationRevision.cs",
+      "line": 5
     },
     {
       "area": "FoodDiary",
@@ -4014,28 +4042,35 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(objectKey)",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 27
+      "line": 28
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(url)",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 28
+      "line": 29
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Only a confirmed image can be promoted.\")",
+      "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
+      "line": 47
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 46
+      "line": 55
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 52
+      "line": 61
     },
     {
       "area": "FoodDiary",
@@ -7523,6 +7558,59 @@
       ],
       "relationships": [],
       "path": "Modules/RecipeCommunity/PersistenceModel/Configurations/RecipeSocial/RecipeLikeConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "RecipeModerationBudget",
+      "table": "RecipeModerationBudgets",
+      "indexes": [],
+      "relationships": [],
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipeModerationBudgetConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "RecipePublicationImageReference",
+      "table": "RecipePublicationImageReferences",
+      "indexes": [
+        "image => image.AssetId)"
+      ],
+      "relationships": [],
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipePublicationImageReferenceConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "RecipePublicationPolicy",
+      "table": "RecipePublicationPolicies",
+      "indexes": [
+        "policy => policy.PublishedAt)"
+      ],
+      "relationships": [],
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipePublicationPolicyConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "RecipePublicationRevision",
+      "table": "RecipePublicationRevisions",
+      "indexes": [
+        "revision => new { revision.Status, revision.CreatedAt })",
+        "revision => revision.NextAttemptAt)",
+        "revision => revision.OwnerId)",
+        "revision => revision.RecipeId).IsUnique().HasFilter(\"\\\"IsCurrent\\\"\")",
+        "revision => revision.ShadowNextAttemptAt)"
+      ],
+      "relationships": [
+        {
+          "kind": "HasOne",
+          "target": "Recipe",
+          "expression": ").WithMany().HasForeignKey(revision => revision.RecipeId).OnDelete(DeleteBehavior.Cascade)"
+        },
+        {
+          "kind": "HasMany",
+          "target": "",
+          "expression": "revision => revision.Images).WithOne().HasForeignKey(image => image.RevisionId).OnDelete(DeleteBehavior.Cascade)"
+        }
+      ],
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipePublicationConfiguration.cs"
     },
     {
       "area": "FoodDiary",

@@ -4,6 +4,8 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
+import { injectImagePreviews } from '../../../../../shared/lib/image-owner-preview';
+import { recipePhotoSources, recipeUsesOwnerImagePreviews } from '../../../../../shared/lib/recipe-image.util';
 import { capitalizeFirstLetter } from '../../../../../shared/lib/text-display.utils';
 import type { Recipe, RecipeIngredient, RecipeStep } from '../../../../../shared/models/recipe.data';
 import { resolveIngredientUnitKey } from '../../../lib/recipe-servings.utils';
@@ -25,22 +27,25 @@ type CookModeIngredientView = {
 })
 export class RecipeCookModeComponent {
     private readonly dialogService = inject(FdUiDialogService);
-    protected readonly stepPhotos = computed(() => {
-        const step = this.currentStep();
-        if (step === null) {
-            return [];
-        }
-        if (step.images !== undefined && step.images.length > 0) {
-            return step.images.map(image => image.imageUrl);
-        }
-        return typeof step.imageUrl === 'string' && step.imageUrl.length > 0 ? [step.imageUrl] : [];
-    });
     public readonly recipe = input.required<Recipe>();
 
     protected readonly currentStepIndex = signal(0);
     protected readonly steps = computed(() => [...this.recipe().steps].sort((a, b) => a.stepNumber - b.stepNumber));
     protected readonly stepCount = computed(() => this.steps().length);
     protected readonly currentStep = computed<RecipeStep | null>(() => this.steps()[this.currentStepIndex()] ?? null);
+    private readonly stepPreviews = injectImagePreviews(
+        computed(() => {
+            const step = this.currentStep();
+            if (step === null) {
+                return [];
+            }
+            const useOwner = recipeUsesOwnerImagePreviews(this.recipe());
+            return step.images !== undefined && step.images.length > 0
+                ? recipePhotoSources({ images: step.images }, useOwner)
+                : recipePhotoSources(step, useOwner);
+        }),
+    );
+    protected readonly stepPhotos = computed(() => this.stepPreviews.urls().filter((url): url is string => url !== null));
     protected readonly progressPercent = computed(() => {
         const count = this.stepCount();
         return count > 0 ? ((this.currentStepIndex() + 1) / count) * PERCENT_SCALE : 0;

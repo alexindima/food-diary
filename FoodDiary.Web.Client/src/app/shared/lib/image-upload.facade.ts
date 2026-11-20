@@ -10,8 +10,9 @@ import type { ImageAssetId } from '../models/semantics/entity-id';
 export class ImageUploadFacade {
     private readonly imageUploadService = inject(ImageUploadService);
 
-    public upload(file: File): Observable<ImageSelection> {
-        return this.imageUploadService.requestUploadUrl(file).pipe(
+    public upload(file: File, keepPrivate = false): Observable<ImageSelection> {
+        const request = keepPrivate ? this.imageUploadService.requestUploadUrl(file, true) : this.imageUploadService.requestUploadUrl(file);
+        return request.pipe(
             switchMap(presign =>
                 this.imageUploadService.uploadToPresignedUrl(presign.uploadUrl, file).pipe(
                     switchMap(() => this.imageUploadService.confirmUpload(presign.assetId)),
@@ -19,6 +20,10 @@ export class ImageUploadFacade {
                 ),
             ),
         );
+    }
+
+    public getOwnerPreview(assetId: ImageAssetId): Observable<string> {
+        return this.imageUploadService.getOwnerPreview(assetId);
     }
 
     public deleteAsset(assetId: ImageAssetId): Observable<void> {

@@ -1,4 +1,4 @@
-import { DOCUMENT, NgOptimizedImage } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     afterRenderEffect,
     ChangeDetectionStrategy,
@@ -23,6 +23,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { finalize, firstValueFrom, Subject, takeUntil } from 'rxjs';
 
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
+import { injectImagePreviews } from '../../../shared/lib/image-owner-preview';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
@@ -66,7 +67,7 @@ type CropInteraction = {
         '(dragover)': 'onDragOver($event)',
         '(dragleave)': 'onDragLeave($event)',
     },
-    imports: [NgOptimizedImage, FdUiButtonComponent, TranslatePipe, FdUiHintDirective],
+    imports: [FdUiButtonComponent, TranslatePipe, FdUiHintDirective],
     templateUrl: './image-upload-field.html',
     styleUrls: ['./image-upload-field.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,6 +84,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     public readonly description = input<string>();
     public readonly requireHealthConsent = input(false);
     public readonly multiple = input(false);
+    public readonly keepPrivate = input(false);
     public readonly maxFiles = input(1);
     public readonly selectText = input<string>();
     public readonly dropText = input<string>();
@@ -119,6 +121,11 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     protected readonly cropSubtitleId = createImageUploadId('image-upload-crop-subtitle');
 
     protected readonly selection = signal<ImageSelection>(imageSelection(null, null));
+    private readonly imagePreviews = injectImagePreviews(computed(() => [{ ...this.selection(), requiresOwner: this.keepPrivate() }]));
+    protected readonly previewUrl = computed(() => this.imagePreviews.urls()[0] ?? null);
+    protected readonly hasSelection = computed(
+        () => this.previewUrl() !== null || (this.keepPrivate() && this.selection().assetId !== null),
+    );
     protected readonly isDragging = signal(false);
     protected readonly isUploading = signal(false);
     protected readonly error = signal<string | null>(null);
@@ -258,7 +265,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                     break;
                 }
                 const selection = await firstValueFrom(
-                    this.imageUploadFacade.upload(resized).pipe(takeUntil(this.uploadCancelled), takeUntilDestroyed(this.destroyRef)),
+                    this.uploadSelection(resized).pipe(takeUntil(this.uploadCancelled), takeUntilDestroyed(this.destroyRef)),
                     { defaultValue: null },
                 );
                 if (selection === null || !this.isCurrentUpload(revision)) {
@@ -457,7 +464,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     }
 
     protected onZoneClick(fileInput: HTMLInputElement): void {
-        if (this.disabled() || this.isUploading() || this.selection().url !== null) {
+        if (this.disabled() || this.isUploading() || this.hasSelection()) {
             return;
         }
         fileInput.click();
@@ -608,8 +615,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
         this.isUploading.set(true);
 
-        this.imageUploadFacade
-            .upload(file)
+        this.uploadSelection(file)
             .pipe(
                 takeUntil(this.uploadCancelled),
                 takeUntilDestroyed(this.destroyRef),
@@ -632,6 +638,10 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                     this.clearPreparationPreview();
                 },
             });
+    }
+
+    private uploadSelection(file: File): ReturnType<ImageUploadFacade['upload']> {
+        return this.keepPrivate() ? this.imageUploadFacade.upload(file, true) : this.imageUploadFacade.upload(file);
     }
 
     private isCurrentUpload(revision: number): boolean {

@@ -40,4 +40,7 @@ public sealed record RecipeModel(
     public string Language { get; init; } = "en";
     public int MissingIngredientCount { get; init; }
     public IReadOnlyList<RecipeImageModel> Images { get; init; } = [];
+    public Guid? PublicationRevisionId { get; init; }
+    public string? PublicationStatus { get; init; }
+    public string? PublicationReason { get; init; }
 }

@@ -1,0 +1,16 @@
+fieldset {
+    display: grid;
+    align-content: start;
+    gap: var(--fd-space-xs);
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-lg);
+}
+
+legend {
+    padding-inline: var(--fd-space-xs);
+    font-weight: var(--fd-font-weight-medium);
+}

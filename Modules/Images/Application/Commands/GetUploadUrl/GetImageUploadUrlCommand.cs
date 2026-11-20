@@ -7,4 +7,5 @@ public sealed record GetImageUploadUrlCommand(
     Guid UserId,
     string FileName,
     string ContentType,
-    long FileSizeBytes) : ICommand<Result<GetImageUploadUrlResult>>;
+    long FileSizeBytes,
+    bool KeepPrivate = false) : ICommand<Result<GetImageUploadUrlResult>>;

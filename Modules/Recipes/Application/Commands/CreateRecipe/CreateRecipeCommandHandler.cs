@@ -1,12 +1,13 @@
 using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
-using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Common;
@@ -26,7 +27,8 @@ public sealed class CreateRecipeCommandHandler(
     IProductLookupService productLookupService,
     IRecipeLookupService recipeLookupService,
     IRecipeMutationTransactionRunner transactionRunner,
-    IUserProfileReadService userProfileReadService)
+    IUserProfileReadService userProfileReadService,
+    IRecipePublicationQueue? publicationQueue = null)
     : ICommandHandler<CreateRecipeCommand, Result<RecipeModel>> {
     public Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) =>
         transactionRunner.ExecuteAsync(
@@ -90,10 +92,18 @@ public sealed class CreateRecipeCommandHandler(
     private async Task<Result<RecipeModel>> SaveAsync(
         Recipe recipe,
         CancellationToken cancellationToken) {
+        if (publicationQueue?.Enabled == true && recipe.Visibility == Visibility.Public) {
+            Result photos = await RecipePublicationPhotos.EnsurePrivateUploadsAsync(
+                RecipePublicationDraft.BuildContent(recipe), recipe.UserId, imageAssetAccessService, retained: null, cancellationToken);
+            if (photos.IsFailure) {
+                return Result.Failure<RecipeModel>(photos.Error);
+            }
+        }
+
         await recipeRepository.AddAsync(recipe, cancellationToken);
         await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeNutritionWriter, cancellationToken);
 
-        return Result.Success(recipe.ToModel(0, isOwnedByCurrentUser: true));
+        return Result.Success(await RecipePublicationDraft.StageNewAsync(recipe, publicationQueue, cancellationToken));
     }
 
     private Task<Result> EnsureIngredientsAccessibleAsync(

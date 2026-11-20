@@ -1,0 +1,41 @@
+<h2>{{ 'ADMIN_RECIPE_MODERATION.RULES_HISTORY' | translate }}</h2>
+@for (version of history(); track version.id) {
+    <div class="history-row">
+        <div>
+            <div>
+                <span [hidden]="version.publishedBy === null">{{ version.publishedAt | date: 'medium' }}</span>
+                <span [hidden]="version.publishedBy !== null">{{ 'ADMIN_RECIPE_MODERATION.DEFAULT_RULES' | translate }}</span>
+                · {{ version.id }}
+            </div>
+            <div [hidden]="version.publishedBy === null">
+                {{ 'ADMIN_RECIPE_MODERATION.PUBLISHED_BY' | translate }} {{ version.publishedBy }}
+            </div>
+            <details>
+                <summary>{{ 'ADMIN_RECIPE_MODERATION.RULES' | translate }}</summary>
+                <dl>
+                    <dt>{{ 'ADMIN_RECIPE_MODERATION.TEXT_REVIEW' | translate }}</dt>
+                    <dd>
+                        @for (category of version.rules.textReviewCategories; track category) {
+                            {{ categoryLabels()[category] ?? category | translate }}{{ $last ? '' : ', ' }}
+                        }
+                    </dd>
+                    <dt>{{ 'ADMIN_RECIPE_MODERATION.IMAGE_REVIEW' | translate }}</dt>
+                    <dd>
+                        @for (category of version.rules.imageReviewCategories; track category) {
+                            {{ categoryLabels()[category] ?? category | translate }}{{ $last ? '' : ', ' }}
+                        }
+                    </dd>
+                    <dt>{{ 'ADMIN_RECIPE_MODERATION.MISTRAL_SAMPLE' | translate }}</dt>
+                    <dd>{{ version.rules.mistralSamplePercent }}%</dd>
+                </dl>
+            </details>
+        </div>
+        @if (version.id !== activeId()) {
+            <fd-ui-button variant="secondary" size="sm" [loading]="saving()" (click)="restore.emit(version.id)">
+                {{ 'ADMIN_RECIPE_MODERATION.RESTORE_RULES' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+} @empty {
+    <p>{{ 'ADMIN_COMMON.EMPTY' | translate }}</p>
+}

@@ -1,20 +1,24 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
 import { AuthService } from '../../../services/auth.service';
 import { injectCurrentLanguage } from '../../../shared/i18n/inject-current-language';
+import { injectImagePreviews } from '../../../shared/lib/image-owner-preview';
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
+import { distinctRecipePhotoSources, recipePhotoSources, recipeUsesOwnerImagePreviews } from '../../../shared/lib/recipe-image.util';
 import { recipeNutrientPerServing } from '../../../shared/lib/recipe-nutrition-display.utils';
 import { capitalizeFirstLetter } from '../../../shared/lib/text-display.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
+import type { RecipePublicationStatus, RecipeVisibility } from '../../../shared/models/recipe.data';
 import { EntityCardComponent } from '../entity-card/entity-card';
 
 export type RecipeCardStep = {
-    images?: Array<{ imageUrl: string }>;
+    images?: Array<{ imageUrl: string; imageAssetId?: string | null }>;
     ingredients?: Array<{ textName?: string | null; productName?: string | null; nestedRecipeName?: string | null }> | null;
     imageUrl?: string | null;
+    imageAssetId?: string | null;
 };
 
 export type RecipeCardItem = {
@@ -22,8 +26,11 @@ export type RecipeCardItem = {
     name: string;
     comment?: string | null;
     imageUrl?: string | null;
-    images?: Array<{ imageUrl: string }>;
+    imageAssetId?: string | null;
+    images?: Array<{ imageUrl: string; imageAssetId?: string | null }>;
     isOwnedByCurrentUser: boolean;
+    visibility?: RecipeVisibility;
+    publicationStatus?: RecipePublicationStatus | null;
     prepTime?: number | null;
     cookTime?: number | null;
     servings: number;
@@ -98,17 +105,27 @@ export class RecipeCardComponent {
 
         return normalizeQualityScore(score);
     });
-    protected readonly galleryImages = computed(() => [
-        ...new Set(
-            [
-                this.recipe().imageUrl,
-                ...(this.recipe().images ?? []).map(image => image.imageUrl),
-                ...(this.recipe().steps ?? []).flatMap(step => [step.imageUrl, ...(step.images ?? []).map(image => image.imageUrl)]),
-            ].filter((url): url is string => typeof url === 'string' && url.trim().length > 0),
-        ),
-    ]);
-    protected readonly hasPreviewImage = computed(() => this.galleryImages().length > 0);
-    protected readonly displayImage = computed(() => this.galleryImages()[0] ?? this.imageUrl());
+    private readonly useOwnerPreviews = computed(() => recipeUsesOwnerImagePreviews(this.recipe()));
+    private readonly gallerySources = computed(() => {
+        const recipe = this.recipe();
+        const requiresOwner = this.useOwnerPreviews();
+        return distinctRecipePhotoSources([
+            ...recipePhotoSources(recipe, requiresOwner),
+            ...(recipe.steps ?? []).flatMap(step => recipePhotoSources(step, requiresOwner)),
+        ]);
+    });
+    private readonly coverPreview = injectImagePreviews(computed(() => this.gallerySources().slice(0, 1)));
+    private readonly privateGalleryRequested = signal(false);
+    private readonly privateGalleryPreviews = injectImagePreviews(
+        computed(() => (this.privateGalleryRequested() ? this.gallerySources().slice(1) : [])),
+    );
+    protected readonly displayImage = computed(() =>
+        this.gallerySources().length === 0 ? this.imageUrl() : (this.coverPreview.urls()[0] ?? null),
+    );
+    protected readonly hasPreviewImage = computed(() => {
+        const cover = this.displayImage();
+        return this.gallerySources().length > 0 && cover !== null && cover !== undefined;
+    });
     protected readonly totalTime = computed(() => {
         const recipe = this.recipe();
         const prep = recipe.prepTime ?? 0;
@@ -129,10 +146,15 @@ export class RecipeCardComponent {
         const count = this.ingredientCount();
         const category = new Intl.PluralRules(this.language()).select(count).toUpperCase();
         const ingredients = this.translateService.instant(`RECIPE_CARD.INGREDIENTS_${category}`, { count });
-        const metadata =
+        const timeAndIngredients =
             this.totalTime() === null
                 ? ingredients
                 : `${ingredients} · ${this.totalTime()} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
+        const publicationStatus = this.recipe().publicationStatus;
+        const metadata =
+            publicationStatus !== null && publicationStatus !== undefined
+                ? `${this.translateService.instant(`RECIPE_PUBLICATION.${publicationStatus}`)} · ${timeAndIngredients}`
+                : timeAndIngredients;
         if (this.catalogLayout()) {
             return metadata;
         }
@@ -143,6 +165,16 @@ export class RecipeCardComponent {
             .filter(Boolean);
         return names.length > 0 ? `${metadata} · ${[...new Set(names)].join(', ')}` : metadata;
     });
+    public constructor() {
+        effect(() => {
+            if (!this.privateGalleryRequested() || this.privateGalleryPreviews.loading()) {
+                return;
+            }
+            this.openImageGallery([this.coverPreview.urls()[0], ...this.privateGalleryPreviews.urls()]);
+            this.privateGalleryRequested.set(false);
+        });
+    }
+
     protected openCard(): void {
         this.open.emit();
     }
@@ -152,7 +184,15 @@ export class RecipeCardComponent {
     }
 
     protected previewCardImage(): void {
-        const images = this.galleryImages();
+        if (this.useOwnerPreviews()) {
+            this.privateGalleryRequested.set(true);
+            return;
+        }
+        this.openImageGallery(this.gallerySources().map(image => image.url));
+    }
+
+    private openImageGallery(urls: ReadonlyArray<string | null | undefined>): void {
+        const images = urls.filter((url): url is string => typeof url === 'string' && url.length > 0);
         if (images.length === 0) {
             return;
         }

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
@@ -20,6 +21,7 @@ internal sealed class RecipesUserDataPurgeParticipant(
         }
 
         await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await RemovePublicationDataAsync(userId, cancellationToken);
         // Restrictive nested references are checked while rows are deleted. Remove
         // outgoing edges of this user's recipes first, including parent -> child.
         // Incoming references from another owner's recipes remain restrictive.
@@ -30,6 +32,7 @@ internal sealed class RecipesUserDataPurgeParticipant(
 
     public async Task TransferAsync(UserId sourceId, UserId targetId, CancellationToken cancellationToken) {
         await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await RemovePublicationDataAsync(sourceId, cancellationToken);
         List<ImageAssetId> assetIds = await context.Recipes
             .Where(item => item.UserId == sourceId && item.ImageAssetId != null)
             .Select(item => item.ImageAssetId!.Value).ToListAsync(cancellationToken);
@@ -48,5 +51,14 @@ internal sealed class RecipesUserDataPurgeParticipant(
         await imageAssetOwnershipService.ReassignAsync(assetIds, sourceId, targetId, cancellationToken);
         await context.Recipes.Where(item => item.UserId == sourceId)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, targetId), cancellationToken);
+    }
+
+    private async Task RemovePublicationDataAsync(UserId userId, CancellationToken cancellationToken) {
+        await context.Set<RecipePublicationRevision>().Where(revision => revision.OwnerId == userId.Value)
+            .ExecuteDeleteAsync(cancellationToken);
+        await context.Set<RecipePublicationRevision>().Where(revision => revision.ReviewedBy == userId.Value)
+            .ExecuteUpdateAsync(update => update.SetProperty(revision => revision.ReviewedBy, (Guid?)null), cancellationToken);
+        await context.Set<RecipePublicationPolicy>().Where(policy => policy.PublishedBy == userId.Value)
+            .ExecuteUpdateAsync(update => update.SetProperty(policy => policy.PublishedBy, (Guid?)null), cancellationToken);
     }
 }

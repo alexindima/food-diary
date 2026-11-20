@@ -35,6 +35,9 @@ export interface RecipeHttpResponse {
     missingIngredientCount?: number;
     name?: string;
     prepTime?: number | null;
+    publicationReason?: string | null;
+    publicationRevisionId?: string | null;
+    publicationStatus?: string | null;
     qualityGrade?: string;
     qualityScore?: number;
     servings?: number;

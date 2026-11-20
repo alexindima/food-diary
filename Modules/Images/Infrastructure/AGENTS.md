@@ -4,10 +4,19 @@ ImageAssetCleanupBatch owns a fresh DI scope and save for one orphan candidate. 
 
 Images PersistenceModel keeps owned mappings and UserId conversions through Users.Domain.Contracts. ImagesCrossModuleRelationships in central Infrastructure owns the unchanged User Cascade FK; the model must not reference foreign Domain assemblies.
 
-ImageAssetContentService reads confirmed, owned assets by ObjectKey from the
-configured published bucket. It never fetches the stored public URL. Keep reads
-bounded by the upload limit and cancellation deadline, and expose only safe
-storage errors. Data URLs are transient provider input, not persisted state.
+ImageAssetContentService reads confirmed, owned assets by object key in the
+published bucket or the server-only `private-confirmed/` staging prefix. Keep
+reads bounded by the upload limit and cancellation deadline. Use data URLs
+only for the immediate authorized response or provider request.
+
+Private recipe confirmation sanitizes bytes under `private-confirmed/{raw key}`.
+Presigned PUTs target only the separate raw key. Exclude the confirmed prefix
+from staging rules that expire raw uploads. The API and JobManager storage
+identity needs read, write and delete access to the confirmed prefix, and it
+must stay outside CDN and public bucket rules. Promotion copies the confirmed
+bytes to the stable public key and queues private copy deletion after the
+asset transition saves. Account purge and orphan cleanup also queue all
+potential objects for private assets.
 
 Runtime writes and normal outbox processing use the owner context registered through
 CreateModuleContext. Processors retain a shared-scope clean-entry callback before
@@ -25,4 +34,6 @@ Shared outbox claiming, processing, policy, options and telemetry now belong to 
 
 Use canonical FoodDiary.Modules.Images project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
 
-Confirmation holds an asset-specific transaction advisory lock before loading and publishing the asset, through commit. Do not compensate persistence errors by deleting the published object: commit may be ambiguous. Pending assets are reclaimed through the existing two-bucket orphan cleanup.
+Confirmation and promotion hold the asset advisory lock and row lock through
+commit. Deletion waits for any in-flight object writes. Pending assets are
+reclaimed through the two-bucket cleanup when confirmation or promotion fails.

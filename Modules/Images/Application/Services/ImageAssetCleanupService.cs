@@ -24,15 +24,9 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult.Refused("in_use");
         }
 
-        await EnqueueObjectDeletionAsync(asset, cancellationToken);
+        await imageObjectDeletionOutbox.EnqueueAssetObjectsAsync(
+            ObjectStorageKey.FromStoredValue(asset.ObjectKey), asset.IsConfirmed, asset.IsPrivate, cancellationToken);
         await imageAssetRepository.DeleteAsync(asset, cancellationToken);
         return DeleteImageAssetResult.Success;
-    }
-
-    private async Task EnqueueObjectDeletionAsync(ImageAsset asset, CancellationToken cancellationToken) {
-        await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), asset.IsConfirmed, cancellationToken);
-        if (!asset.IsConfirmed) {
-            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: true, cancellationToken);
-        }
     }
 }

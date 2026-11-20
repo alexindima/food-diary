@@ -2760,6 +2760,11 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsPrivate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -4236,6 +4241,162 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasIndex("RecipeStepId");
 
                     b.ToTable("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeModerationBudget", b =>
+                {
+                    b.Property<string>("Provider")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<DateTimeOffset>("WindowStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("WindowSeconds")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Requests")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Provider", "WindowStart", "WindowSeconds");
+
+                    b.ToTable("RecipeModerationBudgets", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationImageReference", b =>
+                {
+                    b.Property<Guid>("RevisionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("RevisionId", "AssetId");
+
+                    b.HasIndex("AssetId");
+
+                    b.ToTable("RecipePublicationImageReferences", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationPolicy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("PublishedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("RulesJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PublishedAt");
+
+                    b.ToTable("RecipePublicationPolicies", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationRevision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ChangeJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("ContentJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("LeaseToken")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("LeaseUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("NextAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PolicyVersionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PrimaryResult")
+                        .HasColumnType("jsonb");
+
+                    b.Property<int>("PromotionAttempts")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ReviewedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ShadowAttempts")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ShadowLeaseToken")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ShadowLeaseUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ShadowNextAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ShadowResult")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NextAttemptAt");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("RecipeId")
+                        .IsUnique()
+                        .HasFilter("\"IsCurrent\"");
+
+                    b.HasIndex("ShadowNextAttemptAt");
+
+                    b.HasIndex("Status", "CreatedAt");
+
+                    b.ToTable("RecipePublicationRevisions", (string)null);
                 });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b =>
@@ -6431,6 +6592,24 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("RecipeStep");
                 });
 
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationImageReference", b =>
+                {
+                    b.HasOne("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationRevision", null)
+                        .WithMany("Images")
+                        .HasForeignKey("RevisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationRevision", b =>
+                {
+                    b.HasOne("FoodDiary.Modules.Recipes.Domain.Entities.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b =>
                 {
                     b.HasOne("FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset", null)
@@ -6738,6 +6917,11 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("NestedRecipeUsages");
 
                     b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipePublicationRevision", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep", b =>

@@ -15,12 +15,13 @@ public static class ImageHttpMappings {
     }
 
     extension(GetImageUploadUrlHttpRequest request) {
-        public GetImageUploadUrlCommand ToCommand(Guid userId) {
+        public GetImageUploadUrlCommand ToCommand(Guid userId, bool allowPrivate = false) {
             return new GetImageUploadUrlCommand(
                 userId,
                 request.FileName,
                 request.ContentType,
-                request.FileSizeBytes);
+                request.FileSizeBytes,
+                request.KeepPrivate && allowPrivate);
         }
     }
 }

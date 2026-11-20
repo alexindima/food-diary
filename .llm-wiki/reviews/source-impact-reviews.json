@@ -127,14 +127,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d4dfee658ef79ac1049d555ec77064f4b4c9df0c32ad2d87c2e66255a6107969",
-          "reviewReason": "The dependency matrix and module map show a narrow MCP Presentation dependency on Identity Contracts and the presentation kernel, wired only by the current Web.Api host. The dependency rules and deployment model on this page still apply."
+          "sha256": "5048fafaa131f9e166c38d684bbbe8b476a35a6eaaeda6fb240d4c2287bf3fa0",
+          "reviewReason": "Reviewed the explicit Images contract and Result dependencies in HTTP tests, and the Recipes worker use of the existing Images service boundary. Recipe and image writes stay with their owners."
         }
       ],
-      "reason": "The dependency matrix and module map show a narrow MCP Presentation dependency on Identity Contracts and the presentation kernel, wired only by the current Web.Api host. The dependency rules and deployment model on this page still apply.",
-      "baseRef": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "gitHead": "b4a5cfa2be194b99b98052ca5f1549c7d6e44661",
-      "reviewedAtUtc": "2026-11-17T18:41:03.7748625Z"
+      "reason": "Reviewed the explicit Images contract and Result dependencies in HTTP tests, and the Recipes worker use of the existing Images service boundary. Recipe and image writes stay with their owners.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:10:40.6404120Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -420,14 +420,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "26c06ba66e8deb7ee11ce59aa10b2ff4502991916e6aa1a6d8efe0e4e549d944",
-          "reviewReason": "Reviewed Telegram disconnect OpenAPI change. Confirmation uses a new authenticated operation with an explicit authentication response and keeps the legacy response schema. The legacy operation prevents unconfirmed unlink and returns reauthentication required. Frontend SDK and full snapshot are regenerated from the host."
+          "sha256": "92204d0442d0dc217c28f8485aef07f8d1fae3e2c8e02f6e5e59740e329dc754",
+          "reviewReason": "Compared the real host OpenAPI and generated SDK. The owner image preview operation and optional keepPrivate upload property are additive. Transport tests cover authorization and no-store, and API compatibility passes with zero structural breaks."
         }
       ],
-      "reason": "The added service-environment test step leaves the CI API baseline selection and contract comparison commands intact. The security change introduces only internal query and persistence data.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:48.7610077Z"
+      "reason": "Compared the real host OpenAPI and generated SDK. The owner image preview operation and optional keepPrivate upload property are additive. Transport tests cover authorization and no-store, and API compatibility passes with zero structural breaks.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:16:16.5960062Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -436,8 +436,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "80c128852de207e0fbce8c7e0e995fb12507c8e81e909cd4b6c70aca2b731a93",
-          "reviewReason": "The regenerated index reflects the Users registration-time query and Telegram reply worker. Project dependencies and ownership are preserved and all 2287 architecture checks passed."
+          "sha256": "c838f5e54f0b4be3260b97a0b910b0dd02fb1d2c0097b0b0747106e8f52e049c",
+          "reviewReason": "Reviewed the refreshed route and test inventory. Owner image reads remain within Images and the Recipes worker calls its declared promotion port. The production dependency allowlist and persistence tests passed after the final manifest reconciliation."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -456,14 +456,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d4dfee658ef79ac1049d555ec77064f4b4c9df0c32ad2d87c2e66255a6107969",
-          "reviewReason": "The new MCP transport appears in the generated dependency graph and exact host matrix. The workflow still directs reviewers to the allowed dependency matrix."
+          "sha256": "5048fafaa131f9e166c38d684bbbe8b476a35a6eaaeda6fb240d4c2287bf3fa0",
+          "reviewReason": "Reviewed the generated additions for the owner preview, Recipes moderation, and corresponding dependency edges. Host tests directly reference the typed Images contracts they use; the runtime crosses Images through its service contract."
         }
       ],
-      "reason": "The regenerated index reflects the Users registration-time query and Telegram reply worker. Project dependencies and ownership are preserved and all 2287 architecture checks passed.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:49.4444545Z"
+      "reason": "Reviewed the refreshed route and test inventory. Owner image reads remain within Images and the Recipes worker calls its declared promotion port. The production dependency allowlist and persistence tests passed after the final manifest reconciliation.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:16:16.9969358Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -879,8 +879,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "3ece6f5070afe6d923c2050200e275659034196777fa316cbc5354e9863bff41",
-          "reviewReason": "The domain index now includes the database-generated Marketing receipt time. Its mapping and migration were verified by 10 PostgreSQL integration tests, including a backdated client timestamp."
+          "sha256": "2bbb76b12b78beab7e3d7a03042e753cca4cda35f59ef62011c11c0f914040d6",
+          "reviewReason": "Compared ImageAsset IsPrivate and RecipePublicationRevision PromotionAttempts with the EF mapping, migration defaults and model snapshot. The schema preserves confirmed live assets and supports retrying delivery independently of moderation."
         },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
@@ -888,10 +888,10 @@
           "reviewReason": "The isolated Wiki checks now carry the current SDK, analyzer, and Wiki lock inputs into temporary checkouts. The .NET 11 extraction readiness, index cache and writer tests, cold SQLite checkout, and context retrieval smoke groups passed."
         }
       ],
-      "reason": "The domain index now includes the database-generated Marketing receipt time. Its mapping and migration were verified by 10 PostgreSQL integration tests, including a backdated client timestamp.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:50.1141827Z"
+      "reason": "Compared ImageAsset IsPrivate and RecipePublicationRevision PromotionAttempts with the EF mapping, migration defaults and model snapshot. The schema preserves confirmed live assets and supports retrying delivery independently of moderation.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:10:43.8739605Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1307,8 +1307,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "72ca42e51589c80c73b51d54cd2774b0470564dec885763cabd881ba3a9265b4",
-          "reviewReason": "The sensitive inventory includes certificate password option names. OAuth credentials are excluded from Nginx query logging, browser consent is antiforgery-protected, and tests cover scoped tool access and revocation. Production account-lifecycle verification remains part of the cutover."
+          "sha256": "008e22aead4085e8ae62a34ded5b8256fddead0902e66ca66f08192d3051a1ed",
+          "reviewReason": "Followed sanitized recipe photos from private upload and owner or moderator preview to approval and cleanup. The browser writes a separate raw key, preview responses disable caching, and verified bytes alone enter the CDN after approval."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1317,14 +1317,14 @@
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "a70c2e581b516984cf7ddd483db99db124344c9ab44166ce04d8c0f3621c3386",
-          "reviewReason": "Reviewed the additional item calorie field and progress message ID. Amount and calories use the existing AI result; the ID is protected with the operation, used only for same-chat cleanup after accepted terminal delivery, and erased by completion or cancellation. The lifecycle page now records this explicitly; the privacy workflow guidance still applies."
+          "sha256": "2062c6fa73e94011fa91aff60a57021602d285310cc6db0e34aaa638ab446c87",
+          "reviewReason": "Followed sanitized recipe photos from private upload and owner or moderator preview to approval and cleanup. The browser writes a separate raw key, preview responses disable caching, and verified bytes alone enter the CDN after approval."
         }
       ],
-      "reason": "The sensitive inventory includes certificate password option names. OAuth credentials are excluded from Nginx query logging, browser consent is antiforgery-protected, and tests cover scoped tool access and revocation. Production account-lifecycle verification remains part of the cutover.",
-      "baseRef": "master",
-      "gitHead": "597601ee423c62266693d24daf67045fcda76af3",
-      "reviewedAtUtc": "2026-11-17T11:13:28.0162702Z"
+      "reason": "Followed sanitized recipe photos from private upload and owner or moderator preview to approval and cleanup. The browser writes a separate raw key, preview responses disable caching, and verified bytes alone enter the CDN after approval.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:10:45.3586438Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1510,14 +1510,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4d02a819d98019170e51d67d50781bf0ffc89220bd3d29d00ef80f22770699af",
-          "reviewReason": "The Compose open-file limits apply to the existing API and Job Manager services. The runtime topology change updates its source fingerprint and the workflow still describes how to query that topology."
+          "sha256": "bdba7b71dffda5d9bbbc76798a9d8293a32140a813792466c16c85a6dd665e9f",
+          "reviewReason": "Reviewed topology entries against the running boundaries in source. The API allocates staging and enforces owner access; JobManager promotes approved image bytes with cancellation, owner checks and retry state."
         }
       ],
-      "reason": "The Compose open-file limits apply to the existing API and Job Manager services. The runtime topology change updates its source fingerprint and the workflow still describes how to query that topology.",
+      "reason": "Reviewed topology entries against the running boundaries in source. The API allocates staging and enforces owner access; JobManager promotes approved image bytes with cancellation, owner checks and retry state.",
       "baseRef": "HEAD",
-      "gitHead": "98d3b8f69ccc58a6c703b449be8a0fda1645b837",
-      "reviewedAtUtc": "2026-11-19T16:06:38.5113365Z"
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:10:48.9365781Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1877,8 +1877,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b96065179ca0790b93f36cfe568c501fe853c16eee18810a174aeadf0be35777",
-          "reviewReason": "The catalog was regenerated for the reviewed security source additions. The context query implementation, provider selection and source-freshness rules have no runtime changes."
+          "sha256": "8034fe010840312d8e1a9b14d2986e3c638b0e1d2fa8b6921feb474a6eb7a870",
+          "reviewReason": "Reviewed the changed catalog pointers for the Recipes revision, Images owner preview, worker, and migrations. The entries point to owning implementation and tests and keep the existing navigation rules."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1921,10 +1921,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The catalog was regenerated for the reviewed security source additions. The context query implementation, provider selection and source-freshness rules have no runtime changes.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:52.1363141Z"
+      "reason": "Reviewed the changed catalog pointers for the Recipes revision, Images owner preview, worker, and migrations. The entries point to owning implementation and tests and keep the existing navigation rules.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T22:10:47.4097385Z"
     },
     {
       "pageId": "workflow.review-diff",

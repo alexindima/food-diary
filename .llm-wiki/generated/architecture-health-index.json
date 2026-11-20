@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1697,
+    "productionProjectEdges": 1701,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
-    "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 45,
+    "routedStandaloneComponents": 74,
+    "componentsWithoutDirectSpecs": 138,
+    "criticalSymbolsWithoutTestReferences": 47,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -2127,6 +2127,203 @@
         }
       ],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminModerationNavigationComponent",
+      "selector": "fd-admin-moderation-navigation",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "active",
+          "type": "'/moderation' | '/moderation/recipes' | '/moderation/rules'",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminModerationRulesComponent",
+      "selector": "fd-admin-moderation-rules",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationComponent",
+      "selector": "fd-admin-recipe-moderation",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationDetailComponent",
+      "selector": "fd-admin-recipe-moderation-detail",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.scss"
+      ],
+      "inputs": [
+        {
+          "name": "item",
+          "type": "AdminRecipeModerationItem | null",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "failed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "actionInProgress",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "actionError",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "retryDetails",
+          "type": ""
+        },
+        {
+          "name": "submitAction",
+          "type": "AdminRecipeModerationAction"
+        },
+        {
+          "name": "reasonChange",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationEvidenceComponent",
+      "selector": "fd-admin-recipe-moderation-evidence",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.scss"
+      ],
+      "inputs": [
+        {
+          "name": "item",
+          "type": "AdminRecipeModerationItem",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationRuleCategoriesComponent",
+      "selector": "fd-admin-recipe-moderation-rule-categories",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.scss"
+      ],
+      "inputs": [
+        {
+          "name": "legend",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "options",
+          "type": "readonly AdminRecipeModerationCategory[]",
+          "required": true
+        },
+        {
+          "name": "selected",
+          "type": "readonly string[]",
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "categoryChange",
+          "type": "{ category: string; selected: boolean }"
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationRuleHistoryComponent",
+      "selector": "fd-admin-recipe-moderation-rule-history",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.scss"
+      ],
+      "inputs": [
+        {
+          "name": "history",
+          "type": "readonly AdminRecipeModerationPolicyVersion[]",
+          "required": true
+        },
+        {
+          "name": "activeId",
+          "type": "RecipeModerationPolicyId",
+          "required": true
+        },
+        {
+          "name": "categoryLabels",
+          "type": "Readonly<Record<string, string>>",
+          "required": true
+        },
+        {
+          "name": "saving",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "restore",
+          "type": "RecipeModerationPolicyId"
+        }
+      ],
       "specPath": null
     },
     {
@@ -5622,6 +5819,43 @@
       "specPath": null
     },
     {
+      "class": "RecipePublicationNoticeComponent",
+      "selector": "fd-recipe-publication-notice",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "status",
+          "type": "RecipePublicationStatus | 'Published' | null",
+          "required": true
+        },
+        {
+          "name": "reason",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "refreshFailed",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "refreshRequested",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "RecipeVideoInputComponent",
       "selector": "fd-recipe-video-input",
       "feature": "recipes",
@@ -6043,6 +6277,16 @@
       "coveredThrough": []
     },
     {
+      "name": "AdminRecipeModerationController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "line": 19,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AdminUserPremiumGrantController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminUserPremiumGrantController.cs",
@@ -6177,6 +6421,16 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
       "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetOwnedImageContentQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
+      "line": 10,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

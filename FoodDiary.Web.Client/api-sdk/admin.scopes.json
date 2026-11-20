@@ -139,6 +139,14 @@
         "name": "AdminModeration",
         "operations": {
             "GET /api/v{version}/admin/moderation": "getAdminModeration",
+            "GET /api/v{version}/admin/moderation/recipes": "getAdminModerationRecipes",
+            "GET /api/v{version}/admin/moderation/recipes/{id}": "getAdminModerationRecipe",
+            "GET /api/v{version}/admin/moderation/recipes/{id}/images/{assetId}": "getAdminModerationRecipeImage",
+            "GET /api/v{version}/admin/moderation/rules": "getAdminModerationRules",
+            "POST /api/v{version}/admin/moderation/recipes/{id}/resolve": "postAdminModerationRecipeResolve",
+            "POST /api/v{version}/admin/moderation/recipes/{id}/retry": "postAdminModerationRecipeRetry",
+            "POST /api/v{version}/admin/moderation/rules/{id}/restore": "postAdminModerationRulesRestore",
+            "PUT /api/v{version}/admin/moderation/rules": "putAdminModerationRules",
             "POST /api/v{version}/admin/moderation/{id}/dismiss": "postAdminModerationByIdDismiss",
             "POST /api/v{version}/admin/moderation/{id}/review": "postAdminModerationByIdReview"
         },

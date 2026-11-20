@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4874,
-    "symbols": 4846,
-    "interfaceImplementationLinks": 218,
-    "dependencyInjectionRegistrations": 78,
+    "sourceFiles": 4926,
+    "symbols": 4898,
+    "interfaceImplementationLinks": 222,
+    "dependencyInjectionRegistrations": 80,
     "kinds": {
-      "class": 2502,
-      "enum": 77,
-      "interface": 436,
-      "record": 1673,
+      "class": 2528,
+      "enum": 78,
+      "interface": 442,
+      "record": 1692,
       "record class": 5,
       "record struct": 144,
       "union": 9
@@ -24,9 +24,9 @@
     "roles": {
       "Command": 255,
       "CommandHandler": 249,
-      "Configuration": 106,
-      "Controller": 119,
-      "Entity": 108,
+      "Configuration": 110,
+      "Controller": 120,
+      "Entity": 112,
       "Event": 20,
       "Factory": 15,
       "Handler": 11,
@@ -34,15 +34,15 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 78,
-      "Other": 2033,
-      "Query": 311,
-      "QueryHandler": 225,
+      "Other": 2067,
+      "Query": 313,
+      "QueryHandler": 226,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 106,
-      "Request": 188,
-      "Response": 283,
-      "Service": 181,
+      "Request": 190,
+      "Response": 285,
+      "Service": 183,
       "Validator": 240,
       "ValueObject": 183,
       "WriteRepository": 47
@@ -894,7 +894,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 111
+      "line": 114
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -1168,6 +1168,13 @@
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/PaddleNotificationRecoveryJob.cs",
       "line": 8
+    },
+    {
+      "name": "RecipeModerationWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/RecipeModerationWorker.cs",
+      "line": 4
     },
     {
       "name": "RecurringJobExecutionPolicy",
@@ -4747,6 +4754,13 @@
       "line": 21
     },
     {
+      "name": "AdminRecipeModerationController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+      "line": 19
+    },
+    {
       "name": "AdminRetentionController",
       "kind": "class",
       "role": "Controller",
@@ -5048,6 +5062,20 @@
       "line": 2
     },
     {
+      "name": "AdminRecipeModerationResolveHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminRecipeModerationResolveHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "AdminRecipeModerationRulesHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Admin/Presentation/Requests/AdminRecipeModerationRulesHttpRequest.cs",
+      "line": 4
+    },
+    {
       "name": "AdminReportActionHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -5171,6 +5199,13 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Admin/Presentation/Requests/GetAdminOutgoingEmailsHttpQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetAdminRecipeModerationHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Requests/GetAdminRecipeModerationHttpQuery.cs",
       "line": 5
     },
     {
@@ -5556,6 +5591,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Responses/AdminOutgoingEmailPageHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRecipeModerationImageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminRecipeModerationImageHttpResponse.cs",
       "line": 2
     },
     {
@@ -18775,6 +18817,13 @@
       "line": 4
     },
     {
+      "name": "ImageObjectDeletionOutboxExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Application.Abstractions/Common/ImageObjectDeletionOutboxExtensions.cs",
+      "line": 4
+    },
+    {
       "name": "ImageObjectValidationResult",
       "kind": "union",
       "role": "Other",
@@ -18887,6 +18936,20 @@
       "line": 7
     },
     {
+      "name": "GetOwnedImageContentQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetOwnedImageContentQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Images/Application/Queries/GetOwnedImageContent/GetOwnedImageContentQueryHandler.cs",
+      "line": 10
+    },
+    {
       "name": "ImageAssetAccessService",
       "kind": "class",
       "role": "Service",
@@ -18899,6 +18962,13 @@
       "role": "Service",
       "path": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
       "line": 8
+    },
+    {
+      "name": "RecipeImagePromotionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "line": 11
     },
     {
       "name": "ImageAssetId",
@@ -18947,7 +19017,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/ImageAssetContentService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ImagesProviderRegistration",
@@ -19108,7 +19178,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Images/Presentation/Controllers/ImagesController.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "ImagesPresentationServiceCollectionExtensions",
@@ -19150,6 +19220,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Images/Presentation/Responses/GetImageUploadUrlHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "OwnedImageContentHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Images/Presentation/Responses/OwnedImageContentHttpResponse.cs",
       "line": 2
     },
     {
@@ -19249,6 +19326,13 @@
       "role": "Other",
       "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolver.cs",
       "line": 7
+    },
+    {
+      "name": "IRecipeImagePromotionService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs",
+      "line": 6
     },
     {
       "name": "ImageAssetReadModel",
@@ -24935,6 +25019,76 @@
       "line": 4
     },
     {
+      "name": "IRecipeModerationProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/IRecipeModerationProvider.cs",
+      "line": 2
+    },
+    {
+      "name": "IRecipePublicationApplier",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationApplier.cs",
+      "line": 6
+    },
+    {
+      "name": "IRecipePublicationQueue",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationQueue.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeModerationCheck",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipeModerationCheck.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationContent",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipeModerationContent.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationImage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipeModerationImage.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationProviderException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipeModerationProviderException.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationSignal",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipeModerationSignal.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipePublicationClaim",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipePublicationClaim.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipePublicationState",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application.Abstractions/Moderation/RecipePublicationState.cs",
+      "line": 2
+    },
+    {
       "name": "CreateRecipeCommand",
       "kind": "record",
       "role": "Command",
@@ -24946,7 +25100,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-      "line": 20
+      "line": 21
     },
     {
       "name": "CreateRecipeCommandValidator",
@@ -24988,7 +25142,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "DeleteRecipeCommandValidator",
@@ -25030,7 +25184,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommandHandler.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "RecipeUpdateApplier",
@@ -25051,14 +25205,14 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UpdateRecipeCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 18
+      "line": 21
     },
     {
       "name": "UpdateRecipeCommandValidator",
@@ -25135,7 +25289,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/DependencyInjection.cs",
-      "line": 7
+      "line": 10
     },
     {
       "name": "PublicRecipeMappings",
@@ -25331,7 +25485,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "GetRecentRecipesQueryValidator",
@@ -25352,7 +25506,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "GetRecipeByIdQueryValidator",
@@ -25373,7 +25527,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQueryHandler.cs",
-      "line": 14
+      "line": 17
     },
     {
       "name": "GetRecipesQueryValidator",
@@ -25394,7 +25548,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "GetRecipesOverviewQueryValidator",
@@ -25451,6 +25605,27 @@
       "role": "Other",
       "path": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs",
       "line": 5
+    },
+    {
+      "name": "RecipePublicationApplier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Services/RecipePublicationApplier.cs",
+      "line": 10
+    },
+    {
+      "name": "RecipePublicationDraft",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Services/RecipePublicationDraft.cs",
+      "line": 14
+    },
+    {
+      "name": "RecipePublicationPhotos",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Application/Services/RecipePublicationPhotos.cs",
+      "line": 14
     },
     {
       "name": "RecipeStepAppender",
@@ -25523,6 +25698,62 @@
       "line": 2
     },
     {
+      "name": "IRecipeModerationAdministration",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationActionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationActionOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationItem.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationPage.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationPolicyInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationPolicyInput.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationPolicyVersion",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationPolicyVersion.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationPolicyView",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationPolicyView.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeModerationPreviewImage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Recipes/Contracts/Moderation/RecipeModerationPreviewImage.cs",
+      "line": 2
+    },
+    {
       "name": "RecipeCategory",
       "kind": "enum",
       "role": "Other",
@@ -25591,6 +25822,34 @@
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredientProductSnapshot.cs",
       "line": 8
+    },
+    {
+      "name": "RecipeModerationBudget",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipeModerationBudget.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipePublicationImageReference",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipePublicationImageReference.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipePublicationPolicy",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipePublicationPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipePublicationRevision",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/RecipePublicationRevision.cs",
+      "line": 5
     },
     {
       "name": "RecipeStep",
@@ -25698,6 +25957,83 @@
       "line": 10
     },
     {
+      "name": "IRecipeModerationProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs",
+      "line": 2
+    },
+    {
+      "name": "MistralRecipeModerationProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/MistralRecipeModerationProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "OpenAiRecipeModerationProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/OpenAiRecipeModerationProvider.cs",
+      "line": 8
+    },
+    {
+      "name": "RecipeModerationAdministration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationAdministration.cs",
+      "line": 12
+    },
+    {
+      "name": "RecipeModerationHttp",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationHttp.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipeModerationPolicyRules",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationPolicyRules.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeModerationProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "line": 15
+    },
+    {
+      "name": "RecipeModerationProviderRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProviderRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipePublicationRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationRegistration.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipePublicationStatuses",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationStatuses.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipePublicationStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Moderation/RecipePublicationStore.cs",
+      "line": 14
+    },
+    {
       "name": "EfRecipeMutationTransactionRunner",
       "kind": "class",
       "role": "Other",
@@ -25730,14 +26066,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecipesModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "RecipeAccessService",
@@ -25773,6 +26109,34 @@
       "role": "Configuration",
       "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipeIngredientConfiguration.cs",
       "line": 8
+    },
+    {
+      "name": "RecipeModerationBudgetConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipeModerationBudgetConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipePublicationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipePublicationConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipePublicationImageReferenceConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipePublicationImageReferenceConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipePublicationPolicyConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Recipes/PersistenceModel/Configurations/Recipes/RecipePublicationPolicyConfiguration.cs",
+      "line": 6
     },
     {
       "name": "RecipeStepConfiguration",
@@ -35066,6 +35430,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IRecipeImagePromotionService",
+      "interfacePath": "Modules/Images/Service.Contracts/Common/IRecipeImagePromotionService.cs",
+      "implementation": "RecipeImagePromotionService",
+      "implementationPath": "Modules/Images/Application/Services/RecipeImagePromotionService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IRecipeLikeRepository",
       "interfacePath": "Modules/RecipeCommunity/Application.Abstractions/RecipeLikes/Common/IRecipeLikeRepository.cs",
       "implementation": "RecipeLikeRepository",
@@ -35080,10 +35451,31 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IRecipeModerationAdministration",
+      "interfacePath": "Modules/Recipes/Contracts/Moderation/IRecipeModerationAdministration.cs",
+      "implementation": "RecipeModerationAdministration",
+      "implementationPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationAdministration.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IRecipeModerationProcessor",
+      "interfacePath": "Modules/Recipes/Infrastructure/Moderation/IRecipeModerationProcessor.cs",
+      "implementation": "RecipeModerationProcessor",
+      "implementationPath": "Modules/Recipes/Infrastructure/Moderation/RecipeModerationProcessor.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IRecipeOverviewReadService",
       "interfacePath": "Modules/Recipes/Contracts/Common/IRecipeOverviewReadService.cs",
       "implementation": "RecipeOverviewReadService",
       "implementationPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeOverviewReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IRecipePublicationApplier",
+      "interfacePath": "Modules/Recipes/Application.Abstractions/Moderation/IRecipePublicationApplier.cs",
+      "implementation": "RecipePublicationApplier",
+      "implementationPath": "Modules/Recipes/Application/Services/RecipePublicationApplier.cs",
       "confidence": "naming-convention"
     },
     {
@@ -35555,7 +35947,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 102
+      "line": 104
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -35782,6 +36174,13 @@
       "line": 13
     },
     {
+      "service": "IRecipeImagePromotionService",
+      "implementation": "RecipeImagePromotionService",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
       "service": "IImageConfirmationTransactionRunner",
       "implementation": "EfImageConfirmationTransactionRunner",
       "lifetime": "Scoped",
@@ -35913,6 +36312,13 @@
       "lifetime": "Scoped",
       "path": "Modules/Products/Application/DependencyInjection.cs",
       "line": 19
+    },
+    {
+      "service": "IRecipePublicationApplier",
+      "implementation": "RecipePublicationApplier",
+      "lifetime": "Scoped",
+      "path": "Modules/Recipes/Application/DependencyInjection.cs",
+      "line": 22
     },
     {
       "service": "IUsdaCatalogReadService",

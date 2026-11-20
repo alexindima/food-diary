@@ -72,7 +72,9 @@ public sealed class SharedRecipesContextIntegrationTests(PostgresDatabaseFixture
         await writes.AddAsync(recipe);
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());
         await unitOfWork.SaveChangesAsync();
-        Assert.Equal(5, owned.Model.GetEntityTypes().Count());
+        Assert.NotNull(owned.Model.FindEntityType(typeof(Recipe)));
+        Assert.NotNull(owned.Model.FindEntityType(typeof(RecipeStep)));
+        Assert.NotNull(owned.Model.FindEntityType(typeof(RecipeIngredient)));
         Assert.Equal(2, owned.Model.GetEntityTypes().Count(entity => entity.ClrType == typeof(RecipeImage) && entity.IsOwned()));
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<Recipe>());

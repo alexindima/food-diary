@@ -43,6 +43,7 @@
         <div class="recipe-basic-info__image">
             <fd-image-gallery-editor
                 [editor]="true"
+                [keepPrivate]="true"
                 [photos]="photos()"
                 [cover]="photos()[0] ?? null"
                 (photosChange)="setPhotos($event)"

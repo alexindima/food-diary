@@ -28,6 +28,6 @@ public sealed class ImageAssetAccessService(
                 "Image upload has not been confirmed."));
         }
 
-        return Result.Success<ImageAssetReadModel?>(new ImageAssetReadModel(asset.Id, asset.Url));
+        return Result.Success<ImageAssetReadModel?>(new ImageAssetReadModel(asset.Id, asset.Url, asset.IsPrivate));
     }
 }

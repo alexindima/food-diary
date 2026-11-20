@@ -6,15 +6,18 @@ using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 
 using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipeById;
 
 public sealed class GetRecipeByIdQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IRecipePublicationQueue? publicationQueue = null)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
         Result<RecipeId> recipeIdResult = RecipeRequiredIdParser.Parse(
@@ -48,6 +51,11 @@ public sealed class GetRecipeByIdQueryHandler(
             return Result.Failure<RecipeModel>(RecipeErrors.NotFound(query.RecipeId));
         }
 
-        return Result.Success(recipe.ToModel());
+        RecipeModel model = recipe.ToModel();
+        if (model.IsOwnedByCurrentUser && publicationQueue is not null) {
+            RecipePublicationState? state = await publicationQueue.GetCurrentAsync(recipeId, cancellationToken);
+            model = RecipePublicationDraft.WithPublication(model, state);
+        }
+        return Result.Success(model);
     }
 }

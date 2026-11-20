@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Images.Presentation.Mappings;
+using FoodDiary.Modules.Images.Application.Queries.GetOwnedImageContent;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 
@@ -10,12 +11,13 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Modules.Images.Presentation.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/images")]
-public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ImagesController(ISender mediator, IConfiguration configuration) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
     [EnableIdempotency]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
@@ -24,7 +26,8 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.ImagesRateLimitPolicyName)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
-        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
+        HandleOk(request.ToCommand(userId, configuration["RecipeModeration:Enabled"] is "true" or "True" or "1"),
+            static value => value.ToHttpResponse());
 
     [HttpPost("{assetId:guid}/confirm")]
     [EnableIdempotency]
@@ -36,6 +39,15 @@ public sealed class ImagesController(ISender mediator) : AuthorizedController(me
     [EnableRateLimiting(PresentationPolicyNames.ImagesRateLimitPolicyName)]
     public Task<IActionResult> Confirm(Guid assetId, [FromCurrentUser] Guid userId) =>
         HandleOk(assetId.ToConfirmCommand(userId), static value => value.ToHttpResponse());
+
+    [HttpGet("{assetId:guid}/content")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+    [ProducesResponseType<OwnedImageContentHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    public Task<IActionResult> GetContent(Guid assetId, [FromCurrentUser] Guid userId) =>
+        HandleOk(new GetOwnedImageContentQuery(userId, assetId), static dataUrl => new OwnedImageContentHttpResponse(dataUrl));
 
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

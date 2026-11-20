@@ -1,0 +1,62 @@
+<h2>{{ 'ADMIN_RECIPE_MODERATION.DETAILS' | translate }}</h2>
+@if (actionError(); as error) {
+    <fd-ui-form-error [error]="error | translate" />
+}
+@if (loading()) {
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+} @else if (failed()) {
+    <fd-admin-load-error (retry)="retryDetails.emit()" />
+} @else if (item(); as detail) {
+    <dl class="detail-metadata">
+        <div>
+            <dt>{{ 'ADMIN_RECIPE_MODERATION.REVISION' | translate }}</dt>
+            <dd>{{ detail.revisionId }}</dd>
+        </div>
+        <div>
+            <dt>{{ 'ADMIN_RECIPE_MODERATION.POLICY_VERSION' | translate }}</dt>
+            <dd>{{ detail.policyVersionId }}</dd>
+        </div>
+        <div>
+            <dt>{{ 'ADMIN_RECIPE_MODERATION.OWNER' | translate }}</dt>
+            <dd>{{ detail.ownerId }}</dd>
+        </div>
+        <div>
+            <dt>{{ 'ADMIN_MODERATION.STATUS' | translate }}</dt>
+            <dd>{{ statusLabels[detail.status] | translate }}</dd>
+        </div>
+    </dl>
+    @if (detail.reason) {
+        <p>
+            <strong>{{ 'ADMIN_MODERATION.REASON' | translate }}</strong> {{ detail.reason }}
+        </p>
+    }
+    <fd-admin-recipe-moderation-evidence [item]="detail" />
+    @if (detail.status === 'NeedsReview') {
+        <fd-ui-textarea
+            [label]="'ADMIN_RECIPE_MODERATION.DECISION_REASON' | translate"
+            [value]="reason()"
+            [rows]="3"
+            [maximumLength]="2000"
+            [disabled]="actionInProgress()"
+            (valueChange)="updateReason($event)"
+        />
+        <div class="decision-actions">
+            <fd-ui-button [loading]="actionInProgress()" (click)="submitAction.emit('approve')">
+                {{ 'ADMIN_RECIPE_MODERATION.APPROVE' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                variant="secondary"
+                [loading]="actionInProgress()"
+                [disabled]="reason().trim().length === 0"
+                [disabledReason]="'ADMIN_RECIPE_MODERATION.DECISION_REASON' | translate"
+                (click)="submitAction.emit('requestChanges')"
+            >
+                {{ 'ADMIN_RECIPE_MODERATION.REQUEST_CHANGES' | translate }}
+            </fd-ui-button>
+        </div>
+    } @else if (detail.status === 'CheckDelayed') {
+        <fd-ui-button [loading]="actionInProgress()" (click)="submitAction.emit('retry')">
+            {{ 'ADMIN_RECIPE_MODERATION.RETRY' | translate }}
+        </fd-ui-button>
+    }
+}

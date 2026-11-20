@@ -6,6 +6,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Common;
@@ -19,7 +20,8 @@ public sealed class DeleteRecipeCommandHandler(
     IRecipeWriteRepository recipeWriteRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,
-    IRecipeMutationTransactionRunner transactionRunner)
+    IRecipeMutationTransactionRunner transactionRunner,
+    IRecipePublicationQueue? publicationQueue = null)
     : ICommandHandler<DeleteRecipeCommand, Result> {
     public Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) =>
         transactionRunner.ExecuteAsync(
@@ -70,6 +72,9 @@ public sealed class DeleteRecipeCommandHandler(
 
         ImageAssetId? recipeAssetId = recipe.ImageAssetId;
         IReadOnlyList<ImageAssetId> stepAssetIds = GetStepAssetIds(recipe);
+        if (publicationQueue is not null) {
+            await publicationQueue.CancelAsync(recipe.Id, cancellationToken);
+        }
         await recipeWriteRepository.DeleteAsync(recipe, cancellationToken);
 
         if (recipeAssetId.HasValue) {

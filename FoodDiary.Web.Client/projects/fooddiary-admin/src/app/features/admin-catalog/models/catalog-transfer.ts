@@ -63,7 +63,7 @@ export type CatalogFile = {
 };
 
 export type CatalogKind = 'products' | 'recipes';
-export type CatalogStatus = 'ready' | 'skipped' | 'invalid' | 'imported' | 'failed';
+export type CatalogStatus = 'ready' | 'skipped' | 'invalid' | 'imported' | 'pendingModeration' | 'failed';
 
 export type CatalogResult = {
     id: string;

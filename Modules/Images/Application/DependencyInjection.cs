@@ -11,6 +11,7 @@ public static class DependencyInjection {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
+        services.AddScoped<IRecipeImagePromotionService, RecipeImagePromotionService>();
         return services;
     }
 }

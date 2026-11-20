@@ -4,8 +4,8 @@
             <!-- A native content button keeps the independent add action outside its click target. -->
             <button type="button" class="recent-recipes__open fd-ui-body-sm" (click)="recipeOpen.emit(item.recipe)">
                 <span class="recent-recipes__image">
-                    @if (item.imageUrl) {
-                        <img alt="" width="48" height="48" loading="lazy" [src]="item.imageUrl" />
+                    @if (thumbnails()[$index]; as thumbnail) {
+                        <img alt="" width="48" height="48" loading="lazy" [src]="thumbnail" />
                     } @else {
                         <fd-ui-icon name="menu_book" size="md" aria-hidden="true" />
                     }

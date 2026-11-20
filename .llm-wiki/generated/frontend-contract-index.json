@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 526,
-    "componentsWithoutDirectSpecs": 130,
-    "inputs": 1681,
-    "outputs": 564,
-    "apiCalls": 336,
-    "templatesWithTranslations": 381,
-    "translationKeys": 2304,
-    "consumerEdges": 1359,
-    "consumedComponents": 332,
-    "unconsumedComponents": 193
+    "components": 534,
+    "componentsWithoutDirectSpecs": 138,
+    "inputs": 1703,
+    "outputs": 570,
+    "apiCalls": 345,
+    "templatesWithTranslations": 388,
+    "translationKeys": 2346,
+    "consumerEdges": 1386,
+    "consumedComponents": 338,
+    "unconsumedComponents": 195
   },
   "components": [
     {
@@ -761,6 +761,203 @@
         }
       ],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminModerationNavigationComponent",
+      "selector": "fd-admin-moderation-navigation",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "active",
+          "type": "'/moderation' | '/moderation/recipes' | '/moderation/rules'",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminModerationRulesComponent",
+      "selector": "fd-admin-moderation-rules",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationComponent",
+      "selector": "fd-admin-recipe-moderation",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.scss"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationDetailComponent",
+      "selector": "fd-admin-recipe-moderation-detail",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.scss"
+      ],
+      "inputs": [
+        {
+          "name": "item",
+          "type": "AdminRecipeModerationItem | null",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "failed",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "actionInProgress",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "actionError",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "reason",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "retryDetails",
+          "type": ""
+        },
+        {
+          "name": "submitAction",
+          "type": "AdminRecipeModerationAction"
+        },
+        {
+          "name": "reasonChange",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationEvidenceComponent",
+      "selector": "fd-admin-recipe-moderation-evidence",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.scss"
+      ],
+      "inputs": [
+        {
+          "name": "item",
+          "type": "AdminRecipeModerationItem",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationRuleCategoriesComponent",
+      "selector": "fd-admin-recipe-moderation-rule-categories",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.scss"
+      ],
+      "inputs": [
+        {
+          "name": "legend",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "options",
+          "type": "readonly AdminRecipeModerationCategory[]",
+          "required": true
+        },
+        {
+          "name": "selected",
+          "type": "readonly string[]",
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "categoryChange",
+          "type": "{ category: string; selected: boolean }"
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "AdminRecipeModerationRuleHistoryComponent",
+      "selector": "fd-admin-recipe-moderation-rule-history",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.scss"
+      ],
+      "inputs": [
+        {
+          "name": "history",
+          "type": "readonly AdminRecipeModerationPolicyVersion[]",
+          "required": true
+        },
+        {
+          "name": "activeId",
+          "type": "RecipeModerationPolicyId",
+          "required": true
+        },
+        {
+          "name": "categoryLabels",
+          "type": "Readonly<Record<string, string>>",
+          "required": true
+        },
+        {
+          "name": "saving",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "restore",
+          "type": "RecipeModerationPolicyId"
+        }
+      ],
       "specPath": null
     },
     {
@@ -13105,6 +13302,43 @@
       "specPath": null
     },
     {
+      "class": "RecipePublicationNoticeComponent",
+      "selector": "fd-recipe-publication-notice",
+      "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.html",
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "status",
+          "type": "RecipePublicationStatus | 'Published' | null",
+          "required": true
+        },
+        {
+          "name": "reason",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "refreshFailed",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "refreshRequested",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "RecipeRecognitionComponent",
       "selector": "fd-recipe-recognition",
       "feature": "recipes",
@@ -14943,6 +15177,11 @@
           "required": false
         },
         {
+          "name": "keepPrivate",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "photos",
           "type": "ImageSelection[]",
           "required": true
@@ -15016,6 +15255,11 @@
         },
         {
           "name": "multiple",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "keepPrivate",
           "type": "",
           "required": false
         },
@@ -18679,6 +18923,102 @@
       "resolvedUrlExpression": "/api/v{version}/admin/moderation/{id}/dismiss"
     },
     {
+      "feature": "admin-moderation",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/recipes",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 30,
+      "publicMethod": "list",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/recipes"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/recipes/{id}",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 36,
+      "publicMethod": "get",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/recipes/{id}"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/recipes/{id}/images/{assetId}",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 40,
+      "publicMethod": "getImage",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/recipes/{id}/images/{assetId}"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/recipes/{id}/resolve",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 46,
+      "publicMethod": "resolve",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/recipes/{id}/resolve"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/recipes/{id}/retry",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 54,
+      "publicMethod": "retry",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/recipes/{id}/retry"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/rules",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 58,
+      "publicMethod": "getPolicy",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/rules"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "PUT",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/rules",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 62,
+      "publicMethod": "publishPolicy",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/rules"
+    },
+    {
+      "feature": "admin-moderation",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/moderation/rules/{id}/restore",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 68,
+      "publicMethod": "restorePolicy",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "/api/v{version}/admin/moderation/rules/{id}/restore"
+    },
+    {
       "feature": "admin-outgoing-emails",
       "method": "GET",
       "responseType": null,
@@ -21012,7 +21352,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/images/upload-url",
       "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
-      "line": 29,
+      "line": 30,
       "publicMethod": "requestUploadUrl",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.images",
@@ -21024,7 +21364,7 @@
       "responseType": "",
       "urlExpression": "uploadUrl",
       "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
-      "line": 51,
+      "line": 52,
       "publicMethod": "uploadToPresignedUrl",
       "transport": "HttpClient",
       "baseUrlExpression": "environment.apiUrls.images",
@@ -21036,7 +21376,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/images/{assetId}/confirm",
       "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
-      "line": 58,
+      "line": 59,
       "publicMethod": "confirmUpload",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.images",
@@ -21044,11 +21384,23 @@
     },
     {
       "feature": "shell",
+      "method": "GET",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/images/{assetId}/content",
+      "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
+      "line": 69,
+      "publicMethod": "getOwnerPreview",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.images",
+      "resolvedUrlExpression": "/api/v{version}/images/{assetId}/content"
+    },
+    {
+      "feature": "shell",
       "method": "DELETE",
       "responseType": null,
       "urlExpression": "/api/v{version}/images/{assetId}",
       "path": "FoodDiary.Web.Client/src/app/shared/api/image-upload.service.ts",
-      "line": 68,
+      "line": 75,
       "publicMethod": "deleteAsset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.images",
@@ -22550,9 +22902,79 @@
     },
     {
       "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.html",
+      "keys": [
+        "ADMIN_NAV.MODERATION"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "keys": [
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_MODERATION.REASON",
+        "ADMIN_MODERATION.STATUS",
+        "ADMIN_RECIPE_MODERATION.APPROVE",
+        "ADMIN_RECIPE_MODERATION.DECISION_REASON",
+        "ADMIN_RECIPE_MODERATION.DETAILS",
+        "ADMIN_RECIPE_MODERATION.OWNER",
+        "ADMIN_RECIPE_MODERATION.POLICY_VERSION",
+        "ADMIN_RECIPE_MODERATION.REQUEST_CHANGES",
+        "ADMIN_RECIPE_MODERATION.RETRY",
+        "ADMIN_RECIPE_MODERATION.REVISION"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.html",
+      "keys": [
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_RECIPE_MODERATION.CHECKED_IMAGE",
+        "ADMIN_RECIPE_MODERATION.CHECKED_IMAGES",
+        "ADMIN_RECIPE_MODERATION.CHECKED_TEXT",
+        "ADMIN_RECIPE_MODERATION.CLOSE_IMAGE",
+        "ADMIN_RECIPE_MODERATION.IMAGE_UNAVAILABLE",
+        "ADMIN_RECIPE_MODERATION.VIEW_IMAGE"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.html",
+      "keys": [
+        "ADMIN_COMMON.EMPTY",
+        "ADMIN_RECIPE_MODERATION.DEFAULT_RULES",
+        "ADMIN_RECIPE_MODERATION.IMAGE_REVIEW",
+        "ADMIN_RECIPE_MODERATION.MISTRAL_SAMPLE",
+        "ADMIN_RECIPE_MODERATION.PUBLISHED_BY",
+        "ADMIN_RECIPE_MODERATION.RESTORE_RULES",
+        "ADMIN_RECIPE_MODERATION.RULES",
+        "ADMIN_RECIPE_MODERATION.RULES_HISTORY",
+        "ADMIN_RECIPE_MODERATION.TEXT_REVIEW"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
       "keys": [
         "ADMIN_MODERATION.ACTION_ERROR"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "keys": [
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_MODERATION.ACTION_ERROR",
+        "ADMIN_RECIPE_MODERATION.ACTIVE_RULES",
+        "ADMIN_RECIPE_MODERATION.DEFAULT_RULES",
+        "ADMIN_RECIPE_MODERATION.IMAGE_REVIEW",
+        "ADMIN_RECIPE_MODERATION.INVALID_RULES",
+        "ADMIN_RECIPE_MODERATION.MISTRAL_SAMPLE",
+        "ADMIN_RECIPE_MODERATION.MISTRAL_UNAVAILABLE",
+        "ADMIN_RECIPE_MODERATION.OPENAI_PRIMARY",
+        "ADMIN_RECIPE_MODERATION.PUBLISH_RULES",
+        "ADMIN_RECIPE_MODERATION.RULES_PUBLISHED",
+        "ADMIN_RECIPE_MODERATION.TEXT_REVIEW"
       ]
     },
     {
@@ -22578,6 +23000,28 @@
         "ADMIN_MODERATION.TARGET_ID",
         "ADMIN_MODERATION.TOTAL",
         "ADMIN_MODERATION.TYPE"
+      ]
+    },
+    {
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "keys": [
+        "ADMIN_COMMON.ALL",
+        "ADMIN_COMMON.EMPTY",
+        "ADMIN_COMMON.LOADING",
+        "ADMIN_MODERATION.CREATED",
+        "ADMIN_MODERATION.RECIPE",
+        "ADMIN_MODERATION.STATUS",
+        "ADMIN_RECIPE_MODERATION.ATTEMPTS",
+        "ADMIN_RECIPE_MODERATION.CHANGES_REQUESTED",
+        "ADMIN_RECIPE_MODERATION.CHECKS",
+        "ADMIN_RECIPE_MODERATION.CHECK_DELAYED",
+        "ADMIN_RECIPE_MODERATION.DETAILS",
+        "ADMIN_RECIPE_MODERATION.NEEDS_REVIEW",
+        "ADMIN_RECIPE_MODERATION.PENDING",
+        "ADMIN_RECIPE_MODERATION.PUBLISHED",
+        "ADMIN_RECIPE_MODERATION.REFRESH",
+        "ADMIN_RECIPE_MODERATION.SUPERSEDED"
       ]
     },
     {
@@ -25451,6 +25895,15 @@
     },
     {
       "feature": "recipes",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.html",
+      "keys": [
+        "RECIPE_PUBLICATION.REFRESH",
+        "RECIPE_PUBLICATION.REFRESH_FAILED",
+        "RECIPE_PUBLICATION.REPLACE_IMAGE"
+      ]
+    },
+    {
+      "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
       "keys": [
         "GENERAL.UNITS.KCAL_PER_SERVING",
@@ -25551,7 +26004,9 @@
         "RECIPE_MANAGE.IMPORT.URL_LABEL",
         "RECIPE_MANAGE.IMPORT.URL_PLACEHOLDER",
         "RECIPE_MANAGE.SUBTITLE",
-        "RECIPE_MANAGE.TOUR.START_TOUR"
+        "RECIPE_MANAGE.TOUR.START_TOUR",
+        "RECIPE_PUBLICATION.DATA_NOTICE",
+        "RECIPE_PUBLICATION.REPLACE_IMAGE"
       ]
     },
     {
@@ -27442,7 +27897,43 @@
       "selector": "fd-admin-load-error",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": [
@@ -27592,6 +28083,42 @@
       "outputsHandled": []
     },
     {
+      "component": "AdminModerationNavigationComponent",
+      "selector": "fd-admin-moderation-navigation",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "active"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminModerationNavigationComponent",
+      "selector": "fd-admin-moderation-navigation",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "active"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminModerationNavigationComponent",
+      "selector": "fd-admin-moderation-navigation",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "active"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "AdminPeriodControlComponent",
       "selector": "fd-admin-period",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
@@ -27735,6 +28262,73 @@
         "label"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "AdminRecipeModerationDetailComponent",
+      "selector": "fd-admin-recipe-moderation-detail",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "actionError",
+        "actionInProgress",
+        "failed",
+        "item",
+        "loading",
+        "reason"
+      ],
+      "outputsHandled": [
+        "reasonChange",
+        "retryDetails",
+        "submitAction"
+      ]
+    },
+    {
+      "component": "AdminRecipeModerationEvidenceComponent",
+      "selector": "fd-admin-recipe-moderation-evidence",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "item"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "AdminRecipeModerationRuleCategoriesComponent",
+      "selector": "fd-admin-recipe-moderation-rule-categories",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "legend",
+        "options",
+        "selected"
+      ],
+      "outputsHandled": [
+        "categoryChange"
+      ]
+    },
+    {
+      "component": "AdminRecipeModerationRuleHistoryComponent",
+      "selector": "fd-admin-recipe-moderation-rule-history",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "activeId",
+        "categoryLabels",
+        "history",
+        "saving"
+      ],
+      "outputsHandled": [
+        "restore"
+      ]
     },
     {
       "component": "AdminSessionsSectionComponent",
@@ -30563,6 +31157,48 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "occurrences": 3,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "loading",
+        "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -30580,11 +31216,40 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 3,
       "inputsUsed": [
         "size",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "size",
         "variant"
       ],
       "outputsHandled": []
@@ -33561,6 +34226,22 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "loading",
+        "size",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/favorite-recipe-row/favorite-recipe-row.html",
       "occurrences": 3,
       "inputsUsed": [
@@ -35537,6 +36218,21 @@
       "component": "FdUiCheckboxComponent",
       "selector": "fd-ui-checkbox",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "checked",
+        "disabled"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
+    },
+    {
+      "component": "FdUiCheckboxComponent",
+      "selector": "fd-ui-checkbox",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
       "occurrences": 5,
@@ -37199,7 +37895,43 @@
       "selector": "fd-ui-form-error",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/dialogs/admin-moderation-action-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "error"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiFormErrorComponent",
+      "selector": "fd-ui-form-error",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
       "occurrences": 1,
       "inputsUsed": [
         "error"
@@ -39176,6 +39908,26 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "label",
+        "maximum",
+        "minimum",
+        "step",
+        "type",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "admin-moderation",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -41019,6 +41771,22 @@
       "component": "FdUiPaginationComponent",
       "selector": "fd-ui-pagination",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "length",
+        "pageIndex",
+        "pageSize"
+      ],
+      "outputsHandled": [
+        "pageIndexChange"
+      ]
+    },
+    {
+      "component": "FdUiPaginationComponent",
+      "selector": "fd-ui-pagination",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/pagination/fd-ui-pagination.ts",
       "consumerFeature": "admin-outgoing-emails",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.html",
       "occurrences": 1,
@@ -41971,6 +42739,22 @@
       "component": "FdUiSelectComponent",
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "options",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "admin-outgoing-emails",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.html",
       "occurrences": 2,
@@ -42654,6 +43438,21 @@
       "component": "FdUiTabsComponent",
       "selector": "fd-ui-tabs",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "mode",
+        "selectedValue",
+        "tabs"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiTabsComponent",
+      "selector": "fd-ui-tabs",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
       "occurrences": 1,
@@ -42805,6 +43604,24 @@
         "label"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "FdUiTextareaComponent",
+      "selector": "fd-ui-textarea",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+      "consumerFeature": "admin-moderation",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disabled",
+        "label",
+        "maximumLength",
+        "rows",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiTextareaComponent",
@@ -43450,6 +44267,7 @@
       "inputsUsed": [
         "cover",
         "editor",
+        "keepPrivate",
         "photos"
       ],
       "outputsHandled": [
@@ -43469,6 +44287,7 @@
         "compact",
         "cover",
         "editor",
+        "keepPrivate",
         "photos"
       ],
       "outputsHandled": [
@@ -45844,6 +46663,20 @@
       "selector": "fd-public-recipe-gallery",
       "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
       "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "aspect",
+        "images",
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PublicRecipeGalleryComponent",
+      "selector": "fd-public-recipe-gallery",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-gallery/public-gallery.ts",
+      "consumerFeature": "recipes",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/public-steps/public-steps.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -46226,6 +47059,23 @@
       "outputsHandled": [
         "nutritionModeChange",
         "nutritionScaleModeChange"
+      ]
+    },
+    {
+      "component": "RecipePublicationNoticeComponent",
+      "selector": "fd-recipe-publication-notice",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.ts",
+      "consumerFeature": "recipes",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "loading",
+        "reason",
+        "refreshFailed",
+        "status"
+      ],
+      "outputsHandled": [
+        "refreshRequested"
       ]
     },
     {

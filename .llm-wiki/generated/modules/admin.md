@@ -156,6 +156,19 @@ Source: `Modules/Admin/Presentation/Controllers/AdminOutgoingEmailsController.cs
 
 - `GET /api/v{version:apiVersion}/admin/outgoing-emails`
 
+### AdminRecipeModerationController
+
+Source: `Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs`
+
+- `GET /api/v{version:apiVersion}/admin/moderation/recipes`
+- `GET /api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}`
+- `GET /api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/images/{assetId:guid}`
+- `POST /api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/resolve`
+- `POST /api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/retry`
+- `GET /api/v{version:apiVersion}/admin/moderation/rules`
+- `PUT /api/v{version:apiVersion}/admin/moderation/rules`
+- `POST /api/v{version:apiVersion}/admin/moderation/rules/{id:guid}/restore`
+
 ### AdminRetentionController
 
 Source: `Modules/Admin/Presentation/Controllers/AdminRetentionController.cs`
@@ -258,6 +271,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminAiPromptWorkbenchIntegrationTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminMailTransportTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminNotificationTransportTests.cs`
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminRecipeModerationTransportTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AdminUserPremiumGrantApiTests.cs`
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/AdminProxyOriginTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs`
@@ -284,7 +298,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/AdminBillingCancellationQueryTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/AdminUserManualPremiumTests.cs`
-- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 
 ## Working Rule
 

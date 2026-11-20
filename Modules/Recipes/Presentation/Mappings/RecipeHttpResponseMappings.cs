@@ -42,7 +42,15 @@ public static class RecipeHttpResponseMappings {
                 model.Steps.ToHttpResponseList(ToHttpResponse),
                 model.IsFavorite,
                 model.FavoriteRecipeId
-            ) { LanguageConfirmed = model.LanguageConfirmed, Language = model.Language, MissingIngredientCount = model.MissingIngredientCount, Images = model.Images.Select(image => new RecipeImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList() };
+            ) {
+                LanguageConfirmed = model.LanguageConfirmed,
+                Language = model.Language,
+                MissingIngredientCount = model.MissingIngredientCount,
+                Images = model.Images.Select(image => new RecipeImageHttpResponse(image.ImageAssetId, image.ImageUrl)).ToList(),
+                PublicationRevisionId = model.PublicationRevisionId,
+                PublicationStatus = model.PublicationStatus,
+                PublicationReason = model.PublicationReason,
+            };
         }
     }
 

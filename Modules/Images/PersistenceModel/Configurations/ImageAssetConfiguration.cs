@@ -19,5 +19,6 @@ internal sealed class ImageAssetConfiguration : IEntityTypeConfiguration<ImageAs
         builder.Property(e => e.ObjectKey).IsRequired();
         builder.Property(e => e.Url).IsRequired();
         builder.Property(e => e.IsConfirmed);
+        builder.Property(e => e.IsPrivate).HasDefaultValue(value: false);
     }
 }

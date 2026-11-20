@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2873,
-    "symbols": 890,
-    "routes": 113,
+    "typescriptFiles": 2897,
+    "symbols": 900,
+    "routes": 115,
     "features": 46,
-    "specs": 889,
+    "specs": 890,
     "localeFiles": 5,
     "roles": {
-      "Component": 516,
+      "Component": 524,
       "Directive": 20,
-      "Facade": 91,
+      "Facade": 92,
       "Other": 41,
       "Pipe": 5,
-      "Service": 217
+      "Service": 218
     }
   },
   "features": [
@@ -340,10 +340,21 @@
         "AdminModerationComponent",
         "AdminModerationContextComponent",
         "AdminModerationFacade",
-        "AdminModerationService"
+        "AdminModerationNavigationComponent",
+        "AdminModerationRulesComponent",
+        "AdminModerationService",
+        "AdminRecipeModerationComponent",
+        "AdminRecipeModerationDetailComponent",
+        "AdminRecipeModerationEvidenceComponent",
+        "AdminRecipeModerationFacade",
+        "AdminRecipeModerationRuleCategoriesComponent",
+        "AdminRecipeModerationRuleHistoryComponent",
+        "AdminRecipeModerationService"
       ],
       "routes": [
-        ""
+        "",
+        "recipes",
+        "rules"
       ],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-moderation.service.spec.ts",
@@ -1336,6 +1347,7 @@
         "RecipeNutritionEditorComponent",
         "RecipeNutritionFormManager",
         "RecipePublicationDialogComponent",
+        "RecipePublicationNoticeComponent",
         "RecipePublicationService",
         "RecipeRecognitionComponent",
         "RecipeSelectDialogComponent",
@@ -2769,11 +2781,53 @@
       "line": 15
     },
     {
+      "name": "AdminRecipeModerationService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-recipe-moderation.service.ts",
+      "line": 26
+    },
+    {
       "name": "AdminModerationContextComponent",
       "role": "Component",
       "selector": "fd-admin-moderation-context",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-context.ts",
       "line": 16
+    },
+    {
+      "name": "AdminModerationNavigationComponent",
+      "role": "Component",
+      "selector": "fd-admin-moderation-navigation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-navigation.ts",
+      "line": 11
+    },
+    {
+      "name": "AdminRecipeModerationDetailComponent",
+      "role": "Component",
+      "selector": "fd-admin-recipe-moderation-detail",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-detail.ts",
+      "line": 28
+    },
+    {
+      "name": "AdminRecipeModerationEvidenceComponent",
+      "role": "Component",
+      "selector": "fd-admin-recipe-moderation-evidence",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-evidence.ts",
+      "line": 32
+    },
+    {
+      "name": "AdminRecipeModerationRuleCategoriesComponent",
+      "role": "Component",
+      "selector": "fd-admin-recipe-moderation-rule-categories",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-categories.ts",
+      "line": 14
+    },
+    {
+      "name": "AdminRecipeModerationRuleHistoryComponent",
+      "role": "Component",
+      "selector": "fd-admin-recipe-moderation-rule-history",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-recipe-moderation-rule-history.ts",
+      "line": 15
     },
     {
       "name": "AdminModerationActionDialogComponent",
@@ -2790,11 +2844,32 @@
       "line": 10
     },
     {
+      "name": "AdminRecipeModerationFacade",
+      "role": "Facade",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/lib/admin-recipe-moderation.facade.ts",
+      "line": 19
+    },
+    {
+      "name": "AdminModerationRulesComponent",
+      "role": "Component",
+      "selector": "fd-admin-moderation-rules",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation-rules.ts",
+      "line": 56
+    },
+    {
       "name": "AdminModerationComponent",
       "role": "Component",
       "selector": "fd-admin-moderation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.ts",
-      "line": 52
+      "line": 54
+    },
+    {
+      "name": "AdminRecipeModerationComponent",
+      "role": "Component",
+      "selector": "fd-admin-recipe-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-recipe-moderation.ts",
+      "line": 54
     },
     {
       "name": "AdminOutgoingEmailsService",
@@ -3123,7 +3198,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-moderation.service.ts",
-      "line": 50
+      "line": 105
     },
     {
       "name": "AdminOutgoingEmailsSdk",
@@ -3494,14 +3569,14 @@
       "role": "Component",
       "selector": "fd-image-gallery-editor",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.ts",
-      "line": 26
+      "line": 27
     },
     {
       "name": "ImageUploadFieldComponent",
       "role": "Component",
       "selector": "fd-image-upload-field",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
-      "line": 74
+      "line": 75
     },
     {
       "name": "MarketingConsentComponent",
@@ -3683,7 +3758,7 @@
       "role": "Component",
       "selector": "fd-recipe-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/recipe-card/recipe-card.ts",
-      "line": 51
+      "line": 58
     },
     {
       "name": "SkeletonCardComponent",
@@ -6049,7 +6124,7 @@
       "role": "Component",
       "selector": "fd-recipe-cook-mode",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
-      "line": 26
+      "line": 28
     },
     {
       "name": "RecipeDetailIngredientPreviewComponent",
@@ -6077,7 +6152,14 @@
       "role": "Component",
       "selector": "fd-recipe-detail",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.ts",
-      "line": 39
+      "line": 45
+    },
+    {
+      "name": "RecipePublicationNoticeComponent",
+      "role": "Component",
+      "selector": "fd-recipe-publication-notice",
+      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-publication-notice/recipe-publication-notice.ts",
+      "line": 13
     },
     {
       "name": "FavoriteRecipeRowComponent",
@@ -6105,7 +6187,7 @@
       "role": "Component",
       "selector": "fd-recipe-list-recent",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-recent.ts",
-      "line": 17
+      "line": 19
     },
     {
       "name": "RecipeListResultsComponent",
@@ -7155,7 +7237,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/images.service.ts",
-      "line": 46
+      "line": 53
     },
     {
       "name": "LessonsSdk",
@@ -8089,9 +8171,19 @@
       "line": 7
     },
     {
+      "path": "recipes",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-moderation.routes.ts",
+      "line": 7
+    },
+    {
+      "path": "rules",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-moderation.routes.ts",
+      "line": 12
+    },
+    {
       "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-moderation.routes.ts",
-      "line": 6
+      "line": 17
     },
     {
       "path": "",
@@ -8487,8 +8579,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1496,
-      "russianProperties": 1496,
+      "englishProperties": 1563,
+      "russianProperties": 1563,
       "countsMatch": true
     },
     {

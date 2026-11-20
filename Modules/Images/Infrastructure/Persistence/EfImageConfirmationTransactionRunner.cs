@@ -34,6 +34,12 @@ public sealed class EfImageConfirmationTransactionRunner(IModuleTransactionCoord
                 NpgsqlDbType.Text,
                 $"image-confirmation:{assetId.Value:N}");
             await command.ExecuteNonQueryAsync(cancellationToken);
+
+            // Keep owner deletion and account purge behind any object writes that use this asset.
+            command.CommandText = """SELECT "Id" FROM "ImageAssets" WHERE "Id" = @asset_id FOR UPDATE""";
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("asset_id", NpgsqlDbType.Uuid, assetId.Value);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 }

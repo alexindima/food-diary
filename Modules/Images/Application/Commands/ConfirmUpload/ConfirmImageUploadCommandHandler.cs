@@ -47,9 +47,11 @@ public sealed class ConfirmImageUploadCommandHandler(
 
         if (!asset.IsConfirmed) {
             ImageObjectValidationResult validation;
+            var key = ObjectStorageKey.FromStoredValue(asset.ObjectKey);
             try {
-                validation = await imageStorageService
-                    .ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), cancellationToken);
+                validation = asset.IsPrivate
+                    ? await imageStorageService.ConfirmPrivateUploadedObjectAsync(key, cancellationToken)
+                    : await imageStorageService.ConfirmUploadedObjectAsync(key, cancellationToken);
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 throw;
             } catch (Exception) {
@@ -62,7 +64,7 @@ public sealed class ConfirmImageUploadCommandHandler(
             }
 
             asset.Confirm();
-            await deletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: false, cancellationToken);
+            await deletionOutbox.EnqueueAsync(key, isConfirmed: false, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
             // Never delete the published object on persistence failure: commit may have succeeded.
             // Pending assets are reclaimed by orphan cleanup, which handles both buckets.

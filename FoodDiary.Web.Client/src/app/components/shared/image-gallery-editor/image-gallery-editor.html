@@ -10,7 +10,10 @@
                         [ariaLabel]="'PRODUCT_AI_DIALOG.PHOTO_ACTIONS' | translate: { index: $index + 1 }"
                         [fdUiMenuTrigger]="photoMenu"
                     >
-                        <img [src]="photo.url" [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`" />
+                        <img
+                            [attr.src]="photoPreviews()[$index] ?? null"
+                            [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`"
+                        />
                     </fd-ui-button>
                     <span class="recognition-photos__cover-label" [hidden]="!$first">{{
                         'PRODUCT_AI_DIALOG.COVER_SELECTED' | translate
@@ -34,7 +37,7 @@
                         >
                     </fd-ui-menu>
                 } @else {
-                    <img [src]="photo.url" [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`" />
+                    <img [attr.src]="photoPreviews()[$index] ?? null" [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`" />
                     <fd-ui-button
                         type="button"
                         fill="text"
@@ -70,6 +73,7 @@
                 [class.recognition-photos__add]="photos().length > 0"
                 [showRecommendation]="false"
                 [multiple]="true"
+                [keepPrivate]="keepPrivate()"
                 [maxFiles]="maxPhotos - photos().length"
                 [selectText]="editor() && photos().length ? '+' : ('PRODUCT_AI_DIALOG.ADD_PHOTOS' | translate)"
                 [dropText]="'PRODUCT_AI_DIALOG.DROP_PHOTOS' | translate: { count: maxPhotos - photos().length }"

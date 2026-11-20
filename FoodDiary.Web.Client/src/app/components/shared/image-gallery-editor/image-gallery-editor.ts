@@ -5,6 +5,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 import { FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit/menu';
 
+import { injectImagePreviews } from '../../../shared/lib/image-owner-preview';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
 
@@ -28,12 +29,16 @@ export class ImageGalleryEditorComponent {
     private readonly photoTriggers = viewChildren<FdUiButtonComponent, ElementRef<HTMLElement>>('photoTrigger', { read: ElementRef });
     public readonly compact = input(false);
     public readonly editor = input(false);
+    public readonly keepPrivate = input(false);
     public readonly photos = model.required<ImageSelection[]>();
     public readonly disabled = input(false);
     public readonly scanning = input(false);
     public readonly reviewing = input(false);
     public readonly cover = model<ImageSelection | null>(null);
     public readonly uploading = model(false);
+    protected readonly photoPreviews = injectImagePreviews(
+        computed(() => this.photos().map(photo => ({ ...photo, requiresOwner: this.keepPrivate() }))),
+    ).urls;
     protected readonly uploadAppearance = computed(() => {
         if (this.editor() && this.photos().length > 0) {
             return 'hidden';
@@ -45,12 +50,18 @@ export class ImageGalleryEditorComponent {
     });
 
     protected preview(index: number): void {
+        const urls = this.photoPreviews();
+        const selected = urls.at(index) ?? null;
+        if (selected === null) {
+            return;
+        }
+        const available = urls.filter((url): url is string => url !== null);
         this.dialogService.open(FdUiImagePreviewDialogComponent, {
             size: 'lg',
             width: 'var(--fd-size-dialog-media-width)',
             maxWidth: 'var(--fd-size-dialog-media-max-width)',
             restoreFocus: this.photoTriggers()[index]?.nativeElement.querySelector('button') ?? true,
-            data: { collageImages: this.photos().map(photo => ({ url: photo.url ?? '' })), initialIndex: index },
+            data: { collageImages: available.map(url => ({ url })), initialIndex: available.indexOf(selected) },
         });
     }
 

@@ -19,11 +19,18 @@ import { GetImageUploadUrlHttpRequest } from '../model/get-image-upload-url-http
 
 import { GetImageUploadUrlHttpResponse } from '../model/get-image-upload-url-http-response';
 
+import { OwnedImageContentHttpResponse } from '../model/owned-image-content-http-response';
+
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
 
 export interface DeleteImagesByAssetIdRequestParams {
+    assetId: string;
+    version: string;
+}
+
+export interface GetImagesByAssetIdContentRequestParams {
     assetId: string;
     version: string;
 }
@@ -123,6 +130,87 @@ export class ImagesSdk extends BaseService {
         let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/images/${this.configuration.encodeParam({ name: 'assetId', value: assetId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint get /api/v{version}/images/{assetId}/content
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public getImagesByAssetIdContent(
+        requestParameters: GetImagesByAssetIdContentRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<OwnedImageContentHttpResponse>;
+    public getImagesByAssetIdContent(
+        requestParameters: GetImagesByAssetIdContentRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<OwnedImageContentHttpResponse>>;
+    public getImagesByAssetIdContent(
+        requestParameters: GetImagesByAssetIdContentRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<OwnedImageContentHttpResponse>>;
+    public getImagesByAssetIdContent(
+        requestParameters: GetImagesByAssetIdContentRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const assetId = requestParameters?.assetId;
+        if (assetId === null || assetId === undefined) {
+            throw new Error('Required parameter assetId was null or undefined when calling getImagesByAssetIdContent.');
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling getImagesByAssetIdContent.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/images/${this.configuration.encodeParam({ name: 'assetId', value: assetId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/content`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<OwnedImageContentHttpResponse>('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),

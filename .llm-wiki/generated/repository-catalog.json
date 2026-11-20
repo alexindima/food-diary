@@ -19,8 +19,8 @@
     "applicationModules": 0,
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
-    "controllers": 116,
-    "endpoints": 384,
+    "controllers": 117,
+    "endpoints": 393,
     "agentGuides": 298,
     "documentationPages": 254
   },
@@ -924,9 +924,11 @@
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
+          "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
           "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
           "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
@@ -955,6 +957,7 @@
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
           "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -1282,6 +1285,7 @@
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
+          "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
@@ -10154,6 +10158,7 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj",
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
@@ -10166,11 +10171,17 @@
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
-          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
+          "Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj",
+          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
           {
             "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Http",
             "version": null
           }
         ]
@@ -12383,6 +12394,8 @@
           "Modules/RecipeCommunity/Domain.Contracts/FoodDiary.Modules.RecipeCommunity.Domain.Contracts.csproj",
           "Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj",
           "Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj",
+          "Modules/Recipes/Application.Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj",
+          "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj",
           "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
           "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj",
           "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
@@ -12513,8 +12526,10 @@
           "Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj",
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
+          "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
@@ -12533,6 +12548,7 @@
           "Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj",
           "Modules/RecipeCommunity/Application/FoodDiary.Modules.RecipeCommunity.Application.csproj",
           "Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj",
+          "Modules/Recipes/Application.Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj",
           "Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
           "Modules/Usda/Application.Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj",
@@ -15501,6 +15517,53 @@
         ]
       },
       {
+        "name": "AdminRecipeModerationController",
+        "path": "Modules/Admin/Presentation/Controllers/AdminRecipeModerationController.cs",
+        "routePrefix": "api/v{version:apiVersion}/admin/moderation",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/moderation/recipes",
+            "line": 20
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}",
+            "line": 26
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/images/{assetId:guid}",
+            "line": 34
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/resolve",
+            "line": 44
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/moderation/recipes/{id:guid}/retry",
+            "line": 63
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/admin/moderation/rules",
+            "line": 72
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/admin/moderation/rules",
+            "line": 77
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/admin/moderation/rules/{id:guid}/restore",
+            "line": 93
+          }
+        ]
+      },
+      {
         "name": "AdminRetentionController",
         "path": "Modules/Admin/Presentation/Controllers/AdminRetentionController.cs",
         "routePrefix": "api/v{version:apiVersion}/admin/analytics/retention",
@@ -16795,17 +16858,22 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/images/upload-url",
-            "line": 19
+            "line": 21
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/images/{assetId:guid}/confirm",
-            "line": 29
+            "line": 32
+          },
+          {
+            "verb": "GET",
+            "route": "/api/v{version:apiVersion}/images/{assetId:guid}/content",
+            "line": 43
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/images/{assetId:guid}",
-            "line": 40
+            "line": 52
           }
         ]
       },

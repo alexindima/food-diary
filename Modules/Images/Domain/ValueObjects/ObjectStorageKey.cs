@@ -10,4 +10,6 @@ public sealed record ObjectStorageKey {
     }
 
     public static ObjectStorageKey FromStoredValue(string value) => new(value);
+
+    public ObjectStorageKey ForPrivateConfirmedImage() => new($"private-confirmed/{Value}");
 }

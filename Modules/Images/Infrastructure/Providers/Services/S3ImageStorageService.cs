@@ -102,9 +102,14 @@ public sealed class S3ImageStorageService(
     public Task DeleteAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
         DeleteAsync(key, isConfirmed: true, cancellationToken);
 
-    public async Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
-        ObjectStorageKey key,
-        CancellationToken cancellationToken) {
+    public Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
+        ConfirmUploadedObjectAsync(key, keepPrivate: false, cancellationToken);
+
+    public Task<ImageObjectValidationResult> ConfirmPrivateUploadedObjectAsync(ObjectStorageKey key, CancellationToken cancellationToken) =>
+        ConfirmUploadedObjectAsync(key, keepPrivate: true, cancellationToken);
+
+    private async Task<ImageObjectValidationResult> ConfirmUploadedObjectAsync(
+        ObjectStorageKey key, bool keepPrivate, CancellationToken cancellationToken) {
         string objectKey = key.Value;
         string outcome = "success";
         string? errorType = null;
@@ -149,7 +154,9 @@ public sealed class S3ImageStorageService(
                     "Uploaded object content does not match a supported image format.");
             }
 
-            await PublishValidatedContentAsync(objectKey, info.ContentType, published, cancellationToken);
+            string targetBucket = keepPrivate ? _options.StagingBucket : _options.Bucket;
+            string targetKey = keepPrivate ? key.ForPrivateConfirmedImage().Value : objectKey;
+            await storageClient.PutObjectBytesAsync(targetBucket, targetKey, info.ContentType, published, cancellationToken);
 
             return ImageObjectValidationResult.Accepted;
         } catch (InvalidDataException ex) {
@@ -172,17 +179,23 @@ public sealed class S3ImageStorageService(
         CancellationToken cancellationToken) =>
         ConfirmUploadedObjectAsync(key, cancellationToken);
 
-    private Task PublishValidatedContentAsync(
-        string objectKey,
-        string contentType,
-        byte[] content,
-        CancellationToken cancellationToken) =>
-        storageClient.PutObjectBytesAsync(
-            _options.Bucket,
-            objectKey,
-            contentType,
-            content,
-            cancellationToken);
+    public async Task<ImageObjectValidationResult> PromotePrivateImageAsync(ObjectStorageKey key, CancellationToken cancellationToken) {
+        string privateKey = key.ForPrivateConfirmedImage().Value;
+        StoredObjectInfo? info = await storageClient.GetObjectInfoAsync(_options.StagingBucket, privateKey, cancellationToken);
+        if (info is null || info.SizeBytes <= 0 || info.SizeBytes > _options.MaxUploadSizeBytes
+            || string.IsNullOrWhiteSpace(info.ContentType) || !AllowedContentTypes.Contains(info.ContentType)) {
+            return new ImageObjectValidationResult.Invalid("invalid_private_image", "Confirmed private image is missing or invalid.");
+        }
+
+        byte[]? bytes = await storageClient.GetObjectBytesAsync(
+            _options.StagingBucket, privateKey, _options.MaxUploadSizeBytes, cancellationToken);
+        if (bytes is null || bytes.LongLength != info.SizeBytes) {
+            return new ImageObjectValidationResult.Invalid("invalid_private_image", "Confirmed private image is missing or invalid.");
+        }
+
+        await storageClient.PutObjectBytesAsync(_options.Bucket, key.Value, info.ContentType, bytes, cancellationToken);
+        return ImageObjectValidationResult.Accepted;
+    }
 
     private static ImageObjectValidationResult CreateInvalidValidationResult(
         ref string outcome,

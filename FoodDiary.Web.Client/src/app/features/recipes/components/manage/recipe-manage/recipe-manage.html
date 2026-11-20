@@ -35,6 +35,20 @@
                 </div>
             }
 
+            @if (recipe()?.publicationStatus; as status) {
+                <div class="fd-ui-notice-surface fd-ui-body-sm" role="status">
+                    {{ 'RECIPE_PUBLICATION.' + status | translate }}
+                    @let reason = recipe()?.publicationReason;
+                    @if (status === 'ChangesRequested' && reason) {
+                        <p>{{ reason === 'ReplaceImage' ? ('RECIPE_PUBLICATION.REPLACE_IMAGE' | translate) : reason }}</p>
+                    }
+                </div>
+            }
+
+            @if (requestsPublication()) {
+                <p class="fd-ui-body-sm">{{ 'RECIPE_PUBLICATION.DATA_NOTICE' | translate }}</p>
+            }
+
             @if (isImporting()) {
                 <p class="fd-ui-body-sm" role="status">{{ 'RECIPE_MANAGE.IMPORT.RECOGNIZING' | translate }}</p>
             }

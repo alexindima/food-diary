@@ -1,12 +1,14 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { type Observable, of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { type Observable, of, Subject } from 'rxjs';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 // eslint-disable-next-line scope-imports/shared-ui -- shared card spec needs the concrete feature favorite service token
 import { FavoriteRecipeService } from '../../../features/recipes/api/favorite-recipe.service';
 import { AuthService } from '../../../services/auth.service';
+import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
+import { RecipeVisibility } from '../../../shared/models/recipe.data';
 import { RecipeCardComponent, type RecipeCardItem } from './recipe-card';
 
 const TOTAL_TIME_MINUTES = 45;
@@ -35,13 +37,16 @@ type RecipeCardTestContext = {
     component: RecipeCardComponent;
     el: HTMLElement;
     fixture: ComponentFixture<RecipeCardComponent>;
+    ownerPreview: Mock<ImageUploadFacade['getOwnerPreview']>;
 };
 
 async function setupRecipeCardAsync(): Promise<RecipeCardTestContext> {
+    const ownerPreview = vi.fn<ImageUploadFacade['getOwnerPreview']>();
     await TestBed.configureTestingModule({
         imports: [RecipeCardComponent],
         providers: [
             provideTranslateTesting(),
+            { provide: ImageUploadFacade, useValue: { getOwnerPreview: ownerPreview } },
             {
                 provide: FavoriteRecipeService,
                 useValue: {
@@ -65,7 +70,7 @@ async function setupRecipeCardAsync(): Promise<RecipeCardTestContext> {
     fixture.componentRef.setInput('imageUrl', null);
     const el = fixture.nativeElement as HTMLElement;
 
-    return { component, el, fixture };
+    return { component, el, fixture, ownerPreview };
 }
 
 describe('RecipeCardComponent', () => {
@@ -73,6 +78,34 @@ describe('RecipeCardComponent', () => {
         const { component, fixture } = await setupRecipeCardAsync();
         fixture.detectChanges();
         expect(component).toBeTruthy();
+    });
+});
+
+describe('RecipeCardComponent photo access', () => {
+    it('keeps pending photos off the CDN and switches to it after publication', async () => {
+        const { el, fixture, ownerPreview } = await setupRecipeCardAsync();
+        const imageUrl = 'https://cdn.example.com/recipe-photo.webp';
+        const photo = new Subject<string>();
+        const recipe = { ...MOCK_RECIPE, imageUrl, imageAssetId: 'photo' };
+        ownerPreview.mockReturnValue(photo.asObservable());
+
+        fixture.componentRef.setInput('recipe', { ...recipe, visibility: RecipeVisibility.Private, publicationStatus: 'Pending' });
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(el.querySelector('.entity-card__thumb img')).toBeNull();
+        expect(ownerPreview).toHaveBeenCalledExactlyOnceWith('photo');
+
+        const dataUrl = 'data:image/webp;base64,UklGRg==';
+        photo.next(dataUrl);
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__thumb img')?.getAttribute('src')).toBe(dataUrl);
+
+        fixture.componentRef.setInput('recipe', { ...recipe, visibility: RecipeVisibility.Public, publicationStatus: null });
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(el.querySelector('.entity-card__thumb img')?.getAttribute('src')).toBe(imageUrl);
+        expect(photo.observed).toBe(false);
+        expect(ownerPreview).toHaveBeenCalledTimes(1);
     });
 });
 

@@ -59,6 +59,9 @@ public sealed partial class FoodDiaryDbContext : ICompositionReadContext {
     IQueryable<RecipeIngredient> ICompositionReadContext.RecipeIngredients => RecipeIngredients.AsNoTracking();
     IQueryable<RecipeLike> ICompositionReadContext.RecipeLikes => RecipeLikes.AsNoTracking();
     IQueryable<RecipeStep> ICompositionReadContext.RecipeSteps => RecipeSteps.AsNoTracking();
+    IQueryable<ImageAsset> ICompositionReadContext.ActiveRecipePublicationImages => ImageAssets.AsNoTracking()
+        .Where(asset => Set<RecipePublicationRevision>().AsNoTracking().Where(revision => revision.IsCurrent)
+            .SelectMany(revision => revision.Images).Any(image => image.AssetId == asset.Id));
     IQueryable<Recipe> ICompositionReadContext.Recipes => Recipes.AsNoTracking();
     IQueryable<ShoppingList> ICompositionReadContext.ShoppingLists => ShoppingLists.AsNoTracking();
     IQueryable<RecommendationComment> ICompositionReadContext.RecommendationComments => RecommendationComments.AsNoTracking();

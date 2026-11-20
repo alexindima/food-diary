@@ -227,6 +227,12 @@ describe('recipe manage DTO mapping', () => {
 });
 
 describe('recipe manage edit mapping', () => {
+    it('keeps the publication intent when a first public version still has private visibility', () => {
+        const form = buildRecipeFormPatchValue({ ...RECIPE, visibility: RecipeVisibility.Private, publicationStatus: 'Pending' });
+
+        expect(form.visibility).toBe(RecipeVisibility.Public);
+    });
+
     it('should build form patch from existing recipe and prefer manual values over totals', () => {
         expect(buildRecipeFormPatchValue(RECIPE)).toEqual({
             language: 'en',

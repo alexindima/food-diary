@@ -42,6 +42,7 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 
 - `POST /api/v{version:apiVersion}/images/upload-url`
 - `POST /api/v{version:apiVersion}/images/{assetId:guid}/confirm`
+- `GET /api/v{version:apiVersion}/images/{assetId:guid}/content`
 - `DELETE /api/v{version:apiVersion}/images/{assetId:guid}`
 
 ## Boundary Health
@@ -50,14 +51,14 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 25
+- Public contract files: 27
 - Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 31
-- Interfaces: 13
+- Public contract types: 33
+- Interfaces: 14
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
@@ -65,6 +66,7 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 - `class ImageAssetIdParser`
 - `class ImageAssetResolver`
 - `class ImageErrors`
+- `class ImageObjectDeletionOutboxExtensions`
 - `interface IImageAssetAccessService`
 - `interface IImageAssetCleanupBatch`
 - `interface IImageAssetCleanupService`
@@ -78,6 +80,7 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 - `interface IImageObjectDeletionOutbox`
 - `interface IImageObjectDeletionOutboxProcessor`
 - `interface IImageStorageService`
+- `interface IRecipeImagePromotionService`
 - `record CleanupOrphanImagesCommand`
 - `record ImageAssetReadModel`
 - `record ImageCleanupCandidate`
@@ -90,9 +93,7 @@ Source: `Modules/Images/Presentation/Controllers/ImagesController.cs`
 - `record Unresolved`
 - `record Valid`
 - `record struct ImageAssetId`
-- `union DeleteImageAssetResult`
-- `union ImageAssetResolution`
-- ... 1 more type(s)
+- ... 3 more type(s)
 
 ## Focused Tests
 

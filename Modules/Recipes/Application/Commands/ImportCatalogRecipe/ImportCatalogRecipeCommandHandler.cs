@@ -2,8 +2,10 @@ using FluentValidation.Results;
 using FluentValidation;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
 using FoodDiary.Modules.Recipes.Application.Models;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Recipes.Application.Commands.ImportCatalogRecipe;
@@ -11,7 +13,8 @@ namespace FoodDiary.Modules.Recipes.Application.Commands.ImportCatalogRecipe;
 public sealed class ImportCatalogRecipeCommandHandler(
     IRecipeCatalogIdReadService repository,
     IValidator<CreateRecipeCommand> validator,
-    ISender sender)
+    ISender sender,
+    IRecipePublicationQueue? publicationQueue = null)
     : IRequestHandler<ImportCatalogRecipeCommand, Result<CatalogRecipeImportResult>> {
     public async Task<Result<CatalogRecipeImportResult>> Handle(ImportCatalogRecipeCommand request, CancellationToken cancellationToken) {
         CatalogRecipeModel item = request.Recipe;
@@ -20,6 +23,12 @@ public sealed class ImportCatalogRecipeCommandHandler(
         }
         bool? isPublic = await repository.CatalogIdIsPublicAsync(item.Id, cancellationToken);
         if (isPublic is false) {
+            RecipePublicationState? publication = publicationQueue is null
+                ? null
+                : await publicationQueue.GetCurrentAsync(new RecipeId(item.Id), cancellationToken);
+            if (publication is not null) {
+                return Report(item.Id, "pendingModeration", []);
+            }
             return Report(item.Id, "invalid", ["This ID cannot be imported."]);
         }
         if (isPublic is true) {
@@ -46,7 +55,9 @@ public sealed class ImportCatalogRecipeCommandHandler(
             return Report(item.Id, "ready", []);
         }
         Result<RecipeModel> created = await sender.Send(create, cancellationToken);
-        return created.IsSuccess ? Report(item.Id, "imported", []) : Result.Failure<CatalogRecipeImportResult>(created.Error);
+        return created.IsSuccess
+            ? Report(item.Id, created.Value.PublicationStatus is null ? "imported" : "pendingModeration", [])
+            : Result.Failure<CatalogRecipeImportResult>(created.Error);
     }
 
     private static Result<CatalogRecipeImportResult> Report(Guid id, string status, IReadOnlyList<string> errors) =>

@@ -1,0 +1,12 @@
+<fieldset>
+    <legend>{{ legend() }}</legend>
+    @for (option of options(); track option.value) {
+        <fd-ui-checkbox
+            [checked]="selected().includes(option.value)"
+            [disabled]="disabled()"
+            (checkedChange)="categoryChange.emit({ category: option.value, selected: $event })"
+        >
+            {{ option.label | translate }}
+        </fd-ui-checkbox>
+    }
+</fieldset>

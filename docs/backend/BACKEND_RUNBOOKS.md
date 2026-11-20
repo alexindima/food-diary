@@ -345,6 +345,8 @@ Immediate actions:
 Diagnosis:
 
 - Check `S3:ServiceUrl`, the public `S3:Bucket`, the distinct private `S3:StagingBucket`, region/path-style settings, credentials, and copy/delete permissions between both buckets.
+- For pending recipe photos, ensure the staging bucket remains private and any lifecycle rule for short-lived raw uploads excludes `private-confirmed/`. The API and JobManager need read, write, and delete access for that prefix. The normal image cleanup job removes confirmed copies when they are no longer needed.
+- If an approved version remains queued, inspect its delivery attempt and storage health. A CDN copy is retried against the same managed object key. A previous approved recipe stays visible until the new version is published.
 - Verify current credential validity and whether a recent rotation occurred.
 - Distinguish between:
   - backend cannot sign requests

@@ -9,6 +9,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -29,7 +30,8 @@ public partial class UpdateRecipeCommandHandlerTests {
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         IProductLookupService productLookupService,
-        IRecipeLookupService recipeLookupService) =>
+        IRecipeLookupService recipeLookupService,
+        IRecipePublicationQueue? publicationQueue = null) =>
         new(
             repository,
             repository,
@@ -39,7 +41,8 @@ public partial class UpdateRecipeCommandHandlerTests {
             imageAssetAccessService,
             productLookupService,
             recipeLookupService,
-            new ImmediateRecipeMutationTransactionRunner());
+            new ImmediateRecipeMutationTransactionRunner(),
+            publicationQueue);
 
     [ExcludeFromCodeCoverage]
     private sealed class ImmediateRecipeMutationTransactionRunner : IRecipeMutationTransactionRunner {

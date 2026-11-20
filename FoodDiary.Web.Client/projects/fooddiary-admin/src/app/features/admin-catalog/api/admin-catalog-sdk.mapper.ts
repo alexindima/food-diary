@@ -83,5 +83,5 @@ export function catalogProductImportFromSdk(response: CatalogProductImportHttpRe
 
 export function catalogRecipeImportFromSdk(response: CatalogRecipeImportHttpResponse): CatalogResult {
     const value = requireSdkFields(response, ['id', 'status', 'errors']);
-    return { ...value, status: sdkEnum(value.status, ['ready', 'skipped', 'invalid', 'imported', 'failed'] as const) };
+    return { ...value, status: sdkEnum(value.status, ['ready', 'skipped', 'invalid', 'imported', 'pendingModeration', 'failed'] as const) };
 }

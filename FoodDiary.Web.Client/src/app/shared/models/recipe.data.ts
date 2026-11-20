@@ -12,6 +12,9 @@ export enum RecipeVisibility {
     Public = 'Public',
 }
 
+export const RECIPE_PUBLICATION_STATUSES = ['Pending', 'NeedsReview', 'ChangesRequested', 'CheckDelayed'] as const;
+export type RecipePublicationStatus = (typeof RECIPE_PUBLICATION_STATUSES)[number];
+
 export type Recipe = {
     language?: string;
     languageConfirmed?: boolean;
@@ -27,6 +30,9 @@ export type Recipe = {
     cookTime?: number | null;
     servings: number;
     visibility: RecipeVisibility;
+    publicationRevisionId?: string | null;
+    publicationStatus?: RecipePublicationStatus | null;
+    publicationReason?: string | null;
     usageCount: number;
     createdAt: UtcInstant;
     isOwnedByCurrentUser: boolean;

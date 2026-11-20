@@ -1,0 +1,31 @@
+:host {
+    display: grid;
+    gap: var(--fd-space-sm);
+}
+
+h2,
+p {
+    margin: 0;
+}
+
+.detail-metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--fd-space-md);
+    margin: 0;
+}
+
+dt {
+    color: var(--fd-color-text-muted);
+}
+
+dd {
+    margin-inline-start: 0;
+    overflow-wrap: anywhere;
+}
+
+.decision-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+}

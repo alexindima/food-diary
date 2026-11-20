@@ -1,9 +1,12 @@
 using FoodDiary.Modules.Recipes.Application.Mappings;
+using FoodDiary.Modules.Recipes.Application.Abstractions.Moderation;
+using FoodDiary.Modules.Recipes.Application.Services;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Application.Contracts.Common.Validation;
 
@@ -14,7 +17,8 @@ namespace FoodDiary.Modules.Recipes.Application.Queries.GetRecipes;
 
 public sealed class GetRecipesQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IRecipePublicationQueue? publicationQueue = null)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
         int pageNumber = PaginationPolicy.NormalizePage(query.Page);
@@ -43,8 +47,11 @@ public sealed class GetRecipesQueryHandler(
             cancellationToken);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        RecipeModel[] models = [.. items.Select(recipe => recipe.ToModel())];
+        IReadOnlyDictionary<RecipeId, RecipePublicationState> states =
+            await RecipePublicationDraft.GetOwnedStatesAsync(models, publicationQueue, cancellationToken);
         var response = new PagedResponse<RecipeModel>(
-            items.Select(recipe => recipe.ToModel()).ToList(),
+            models.Select(model => RecipePublicationDraft.WithPublication(model, states)).ToList(),
             pageNumber,
             pageSize,
             totalPages,

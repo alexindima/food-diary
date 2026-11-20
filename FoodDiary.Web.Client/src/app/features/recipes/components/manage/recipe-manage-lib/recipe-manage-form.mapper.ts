@@ -138,7 +138,7 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
         prepTime: toNullable(recipeData.prepTime),
         cookTime: toNullable(recipeData.cookTime),
         servings: recipeData.servings,
-        visibility: normalizeRecipeVisibility(recipeData.visibility),
+        visibility: recipeData.publicationStatus ? RecipeVisibility.Public : normalizeRecipeVisibility(recipeData.visibility),
         calculateNutritionAutomatically: recipeData.isNutritionAutoCalculated,
         ...buildRecipeManualNutritionPatchValue(recipeData),
     };

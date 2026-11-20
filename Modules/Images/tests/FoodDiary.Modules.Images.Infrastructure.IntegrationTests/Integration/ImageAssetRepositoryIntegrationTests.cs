@@ -1,3 +1,10 @@
+using System.Data.Common;
+using FoodDiary.Modules.Images.Infrastructure.Persistence;
+using FoodDiary.Persistence.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql;
+using NSubstitute;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Application.Abstractions.Models;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -64,6 +71,38 @@ public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture
         ImageAsset? confirmed = await repository.GetOwnedByIdAsync(asset.Id, owner.Id, CancellationToken.None);
         Assert.NotNull(confirmed);
         Assert.True(confirmed.IsConfirmed);
+    }
+
+    [RequiresDockerFact]
+    public async Task ImageStorageTransitionLocksAssetAgainstConcurrentDeletionAsync() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create("image-lock-owner@example.com", "hash");
+        var asset = ImageAsset.Create(owner.Id, "images/private.webp", "https://cdn.example.com/private.webp", keepPrivate: true);
+        asset.Confirm();
+        context.Users.Add(owner);
+        context.ImageAssets.Add(asset);
+        await context.SaveChangesAsync();
+        await using FoodDiaryDbContext deleting = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
+
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync();
+        IModuleTransactionCoordinator coordinator = Substitute.For<IModuleTransactionCoordinator>();
+        coordinator.ExecuteAsync(Arg.Any<Func<DbTransaction, CancellationToken, Task<bool>>>(), Arg.Any<CancellationToken>())
+            .Returns(call => call.Arg<Func<DbTransaction, CancellationToken, Task<bool>>>()(
+                transaction.GetDbTransaction(), call.Arg<CancellationToken>()));
+        var runner = new EfImageConfirmationTransactionRunner(coordinator);
+
+        Assert.True(await runner.ExecuteSerializedAsync(asset.Id, async token => {
+            await using IDbContextTransaction deleteTransaction = await deleting.Database.BeginTransactionAsync(token);
+            await deleting.Database.ExecuteSqlRawAsync("SET LOCAL lock_timeout = '200ms'", token);
+            InvalidOperationException failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                deleting.ImageAssets.Where(item => item.Id == asset.Id).ExecuteDeleteAsync(token));
+            PostgresException lockFailure = Assert.IsType<PostgresException>(failure.InnerException);
+            Assert.Equal(PostgresErrorCodes.LockNotAvailable, lockFailure.SqlState);
+            return true;
+        }));
+
+        await transaction.CommitAsync();
+        Assert.Equal(1, await deleting.ImageAssets.Where(item => item.Id == asset.Id).ExecuteDeleteAsync());
     }
 
     [RequiresDockerFact]

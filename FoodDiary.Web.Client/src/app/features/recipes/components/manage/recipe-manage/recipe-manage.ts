@@ -17,7 +17,7 @@ import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
-import type { Recipe, RecipeDto } from '../../../../../shared/models/recipe.data';
+import { type Recipe, type RecipeDto, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import type { RecipeImportResult } from '../../../../../shared/models/recipe-import.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
@@ -118,6 +118,7 @@ export class RecipeManageComponent implements UnsavedEditor {
     protected readonly isImportPanelVisible = computed(() => this.recipe() === null);
 
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue(this.recipeManageFacade.preferredLanguage()));
+    protected readonly requestsPublication = computed(() => this.recipeFormModel().visibility === RecipeVisibility.Public);
     protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
         required(path.name);
         validate(path.name, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));
