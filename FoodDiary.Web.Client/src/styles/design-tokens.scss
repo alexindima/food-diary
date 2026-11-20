@@ -1055,6 +1055,7 @@ $fd-theme-design-tokens: (
         --fd-bg-card-profile-gradient: var(--fd-bg-surface-panel-gradient);
         --fd-bg-surface-raised-blend: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, var(--fd-bg-surface));
         --fd-bg-control-surface-mixed: color-mix(in srgb, var(--fd-bg-surface-raised) 84%, var(--fd-color-border-strong));
+        --fd-button-primary-text-disabled: var(--fd-color-surface-muted);
         --fd-bg-button-card-action: linear-gradient(
             180deg,
             color-mix(in srgb, var(--fd-color-primary-100) 52%, var(--fd-color-white)),

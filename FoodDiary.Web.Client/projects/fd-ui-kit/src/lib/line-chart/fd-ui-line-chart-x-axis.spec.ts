@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -48,7 +49,8 @@ function mockLabelSpacing(spacing: { value: number }): void {
 }
 
 function axis(fixture: AxisFixture): HTMLElement {
-    const element = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.fd-ui-line-chart__x-axis');
+    const host = fixture.nativeElement as HTMLElement;
+    const element = (host.shadowRoot ?? host).querySelector<HTMLElement>('.fd-ui-line-chart__x-axis');
     if (element === null) {
         throw new Error('The visible x-axis was not rendered');
     }
@@ -78,6 +80,38 @@ function currentObserver(): AxisObserver {
 beforeEach(() => {
     AxisObserver.instances.length = 0;
     TestBed.configureTestingModule({ imports: [FdUiLineChartXAxisComponent] });
+});
+
+describe('Line chart x-axis in a shadow root', () => {
+    it('measures labels and responds to resize after JIT recompilation', async () => {
+        await TestBed.overrideComponent(FdUiLineChartXAxisComponent, {
+            set: { encapsulation: ViewEncapsulation.ShadowDom },
+        }).compileComponents();
+
+        vi.stubGlobal('ResizeObserver', AxisObserver);
+        const spacing = { value: CROWDED_SPACING };
+        mockLabelSpacing(spacing);
+        const fixture = TestBed.createComponent(FdUiLineChartXAxisComponent);
+        const host = fixture.nativeElement as HTMLElement;
+        fixture.componentRef.setInput('show', true);
+        fixture.componentRef.setInput('layout', 'stacked');
+        fixture.componentRef.setInput('labels', LABELS);
+        await updateAsync(fixture);
+
+        const element = axis(fixture);
+        expect(element.getRootNode()).toBe(host.shadowRoot);
+        expect(visibleLabels(element)).toEqual(['Mon', 'Fri']);
+        expect(element.style.minHeight).toContain('22px');
+
+        const observer = currentObserver();
+        expect(observer.observe).toHaveBeenCalledWith(element);
+        spacing.value = ROOMY_SPACING;
+        observer.resize();
+        await updateAsync(fixture);
+
+        expect(visibleLabels(element)).toEqual(['Mon', 'Wed', 'Fri']);
+        expect(element.style.minHeight).toContain('40px');
+    });
 });
 
 afterEach(() => {

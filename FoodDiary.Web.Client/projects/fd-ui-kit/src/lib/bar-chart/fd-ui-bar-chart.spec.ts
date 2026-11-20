@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -179,6 +180,51 @@ describe('FdUiBarChartComponent data fallbacks', () => {
         } finally {
             vi.restoreAllMocks();
             vi.unstubAllGlobals();
+        }
+    });
+});
+
+describe('FdUiBarChartComponent in a shadow root', () => {
+    it('reflows category labels and keeps bars accessible after JIT recompilation', async () => {
+        await TestBed.configureTestingModule({ imports: [FdUiBarChartComponent] })
+            .overrideComponent(FdUiBarChartComponent, { set: { encapsulation: ViewEncapsulation.ShadowDom } })
+            .compileComponents();
+
+        let spacing = DENSE_LABEL_SPACING;
+        const measure = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement): DOMRect {
+            return measureCategoricalLabel(this, spacing);
+        });
+        try {
+            const fixture = TestBed.createComponent(FdUiBarChartComponent);
+            const host = fixture.nativeElement as HTMLElement;
+            fixture.componentRef.setInput('categories', [
+                { label: 'Monday', values: [{ label: 'Protein', value: PROTEIN_VALUE }] },
+                { label: 'Tuesday', values: [{ label: 'Fat', value: FAT_VALUE }] },
+            ]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const root = host.shadowRoot;
+            if (root === null) {
+                throw new Error('Expected the chart to render inside its shadow root');
+            }
+            const labelVisibility = (): string[] =>
+                [...root.querySelectorAll<HTMLElement>('.fd-ui-bar-chart__categorical-labels span')].map(label => label.style.visibility);
+            expect(host.querySelector('.fd-ui-bar-chart__categorical-labels')).toBeNull();
+            expect(labelVisibility()).toEqual(['hidden', '']);
+
+            spacing = ROOMY_LABEL_SPACING;
+            fixture.componentRef.setInput('horizontalEdgeInset', 'default');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(labelVisibility()).toEqual(['', '']);
+            expect(root.querySelector('[role="group"]')?.getAttribute('aria-label')).toBe('Monday: Protein 50, Tuesday: Fat 25');
+            expect(root.querySelectorAll('.fd-ui-bar-chart__categorical-bar[role="img"]')).toHaveLength(BAR_COUNT);
+        } finally {
+            measure.mockRestore();
         }
     });
 });

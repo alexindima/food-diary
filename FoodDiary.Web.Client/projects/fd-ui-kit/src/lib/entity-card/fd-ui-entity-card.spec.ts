@@ -1,7 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { By } from '@angular/platform-browser';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { FdUiActivateDirective } from '../interaction/fd-ui-activate.directive';
 import { FdUiEntityCardComponent } from './fd-ui-entity-card';
 import { FdUiEntityCardHeaderDirective } from './fd-ui-entity-card-header.directive';
 
@@ -105,5 +107,30 @@ describe('FdUiEntityCardComponent', () => {
         fixture.componentInstance.imageUrl.set('/after.jpg');
         fixture.detectChanges();
         expect(hostEl.querySelector('img')?.getAttribute('src')).toBe('/after.jpg');
+    });
+});
+
+describe('FdUiEntityCardComponent with host activation', () => {
+    it('keeps the custom header interactive when the card is composed with activation', async () => {
+        await TestBed.configureTestingModule({ imports: [TestHostComponent] })
+            .overrideComponent(FdUiEntityCardComponent, { add: { hostDirectives: [FdUiActivateDirective] } })
+            .compileComponents();
+        const fixture = TestBed.createComponent(TestHostComponent);
+        fixture.componentInstance.showHeader.set(true);
+        fixture.detectChanges();
+
+        const card = fixture.debugElement.query(By.directive(FdUiEntityCardComponent));
+        const element = card.nativeElement as HTMLElement;
+        const activated = vi.fn();
+        card.injector.get(FdUiActivateDirective).fdUiActivated.subscribe(activated);
+        const headerAction = element.querySelector<HTMLButtonElement>('.fd-ui-entity-card__header-extra button');
+        expect(element.getAttribute('tabindex')).toBe('0');
+        expect(headerAction?.textContent.trim()).toBe('Manage');
+        headerAction?.click();
+        expect(fixture.componentInstance.headerActivated()).toBe(true);
+        expect(activated).not.toHaveBeenCalled();
+
+        element.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+        expect(activated).toHaveBeenCalledOnce();
     });
 });
