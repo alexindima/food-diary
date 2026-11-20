@@ -17,6 +17,7 @@ import { PublicRecipeCatalogComponent } from './public-catalog';
 
 const facade = { query: vi.fn<PublicRecipesFacade['query']>(), getCategories: vi.fn().mockReturnValue(of([])) };
 const CATALOG_PAGES = 3;
+const CATALOG_ITEMS = 41;
 beforeEach(() => {
     facade.query
         .mockReset()
@@ -134,6 +135,65 @@ it('filters by explicit language and supports all languages', async () => {
     await harness.navigateByUrl('/explore?language=invalid');
     expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ language: 'en' }));
 });
+it('applies the selected category and returns to the first page with the other filters intact', async () => {
+    const harness = await RouterTestingHarness.create('/explore?page=2&search=Soup&maxTotalTime=30&language=ru');
+    selectCatalogOption(harness, 'fd-public-category-filter button', 'RECIPE_CATEGORIES.desserts');
+
+    await vi.waitFor(() => {
+        expect(facade.query).toHaveBeenLastCalledWith({
+            page: 1,
+            search: 'Soup',
+            category: 'desserts',
+            maxTotalTime: 30,
+            sortBy: 'newest',
+            language: 'ru',
+        });
+    });
+    const router = TestBed.inject(Router);
+    const params = router.parseUrl(router.url).queryParamMap;
+    expect(params.get('category')).toBe('desserts');
+    expect(params.has('page')).toBe(false);
+});
+it('writes the all-languages selection to the URL and drops the language constraint from the request', async () => {
+    const harness = await RouterTestingHarness.create('/explore?page=2&language=ru&sortBy=name');
+    selectCatalogOption(harness, 'button[aria-label="RECIPE_LANGUAGE.LABEL"]', 'RECIPE_LANGUAGE.ALL');
+
+    await vi.waitFor(() => {
+        expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 1, sortBy: 'name', language: undefined }));
+    });
+    const router = TestBed.inject(Router);
+    expect(router.parseUrl(router.url).queryParamMap.get('language')).toBe('all');
+});
+it('resets active filters from the empty catalog while retaining the chosen sort order', async () => {
+    facade.query.mockImplementation(filters => {
+        const hasSearch = filters.search.length > 0;
+        return of({
+            data: hasSearch ? [] : [publicRecipeFixture()],
+            page: filters.page,
+            limit: 20,
+            totalPages: hasSearch ? 0 : CATALOG_PAGES,
+            totalItems: hasSearch ? 0 : CATALOG_ITEMS,
+        });
+    });
+    const harness = await RouterTestingHarness.create(
+        '/explore?search=Unavailable&category=desserts&language=all&sortBy=name&maxTotalTime=30',
+    );
+    catalogButton(harness, '.catalog-state button').click();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(facade.query).toHaveBeenLastCalledWith({
+        page: 1,
+        search: '',
+        category: '',
+        maxTotalTime: undefined,
+        sortBy: 'name',
+        language: 'en',
+    });
+    expect(harness.routeNativeElement?.querySelector('.catalog-grid')?.textContent).toContain('Soup');
+    const router = TestBed.inject(Router);
+    expect(router.parseUrl(router.url).queryParams).toEqual({ sortBy: 'name', language: 'en' });
+});
 it('preserves server sorting on bookmarked pages and normalizes unknown orders', async () => {
     const harness = await RouterTestingHarness.create('/explore?page=2&sortBy=fastest');
     expect(facade.query).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2, sortBy: 'fastest' }));
@@ -165,3 +225,24 @@ it('shows a retryable failure rather than an empty catalog', async () => {
     expect(harness.routeNativeElement?.textContent).toContain('Soup');
     expect(facade.query).toHaveBeenCalledTimes(2);
 });
+
+function selectCatalogOption(harness: RouterTestingHarness, control: string, optionLabel: string): void {
+    catalogButton(harness, control).click();
+    harness.detectChanges();
+    const option = [...document.querySelectorAll<HTMLButtonElement>('[role="option"]')].find(
+        item => item.textContent.trim() === optionLabel,
+    );
+    if (option === undefined) {
+        throw new Error(`Catalog option ${optionLabel} was not rendered`);
+    }
+    option.click();
+    harness.detectChanges();
+}
+
+function catalogButton(harness: RouterTestingHarness, selector: string): HTMLButtonElement {
+    const button = harness.routeNativeElement?.querySelector<HTMLButtonElement>(selector);
+    if (button === null || button === undefined) {
+        throw new Error(`Catalog button ${selector} was not rendered`);
+    }
+    return button;
+}

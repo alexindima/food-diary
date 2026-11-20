@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -38,7 +37,6 @@ import { GOALS_TOUR } from './goals-page-lib/goals-tour';
 })
 export class GoalsPageComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly facade = inject(GoalsFacade);
@@ -54,13 +52,15 @@ export class GoalsPageComponent {
     protected readonly calorieCyclingEnabled = this.facade.calorieCyclingEnabled;
     protected readonly dayCalories = this.facade.dayCalories;
     protected readonly bodyTargetDraftValues = this.facade.bodyTargetValues;
-    protected macroPresetOptions: Array<FdUiSelectOption<MacroPresetKey>> = [];
+    protected readonly macroPresetOptions = computed<Array<FdUiSelectOption<MacroPresetKey>>>(() => {
+        this.translateService.currentLang();
+        return this.macroPresets.map(preset => ({
+            value: preset.key,
+            label: this.translateService.instant(preset.labelKey),
+        }));
+    });
 
     public constructor() {
-        this.buildMacroPresetOptions();
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.buildMacroPresetOptions();
-        });
         this.facade.initialize();
     }
 
@@ -97,11 +97,4 @@ export class GoalsPageComponent {
 
     protected readonly saveGoalsManuallyAsync = async (request: UpdateGoalsRequest): Promise<boolean> =>
         this.facade.saveManuallyAsync(request);
-
-    private buildMacroPresetOptions(): void {
-        this.macroPresetOptions = this.macroPresets.map(preset => ({
-            value: preset.key,
-            label: this.translateService.instant(preset.labelKey),
-        }));
-    }
 }

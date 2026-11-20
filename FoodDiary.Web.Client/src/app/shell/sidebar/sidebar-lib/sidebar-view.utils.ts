@@ -38,6 +38,10 @@ export function isSidebarRouteActive(currentUrl: string, route: string, exact: b
     return currentPath === route || currentPath.startsWith(`${route}/`);
 }
 
+export function isSidebarRouterLinkActivation(event: MouseEvent): boolean {
+    return event.button === 0 && !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey;
+}
+
 export function getSidebarMobileSheetLabelKey(sheet: MobileSheetId): string {
     switch (sheet) {
         case 'food': {

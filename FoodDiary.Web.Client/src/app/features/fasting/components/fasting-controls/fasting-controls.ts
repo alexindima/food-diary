@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
@@ -260,18 +261,19 @@ export class FastingControlsComponent {
     }
 
     protected endFasting(): void {
-        this.dialogService
-            .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
-                FastingEndConfirmDialogComponent,
-                {
-                    preset: 'confirm',
-                    data: this.getEndConfirmDialogData(),
-                },
-            )
-            .afterClosed()
+        const sessionId = this.currentSession()?.id;
+        const dialog = this.dialogService.open<
+            FastingEndConfirmDialogComponent,
+            FastingEndConfirmDialogData,
+            FastingEndConfirmDialogResult
+        >(FastingEndConfirmDialogComponent, {
+            preset: 'confirm',
+            data: this.getEndConfirmDialogData(),
+        });
+        this.observeOwnedDialog(dialog)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (result === 'confirm') {
+                if (result === 'confirm' && this.matchesActiveSession(sessionId)) {
                     this.facade.endFasting();
                 }
             });
@@ -480,7 +482,7 @@ export class FastingControlsComponent {
             })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(result => {
-                    if (result === 'confirm') {
+                    if (result === 'confirm' && this.matchesActiveSession(currentSession?.id, currentDuration)) {
                         this.facade.extendByHours(normalizedHours);
                     }
                 });
@@ -504,34 +506,53 @@ export class FastingControlsComponent {
     }
 
     private openCycleActionDialog(titleKey: string, messageKey: string, confirmLabelKey: string, action: () => void): void {
-        this.dialogService
-            .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
-                FastingEndConfirmDialogComponent,
-                {
-                    preset: 'confirm',
-                    data: {
-                        title: this.translateService.instant(titleKey),
-                        message: this.translateService.instant(messageKey),
-                        confirmLabel: this.translateService.instant(confirmLabelKey),
-                        cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
-                    },
-                },
-            )
-            .afterClosed()
+        const sessionId = this.currentSession()?.id;
+        const dialog = this.dialogService.open<
+            FastingEndConfirmDialogComponent,
+            FastingEndConfirmDialogData,
+            FastingEndConfirmDialogResult
+        >(FastingEndConfirmDialogComponent, {
+            preset: 'confirm',
+            data: {
+                title: this.translateService.instant(titleKey),
+                message: this.translateService.instant(messageKey),
+                confirmLabel: this.translateService.instant(confirmLabelKey),
+                cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
+            },
+        });
+        this.observeOwnedDialog(dialog)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (result === 'confirm') {
+                if (result === 'confirm' && this.matchesActiveSession(sessionId)) {
                     action();
                 }
             });
     }
 
+    private matchesActiveSession(sessionId: FastingSession['id'] | undefined, plannedDurationHours?: number): boolean {
+        const session = this.currentSession();
+        return (
+            session !== null &&
+            session.id === sessionId &&
+            session.endedAtUtc === null &&
+            (plannedDurationHours === undefined || session.plannedDurationHours === plannedDurationHours)
+        );
+    }
+
     private openSafetyDialog(data: FastingSafetyDialogData): Observable<FastingSafetyDialogResult | undefined> {
-        return this.dialogService
-            .open<FastingSafetyDialogComponent, FastingSafetyDialogData, FastingSafetyDialogResult>(FastingSafetyDialogComponent, {
-                preset: 'confirm',
-                data,
-            })
-            .afterClosed();
+        const dialog = this.dialogService.open<FastingSafetyDialogComponent, FastingSafetyDialogData, FastingSafetyDialogResult>(
+            FastingSafetyDialogComponent,
+            { preset: 'confirm', data },
+        );
+        return this.observeOwnedDialog(dialog);
+    }
+
+    private observeOwnedDialog<T, R>(dialog: FdUiDialogRef<T, R>): Observable<R | undefined> {
+        const unregisterCleanup = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        const closed = dialog.afterClosed();
+        closed.subscribe({ complete: unregisterCleanup });
+        return closed;
     }
 }

@@ -6,7 +6,7 @@
             [requireHealthConsent]="true"
             [cropEnabled]="false"
             [resizeMaxDimension]="1536"
-            [deleteOnClear]="true"
+            [clearRequest]="photoUploadClearRequest()"
             (imagePreparationStarted)="onPhotoPreparationStarted($event)"
             (imagePreparationFailed)="onPhotoPreparationFailed()"
             (imageChanged)="onPhotoSelected($event)"
@@ -89,6 +89,10 @@
                 />
             </div>
         </div>
+    }
+
+    @if (aiConsentSaveFailed()) {
+        <fd-ui-inline-alert appearance="notice" severity="danger" role="alert" [message]="'AI_RECOGNITION.ERROR_CONSENT' | translate" />
     }
 
     <div #actionsElement class="ai-input-bar__actions fd-row fd-justify-between fd-gap-xs">

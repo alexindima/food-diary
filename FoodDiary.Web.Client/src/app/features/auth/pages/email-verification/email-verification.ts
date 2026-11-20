@@ -89,7 +89,8 @@ export class EmailVerificationComponent {
             return;
         }
         if (this.authService.isAuthenticated()) {
-            await this.authService.onLogoutAsync();
+            await this.authService.logoutForAccountSwitchAsync('/profile', this.destroyRef);
+            return;
         }
         await this.navigationService.navigateToAuthAsync('login', '/profile');
     }

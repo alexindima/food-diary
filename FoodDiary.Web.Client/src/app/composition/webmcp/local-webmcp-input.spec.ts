@@ -1,9 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { MAXIMUM_CONSUMED_QUANTITY } from '../../shared/models/semantics/meal-quantity';
 import { localModelContext } from './local-webmcp.types';
+import { readDay, readDraft } from './local-webmcp-input';
 
 const DST_SHIFTED_HOUR = 3;
-import { readDay, readDraft } from './local-webmcp-input';
+const RECIPE_ID_OVER_LIMIT = 101;
+const HALF_PORTION = 0.5;
 
 const draft = {
     date: '2026-10-17',
@@ -67,5 +70,29 @@ describe('local WebMCP input boundary', () => {
         expect(localModelContext(document('localhost'), false)).toBeUndefined();
         expect(localModelContext(document('fooddiary.club'), true)).toBeUndefined();
         expect(localModelContext(document('localhost', false), true)).toBeUndefined();
+    });
+});
+
+describe('local WebMCP recipe servings input', () => {
+    it('preserves fractional recipe servings alongside a regular product item', () => {
+        const input = { ...draft, items: [...draft.items, { recipeId: 'pancakes-for-two', servings: HALF_PORTION }] };
+        expect(readDraft(input)).toEqual(input);
+    });
+
+    it('rejects recipe servings on a product row that has no recipe ID', () => {
+        expect(() => readDraft({ ...draft, items: [{ ...draft.items[0], servings: 1 }] })).toThrow('Servings require recipeId.');
+    });
+
+    it.each([
+        { recipeId: 'existing-recipe', servings: 1, productName: 'Apple' },
+        { recipeId: 1, servings: 1 },
+        { recipeId: 'existing-recipe', servings: '1' },
+        { recipeId: '', servings: 1 },
+        { recipeId: 'r'.repeat(RECIPE_ID_OVER_LIMIT), servings: 1 },
+        { recipeId: 'existing-recipe', servings: Number.POSITIVE_INFINITY },
+        { recipeId: 'existing-recipe', servings: 0 },
+        { recipeId: 'existing-recipe', servings: MAXIMUM_CONSUMED_QUANTITY + 1 },
+    ])('rejects recipe input outside the published ID and serving contract (%j)', item => {
+        expect(() => readDraft({ ...draft, items: [item] })).toThrow('exact recipe ID and a bounded serving quantity');
     });
 });

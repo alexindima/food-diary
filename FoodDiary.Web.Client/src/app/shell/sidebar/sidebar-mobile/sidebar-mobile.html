@@ -13,7 +13,7 @@
                 [attr.aria-label]="'SIDEBAR.DASHBOARD' | translate"
                 [routerLinkActiveOptions]="{ exact: true }"
                 [class.is-pending]="pendingRoute() === '/'"
-                (click)="directRouteClick.emit({ route: '/', exact: true }); closeMenus.emit()"
+                (click)="activateDirectRoute($event, { route: '/', exact: true })"
             >
                 <fd-ui-icon name="dashboard" />
                 <span class="sidebar-mobile__label fd-ui-caption">{{ 'SIDEBAR.MOBILE_DASHBOARD' | translate }}</span>
@@ -95,7 +95,7 @@
                     routerLinkActive="is-active"
                     class="sidebar-mobile__sheet-link sidebar-mobile__profile-link fd-row fd-gap-xs"
                     [class.is-pending]="pendingRoute() === '/profile'"
-                    (click)="directRouteClick.emit({ route: '/profile' }); closeMenus.emit()"
+                    (click)="activateDirectRoute($event, { route: '/profile' })"
                 >
                     <fd-ui-icon name="settings" />
                     <span class="fd-ui-action-text">{{ 'HEADER.PROFILE' | translate }}</span>

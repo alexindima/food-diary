@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -7,6 +8,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
+import { finalize } from 'rxjs';
 
 import { ProductAddDialogComponent } from '../../../features/products/contracts/product-add-dialog';
 import { ProductListDialogComponent } from '../../../features/products/contracts/product-list-dialog';
@@ -35,6 +37,7 @@ const MAX_TEXT_NAME_LENGTH = 256;
 export class ItemSelectDialogComponent {
     private readonly dialogData = inject<ItemSelectDialogData | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
     private readonly dialogRef = inject(FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null>, { optional: true });
 
@@ -96,13 +99,26 @@ export class ItemSelectDialogComponent {
 
     protected onCreateAction(): void {
         if (this.activeTab() === 'Product') {
-            this.fdDialogService
-                .open<ProductAddDialogComponent, Product | null, Product | null>(ProductAddDialogComponent, {
+            const creation = this.fdDialogService.open<ProductAddDialogComponent, Product | null, Product | null>(
+                ProductAddDialogComponent,
+                {
                     preset: 'fullscreen',
                     ariaLabel: String(this.translateService.instant('PRODUCT_MANAGE.ADD_TITLE')),
-                })
+                },
+            );
+            let receivedResult = false;
+            creation
                 .afterClosed()
+                .pipe(
+                    takeUntilDestroyed(this.destroyRef),
+                    finalize(() => {
+                        if (!receivedResult && this.destroyRef.destroyed) {
+                            creation.close();
+                        }
+                    }),
+                )
                 .subscribe(product => {
+                    receivedResult = true;
                     if (product === null || product === undefined) {
                         return;
                     }

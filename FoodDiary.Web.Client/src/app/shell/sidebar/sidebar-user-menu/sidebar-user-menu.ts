@@ -17,7 +17,7 @@ import { FdUiIconComponent } from 'fd-ui-kit';
 
 import type { User } from '../../../shared/models/user.data';
 import type { SidebarDirectRouteRequest } from '../sidebar-lib/sidebar.models';
-import { focusFirstSidebarInteractiveElement } from '../sidebar-lib/sidebar-view.utils';
+import { focusFirstSidebarInteractiveElement, isSidebarRouterLinkActivation } from '../sidebar-lib/sidebar-view.utils';
 
 @Component({
     selector: 'fd-sidebar-user-menu',
@@ -75,5 +75,12 @@ export class SidebarUserMenuComponent {
                 { injector: this.injector },
             );
         });
+    }
+
+    protected activateProfileRoute(event: MouseEvent): void {
+        if (isSidebarRouterLinkActivation(event)) {
+            this.directRouteClick.emit({ route: '/profile' });
+            this.dismissMenu.emit();
+        }
     }
 }

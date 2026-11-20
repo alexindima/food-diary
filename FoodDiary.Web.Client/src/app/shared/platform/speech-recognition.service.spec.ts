@@ -52,6 +52,24 @@ describe('SpeechRecognitionService', () => {
         expect(service.isListening()).toBe(true);
     });
 
+    it('ignores an empty final result and accepts a new recording after the browser ends it', () => {
+        const service = TestBed.inject(SpeechRecognitionService);
+        const onTranscript = vi.fn();
+        const onError = vi.fn();
+        expect(service.start('en-US', onTranscript, onError)).toBe(true);
+
+        recognition.onresult({ results: [[{ transcript: '' }]] });
+        recognition.onend();
+        expect(onTranscript).not.toHaveBeenCalled();
+        expect(onError).not.toHaveBeenCalled();
+        expect(service.isListening()).toBe(false);
+
+        recognition = createRecognitionMock();
+        expect(service.start('en-US', onTranscript, onError)).toBe(true);
+        recognition.onresult({ results: [[{ transcript: 'apple' }]] });
+        expect(onTranscript).toHaveBeenCalledExactlyOnceWith('apple');
+    });
+
     it('stops the active recognition and resets listening state', () => {
         const service = TestBed.inject(SpeechRecognitionService);
         const onError = vi.fn();

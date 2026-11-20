@@ -130,7 +130,19 @@ export class ProductBasicInfoComponent {
     }
 
     protected setPhotos(photos: ImageSelection[]): void {
-        this.form()().value.update(value => ({ ...value, images: photos, imageUrl: photos[0] ?? null }));
+        const currentPhotos = this.productPhotos();
+        if (
+            photos.length === currentPhotos.length &&
+            photos.every((photo, index) => {
+                const currentPhoto = currentPhotos.at(index);
+                return photo.assetId === currentPhoto?.assetId && photo.url === currentPhoto.url;
+            })
+        ) {
+            return;
+        }
+        const field = this.form()();
+        field.value.update(value => ({ ...value, images: photos, imageUrl: photos[0] ?? null }));
+        field.markAsDirty();
     }
 
     protected setCover(photo: ImageSelection | null): void {

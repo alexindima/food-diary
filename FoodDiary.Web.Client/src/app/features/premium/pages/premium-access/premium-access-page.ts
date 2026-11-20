@@ -17,7 +17,7 @@ import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, type Observable, timer } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -95,6 +95,7 @@ export class PremiumAccessPageComponent {
     protected readonly checkoutLoadingPlan = signal<BillingPlan | null>(null);
     protected readonly portalLoading = signal(false);
     protected readonly trialLoading = signal(false);
+    private readonly accessActivationBusy = computed(() => this.checkoutLoadingPlan() !== null || this.trialLoading());
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
     private readonly languageVersion = signal(0);
@@ -146,7 +147,7 @@ export class PremiumAccessPageComponent {
     }
 
     protected async startCheckoutAsync(plan: BillingPlan, provider?: BillingProvider): Promise<void> {
-        if (!this.isBrowser || this.checkoutLoadingPlan() !== null) {
+        if (!this.isBrowser || this.accessActivationBusy()) {
             return;
         }
         const selectedProvider = provider ?? this.availableProviders().at(0);
@@ -159,17 +160,8 @@ export class PremiumAccessPageComponent {
         this.checkoutLoadingPlan.set(plan);
 
         try {
-            const session = await firstValueFrom(this.billingService.createCheckoutSession(plan, selectedProvider));
-            if (session.url.length === 0) {
-                this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
-                return;
-            }
-
-            if (selectedProvider.toLowerCase() === 'telegramstars' && this.telegram.isMiniAppLaunch()) {
-                await this.handleStarsInvoiceAsync(session.url);
-            } else {
-                this.document.location.href = session.url;
-            }
+            const session = await this.readBillingResponseAsync(this.billingService.createCheckoutSession(plan, selectedProvider));
+            await this.openCheckoutProviderAsync(session.url, selectedProvider);
         } catch (error) {
             this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
         } finally {
@@ -177,10 +169,32 @@ export class PremiumAccessPageComponent {
         }
     }
 
+    private async openCheckoutProviderAsync(url: string, provider: BillingProvider): Promise<void> {
+        if (!this.isPageActive()) {
+            return;
+        }
+        if (url.length === 0) {
+            this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_CHECKOUT'));
+            return;
+        }
+
+        if (provider.toLowerCase() === 'telegramstars' && this.telegram.isMiniAppLaunch()) {
+            await this.handleStarsInvoiceAsync(url);
+            return;
+        }
+        this.document.location.href = url;
+    }
+
     private async handleStarsInvoiceAsync(url: string): Promise<void> {
         const state = await this.telegram.openInvoiceAsync(url);
+        if (!this.isPageActive()) {
+            return;
+        }
         if (state === 'paid' || state === 'pending') {
             await this.refreshTokenWhenPremiumEntitlementVisibleAsync();
+            if (!this.isPageActive()) {
+                return;
+            }
             const confirmed = this.overview()?.isPremium === true;
             this.checkoutReturnState.set(confirmed ? 'success' : null);
             if (!confirmed) {
@@ -206,7 +220,7 @@ export class PremiumAccessPageComponent {
     }
 
     protected async startTrialAsync(): Promise<void> {
-        if (this.trialLoading()) {
+        if (this.accessActivationBusy()) {
             return;
         }
 
@@ -214,10 +228,13 @@ export class PremiumAccessPageComponent {
         this.trialLoading.set(true);
 
         try {
-            const overview = await firstValueFrom(this.billingService.startPremiumTrial());
+            const overview = await this.readBillingResponseAsync(this.billingService.startPremiumTrial());
+            if (!this.isPageActive()) {
+                return;
+            }
             this.overview.set(overview);
             void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
-            if (!(await this.refreshAccountAccessAsync())) {
+            if (!(await this.refreshAccountAccessAsync()) || !this.isPageActive()) {
                 return;
             }
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE'));
@@ -237,7 +254,10 @@ export class PremiumAccessPageComponent {
         this.portalLoading.set(true);
 
         try {
-            const session = await firstValueFrom(this.billingService.createPortalSession());
+            const session = await this.readBillingResponseAsync(this.billingService.createPortalSession());
+            if (!this.isPageActive()) {
+                return;
+            }
             if (session.url.length === 0) {
                 this.showErrorMessage(this.translateService.instant('PREMIUM_PAGE.ERROR_PORTAL'));
                 return;
@@ -265,6 +285,9 @@ export class PremiumAccessPageComponent {
 
     private async initializePageAsync(): Promise<void> {
         await this.handleCheckoutReturnStateAsync();
+        if (!this.isPageActive()) {
+            return;
+        }
         await this.loadOverviewAsync();
         await this.handlePaddleTransactionCheckoutAsync();
     }
@@ -278,6 +301,9 @@ export class PremiumAccessPageComponent {
         if (checkoutState === 'success') {
             this.checkoutReturnState.set('success');
             await this.refreshTokenWhenPremiumEntitlementVisibleAsync();
+            if (!this.isPageActive()) {
+                return;
+            }
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE'));
         } else if (checkoutState === 'canceled') {
             this.checkoutReturnState.set('canceled');
@@ -300,13 +326,18 @@ export class PremiumAccessPageComponent {
         this.errorMessage.set(null);
 
         try {
-            const overview = await firstValueFrom(this.billingService.getOverview());
+            const overview = await this.readBillingResponseAsync(this.billingService.getOverview());
+            if (!this.isPageActive()) {
+                return;
+            }
             this.overview.set(overview);
             if (this.isBrowser && overview.isPremium !== this.authService.isPremium()) {
                 await this.refreshAccountAccessAsync();
             }
         } catch (error) {
-            this.errorMessage.set(this.getErrorMessage(error));
+            if (this.isPageActive()) {
+                this.errorMessage.set(this.getErrorMessage(error));
+            }
         } finally {
             this.isLoading.set(false);
         }
@@ -326,10 +357,21 @@ export class PremiumAccessPageComponent {
         return false;
     }
 
+    private async readBillingResponseAsync<T>(response: Observable<T>): Promise<T> {
+        return firstValueFrom(response.pipe(takeUntilDestroyed(this.destroyRef)));
+    }
+
+    private isPageActive(): boolean {
+        return !this.destroyRef.destroyed;
+    }
+
     private async refreshTokenWhenPremiumEntitlementVisibleAsync(): Promise<void> {
         try {
-            for (let attempt = 0; attempt < PremiumAccessPageComponent.CheckoutActivationPollAttempts; attempt++) {
-                const overview = await firstValueFrom(this.billingService.getOverview());
+            for (let attempt = 0; attempt < PremiumAccessPageComponent.CheckoutActivationPollAttempts && this.isPageActive(); attempt++) {
+                const overview = await this.readBillingResponseAsync(this.billingService.getOverview());
+                if (!this.isPageActive()) {
+                    return;
+                }
                 this.overview.set(overview);
                 if (overview.isPremium) {
                     await firstValueFrom(this.authService.refreshSession());
@@ -339,21 +381,22 @@ export class PremiumAccessPageComponent {
                 await this.delayCheckoutActivationPollAsync();
             }
         } catch {
-            await firstValueFrom(this.authService.refreshSession());
-            return;
+            // An active return screen attempts a final session refresh even if polling fails.
         }
 
-        await firstValueFrom(this.authService.refreshSession());
+        if (this.isPageActive()) {
+            await firstValueFrom(this.authService.refreshSession());
+        }
     }
 
     private async delayCheckoutActivationPollAsync(): Promise<void> {
-        await new Promise<void>(resolve => {
-            setTimeout(resolve, PremiumAccessPageComponent.CheckoutActivationPollDelayMs);
+        await firstValueFrom(timer(PremiumAccessPageComponent.CheckoutActivationPollDelayMs).pipe(takeUntilDestroyed(this.destroyRef)), {
+            defaultValue: undefined,
         });
     }
 
     private async handlePaddleTransactionCheckoutAsync(): Promise<void> {
-        if (!this.isBrowser) {
+        if (!this.isBrowser || !this.isPageActive()) {
             return;
         }
 
@@ -370,14 +413,18 @@ export class PremiumAccessPageComponent {
 
         try {
             await this.openPaddleTransactionCheckoutAsync(transactionId, paddleClientToken);
-
+            if (!this.isPageActive()) {
+                return;
+            }
             await this.router.navigate([], {
                 relativeTo: this.route,
                 queryParams: {},
                 replaceUrl: true,
             });
         } catch (error) {
-            this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
+            if (this.isPageActive()) {
+                this.showErrorMessage(this.getErrorMessage(error, 'PREMIUM_PAGE.ERROR_CHECKOUT'));
+            }
         }
     }
 
@@ -391,6 +438,9 @@ export class PremiumAccessPageComponent {
     }
 
     private showErrorMessage(message: string): void {
+        if (!this.isPageActive()) {
+            return;
+        }
         this.errorMessage.set(message);
         this.toastService.error(message);
     }

@@ -1,17 +1,29 @@
+import { signal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideTranslateService } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { of, Subject } from 'rxjs';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
+import { QuickMealService } from '../../../features/meals/contracts/quick-meal';
+import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
+import { OpenFoodFactsService } from '../../../features/products/api/open-food-facts.service';
+import { ProductService } from '../../../features/products/api/product.service';
+import { RecipeService } from '../../../features/recipes/api/recipe.service';
+import { NavigationService } from '../../../services/navigation.service';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { utcInstant } from '../../models/semantics/date-value';
 import { entityId } from '../../models/semantics/entity-id';
+import { ViewportService } from '../../platform/viewport.service';
 import { ItemSelectDialogComponent } from './item-select-dialog';
+import type { ItemSelectDialogData, ItemSelection } from './item-select-dialog-lib/item-select-dialog.types';
 
 const BASE_AMOUNT = 100;
 const DEFAULT_PORTION_AMOUNT = 100;
@@ -174,3 +186,172 @@ describe('ItemSelectDialogComponent', () => {
         expect(dialogRef.close).toHaveBeenCalledWith({ type: 'Product', product });
     });
 });
+
+describe('Rendered ingredient picker', () => {
+    it('resets the text choice when changing tabs and returns trimmed text from the visible search', () => {
+        configureRenderedPicker();
+        TestBed.inject(TranslateService).setTranslation('en', { RECIPE_MANAGE: { USE_AS_TEXT: 'Use {{name}} as text' } });
+        const ref = openRenderedPicker({ allowText: true });
+        const picked = vi.fn<(selection: ItemSelection | null | undefined) => void>();
+        ref.afterClosed().subscribe(picked);
+        const host = requiredPickerElement(document, 'fd-item-select-dialog', HTMLElement);
+
+        changeSearch(host, 'fd-product-list-dialog input', '  Smoked paprika  ');
+        expect(pickerButton(host, 'Use Smoked paprika as text').closest('[hidden]')).toBeNull();
+        pickerButton(host, 'MEAL_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB').click();
+        TestBed.tick();
+        expect(host.querySelector('fd-product-list-dialog')).toBeNull();
+        expect(pickerButton(host, 'Use as text').closest('[hidden]')).not.toBeNull();
+
+        changeSearch(host, 'fd-recipe-select-dialog input', '  Dill  ');
+        pickerButton(host, 'Use Dill as text').click();
+        expect(picked).toHaveBeenCalledExactlyOnceWith({ type: 'Text', name: 'Dill' });
+    });
+
+    it('hides recipe creation when an embedded picker is configured for existing recipes only', () => {
+        configureRenderedPicker();
+        const fixture = TestBed.createComponent(ItemSelectDialogComponent);
+        fixture.componentRef.setInput('embedded', true);
+        fixture.componentRef.setInput('allowRecipeCreation', false);
+        const picked = vi.fn<(selection: Recipe) => void>();
+        fixture.componentInstance.recipeSelected.subscribe(picked);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(pickerButton(host, 'PRODUCT_LIST.ADD_PRODUCT_BUTTON').closest('[hidden]')).toBeNull();
+
+        pickerButton(host, 'MEAL_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB').click();
+        fixture.detectChanges();
+        expect(pickerButton(host, 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON').closest('[hidden]')).not.toBeNull();
+        const existingRecipe = requiredPickerElement(host, '.recipe-select__item', HTMLButtonElement);
+        expect(existingRecipe.textContent).toContain(recipe.name);
+        existingRecipe.click();
+        expect(picked).toHaveBeenCalledExactlyOnceWith(recipe);
+    });
+});
+
+describe('Rendered item picker product creation', () => {
+    it('keeps the picker open when product creation is cancelled and returns the next created product', () => {
+        const openCreation = configureRenderedPicker();
+        const closeCreation = vi.fn();
+        openCreation
+            .mockReturnValueOnce({ afterClosed: () => of(null) })
+            .mockReturnValueOnce({ afterClosed: () => of(product), close: closeCreation });
+        const ref = openRenderedPicker();
+        const picked = vi.fn<(selection: ItemSelection | null | undefined) => void>();
+        ref.afterClosed().subscribe(picked);
+        const host = requiredPickerElement(document, 'fd-item-select-dialog', HTMLElement);
+        const add = pickerButton(host, 'PRODUCT_LIST.ADD_PRODUCT_BUTTON');
+        add.click();
+        expect(host.isConnected).toBe(true);
+        expect(picked).not.toHaveBeenCalled();
+
+        add.click();
+        expect(picked).toHaveBeenCalledExactlyOnceWith({ type: 'Product', product });
+        expect(host.isConnected).toBe(false);
+        expect(closeCreation).not.toHaveBeenCalled();
+    });
+
+    it('disposes pending product creation when the parent picker closes', () => {
+        const openCreation = configureRenderedPicker();
+        const creation = new Subject<Product | null>();
+        const closeCreation = vi.fn(() => {
+            creation.next(null);
+            creation.complete();
+        });
+        openCreation.mockReturnValue({ afterClosed: () => creation, close: closeCreation });
+        const ref = openRenderedPicker();
+        const picked = vi.fn<(selection: ItemSelection | null | undefined) => void>();
+        ref.afterClosed().subscribe(picked);
+        const host = requiredPickerElement(document, 'fd-item-select-dialog', HTMLElement);
+        pickerButton(host, 'PRODUCT_LIST.ADD_PRODUCT_BUTTON').click();
+        expect(creation.observed).toBe(true);
+
+        ref.close(null);
+        expect(host.isConnected).toBe(false);
+        expect(creation.observed).toBe(false);
+        expect(closeCreation).toHaveBeenCalledOnce();
+        creation.next(product);
+        expect(picked).toHaveBeenCalledExactlyOnceWith(null);
+    });
+});
+
+function configureRenderedPicker(): ReturnType<typeof vi.fn> {
+    const openCreation = vi.fn();
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+    TestBed.configureTestingModule({
+        imports: [ItemSelectDialogComponent],
+        providers: [
+            provideRouter([]),
+            provideTranslateService({ lang: 'en' }),
+            { provide: APP_SEARCH_DEBOUNCE_MS, useValue: 0 },
+            { provide: NavigationService, useValue: {} },
+            { provide: QuickMealService, useValue: {} },
+            { provide: ViewportService, useValue: { isMobile: signal(false) } },
+            { provide: FdUiToastService, useValue: { error: vi.fn() } },
+            {
+                provide: FavoriteProductService,
+                useValue: { getLookupPage: vi.fn<FavoriteProductService['getLookupPage']>().mockReturnValue(of([])) },
+            },
+            { provide: OpenFoodFactsService, useValue: { search: vi.fn<OpenFoodFactsService['search']>().mockReturnValue(of([])) } },
+            {
+                provide: ProductService,
+                useValue: {
+                    query: vi.fn<ProductService['query']>().mockReturnValue(of(pickerPage([product]))),
+                    queryOverview: vi
+                        .fn<ProductService['queryOverview']>()
+                        .mockReturnValue(
+                            of({ allProducts: pickerPage([product]), recentItems: [], favoriteItems: [], favoriteTotalCount: 0 }),
+                        ),
+                },
+            },
+            { provide: RecipeService, useValue: { query: vi.fn<RecipeService['query']>().mockReturnValue(of(pickerPage([recipe]))) } },
+        ],
+    });
+    TestBed.overrideComponent(ItemSelectDialogComponent, {
+        add: { providers: [{ provide: FdUiDialogService, useValue: { open: openCreation } }] },
+    });
+    const dialogs = TestBed.inject(FdUiDialogService);
+    onTestFinished(() => {
+        dialogs.closeAll();
+        vi.unstubAllGlobals();
+    });
+    return openCreation;
+}
+
+function pickerPage<T>(data: T[]): { data: T[]; page: number; totalPages: number; totalItems: number; limit: number } {
+    return { data, page: 1, totalPages: 1, totalItems: data.length, limit: data.length };
+}
+
+function openRenderedPicker(data: ItemSelectDialogData = {}): FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null> {
+    const ref = TestBed.inject(FdUiDialogService).open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
+        ItemSelectDialogComponent,
+        { data },
+    );
+    TestBed.tick();
+    return ref;
+}
+
+function changeSearch(host: HTMLElement, selector: string, value: string): void {
+    const search = requiredPickerElement(host, selector, HTMLInputElement);
+    search.value = value;
+    search.dispatchEvent(new Event('input', { bubbles: true }));
+    TestBed.tick();
+}
+
+function pickerButton(host: HTMLElement, label: string): HTMLButtonElement {
+    const found = Array.from(host.querySelectorAll('button')).find(button =>
+        button.textContent.replaceAll(/\s+/g, ' ').trim().endsWith(label),
+    );
+    if (found === undefined) {
+        throw new Error(`Missing picker control: ${label}`);
+    }
+    return found;
+}
+
+function requiredPickerElement<T extends HTMLElement>(host: ParentNode, selector: string, type: new () => T): T {
+    const element = host.querySelector(selector);
+    if (!(element instanceof type)) {
+        throw new Error(`Missing ${selector} in the item picker.`);
+    }
+    return element;
+}

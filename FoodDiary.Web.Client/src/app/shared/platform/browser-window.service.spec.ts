@@ -1,13 +1,17 @@
 import { DOCUMENT } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { BrowserWindowService } from './browser-window.service';
 
+type OpenTelegramInvoice = (url: string, callback: (status: string) => void) => void;
+
 type TelegramCapableWindow = Window & {
     Telegram?: {
         WebApp?: {
             initData?: string;
+            openInvoice?: OpenTelegramInvoice;
         };
     };
 };
@@ -32,10 +36,9 @@ describe('BrowserWindowService visibility flush', () => {
     });
 });
 
-describe('BrowserWindowService', () => {
+describe('BrowserWindowService location and Telegram bridge', () => {
     afterEach(() => {
         Reflect.deleteProperty(window, 'Telegram');
-        Reflect.deleteProperty(window, 'matchMedia');
         vi.restoreAllMocks();
     });
 
@@ -64,6 +67,44 @@ describe('BrowserWindowService', () => {
         const service = createService(document);
 
         expect(service.getTelegramInitData()).toBeNull();
+    });
+
+    it.each(['', '  '])('treats a blank Telegram launch payload as absent', initData => {
+        (window as TelegramCapableWindow).Telegram = { WebApp: { initData } };
+
+        expect(createService(document).getTelegramInitData()).toBeNull();
+    });
+
+    it('waits for Telegram to close the invoice and forwards its result', async () => {
+        let completeInvoice: (status: string) => void = () => {};
+        const openInvoice = vi.fn<OpenTelegramInvoice>((_url, complete) => {
+            completeInvoice = complete;
+        });
+        const app = { openInvoice };
+        (window as TelegramCapableWindow).Telegram = { WebApp: app };
+        const url = 'https://example.test/invoice';
+        const result = createService(document).openTelegramInvoiceAsync(url);
+
+        expect(openInvoice).toHaveBeenCalledExactlyOnceWith(url, expect.any(Function));
+        expect(openInvoice.mock.contexts[0]).toBe(app);
+        completeInvoice('cancelled');
+
+        await expect(result).resolves.toBe('cancelled');
+    });
+
+    it('rejects opening an invoice when the Telegram client has no invoice support', async () => {
+        (window as TelegramCapableWindow).Telegram = { WebApp: {} };
+
+        await expect(createService(document).openTelegramInvoiceAsync('https://example.test/invoice')).rejects.toThrow(
+            'Telegram invoice interface unavailable',
+        );
+    });
+});
+
+describe('BrowserWindowService window actions', () => {
+    afterEach(() => {
+        Reflect.deleteProperty(window, 'matchMedia');
+        vi.restoreAllMocks();
     });
 
     it('replaces current URL through history API', () => {
@@ -218,6 +259,150 @@ describe('BrowserWindowService storage events', () => {
     });
 });
 
+describe('BrowserWindowService platform capabilities', () => {
+    const originalClipboard = Object.getOwnPropertyDescriptor(window.navigator, 'clipboard');
+    const originalMediaDevices = Object.getOwnPropertyDescriptor(window.navigator, 'mediaDevices');
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        if (originalClipboard === undefined) {
+            Reflect.deleteProperty(window.navigator, 'clipboard');
+        } else {
+            Object.defineProperty(window.navigator, 'clipboard', originalClipboard);
+        }
+        if (originalMediaDevices === undefined) {
+            Reflect.deleteProperty(window.navigator, 'mediaDevices');
+        } else {
+            Object.defineProperty(window.navigator, 'mediaDevices', originalMediaDevices);
+        }
+    });
+
+    it('reports no browser APIs on the server even when the injected document has a window', async () => {
+        const service = createService(document, 'server');
+        const callback = vi.fn();
+
+        expect(service.isAvailable()).toBe(false);
+        expect(service.getOrigin()).toBeUndefined();
+        expect(service.getHref()).toBeNull();
+        expect(service.getSearch()).toBeNull();
+        expect(service.getPathname()).toBeNull();
+        expect(service.getHostname()).toBeNull();
+        expect(service.getViewportWidth()).toBe(0);
+        expect(service.getScrollY()).toBe(0);
+        expect(service.requestAnimationFrame(callback)).toBeNull();
+        expect(service.setInterval(callback, TEST_TIMEOUT_MS)).toBeNull();
+        expect(service.setTimeout(callback, TEST_TIMEOUT_MS)).toBeNull();
+        expect(service.createBarcodeDetector(['ean_13'])).toBeNull();
+        await expect(service.openTelegramInvoiceAsync('https://example.test/invoice')).rejects.toThrow(
+            'Telegram invoice interface unavailable',
+        );
+        await expect(service.copyTextAsync('Diary link')).rejects.toThrow('Clipboard unavailable');
+        await expect(service.getUserMediaAsync({ video: true })).rejects.toThrow('Browser media devices are unavailable');
+        service.onResize(callback)();
+        service.onLocalStorageChange(callback)();
+        expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('copies the provided text using browser clipboard permission', async () => {
+        const writeText = vi.fn<Clipboard['writeText']>().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText } });
+        const service = createService(document);
+
+        await service.copyTextAsync('https://example.test/recipes/view');
+
+        expect(writeText).toHaveBeenCalledExactlyOnceWith('https://example.test/recipes/view');
+    });
+
+    it('preserves camera constraints and propagates a browser permission refusal', async () => {
+        const refusal = new DOMException('Camera permission denied', 'NotAllowedError');
+        const getUserMedia = vi.fn<MediaDevices['getUserMedia']>().mockRejectedValue(refusal);
+        Object.defineProperty(window.navigator, 'mediaDevices', { configurable: true, value: { getUserMedia } });
+        const constraints: MediaStreamConstraints = { video: { facingMode: 'environment' }, audio: false };
+
+        await expect(createService(document).getUserMediaAsync(constraints)).rejects.toBe(refusal);
+
+        expect(getUserMedia).toHaveBeenCalledExactlyOnceWith(constraints);
+    });
+
+    it('cancels only the requested animation frame and clears its resize listener', () => {
+        const frame = 42;
+        const schedule = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(frame);
+        const cancel = vi.spyOn(window, 'cancelAnimationFrame');
+        const service = createService(document);
+        const callback = vi.fn();
+        const unlisten = service.onResize(callback);
+
+        window.dispatchEvent(new Event('resize'));
+        const id = service.requestAnimationFrame(callback);
+        service.cancelAnimationFrame(null);
+        service.cancelAnimationFrame(id);
+        unlisten();
+        window.dispatchEvent(new Event('resize'));
+
+        expect(schedule).toHaveBeenCalledExactlyOnceWith(callback);
+        expect(cancel).toHaveBeenCalledExactlyOnceWith(frame);
+        expect(callback).toHaveBeenCalledOnce();
+    });
+
+    it.each(['', 'https://example.test/diary'])('preserves the document referrer %s', referrer => {
+        const source = document.implementation.createHTMLDocument();
+        Object.defineProperty(source, 'referrer', { value: referrer });
+
+        expect(createService(source).getReferrer()).toBe(referrer === '' ? null : referrer);
+    });
+});
+
+describe('BrowserWindowService blocked operations and cleanup', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('returns a blocked popup result while preserving the requested window features', () => {
+        const open = vi.spyOn(window, 'open').mockReturnValue(null);
+        const service = createService(document);
+
+        expect(service.open('/recipes', '_blank', 'noopener,noreferrer')).toBeNull();
+        expect(open).toHaveBeenCalledExactlyOnceWith('/recipes', '_blank', 'noopener,noreferrer');
+    });
+
+    it('clears only the allocated interval and ignores cleanup when no timer was registered', () => {
+        const intervalId = 42;
+        const set = vi.spyOn(window, 'setInterval').mockReturnValue(intervalId);
+        const clear = vi.spyOn(window, 'clearInterval').mockImplementation(() => {});
+        const service = createService(document);
+        const callback = vi.fn();
+
+        const active = service.setInterval(callback, TEST_TIMEOUT_MS);
+        service.clearInterval(null);
+        service.clearInterval(active);
+
+        expect(set).toHaveBeenCalledExactlyOnceWith(callback, TEST_TIMEOUT_MS);
+        expect(clear).toHaveBeenCalledExactlyOnceWith(intervalId);
+    });
+});
+
+describe('BrowserWindowService barcode capabilities', () => {
+    it('constructs the native barcode detector with the formats requested by the scanner', () => {
+        const construct = vi.fn<(options?: BarcodeDetectorOptions) => void>();
+        class NativeDetector implements BarcodeDetector {
+            public readonly detect = vi.fn<BarcodeDetector['detect']>();
+
+            public constructor(options?: BarcodeDetectorOptions) {
+                construct(options);
+            }
+        }
+        vi.stubGlobal('BarcodeDetector', NativeDetector);
+        try {
+            const formats = ['ean_13', 'qr_code'];
+
+            expect(createService(document).createBarcodeDetector(formats)).toBeInstanceOf(NativeDetector);
+            expect(construct).toHaveBeenCalledExactlyOnceWith({ formats });
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+});
+
 describe('BrowserWindowService locks', () => {
     const originalLocks = Object.getOwnPropertyDescriptor(window.navigator, 'locks');
 
@@ -263,9 +448,9 @@ describe('BrowserWindowService locks', () => {
     });
 });
 
-function createService(ownerDocument: Document): BrowserWindowService {
+function createService(ownerDocument: Document, platform = 'browser'): BrowserWindowService {
     TestBed.configureTestingModule({
-        providers: [BrowserWindowService, { provide: DOCUMENT, useValue: ownerDocument }],
+        providers: [BrowserWindowService, { provide: DOCUMENT, useValue: ownerDocument }, { provide: PLATFORM_ID, useValue: platform }],
     });
 
     return TestBed.inject(BrowserWindowService);

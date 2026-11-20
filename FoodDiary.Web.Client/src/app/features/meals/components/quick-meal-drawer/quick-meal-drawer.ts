@@ -63,6 +63,7 @@ export class QuickMealDrawerComponent {
     public readonly forceShow = input(false);
     public readonly layout = input<'fixed' | 'inline'>('fixed');
     protected readonly titleId = `fd-quick-meal-title-${QuickMealDrawerComponent.nextId++}`;
+    protected readonly bodyId = `${this.titleId}-body`;
 
     protected readonly items = this.quickService.items;
     protected readonly language = injectCurrentLanguage();

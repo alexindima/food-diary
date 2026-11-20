@@ -178,6 +178,56 @@ describe('ShoppingListFacade competing selections', () => {
     });
 });
 
+describe('ShoppingListFacade restoring list availability', () => {
+    it('releases loading after a failed overview and retries it without overlapping requests', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const pending = new Subject<ShoppingListOverview>();
+        shoppingListService.getOverview.mockReturnValueOnce(pending);
+        facade.initialize();
+        expect(facade.isLoading()).toBe(true);
+        expect(facade.list()).toBeNull();
+        facade.initialize();
+        expect(shoppingListService.getOverview).toHaveBeenCalledOnce();
+
+        pending.error(new Error('offline'));
+        expect(facade.isLoading()).toBe(false);
+        expect(facade.list()).toBeNull();
+        expect(facade.overviewLoadError()).toBe(true);
+
+        facade.initialize();
+        expect(shoppingListService.getOverview).toHaveBeenCalledTimes(2);
+        expect(facade.isLoading()).toBe(false);
+        expect(facade.list()).toEqual(list);
+        expect(facade.selectedListId()).toBe(list.id);
+        expect(facade.overviewLoadError()).toBe(false);
+    });
+
+    it('restores an inactive list after failed deletion without replacing the active list', () => {
+        const { facade, list, shoppingListService, toastService } = setupShoppingListFacade();
+        const inactiveId = entityId<'shopping-list'>('inactive-list');
+        const active = { id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: list.items.length };
+        const inactive = { id: inactiveId, name: 'Weekend', createdAt: list.createdAt, itemsCount: 0 };
+        const overview: ShoppingListOverview = { selectedList: list, lists: { items: [active, inactive], hasMore: false, nextPage: null } };
+        shoppingListService.getOverview.mockReturnValueOnce(of(overview));
+        const removal = new Subject<void>();
+        shoppingListService.deleteById.mockReturnValueOnce(removal);
+        facade.initialize();
+
+        facade.deleteListById(inactiveId);
+        expect(facade.lists().map(item => item.id)).toEqual([list.id]);
+        expect(facade.isSaving()).toBe(true);
+        removal.error(new Error('offline'));
+
+        expect(shoppingListService.deleteById).toHaveBeenCalledExactlyOnceWith(inactiveId);
+        expect(facade.isSaving()).toBe(false);
+        expect(facade.lists().map(item => item.id)).toEqual([list.id, inactiveId]);
+        expect(facade.list()).toEqual(list);
+        expect(facade.selectedListId()).toBe(list.id);
+        expect(shoppingListService.getPage).not.toHaveBeenCalled();
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.DELETE_ERROR');
+    });
+});
+
 describe('ShoppingListFacade saves before leaving', () => {
     it('reports unsaved changes during debounce and request, then clears after success', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
@@ -453,6 +503,83 @@ describe('ShoppingListFacade persistence operations', () => {
         expect(facade.items()).toHaveLength(1);
         expect(facade.isSaving()).toBe(false);
         expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.CLEAR_ERROR');
+    });
+});
+
+describe('ShoppingListFacade item editing and deletion', () => {
+    it('retains a physical aisle when the category is unchanged, and saves the final edit after removal', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const milk = {
+            id: entityId<'shopping-list-item'>('milk'),
+            shoppingListId: list.id,
+            name: 'Milk',
+            category: 'Dairy',
+            aisle: 'Refrigerated aisle',
+            isChecked: false,
+            sortOrder: 1,
+        };
+        const rice = { ...milk, id: entityId<'shopping-list-item'>('rice'), name: 'Rice', category: 'Pantry', aisle: 'Bulk', sortOrder: 2 };
+        const overview = makeOverview([{ id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: 2 }]);
+        shoppingListService.getOverview.mockReturnValueOnce(of({ ...overview, selectedList: { ...list, items: [milk, rice] } }));
+        facade.initialize();
+
+        facade.editItem(milk.id, { name: '  Oat milk ', category: 'Dairy', note: ' Unsweetened ', unit: null, amount: 2 });
+        expect(facade.items()[0]).toMatchObject({ name: 'Oat milk', aisle: milk.aisle, note: 'Unsweetened' });
+        facade.editItem(milk.id, { name: '  ', category: null, note: null, unit: null, amount: null });
+        expect(facade.items()[0].name).toBe('Oat milk');
+        facade.editItem(rice.id, { name: 'Brown rice', category: ' Organic ', note: null, unit: null, amount: null });
+        facade.removeItem(milk.id);
+
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenCalledOnce();
+        expect(shoppingListService.update.mock.lastCall).toMatchObject([
+            list.id,
+            {
+                expectedRevision: list.revision,
+                items: [{ id: rice.id, name: 'Brown rice', category: 'Organic', aisle: 'Organic', sortOrder: 1 }],
+            },
+        ]);
+    });
+
+    it('resumes saving the restored draft after a selected list deletion fails past the debounce', () => {
+        const { facade, list, shoppingListService, toastService } = setupShoppingListFacade();
+        const deletion = new Subject<void>();
+        shoppingListService.deleteById.mockReturnValueOnce(deletion);
+        facade.initialize();
+        addMilk(facade);
+        facade.deleteListById(list.id);
+        expect(facade.list()).toBeNull();
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).not.toHaveBeenCalled();
+
+        deletion.error(new Error('offline'));
+        expect(facade.selectedListId()).toBe(list.id);
+        expect(facade.items()[0].name).toBe('Milk');
+        expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.DELETE_ERROR');
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+
+        expect(shoppingListService.update).toHaveBeenCalledOnce();
+        expect(shoppingListService.update.mock.lastCall).toMatchObject([list.id, { items: [{ name: 'Milk' }] }]);
+    });
+
+    it('does not carry a pending draft to the next list after deletion succeeds', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const deletion = new Subject<void>();
+        const next = { ...list, id: entityId<'shopping-list'>('weekend'), name: 'Weekend' };
+        shoppingListService.deleteById.mockReturnValueOnce(deletion);
+        shoppingListService.getPage.mockReturnValueOnce(of([{ id: next.id, name: next.name, createdAt: next.createdAt, itemsCount: 0 }]));
+        shoppingListService.getById.mockReturnValueOnce(of(next));
+        facade.initialize();
+        addMilk(facade);
+        facade.deleteListById(list.id);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+
+        deletion.next();
+        deletion.complete();
+        expect(facade.selectedListId()).toBe(next.id);
+        expect(facade.items()).toEqual([]);
+        expect(facade.hasUnsavedChanges()).toBe(false);
+        expect(shoppingListService.update).not.toHaveBeenCalled();
     });
 });
 

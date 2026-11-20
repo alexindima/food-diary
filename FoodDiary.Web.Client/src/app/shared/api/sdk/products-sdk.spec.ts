@@ -77,4 +77,9 @@ describe('Products SDK HTTP integration', () => {
         request.flush(null, { status: 204, statusText: 'No Content' });
         await result;
     });
+
+    it('rejects a catalog endpoint configured with a different API resource before sending a request', () => {
+        expect(() => connect('/api/v1/recipes')).toThrow('Products API URL must end with /api/v{version}/products.');
+        TestBed.inject(HttpTestingController).expectNone(() => true);
+    });
 });

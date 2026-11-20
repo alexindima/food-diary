@@ -1,20 +1,35 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { createEnvironmentInjector, DestroyRef, EnvironmentInjector, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { firstValueFrom, type Observable, Subject } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
-import { ConfirmPasswordResetRequest, LoginRequest, PasswordResetRequest, RegisterRequest } from '../shared/auth/auth.data';
+import type { TelegramDiaryTransferHttpResponse } from '../shared/api/sdk/generated/model/telegram-diary-transfer-http-response';
+import {
+    ConfirmPasswordResetRequest,
+    LoginRequest,
+    PasswordResetRequest,
+    RegisterRequest,
+    RestoreAccountRequest,
+    type TelegramDisconnectConfirmation,
+} from '../shared/auth/auth.data';
+import { ACCOUNT_ACCESS_STORAGE_KEY } from '../shared/auth/auth-metadata-storage.service';
+import { AuthRecoveryStateService } from '../shared/auth/auth-recovery-state.service';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
+import { telegramOAuthCode, telegramOAuthState } from '../shared/auth/telegram-oidc-values';
 import { LocalizationService } from '../shared/i18n/localization.service';
+import { entityId } from '../shared/models/semantics/entity-id';
 import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
 
 const base = environment.apiUrls.auth;
+const SESSION_REQUEST_DEADLINE_MS = 30_000;
 const sessionId = 'dd281aa8-5d85-4fda-bc28-a7e1fd6085db';
 const response = {
     sessionId,
@@ -36,18 +51,26 @@ const response = {
 const login = new LoginRequest({ email: response.user.email, password: 'test-password', rememberMe: true });
 let service: AuthService;
 let requests: HttpTestingController;
-let navigation: { navigateToAuthAsync: ReturnType<typeof vi.fn>; navigateToLandingAsync: ReturnType<typeof vi.fn> };
+let navigation: {
+    navigateToAuthAsync: Mock<NavigationService['navigateToAuthAsync']>;
+    navigateToLandingAsync: Mock<NavigationService['navigateToLandingAsync']>;
+};
 
 beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
     window.history.replaceState({}, '', '/');
     navigation = {
-        navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
-        navigateToLandingAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToAuthAsync: vi.fn<NavigationService['navigateToAuthAsync']>().mockResolvedValue(undefined),
+        navigateToLandingAsync: vi.fn<NavigationService['navigateToLandingAsync']>().mockResolvedValue(undefined),
     };
+    configureAuthTesting();
+});
+
+function configureAuthTesting(platform: 'browser' | 'server' = 'browser'): void {
     TestBed.configureTestingModule({
         providers: [
+            { provide: PLATFORM_ID, useValue: platform },
             provideHttpClient(),
             provideHttpClientTesting(),
             { provide: NavigationService, useValue: navigation },
@@ -59,7 +82,7 @@ beforeEach(() => {
     });
     service = TestBed.inject(AuthService);
     requests = TestBed.inject(HttpTestingController);
-});
+}
 
 afterEach(() => {
     requests.verify();
@@ -72,6 +95,146 @@ function signIn(): void {
     service.login(login).subscribe();
     requests.expectOne(`${base}/login`).flush(response);
 }
+
+describe('Authentication during server rendering', () => {
+    it('marks prerendered pages ready without restoring a browser session or redirecting', async () => {
+        TestBed.resetTestingModule();
+        configureAuthTesting('server');
+
+        await service.ensureSessionReadyAsync();
+
+        expect(service.isAuthReady()).toBe(true);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getUserId()).toBeNull();
+        requests.expectNone({ method: 'POST', url: `${base}/session` });
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Authentication restoration after a stalled request', () => {
+    it('aborts a timed-out HTTP restoration and shares the successful retry across callers', async () => {
+        vi.useFakeTimers();
+        try {
+            const restoring = service.ensureSessionReadyAsync();
+            const pending = requests.expectOne({ method: 'POST', url: `${base}/session` });
+            await vi.advanceTimersByTimeAsync(SESSION_REQUEST_DEADLINE_MS);
+            await restoring;
+            expect(pending.cancelled).toBe(true);
+            expect(service.isAuthReady()).toBe(false);
+            expect(TestBed.inject(AuthRecoveryStateService).issue()).toBe('restore');
+
+            const retry = service.ensureSessionReadyAsync();
+            const concurrent = service.ensureSessionReadyAsync();
+            requests.expectOne({ method: 'POST', url: `${base}/session` }).flush(response);
+            await Promise.all([retry, concurrent]);
+
+            expect(service.isAuthReady()).toBe(true);
+            expect(service.getUserId()).toBe(response.user.id);
+            expect(TestBed.inject(AuthRecoveryStateService).issue()).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it.each([HttpStatusCode.Unauthorized, HttpStatusCode.ServiceUnavailable])(
+        'keeps a newer account ready when the old session returns %s',
+        async status => {
+            signIn();
+            const renewal = firstValueFrom(service.refreshSession());
+            const previous = requests.expectOne({ method: 'POST', url: `${base}/session` });
+            const replacement = { ...response, user: { ...response.user, id: 'new-account' }, sessionId: 'new-session' };
+            service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+
+            previous.flush(null, { status, statusText: 'Old session response' });
+
+            await expect(renewal).resolves.toBe(false);
+            expect(service.getUserId()).toBe(replacement.user.id);
+            expect(service.getSessionKey()).toBe(replacement.sessionId);
+            expect(TestBed.inject(AuthRecoveryStateService).issue()).toBeNull();
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        },
+    );
+});
+
+describe('Admin sign-in handoff', () => {
+    it('returns the issued code and expiry from the generated client', async () => {
+        const handoff = { code: 'test-handoff', expiresAtUtc: '2026-05-17T10:00:00Z' };
+        const request = firstValueFrom(service.startAdminSso());
+        requests.expectOne({ method: 'POST', url: `${base}/admin-sso/start` }).flush(handoff);
+
+        await expect(request).resolves.toEqual(handoff);
+    });
+
+    it('rejects an incomplete handoff that cannot be used for navigation', async () => {
+        const request = firstValueFrom(service.startAdminSso());
+        requests.expectOne({ method: 'POST', url: `${base}/admin-sso/start` }).flush({ code: 'test-handoff' });
+
+        await expect(request).rejects.toThrow('expiresAtUtc');
+    });
+});
+
+describe('Required password renewal ownership', () => {
+    it('exits before retrying sign-in when the current session email is gone', async () => {
+        signIn();
+        const logout = service.onLogoutAsync();
+        requests.expectOne({ method: 'POST', url: `${base}/logout` }).flush(null);
+        await logout;
+
+        await expect(service.completeRequiredPasswordChangeAsync('test-updated-password')).rejects.toThrow('Missing session email');
+        requests.expectNone({ method: 'POST', url: `${base}/login` });
+    });
+
+    it('completes logout after an already sent password sign-in receives its response', async () => {
+        signIn();
+        const renewal = service.completeRequiredPasswordChangeAsync('test-updated-password').catch((error: unknown) => error);
+        const pendingLogin = requests.expectOne({ method: 'POST', url: `${base}/login` });
+
+        const logout = service.onLogoutAsync(true);
+        expect(service.isAuthenticated()).toBe(false);
+        requests.expectNone({ method: 'POST', url: `${base}/logout` });
+        pendingLogin.flush({ ...response, sessionId: 'renewed-session' });
+        requests.expectOne({ method: 'POST', url: `${base}/logout` }).flush(null);
+        const result = await renewal;
+        await logout;
+
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getUserId()).toBeNull();
+        expect(navigation.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login');
+        expect(result).toEqual(new Error('Authentication session changed'));
+    });
+
+    it('does not send a queued password sign-in after the user has signed out', async () => {
+        signIn();
+        const refresh = firstValueFrom(service.refreshSession());
+        const pendingRefresh = requests.expectOne({ method: 'POST', url: `${base}/session` });
+        const renewal = service.completeRequiredPasswordChangeAsync('test-updated-password').catch((error: unknown) => error);
+        const logout = service.onLogoutAsync(true);
+        expect(service.isAuthenticated()).toBe(false);
+        pendingRefresh.flush(response);
+
+        requests.expectNone({ method: 'POST', url: `${base}/login` });
+        requests.expectOne({ method: 'POST', url: `${base}/logout` }).flush(null);
+        await expect(refresh).resolves.toBe(false);
+        expect(await renewal).toEqual(new Error('Authentication session changed'));
+        await logout;
+        expect(service.isAuthenticated()).toBe(false);
+        expect(navigation.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login');
+    });
+
+    it('keeps a replacement account when an older required-password renewal succeeds', async () => {
+        signIn();
+        const renewal = service.completeRequiredPasswordChangeAsync('test-updated-password').catch((error: unknown) => error);
+        const pendingLogin = requests.expectOne({ method: 'POST', url: `${base}/login` });
+        const replacement = { ...response, user: { ...response.user, id: 'new-account' }, sessionId: 'new-session' };
+        service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+        pendingLogin.flush({ ...response, sessionId: 'renewed-session' });
+        const result = await renewal;
+
+        expect(service.getUserId()).toBe(replacement.user.id);
+        expect(service.getSessionKey()).toBe(replacement.sessionId);
+        expect(result).toEqual(new Error('Authentication session changed'));
+    });
+});
 
 describe('email verification requests and session ownership', () => {
     const unconfirmed = { ...response, user: { ...response.user, isEmailConfirmed: false } };
@@ -143,6 +306,89 @@ it('sends a password reset link request and accepts the fresh cookie returned by
     await confirmed;
     expect(service.getSessionKey()).toBe(sessionId);
     expect(service.isAuthenticated()).toBe(true);
+});
+
+describe('Authentication HTTP outcomes', () => {
+    it.each([
+        { endpoint: 'login', status: HttpStatusCode.Unauthorized, start: (): Observable<unknown> => service.login(login) },
+        {
+            endpoint: 'register',
+            status: HttpStatusCode.Conflict,
+            start: (): Observable<unknown> =>
+                service.register(new RegisterRequest({ email: response.user.email, password: login.password, language: 'en' })),
+        },
+        {
+            endpoint: 'verify-email',
+            status: HttpStatusCode.BadRequest,
+            start: (): Observable<unknown> => service.verifyEmail(response.user.id, 'expired-verification-fixture'),
+        },
+        {
+            endpoint: 'verify-email/resend',
+            status: HttpStatusCode.TooManyRequests,
+            start: (): Observable<unknown> => service.resendEmailVerification(),
+        },
+        {
+            endpoint: 'restore',
+            status: HttpStatusCode.Unauthorized,
+            start: (): Observable<unknown> =>
+                service.restoreAccount(new RestoreAccountRequest({ email: response.user.email, password: login.password })),
+        },
+        {
+            endpoint: 'google',
+            status: HttpStatusCode.Conflict,
+            start: (): Observable<unknown> => service.loginWithGoogle({ credential: 'google-fixture', rememberMe: true }),
+        },
+        {
+            endpoint: 'password-reset/request',
+            status: HttpStatusCode.TooManyRequests,
+            start: (): Observable<unknown> => service.requestPasswordReset(new PasswordResetRequest({ email: response.user.email })),
+        },
+        {
+            endpoint: 'password-reset/confirm',
+            status: HttpStatusCode.BadRequest,
+            start: (): Observable<unknown> =>
+                service.confirmPasswordReset(
+                    new ConfirmPasswordResetRequest({
+                        userId: response.user.id,
+                        token: 'expired-reset-fixture',
+                        newPassword: 'new-fixture',
+                    }),
+                ),
+        },
+    ] satisfies Array<{ endpoint: string; status: HttpStatusCode; start: () => Observable<unknown> }>)(
+        'preserves the session and reports the server rejection from $endpoint',
+        async ({ endpoint, status, start }) => {
+            const existing = { ...response, user: { ...response.user, isEmailConfirmed: false } };
+            service.acceptExternalAuthentication(authResponseFromSdk(existing));
+            const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const payload = { message: 'Request rejected by the server' };
+
+            try {
+                const rejected = expect(firstValueFrom(start())).rejects.toMatchObject({ status, error: payload });
+                requests
+                    .expectOne({ method: 'POST', url: `${base}/${endpoint}` })
+                    .flush(payload, { status, statusText: 'Request rejected' });
+                await rejected;
+                expect(service.getSessionKey()).toBe(sessionId);
+                expect(service.requiresEmailVerification()).toBe(true);
+                expect(TestBed.inject(EmailVerificationCooldownService).remainingSeconds(response.user.id)).toBe(0);
+            } finally {
+                log.mockRestore();
+            }
+        },
+    );
+
+    it('maps the linked Google profile and retains the current browser session', async () => {
+        signIn();
+        const result = firstValueFrom(service.linkGoogle('new-google-link-fixture'));
+        const request = requests.expectOne({ method: 'POST', url: `${base}/google/link` });
+        expect(request.request.body).toEqual({ credential: 'new-google-link-fixture' });
+        request.flush({ ...response.user, username: 'Updated profile', hasGoogleIdentity: true });
+
+        await expect(result).resolves.toMatchObject({ id: response.user.id, username: 'Updated profile', hasGoogleIdentity: true });
+        expect(service.getSessionKey()).toBe(sessionId);
+        expect(service.getUserId()).toBe(response.user.id);
+    });
 });
 
 describe('server-backed browser sessions', () => {
@@ -364,6 +610,40 @@ describe('browser session failures and logout', () => {
     });
 });
 
+it('logs out the selected support session and keeps the ordinary browser account preferences', async () => {
+    const contextId = 'support-context';
+    const browserAccess = JSON.stringify(['ordinary-user', 'User']);
+    localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, browserAccess);
+    const clearLanguage = vi.spyOn(TestBed.inject(LocalizationService), 'clearStoredLanguage');
+    try {
+        TestBed.inject(BrowserSessionStateService).setContext(contextId);
+        const supportSession = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush({ ...response, sessionId: null, impersonationContext: contextId });
+        expect(await supportSession).toBe(true);
+        expect(service.isImpersonating()).toBe(true);
+
+        const logout = service.onLogoutAsync();
+        const request = requests.expectOne({ method: 'POST', url: `${base}/logout` });
+        expect(request.request.headers.get('X-FoodDiary-Context')).toBe(contextId);
+        expect(request.request.headers.has('X-FoodDiary-Session')).toBe(false);
+        expect(sessionStorage.getItem('pendingImpersonationLogout')).toContain(contextId);
+        expect(localStorage.getItem('pendingBrowserLogout')).toBeNull();
+        request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await logout;
+
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.isImpersonating()).toBe(false);
+        expect(sessionStorage.getItem('pendingImpersonationLogout')).toBeNull();
+        expect(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY)).toBe(browserAccess);
+        expect(clearLanguage).not.toHaveBeenCalled();
+        expect(navigation.navigateToLandingAsync).toHaveBeenCalledOnce();
+        await service.ensureSessionReadyAsync();
+        requests.expectNone(`${base}/session`);
+    } finally {
+        clearLanguage.mockRestore();
+    }
+});
+
 describe('browser session policy and explicit Telegram mode', () => {
     it('keeps the required-password-change flow and clears the server flag after a new login', async () => {
         service.login(login).subscribe();
@@ -371,7 +651,12 @@ describe('browser session policy and explicit Telegram mode', () => {
         expect(service.mustChangePassword()).toBe(true);
         const completed = service.completeRequiredPasswordChangeAsync('updated-password');
         const request = requests.expectOne(`${base}/login`);
-        expect(request.request.body).toMatchObject({ rememberMe: true });
+        expect(request.request.body).toEqual({
+            email: response.user.email,
+            password: 'updated-password',
+            rememberMe: true,
+            expectedUserId: response.user.id,
+        });
         request.flush({ ...response, user: { ...response.user, mustChangePassword: false } });
         await completed;
         expect(service.mustChangePassword()).toBe(false);
@@ -388,19 +673,7 @@ describe('browser session policy and explicit Telegram mode', () => {
     it('keeps an explicit Mini App access token only in memory', async () => {
         TestBed.resetTestingModule();
         window.history.replaceState({}, '', '/#tgWebAppData=unit-fixture');
-        TestBed.configureTestingModule({
-            providers: [
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                { provide: NavigationService, useValue: navigation },
-                {
-                    provide: LocalizationService,
-                    useValue: { applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined), clearStoredLanguage: vi.fn() },
-                },
-            ],
-        });
-        service = TestBed.inject(AuthService);
-        requests = TestBed.inject(HttpTestingController);
+        configureAuthTesting();
         const restored = firstValueFrom(service.refreshSession());
         requests.expectOne(`${base}/refresh`).flush({ user: response.user, accessToken: 'mini-access-token' });
         expect(await restored).toBe(true);
@@ -418,3 +691,355 @@ describe('browser session policy and explicit Telegram mode', () => {
         expect(authenticated).toHaveBeenCalledOnce();
     });
 });
+
+describe('cross-tab browser session ownership', () => {
+    it('refreshes privileges for the same account using server metadata', async () => {
+        signIn();
+        expect(service.isAdmin()).toBe(false);
+        expect(service.isDietologist()).toBe(false);
+
+        publishAccountAccess([response.user.id, 'Admin']);
+
+        const request = requests.expectOne({ method: 'POST', url: `${base}/session` });
+        expect(request.request.headers.get('X-FoodDiary-Session')).toBe(sessionId);
+        expect(service.isAdmin()).toBe(false);
+        request.flush({ ...response, roles: ['User', 'Dietologist'] });
+        await waitForAsyncTasksAsync();
+
+        expect(service.getUserId()).toBe(response.user.id);
+        expect(service.isAdmin()).toBe(false);
+        expect(service.isDietologist()).toBe(true);
+    });
+
+    it('ends access in an older tab when another account signs in', async () => {
+        signIn();
+        const replacement = ['new-account', 'User'];
+
+        publishAccountAccess(replacement);
+        await waitForAsyncTasksAsync();
+
+        expect(service.isAuthenticated()).toBe(false);
+        expect(navigation.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login');
+        expect(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY)).toBe(JSON.stringify(replacement));
+        requests.expectNone(`${base}/session`);
+    });
+
+    it('ends a matching browser session when another tab starts logging out', async () => {
+        signIn();
+        const key = 'pendingBrowserLogout';
+        const pending = JSON.stringify({ sessionId, contextId: null, telegram: false });
+        localStorage.setItem(key, pending);
+
+        dispatchAccountStorageChange(key, pending);
+        await waitForAsyncTasksAsync();
+
+        expect(service.isAuthenticated()).toBe(false);
+        expect(navigation.navigateToLandingAsync).toHaveBeenCalledOnce();
+        requests.expectNone(`${base}/logout`);
+    });
+});
+
+describe('browser session recovery boundaries', () => {
+    it('refreshes on visible activity after the renewal interval and coalesces nearby activity', () => {
+        const interval = 3_600_000;
+        const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now() + interval);
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+        try {
+            signIn();
+            document.dispatchEvent(new Event('pointerdown'));
+            requests.expectNone(`${base}/session`);
+
+            visibility.mockReturnValue('visible');
+            document.dispatchEvent(new Event('visibilitychange'));
+            const renewal = requests.expectOne({ method: 'POST', url: `${base}/session` });
+            renewal.flush({ ...response, roles: ['User', 'Premium'] });
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            requests.expectNone(`${base}/session`);
+
+            expect(service.isPremium()).toBe(true);
+        } finally {
+            clock.mockRestore();
+            visibility.mockRestore();
+        }
+    });
+
+    it('preserves a newer login when an older logout is waiting for session cleanup', async () => {
+        signIn();
+        const cleanup = new Subject<void>();
+        TestBed.inject(SessionEventsService).registerSessionEndCleanup(async () => firstValueFrom(cleanup));
+
+        const logout = service.onLogoutAsync(true);
+        expect(service.isAuthenticated()).toBe(false);
+        requests.expectNone(`${base}/logout`);
+
+        const replacement = { ...response, user: { ...response.user, id: 'replacement-account' }, sessionId: 'replacement-session' };
+        service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+        cleanup.next();
+        await logout;
+
+        expect(service.getUserId()).toBe(replacement.user.id);
+        expect(service.getSessionKey()).toBe(replacement.sessionId);
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        requests.expectNone(`${base}/logout`);
+    });
+
+    it('treats an already replaced cookie as a completed logout', async () => {
+        signIn();
+
+        const logout = service.onLogoutAsync();
+        requests
+            .expectOne(`${base}/logout`)
+            .flush({ error: 'Authentication.SessionChanged' }, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        await logout;
+
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.isAuthReady()).toBe(true);
+        expect(localStorage.getItem('pendingBrowserLogout')).toBeNull();
+        expect(navigation.navigateToLandingAsync).toHaveBeenCalledOnce();
+    });
+});
+
+describe('AuthService account-switch logout', () => {
+    it('clears the old session and opens login with a profile return path from the live owner', async () => {
+        signIn();
+        const sessions = TestBed.inject(SessionEventsService);
+        const cleanup = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+        const unregister = sessions.registerSessionEndCleanup(cleanup);
+        const owner = createEnvironmentInjector([], TestBed.inject(EnvironmentInjector));
+        navigation.navigateToAuthAsync.mockImplementation(async () => {
+            await waitForAsyncTasksAsync();
+            expect(sessions.isSessionEndNavigation).toBe(true);
+        });
+
+        try {
+            const done = service.logoutForAccountSwitchAsync('/profile', owner.get(DestroyRef));
+            expect(cleanup).toHaveBeenCalledOnce();
+            expect(service.isAuthenticated()).toBe(false);
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+            const request = await vi.waitFor(() => requests.expectOne({ method: 'POST', url: `${base}/logout` }));
+            request.flush(null);
+            await done;
+
+            expect(navigation.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login', '/profile');
+            expect(navigation.navigateToLandingAsync).not.toHaveBeenCalled();
+            expect(sessions.isSessionEndNavigation).toBe(false);
+        } finally {
+            unregister();
+            owner.destroy();
+        }
+    });
+
+    it.each(['destroyed route', 'newer session'] as const)('keeps sign-out from redirecting after %s', async transition => {
+        signIn();
+        const owner = createEnvironmentInjector([], TestBed.inject(EnvironmentInjector));
+        const scope = owner.get(DestroyRef);
+        const replacement = { ...response, sessionId: 'replacement-session', user: { ...response.user, id: 'replacement-user' } };
+        try {
+            const done = service.logoutForAccountSwitchAsync('/profile', scope);
+            const request = requests.expectOne({ method: 'POST', url: `${base}/logout` });
+            if (transition === 'destroyed route') {
+                owner.destroy();
+            } else {
+                service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+            }
+            request.flush(null);
+            await done;
+
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+            expect(navigation.navigateToLandingAsync).not.toHaveBeenCalled();
+            expect(service.getSessionKey()).toBe(transition === 'newer session' ? replacement.sessionId : null);
+        } finally {
+            if (!scope.destroyed) {
+                owner.destroy();
+            }
+        }
+    });
+});
+
+describe('browser session link exchanges', () => {
+    it('does not apply an old impersonation exchange after a newer login', async () => {
+        window.history.replaceState({}, '', '/#impersonationCode=old-fixture');
+        const restoration = service.restoreSessionAsync();
+        const exchange = requests.expectOne({ method: 'POST', url: `${base}/impersonation/exchange` });
+        const replacement = { ...response, user: { ...response.user, id: 'replacement-account' }, sessionId: 'replacement-session' };
+        service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+
+        exchange.flush({ contextId: 'expired-context' });
+        await waitForAsyncTasksAsync();
+        const obsolete = requests.match(`${base}/session`);
+        for (const request of obsolete) {
+            request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        }
+        await restoration;
+
+        expect(obsolete).toEqual([]);
+        expect(TestBed.inject(BrowserSessionStateService).contextId()).toBeNull();
+        expect(service.getUserId()).toBe(replacement.user.id);
+        expect(service.getSessionKey()).toBe(replacement.sessionId);
+    });
+
+    it('removes an expired handoff from the URL and leaves the browser in its guest state', async () => {
+        window.history.replaceState({}, '', '/?view=food#impersonationCode=expired-fixture&tab=notes');
+        const restoration = service.restoreSessionAsync();
+        requests.expectOne(`${base}/impersonation/exchange`).flush({ contextId: '' });
+        await restoration;
+
+        expect(window.location.search).toBe('?view=food');
+        expect(window.location.hash).toBe('#tab=notes');
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.isAuthReady()).toBe(true);
+        requests.expectNone(`${base}/session`);
+    });
+
+    it('restores the browser cookie for a recovered account and keeps the requested remember choice', async () => {
+        const recovery = firstValueFrom(
+            service.restoreAccount(new RestoreAccountRequest({ email: login.email, password: login.password })),
+        );
+        const request = requests.expectOne({ method: 'POST', url: `${base}/restore` });
+        expect(request.request.body).toEqual({ email: login.email, password: login.password, rememberMe: false });
+        request.flush(response);
+        await recovery;
+
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getSessionKey()).toBe(sessionId);
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authRemembered')).toBe('false');
+    });
+});
+
+function publishAccountAccess(access: string[]): void {
+    const payload = JSON.stringify(access);
+    localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, payload);
+    dispatchAccountStorageChange(ACCOUNT_ACCESS_STORAGE_KEY, payload);
+}
+
+describe('Telegram recovery SDK contracts', () => {
+    it.each(['backup-email', 'unlink'] as const)('starts and completes the %s provider flow with separate request bodies', async kind => {
+        const email = response.user.email;
+        const started = firstValueFrom(kind === 'backup-email' ? service.startTelegramBackupEmail(email) : service.startTelegramUnlink());
+        const start = requests.expectOne({ method: 'POST', url: `${base}/telegram/${kind}/oidc/start` });
+        expect(start.request.body).toEqual(kind === 'backup-email' ? { email } : null);
+        const authorizationUrl = 'https://oauth.telegram.org/auth?state=fixture';
+        start.flush({ authorizationUrl });
+        await expect(started).resolves.toEqual({ authorizationUrl });
+
+        const code = telegramOAuthCode('fixture-code');
+        const state = telegramOAuthState('fixture-state');
+        const completed = firstValueFrom(
+            kind === 'backup-email' ? service.completeTelegramBackupEmail(code, state) : service.completeTelegramUnlink(code, state),
+        );
+        const finish = requests.expectOne({ method: 'POST', url: `${base}/telegram/${kind}/oidc/complete` });
+        expect(finish.request.body).toEqual({ code, state });
+        finish.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await expect(completed).resolves.toBeNull();
+    });
+
+    it('uses the Mini App proof when requesting backup email and unlinking without an OIDC redirect', async () => {
+        const email = response.user.email;
+        const initData = 'fixture-mini-app-launch';
+        const backup = firstValueFrom(service.requestTelegramBackupEmail(email, initData));
+        const emailRequest = requests.expectOne({ method: 'POST', url: `${base}/telegram/backup-email` });
+        expect(emailRequest.request.body).toEqual({ email, initData });
+        emailRequest.flush(null);
+        await backup;
+
+        const unlink = firstValueFrom(service.unlinkTelegram(initData));
+        const unlinkRequest = requests.expectOne({ method: 'POST', url: `${base}/telegram/unlink` });
+        expect(unlinkRequest.request.body).toEqual({ initData });
+        unlinkRequest.flush(null);
+        await unlink;
+    });
+
+    it.each([undefined, 'diary-review-fixture'])('verifies a backup email and returns the optional transfer ticket %s', async ticket => {
+        const token = 'verification-fixture';
+        const verified = firstValueFrom(service.verifyTelegramBackupEmail(response.user.id, token));
+        const request = requests.expectOne({ method: 'POST', url: `${base}/telegram/backup-email/verify` });
+        expect(request.request.body).toEqual({ userId: response.user.id, token });
+        request.flush(ticket === undefined ? {} : { transferTicket: ticket });
+        await expect(verified).resolves.toBe(ticket ?? null);
+    });
+});
+
+describe('Telegram diary transfer SDK contracts', () => {
+    it('separates a review from confirmation and keeps an explicit choice to retain email goals', async () => {
+        const ticket = 'diary-review-fixture';
+        const preview: TelegramDiaryTransferHttpResponse = {
+            counts: { meals: 2, recipes: 0, products: 1, waterEntries: 1, measurements: 0 },
+            emailGoals: { calories: 2100 },
+            telegramGoals: { calories: 1800, water: 2200 },
+            canUseTelegramGoals: true,
+        };
+        const loaded = firstValueFrom(service.transferTelegramDiary(ticket));
+        const request = requests.expectOne({ method: 'POST', url: `${base}/telegram/diary-transfer` });
+        expect(request.request.serializeBody()).toBe(JSON.stringify({ ticket }));
+        request.flush(preview);
+        await expect(loaded).resolves.toMatchObject({
+            counts: preview.counts,
+            emailGoals: { calories: 2100, water: null, steps: null },
+            telegramGoals: { calories: 1800, water: 2200, steps: null },
+            canUseTelegramGoals: true,
+        });
+
+        const confirmed = firstValueFrom(service.transferTelegramDiary(ticket, false));
+        const confirm = requests.expectOne({ method: 'POST', url: `${base}/telegram/diary-transfer` });
+        expect(confirm.request.body).toEqual({ ticket, useTelegramGoals: false });
+        confirm.flush(preview);
+        await expect(confirmed).resolves.toMatchObject({ counts: preview.counts });
+    });
+});
+
+describe('Telegram disconnect account ownership', () => {
+    const owner = entityId<'user'>(response.user.id);
+    const path = `${base}/telegram/disconnect/confirm`;
+
+    it.each([
+        ['password', { password: 'test-password' }, false],
+        ['Google', { googleCredential: 'test-google-confirmation' }, true],
+    ] as const)('installs the same owner’s replacement session after %s confirmation', async (_method, confirmation, rememberMe) => {
+        service.acceptExternalAuthentication(authResponseFromSdk(response));
+        const result = firstValueFrom(service.disconnectTelegram(owner, confirmation));
+        const request = requests.expectOne({ method: 'POST', url: path });
+        expect(request.request.body).toEqual({ ...confirmation, rememberMe });
+
+        const replacementSession = 'telegram-disconnected-session';
+        request.flush({ ...response, sessionId: replacementSession, user: { ...response.user, hasTelegramIdentity: false } });
+        await expect(result).resolves.toMatchObject({ id: owner, hasTelegramIdentity: false });
+        expect(service.getUserId()).toBe(owner);
+        expect(service.getSessionKey()).toBe(replacementSession);
+    });
+
+    it('does not send an old confirmation after another account has taken over', async () => {
+        service.acceptExternalAuthentication(authResponseFromSdk(response));
+        const confirmation: TelegramDisconnectConfirmation = { password: 'previous-account-fixture' };
+        const disconnect = service.disconnectTelegram(owner, confirmation);
+        const replacement = telegramDisconnectReplacement();
+        service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+
+        await expect(firstValueFrom(disconnect)).rejects.toThrow('Account changed');
+        requests.expectNone(path);
+        expect(service.getSessionKey()).toBe(replacement.sessionId);
+    });
+
+    it('does not replace a newer account when the old confirmation returns late', async () => {
+        service.acceptExternalAuthentication(authResponseFromSdk(response));
+        const disconnect = firstValueFrom(service.disconnectTelegram(owner, { password: 'previous-account-fixture' }));
+        const pending = requests.expectOne({ method: 'POST', url: path });
+        const replacement = telegramDisconnectReplacement();
+        service.acceptExternalAuthentication(authResponseFromSdk(replacement));
+
+        pending.flush({ ...response, sessionId: 'obsolete-confirmed-session' });
+        await expect(disconnect).rejects.toThrow('Account changed');
+        expect(service.getUserId()).toBe(replacement.user.id);
+        expect(service.getSessionKey()).toBe(replacement.sessionId);
+    });
+});
+
+function telegramDisconnectReplacement(): typeof response {
+    return { ...response, sessionId: 'other-account-session', user: { ...response.user, id: 'other-account' } };
+}
+
+function dispatchAccountStorageChange(key: string, value: string): void {
+    const event = new StorageEvent('storage', { key, newValue: value });
+    Object.defineProperty(event, 'storageArea', { value: window.localStorage });
+    window.dispatchEvent(event);
+}

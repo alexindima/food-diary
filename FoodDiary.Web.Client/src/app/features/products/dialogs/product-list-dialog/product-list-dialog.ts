@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, effect, type ElementRef, inject, input, output, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type ElementRef,
+    inject,
+    input,
+    output,
+    viewChild,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -34,6 +46,7 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
 })
 export class ProductListDialogComponent extends ProductListBaseComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
     public readonly searchChanged = output<string>();
     public readonly embedded = input<boolean>(false);
@@ -64,7 +77,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
                 ariaLabel: String(this.translateService.instant('PRODUCT_MANAGE.ADD_TITLE')),
             })
             .afterClosed()
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(product => {
                 if (product !== null && product !== undefined) {
                     this.handleSelection(product);

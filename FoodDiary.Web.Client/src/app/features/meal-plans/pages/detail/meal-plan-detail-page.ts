@@ -66,9 +66,7 @@ export class MealPlanDetailPageComponent {
             )
             .subscribe(id => {
                 this.deleteDialog?.close();
-                if (id !== null && id.trim().length > 0) {
-                    this.facade.loadPlan(entityId<'meal-plan'>(id));
-                }
+                this.facade.loadPlan(id === null || id.trim().length === 0 ? null : entityId<'meal-plan'>(id));
             });
     }
 

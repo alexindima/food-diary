@@ -2,9 +2,11 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import type { Observable } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { firstValueFrom, type Observable } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { ProductHttpResponse } from '../../../shared/api/sdk/generated/model/product-http-response';
+import { DEVELOPMENT_REQUEST_SCOPE, developmentRequestContext } from '../../../shared/development/development-request-context';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import {
@@ -179,6 +181,51 @@ describe('ProductService reads', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/p1`);
         req.flush('Not Found', { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
+    });
+});
+
+describe('ProductService scoped catalog queries', () => {
+    it('carries the catalog request scope and locale through the generated HTTP request', async () => {
+        language = 'ru';
+        const bindRequest = vi.fn<(id: number) => void>();
+        const context = developmentRequestContext(bindRequest);
+        const pending = firstValueFrom(service.query(1, DEFAULT_PAGE_LIMIT, { search: '  курица  ' }, { includePublic: false, context }));
+        const request = httpMock.expectOne(item => item.url === BASE_URL && item.method === 'GET');
+
+        expect(request.request.context.get(DEVELOPMENT_REQUEST_SCOPE)).toBe(bindRequest);
+        expect(request.request.headers.get('Accept-Language')).toBe('ru');
+        expect(request.request.params.get('includePublic')).toBe('false');
+        expect(request.request.params.get('search')).toBe('курица');
+        request.flush(MOCK_PAGE);
+
+        await expect(pending).resolves.toEqual(MOCK_PAGE);
+    });
+});
+
+describe('ProductService stored photo metadata', () => {
+    it('preserves the order of uploaded and older URL-only product photos', async () => {
+        const imageAssetId = 'stored-cover';
+        const imageUrl = 'https://cdn.example.test/chicken/cover.jpg';
+        const legacyUrl = 'https://cdn.example.test/chicken/old-side.jpg';
+        const product: ProductHttpResponse = {
+            ...MOCK_PRODUCT,
+            productType: ProductType.Meat,
+            createdAt: MOCK_PRODUCT.createdAt.toISOString(),
+            imageAssetId,
+            imageUrl,
+            images: [{ imageAssetId, imageUrl }, { imageUrl: legacyUrl }],
+        };
+        const pending = firstValueFrom(service.getById(MOCK_PRODUCT.id));
+        httpMock.expectOne({ url: `${BASE_URL}/${MOCK_PRODUCT.id}`, method: 'GET' }).flush(product);
+
+        await expect(pending).resolves.toMatchObject({
+            imageAssetId,
+            imageUrl,
+            images: [
+                { imageAssetId, imageUrl },
+                { imageAssetId: null, imageUrl: legacyUrl },
+            ],
+        });
     });
 });
 

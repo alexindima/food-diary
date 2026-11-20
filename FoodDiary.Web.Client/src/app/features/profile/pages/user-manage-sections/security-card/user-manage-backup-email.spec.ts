@@ -8,29 +8,29 @@ import { UserManageBackupEmailComponent } from './user-manage-backup-email';
 
 const RESEND_COOLDOWN_MS = 60_000;
 
-describe('UserManageBackupEmailComponent', () => {
-    const facade = {
-        user: signal<{ hasTelegramIdentity: boolean; email: string | null; hasPassword?: boolean; isEmailConfirmed?: boolean }>({
-            hasTelegramIdentity: true,
-            email: null,
-        }),
-        isRequestingBackupEmail: signal(false),
-        backupEmailSentTo: signal<string | null>(null),
-        backupEmailResendAt: signal(0),
-        requestBackupEmailAsync: vi.fn(),
-    };
-    beforeEach(() => {
-        facade.user.set({ hasTelegramIdentity: true, email: null });
-        facade.isRequestingBackupEmail.set(false);
-        facade.backupEmailSentTo.set(null);
-        facade.backupEmailResendAt.set(0);
-        facade.requestBackupEmailAsync.mockReset();
-        TestBed.configureTestingModule({
-            imports: [UserManageBackupEmailComponent],
-            providers: [provideTranslateTesting(), { provide: ProfileManageFacade, useValue: facade }],
-        });
+const facade = {
+    user: signal<{ hasTelegramIdentity: boolean; email: string | null; hasPassword?: boolean; isEmailConfirmed?: boolean }>({
+        hasTelegramIdentity: true,
+        email: null,
+    }),
+    isRequestingBackupEmail: signal(false),
+    backupEmailSentTo: signal<string | null>(null),
+    backupEmailResendAt: signal(0),
+    requestBackupEmailAsync: vi.fn(),
+};
+beforeEach(() => {
+    facade.user.set({ hasTelegramIdentity: true, email: null });
+    facade.isRequestingBackupEmail.set(false);
+    facade.backupEmailSentTo.set(null);
+    facade.backupEmailResendAt.set(0);
+    facade.requestBackupEmailAsync.mockReset();
+    TestBed.configureTestingModule({
+        imports: [UserManageBackupEmailComponent],
+        providers: [provideTranslateTesting(), { provide: ProfileManageFacade, useValue: facade }],
     });
+});
 
+describe('UserManageBackupEmailComponent', () => {
     it('rejects invalid input and forwards a valid email without claiming verification', () => {
         const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
         fixture.detectChanges();
@@ -87,5 +87,39 @@ describe('UserManageBackupEmailComponent', () => {
         facade.backupEmailResendAt.set(Date.now() + RESEND_COOLDOWN_MS);
         component['submit']();
         expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Backup email resend from the rendered field', () => {
+    it('prefills the sent address, blocks Enter during cooldown, and resends when the wait ends', () => {
+        vi.useFakeTimers();
+        facade.backupEmailSentTo.set('pending@example.test');
+        facade.backupEmailResendAt.set(Date.now() + RESEND_COOLDOWN_MS);
+        const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
+        try {
+            fixture.detectChanges();
+            const host = fixture.nativeElement as HTMLElement;
+            const field = host.querySelector('input[type="email"]');
+            const button = host.querySelector('button');
+            if (!(field instanceof HTMLInputElement) || !(button instanceof HTMLButtonElement)) {
+                throw new Error('Expected the backup email resend controls');
+            }
+            expect(field.value).toBe('pending@example.test');
+            expect(button.disabled).toBe(true);
+            expect(host.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.BACKUP_EMAIL_SENT');
+
+            field.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+            expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
+            vi.advanceTimersByTime(RESEND_COOLDOWN_MS);
+            fixture.detectChanges();
+            expect(button.disabled).toBe(false);
+
+            field.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+            expect(facade.requestBackupEmailAsync).toHaveBeenCalledExactlyOnceWith('pending@example.test');
+            expect(facade.user().email).toBeNull();
+        } finally {
+            fixture.destroy();
+            vi.useRealTimers();
+        }
     });
 });

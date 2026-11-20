@@ -6,7 +6,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { calculateCycleDayNumber, resolveCycleStartDateKey } from '../../../../shared/lib/cycle-calendar.utils';
-import { normalizeStartOfUtcDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
+import { normalizeStartOfUtcDay, parseCalendarDateUtc, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../../shared/lib/time.constants';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -133,12 +133,23 @@ export class CycleSummaryCardComponent {
     protected readonly confidence = computed(() => this.predictions()?.confidence ?? null);
     protected readonly activeFactorPills = computed<CycleSummaryPill[]>(() => {
         const cycle = this.cycle();
-        if (cycle === null) {
+        const reference = this.normalizedReference();
+        if (cycle === null || reference === null) {
             return [];
         }
 
         return cycle.factors
-            .filter(factor => factor.endDate === null || factor.endDate === undefined)
+            .filter(factor => {
+                const start = parseCalendarDateUtc(factor.startDate);
+                if (start === null || start > reference) {
+                    return false;
+                }
+                if (factor.endDate === null || factor.endDate === undefined) {
+                    return true;
+                }
+                const end = parseCalendarDateUtc(factor.endDate);
+                return end !== null && end >= reference;
+            })
             .sort((a, b) => b.startDate.localeCompare(a.startDate))
             .slice(0, 2)
             .map(factor => this.buildFactorPill(factor));

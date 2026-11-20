@@ -116,7 +116,10 @@ describe('FastingPageComponent rendered workflow', () => {
         facade.isActive.set(true);
         const saved = new Subject<FastingCheckInDialogResult>();
         const pending = new Subject<FastingCheckInDialogResult>();
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => saved }).mockReturnValueOnce({ afterClosed: () => pending });
+        const closePending = vi.fn();
+        dialogService.open
+            .mockReturnValueOnce({ afterClosed: () => saved })
+            .mockReturnValueOnce({ afterClosed: () => pending, close: closePending });
         fixture.detectChanges();
 
         pageButton('FASTING.REDESIGN.CHECK_IN').click();
@@ -127,6 +130,7 @@ describe('FastingPageComponent rendered workflow', () => {
         pageButton('FASTING.REDESIGN.CHECK_IN').click();
         expect(dialogService.open).toHaveBeenCalledTimes(2);
         fixture.destroy();
+        expect(closePending).toHaveBeenCalledOnce();
         pending.next('cancel');
         pending.complete();
         expect(facade.resetCheckInDraft).not.toHaveBeenCalled();
@@ -286,31 +290,12 @@ describe('FastingPageComponent setup and actions', () => {
         expect(facade.initialize).toHaveBeenCalledTimes(1);
     });
 
-    it('builds current check-in timeline when current check-in exists', () => {
-        facade.currentSession.set({
-            ...createSession(),
-            checkIns: [
-                {
-                    id: 'checkin-1',
-                    checkedInAtUtc: '2026-04-12T10:00:00Z',
-                    hungerLevel: 2,
-                    energyLevel: 4,
-                    moodLevel: 4,
-                    symptoms: ['weakness'],
-                    notes: 'steady',
-                },
-            ],
-        });
-
-        expect(component['hasCurrentSessionTimeline']()).toBe(true);
-        expect(component['currentSessionRecentCheckIns']()).toHaveLength(1);
-    });
-
     it('opens the check-in dialog and resets the draft when it closes without saving', () => {
-        component['openCheckInForm']();
+        facade.currentSession.set(createSession());
+        fixture.detectChanges();
+        pageButton('FASTING.REDESIGN.CHECK_IN').click();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
-        expect(component['isCheckInExpanded']()).toBe(false);
         expect(facade.resetCheckInDraft).toHaveBeenCalledTimes(1);
     });
 
@@ -336,12 +321,10 @@ describe('FastingPageComponent setup and actions', () => {
         expect(facade.snoozePrompt).toHaveBeenCalledWith('prompt-2');
     });
 
-    it('shows success toast and collapses check-in after saved version changes', () => {
-        component['openCheckInForm']();
+    it('announces a successful check-in when the saved version changes', () => {
         facade.checkInSavedVersion.set(1);
         fixture.detectChanges();
 
-        expect(component['isCheckInExpanded']()).toBe(false);
         expect(toastService.success).toHaveBeenCalledWith('FASTING.CHECK_IN.SAVED_TOAST');
     });
 

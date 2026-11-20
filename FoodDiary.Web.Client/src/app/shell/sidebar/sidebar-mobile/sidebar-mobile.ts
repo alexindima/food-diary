@@ -16,7 +16,11 @@ import { FdUiHintDirective, FdUiIconComponent, FdUiModalDirective } from 'fd-ui-
 
 import type { MobileSheetId, SidebarActionId, SidebarDirectRouteRequest, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
 import { BODY_TRACKING_ITEMS, FOOD_TRACKING_ITEMS, MOBILE_REPORT_ITEMS } from '../sidebar-lib/sidebar-navigation.config';
-import { getSidebarMobileSheetLabelKey, getSidebarMobileSheetRouteItems } from '../sidebar-lib/sidebar-view.utils';
+import {
+    getSidebarMobileSheetLabelKey,
+    getSidebarMobileSheetRouteItems,
+    isSidebarRouterLinkActivation,
+} from '../sidebar-lib/sidebar-view.utils';
 import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route-links';
 
 @Component({
@@ -87,5 +91,12 @@ export class SidebarMobileComponent {
                 nav.querySelector<HTMLElement>(`[data-mobile-sheet="${previousSheet}"]`)?.focus();
             }
         });
+    }
+
+    protected activateDirectRoute(event: MouseEvent, request: SidebarDirectRouteRequest): void {
+        if (isSidebarRouterLinkActivation(event)) {
+            this.directRouteClick.emit(request);
+            this.closeMenus.emit();
+        }
     }
 }

@@ -80,6 +80,7 @@ export class ShoppingListFacade {
     public readonly list = signal<ShoppingList | null>(null);
     public readonly items = signal<ShoppingListItem[]>([]);
     public readonly isLoading = signal(false);
+    public readonly overviewLoadError = signal(false);
     public readonly isSaving = signal(false);
     public readonly isClearing = signal(false);
     public readonly saveError = signal(false);
@@ -146,6 +147,10 @@ export class ShoppingListFacade {
     }
 
     public initialize(): void {
+        if (this.isLoading()) {
+            return;
+        }
+        this.overviewLoadError.set(false);
         this.isLoading.set(true);
         this.shoppingListService
             .getOverview()
@@ -162,8 +167,8 @@ export class ShoppingListFacade {
                     this.isLoading.set(false);
                 },
                 error: () => {
+                    this.overviewLoadError.set(true);
                     this.isLoading.set(false);
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                 },
             });
     }
@@ -266,6 +271,7 @@ export class ShoppingListFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: list => {
+                    this.overviewLoadError.set(false);
                     this.creating.set(false);
                     this.isLoading.set(false);
                     this.renameRequestedListId.set(explicitName === undefined ? list.id : null);
@@ -409,8 +415,7 @@ export class ShoppingListFacade {
                     this.isClearing.set(false);
                     if (this.selectedListId() === list.id) {
                         this.applyList(list);
-                        this.saveQueue.clearPending();
-                        this.pendingSave = false;
+                        this.discardPendingSave();
                     } else {
                         this.pendingSave = false;
                         this.saveQueue.scheduleIfPending();
@@ -462,6 +467,7 @@ export class ShoppingListFacade {
             .subscribe({
                 next: () => {
                     this.isSaving.set(false);
+                    this.removeDeletedListSummary(listId);
                     this.loadLists();
                 },
                 error: () => {
@@ -490,8 +496,10 @@ export class ShoppingListFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
+                    this.discardPendingSave();
                     this.isSaving.set(false);
                     this.suppressAutosave = false;
+                    this.removeDeletedListSummary(current.id);
                     this.loadLists();
                 },
                 error: () => {
@@ -502,9 +510,25 @@ export class ShoppingListFacade {
                     this.selectedListId.set(previousSelectedListId);
                     this.listName.set(previousListName);
                     this.suppressAutosave = false;
+                    this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
                 },
             });
+    }
+
+    private removeDeletedListSummary(id: ShoppingListId): void {
+        this.lists.update(lists => lists.filter(list => list.id !== id));
+        this.initialPage.update(page => {
+            if (page === null) {
+                return page;
+            }
+            const items = page.items.filter(list => list.id !== id);
+            if (items.length === page.items.length) {
+                return page;
+            }
+            // An item from page two may have shifted into the first page after deletion.
+            return { ...page, items, nextPage: page.hasMore ? 1 : null };
+        });
     }
 
     private loadLists(): void {
@@ -654,6 +678,12 @@ export class ShoppingListFacade {
         this.saveQueue.schedule();
     }
 
+    private discardPendingSave(): void {
+        this.saveQueue.clearPending();
+        this.pendingSave = false;
+        this.activeSave = null;
+    }
+
     public retrySave(): void {
         if (this.conflictListId() === null && !this.isSaving() && !this.isLoading() && this.saveQueue.hasPending()) {
             this.saveQueue.flushNow();
@@ -763,10 +793,8 @@ export class ShoppingListFacade {
                         this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
                         return;
                     }
-                    this.saveQueue.clearPending();
-                    this.pendingSave = false;
+                    this.discardPendingSave();
                     this.pendingSelection = null;
-                    this.activeSave = null;
                     this.conflictListId.set(null);
                     this.applyList(list);
                     this.updateListSummary(list);

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers -- Independent regression examples for portions and calorie basis. */
 import { Component, input, output } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -46,15 +47,53 @@ type DialogSetup = {
 
 describe('MealManualItemDialogComponent selection', () => {
     it.each([
-        [400, 2],
-        [200, 1],
-    ])('shows the same per-serving metadata for recipe total %s and %s servings', async (totalCalories, servings) => {
-        const recipe = { ...createRecipe(), totalCalories, servings };
-        const { component } = await setupComponentAsync({ recipe });
-        const instant = vi.spyOn(TestBed.inject(TranslateService), 'instant');
-        component['recipe'].set({ ...recipe });
-        component['selectedItemMeta']();
-        expect(instant).toHaveBeenCalledWith('MEAL_MANAGE.MANUAL_ITEM_RECIPE_META', { calories: 200 });
+        { variant: 'two calculated servings', data: { totalCalories: 400, servings: 2 }, text: '200 kcal per serving' },
+        { variant: 'one calculated serving', data: { totalCalories: 200, servings: 1 }, text: '200 kcal per serving' },
+        {
+            variant: 'explicit manual zero',
+            data: { totalCalories: 400, manualCalories: 0, isNutritionAutoCalculated: false },
+            text: '0 kcal per serving',
+        },
+        { variant: 'null calories', data: { totalCalories: null, manualCalories: null }, text: 'Recipe' },
+        { variant: 'omitted calories', data: {}, text: 'Recipe' },
+    ])('shows $text for $variant and still allows changing the amount', async ({ data, text }) => {
+        const recipe = { ...createRecipe(), ...data };
+        const { fixture, dialogRef } = await setupComponentAsync();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            MEAL_MANAGE: {
+                ITEM_TYPE_OPTIONS: { Recipe: 'Recipe' },
+                MANUAL_ITEM_RECIPE_META: '{{calories}} kcal per serving',
+            },
+        });
+        await firstValueFrom(translate.use('en'));
+        const picker = fixture.debugElement.query(By.directive(ItemSelectStub)).componentInstance as ItemSelectStub;
+        picker.recipeSelected.emit(recipe);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.meal-manual-item-dialog__source-name')?.textContent).toBe(recipe.name);
+        expect(host.querySelector('.meal-manual-item-dialog__source-meta')?.textContent).toBe(text);
+        const amount = host.querySelector<HTMLInputElement>('input[type="number"]');
+        const save = Array.from(host.querySelectorAll('button')).find(button =>
+            button.textContent.trim().endsWith('MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE'),
+        );
+        if (amount === null || save === undefined) {
+            throw new Error('Expected an amount input and a native Save button');
+        }
+        expect(amount.valueAsNumber).toBe(RECIPE_SERVING_WEIGHT);
+        const editedAmount = 120;
+        amount.value = String(editedAmount);
+        amount.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(save.disabled).toBe(false);
+        save.click();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({
+            sourceType: MealSourceType.Recipe,
+            product: null,
+            recipe,
+            amount: editedAmount,
+        });
     });
     it('should apply selected product default portion amount', async () => {
         const product = createProduct();
@@ -327,5 +366,35 @@ describe('MealManualItemDialogComponent validation and selection boundaries', ()
         vi.spyOn(TestBed.inject(RecipeServingWeightService), 'loadServingMass').mockReturnValue(of(servingMassFromObservation(weight)));
         component['onRecipeSelected'](createRecipe());
         expect(component['amountModel']()).toBe(1);
+    });
+});
+
+describe('Meal item picker legacy portions', () => {
+    it.each([
+        [100, 100],
+        [0, 1],
+    ])('presents a usable amount for a product with no saved portion and base amount %s', async (baseAmount, expectedAmount) => {
+        const { fixture, dialogRef } = await setupComponentAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const picker = fixture.debugElement.query(By.directive(ItemSelectStub)).componentInstance as ItemSelectStub;
+        expect(picker.embedded()).toBe(true);
+        const product = { ...createProduct(), baseAmount, defaultPortionAmount: 0 };
+        picker.productSelected.emit(product);
+        fixture.detectChanges();
+
+        expect(host.querySelector('.meal-manual-item-dialog__source-name')?.textContent).toBe(product.name);
+        expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe(String(expectedAmount));
+        const save = Array.from(host.querySelectorAll('button')).find(button =>
+            button.textContent.trim().endsWith('MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE'),
+        );
+        expect(save?.disabled).toBe(false);
+        save?.click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({
+            sourceType: MealSourceType.Product,
+            product,
+            recipe: null,
+            amount: expectedAmount,
+        });
     });
 });

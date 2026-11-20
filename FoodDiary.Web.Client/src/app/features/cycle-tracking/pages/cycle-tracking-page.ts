@@ -7,6 +7,7 @@ import {
     type ElementRef,
     inject,
     signal,
+    type Type,
     untracked,
     viewChild,
 } from '@angular/core';
@@ -20,13 +21,13 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
-import { filter } from 'rxjs';
+import { filter, finalize, type Observable } from 'rxjs';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
@@ -309,7 +310,11 @@ export class CycleTrackingPageComponent {
                           },
             }),
             isDirty: () =>
-                this.startCycleForm().dirty() || this.dayForm().dirty() || this.factorForm().dirty() || this.episodeForm().dirty(),
+                this.startCycleForm().dirty() ||
+                this.settingsForm().dirty() ||
+                this.dayForm().dirty() ||
+                this.factorForm().dirty() ||
+                this.episodeForm().dirty(),
             openDraft: () => {
                 this.openSettings();
                 if (!this.isSettingsOpen()) {
@@ -424,21 +429,16 @@ export class CycleTrackingPageComponent {
         if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
             return;
         }
-        this.dialogService
-            .open(FdUiConfirmDialogComponent, {
-                size: 'sm',
-                data: {
-                    title: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY_TITLE'),
-                    message: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY_MESSAGE'),
-                    confirmLabel: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY'),
-                    danger: true,
-                },
-            })
-            .afterClosed()
-            .pipe(
-                filter((confirmed): confirmed is true => confirmed === true),
-                takeUntilDestroyed(this.destroyRef),
-            )
+        this.openRouteDialog(FdUiConfirmDialogComponent, {
+            size: 'sm',
+            data: {
+                title: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY_TITLE'),
+                message: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY_MESSAGE'),
+                confirmLabel: this.translateService.instant('CYCLE_TRACKING.CLEAR_DAY'),
+                danger: true,
+            },
+        })
+            .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
                 this.facade.clearDay(date);
             });
@@ -474,21 +474,16 @@ export class CycleTrackingPageComponent {
     }
 
     protected deleteMenstrualEpisode(episodeId: MenstrualEpisodeId): void {
-        this.dialogService
-            .open(FdUiConfirmDialogComponent, {
-                size: 'sm',
-                data: {
-                    title: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE_TITLE'),
-                    message: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE_MESSAGE'),
-                    confirmLabel: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE'),
-                    danger: true,
-                },
-            })
-            .afterClosed()
-            .pipe(
-                filter((confirmed): confirmed is true => confirmed === true),
-                takeUntilDestroyed(this.destroyRef),
-            )
+        this.openRouteDialog(FdUiConfirmDialogComponent, {
+            size: 'sm',
+            data: {
+                title: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE_TITLE'),
+                message: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE_MESSAGE'),
+                confirmLabel: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE'),
+                danger: true,
+            },
+        })
+            .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
                 void this.facade.deleteMenstrualEpisodeAsync(episodeId);
             });
@@ -498,21 +493,16 @@ export class CycleTrackingPageComponent {
         if (this.isSavingSettings() || this.isDeletingCycle() || this.cycle() === null) {
             return;
         }
-        this.dialogService
-            .open(FdUiConfirmDialogComponent, {
-                size: 'sm',
-                data: {
-                    title: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE_TITLE'),
-                    message: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE_MESSAGE'),
-                    confirmLabel: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE'),
-                    danger: true,
-                },
-            })
-            .afterClosed()
-            .pipe(
-                filter((confirmed): confirmed is true => confirmed === true),
-                takeUntilDestroyed(this.destroyRef),
-            )
+        this.openRouteDialog(FdUiConfirmDialogComponent, {
+            size: 'sm',
+            data: {
+                title: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE_TITLE'),
+                message: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE_MESSAGE'),
+                confirmLabel: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE'),
+                danger: true,
+            },
+        })
+            .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
                 void this.facade.deleteCycleAsync();
             });
@@ -544,18 +534,15 @@ export class CycleTrackingPageComponent {
             return;
         }
         const today = formatDateInputValue(new Date());
-        this.dialogService
-            .open(CycleExportDialogComponent, {
-                preset: 'form',
-                data: { sensitive, today, dateFrom: toCycleDateKey(cycle.trackingStartDate), dateTo: today },
-            })
-            .afterClosed()
+        this.openRouteDialog(CycleExportDialogComponent, {
+            preset: 'form',
+            data: { sensitive, today, dateFrom: toCycleDateKey(cycle.trackingStartDate), dateTo: today },
+        })
             .pipe(
                 filter(
                     (selection): selection is CycleExportSelection =>
                         selection !== null && typeof selection === 'object' && 'dateFrom' in selection,
                 ),
-                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(selection => {
                 if (selection.currentPassword === undefined) {
@@ -564,6 +551,14 @@ export class CycleTrackingPageComponent {
                     this.facade.exportSensitiveCycle(selection.currentPassword, selection);
                 }
             });
+    }
+
+    private openRouteDialog<T, D, R>(component: Type<T>, config: FdUiDialogConfig<D>): Observable<R | undefined> {
+        const dialog = this.dialogService.open<T, D, R>(component, config);
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        return dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose));
     }
 
     protected startCycleTrackingTour(force = true): void {
@@ -575,6 +570,7 @@ export class CycleTrackingPageComponent {
             day: 'numeric',
             month: 'short',
             year: 'numeric',
+            timeZone: 'UTC',
         }).format(new Date(value));
     }
 

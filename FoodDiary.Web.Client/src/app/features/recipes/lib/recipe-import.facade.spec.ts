@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
@@ -16,6 +16,7 @@ const user = { user: signal<{ aiConsentAcceptedAt: string | null }>({ aiConsentA
 const dialogs = { open: vi.fn() };
 let facade: RecipeImportFacade;
 const OVERSIZED_VIDEO_BYTES = 53_477_376;
+const OVER_LIMIT_CAPTION_LENGTH = 8_001;
 
 beforeEach(() => {
     ai.importRecipe.mockReset().mockReturnValue(of({ name: 'Salad' }));
@@ -127,5 +128,54 @@ describe('recipe import video validation failures', () => {
         expect(facade.errorKey()).toBe(expectedKey);
         expect(facade.busy()).toBe(false);
         expect(ai.importRecipeVideo).toHaveBeenCalledOnce();
+    });
+});
+
+describe('recipe import access and request lifetime', () => {
+    it('records accepted consent before recognizing and blocks a second submission while it is pending', async () => {
+        user.user.set({ aiConsentAcceptedAt: null });
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of(true) });
+        const accepted = new Subject<void>();
+        user.acceptAiConsent.mockReturnValueOnce(accepted);
+        const recognition = facade.recognizeAsync('', 'Ingredients: oats and milk');
+        await vi.waitFor(() => {
+            expect(user.acceptAiConsent).toHaveBeenCalledOnce();
+        });
+
+        expect(facade.busy()).toBe(true);
+        expect(ai.importRecipe).not.toHaveBeenCalled();
+        expect(await facade.recognizeAsync('', 'A second recipe')).toBeNull();
+        expect(dialogs.open).toHaveBeenCalledOnce();
+        accepted.next();
+        accepted.complete();
+
+        expect(await recognition).toEqual({ name: 'Salad' });
+        expect(ai.importRecipe).toHaveBeenCalledExactlyOnceWith({ sourceUrl: null, text: 'Ingredients: oats and milk' });
+        expect(facade.busy()).toBe(false);
+    });
+
+    it('shows actionable validation without starting a request for a blank recipe or oversized video caption', async () => {
+        expect(await facade.recognizeAsync(' ', ' ')).toBeNull();
+        expect(facade.errorKey()).toBe('RECIPE_MANAGE.IMPORT.EMPTY_ERROR');
+        expect(await facade.recognizeAsync('https://example.org/recipe', 'x'.repeat(OVER_LIMIT_CAPTION_LENGTH), true)).toBeNull();
+        expect(facade.errorKey()).toBe('RECIPE_MANAGE.IMPORT.VIDEO_INVALID');
+        expect(ai.importRecipe).not.toHaveBeenCalled();
+        expect(ai.importRecipeVideo).not.toHaveBeenCalled();
+        expect(facade.busy()).toBe(false);
+    });
+
+    it.each([
+        [new HttpErrorResponse({ status: 503, error: { error: 'Ai.VideoBusy' } }), 'RECIPE_MANAGE.IMPORT.VIDEO_BUSY'],
+        [new Error('Video import disconnected'), 'RECIPE_MANAGE.IMPORT.RECOGNITION_ERROR'],
+    ])('reports a failed recognition and allows an explicit retry (%s)', async (error, guidance) => {
+        const sourceUrl = 'https://example.org/recipe';
+        ai.importRecipeVideo.mockReturnValueOnce(throwError(() => error));
+        expect(await facade.recognizeAsync(sourceUrl, '', true)).toBeNull();
+        expect(facade.errorKey()).toBe(guidance);
+        expect(facade.busy()).toBe(false);
+
+        expect(await facade.recognizeAsync(sourceUrl, '', true)).toEqual({ name: 'Salad' });
+        expect(facade.errorKey()).toBeNull();
+        expect(ai.importRecipeVideo).toHaveBeenCalledTimes(2);
     });
 });

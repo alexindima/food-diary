@@ -6,7 +6,7 @@ import { TranslateService, type TranslationObject } from '@ngx-translate/core';
 import { filter, firstValueFrom, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { isPublicMarketingPath, publicSiteLocale } from '../../config/public-site-paths';
+import { isPublicMarketingPath, type PublicSiteLocale, publicSiteLocale } from '../../config/public-site-paths';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
@@ -64,10 +64,6 @@ export class LocalizationService {
 
     public async applyLanguagePreferenceAsync(language: string | null | undefined): Promise<void> {
         const normalized = this.normalizeLanguage(language);
-        if (normalized.length === 0) {
-            return;
-        }
-
         const current = resolveTranslateLanguage(this.translateService);
         if (current === normalized) {
             this.persistLanguage(normalized);
@@ -131,7 +127,7 @@ export class LocalizationService {
         return pathname === undefined ? `application:${language}` : `route:${language}:${this.normalizeRouteKey(pathname)}`;
     }
 
-    private normalizeLanguage(lang?: string | null): string {
+    private normalizeLanguage(lang?: string | null): PublicSiteLocale {
         if (lang === null || lang === undefined || lang.length === 0) {
             return 'en';
         }

@@ -1,6 +1,7 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
@@ -36,7 +37,7 @@ let browserWindowSpy: {
     onPageHideOnce: ReturnType<typeof vi.fn<BrowserWindowService['onPageHideOnce']>>;
     onVisibilityHiddenOnce: ReturnType<typeof vi.fn<BrowserWindowService['onVisibilityHiddenOnce']>>;
 };
-let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
+let loggingSpy: { logEvent: ReturnType<typeof vi.fn<LoggingApiService['logEvent']>> };
 
 beforeEach(() => {
     environment.enableClientObservability = true;
@@ -55,7 +56,7 @@ beforeEach(() => {
         onVisibilityHiddenOnce: vi.fn(),
     };
     loggingSpy = {
-        logEvent: vi.fn().mockReturnValue(of(void 0)),
+        logEvent: vi.fn<LoggingApiService['logEvent']>().mockReturnValue(of(void 0)),
     };
 
     TestBed.configureTestingModule({
@@ -302,5 +303,197 @@ describe('FrontendObservabilityService fasting events', () => {
         const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['name']).toBe('fasting.check-in.saved');
         expect((payload['details'] as Record<string, unknown>)['sessionId']).toBe('session-1');
+    });
+});
+
+@Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
+class ObservabilityRouteFixture {}
+
+describe('frontend observability router lifetime', () => {
+    it('reports distinct redirect, cancellation and failure outcomes with normalized private routes', async () => {
+        const router = TestBed.inject(Router);
+        router.resetConfig([
+            { path: 'diary', pathMatch: 'full', redirectTo: 'meals/42' },
+            { path: 'meals/:id', component: ObservabilityRouteFixture },
+            { path: 'profile', component: ObservabilityRouteFixture, canActivate: [(): boolean => false] },
+            {
+                path: 'statistics',
+                component: ObservabilityRouteFixture,
+                resolve: { summary: (): Observable<never> => throwError(() => new Error('Fixture report unavailable')) },
+            },
+        ]);
+        let clock = 0;
+        browserPerformanceSpy.now.mockImplementation(() => ++clock);
+        service.initialize();
+
+        await expect(router.navigateByUrl('/diary')).resolves.toBe(true);
+        await expect(router.navigateByUrl('/profile?tab=notifications')).resolves.toBe(false);
+        await expect(router.navigateByUrl('/statistics')).rejects.toThrow('Fixture report unavailable');
+
+        expect(loggingSpy.logEvent.mock.calls.map(([event]) => event)).toEqual([
+            expect.objectContaining({ category: 'route_timing', route: '/meals/:id', outcome: 'success', durationMs: 1 }),
+            expect.objectContaining({ category: 'route_timing', route: '/profile', outcome: 'cancelled', durationMs: 1 }),
+            expect.objectContaining({ category: 'route_timing', route: '/statistics', outcome: 'error', level: 'error', durationMs: 1 }),
+        ]);
+    });
+
+    it.each(['/', '/ru/auth/login', '/en/privacy-policy', '/ru/food-diary'])('skips local vitals on the public entry %s', async entry => {
+        browserWindowSpy.getPathname.mockReturnValue(entry);
+        const router = TestBed.inject(Router);
+        router.resetConfig([{ path: '**', component: ObservabilityRouteFixture }]);
+
+        service.initialize();
+        await expect(router.navigateByUrl(entry)).resolves.toBe(true);
+
+        expect(browserPerformanceSpy.observeWebVitalsAsync).not.toHaveBeenCalled();
+        expect(loggingSpy.logEvent).not.toHaveBeenCalled();
+    });
+
+    it('does not attach browser observers on the server', () => {
+        browserWindowSpy.isAvailable.mockReturnValue(false);
+
+        service.initialize();
+
+        expect(browserPerformanceSpy.observeWebVitalsAsync).not.toHaveBeenCalled();
+        expect(browserPerformanceSpy.now).not.toHaveBeenCalled();
+    });
+
+    it('does not report cancelled and failed navigation to public account routes', async () => {
+        const router = TestBed.inject(Router);
+        router.resetConfig([
+            { path: 'auth', component: ObservabilityRouteFixture, canActivate: [(): boolean => false] },
+            {
+                path: 'privacy-policy',
+                component: ObservabilityRouteFixture,
+                resolve: { content: (): Observable<never> => throwError(() => new Error('Fixture policy unavailable')) },
+            },
+        ]);
+        service.initialize();
+
+        await expect(router.navigateByUrl('/auth')).resolves.toBe(false);
+        await expect(router.navigateByUrl('/privacy-policy')).rejects.toThrow('Fixture policy unavailable');
+
+        expect(loggingSpy.logEvent).not.toHaveBeenCalled();
+    });
+
+    it('does not invent a start time when initialized during an active navigation', async () => {
+        const router = TestBed.inject(Router);
+        const allow = new Subject<boolean>();
+        router.resetConfig([{ path: 'profile', component: ObservabilityRouteFixture, canActivate: [(): Observable<boolean> => allow] }]);
+        const pending = router.navigateByUrl('/profile');
+        await vi.waitFor(() => {
+            expect(allow.observed).toBe(true);
+        });
+
+        service.initialize();
+        allow.next(true);
+        await expect(pending).resolves.toBe(true);
+
+        expect(loggingSpy.logEvent).not.toHaveBeenCalled();
+    });
+});
+
+describe('observability boundary payloads', () => {
+    it('uses the current private router path when the browser pathname is unavailable', async () => {
+        const router = TestBed.inject(Router);
+        router.resetConfig([{ path: 'meals/:id', component: ObservabilityRouteFixture }]);
+        await router.navigateByUrl('/meals/42');
+        browserWindowSpy.getPathname.mockReturnValue(null);
+
+        service.initialize();
+
+        expect(browserPerformanceSpy.observeWebVitalsAsync).toHaveBeenCalledOnce();
+        const reportVital = browserPerformanceSpy.observeWebVitalsAsync.mock.calls[0][0];
+        reportVital({ name: 'TTFB', value: 0, id: 'visit-fixture', delta: 0, rating: 'good', navigationType: 'navigate' });
+        expect(loggingSpy.logEvent).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ category: 'web_vital', route: '/meals/:id' }),
+        );
+    });
+
+    it('rejects invalid measurements while retaining independently reported metrics', () => {
+        service.recordWebVital('lcp', Number.NaN);
+        service.recordWebVital('lcp', Number.POSITIVE_INFINITY);
+        service.recordWebVital('lcp', -1);
+        service.recordWebVital('lcp', 0, 'ms', { metricId: 'initial' });
+        service.recordWebVital('lcp', 0, 'ms', { metricId: 'restored' });
+        service.recordWebVital('lcp', 0, 'ms', { metricId: 'initial' });
+
+        expect(loggingSpy.logEvent).toHaveBeenCalledTimes(2);
+        expect(loggingSpy.logEvent).toHaveBeenNthCalledWith(
+            2,
+            expect.objectContaining({ name: 'lcp', value: 0, details: { metricId: 'restored' } }),
+        );
+    });
+
+    it('normalizes a relative network failure when the location is unavailable', () => {
+        browserWindowSpy.getHref.mockReturnValue(null);
+        service.recordHttpRequest({
+            url: '/api/meals/%34%32?code=private-fixture',
+            method: 'GET',
+            statusCode: 0,
+            durationMs: ROUTE_DURATION_MS,
+            outcome: 'network_error',
+        });
+
+        expect(loggingSpy.logEvent).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                location: '/',
+                details: { url: '/api/meals/:id' },
+                level: 'error',
+                statusCode: 0,
+            }),
+        );
+    });
+});
+
+describe('observability notifications and malformed paths', () => {
+    it('keeps later user-action reporting usable after transport fails', () => {
+        loggingSpy.logEvent.mockReturnValueOnce(throwError(() => new Error('Telemetry transport unavailable')));
+
+        service.recordServiceWorkerFailure('check');
+        service.recordNotificationSettingsViewed({ permission: 'denied' });
+
+        expect(loggingSpy.logEvent).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+                level: 'warning',
+                outcome: 'pwa_check_failed',
+                details: { stage: 'check' },
+            }),
+        );
+        expect(loggingSpy.logEvent).toHaveBeenNthCalledWith(
+            2,
+            expect.objectContaining({
+                category: 'user_action',
+                name: 'notifications.settings.viewed',
+                details: { permission: 'denied' },
+            }),
+        );
+    });
+
+    it('records a notification opt-out as a disabled preference change', () => {
+        service.recordNotificationPreferenceChanged('fasting', false);
+
+        expect(loggingSpy.logEvent).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                name: 'notifications.preference.changed',
+                outcome: 'disabled',
+                details: { preference: 'fasting', enabled: false },
+            }),
+        );
+    });
+
+    it('keeps route reporting valid for missing or malformed path segments', () => {
+        service.recordRouteTiming('#heading', ROUTE_DURATION_MS, 'success');
+        service.recordHttpRequest({
+            url: '/api/%E0%A4%A?query=private-fixture',
+            method: 'GET',
+            statusCode: 0,
+            durationMs: ROUTE_DURATION_MS,
+            outcome: 'network_error',
+        });
+
+        expect(loggingSpy.logEvent).toHaveBeenNthCalledWith(1, expect.objectContaining({ route: '/', pageRoute: '/' }));
+        expect(loggingSpy.logEvent).toHaveBeenNthCalledWith(2, expect.objectContaining({ details: { url: '/api/%E0%A4%A' } }));
     });
 });

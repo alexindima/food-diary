@@ -1,8 +1,8 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import type { Observable } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FavoriteProduct } from '../../../shared/models/product.data';
@@ -142,6 +142,37 @@ describe('FavoriteProductService writes', () => {
         const req = httpMock.expectOne(`${BASE_URL}/favorite-1`);
         expect(req.request.method).toBe('DELETE');
         req.flush(null);
+    });
+});
+
+describe('FavoriteProductService multi-page selection', () => {
+    it('fails the entire lookup when a later page errors and retries from the first page', async () => {
+        const batchSize = 100;
+        const totalItems = batchSize + 1;
+        const makeFavorite = (number: number): FavoriteProduct => ({
+            ...createFavoriteProduct(),
+            id: entityId<'favorite-product'>(`favorite-${number}`),
+            productId: entityId<'product'>(`product-${number}`),
+        });
+        const first = Array.from({ length: batchSize }, (_, index) => makeFavorite(index + 1));
+        const [previousLabel, ...unchanged] = first;
+        const fresh = [{ ...previousLabel, name: 'New label' }, ...unchanged];
+        const last = { ...makeFavorite(totalItems), productName: 'Pear' };
+        const page = { limit: batchSize, totalPages: 2, totalItems };
+        const getPageRequest = (number: number): TestRequest =>
+            httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('page') === String(number));
+
+        const failedLookup = firstValueFrom(service.getLookupPage());
+        getPageRequest(1).flush({ ...page, data: first, page: 1 });
+        const failedPage = getPageRequest(2);
+        expect(failedPage.request.params.get('limit')).toBe(String(batchSize));
+        failedPage.flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        await expect(failedLookup).rejects.toMatchObject({ status: HttpStatusCode.ServiceUnavailable });
+
+        const retry = firstValueFrom(service.getLookupPage());
+        getPageRequest(1).flush({ ...page, data: fresh, page: 1 });
+        getPageRequest(2).flush({ ...page, data: [last], page: 2 });
+        await expect(retry).resolves.toEqual([...fresh, last]);
     });
 });
 

@@ -159,3 +159,34 @@ describe('session recovery across requests and reloads', () => {
         expect(recovery.issue()).toBeNull();
     });
 });
+
+it('honors the logout cooldown and sends one retry for repeated clicks on the original session', async () => {
+    const now = vi.spyOn(Date, 'now').mockReturnValue(INITIAL_TIME_MS);
+    const logout = auth.onLogoutAsync();
+    requests
+        .expectOne({ method: 'POST', url: `${base}/logout` })
+        .flush({}, { status: HttpStatusCode.TooManyRequests, statusText: 'Limited', headers: { 'Retry-After': '3' } });
+    await logout;
+
+    await auth.retryPendingLogoutAsync();
+    requests.expectNone(`${base}/logout`);
+    expect(recovery.issue()).toBe('logout');
+    expect(auth.isAuthenticated()).toBe(false);
+
+    now.mockReturnValue(AFTER_RETRY_TIME_MS);
+    const retry = auth.retryPendingLogoutAsync();
+    const request = requests.expectOne({ method: 'POST', url: `${base}/logout` });
+    expect(request.request.headers.get('X-FoodDiary-Session')).toBe(sessionId);
+    expect(recovery.busy()).toBe(true);
+    const duplicate = auth.retryPendingLogoutAsync();
+    requests.expectNone(`${base}/logout`);
+
+    request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+    await Promise.all([retry, duplicate]);
+
+    expect(recovery.busy()).toBe(false);
+    expect(recovery.issue()).toBeNull();
+    expect(recovery.pendingLogout()).toBeNull();
+    expect(auth.isAuthenticated()).toBe(false);
+    requests.expectNone(`${base}/session`);
+});

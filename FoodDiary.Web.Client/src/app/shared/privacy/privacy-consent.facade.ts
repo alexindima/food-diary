@@ -1,9 +1,12 @@
 import { inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FdUiDialogService } from 'fd-ui-kit';
+import { type FdUiDialogRef, FdUiDialogService } from 'fd-ui-kit';
 import { concatMap, firstValueFrom, map } from 'rxjs';
 
-import type { HealthConsentDialogData } from '../../components/shared/health-consent-dialog/health-consent-dialog';
+import type {
+    HealthConsentDialogComponent,
+    HealthConsentDialogData,
+} from '../../components/shared/health-consent-dialog/health-consent-dialog';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../api/export.service';
 import { type UserPrivacyState, UserService } from '../api/user.service';
@@ -28,6 +31,7 @@ export class PrivacyConsentFacade {
     public readonly needsReload = signal(false);
     private sessionVersion = 0;
     private healthReview: Promise<boolean> | null = null;
+    private healthDialog: FdUiDialogRef<HealthConsentDialogComponent, boolean> | null = null;
 
     public constructor() {
         this.marketing.changed
@@ -75,6 +79,9 @@ export class PrivacyConsentFacade {
     private reset(): void {
         this.sessionVersion++;
         this.healthReview = null;
+        const dialog = this.healthDialog;
+        this.healthDialog = null;
+        dialog?.close();
         this.state.set(null);
         this.failed.set(false);
         this.busy.set(false);
@@ -83,9 +90,13 @@ export class PrivacyConsentFacade {
     }
 
     public async flushPendingWithdrawalAsync(): Promise<void> {
+        const session = this.sessionVersion;
         const userId = this.users.user()?.id;
         if (userId !== undefined && this.storage.getItem('local', `fd_marketing_withdrawal:${userId}`) === 'pending') {
-            this.marketing.accountSyncFailed.set(!(await this.chooseAsync(PrivacyConsentPurpose.MarketingAttribution, false)));
+            const saved = await this.chooseAsync(PrivacyConsentPurpose.MarketingAttribution, false);
+            if (session === this.sessionVersion) {
+                this.marketing.accountSyncFailed.set(!saved);
+            }
         }
     }
 
@@ -200,15 +211,20 @@ export class PrivacyConsentFacade {
     }
     private async reviewHealthAsync(session: number, data?: HealthConsentDialogData): Promise<boolean> {
         const { HealthConsentDialogComponent } = await import('../../components/shared/health-consent-dialog/health-consent-dialog');
-        const accepted = await firstValueFrom(
-            this.dialogs
-                .open<InstanceType<typeof HealthConsentDialogComponent>, HealthConsentDialogData, boolean>(HealthConsentDialogComponent, {
-                    data,
-                    size: 'lg',
-                    disableClose: true,
-                })
-                .afterClosed(),
-        );
+        if (session !== this.sessionVersion) {
+            return false;
+        }
+        const dialog = this.dialogs.open<HealthConsentDialogComponent, HealthConsentDialogData, boolean>(HealthConsentDialogComponent, {
+            data,
+            size: 'lg',
+            disableClose: true,
+        });
+        this.healthDialog = dialog;
+        const accepted = await firstValueFrom(dialog.afterClosed()).finally(() => {
+            if (this.healthDialog === dialog) {
+                this.healthDialog = null;
+            }
+        });
         if (session !== this.sessionVersion) {
             return false;
         }

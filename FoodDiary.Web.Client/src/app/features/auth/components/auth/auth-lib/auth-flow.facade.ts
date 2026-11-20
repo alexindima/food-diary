@@ -4,6 +4,7 @@ import { catchError, concatMap, from, map, type Observable, of } from 'rxjs';
 
 import { AuthService } from '../../../../../services/auth.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
+import { getRecordProperty, getStringProperty } from '../../../../../shared/lib/unknown-value.utils';
 import { MarketingAttributionService } from '../../../../../shared/marketing/marketing-attribution.service';
 import { type AuthResponse, LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
@@ -121,16 +122,7 @@ export class AuthFlowFacade {
     }
 
     private getApiErrorCode(error: unknown): string | undefined {
-        if (!this.isRecord(error)) {
-            return undefined;
-        }
-
-        const responseBody = error['error'];
-        return this.isRecord(responseBody) && typeof responseBody['error'] === 'string' ? responseBody['error'] : undefined;
-    }
-
-    private isRecord(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
+        return getStringProperty(getRecordProperty(error, 'error'), 'error');
     }
 
     private prepareAuthenticatedLocalization(response: AuthResponse): Observable<void> {

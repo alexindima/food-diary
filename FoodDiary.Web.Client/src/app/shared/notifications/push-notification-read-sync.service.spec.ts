@@ -26,6 +26,11 @@ function push(notificationId = firstId, userId = 'user-a'): DisplayedPush {
     return { data: { notificationId, userId }, close: vi.fn() };
 }
 
+function createDisplayedPushBatch(): DisplayedPush[] {
+    return Array.from({ length: PUSH_COUNT }, (_, index) =>
+        push(entityId<'notification'>(`11111111-1111-1111-1111-${String(index + 1).padStart(UUID_SUFFIX_LENGTH, '0')}`)),
+    );
+}
 let displayed: DisplayedPush[];
 let readIds: Set<NotificationId>;
 let changes: Subject<void>;
@@ -119,6 +124,25 @@ describe('PushNotificationReadSyncService', () => {
         expect(displayed[0].close).toHaveBeenCalledOnce();
     });
 
+    it('defers hidden-tab resume events and reconciles once the tab is visible', async () => {
+        readIds.clear();
+        await startAsync();
+        readIds.add(firstId);
+        document.visibilityState = 'hidden';
+
+        document.dispatchEvent(new Event('visibilitychange'));
+        document.defaultView.dispatchEvent(new Event('focus'));
+        document.defaultView.dispatchEvent(new Event('online'));
+        await settleAsync();
+        expect(notifications.getReadNotificationIds).toHaveBeenCalledOnce();
+        expect(displayed[0].close).not.toHaveBeenCalled();
+
+        document.visibilityState = 'visible';
+        document.dispatchEvent(new Event('visibilitychange'));
+        await settleAsync();
+        expect(notifications.getReadNotificationIds).toHaveBeenCalledTimes(2);
+        expect(displayed[0].close).toHaveBeenCalledOnce();
+    });
     it('does not make status requests without displayed pushes', async () => {
         displayed = [];
         await startAsync();
@@ -178,6 +202,31 @@ describe('PushNotificationReadSyncService session isolation', () => {
         },
     );
 
+    it('drops the remaining old-account batch after the first status reply becomes stale', async () => {
+        displayed = createDisplayedPushBatch();
+        const oldPush = displayed[0];
+        const oldTail = displayed[BATCH_SIZE];
+        const currentPush = push(secondId, 'user-b');
+        displayed.push(currentPush);
+        readIds.add(secondId);
+        const pending = new Subject<NotificationId[]>();
+        notifications.getReadNotificationIds.mockReturnValueOnce(pending);
+        await startAsync();
+        expect(notifications.getReadNotificationIds).toHaveBeenCalledOnce();
+        expect(notifications.getReadNotificationIds.mock.calls[0][0]).toHaveLength(BATCH_SIZE);
+
+        userId.set('user-b');
+        TestBed.inject(SessionEventsService).notifyAuthenticated();
+        pending.next([oldPush.data.notificationId]);
+        pending.complete();
+        await settleAsync();
+
+        expect(notifications.getReadNotificationIds).toHaveBeenCalledTimes(2);
+        expect(notifications.getReadNotificationIds).toHaveBeenLastCalledWith([secondId]);
+        expect(oldPush.close).not.toHaveBeenCalled();
+        expect(oldTail.close).not.toHaveBeenCalled();
+        expect(currentPush.close).toHaveBeenCalledOnce();
+    });
     it('does not query while impersonating and resumes after normal authentication', async () => {
         impersonating.set(true);
         await startAsync();
@@ -205,9 +254,7 @@ describe('PushNotificationReadSyncService concurrent changes and failures', () =
     });
 
     it('deduplicates and batches more than 100 displayed notifications', async () => {
-        displayed = Array.from({ length: PUSH_COUNT }, (_, index) =>
-            push(entityId<'notification'>(`11111111-1111-1111-1111-${String(index + 1).padStart(UUID_SUFFIX_LENGTH, '0')}`)),
-        );
+        displayed = createDisplayedPushBatch();
         displayed.push(displayed[0]);
         await startAsync();
         expect(notifications.getReadNotificationIds.mock.calls.map(call => call[0].length)).toEqual([BATCH_SIZE, 1]);

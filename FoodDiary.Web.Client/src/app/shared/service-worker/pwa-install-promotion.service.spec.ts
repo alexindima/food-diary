@@ -142,6 +142,38 @@ describe('PWA promotion visits', () => {
     });
 });
 
+describe('PWA promotion eligibility changes', () => {
+    it('waits for the first visible visit even if the application stabilizes in a hidden tab', async () => {
+        documentRef.visibilityState = 'hidden';
+        const service = start();
+        stable.next(true);
+        await vi.advanceTimersByTimeAsync(HOUR);
+        expect(storage.setJson).not.toHaveBeenCalled();
+        expect(service.shouldShowBanner()).toBe(false);
+
+        documentRef.visibilityState = 'visible';
+        documentRef.dispatchEvent(new Event('visibilitychange'));
+
+        expect(saved.get(PWA_PROMOTION_VISITS_STORAGE_KEY)).toMatchObject({ visits: 1, lastSeenAt: Date.now() });
+        expect(service.shouldShowBanner()).toBe(false);
+    });
+
+    it('takes the last active timestamp and ignores later events while the route is ineligible', () => {
+        const service = start();
+        vi.setSystemTime(START + HALF_HOUR);
+        service.setActive(false);
+        expect(saved.get(PWA_PROMOTION_VISITS_STORAGE_KEY)).toMatchObject({ visits: 1, lastSeenAt: Date.now() });
+        const calls = storage.setJson.mock.calls.length;
+
+        returnAfter(HOUR);
+        expect(storage.setJson).toHaveBeenCalledTimes(calls);
+        service.setActive(true);
+
+        expect(saved.get(PWA_PROMOTION_VISITS_STORAGE_KEY)).toMatchObject({ visits: 2, lastSeenAt: Date.now() });
+        expect(service.shouldShowBanner()).toBe(false);
+    });
+});
+
 describe('PWA promotion dismissal preferences', () => {
     it('snoozes for exactly thirty days and preserves the decision after reload', () => {
         const service = qualify();
@@ -216,6 +248,19 @@ describe('PWA promotion lifecycle and cross-tab state', () => {
         expect(service.shouldShowBanner()).toBe(false);
     });
 
+    it('preserves a local install opt-out when unrelated account storage changes while persistence is denied', () => {
+        const service = qualify();
+        expect(service.shouldShowBanner()).toBe(true);
+        storage.getJson.mockReturnValue(null);
+        storage.setJson.mockImplementation(() => {});
+        service.dismissPermanently();
+        expect(service.isDismissed()).toBe(true);
+
+        view.dispatchEvent(new StorageEvent('storage', { key: 'accountAccess' }));
+
+        expect(service.isDismissed()).toBe(true);
+        expect(service.shouldShowBanner()).toBe(false);
+    });
     it('reacts to preference changes and storage clearing in another tab', () => {
         const service = qualify();
         saved.set(PWA_PROMOTION_STORAGE_KEY, { visits: 3, lastSeenAt: Date.now(), never: true });

@@ -4,6 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { isRecord } from '../shared/lib/unknown-value.utils';
 import { SeoService } from './seo.service';
 
 let service: SeoService;
@@ -188,6 +189,89 @@ describe('SeoService reset', () => {
         expect(metaService.getTag('name="robots"')).toBeNull();
     });
 });
+
+describe('SeoService public feature and FAQ metadata', () => {
+    it.each([
+        { language: 'en', path: '/food-diary', feature: 'Log meals', question: 'What can I track?', answer: 'Meals and nutrition' },
+        {
+            language: 'ru',
+            path: '/ru/food-diary',
+            feature: 'Записывайте приёмы пищи',
+            question: 'Что можно отслеживать?',
+            answer: 'Питание и приёмы пищи',
+        },
+    ])('builds the $language feature and FAQ graph at the normalized public URL', ({ language, path, feature, question, answer }) => {
+        translateService.getCurrentLang.mockReturnValue(language);
+        const translated: Record<string, string> = {
+            'NUTRITION_DIARY_PAGE.FEATURES.ITEMS.MEAL_LOGGING.TITLE': feature,
+            'NUTRITION_DIARY_PAGE.FAQ.ITEMS.APP_SCOPE.QUESTION': question,
+            'NUTRITION_DIARY_PAGE.FAQ.ITEMS.APP_SCOPE.ANSWER': answer,
+        };
+        translateService.instant.mockImplementation((key: string) => translated[key] ?? key);
+        const canonical = `https://fooddiary.club${path}`;
+
+        service.update({
+            path: `${path}/?utm_source=example#faq`,
+            structuredDataBaseKey: 'NUTRITION_DIARY_PAGE',
+            structuredDataFeatureKeys: ['MEAL_LOGGING'],
+            structuredDataFaqKeys: ['APP_SCOPE'],
+        });
+
+        expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(canonical);
+        expect(readStructuredEntity('SoftwareApplication')).toMatchObject({
+            inLanguage: language,
+            url: canonical,
+            featureList: [feature],
+        });
+        expect(readStructuredEntity('FAQPage')).toMatchObject({
+            inLanguage: language,
+            url: canonical,
+            mainEntity: [{ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } }],
+        });
+    });
+
+    it('removes previously rendered FAQ and feature entries on a public page with neither section', () => {
+        service.update({
+            path: '/food-diary',
+            structuredDataBaseKey: 'NUTRITION_DIARY_PAGE',
+            structuredDataFeatureKeys: ['MEAL_LOGGING'],
+            structuredDataFaqKeys: ['APP_SCOPE'],
+        });
+
+        service.update({ path: '/about', structuredDataBaseKey: 'PUBLIC_PAGES.ABOUT' });
+
+        const script = document.querySelector('script[data-seo-structured-data="app"]');
+        expect(script?.textContent).not.toContain('FAQPage');
+        expect(script?.textContent).not.toContain('featureList');
+        expect(script?.textContent).toContain('https://fooddiary.club/about');
+    });
+
+    it('keeps the Russian landing FAQ attached to the Russian canonical when no feature page data is supplied', () => {
+        translateService.getCurrentLang.mockReturnValue('ru');
+        service.update({ path: '/ru' });
+
+        const faq = readStructuredEntity('FAQPage');
+        expect(faq).toMatchObject({ inLanguage: 'ru', url: 'https://fooddiary.club/ru' });
+        expect(faq?.['mainEntity']).toContainEqual({
+            '@type': 'Question',
+            name: 'LANDING_FAQ.ITEMS.APP_SCOPE.QUESTION',
+            acceptedAnswer: { '@type': 'Answer', text: 'LANDING_FAQ.ITEMS.APP_SCOPE.ANSWER' },
+        });
+    });
+});
+
+function readStructuredEntity(type: string): Record<string, unknown> | undefined {
+    const script = document.querySelector('script[data-seo-structured-data="app"]');
+    if (script === null) {
+        throw new Error('Expected generated JSON-LD in the document head');
+    }
+    const payload: unknown = JSON.parse(script.textContent);
+    const graph = isRecord(payload) ? payload['@graph'] : undefined;
+    if (!Array.isArray(graph)) {
+        throw new Error('Expected the generated schema graph');
+    }
+    return graph.find((item: unknown): item is Record<string, unknown> => isRecord(item) && item['@type'] === type);
+}
 
 describe('public recipe metadata', () => {
     it('uses recipe title and image and escapes script delimiters', () => {

@@ -169,6 +169,7 @@ describe('MealListFacade', () => {
     registerDetailActionTests();
     registerDetailFavoriteRefreshTests();
     registerDetailDepartureTests();
+    registerDetachedDetailResultTests();
 });
 
 function registerLoadTests(): void {
@@ -621,4 +622,49 @@ function registerDetailDepartureTests(): void {
         expect(navigate).not.toHaveBeenCalled();
         expect(overview.observed).toBe(false);
     });
+}
+
+function registerDetachedDetailResultTests(): void {
+    it('does not open the lazy meal dialog after the diary scope is destroyed', async () => {
+        const dialogs = TestBed.inject(FdUiDialogService);
+        const open = vi.spyOn(dialogs, 'open').mockReturnValue({
+            afterClosed: () => of(undefined),
+        } as unknown as ReturnType<typeof dialogs.open>);
+        const result = facade.handleMealDetailsAsync(createMeal(), emptyMealFilters());
+
+        TestBed.resetTestingModule();
+
+        await expect(result).resolves.toBe(false);
+        expect(open).not.toHaveBeenCalled();
+        expect(mealService.queryOverview).not.toHaveBeenCalled();
+    });
+
+    it.each(['Repeat', 'Delete', 'FavoriteChanged'] as const)(
+        'ignores the %s result when the diary tears down before the close is handled',
+        async action => {
+            const dialogs = TestBed.inject(FdUiDialogService);
+            const closed = new Subject<MealDetailActionResult | undefined>();
+            vi.spyOn(dialogs, 'open').mockReturnValue({
+                afterClosed: () => closed,
+                close: (): void => {
+                    closed.next(undefined);
+                    closed.complete();
+                },
+            } as unknown as ReturnType<typeof dialogs.open>);
+            const meal = createMeal();
+            const result = facade.handleMealDetailsAsync(meal, emptyMealFilters());
+            await vi.waitFor(() => {
+                expect(closed.observed).toBe(true);
+            });
+
+            closed.next(new MealDetailActionResult(meal.id, action, true));
+            TestBed.resetTestingModule();
+
+            await expect(result).resolves.toBe(false);
+            expect(closed.observed).toBe(false);
+            expect(mealService.repeat).not.toHaveBeenCalled();
+            expect(mealService.deleteById).not.toHaveBeenCalled();
+            expect(mealService.queryOverview).not.toHaveBeenCalled();
+        },
+    );
 }

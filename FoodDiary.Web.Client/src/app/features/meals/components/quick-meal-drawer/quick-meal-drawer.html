@@ -21,6 +21,8 @@
                     [icon]="collapsedToggleView().icon"
                     [fdUiHint]="collapsedToggleView().labelKey | translate"
                     [ariaLabel]="collapsedToggleView().labelKey | translate"
+                    [ariaExpanded]="!isCollapsed()"
+                    [ariaControls]="bodyId"
                     (click)="toggleCollapsed()"
                 />
                 <fd-ui-button
@@ -30,6 +32,8 @@
                     icon="close"
                     [fdUiHint]="'QUICK_MEAL.CLEAR' | translate"
                     [ariaLabel]="'QUICK_MEAL.CLEAR' | translate"
+                    [disabled]="isSaving()"
+                    [disabledReason]="isSaving() ? ('QUICK_MEAL.SAVING' | translate) : null"
                     (click)="clear()"
                 />
             </div>
@@ -37,6 +41,7 @@
 
         <div
             class="quick-meal__body fd-grid fd-gap-sm"
+            [id]="bodyId"
             [class.quick-meal__body--collapsed]="isCollapsed()"
             [attr.aria-hidden]="isCollapsed()"
             [attr.inert]="bodyInert()"
@@ -79,6 +84,8 @@
                                     icon="delete"
                                     [fdUiHint]="'QUICK_MEAL.REMOVE_ITEM' | translate"
                                     [ariaLabel]="'QUICK_MEAL.REMOVE_ITEM_NAMED' | translate: { name: itemView.name }"
+                                    [disabled]="isSaving()"
+                                    [disabledReason]="isSaving() ? ('QUICK_MEAL.SAVING' | translate) : null"
                                     (click)="remove(itemView.item.key)"
                                 />
                             </div>
@@ -102,6 +109,7 @@
                     fill="text"
                     [icon]="detailsToggleView().icon"
                     [ariaLabel]="detailsToggleView().labelKey | translate"
+                    [ariaExpanded]="isDetailsExpanded()"
                     (click)="toggleDetails()"
                 >
                     {{ detailsToggleView().labelKey | translate }}

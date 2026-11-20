@@ -177,3 +177,47 @@ describe('user manage DOM value mapper', () => {
         });
     });
 });
+describe('profile patch compatibility', () => {
+    it.each(['   ', '-RU', '_RU'])('treats the historical locale %j as unset when saving the rest of the profile', language => {
+        const form = { ...createUserManageFormModel(), ...mapUserToForm({ ...USER, language }) };
+        expect(form.language).toBeNull();
+
+        const patch = buildUserUpdateDto({ ...form, firstName: 'Updated name' });
+        expect(patch.firstName).toBe('Updated name');
+        expect(patch.language).toBeUndefined();
+    });
+
+    it('omits whitespace-only language and theme while preserving the submitted name', () => {
+        const patch = new UpdateUserDto({ language: ' \t ', theme: '   ', firstName: ' Updated ' });
+
+        expect(JSON.parse(JSON.stringify(patch))).toEqual({ firstName: 'Updated' });
+    });
+
+    it('keeps an invalid legacy Date out of an otherwise valid patch', () => {
+        const patch = new UpdateUserDto({ birthDate: new Date(Number.NaN), timeZoneId: 'Asia/Tbilisi' });
+
+        expect(JSON.parse(JSON.stringify(patch))).toEqual({ timeZoneId: 'Asia/Tbilisi' });
+    });
+
+    it('keeps an existing URL-only avatar when the profile name changes', () => {
+        const avatar = 'https://example.test/legacy-avatar.png';
+        const form = {
+            ...createUserManageFormModel(),
+            ...mapUserToForm({ ...USER, profileImage: avatar, profileImageAssetId: undefined }),
+        };
+        expect(form.profileImage).toEqual(imageSelection(avatar, null));
+
+        const patch = buildUserUpdateDto({ ...form, firstName: 'Updated name' });
+        expect(JSON.parse(JSON.stringify(patch))).toMatchObject({ firstName: 'Updated name', profileImage: avatar });
+        expect(JSON.stringify(patch)).not.toContain('profileImageAssetId');
+    });
+
+    it.each([
+        { input: ' https://example.test/legacy-avatar.png ', expected: { profileImage: 'https://example.test/legacy-avatar.png' } },
+        { input: ' \t ', expected: { profileImage: null, profileImageAssetId: null } },
+    ])('normalizes a legacy scalar avatar selection $input', ({ input, expected }) => {
+        const patch = new UpdateUserDto({ profileImage: input });
+
+        expect(JSON.parse(JSON.stringify(patch))).toEqual(expected);
+    });
+});

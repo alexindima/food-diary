@@ -384,3 +384,50 @@ describe('MealCardComponent item description', () => {
         expect(component['description']()).toBe('Rice, Курица');
     });
 });
+
+describe('Meal card photo and favorite controls', () => {
+    it('opens the selected cover photo through its native control without opening the meal', async () => {
+        const { fixture, el, component, dialogService } = await setupMealCardAsync();
+        const photoUrl = '/meal-cover.jpg';
+        const openedMeal = vi.fn();
+        const dialogRef = Object.create(null) as ReturnType<FdUiDialogService['open']>;
+        const preview = vi.spyOn(dialogService, 'open').mockReturnValue(dialogRef);
+        component.open.subscribe(openedMeal);
+        fixture.componentRef.setInput('meal', { ...createItemCollageMeal(), imageUrl: photoUrl });
+        fixture.detectChanges();
+        const cover = el.querySelector<HTMLElement>('.entity-card__thumb[role="button"]');
+
+        cover?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+        expect(preview).toHaveBeenCalledOnce();
+        expect(preview.mock.calls[0]?.[1]?.data).toMatchObject({ imageUrl: photoUrl, collageImages: [] });
+        expect(openedMeal).not.toHaveBeenCalled();
+    });
+
+    it('suppresses a repeat favorite click when loading starts ahead of the next render', async () => {
+        const { fixture, el, component } = await setupMealCardAsync();
+        const toggle = vi.fn();
+        const open = vi.fn();
+        component.favoriteToggle.subscribe(toggle);
+        component.open.subscribe(open);
+        fixture.detectChanges();
+        const button = el.querySelector<HTMLButtonElement>('.entity-card__favorite-button');
+
+        expect(button?.disabled).toBe(false);
+        button?.click();
+        expect(toggle).toHaveBeenCalledOnce();
+
+        fixture.componentRef.setInput('favoriteLoading', true);
+        button?.click();
+        expect(toggle).toHaveBeenCalledOnce();
+        fixture.detectChanges();
+        expect(button?.disabled).toBe(true);
+
+        fixture.componentRef.setInput('favoriteLoading', false);
+        fixture.detectChanges();
+        button?.click();
+
+        expect(toggle).toHaveBeenCalledTimes(2);
+        expect(open).not.toHaveBeenCalled();
+    });
+});

@@ -312,3 +312,157 @@ describe('AiPhotoResultComponent meal details', () => {
         });
     });
 });
+
+describe('Rendered photo correction', () => {
+    it('validates a new row and publishes only the corrected food after removal and apply', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const applied = vi.fn();
+        component.editApplied.subscribe(applied);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const action = '.ai-photo-result__items-header > fd-ui-button:nth-child(2) button';
+        photoButton(host, action).click();
+        fixture.detectChanges();
+        photoButton(host, '.ai-photo-result__edit-add button').click();
+        fixture.detectChanges();
+        expect(host.querySelectorAll('.ai-photo-result__edit-row')).toHaveLength(2);
+
+        photoButton(host, action).click();
+        fixture.detectChanges();
+        expect(applied).not.toHaveBeenCalled();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('PHOTO_AI_DIALOG.ROW_INVALID');
+        changePhotoField(host, '.ai-photo-result__edit-row:nth-child(2) input[type="text"]', '  pear  ');
+        changePhotoField(host, '.ai-photo-result__edit-row:nth-child(2) input[type="number"]', '100');
+        photoButton(host, '.ai-photo-result__edit-row:first-child .ai-photo-result__edit-remove button').click();
+        fixture.detectChanges();
+        expect(host.querySelectorAll('.ai-photo-result__edit-row')).toHaveLength(1);
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+
+        photoButton(host, action).click();
+        fixture.detectChanges();
+        expect(applied).toHaveBeenCalledExactlyOnceWith({
+            items: [expect.objectContaining({ nameEn: 'pear', amount: ORIGINAL_AMOUNT, unit: 'g' })],
+            nutrition: null,
+        });
+        expect(host.querySelector('fd-ai-photo-edit-list')).toBeNull();
+    });
+
+    it('keeps the nutrition of another same-named portion when one amount is halved', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const applied = vi.fn<(applied: AiPhotoEditApplied) => void>();
+        component.editApplied.subscribe(applied);
+        const twoServings = 2;
+        const original = NUTRITION.items[0];
+        const largerPortion = {
+            ...original,
+            amount: ORIGINAL_AMOUNT * twoServings,
+            calories: original.calories * twoServings,
+            protein: original.protein * twoServings,
+            fat: original.fat * twoServings,
+            carbs: original.carbs * twoServings,
+        };
+        fixture.componentRef.setInput('results', [VISION_ITEMS[0], { ...VISION_ITEMS[0], amount: largerPortion.amount }]);
+        fixture.componentRef.setInput('nutrition', {
+            ...NUTRITION,
+            calories: original.calories + largerPortion.calories,
+            protein: original.protein + largerPortion.protein,
+            fat: original.fat + largerPortion.fat,
+            carbs: original.carbs + largerPortion.carbs,
+            items: [largerPortion, original],
+        });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const action = '.ai-photo-result__items-header > fd-ui-button:nth-child(2) button';
+
+        photoButton(host, action).click();
+        fixture.detectChanges();
+        changePhotoField(host, '.ai-photo-result__edit-row:first-child input[type="number"]', String(HALF_AMOUNT));
+        fixture.detectChanges();
+        photoButton(host, action).click();
+
+        expect(applied).toHaveBeenCalledOnce();
+        expect(applied.mock.calls[0][0].nutrition).toMatchObject({
+            calories: HALF_CALORIES + largerPortion.calories,
+            protein: HALF_PROTEIN + largerPortion.protein,
+            items: [
+                { amount: HALF_AMOUNT, calories: HALF_CALORIES, protein: HALF_PROTEIN },
+                { amount: largerPortion.amount, calories: largerPortion.calories, protein: largerPortion.protein },
+            ],
+        });
+    });
+});
+
+describe('Rendered photo result details', () => {
+    it('retains a comment when details close and submits only nonblank content', async () => {
+        const { component, fixture } = await setupAiPhotoResultAsync();
+        const submitted = vi.fn();
+        component.addToMeal.subscribe(submitted);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const details = host.querySelector('.ai-photo-result__details');
+        const showDetails = photoButton(host, '.ai-photo-result__details-toggle button');
+        expect(details?.hasAttribute('inert')).toBe(true);
+        showDetails.click();
+        fixture.detectChanges();
+        expect(details?.hasAttribute('inert')).toBe(false);
+
+        changePhotoField(host, 'textarea', '  Breakfast with pears  ');
+        showDetails.click();
+        fixture.detectChanges();
+        expect(details?.hasAttribute('inert')).toBe(true);
+        photoButton(host, '.ai-photo-result__submit-action button').click();
+        expect(submitted).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ comment: 'Breakfast with pears' }));
+
+        showDetails.click();
+        fixture.detectChanges();
+        expect(host.querySelector('textarea')?.value).toBe('  Breakfast with pears  ');
+        changePhotoField(host, 'textarea', '  ');
+        photoButton(host, '.ai-photo-result__submit-action button').click();
+        expect(submitted).toHaveBeenLastCalledWith(expect.objectContaining({ comment: null }));
+    });
+});
+
+describe('Rendered photo annotations', () => {
+    it('keeps the chosen food selected when the user toggles the overlay off and on', async () => {
+        const { fixture } = await setupAiPhotoResultAsync();
+        fixture.componentRef.setInput('imageUrl', '/meal.png');
+        fixture.componentRef.setInput('results', [
+            { ...VISION_ITEMS[0], centerX: 0.2, centerY: 0.2 },
+            { ...VISION_ITEMS[0], nameEn: 'pear', nameLocal: 'Pear', centerX: 0.8, centerY: 0.8 },
+        ]);
+        fixture.componentRef.setInput('nutrition', { ...NUTRITION, items: [...NUTRITION.items, { ...NUTRITION.items[0], name: 'pear' }] });
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const toggle = photoButton(host, '.ai-photo-result__annotation-toggle');
+        photoButton(host, '.ai-photo-result__table-row:nth-child(2)').click();
+        fixture.detectChanges();
+        expect(host.querySelector('.ai-photo-result__table-row--active')?.textContent).toContain('Pear');
+        expect(host.querySelector('.ai-photo-result__annotations')).not.toBeNull();
+
+        toggle.click();
+        fixture.detectChanges();
+        expect(host.querySelector('.ai-photo-result__annotations')).toBeNull();
+        expect(toggle.textContent).toContain('PHOTO_AI_DIALOG.SHOW_ANNOTATIONS');
+        toggle.click();
+        fixture.detectChanges();
+        expect(host.querySelector('.ai-photo-result__annotations')).not.toBeNull();
+        expect(host.querySelector('.ai-photo-result__table-row--active')?.textContent).toContain('Pear');
+    });
+});
+
+function photoButton(root: HTMLElement, selector: string): HTMLButtonElement {
+    const button = root.querySelector(selector);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error(`Expected the photo result control ${selector}`);
+    }
+    return button;
+}
+
+function changePhotoField(root: HTMLElement, selector: string, value: string): void {
+    const field = root.querySelector(selector);
+    if (!(field instanceof HTMLInputElement) && !(field instanceof HTMLTextAreaElement)) {
+        throw new Error(`Expected the photo result field ${selector}`);
+    }
+    field.value = value;
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+}

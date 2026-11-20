@@ -9,7 +9,7 @@ import { FdTourService } from 'fd-tour';
 import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { BehaviorSubject, firstValueFrom, of, Subject } from 'rxjs';
-import { describe, expect, it, type MockInstance, vi } from 'vitest';
+import { describe, expect, it, type MockInstance, onTestFinished, vi } from 'vitest';
 
 import { nutritionMealFixture } from '../../../../testing/nutrition-details.fixtures';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -24,16 +24,21 @@ import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { AiMealCreateFacade } from '../../meals/contracts/ai-meal-create';
+import type { TdeeInsightDialogAction } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardNutritionDialogFacade } from '../lib/dashboard-nutrition-dialog.facade';
+import { DashboardSetupFacade } from '../lib/dashboard-setup.facade';
 import type { NutritionDetailsAction } from '../models/nutrition-details.types';
 import { DashboardComponent } from './dashboard';
+import { DashboardTdeeBlockComponent } from './dashboard-sections/dashboard-tdee-block/dashboard-tdee-block';
 
 registerLocaleData(ru);
 const WATER_AMOUNT = 250;
 const CALORIE_TARGET = 2100;
 const ONE_HOUR_MS = 3600000;
+const DESKTOP_DASHBOARD_WIDTH = 1024;
+const NARROW_DASHBOARD_WIDTH = 420;
 
 // Keep the production page template and its bindings. Child components have their own
 // DOM tests; this suite isolates page orchestration from HTTP, overlays and defer timing.
@@ -260,6 +265,110 @@ describe('Dashboard layout draft protection', () => {
     });
 });
 
+describe('Dashboard TDEE dialog continuation', () => {
+    it.each([
+        ['profile', 'navigateToProfileAsync', []],
+        ['meal', 'navigateToMealAddAsync', [undefined, { manual: true }]],
+        ['weight', 'navigateToWeightHistoryAsync', []],
+        ['goals', 'navigateToGoalsAsync', []],
+        [undefined, undefined, []],
+    ] as const)('continues to %s only after the insight dialog closes', async (type, method, routeArgs) => {
+        const { host, facade, navigation } = await setupAsync(false, false, { renderTdee: true });
+        const closed = new Subject<TdeeInsightDialogAction | undefined>();
+        const dialogResult = firstValueFrom(closed);
+        facade.openTdeeDetailsAsync.mockReturnValueOnce(dialogResult);
+        const button = host.querySelector<HTMLButtonElement>('button.dashboard__tdee-action');
+        expect(button?.getAttribute('aria-label')).toBe('TDEE_CARD.TITLE');
+        button?.click();
+
+        expect(facade.openTdeeDetailsAsync).toHaveBeenCalledOnce();
+        for (const navigate of Object.values(navigation)) {
+            expect(navigate).not.toHaveBeenCalled();
+        }
+
+        closed.next(type === undefined ? undefined : { type });
+        closed.complete();
+        await dialogResult;
+
+        for (const [key, navigate] of Object.entries(navigation)) {
+            if (key === method) {
+                expect(navigate).toHaveBeenCalledExactlyOnceWith(...routeArgs);
+            } else {
+                expect(navigate).not.toHaveBeenCalled();
+            }
+        }
+    });
+});
+
+describe('Dashboard content bounds', () => {
+    it('uses the initial dashboard width when the browser cannot observe resizing', async () => {
+        const measurements = vi
+            .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+            .mockReturnValue(new DOMRect(0, 0, NARROW_DASHBOARD_WIDTH));
+        vi.stubGlobal('ResizeObserver', undefined);
+        onTestFinished(() => {
+            measurements.mockRestore();
+            vi.unstubAllGlobals();
+        });
+
+        const { fixture, host, layout } = await setupAsync();
+        expect(host.querySelector('.dashboard')).not.toBeNull();
+        expect(layout.updateViewportWidth).toHaveBeenCalledExactlyOnceWith(NARROW_DASHBOARD_WIDTH);
+        fixture.destroy();
+    });
+
+    it('updates its layout for usable measurements and disconnects the observer on departure', async () => {
+        const measurements = vi
+            .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+            .mockReturnValue(new DOMRect(0, 0, DESKTOP_DASHBOARD_WIDTH));
+        const observers: ObservedResizeObserver[] = [];
+        class ObservedResizeObserver implements ResizeObserver {
+            public readonly observe = vi.fn();
+            public readonly unobserve = vi.fn();
+            public readonly disconnect = vi.fn();
+
+            public constructor(private readonly callback: ResizeObserverCallback) {
+                observers.push(this);
+            }
+
+            public emit(entry: ResizeObserverEntry): void {
+                this.callback([entry], this);
+            }
+        }
+        vi.stubGlobal('ResizeObserver', ObservedResizeObserver);
+        onTestFinished(() => {
+            measurements.mockRestore();
+            vi.unstubAllGlobals();
+        });
+
+        const { fixture, host, layout } = await setupAsync();
+        const resize = observers.at(0);
+        const dashboard = host.querySelector('.dashboard');
+        if (resize === undefined || dashboard === null) {
+            throw new Error('Missing Dashboard resize observer');
+        }
+        expect(resize.observe).toHaveBeenCalledExactlyOnceWith(dashboard);
+        expect(layout.updateViewportWidth).toHaveBeenCalledExactlyOnceWith(DESKTOP_DASHBOARD_WIDTH);
+
+        resize.emit(measurement(dashboard, 0));
+        resize.emit(measurement(dashboard, NARROW_DASHBOARD_WIDTH));
+
+        expect(layout.updateViewportWidth.mock.calls).toEqual([[DESKTOP_DASHBOARD_WIDTH], [NARROW_DASHBOARD_WIDTH]]);
+        fixture.destroy();
+        expect(resize.disconnect).toHaveBeenCalledOnce();
+    });
+});
+
+function measurement(target: Element, width: number): ResizeObserverEntry {
+    return {
+        target,
+        contentRect: new DOMRect(0, 0, width),
+        borderBoxSize: [],
+        contentBoxSize: [],
+        devicePixelContentBoxSize: [],
+    };
+}
+
 describe('Dashboard initial setup card', () => {
     it('offers profile setup and hides after an account-persisted dismissal', async () => {
         const { fixture, host, child, navigation, user } = await setupAsync();
@@ -367,7 +476,7 @@ class DashboardTestState {
         addHydration: vi.fn(),
         undoHydration: vi.fn(),
         applyTdeeGoal: vi.fn(),
-        openTdeeDetailsAsync: vi.fn().mockResolvedValue(undefined),
+        openTdeeDetailsAsync: vi.fn<DashboardFacade['openTdeeDetailsAsync']>().mockResolvedValue(undefined),
         reload: vi.fn(),
     };
     public readonly layout = {
@@ -400,7 +509,7 @@ class DashboardTestState {
     public readonly unsaved = { register: vi.fn<(handler: unknown) => void>(), clear: vi.fn() };
 }
 
-async function setupAsync(fasting = false, initiallyLoading = false): Promise<DashboardTestContext> {
+async function setupAsync(fasting = false, initiallyLoading = false, options?: { renderTdee?: boolean }): Promise<DashboardTestContext> {
     const { facade, layout, viewport, params, navigation, unsaved, user } = new DashboardTestState();
     const dialog = { open: vi.fn() };
     facade.isLoading.set(initiallyLoading);
@@ -425,13 +534,19 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
     })
         .overrideComponent(DashboardComponent, {
             set: {
-                imports: [NgTemplateOutlet, TranslatePipe, FdUiPreventUnloadDirective],
+                imports: [
+                    NgTemplateOutlet,
+                    TranslatePipe,
+                    FdUiPreventUnloadDirective,
+                    ...(options?.renderTdee === true ? [DashboardTdeeBlockComponent] : []),
+                ],
                 schemas: [NO_ERRORS_SCHEMA],
                 providers: [
                     { provide: UserFacade, useValue: { user, getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
                     { provide: DashboardFacade, useValue: facade },
                     DashboardNutritionDialogFacade,
                     { provide: DashboardLayoutService, useValue: layout },
+                    { provide: DashboardSetupFacade, useValue: { isSaving: signal(false) } },
                     {
                         provide: AiMealCreateFacade,
                         useValue: { isSaving: signal(false), clearToken: signal(0), createFromAiResult: vi.fn(() => of(null)) },

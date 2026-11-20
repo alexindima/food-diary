@@ -430,10 +430,7 @@ export class DashboardFacade {
         const observer: PartialObserver<DashboardSnapshot | null> = {
             next: snapshot => {
                 if (snapshot === null) {
-                    const failed = this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader });
-                    if (showLoader && failed) {
-                        this.layout.initializeLayout(null);
-                    }
+                    this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader });
                     return;
                 }
                 if (!this.snapshotRequest.succeed(requestId, snapshot)) {
@@ -442,13 +439,7 @@ export class DashboardFacade {
                 this.layout.initializeLayout(snapshot.dashboardLayout ?? null);
             },
             error: () => {
-                if (!this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader })) {
-                    return;
-                }
-
-                if (showLoader) {
-                    this.layout.initializeLayout(null);
-                }
+                this.snapshotRequest.fail(requestId, 'DASHBOARD.LOAD_ERROR', { preserveData: !showLoader });
             },
         };
 

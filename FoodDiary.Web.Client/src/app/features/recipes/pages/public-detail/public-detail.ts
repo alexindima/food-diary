@@ -19,7 +19,10 @@ import { PublicNutritionComponent } from '../../components/public-nutrition/publ
 import { PublicStepsComponent } from '../../components/public-steps/public-steps';
 import { recipeImages } from '../../lib/public-recipe.utils';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
+import type { PublicRecipe } from '../../models/public-recipe.data';
 import type { PublicRecipePageData } from '../../resolvers/public-recipe.resolver';
+
+type RecipeAction = { recipe: PublicRecipe; kind: 'save' | 'diary' };
 
 @Component({
     selector: 'fd-public-recipe-detail',
@@ -59,6 +62,7 @@ export class PublicRecipeDetailComponent {
     private readonly browser = inject(BrowserWindowService);
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly activeAction = signal<RecipeAction | null>(null);
     private readonly routeData = toSignal(this.route.data, { initialValue: this.route.snapshot.data });
     protected readonly page = computed(() => readPublicRecipePage(this.routeData()['seo']));
     protected readonly recipe = computed(() => this.page().recipe);
@@ -67,7 +71,7 @@ export class PublicRecipeDetailComponent {
         return recipe === null ? [] : recipeImages(recipe);
     });
     protected readonly saved = signal(false);
-    protected readonly busy = signal(false);
+    protected readonly busy = computed(() => this.activeAction()?.recipe === this.recipe());
     protected readonly servings = signal(1);
     protected readonly actionMessage = signal<string | null>(null);
     protected readonly shareUrl = signal<string | null>(null);
@@ -97,6 +101,7 @@ export class PublicRecipeDetailComponent {
     public constructor() {
         effect(() => {
             this.servings.set(this.recipe()?.servings ?? 1);
+            this.shareUrl.set(null);
             this.shopping.setScope(this.recipe()?.id ?? '', this.recipe()?.name ?? '');
         });
         effect(onCleanup => {
@@ -126,51 +131,77 @@ export class PublicRecipeDetailComponent {
         await this.router.navigate(['/explore'], { queryParamsHandling: 'preserve' });
     }
 
-    protected async actAsync(action: 'save' | 'diary'): Promise<void> {
-        if (this.busy()) {
+    protected async actAsync(kind: RecipeAction['kind']): Promise<void> {
+        const recipe = this.recipe();
+        if (recipe === null || this.busy()) {
             return;
         }
-        if (!this.auth.isAuthenticated()) {
-            const dialog = await this.authDialog.openAsync({ mode: 'login', returnUrl: this.router.url, destroyRef: this.destroyRef });
-            if (dialog !== null) {
-                await firstValueFrom(dialog.afterClosed());
-            }
-            if (this.destroyRef.destroyed || !this.auth.isAuthenticated()) {
+        const action = { recipe, kind };
+        this.activeAction.set(action);
+        try {
+            if (!this.auth.isAuthenticated() && !(await this.authenticateForActionAsync(action))) {
                 return;
             }
-        }
-        const recipe = this.recipe();
-        if (recipe === null) {
-            return;
-        }
-        this.busy.set(true);
-        this.actionMessage.set(null);
-        try {
-            if (action === 'save') {
+            this.actionMessage.set(null);
+            if (kind === 'save') {
                 await this.facade.saveAsync(recipe);
-                this.saved.set(true);
             } else {
                 await this.facade.addToDiaryAsync(entityId<'recipe'>(recipe.id), this.servings());
             }
-            this.actionMessage.set(action === 'save' ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.ADDED');
+            this.publishActionResult(action);
         } catch {
-            this.actionMessage.set('PUBLIC_RECIPES.ACTION_ERROR');
+            if (this.isCurrentAction(action)) {
+                this.actionMessage.set('PUBLIC_RECIPES.ACTION_ERROR');
+            }
         } finally {
-            this.busy.set(false);
+            if (this.activeAction() === action) {
+                this.activeAction.set(null);
+            }
         }
     }
 
-    protected async shareAsync(): Promise<void> {
-        const origin = this.browser.getOrigin();
-        if (origin === undefined) {
+    private async authenticateForActionAsync(action: RecipeAction): Promise<boolean> {
+        const dialog = await this.authDialog.openAsync({ mode: 'login', returnUrl: this.router.url, destroyRef: this.destroyRef });
+        if (dialog !== null) {
+            await firstValueFrom(dialog.afterClosed(), { defaultValue: undefined });
+        }
+        return this.isCurrentAction(action) && this.auth.isAuthenticated();
+    }
+
+    private publishActionResult(action: RecipeAction): void {
+        if (!this.isCurrentAction(action)) {
             return;
         }
-        const url = `${origin}/explore/${this.recipe()?.id ?? ''}`;
+        if (action.kind === 'save') {
+            this.saved.set(true);
+        }
+        this.actionMessage.set(action.kind === 'save' ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.ADDED');
+    }
+
+    private isCurrentAction(action: RecipeAction): boolean {
+        return this.activeAction() === action && this.isCurrentRecipe(action.recipe);
+    }
+
+    private isCurrentRecipe(recipe: PublicRecipe): boolean {
+        return !this.destroyRef.destroyed && this.recipe() === recipe;
+    }
+
+    protected async shareAsync(): Promise<void> {
+        const recipe = this.recipe();
+        const origin = this.browser.getOrigin();
+        if (recipe === null || origin === undefined) {
+            return;
+        }
+        const url = `${origin}/explore/${recipe.id}`;
         try {
             await this.browser.copyTextAsync(url);
-            this.actionMessage.set('PUBLIC_RECIPES.COPIED');
+            if (this.isCurrentRecipe(recipe)) {
+                this.actionMessage.set('PUBLIC_RECIPES.COPIED');
+            }
         } catch {
-            this.shareUrl.set(url);
+            if (this.isCurrentRecipe(recipe)) {
+                this.shareUrl.set(url);
+            }
         }
     }
 

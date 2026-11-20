@@ -149,3 +149,72 @@ describe('AiInputBarFacade saved photo results', () => {
         expect(aiFoodFacade.calculateNutrition).not.toHaveBeenCalled();
     });
 });
+
+describe('AI recognition nutrition ownership', () => {
+    it('keeps reviewed nutrition when an earlier calculation finishes after the edit', () => {
+        const earlier = new Subject<FoodNutritionResponse>();
+        aiFoodFacade.calculateNutrition.mockReturnValueOnce(earlier);
+        facade.analyzeText('apple');
+        expect(facade.text.nutritionLoading()).toBe(true);
+        const reviewed = { ...item, nameEn: 'Granny Smith' };
+
+        facade.setEditResult(facade.text, [reviewed], nutrition);
+        earlier.next({ ...nutrition, calories: 65 });
+
+        expect(earlier.observed).toBe(false);
+        expect(facade.text.results()).toEqual([reviewed]);
+        expect(facade.text.nutrition()).toBe(nutrition);
+        expect(facade.text.nutritionLoading()).toBe(false);
+    });
+
+    it('does not restore older nutrition after removing the last item from the result', () => {
+        const earlier = new Subject<FoodNutritionResponse>();
+        aiFoodFacade.calculateNutrition.mockReturnValueOnce(earlier);
+        facade.analyzePhoto(entityId<'image-asset'>('reviewed-photo'));
+
+        facade.setEditResult(facade.photo, [], null);
+        earlier.next(nutrition);
+
+        expect(earlier.observed).toBe(false);
+        expect(facade.photo.errorKey()).toBe('AI_INPUT_BAR.EMPTY_ITEMS_ERROR');
+        expect(facade.photo.results()).toEqual([]);
+        expect(facade.photo.nutrition()).toBeNull();
+    });
+
+    it('recalculates the current photo after correcting a recognition item', () => {
+        const request = new Subject<FoodNutritionResponse>();
+        const edited = { ...item, nameEn: 'Granny Smith' };
+        aiFoodFacade.calculateNutrition.mockReturnValueOnce(request);
+
+        facade.setEditResult(facade.photo, [edited], null);
+
+        expect(aiFoodFacade.calculateNutrition).toHaveBeenCalledExactlyOnceWith({ items: [edited] });
+        expect(facade.photo.nutritionLoading()).toBe(true);
+
+        request.next(nutrition);
+
+        expect(facade.photo.results()).toEqual([edited]);
+        expect(facade.photo.nutrition()).toBe(nutrition);
+        expect(facade.photo.nutritionLoading()).toBe(false);
+    });
+
+    it.each([
+        { error: { status: HttpStatusCode.TooManyRequests }, key: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA' },
+        { error: { status: HttpStatusCode.BadGateway }, key: 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR' },
+    ])('retains photo items when nutrition fails with $key and recovers on retry', ({ error, key }) => {
+        const asset = entityId<'image-asset'>('reviewed-photo');
+        aiFoodFacade.calculateNutrition.mockReturnValueOnce(throwError(() => error));
+
+        facade.analyzePhoto(asset);
+
+        expect(facade.photo.nutritionErrorKey()).toBe(key);
+        expect(facade.photo.nutrition()).toBeNull();
+        expect(facade.photo.results()).toEqual([item]);
+        expect(facade.photo.nutritionLoading()).toBe(false);
+
+        facade.analyzePhoto(asset);
+
+        expect(facade.photo.nutritionErrorKey()).toBeNull();
+        expect(facade.photo.nutrition()).toBe(nutrition);
+    });
+});

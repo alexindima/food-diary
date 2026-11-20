@@ -110,20 +110,20 @@ function itemSource(meal: Meal, item: MealItem, metric: NutritionMetric): Nutrit
             value: (product[fields.product] * item.amount) / product.baseAmount,
         };
     }
-    if (
-        item.recipe === null ||
-        item.recipe.servings <= 0 ||
-        item.recipe[fields.total] === null ||
-        item.recipe[fields.total] === undefined
-    ) {
+    const recipe = item.recipe;
+    if (recipe === null || recipe.servings <= 0) {
+        return null;
+    }
+    const total = recipe[fields.total];
+    if (total === null || total === undefined) {
         return null;
     }
     return {
         id: `${meal.id}:${item.id}`,
         meal,
-        name: item.recipe.name,
+        name: recipe.name,
         kind: 'recipe',
-        value: ((item.recipe[fields.total] ?? 0) * item.amount) / item.recipe.servings,
+        value: (total * item.amount) / recipe.servings,
     };
 }
 

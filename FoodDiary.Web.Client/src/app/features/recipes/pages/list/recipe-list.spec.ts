@@ -1,19 +1,27 @@
-import { signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { EMPTY, type Observable, of } from 'rxjs';
+import { EMPTY, firstValueFrom, type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
+import { AuthService } from '../../../../services/auth.service';
+import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
-import { createRecipeListQuery } from '../../lib/list/recipe-list-query';
+import {
+    RecipeFavoritesPickerComponent,
+    type RecipeFavoritesPickerData,
+} from '../../dialogs/recipe-favorites-picker/recipe-favorites-picker';
 import { RecipeListRouteStateFacade } from '../../lib/list/recipe-list-route-state.facade';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import { RecipeListComponent } from './recipe-list';
@@ -38,19 +46,16 @@ beforeEach(() => {
         imports: [RecipeListComponent],
         providers: [
             provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
+            { provide: AuthService, useValue: { isAuthenticated: signal(true) } },
             { provide: ViewportService, useValue: { isMobile } },
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
         ],
     });
     TestBed.overrideComponent(RecipeListComponent, {
         set: {
-            template: '<div #container></div>',
             providers: [
                 { provide: RecipeListFacade, useValue: facade },
-                {
-                    provide: RecipeListRouteStateFacade,
-                    useValue: { initial: { page: 1 }, current: signal(createRecipeListQuery(1, emptyRecipeFilters(), true)) },
-                },
+                RecipeListRouteStateFacade,
                 { provide: FdUiDialogService, useValue: dialogService },
             ],
         },
@@ -158,12 +163,13 @@ describe('RecipeListComponent actions', () => {
     });
 });
 
-type SetupOptions = {
-    detailResult?: RecipeDetailActionResult;
-    filterResult?: { onlyMine: boolean } | null;
-};
+type SetupOptions = { detailResult?: RecipeDetailActionResult; filterResult?: { onlyMine: boolean } | null; renderTemplate?: boolean };
 
 function setupComponent(options: SetupOptions = {}): { fixture: ComponentFixture<RecipeListComponent>; component: RecipeListComponent } {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    if (options.renderTemplate !== true) {
+        TestBed.overrideTemplate(RecipeListComponent, '<div #container></div>');
+    }
     facade.openFilters.mockReturnValue(of(options.filterResult ?? null));
     dialogService.open.mockImplementation((_component: unknown, config: { data?: unknown }): { afterClosed: () => Observable<unknown> } => {
         if (config.data !== undefined && 'onlyMine' in (config.data as Record<string, unknown>)) {
@@ -181,6 +187,7 @@ function setupComponent(options: SetupOptions = {}): { fixture: ComponentFixture
 
 type RecipeListFacadeMock = Omit<
     RecipeListFacade,
+    | 'addFavoriteToMeal'
     | 'addToMeal'
     | 'getFavoriteRecipe'
     | 'getRecipeDetailAsync'
@@ -193,8 +200,11 @@ type RecipeListFacadeMock = Omit<
     | 'navigateToAddRecipeAsync'
     | 'openFilters'
     | 'removeFavorite'
+    | 'removePickerFavorite'
+    | 'restorePickerFavorite'
     | 'toggleRecipeFavorite'
 > & {
+    addFavoriteToMeal: ReturnType<typeof vi.fn<RecipeListFacade['addFavoriteToMeal']>>;
     addToMeal: ReturnType<typeof vi.fn>;
     getFavoriteRecipe: ReturnType<typeof vi.fn>;
     getRecipeDetailAsync: ReturnType<typeof vi.fn>;
@@ -207,6 +217,8 @@ type RecipeListFacadeMock = Omit<
     navigateToAddRecipeAsync: ReturnType<typeof vi.fn>;
     openFilters: ReturnType<typeof vi.fn>;
     removeFavorite: ReturnType<typeof vi.fn>;
+    removePickerFavorite: ReturnType<typeof vi.fn<RecipeListFacade['removePickerFavorite']>>;
+    restorePickerFavorite: ReturnType<typeof vi.fn<RecipeListFacade['restorePickerFavorite']>>;
     toggleRecipeFavorite: ReturnType<typeof vi.fn>;
 };
 
@@ -221,6 +233,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
     });
 
     return {
+        addFavoriteToMeal: vi.fn<RecipeListFacade['addFavoriteToMeal']>().mockReturnValue(of(true)),
         addToMeal: vi.fn(),
         allRecipesSectionItems: signal([createRecipe()]),
         allRecipesSectionLabelKey: signal('RECIPE_LIST.ALL_RECIPES'),
@@ -247,6 +260,9 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
         recipeData,
         recentRecipes: signal<Recipe[]>([]),
         removeFavorite: vi.fn().mockReturnValue(of(void 0)),
+        removePickerFavorite: vi.fn<RecipeListFacade['removePickerFavorite']>().mockReturnValue(of(true)),
+        requestProvenance: signal(null),
+        restorePickerFavorite: vi.fn<RecipeListFacade['restorePickerFavorite']>().mockReturnValue(of(false)),
         showRecentSection: signal(true),
         toggleRecipeFavorite: vi.fn().mockReturnValue(of(void 0)),
     } as unknown as RecipeListFacadeMock;
@@ -467,3 +483,112 @@ describe('RecipeListComponent presentation state', () => {
         expect(facade.loadFavorites).not.toHaveBeenCalled();
     });
 });
+
+describe('RecipeListComponent rendered catalogue', () => {
+    it('opens the favorites picker from the count button and delegates its three operations', async () => {
+        const savedCount = 3;
+        facade.favoriteTotalCount.set(savedCount);
+        const { fixture } = setupComponent({ renderTemplate: true });
+        const button = recipeListButton(fixture, '[data-tour-id="recipe-list-favorites"] button');
+        expect(button.querySelector('.fd-ui-button__label')?.textContent.trim()).toBe(String(savedCount));
+        button.click();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(dialogService.open.mock.calls[0][0]).toBe(RecipeFavoritesPickerComponent);
+        const { data } = dialogService.open.mock.calls[0][1] as { data: RecipeFavoritesPickerData };
+        const favorite = createFavoriteRecipe();
+        expect(await firstValueFrom(data.repeat(favorite))).toBe(true);
+        expect(await firstValueFrom(data.remove(favorite))).toBe(true);
+        expect(await firstValueFrom(data.restore(favorite))).toBe(false);
+        expect(facade.addFavoriteToMeal).toHaveBeenCalledExactlyOnceWith(favorite);
+        expect(facade.removePickerFavorite).toHaveBeenCalledExactlyOnceWith(favorite);
+        expect(facade.restorePickerFavorite).toHaveBeenCalledExactlyOnceWith(favorite);
+        expect(facade.loadFavorites).not.toHaveBeenCalled();
+    });
+
+    it('refreshes the clicked card before opening it and stays on the list if it is unavailable', async () => {
+        facade.getRecipeDetailAsync.mockResolvedValueOnce(null);
+        const { fixture } = setupComponent({ renderTemplate: true });
+        recipeListButton(fixture, 'button[aria-label="Recipe"]').click();
+        await flushPromisesAsync();
+
+        expect(facade.getRecipeDetailAsync).toHaveBeenCalledExactlyOnceWith('recipe-1');
+        expect(dialogService.open).not.toHaveBeenCalled();
+        expect(recipeListButton(fixture, 'button[aria-label="Recipe"]').isConnected).toBe(true);
+    });
+
+    it('reloads the visible list when the detail dialog closes without an action', async () => {
+        const { fixture } = setupComponent({ renderTemplate: true });
+        dialogService.open.mockReturnValue({ afterClosed: (): Observable<undefined> => of(undefined) });
+        recipeListButton(fixture, 'button[aria-label="Recipe"]').click();
+        await waitForAsync(() => facade.loadRecipes.mock.calls.length > 0);
+
+        expect(facade.loadRecipes).toHaveBeenCalledExactlyOnceWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
+        expect(facade.handleDetailActionAsync).not.toHaveBeenCalled();
+    });
+
+    it('starts the recipe tour from the help button', () => {
+        const { fixture } = setupComponent({ renderTemplate: true });
+        const start = vi.spyOn(TestBed.inject(FdTourService), 'start').mockReturnValue(true);
+        recipeListButton(fixture, '[data-tour-id="recipe-list-tour-help"] button').click();
+
+        expect(start).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: 'recipe-list' }), { force: true });
+    });
+});
+
+@Component({ template: 'Recipe editor' })
+class RecipeEditTestPage {}
+
+it('publishes the visible recipes and routes only known recipe IDs from the development screen', async () => {
+    const detach = vi.fn();
+    const attach = vi.fn<(screen: DevelopmentScreen) => () => void>().mockReturnValue(detach);
+    TestBed.configureTestingModule({
+        providers: [
+            provideRouter([
+                { path: 'recipes', component: RecipeListComponent },
+                { path: 'recipes/:id/edit', component: RecipeEditTestPage },
+            ]),
+            { provide: DEVELOPMENT_SCREENS, useValue: { attach } },
+        ],
+    });
+    const harness = await RouterTestingHarness.create('/recipes');
+    const screen = attach.mock.calls[0][0];
+    if (screen.setFiltersAsync === undefined || screen.openEntityAsync === undefined) {
+        throw new Error('Recipe list development screen lost its filters or edit action');
+    }
+    expect(screen.kind).toBe('recipe-list');
+    expect(screen.read()).toMatchObject({ totalItems: 1, items: [{ id: 'recipe-1', name: 'Recipe', servings: 1 }] });
+
+    await screen.setFiltersAsync({ search: '  Soup  ', onlyMine: false, category: 'soups', hasImage: false });
+    const router = TestBed.inject(Router);
+    expect(router.parseUrl(router.url).queryParams).toEqual({ search: 'Soup', onlyMine: 'false', category: 'soups', hasImage: 'false' });
+    await expect(screen.openEntityAsync('outside-list')).rejects.toThrow('ID is not in the current recipe list.');
+    expect(router.url).toMatch(/^\/recipes\?/);
+
+    facade.recipeData.setLoading(true);
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-skeleton-card')).not.toBeNull();
+    expect(harness.routeNativeElement?.querySelector('button[aria-label="Recipe"]')).toBeNull();
+    await expect(screen.openEntityAsync('recipe-1')).rejects.toThrow('ID is not in the current recipe list.');
+    expect(router.url).toMatch(/^\/recipes\?/);
+
+    const soup = createRecipe({ id: entityId<'recipe'>('soup-1'), name: 'Soup' });
+    facade.recipeData.setData({ data: [soup], page: 1, limit: PAGE_SIZE, totalItems: 1, totalPages: 1 });
+    facade.recipeData.setLoading(false);
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-skeleton-card')).toBeNull();
+    expect(screen.read()).toMatchObject({ items: [{ id: 'soup-1', name: 'Soup' }] });
+    await expect(screen.openEntityAsync('recipe-1')).rejects.toThrow('ID is not in the current recipe list.');
+    await screen.openEntityAsync('soup-1');
+    expect(router.url).toBe('/recipes/soup-1/edit');
+    expect(harness.routeNativeElement?.textContent).toContain('Recipe editor');
+    expect(detach).toHaveBeenCalledTimes(1);
+});
+
+function recipeListButton(fixture: ComponentFixture<RecipeListComponent>, selector: string): HTMLButtonElement {
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(selector);
+    if (button === null) {
+        throw new Error(`Recipe list button ${selector} was not rendered`);
+    }
+    return button;
+}

@@ -90,6 +90,8 @@ export class AiInputBarComponent {
     private readonly historyLabelElement = viewChild.required<ElementRef<HTMLElement>>('historyLabelElement');
     private readonly photoDialogRef = signal<FdUiDialogRef<AiPhotoResultComponent> | null>(null);
     private readonly historyDialogRef = signal<FdUiDialogRef<FoodRecognitionHistoryDialogComponent, FoodRecognitionJob> | null>(null);
+    private recognitionActionVersion = 0;
+    private pendingRecognitionConsentVersion: number | null = null;
 
     public readonly isProcessing = input<boolean>(false);
     public readonly active = input(true);
@@ -120,6 +122,8 @@ export class AiInputBarComponent {
 
     protected readonly photoSelection = signal<ImageSelection | null>(null);
     protected readonly photoIsPreparing = signal(false);
+    protected readonly photoUploadClearRequest = signal(0);
+    private photoUploadDismissed = false;
     protected readonly photoIsAnalyzing = this.recognition.photo.analyzing;
     protected readonly photoResults = this.recognition.photo.results;
     protected readonly photoIsNutritionLoading = this.recognition.photo.nutritionLoading;
@@ -146,6 +150,7 @@ export class AiInputBarComponent {
     protected readonly isMicrophoneDisabled = computed(
         () => this.isDisabled() || (this.speechRecognition.isListening() && !this.isListening()),
     );
+    protected readonly aiConsentSaveFailed = signal(false);
 
     protected readonly showDetails = computed(() => this.mode() === 'create');
     protected readonly submitLabelKey = computed(() =>
@@ -161,6 +166,7 @@ export class AiInputBarComponent {
         });
         effect(() => {
             if (!this.active()) {
+                this.recognitionActionVersion++;
                 this.speechRecognition.stop(this.speechOwner);
             }
         });
@@ -271,16 +277,19 @@ export class AiInputBarComponent {
             return;
         }
 
+        const version = this.recognitionActionVersion;
         this.speechRecognition.start(
             resolveAppLocale(this.localizationService.getCurrentLanguage()),
-            this.onSpeechTranscript.bind(this),
+            (transcript: string): void => {
+                this.onSpeechTranscript(transcript, version);
+            },
             this.onSpeechError.bind(this),
             this.speechOwner,
         );
     }
 
-    private onSpeechTranscript(transcript: string): void {
-        if (transcript.length > 0 && !this.destroyRef.destroyed && this.active()) {
+    private onSpeechTranscript(transcript: string, version: number): void {
+        if (transcript.length > 0 && this.isCurrentRecognitionAction(version)) {
             this.voiceText.set(transcript);
             void this.submitTextAsync('Voice');
         }
@@ -353,7 +362,7 @@ export class AiInputBarComponent {
     }
 
     protected onPhotoSelected(selection: ImageSelection | null): void {
-        if (selection?.assetId === null || selection?.assetId === undefined) {
+        if (this.photoUploadDismissed || selection?.assetId === null || selection?.assetId === undefined) {
             return;
         }
 
@@ -370,6 +379,7 @@ export class AiInputBarComponent {
     }
 
     protected onPhotoPreparationStarted(previewUrl: string): void {
+        this.photoUploadDismissed = false;
         this.photoSelection.set(imageSelection(previewUrl, null));
         this.photoIsPreparing.set(true);
         this.photoErrorKey.set(null);
@@ -404,6 +414,7 @@ export class AiInputBarComponent {
     }
 
     protected dismissTextResult(): void {
+        this.recognitionActionVersion++;
         this.textSubmittedQuery.set(null);
         this.recognition.clear(this.recognition.text);
     }
@@ -431,6 +442,11 @@ export class AiInputBarComponent {
     }
 
     private clearPhotoResult(): void {
+        if (this.photoIsPreparing()) {
+            // The upload can finish before the field receives its clear request.
+            this.photoUploadDismissed = true;
+            this.photoUploadClearRequest.update(request => request + 1);
+        }
         this.photoSelection.set(null);
         this.photoIsPreparing.set(false);
         this.recognition.clear(this.recognition.photo);
@@ -458,6 +474,7 @@ export class AiInputBarComponent {
 
     protected clearState(): void {
         this.speechErrorKey.set(null);
+        this.aiConsentSaveFailed.set(false);
         this.voiceText.set('');
         this.dismissTextResult();
         this.dismissPhotoResult();
@@ -482,7 +499,9 @@ export class AiInputBarComponent {
     }
 
     private openPhotoResultDialog(): void {
-        this.photoDialogRef()?.close();
+        const previousDialog = this.photoDialogRef();
+        this.photoDialogRef.set(null);
+        previousDialog?.close();
         const dialogRef = this.fdDialogService.open(AiPhotoResultComponent, {
             size: 'xl',
             width: '94vw',
@@ -552,39 +571,74 @@ export class AiInputBarComponent {
     }
 
     private async ensureRecognitionConsentAsync(): Promise<boolean> {
-        return (
-            (await this.privacy.ensureHealthConsentAsync(true)) &&
-            !this.destroyRef.destroyed &&
-            (await this.ensureAiConsentAsync()) &&
-            !this.destroyRef.destroyed
-        );
+        const version = this.recognitionActionVersion;
+        if (this.pendingRecognitionConsentVersion === version) {
+            return false;
+        }
+
+        this.pendingRecognitionConsentVersion = version;
+        this.aiConsentSaveFailed.set(false);
+        try {
+            return (
+                this.isCurrentRecognitionAction(version) &&
+                (await this.privacy.ensureHealthConsentAsync(true)) &&
+                this.isCurrentRecognitionAction(version) &&
+                (await this.ensureAiConsentAsync(version)) &&
+                this.isCurrentRecognitionAction(version)
+            );
+        } finally {
+            if (this.pendingRecognitionConsentVersion === version) {
+                this.pendingRecognitionConsentVersion = null;
+            }
+        }
     }
 
-    private async ensureAiConsentAsync(): Promise<boolean> {
+    private isCurrentRecognitionAction(version: number): boolean {
+        return !this.destroyRef.destroyed && this.active() && version === this.recognitionActionVersion;
+    }
+
+    private async ensureAiConsentAsync(version: number): Promise<boolean> {
         const cachedUser = this.userFacade.user();
         if (cachedUser?.aiConsentAcceptedAt !== null && cachedUser?.aiConsentAcceptedAt !== undefined) {
             return true;
         }
 
-        const freshUser = await firstValueFrom(this.userFacade.getInfoSilently());
+        const freshUser = await firstValueFrom(this.userFacade.getInfoSilently().pipe(takeUntilDestroyed(this.destroyRef)), {
+            defaultValue: null,
+        });
+        if (!this.isCurrentRecognitionAction(version)) {
+            return false;
+        }
         if (freshUser?.aiConsentAcceptedAt !== null && freshUser?.aiConsentAcceptedAt !== undefined) {
             return true;
         }
 
-        const accepted = await firstValueFrom(
-            this.fdDialogService
-                .open<AiConsentDialogComponent, never, boolean>(AiConsentDialogComponent, {
-                    size: 'lg',
-                    disableClose: true,
-                })
-                .afterClosed(),
-        );
+        return this.requestAiConsentAsync(version);
+    }
 
-        if (accepted !== true) {
+    private async requestAiConsentAsync(version: number): Promise<boolean> {
+        const dialog = this.fdDialogService.open<AiConsentDialogComponent, never, boolean>(AiConsentDialogComponent, {
+            size: 'lg',
+            disableClose: true,
+        });
+        const unregister = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        const accepted = await firstValueFrom(dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)), {
+            defaultValue: false,
+        }).finally(unregister);
+        if (accepted !== true || this.destroyRef.destroyed) {
             return false;
         }
 
-        await firstValueFrom(this.userFacade.acceptAiConsent());
-        return true;
+        try {
+            await firstValueFrom(this.userFacade.acceptAiConsent());
+            return true;
+        } catch {
+            if (this.isCurrentRecognitionAction(version)) {
+                this.aiConsentSaveFailed.set(true);
+            }
+            return false;
+        }
     }
 }

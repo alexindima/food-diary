@@ -24,7 +24,7 @@ import { FdUiFormDirective, focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, EMPTY } from 'rxjs';
+import { catchError, EMPTY, merge } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -151,6 +151,7 @@ export class UserManageComponent {
     protected readonly isSavingDietologistPermissions = this.dietologist.isSavingDietologistPermissions;
     protected readonly isSavingDietologistRelationshipAction = this.dietologist.isSavingDietologistRelationshipAction;
     protected readonly isSavingDietologist = this.dietologist.isSavingDietologist;
+    protected readonly hasLoadedProfile = computed(() => this.facade.user() !== null);
     protected readonly isSavingProfile = this.facade.isSavingProfile;
     protected readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().includes(true));
     protected readonly hasPassword = computed(() => this.facade.user()?.hasPassword ?? true);
@@ -199,7 +200,7 @@ export class UserManageComponent {
         });
         this.buildSelectOptions();
         this.watchUserFormElement();
-        this.watchLanguageChanges();
+        this.watchTranslations();
         this.watchPasswordSetupIntent();
         this.watchGoogleLinkResult();
         this.watchUserProfile();
@@ -225,11 +226,13 @@ export class UserManageComponent {
         this.facade.initialize();
     }
 
-    private watchLanguageChanges(): void {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.buildSelectOptions();
-            this.updateDietologistInviteEmailError();
-        });
+    private watchTranslations(): void {
+        merge(this.translateService.onLangChange, this.translateService.onTranslationChange)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.buildSelectOptions();
+                this.updateDietologistInviteEmailError();
+            });
     }
 
     private watchUserFormElement(): void {

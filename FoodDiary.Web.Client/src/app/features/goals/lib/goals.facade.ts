@@ -1,4 +1,5 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize } from 'rxjs';
@@ -78,6 +79,7 @@ const CIRCLE_DEGREES = 360;
 @Injectable()
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly toastService = inject(FdUiToastService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly translateService = inject(TranslateService);
@@ -302,7 +304,9 @@ export class GoalsFacade {
     }
 
     public reload(): void {
-        this.loadGoals();
+        if (!this.isLoadingGoals()) {
+            this.loadGoals();
+        }
     }
 
     public async saveManuallyAsync(request: UpdateGoalsRequest): Promise<boolean> {
@@ -412,6 +416,7 @@ export class GoalsFacade {
         this.goalsService
             .getGoalsStrict()
             .pipe(
+                takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.isLoadingGoals.set(false);
                 }),
@@ -520,7 +525,9 @@ export class GoalsFacade {
 
                     this.hasAutosaveError.set(false);
                     this.invalidation.reportGoalMutation();
-                    this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
+                    if (!this.destroyRef.destroyed) {
+                        this.toastService.success(this.translateService.instant('GOALS_PAGE.SAVED_TOAST'));
+                    }
                     this.autosaveQueue.scheduleIfPending();
                     this.hasPendingAutosave.set(this.autosaveQueue.hasPending());
                     completed?.(true);
@@ -541,6 +548,10 @@ export class GoalsFacade {
     }
 
     private showSaveError(): void {
+        if (this.destroyRef.destroyed) {
+            return;
+        }
+
         this.hasAutosaveError.set(true);
         this.toastService.error(this.translateService.instant('GOALS_PAGE.STATUS_ERROR'));
     }

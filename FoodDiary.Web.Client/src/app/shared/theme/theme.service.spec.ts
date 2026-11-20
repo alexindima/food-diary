@@ -1,6 +1,7 @@
 import '@angular/compiler';
 
 import { DOCUMENT } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -176,6 +177,64 @@ describe('ThemeService preferences', () => {
 
         expect(localStorage.getItem('fd_ui_style')).toBe('modern');
         expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
+    });
+});
+
+describe('ThemeService browser fallback behavior', () => {
+    it('ignores unsupported theme and style changes while retaining the last valid local preferences', () => {
+        service.setTheme('leaf');
+        service.setUiStyle('modern');
+
+        service.setTheme('unsupported-theme');
+        service.setUiStyle('unsupported-style');
+
+        expect(service.theme()).toBe('leaf');
+        expect(service.uiStyle()).toBe('modern');
+        expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
+        expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
+        expect(localStorage.getItem('fd_theme')).toBe('leaf');
+        expect(localStorage.getItem('fd_ui_style')).toBe('modern');
+    });
+
+    it('clears obsolete account theme and UI style values before restoring settings on a private route', () => {
+        service.setTheme('leaf');
+        service.setUiStyle('modern');
+        const originalLocation = window.location.href;
+        try {
+            window.history.replaceState({}, '', '/pricing');
+            service.applyThemeForRoute('/pricing');
+
+            service.syncWithUserPreferences(undefined, 'obsolete-style');
+
+            expect(localStorage.getItem('fd_theme')).toBe('ocean');
+            expect(localStorage.getItem('fd_ui_style')).toBe('classic');
+            service.applyThemeForRoute('/dashboard');
+            expect(service.theme()).toBe('ocean');
+            expect(service.uiStyle()).toBe('classic');
+        } finally {
+            window.history.replaceState({}, '', originalLocation);
+        }
+    });
+
+    it('applies default public chrome without browser location, storage or theme metadata', () => {
+        const serverDocument = documentRef.implementation.createHTMLDocument();
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [ThemeService, { provide: DOCUMENT, useValue: serverDocument }, { provide: PLATFORM_ID, useValue: 'server' }],
+        });
+        const serverTheme = TestBed.inject(ThemeService);
+
+        serverTheme.initializeTheme();
+        serverTheme.syncWithUserPreferences('dark', 'modern', 'glass');
+
+        expect(serverDocument.documentElement.getAttribute('data-theme')).toBe('ocean');
+        expect(serverDocument.documentElement.getAttribute('data-ui-style')).toBe('classic');
+        expect(serverDocument.documentElement.getAttribute('data-surface-style')).toBe('normal');
+        expect(serverDocument.querySelector('meta[name="theme-color"]')).toBeNull();
+        serverTheme.applyThemeForRoute('/dashboard');
+        expect(serverTheme.theme()).toBe('ocean');
+        expect(serverTheme.uiStyle()).toBe('classic');
+        expect(serverTheme.surfaceStyle()).toBe('normal');
     });
 });
 

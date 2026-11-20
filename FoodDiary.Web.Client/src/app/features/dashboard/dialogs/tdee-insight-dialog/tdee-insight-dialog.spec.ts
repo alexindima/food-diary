@@ -123,6 +123,24 @@ describe('TDEE dialog application recovery', () => {
     });
 });
 
+describe('TDEE dialog footer actions', () => {
+    it.each(['profile', 'weight', 'meal', 'goals'] as const)('returns the selected %s action from the rendered footer', async type => {
+        const { fixture, dialogRef, applyGoal } = await setupComponentAsync(type === 'goals' ? null : createInsight());
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const label = `TDEE_DIALOG.ACTIONS.${type.toUpperCase()}`;
+        const action = Array.from(host.querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button')).find(button =>
+            button.textContent.trim().endsWith(label),
+        );
+        expect(action, `Missing ${type} continuation`).toBeDefined();
+
+        action?.click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({ type });
+        expect(applyGoal).not.toHaveBeenCalled();
+    });
+});
+
 async function setupComponentAsync(insight: TdeeInsight | null): Promise<{
     component: TdeeInsightDialogComponent;
     fixture: ComponentFixture<TdeeInsightDialogComponent>;

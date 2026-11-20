@@ -73,6 +73,10 @@ export class ProfileManageFacade {
         this.clearGlobalError();
         try {
             await this.telegram.initializeAsync();
+            if (this.destroyRef.destroyed) {
+                return;
+            }
+
             const initData = this.telegram.getInitData();
             if (initData === null || initData.length === 0) {
                 await this.backupEmailFlow.startAsync(email.trim());
@@ -275,7 +279,7 @@ export class ProfileManageFacade {
     }
 
     public async saveProfileAsync(updateData: UpdateUserDto): Promise<boolean> {
-        if (this.isSavingProfile()) {
+        if (this.user() === null || this.isSavingProfile()) {
             return false;
         }
 

@@ -167,6 +167,44 @@ describe('FoodDiaryTranslationLoader initial failure recovery', () => {
     });
 });
 
+describe('FoodDiaryTranslationLoader hydrated public routes', () => {
+    it('reuses transferred core and public information copy when returning from the workspace', async () => {
+        const { loader, httpMock, transferState } = setup('/about?ref=menu');
+        const core = { COMMON: { SAVE: 'Save' } };
+        const publicCopy = { PUBLIC_PAGES: { ABOUT: { TITLE: 'About Food Diary' } } };
+        transferState.set(translationStateKey('core'), core);
+
+        const firstVisit = firstValueFrom(loader.getTranslation(LANGUAGE));
+        flushBundle(httpMock, 'seo', publicCopy);
+        await expect(firstVisit).resolves.toEqual({ ...core, ...publicCopy });
+        expect(transferState.hasKey(translationStateKey('core'))).toBe(false);
+
+        const workspace = firstValueFrom(loader.loadRouteTranslations(LANGUAGE, '/profile'));
+        const profileCopy = { USER_MANAGE: { TITLE: 'Profile' } };
+        flushBundle(httpMock, 'app', profileCopy);
+        await expect(workspace).resolves.toEqual({ ...core, ...profileCopy });
+
+        await expect(firstValueFrom(loader.loadRouteTranslations(LANGUAGE, '/about#team'))).resolves.toEqual({ ...core, ...publicCopy });
+        expect(loader.isPublicRoute('/about#team')).toBe(true);
+        httpMock.verify();
+    });
+
+    it('uses the development cache key when custom deployment settings omit a build version', async () => {
+        const savedVersion = environment.buildVersion;
+        environment.buildVersion = undefined;
+        try {
+            const { loader, httpMock } = setup('/dashboard');
+            const result = firstValueFrom(loader.loadApplicationTranslations(LANGUAGE));
+            httpMock.expectOne('./assets/i18n/en/core.json?v=dev').flush({});
+            httpMock.expectOne('./assets/i18n/en/app.json?v=dev').flush({ DASHBOARD: { TITLE: 'Dashboard' } });
+
+            await expect(result).resolves.toEqual({ DASHBOARD: { TITLE: 'Dashboard' } });
+            httpMock.verify();
+        } finally {
+            environment.buildVersion = savedVersion;
+        }
+    });
+});
 function setup(
     pathname: string,
     platformId: 'browser' | 'server' = 'browser',

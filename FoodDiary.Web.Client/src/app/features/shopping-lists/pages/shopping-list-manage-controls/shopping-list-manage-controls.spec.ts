@@ -2,12 +2,15 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
+import { ShoppingListBrowserDialogComponent } from '../../dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog';
 import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls';
 
 const LISTS: ShoppingListSummary[] = [
@@ -18,10 +21,12 @@ const LISTS: ShoppingListSummary[] = [
 async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): Promise<{
     component: ShoppingListManageControlsComponent;
     fixture: ComponentFixture<ShoppingListManageControlsComponent>;
+    openDialog: ReturnType<typeof vi.fn>;
 }> {
+    const openDialog = vi.fn();
     await TestBed.configureTestingModule({
         imports: [ShoppingListManageControlsComponent],
-        providers: [provideTranslateTesting(), provideRouter([])],
+        providers: [provideTranslateTesting(), provideRouter([]), { provide: FdUiDialogService, useValue: { open: openDialog } }],
     }).compileComponents();
 
     const listSelectModel = signal({ id: 'list-1' });
@@ -33,7 +38,75 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
     fixture.componentRef.setInput('canDeleteList', true);
     fixture.detectChanges();
 
-    return { component: fixture.componentInstance, fixture };
+    return { component: fixture.componentInstance, fixture, openDialog };
+}
+
+describe('ShoppingListManageControlsComponent rendered actions', () => {
+    it('keeps the original name after Escape and trims the next confirmed rename', async () => {
+        const { component, fixture } = await setupManageControlsAsync();
+        const rename = vi.fn();
+        component.renameListById.subscribe(rename);
+        const host = fixture.nativeElement as HTMLElement;
+        const input = openRename(fixture);
+        expect(input.value).toBe(LISTS[0].name);
+        input.value = '  ';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(host.querySelector<HTMLButtonElement>('button[aria-label="SHOPPING_LIST.SAVE_NAME_BUTTON"]')?.disabled).toBe(true);
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        fixture.detectChanges();
+        expect(host.querySelector('h2')?.textContent).toBe(LISTS[0].name);
+        expect(rename).not.toHaveBeenCalled();
+
+        const newName = openRename(fixture);
+        newName.value = '  Next week  ';
+        newName.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        host.querySelector<HTMLButtonElement>('button[aria-label="SHOPPING_LIST.SAVE_NAME_BUTTON"]')?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('input')).toBeNull();
+        expect(rename).toHaveBeenCalledExactlyOnceWith({ listId: LISTS[0].id, name: 'Next week' });
+    });
+
+    it('applies selection and creation from the mobile list dialog and ignores dismissal', async () => {
+        const extra = ['Party', 'Vacation'].map(name => ({ ...LISTS[1], id: entityId<'shopping-list'>(name), name }));
+        const { component, fixture, openDialog } = await setupManageControlsAsync([...LISTS, ...extra]);
+        const create = vi.fn();
+        component.createList.subscribe(create);
+        fixture.componentRef.setInput('isMobile', true);
+        fixture.detectChanges();
+        openDialog
+            .mockReturnValueOnce({ afterClosed: () => of(undefined) })
+            .mockReturnValueOnce({ afterClosed: () => of({ id: extra[1].id }) })
+            .mockReturnValueOnce({ afterClosed: () => of({ create: true, name: 'Market' }) });
+
+        const host = fixture.nativeElement as HTMLElement;
+        const allLists = host.querySelector<HTMLButtonElement>('.shopping-list__all-lists-button button');
+        allLists?.click();
+        expect(host.querySelector('button[aria-current="true"]')?.textContent).toContain(LISTS[0].name);
+        expect(create).not.toHaveBeenCalled();
+        allLists?.click();
+        fixture.detectChanges();
+        expect(host.querySelector('button[aria-current="true"]')?.textContent).toContain(extra[1].name);
+        allLists?.click();
+
+        expect(openDialog).toHaveBeenCalledWith(ShoppingListBrowserDialogComponent, expect.objectContaining({ preset: 'form' }));
+        expect(create).toHaveBeenCalledExactlyOnceWith('Market');
+    });
+});
+
+function openRename(fixture: ComponentFixture<ShoppingListManageControlsComponent>): HTMLInputElement {
+    const host = fixture.nativeElement as HTMLElement;
+    host.querySelector<HTMLButtonElement>('button[aria-label="COMMON.MORE_ACTIONS"]')?.click();
+    fixture.detectChanges();
+    const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]'));
+    menuItems.find(item => item.textContent.trim().endsWith('SHOPPING_LIST.RENAME_LIST_BUTTON'))?.click();
+    fixture.detectChanges();
+    const input = host.querySelector<HTMLInputElement>('input[aria-label="SHOPPING_LIST.RENAME_LIST_BUTTON"]');
+    if (input === null) {
+        throw new Error('Expected the inline shopping list name editor');
+    }
+    return input;
 }
 
 describe('ShoppingListManageControlsComponent', () => {

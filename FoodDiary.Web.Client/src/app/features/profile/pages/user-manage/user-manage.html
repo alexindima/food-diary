@@ -27,6 +27,7 @@
         >
             <div class="user-manage__stack fd-stack fd-gap-page-card">
                 <fd-user-manage-comparison-widgets
+                    [attr.inert]="hasLoadedProfile() ? null : ''"
                     [userForm]="userForm"
                     [genderOptions]="genderOptions"
                     [languageOptions]="languageOptions"

@@ -1,18 +1,22 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { firstValueFrom, of, throwError } from 'rxjs';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { User } from '../../../../shared/models/user.data';
+import { AuthDialogComponent } from '../../dialogs/auth-dialog/auth-dialog';
 import type { AuthResponse, ConfirmPasswordResetRequest } from '../../models/auth.data';
 import { PasswordResetComponent } from './password-reset';
 
 const PASSWORD_CONTRACT_MAX_LENGTH = 256;
+const RESET_PASSWORD_FIELD_COUNT = 2;
 
 const USER: User = {
     id: entityId<'user'>('user-1'),
@@ -35,6 +39,7 @@ const DEFAULT_QUERY_PARAMS = { userId: 'user-1', token: 'tok-abc' };
 type PasswordResetTestContext = {
     authServiceSpy: { confirmPasswordReset: ReturnType<typeof vi.fn> };
     component: PasswordResetComponent;
+    dialogServiceSpy: { open: ReturnType<typeof vi.fn> };
     fixture: ComponentFixture<PasswordResetComponent>;
     navigationServiceSpy: {
         navigateToAuthAsync: ReturnType<typeof vi.fn>;
@@ -44,6 +49,7 @@ type PasswordResetTestContext = {
 
 function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PARAMS): PasswordResetTestContext {
     const authServiceSpy = { confirmPasswordReset: vi.fn() };
+    const dialogServiceSpy = { open: vi.fn<FdUiDialogService['open']>() };
     const navigationServiceSpy = { navigateToHomeAsync: vi.fn(), navigateToAuthAsync: vi.fn() };
     navigationServiceSpy.navigateToHomeAsync.mockResolvedValue(undefined);
     navigationServiceSpy.navigateToAuthAsync.mockResolvedValue(undefined);
@@ -53,6 +59,7 @@ function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PAR
         providers: [
             provideTranslateTesting(),
             { provide: AuthService, useValue: authServiceSpy },
+            { provide: FdUiDialogService, useValue: dialogServiceSpy },
             { provide: NavigationService, useValue: navigationServiceSpy },
             {
                 provide: ActivatedRoute,
@@ -65,14 +72,11 @@ function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PAR
         ],
     });
 
-    const translateServiceSpy = TestBed.inject(TranslateService);
-    vi.spyOn(translateServiceSpy, 'instant').mockImplementation((key: string | string[]) => (Array.isArray(key) ? key[0] : key));
-
     const fixture = TestBed.createComponent(PasswordResetComponent);
     const component = fixture.componentInstance;
     fixture.detectChanges();
 
-    return { authServiceSpy, component, fixture, navigationServiceSpy };
+    return { authServiceSpy, component, dialogServiceSpy, fixture, navigationServiceSpy };
 }
 
 function setValidPassword(component: PasswordResetComponent): void {
@@ -272,3 +276,131 @@ describe('PasswordResetComponent invalid states', () => {
         expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
     });
 });
+describe('Password reset recovery controls', () => {
+    it('offers a new link and login after the server rejects an expired reset link', async () => {
+        const { authServiceSpy, dialogServiceSpy, fixture, navigationServiceSpy } = createComponent();
+        authServiceSpy.confirmPasswordReset.mockReturnValue(
+            throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized })),
+        );
+        enterResetPasswords(fixture, 'newPassword123');
+        await submitRenderedResetAsync(fixture);
+        const root = fixture.nativeElement as HTMLElement;
+        const state = root.querySelector<HTMLElement>('.password-reset__state');
+        if (state === null) {
+            throw new Error('The expired link did not reveal recovery actions');
+        }
+
+        expect(state.getAttribute('role')).toBe('status');
+        expect(state.textContent).toContain('AUTH.RESET.INVALID');
+        expect(root.querySelector('form')).toBeNull();
+        expect(navigationServiceSpy.navigateToHomeAsync).not.toHaveBeenCalled();
+
+        resetButton(state, 'AUTH.RESET.REQUEST_NEW_LINK').click();
+        expect(dialogServiceSpy.open).toHaveBeenCalledExactlyOnceWith(AuthDialogComponent, {
+            preset: 'form',
+            ariaLabel: 'AUTH.DIALOG_TITLE',
+            data: { mode: 'login', requestPasswordReset: true },
+        });
+        resetButton(state, 'AUTH.RESET.BACK_TO_LOGIN').click();
+        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login');
+        expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledOnce();
+    });
+
+    it('updates a displayed mismatch message after switching language and keeps the entered values', async () => {
+        const { authServiceSpy, fixture } = createComponent();
+        const translate = TestBed.inject(TranslateService);
+        const mismatchEn = 'Passwords must be the same';
+        const mismatchRu = 'Пароли должны совпадать';
+        translate.setTranslation('en', { FORM_ERRORS: { PASSWORD: { MATCH: mismatchEn } } });
+        translate.setTranslation('ru', { FORM_ERRORS: { PASSWORD: { MATCH: mismatchRu } } });
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+        const password = 'newPassword123';
+        const confirmation = 'differentPassword123';
+        const [firstInput, confirmationInput] = enterResetPasswords(fixture, password, confirmation);
+        await submitRenderedResetAsync(fixture);
+
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain(mismatchEn);
+        expect(confirmationInput.getAttribute('aria-invalid')).toBe('true');
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(root.querySelector('[role="alert"]')?.textContent).toContain(mismatchRu);
+        expect(firstInput.value).toBe(password);
+        expect(confirmationInput.value).toBe(confirmation);
+        expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
+    });
+});
+
+describe('Password reset link compatibility', () => {
+    it.each(['user', 'id'])('submits a legacy link using the %s query parameter', async key => {
+        const { authServiceSpy, fixture } = createComponent({ [key]: 'legacy-account', token: 'legacy-reset-token' });
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
+        enterResetPasswords(fixture, 'newPassword123');
+        await submitRenderedResetAsync(fixture);
+
+        expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ userId: 'legacy-account', token: 'legacy-reset-token', newPassword: 'newPassword123' }),
+        );
+    });
+
+    it('removes fragment tokens from the visible URL and uses them for the submitted reset', async () => {
+        const history = document.defaultView?.history;
+        if (history === undefined) {
+            throw new Error('Expected browser history for reset link');
+        }
+        const originalUrl = document.location.href;
+        const originalState: unknown = history.state;
+        history.replaceState(null, '', '/reset-password?from=email#userId=fragment-account&token=fragment-reset-token');
+        onTestFinished(() => {
+            history.replaceState(originalState, '', originalUrl);
+        });
+        const { authServiceSpy, fixture } = createComponent({ userId: 'legacy-account', token: 'legacy-reset-token' });
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
+
+        expect(document.location.pathname).toBe('/reset-password');
+        expect(document.location.search).toBe('?from=email');
+        expect(document.location.hash).toBe('');
+
+        enterResetPasswords(fixture, 'newPassword123');
+        await submitRenderedResetAsync(fixture);
+        expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ userId: 'fragment-account', token: 'fragment-reset-token', newPassword: 'newPassword123' }),
+        );
+    });
+});
+
+function enterResetPasswords(
+    fixture: ComponentFixture<PasswordResetComponent>,
+    password: string,
+    confirmation = password,
+): [HTMLInputElement, HTMLInputElement] {
+    const root = fixture.nativeElement as HTMLElement;
+    const inputs = root.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]');
+    if (inputs.length !== RESET_PASSWORD_FIELD_COUNT) {
+        throw new Error('Expected both password reset inputs');
+    }
+    const [first, second] = inputs;
+    first.value = password;
+    first.dispatchEvent(new Event('input', { bubbles: true }));
+    second.value = confirmation;
+    second.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+    return [first, second];
+}
+
+async function submitRenderedResetAsync(fixture: ComponentFixture<PasswordResetComponent>): Promise<void> {
+    const root = fixture.nativeElement as HTMLElement;
+    resetButton(root, 'AUTH.RESET.SAVE').click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
+
+function resetButton(host: HTMLElement, label: string): HTMLButtonElement {
+    const button = [...host.querySelectorAll('button')].find(candidate => candidate.textContent.trim() === label);
+    if (button === undefined) {
+        throw new Error(`Expected the password reset button ${label}`);
+    }
+    return button;
+}

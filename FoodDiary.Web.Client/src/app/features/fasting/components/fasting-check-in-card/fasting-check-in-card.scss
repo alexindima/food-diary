@@ -5,6 +5,14 @@
 }
 
 .fasting {
+    &__checkin-fields {
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        gap: inherit;
+    }
+
     &__checkin-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

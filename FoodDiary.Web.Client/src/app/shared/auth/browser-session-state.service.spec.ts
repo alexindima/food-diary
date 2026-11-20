@@ -39,6 +39,23 @@ describe('Mini App session transport context', () => {
         expect(create().telegram).toBe(false);
     });
 
+    it('keeps existing hub query parameters and clears the restored tab context', () => {
+        const hub = 'https://fooddiary.example/hubs/email-verification?version=1';
+        const context = 'staff context+1';
+        const state = create();
+        expect(state.hubUrl(hub)).toBe(hub);
+
+        state.setContext(context);
+        expect(sessionStorage.getItem('impersonationContext')).toBe(context);
+        expect(localStorage.getItem('impersonationContext')).toBeNull();
+
+        const reloaded = create();
+        expect(reloaded.hubUrl(hub)).toBe('https://fooddiary.example/hubs/email-verification?version=1&fd_context=staff%20context%2B1');
+
+        reloaded.setContext(null);
+        expect(sessionStorage.getItem('impersonationContext')).toBeNull();
+        expect(reloaded.hubUrl(hub)).toBe(hub);
+    });
     it('treats a stored transport hint as a selector without restoring credentials', () => {
         sessionStorage.setItem(TELEGRAM_MINI_APP_CONTEXT_KEY, 'true');
         sessionStorage.setItem('authToken', 'obsolete-token');

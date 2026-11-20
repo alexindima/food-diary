@@ -19,6 +19,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { provideTranslateTesting } from '../../testing/translate-testing.module';
+import { MarketingConsentComponent } from '../components/shared/marketing-consent/marketing-consent';
+import { PublicSiteFooterComponent } from '../features/public/contracts/public-site-chrome';
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
@@ -26,15 +28,19 @@ import { SeoService } from '../services/seo.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { editorUnsavedChangesGuard } from '../shared/forms/editor-unsaved-changes.guard';
 import { LocalizationService } from '../shared/i18n/localization.service';
+import { MARKETING_ATTRIBUTION_ENABLED } from '../shared/marketing/marketing-attribution-enabled';
+import { MarketingConsentService } from '../shared/marketing/marketing-consent.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
 import { PushNotificationReadSyncService } from '../shared/notifications/push-notification-read-sync.service';
+import { BrowserStorageService } from '../shared/platform/browser-storage.service';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { PwaInstallPromotionService } from '../shared/service-worker/pwa-install-promotion.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { AppComponent } from './app';
 
 const NAVIGATION_ID = 1;
+const BROWSER_NOTIFICATION_CLIENTS = [NotificationRealtimeService, PushNotificationService, PushNotificationReadSyncService] as const;
 const SHELL_TEST_TIMEOUT_MS = 15000;
 const disposePrivateEditor = vi.fn();
 const createLatePrivateEditor = vi.fn();
@@ -153,6 +159,35 @@ describe('AppComponent session-owned route lifetime', () => {
     );
 });
 
+describe('AppComponent platform and support session controls', () => {
+    it('keeps browser-only notification clients dormant when the server shell renders a workspace route', async () => {
+        const { rootElement, startNotificationClient } = await createSessionShellAsync(undefined, false, { browserAvailable: false });
+
+        expect(rootElement.textContent).toContain('Private Alice draft');
+        expect(startNotificationClient).not.toHaveBeenCalled();
+    });
+
+    it('renders the impersonation reason and stops the support session from its banner', async () => {
+        const reason = 'Support ticket example';
+        const { rootElement, startNotificationClient, endSupportSession, setInstallPromotionActive } = await createSessionShellAsync(
+            undefined,
+            false,
+            { impersonationReason: reason },
+        );
+        const banner = rootElement.querySelector('.fd-impersonation-banner');
+        const endSession = banner?.querySelector('button');
+        if (banner === null || !(endSession instanceof HTMLButtonElement)) {
+            throw new Error('The support session banner did not render its end-session action');
+        }
+
+        expect(banner.getAttribute('role')).toBe('status');
+        expect(banner.textContent).toContain(reason);
+        expect(startNotificationClient).toHaveBeenCalledTimes(BROWSER_NOTIFICATION_CLIENTS.length);
+        expect(setInstallPromotionActive).toHaveBeenLastCalledWith(false);
+        endSession.click();
+        expect(endSupportSession).toHaveBeenCalledExactlyOnceWith(false);
+    });
+});
 describe('AppComponent pending private navigation lifetime', () => {
     it.each(['dietologist', 'change-password-required'])(
         'keeps a late pre-invalidation %s navigation closed without a session',
@@ -363,9 +398,9 @@ describe('AppComponent public navigation', () => {
         expect(rootElement.querySelector('.fd-root')?.classList.contains('fd-root--public-site')).toBe(true);
     });
 
-    it('keeps the scroll position when only the public query or fragment changes', async () => {
+    it('keeps public scroll position when a slash alias adds query or fragment parameters', async () => {
         const { fixture, routerEvents, viewportScroll, viewportScroller } = await createComponentAsync();
-        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/pricing', '/pricing'));
+        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/pricing/', '/pricing/'));
         fixture.detectChanges();
         const navigation = new NavigationEnd(NAVIGATION_ID + 1, '/pricing?auth=login#details', '/pricing?auth=login#details');
         routerEvents.next(navigation);
@@ -399,6 +434,66 @@ describe('AppComponent public navigation', () => {
     });
 });
 
+describe('Public shell marketing settings focus', () => {
+    it('moves focus to main after the first choice and returns it to the footer after updating the choice', async () => {
+        const { fixture, rootElement, router } = await createSessionShellAsync({ path: '', component: SessionPublicLogin }, true);
+        const storage = TestBed.inject(BrowserStorageService);
+        vi.spyOn(storage, 'getJson').mockReturnValue(null);
+        vi.spyOn(storage, 'setJson').mockReturnValue(undefined);
+        vi.spyOn(storage, 'removeItem').mockReturnValue(undefined);
+        allowPrivateEditorDeparture = true;
+        await router.navigateByUrl('/');
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const reject = marketingButton(rootElement, 'fd-marketing-consent', 'MARKETING_CONSENT.REJECT_SHORT');
+        reject.focus();
+        reject.click();
+        fixture.detectChanges();
+        expect(TestBed.inject(MarketingConsentService).currentDecision()?.allowed).toBe(false);
+        expect(rootElement.querySelector('.marketing-consent')).toBeNull();
+        expect(document.activeElement?.id).toBe('main-content');
+
+        const launcher = marketingButton(rootElement, 'fd-public-site-footer', 'MARKETING_CONSENT.SETTINGS');
+        launcher.focus();
+        launcher.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(document.activeElement).toBe(rootElement.querySelector('.marketing-consent'));
+
+        const allow = marketingButton(rootElement, 'fd-marketing-consent', 'MARKETING_CONSENT.ALLOW_SHORT');
+        allow.focus();
+        allow.click();
+        fixture.detectChanges();
+        expect(TestBed.inject(MarketingConsentService).currentDecision()?.allowed).toBe(true);
+        expect(rootElement.querySelector('.marketing-consent')).toBeNull();
+        expect(document.activeElement).toBe(launcher);
+
+        launcher.click();
+        fixture.detectChanges();
+        expect(rootElement.querySelector('.marketing-consent')).not.toBeNull();
+        await router.navigateByUrl('/explore');
+        fixture.detectChanges();
+        expect(rootElement.querySelector('fd-marketing-consent')).toBeNull();
+        await router.navigateByUrl('/');
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(rootElement.querySelector('.marketing-consent')).toBeNull();
+    });
+});
+
+function marketingButton(host: HTMLElement, owner: string, label: string): HTMLButtonElement {
+    const button = Array.from(host.querySelectorAll<HTMLButtonElement>(`${owner} button`)).find(
+        child => child.textContent.trim() === label,
+    );
+    if (button === undefined) {
+        throw new Error(`Expected public shell button ${label}`);
+    }
+    return button;
+}
+
 function stubMatchMedia(): void {
     vi.stubGlobal(
         'matchMedia',
@@ -418,25 +513,33 @@ function stubMatchMedia(): void {
     );
 }
 
-async function createSessionShellAsync(lateRoute?: Route): Promise<{
+type SessionShellFixture = {
     fixture: ComponentFixture<AppComponent>;
     rootElement: HTMLElement;
     authenticated: ReturnType<typeof signal<boolean>>;
     sessions: SessionEventsService;
     router: Router;
-}> {
-    TestBed.resetTestingModule();
-    disposePrivateEditor.mockClear();
-    createLatePrivateEditor.mockClear();
-    disposeRootDialog.mockClear();
-    saveRootDialog.mockClear();
-    allowPrivateEditorDeparture = false;
+    startNotificationClient: ReturnType<typeof vi.fn>;
+    endSupportSession: ReturnType<typeof vi.fn>;
+    setInstallPromotionActive: ReturnType<typeof vi.fn>;
+};
+
+async function createSessionShellAsync(
+    lateRoute?: Route,
+    marketingAttributionEnabled = false,
+    options: { browserAvailable?: boolean; impersonationReason?: string } = {},
+): Promise<SessionShellFixture> {
+    resetSessionShellFixture();
     stubMatchMedia();
     const authenticated = signal(true);
+    const startNotificationClient = vi.fn(() => ({}));
+    const endSupportSession = vi.fn<AuthService['onLogoutAsync']>().mockResolvedValue(undefined);
+    const setInstallPromotionActive = vi.fn<PwaInstallPromotionService['setActive']>();
     TestBed.configureTestingModule({
         imports: [AppComponent],
         providers: [
             provideTranslateTesting(),
+            { provide: MARKETING_ATTRIBUTION_ENABLED, useValue: marketingAttributionEnabled },
             provideRouter([
                 {
                     path: 'editor',
@@ -459,9 +562,9 @@ async function createSessionShellAsync(lateRoute?: Route): Promise<{
                 provide: AuthService,
                 useValue: {
                     isAuthenticated: authenticated,
-                    isImpersonating: signal(false),
-                    impersonationReason: signal<string | null>(null),
-                    onLogoutAsync: vi.fn(),
+                    isImpersonating: signal(options.impersonationReason !== undefined),
+                    impersonationReason: signal(options.impersonationReason ?? null),
+                    onLogoutAsync: endSupportSession,
                 },
             },
             { provide: SeoService, useValue: { update: vi.fn() } },
@@ -470,15 +573,13 @@ async function createSessionShellAsync(lateRoute?: Route): Promise<{
             { provide: RouteLoadingService, useValue: { isVisible: signal(false), beginLoad: vi.fn(), endLoad: vi.fn() } },
             { provide: ThemeService, useValue: { applyThemeForRoute: vi.fn() } },
             { provide: ViewportScroller, useValue: { scrollToPosition: vi.fn(), setHistoryScrollRestoration: vi.fn() } },
-            { provide: BrowserWindowService, useValue: createBrowserWindowStub(false) },
-            { provide: NotificationRealtimeService, useValue: {} },
-            { provide: PushNotificationService, useValue: {} },
-            { provide: PushNotificationReadSyncService, useValue: {} },
-            { provide: PwaInstallPromotionService, useValue: { setActive: vi.fn(), shouldShowBanner: signal(false) } },
+            { provide: BrowserWindowService, useValue: createBrowserWindowStub(false, options.browserAvailable) },
+            ...BROWSER_NOTIFICATION_CLIENTS.map(provide => ({ provide, useFactory: startNotificationClient })),
+            { provide: PwaInstallPromotionService, useValue: { setActive: setInstallPromotionActive, shouldShowBanner: signal(false) } },
         ],
     });
     TestBed.overrideComponent(AppComponent, {
-        set: { imports: [RouterOutlet, TranslatePipe], schemas: [NO_ERRORS_SCHEMA] },
+        set: { imports: [RouterOutlet, TranslatePipe, MarketingConsentComponent, PublicSiteFooterComponent], schemas: [NO_ERRORS_SCHEMA] },
     });
     await TestBed.compileComponents();
     const fixture = TestBed.createComponent(AppComponent);
@@ -496,7 +597,19 @@ async function createSessionShellAsync(lateRoute?: Route): Promise<{
         authenticated,
         sessions: TestBed.inject(SessionEventsService),
         router,
+        startNotificationClient,
+        endSupportSession,
+        setInstallPromotionActive,
     };
+}
+
+function resetSessionShellFixture(): void {
+    TestBed.resetTestingModule();
+    disposePrivateEditor.mockClear();
+    createLatePrivateEditor.mockClear();
+    disposeRootDialog.mockClear();
+    saveRootDialog.mockClear();
+    allowPrivateEditorDeparture = false;
 }
 
 async function createComponentAsync(
@@ -590,12 +703,15 @@ function attachViewportScrollSpy(rootElement: HTMLElement): ReturnType<typeof vi
     return viewportScroll;
 }
 
-function createBrowserWindowStub(reducedMotion: boolean): {
+function createBrowserWindowStub(
+    reducedMotion: boolean,
+    available = true,
+): {
     isAvailable: () => boolean;
     matchMedia: () => Pick<MediaQueryList, 'matches'>;
 } {
     return {
-        isAvailable: (): boolean => true,
+        isAvailable: (): boolean => available,
         matchMedia: (): Pick<MediaQueryList, 'matches'> => ({ matches: reducedMotion }),
     };
 }

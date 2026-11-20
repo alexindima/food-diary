@@ -17,6 +17,7 @@ import { QuickMealService } from './quick-meal.service';
 
 const DEFAULT_PORTION_AMOUNT = 180;
 const DOUBLE_DEFAULT_PORTION_AMOUNT = 360;
+const CUSTOM_PRODUCT_AMOUNT = 75;
 
 const product: Product = {
     id: entityId<'product'>('product-1'),
@@ -410,5 +411,44 @@ describe('QuickMealService pending draft replacements', () => {
         pending.error(new Error('offline'));
         expect(service.items()[0].amount).toBe(DEFAULT_PORTION_AMOUNT + DEFAULT_PORTION_AMOUNT);
         expect(service.isSaving()).toBe(false);
+    });
+});
+
+describe('QuickMealService portion defaults and preview actions', () => {
+    it('uses an explicit serving amount before the product default', () => {
+        service.addProduct(product, CUSTOM_PRODUCT_AMOUNT);
+        expect(service.items()[0].amount).toBe(CUSTOM_PRODUCT_AMOUNT);
+    });
+
+    it('uses the base amount for a legacy product with no default portion', () => {
+        const legacy = { ...product, defaultPortionAmount: 0 };
+        service.addProduct(legacy);
+        expect(service.items()[0].amount).toBe(product.baseAmount);
+    });
+
+    it('keeps a preview draft editable without toast or persistence until the preview exits', () => {
+        service.setPreviewItems([]);
+        service.addProduct(product);
+        service.addRecipe(recipe);
+        expect(service.items()).toEqual([expect.objectContaining({ product }), expect.objectContaining({ recipe })]);
+        expect(toastService.success).not.toHaveBeenCalled();
+        service.saveDraft();
+        expect(mealService.create).not.toHaveBeenCalled();
+
+        service.exitPreview();
+        expect(service.hasItems()).toBe(false);
+        service.addRecipe(recipe);
+        expect(toastService.success).toHaveBeenCalledExactlyOnceWith('QUICK_MEAL.ADDED_RECIPE');
+    });
+
+    it('preserves the selected meal type in the save payload even if it differs from the clock-based default', () => {
+        service.addProduct(product);
+        service.updateDetails({ date: '2026-05-03', time: '08:30', mealType: 'DINNER', comment: '  Dinner after work  ' });
+        expect(service.details()).toMatchObject({ mealType: 'DINNER', time: '08:30' });
+
+        service.saveDraft();
+
+        expect(mealService.create).toHaveBeenCalledOnce();
+        expect(mealService.create.mock.calls[0][0]).toMatchObject({ mealType: 'DINNER', comment: 'Dinner after work' });
     });
 });

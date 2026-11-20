@@ -2,7 +2,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { FdTourTargetRegistry } from 'fd-tour';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { HeaderActionsOverflowComponent } from './header-actions-overflow';
@@ -21,7 +22,12 @@ import { HeaderActionsOverflowComponent } from './header-actions-overflow';
             </button>
 
             @if (showSecond()) {
-                <button type="button" aria-label="Second action" (click)="secondClicks.set(secondClicks() + 1)">
+                <button
+                    type="button"
+                    aria-label="Second action"
+                    data-tour-id="secondary-action"
+                    (click)="secondClicks.set(secondClicks() + 1)"
+                >
                     <span class="fd-ui-icon__glyph">delete</span>
                 </button>
             }
@@ -205,6 +211,79 @@ describe('Header action reactive metadata', () => {
         expect(primary()?.title).toBe('Updated reason');
     });
 });
+
+const SECONDARY_TOUR_TARGET = '[data-tour-id="secondary-action"]';
+
+describe('Header overflow guided tour', () => {
+    let fixture: ComponentFixture<TestHostComponent>;
+    let registry: FdTourTargetRegistry;
+    let overlay: HTMLElement;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestHostComponent],
+            providers: [provideTranslateTesting(), provideRouter([])],
+        }).compileComponents();
+        fixture = TestBed.createComponent(TestHostComponent);
+        registry = TestBed.inject(FdTourTargetRegistry);
+        overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    });
+
+    it('only offers a resolver when the requested action can be revealed through a visible trigger', async () => {
+        await settleHeaderActionsAsync(fixture);
+        expect(registry.find(SECONDARY_TOUR_TARGET)).toBeUndefined();
+        fixture.componentInstance.showSecond.set(true);
+        await settleHeaderActionsAsync(fixture);
+        const trigger = overflowHost(fixture);
+        trigger.style.visibility = 'hidden';
+
+        expect(registry.find(SECONDARY_TOUR_TARGET)).toBeUndefined();
+        trigger.style.visibility = 'visible';
+        expect(registry.find(SECONDARY_TOUR_TARGET)).toBeDefined();
+        fixture.destroy();
+        expect(registry.find(SECONDARY_TOUR_TARGET)).toBeUndefined();
+    });
+
+    it('scrolls to the trigger and closes only the menu it opened to reveal the target', async () => {
+        fixture.componentInstance.showSecond.set(true);
+        await settleHeaderActionsAsync(fixture);
+        const trigger = overflowHost(fixture);
+        const scrollIntoView = vi.fn();
+        Object.defineProperty(trigger, 'scrollIntoView', { value: scrollIntoView, configurable: true });
+        const resolver = registry.find(SECONDARY_TOUR_TARGET);
+        if (resolver === undefined) {
+            throw new Error('Expected the visible overflow to resolve the tour target');
+        }
+
+        const release = resolver.reveal(SECONDARY_TOUR_TARGET);
+        await settleHeaderActionsAsync(fixture);
+        expect(scrollIntoView).toHaveBeenCalledExactlyOnceWith({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+        expect(overlay.querySelector(SECONDARY_TOUR_TARGET)?.textContent).toContain('Second action');
+        expect(fixture.componentInstance.secondClicks()).toBe(0);
+
+        release();
+        await settleHeaderActionsAsync(fixture);
+        expect(overlay.querySelector(SECONDARY_TOUR_TARGET)).toBeNull();
+
+        trigger.querySelector('button')?.click();
+        await settleHeaderActionsAsync(fixture);
+        expect(overlay.querySelector(SECONDARY_TOUR_TARGET)).not.toBeNull();
+        resolver.reveal(SECONDARY_TOUR_TARGET)();
+        await settleHeaderActionsAsync(fixture);
+        expect(overlay.querySelector(SECONDARY_TOUR_TARGET)).not.toBeNull();
+        expect(fixture.componentInstance.secondClicks()).toBe(0);
+    });
+});
+
+function overflowHost(fixture: ComponentFixture<TestHostComponent>): HTMLElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const trigger = host.querySelector<HTMLElement>('.fd-header-actions-overflow__trigger');
+    if (trigger === null) {
+        throw new Error('Expected the rendered overflow trigger');
+    }
+    trigger.style.display = 'inline-flex';
+    return trigger;
+}
 
 async function settleHeaderActionsAsync(fixture: ComponentFixture<TestHostComponent>): Promise<void> {
     fixture.detectChanges();

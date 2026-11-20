@@ -41,6 +41,7 @@ export class PrivacySettingsComponent {
     private readonly dialogs = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly language = injectCurrentLanguage();
+    private isReviewingAi = false;
     protected readonly policyPath = computed(() => localizedPublicPath('/privacy-policy', this.language() === 'ru' ? 'ru' : 'en'));
 
     public constructor() {
@@ -57,15 +58,23 @@ export class PrivacySettingsComponent {
     }
 
     protected async allowAiAsync(): Promise<void> {
-        const accepted = await firstValueFrom(
-            this.dialogs
-                .open<AiConsentDialogComponent, never, boolean>(AiConsentDialogComponent, { size: 'lg' })
-                .afterClosed()
-                .pipe(takeUntilDestroyed(this.destroyRef)),
-            { defaultValue: false },
-        );
-        if (accepted === true && !this.destroyRef.destroyed) {
-            await this.privacy.chooseAsync(2, true);
+        if (this.isReviewingAi) {
+            return;
+        }
+        this.isReviewingAi = true;
+        try {
+            const accepted = await firstValueFrom(
+                this.dialogs
+                    .open<AiConsentDialogComponent, never, boolean>(AiConsentDialogComponent, { size: 'lg' })
+                    .afterClosed()
+                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: false },
+            );
+            if (accepted === true && !this.destroyRef.destroyed) {
+                await this.privacy.chooseAsync(2, true);
+            }
+        } finally {
+            this.isReviewingAi = false;
         }
     }
 

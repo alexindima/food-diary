@@ -71,6 +71,9 @@ export class DashboardLayoutService {
 
         const normalized = this.normalizeLayout(layout);
         this.layoutSettings.set(normalized);
+        if (this.isEditingLayout()) {
+            this.layoutSnapshot.set(normalized);
+        }
         this.layoutInitialized.set(true);
     }
 

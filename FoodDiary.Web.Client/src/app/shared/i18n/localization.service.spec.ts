@@ -171,6 +171,26 @@ describe('LocalizationService initialization', () => {
     });
 });
 
+describe('LocalizationService document fallback', () => {
+    it('uses the server document path to load and retain the dictionary for a localized public page', async () => {
+        const path = '/ru/pricing';
+        browserWindowSpy.getPathname.mockReturnValue(null);
+        browserWindowSpy.getHostname.mockReturnValue(null);
+        Object.assign(mockDocument.location, { hostname: '', pathname: path });
+        const setDocumentAttribute = vi.spyOn(mockDocument.documentElement, 'setAttribute');
+        translateSpy.use.mockReturnValue(of({ PUBLIC_PAGES: { PRICING: { TITLE: 'Тарифы' } } }));
+        translateSpy.getCurrentLang.mockReturnValue('ru');
+        localStorage.setItem('fd_language', 'en');
+
+        await service.initializeLocalizationAsync();
+        await service.loadTranslationsForRouteAsync(path);
+
+        expect(translateSpy.use).toHaveBeenCalledExactlyOnceWith('ru');
+        expect(translationLoaderSpy.loadRouteTranslations).not.toHaveBeenCalled();
+        expect(setDocumentAttribute).toHaveBeenCalledWith('data-i18n-ready', 'ru');
+    });
+});
+
 describe('LocalizationService language preference', () => {
     it('should apply language preference', async () => {
         translateSpy.getCurrentLang.mockReturnValue('en');
@@ -179,6 +199,14 @@ describe('LocalizationService language preference', () => {
         await service.applyLanguagePreferenceAsync('ru');
 
         expect(translateSpy.use).toHaveBeenCalledWith('ru');
+    });
+
+    it.each([null, undefined, ''])('uses the default language for a missing preference (%s)', async preference => {
+        translateSpy.getCurrentLang.mockReturnValue('ru');
+
+        await service.applyLanguagePreferenceAsync(preference);
+
+        expect(translateSpy.use).toHaveBeenCalledExactlyOnceWith('en');
     });
 
     it('should not call use() if language is already set', async () => {

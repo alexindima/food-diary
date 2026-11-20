@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { nutritionMealFixture, nutritionSnapshotFixture } from '../../../../testing/nutrition-details.fixtures';
-import { buildNutritionSources, nutritionDayProgress } from './nutrition-details.mapper';
+import { createEmptyRecipeSnapshot, mealItemFromStored } from '../../../shared/models/meal.data';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import { buildNutritionSources, nutritionDayProgress, nutritionMetricPresentation } from './nutrition-details.mapper';
 
 const LARGER_CALORIES = 500;
 const SMALLER_CALORIES = 200;
@@ -65,7 +67,11 @@ function registerPortionTests(): void {
 }
 
 function registerAiTests(): void {
-    it('includes accepted AI consumed totals without multiplying them by food mass and ignores rejected items', () => {
+    it.each([
+        ['ru', 'Курица', 'Курица'],
+        ['ru', null, 'Chicken'],
+        ['en', 'Курица', 'Chicken'],
+    ] as const)('uses the recorded AI totals and the selected language %s with translation %s', (language, nameLocal, expectedName) => {
         const meal = nutritionMealFixture({
             totalProteins: 7,
             aiSessions: [
@@ -78,7 +84,7 @@ function registerAiTests(): void {
                             id: 'accepted',
                             sessionId: 'session',
                             nameEn: 'Chicken',
-                            nameLocal: 'Курица',
+                            nameLocal,
                             amount: 90,
                             unit: 'g',
                             calories: 100,
@@ -107,9 +113,64 @@ function registerAiTests(): void {
                 },
             ],
         });
-        expect(buildNutritionSources([meal], 'protein', 'ru')).toMatchObject([{ name: 'Курица', value: 7, kind: 'ai' }]);
+        expect(buildNutritionSources([meal], 'protein', language)).toMatchObject([{ name: expectedName, value: 7, kind: 'ai' }]);
     });
 }
+
+describe('Daily nutrition metric presentation', () => {
+    it.each([
+        ['calories', { current: 875, goal: 2000 }, 'MEAL_RING.UNIT'],
+        ['protein', { current: 35, goal: null }, 'GENERAL.UNITS.G'],
+        ['fats', { current: 25, goal: 60 }, 'GENERAL.UNITS.G'],
+        ['carbs', { current: 85, goal: null }, 'GENERAL.UNITS.G'],
+    ] as const)('uses recorded daily progress and units for %s', (metric, expectedProgress, unitKey) => {
+        const snapshot = nutritionSnapshotFixture([], {
+            statistics: { totalCalories: 875, averageProteins: 35, averageFats: 25, averageCarbs: 85, averageFiber: 5, fatGoal: 60 },
+        });
+
+        expect(nutritionDayProgress(snapshot, metric)).toEqual(expectedProgress);
+        expect(nutritionMetricPresentation(metric).unitKey).toBe(unitKey);
+    });
+
+    it('shows recorded fat progress when a legacy daily snapshot has no fat goal', () => {
+        const recordedFat = 25;
+        const snapshot = nutritionSnapshotFixture([], {
+            statistics: { totalCalories: 875, averageProteins: 35, averageFats: recordedFat, averageCarbs: 85, averageFiber: 5 },
+        });
+
+        expect(nutritionDayProgress(snapshot, 'fats')).toEqual({ current: recordedFat, goal: null });
+    });
+
+    it('keeps manual calorie totals separate even if a recorded product is present', () => {
+        const meal = nutritionMealFixture({
+            totalCalories: 340,
+            isNutritionAutoCalculated: false,
+            manualCalories: 340,
+            items: [{ id: 'item', mealId: 'meal-1', productId: 'product', productName: 'Milk', productCaloriesPerBase: 50, amount: 100 }],
+        });
+
+        expect(buildNutritionSources([meal], 'calories', 'en')).toMatchObject([{ kind: 'manual', value: 340, name: null }]);
+    });
+
+    it('keeps the recorded meal total when a historical product has no usable base amount', () => {
+        const meal = nutritionMealFixture({
+            totalFats: 8,
+            items: [
+                {
+                    id: 'item',
+                    mealId: 'meal-1',
+                    productId: 'product',
+                    productName: 'Milk',
+                    productFatsPerBase: 4,
+                    productBaseAmount: 0,
+                    amount: 100,
+                },
+            ],
+        });
+
+        expect(buildNutritionSources([meal], 'fats', 'en')).toMatchObject([{ kind: 'unavailable', value: 8, name: null }]);
+    });
+});
 
 function registerFallbackTests(): void {
     it('does not invent a product breakdown when the snapshot is incomplete or disagrees with the recorded total', () => {
@@ -142,4 +203,66 @@ function registerFallbackTests(): void {
         expect(nutritionDayProgress(nutritionSnapshotFixture(), 'fiber')).toEqual({ current: 0, goal: null });
         expect(buildNutritionSources([nutritionMealFixture({ totalProteins: 0 })], 'protein', 'en')).toEqual([]);
     });
+
+    it('attributes the saved rounded total to a product when an older meal has no AI sessions', () => {
+        const savedFatTotal = 4.13;
+        const servedAmount = 33;
+        const fatsPerBase = 12.5;
+        const meal = {
+            ...nutritionMealFixture({
+                totalFats: savedFatTotal,
+                items: [
+                    {
+                        id: 'historical-product',
+                        mealId: 'meal-1',
+                        productId: 'saved-product',
+                        productName: 'Hard cheese',
+                        productBaseAmount: 100,
+                        productFatsPerBase: fatsPerBase,
+                        amount: servedAmount,
+                    },
+                ],
+            }),
+            aiSessions: undefined,
+        };
+
+        expect(buildNutritionSources([meal], 'fats', 'en')).toMatchObject([{ kind: 'product', name: 'Hard cheese', value: 4.125 }]);
+    });
 }
+
+describe('Historical recipe nutrition attribution', () => {
+    const savedProtein = 10;
+    const meal = nutritionMealFixture({
+        totalProteins: savedProtein,
+        items: [
+            {
+                id: 'product-item',
+                mealId: 'meal-1',
+                productId: 'milk',
+                productName: 'Milk',
+                productBaseAmount: 100,
+                productProteinsPerBase: savedProtein,
+                amount: 100,
+            },
+        ],
+    });
+
+    it.each([
+        { total: null, expected: { kind: 'unavailable', name: null } },
+        { total: undefined, expected: { kind: 'unavailable', name: null } },
+        { total: 0, expected: { kind: 'product', name: 'Milk' } },
+    ])('attributes a recorded total with recipe protein $total as $expected.kind', ({ total, expected }) => {
+        const recipe = {
+            ...createEmptyRecipeSnapshot(),
+            id: entityId<'recipe'>('recipe-1'),
+            name: 'Lemon water',
+            servings: 2,
+            totalProteins: total,
+        };
+        const recipeItem = mealItemFromStored({ id: entityId<'meal-item'>('recipe-item'), mealId: meal.id }, 1, { product: null, recipe });
+
+        expect(buildNutritionSources([{ ...meal, items: [...meal.items, recipeItem] }], 'protein', 'en')).toMatchObject([
+            { ...expected, value: savedProtein },
+        ]);
+    });
+});

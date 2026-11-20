@@ -26,13 +26,17 @@ export class TelegramBackupEmailFlowService {
     private readonly auth = inject(AuthService);
     private readonly storage = inject(BrowserStorageService);
     private readonly browser = inject(BrowserWindowService);
+    private sessionRevision = 0;
 
     public constructor() {
-        inject(SessionEventsService)
-            .sessionEnded$.pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.clear();
-            });
+        const sessions = inject(SessionEventsService);
+        sessions.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.sessionRevision++;
+        });
+        sessions.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.sessionRevision++;
+            this.clear();
+        });
     }
 
     public read(): PendingEmail | null {
@@ -86,10 +90,20 @@ export class TelegramBackupEmailFlowService {
             this.storage.setJson('session', KEY, { ...pending, state: null, failed: true });
             return true;
         }
+        const revision = this.sessionRevision;
+        let sent: boolean;
         try {
             await firstValueFrom(this.auth.completeTelegramBackupEmail(code, state));
-            this.markSent(pending.email);
+            sent = true;
         } catch {
+            sent = false;
+        }
+        if (revision !== this.sessionRevision || pending.userId !== this.auth.getUserId()) {
+            return true;
+        }
+        if (sent) {
+            this.markSent(pending.email);
+        } else {
             this.storage.setJson('session', KEY, { ...pending, state: null, failed: true });
         }
         return true;

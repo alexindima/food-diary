@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { BrowserStorageService } from '../platform/browser-storage.service';
+import { MeasurementUnitPipe, MeasurementValuePipe } from './measurement-display.pipe';
 import {
     centimetersToImperialHeight,
     centimetersToInches,
@@ -72,5 +73,36 @@ describe('MeasurementSystemService test isolation', () => {
         expect(globalThis.localStorage.getItem('fd_measurement_system')).toBeNull();
         expect(TestBed.inject(DOCUMENT).defaultView?.localStorage.getItem('fd_measurement_system')).toBeNull();
         expect(TestBed.inject(MeasurementSystemService).system()).toBe('metric');
+    });
+});
+
+describe('stored units in measurement displays', () => {
+    it('restores imperial units, honors explicit metric display and leaves missing measurements blank', () => {
+        TestBed.configureTestingModule({ providers: [MeasurementSystemService, MeasurementUnitPipe, MeasurementValuePipe] });
+        const storage = TestBed.inject(BrowserStorageService);
+        storage.setItem('local', 'fd_measurement_system', 'imperial');
+        try {
+            const measurements = TestBed.inject(MeasurementSystemService);
+            const displayValues = TestBed.inject(MeasurementValuePipe);
+            const displayUnits = TestBed.inject(MeasurementUnitPipe);
+
+            expect(measurements.system()).toBe('imperial');
+            expect(displayValues.transform(WEIGHT_KG, 'weight')).toBe(WEIGHT_LB);
+            expect(displayUnits.transform('weight')).toBe('GENERAL.UNITS.LB');
+            expect(displayValues.transform(WAIST_CM, 'length')).toBe(WAIST_IN);
+            expect(displayUnits.transform('length')).toBe('GENERAL.UNITS.IN');
+            expect(displayValues.transform(null, 'weight')).toBeNull();
+            expect(displayValues.transform(WEIGHT_KG, 'weight', 'metric')).toBe(WEIGHT_KG);
+            expect(measurements.canonicalWeight(WEIGHT_LB)).toBe(ROUND_TRIP_WEIGHT_KG);
+            expect(measurements.canonicalLength(WAIST_IN)).toBe(ROUND_TRIP_WAIST_CM);
+            expect(measurements.weightUnitKey()).toBe('GENERAL.UNITS.LB');
+            expect(measurements.lengthUnitKey()).toBe('GENERAL.UNITS.IN');
+
+            measurements.setSystem('metric');
+            expect(measurements.weightUnitKey()).toBe('GENERAL.UNITS.KG');
+            expect(measurements.lengthUnitKey()).toBe('GENERAL.UNITS.CM');
+        } finally {
+            storage.removeItem('local', 'fd_measurement_system');
+        }
     });
 });

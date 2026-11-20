@@ -123,6 +123,38 @@ describe('PublicCatalogFavorites account replacement', () => {
     });
 });
 
+describe('PublicCatalogFavorites completed removal', () => {
+    it('ignores a completed removal for the previous account when both accounts saved the same recipe', async () => {
+        const pendingRemoval = new Subject<void>();
+        api.getLookupPage
+            .mockReturnValueOnce(of([{ id: 'alice-favorite', recipeId: 'recipe' }]))
+            .mockReturnValueOnce(of([{ id: 'bob-favorite', recipeId: 'recipe' }]));
+        api.remove.mockReturnValueOnce(pendingRemoval);
+        authenticated.set(true);
+        TestBed.tick();
+
+        const previousRemoval = favorites.toggleAsync(publicRecipeFixture());
+        await vi.waitFor(() => {
+            expect(api.remove).toHaveBeenCalledExactlyOnceWith('alice-favorite');
+        });
+        account.set('bob');
+        TestBed.tick();
+        await vi.waitFor(() => {
+            expect(favorites.savedIds().has('recipe')).toBe(true);
+        });
+        pendingRemoval.next();
+        pendingRemoval.complete();
+        await previousRemoval;
+
+        expect(favorites.savedIds().has('recipe')).toBe(true);
+        expect(favorites.message()).toBeNull();
+        expect(favorites.busyIds().size).toBe(0);
+        await favorites.toggleAsync(publicRecipeFixture());
+        expect(api.remove).toHaveBeenLastCalledWith('bob-favorite');
+        expect(favorites.savedIds().size).toBe(0);
+    });
+});
+
 describe('PublicCatalogFavorites login ownership', () => {
     it('keeps the authenticated owner when another account replaces it before the save continuation', async () => {
         const lookup = new Subject<FavoriteRecipe[]>();

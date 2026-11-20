@@ -1,9 +1,11 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import type { ApiErrorHttpResponse } from '../../../shared/api/sdk/generated/model/api-error-http-response';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
@@ -91,6 +93,45 @@ function createPage(): PageOf<RecipeComment> {
         totalItems: 1,
     };
 }
+
+describe('Recipe comment write responses', () => {
+    const recipeId = entityId<'recipe'>('a27d168c-a181-44e9-af4f-1abb9daa4d5d');
+    const commentId = entityId<'recipe-comment'>('524059ff-3cd3-4495-9f33-f440d03d03fb');
+    const collection = `${BASE_URL}/${recipeId}/comments`;
+    const selection = `${collection}/${commentId}`;
+
+    it('propagates the unavailable recipe when the comment is submitted after removal', async () => {
+        const body = { text: 'Would this work with frozen vegetables?' };
+        const pending = firstValueFrom(service.createComment(recipeId, body));
+        const removed = { error: 'Recipe.NotFound' } satisfies ApiErrorHttpResponse;
+        const request = httpMock.expectOne({ method: 'POST', url: collection });
+        expect(request.request.body).toEqual(body);
+        request.flush(removed, { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.NotFound, error: removed });
+    });
+
+    it('preserves the comment author restriction and the attempted edit', async () => {
+        const body = { text: 'Update from another tab' };
+        const pending = firstValueFrom(service.updateComment(recipeId, commentId, body));
+        const forbidden = { error: 'RecipeComment.NotAuthor' } satisfies ApiErrorHttpResponse;
+        const request = httpMock.expectOne({ method: 'PATCH', url: selection });
+        expect(request.request.body).toEqual(body);
+        request.flush(forbidden, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.Forbidden, error: forbidden });
+    });
+
+    it('returns the missing comment result to a caller deleting a stale comment', async () => {
+        const pending = firstValueFrom(service.deleteComment(recipeId, commentId));
+        const removed = { error: 'RecipeComment.NotFound' } satisfies ApiErrorHttpResponse;
+        const request = httpMock.expectOne({ method: 'DELETE', url: selection });
+        expect(request.request.body).toBeNull();
+        request.flush(removed, { status: HttpStatusCode.NotFound, statusText: 'Not Found' });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.NotFound, error: removed });
+    });
+});
 
 function createComment(): RecipeComment {
     return {

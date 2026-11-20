@@ -239,7 +239,7 @@ export class ProductListFacade {
                 size: 'lg',
             })
             .afterClosed()
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
                     this.searchForm.search().value.set(barcode);
@@ -262,27 +262,27 @@ export class ProductListFacade {
         const currentCaloriesTo = this.caloriesToFilter();
         const currentHasImage = this.hasImageFilter();
 
-        this.fdDialogService
-            .open<
-                ProductListFiltersDialogComponent,
-                {
-                    onlyMine: boolean;
-                    productTypes: ProductType[];
-                    caloriesFrom: number | null;
-                    caloriesTo: number | null;
-                    hasImage: boolean | null;
-                },
-                ProductListFiltersDialogResult | null
-            >(ProductListFiltersDialogComponent, {
-                preset: 'form',
-                data: {
-                    onlyMine: currentOnlyMine,
-                    productTypes: [...currentTypes],
-                    caloriesFrom: currentCaloriesFrom,
-                    caloriesTo: currentCaloriesTo,
-                    hasImage: currentHasImage,
-                },
-            })
+        const dialog = this.fdDialogService.open<
+            ProductListFiltersDialogComponent,
+            {
+                onlyMine: boolean;
+                productTypes: ProductType[];
+                caloriesFrom: number | null;
+                caloriesTo: number | null;
+                hasImage: boolean | null;
+            },
+            ProductListFiltersDialogResult | null
+        >(ProductListFiltersDialogComponent, {
+            preset: 'form',
+            data: {
+                onlyMine: currentOnlyMine,
+                productTypes: [...currentTypes],
+                caloriesFrom: currentCaloriesFrom,
+                caloriesTo: currentCaloriesTo,
+                hasImage: currentHasImage,
+            },
+        });
+        dialog
             .afterClosed()
             .pipe(
                 switchMap(result => {
@@ -326,6 +326,11 @@ export class ProductListFacade {
                     return this.loadProducts(1, this.pageSize, this.searchValue());
                 }),
                 takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    if (this.destroyRef.destroyed) {
+                        dialog.close();
+                    }
+                }),
             )
             .subscribe();
     }
@@ -578,12 +583,9 @@ export class ProductListFacade {
     }
 
     public async handleProductDetailsAsync(product: Product): Promise<boolean> {
-        const { ProductDetailComponent } = await import('../../components/detail/product-detail/product-detail');
-        const result = await firstValueFrom(
-            this.fdDialogService.open(ProductDetailComponent, { preset: 'detail', data: product }).afterClosed().pipe(take(1)),
-        );
+        const result = await this.openProductDetailsAsync(product);
 
-        if (!(result instanceof ProductDetailActionResult)) {
+        if (this.destroyRef.destroyed || !(result instanceof ProductDetailActionResult)) {
             return false;
         }
 
@@ -601,18 +603,37 @@ export class ProductListFacade {
         if (!product.isOwnedByCurrentUser || this.isDeleteInProgress) {
             return false;
         }
+        return this.deleteFromDetailsAsync(result.id);
+    }
 
+    private async deleteFromDetailsAsync(id: string): Promise<boolean> {
         this.isDeleteInProgress = true;
         try {
-            await firstValueFrom(this.deleteProductAndReload(entityId<'product'>(result.id)));
-            return true;
+            const result = await firstValueFrom(this.deleteProductAndReload(entityId<'product'>(id)), { defaultValue: false });
+            return result !== false && !this.destroyRef.destroyed;
         } catch {
             this.deletingProduct.set(false);
-            this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
+            if (!this.destroyRef.destroyed) {
+                this.toastService.error(this.translateService.instant('PRODUCT_LIST.DELETE_ERROR'));
+            }
             return false;
         } finally {
             this.isDeleteInProgress = false;
         }
+    }
+
+    private async openProductDetailsAsync(product: Product): Promise<unknown> {
+        const { ProductDetailComponent } = await import('../../components/detail/product-detail/product-detail');
+        if (this.destroyRef.destroyed) {
+            return null;
+        }
+        return firstValueFrom(
+            this.fdDialogService
+                .open(ProductDetailComponent, { preset: 'detail', data: product })
+                .afterClosed()
+                .pipe(takeUntilDestroyed(this.destroyRef)),
+            { defaultValue: null },
+        );
     }
 
     private bindSearch(): void {
@@ -745,27 +766,27 @@ export class ProductListFacade {
 
     private removeProductFavorite(product: Product): void {
         const favoriteId = product.favoriteProductId;
-        const request$ =
+        const favoriteId$ =
             favoriteId !== null && favoriteId !== undefined && favoriteId.length > 0
-                ? this.favoriteProductService.remove(favoriteId)
-                : this.favoriteProductService.getLookupPage().pipe(
-                      switchMap(favorites => {
-                          const match = favorites.find(favorite => favorite.productId === product.id);
-                          return match === undefined ? of(null) : this.favoriteProductService.remove(match.id);
-                      }),
-                  );
+                ? of(favoriteId)
+                : this.favoriteProductService
+                      .getLookupPage()
+                      .pipe(map(favorites => favorites.find(favorite => favorite.productId === product.id)?.id));
 
-        request$
+        favoriteId$
             .pipe(
+                switchMap(id => (id === undefined ? of(false) : this.favoriteProductService.remove(id).pipe(map(() => true)))),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.setFavoriteLoading(product.id, false);
                 }),
             )
             .subscribe({
-                next: () => {
+                next: removed => {
                     this.syncProductFavoriteState(product.id, false, null);
-                    this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                    if (removed) {
+                        this.favoriteTotalCount.update(count => Math.max(0, count - 1));
+                    }
                 },
                 error: () => this.toastService.error(this.translateService.instant('PRODUCT_FAVORITES.REMOVE_ERROR')),
             });

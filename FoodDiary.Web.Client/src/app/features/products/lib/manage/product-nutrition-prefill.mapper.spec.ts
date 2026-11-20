@@ -82,6 +82,12 @@ describe('Open Food Facts nutrition prefill mapper', () => {
         expect(buildOpenFoodFactsLookupPatch(values, OFF_PRODUCT)).toEqual({});
     });
 
+    it('leaves the name out of the patch when restored source data only has a barcode and nutrition', () => {
+        const source = { barcode: OFF_PRODUCT.barcode, name: '', caloriesPer100G: 0 };
+
+        expect(buildSourceProductPrefillPatch(source)).toEqual({ barcode: OFF_PRODUCT.barcode, caloriesPerBase: 0 });
+    });
+
     it('should build selected source product patch and overwrite nutrition values', () => {
         const suggestion: ProductSearchSuggestion = {
             source: 'openFoodFacts',
@@ -108,6 +114,38 @@ describe('Open Food Facts nutrition prefill mapper', () => {
             carbsPerBase: 42.2,
             fiberPerBase: 3,
         });
+    });
+});
+
+describe('Open Food Facts sparse entries', () => {
+    it('fills a known nutrient zero during a sparse barcode lookup and keeps a manually entered zero', () => {
+        const form = {
+            ...EMPTY_FORM_VALUES,
+            name: 'Unsweetened drink',
+            caloriesPerBase: 0,
+        } satisfies ProductFormValues;
+        const lookup: OpenFoodFactsProduct = {
+            barcode: OFF_PRODUCT.barcode,
+            name: 'Imported drink',
+            brand: null,
+            imageUrl: '',
+            caloriesPer100G: OFF_PRODUCT.caloriesPer100G,
+            proteinsPer100G: 0,
+            fatsPer100G: null,
+        };
+
+        expect(buildOpenFoodFactsLookupPatch(form, lookup)).toEqual({ proteinsPerBase: 0 });
+    });
+
+    it('selects a catalog name and recorded fiber without filling unknown source fields', () => {
+        const suggestion: ProductSearchSuggestion = {
+            source: 'openFoodFacts',
+            name: 'Canned lentils',
+            caloriesPer100G: null,
+            fiberPer100G: 0,
+        };
+
+        expect(buildSourceProductPrefillPatch(suggestion)).toEqual({ name: 'Canned lentils', fiberPerBase: 0 });
     });
 });
 
@@ -165,6 +203,83 @@ describe('USDA nutrition prefill mapper', () => {
             proteinsPerBase: 12.3,
             fatsPerBase: 4.6,
             carbsPerBase: 20.1,
+        });
+    });
+});
+
+describe('USDA sparse nutrient fields', () => {
+    it('keeps declared alcohol zero and fiber while converting named energy from kJ', () => {
+        const energyKj = 418.4;
+        const energyKjNutrientId = 1_062;
+        const detail = {
+            fdcId: usdaFoodId(USDA_FOOD_KEY),
+            description: 'Fruit puree',
+            foodCategory: null,
+            nutrients: [
+                {
+                    nutrientId: energyKjNutrientId,
+                    name: 'Energy',
+                    unit: 'kJ',
+                    amountPer100g: energyKj,
+                    dailyValue: null,
+                    percentDailyValue: null,
+                },
+                {
+                    nutrientId: USDA_NUTRIENT_IDS.fiber,
+                    name: 'Fiber, total dietary',
+                    unit: 'g',
+                    amountPer100g: 2.46,
+                    dailyValue: null,
+                    percentDailyValue: null,
+                },
+                {
+                    nutrientId: USDA_NUTRIENT_IDS.alcohol,
+                    name: 'Alcohol, ethyl',
+                    unit: 'g',
+                    amountPer100g: 0,
+                    dailyValue: null,
+                    percentDailyValue: null,
+                },
+            ],
+            portions: [],
+            healthScores: null,
+        } satisfies UsdaFoodDetail;
+
+        expect(buildUsdaFoodDetailPrefillPatch(detail)).toEqual({
+            name: detail.description,
+            usdaFdcId: detail.fdcId,
+            baseUnit: MeasurementUnit.G,
+            baseAmount: DEFAULT_BASE_AMOUNT,
+            caloriesPerBase: 100,
+            fiberPerBase: 2.5,
+            alcoholPerBase: 0,
+        });
+    });
+
+    it('leaves the editable macros unchanged when a provider has only micronutrients', () => {
+        const detail = {
+            fdcId: usdaFoodId(USDA_FOOD_KEY),
+            description: 'Sample with mineral data',
+            foodCategory: null,
+            nutrients: [
+                {
+                    nutrientId: USDA_NUTRIENT_IDS.iron,
+                    name: 'Iron, Fe',
+                    unit: 'mg',
+                    amountPer100g: 1.24,
+                    dailyValue: null,
+                    percentDailyValue: null,
+                },
+            ],
+            portions: [],
+            healthScores: null,
+        } satisfies UsdaFoodDetail;
+
+        expect(buildUsdaFoodDetailPrefillPatch(detail)).toEqual({
+            name: detail.description,
+            usdaFdcId: detail.fdcId,
+            baseUnit: MeasurementUnit.G,
+            baseAmount: DEFAULT_BASE_AMOUNT,
         });
     });
 });

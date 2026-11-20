@@ -3,13 +3,16 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../../shared/development/development-tools';
-import { imageSelection } from '../../../../../shared/models/image-upload.data';
+import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
+import { type ImageSelection, imageSelection } from '../../../../../shared/models/image-upload.data';
 import {
     MeasurementUnit,
     type Product,
@@ -24,6 +27,7 @@ import { ProductService } from '../../../api/product.service';
 import type { ProductAiRecognitionResult } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog.types';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
 import {
+    PRODUCT_BRAND_MAX_LENGTH,
     PRODUCT_MAX_PHOTOS,
     PRODUCT_MAX_PIECE_AMOUNT,
     PRODUCT_MAX_PIECE_CALORIES_PER_BASE,
@@ -34,6 +38,7 @@ import {
     PRODUCT_NAME_MAX_LENGTH,
 } from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
+import type { ProductDeleteResult } from '../../../lib/product-manage.types';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import { ProductManageFormComponent } from './product-manage-form';
 
@@ -192,6 +197,7 @@ type ProductManageFormSetup = {
         open: ReturnType<typeof vi.fn>;
     };
     productManageFacade: ProductManageFacadeMock;
+    uploadImage: ReturnType<typeof vi.fn<ImageUploadFacade['upload']>>;
     navigationService: {
         navigateToProductListAsync: ReturnType<typeof vi.fn<NavigationService['navigateToProductListAsync']>>;
     };
@@ -199,6 +205,7 @@ type ProductManageFormSetup = {
         start: ReturnType<typeof vi.fn>;
     };
     externalFoodFacade: ProductExternalFoodFacadeMock;
+    searchSuggestions: ReturnType<typeof vi.fn<ProductService['searchSuggestions']>>;
 };
 
 describe('ProductManageFormComponent header state', () => {
@@ -612,23 +619,6 @@ describe('ProductManageFormComponent validation limits', () => {
 });
 
 describe('ProductManageFormComponent cancel delete and nutrition behavior', () => {
-    it('should emit cancel without navigation or discard confirmation in dialog mode', async () => {
-        const { component, fixture, productManageFacade, navigationService } = await setupComponentAsync();
-        let wasCancelled = false;
-        component['cancelled'].subscribe(() => {
-            wasCancelled = true;
-        });
-        fixture.componentRef.setInput('mode', 'dialog');
-        fixture.detectChanges();
-        component['productForm']().markAsDirty();
-
-        await component['onCancelAsync']();
-
-        expect(wasCancelled).toBe(true);
-        expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
-        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
-    });
-
     it('should stay on page when dirty cancel confirmation is rejected', async () => {
         const { component, productManageFacade, navigationService } = await setupComponentAsync();
         productManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
@@ -965,11 +955,730 @@ describe('product development capability', () => {
     });
 });
 
+describe('Product editor capability snapshot', () => {
+    it('reports native validation and refuses draft changes during a pending submission', async () => {
+        const screens: DevelopmentScreen[] = [];
+        const editor = await setupComponentAsync({
+            attach: screen => {
+                screens.push(screen);
+                return (): void => undefined;
+            },
+        });
+        editor.fixture.detectChanges();
+        const screen = screens[0];
+        const emptyDraft = screen.read();
+        expect(emptyDraft).toMatchObject({
+            isNew: true,
+            id: null,
+            valid: false,
+            loading: false,
+        });
+        expect(emptyDraft).toHaveProperty('validation.name', expect.arrayContaining(['required']));
+        expect(emptyDraft).toHaveProperty('validation.calories', expect.arrayContaining(['required']));
+        enterProductValue(requiredProductInput(editor.el, 'fd-ui-autocomplete input'), 'Fresh apple');
+        enterProductValue(requiredProductInput(editor.el, '.nutrition-editor__input--calories input'), String(BASE_CALORIES));
+        editor.fixture.detectChanges();
+        expect(screen.read()).toMatchObject({
+            isNew: true,
+            valid: true,
+            loading: false,
+            values: { name: 'Fresh apple', caloriesPerBase: BASE_CALORIES, visibility: ProductVisibility.Private },
+            validation: { name: [], calories: [] },
+        });
+        expect(screen.isDirty?.()).toBe(true);
+        let rejectSave: (() => void) | undefined;
+        editor.productManageFacade.submitProductAsync.mockReturnValueOnce(
+            new Promise(resolve => {
+                rejectSave = (): void => {
+                    resolve({ product: null, error: new HttpErrorResponse({ status: 503 }) });
+                };
+            }),
+        );
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await vi.waitFor(() => {
+            editor.fixture.detectChanges();
+            expect(screen.read()).toMatchObject({ loading: true });
+        });
+        expect(() => screen.clearDraft?.()).toThrow('A ready NEW product editor is required');
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe('Fresh apple');
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledTimes(1);
+        rejectSave?.();
+        await editor.fixture.whenStable();
+        editor.fixture.detectChanges();
+        expect(screen.read()).toMatchObject({ loading: false, error: 'PRODUCT_MANAGE.SAVE_ERROR', values: { name: 'Fresh apple' } });
+        expect(screen.isDirty?.()).toBe(true);
+    });
+});
+
+describe('Product editor capability privacy', () => {
+    it('reports the existing product identity and omits photo references from the serialized snapshot', async () => {
+        const screens: DevelopmentScreen[] = [];
+        const editor = await setupComponentAsync({
+            attach: screen => {
+                screens.push(screen);
+                return (): void => undefined;
+            },
+        });
+        const imgUrl = 'https://images.example.test/product-cover.jpg';
+        const galleryUrl = 'https://images.example.test/product-gallery.jpg';
+        const assetId = 'test-product-photo';
+        editor.fixture.componentRef.setInput('product', {
+            ...PRODUCT,
+            imageUrl: imgUrl,
+            images: [{ imageAssetId: assetId, imageUrl: galleryUrl }],
+        });
+        editor.fixture.detectChanges();
+        expect(editor.el.querySelector('fd-image-gallery-editor img[src*="product-gallery.jpg"]')).not.toBeNull();
+        const screen = screens[0];
+        const snapshot = screen.read();
+
+        expect(snapshot).toMatchObject({ isNew: false, id: PRODUCT.id, valid: true, values: { name: PRODUCT.name } });
+        expect(JSON.stringify(snapshot)).not.toContain(imgUrl);
+        expect(JSON.stringify(snapshot)).not.toContain(galleryUrl);
+        expect(JSON.stringify(snapshot)).not.toContain(assetId);
+        expect(() => screen.clearDraft?.()).toThrow('A ready NEW product editor is required');
+        expect(screen.isDirty?.()).toBe(false);
+    });
+});
+
+describe('Product editor gallery departure', () => {
+    it('blocks leaving or deleting while a photo uploads and lets the pristine editor leave after failure', async () => {
+        const { component, el, fixture, uploadImage, productManageFacade } = await setupComponentAsync();
+        const pending = new Subject<ImageSelection>();
+        uploadImage.mockReturnValueOnce(pending);
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        expect(await component.canLeaveAsync()).toBe(true);
+
+        beginNativeGalleryUpload(el);
+        const save = requiredFormButton(el, 'button[type="submit"]');
+        const remove = requiredFormButton(el, '.product-manage__delete-button button');
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(uploadImage).toHaveBeenCalledOnce();
+            expect(save.matches(':disabled')).toBe(true);
+        });
+
+        expect(await component.canLeaveAsync()).toBe(false);
+        expect(remove.matches(':disabled')).toBe(true);
+        remove.click();
+        expect(productManageFacade.deleteProductAsync).not.toHaveBeenCalled();
+
+        pending.error(new Error('Upload unavailable'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(save.matches(':disabled')).toBe(false);
+        });
+        expect(remove.matches(':disabled')).toBe(false);
+        expect(await component.canLeaveAsync()).toBe(true);
+        expect(productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+    });
+
+    it('asks before discarding a successfully uploaded gallery edit', async () => {
+        const { component, el, fixture, uploadImage, productManageFacade } = await setupComponentAsync();
+        const photo = imageSelection('https://images.example.test/added-photo.jpg', 'added-asset');
+        uploadImage.mockReturnValueOnce(of(photo));
+        productManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+
+        beginNativeGalleryUpload(el);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(el.querySelector('fd-image-gallery-editor img[src*="added-photo.jpg"]')).not.toBeNull();
+            expect(el.querySelector('button[type="submit"]')?.matches(':disabled')).toBe(false);
+        });
+
+        expect(await component.canLeaveAsync()).toBe(false);
+        expect(productManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product editor rendered source prefill', () => {
+    it('uses a supplied Open Food Facts entry without fetching it again and submits a private creation', async () => {
+        const { el, fixture, productManageFacade, externalFoodFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('prefill', { offProduct: OFF_PRODUCT });
+        fixture.detectChanges();
+
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(OFF_PRODUCT.name);
+        expect(el.querySelector<HTMLInputElement>('input[aria-label="PRODUCT_MANAGE.BRAND"]')?.value).toBe(OFF_PRODUCT.brand);
+        expect(externalFoodFacade.searchByBarcode).not.toHaveBeenCalled();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+
+        productManageFacade.submitProductAsync.mockResolvedValueOnce({ product: PRODUCT, error: null });
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledOnce();
+        const [existing, request] = productManageFacade.submitProductAsync.mock.calls[0];
+        expect(existing).toBeNull();
+        expect(request).toMatchObject({ name: OFF_PRODUCT.name, barcode: OFF_PRODUCT.barcode, visibility: ProductVisibility.Private });
+    });
+
+    it('does not overwrite the editable product with an obsolete barcode lookup', async () => {
+        const { el, fixture, externalFoodFacade } = await setupComponentAsync();
+        const result = new Subject<typeof OFF_PRODUCT | null>();
+        externalFoodFacade.searchByBarcode.mockReturnValueOnce(result);
+        fixture.componentRef.setInput('prefill', { barcode: OFF_PRODUCT.barcode });
+        fixture.detectChanges();
+        expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledExactlyOnceWith(OFF_PRODUCT.barcode);
+
+        fixture.componentRef.setInput('product', SECOND_PRODUCT);
+        fixture.detectChanges();
+        result.next(OFF_PRODUCT);
+        result.complete();
+        fixture.detectChanges();
+
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(SECOND_PRODUCT.name);
+        expect(el.querySelector<HTMLInputElement>('input[aria-label="PRODUCT_MANAGE.BRAND"]')?.value).toBe('');
+    });
+
+    it.each([
+        [null, OFF_PRODUCT.barcode],
+        ['', OFF_PRODUCT.barcode],
+        ['4006381333931', '4006381333931'],
+    ] as const)('keeps the existing product data when its scanner closes with %j', async (returned, expectedBarcode) => {
+        const { el, fixture, dialogService, externalFoodFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', { ...PRODUCT, barcode: OFF_PRODUCT.barcode });
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(returned) });
+        fixture.detectChanges();
+
+        requiredFormButton(el, 'button[aria-label="PRODUCT_MANAGE.SCAN_BARCODE"]').click();
+        fixture.detectChanges();
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(el.querySelector<HTMLInputElement>('input[aria-label="PRODUCT_MANAGE.BARCODE"]')?.value).toBe(expectedBarcode);
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(PRODUCT.name);
+        expect(externalFoodFacade.searchByBarcode).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product editor native deletion controls', () => {
+    it('locks the form while deletion confirmation is pending and re-enables the same product on cancellation', async () => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        const confirm = new Subject<ProductDeleteResult>();
+        const result = firstValueFrom(confirm);
+        productManageFacade.deleteProductAsync.mockReturnValueOnce(result);
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        const button = requiredFormButton(el, '.product-manage__delete-button button');
+        const save = requiredFormButton(el, 'button[type="submit"]');
+
+        button.click();
+        fixture.detectChanges();
+        expect(button.matches(':disabled')).toBe(true);
+        expect(save.matches(':disabled')).toBe(true);
+        button.click();
+        expect(productManageFacade.deleteProductAsync).toHaveBeenCalledExactlyOnceWith(
+            PRODUCT,
+            expect.objectContaining({ name: PRODUCT.name }),
+        );
+
+        confirm.next('cancelled');
+        confirm.complete();
+        await result;
+        fixture.detectChanges();
+
+        expect(save.matches(':disabled')).toBe(false);
+        expect(el.querySelector<HTMLInputElement>('fd-ui-autocomplete input')?.value).toBe(PRODUCT.name);
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
+    });
+});
+
+describe('Product editor scanner ownership', () => {
+    it('releases a pending barcode and never requests external product data after the editor is destroyed', async () => {
+        const { el, fixture, dialogService, externalFoodFacade } = await setupComponentAsync();
+        const closed = new Subject<string | null>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => closed });
+        fixture.detectChanges();
+        requiredFormButton(el, 'button[aria-label="PRODUCT_MANAGE.SCAN_BARCODE"]').click();
+        expect(closed.observed).toBe(true);
+
+        fixture.destroy();
+
+        expect(closed.observed).toBe(false);
+        closed.next(OFF_PRODUCT.barcode);
+        closed.complete();
+        expect(externalFoodFacade.searchByBarcode).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product editor rendered suggestion ownership', () => {
+    it('keeps a custom name typed during USDA lookup while displaying the returned nutrients', async () => {
+        const editor = await setupComponentAsync();
+        const result = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(result);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        const name = requiredProductInput(editor.el, 'fd-ui-autocomplete input');
+        expect(name.value).toBe(USDA_SUGGESTION.name);
+        expect(editor.externalFoodFacade.getUsdaFoodDetail).toHaveBeenCalledExactlyOnceWith(USDA_FDC_ID);
+        const ownName = 'My morning oats';
+        enterProductValue(name, ownName);
+        editor.fixture.detectChanges();
+
+        result.next(createUsdaFoodDetail(USDA_FDC_ID, 'Provider description'));
+        result.complete();
+        editor.fixture.detectChanges();
+
+        expect(name.value).toBe(ownName);
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--proteins input').value).toBe(
+            String(EXPECTED_ROUNDED_USDA_PROTEIN),
+        );
+        expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('leaves the selected name editable and permits a manual save when the USDA detail request fails', async () => {
+        const editor = await setupComponentAsync();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(throwError(() => new Error('USDA unavailable')));
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(USDA_SUGGESTION.name);
+        const calories = requiredProductInput(editor.el, '.nutrition-editor__input--calories input');
+        expect(calories.disabled).toBe(false);
+        expect(calories.value).toBe('');
+        enterProductValue(calories, String(BASE_CALORIES));
+        editor.fixture.detectChanges();
+
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await editor.fixture.whenStable();
+
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            null,
+            expect.objectContaining({ name: USDA_SUGGESTION.name, caloriesPerBase: BASE_CALORIES }),
+            false,
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor external source handoff', () => {
+    it.each([true, false])('keeps the chosen source when recognition is accepted=%s during USDA loading', async accepted => {
+        const editor = await setupComponentAsync();
+        const detail = new Subject<UsdaFoodDetail>();
+        const recognition = new Subject<ProductAiRecognitionResult | null>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(detail);
+        editor.dialogService.open.mockReturnValueOnce({ afterClosed: (): Subject<ProductAiRecognitionResult | null> => recognition });
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        const name = requiredProductInput(editor.el, 'fd-ui-autocomplete input');
+        const proteins = requiredProductInput(editor.el, '.nutrition-editor__input--proteins input');
+        expect(name.value).toBe(USDA_SUGGESTION.name);
+        expect(detail.observed).toBe(true);
+
+        requiredFormButton(editor.el, '.product-manage__ai button').click();
+        expect(recognition.observed).toBe(true);
+        const recognizedName = 'Recognized packaging';
+        const recognizedProteins = 6;
+        recognition.next(
+            accepted
+                ? {
+                      name: recognizedName,
+                      image: null,
+                      baseUnit: MeasurementUnit.G,
+                      baseAmount: PORTION_AMOUNT,
+                      caloriesPerBase: PORTION_CALORIES,
+                      proteinsPerBase: recognizedProteins,
+                      fatsPerBase: 0,
+                      carbsPerBase: 0,
+                      fiberPerBase: 0,
+                      alcoholPerBase: 0,
+                  }
+                : null,
+        );
+        recognition.complete();
+        editor.fixture.detectChanges();
+        expect(name.value).toBe(accepted ? recognizedName : USDA_SUGGESTION.name);
+        expect(proteins.value).toBe(accepted ? String(recognizedProteins) : '');
+
+        const providerName = 'USDA product details';
+        detail.next(createUsdaFoodDetail(USDA_FDC_ID, providerName));
+        detail.complete();
+        editor.fixture.detectChanges();
+
+        expect(name.value).toBe(accepted ? recognizedName : providerName);
+        expect(proteins.value).toBe(String(accepted ? recognizedProteins : EXPECTED_ROUNDED_USDA_PROTEIN));
+    });
+
+    it('keeps the chosen Open Food Facts details when a previous USDA response arrives', async () => {
+        const editor = await setupComponentAsync();
+        const detail = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(detail);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        const selected: ProductSearchSuggestion = { ...OFF_PRODUCT, source: 'openFoodFacts' };
+        await chooseProductSuggestionAsync(editor, selected);
+        expect(requiredProductInput(editor.el, 'input[aria-label="PRODUCT_MANAGE.BRAND"]').value).toBe(OFF_PRODUCT.brand);
+
+        detail.next(createUsdaFoodDetail(USDA_FDC_ID, 'Prior USDA product'));
+        detail.complete();
+        editor.fixture.detectChanges();
+
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(selected.name);
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--proteins input').value).toBe(String(OFF_PRODUCT.proteinsPer100G));
+    });
+});
+
+describe('Product editor refresh while recognition is pending', () => {
+    it.each([
+        ['opening another product', SECOND_PRODUCT],
+        ['refreshing the current product', SAME_ID_UPDATED_PRODUCT],
+    ] as const)('keeps the fresh product fields after %s with the same USDA source', async (_context, refreshed) => {
+        const editor = await setupComponentAsync();
+        const oldProduct = { ...PRODUCT, usdaFdcId: USDA_FDC_ID };
+        const currentProduct = { ...refreshed, usdaFdcId: USDA_FDC_ID };
+        editor.fixture.componentRef.setInput('product', oldProduct);
+        const pending = new Subject<UsdaFoodDetail>();
+        editor.externalFoodFacade.getUsdaFoodDetail.mockReturnValueOnce(pending);
+        await chooseProductSuggestionAsync(editor, USDA_SUGGESTION);
+        expect(pending.observed).toBe(true);
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(USDA_SUGGESTION.name);
+
+        editor.fixture.componentRef.setInput('product', currentProduct);
+        editor.fixture.detectChanges();
+        const proteins = requiredProductInput(editor.el, '.nutrition-editor__input--proteins input');
+        expect(proteins.value).toBe(String(currentProduct.proteinsPerBase));
+        pending.next(createUsdaFoodDetail(USDA_FDC_ID, 'Details from the former editor'));
+        pending.complete();
+        editor.fixture.detectChanges();
+
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(currentProduct.name);
+        expect(proteins.value).toBe(String(currentProduct.proteinsPerBase));
+        expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('keeps the new product fields when the old AI dialog completes', async () => {
+        const editor = await setupComponentAsync();
+        const pending = new Subject<ProductAiRecognitionResult>();
+        editor.dialogService.open.mockReturnValueOnce({ afterClosed: (): Subject<ProductAiRecognitionResult> => pending });
+        editor.fixture.componentRef.setInput('product', PRODUCT);
+        editor.fixture.detectChanges();
+        requiredFormButton(editor.el, '.product-manage__ai button').click();
+        expect(pending.observed).toBe(true);
+
+        editor.fixture.componentRef.setInput('product', SECOND_PRODUCT);
+        editor.fixture.detectChanges();
+        pending.next({
+            name: 'Recognized in the former editor',
+            image: null,
+            baseUnit: MeasurementUnit.G,
+            baseAmount: PORTION_AMOUNT,
+            caloriesPerBase: PORTION_CALORIES,
+            proteinsPerBase: 1,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        });
+        pending.complete();
+        editor.fixture.detectChanges();
+
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(SECOND_PRODUCT.name);
+        expect(requiredProductInput(editor.el, '.nutrition-editor__input--calories input').value).toBe(
+            String(SECOND_PRODUCT.caloriesPerBase),
+        );
+        expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('releases the open AI dialog result subscription when its editor leaves', async () => {
+        const editor = await setupComponentAsync();
+        const result = new Subject<ProductAiRecognitionResult>();
+        editor.dialogService.open.mockReturnValueOnce({ afterClosed: (): Subject<ProductAiRecognitionResult> => result });
+        editor.fixture.detectChanges();
+        requiredFormButton(editor.el, '.product-manage__ai button').click();
+        expect(result.observed).toBe(true);
+
+        editor.fixture.destroy();
+
+        expect(result.observed).toBe(false);
+        expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product editor native source replacement', () => {
+    it('saves the chosen Open Food Facts fields and removes the previous USDA link', async () => {
+        const editor = await setupComponentAsync();
+        const existing = { ...PRODUCT, usdaFdcId: USDA_FDC_ID };
+        editor.fixture.componentRef.setInput('product', existing);
+        const selected: ProductSearchSuggestion = { ...OFF_PRODUCT, source: 'openFoodFacts' };
+        const saved = { ...existing, name: selected.name, brand: selected.brand };
+        editor.productManageFacade.submitProductAsync.mockImplementationOnce(async (_product, _request, _skip, afterSave) => {
+            await afterSave?.(saved);
+            return { product: saved, error: null };
+        });
+        await chooseProductSuggestionAsync(editor, selected);
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(selected.name);
+        expect(requiredProductInput(editor.el, 'input[aria-label="PRODUCT_MANAGE.BARCODE"]').value).toBe(OFF_PRODUCT.barcode);
+        expect(requiredProductInput(editor.el, 'input[aria-label="PRODUCT_MANAGE.BRAND"]').value).toBe(OFF_PRODUCT.brand);
+
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await editor.fixture.whenStable();
+
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            existing,
+            expect.objectContaining({ name: OFF_PRODUCT.name, barcode: OFF_PRODUCT.barcode, brand: OFF_PRODUCT.brand }),
+            false,
+            expect.any(Function),
+        );
+        expect(editor.externalFoodFacade.unlinkUsdaProduct).toHaveBeenCalledExactlyOnceWith(existing.id);
+        expect(editor.externalFoodFacade.linkUsdaProduct).not.toHaveBeenCalled();
+        expect(editor.externalFoodFacade.searchByBarcode).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product editor native dialog cancellation', () => {
+    it('routes Cancel through the enclosing dialog with no page-level navigation or save', async () => {
+        const editor = await setupComponentAsync();
+        editor.fixture.componentRef.setInput('mode', 'dialog');
+        const cancelled = vi.fn();
+        editor.component.cancelled.subscribe(cancelled);
+        editor.fixture.detectChanges();
+        enterProductValue(requiredProductInput(editor.el, 'fd-ui-autocomplete input'), 'Unsaved label');
+        editor.fixture.detectChanges();
+
+        requiredFormButton(editor.el, '.product-manage__cancel-button button').click();
+        await editor.fixture.whenStable();
+
+        expect(cancelled).toHaveBeenCalledOnce();
+        expect(editor.productManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+        expect(editor.navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
+        expect(editor.productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product editor native recovery', () => {
+    it('restores a barcode once and keeps a typed draft when a different prefill arrives', async () => {
+        const { el, fixture, externalFoodFacade, productManageFacade } = await setupComponentAsync();
+        fixture.detectChanges();
+        const barcode = requiredProductInput(el, 'input[aria-label="PRODUCT_MANAGE.BARCODE"]');
+        const name = requiredProductInput(el, 'fd-ui-autocomplete input');
+        fixture.componentRef.setInput('prefill', { barcode: ' 4600000000001 ' });
+        fixture.detectChanges();
+        expect(barcode.value).toBe('4600000000001');
+        expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledExactlyOnceWith('4600000000001');
+
+        fixture.componentRef.setInput('prefill', { barcode: '4600000000001' });
+        fixture.detectChanges();
+        expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledTimes(1);
+
+        enterProductValue(name, 'My own product');
+        fixture.detectChanges();
+        fixture.componentRef.setInput('prefill', { offProduct: OFF_PRODUCT });
+        fixture.detectChanges();
+
+        expect(name.value).toBe('My own product');
+        expect(barcode.value).toBe('4600000000001');
+        expect(externalFoodFacade.searchByBarcode).toHaveBeenCalledTimes(1);
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('highlights a saved brand that exceeds the current limit and admits a corrected save', async () => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', { ...PRODUCT, brand: 'B'.repeat(PRODUCT_BRAND_MAX_LENGTH + 1) });
+        fixture.detectChanges();
+        const brand = requiredProductInput(el, 'input[aria-label="PRODUCT_MANAGE.BRAND"]');
+        const save = requiredFormButton(el, 'button[type="submit"]');
+        expect(brand.getAttribute('aria-invalid')).not.toBe('true');
+        save.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(brand.getAttribute('aria-invalid')).toBe('true');
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+
+        enterProductValue(brand, 'Corrected brand');
+        fixture.detectChanges();
+        expect(brand.getAttribute('aria-invalid')).not.toBe('true');
+        save.click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({ brand: 'Corrected brand' }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor nutrition input', () => {
+    it('keeps an unfinished empty nutrition draft editable when the display basis changes', async () => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.detectChanges();
+        const portion = requiredFormButton(el, 'fd-ui-segmented-toggle button[role="radio"]:last-child');
+        const base = requiredFormButton(el, 'fd-ui-segmented-toggle button[role="radio"]:first-child');
+        const calories = requiredProductInput(el, '.nutrition-editor__input--calories input');
+
+        portion.click();
+        fixture.detectChanges();
+        expect(portion.getAttribute('aria-checked')).toBe('true');
+        expect(calories.value).toBe('');
+
+        base.click();
+        fixture.detectChanges();
+        expect(base.getAttribute('aria-checked')).toBe('true');
+        expect(calories.value).toBe('');
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('shows invalid serving and macro entries before saving corrected decimal values', async () => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        const amount = requiredProductInput(el, 'input[aria-label="PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT"]');
+        const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+        const portion = requiredFormButton(el, 'fd-ui-segmented-toggle button[role="radio"]:last-child');
+        const save = requiredFormButton(el, 'button[type="submit"]');
+        portion.click();
+        fixture.detectChanges();
+        enterProductValue(amount, '0');
+        enterProductValue(proteins, '9..5');
+        fixture.detectChanges();
+        save.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(amount.getAttribute('aria-invalid')).toBe('true');
+        expect(proteins.getAttribute('aria-invalid')).toBe('true');
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+
+        enterProductValue(amount, '100,5');
+        fixture.detectChanges();
+        enterProductValue(proteins, '9,5');
+        fixture.detectChanges();
+        expect(amount.getAttribute('aria-invalid')).not.toBe('true');
+        expect(proteins.getAttribute('aria-invalid')).not.toBe('true');
+        save.click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({ defaultPortionAmount: 100.5, proteinsPerBase: 9.5 }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor legacy cover actions', () => {
+    it('removes the previous URL-only cover and saves an explicit empty gallery', async () => {
+        const { el, fixture, productManageFacade } = await setupComponentAsync();
+        const legacyCover = 'https://images.example.test/legacy-cover.jpg';
+        fixture.componentRef.setInput('product', { ...PRODUCT, imageUrl: legacyCover });
+        fixture.detectChanges();
+        expect(el.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
+
+        requiredFormButton(el, 'fd-image-gallery-editor .recognition-photos__preview button').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(document.querySelector('.fd-ui-menu-item--danger button')).not.toBeNull();
+        });
+        requiredFormButton(document.body, '.fd-ui-menu-item--danger button').click();
+        fixture.detectChanges();
+        expect(el.querySelector('fd-image-gallery-editor img')).toBeNull();
+
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({ imageAssetId: null, imageAssetIds: [] }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+
+    it('keeps the URL-only cover when recognition supplies nutrition without new photos', async () => {
+        const { el, fixture, dialogService, productManageFacade } = await setupComponentAsync();
+        const legacyCover = 'https://images.example.test/legacy-cover.jpg';
+        fixture.componentRef.setInput('product', { ...PRODUCT, imageUrl: legacyCover });
+        fixture.detectChanges();
+        const recognized: ProductAiRecognitionResult = {
+            name: 'Recognized product',
+            image: null,
+            baseUnit: MeasurementUnit.G,
+            baseAmount: PORTION_AMOUNT,
+            caloriesPerBase: PORTION_CALORIES,
+            proteinsPerBase: 5,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+        };
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(recognized) });
+        requiredFormButton(el, '.product-manage__ai button').click();
+        fixture.detectChanges();
+
+        expect(requiredProductInput(el, 'fd-ui-autocomplete input').value).toBe(recognized.name);
+        expect(el.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
+        expect(el.querySelector('.product-manage__footer-error')).toBeNull();
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+        const payload = productManageFacade.submitProductAsync.mock.calls[0]?.[1];
+        expect(payload).toMatchObject({ name: recognized.name, caloriesPerBase: BASE_CALORIES });
+        expect(payload).not.toHaveProperty('imageAssetIds');
+    });
+});
+async function chooseProductSuggestionAsync(editor: ProductManageFormSetup, suggestion: ProductSearchSuggestion): Promise<void> {
+    stubScrollIntoView();
+    editor.searchSuggestions.mockReturnValueOnce(of([suggestion]));
+    editor.fixture.detectChanges();
+    const name = requiredProductInput(editor.el, 'fd-ui-autocomplete input');
+    name.focus();
+    enterProductValue(name, 'Source search');
+    await vi.waitFor(() => {
+        editor.fixture.detectChanges();
+        expect(document.querySelector('button[role="option"] .fd-ui-autocomplete__option-label')?.textContent).toBe(suggestion.name);
+    });
+    requiredFormButton(document.body, 'button.fd-ui-autocomplete__menu-item[role="option"]').click();
+    editor.fixture.detectChanges();
+}
+
+function requiredProductInput(host: HTMLElement, selector: string): HTMLInputElement {
+    const input = host.querySelector(selector);
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error(`Missing product editor input ${selector}`);
+    }
+    return input;
+}
+
+function enterProductValue(input: HTMLInputElement, value: string): void {
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function requiredFormButton(host: HTMLElement, selector: string): HTMLButtonElement {
+    const button = host.querySelector<HTMLButtonElement>(selector);
+    if (button === null) {
+        throw new Error(`Missing product editor button ${selector}`);
+    }
+    return button;
+}
+
+function beginNativeGalleryUpload(host: HTMLElement): void {
+    const decoded = document.createElement('img');
+    const thumbnailSize = 320;
+    Object.defineProperties(decoded, { naturalWidth: { value: thumbnailSize }, naturalHeight: { value: thumbnailSize } });
+    vi.stubGlobal('Image', function createDecodedImage(): HTMLImageElement {
+        return decoded;
+    });
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:product-thumbnail');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    onTestFinished(() => {
+        createUrl.mockRestore();
+        revokeUrl.mockRestore();
+        vi.unstubAllGlobals();
+    });
+    const picker = host.querySelector<HTMLInputElement>('fd-image-gallery-editor input[type="file"]');
+    if (picker === null) {
+        throw new Error('Product gallery file picker is missing');
+    }
+    Object.defineProperty(picker, 'files', { value: [new File(['thumbnail bytes'], 'thumbnail.png', { type: 'image/png' })] });
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+    decoded.dispatchEvent(new Event('load'));
+}
+
 async function setupComponentAsync(developmentScreens?: {
     attach: (screen: DevelopmentScreen) => () => void;
 }): Promise<ProductManageFormSetup> {
     const productManageFacade = createProductManageFacadeMock();
     const externalFoodFacade = createProductExternalFoodFacadeMock();
+    const uploadImage = vi.fn<ImageUploadFacade['upload']>();
     const navigationService = {
         navigateToProductListAsync: vi.fn<NavigationService['navigateToProductListAsync']>().mockResolvedValue(void 0),
     };
@@ -979,6 +1688,7 @@ async function setupComponentAsync(developmentScreens?: {
     const tourService = {
         start: vi.fn(),
     };
+    const searchSuggestions = vi.fn<ProductService['searchSuggestions']>().mockReturnValue(of([]));
 
     await TestBed.configureTestingModule({
         imports: [ProductManageFormComponent],
@@ -986,13 +1696,15 @@ async function setupComponentAsync(developmentScreens?: {
             ...(developmentScreens === undefined ? [] : [{ provide: DEVELOPMENT_SCREENS, useValue: developmentScreens }]),
             provideRouter([]),
             provideTranslateTesting(),
+            { provide: NAME_SEARCH_DEBOUNCE_MS, useValue: 0 },
             {
                 provide: ProductService,
                 useValue: {
-                    searchSuggestions: vi.fn().mockReturnValue(of([])),
+                    searchSuggestions,
                 },
             },
             { provide: ProductExternalFoodFacade, useValue: externalFoodFacade },
+            { provide: ImageUploadFacade, useValue: { upload: uploadImage } },
             {
                 provide: FdUiDialogService,
                 useValue: dialogService,
@@ -1021,9 +1733,11 @@ async function setupComponentAsync(developmentScreens?: {
         component: fixture.componentInstance,
         dialogService,
         productManageFacade,
+        uploadImage,
         navigationService,
         tourService,
         externalFoodFacade,
+        searchSuggestions,
     };
 }
 

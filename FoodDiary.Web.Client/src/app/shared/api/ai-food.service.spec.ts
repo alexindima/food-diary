@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -179,6 +179,66 @@ describe('AiFoodService usage', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/usage/me`);
         req.flush('Server error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+    });
+});
+
+describe('AiFoodService optional video import fields', () => {
+    it('sends a linked video as multipart with no file or caption field', async () => {
+        const sourceUrl = 'https://www.youtube.com/shorts/abcdEFGhijk';
+        const pending = firstValueFrom(service.importRecipeVideo({ sourceUrl, text: null }, null));
+        const request = httpMock.expectOne({ method: 'POST', url: `${BASE_URL}/food/recipe-import/video` });
+        const body = request.request.body as FormData;
+        expect(body.get('sourceUrl')).toBe(sourceUrl);
+        expect(body.has('video')).toBe(false);
+        expect(body.has('text')).toBe(false);
+        expect(request.request.headers.has('Content-Type')).toBe(false);
+        const recipe = { name: 'Baked tomato', sourceUrl, ingredients: [{ name: 'Tomato' }], steps: ['Bake until tender'] };
+        request.flush(recipe);
+
+        await expect(pending).resolves.toMatchObject({
+            ...recipe,
+            ingredients: [{ name: 'Tomato', amount: null, stepIndex: null }],
+        });
+    });
+
+    it('sends a local video without inventing a source URL or an empty caption', async () => {
+        const video = new File(['video'], 'quiet-recipe.mp4', { type: 'video/mp4' });
+        const pending = firstValueFrom(service.importRecipeVideo({ sourceUrl: null, text: null }, video));
+        const request = httpMock.expectOne({ method: 'POST', url: `${BASE_URL}/food/recipe-import/video` });
+        const body = request.request.body as FormData;
+        expect(body.get('video')).toBe(video);
+        expect(body.has('sourceUrl')).toBe(false);
+        expect(body.has('text')).toBe(false);
+        request.flush({ name: 'Baked tomato', ingredients: [], steps: [], sourceUrl: null });
+
+        await expect(pending).resolves.toMatchObject({ name: 'Baked tomato', sourceUrl: null });
+    });
+});
+
+describe('AiFoodService analysis errors', () => {
+    it('preserves the server quota code for text analysis', async () => {
+        const pending = firstValueFrom(service.parseFoodText({ text: 'tomato soup 200 g' }));
+        const error = { code: 'Ai.QuotaExceeded' };
+        httpMock.expectOne({ method: 'POST', url: `${BASE_URL}/food/text` }).flush(error, {
+            status: HttpStatusCode.TooManyRequests,
+            statusText: 'Too Many Requests',
+        });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.TooManyRequests, error });
+    });
+
+    it('preserves a nutrition calculation failure so the caller can keep the existing recognition result', async () => {
+        const servingGrams = 200;
+        const pending = firstValueFrom(
+            service.calculateNutrition({ items: [{ nameEn: 'Tomato soup', amount: servingGrams, unit: 'g', confidence: 1 }] }),
+        );
+        const error = { title: 'Nutrition calculation unavailable' };
+        httpMock.expectOne({ method: 'POST', url: `${BASE_URL}/food/nutrition` }).flush(error, {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Service Unavailable',
+        });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.ServiceUnavailable, error });
     });
 });
 

@@ -82,11 +82,18 @@ export class MealDetailFacade {
             cancelLabel: this.translate.instant('CONFIRM_DELETE.CANCEL'),
         };
 
-        this.fdDialogService
-            .open(ConfirmDeleteDialogComponent, { data, size: 'sm' })
+        const confirmation = this.fdDialogService.open(ConfirmDeleteDialogComponent, { data, size: 'sm' });
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            confirmation.close();
+        });
+        confirmation
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirm => {
+                if (this.destroyRef.destroyed) {
+                    return;
+                }
+                unregisterClose();
                 if (confirm === true) {
                     this.dialogRef.close(new MealDetailActionResult(meal.id, 'Delete', this.hasFavoriteChanged()));
                 }

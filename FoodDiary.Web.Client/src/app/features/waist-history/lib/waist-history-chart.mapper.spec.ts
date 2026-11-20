@@ -73,6 +73,7 @@ describe('Chart date boundaries', () => {
     it.each([
         { locale: 'en', date: '2025-09-01', expected: '01\nSep\n2025' },
         { locale: 'ru', date: '2025-09-01', expected: '01\nсент.\n2025' },
+        { locale: 'ru', date: '2025-03-01', expected: '01\nмар.\n2025' },
         { locale: 'en', date: '2025-05-01', expected: '01\nMay\n2025' },
     ])('labels $locale dates from earlier years', ({ locale, date, expected }) => {
         expect(

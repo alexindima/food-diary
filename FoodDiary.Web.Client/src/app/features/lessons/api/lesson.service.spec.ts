@@ -1,6 +1,7 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -8,24 +9,23 @@ import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { LessonDetail, LessonPage, LessonSummary } from '../models/lesson.data';
 import { LessonService } from './lesson.service';
 
+const LEGACY_LESSON_COUNT = 21;
+let service: LessonService;
+let httpMock: HttpTestingController;
+
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [LessonService, provideHttpClient(), provideHttpClientTesting()],
+    });
+    service = TestBed.inject(LessonService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+
+afterEach(() => {
+    httpMock.verify();
+});
+
 describe('LessonService', () => {
-    const LEGACY_LESSON_COUNT = 21;
-    let service: LessonService;
-    let httpMock: HttpTestingController;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [LessonService, provideHttpClient(), provideHttpClientTesting()],
-        });
-
-        service = TestBed.inject(LessonService);
-        httpMock = TestBed.inject(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
-    });
-
     it('loads lessons with locale and optional category', () => {
         const page = createPage();
 
@@ -99,6 +99,35 @@ describe('LessonService', () => {
         expect(request.request.method).toBe('POST');
         expect(request.request.body).toBeNull();
         request.flush(null);
+    });
+});
+
+describe('LessonService detail and read failures', () => {
+    it('reports a deleted lesson as a not-found response', async () => {
+        const id = entityId<'lesson'>('archived-lesson');
+        const pending = firstValueFrom(service.getById(id));
+        const error = { title: 'Lesson not found' };
+        httpMock.expectOne({ method: 'GET', url: `${environment.apiUrls.lessons}/${id}` }).flush(error, {
+            status: HttpStatusCode.NotFound,
+            statusText: 'Not Found',
+        });
+
+        await expect(pending).rejects.toMatchObject({ status: HttpStatusCode.NotFound, error });
+    });
+
+    it('reports a failed read update and succeeds on a new request for the same lesson', async () => {
+        const id = entityId<'lesson'>('lesson-1');
+        const url = `${environment.apiUrls.lessons}/${id}/read`;
+        const failed = firstValueFrom(service.markRead(id));
+        httpMock.expectOne({ method: 'POST', url }).flush(null, {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Service Unavailable',
+        });
+        await expect(failed).rejects.toMatchObject({ status: HttpStatusCode.ServiceUnavailable });
+
+        const retry = firstValueFrom(service.markRead(id));
+        httpMock.expectOne({ method: 'POST', url }).flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await expect(retry).resolves.toBeNull();
     });
 });
 

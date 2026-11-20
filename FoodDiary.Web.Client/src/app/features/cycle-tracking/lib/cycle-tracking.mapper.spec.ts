@@ -65,4 +65,8 @@ describe('cycle tracking mapper', () => {
         expect(toCycleDateKey('2026-04-12T22:30:00Z')).toBe('2026-04-12');
         expect(toCycleDateKey('invalid')).toBe('');
     });
+
+    it('reads the local calendar day from a saved non-ISO date', () => {
+        expect(toCycleDateKey('Thu, 16 Apr 2026 12:30:00 GMT')).toBe('2026-04-16');
+    });
 });

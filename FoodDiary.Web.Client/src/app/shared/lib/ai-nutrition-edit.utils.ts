@@ -1,4 +1,7 @@
 import type { FoodNutritionResponse } from '../models/ai.data';
+import { type AiEditableFoodItemResolution, alignAiPhotoNutrition, normalizeAiNutritionItemName } from './ai-photo-edit.utils';
+
+export { normalizeAiNutritionItemName };
 
 export type AiNutritionEditableItem = {
     id: string;
@@ -6,6 +9,7 @@ export type AiNutritionEditableItem = {
     nameEn?: string | null;
     amount: number;
     unit: string;
+    resolution?: AiEditableFoodItemResolution;
 };
 
 type NutritionTotals = Pick<FoodNutritionResponse, 'calories' | 'protein' | 'fat' | 'carbs' | 'fiber' | 'alcohol'>;
@@ -19,10 +23,6 @@ const EMPTY_NUTRITION_TOTALS: NutritionTotals = {
     alcohol: 0,
 };
 
-export function normalizeAiNutritionItemName(value?: string | null): string {
-    return (value ?? '').trim().toLowerCase();
-}
-
 export function recalculateEditedAiNutrition(
     nutrition: FoodNutritionResponse | null,
     sourceItems: readonly AiNutritionEditableItem[],
@@ -32,13 +32,18 @@ export function recalculateEditedAiNutrition(
         return null;
     }
 
-    const nutritionByName = new Map(nutrition.items.map(item => [normalizeAiNutritionItemName(item.name), item]));
+    const originalItems = new Map(sourceItems.map(item => [item.id, item]));
+    const sourcePortions = [
+        ...sourceItems.filter(item => item.resolution !== 'Rejected'),
+        ...editedItems.filter(item => !originalItems.has(item.id)),
+    ].map(item => ({ ...item, nameEn: item.nameEn ?? item.name, nameLocal: item.name }));
+    const nutritionById = new Map(alignAiPhotoNutrition(sourcePortions, nutrition).map(match => [match.item.id, match.nutrition]));
 
     const updatedItems = editedItems
         .map(item => {
-            const base = sourceItems.find(sourceItem => sourceItem.id === item.id);
-            const originalNutrition = findOriginalNutrition(nutritionByName, base ?? item);
-            if (originalNutrition === undefined) {
+            const base = originalItems.get(item.id);
+            const originalNutrition = nutritionById.get(item.id);
+            if (originalNutrition === undefined || originalNutrition === null) {
                 return null;
             }
 
@@ -74,11 +79,4 @@ export function recalculateEditedAiNutrition(
     );
 
     return { ...totals, items: updatedItems, notes: nutrition.notes ?? null };
-}
-
-function findOriginalNutrition(
-    byName: ReadonlyMap<string, FoodNutritionResponse['items'][number]>,
-    item: AiNutritionEditableItem,
-): FoodNutritionResponse['items'][number] | undefined {
-    return byName.get(normalizeAiNutritionItemName(item.nameEn ?? item.name)) ?? byName.get(normalizeAiNutritionItemName(item.name));
 }

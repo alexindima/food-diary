@@ -11,6 +11,7 @@ import {
     normalizeEndOfUtcDay,
     normalizeStartOfLocalDay,
     normalizeStartOfUtcDay,
+    parseCalendarDateUtc,
     parseDateValue,
     parseLocalDateInputValue,
     parseLocalDateTimeInputValue,
@@ -110,6 +111,46 @@ describe('local-date.utils', () => {
         expect(getDateTimestamp(earlier)).toBe(earlier.getTime());
         expect(compareDatesAsc(earlier, later)).toBeLessThan(0);
         expect(compareDatesDesc(earlier, later)).toBeGreaterThan(0);
+    });
+});
+
+describe('date inputs from restored forms', () => {
+    it('keeps invalid Date objects absent in date-only and date-time fields', () => {
+        const invalid = new Date(Number.NaN);
+
+        expect(parseDateValue(invalid)).toBeNull();
+        expect(parseLocalDateInputValue(invalid)).toBeNull();
+        expect(parseLocalDateTimeInputValue(invalid)).toBeNull();
+    });
+
+    it.each([null, undefined, ''])('recognizes a cleared date-time field represented by %j', value => {
+        expect(parseLocalDateTimeInputValue(value)).toBeNull();
+    });
+
+    it('preserves the time of a Date object restored by the date-time picker', () => {
+        const selected = createInputDate();
+
+        expect(parseLocalDateTimeInputValue(selected)).toEqual(selected);
+    });
+
+    it('preserves the instant of a legacy timestamp and uses its local day for a date-only field', () => {
+        const legacyTimestamp = 'Tue, 05 May 2026 15:30:00 GMT';
+
+        expect(parseLocalDateTimeInputValue(legacyTimestamp)?.toISOString()).toBe('2026-05-05T15:30:00.000Z');
+        expect(parseLocalDateInputValue(legacyTimestamp)).toEqual(createStartOfDayDate());
+    });
+
+    it('preserves a saved calendar label even when its timestamp offset crosses into the next UTC day', () => {
+        expect(parseCalendarDateUtc('2026-05-05T23:30:00-07:00')?.toISOString()).toBe('2026-05-05T00:00:00.000Z');
+        expect(parseCalendarDateUtc('2026-02-29')).toBeNull();
+        expect(parseCalendarDateUtc(undefined)).toBeNull();
+    });
+
+    it('sorts absent or unparseable dates before a recorded date in ascending order', () => {
+        const recorded = createInputDate();
+
+        expect(compareDatesAsc(null, recorded)).toBeLessThan(0);
+        expect(compareDatesDesc('invalid', recorded)).toBeGreaterThan(0);
     });
 });
 

@@ -33,7 +33,13 @@
             <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NOT_FOUND' | translate }}</p>
         } @else {
             <div class="client-dashboard__actions fd-row fd-wrap fd-gap-sm">
-                <fd-ui-button variant="danger" fill="outline" (click)="disconnectClient()">
+                <fd-ui-button
+                    variant="danger"
+                    fill="outline"
+                    [disabled]="disconnecting()"
+                    [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                    (click)="disconnectClient()"
+                >
                     {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT' | translate }}
                 </fd-ui-button>
             </div>
@@ -213,6 +219,8 @@
                                             type="button"
                                             variant="danger"
                                             fill="outline"
+                                            [disabled]="archivingTemplateIds().has(template.id)"
+                                            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
                                             [ariaLabel]="'RECOMMENDATION_TEMPLATES.ARCHIVE' | translate: { name: template.name }"
                                             (click)="archiveRecommendationTemplate(template)"
                                         >

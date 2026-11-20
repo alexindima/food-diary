@@ -290,6 +290,17 @@ describe('RecipeListFacade actions', () => {
 
         expect(quickMealService.addRecipe).toHaveBeenCalledWith(recipe);
     });
+
+    it('deletes a recipe selected in details and keeps the current collection search', async () => {
+        await facade.handleDetailActionAsync(new RecipeDetailActionResult(recipe.id, 'Delete'), recipe, 'Rice', false);
+
+        expect(recipeService.deleteById).toHaveBeenCalledExactlyOnceWith(recipe.id);
+        expect(recipeService.queryOverview).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ page: 1, filters: { search: 'Rice' }, includePublic: true }),
+            expect.any(HttpContext),
+        );
+        expect(facade.currentPageIndex()).toBe(0);
+    });
 });
 
 describe('RecipeListFacade favorite picker', () => {
@@ -324,6 +335,21 @@ describe('RecipeListFacade favorite picker', () => {
         expect(quickMealService.addRecipe).not.toHaveBeenCalled();
         expect(await firstValueFrom(facade.addFavoriteToMeal(favorite))).toBe(true);
         expect(quickMealService.addRecipe).toHaveBeenCalledExactlyOnceWith(recipe);
+    });
+
+    it('restores a favorite without a custom label and synchronizes the matching recipe only', async () => {
+        const favorite = { ...createFavoriteRecipe(), name: null };
+        const anotherRecipe = { ...recipe, id: entityId<'recipe'>('another-recipe') };
+        facade.recipeData.items.set([recipe, anotherRecipe]);
+        facade.recentRecipes.set([anotherRecipe, recipe]);
+
+        expect(await firstValueFrom(facade.restorePickerFavorite(favorite))).toBe(true);
+
+        expect(favoriteRecipeService.add).toHaveBeenCalledExactlyOnceWith(recipe.id, undefined);
+        const restoredRecipe = { ...recipe, isFavorite: true, favoriteRecipeId: favorite.id };
+        expect(facade.recipeData.items()).toEqual([restoredRecipe, anotherRecipe]);
+        expect(facade.recentRecipes()).toEqual([anotherRecipe, restoredRecipe]);
+        expect(facade.favoriteTotalCount()).toBe(1);
     });
 });
 
@@ -447,6 +473,40 @@ describe('RecipeListFacade edge cases', () => {
 });
 
 describe('RecipeListFacade recovery and navigation', () => {
+    it('recovers to the last available page after the catalogue shrinks', () => {
+        const stalePage = 3;
+        recipeService.queryOverview
+            .mockReturnValueOnce(
+                of({
+                    recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
+                    allRecipes: { data: [], page: stalePage, limit: PAGE_LIMIT, totalPages: 2, totalItems: 11 },
+                }),
+            )
+            .mockReturnValueOnce(
+                of({
+                    recentItems: [],
+                    favoriteItems: [],
+                    favoriteTotalCount: 0,
+                    allRecipes: { data: [recipe], page: 2, limit: PAGE_LIMIT, totalPages: 2, totalItems: 11 },
+                }),
+            );
+
+        facade.loadRecipes(stalePage, PAGE_LIMIT, { search: 'Rice' }, false).subscribe();
+
+        expect(recipeService.queryOverview).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({ page: stalePage }),
+            expect.any(HttpContext),
+        );
+        expect(recipeService.queryOverview).toHaveBeenNthCalledWith(2, expect.objectContaining({ page: 2 }), expect.any(HttpContext));
+        expect(recipeService.queryOverview).toHaveBeenCalledTimes(2);
+        expect(facade.currentPageIndex()).toBe(1);
+        expect(facade.recipeData.items()).toEqual([recipe]);
+        expect(facade.recipeData.isLoading()).toBe(false);
+    });
+
     it('retains the requested later page after loading fails', () => {
         recipeService.queryOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
 

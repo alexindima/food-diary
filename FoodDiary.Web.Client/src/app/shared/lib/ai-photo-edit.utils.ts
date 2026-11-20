@@ -1,5 +1,4 @@
 import type { FoodNutritionItem, FoodNutritionResponse, FoodVisionItem } from '../models/ai.data';
-import { normalizeAiNutritionItemName } from './ai-nutrition-edit.utils';
 
 export type AiEditableFoodItem = {
     id: string;
@@ -32,6 +31,10 @@ const AI_PHOTO_UNIT_TRANSLATION_KEYS: Readonly<Record<string, string>> = {
     'шт.': 'GENERAL.UNITS.PCS',
     kcal: 'GENERAL.UNITS.KCAL',
 };
+
+export function normalizeAiNutritionItemName(value?: string | null): string {
+    return (value ?? '').trim().toLowerCase();
+}
 
 export function normalizeAiPhotoUnit(unit: string): string {
     const normalized = unit.trim().toLowerCase();

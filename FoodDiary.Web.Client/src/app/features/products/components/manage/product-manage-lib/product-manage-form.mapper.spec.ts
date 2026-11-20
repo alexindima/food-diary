@@ -289,3 +289,79 @@ describe('product gallery mapping', () => {
         expect(buildProductData(createProductForm(), 'base').imageAssetIds).toBeUndefined();
     });
 });
+
+describe('editing products saved before gallery and type fields', () => {
+    it.each([
+        { category: 'Dairy', expected: ProductType.Dairy },
+        { category: 'old-catalog-label', expected: ProductType.Unknown },
+        { category: null, expected: ProductType.Unknown },
+    ])('normalizes legacy category $category when productType is absent', ({ category, expected }) => {
+        const product: Product = { ...PRODUCT, productType: undefined, category };
+
+        const values = { ...createProductForm(), ...buildProductFormPatch(product) };
+
+        expect(values.productType).toBe(expected);
+        expect(buildProductData(values, 'base')).toMatchObject({ productType: expected, category: expected });
+    });
+
+    it('retains a saved asset without a URL when the user adds recognized photos', () => {
+        const product: Product = { ...PRODUCT, imageUrl: null };
+        const values = { ...createProductForm(), ...buildProductFormPatch(product) };
+        const cover = imageSelection('/front.jpg', 'recognized-front');
+        const label = imageSelection('/label.jpg', 'recognized-label');
+        const patch = buildAiResultPatch(values, recognitionWithPhotos(cover, [cover, label]));
+
+        const request = buildProductData({ ...values, ...patch }, 'base');
+
+        expect(request.imageAssetId).toBe(cover.assetId);
+        expect(request.imageAssetIds).toEqual([cover.assetId, product.imageAssetId, label.assetId]);
+    });
+
+    it('preserves an existing URL-only cover for review when recognition supplies only additional photos', () => {
+        const legacy = imageSelection('/legacy-cover.jpg', null);
+        const label = imageSelection('/new-label.jpg', 'label');
+        const values = { ...createProductForm(), imageUrl: legacy };
+        const patch = buildAiResultPatch(values, recognitionWithPhotos(null, [label]));
+
+        expect(patch.imageUrl).toEqual(legacy);
+        expect(patch.images).toEqual([legacy, label]);
+        const request = buildProductData({ ...values, ...patch }, 'base');
+        expect(request.imageUrl).toBe(legacy.url);
+        expect(request.imageAssetIds).toEqual([label.assetId]);
+    });
+});
+
+describe('adding products from label recognition', () => {
+    it('uses the first recognized photo and a one-piece portion when the label omits a portion amount', () => {
+        const label = imageSelection('/label.jpg', 'label');
+        const values = createProductForm();
+        const patch = buildAiResultPatch(values, recognitionWithPhotos(null, [label]));
+
+        expect(patch.imageUrl).toEqual(label);
+        expect(patch.images).toEqual([label]);
+        expect(patch.defaultPortionAmount).toBe(1);
+        expect(buildProductData({ ...values, ...patch }, 'base')).toMatchObject({
+            baseUnit: MeasurementUnit.PCS,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: 120,
+        });
+    });
+});
+
+function recognitionWithPhotos(image: ImageSelection | null, images: ImageSelection[]): ProductAiRecognitionResult {
+    return {
+        name: 'Recognized product',
+        description: null,
+        image,
+        images,
+        baseAmount: 0,
+        baseUnit: MeasurementUnit.PCS,
+        caloriesPerBase: 120,
+        proteinsPerBase: 10,
+        fatsPerBase: null,
+        carbsPerBase: null,
+        fiberPerBase: null,
+        alcoholPerBase: null,
+    };
+}

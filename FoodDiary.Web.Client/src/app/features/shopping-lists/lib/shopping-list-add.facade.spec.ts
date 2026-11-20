@@ -9,7 +9,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../../services/auth.service';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
-import type { ShoppingList } from '../../../shared/models/shopping-list.data';
+import type { ShoppingList, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { PublicAuthDialogService } from '../../public/contracts/auth-dialog';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
@@ -194,5 +194,110 @@ describe('recipe shopping target state', () => {
         TestBed.tick();
         expect(facade.target()).toBeNull();
         expect(facade.isAdded(0)).toBe(false);
+    });
+});
+
+describe('shopping list selection and request lifetime', () => {
+    it('chooses an existing destination without writing items and can retry a failed lookup', async () => {
+        api.getSelectionPage.mockReturnValueOnce(throwError(() => new Error('offline')));
+        await facade.chooseAsync();
+        expect(facade.message()).toBe('PUBLIC_RECIPES.SHOPPING_ERROR');
+        expect(facade.busy()).toBe(false);
+
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of({ id: list.id, name: list.name }) });
+        await facade.chooseAsync();
+        expect(facade.target()).toEqual({ id: list.id, name: list.name });
+        expect(facade.message()).toBeNull();
+        expect(api.create).not.toHaveBeenCalled();
+        expect(api.update).not.toHaveBeenCalled();
+    });
+
+    it.each(['navigation', 'logout'])('keeps stale save errors out of the current view after %s', async transition => {
+        const response = new Subject<ShoppingList>();
+        api.create.mockReturnValueOnce(response);
+        const pending = facade.addAsync(0, { name: 'Rice' });
+        await vi.waitFor(() => {
+            expect(api.create).toHaveBeenCalledOnce();
+        });
+
+        if (transition === 'navigation') {
+            facade.setScope('recipe-2', 'Salad');
+        } else {
+            authenticated.set(false);
+            TestBed.tick();
+        }
+        response.error(new Error('offline'));
+        await pending;
+
+        expect(facade.message()).toBeNull();
+        expect(facade.target()).toBeNull();
+        expect(facade.isAdded(0)).toBe(false);
+        expect(facade.busy()).toBe(false);
+    });
+});
+
+describe('shopping list add recovery', () => {
+    it('waits for the sign-in dialog to finish before creating a destination', async () => {
+        authenticated.set(false);
+        TestBed.tick();
+        const closed = new Subject<void>();
+        authDialog.openAsync.mockResolvedValueOnce({ afterClosed: () => closed });
+        const adding = facade.addAsync(0, { name: 'Rice' });
+        await vi.waitFor(() => {
+            expect(closed.observed).toBe(true);
+        });
+        expect(authDialog.openAsync).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ mode: 'login' }));
+        expect(api.getSelectionPage).not.toHaveBeenCalled();
+        expect(api.create).not.toHaveBeenCalled();
+
+        authenticated.set(true);
+        TestBed.tick();
+        closed.next();
+        closed.complete();
+        await adding;
+
+        expect(api.getSelectionPage).toHaveBeenCalledOnce();
+        expect(api.create).toHaveBeenCalledExactlyOnceWith({ name: list.name, items: [{ name: 'Rice', sortOrder: 1 }] });
+        expect(facade.isAdded(0)).toBe(true);
+    });
+
+    it('clears an unavailable destination and uses a newly selected one without losing the ingredient', async () => {
+        const replaced = { ...list, id: entityId<'shopping-list'>('replacement'), name: 'Market' };
+        const ingredient = { name: 'Rice', note: 'Long grain' };
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of({ id: list.id, name: list.name }) });
+        api.getById.mockReturnValueOnce(of(null));
+        await facade.addAsync(0, ingredient);
+
+        expect(api.getById).toHaveBeenCalledExactlyOnceWith(list.id);
+        expect(api.update).not.toHaveBeenCalled();
+        expect(facade.target()).toBeNull();
+        expect(facade.isAdded(0)).toBe(false);
+        expect(facade.message()).toBe('PUBLIC_RECIPES.SHOPPING_ERROR');
+
+        dialogs.open.mockReturnValueOnce({ afterClosed: () => of({ id: null, name: replaced.name }) });
+        api.create.mockReturnValueOnce(of(replaced));
+        await facade.addAsync(0, ingredient);
+
+        expect(api.create).toHaveBeenCalledExactlyOnceWith({ name: replaced.name, items: [{ ...ingredient, sortOrder: 1 }] });
+        expect(facade.target()).toEqual({ id: replaced.id, name: replaced.name });
+        expect(facade.isAdded(0)).toBe(true);
+        expect(facade.message()).toBe('PUBLIC_RECIPES.SHOPPING_SUCCESS');
+    });
+
+    it('keeps a delayed destination lookup error off a newly opened recipe', async () => {
+        const pending = new Subject<ShoppingListSummary[]>();
+        api.getSelectionPage.mockReturnValueOnce(pending);
+        const selecting = facade.chooseAsync();
+        await vi.waitFor(() => {
+            expect(pending.observed).toBe(true);
+        });
+        facade.setScope('recipe-2', 'Salad');
+        pending.error(new Error('old recipient lookup failed'));
+        await selecting;
+
+        expect(facade.message()).toBeNull();
+        expect(facade.target()).toBeNull();
+        expect(dialogs.open).not.toHaveBeenCalled();
+        expect(facade.busy()).toBe(false);
     });
 });

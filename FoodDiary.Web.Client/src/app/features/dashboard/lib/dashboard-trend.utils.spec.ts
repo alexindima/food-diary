@@ -97,6 +97,32 @@ function registerWaistTrendTests(): void {
             expect(waistTrendSeries()[0].value).toBe(WAIST_85);
         });
 
+        it('keeps empty waist buckets as gaps and still reports the latest known measurement', () => {
+            const first = calendarDate('2026-03-10');
+            const second = calendarDate('2026-03-11');
+            const third = calendarDate('2026-03-12');
+            const emptyBucket = { startDate: third, endDate: third, averageCircumferenceCm: 0 };
+            const points = signal([
+                { startDate: first, endDate: first, averageCircumferenceCm: WAIST_90 },
+                { startDate: second, endDate: second, averageCircumferenceCm: WAIST_85 },
+                emptyBucket,
+            ]);
+            const latestMeasurement = signal<number | null>(WAIST_90);
+            const { waistTrendSeries, waistTrendChange, waistTrendCurrent } = createWaistTrendSignals(points, latestMeasurement);
+
+            expect(waistTrendSeries()).toEqual([
+                { date: first, value: WAIST_90 },
+                { date: second, value: WAIST_85 },
+                { date: third, value: null },
+            ]);
+            expect(waistTrendChange()).toBe(WAIST_85 - WAIST_90);
+            expect(waistTrendCurrent()).toBe(WAIST_85);
+
+            points.set([emptyBucket]);
+            expect(waistTrendSeries()).toEqual([{ date: third, value: null }]);
+            expect(waistTrendChange()).toBeNull();
+            expect(waistTrendCurrent()).toBe(WAIST_90);
+        });
         it('should not invent waist trend points from the latest measurement', () => {
             const points = signal<Array<{ startDate: CalendarDate; endDate: CalendarDate; averageCircumferenceCm: number }>>([]);
             const { waistTrendSeries } = createWaistTrendSignals(points, signal(WAIST_90));

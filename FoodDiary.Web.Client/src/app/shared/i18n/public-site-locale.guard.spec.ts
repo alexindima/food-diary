@@ -8,6 +8,7 @@ import { publicSiteLocaleGuard } from './public-site-locale.guard';
 
 const locale = {
     applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
+    loadApplicationTranslationsAsync: vi.fn().mockResolvedValue(undefined),
     loadRouteTranslationsAsync: vi.fn().mockResolvedValue(undefined),
 };
 const auth = { isAuthenticated: vi.fn(() => false) };
@@ -31,6 +32,7 @@ describe('public page language', () => {
         await activateAsync('/ru/calorie-counter');
         expect(locale.applyLanguagePreferenceAsync).toHaveBeenCalledWith('ru');
         expect(locale.loadRouteTranslationsAsync).toHaveBeenCalledWith('/ru/calorie-counter');
+        expect(locale.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
     });
 
     it('preserves the signed-in account language during a landing redirect', async () => {
@@ -44,5 +46,17 @@ describe('public page language', () => {
         auth.isAuthenticated.mockReturnValue(true);
         await activateAsync('/ru/pricing');
         expect(locale.applyLanguagePreferenceAsync).toHaveBeenCalledWith('ru');
+    });
+
+    it('loads app shell and policy translations for a signed-in visitor on the Russian privacy page', async () => {
+        auth.isAuthenticated.mockReturnValue(true);
+
+        await activateAsync('/ru/privacy-policy');
+
+        expect(locale.applyLanguagePreferenceAsync).toHaveBeenCalledExactlyOnceWith('ru');
+        expect(locale.loadApplicationTranslationsAsync).toHaveBeenCalledOnce();
+        expect(locale.loadRouteTranslationsAsync).toHaveBeenCalledExactlyOnceWith('/ru/privacy-policy');
+        expect(locale.applyLanguagePreferenceAsync).toHaveBeenCalledBefore(locale.loadApplicationTranslationsAsync);
+        expect(locale.loadApplicationTranslationsAsync).toHaveBeenCalledBefore(locale.loadRouteTranslationsAsync);
     });
 });

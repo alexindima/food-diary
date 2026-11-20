@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import type { Observable } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -13,6 +13,9 @@ import { entityId } from '../models/semantics/entity-id';
 import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
 import { PrivacyConsentPurpose } from '../privacy/privacy-consent-purpose';
 import { PRIVACY_NOTICE_VERSION } from '../privacy/privacy-notice-version';
+import type { UserHttpResponse } from './sdk/generated/model/user-http-response';
+import type { WaistGoalHistoryPageHttpResponse } from './sdk/generated/model/waist-goal-history-page-http-response';
+import type { WeightGoalHistoryPageHttpResponse } from './sdk/generated/model/weight-goal-history-page-http-response';
 import { type UserProfileOverview, UserService } from './user.service';
 
 const DESIRED_WAIST = 80;
@@ -788,5 +791,140 @@ describe('UserService paged goal history', () => {
         http.flush('offline', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
         expect(failed).toHaveBeenCalledOnce();
         expect(received).not.toHaveBeenCalled();
+    });
+});
+
+describe('UserService restored account settings', () => {
+    it('normalizes a stored activity level and nullable dashboard preferences on sign in', () => {
+        const wire: UserHttpResponse = {
+            ...MOCK_USER,
+            email: null,
+            activityLevel: 'Moderate',
+            dashboardLayout: { web: null, mobile: null, setupHintDismissed: null },
+        };
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(wire);
+
+        expect(service.user()).toMatchObject({
+            id: MOCK_USER.id,
+            email: null,
+            activityLevel: 'MODERATE',
+            dashboardLayout: { web: undefined, mobile: undefined, setupHintDismissed: undefined },
+        });
+    });
+
+    it('recovers from a profile response with an unsupported activity level on the next request', () => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+
+        const received = vi.fn();
+        service.getInfo().subscribe(received);
+        const malformed: UserHttpResponse = { ...MOCK_USER, activityLevel: 'unknown-legacy-level' };
+        httpMock.expectOne(`${BASE_URL}/info`).flush(malformed);
+        expect(received).toHaveBeenLastCalledWith(null);
+        expect(service.user()).toBeNull();
+
+        const updated: UserHttpResponse = { ...MOCK_USER, activityLevel: 'Light' };
+        service.getInfo().subscribe(received);
+        httpMock.expectOne(`${BASE_URL}/info`).flush(updated);
+        expect(received).toHaveBeenLastCalledWith(expect.objectContaining({ id: MOCK_USER.id, activityLevel: 'LIGHT' }));
+        expect(service.user()?.activityLevel).toBe('LIGHT');
+    });
+
+    it('records user activity without a global loading indicator or changing the confirmed profile', () => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
+        const completed = vi.fn();
+
+        service.recordActivity().subscribe({ complete: completed });
+        const request = httpMock.expectOne({ method: 'POST', url: `${BASE_URL}/activity` });
+        expect(request.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        expect(request.request.body).toBeNull();
+        request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+
+        expect(completed).toHaveBeenCalledTimes(1);
+        expect(service.user()).toEqual(MOCK_USER);
+    });
+});
+
+describe('UserService persisted goal rows', () => {
+    it('continues weight history with its opaque cursor and maps an active goal with no end data', () => {
+        const cursor = '2026-07-24+weight/next=';
+        const row = {
+            id: 'weight-goal',
+            targetWeightKg: 70,
+            startWeightKg: 76,
+            startedAtUtc: '2026-07-24T09:25:00Z',
+            status: 'Active',
+        };
+        const response: WeightGoalHistoryPageHttpResponse = { items: [row] };
+        const received = vi.fn();
+        service.getWeightGoalHistoryPage(cursor).subscribe(received);
+        const request = httpMock.expectOne(candidate => candidate.url === `${BASE_URL}/weight-goals/page`);
+        expect(request.request.params.get('cursor')).toBe(cursor);
+        request.flush(response);
+
+        expect(received).toHaveBeenCalledExactlyOnceWith({
+            nextCursor: null,
+            items: [{ ...row, endWeightKg: null, endedAtUtc: null }],
+        });
+    });
+
+    it('retains the end measurement and exact timestamp for a replaced waist goal', () => {
+        const row = {
+            id: 'waist-goal',
+            targetWaistCm: 79,
+            startWaistCm: 88,
+            endWaistCm: 83,
+            startedAtUtc: '2026-06-02T16:30:00Z',
+            endedAtUtc: '2026-07-09T14:15:00+03:00',
+            status: 'Replaced',
+        };
+        const response: WaistGoalHistoryPageHttpResponse = { items: [row], nextCursor: null };
+        const received = vi.fn();
+        service.getWaistGoalHistoryPage().subscribe(received);
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/waist-goals/page` }).flush(response);
+
+        expect(received).toHaveBeenCalledExactlyOnceWith(response);
+    });
+
+    it('shows an active waist goal without inventing a completion timestamp or measurement', async () => {
+        const row = {
+            id: 'active-waist',
+            targetWaistCm: 79,
+            startWaistCm: 88,
+            startedAtUtc: '2026-07-24T09:25:00Z',
+            status: 'Active',
+        };
+        const pending = firstValueFrom(service.getWaistGoalHistoryPage());
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/waist-goals/page` }).flush({ items: [row] });
+
+        await expect(pending).resolves.toEqual({ nextCursor: null, items: [{ ...row, endWaistCm: null, endedAtUtc: null }] });
+    });
+});
+
+describe('UserService unset targets in older successful responses', () => {
+    it('returns no calorie target for a saved profile without calories', async () => {
+        const pending = firstValueFrom(service.getUserCalories());
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/info` }).flush({ ...MOCK_USER, calories: undefined });
+
+        await expect(pending).resolves.toBeNull();
+        expect(service.user()?.id).toBe(MOCK_USER.id);
+    });
+
+    it.each(['weight', 'waist'] as const)('returns no desired %s for a successful response that omits the target', async kind => {
+        const pending = firstValueFrom(kind === 'weight' ? service.getDesiredWeight() : service.getDesiredWaist());
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/desired-${kind}` }).flush({ startedAtUtc: null });
+
+        await expect(pending).resolves.toBeNull();
+    });
+
+    it('clears the desired weight when an older server acknowledges the update without a target field', async () => {
+        const pending = firstValueFrom(service.updateDesiredWeight(null));
+        const request = httpMock.expectOne({ method: 'PUT', url: `${BASE_URL}/desired-weight` });
+        expect(request.request.body).toEqual({ desiredWeightKg: null });
+        request.flush({});
+
+        await expect(pending).resolves.toBeNull();
     });
 });

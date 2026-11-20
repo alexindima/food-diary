@@ -236,6 +236,75 @@ describe('Profile imperial height editing', () => {
     });
 });
 
+describe('Profile account and measurement defaults', () => {
+    it('keeps the saved zone and allows selecting UTC when the browser has no time zone enumeration', () => {
+        const saved = Object.getOwnPropertyDescriptor(Intl, 'supportedValuesOf');
+        if (saved === undefined) {
+            throw new Error('Expected an installed time zone enumeration fixture');
+        }
+        Object.defineProperty(Intl, 'supportedValuesOf', { configurable: true, value: undefined });
+        try {
+            userForm.timeZoneId().value.set('Europe/Kyiv');
+            fixture.detectChanges();
+
+            search('Kyiv');
+            expect(optionLabels()).toEqual(['Europe/Kyiv']);
+            expect(patched).not.toHaveBeenCalled();
+            search('UTC');
+            expect(optionLabels()).toEqual(['UTC']);
+            input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            fixture.detectChanges();
+
+            expect(userForm.timeZoneId().value()).toBe('UTC');
+            expect(patched).toHaveBeenCalledExactlyOnceWith({ timeZoneId: 'UTC' });
+        } finally {
+            Object.defineProperty(Intl, 'supportedValuesOf', saved);
+        }
+    });
+
+    it('handles a nameless account without email and uses returned identity fields as they become available', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        const title = host.querySelector('.profile-comparison__identity-copy strong');
+        userForm.email().value.set(null);
+        fixture.detectChanges();
+
+        expect(title?.textContent).toBe('');
+        userForm.email().value.set('profile@example.test');
+        fixture.detectChanges();
+
+        expect(title?.textContent).toBe('profile@example.test');
+        userForm.firstName().value.set('Mira');
+        userForm.lastName().value.set('Lee');
+        fixture.detectChanges();
+
+        expect(title?.textContent).toBe('Mira Lee');
+    });
+
+    it('stores the entered metric height and clears it when the input is emptied', () => {
+        TestBed.inject(MeasurementSystemService).setSystem('metric');
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const heightInput = host.querySelector<HTMLInputElement>('[data-user-field="height"] input');
+        if (heightInput === null) {
+            throw new Error('Expected the metric height control');
+        }
+
+        heightInput.value = String(tallerHeightCm);
+        heightInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(patched).toHaveBeenLastCalledWith({ heightCm: tallerHeightCm });
+        expect(userForm.heightCm().value()).toBe(tallerHeightCm);
+        heightInput.value = '';
+        heightInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(patched).toHaveBeenLastCalledWith({ heightCm: null });
+        expect(userForm.heightCm().value()).toBeNull();
+        expect(heightInput.value).toBe('');
+    });
+});
+
 function imperialInputs(): HTMLInputElement[] {
     return Array.from(
         (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement>('.profile-comparison__imperial-height input'),

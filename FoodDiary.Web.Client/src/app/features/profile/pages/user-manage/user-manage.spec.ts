@@ -4,9 +4,10 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -143,6 +144,72 @@ describe('UserManageComponent dietologist invite state', () => {
         const host = fixture.nativeElement as HTMLElement;
         expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
         expect(host.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_SAVE_PERMISSIONS');
+    });
+});
+
+describe('Profile dietologist invitation submission', () => {
+    it('keeps the invitation draft after a rejected send and renders the pending invitation once retried', async () => {
+        await createComponentAsync(null);
+        const host = fixture.nativeElement as HTMLElement;
+        const summary = host.querySelector('details:has(fd-user-manage-dietologist-card) > summary');
+        const email = host.querySelector<HTMLInputElement>('fd-user-manage-dietologist-summary input[type="email"]');
+        const send = host.querySelector<HTMLButtonElement>('.user-manage__dietologist-summary-button button');
+        if (email === null || send === null || !(summary instanceof HTMLElement)) {
+            throw new Error('Expected the profile invitation controls');
+        }
+        summary.click();
+        send.click();
+        expect(dietologistService.invite).not.toHaveBeenCalled();
+        email.value = 'diet@example.com';
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(send.disabled).toBe(false);
+
+        const request = new Subject<void>();
+        const permissions = {
+            shareProfile: true,
+            shareMeals: true,
+            shareStatistics: true,
+            shareWeight: true,
+            shareWaist: true,
+            shareGoals: true,
+            shareHydration: true,
+            shareFasting: true,
+        };
+        const relationship: DietologistRelationship = {
+            invitationId: entityId<'dietologist-invitation'>('new-invitation'),
+            status: 'Pending',
+            email: 'diet@example.com',
+            firstName: null,
+            lastName: null,
+            dietologistUserId: null,
+            permissions,
+            createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+            expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+            acceptedAtUtc: null,
+        };
+        dietologistService.invite.mockReturnValueOnce(request);
+        dietologistService.getRelationship.mockReturnValueOnce(of(relationship));
+        send.click();
+        fixture.detectChanges();
+        expect(send.disabled).toBe(true);
+        send.click();
+        expect(dietologistService.invite).toHaveBeenCalledExactlyOnceWith({ dietologistEmail: email.value, permissions });
+        expect(dietologistService.getRelationship).not.toHaveBeenCalled();
+
+        request.error(new Error('Invitation delivery unavailable'));
+        fixture.detectChanges();
+        expect(host.querySelector('.user-manage__error--dietologist [role="alert"]')?.textContent).toContain(
+            'USER_MANAGE.DIETOLOGIST_INVITE_ERROR',
+        );
+        expect(email.value).toBe('diet@example.com');
+        expect(send.disabled).toBe(false);
+
+        send.click();
+        fixture.detectChanges();
+        expect(dietologistService.getRelationship).toHaveBeenCalledOnce();
+        expect(host.textContent).toContain('USER_MANAGE.DIETOLOGIST_STATUS_PENDING');
+        expect(host.querySelector('.user-manage__error--dietologist [role="alert"]')).toBeNull();
     });
 });
 
@@ -340,6 +407,368 @@ describe('UserManageComponent dietologist disconnect', () => {
         expect(dietologistService.revokeRelationship).toHaveBeenCalledTimes(1);
     });
 });
+
+describe('Profile dietologist requests after the relationship changes', () => {
+    it.each(['success', 'error'] as const)('keeps the current permissions after the previous save returns %s', async outcome => {
+        const original = dietologistRelationship('Accepted');
+        await createComponentAsync(original);
+        const card = openDietologistCard();
+        const meals = 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS"]';
+        const weight = 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_WEIGHT"]';
+        const pending = new Subject<void>();
+        dietologistService.updatePermissions.mockReturnValueOnce(pending);
+
+        dietologistButton(card, meals).click();
+        expect(dietologistService.updatePermissions).toHaveBeenCalledExactlyOnceWith({ ...original.permissions, shareMeals: false });
+        const replacement = replacementDietologistRelationship();
+        await refreshDietologistRelationshipAsync(replacement);
+        expect(dietologistButton(card, meals).getAttribute('aria-checked')).toBe('true');
+        expect(dietologistButton(card, weight).getAttribute('aria-checked')).toBe('false');
+
+        if (outcome === 'success') {
+            pending.next();
+            pending.complete();
+        } else {
+            pending.error(new Error('Previous permission save failed'));
+        }
+        fixture.detectChanges();
+
+        expect(facade.dietologistRelationship()).toEqual(replacement);
+        expect(dietologistButton(card, meals).getAttribute('aria-checked')).toBe('true');
+        expect(dietologistButton(card, weight).getAttribute('aria-checked')).toBe('false');
+        expect(dietologistError(card)).toBeNull();
+    });
+
+    it.each([
+        { action: 'disconnect', selector: '.user-manage__dietologist-summary-button button' },
+        { action: 'disable profile sharing', selector: 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE"]' },
+    ])('keeps the replacement dietologist settings when confirming an old prompt to $action', async ({ selector }) => {
+        await createComponentAsync(dietologistRelationship('Accepted'));
+        const card = openDietologistCard();
+        const confirmation = new Subject<boolean>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: (): Observable<boolean> => confirmation.asObservable() });
+
+        dietologistButton(card, selector).click();
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(dietologistService.revokeRelationship).not.toHaveBeenCalled();
+        const replacement = replacementDietologistRelationship();
+        await refreshDietologistRelationshipAsync(replacement);
+        confirmation.next(true);
+        confirmation.complete();
+        fixture.detectChanges();
+
+        expect(facade.dietologistRelationship()).toEqual(replacement);
+        expect(dietologistService.revokeRelationship).not.toHaveBeenCalled();
+        expect(dietologistService.updatePermissions).not.toHaveBeenCalled();
+        expect(
+            dietologistButton(card, 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE"]').getAttribute(
+                'aria-checked',
+            ),
+        ).toBe('true');
+    });
+
+    it.each(['success', 'error'] as const)('keeps the current relationship after the previous disconnect returns %s', async outcome => {
+        await createComponentAsync(dietologistRelationship('Accepted'), true);
+        const card = openDietologistCard();
+        const pending = new Subject<void>();
+        dietologistService.revokeRelationship.mockReturnValueOnce(pending);
+
+        dietologistButton(card, '.user-manage__dietologist-summary-button button').click();
+        expect(dietologistService.revokeRelationship).toHaveBeenCalledOnce();
+        const replacement = replacementDietologistRelationship();
+        await refreshDietologistRelationshipAsync(replacement);
+
+        if (outcome === 'success') {
+            pending.next();
+            pending.complete();
+        } else {
+            pending.error(new Error('Previous disconnect failed'));
+        }
+        fixture.detectChanges();
+
+        expect(facade.dietologistRelationship()).toEqual(replacement);
+        expect(dietologistError(card)).toBeNull();
+        expect(dietologistButton(card, '.user-manage__dietologist-summary-button button').textContent).toContain(
+            'USER_MANAGE.DIETOLOGIST_DISCONNECT_ACTION',
+        );
+    });
+});
+
+function replacementDietologistRelationship(): DietologistRelationship {
+    const relationship = dietologistRelationship('Accepted');
+    return {
+        ...relationship,
+        invitationId: entityId<'dietologist-invitation'>('replacement-dietologist'),
+        dietologistUserId: entityId<'user'>('replacement-dietologist-user'),
+        firstName: 'New dietologist',
+        permissions: { ...relationship.permissions, shareWeight: false },
+    };
+}
+
+async function refreshDietologistRelationshipAsync(relationship: DietologistRelationship): Promise<void> {
+    dietologistService.getRelationship.mockReturnValueOnce(of(relationship));
+    notificationService.notificationsChangedVersion.update(version => version + 1);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(facade.dietologistRelationship()).toEqual(relationship);
+}
+
+describe('Profile pending dietologist invitation recovery', () => {
+    it('keeps the invitation after cancellation fails, then returns to a clean invitation form on retry', async () => {
+        await createComponentAsync(dietologistRelationship('Pending'));
+        const card = openDietologistCard();
+        const revoke = dietologistButton(card, '.user-manage__dietologist-summary-button button');
+        const pendingCancel = new Subject<void>();
+        dietologistService.revokeRelationship.mockReturnValueOnce(pendingCancel);
+        expect(revoke.textContent).toContain('USER_MANAGE.DIETOLOGIST_CANCEL_INVITE');
+        expect(card.querySelector<HTMLInputElement>('input[type="email"]')?.disabled).toBe(true);
+
+        revoke.click();
+        fixture.detectChanges();
+        expect(dialogService.open).not.toHaveBeenCalled();
+        expect(revoke.disabled).toBe(true);
+        revoke.click();
+        expect(dietologistService.revokeRelationship).toHaveBeenCalledOnce();
+        pendingCancel.error(new Error('Cancellation temporarily unavailable'));
+        fixture.detectChanges();
+        expect(dietologistError(card)).toBe('USER_MANAGE.DIETOLOGIST_DISCONNECT_ERROR');
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_STATUS_PENDING');
+        expect(revoke.disabled).toBe(false);
+
+        revoke.click();
+        fixture.detectChanges();
+        expect(dietologistService.revokeRelationship).toHaveBeenCalledTimes(2);
+        expect(revoke.textContent).toContain('USER_MANAGE.DIETOLOGIST_INVITE_ACTION');
+        expect(card.querySelector<HTMLInputElement>('input[type="email"]')?.disabled).toBe(false);
+        expect(dietologistError(card)).toBeNull();
+    });
+
+    it('replaces a failed relationship refresh with the accepted relationship when a new notification arrives', async () => {
+        await createComponentAsync(dietologistRelationship('Pending'));
+        const card = openDietologistCard();
+        const pendingRefresh = new Subject<DietologistRelationship | null>();
+        const accepted = dietologistRelationship('Accepted');
+        dietologistService.getRelationship.mockReturnValueOnce(pendingRefresh).mockReturnValueOnce(of(accepted));
+
+        notificationService.notificationsChangedVersion.update(version => version + 1);
+        fixture.detectChanges();
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_LOADING');
+        expect(card.querySelector('.user-manage__dietologist-summary-button button')).toBeNull();
+        pendingRefresh.error(new Error('Relationship temporarily unavailable'));
+        fixture.detectChanges();
+        expect(dietologistError(card)).toBe('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_STATUS_PENDING');
+
+        notificationService.notificationsChangedVersion.update(version => version + 1);
+        fixture.detectChanges();
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(2);
+        expect(dietologistError(card)).toBeNull();
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_CONNECTED_HINT');
+        expect(card.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_STATUS_PENDING');
+    });
+});
+
+describe('Profile dietologist client profile sharing', () => {
+    it('keeps sharing active if confirmation is canceled or saving fails and lets sharing be turned off and restored', async () => {
+        const relationship = dietologistRelationship('Accepted');
+        await createComponentAsync(relationship);
+        const card = openDietologistCard();
+        const share = dietologistButton(card, 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE"]');
+        expect(share.getAttribute('aria-checked')).toBe('true');
+
+        share.click();
+        fixture.detectChanges();
+        expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(FdUiConfirmDialogComponent, {
+            preset: 'confirm',
+            data: {
+                title: 'USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_TITLE',
+                message: 'USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_MESSAGE',
+                confirmLabel: 'USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_CONFIRM',
+                cancelLabel: 'USER_MANAGE.DIETOLOGIST_PROFILE_DISABLE_CANCEL',
+            },
+        });
+        expect(share.getAttribute('aria-checked')).toBe('true');
+        expect(dietologistService.updatePermissions).not.toHaveBeenCalled();
+
+        const confirmation = new Subject<boolean>();
+        const save = new Subject<void>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: (): Observable<boolean> => confirmation.asObservable() });
+        dietologistService.updatePermissions.mockReturnValueOnce(save);
+        share.click();
+        expect(dietologistService.updatePermissions).not.toHaveBeenCalled();
+        confirmation.next(true);
+        confirmation.complete();
+        fixture.detectChanges();
+        expect(dietologistService.updatePermissions).toHaveBeenCalledExactlyOnceWith({ ...relationship.permissions, shareProfile: false });
+        expect(share.getAttribute('aria-checked')).toBe('false');
+        expect(share.disabled).toBe(true);
+
+        save.error(new Error('Permission service temporarily unavailable'));
+        fixture.detectChanges();
+        expect(share.getAttribute('aria-checked')).toBe('true');
+        expect(share.disabled).toBe(false);
+        expect(dietologistError(card)).toBe('USER_MANAGE.DIETOLOGIST_PERMISSIONS_ERROR');
+
+        dialogService.open.mockReturnValueOnce({ afterClosed: (): Observable<boolean> => of(true) });
+        share.click();
+        fixture.detectChanges();
+        expect(share.getAttribute('aria-checked')).toBe('false');
+        expect(dietologistError(card)).toBeNull();
+        share.click();
+        fixture.detectChanges();
+        expect(share.getAttribute('aria-checked')).toBe('true');
+        expect(dietologistService.updatePermissions).toHaveBeenLastCalledWith(relationship.permissions);
+    });
+
+    it('changes invitation draft permissions without contacting an existing dietologist', async () => {
+        await createComponentAsync(null, true);
+        const card = openDietologistCard();
+        const share = dietologistButton(card, 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_PROFILE"]');
+        const meals = dietologistButton(card, 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS"]');
+        share.click();
+        meals.click();
+        fixture.detectChanges();
+        expect(share.getAttribute('aria-checked')).toBe('false');
+        expect(meals.getAttribute('aria-checked')).toBe('false');
+
+        share.click();
+        fixture.detectChanges();
+        expect(share.getAttribute('aria-checked')).toBe('true');
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(dietologistService.updatePermissions).not.toHaveBeenCalled();
+    });
+});
+
+describe('Profile dietologist invitation draft controls', () => {
+    it('keeps the permission draft stable while an invitation is being sent', async () => {
+        await createComponentAsync(null);
+        const card = openDietologistCard();
+        const email = card.querySelector<HTMLInputElement>('input[type="email"]');
+        if (email === null) {
+            throw new Error('Expected the dietologist invitation email field');
+        }
+        email.value = 'diet@example.com';
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const shareMeals = dietologistButton(card, 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS"]');
+        const invite = dietologistButton(card, '.user-manage__dietologist-summary-button button');
+        const permissions = dietologistRelationship('Pending').permissions;
+        const pending = new Subject<void>();
+        dietologistService.invite.mockReturnValueOnce(pending);
+        invite.click();
+        fixture.detectChanges();
+
+        expect(invite.disabled).toBe(true);
+        shareMeals.click();
+        fixture.detectChanges();
+        expect(shareMeals.getAttribute('aria-checked')).toBe('true');
+        expect(dietologistService.invite).toHaveBeenCalledExactlyOnceWith({ dietologistEmail: email.value, permissions });
+
+        pending.error(new Error('Invitation temporarily unavailable'));
+        fixture.detectChanges();
+        shareMeals.click();
+        fixture.detectChanges();
+        expect(shareMeals.getAttribute('aria-checked')).toBe('false');
+        expect(dietologistService.updatePermissions).not.toHaveBeenCalled();
+    });
+
+    it('retranslates an invalid invitation email without losing the draft or sending it', async () => {
+        await createComponentAsync(null);
+        const translate = TestBed.inject(TranslateService);
+        vi.spyOn(translate, 'instant').mockRestore();
+        const emailErrorEn = 'Incorrect email';
+        const emailErrorRu = 'Некорректный адрес электронной почты';
+        translate.setTranslation('en', { FORM_ERRORS: { EMAIL: emailErrorEn } });
+        translate.setTranslation('ru', { FORM_ERRORS: { EMAIL: emailErrorRu } });
+        const card = openDietologistCard();
+        const email = card.querySelector<HTMLInputElement>('input[type="email"]');
+        if (email === null) {
+            throw new Error('Expected the dietologist invitation email field');
+        }
+        email.value = 'invalid-address';
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        dietologistButton(card, '.user-manage__dietologist-summary-button button').click();
+        fixture.detectChanges();
+
+        expect(card.querySelector('[role="alert"]')?.textContent).toContain(emailErrorEn);
+        expect(document.activeElement).toBe(email);
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+
+        expect(card.querySelector('[role="alert"]')?.textContent).toContain(emailErrorRu);
+        expect(email.value).toBe('invalid-address');
+        expect(dietologistService.invite).not.toHaveBeenCalled();
+    });
+});
+
+describe('Profile dietologist relationship without contact details', () => {
+    it('keeps the connected permissions editable when the dietologist has no exposed email', async () => {
+        const relationship: DietologistRelationship = { ...dietologistRelationship('Accepted'), email: null };
+        await createComponentAsync(relationship);
+        const card = openDietologistCard();
+        const shareMeals = dietologistButton(card, 'button[role="switch"][aria-label="USER_MANAGE.DIETOLOGIST_PERMISSION_MEALS"]');
+        expect(card.querySelector('input[type="email"]')).toBeNull();
+        expect(dietologistButton(card, '.user-manage__dietologist-summary-button button').textContent).toContain(
+            'USER_MANAGE.DIETOLOGIST_DISCONNECT_ACTION',
+        );
+
+        shareMeals.click();
+        fixture.detectChanges();
+        expect(dietologistService.updatePermissions).toHaveBeenCalledExactlyOnceWith({ ...relationship.permissions, shareMeals: false });
+        expect(shareMeals.getAttribute('aria-checked')).toBe('false');
+        expect(dietologistError(card)).toBeNull();
+    });
+});
+function dietologistRelationship(status: 'Accepted' | 'Pending'): DietologistRelationship {
+    const accepted = status === 'Accepted';
+    return {
+        invitationId: entityId<'dietologist-invitation'>('dietologist-relationship'),
+        status,
+        email: 'diet@example.com',
+        firstName: accepted ? 'Anne' : null,
+        lastName: null,
+        dietologistUserId: accepted ? entityId<'user'>('dietologist-user') : null,
+        permissions: {
+            shareProfile: true,
+            shareMeals: true,
+            shareStatistics: true,
+            shareWeight: true,
+            shareWaist: true,
+            shareGoals: true,
+            shareHydration: true,
+            shareFasting: true,
+        },
+        createdAtUtc: utcInstant('2026-04-15T00:00:00Z'),
+        expiresAtUtc: utcInstant('2026-04-22T00:00:00Z'),
+        acceptedAtUtc: accepted ? utcInstant('2026-04-15T01:00:00Z') : null,
+    };
+}
+
+function openDietologistCard(): HTMLElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const card = host.querySelector('fd-user-manage-dietologist-card');
+    const section = card?.closest('details')?.querySelector('summary');
+    if (!(card instanceof HTMLElement) || !(section instanceof HTMLElement)) {
+        throw new Error('Expected the dietologist details section');
+    }
+    section.click();
+    fixture.detectChanges();
+    return card;
+}
+
+function dietologistButton(card: HTMLElement, selector: string): HTMLButtonElement {
+    const button = card.querySelector(selector);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error(`Expected the dietologist control ${selector}`);
+    }
+    return button;
+}
+
+function dietologistError(card: HTMLElement): string | null {
+    return card.querySelector('.user-manage__error--dietologist [role="alert"]')?.textContent.trim() ?? null;
+}
 
 describe('UserManageComponent notification relationship refresh', () => {
     it('reloads dietologist relationship when notifications realtime changes', async () => {

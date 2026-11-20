@@ -5,6 +5,9 @@ import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import type { FastingCheckInHttpResponse } from '../../../shared/api/sdk/generated/model/fasting-check-in-http-response';
+import type { FastingOverviewHttpResponse } from '../../../shared/api/sdk/generated/model/fasting-overview-http-response';
+import type { FastingSessionHttpResponsePagedHttpResponse } from '../../../shared/api/sdk/generated/model/fasting-session-http-response-paged-http-response';
 import type { FastingSession } from '../../../shared/models/fasting.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
@@ -331,6 +334,95 @@ describe('FastingService session lifecycle operations', () => {
         const result = expect(firstValueFrom(perform())).rejects.toMatchObject({ status: HttpStatusCode.Conflict, error });
         httpMock.expectOne(`${BASE_URL}/${path}`).flush(error, { status: HttpStatusCode.Conflict, statusText: 'Conflict' });
         await result;
+    });
+});
+
+describe('Fasting SDK history metadata', () => {
+    it('defaults to the first history page and preserves nested check-in notes and instants', async () => {
+        const from = '2026-04-01T00:00:00.000Z';
+        const to = '2026-04-30T23:59:59.000Z';
+        const pending = firstValueFrom(service.getHistory({ from, to }));
+        const lastCheckIn = {
+            id: '348d2e5d-4895-4dab-bf39-d3bbea9c1719',
+            checkedInAtUtc: '2026-04-12T10:00:00Z',
+            hungerLevel: 2,
+            energyLevel: 4,
+            moodLevel: 4,
+            symptoms: ['weakness'],
+            notes: 'Light walk before lunch',
+        } satisfies FastingCheckInHttpResponse;
+        const earlier = { ...lastCheckIn, id: '75a1d51c-1ad6-42ba-b369-cbe7c45cd8fe', checkedInAtUtc: '2026-04-12T08:00:00Z', notes: null };
+        const ended = {
+            ...SESSION_RESPONSE,
+            endedAtUtc: '2026-04-12T22:00:00Z',
+            isCompleted: true,
+            status: 'Completed',
+            checkInNotes: lastCheckIn.notes,
+            checkIns: [lastCheckIn, earlier],
+        };
+        const history = {
+            data: [ended],
+            page: 1,
+            limit: DEFAULT_HISTORY_PAGE_SIZE,
+            totalPages: 1,
+            totalItems: 1,
+        } satisfies FastingSessionHttpResponsePagedHttpResponse;
+        const request = httpMock.expectOne(candidate => candidate.method === 'GET' && candidate.url === `${BASE_URL}/history`);
+        expect(request.request.params.get('from')).toBe(from);
+        expect(request.request.params.get('to')).toBe(to);
+        expect(request.request.params.get('page')).toBe('1');
+        expect(request.request.params.get('limit')).toBe(String(DEFAULT_HISTORY_PAGE_SIZE));
+        request.flush(history);
+
+        await expect(pending).resolves.toEqual(history);
+    });
+});
+
+describe('Fasting SDK overview metadata', () => {
+    it('preserves alert translation keys and insight parameters from the overview', async () => {
+        const pending = firstValueFrom(service.getOverviewStrict());
+        const alert = {
+            id: 'risky',
+            titleKey: 'FASTING.PROMPTS.RISKY_TITLE',
+            bodyKey: 'FASTING.PROMPTS.RISKY_BODY',
+            tone: 'warning',
+        };
+        const insight = {
+            id: 'symptom-headache',
+            titleKey: 'FASTING.INSIGHTS.RECURRING_SYMPTOM_TITLE',
+            bodyKey: 'FASTING.INSIGHTS.RECURRING_SYMPTOM_BODY',
+            tone: 'neutral',
+            bodyParams: { symptom: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE' },
+        };
+        const overview = {
+            ...createOverview(),
+            currentSession: { ...SESSION_RESPONSE, energyLevel: 2 },
+            insights: { alerts: [alert], insights: [insight] },
+        } satisfies FastingOverviewHttpResponse;
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/overview` }).flush(overview);
+
+        await expect(pending).resolves.toEqual({
+            ...overview,
+            insights: { alerts: [{ ...alert, bodyParams: null }], insights: [insight] },
+        });
+    });
+
+    it('normalizes a report with no check-in statistics without discarding available fasting totals', async () => {
+        const pending = firstValueFrom(service.getOverview());
+        const sparseStats = {
+            totalCompleted: 1,
+            currentStreak: 1,
+            averageDurationHours: INTERMITTENT_FAST_HOURS,
+            completionRateLast30Days: 100,
+            checkInRateLast30Days: 0,
+        };
+        const overview = { ...createOverview(), stats: sparseStats } satisfies FastingOverviewHttpResponse;
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/overview` }).flush(overview);
+
+        await expect(pending).resolves.toEqual({
+            ...overview,
+            stats: { ...sparseStats, lastCheckInAtUtc: null, topSymptom: null },
+        });
     });
 });
 

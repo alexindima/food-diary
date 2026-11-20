@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { map, timer } from 'rxjs';
+import { finalize, map, timer } from 'rxjs';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner';
@@ -102,16 +102,20 @@ export class HydrationCardComponent {
     }
 
     protected openDetails(): void {
-        this.dialogService
-            .open<HydrationDetailsDialogComponent, { total: number; history: DashboardHydrationHistory | null }, boolean>(
-                HydrationDetailsDialogComponent,
-                {
-                    size: 'sm',
-                    data: { total: this.total(), history: this.history() },
-                },
-            )
+        const dialogRef = this.dialogService.open<
+            HydrationDetailsDialogComponent,
+            { total: number; history: DashboardHydrationHistory | null },
+            boolean
+        >(HydrationDetailsDialogComponent, {
+            size: 'sm',
+            data: { total: this.total(), history: this.history() },
+        });
+        const unregisterCleanup = this.destroyRef.onDestroy(() => {
+            dialogRef.close();
+        });
+        dialogRef
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterCleanup))
             .subscribe(editGoal => {
                 if (editGoal === true) {
                     this.goalAction.emit();

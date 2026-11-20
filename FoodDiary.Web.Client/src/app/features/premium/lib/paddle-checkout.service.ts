@@ -137,6 +137,7 @@ export class PaddleCheckoutService {
 
         const paddle = this.document.defaultView?.Paddle;
         if (paddle === undefined) {
+            this.resetScriptLoad();
             throw new Error('Paddle.js did not initialize');
         }
 
@@ -209,11 +210,14 @@ export class PaddleCheckoutService {
         });
 
         await withPaddleTimeoutAsync(this.scriptLoadPromise).catch(error => {
-            this.scriptLoadPromise = null;
-            const failedScript = this.document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`);
-            failedScript?.remove();
+            this.resetScriptLoad();
             throw error;
         });
+    }
+
+    private resetScriptLoad(): void {
+        this.scriptLoadPromise = null;
+        this.document.querySelector<HTMLScriptElement>(`script[src="${this.scriptUrl}"]`)?.remove();
     }
 
     private buildSuccessUrl(): string {

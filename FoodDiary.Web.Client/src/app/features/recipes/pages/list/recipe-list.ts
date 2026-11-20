@@ -158,7 +158,7 @@ export class RecipeListComponent {
                 await this.routeState.writeAsync(readRecipeListQuery(convertToParamMap(devQuery(filters, fields))));
             },
             openEntityAsync: async id => {
-                if (!this.recipeData.items().some(recipe => recipe.id === id)) {
+                if (this.recipeData.isLoading() || !this.recipeData.items().some(recipe => recipe.id === id)) {
                     throw new DevelopmentToolError('ID is not in the current recipe list.');
                 }
                 await router.navigate(['/recipes', id, 'edit']);

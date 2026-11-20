@@ -71,6 +71,20 @@ describe('PwaInstallService browser prompts', () => {
         expect(service.showInstallCard()).toBe(false);
     });
 
+    it('ignores a browser install event that provides no native prompt', () => {
+        const service = TestBed.inject(PwaInstallService);
+        service.initialize();
+        const incompleteEvent = new Event('beforeinstallprompt', { cancelable: true });
+
+        view.dispatchEvent(incompleteEvent);
+
+        expect(incompleteEvent.defaultPrevented).toBe(false);
+        expect(service.installMode()).toBeNull();
+        expect(service.showInstallCard()).toBe(false);
+        view.dispatchEvent(installEvent());
+        expect(service.installMode()).toBe('prompt');
+    });
+
     it('handles a failed native prompt without an unhandled rejection', async () => {
         const service = TestBed.inject(PwaInstallService);
         service.initialize();
@@ -105,6 +119,7 @@ describe('PwaInstallService platform capabilities', () => {
         service.initialize();
         expect(service.isStandalone()).toBe(true);
         expect(service.shouldRememberSession()).toBe(true);
+        expect(service.installMode()).toBeNull();
         expect(service.showInstallCard()).toBe(false);
     });
 });
@@ -158,6 +173,18 @@ describe('PwaInstallService lifecycle', () => {
         view.dispatchEvent(installEvent());
         expect(service.showInstallCard()).toBe(false);
         expect(service.canShowAndroidInstallInstructions()).toBe(false);
+    });
+
+    it('stays unavailable when the browser document has no window', async () => {
+        const detached = document.implementation.createHTMLDocument();
+        TestBed.overrideProvider(DOCUMENT, { useValue: detached });
+        const service = TestBed.inject(PwaInstallService);
+
+        service.initialize();
+
+        expect(service.installMode()).toBeNull();
+        expect(service.showInstallCard()).toBe(false);
+        await expect(service.installAsync()).resolves.toBe('unavailable');
     });
 
     it('releases event listeners when the application is destroyed', () => {

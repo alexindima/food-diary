@@ -48,6 +48,14 @@ describe('lesson view mapper', () => {
         });
     });
 
+    it('uses the middle difficulty on the same lesson in the list and detail view', () => {
+        const lesson = createSummary({ difficulty: 'Intermediate' });
+        const difficulty = { difficultyLabelKey: 'LESSONS.DIFFICULTY.Intermediate', difficultyLevel: 2 };
+
+        expect(buildLessonListItems([lesson])).toMatchObject([difficulty]);
+        expect(buildLessonDetailView({ ...lesson, content: 'Lesson content' })).toMatchObject(difficulty);
+    });
+
     it('returns null detail view for missing lesson', () => {
         expect(buildLessonDetailView(null)).toBeNull();
     });

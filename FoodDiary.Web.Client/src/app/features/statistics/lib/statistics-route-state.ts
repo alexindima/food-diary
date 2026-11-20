@@ -30,7 +30,8 @@ export function connectStatisticsRouteState(facade: StatisticsRouteOwner): void 
     const write = (query: StatisticsRouteQuery, replaceUrl: boolean): void => {
         const serialized = writeStatisticsRouteQuery(query);
         const key = JSON.stringify(serialized);
-        if (pendingKey === key || matchesParams(params, query)) {
+        // A selection matching the current URL can still supersede a different pending destination.
+        if (pendingKey === key || (pendingKey === null && matchesParams(params, query))) {
             return;
         }
         pendingKey = key;

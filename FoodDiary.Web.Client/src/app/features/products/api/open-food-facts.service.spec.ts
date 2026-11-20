@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { OpenFoodFactsService } from './open-food-facts.service';
@@ -86,5 +87,34 @@ describe('Open Food Facts failures and barcode lookup', () => {
         expect(req.request.params.get('limit')).toBe('2');
         req.flush({}, { status: 503, statusText: 'Unavailable' });
         expect(received).toEqual([]);
+    });
+});
+
+describe('Open Food Facts persisted catalog fields', () => {
+    const barcode = '0012345678905';
+    const product = { barcode, name: 'Sparkling water', brand: 'Spring', caloriesPer100G: 0 };
+
+    it('preserves a leading-zero barcode and explicit zero calories from a cached lookup', async () => {
+        const pending = firstValueFrom(service.searchByBarcode(barcode));
+        httpMock.expectOne({ url: `${BASE_URL}/products/${barcode}`, method: 'GET' }).flush(product);
+
+        await expect(pending).resolves.toEqual(product);
+    });
+
+    it('preserves search order and sparse fields when both catalog entries are valid', async () => {
+        const pending = firstValueFrom(service.search('sparkling water'));
+        const matches = [product, { barcode: '0012345678912', name: 'Mineral water' }];
+        const request = httpMock.expectOne(req => req.url === `${BASE_URL}/products` && req.method === 'GET');
+        expect(request.request.params.get('search')).toBe('sparkling water');
+        request.flush(matches);
+
+        await expect(pending).resolves.toEqual(matches);
+    });
+
+    it('does not return a partially decoded search page when the provider omits a required barcode', async () => {
+        const pending = firstValueFrom(service.search('sparkling water'));
+        httpMock.expectOne(req => req.url === `${BASE_URL}/products`).flush([product, { name: 'Unidentified water' }]);
+
+        await expect(pending).resolves.toEqual([]);
     });
 });

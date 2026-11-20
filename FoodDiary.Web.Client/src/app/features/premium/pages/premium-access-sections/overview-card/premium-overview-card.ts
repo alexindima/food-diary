@@ -19,6 +19,7 @@ export class PremiumOverviewCardComponent {
     public readonly viewModel = input.required<PremiumOverviewCardViewModel>();
     public readonly portalLoading = input.required<boolean>();
     public readonly trialLoading = input.required<boolean>();
+    public readonly startTrialBlocked = input(false);
     public readonly isLoading = input.required<boolean>();
     public readonly overview = input.required<BillingOverview | null>();
     public readonly plansAvailable = input(false);

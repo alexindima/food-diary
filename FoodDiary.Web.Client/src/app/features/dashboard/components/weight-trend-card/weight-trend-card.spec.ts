@@ -1,9 +1,11 @@
 import { registerLocaleData } from '@angular/common';
 import ru from '@angular/common/locales/ru';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
@@ -20,6 +22,10 @@ const MINIMUM_CHART_POINTS = 3;
 const MINIMUM_CHART_BOUND_OFFSET = 1;
 const MAXIMUM_CHART_BOUND_OFFSET = 2;
 const TARGET_WEIGHT = 72;
+const FIRST_MEASUREMENT: WeightTrendPoint = { date: '2026-05-01', value: CURRENT_WEIGHT };
+
+@Component({ template: 'Measurements history', changeDetection: ChangeDetectionStrategy.OnPush })
+class MeasurementHistoryStubComponent {}
 
 describe('WeightTrendCardComponent calendar encoding', () => {
     it.each(['2026-11-07', '2026-11-07T00:00:00', '2026-11-07T00:00:00.000Z'])(
@@ -47,6 +53,22 @@ describe('WeightTrendCardComponent calendar encoding', () => {
         fixture.detectChanges();
 
         expect(component['measurementPoints']().map(point => point.label)).toEqual(['November 5', 'November 6', 'November 7']);
+    });
+
+    it('presents dated and calendar-only measurements in order in the accessible chart', async () => {
+        const { fixture } = await setupComponentAsync({
+            points: [
+                { date: new Date('2026-11-07T00:00:00Z'), value: CURRENT_WEIGHT },
+                { date: '2026-11-05', value: CURRENT_WEIGHT },
+                { date: new Date('2026-11-06T00:00:00Z'), value: CURRENT_WEIGHT },
+            ],
+        });
+        fixture.detectChanges();
+
+        const chart = (fixture.nativeElement as HTMLElement).querySelector('fd-ui-line-chart [role="img"]');
+        expect(chart?.getAttribute('aria-label')).toContain(
+            ['November 5', 'November 6', 'November 7'].map(day => `${day} ${CURRENT_WEIGHT} GENERAL.UNITS.KG`).join(', '),
+        );
     });
 });
 
@@ -216,6 +238,81 @@ describe('Weight and waist rendered regression states', () => {
     });
 });
 
+describe('Weight and waist measurement actions', () => {
+    it.each([
+        { kind: 'weight', route: '/weight-history' },
+        { kind: 'length', route: '/waist-history' },
+    ] as const)('opens $kind history directly or with the add form requested', async ({ kind, route }) => {
+        const { fixture } = await setupComponentAsync({ isLoading: true });
+        await RouterTestingHarness.create();
+        fixture.componentRef.setInput('measurementKind', kind);
+        fixture.componentRef.setInput('actionRoute', route);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const add = host.querySelector<HTMLButtonElement>('.weight-trend-card__action button');
+        const history = host.querySelector<HTMLAnchorElement>('.weight-trend-card__history-link');
+        expect(add?.disabled).toBe(true);
+        expect(history?.hidden).toBe(true);
+        add?.click();
+        const router = TestBed.inject(Router);
+        expect(router.url).toBe('/');
+
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.detectChanges();
+        expect(add?.disabled).toBe(false);
+        expect(history?.hidden).toBe(false);
+        add?.click();
+        await vi.waitFor(() => {
+            expect(router.url).toBe(`${route}?addEntry=true`);
+        });
+
+        history?.click();
+        await vi.waitFor(() => {
+            expect(router.url).toBe(route);
+        });
+    });
+});
+
+describe('Weight and waist changes rounded to the displayed precision', () => {
+    it('shows no metric change when a small weight increase only appears after conversion to pounds', async () => {
+        const smallIncrease = 0.04;
+        const { fixture } = await setupComponentAsync({
+            currentWeight: CURRENT_WEIGHT + smallIncrease,
+            change: smallIncrease,
+            points: [FIRST_MEASUREMENT, { date: '2026-05-02', value: CURRENT_WEIGHT + smallIncrease }],
+        });
+        const measurements = TestBed.inject(MeasurementSystemService);
+        measurements.setSystem('metric');
+        fixture.detectChanges();
+        const delta = (fixture.nativeElement as HTMLElement).querySelector('.weight-trend-card__delta');
+        expect(delta?.textContent.trim()).toBe('WEIGHT_TREND_CARD.NO_CHANGE');
+
+        try {
+            measurements.setSystem('imperial');
+            fixture.detectChanges();
+            expect(delta?.textContent).toContain('+0.1');
+            expect(delta?.textContent).toContain('GENERAL.UNITS.LB');
+        } finally {
+            measurements.setSystem('metric');
+        }
+    });
+
+    it('shows no metric change when a small waist decrease rounds to zero', async () => {
+        const smallDecrease = -0.04;
+        const { fixture } = await setupComponentAsync({
+            currentWeight: CURRENT_WEIGHT + smallDecrease,
+            change: smallDecrease,
+            points: [FIRST_MEASUREMENT, { date: '2026-05-02', value: CURRENT_WEIGHT + smallDecrease }],
+        });
+        fixture.componentRef.setInput('measurementKind', 'length');
+        TestBed.inject(MeasurementSystemService).setSystem('metric');
+        fixture.detectChanges();
+
+        const delta = (fixture.nativeElement as HTMLElement).querySelector('.weight-trend-card__delta');
+        expect(delta?.textContent.trim()).toBe('WEIGHT_TREND_CARD.NO_CHANGE');
+    });
+});
+
 function registerTrendContinuityTests(kind: 'weight' | 'length'): void {
     it(`${kind}: displays the measurement calendar date consistently in both locales`, async () => {
         const { fixture } = await setupComponentAsync({ currentWeight: CURRENT_WEIGHT, points: [] });
@@ -274,7 +371,13 @@ async function setupComponentAsync(
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [WeightTrendCardComponent],
-            providers: [provideRouter([]), provideTranslateTesting()],
+            providers: [
+                provideRouter([
+                    { path: 'weight-history', component: MeasurementHistoryStubComponent },
+                    { path: 'waist-history', component: MeasurementHistoryStubComponent },
+                ]),
+                provideTranslateTesting(),
+            ],
         })
         .compileComponents();
 

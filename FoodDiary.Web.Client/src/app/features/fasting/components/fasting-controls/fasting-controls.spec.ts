@@ -311,6 +311,81 @@ describe('FastingControlsComponent active extended session', () => {
     });
 });
 
+describe('Fasting confirmation after the active session changes', () => {
+    it.each(['replaced', 'ended'] as const)('discards an intermittent end confirmation after the session is %s', change => {
+        const intermittent: FastingSession = {
+            ...createExtendedSession(),
+            id: entityId<'fasting-session'>('intermittent-session'),
+            planType: 'Intermittent',
+            protocol: 'Fast16Eat8',
+        };
+        facade.isActive.set(true);
+        facade.currentSession.set(intermittent);
+        const result = new Subject<'confirm' | 'cancel'>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => result });
+        fixture.detectChanges();
+
+        getNativeButtonByText(fixture, 'FASTING.END_FAST').click();
+        expect(dialogService.open.mock.lastCall).toMatchObject([
+            FastingEndConfirmDialogComponent,
+            { data: { title: 'FASTING.END_CONFIRM_TITLE' } },
+        ]);
+        facade.currentSession.set(
+            change === 'replaced'
+                ? { ...intermittent, id: entityId<'fasting-session'>('replacement-intermittent') }
+                : { ...intermittent, endedAtUtc: utcInstant('2026-04-12T10:00:00Z') },
+        );
+        result.next('confirm');
+        result.complete();
+
+        expect(facade.endFasting).not.toHaveBeenCalled();
+    });
+
+    it('allows a new skip confirmation for the current cycle without applying the previous one', () => {
+        const session = createCyclicSession();
+        facade.isActive.set(true);
+        facade.currentSession.set(session);
+        const result = new Subject<'confirm' | 'cancel'>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => result });
+        fixture.detectChanges();
+
+        getNativeButtonByText(fixture, 'FASTING.SKIP_FASTING_PERIOD').click();
+        facade.currentSession.set({ ...session, id: entityId<'fasting-session'>('replacement-cycle') });
+        result.next('confirm');
+        result.complete();
+        expect(facade.skipCyclicDay).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
+        getNativeButtonByText(fixture, 'FASTING.SKIP_FASTING_PERIOD').click();
+        expect(facade.skipCyclicDay).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Fasting safety approval after the extension target changes', () => {
+    it.each(['replaced', 'retargeted'] as const)('keeps the active session unchanged after it is %s', change => {
+        const session = { ...createExtendedSession(), plannedDurationHours: WARNING_PLANNED_DURATION_HOURS };
+        facade.isActive.set(true);
+        facade.currentSession.set(session);
+        const result = new Subject<'confirm' | 'cancel'>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => result });
+        fixture.detectChanges();
+
+        host(fixture).querySelector<HTMLButtonElement>('.fasting-controls__extend-panel-header')?.click();
+        fixture.detectChanges();
+        getNativeButtonByText(fixture, 'FASTING.ADD_36_HOURS').click();
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        facade.currentSession.set(
+            change === 'replaced'
+                ? { ...session, id: entityId<'fasting-session'>('replacement-extended') }
+                : { ...session, plannedDurationHours: HARD_STOP_PLANNED_DURATION_HOURS },
+        );
+        result.next('confirm');
+        result.complete();
+
+        expect(facade.extendByHours).not.toHaveBeenCalled();
+    });
+});
+
 describe('FastingControlsComponent target reductions', () => {
     it('does not request unavailable target reductions', () => {
         facade.isActive.set(true);

@@ -493,17 +493,25 @@ describe('CycleTrackingFacade day save recovery', () => {
         });
     });
 
-    it('retains a saved day when refreshing predictions fails and permits retry', async () => {
+    it('retains a saved day when refreshing predictions fails and retries the read without another write', async () => {
         facade.initialize();
         setValidDayForm();
         cyclesService.getCurrent.mockReturnValueOnce(throwError(() => new Error('refresh unavailable')));
         await submit(facade.dayForm);
         expect(facade.bleedingEntries()).toHaveLength(1);
         expect(facade.isSavingDay()).toBe(false);
-        expect(facade.daySaveRevision()).toBe(0);
-        expect(facade.dayError()).toBe('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
-        await submit(facade.dayForm);
         expect(facade.daySaveRevision()).toBe(1);
+        expect(facade.dayError()).toBeNull();
+        expect(facade.loadError()).toBe('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+
+        cyclesService.getCurrent.mockReturnValueOnce(
+            of({ ...createCycleResponse(), bleedingEntries: createCycleLogDay().bleedingEntries }),
+        );
+        facade.initialize();
+        expect(facade.bleedingEntries()).toHaveLength(1);
+        expect(facade.loadError()).toBeNull();
+        expect(facade.daySaveRevision()).toBe(1);
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
     });
 
     it('recognizes the HTTP client empty fallback as a failed refresh after saving', async () => {
@@ -512,8 +520,9 @@ describe('CycleTrackingFacade day save recovery', () => {
         cyclesService.getCurrent.mockReturnValueOnce(of(null));
         await submit(facade.dayForm);
         expect(facade.bleedingEntries()).toHaveLength(1);
-        expect(facade.dayError()).toBe('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
-        expect(facade.daySaveRevision()).toBe(0);
+        expect(facade.dayError()).toBeNull();
+        expect(facade.loadError()).toBe('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+        expect(facade.daySaveRevision()).toBe(1);
         expect(facade.isSavingDay()).toBe(false);
     });
 });
@@ -621,13 +630,15 @@ describe('CycleTrackingFacade settings cancellation', () => {
 describe('CycleTrackingFacade settings operations', () => {
     it('does not delete the cycle during an unresolved settings save', async () => {
         facade.initialize();
+        const persisted = { ...createCycleResponse(), averageCycleLength: 30 };
+        facade.settingsForm.averageCycleLength().value.set(persisted.averageCycleLength);
         const pending = new Subject<CycleResponse>();
         cyclesService.updateSettings.mockReturnValue(pending);
         const saving = submit(facade.settingsForm);
         await facade.deleteCycleAsync();
         expect(cyclesService.deleteCycle).not.toHaveBeenCalled();
         expect(facade.settingsForm().disabled()).toBe(true);
-        pending.next(createCycleResponse());
+        pending.next(persisted);
         pending.complete();
         await saving;
         expect(facade.settingsForm().disabled()).toBe(false);
@@ -708,13 +719,14 @@ describe('CycleTrackingFacade settings saving', () => {
         expect(facade.settingsSaveRevision()).toBe(1);
     });
 
-    it('publishes a successful settings save for drawer orchestration', async () => {
+    it('publishes successful completion for an unchanged settings form without writing', async () => {
         facade.initialize();
 
         const success = await submit(facade.settingsForm);
 
         expect(success).toBe(true);
-        expect(cyclesService.updateSettings).toHaveBeenCalledOnce();
+        expect(cyclesService.updateSettings).not.toHaveBeenCalled();
+        expect(cyclesService.updateConsent).not.toHaveBeenCalled();
         expect(facade.settingsSaveRevision()).toBe(1);
     });
 });
@@ -1623,6 +1635,123 @@ describe('CycleTrackingFacade day ordering', () => {
         await vi.waitFor(() => {
             expect(facade.bleedingEntries().map(entry => entry.id)).toEqual(['later-entry', 'bleeding-1']);
         });
+    });
+});
+
+describe('CycleTrackingFacade persisted optional state', () => {
+    it('clears every public health projection after deleting the profile and loading an absent record', async () => {
+        const profile = createCycleResponse();
+        const day = createCycleLogDay();
+        const recorded: CycleResponse = {
+            ...profile,
+            bleedingEntries: day.bleedingEntries,
+            symptoms: day.symptoms,
+            fertilitySignals: [
+                {
+                    id: entityId<'fertility-signal'>('signal-1'),
+                    cycleProfileId: profile.id,
+                    date: day.date,
+                    basalBodyTemperatureCelsius: null,
+                    ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+                    cervicalFluid: null,
+                    hadSex: false,
+                    notes: null,
+                },
+            ],
+        };
+        cyclesService.getCurrent.mockReturnValueOnce(of(recorded)).mockReturnValueOnce(of(null));
+        facade.initialize();
+
+        expect(facade.bleedingEntries()).toEqual(recorded.bleedingEntries);
+        expect(facade.symptoms()).toEqual(recorded.symptoms);
+        expect(facade.factors()).toEqual(recorded.factors);
+        expect(facade.fertilitySignals()).toEqual(recorded.fertilitySignals);
+        expect(facade.menstrualEpisodes()).toEqual(recorded.menstrualEpisodes);
+        expect(facade.predictions()).toEqual(recorded.predictions);
+
+        await facade.deleteCycleAsync();
+        facade.initialize();
+
+        expect(cyclesService.deleteCycle).toHaveBeenCalledExactlyOnceWith(profile.id);
+        expect(cyclesService.getCurrent).toHaveBeenCalledTimes(2);
+        expect(cyclesService.getNutritionSummary).toHaveBeenCalledOnce();
+        expect(facade.cycle()).toBeNull();
+        expect(facade.bleedingEntries()).toEqual([]);
+        expect(facade.symptoms()).toEqual([]);
+        expect(facade.factors()).toEqual([]);
+        expect(facade.fertilitySignals()).toEqual([]);
+        expect(facade.menstrualEpisodes()).toEqual([]);
+        expect(facade.predictions()).toBeNull();
+        expect(facade.nutritionSummary()).toBeNull();
+    });
+});
+
+describe('CycleTrackingFacade optional fields and save lifecycle', () => {
+    it('saves an edited episode with an explicit open end after its end date is cleared', async () => {
+        const profile = createCycleResponse();
+        const episode = profile.menstrualEpisodes?.[0];
+        if (episode === undefined) {
+            throw new Error('Expected a saved menstrual episode');
+        }
+        cyclesService.updateMenstrualEpisode.mockReturnValueOnce(of({ ...profile, menstrualEpisodes: [{ ...episode, endDate: null }] }));
+        facade.initialize();
+        facade.editMenstrualEpisode(episode.id);
+        facade.episodeForm.endDate().value.set(null);
+
+        await submit(facade.episodeForm);
+
+        expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledExactlyOnceWith(profile.id, episode.id, {
+            startDate: calendarDate('2026-04-01'),
+            endDate: null,
+        });
+        expect(facade.menstrualEpisodes()[0]?.endDate).toBeNull();
+        expect(facade.editingEpisodeId()).toBeNull();
+        expect(facade.episodeError()).toBeNull();
+    });
+
+    it('ends an existing factor without supplying a note or a clear-note instruction', async () => {
+        const profile = createCycleResponse();
+        const factor = { ...profile.factors[0], notes: null };
+        const today = calendarDate(formatDateInputValue(new Date()));
+        cyclesService.getCurrent.mockReturnValueOnce(of({ ...profile, factors: [factor] }));
+        cyclesService.upsertFactor.mockReturnValueOnce(of({ ...profile, factors: [{ ...factor, endDate: today }] }));
+        facade.initialize();
+
+        await facade.endFactorTodayAsync(factor.id);
+
+        expect(cyclesService.upsertFactor).toHaveBeenCalledExactlyOnceWith(profile.id, {
+            factorId: factor.id,
+            type: factor.type,
+            startDate: calendarDate('2026-04-01'),
+            endDate: today,
+            clearNotes: false,
+        });
+        expect(facade.factors()).toEqual([{ ...factor, endDate: today }]);
+        expect(facade.factorError()).toBeNull();
+    });
+
+    it('keeps the submitted settings draft when cancellation arrives during a pending save', async () => {
+        const persisted = createCycleResponse();
+        const pending = new Subject<CycleResponse>();
+        const nextDuration = 29;
+        cyclesService.updateSettings.mockReturnValueOnce(pending);
+        facade.initialize();
+        facade.settingsForm.averageCycleLength().value.set(nextDuration);
+        const draft = facade.settingsModel();
+        const saving = submit(facade.settingsForm);
+
+        expect(facade.isSavingSettings()).toBe(true);
+        facade.cancelSettingsEdit();
+        expect(facade.settingsModel()).toEqual(draft);
+        expect(facade.cycle()?.averageCycleLength).toBe(persisted.averageCycleLength);
+
+        pending.next({ ...persisted, averageCycleLength: nextDuration });
+        pending.complete();
+        await saving;
+
+        expect(facade.cycle()?.averageCycleLength).toBe(nextDuration);
+        expect(facade.settingsSaveRevision()).toBe(1);
+        expect(facade.isSavingSettings()).toBe(false);
     });
 });
 

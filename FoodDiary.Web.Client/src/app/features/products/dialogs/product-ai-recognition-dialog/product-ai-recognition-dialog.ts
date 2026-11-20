@@ -24,8 +24,8 @@ import {
     buildProductAiRecognitionModelFromNutrition,
     buildProductAiRecognitionResult,
     buildProductLabelFormModel,
-    capitalizeName,
     createProductAiRecognitionFormModel,
+    getProductRecognitionItemName,
     isProductAiRecognitionModelValid,
     mapAiNutritionErrorKey,
     mapAiRecognitionErrorKey,
@@ -82,7 +82,16 @@ export class ProductAiRecognitionDialogComponent {
     protected readonly cover = signal<ImageSelection | null>(this.photos()[0] ?? null);
     protected readonly productLabel = signal<ProductLabel | null>(null);
     protected readonly hasResult = computed(() => this.productLabel() !== null || this.nutrition() !== null);
-    protected readonly selection = signal<ImageSelection | null>(this.photos()[0] ?? null);
+    private readonly uploadedAssetIds = computed(() =>
+        this.photos()
+            .map(({ assetId }) => assetId)
+            .filter((assetId): assetId is ImageAssetId => assetId !== null && assetId.trim().length > 0),
+    );
+    // Choosing a different product cover must not change the recognition primary.
+    private readonly primaryAnalysisAssetId = signal(this.uploadedAssetIds().at(0) ?? null);
+    private readonly availableAnalysisAssetId = computed(() =>
+        this.isBusy() || this.photoUploading() ? null : this.primaryAnalysisAssetId(),
+    );
     protected readonly results = signal<FoodVisionItem[]>([]);
     protected readonly nutrition = signal<FoodNutritionResponse | null>(null);
     protected readonly descriptionModel = signal({ description: this.dialogData.initialDescription ?? '' });
@@ -93,7 +102,7 @@ export class ProductAiRecognitionDialogComponent {
     protected readonly resultForm = form(this.resultFormModel);
 
     protected readonly statusKey = computed(() => {
-        if (this.selection() === null) {
+        if (this.photos().length === 0) {
             return null;
         }
         if (this.isLoading()) {
@@ -120,11 +129,9 @@ export class ProductAiRecognitionDialogComponent {
             this.results().length === 0 &&
             !this.hasResult(),
     );
-    protected readonly isAnalyzeDisabled = computed(
-        () => (this.selection()?.assetId ?? '').length === 0 || this.isBusy() || this.photoUploading(),
-    );
+    protected readonly isAnalyzeDisabled = computed(() => this.availableAnalysisAssetId() === null);
     protected readonly analyzeDisabledReason = computed(() => {
-        if (this.selection() === null) {
+        if (this.primaryAnalysisAssetId() === null) {
             return 'DISABLED_HINTS.IMAGE_REQUIRED';
         }
 
@@ -144,15 +151,20 @@ export class ProductAiRecognitionDialogComponent {
     );
     protected readonly itemNames = computed(() =>
         this.results()
-            .map(item => capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))
+            .map(getProductRecognitionItemName)
             .filter(name => name.length > 0),
     );
-    protected onImageChanged(selection: ImageSelection | null): void {
+    protected onPhotosChanged(photos: ImageSelection[]): void {
+        if (this.isBusy()) {
+            return;
+        }
+        this.photos.set(photos);
+        this.primaryAnalysisAssetId.set(this.uploadedAssetIds().at(0) ?? null);
+        this.cover.set(null);
         this.analysisSubscription?.unsubscribe();
         this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(false);
         this.isNutritionLoading.set(false);
-        this.selection.set(selection);
         this.productLabel.set(null);
         this.useAsCover.set(false);
         this.replacementAccepted.set(false);
@@ -163,18 +175,10 @@ export class ProductAiRecognitionDialogComponent {
         this.hasAnalyzed.set(false);
     }
 
-    protected onPhotosChanged(photos: ImageSelection[]): void {
-        if (this.isBusy()) {
-            return;
-        }
-        this.photos.set(photos);
-        this.cover.set(null);
-        this.onImageChanged(photos[0] ?? null);
-    }
-
     protected onCoverChanged(photo: ImageSelection | null): void {
         if (photo !== null) {
-            this.photos.update(photos => [photo, ...photos.filter(item => item.assetId !== photo.assetId)]);
+            const photoKey = photo.assetId ?? photo.url;
+            this.photos.update(photos => [photo, ...photos.filter(item => (item.assetId ?? item.url) !== photoKey)]);
         }
         this.cover.set(photo);
         this.useAsCover.set(photo !== null);
@@ -202,20 +206,11 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     private runAnalysisFlow(): void {
-        if (this.isAnalyzeDisabled()) {
+        const assetId = this.availableAnalysisAssetId();
+        if (assetId === null) {
             return;
         }
 
-        const assetId = this.selection()?.assetId;
-        if (assetId === undefined || assetId === null || assetId.length === 0) {
-            return;
-        }
-
-        this.errorKey.set(null);
-        this.nutritionErrorKey.set(null);
-        this.results.set([]);
-        this.nutrition.set(null);
-        this.hasAnalyzed.set(false);
         this.runAnalysis(assetId);
     }
 
@@ -226,7 +221,7 @@ export class ProductAiRecognitionDialogComponent {
 
         const result = buildProductAiRecognitionResult({
             model: this.resultFormModel(),
-            selection: this.useAsCover() ? (this.cover() ?? this.selection()) : null,
+            selection: this.useAsCover() ? (this.cover() ?? this.photos().at(0) ?? null) : null,
             itemNames: this.itemNames(),
             results: this.results(),
             description: null,
@@ -245,8 +240,8 @@ export class ProductAiRecognitionDialogComponent {
         this.replacementAccepted.set(false);
         const selection = imageSelection(job.imageUrl, job.imageAssetId);
         this.photos.set([selection, ...(job.additionalImages ?? []).map(image => imageSelection(image.imageUrl, image.imageAssetId))]);
+        this.primaryAnalysisAssetId.set(job.imageAssetId);
         this.cover.set(null);
-        this.selection.set(selection);
         this.productLabel.set(null);
         this.descriptionModel.set({ description: job.description ?? '' });
         this.runAnalysis(job.imageAssetId, job.id);
@@ -277,10 +272,7 @@ export class ProductAiRecognitionDialogComponent {
                 ? this.productAiRecognitionFacade.analyzeFoodImage({
                       imageAssetId: assetId,
                       isProductLabel: true,
-                      additionalImageAssetIds: this.photos()
-                          .map(photo => photo.assetId)
-                          .filter(id => id !== null)
-                          .filter(id => id !== assetId),
+                      additionalImageAssetIds: this.uploadedAssetIds().filter(id => id !== assetId),
                       description: this.getDescription(),
                   })
                 : this.productAiRecognitionFacade.resumeRecognition(jobId)

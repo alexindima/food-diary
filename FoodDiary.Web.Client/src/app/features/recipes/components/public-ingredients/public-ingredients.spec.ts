@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { PublicProductPreviewService } from '../../../products/contracts/public-product-preview';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicIngredientsComponent } from './public-ingredients';
 
@@ -194,4 +195,65 @@ it('hides shopping actions when all ingredients are unavailable', () => {
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector<HTMLElement>('.shopping-toolbar')?.style.display).toBe('none');
+});
+
+describe('Public ingredient actions for mixed sources', () => {
+    it('previews the available ingredient by its stored product identifier', () => {
+        const openAsync = vi.fn<PublicProductPreviewService['openAsync']>().mockResolvedValue(undefined);
+        TestBed.configureTestingModule({
+            imports: [PublicIngredientsComponent],
+            providers: [provideRouter([]), provideTranslateTesting(), { provide: PublicProductPreviewService, useValue: { openAsync } }],
+        });
+        const recipe = publicRecipeFixture();
+        const productId = entityId<'product'>('oats');
+        recipe.steps[0].ingredients = [
+            { name: 'oats', productId, amount: 50, unit: 'g', amountText: null, recipeId: null, isAvailable: true },
+        ];
+        const fixture = TestBed.createComponent(PublicIngredientsComponent);
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.componentRef.setInput('servings', recipe.servings);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+
+        root.querySelector<HTMLButtonElement>('button[aria-label="PUBLIC_RECIPES.PRODUCT_VIEW"]')?.click();
+
+        expect(openAsync).toHaveBeenCalledExactlyOnceWith(productId);
+    });
+
+    it('adds only remaining visible ingredients and preserves unsupported or absent units', () => {
+        TestBed.configureTestingModule({
+            imports: [PublicIngredientsComponent],
+            providers: [provideRouter([]), provideTranslateTesting()],
+        });
+        const recipe = publicRecipeFixture();
+        recipe.steps[0].ingredients = [
+            { name: 'rice', amount: 100, unit: 'g', amountText: null, recipeId: null, isAvailable: true },
+            { name: 'Sauce', amount: 0.5, unit: 'serving', amountText: null, recipeId: entityId<'recipe'>('sauce'), isAvailable: true },
+            { name: 'Spice', amount: 1, unit: 'pinch', amountText: null, recipeId: null, isAvailable: true },
+            { name: 'Water', amount: 2, unit: null, amountText: null, recipeId: null, isAvailable: true },
+            { name: null, amount: null, unit: null, amountText: null, recipeId: null, isAvailable: false },
+        ];
+        const fixture = TestBed.createComponent(PublicIngredientsComponent);
+        const addAll = vi.fn();
+        fixture.componentInstance.shoppingAddAll.subscribe(addAll);
+        fixture.componentRef.setInput('recipe', recipe);
+        fixture.componentRef.setInput('servings', recipe.servings * 2);
+        fixture.componentRef.setInput('addedIngredients', new Set([0]));
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        const add = Array.from(root.querySelectorAll<HTMLButtonElement>('.shopping-toolbar button')).find(
+            control => control.querySelector('.fd-ui-button__label')?.textContent.trim() === 'PUBLIC_RECIPES.SHOPPING_ADD_ALL',
+        );
+
+        add?.click();
+
+        expect(addAll).toHaveBeenCalledExactlyOnceWith([
+            {
+                index: 1,
+                item: { name: 'Sauce', productId: null, amount: 1, unit: null, note: 'PUBLIC_RECIPES.SERVINGS', isChecked: false },
+            },
+            { index: 2, item: { name: 'Spice', productId: null, amount: 2, unit: null, note: 'pinch', isChecked: false } },
+            { index: 3, item: { name: 'Water', productId: null, amount: 4, unit: null, note: null, isChecked: false } },
+        ]);
+    });
 });

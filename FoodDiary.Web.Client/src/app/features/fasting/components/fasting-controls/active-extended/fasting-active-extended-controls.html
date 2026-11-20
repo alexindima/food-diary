@@ -58,9 +58,9 @@
                                     type="number"
                                     size="sm"
                                     [label]="'FASTING.ADD_HOURS' | translate"
-                                    [numberNormalizer]="normalizeFastingHours"
-                                    [value]="extendHours()"
-                                    (valueChange)="extendHoursChange.emit(normalizeNumericControlValue($event))"
+                                    [numberNormalizer]="normalizeCustomHours"
+                                    [value]="extendHoursDraft()"
+                                    (valueChange)="updateExtendHours($event)"
                                 />
                             </div>
                             <fd-ui-button
@@ -68,9 +68,11 @@
                                 fill="outline"
                                 size="sm"
                                 [loading]="isExtending()"
-                                [disabled]="extendActionsDisabled()"
+                                [disabled]="getExtendCustomDisabledReason() !== null"
                                 [disabledReason]="
-                                    extendActionsDisabled() && !isExtending() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null
+                                    !isExtending() && getExtendCustomDisabledReason() !== null
+                                        ? (getExtendCustomDisabledReason() | translate)
+                                        : null
                                 "
                                 (click)="extendCustom.emit()"
                             >
@@ -138,9 +140,9 @@
                                     type="number"
                                     size="sm"
                                     [label]="'FASTING.REDUCE_HOURS' | translate"
-                                    [numberNormalizer]="normalizeFastingHours"
-                                    [value]="reduceHours()"
-                                    (valueChange)="reduceHoursChange.emit(normalizeNumericControlValue($event))"
+                                    [numberNormalizer]="normalizeCustomHours"
+                                    [value]="reduceHoursDraft()"
+                                    (valueChange)="updateReduceHours($event)"
                                 />
                             </div>
                             <fd-ui-button
@@ -148,10 +150,10 @@
                                 fill="outline"
                                 size="sm"
                                 [loading]="isReducing()"
-                                [disabled]="isReduceActionDisabled(reduceHours())"
+                                [disabled]="isReduceActionDisabled(reduceHoursDraft())"
                                 [disabledReason]="
-                                    !isReducing() && getReduceDisabledReason(reduceHours()) !== null
-                                        ? (getReduceDisabledReason(reduceHours()) | translate)
+                                    !isReducing() && getReduceDisabledReason(reduceHoursDraft()) !== null
+                                        ? (getReduceDisabledReason(reduceHoursDraft()) | translate)
                                         : null
                                 "
                                 (click)="reduceCustom.emit()"

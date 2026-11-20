@@ -39,6 +39,10 @@ const POLL_INTERVAL_MS = 5000;
 const POST_RETRY_MS = 1000;
 const HEX_RADIX = 16;
 
+function unauthorizedRecognition(): Observable<never> {
+    return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
+}
+
 @Service()
 export class FoodRecognitionService {
     private readonly http = inject(HttpClient);
@@ -74,37 +78,40 @@ export class FoodRecognitionService {
         return defer(() => {
             const user = this.currentUserId();
             if (user === null) {
-                return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
+                return unauthorizedRecognition();
             }
             return from(this.requestKeyAsync(user, request)).pipe(switchMap(key => this.submit(key, user, request)));
         });
     }
 
     private submit(key: string, user: UserId, request: FoodVisionRequest): Observable<FoodVisionResponse> {
+        if (this.currentUserId() !== user) {
+            return unauthorizedRecognition();
+        }
         const id = entityId<'food-recognition'>(this.storage.getItem('session', key) ?? crypto.randomUUID());
         // Persist before POST. A lost acceptance response retries the same durable task.
         this.storage.setItem('session', key, id);
-        return this.sdk.client
-            .postAiFoodRecognitions({ version: this.sdk.version, startFoodRecognitionHttpRequest: { id, ...request } })
-            .pipe(
-                map(recognitionJobFromSdk),
-                retry({ count: 2, delay: (error: unknown) => (this.isTransient(error) ? timer(POST_RETRY_MS) : throwError(() => error)) }),
-                switchMap(job => this.waitForResult(job.id, user)),
-                catchError((error: unknown) => {
-                    if (!this.isTransient(error)) {
-                        this.storage.removeItem('session', key);
-                    }
-                    return throwError(() => error);
-                }),
-            );
+        return defer(() =>
+            this.currentUserId() === user
+                ? this.sdk.client.postAiFoodRecognitions({ version: this.sdk.version, startFoodRecognitionHttpRequest: { id, ...request } })
+                : unauthorizedRecognition(),
+        ).pipe(
+            map(recognitionJobFromSdk),
+            retry({ count: 2, delay: (error: unknown) => (this.isTransient(error) ? timer(POST_RETRY_MS) : throwError(() => error)) }),
+            switchMap(job => this.waitForResult(job.id, user)),
+            catchError((error: unknown) => {
+                if (this.currentUserId() === user && !this.isTransient(error)) {
+                    this.storage.removeItem('session', key);
+                }
+                return throwError(() => error);
+            }),
+        );
     }
 
     public resume(id: FoodRecognitionId): Observable<FoodVisionResponse> {
         return defer(() => {
             const user = this.currentUserId();
-            return user === null
-                ? throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }))
-                : this.waitForResult(id, user);
+            return user === null ? unauthorizedRecognition() : this.waitForResult(id, user);
         });
     }
 
@@ -123,7 +130,7 @@ export class FoodRecognitionService {
         return merge(timer(0, POLL_INTERVAL_MS), this.changes.pipe(filter(changed => changed === null || changed === id))).pipe(
             exhaustMap(() => {
                 if (this.currentUserId() !== user) {
-                    return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
+                    return unauthorizedRecognition();
                 }
                 return this.sdk.client.getAiFoodRecognitionsById({ version: this.sdk.version, id }).pipe(
                     map(recognitionJobFromSdk),
@@ -139,7 +146,7 @@ export class FoodRecognitionService {
 
     private toResult(job: FoodRecognitionJob, user: UserId): Observable<FoodVisionResponse> {
         if (this.currentUserId() !== user) {
-            return throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Unauthorized }));
+            return unauthorizedRecognition();
         }
         if (job.vision === null) {
             const status =

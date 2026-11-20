@@ -180,7 +180,13 @@ export class FastingFacade {
                 limit: FASTING_HISTORY_PAGE_SIZE,
             }),
             history => {
-                this.history.update(current => [...current, ...history.data]);
+                this.history.update(current => {
+                    const sessionsById = new Map(current.map(session => [session.id, session]));
+                    for (const session of history.data) {
+                        sessionsById.set(session.id, session);
+                    }
+                    return [...sessionsById.values()];
+                });
                 this.historyPage.set(history.page);
                 this.historyTotalPages.set(history.totalPages);
             },
@@ -414,7 +420,8 @@ export class FastingFacade {
             return true;
         }
 
-        return new Date(state.snoozedUntilUtc).getTime() <= this.now().getTime();
+        const snoozedUntilMs = new Date(state.snoozedUntilUtc).getTime();
+        return Number.isNaN(snoozedUntilMs) || snoozedUntilMs <= this.now().getTime();
     }
 
     public dismissPrompt(promptId: string): void {

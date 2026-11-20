@@ -4,6 +4,7 @@ import {
     buildBodyChartPoints,
     getCurrentDateRange,
     getDateRangeDayCount,
+    getQuantizationDays,
     normalizeEndOfDay,
     normalizeStartOfDay,
 } from './statistics-data-mapper';
@@ -35,6 +36,9 @@ const BODY_START_VALUE = 80;
 const BODY_END_VALUE = 82;
 const BODY_INTERPOLATED_VALUE = 81;
 const MS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
+const WEEK_LONG_BUCKET = 7;
+const FORTNIGHT_BUCKET = 14;
+const THREE_WEEK_BUCKET = 21;
 
 describe('statistics-data-mapper', () => {
     afterEach(() => {
@@ -76,6 +80,17 @@ describe('statistics-data-mapper', () => {
 
             expect(range.start).toBe(end);
             expect(range.end).toBe(start);
+        });
+
+        it.each([
+            { start: null, end: new Date('2026-04-15T12:00:00') },
+            { start: new Date('2026-04-10T12:00:00'), end: null },
+        ])('returns a current-day preview while a custom endpoint is empty', value => {
+            const now = new Date('2026-04-20T12:00:00');
+            vi.useFakeTimers();
+            vi.setSystemTime(now);
+
+            expect(getCurrentDateRange('custom', value)).toEqual({ start: now, end: now });
         });
 
         it('should return three months for quarter range', () => {
@@ -123,6 +138,49 @@ describe('statistics-data-mapper', () => {
             { label: '2026-05-01', value: BODY_START_VALUE },
             { label: '2026-05-02', value: BODY_INTERPOLATED_VALUE },
             { label: '2026-05-03', value: BODY_END_VALUE },
+        ]);
+    });
+});
+
+describe('statistics report projection intervals', () => {
+    it.each([
+        ['2026-03-04T00:00:00Z', WEEK_LONG_BUCKET],
+        ['2026-04-04T00:00:00Z', FORTNIGHT_BUCKET],
+        ['2026-05-04T00:00:00Z', THREE_WEEK_BUCKET],
+    ] as const)('uses %s and the expected aggregation width %s for the selected range', (lastDate, width) => {
+        expect(getQuantizationDays(new Date('2026-01-01T00:00:00Z'), new Date(lastDate))).toBe(width);
+    });
+
+    it('omits an entirely missing body series rather than drawing zero measurements', () => {
+        const points = buildBodyChartPoints(
+            [
+                { startDate: '2026-05-01', value: null },
+                { startDate: '2026-05-02', value: 0 },
+            ],
+            point => point.value,
+            date => date,
+        );
+
+        expect(points).toEqual([]);
+    });
+
+    it('does not invent measurements outside the first and last recorded values', () => {
+        const points = buildBodyChartPoints(
+            [
+                { startDate: '2026-04-30', value: null },
+                { startDate: '2026-05-01', value: BODY_START_VALUE },
+                { startDate: '2026-05-02', value: BODY_END_VALUE },
+                { startDate: '2026-05-03', value: null },
+            ],
+            point => point.value,
+            date => date,
+        );
+
+        expect(points).toEqual([
+            { label: '2026-04-30', value: null },
+            { label: '2026-05-01', value: BODY_START_VALUE },
+            { label: '2026-05-02', value: BODY_END_VALUE },
+            { label: '2026-05-03', value: null },
         ]);
     });
 });

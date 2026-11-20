@@ -6,6 +6,12 @@ import { developmentOperation } from './local-webmcp-request-metadata';
 import { LocalWebmcpRequestsService } from './local-webmcp-requests.service';
 
 describe('local request provenance', () => {
+    it('omits static or unversioned paths from operation labels', () => {
+        expect(developmentOperation('GET', '/assets/i18n/en/app.json')).toBeNull();
+        expect(developmentOperation('GET', '/api/recipes')).toBeNull();
+        expect(developmentOperation('GET', '/api/v1.0/recipes')).toBe('GET /api/v{version}/recipes');
+    });
+
     it('clears session history without reusing IDs that a live owner may already reference', () => {
         const service = TestBed.inject(LocalWebmcpRequestsService);
         const first = service.begin('GET', new URL('http://localhost/api/v1/statistics/summary'));

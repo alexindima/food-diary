@@ -10,10 +10,27 @@ import type {
 } from '../../../../shared/models/cycle.data';
 import {
     BLEEDING_TYPE_BLEEDING,
+    BLEEDING_TYPE_SPOTTING,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FACTOR_TYPE_LACTATION,
+    CYCLE_FACTOR_TYPE_NO_PERIOD,
+    CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION,
+    CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
+    CYCLE_FACTOR_TYPE_POSTPARTUM,
+    CYCLE_FACTOR_TYPE_PREGNANCY,
     CYCLE_FLOW_HEAVY,
+    CYCLE_FLOW_LIGHT,
     CYCLE_FLOW_MEDIUM,
+    CYCLE_FLOW_NONE,
+    CYCLE_SYMPTOM_CATEGORY_MOOD,
+    CYCLE_SYMPTOM_CATEGORY_OTHER,
+    CYCLE_TRACKING_MODE_NO_PERIOD,
+    CYCLE_TRACKING_MODE_PERIMENOPAUSE,
+    CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION,
+    CYCLE_TRACKING_MODE_PREGNANCY,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
+    OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../../../shared/models/cycle.data';
 import { calendarDate } from '../../../../shared/models/semantics/date-value';
@@ -73,6 +90,8 @@ const CARE_PROMPT_YEAR = 2026;
 const APRIL_MONTH_INDEX = 3;
 const LAST_PROLONGED_BLEEDING_INDEX = PROLONGED_BLEEDING_DAYS - 1;
 const SEVERE_PAIN_VALUE = 8;
+const PAIN_INTENSITY = 2;
+const HIGHER_MOOD_INTENSITY = 3;
 const NUTRITION_LOGGED_CYCLE_DAYS = 4;
 const OVERVIEW_YEAR = 2026;
 const OVERVIEW_MONTH_INDEX = 3;
@@ -158,6 +177,21 @@ describe('cycle tracking page mapper', () => {
 });
 
 describe('cycle tracking overview mapper', () => {
+    it('keeps the overview absent without a profile', () => {
+        expect(buildCycleOverviewView(null, 'en-US')).toBeNull();
+    });
+
+    it('marks only the reported local calendar day when a prediction has no ending date', () => {
+        const prediction = calendarDate('2026-04-16T00:00:00.000Z');
+        const view = buildCycleOverviewView(
+            { ...CYCLE, predictions: { nextPeriodStartFrom: prediction, confidence: 'Low', rationale: '' } },
+            'en-US',
+            new Date('2026-04-15T23:30:00'),
+        );
+
+        expect(view?.days.filter(day => day.isPredictedPeriod).map(day => day.dateKey)).toEqual(['2026-04-16']);
+    });
+
     it('marks a notes-only day as tracked and offers to review the existing record', () => {
         const view = buildCycleOverviewView(
             {
@@ -226,6 +260,81 @@ describe('cycle tracking overview mapper', () => {
             new Date(OVERVIEW_YEAR, OVERVIEW_MONTH_INDEX, EPISODE_START_DAY),
         );
         expect(viewFromEpisodeStart?.days.find(day => day.dateKey === '2026-04-09')?.cycleDayNumber).toBe(CYCLE.averageCycleLength);
+    });
+});
+
+it('marks a symptom-only day from a saved non-ISO date without marking it as bleeding', () => {
+    const symptom = { ...SYMPTOM_ENTRY, date: calendarDate('Thu, 16 Apr 2026 12:30:00 GMT') };
+    const view = buildCycleOverviewView({ ...CYCLE, symptoms: [symptom] }, 'en-US', new Date('2026-04-16T12:00:00'));
+
+    expect(view?.hasTodayEntry).toBe(true);
+    expect(view?.days.find(day => day.isToday)).toMatchObject({ dateKey: '2026-04-16', isTracked: true, isBleeding: false });
+});
+
+it('does not mark any calendar day for a symptom with an unparseable saved date', () => {
+    const symptom = { ...SYMPTOM_ENTRY, date: calendarDate('invalid') };
+    const view = buildCycleOverviewView({ ...CYCLE, symptoms: [symptom] }, 'en-US', new Date('2026-04-16T12:00:00'));
+
+    expect(view?.hasTodayEntry).toBe(false);
+    expect(view?.days.every(day => !day.isTracked)).toBe(true);
+});
+
+describe('Cycle profile display', () => {
+    it.each([
+        [CYCLE_TRACKING_MODE_PERIOD_TRACKING, 'MODE_PERIOD_TRACKING'],
+        [CYCLE_TRACKING_MODE_PREGNANCY, 'MODE_PREGNANCY'],
+        [CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION, 'MODE_POSTPARTUM_LACTATION'],
+        [CYCLE_TRACKING_MODE_PERIMENOPAUSE, 'MODE_PERIMENOPAUSE'],
+        [CYCLE_TRACKING_MODE_NO_PERIOD, 'MODE_NO_PERIOD'],
+    ] as const)('presents configured tracking mode %s and disabled fertility estimates', (mode, key) => {
+        const view = buildCycleCurrentView({ ...CYCLE, mode, isRegular: false, showFertilityEstimates: false }, 'en-US');
+
+        expect(view?.summaryItems).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ labelKey: 'CYCLE_TRACKING.MODE', valueKey: `CYCLE_TRACKING.${key}` }),
+                expect.objectContaining({ labelKey: 'CYCLE_TRACKING.REGULARITY', valueKey: 'CYCLE_TRACKING.REGULARITY_IRREGULAR' }),
+                expect.objectContaining({ labelKey: 'CYCLE_TRACKING.FERTILITY_ESTIMATES', valueKey: 'CYCLE_TRACKING.DISABLED' }),
+            ]),
+        );
+    });
+
+    it.each([
+        [CYCLE_FACTOR_TYPE_PREGNANCY, 'FACTOR_PREGNANCY'],
+        [CYCLE_FACTOR_TYPE_LACTATION, 'FACTOR_LACTATION'],
+        [CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION, 'FACTOR_NON_HORMONAL_CONTRACEPTION'],
+        [CYCLE_FACTOR_TYPE_POSTPARTUM, 'FACTOR_POSTPARTUM'],
+        [CYCLE_FACTOR_TYPE_PERIMENOPAUSE, 'FACTOR_PERIMENOPAUSE'],
+        [CYCLE_FACTOR_TYPE_NO_PERIOD, 'FACTOR_NO_PERIOD'],
+    ] as const)('uses the configured journal label for active factor %s', (type, key) => {
+        const factor = {
+            id: entityId<'cycle-factor'>('active-factor'),
+            cycleProfileId: CYCLE.id,
+            type,
+            startDate: calendarDate('2026-04-02T00:00:00.000Z'),
+        };
+        const view = buildCycleCurrentView({ ...CYCLE, factors: [factor] }, 'en-US');
+
+        expect(view?.activeFactorItems).toEqual([{ id: factor.id, labelKey: `CYCLE_TRACKING.${key}`, startDateLabel: 'Apr 2' }]);
+    });
+});
+
+describe('current cycle factors', () => {
+    it('orders ongoing factors newest first and leaves completed factors out of the current profile summary', () => {
+        const older = { ...CYCLE.factors[0], id: entityId<'cycle-factor'>('older'), startDate: calendarDate('2026-04-01'), endDate: null };
+        const newest = {
+            ...CYCLE.factors[0],
+            id: entityId<'cycle-factor'>('newest'),
+            startDate: calendarDate('2026-04-06'),
+            endDate: undefined,
+        };
+        const ended = CYCLE.factors[1];
+
+        const summary = buildCycleCurrentView({ ...CYCLE, factors: [older, ended, newest] }, 'en-US');
+
+        expect(summary?.activeFactorItems.map(({ id, startDateLabel }) => ({ id, startDateLabel }))).toEqual([
+            { id: newest.id, startDateLabel: 'Apr 6' },
+            { id: older.id, startDateLabel: 'Apr 1' },
+        ]);
     });
 });
 
@@ -472,7 +581,53 @@ describe('cycle tracking day item mapper', () => {
     });
 });
 
+describe('Cycle journal day display', () => {
+    it.each([
+        [CYCLE_FLOW_LIGHT, 'CYCLE_TRACKING.FLOW_LIGHT'],
+        [CYCLE_FLOW_NONE, null],
+    ] as const)('shows spotting independently of the optional flow label %s', (flow, flowLabelKey) => {
+        const entry: BleedingEntry = { ...BLEEDING_ENTRY, type: BLEEDING_TYPE_SPOTTING, flow, painImpact: 1 };
+        const [item] = buildCycleDayItems([entry], [], [], 'en-US');
+
+        expect(item).toMatchObject({
+            accentColor: DEFAULT_DAY_ACCENT_COLOR,
+            badgeLabelKey: 'CYCLE_TRACKING.BADGE_SPOTTING',
+            bleedingSummaryItems: [
+                { typeLabelKey: 'CYCLE_TRACKING.BLEEDING_TYPE_SPOTTING', flowLabelKey, painSeverityKey: 'CYCLE_TRACKING.SEVERITY_MILD' },
+            ],
+        });
+    });
+
+    it('keeps a negative test and labels other symptoms without showing blank optional signals', () => {
+        const signal: FertilitySignal = {
+            ...FERTILITY_SIGNAL,
+            basalBodyTemperatureCelsius: null,
+            ovulationTestResult: OVULATION_TEST_RESULT_NEGATIVE,
+            cervicalFluid: ' ',
+            hadSex: false,
+        };
+        const [item] = buildCycleDayItems([], [{ ...SYMPTOM_ENTRY, category: CYCLE_SYMPTOM_CATEGORY_OTHER }], [signal], 'en-US');
+
+        expect(item.symptomSummaryItems).toMatchObject([{ labelKey: 'CYCLE_TRACKING.SYMPTOM_OTHER' }]);
+        expect(item.fertilitySignalItems).toEqual([{ textKey: 'CYCLE_TRACKING.OVULATION_TEST_NEGATIVE_SUMMARY' }]);
+    });
+});
+
 describe('cycle observations mapper', () => {
+    it.each([
+        [HIGHER_MOOD_INTENSITY, ['CYCLE_TRACKING.SYMPTOM_MOOD', 'CYCLE_TRACKING.SYMPTOM_PAIN']],
+        [PAIN_INTENSITY, ['CYCLE_TRACKING.SYMPTOM_PAIN', 'CYCLE_TRACKING.SYMPTOM_MOOD']],
+    ] as const)('ranks equally frequent symptoms consistently when the recorded mood intensity is %s', (intensity, labels) => {
+        const symptoms: CycleSymptomEntry[] = [
+            { ...SYMPTOM_ENTRY, id: entityId<'cycle-symptom-entry'>('mood'), category: CYCLE_SYMPTOM_CATEGORY_MOOD, intensity },
+            { ...SYMPTOM_ENTRY, intensity: PAIN_INTENSITY },
+        ];
+        const items = buildCycleDayItems([], symptoms, [], 'en-US');
+
+        expect(items[0].symptomSummaryItems.map(item => item.labelKey)).toEqual(labels);
+        expect(buildCycleObservationsView(items).topSymptom).toMatchObject({ labelKey: labels[0], loggedDayCount: 1 });
+    });
+
     it('builds descriptive observations from active journal entries', () => {
         const symptoms: CycleSymptomEntry[] = [
             {

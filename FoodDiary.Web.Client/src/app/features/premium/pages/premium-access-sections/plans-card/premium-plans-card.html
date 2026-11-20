@@ -38,7 +38,7 @@
                                 fullWidth
                                 [loading]="card.isLoading"
                                 [disabled]="checkoutDisabled()"
-                                [disabledReason]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
+                                [disabledReason]="checkoutDisabled() ? (checkoutDisabledReasonKey() | translate) : null"
                                 (click)="checkout.emit({ plan: card.plan, provider: provider.provider })"
                             >
                                 {{ provider.actionKey | translate: { provider: provider.label } }}
@@ -52,7 +52,7 @@
                         [fill]="preferTrial() ? 'outline' : 'solid'"
                         [loading]="card.isLoading"
                         [disabled]="checkoutDisabled()"
-                        [disabledReason]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
+                        [disabledReason]="checkoutDisabled() ? (checkoutDisabledReasonKey() | translate) : null"
                         (click)="checkout.emit({ plan: card.plan, provider: card.providerOptions[0]?.provider })"
                     >
                         {{ card.actionKey | translate }}

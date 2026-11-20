@@ -27,11 +27,15 @@ const draft: RecipeImportResult = {
     sourceUrl: reportedUrl,
 };
 const ai = { importRecipe: vi.fn<AiFoodService['importRecipe']>(), importRecipeVideo: vi.fn<AiFoodService['importRecipeVideo']>() };
+const clipboardRead = vi.fn<BrowserClipboardService['readTextAsync']>();
+const storePreference = vi.fn<BrowserStorageService['setItem']>();
 let fixture: ComponentFixture<RecipeRecognitionComponent>;
 
 beforeEach(async () => {
     ai.importRecipe.mockReset().mockReturnValue(of(draft));
     ai.importRecipeVideo.mockReset().mockReturnValue(of(draft));
+    clipboardRead.mockReset().mockResolvedValue('');
+    storePreference.mockClear();
     await TestBed.configureTestingModule({
         imports: [RecipeRecognitionComponent],
         providers: [
@@ -50,15 +54,81 @@ beforeEach(async () => {
                 provide: BrowserClipboardService,
                 useValue: {
                     onReturn: vi.fn().mockReturnValue(vi.fn()),
-                    readTextAsync: vi.fn().mockResolvedValue(''),
+                    readTextAsync: clipboardRead,
                     canReadWithoutPromptAsync: vi.fn().mockResolvedValue(false),
                 },
             },
-            { provide: BrowserStorageService, useValue: { getItem: vi.fn().mockReturnValue(null), setItem: vi.fn() } },
+            { provide: BrowserStorageService, useValue: { getItem: vi.fn().mockReturnValue(null), setItem: storePreference } },
         ],
     }).compileComponents();
     fixture = TestBed.createComponent(RecipeRecognitionComponent);
     fixture.detectChanges();
+});
+
+describe('RecipeRecognitionComponent clipboard and review', () => {
+    it('offers a copied Instagram recipe after enabling suggestions and fills it only when accepted', async () => {
+        const suggested = vi.fn();
+        fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
+        clipboardRead.mockResolvedValueOnce('https://www.instagram.com/reel/example/?igsh=sharing');
+        const host = fixture.nativeElement as HTMLElement;
+        const label = Array.from(host.querySelectorAll('label')).find(candidate =>
+            candidate.textContent.includes('RECIPE_MANAGE.IMPORT.CLIPBOARD_LABEL'),
+        );
+        if (!(label?.control instanceof HTMLInputElement)) {
+            throw new Error('Expected the clipboard suggestions checkbox');
+        }
+        label.control.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+        expect(suggested).not.toHaveBeenCalled();
+        expect(storePreference).toHaveBeenCalledWith('local', 'recipe.clipboardSuggestions', 'true');
+        recipeAction('RECIPE_MANAGE.IMPORT.USE_LINK').click();
+        fixture.detectChanges();
+
+        expect(suggested).toHaveBeenCalledExactlyOnceWith('https://www.instagram.com/reel/example/');
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+        expect(ai.importRecipe).not.toHaveBeenCalled();
+    });
+
+    it('reacts to clipboard permission denial and allows a later explicit paste', async () => {
+        const suggested = vi.fn();
+        fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
+        clipboardRead
+            .mockRejectedValueOnce(new DOMException('Permission denied', 'NotAllowedError'))
+            .mockResolvedValueOnce(` ${reportedUrl} `);
+        const paste = recipeAction('RECIPE_MANAGE.IMPORT.PASTE_LINK');
+        const host = fixture.nativeElement as HTMLElement;
+
+        paste.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="status"]')?.textContent).toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_UNAVAILABLE');
+        expect(suggested).not.toHaveBeenCalled();
+
+        paste.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(suggested).toHaveBeenCalledExactlyOnceWith(reportedUrl);
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_UNAVAILABLE');
+    });
+
+    it('shows serving and cooking-step review prompts only for incomplete results', async () => {
+        const incomplete: RecipeImportResult = { ...draft, servings: null, steps: [] };
+        ai.importRecipe.mockReturnValueOnce(of(incomplete));
+        setInputs('', caption);
+        const host = fixture.nativeElement as HTMLElement;
+        await recognizeAsync();
+
+        expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.REVIEW_HINT');
+        expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.SERVINGS_HINT');
+        expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.STEPS_HINT');
+        await recognizeAsync();
+        expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.REVIEW_HINT');
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.SERVINGS_HINT');
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.STEPS_HINT');
+    });
 });
 
 describe('RecipeRecognitionComponent source selection', () => {
@@ -216,14 +286,18 @@ function setVideoEnabled(enabled: boolean): void {
 }
 
 async function recognizeAsync(): Promise<void> {
-    const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button');
-    const button = Array.from(buttons).find(control => control.textContent.includes('RECIPE_MANAGE.IMPORT.RECOGNIZE'));
-    if (button === undefined) {
-        throw new Error('Recognize recipe button is missing.');
-    }
-    button.click();
+    recipeAction('RECIPE_MANAGE.IMPORT.RECOGNIZE').click();
     await fixture.whenStable();
     fixture.detectChanges();
+}
+
+function recipeAction(label: string): HTMLButtonElement {
+    const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button');
+    const button = Array.from(buttons).find(control => control.textContent.trim().endsWith(label));
+    if (button === undefined) {
+        throw new Error(`Expected the recipe action "${label}"`);
+    }
+    return button;
 }
 
 function inputElement(selector: string): HTMLInputElement {

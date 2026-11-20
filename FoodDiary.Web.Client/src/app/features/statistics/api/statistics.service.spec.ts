@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -135,5 +136,32 @@ describe('StatisticsService summaries', () => {
         httpMock.expectOne(request => request.url === environment.apiUrls.waists).flush({}, { status: 500, statusText: 'Error' });
         expect(emitted).toBe(false);
         expect(failed).toBe(true);
+    });
+});
+
+describe('StatisticsService without reference measurements', () => {
+    it('keeps nutrition data and reports no reference measurements for a period without body entries', async () => {
+        const dateFrom = '2026-05-01T00:00:00.000Z';
+        const dateTo = '2026-05-07T23:59:59.999Z';
+        const pending = firstValueFrom(service.getSummary({ dateFrom, dateTo }));
+        const response = { nutrition: RESPONSE, weight: [], waist: [] };
+        const charts = httpMock.expectOne(request => request.url === SUMMARY_URL && request.method === 'GET');
+        expect(charts.request.params.get('dateFrom')).toBe(dateFrom);
+        expect(charts.request.params.get('dateTo')).toBe(dateTo);
+        charts.flush(response);
+        const weight = httpMock.expectOne(request => request.url === environment.apiUrls.weights && request.method === 'GET');
+        const waist = httpMock.expectOne(request => request.url === environment.apiUrls.waists && request.method === 'GET');
+
+        for (const request of [weight, waist]) {
+            expect(request.request.params.get('dateFrom')).toBe(dateFrom);
+            expect(request.request.params.get('dateTo')).toBe(dateTo);
+            request.flush([]);
+        }
+
+        await expect(pending).resolves.toEqual({
+            ...response,
+            weightMeasurements: { first: null, last: null, count: 0 },
+            waistMeasurements: { first: null, last: null, count: 0 },
+        });
     });
 });

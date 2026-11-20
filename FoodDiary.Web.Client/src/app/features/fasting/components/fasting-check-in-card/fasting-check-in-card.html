@@ -37,85 +37,87 @@
                 <p class="fasting__checkin-copy fd-ui-body-sm">{{ 'FASTING.CHECK_IN.SUBTITLE' | translate }}</p>
             }
 
-            <div class="fasting__checkin-grid">
-                <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                    <div class="fasting__checkin-field-heading">
-                        <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
-                        <strong class="fasting__checkin-selection">{{ selectedHungerLabel() }}</strong>
+            <fieldset class="fasting__checkin-fields fd-stack" [disabled]="draftDisabled()">
+                <div class="fasting__checkin-grid">
+                    <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                        <div class="fasting__checkin-field-heading">
+                            <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.HUNGER' | translate }}</div>
+                            <strong class="fasting__checkin-selection">{{ selectedHungerLabel() }}</strong>
+                        </div>
+                        <fd-ui-emoji-picker
+                            [size]="presentation() === 'dialog' ? 'md' : 'sm'"
+                            [fullWidth]="presentation() === 'dialog'"
+                            [options]="hungerOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
+                            [selectedValue]="hungerLevel()()"
+                            (selectedValueChange)="setHungerLevel($event)"
+                        />
                     </div>
-                    <fd-ui-emoji-picker
-                        [size]="presentation() === 'dialog' ? 'md' : 'sm'"
-                        [fullWidth]="presentation() === 'dialog'"
-                        [options]="hungerOptions()"
-                        [ariaLabel]="'FASTING.CHECK_IN.HUNGER' | translate"
-                        [selectedValue]="hungerLevel()()"
-                        (selectedValueChange)="setHungerLevel($event)"
-                    />
-                </div>
 
-                <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                    <div class="fasting__checkin-field-heading">
-                        <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
-                        <strong class="fasting__checkin-selection">{{ selectedEnergyLabel() }}</strong>
+                    <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                        <div class="fasting__checkin-field-heading">
+                            <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.ENERGY' | translate }}</div>
+                            <strong class="fasting__checkin-selection">{{ selectedEnergyLabel() }}</strong>
+                        </div>
+                        <fd-ui-emoji-picker
+                            [size]="presentation() === 'dialog' ? 'md' : 'sm'"
+                            [fullWidth]="presentation() === 'dialog'"
+                            [options]="energyOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
+                            [selectedValue]="energyLevel()()"
+                            (selectedValueChange)="setEnergyLevel($event)"
+                        />
                     </div>
-                    <fd-ui-emoji-picker
-                        [size]="presentation() === 'dialog' ? 'md' : 'sm'"
-                        [fullWidth]="presentation() === 'dialog'"
-                        [options]="energyOptions()"
-                        [ariaLabel]="'FASTING.CHECK_IN.ENERGY' | translate"
-                        [selectedValue]="energyLevel()()"
-                        (selectedValueChange)="setEnergyLevel($event)"
-                    />
-                </div>
 
-                <div class="fasting__checkin-field fd-stack fd-gap-xs">
-                    <div class="fasting__checkin-field-heading">
-                        <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
-                        <strong class="fasting__checkin-selection">{{ selectedMoodLabel() }}</strong>
+                    <div class="fasting__checkin-field fd-stack fd-gap-xs">
+                        <div class="fasting__checkin-field-heading">
+                            <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.MOOD' | translate }}</div>
+                            <strong class="fasting__checkin-selection">{{ selectedMoodLabel() }}</strong>
+                        </div>
+                        <fd-ui-emoji-picker
+                            [size]="presentation() === 'dialog' ? 'md' : 'sm'"
+                            [fullWidth]="presentation() === 'dialog'"
+                            [options]="moodOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
+                            [selectedValue]="moodLevel()()"
+                            (selectedValueChange)="setMoodLevel($event)"
+                        />
                     </div>
-                    <fd-ui-emoji-picker
-                        [size]="presentation() === 'dialog' ? 'md' : 'sm'"
-                        [fullWidth]="presentation() === 'dialog'"
-                        [options]="moodOptions()"
-                        [ariaLabel]="'FASTING.CHECK_IN.MOOD' | translate"
-                        [selectedValue]="moodLevel()()"
-                        (selectedValueChange)="setMoodLevel($event)"
-                    />
                 </div>
-            </div>
 
-            <div class="fasting__checkin-field fasting__checkin-field--symptoms fd-stack fd-gap-xs">
-                <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.SYMPTOMS_QUESTION' | translate }}</div>
-                <div class="fasting__symptom-options">
-                    <fd-ui-chip-select
-                        class="fasting__symptom-chips"
-                        size="sm"
-                        [options]="noSymptomsOptions()"
-                        [ariaLabel]="'FASTING.CHECK_IN.NO_SYMPTOMS_TITLE' | translate"
-                        [selectedValues]="selectedSymptoms()()"
-                        (selectedValuesChange)="setNoSymptoms($event)"
-                    />
-                    <span class="fasting__symptom-divider" aria-hidden="true"></span>
-                    <fd-ui-chip-select
-                        class="fasting__symptom-chips"
-                        size="sm"
-                        [options]="symptomOptions()"
-                        [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
-                        [selectedValues]="selectedSymptoms()()"
-                        (selectedValuesChange)="setWarningSymptoms($event)"
-                    />
+                <div class="fasting__checkin-field fasting__checkin-field--symptoms fd-stack fd-gap-xs">
+                    <div class="fasting__protocol-group-title fd-ui-overline">{{ 'FASTING.CHECK_IN.SYMPTOMS_QUESTION' | translate }}</div>
+                    <div class="fasting__symptom-options">
+                        <fd-ui-chip-select
+                            class="fasting__symptom-chips"
+                            size="sm"
+                            [options]="noSymptomsOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.NO_SYMPTOMS_TITLE' | translate"
+                            [selectedValues]="selectedSymptoms()()"
+                            (selectedValuesChange)="setNoSymptoms($event)"
+                        />
+                        <span class="fasting__symptom-divider" aria-hidden="true"></span>
+                        <fd-ui-chip-select
+                            class="fasting__symptom-chips"
+                            size="sm"
+                            [options]="symptomOptions()"
+                            [ariaLabel]="'FASTING.CHECK_IN.SYMPTOMS_TITLE' | translate"
+                            [selectedValues]="selectedSymptoms()()"
+                            (selectedValuesChange)="setWarningSymptoms($event)"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <fd-ui-textarea
-                id="fasting-check-in-notes"
-                [label]="'FASTING.CHECK_IN.NOTES' | translate"
-                [rows]="3"
-                [maxLength]="maxCheckInNotesLength"
-                [value]="notes()()"
-                [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
-                (valueChange)="setNotesValue($event)"
-            />
+                <fd-ui-textarea
+                    id="fasting-check-in-notes"
+                    [label]="'FASTING.CHECK_IN.NOTES' | translate"
+                    [rows]="3"
+                    [maxLength]="maxCheckInNotesLength"
+                    [value]="notes()()"
+                    [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
+                    (valueChange)="setNotesValue($event)"
+                />
+            </fieldset>
 
             @if (presentation() === 'card') {
                 <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">

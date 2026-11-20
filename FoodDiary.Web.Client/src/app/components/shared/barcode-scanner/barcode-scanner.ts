@@ -66,7 +66,7 @@ export class BarcodeScannerComponent {
             const stream = await this.browserWindow.getUserMediaAsync({
                 video: { facingMode: 'environment' },
             });
-            if (this.isClosed || this.destroyRef.destroyed) {
+            if (this.isInactive()) {
                 stream.getTracks().forEach(track => {
                     track.stop();
                 });
@@ -74,23 +74,33 @@ export class BarcodeScannerComponent {
             }
             this.stream = stream;
             // Wait for next tick so viewChild is available
-            setTimeout(() => {
-                if (this.isClosed || this.destroyRef.destroyed) {
-                    return;
-                }
-                const video = this.videoRef()?.nativeElement;
-                if (video !== undefined) {
-                    video.srcObject = this.stream;
-                    void video.play();
-                    this.isCameraReady.set(true);
-                    this.scanLoop();
-                }
+            await new Promise<void>(resolve => {
+                setTimeout(resolve);
             });
+            if (this.isInactive()) {
+                return;
+            }
+            const video = this.videoRef()?.nativeElement;
+            if (video === undefined) {
+                return;
+            }
+            video.srcObject = stream;
+            await video.play();
+            if (this.isInactive()) {
+                return;
+            }
+            this.isCameraReady.set(true);
+            this.scanLoop();
         } catch {
-            if (!this.isClosed && !this.destroyRef.destroyed) {
+            if (!this.isInactive()) {
+                this.stopCamera();
                 this.isCameraError.set(true);
             }
         }
+    }
+
+    private isInactive(): boolean {
+        return this.isClosed || this.destroyRef.destroyed;
     }
 
     private scanLoop(): void {

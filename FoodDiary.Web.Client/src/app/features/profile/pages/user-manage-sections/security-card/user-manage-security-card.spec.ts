@@ -4,7 +4,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -23,6 +23,10 @@ beforeEach(() => {
     environment.googleClientId = originalClientId;
     googleIdentityService.initializeAsync.mockReset();
     googleIdentityService.renderButton.mockReset();
+});
+
+afterEach(() => {
+    environment.googleClientId = originalClientId;
 });
 
 describe('UserManageSecurityCardComponent', () => {
@@ -105,6 +109,57 @@ describe('UserManageSecurityCardComponent', () => {
     });
 });
 
+describe('Profile Google connection startup', () => {
+    it('keeps the password action available when Google is unconfigured', async () => {
+        environment.googleClientId = undefined;
+        const fixture = await createFixtureAsync(false);
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.querySelector('.user-manage__method-actions [role="status"]')?.textContent).toContain('USER_MANAGE.GOOGLE_UNAVAILABLE');
+        expect(host.querySelector('fd-user-manage-password-method button')).not.toBeNull();
+        expect(googleIdentityService.initializeAsync).not.toHaveBeenCalled();
+        expect(googleIdentityService.renderButton).not.toHaveBeenCalled();
+    });
+
+    it('shows the unavailable state after the configured Google SDK fails to initialize', async () => {
+        environment.googleClientId = 'configured-client';
+        googleIdentityService.initializeAsync.mockRejectedValueOnce(new Error('Identity SDK unavailable'));
+        const fixture = await createFixtureAsync(false);
+        const host = fixture.nativeElement as HTMLElement;
+        const status = host.querySelector('.user-manage__method-actions [role="status"]');
+
+        expect(googleIdentityService.initializeAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ clientId: 'configured-client' }),
+        );
+        expect(status?.textContent).toContain('USER_MANAGE.GOOGLE_UNAVAILABLE');
+        expect(status?.textContent).not.toContain('USER_MANAGE.GOOGLE_LOADING');
+        expect(googleIdentityService.renderButton).not.toHaveBeenCalled();
+    });
+
+    it('re-renders the connect button in the chosen locale until the account is linked', async () => {
+        environment.googleClientId = 'configured-client';
+        googleIdentityService.initializeAsync.mockResolvedValue(undefined);
+        const fixture = await createFixtureAsync(false);
+        const host = fixture.nativeElement as HTMLElement;
+        const target = host.querySelector('.user-manage__google-button');
+        expect(target).not.toBeNull();
+
+        const translate = TestBed.inject(TranslateService);
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+        expect(googleIdentityService.renderButton).toHaveBeenLastCalledWith(target, 'filled_blue', 'en');
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(googleIdentityService.renderButton).toHaveBeenLastCalledWith(target, 'filled_blue', 'ru');
+        expect(googleIdentityService.initializeAsync).toHaveBeenCalledOnce();
+
+        fixture.componentRef.setInput('hasGoogleIdentity', true);
+        fixture.detectChanges();
+        expect(host.querySelector('.user-manage__google-button')).toBeNull();
+        expect(host.textContent).toContain('USER_MANAGE.GOOGLE_CONNECTED_AS');
+    });
+});
 async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManageSecurityCardComponent>): Promise<void> {
     registerLocaleData(localeRu);
     const translate = TestBed.inject(TranslateService);

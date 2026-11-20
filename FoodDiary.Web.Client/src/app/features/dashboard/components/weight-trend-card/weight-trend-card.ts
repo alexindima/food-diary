@@ -15,11 +15,9 @@ import {
     WEIGHT_TREND_CHART_MINIMUM_PADDING,
     WEIGHT_TREND_CHART_RANGE_PADDING_RATIO,
     WEIGHT_TREND_DISPLAY_FRACTION_DIGITS,
-    WEIGHT_TREND_EPSILON,
     WEIGHT_TREND_FILL_COLOR_PERCENT,
     WEIGHT_TREND_ISO_DATE_LENGTH,
     WEIGHT_TREND_MINIMUM_CHART_POINTS,
-    WEIGHT_TREND_ROUNDING_FACTOR,
 } from './weight-trend-card.config';
 
 export type WeightTrendPoint = {
@@ -137,16 +135,17 @@ export class WeightTrendCardComponent {
     );
 
     protected readonly formattedChangeValue = computed(() => {
-        const delta = this.change();
-        if (delta === null) {
+        const delta = this.displayValue(this.change() ?? 0, WEIGHT_TREND_DISPLAY_FRACTION_DIGITS);
+        if (delta === 0 || !Number.isFinite(delta)) {
             return null;
         }
-        const displayDelta = this.displayValue(delta);
-        const rounded = Math.round(displayDelta * WEIGHT_TREND_ROUNDING_FACTOR) / WEIGHT_TREND_ROUNDING_FACTOR;
-        const sign = rounded > 0 ? '+' : '';
-        return `${sign}${new Intl.NumberFormat(this.locale(), { minimumFractionDigits: WEIGHT_TREND_DISPLAY_FRACTION_DIGITS, maximumFractionDigits: WEIGHT_TREND_DISPLAY_FRACTION_DIGITS }).format(rounded)}`;
+        const sign = delta > 0 ? '+' : '';
+        const formattedDelta = new Intl.NumberFormat(this.locale(), {
+            minimumFractionDigits: WEIGHT_TREND_DISPLAY_FRACTION_DIGITS,
+            maximumFractionDigits: WEIGHT_TREND_DISPLAY_FRACTION_DIGITS,
+        }).format(delta);
+        return `${sign}${formattedDelta}`;
     });
-    protected readonly hasMeaningfulChange = computed(() => Math.abs(this.change() ?? 0) > WEIGHT_TREND_EPSILON);
 
     protected readonly hasValue = computed(() => this.currentWeight() !== null && Number.isFinite(this.currentWeight()));
     protected readonly displayCurrentValue = computed(() => {
@@ -177,7 +176,9 @@ export class WeightTrendCardComponent {
         return (typeof date === 'string' ? parseCalendarDateUtc(date) : parseDateValue(date))?.getTime() ?? 0;
     }
 
-    private displayValue(value: number): number {
-        return this.measurementKind() === 'weight' ? this.measurements.displayWeight(value) : this.measurements.displayLength(value);
+    private displayValue(value: number, fractionDigits?: number): number {
+        return this.measurementKind() === 'weight'
+            ? this.measurements.displayWeight(value, fractionDigits)
+            : this.measurements.displayLength(value, fractionDigits);
     }
 }

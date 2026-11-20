@@ -99,3 +99,30 @@ describe('Nutrition details dialog', () => {
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE');
     });
 });
+
+describe('Nutrition detail labels for recorded sources', () => {
+    it('keeps a named product contribution for a meal without a recorded slot', async () => {
+        const meal = nutritionMealFixture({
+            mealType: null,
+            items: [
+                {
+                    id: 'product-item',
+                    mealId: 'meal-1',
+                    productId: 'product-1',
+                    productName: 'Plain skyr',
+                    productBaseAmount: 100,
+                    productProteinsPerBase: 10,
+                    amount: 100,
+                },
+            ],
+        });
+        const { host, close } = await setupAsync({}, vi.fn().mockReturnValue(of(nutritionSnapshotFixture([meal]))));
+        const sourceButton = host.querySelector<HTMLButtonElement>('.nutrition-details__sources button');
+        expect(sourceButton?.querySelector('.nutrition-details__name')?.textContent.trim()).toBe('Plain skyr');
+        expect(sourceButton?.textContent).toContain('MEAL_CARD.MEAL_TYPES.OTHER');
+        expect(sourceButton?.textContent).toContain('100%');
+        expect(host.textContent).not.toContain('DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED');
+        sourceButton?.click();
+        expect(close).toHaveBeenCalledExactlyOnceWith({ kind: 'meal', meal });
+    });
+});

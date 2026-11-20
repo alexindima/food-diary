@@ -254,16 +254,18 @@ function getProductGallery(product: Product): ImageSelection[] | undefined {
 }
 
 function mergeProductPhotos(values: ProductFormValues, result: ProductAiRecognitionResult): ImageSelection[] | undefined {
-    if ((result.images?.length ?? 0) === 0) {
+    const recognizedPhotos = result.images;
+    if (recognizedPhotos === undefined || recognizedPhotos.length === 0) {
         return values.images;
     }
     const existing = getExistingPhotos(values);
-    const combined = [...(result.image !== null ? [result.image] : []), ...existing, ...(result.images ?? [])];
+    const combined = [...(result.image !== null ? [result.image] : []), ...existing, ...recognizedPhotos];
     return combined
         .filter((photo, index) => combined.findIndex(other => other.assetId === photo.assetId && other.url === photo.url) === index)
         .slice(0, PRODUCT_MAX_PHOTOS);
 }
 
 function getExistingPhotos(values: ProductFormValues): ImageSelection[] {
-    return values.images ?? (values.imageUrl !== null && (values.imageUrl.url?.length ?? 0) > 0 ? [values.imageUrl] : []);
+    const cover = values.imageUrl;
+    return values.images ?? (cover !== null && (cover.assetId !== null || (cover.url?.length ?? 0) > 0) ? [cover] : []);
 }

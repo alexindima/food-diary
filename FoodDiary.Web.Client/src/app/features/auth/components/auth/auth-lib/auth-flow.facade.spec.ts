@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -187,5 +187,81 @@ describe('Auth rate limits', () => {
         const facade = TestBed.inject(AuthFlowFacade);
         expect(await firstValueFrom(facade.login({ email: 'user@example.com', password: 'password' }))).toBe('rateLimited');
         expect(authServiceMock.login).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Sign-in rejection details', () => {
+    it.each([
+        { code: 'Authentication.ReauthenticationAccountMismatch', expected: 'accountMismatch' },
+        { code: 'User.InvalidCredentials', expected: 'invalidCredentials' },
+    ])('keeps $code distinct from other sign-in failures', async ({ code, expected }) => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.login.mockReturnValue(throwError(() => createApiError(code)));
+        const owner = entityId<'user'>('expected-account');
+
+        const result = await firstValueFrom(
+            facade.login({ email: 'user@example.com', password: 'fixture-password', expectedUserId: owner }),
+        );
+
+        expect(result).toBe(expected);
+        expect(authServiceMock.login).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ expectedUserId: owner }));
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
+    });
+
+    it('reports a gateway response without an API error body as a general sign-in failure', async () => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.login.mockReturnValue(
+            throwError(() => new HttpErrorResponse({ status: HttpStatusCode.BadGateway, error: 'Gateway unavailable' })),
+        );
+
+        const result = await firstValueFrom(facade.login({ email: 'user@example.com', password: 'fixture-password' }));
+
+        expect(result).toBe('unknown');
+        expect(authServiceMock.login).toHaveBeenCalledOnce();
+        expect(localizationServiceMock.applyLanguagePreferenceAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Registration rejection details', () => {
+    it.each([
+        { failure: createApiError('User.EmailAlreadyExists'), expected: 'emailExists' },
+        { failure: createApiError('Authentication.AccountDeleted'), expected: 'accountDeleted' },
+        { failure: new HttpErrorResponse({ status: HttpStatusCode.TooManyRequests }), expected: 'rateLimited' },
+        { failure: new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }), expected: 'unknown' },
+    ])('reports $expected while keeping signup conversion tied to a successful registration', async ({ failure, expected }) => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.register.mockReturnValue(throwError(() => failure));
+
+        const result = await firstValueFrom(facade.register({ email: 'user@example.com', password: 'fixture-password' }));
+
+        expect(result).toBe(expected);
+        expect(authServiceMock.register).toHaveBeenCalledOnce();
+        expect(marketingAttributionMock.recordSignupCompleted).not.toHaveBeenCalled();
+    });
+});
+
+describe('Google confirmation failures', () => {
+    it.each([
+        { failure: createApiError('Authentication.ReauthenticationAccountMismatch'), expected: 'accountMismatch' },
+        { failure: new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }), expected: 'unknown' },
+    ])('reports $expected without loading translations or linking a different account', async ({ failure, expected }) => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        const request = { credential: 'fixture-credential', expectedUserId: entityId<'user'>('expected-account') };
+        authServiceMock.loginWithGoogle.mockReturnValue(throwError(() => failure));
+
+        const result = await firstValueFrom(facade.loginWithGoogle(request));
+
+        expect(result).toBe(expected);
+        expect(authServiceMock.loginWithGoogle).toHaveBeenCalledExactlyOnceWith(request);
+        expect(authServiceMock.linkGoogle).not.toHaveBeenCalled();
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
+    });
+
+    it('reports a failed link so the profile can keep its existing provider connection', async () => {
+        const facade = TestBed.inject(AuthFlowFacade);
+        authServiceMock.linkGoogle.mockReturnValue(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
+
+        await expect(firstValueFrom(facade.linkGoogle('fixture-credential'))).resolves.toBe(false);
+        expect(authServiceMock.linkGoogle).toHaveBeenCalledExactlyOnceWith('fixture-credential');
     });
 });

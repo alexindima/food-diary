@@ -114,6 +114,9 @@ describe('DashboardFastingCardComponent', () => {
     it('preserves the fasting segment through eating and resets only at the next cycle', () => {
         verifyPhaseTransitions(fixture);
     });
+    it('preserves manual scrolling during updates to the same cycle day and centers the next day', () => {
+        verifyCycleScrolling(fixture);
+    });
     it('handles a missing session without invalid dates or progress', () => {
         fixture.componentRef.setInput('session', null);
         fixture.detectChanges();
@@ -179,6 +182,57 @@ function createSession(): FastingSession {
         checkInNotes: null,
         checkIns: [],
     };
+}
+
+function verifyCycleScrolling(fixture: ComponentFixture<DashboardFastingCardComponent>): void {
+    const initial: FastingSession = {
+        ...createSession(),
+        planType: 'Cyclic',
+        protocol: 'Cyclic',
+        occurrenceKind: 'FastDay',
+        cyclicFastDays: 4,
+        cyclicEatDays: 2,
+        cyclicPhaseDayNumber: 1,
+    };
+    fixture.componentRef.setInput('session', initial);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const cycleList = host.querySelector<HTMLOListElement>('.dashboard-fasting-card__days');
+    if (cycleList === null) {
+        throw new Error('The current fasting cycle is missing');
+    }
+
+    const viewportWidth = 160;
+    const dayWidth = 80;
+    const manualScroll = 24;
+    const centeredFourthDayScroll = 200;
+    const centeredFifthDayScroll = 280;
+    Object.defineProperty(cycleList, 'clientWidth', { value: viewportWidth });
+    vi.spyOn(cycleList, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, viewportWidth, dayWidth));
+    const days = [...cycleList.querySelectorAll('li')];
+    for (const [index, day] of days.entries()) {
+        vi.spyOn(day, 'getBoundingClientRect').mockImplementation(
+            () => new DOMRect(index * dayWidth - cycleList.scrollLeft, 0, dayWidth, dayWidth),
+        );
+    }
+
+    expect(cycleList.querySelector('[aria-current="step"]')).toBe(days[0]);
+    cycleList.scrollLeft = manualScroll;
+    fixture.componentRef.setInput('session', { ...initial, notes: 'Updated check-in notes' });
+    fixture.detectChanges();
+    expect(cycleList.scrollLeft).toBe(manualScroll);
+
+    fixture.componentRef.setInput('session', { ...initial, cyclicPhaseDayNumber: 4 });
+    fixture.detectChanges();
+    expect(host.querySelector('.dashboard-fasting-card__days')).toBe(cycleList);
+    expect(cycleList.querySelector('[aria-current="step"]')).toBe(days[3]);
+    expect(cycleList.scrollLeft).toBe(centeredFourthDayScroll);
+
+    fixture.componentRef.setInput('session', { ...initial, occurrenceKind: 'EatDay' });
+    fixture.detectChanges();
+    expect(cycleList.querySelector('[aria-current="step"]')).toBe(days[4]);
+    expect(cycleList.scrollLeft).toBe(centeredFifthDayScroll);
 }
 
 function verifyPhaseTransitions(fixture: ComponentFixture<DashboardFastingCardComponent>): void {

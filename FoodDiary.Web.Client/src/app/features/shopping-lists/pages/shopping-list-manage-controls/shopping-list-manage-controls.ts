@@ -10,6 +10,7 @@ import { FdUiMenuComponent } from 'fd-ui-kit/menu/fd-ui-menu';
 import { FdUiMenuDividerComponent } from 'fd-ui-kit/menu/fd-ui-menu-divider';
 import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
+import { finalize } from 'rxjs';
 
 import { entityId, optionalEntityId, type ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
@@ -127,17 +128,20 @@ export class ShoppingListManageControlsComponent {
         if (!this.isMobile()) {
             return;
         }
-        this.dialogs
-            .open<ShoppingListBrowserDialogComponent, ShoppingListBrowserData, ShoppingListBrowserResult>(
-                ShoppingListBrowserDialogComponent,
-                {
-                    preset: 'form',
-                    autoFocus: 'dialog',
-                    data: { lists: this.lists, initialPage: this.initialPage, selectedId: this.selectedListId() },
-                },
-            )
+        const dialog = this.dialogs.open<ShoppingListBrowserDialogComponent, ShoppingListBrowserData, ShoppingListBrowserResult>(
+            ShoppingListBrowserDialogComponent,
+            {
+                preset: 'form',
+                autoFocus: 'dialog',
+                data: { lists: this.lists, initialPage: this.initialPage, selectedId: this.selectedListId() },
+            },
+        );
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        dialog
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose))
             .subscribe(result => {
                 if (result !== undefined) {
                     if ('create' in result) {
@@ -185,7 +189,10 @@ export class ShoppingListManageControlsComponent {
             return;
         }
 
-        this.renameListById.emit({ listId, name });
+        const list = this.lists().find(entry => entry.id === listId);
+        if (list !== undefined && name !== list.name) {
+            this.renameListById.emit({ listId, name });
+        }
         this.editingListId.set(null);
     }
 

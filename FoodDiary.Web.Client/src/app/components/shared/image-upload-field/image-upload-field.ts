@@ -250,7 +250,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                 if (!this.isCurrentUpload(revision)) {
                     break;
                 }
-                if (!this.validateBatchFile(file)) {
+                if (!this.validateUploadType(file) || !this.validateUploadSize(file)) {
                     break;
                 }
                 const resized = await this.resizeFileIfNeededAsync(file);
@@ -284,12 +284,12 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         }
     }
 
-    private validateBatchFile(file: File): boolean {
+    private validateUploadType(file: File): boolean {
         if (!this.acceptedTypes().split(',').includes(file.type)) {
             this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'));
             return false;
         }
-        return this.validateUploadSize(file);
+        return true;
     }
 
     private validateUploadSize(file: File): boolean {
@@ -481,8 +481,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         }
 
         this.error.set(null);
-        if (!file.type.startsWith('image/')) {
-            this.error.set(this.translateService.instant('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'));
+        if (!this.validateUploadType(file)) {
             return;
         }
 

@@ -22,9 +22,13 @@ export class PremiumPlansCardComponent {
     public readonly pricesUnavailable = input(false);
     public readonly starsPrice = input<number | null>(null);
     public readonly preferTrial = input(false);
+    public readonly checkoutBlocked = input(false);
     protected readonly hasPrices = computed(() => Object.keys(this.prices()).length > 0);
     protected readonly showProviderChoices = computed(() => this.cards().some(card => card.providerOptions.length > 1));
-    protected readonly checkoutDisabled = computed(() => this.cards().some(card => card.isLoading));
+    protected readonly checkoutDisabled = computed(() => this.checkoutBlocked() || this.cards().some(card => card.isLoading));
+    protected readonly checkoutDisabledReasonKey = computed(() =>
+        this.checkoutBlocked() ? 'DISABLED_HINTS.OPERATION_BUSY' : 'DISABLED_HINTS.CHECKOUT_IN_PROGRESS',
+    );
     protected readonly singlePlan = computed(() => this.cards().length === 1);
     protected readonly hasStarsPlan = computed(() => this.cards().some(card => this.supportsStars(card)));
 

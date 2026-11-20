@@ -1,7 +1,7 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
@@ -61,6 +61,61 @@ describe('MarketingAttributionService', () => {
     });
 });
 
+describe('Marketing attribution recovery with stored consent', () => {
+    it('keeps withdrawal effective when pending landing and signup submissions both fail', () => {
+        const { service, httpMock, storage } = setup();
+        const consent = TestBed.inject(MarketingConsentService);
+        service.initialize();
+        const landing = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        service.recordSignupCompleted();
+        const signup = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(landing.request.body).toMatchObject({ consentGrantedAtUtc: consent.grantedAt() });
+        expect(signup.request.body).toMatchObject({ consentGrantedAtUtc: consent.grantedAt() });
+
+        consent.decide(false);
+        landing.flush('Unavailable', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        signup.flush('Unavailable', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        service.initialize();
+        service.recordSignupCompleted();
+
+        expect(consent.currentDecision()?.allowed).toBe(false);
+        expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toBeNull();
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toBeNull();
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).toBeNull();
+        httpMock.expectNone(() => true);
+        httpMock.verify();
+    });
+
+    it.each(['initialize', 'recordSignupCompleted'] as const)('skips %s if the saved consent expires during startup', action => {
+        vi.useFakeTimers();
+        try {
+            const { service, httpMock, storage, browserWindow } = setup();
+            const now = Date.now();
+            const maximumConsentAgeMs = 15_552_000_000;
+            storage.setJson('local', 'fd_marketing_consent', {
+                version: MARKETING_NOTICE_VERSION,
+                allowed: true,
+                decidedAt: new Date(now - maximumConsentAgeMs + 1).toISOString(),
+            });
+            const consent = TestBed.inject(MarketingConsentService);
+            expect(consent.isAllowed()).toBe(true);
+            vi.spyOn(browserWindow, 'isAvailable').mockImplementationOnce(() => {
+                vi.setSystemTime(now + 1);
+                return true;
+            });
+
+            service[action]();
+
+            expect(consent.isAllowed()).toBe(false);
+            expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toBeNull();
+            expect(storage.getJson('local', 'fd_marketing_first_touch')).toBeNull();
+            httpMock.expectNone(() => true);
+            httpMock.verify();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
 describe('MarketingAttributionService capture', () => {
     it('captures UTM landing attribution once per session', () => {
         const { service, httpMock, storage } = setup();
@@ -141,7 +196,86 @@ describe('MarketingAttributionService capture', () => {
     });
 });
 
+describe('MarketingAttributionService when browser or campaign data is absent', () => {
+    it('avoids storage and network activity without an available browser even with existing consent', () => {
+        const { service, httpMock, storage } = setup({ available: false });
+
+        service.initialize();
+        service.recordSignupCompleted();
+
+        expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toBeNull();
+        expect(storage.getItem('local', 'fd_marketing_first_touch')).toBeNull();
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).toBeNull();
+        httpMock.expectNone(() => true);
+        httpMock.verify();
+    });
+
+    it('records an organic signup with a fresh visitor when there is no saved first touch', () => {
+        const { service, httpMock, storage } = setup({
+            href: null,
+            pathname: '/verify-email',
+            search: null,
+        });
+
+        service.recordSignupCompleted();
+
+        const request = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toMatch(/^fd-anon-/u);
+        expect(request.request.body).toMatchObject({
+            anonymousId: storage.getItem('local', 'fd_marketing_anonymous_id'),
+            sessionId: 'fd-session-test',
+            landingPath: '/verify-email',
+            consentNoticeVersion: MARKETING_NOTICE_VERSION,
+        });
+        expect(request.request.body).not.toHaveProperty('referrerHost');
+        expect(request.request.body).not.toHaveProperty('utmSource');
+        request.flush(null);
+        httpMock.verify();
+    });
+
+    it('drops a same-site referrer and keeps the organic landing when location information is missing', () => {
+        const { service, httpMock, storage } = setup({
+            href: null,
+            pathname: null,
+            search: null,
+            referrer: 'https://fooddiary.club/verify-email?token=example',
+        });
+
+        service.initialize();
+
+        const request = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(request.request.body).toMatchObject({ landingPath: '/' });
+        expect(request.request.body).not.toHaveProperty('referrerHost');
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toMatchObject({ landingPath: '/' });
+        request.flush(null);
+        httpMock.verify();
+    });
+});
+
 describe('MarketingAttributionService identity lifetimes', () => {
+    it('copies content and search attribution into a later signup without including the current page query', () => {
+        const { service, httpMock, browserWindow } = setup({
+            href: 'https://fooddiary.club/food-diary?utm_content=checklist&utm_term=planning',
+            search: '?utm_content=checklist&utm_term=planning',
+        });
+        service.initialize();
+        const first = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        first.flush(null);
+        browserWindow.href = 'https://fooddiary.club/verify-email?token=example&utm_source=later';
+
+        service.recordSignupCompleted();
+
+        const signup = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(signup.request.body).toMatchObject({
+            landingPath: '/food-diary?utm_content=checklist&utm_term=planning',
+            utmContent: 'checklist',
+            utmTerm: 'planning',
+        });
+        expect(signup.request.body).not.toHaveProperty('utmSource');
+        signup.flush(null);
+        httpMock.verify();
+    });
+
     it('retains the local visitor across a new session and keeps signup on the first touch', () => {
         const { service, httpMock, storage, session } = setup();
         storage.setItem('local', 'fd_marketing_anonymous_id', 'opaque/visitor');
@@ -424,9 +558,9 @@ class BrowserStorageMock {
 }
 
 class BrowserWindowMock {
-    public href = 'https://fooddiary.club/food-diary?utm_source=telegram&utm_medium=social&utm_campaign=launch';
-    public search = '?utm_source=telegram&utm_medium=social&utm_campaign=launch';
-    public pathname = '/food-diary';
+    public href: string | null = 'https://fooddiary.club/food-diary?utm_source=telegram&utm_medium=social&utm_campaign=launch';
+    public search: string | null = '?utm_source=telegram&utm_medium=social&utm_campaign=launch';
+    public pathname: string | null = '/food-diary';
     public hostname = 'fooddiary.club';
     public referrer = 'https://t.me/fooddiary';
     public available = true;

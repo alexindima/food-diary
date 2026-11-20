@@ -1,4 +1,8 @@
+/* eslint-disable no-redeclare -- TypeScript overloads preserve numeric and nullable display contracts. */
+
 /** Display stored whole-recipe nutrition without changing the recipe used by meals. */
+export function recipeNutrientPerServing(value: number, servings: number | null | undefined): number;
+export function recipeNutrientPerServing(value: number | null | undefined, servings: number | null | undefined): number | null;
 export function recipeNutrientPerServing(value: number | null | undefined, servings: number | null | undefined): number | null {
     if (value === null || value === undefined) {
         return null;

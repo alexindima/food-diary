@@ -84,6 +84,7 @@ describe('GoogleIdentityService browser initialization', () => {
         initializeConfig.callback({ credential: CREDENTIAL });
         initializeConfig.callback({ credential: '' });
         initializeConfig.callback({ credential: null });
+        initializeConfig.callback({});
 
         expect(googleIdentityApi.initialize).toHaveBeenCalledTimes(1);
         expect(firstCallback).not.toHaveBeenCalled();
@@ -160,6 +161,34 @@ describe('GoogleIdentityService browser script errors', () => {
         vi.restoreAllMocks();
     });
 
+    it('keeps the local sign-in fallback and uses a late SDK without reloading the script', async () => {
+        const service = setupBrowserService();
+        const callback = vi.fn();
+        const initialized = service.initializeAsync({ clientId: CLIENT_ID, callback });
+        const unavailable = expect(initialized).rejects.toThrow('Google Identity Services unavailable');
+        const script = getGoogleScript();
+        script.dispatchEvent(new Event('load'));
+        await unavailable;
+
+        const target = document.createElement('div');
+        const fallback = document.createElement('span');
+        fallback.textContent = 'Sign in with email';
+        target.append(fallback);
+        service.renderButton(target);
+        expect(target.firstElementChild).toBe(fallback);
+
+        const googleApi = createGoogleIdentityApiMock();
+        googleWindow.google = { accounts: { id: googleApi } };
+        await service.initializeAsync({ clientId: CLIENT_ID, callback });
+        expect(document.head.querySelectorAll('script[src="https://accounts.google.com/gsi/client"]')).toHaveLength(1);
+        expect(getGoogleScript()).toBe(script);
+        expect(googleApi.initialize).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ client_id: CLIENT_ID }));
+
+        service.renderButton(target);
+        expect(target.textContent).toBe('');
+        expect(googleApi.renderButton).toHaveBeenCalledExactlyOnceWith(target, expect.objectContaining({ theme: 'outline' }));
+        expect(callback).not.toHaveBeenCalled();
+    });
     it('rejects initialization when Google script fails to load', async () => {
         const service = setupBrowserService();
 

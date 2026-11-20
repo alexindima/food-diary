@@ -76,8 +76,10 @@ export class ProductManageFacade {
 
         try {
             await firstValueFrom(this.productService.deleteById(product.id));
-            this.committed.next();
-            await this.navigationService.navigateToProductListAsync();
+            if (!this.destroyRef.destroyed) {
+                this.committed.next();
+                await this.navigationService.navigateToProductListAsync();
+            }
             return 'deleted';
         } catch {
             return 'error';

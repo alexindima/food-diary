@@ -201,3 +201,45 @@ describe('AppUpdateService departure protection', () => {
         expect(service.updateAvailable()).toBe(false);
     });
 });
+
+describe('AppUpdateService reload requests', () => {
+    it('only asks for a reload after a downloaded version is active', async () => {
+        const service = TestBed.inject(AppUpdateService);
+        service.initialize();
+        const confirm = vi.fn<() => Promise<boolean>>().mockResolvedValue(true);
+        events.next({ type: 'VERSION_DETECTED', version: { hash: 'downloading' } });
+
+        await service.reloadAsync(confirm);
+
+        expect(confirm).not.toHaveBeenCalled();
+        expect(service.isReloading()).toBe(false);
+        expect(view.location.reload).not.toHaveBeenCalled();
+    });
+
+    it('keeps one confirmation open and skips its reload if the update was dismissed while waiting', async () => {
+        const service = TestBed.inject(AppUpdateService);
+        service.initialize();
+        ready();
+        let accept = (): void => {};
+        const approval = new Promise<boolean>(resolve => {
+            accept = (): void => {
+                resolve(true);
+            };
+        });
+        const confirm = vi.fn<() => Promise<boolean>>(async () => approval);
+        const pending = service.reloadAsync(confirm);
+        expect(service.isReloading()).toBe(true);
+
+        await service.reloadAsync(confirm);
+        expect(confirm).toHaveBeenCalledOnce();
+        service.dismiss();
+        accept();
+        await pending;
+
+        expect(service.isReloading()).toBe(false);
+        expect(view.location.reload).not.toHaveBeenCalled();
+        ready('newer-version');
+        await service.reloadAsync(vi.fn<() => Promise<boolean>>().mockResolvedValue(true));
+        expect(view.location.reload).toHaveBeenCalledOnce();
+    });
+});

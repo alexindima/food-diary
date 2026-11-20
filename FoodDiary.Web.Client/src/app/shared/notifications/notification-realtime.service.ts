@@ -40,7 +40,7 @@ export class NotificationRealtimeService {
 
     public constructor() {
         effect(() => {
-            if (this.sessionOwner() !== null) {
+            if (this.sessionOwner() !== null && this.tokenAvailable()) {
                 untracked(() => {
                     void this.synchronizeConnectionAsync();
                 });
@@ -147,16 +147,17 @@ export class NotificationRealtimeService {
             return;
         }
 
-        this.connection = new HubConnectionBuilder()
+        const userId = this.authService.getUserId();
+        const accessTokenFactoryAsync = async (): Promise<string> => this.getConnectionTokenAsync(connection, userId);
+        const connection: HubConnection = new HubConnectionBuilder()
             .withUrl(this.authService.sessionHubUrl(toNotificationHubUrl(environment.apiUrls.auth)), {
-                accessTokenFactory: this.getConnectionTokenAsync.bind(this),
+                accessTokenFactory: accessTokenFactoryAsync,
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Warning)
             .build();
-        const connection = this.connection;
-        const userId = this.authService.getUserId();
+        this.connection = connection;
         this.connectionUserId = userId;
 
         this.connection.on('UnreadCountUpdated', (count: number) => {
@@ -199,10 +200,11 @@ export class NotificationRealtimeService {
             this.notificationService.fetchUnreadCount();
             this.notificationService.ensureNotificationsLoaded();
         } catch (error) {
-            this.connectedSignal.set(false);
-            this.handleConnectionFailure(error, connection);
+            this.handleConnectionFailure(error, connection, userId);
         } finally {
-            this.connecting.set(false);
+            if (this.connection === connection) {
+                this.connecting.set(false);
+            }
         }
     }
 
@@ -214,14 +216,16 @@ export class NotificationRealtimeService {
         return this.connection === connection && this.canConnect() && this.authService.getUserId() === userId;
     }
 
-    private handleConnectionFailure(error: unknown, connection: HubConnection): void {
-        if (this.canConnect()) {
-            this.logger.error('Notification SignalR connection failed', error, { devOnly: true });
+    private handleConnectionFailure(error: unknown, connection: HubConnection, userId: string | null): void {
+        if (!this.isCurrentConnection(connection, userId)) {
+            return;
         }
-        if (this.connection === connection) {
-            this.connection = null;
-            this.connectionUserId = null;
-        }
+
+        this.connecting.set(false);
+        this.logger.error('Notification SignalR connection failed', error, { devOnly: true });
+        this.connection = null;
+        this.connectionUserId = null;
+        this.connectedSignal.set(false);
     }
 
     private async disconnectAsync(): Promise<void> {
@@ -261,8 +265,8 @@ export class NotificationRealtimeService {
         }
     }
 
-    private async getConnectionTokenAsync(): Promise<string> {
-        if (!this.canConnect()) {
+    private async getConnectionTokenAsync(connection: HubConnection, userId: string | null): Promise<string> {
+        if (!this.isCurrentConnection(connection, userId)) {
             return '';
         }
         const token = this.authService.getToken();
@@ -271,7 +275,7 @@ export class NotificationRealtimeService {
         }
         if (this.jwtDecoder.isExpired(token)) {
             const restored = await firstValueFrom(this.authService.refreshSession());
-            return restored ? (this.authService.getToken() ?? '') : '';
+            return restored && this.isCurrentConnection(connection, userId) ? (this.authService.getToken() ?? '') : '';
         }
         return token;
     }

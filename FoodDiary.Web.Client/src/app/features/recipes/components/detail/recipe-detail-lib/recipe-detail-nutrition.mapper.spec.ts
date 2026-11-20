@@ -143,6 +143,114 @@ describe('buildRecipeDetailViewModel preview', () => {
     });
 });
 
+describe('Recipe detail nutrition for stored drafts and partial recipes', () => {
+    it('keeps missing nutrition empty for a draft with no steps', () => {
+        const recipe = createRecipe({
+            steps: [],
+            totalCalories: null,
+            totalProteins: null,
+            totalFats: null,
+            totalCarbs: null,
+            totalFiber: null,
+            totalAlcohol: null,
+        });
+
+        const { nutritionModel, macroBarState, ingredientPreview, ingredientCount } = buildRecipeDetailViewModel(recipe, 'Unknown');
+
+        expect(nutritionModel).toEqual({ calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 });
+        expect(macroBarState.isEmpty).toBe(true);
+        expect(ingredientPreview).toEqual([]);
+        expect(ingredientCount).toBe(0);
+    });
+
+    it('counts known fiber per product base and ignores unresolved bases without losing ingredient labels', () => {
+        const known = recipeIngredientFromStored({
+            id: 'known',
+            amount: 150,
+            productId: 'oats',
+            productName: 'Oats',
+            productBaseUnit: MeasurementUnit.G,
+            productBaseAmount: 100,
+            productFiberPerBase: 4,
+            productAlcoholPerBase: null,
+        });
+        const absentBase = recipeIngredientFromStored({
+            id: 'absent-base',
+            amount: 50,
+            productName: 'Legacy syrup',
+            productFiberPerBase: 20,
+            productAlcoholPerBase: 10,
+        });
+        const zeroBase = recipeIngredientFromStored({
+            id: 'zero-base',
+            amount: 50,
+            productName: 'Unresolved product',
+            productBaseAmount: 0,
+            productFiberPerBase: 10,
+            productAlcoholPerBase: 10,
+        });
+        const storedSteps = createRecipe().steps;
+        const recipe = createRecipe({
+            servings: 3,
+            totalFiber: null,
+            totalAlcohol: null,
+            steps: [{ ...storedSteps[0], ingredients: [known, absentBase, zeroBase] }],
+        });
+
+        const model = buildRecipeDetailViewModel(recipe, 'Unknown');
+
+        expect(model.fiber).toBe(2);
+        expect(model.alcohol).toBe(0);
+        expect(model.ingredientPreview.map(item => item.name)).toEqual(['Oats', 'Legacy syrup', 'Unresolved product']);
+        expect(model.ingredientPreview.map(item => item.amount)).toEqual([known.amount, absentBase.amount, zeroBase.amount]);
+        expect(model.macroSummaryBlocks.map(block => block.labelKey)).not.toContain('GENERAL.NUTRIENTS.ALCOHOL');
+    });
+
+    it('retains explicit manual zero and applies the legacy single-portion display for stored zero servings', () => {
+        const recipe = createRecipe({
+            servings: 0,
+            manualCalories: 0,
+            manualFats: 0,
+            totalFiber: null,
+            totalAlcohol: null,
+            manualFiber: 0,
+            manualAlcohol: 0,
+        });
+
+        const { nutritionModel } = buildRecipeDetailViewModel(recipe, 'Unknown');
+
+        expect(nutritionModel).toEqual({ calories: 0, proteins: TOTAL_PROTEINS, fats: 0, carbs: TOTAL_CARBS, fiber: 0, alcohol: 0 });
+    });
+});
+
+describe('Recipe detail ingredient and duration display', () => {
+    it('preserves a fractional nested portion and leaves unknown text quantities blank', () => {
+        const recipe = createRecipe();
+        recipe.steps[0].ingredients = [
+            recipeIngredientFromStored({ id: 'herbs', amount: 0, textName: 'Fresh herbs' }),
+            recipeIngredientFromStored({ id: 'salt', amount: 0, textName: 'Salt', amountText: 'To taste' }),
+            recipeIngredientFromStored({ id: 'sauce', amount: 0.5, nestedRecipeId: 'sauce-1', nestedRecipeName: 'Tomato sauce' }),
+        ];
+
+        const { ingredientPreview } = buildRecipeDetailViewModel(recipe, 'Unknown');
+
+        expect(ingredientPreview).toEqual([
+            { name: 'Fresh herbs', amount: '', unitKey: null },
+            { name: 'Salt', amount: 'To taste', unitKey: null },
+            { name: 'Tomato sauce', amount: 0.5, unitKey: 'RECIPE_DETAIL.SUMMARY.SERVINGS_FEW' },
+        ]);
+    });
+
+    it.each([
+        { prepTime: 0, cookTime: null, expected: 0 },
+        { prepTime: null, cookTime: 12, expected: 12 },
+    ])('displays $expected minutes when only one recipe duration is provided', ({ prepTime, cookTime, expected }) => {
+        const model = buildRecipeDetailViewModel(createRecipe({ prepTime, cookTime }), 'Unknown');
+
+        expect(model.totalTime).toBe(expected);
+    });
+});
+
 function createRecipe(overrides: Partial<Recipe> = {}): Recipe {
     return {
         id: entityId<'recipe'>('recipe-1'),

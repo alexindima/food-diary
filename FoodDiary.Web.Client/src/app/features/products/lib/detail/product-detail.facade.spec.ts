@@ -127,6 +127,23 @@ describe('ProductDetailFacade favorites', () => {
         expect(favoriteProductService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.isFavorite()).toBe(false);
     });
+
+    it('clears a stale favorite after the lookup shows it was already removed', () => {
+        const product = createProduct({ isFavorite: true, favoriteProductId: null });
+        favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
+        favoriteProductService.getLookupPage.mockReturnValueOnce(
+            of([{ ...createFavoriteProduct(), productId: entityId<'product'>('different-product') }]),
+        );
+        facade.initialize(product);
+
+        facade.toggleFavorite(product);
+
+        expect(favoriteProductService.getLookupPage).toHaveBeenCalledOnce();
+        expect(favoriteProductService.remove).not.toHaveBeenCalled();
+        expect(facade.isFavorite()).toBe(false);
+        expect(facade.isFavoriteLoading()).toBe(false);
+        expect(facade.hasFavoriteChanged()).toBe(true);
+    });
 });
 
 describe('ProductDetailFacade dialog actions', () => {

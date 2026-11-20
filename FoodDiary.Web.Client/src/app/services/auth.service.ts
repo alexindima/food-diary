@@ -193,21 +193,33 @@ export class AuthService {
     }
 
     public login(data: LoginRequest): Observable<AuthResponse> {
+        return this.requestLogin(data);
+    }
+
+    private requestLogin(data: LoginRequest, sessionVersion?: number): Observable<AuthResponse> {
         const loginData = {
             email: data.email,
             password: data.password,
             rememberMe: data.rememberMe || this.pwa.shouldRememberSession(),
             expectedUserId: data.expectedUserId,
         };
-        return this.cookieSessions.run(() =>
-            this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(
+        return this.cookieSessions.run(() => {
+            this.assertLoginOwner(sessionVersion);
+            return this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(
                 map(authResponseFromSdk),
+                catchError((error: unknown) => rethrowApiError('Login error', error)),
                 tap(response => {
+                    this.assertLoginOwner(sessionVersion);
                     this.onLogin(response, loginData.rememberMe);
                 }),
-                catchError((error: unknown) => rethrowApiError('Login error', error)),
-            ),
-        );
+            );
+        });
+    }
+
+    private assertLoginOwner(sessionVersion: number | undefined): void {
+        if (sessionVersion !== undefined && sessionVersion !== this.sessionVersion) {
+            throw new Error('Authentication session changed');
+        }
     }
 
     public register(data: RegisterRequest): Observable<AuthResponse> {
@@ -523,6 +535,20 @@ export class AuthService {
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
+        await this.endSessionAsync(async () => this.navigateAfterSessionEndAsync(redirectToAuth));
+    }
+
+    public async logoutForAccountSwitchAsync(returnUrl: string, owner: Pick<DestroyRef, 'destroyed'>): Promise<void> {
+        await this.endSessionAsync(async () => {
+            if (!owner.destroyed) {
+                await this.sessionEvents.runSessionEndNavigationAsync(async () =>
+                    this.navigationService.navigateToAuthAsync('login', returnUrl),
+                );
+            }
+        });
+    }
+
+    private async endSessionAsync(navigateAsync: () => Promise<void>): Promise<void> {
         if (this.browserSession.telegram) {
             await this.telegramWebApp.suppressAutomaticSignInAsync();
         }
@@ -550,7 +576,7 @@ export class AuthService {
         if (version !== this.sessionVersion) {
             return;
         }
-        await this.navigateAfterSessionEndAsync(redirectToAuth);
+        await navigateAsync();
     }
 
     public async retryPendingLogoutAsync(): Promise<void> {
@@ -641,11 +667,16 @@ export class AuthService {
     }
 
     public async completeRequiredPasswordChangeAsync(newPassword: string): Promise<void> {
-        const email = this.session()?.user.email;
-        if (email === null || email === undefined || email.length === 0) {
+        const owner = this.session()?.user;
+        if (owner === undefined || owner.email === null || owner.email.length === 0) {
             throw new Error('Missing session email');
         }
-        await firstValueFrom(this.login({ email, password: newPassword, rememberMe: this.authMetadata.isRemembered() }));
+        await firstValueFrom(
+            this.requestLogin(
+                { email: owner.email, password: newPassword, rememberMe: this.authMetadata.isRemembered(), expectedUserId: owner.id },
+                this.sessionVersion,
+            ),
+        );
     }
 
     private onLogin(response: AuthResponse, rememberMe: boolean): void {
@@ -701,6 +732,7 @@ export class AuthService {
                 fragments.delete('impersonationCode');
                 url.hash = fragments.toString();
                 this.browserWindow.replaceCurrentUrl(url.pathname + url.search + url.hash);
+                const version = this.sessionVersion;
                 const response = await firstValueFrom(
                     this.sdk.client
                         .postAuthImpersonationExchange({
@@ -709,8 +741,8 @@ export class AuthService {
                         })
                         .pipe(catchError((error: unknown) => fallbackApiError('impersonation exchange error', error, null))),
                 );
-                const context = response?.contextId;
-                if (context === undefined || context === null || context.length === 0) {
+                const context = response?.contextId ?? '';
+                if (version !== this.sessionVersion || context.length === 0) {
                     return;
                 }
                 this.browserSession.setContext(context);

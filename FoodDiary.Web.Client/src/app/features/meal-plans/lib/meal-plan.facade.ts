@@ -157,7 +157,7 @@ export class MealPlanFacade {
         }
     }
 
-    public loadPlan(id: MealPlanId): void {
+    public loadPlan(id: MealPlanId | null): void {
         if (id !== this.selectedPlanId()) {
             this.selectionChanged.next();
             this.actionErrorKey.set(null);

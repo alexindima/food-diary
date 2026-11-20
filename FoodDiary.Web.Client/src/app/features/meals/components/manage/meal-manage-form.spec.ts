@@ -2,9 +2,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, type Params, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { EMPTY, of, Subject } from 'rxjs';
+import { EMPTY, firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
@@ -27,6 +29,7 @@ import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen, type MealDevelopmentTools } from '../../contracts/meal-development-tools';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
+import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import { MealManageFormComponent } from './meal-manage-form';
 import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
 import { createMealItemValue, getDateInputValue, getTimeInputValue } from './meal-manage-lib/meal-manage-form.mapper';
@@ -65,13 +68,14 @@ type MealManageFacadeMock = {
     prepareMealItems: ReturnType<typeof vi.fn>;
     removeAiSession: ReturnType<typeof vi.fn>;
     replaceAiSession: ReturnType<typeof vi.fn>;
-    showSuccessToastAndRedirectAsync: ReturnType<typeof vi.fn>;
+    showSuccessToastAndRedirectAsync: ReturnType<typeof vi.fn<MealManageFacade['showSuccessToastAndRedirectAsync']>>;
     submitMealAsync: ReturnType<typeof vi.fn>;
 };
 
 type MealManageFormSetup = {
     component: MealManageFormComponent;
     fixture: ComponentFixture<MealManageFormComponent>;
+    openDialog: ReturnType<typeof vi.fn>;
     mealManageFacade: MealManageFacadeMock;
     navigationService: {
         navigateToMealListAsync: ReturnType<typeof vi.fn>;
@@ -634,22 +638,60 @@ describe('MealManageFormComponent navigation', () => {
 describe('Meal editor route departure', () => {
     it('keeps the draft after failed save, blocks pending save, and permits the committed edit redirect', async () => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
-        fixture.componentRef.setInput('meal', createMeal());
+        const meal = mealWithProduct('departure-meal', 'Original note');
+        let failSave: ((response: null) => void) | undefined;
+        mealManageFacade.submitMealAsync
+            .mockReturnValueOnce(
+                new Promise<Meal | null>(resolve => {
+                    failSave = resolve;
+                }),
+            )
+            .mockResolvedValueOnce(meal);
+        mealManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
+        mealManageFacade.showSuccessToastAndRedirectAsync.mockImplementationOnce(async () => {
+            expect(await component.canLeaveAsync()).toBe(true);
+        });
+        fixture.componentRef.setInput('meal', meal);
         fixture.detectChanges();
-        component['mealSignalForm']().markAsDirty();
-        component['isSubmitting'].set(true);
+        const host = fixture.nativeElement as HTMLElement;
+        const note = host.querySelector('textarea');
+        if (note === null) {
+            throw new Error('Expected the rendered meal editor comment');
+        }
+        note.value = 'Edited note';
+        note.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const save = requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.SAVE_BUTTON"]');
+        save.click();
+        await vi.waitFor(() => {
+            expect(mealManageFacade.submitMealAsync).toHaveBeenCalledTimes(1);
+        });
         expect(await component.canLeaveAsync()).toBe(false);
-        await component['handleSubmitResponseAsync'](null);
-        expect(component['mealSignalForm']().dirty()).toBe(true);
-        await component['handleSubmitResponseAsync'](createMeal());
-        expect(await component.canLeaveAsync()).toBe(true);
         expect(mealManageFacade.confirmDiscardChangesAsync).not.toHaveBeenCalled();
+
+        failSave?.(null);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('.meal-manage__footer-error')?.textContent).toContain('QUICK_MEAL.SAVE_ERROR');
+        });
+        expect(note.value).toBe('Edited note');
+        expect(await component.canLeaveAsync()).toBe(false);
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledTimes(1);
+
+        save.click();
+        await fixture.whenStable();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenLastCalledWith(meal, expect.objectContaining({ comment: 'Edited note' }));
         expect(mealManageFacade.showSuccessToastAndRedirectAsync).toHaveBeenCalledWith(true);
+        expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledTimes(1);
     });
 });
 
-async function setupComponentAsync(developmentTools?: MealDevelopmentTools): Promise<MealManageFormSetup> {
+async function setupComponentAsync(
+    developmentTools?: MealDevelopmentTools,
+    launch?: { query: Params; picker: Subject<MealItemFormValues | null> },
+): Promise<MealManageFormSetup> {
     const mealManageFacade = createMealManageFacadeMock();
+    const openDialog = vi.fn().mockReturnValue({ afterClosed: () => launch?.picker ?? of(true) });
     const navigationService = {
         navigateToMealListAsync: vi.fn().mockResolvedValue(true),
     };
@@ -662,14 +704,17 @@ async function setupComponentAsync(developmentTools?: MealDevelopmentTools): Pro
             { provide: MealManageFacade, useValue: mealManageFacade },
             {
                 provide: PrivacyConsentFacade,
-                useValue: { ensureHealthConsentAsync: vi.fn().mockResolvedValue(true), failed: signal(false), needsReload: signal(false) },
+                useValue: {
+                    ensureHealthConsentAsync: vi.fn().mockResolvedValue(true),
+                    failed: signal(false),
+                    needsReload: signal(false),
+                    state: signal<ReturnType<PrivacyConsentFacade['state']>>(null),
+                },
             },
             { provide: NavigationService, useValue: navigationService },
             {
                 provide: FdUiDialogService,
-                useValue: {
-                    open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }),
-                },
+                useValue: { open: openDialog },
             },
             {
                 provide: Router,
@@ -682,9 +727,7 @@ async function setupComponentAsync(developmentTools?: MealDevelopmentTools): Pro
                 provide: ActivatedRoute,
                 useValue: {
                     snapshot: {
-                        queryParamMap: {
-                            get: vi.fn().mockReturnValue(null),
-                        },
+                        queryParamMap: convertToParamMap(launch?.query ?? {}),
                     },
                 },
             },
@@ -697,6 +740,7 @@ async function setupComponentAsync(developmentTools?: MealDevelopmentTools): Pro
     return {
         component: fixture.componentInstance,
         fixture,
+        openDialog,
         mealManageFacade,
         navigationService,
     };
@@ -841,7 +885,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
             sessions.filter((_session, currentIndex) => currentIndex !== index),
         ),
         replaceAiSession: vi.fn(),
-        showSuccessToastAndRedirectAsync: vi.fn().mockResolvedValue(void 0),
+        showSuccessToastAndRedirectAsync: vi.fn<MealManageFacade['showSuccessToastAndRedirectAsync']>().mockResolvedValue(void 0),
         submitMealAsync: vi.fn().mockResolvedValue(null),
     };
     facade.prepareMealItems.mockImplementation((items: MealItem[]) =>
@@ -1266,14 +1310,16 @@ describe('Meal form custom controls preserve unsaved changes', () => {
 });
 
 describe('Meal form detached dialog results', () => {
-    it('unsubscribes a manual selection on destruction', async () => {
+    it('closes the manual editor and unsubscribes its result on destruction', async () => {
         const { component, fixture } = await setupComponentAsync();
         const response = new Subject<MealItemFormValues | null>();
+        const close = vi.fn();
         const dialogs = TestBed.inject(FdUiDialogService);
-        vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => response } as unknown as ReturnType<typeof dialogs.open>);
+        vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => response, close } as unknown as ReturnType<typeof dialogs.open>);
         component['onItemSourceClick'](0);
         fixture.destroy();
         await waitForAsyncTasksAsync();
+        expect(close).toHaveBeenCalledExactlyOnceWith(null);
         expect(response.observed).toBe(false);
     });
     it('ignores a photo session editor result when its original session was removed', async () => {
@@ -1381,3 +1427,519 @@ it('does not redirect from a newer page when a pending save completes after the 
 
     expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
 });
+
+describe('Meal editor launch and item picker', () => {
+    it('opens the manual picker from the route and applies the normalized meal type', async () => {
+        const picker = new Subject<MealItemFormValues | null>();
+        const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(undefined, {
+            query: { manual: '1', mealType: ' dinner ' },
+            picker,
+        });
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(openDialog).toHaveBeenCalledOnce();
+        });
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('fd-meal-general-info fd-ui-select')?.textContent).toContain('MEAL_TYPES.DINNER');
+
+        const chosen = createCommentTestItem();
+        picker.next(chosen);
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+
+        expect(mealManageFacade.configureItemType).toHaveBeenCalledExactlyOnceWith(chosen, MealSourceType.Product);
+        expect(host.querySelector('.meal-manage__manual-summary')?.textContent).toContain('Apple');
+    });
+
+    it('adds a distinct second item through the manual action and edits the visible list', async () => {
+        const picker = new Subject<MealItemFormValues | null>();
+        const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(undefined, { query: {}, picker });
+        fixture.componentRef.setInput(
+            'meal',
+            createMeal({
+                items: [
+                    {
+                        id: entityId<'meal-item'>('original-item'),
+                        mealId: entityId<'meal'>('meal-1'),
+                        product: { ...createEmptyProductSnapshot(), id: entityId<'product'>('original-product'), name: 'Original food' },
+                        recipe: null,
+                        sourceType: MealSourceType.Product,
+                        amount: productQuantityFromStored(PRODUCT_AMOUNT),
+                    },
+                ],
+            }),
+        );
+        fixture.detectChanges();
+        mealManageFacade.createMealItem.mockClear();
+        const host = fixture.nativeElement as HTMLElement;
+        const add = host.querySelector<HTMLButtonElement>('button[aria-label="AI_INPUT_BAR.MANUAL_ACTION"]');
+        if (add === null) {
+            throw new Error('Expected the rendered manual add action');
+        }
+        add.click();
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(openDialog).toHaveBeenCalledOnce();
+        });
+        expect(mealManageFacade.createMealItem).toHaveBeenCalledOnce();
+
+        picker.next(createCommentTestItem());
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+
+        const names = (): string[] => Array.from(host.querySelectorAll('.meal-manage__ai-summary-name'), name => name.textContent.trim());
+        expect(names()).toEqual(['Original food', 'Apple']);
+        const remove = host.querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]');
+        if (remove === null) {
+            throw new Error('Expected the first item removal action');
+        }
+        remove.click();
+        fixture.detectChanges();
+        expect(names()).toEqual(['Apple']);
+    });
+});
+
+describe('Meal editor displayed feedback', () => {
+    it.each([false, true])('preserves the form when the server requires renewed consent, reload=%s', async needsReload => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        TestBed.inject(PrivacyConsentFacade).needsReload.set(needsReload);
+        mealManageFacade.submitMealAsync.mockRejectedValueOnce(
+            new HttpErrorResponse({ status: 403, error: { error: 'Privacy.HealthConsentRequired' } }),
+        );
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const form = host.querySelector('form');
+        if (form === null) {
+            throw new Error('Expected the rendered meal editor form');
+        }
+
+        form.requestSubmit();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(host.querySelector('.meal-manage__footer-error')?.textContent).toContain(
+            needsReload ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR',
+        );
+        expect(host.querySelector('.meal-manage__manual-summary')).not.toBeNull();
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
+    });
+
+    it('starts the tour only when the visible tour button is pressed', async () => {
+        const { fixture } = await setupComponentAsync();
+        const start = vi.spyOn(TestBed.inject(FdTourService), 'start').mockReturnValue(true);
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('[data-tour-id="meal-manage-tour-help"] button');
+        if (button === null) {
+            throw new Error('Expected the rendered meal tour button');
+        }
+        expect(start).not.toHaveBeenCalled();
+
+        button.click();
+
+        expect(start).toHaveBeenCalledExactlyOnceWith(expect.any(Object), { force: true });
+    });
+});
+
+describe('Meal editor clears a recognized draft', () => {
+    it('removes visible recognition, calories and the ability to save when a development draft is cleared', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const { fixture, mealManageFacade } = await setupComponentAsync({
+            attach: screen => {
+                screens.push(screen);
+                return (): void => {};
+            },
+        });
+        mealManageFacade.buildNutritionSummaryStateFromValues.mockImplementation((_form, sessions: MealAiSessionManageDto[]) =>
+            createNutritionSummaryStateWithCalories(sessions.length > 0 ? TOTAL_CALORIES : 0),
+        );
+        renderRecognizedMeal(fixture);
+        const host = fixture.nativeElement as HTMLElement;
+        const save = requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.ADD_BUTTON"]');
+        expect(host.querySelector('fd-meal-ai-sessions')?.textContent).toContain('Grilled salmon');
+        expect(screens[0].read()).toMatchObject({ calories: TOTAL_CALORIES, dirty: true });
+        expect(save.disabled).toBe(false);
+
+        screens[0].clearDraft?.();
+        fixture.detectChanges();
+
+        expect(host.querySelector('fd-meal-ai-sessions')).toBeNull();
+        expect(screens[0].read()).toMatchObject({ calories: 0, dirty: false, valid: false, items: [] });
+        expect(save.disabled).toBe(true);
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal editor consent ownership', () => {
+    it('does not send a previously displayed meal after approval when the route editor has been reused', async () => {
+        const { fixture, mealManageFacade } = await setupComponentAsync();
+        const original = mealWithProduct('pending-consent', 'The original meal');
+        const next = mealWithProduct('next-meal', 'A different meal');
+        let approve: ((allowed: boolean) => void) | undefined;
+        const consent = vi.spyOn(TestBed.inject(PrivacyConsentFacade), 'ensureHealthConsentAsync').mockReturnValueOnce(
+            new Promise(resolve => {
+                approve = resolve;
+            }),
+        );
+        fixture.componentRef.setInput('meal', original);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const save = requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.SAVE_BUTTON"]');
+        save.click();
+        await vi.waitFor(() => {
+            expect(consent).toHaveBeenCalledTimes(1);
+        });
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('meal', next);
+        fixture.detectChanges();
+        approve?.(true);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+        });
+
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
+        expect(host.querySelector('textarea')?.value).toBe(next.comment);
+        expect(requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.SAVE_BUTTON"]').disabled).toBe(false);
+    });
+
+    it('does not write a meal when the editor loses ownership during the consent review', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        let allow: ((value: boolean) => void) | undefined;
+        const privacy = TestBed.inject(PrivacyConsentFacade);
+        const review = vi.spyOn(privacy, 'ensureHealthConsentAsync').mockReturnValueOnce(
+            new Promise(resolve => {
+                allow = resolve;
+            }),
+        );
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+
+        requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.ADD_BUTTON"]').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(review).toHaveBeenCalledExactlyOnceWith(true, {
+                acceptLabelKey: 'PRIVACY_CHOICES.ACCEPT_AND_SAVE',
+            });
+            expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+        });
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        fixture.destroy();
+        allow?.(true);
+        await waitForAsyncTasksAsync();
+
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal editor late save responses', () => {
+    it.each(['success', 'error'] as const)('keeps the current meal visible when a previous save returns %s', async result => {
+        const { fixture, mealManageFacade } = await setupComponentAsync();
+        const current = mealWithProduct('saving-meal', 'Save this note');
+        const refreshed = mealWithProduct('other-meal', 'Keep this newly loaded note');
+        let finish: (() => void) | undefined;
+        mealManageFacade.submitMealAsync.mockReturnValueOnce(
+            new Promise<Meal>((resolve, reject) => {
+                finish = (): void => {
+                    if (result === 'success') {
+                        resolve(current);
+                    } else {
+                        reject(new Error('Error from the previous meal'));
+                    }
+                };
+            }),
+        );
+        fixture.componentRef.setInput('meal', current);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const save = requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.SAVE_BUTTON"]');
+        save.click();
+        await vi.waitFor(() => {
+            expect(mealManageFacade.submitMealAsync).toHaveBeenCalledExactlyOnceWith(
+                current,
+                expect.objectContaining({ comment: current.comment }),
+            );
+        });
+
+        fixture.componentRef.setInput('meal', refreshed);
+        fixture.detectChanges();
+        finish?.();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+        });
+
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
+        expect(host.querySelector('textarea')?.value).toBe(refreshed.comment);
+        expect(host.querySelector('.meal-manage__footer-error')).toBeNull();
+        expect(requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.SAVE_BUTTON"]').disabled).toBe(false);
+    });
+});
+
+describe('Meal editor development capability during photo preparation', () => {
+    it('preserves a recognized draft until the pending photo settles', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const { fixture, mealManageFacade } = await setupComponentAsync(captureMealDevelopment(screens));
+        renderRecognizedMeal(fixture);
+        const host = fixture.nativeElement as HTMLElement;
+        const control = mealPhotoControl(fixture);
+        const clearDraft = screens[0].clearDraft;
+        expect(clearDraft).toBeDefined();
+
+        control.imagePreparationStarted.emit('blob:meal-draft-photo');
+        fixture.detectChanges();
+        expect(requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.ADD_BUTTON"]').disabled).toBe(true);
+        expect(() => clearDraft?.()).toThrow('A ready new meal editor is required.');
+        expect(host.querySelector('fd-meal-ai-sessions')?.textContent).toContain('Grilled salmon');
+
+        control.imagePreparationFailed.emit();
+        fixture.detectChanges();
+        clearDraft?.();
+        fixture.detectChanges();
+
+        expect(host.querySelector('fd-meal-ai-sessions')).toBeNull();
+        expect(screens[0].read()).toMatchObject({ dirty: false, valid: false });
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+
+    it('does not apply a pending development draft after photo preparation starts', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const { fixture, mealManageFacade } = await setupComponentAsync(captureMealDevelopment(screens));
+        let resolveAmount: ((amount: number) => void) | undefined;
+        mealManageFacade.resolveRecipeDisplayValueAsync.mockReturnValueOnce(
+            new Promise(resolve => {
+                resolveAmount = resolve;
+            }),
+        );
+        const control = mealPhotoControl(fixture);
+        const draft = {
+            date: '2026-10-17',
+            time: '12:00',
+            mealType: 'LUNCH',
+            comment: 'Imported serving',
+            items: [{ recipe: createEmptyRecipeSnapshot(), servings: recipeServingsFromStored(FRACTIONAL_RECIPE_SERVINGS) }],
+        };
+        const pending = screens[0].fillDraft?.(draft, vi.fn());
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(1);
+        control.imagePreparationStarted.emit('blob:meal-draft-photo');
+        fixture.detectChanges();
+        resolveAmount?.(PRODUCT_AMOUNT);
+
+        await expect(pending).rejects.toThrow('Meal editor changed while resolving serving quantities.');
+        await expect(screens[0].fillDraft?.(draft, vi.fn())).rejects.toThrow('A clean new meal editor is required.');
+        expect(screens[0].read()).toMatchObject({ items: [], dirty: false });
+        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(1);
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal editor visible language and development projection', () => {
+    it('updates the selected meal type label when switching the visible language', async () => {
+        const { fixture, mealManageFacade } = await setupComponentAsync();
+        const translations = TestBed.inject(TranslateService);
+        translations.setTranslation('en', { MEAL_TYPES: { LUNCH: 'Lunch' } });
+        translations.setTranslation('ru', { MEAL_TYPES: { LUNCH: 'Обед' } });
+        await firstValueFrom(translations.use('en'));
+        const meal = { ...mealWithProduct('local-meal', 'Unchanged note'), mealType: 'Lunch' };
+        fixture.componentRef.setInput('meal', meal);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const select = requiredMealButton(host, 'fd-meal-general-info button[aria-haspopup="listbox"]');
+        expect(select.textContent).toContain('Lunch');
+
+        await firstValueFrom(translations.use('ru'));
+        fixture.detectChanges();
+
+        expect(select.textContent).toContain('Обед');
+        expect(host.querySelector('textarea')?.value).toBe(meal.comment);
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+
+    it('reports both the editable recipe quantity and the stored servings alongside ordinary product amounts', async () => {
+        const screens: MealDevelopmentScreen[] = [];
+        const { fixture, mealManageFacade } = await setupComponentAsync(captureMealDevelopment(screens));
+        const meal = mealWithProduct('loaded-ingredients', 'Meal with recipe and product');
+        const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('soup'), name: 'Soup' };
+        mealManageFacade.recipeDisplayValueFromStoredServings.mockReturnValue(PRODUCT_AMOUNT);
+        mealManageFacade.recipeDisplayUnit.mockReturnValue('grams');
+        mealManageFacade.recipeServingsFromDisplayInput.mockReturnValue(FRACTIONAL_RECIPE_SERVINGS);
+        fixture.componentRef.setInput('meal', {
+            ...meal,
+            items: [
+                ...meal.items,
+                {
+                    id: entityId<'meal-item'>('soup-item'),
+                    mealId: meal.id,
+                    sourceType: MealSourceType.Recipe,
+                    amount: recipeServingsFromStored(FRACTIONAL_RECIPE_SERVINGS),
+                    recipe,
+                    product: null,
+                },
+            ],
+        });
+        fixture.detectChanges();
+
+        expect(screens[0].read()).toMatchObject({
+            kind: 'edit-meal-editor',
+            items: [
+                { name: 'Apple', productId: 'apple', recipeId: null, servings: null, amount: PRODUCT_AMOUNT },
+                {
+                    name: 'Soup',
+                    productId: null,
+                    recipeId: recipe.id,
+                    servings: FRACTIONAL_RECIPE_SERVINGS,
+                    amount: PRODUCT_AMOUNT,
+                    unit: 'grams',
+                },
+            ],
+        });
+        expect(mealManageFacade.recipeServingsFromDisplayInput).toHaveBeenCalledWith(recipe, PRODUCT_AMOUNT);
+    });
+});
+
+describe('Meal editor closes a recognition review', () => {
+    it('keeps a recognized dish when the edit is cancelled and ignores a later result after leaving', async () => {
+        const { fixture, mealManageFacade } = await setupComponentAsync();
+        renderRecognizedMeal(fixture);
+        const host = fixture.nativeElement as HTMLElement;
+        const edit = requiredMealButton(host, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_EDIT"]');
+        edit.click();
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-meal-ai-sessions')?.textContent).toContain('Grilled salmon');
+        expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledOnce();
+        expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
+
+        let finish: ((value: MealAiSessionManageDto) => void) | undefined;
+        mealManageFacade.openEditAiPhotoSessionDialogAsync.mockReturnValueOnce(
+            new Promise(resolve => {
+                finish = resolve;
+            }),
+        );
+        edit.click();
+        expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledTimes(2);
+        fixture.destroy();
+        finish?.({ notes: 'Late recognition edit', items: [] });
+        await waitForAsyncTasksAsync();
+
+        expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal editor rendered nutrition modes', () => {
+    it('copies calculated values to the manual fields and restores the automatic values after switching back', async () => {
+        const { fixture, mealManageFacade } = await setupComponentAsync();
+        const totals: NutritionTotals = { calories: TOTAL_CALORIES, proteins: 25, fats: 18, carbs: 10, fiber: 4, alcohol: 1 };
+        mealManageFacade.buildNutritionSummaryStateFromValues.mockReturnValue({
+            autoTotals: totals,
+            summaryTotals: totals,
+            warning: null,
+        });
+        renderRecognizedMeal(fixture);
+        const host = fixture.nativeElement as HTMLElement;
+        const options = Array.from(host.querySelectorAll<HTMLButtonElement>('.meal-manage__nutrition-toggle button'));
+        const [automatic, manual] = options;
+        const calories = requiredMealInput(host, '.nutrition-editor__input--calories input');
+        const fiber = requiredMealInput(host, '.nutrition-editor__input--fiber input');
+        const alcohol = requiredMealInput(host, '.nutrition-editor__input--alcohol input');
+        expect(automatic.getAttribute('aria-checked')).toBe('true');
+        expect(calories.readOnly).toBe(true);
+
+        manual.click();
+        fixture.detectChanges();
+        expect(manual.getAttribute('aria-checked')).toBe('true');
+        expect(calories.readOnly).toBe(false);
+        expect([calories.value, fiber.value, alcohol.value]).toEqual([
+            String(totals.calories),
+            String(totals.fiber),
+            String(totals.alcohol),
+        ]);
+        calories.value = '280';
+        calories.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(calories.value).toBe('280');
+
+        automatic.click();
+        fixture.detectChanges();
+        expect(calories.readOnly).toBe(true);
+        expect(calories.value).toBe(String(totals.calories));
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+    });
+});
+
+function renderRecognizedMeal(fixture: ComponentFixture<MealManageFormComponent>): void {
+    const section = fixture.debugElement.query(By.directive(MealItemsSectionComponent)).componentInstance as MealItemsSectionComponent;
+    section.mealRecognized.emit({
+        source: 'Photo',
+        imageUrl: 'https://images.example.test/salmon.jpg',
+        recognizedAtUtc: '2026-05-21T12:30:00Z',
+        items: [
+            {
+                nameEn: 'Grilled salmon',
+                amount: PRODUCT_AMOUNT,
+                unit: 'g',
+                calories: TOTAL_CALORIES,
+                proteins: 25,
+                fats: 18,
+                carbs: 0,
+                fiber: 0,
+                alcohol: 0,
+            },
+        ],
+    });
+    fixture.detectChanges();
+}
+
+function mealWithProduct(id: string, comment: string): Meal {
+    const mealId = entityId<'meal'>(id);
+    return createMeal({
+        id: mealId,
+        comment,
+        items: [
+            {
+                id: entityId<'meal-item'>('apple-item'),
+                mealId,
+                amount: productQuantityFromStored(PRODUCT_AMOUNT),
+                sourceType: MealSourceType.Product,
+                product: { ...createEmptyProductSnapshot(), id: entityId<'product'>('apple'), name: 'Apple' },
+                recipe: null,
+            },
+        ],
+    });
+}
+
+function captureMealDevelopment(screens: MealDevelopmentScreen[]): MealDevelopmentTools {
+    return {
+        attach: screen => {
+            screens.push(screen);
+            return (): void => undefined;
+        },
+    };
+}
+
+function mealPhotoControl(fixture: ComponentFixture<MealManageFormComponent>): ImageUploadFieldComponent {
+    return fixture.debugElement.query(By.directive(MealGeneralInfoComponent)).query(By.directive(ImageUploadFieldComponent))
+        .componentInstance as ImageUploadFieldComponent;
+}
+
+function requiredMealButton(host: HTMLElement, selector: string): HTMLButtonElement {
+    const button = host.querySelector(selector);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error(`Expected meal editor button ${selector}`);
+    }
+    return button;
+}
+
+function requiredMealInput(host: HTMLElement, selector: string): HTMLInputElement {
+    const input = host.querySelector(selector);
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error(`Expected meal editor input ${selector}`);
+    }
+    return input;
+}

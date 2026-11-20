@@ -29,13 +29,14 @@ export class IdleSelectivePreloadingStrategy implements PreloadingStrategy {
         }
 
         const requiresAuth = (route.canActivate?.length ?? 0) > 0;
-        if (requiresAuth && !this.authService.isAuthenticated()) {
+        const canPreload = (): boolean => !requiresAuth || this.authService.isAuthenticated();
+        if (!canPreload()) {
             return EMPTY;
         }
 
         return from(this.waitForPageReadyAsync()).pipe(
             switchMap(() => from(this.waitForIdleAsync())),
-            switchMap(() => load()),
+            switchMap(() => (canPreload() ? load() : EMPTY)),
         );
     }
 

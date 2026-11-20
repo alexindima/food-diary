@@ -1,13 +1,13 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
-import { imageSelection } from '../../../shared/models/image-upload.data';
+import { type ImageSelection, imageSelection } from '../../../shared/models/image-upload.data';
 import { PrivacyConsentFacade } from '../../../shared/privacy/privacy-consent.facade';
 import { ImageUploadFieldComponent } from './image-upload-field';
 
@@ -32,6 +32,10 @@ type ImageUploadFieldTestContext = {
 const TINY_MAX_SIZE_MB = 0.000001;
 const CROP_SHIFTED_X = 20;
 const PREVIEW_URL = 'blob:image-upload-preview';
+const DECODE_URL = 'blob:image-upload-decode';
+const RESIZE_LIMIT = 1200;
+const LARGE_IMAGE_SIZE = { width: 2400, height: 1200 };
+const RESIZED_IMAGE_SIZE = { width: 1200, height: 600 };
 
 beforeEach(() => {
     vi.spyOn(URL, 'createObjectURL').mockReturnValue(PREVIEW_URL);
@@ -40,6 +44,7 @@ beforeEach(() => {
 
 afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
 });
 
 async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext> {
@@ -84,6 +89,14 @@ function selectFiles(host: HTMLElement, ...files: File[]): void {
     input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
+function dropFiles(host: HTMLElement, ...files: File[]): void {
+    const dropzone = requireElement(host, '.image-upload-field__dropzone', HTMLElement);
+    // jsdom has no native drag data store, so provide only the files visible to the drop event.
+    const event = new Event('drop', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'dataTransfer', { value: { files } });
+    dropzone.dispatchEvent(event);
+}
+
 describe('ImageUploadFieldComponent control value', () => {
     it('writes value and disabled state', async () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
@@ -95,6 +108,29 @@ describe('ImageUploadFieldComponent control value', () => {
 
         expect(component['selection']()).toEqual(imageSelection('https://example.com/image.jpg', 'asset-1'));
         expect(component.disabled()).toBe(true);
+    });
+});
+
+describe('ImageUploadFieldComponent stored initial selection', () => {
+    it.each([
+        imageSelection('https://example.test/stored-photo.png', null),
+        imageSelection(null, 'stored-asset'),
+        imageSelection(null, null),
+    ])('restores a $kind selection without uploading', async restored => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const published = vi.fn<(selection: ImageSelection | null) => void>();
+        component.imageChanged.subscribe(published);
+        fixture.componentRef.setInput('initialSelection', restored);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+
+        if (restored.kind === 'empty') {
+            expect(published).not.toHaveBeenCalled();
+        } else {
+            expect(published).toHaveBeenCalledExactlyOnceWith(restored);
+        }
+        expect(host.querySelector('img.image-upload-field__preview')?.getAttribute('src') ?? null).toBe(restored.url);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
 });
 
@@ -152,6 +188,133 @@ describe('ImageUploadFieldComponent upload', () => {
     });
 });
 
+describe('ImageUploadFieldComponent configured file types', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it.each(['file picker', 'drop'] as const)('rejects an image outside the configured crop formats from %s', async origin => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const previous = imageSelection('https://example.test/saved.png', 'saved-avatar');
+        const preparing = vi.fn<(url: string) => void>();
+        component.imagePreparationStarted.subscribe(preparing);
+        component.value.set(previous);
+        fixture.componentRef.setInput('acceptedTypes', 'image/png,image/jpeg,image/webp');
+        fixture.componentRef.setInput('cropEnabled', true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const file = new File(['GIF89a'], 'animated.gif', { type: 'image/gif' });
+
+        const choose = origin === 'file picker' ? selectFiles : dropFiles;
+        choose(host, file);
+        fixture.detectChanges();
+
+        expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES');
+        expect(host.querySelector('dialog')).toBeNull();
+        expect(component.value()).toEqual(previous);
+        expect(preparing).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+describe('ImageUploadFieldComponent resizing selected photos', () => {
+    it.each([
+        ['image/jpeg', 'photo.jpg'],
+        ['image/png', 'photo.png'],
+    ] as const)('fits a large %s to the configured dimensions and preserves its format and name', async (type, name) => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, image, revokeObjectUrl } = prepareNativeResize(fixture);
+        const drawImage = vi.fn<CanvasRenderingContext2D['drawImage']>();
+        const fillRect = vi.fn<CanvasRenderingContext2D['fillRect']>();
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage, fillRect } as unknown as CanvasRenderingContext2D);
+        const resized = new Blob(['resized bytes'], { type });
+        const toBlob = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(resized);
+        });
+        const file = new File(['source bytes'], name, { type, lastModified: 100 });
+
+        selectFiles(host, file);
+        expect(image.src).toBe(DECODE_URL);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        image.dispatchEvent(new Event('load'));
+
+        await vi.waitFor(() => {
+            expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(
+                expect.objectContaining({ name, type, size: resized.size, lastModified: file.lastModified }),
+            );
+        });
+        const { width, height } = RESIZED_IMAGE_SIZE;
+        expect(drawImage).toHaveBeenCalledExactlyOnceWith(image, 0, 0, width, height);
+        expect(toBlob).toHaveBeenCalledExactlyOnceWith(expect.any(Function), type, component.resizeQuality());
+        if (type === 'image/jpeg') {
+            expect(fillRect).toHaveBeenCalledExactlyOnceWith(0, 0, width, height);
+        } else {
+            expect(fillRect).not.toHaveBeenCalled();
+        }
+        expect(revokeObjectUrl).toHaveBeenCalledExactlyOnceWith(DECODE_URL);
+        fixture.destroy();
+        expect(revokeObjectUrl).toHaveBeenLastCalledWith(PREVIEW_URL);
+    });
+
+    it.each(['decode', 'export'] as const)('uploads the original photo after a %s failure', async stage => {
+        const { fixture, imageUploadService, logger } = await setupImageUploadFieldAsync();
+        const { host, image, revokeObjectUrl } = prepareNativeResize(fixture);
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+        vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(null);
+        });
+        const file = new File(['original bytes'], 'photo.png', { type: 'image/png' });
+
+        selectFiles(host, file);
+        image.dispatchEvent(new Event(stage === 'decode' ? 'error' : 'load'));
+
+        await vi.waitFor(() => {
+            expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(file);
+        });
+        expect(logger.warn).toHaveBeenCalledWith('Failed to resize image before upload', expect.any(Error));
+        expect(revokeObjectUrl).toHaveBeenCalledWith(DECODE_URL);
+    });
+
+    it('keeps the original animated GIF without decoding it for resizing', async () => {
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, createObjectUrl } = prepareNativeResize(fixture);
+        const file = new File(['GIF89a'], 'photo.gif', { type: 'image/gif' });
+
+        selectFiles(host, file);
+
+        await vi.waitFor(() => {
+            expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(file);
+        });
+        expect(createObjectUrl).toHaveBeenCalledExactlyOnceWith(file);
+    });
+});
+
+function prepareNativeResize(
+    fixture: ComponentFixture<ImageUploadFieldComponent>,
+    mode: 'single' | 'batch' = 'single',
+): {
+    host: HTMLElement;
+    image: HTMLImageElement;
+    createObjectUrl: MockInstance<typeof URL.createObjectURL>;
+    revokeObjectUrl: MockInstance<typeof URL.revokeObjectURL>;
+} {
+    const image = document.createElement('img');
+    Object.defineProperties(image, {
+        naturalWidth: { value: LARGE_IMAGE_SIZE.width },
+        naturalHeight: { value: LARGE_IMAGE_SIZE.height },
+    });
+    vi.stubGlobal('Image', function createDecodedImage(): HTMLImageElement {
+        return image;
+    });
+    const createObjectUrl = vi.spyOn(URL, 'createObjectURL');
+    if (mode === 'single') {
+        createObjectUrl.mockReturnValueOnce(PREVIEW_URL);
+    }
+    createObjectUrl.mockReturnValueOnce(DECODE_URL);
+    const revokeObjectUrl = vi.spyOn(URL, 'revokeObjectURL');
+    fixture.componentRef.setInput('resizeMaxDimension', RESIZE_LIMIT);
+    fixture.detectChanges();
+    return { host: fixture.nativeElement as HTMLElement, image, createObjectUrl, revokeObjectUrl };
+}
+
 describe('ImageUploadFieldComponent disabled actions', () => {
     it('disables native replacement and deletion while preserving external clear requests', async () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
@@ -170,6 +333,47 @@ describe('ImageUploadFieldComponent disabled actions', () => {
         fixture.componentRef.setInput('clearRequest', 1);
         fixture.detectChanges();
         expect(component.value()).toEqual(imageSelection(null, null));
+    });
+});
+
+describe('ImageUploadFieldComponent chooser lifecycle', () => {
+    it('lets the owner reopen the native picker only when the upload field is available', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const pending = new Subject<ImageSelection>();
+        imageUploadService.upload.mockReturnValueOnce(pending);
+        const previous = imageSelection('https://example.test/saved.png', 'saved');
+        component.value.set(previous);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const picker = requireElement(host, 'input[type="file"]', HTMLInputElement);
+        const openPicker = vi.spyOn(picker, 'click').mockImplementation(() => {});
+
+        component.openFilePicker();
+        expect(openPicker).toHaveBeenCalledOnce();
+        selectFiles(host, new File(['replacement'], 'replacement.png', { type: 'image/png' }));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('[role="status"]')?.textContent).toContain('IMAGE_UPLOAD_FIELD.UPLOADING');
+        });
+        component.openFilePicker();
+        expect(openPicker).toHaveBeenCalledOnce();
+        expect(component.value()).toEqual(previous);
+
+        const replacement = imageSelection('https://example.test/new.png', 'new');
+        pending.next(replacement);
+        pending.complete();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        component.openFilePicker();
+        expect(openPicker).toHaveBeenCalledOnce();
+
+        fixture.componentRef.setInput('disabled', false);
+        fixture.detectChanges();
+        component.openFilePicker();
+
+        expect(openPicker).toHaveBeenCalledTimes(2);
+        expect(component.value()).toEqual(replacement);
+        expect(host.querySelector('img.image-upload-field__preview')?.getAttribute('src')).toBe(replacement.url);
     });
 });
 
@@ -274,6 +478,77 @@ describe('ImageUploadFieldComponent pending preparation', () => {
     });
 });
 
+describe('ImageUploadFieldComponent native preparation ownership', () => {
+    it('discards an earlier decode that settles after the replacement photo has uploaded', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, image: earlier, createObjectUrl, revokeObjectUrl } = prepareNativeResize(fixture);
+        const later = document.createElement('img');
+        Object.defineProperties(later, {
+            naturalWidth: { value: RESIZED_IMAGE_SIZE.width },
+            naturalHeight: { value: RESIZED_IMAGE_SIZE.height },
+        });
+        const decodedImages = [earlier, later];
+        vi.stubGlobal('Image', function nextDecodedImage(): HTMLImageElement {
+            const image = decodedImages.shift();
+            if (image === undefined) {
+                throw new Error('Unexpected image decode');
+            }
+            return image;
+        });
+        const laterPreview = 'blob:replacement-preview';
+        const laterDecode = 'blob:replacement-decode';
+        createObjectUrl.mockReturnValueOnce(laterPreview).mockReturnValueOnce(laterDecode);
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+        const changed = vi.fn<(selection: ImageSelection | null) => void>();
+        component.imageChanged.subscribe(changed);
+        const earlierFile = new File(['first'], 'first.png', { type: 'image/png' });
+        const replacement = new File(['second'], 'replacement.png', { type: 'image/png' });
+
+        selectFiles(host, earlierFile);
+        selectFiles(host, replacement);
+        expect(earlier.src).toBe(DECODE_URL);
+        expect(later.src).toBe(laterDecode);
+        expect(revokeObjectUrl).toHaveBeenCalledWith(PREVIEW_URL);
+        later.dispatchEvent(new Event('load'));
+        await vi.waitFor(() => {
+            expect(changed).toHaveBeenCalledOnce();
+        });
+        earlier.dispatchEvent(new Event('load'));
+        await waitForAsyncTasksAsync();
+
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(replacement);
+        expect(changed).toHaveBeenCalledExactlyOnceWith(component.value());
+        expect(revokeObjectUrl).toHaveBeenCalledWith(DECODE_URL);
+        expect(revokeObjectUrl).toHaveBeenCalledWith(laterDecode);
+    });
+
+    it('cancels a whole pending batch before any presigned request when cleared during decode', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('multiple', true);
+        const files = [new File(['first'], 'first.png', { type: 'image/png' }), new File(['second'], 'second.png', { type: 'image/png' })];
+        fixture.componentRef.setInput('maxFiles', files.length);
+        const { host, image } = prepareNativeResize(fixture, 'batch');
+        const busy = vi.fn<(pending: boolean) => void>();
+        const added = vi.fn<(photos: ImageSelection[]) => void>();
+        component.batchUploading.subscribe(busy);
+        component.imagesAdded.subscribe(added);
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+
+        dropFiles(host, ...files);
+        expect(image.src).toBe(DECODE_URL);
+        expect(busy.mock.calls).toEqual([[true]]);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('clearRequest', 1);
+        fixture.detectChanges();
+        image.dispatchEvent(new Event('load'));
+        await waitForAsyncTasksAsync();
+
+        expect(busy.mock.calls).toEqual([[true], [false]]);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(added).not.toHaveBeenCalled();
+    });
+});
+
 describe('ImageUploadFieldComponent interactions', () => {
     it('removes hidden upload controls from the accessibility tree and tab order', async () => {
         const { fixture } = await setupImageUploadFieldAsync();
@@ -304,17 +579,40 @@ describe('ImageUploadFieldComponent interactions', () => {
 
         expect(clickSpy).not.toHaveBeenCalled();
     });
+});
 
-    it('tracks drag state when enabled', async () => {
-        const { component, fixture } = await setupImageUploadFieldAsync();
-        const preventDefault = vi.fn();
+describe('ImageUploadFieldComponent drag, drop and crop controls', () => {
+    it('clears the drop highlight after leaving or dropping a link and keeps the saved photo', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const saved = imageSelection('https://example.com/saved.jpg', 'saved-photo');
+        const changed = vi.fn();
+        component.imageChanged.subscribe(changed);
+        component.value.set(saved);
+        fixture.detectChanges();
+        const zone = requireElement(fixture.nativeElement as HTMLElement, '.image-upload-field__dropzone', HTMLElement);
+        const draggingClass = 'image-upload-field__dropzone--dragging';
+        const dragOver = new Event('dragover', { bubbles: true, cancelable: true });
+
+        zone.dispatchEvent(dragOver);
+        fixture.detectChanges();
+        expect(dragOver.defaultPrevented).toBe(true);
+        expect(zone.classList.contains(draggingClass)).toBe(true);
+        zone.dispatchEvent(new Event('dragleave', { bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        expect(zone.classList.contains(draggingClass)).toBe(false);
+
+        zone.dispatchEvent(new Event('dragover', { bubbles: true, cancelable: true }));
+        const drop = new Event('drop', { bubbles: true, cancelable: true });
+        Object.defineProperty(drop, 'dataTransfer', { value: { files: [], types: ['text/uri-list'] } });
+        zone.dispatchEvent(drop);
         fixture.detectChanges();
 
-        component['onDragOver']({ preventDefault } as unknown as DragEvent);
-        expect(component['isDragging']()).toBe(true);
-
-        component['onDragLeave']({ preventDefault } as unknown as DragEvent);
-        expect(component['isDragging']()).toBe(false);
+        expect(drop.defaultPrevented).toBe(true);
+        expect(zone.classList.contains(draggingClass)).toBe(false);
+        expect(zone.getAttribute('aria-busy')).toBe('false');
+        expect(requireElement(zone, '.image-upload-field__preview', HTMLImageElement).src).toBe(saved.url);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(changed).not.toHaveBeenCalled();
     });
 
     it('ignores drop and dragover while disabled', async () => {
@@ -425,6 +723,55 @@ describe('ImageUploadFieldComponent multiple uploads', () => {
     });
 });
 
+describe('ImageUploadFieldComponent partial batches and retry', () => {
+    it.each([
+        ['format', new File(['x'], 'unsupported.gif', { type: 'image/gif' }), 'IMAGE_UPLOAD_FIELD.ERRORS.ONLY_IMAGES'],
+        ['size', new File(['too large'], 'oversized.png', { type: 'image/png' }), 'IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE'],
+    ] as const)('keeps the completed photo when a later batch file fails %s validation', async (_failure, rejected, key) => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const added = vi.fn<(photos: ImageSelection[]) => void>();
+        const busy = vi.fn<(pending: boolean) => void>();
+        const hasError = vi.fn<(error: boolean) => void>();
+        component.imagesAdded.subscribe(added);
+        component.batchUploading.subscribe(busy);
+        component.hasErrorChange.subscribe(hasError);
+        const first = new File(['a'], 'first.png', { type: 'image/png' });
+        const next = new File(['b'], 'next.png', { type: 'image/png' });
+        const chosen = [first, rejected, next];
+        fixture.componentRef.setInput('multiple', true);
+        fixture.componentRef.setInput('maxFiles', chosen.length);
+        fixture.componentRef.setInput('acceptedTypes', 'image/png');
+        fixture.componentRef.setInput('maxSizeMb', TINY_MAX_SIZE_MB);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const firstResult = imageSelection('https://example.test/first.png', 'first');
+        const retryResult = imageSelection('https://example.test/next.png', 'next');
+        imageUploadService.upload.mockReturnValueOnce(of(firstResult)).mockReturnValueOnce(of(retryResult));
+
+        dropFiles(host, ...chosen);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe(key);
+        });
+
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(first);
+        expect(added).toHaveBeenCalledExactlyOnceWith([firstResult]);
+        expect(busy.mock.calls).toEqual([[true], [false]]);
+        expect(hasError).toHaveBeenLastCalledWith(true);
+
+        dropFiles(host, next);
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(added).toHaveBeenLastCalledWith([retryResult]);
+        });
+
+        expect(imageUploadService.upload.mock.calls).toEqual([[first], [next]]);
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(busy.mock.calls).toEqual([[true], [false], [true], [false]]);
+        expect(hasError).toHaveBeenLastCalledWith(false);
+    });
+});
+
 describe('ImageUploadFieldComponent health consent', () => {
     it('waits for consent before sending a selected attachment', async () => {
         const { fixture, imageUploadService, privacyConsent } = await setupImageUploadFieldAsync();
@@ -529,11 +876,12 @@ function mockNativeDialogMethods(): () => void {
 async function openCropperAsync(
     fixture: ComponentFixture<ImageUploadFieldComponent>,
     fileName: string,
+    type = 'image/png',
 ): Promise<{ dialog: HTMLDialogElement; apply: HTMLButtonElement; surface: HTMLDivElement; image: HTMLImageElement }> {
     fixture.componentRef.setInput('cropEnabled', true);
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
-    selectFiles(host, new File(['source image'], fileName, { type: 'image/png' }));
+    selectFiles(host, new File(['source image'], fileName, { type }));
     await vi.waitFor(() => {
         fixture.detectChanges();
         expect(host.querySelector('dialog[open]')).not.toBeNull();
@@ -572,11 +920,14 @@ describe('ImageUploadFieldComponent rendered cropper', () => {
 
         const movePointer = 7;
         const resizePointer = 8;
+        const otherFinger = 9;
         const selection = requireElement(surface, '[role="group"]', HTMLElement);
         selection.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: movePointer, clientX: 100, clientY: 80 }));
-        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId: 9, clientX: 140, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId: otherFinger, clientX: 140, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointerup', { pointerId: otherFinger }));
         fixture.detectChanges();
         expect(selection.style.left).toBe('50px');
+        expect(release).not.toHaveBeenCalled();
         surface.dispatchEvent(new PointerEvent('pointermove', { pointerId: movePointer, clientX: 120, clientY: 80 }));
         surface.dispatchEvent(new PointerEvent('pointerup', { pointerId: movePointer }));
         fixture.detectChanges();
@@ -616,7 +967,10 @@ describe('ImageUploadFieldComponent rendered cropper', () => {
         expect(component.value()).toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
         expect(changed).toHaveBeenCalledExactlyOnceWith(component.value());
     });
+});
 
+describe('ImageUploadFieldComponent rendered cropper dismissal', () => {
+    beforeEach(mockNativeDialogMethods);
     it('closes the dialog on native cancel and discards a late canvas result', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         const previous = imageSelection('https://example.test/avatar.png', 'existing');
@@ -640,6 +994,73 @@ describe('ImageUploadFieldComponent rendered cropper', () => {
         expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
     });
 });
+
+describe('ImageUploadFieldComponent reading crop files', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('reports a native file read error and leaves the saved image in place', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, readers } = captureCropReads(fixture);
+        const saved = imageSelection('https://example.test/saved.png', 'saved-avatar');
+        const failed = vi.fn();
+        const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
+        component.value.set(saved);
+        component.imagePreparationFailed.subscribe(failed);
+        fixture.detectChanges();
+
+        selectFiles(host, new File(['source photo'], 'photo.png', { type: 'image/png' }));
+        expect(readers).toHaveLength(1);
+        readers.at(0)?.dispatchEvent(new ProgressEvent('error'));
+        fixture.detectChanges();
+
+        expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.READ_FAILED');
+        expect(host.querySelector('dialog')).toBeNull();
+        expect(component.value()).toEqual(saved);
+        expect(failed).toHaveBeenCalledOnce();
+        expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+
+    it.each(['load', 'error'] as const)('keeps the newer crop open after a stale read emits %s', async event => {
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, readers } = captureCropReads(fixture);
+        selectFiles(host, new File(['first photo'], 'first.png', { type: 'image/png' }));
+        selectFiles(host, new File(['second photo'], 'second.png', { type: 'image/png' }));
+        const [first, second] = readers;
+        expect(readers).toHaveLength(2);
+
+        const completeRead = (reader: FileReader, content: string): void => {
+            Object.defineProperty(reader, 'result', { value: `data:image/png;base64,${content}` });
+            reader.dispatchEvent(new ProgressEvent('load'));
+            fixture.detectChanges();
+        };
+        completeRead(second, 'c2Vjb25k');
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('dialog[open] img')?.getAttribute('src')).toBe('data:image/png;base64,c2Vjb25k');
+        });
+        if (event === 'load') {
+            completeRead(first, 'Zmlyc3Q=');
+        } else {
+            first.dispatchEvent(new ProgressEvent('error'));
+            fixture.detectChanges();
+        }
+
+        expect(host.querySelector('dialog[open] img')?.getAttribute('src')).toBe('data:image/png;base64,c2Vjb25k');
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+function captureCropReads(fixture: ComponentFixture<ImageUploadFieldComponent>): { host: HTMLElement; readers: FileReader[] } {
+    const readers: FileReader[] = [];
+    vi.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementation(function (this: FileReader): void {
+        readers.push(this);
+    });
+    fixture.componentRef.setInput('cropEnabled', true);
+    fixture.detectChanges();
+    return { host: fixture.nativeElement as HTMLElement, readers };
+}
 
 describe('ImageUploadFieldComponent crop failures', () => {
     const cropUrl = 'data:image/png;base64,bm90LWFuLWltYWdl';
@@ -696,24 +1117,74 @@ describe('ImageUploadFieldComponent crop failures', () => {
         expect(component['isProcessingCrop']()).toBe(false);
         expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
+});
 
-    it('reports canvas failures and preserves the saved image instead of leaving the cropper stuck', async () => {
-        const { component, imageUploadService, translateService } = await setupImageUploadFieldAsync();
-        const previousSelection = imageSelection('https://example.com/saved-avatar.png', 'saved-avatar');
-        vi.spyOn(translateService, 'instant').mockReturnValue('Image processing failed');
-        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
-        component.value.set(previousSelection);
-        component['isCropping'].set(true);
-        component['cropImageElement'] = document.createElement('img');
-        component['cropImageBounds'].set({ x: 0, y: 0, width: 100, height: 100 });
-        component['cropSelection'].set({ x: 10, y: 10, width: 50, height: 50 });
+describe('ImageUploadFieldComponent native crop export', () => {
+    beforeEach(mockNativeDialogMethods);
 
-        component['confirmCrop']();
+    it.each(['context', 'resize context', 'blob'] as const)(
+        'shows a crop error and retains the saved image after a %s failure',
+        async failure => {
+            const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+            const saved = imageSelection('https://example.test/saved-avatar.png', 'saved-avatar');
+            const failed = vi.fn();
+            component.value.set(saved);
+            component.imagePreparationFailed.subscribe(failed);
+            const ctx = failure === 'context' ? null : ({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+            const getContext = vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx);
+            if (failure === 'resize context') {
+                const cropLimit = 256;
+                fixture.componentRef.setInput('cropSize', null);
+                fixture.componentRef.setInput('cropMaxSize', cropLimit);
+                getContext.mockReturnValueOnce(ctx).mockReturnValueOnce(null);
+            }
+            vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+                callback(null);
+            });
+            const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
+            const { dialog, apply } = await openCropperAsync(fixture, 'replacement.png');
 
-        expect(component.value()).toEqual(previousSelection);
-        expect(component['isCropping']()).toBe(false);
-        expect(component['isProcessingCrop']()).toBe(false);
-        expect(component['error']()).toBe('Image processing failed');
-        expect(imageUploadService.upload).not.toHaveBeenCalled();
+            apply.click();
+            fixture.detectChanges();
+
+            const host = fixture.nativeElement as HTMLElement;
+            expect(dialog.open).toBe(false);
+            expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+            expect(host.querySelector('img.image-upload-field__preview')?.getAttribute('src')).toBe(saved.url);
+            expect(component.value()).toEqual(saved);
+            expect(failed).toHaveBeenCalledOnce();
+            expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
+            expect(imageUploadService.upload).not.toHaveBeenCalled();
+        },
+    );
+
+    it.each([
+        { maximum: 256, expectedSize: 256 },
+        { maximum: 1024, expectedSize: 600 },
+    ])('uses the JPEG crop dimensions subject to the $maximum pixel cap', async ({ maximum, expectedSize }) => {
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('cropSize', null);
+        fixture.componentRef.setInput('cropMaxSize', maximum);
+        const drawImage = vi.fn<CanvasRenderingContext2D['drawImage']>();
+        const fillRect = vi.fn<CanvasRenderingContext2D['fillRect']>();
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage, fillRect } as unknown as CanvasRenderingContext2D);
+        const blob = new Blob(['cropped photo'], { type: 'image/jpeg' });
+        const exported = vi.fn<(width: number, height: number, type: string | undefined) => void>();
+        vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(function (this: HTMLCanvasElement, callback, type) {
+            exported(this.width, this.height, type);
+            callback(blob);
+        });
+        const { dialog, apply } = await openCropperAsync(fixture, 'portrait.jpg', 'image/jpeg');
+
+        apply.click();
+        fixture.detectChanges();
+
+        const sourceSize = 600;
+        expect(fillRect).toHaveBeenCalledWith(0, 0, sourceSize, sourceSize);
+        expect(exported).toHaveBeenCalledExactlyOnceWith(expectedSize, expectedSize, 'image/jpeg');
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ name: 'portrait.jpg', size: blob.size, type: 'image/jpeg' }),
+        );
+        expect(dialog.open).toBe(false);
     });
 });

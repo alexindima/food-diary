@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, type Type } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, maxLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
-import { skip } from 'rxjs';
+import { finalize, type Observable, skip } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -181,25 +181,21 @@ export class ShoppingListPageComponent {
         if (item === undefined) {
             return;
         }
-        this.dialogService
-            .open<ShoppingItemEditComponent, ShoppingItemEditData, ShoppingListDraftItem>(ShoppingItemEditComponent, {
-                preset: 'form',
-                data: {
-                    productId: item.productId ?? null,
-                    name: item.name,
-                    amount: item.amount ?? null,
-                    unit: item.unit ?? null,
-                    category: item.category ?? null,
-                    note: item.note ?? null,
-                },
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(draft => {
-                if (draft !== undefined && this.list()?.id === listId) {
-                    this.facade.editItem(itemId, draft);
-                }
-            });
+        this.openRouteDialog<ShoppingItemEditComponent, ShoppingItemEditData, ShoppingListDraftItem>(ShoppingItemEditComponent, {
+            preset: 'form',
+            data: {
+                productId: item.productId ?? null,
+                name: item.name,
+                amount: item.amount ?? null,
+                unit: item.unit ?? null,
+                category: item.category ?? null,
+                note: item.note ?? null,
+            },
+        }).subscribe(draft => {
+            if (draft !== undefined && this.list()?.id === listId) {
+                this.facade.editItem(itemId, draft);
+            }
+        });
     }
 
     protected mergeDuplicates(): void {
@@ -209,18 +205,14 @@ export class ShoppingListPageComponent {
         }
         const expected = this.items();
         const plan = planShoppingConsolidation(expected);
-        this.dialogService
-            .open<ShoppingMergePreviewComponent, ShoppingMergeGroup[], boolean>(ShoppingMergePreviewComponent, {
-                preset: 'confirm',
-                data: plan.groups,
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.facade.applyConsolidation(listId, expected, plan.items);
-                }
-            });
+        this.openRouteDialog<ShoppingMergePreviewComponent, ShoppingMergeGroup[], boolean>(ShoppingMergePreviewComponent, {
+            preset: 'confirm',
+            data: plan.groups,
+        }).subscribe(confirmed => {
+            if (confirmed === true) {
+                this.facade.applyConsolidation(listId, expected, plan.items);
+            }
+        });
     }
 
     protected removeItem(itemId: ShoppingListItemId): void {
@@ -275,18 +267,16 @@ export class ShoppingListPageComponent {
             }),
         };
 
-        this.dialogService
-            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                preset: 'confirm',
-                data,
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.facade.deleteListById(entityId<'shopping-list'>(listId));
-                }
-            });
+        this.openRouteDialog<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+            preset: 'confirm',
+            data,
+        }).subscribe(confirmed => {
+            if (confirmed === true) {
+                void this.applyConfirmedListChangeAsync(() => {
+                    this.facade.deleteListById(listId);
+                });
+            }
+        });
     }
 
     protected clearCurrentList(): void {
@@ -317,43 +307,64 @@ export class ShoppingListPageComponent {
             cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
         };
 
-        this.dialogService
-            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                preset: 'confirm',
-                data,
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.facade.clearListById(entityId<'shopping-list'>(listId));
-                }
-            });
+        this.openRouteDialog<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+            preset: 'confirm',
+            data,
+        }).subscribe(confirmed => {
+            if (confirmed === true) {
+                void this.applyConfirmedListChangeAsync(() => {
+                    this.facade.clearListById(listId);
+                });
+            }
+        });
     }
 
-    protected clearPurchased(): void {
+    private async applyConfirmedListChangeAsync(change: () => void): Promise<void> {
+        if (this.isSaving()) {
+            const selectedId = this.list()?.id;
+            const saved = await this.facade.saveBeforeLeaveAsync();
+            if (!saved || this.destroyRef.destroyed || this.list()?.id !== selectedId) {
+                return;
+            }
+        }
+        change();
+    }
+
+    protected async clearPurchasedAsync(): Promise<void> {
         const current = this.list();
+        if (current === null || !this.canClearList() || this.checkedItemsCount() === 0) {
+            return;
+        }
+        if (this.facade.hasUnsavedChanges() && !(await this.facade.saveBeforeLeaveAsync())) {
+            return;
+        }
+        if (this.destroyRef.destroyed || this.list()?.id !== current.id) {
+            return;
+        }
         const ids = this.items()
             .filter(item => item.isChecked)
             .map(item => item.id);
-        if (current === null || ids.length === 0 || this.isLoading() || this.isSaving()) {
+        if (ids.length === 0) {
             return;
         }
+        this.confirmClearPurchased(current.id, ids);
+    }
+
+    private confirmClearPurchased(listId: ShoppingListId, ids: ShoppingListItemId[]): void {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('SHOPPING_LIST.CLEAR_PURCHASED'),
             message: this.translateService.instant('SHOPPING_LIST.CLEAR_PURCHASED_CONFIRM', { count: ids.length }),
             confirmLabel: this.translateService.instant('SHOPPING_LIST.CLEAR_PURCHASED'),
             cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
         };
-        this.dialogService
-            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, { preset: 'confirm', data })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.facade.removePurchased(current.id, ids);
-                }
-            });
+        this.openRouteDialog<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+            preset: 'confirm',
+            data,
+        }).subscribe(confirmed => {
+            if (confirmed === true) {
+                this.facade.removePurchased(listId, ids);
+            }
+        });
     }
 
     protected createNewList(name?: string | void): void {
@@ -369,23 +380,27 @@ export class ShoppingListPageComponent {
         if (listId === null || this.isLoading() || this.isSaving()) {
             return;
         }
-        this.dialogService
-            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
-                preset: 'confirm',
-                data: {
-                    title: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD_TITLE'),
-                    message: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD_MESSAGE'),
-                    confirmLabel: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD'),
-                    cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
-                },
-            })
-            .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.facade.reloadConflict(listId);
-                }
-            });
+        this.openRouteDialog<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+            preset: 'confirm',
+            data: {
+                title: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD_TITLE'),
+                message: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD_MESSAGE'),
+                confirmLabel: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD'),
+                cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
+            },
+        }).subscribe(confirmed => {
+            if (confirmed === true) {
+                this.facade.reloadConflict(listId);
+            }
+        });
+    }
+
+    private openRouteDialog<T, D, R>(component: Type<T>, config: FdUiDialogConfig<D>): Observable<R | undefined> {
+        const dialog = this.dialogService.open<T, D, R>(component, config);
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        return dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose));
     }
 
     protected startShoppingListTour(force = true): void {

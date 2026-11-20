@@ -67,6 +67,20 @@ describe('non-secret session metadata', () => {
         expect(Object.fromEntries(Object.entries(localStorage))).toEqual(shared);
     });
 
+    it('keeps a guest verification update out of the published account metadata', () => {
+        publishBob();
+        localStorage.setItem('emailConfirmed', 'false');
+        localStorage.setItem('mustChangePassword', 'true');
+
+        service.setEmailConfirmed(true);
+        service.setMustChangePassword(false);
+
+        expect(localStorage.getItem('emailConfirmed')).toBe('false');
+        expect(localStorage.getItem('mustChangePassword')).toBe('true');
+        expect(sessionStorage.getItem('emailConfirmed')).toBeNull();
+        expect(sessionStorage.getItem('mustChangePassword')).toBeNull();
+        expect(service.hasForeignSession('alice')).toBe(true);
+    });
     it('does not let an unidentified guest erase another account', () => {
         publishBob();
         service.clearAll();

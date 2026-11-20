@@ -34,12 +34,12 @@ export function buildRecipeDetailViewModel(
     unknownIngredientName: string,
     colors: ChartColorPalette = CHART_COLORS,
 ): RecipeDetailViewModel {
-    const calories = recipeNutrientPerServing(resolveNutrientValue(recipe.totalCalories, recipe.manualCalories), recipe.servings) ?? 0;
-    const proteins = recipeNutrientPerServing(resolveNutrientValue(recipe.totalProteins, recipe.manualProteins), recipe.servings) ?? 0;
-    const fats = recipeNutrientPerServing(resolveNutrientValue(recipe.totalFats, recipe.manualFats), recipe.servings) ?? 0;
-    const carbs = recipeNutrientPerServing(resolveNutrientValue(recipe.totalCarbs, recipe.manualCarbs), recipe.servings) ?? 0;
-    const fiber = recipeNutrientPerServing(resolveFiberValue(recipe), recipe.servings) ?? 0;
-    const alcohol = recipeNutrientPerServing(resolveAlcoholValue(recipe), recipe.servings) ?? 0;
+    const calories = recipeNutrientPerServing(resolveNutrientValue(recipe.totalCalories, recipe.manualCalories), recipe.servings);
+    const proteins = recipeNutrientPerServing(resolveNutrientValue(recipe.totalProteins, recipe.manualProteins), recipe.servings);
+    const fats = recipeNutrientPerServing(resolveNutrientValue(recipe.totalFats, recipe.manualFats), recipe.servings);
+    const carbs = recipeNutrientPerServing(resolveNutrientValue(recipe.totalCarbs, recipe.manualCarbs), recipe.servings);
+    const fiber = recipeNutrientPerServing(resolveFiberValue(recipe), recipe.servings);
+    const alcohol = recipeNutrientPerServing(resolveAlcoholValue(recipe), recipe.servings);
     const macroReferenceValues = [proteins, fats, carbs];
     const macroBlocks = buildMacroBlocks({ proteins, fats, carbs, fiber, alcohol }, macroReferenceValues, colors);
 

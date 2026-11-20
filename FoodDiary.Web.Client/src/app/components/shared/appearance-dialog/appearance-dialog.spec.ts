@@ -6,8 +6,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { UserFacade } from '../../../shared/lib/user.facade';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import type { User } from '../../../shared/models/user.data';
 import { ThemeService } from '../../../shared/theme/theme.service';
-import { AppearanceFacade } from './appearance.facade';
+import { type AppearanceDialogData, AppearanceFacade } from './appearance.facade';
 import { AppearanceDialogComponent } from './appearance-dialog';
 
 let fixture: ComponentFixture<AppearanceDialogComponent>;
@@ -41,25 +43,41 @@ beforeEach(async () => {
             },
         ],
     }).compileComponents();
+});
 
+function renderAppearanceDialog(persistence?: AppearanceDialogData['persistence']): void {
+    if (persistence !== undefined) {
+        TestBed.inject<AppearanceDialogData>(FD_UI_DIALOG_DATA).persistence = persistence;
+    }
     fixture = TestBed.createComponent(AppearanceDialogComponent);
     appearance = fixture.debugElement.injector.get(AppearanceFacade);
     fixture.detectChanges();
+}
+
+it('shows device-only persistence and saves guest preferences without calling the account API', () => {
+    renderAppearanceDialog('local');
+    appearanceButton('.appearance-dialog__swatch--dark').click();
+    appearanceButton('.appearance-dialog__style-preview--modern').click();
+    const glass = Array.from(
+        appearanceRoot().querySelectorAll<HTMLButtonElement>('.appearance-dialog__surface-toggle [role="radio"]'),
+    ).find(option => option.textContent.trim() === 'DASHBOARD.APPEARANCE.SURFACE_GLASS');
+    glass?.click();
+    fixture.detectChanges();
+
+    expect(appearanceRoot().textContent).toContain('DASHBOARD.APPEARANCE.LOCAL_DEVICE_HINT');
+    expect(themeService.setTheme).toHaveBeenCalledWith('dark');
+    expect(themeService.setUiStyle).toHaveBeenCalledWith('modern');
+    expect(themeService.setSurfaceStyle).toHaveBeenCalledWith('glass');
+    expect(glass?.getAttribute('aria-checked')).toBe('true');
+    expect(userService.updateAppearance).not.toHaveBeenCalled();
+    expect(appearance.hasChanges()).toBe(false);
+    expect(appearance.isSaving()).toBe(false);
+    expect(appearance.submitError()).toBeNull();
 });
 
 describe('AppearanceDialogComponent', () => {
-    it('saves guest preferences locally without calling the account API', () => {
-        TestBed.inject<{ persistence?: string }>(FD_UI_DIALOG_DATA).persistence = 'local';
-        appearance.selectTheme('dark');
-        appearance.selectUiStyle('modern');
-        appearance.selectSurfaceStyle('glass');
-        expect(themeService.setTheme).toHaveBeenCalledWith('dark');
-        expect(themeService.setUiStyle).toHaveBeenCalledWith('modern');
-        expect(themeService.setSurfaceStyle).toHaveBeenCalledWith('glass');
-        expect(userService.updateAppearance).not.toHaveBeenCalled();
-        expect(appearance.hasChanges()).toBe(false);
-        expect(appearance.isSaving()).toBe(false);
-        expect(appearance.submitError()).toBeNull();
+    beforeEach(() => {
+        renderAppearanceDialog();
     });
 
     it('applies preview when selecting theme and style', () => {
@@ -123,6 +141,92 @@ describe('AppearanceDialogComponent', () => {
         expect(queuedAppearance).toEqual(expect.objectContaining({ surfaceStyle: 'glass' }));
     });
 });
+
+describe('Appearance dialog account responses', () => {
+    beforeEach(() => {
+        renderAppearanceDialog();
+    });
+
+    it('leaves the selected controls pressed without writing the same preferences again', () => {
+        const ocean = appearanceButton('.appearance-dialog__swatch--ocean');
+        const classic = appearanceButton('.appearance-dialog__style-preview--classic');
+
+        ocean.click();
+        classic.click();
+        appearance.selectSurfaceStyle('unsupported-surface');
+        fixture.detectChanges();
+
+        expect(ocean.getAttribute('aria-pressed')).toBe('true');
+        expect(classic.getAttribute('aria-pressed')).toBe('true');
+        expect(appearance.selectedSurfaceStyle()).toBe('normal');
+        expect(themeService.setSurfaceStyle).not.toHaveBeenCalled();
+        expect(userService.updateAppearance).not.toHaveBeenCalled();
+    });
+
+    it('rolls back a rejected account update and lets the same theme be retried', () => {
+        userService.updateAppearance
+            .mockReturnValueOnce(of(null))
+            .mockReturnValueOnce(of({ ...ACCOUNT_WITHOUT_APPEARANCE, theme: 'dark', uiStyle: 'classic', surfaceStyle: 'normal' }));
+        const ocean = appearanceButton('.appearance-dialog__swatch--ocean');
+        const dark = appearanceButton('.appearance-dialog__swatch--dark');
+
+        dark.click();
+        fixture.detectChanges();
+
+        expect(ocean.getAttribute('aria-pressed')).toBe('true');
+        expect(dark.getAttribute('aria-pressed')).toBe('false');
+        expect(appearanceRoot().querySelector('[role="alert"]')?.textContent).toContain('DASHBOARD.APPEARANCE.ERROR');
+        expect(themeService.syncWithUserPreferences).toHaveBeenLastCalledWith('ocean', 'classic', 'normal');
+
+        dark.click();
+        fixture.detectChanges();
+
+        expect(userService.updateAppearance).toHaveBeenCalledTimes(2);
+        expect(dark.getAttribute('aria-pressed')).toBe('true');
+        expect(appearanceRoot().querySelector('[role="alert"]')).toBeNull();
+        expect(themeService.syncWithUserPreferences).toHaveBeenLastCalledWith('dark', 'classic', 'normal');
+    });
+
+    it('keeps the selected preview when a legacy account response omits appearance fields', () => {
+        userService.updateAppearance.mockReturnValueOnce(of(ACCOUNT_WITHOUT_APPEARANCE));
+        const dark = appearanceButton('.appearance-dialog__swatch--dark');
+
+        dark.click();
+        fixture.detectChanges();
+
+        expect(userService.updateAppearance).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ theme: 'dark', uiStyle: 'classic', surfaceStyle: 'normal' }),
+        );
+        expect(themeService.syncWithUserPreferences).toHaveBeenLastCalledWith('dark', 'classic', 'normal');
+        expect(dark.getAttribute('aria-pressed')).toBe('true');
+        expect(appearance.hasChanges()).toBe(false);
+    });
+});
+
+const ACCOUNT_WITHOUT_APPEARANCE: User = {
+    id: entityId<'user'>('local-appearance-user'),
+    email: null,
+    hasPassword: true,
+    pushNotificationsEnabled: false,
+    fastingPushNotificationsEnabled: false,
+    socialPushNotificationsEnabled: false,
+    fastingCheckInReminderHours: 0,
+    fastingCheckInFollowUpReminderHours: 0,
+    isActive: true,
+    isEmailConfirmed: true,
+};
+
+function appearanceRoot(): HTMLElement {
+    return fixture.nativeElement as HTMLElement;
+}
+
+function appearanceButton(previewSelector: string): HTMLButtonElement {
+    const button = appearanceRoot().querySelector(previewSelector)?.closest('button');
+    if (button === null || button === undefined) {
+        throw new Error(`No appearance button for ${previewSelector}`);
+    }
+    return button;
+}
 
 function createThemeServiceMock(): {
     setTheme: ReturnType<typeof vi.fn>;

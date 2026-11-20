@@ -42,6 +42,7 @@ export class UserManageNotificationsFacade {
     private readonly hasTrackedNotificationsView = signal(false);
     private readonly isEnablingDeviceNotifications = signal(false);
     private readonly invalidReminderFields = new Set<'first' | 'followUp'>();
+    private savedReminderTiming: { userId: User['id']; first: number; followUp: number } | null = null;
 
     public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
     public readonly notificationsChangedVersion = this.notificationService.notificationsChangedVersion;
@@ -88,9 +89,15 @@ export class UserManageNotificationsFacade {
     }
 
     public syncFromUser(user: User): void {
-        this.invalidReminderFields.clear();
-        this.fastingCheckInReminderHours.set(user.fastingCheckInReminderHours);
-        this.fastingCheckInFollowUpReminderHours.set(user.fastingCheckInFollowUpReminderHours);
+        const next = { userId: user.id, first: user.fastingCheckInReminderHours, followUp: user.fastingCheckInFollowUpReminderHours };
+        const saved = this.savedReminderTiming;
+        // Independent preference updates can return the same reminder times while the user is editing them.
+        if (saved?.userId !== next.userId || saved.first !== next.first || saved.followUp !== next.followUp) {
+            this.savedReminderTiming = next;
+            this.invalidReminderFields.clear();
+            this.fastingCheckInReminderHours.set(next.first);
+            this.fastingCheckInFollowUpReminderHours.set(next.followUp);
+        }
 
         if (this.hasTrackedNotificationsView()) {
             return;
@@ -111,7 +118,7 @@ export class UserManageNotificationsFacade {
 
         const nextEnabled = !this.pushNotificationsEnabled();
         const user = await this.facade.updateNotificationPreferencesAsync({ pushNotificationsEnabled: nextEnabled });
-        if (user === null) {
+        if (user === null || !this.isViewActive()) {
             return;
         }
 
@@ -122,6 +129,9 @@ export class UserManageNotificationsFacade {
         }
 
         const result = await this.pushNotifications.ensureSubscriptionAsync();
+        if (!this.isViewActive()) {
+            return;
+        }
         this.handlePushSubscriptionResult(result);
     }
 
@@ -253,28 +263,28 @@ export class UserManageNotificationsFacade {
     }
 
     public async removeConnectedDeviceAsync(subscription: WebPushSubscriptionItem): Promise<void> {
+        const owner = this.facade.user();
         const endpoint = subscription.endpoint;
-        if (endpoint.length === 0 || this.removingConnectedDeviceEndpoint() !== null || this.pushNotificationsBusy()) {
+        if (owner === null || endpoint.length === 0 || this.removingConnectedDeviceEndpoint() !== null || this.pushNotificationsBusy()) {
             return;
         }
 
-        const removed =
-            this.currentSubscriptionEndpoint() === endpoint
-                ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
-                : await this.facade.removeWebPushSubscriptionAsync(endpoint);
+        const currentDevice = this.isCurrentDevice(subscription);
+        const removed = currentDevice
+            ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
+            : await this.facade.removeWebPushSubscriptionAsync(endpoint);
+        if (!this.isCurrentProfileUser(owner)) {
+            return;
+        }
 
         if (!removed) {
-            this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'failed', {
-                currentDevice: this.isCurrentDevice(subscription),
-            });
+            this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'failed', { currentDevice });
             this.toastService.error(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE_ERROR'));
             return;
         }
 
         this.facade.refreshWebPushSubscriptions();
-        this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'success', {
-            currentDevice: this.isCurrentDevice(subscription),
-        });
+        this.frontendObservability.recordNotificationSubscriptionEvent('subscription.remove', 'success', { currentDevice });
         this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVED_TOAST'));
     }
 
@@ -354,7 +364,15 @@ export class UserManageNotificationsFacade {
     }
 
     private isCurrentNotificationUser(user: User): boolean {
-        return this.facade.user()?.id === user.id && this.pushNotificationsEnabled();
+        return this.isCurrentProfileUser(user) && this.pushNotificationsEnabled();
+    }
+
+    private isCurrentProfileUser(user: User): boolean {
+        return this.isViewActive() && this.facade.user()?.id === user.id;
+    }
+
+    private isViewActive(): boolean {
+        return !this.destroyRef.destroyed;
     }
 
     private handleDevicePermissionNotGranted(permission: Exclude<NotificationPermission | 'unsupported', 'granted'>): void {

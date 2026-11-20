@@ -48,6 +48,25 @@ describe('Service worker failure diagnostics', () => {
         expect(record).toHaveBeenCalledTimes(RETRIED_FAILURE_COUNT);
     });
 
+    it('allows an old failure after newer versions evict it from the suppression window', () => {
+        const service = TestBed.inject(ServiceWorkerDiagnosticsService);
+        const recentVersionLimit = 16;
+        const radix = 16;
+        const versions = Array.from({ length: recentVersionLimit }, (_, index) =>
+            (index + 1).toString(radix).padStart(VERSION_HASH_LENGTH, '0'),
+        );
+        for (const version of versions) {
+            service.report('installation', version);
+        }
+        service.report('installation', versions[0]);
+        expect(record).toHaveBeenCalledTimes(recentVersionLimit);
+
+        service.report('installation', VERSION);
+        service.report('installation', versions[0]);
+        service.report('installation', VERSION);
+
+        expect(record.mock.calls).toEqual([...versions, VERSION, versions[0]].map(version => ['installation', version]));
+    });
     it('drops non-hash version data rather than sending URLs or credentials', () => {
         const service = TestBed.inject(ServiceWorkerDiagnosticsService);
         service.report('installation', 'https://private.test/chunk.js?token=secret');

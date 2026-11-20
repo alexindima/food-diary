@@ -1,14 +1,25 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FACTOR_TYPE_LACTATION,
+    CYCLE_FACTOR_TYPE_NO_PERIOD,
+    CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION,
+    CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
+    CYCLE_FACTOR_TYPE_POSTPARTUM,
+    CYCLE_FACTOR_TYPE_PREGNANCY,
     CYCLE_TRACKING_MODE_NO_PERIOD,
+    CYCLE_TRACKING_MODE_PERIMENOPAUSE,
+    CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION,
     CYCLE_TRACKING_MODE_PREGNANCY,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
+    type CycleFactor,
     type CyclePredictions,
     type CycleResponse,
     type MenstrualEpisode,
@@ -170,6 +181,181 @@ describe('CycleSummaryCardComponent', () => {
             expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
         },
     );
+});
+
+describe('CycleSummaryCard prediction presentation', () => {
+    it.each([
+        ['2026-05-08', '2026-05-18', 'Ovulation in 3 days'],
+        ['2026-05-05', '2026-05-18', 'Ovulation in 0 days'],
+        ['2026-05-04', '2026-05-05', 'Period expected today'],
+        ['2026-05-04', '2026-05-08', 'Next period in 3 days'],
+        ['2026-05-04', null, undefined],
+    ] as const)('presents the applicable prediction for ovulation=%s and period=%s', async (ovulation, period, text) => {
+        const { fixture } = await setupComponentAsync({
+            referenceDate: '2026-05-05',
+            predictions: {
+                ovulationFrom: calendarDate(ovulation),
+                nextPeriodStartFrom: period === null ? null : calendarDate(period),
+                confidence: 'Learning',
+                rationale: 'Based on journal data',
+            },
+        });
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            CYCLE_CARD: {
+                OVULATION_IN: 'Ovulation in {{days}} days',
+                NEXT_PERIOD_IN: 'Next period in {{days}} days',
+                NEXT_PERIOD_TODAY: 'Period expected today',
+            },
+        });
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+
+        const card = fixture.nativeElement as HTMLElement;
+        expect(card.querySelector('.cycle-summary-card__status')?.textContent.trim()).toBe(text);
+    });
+
+    it('omits the cycle day and prediction when the reference date is absent', async () => {
+        const { fixture } = await setupComponentAsync({
+            referenceDate: null,
+            predictions: { ovulationFrom: calendarDate('2026-05-08'), confidence: 'High', rationale: '' },
+        });
+        fixture.detectChanges();
+
+        const card = fixture.nativeElement as HTMLElement;
+        expect(card.querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
+        expect(card.querySelector('.cycle-summary-card__status')).toBeNull();
+        expect(card.querySelector('a[href="/cycle-tracking"]')).not.toBeNull();
+    });
+});
+
+describe('CycleSummaryCard recent factors', () => {
+    it('shows the active mode and two newest open factors and omits completed factors', async () => {
+        const cycleProfileId = CYCLE.id;
+        const factors: CycleFactor[] = [
+            {
+                id: entityId<'cycle-factor'>('older'),
+                type: CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION,
+                cycleProfileId,
+                startDate: calendarDate('2026-05-01'),
+            },
+            {
+                id: entityId<'cycle-factor'>('completed'),
+                type: CYCLE_FACTOR_TYPE_PREGNANCY,
+                cycleProfileId,
+                startDate: calendarDate('2026-05-04'),
+                endDate: calendarDate('2026-05-04'),
+            },
+            {
+                id: entityId<'cycle-factor'>('postpartum'),
+                type: CYCLE_FACTOR_TYPE_POSTPARTUM,
+                cycleProfileId,
+                startDate: calendarDate('2026-05-02'),
+                endDate: null,
+            },
+            {
+                id: entityId<'cycle-factor'>('lactation'),
+                type: CYCLE_FACTOR_TYPE_LACTATION,
+                cycleProfileId,
+                startDate: calendarDate('2026-05-03'),
+            },
+        ];
+        const { fixture } = await setupComponentAsync({
+            cycle: { ...CYCLE, mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING, factors },
+            predictions: { confidence: 'Observed', rationale: '' },
+        });
+        fixture.detectChanges();
+
+        const card = fixture.nativeElement as HTMLElement;
+        expect(Array.from(card.querySelectorAll('.cycle-summary-card__pill'), pill => pill.textContent.trim())).toEqual([
+            'CYCLE_TRACKING.MODE_PERIOD_TRACKING',
+            'CYCLE_CARD.CONFIDENCE_UNKNOWN',
+            'CYCLE_TRACKING.FACTOR_LACTATION',
+            'CYCLE_TRACKING.FACTOR_POSTPARTUM',
+        ]);
+    });
+});
+
+describe('Cycle summary factors on the selected day', () => {
+    it('includes factors through their end date and shows planned factors once their start day arrives', async () => {
+        const factors: CycleFactor[] = [
+            {
+                id: entityId<'cycle-factor'>('ending-today'),
+                cycleProfileId: CYCLE.id,
+                type: CYCLE_FACTOR_TYPE_POSTPARTUM,
+                startDate: calendarDate('2026-05-03'),
+                endDate: calendarDate('2026-05-05T00:00:00.000Z'),
+            },
+            {
+                id: entityId<'cycle-factor'>('ending-later'),
+                cycleProfileId: CYCLE.id,
+                type: CYCLE_FACTOR_TYPE_LACTATION,
+                startDate: calendarDate('2026-05-02'),
+                endDate: calendarDate('2026-05-09'),
+            },
+            {
+                id: entityId<'cycle-factor'>('starts-later'),
+                cycleProfileId: CYCLE.id,
+                type: CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION,
+                startDate: calendarDate('2026-05-07T00:00:00.000Z'),
+                endDate: null,
+            },
+            {
+                id: entityId<'cycle-factor'>('already-ended'),
+                cycleProfileId: CYCLE.id,
+                type: CYCLE_FACTOR_TYPE_PREGNANCY,
+                startDate: calendarDate('2026-05-01'),
+                endDate: calendarDate('2026-05-04'),
+            },
+        ];
+        const { fixture } = await setupComponentAsync({ cycle: { ...CYCLE, factors }, referenceDate: '2026-05-05' });
+        fixture.detectChanges();
+        const card = fixture.nativeElement as HTMLElement;
+        const visiblePills = (): string[] =>
+            Array.from(card.querySelectorAll('.cycle-summary-card__pill'), pill => pill.textContent.trim());
+        const mode = 'CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE';
+        expect(visiblePills()).toEqual([mode, 'CYCLE_TRACKING.FACTOR_POSTPARTUM', 'CYCLE_TRACKING.FACTOR_LACTATION']);
+
+        fixture.componentRef.setInput('referenceDate', '2026-05-07');
+        fixture.detectChanges();
+        expect(visiblePills()).toEqual([mode, 'CYCLE_TRACKING.FACTOR_NON_HORMONAL_CONTRACEPTION', 'CYCLE_TRACKING.FACTOR_LACTATION']);
+
+        fixture.componentRef.setInput('referenceDate', '2026-05-01');
+        fixture.detectChanges();
+        expect(visiblePills()).toEqual([mode, 'CYCLE_TRACKING.FACTOR_PREGNANCY']);
+
+        fixture.componentRef.setInput('referenceDate', null);
+        fixture.detectChanges();
+        expect(visiblePills()).toEqual([mode]);
+    });
+
+    it.each([
+        [CYCLE_TRACKING_MODE_PERIMENOPAUSE, CYCLE_FACTOR_TYPE_PERIMENOPAUSE, 'PERIMENOPAUSE'],
+        [CYCLE_TRACKING_MODE_NO_PERIOD, CYCLE_FACTOR_TYPE_NO_PERIOD, 'NO_PERIOD'],
+    ] as const)('shows the configured mode and scheduled factor ending today (%s)', async (mode, type, label) => {
+        const { fixture } = await setupComponentAsync({
+            cycle: {
+                ...CYCLE,
+                mode,
+                factors: [
+                    {
+                        id: entityId<'cycle-factor'>('ends-on-selected-day'),
+                        cycleProfileId: CYCLE.id,
+                        type,
+                        startDate: calendarDate('2026-05-02'),
+                        endDate: calendarDate('2026-05-05'),
+                    },
+                ],
+            },
+        });
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(Array.from(host.querySelectorAll('.cycle-summary-card__pill'), pill => pill.textContent.trim())).toEqual([
+            `CYCLE_TRACKING.MODE_${label}`,
+            `CYCLE_TRACKING.FACTOR_${label}`,
+        ]);
+    });
 });
 
 async function setupComponentAsync(

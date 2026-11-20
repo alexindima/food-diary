@@ -32,9 +32,13 @@ describe('FrontendLoggerService', () => {
         const service = setup();
         const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
         service.warn(MESSAGE, ERROR, { devOnly: true });
+        service.error(MESSAGE, ERROR, { devOnly: true });
 
         expect(warnSpy).not.toHaveBeenCalled();
+        expect(errorSpy).not.toHaveBeenCalled();
     });
 });
 

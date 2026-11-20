@@ -29,6 +29,7 @@ const MAX_KIND_LENGTH = 80;
 const MAX_SEARCH_LENGTH = 200;
 const MAX_ID_LENGTH = 100;
 const NOTIFICATION_FEED_LIMIT = 25;
+const PERIOD_SCREEN_REQUIRED = 'A diary, client dashboard or statistics screen with published filters is required.';
 const SECTIONS = [
     'dashboard',
     'meals',
@@ -204,12 +205,7 @@ export class LocalWebmcpApplicationService {
         const runAsync = async (input: unknown): Promise<unknown> => {
             const value = devRecord(input, ['filters']);
             requireClean();
-            const screen = this.screens.current();
-            const set = screen?.setFiltersAsync ?? screen?.setFilters;
-            if (set === undefined) {
-                throw new DevelopmentToolError('This screen does not publish filters.');
-            }
-            await set(value['filters']);
+            await this.applyScreenFiltersAsync(this.screens.current(), value['filters'], 'This screen does not publish filters.');
             return completeAsync();
         };
         return {
@@ -281,9 +277,10 @@ export class LocalWebmcpApplicationService {
                 );
             }
             const screen = this.requirePeriodScreen();
-            const setFilters = screen.setFiltersAsync ?? screen.setFilters;
-            await setFilters?.(
+            await this.applyScreenFiltersAsync(
+                screen,
                 screen.kind === 'client-dashboard' ? { dateFrom, dateTo, timeZone: value['timeZone'] } : { dateFrom, dateTo },
+                PERIOD_SCREEN_REQUIRED,
             );
             return completeAsync();
         };
@@ -440,13 +437,22 @@ export class LocalWebmcpApplicationService {
 
     private requirePeriodScreen(): DevelopmentScreen {
         const screen = this.screens.current();
-        if (
-            screen === undefined ||
-            !['meal-diary', 'client-dashboard', 'statistics'].includes(screen.kind) ||
-            (screen.setFiltersAsync === undefined && screen.setFilters === undefined)
-        ) {
-            throw new DevelopmentToolError('A diary, client dashboard or statistics screen with published filters is required.');
+        if (screen === undefined || !['meal-diary', 'client-dashboard', 'statistics'].includes(screen.kind)) {
+            throw new DevelopmentToolError(PERIOD_SCREEN_REQUIRED);
         }
         return screen;
+    }
+
+    private async applyScreenFiltersAsync(screen: DevelopmentScreen | undefined, filters: unknown, missingMessage: string): Promise<void> {
+        const setAsync = screen?.setFiltersAsync;
+        if (setAsync !== undefined) {
+            await setAsync(filters);
+            return;
+        }
+        const set = screen?.setFilters;
+        if (set === undefined) {
+            throw new DevelopmentToolError(missingMessage);
+        }
+        set(filters);
     }
 }

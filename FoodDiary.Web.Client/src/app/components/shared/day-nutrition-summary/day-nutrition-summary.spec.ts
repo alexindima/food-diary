@@ -5,6 +5,10 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 import { DayNutritionSummaryComponent } from './day-nutrition-summary';
 
 const originalScrollTo = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollTo');
+const NO_GOAL_DATA = { dailyGoal: 0, dailyConsumed: 500, weeklyConsumed: 0, weeklyGoal: null, nutrientBars: null };
+const SUMMARY_RECT = { x: 20, y: 30, width: 400, height: 400 };
+const INITIAL_NUTRIENT_LABEL_RECT = { x: 460, y: 130, width: 100, height: 32 };
+const MOVED_NUTRIENT_LABEL_RECT = { ...INITIAL_NUTRIENT_LABEL_RECT, y: 200 };
 beforeAll(() => {
     Object.defineProperty(HTMLElement.prototype, 'scrollTo', { configurable: true, value: vi.fn() });
 });
@@ -100,6 +104,97 @@ describe('Day summary keyboard access', () => {
     });
 });
 
+describe('Day summary user interaction and missing goals', () => {
+    it('activates only interactive metrics and ignores held key repeats', async () => {
+        const fixture = await createSummaryAsync();
+        const details = vi.fn();
+        fixture.componentInstance.details.subscribe(details);
+        const nutrient = getElement(fixture, '.day-summary__nutrient--protein');
+        nutrient.click();
+        nutrient.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        expect(details).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('interactive', true);
+        fixture.detectChanges();
+        nutrient.click();
+        const repeat = new KeyboardEvent('keydown', { key: 'Enter', repeat: true, bubbles: true, cancelable: true });
+        nutrient.dispatchEvent(repeat);
+        expect(repeat.defaultPrevented).toBe(true);
+        expect(details).toHaveBeenCalledExactlyOnceWith('protein');
+    });
+
+    it('shows logged calories without filling a goal ring when no goal exists', async () => {
+        const fixture = await createSummaryAsync();
+        fixture.componentRef.setInput('data', NO_GOAL_DATA);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.day-summary__calorie-value')?.textContent.trim()).toBe('500');
+        expect(host.querySelector('.day-summary__calorie-ring')?.getAttribute('stroke-dashoffset')).toBe('100');
+        expect(host.querySelectorAll('.day-summary__nutrient')).toHaveLength(0);
+        expect(host.querySelector('.day-summary__pulse-content')?.textContent).toContain('DASHBOARD.DAY_SUMMARY.PULSE_CALORIES');
+    });
+});
+
+describe('Day summary nutrient connectors', () => {
+    it('updates a connector from measured label geometry and disconnects on teardown', async () => {
+        const observers: SummaryResizeObserver[] = [];
+        class SummaryResizeObserver implements ResizeObserver {
+            public readonly observe = vi.fn<(target: Element) => void>();
+            public readonly unobserve = vi.fn<(target: Element) => void>();
+            public readonly disconnect = vi.fn();
+
+            public constructor(private readonly callback: ResizeObserverCallback) {
+                observers.push(this);
+            }
+
+            public notify(): void {
+                this.callback([], this);
+            }
+        }
+        vi.stubGlobal('ResizeObserver', SummaryResizeObserver);
+
+        try {
+            const fixture = await createSummaryAsync();
+            const host = fixture.nativeElement as HTMLElement;
+            const chart = getElement(fixture, '.day-summary__visual');
+            const protein = getElement(fixture, '.day-summary__nutrient--protein');
+            const observer = observers.find(candidate => candidate.observe.mock.calls.some(([observed]) => observed === chart));
+            if (observer === undefined) {
+                throw new Error('Expected a resize observer for the nutrient contour');
+            }
+            expect(observer.observe).toHaveBeenCalledWith(protein);
+            expect(observer.observe).toHaveBeenCalledWith(chart.parentElement);
+            expect(host.querySelector('.day-summary__connector')).toBeNull();
+
+            vi.spyOn(chart, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect(SUMMARY_RECT));
+            const labelBounds = vi.spyOn(protein, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect(INITIAL_NUTRIENT_LABEL_RECT));
+            observer.notify();
+            fixture.detectChanges();
+            const connector = host.querySelector('.day-summary__connector');
+            if (connector === null) {
+                throw new Error('Expected a connector after the chart becomes measurable');
+            }
+            const firstLabelEndY = connector.getAttribute('y1');
+            const anchorY = connector.getAttribute('y2');
+            expect(firstLabelEndY).not.toBeNull();
+            expect(anchorY).not.toBeNull();
+            expect(Number.isFinite(Number(firstLabelEndY))).toBe(true);
+            expect(Number.isFinite(Number(anchorY))).toBe(true);
+
+            labelBounds.mockReturnValue(DOMRect.fromRect(MOVED_NUTRIENT_LABEL_RECT));
+            observer.notify();
+            fixture.detectChanges();
+            expect(connector.getAttribute('y1')).not.toBe(firstLabelEndY);
+            expect(connector.getAttribute('y2')).toBe(anchorY);
+
+            fixture.destroy();
+            expect(observer.disconnect).toHaveBeenCalledOnce();
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+});
+
 describe('Day summary pulse navigation', () => {
     it('synchronizes the counter and announcement with native scrolling in both directions', async () => {
         const fixture = await createSummaryAsync();
@@ -169,5 +264,96 @@ describe('Day summary pulse navigation', () => {
         expect(controls.textContent).toContain('1 / 1');
         expect(announcement.textContent).toContain('DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE');
         expect(viewport.children).toHaveLength(1);
+    });
+});
+
+describe('Day summary nutrition and geometry fallbacks', () => {
+    it('shows both the reached calorie goal and the exceeded nutrient target', async () => {
+        const insightCount = 3;
+        const targetCalories = 2_000;
+        const proteinTarget = 80;
+        const proteinConsumed = 90;
+        const consumedFiber = 10;
+        const fiberTarget = 25;
+        const fixture = await createSummaryAsync();
+        fixture.componentRef.setInput('data', {
+            mealCount: 1,
+            dailyGoal: targetCalories,
+            dailyConsumed: targetCalories,
+            weeklyConsumed: targetCalories,
+            weeklyGoal: null,
+            nutrientBars: [
+                {
+                    id: 'protein',
+                    label: 'Protein',
+                    current: proteinConsumed,
+                    target: proteinTarget,
+                    unit: 'g',
+                    colorStart: 'green',
+                    colorEnd: 'green',
+                },
+                {
+                    id: 'fiber',
+                    label: 'Fiber',
+                    current: consumedFiber,
+                    target: fiberTarget,
+                    unit: 'g',
+                    colorStart: 'purple',
+                    colorEnd: 'purple',
+                },
+            ],
+        });
+        fixture.detectChanges();
+
+        const pulse = getElement(fixture, '.day-summary__pulse-content');
+        expect(getElement(fixture, '[aria-live="polite"]').textContent).toContain('DASHBOARD.DAY_SUMMARY.TARGET_REACHED');
+        expect(pulse.children).toHaveLength(insightCount);
+        expect(pulse.children[1].textContent).toContain('Protein');
+        expect(pulse.children[1].textContent).toContain('DASHBOARD.DAY_SUMMARY.EXCEEDED_BY');
+        expect(pulse.children[2].textContent).toContain('Fiber');
+        expect(pulse.children[2].textContent).toContain('DASHBOARD.DAY_SUMMARY.REMAINING');
+    });
+
+    it('keeps the active announcement while a responsive pulse has no measurable width', async () => {
+        const viewportWidth = 300;
+        const fixture = await createSummaryAsync();
+        const viewport = getElement(fixture, '.day-summary__pulse-content');
+        const liveRegion = getElement(fixture, '[aria-live="polite"]');
+        Object.defineProperty(viewport, 'clientWidth', { configurable: true, value: viewportWidth });
+        viewport.scrollLeft = viewportWidth;
+        viewport.dispatchEvent(new Event('scroll'));
+        fixture.detectChanges();
+        expect(liveRegion.textContent).toContain('Protein');
+
+        Object.defineProperty(viewport, 'clientWidth', { configurable: true, value: 0 });
+        viewport.scrollLeft = 0;
+        viewport.dispatchEvent(new Event('scroll'));
+        fixture.detectChanges();
+
+        expect(liveRegion.textContent).toContain('Protein');
+        Object.defineProperty(viewport, 'clientWidth', { configurable: true, value: viewportWidth });
+        viewport.dispatchEvent(new Event('scroll'));
+        fixture.detectChanges();
+        expect(liveRegion.textContent).toContain('DASHBOARD.DAY_SUMMARY.PULSE_CALORIES');
+    });
+});
+
+describe('Day summary browser geometry capability', () => {
+    it('renders nutrition and keeps metric controls usable when ResizeObserver is unavailable', async () => {
+        vi.stubGlobal('ResizeObserver', undefined);
+        try {
+            const fixture = await createSummaryAsync();
+            const details = vi.fn();
+            fixture.componentInstance.details.subscribe(details);
+            fixture.componentRef.setInput('interactive', true);
+            fixture.detectChanges();
+
+            expect((fixture.nativeElement as HTMLElement).querySelector('.day-summary__connector')).toBeNull();
+            expect(getElement(fixture, '.day-summary__calorie-value').textContent.trim()).toBe('500');
+            getElement(fixture, '.day-summary__nutrient--protein').click();
+            expect(details).toHaveBeenCalledExactlyOnceWith('protein');
+        } finally {
+            vi.unstubAllGlobals();
+        }
     });
 });

@@ -463,10 +463,11 @@ describe('DashboardFacade request lifecycle', () => {
         expect(facade.loadError()).toBe('DASHBOARD.LOAD_ERROR');
         expect(facade.isLoading()).toBe(false);
         expect(facade.hasSnapshot()).toBe(false);
-        expect(layout.initializeLayout).toHaveBeenCalledWith(null);
+        expect(layout.initializeLayout).not.toHaveBeenCalled();
         facade.reload();
         expect(facade.loadError()).toBeNull();
         expect(facade.snapshot()).toEqual(snapshot);
+        expect(layout.initializeLayout).toHaveBeenCalledExactlyOnceWith(snapshot.dashboardLayout);
     });
 
     it.each(['null', 'error'] as const)('ignores a stale %s after a newer day succeeds', failure => {
@@ -890,6 +891,33 @@ describe('Dashboard water snackbar', () => {
         toast.triggerAction(retry.id);
         expect(hydrationService.deleteEntry).toHaveBeenCalledTimes(2);
         expect(facade.lastHydrationUndo()).toBeNull();
+    });
+});
+
+describe('Dashboard water snackbar update failure', () => {
+    it('restores the last saved undo action when adding another serving fails', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const toast = TestBed.inject(FdUiToastService);
+        const savedAction = toast.toasts().find(item => !item.leaving && item.action === 'HYDRATION_CARD.UNDO');
+        if (savedAction === undefined) {
+            throw new Error('Expected an undo action for the first serving');
+        }
+
+        hydrationService.addEntry.mockReturnValueOnce(throwError(() => new Error('Second serving rejected')));
+        facade.addHydration(SECOND_HYDRATION_AMOUNT_ML);
+        const restored = toast.toasts().find(item => !item.leaving && item.action === 'HYDRATION_CARD.UNDO');
+        if (restored === undefined) {
+            throw new Error('Expected the failed addition to restore the previous undo action');
+        }
+        expect(toast.toasts().some(item => item.message === 'HYDRATION_CARD.ADD_ERROR')).toBe(true);
+        expect(toast.toasts().find(item => item.id === savedAction.id)?.leaving).toBe(true);
+        expect(restored.id).not.toBe(savedAction.id);
+        toast.triggerAction(savedAction.id);
+        expect(hydrationService.deleteEntry).not.toHaveBeenCalled();
+        toast.triggerAction(restored.id);
+        expect(hydrationService.deleteEntry).toHaveBeenCalledExactlyOnceWith(CREATED_WATER_ENTRY.id);
     });
 });
 

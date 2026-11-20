@@ -233,10 +233,13 @@ export class CycleSettingsFacade {
         this.state.settingsError.set(null);
         this.state.isSavingSettings.set(true);
         try {
-            let updatedCycle = await firstValueFrom(
-                this.cyclesService.updateSettings(currentCycle.id, payload).pipe(takeUntilDestroyed(this.destroyRef)),
-            );
-            this.state.cycle.set(updatedCycle);
+            let updatedCycle = currentCycle;
+            if (this.hasSettingsChanges(currentCycle, payload)) {
+                updatedCycle = await firstValueFrom(
+                    this.cyclesService.updateSettings(currentCycle.id, payload).pipe(takeUntilDestroyed(this.destroyRef)),
+                );
+                this.state.cycle.set(updatedCycle);
+            }
             updatedCycle = await this.updateConsentIfChangedAsync(
                 updatedCycle,
                 CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
@@ -258,6 +261,16 @@ export class CycleSettingsFacade {
         } finally {
             this.state.isSavingSettings.set(false);
         }
+    }
+
+    private hasSettingsChanges(cycle: CycleResponse, payload: UpdateCycleSettingsPayload): boolean {
+        // The server derives the legacy mode from an explicit goal or reproductive state.
+        const usesLegacyMode = payload.goal === undefined && payload.reproductiveState === undefined;
+        const persisted: Readonly<Record<string, unknown>> = cycle;
+        const requested: Array<[string, unknown]> = Object.entries(payload);
+        return requested.some(
+            ([field, value]) => (field !== 'mode' || usesLegacyMode) && value !== undefined && value !== persisted[field],
+        );
     }
 
     private buildSettingsPayload(formValue: CycleSettingsFormModel): UpdateCycleSettingsPayload | null {

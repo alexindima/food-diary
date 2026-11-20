@@ -115,3 +115,46 @@ function createNutrition(overrides: { itemName?: string; notes?: string | null }
         ],
     };
 }
+
+describe('incomplete recognition metadata', () => {
+    it('uses the nutrition item name when the recognition has no match or local label', () => {
+        const [mapped] = mapNutritionItemsToAiInputBarItems(createNutrition({ itemName: 'Pear' }), [
+            { ...createVisionItem(), nameLocal: null },
+        ]);
+
+        expect(mapped).toMatchObject({ nameEn: 'Pear', nameLocal: null, calories: CALORIES, confidence: 1 });
+    });
+
+    it('retains a recognized text meal without a comment', () => {
+        const result = buildTextAiInputBarResult({
+            source: 'Text',
+            mealType: null,
+            recognizedAtUtc: RECOGNIZED_AT_UTC,
+            query: 'apple',
+            details: { date: DETAILS.date, time: DETAILS.time },
+            nutrition: createNutrition(),
+            results: [createVisionItem()],
+        });
+
+        expect(result).toMatchObject({ notes: 'apple', comment: null, preMealSatietyLevel: null, postMealSatietyLevel: null });
+    });
+
+    it('preserves the legacy asset ID when a saved photo has no URL', () => {
+        const result = buildPhotoAiInputBarResult({
+            mealType: null,
+            recognizedAtUtc: RECOGNIZED_AT_UTC,
+            selection: imageSelection(null, 'asset-1'),
+            details: { date: DETAILS.date, time: DETAILS.time },
+            nutrition: createNutrition(),
+            results: [createVisionItem()],
+        });
+
+        expect(result).toMatchObject({
+            imageAssetId: 'asset-1',
+            imageUrl: null,
+            notes: null,
+            comment: null,
+            items: [expect.objectContaining({ nameEn: 'Apple', calories: CALORIES })],
+        });
+    });
+});

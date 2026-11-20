@@ -92,6 +92,19 @@ describe('Push notification read receipts', () => {
         });
     });
 
+    it('restores the valid compact receipt from saved data with stale entries', async () => {
+        const storageKey = 'webPushPendingReads:user-a';
+        const foreignKey = 'webPushPendingReads:user-b';
+        localStorage.setItem(storageKey, JSON.stringify(['legacy-invalid-id', firstId.replaceAll('-', '')]));
+        localStorage.setItem(foreignKey, JSON.stringify([secondId]));
+        configure();
+
+        await vi.waitFor(() => {
+            expect(notifications.markAsRead).toHaveBeenCalledExactlyOnceWith(firstId);
+            expect(localStorage.getItem(storageKey)).toBeNull();
+        });
+        expect(localStorage.getItem(foreignKey)).toBe(JSON.stringify([secondId]));
+    });
     it('recovers a persisted click after the application restarts', async () => {
         owner.set(null);
         configure();

@@ -84,6 +84,7 @@ const telegram = { initializeAsync: vi.fn(), getInitData: vi.fn() };
 const backupEmailFlow = { startAsync: vi.fn(), markSent: vi.fn(), read: vi.fn().mockReturnValue(null), clear: vi.fn() };
 const browser = { open: vi.fn() };
 const STATE_LENGTH = 43;
+const BACKUP_EMAIL_RECORD_TTL_MS = 900_000;
 
 function createStorageMock(session: Map<string, unknown>): Pick<BrowserStorageService, 'getJson' | 'setJson' | 'removeItem'> {
     return {
@@ -300,6 +301,69 @@ describe('ProfileManageFacade backup email', () => {
     });
 });
 
+describe('Profile bootstrap after a backup-email return', () => {
+    it('restores the previously sent address and its resend window without replacing the account email', () => {
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: { ...user, email: null, hasTelegramIdentity: true } }));
+        const sentAt = Date.now();
+        const address = 'pending@example.test';
+        const pending: NonNullable<ReturnType<TelegramBackupEmailFlowService['read']>> = {
+            userId: user.id,
+            email: address,
+            state: null,
+            expiresAt: sentAt + BACKUP_EMAIL_RECORD_TTL_MS,
+            sentAt,
+            failed: false,
+        };
+        backupEmailFlow.read.mockReturnValueOnce(pending);
+
+        facade.initialize();
+
+        expect(facade.backupEmailSentTo()).toBe(address);
+        expect(facade.backupEmailResendAt()).toBeGreaterThan(sentAt);
+        expect(facade.user()?.email).toBeNull();
+        expect(authService.requestTelegramBackupEmail).not.toHaveBeenCalled();
+    });
+
+    it('shows a failed verification return once and allows reopening with the account intact', () => {
+        const failed: NonNullable<ReturnType<TelegramBackupEmailFlowService['read']>> = {
+            userId: user.id,
+            email: 'pending@example.test',
+            state: null,
+            expiresAt: Date.now() + BACKUP_EMAIL_RECORD_TTL_MS,
+            sentAt: null,
+            failed: true,
+        };
+        backupEmailFlow.clear.mockClear();
+        backupEmailFlow.read.mockReturnValueOnce(failed).mockReturnValueOnce(failed);
+
+        facade.initialize();
+        expect(facade.globalError()).toBe('USER_MANAGE.BACKUP_EMAIL_ERROR');
+        expect(facade.backupEmailSentTo()).toBeNull();
+        expect(facade.user()).toEqual(user);
+        expect(backupEmailFlow.clear).toHaveBeenCalledOnce();
+        facade.initialize();
+        expect(facade.globalError()).toBeNull();
+        expect(facade.user()).toEqual(user);
+    });
+});
+
+describe('Profile overview read recovery', () => {
+    it.each(['empty', 'unavailable'] as const)('reports an %s overview and clears it after the account loads', failure => {
+        userService.getOverview.mockReturnValueOnce(
+            failure === 'empty' ? of(null) : throwError(() => new Error('Profile temporarily unavailable')),
+        );
+
+        facade.initialize();
+        expect(facade.user()).toBeNull();
+        expect(facade.globalError()).toBe('USER_MANAGE.LOAD_ERROR');
+        expect(localizationService.applyLanguagePreferenceAsync).not.toHaveBeenCalled();
+        facade.initialize();
+        expect(facade.user()).toEqual(user);
+        expect(facade.globalError()).toBeNull();
+        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenCalledOnce();
+    });
+});
+
 describe('ProfileManageFacade account actions', () => {
     it('offers the configured confirmations and keeps the user in their profile', async () => {
         const linked = { ...user, hasTelegramIdentity: true, hasGoogleIdentity: true, hasPassword: true };
@@ -352,6 +416,26 @@ describe('ProfileManageFacade password and deletion actions', () => {
         );
         expect(facade.user()?.hasPassword).toBe(true);
         expect(authService.onLogoutAsync).toHaveBeenCalledWith(true);
+    });
+});
+
+describe('ProfileManageFacade existing password lifecycle', () => {
+    it.each([
+        { action: 'cancelling', changed: false, dialogCount: 1, logoutCount: 0 },
+        { action: 'changing', changed: true, dialogCount: 2, logoutCount: 1 },
+    ])('keeps the existing account state when $action its password', ({ changed, dialogCount, logoutCount }) => {
+        const existing = { ...user, hasPassword: true };
+        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: existing }));
+        facade.initialize();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(changed) });
+
+        facade.openChangePasswordDialog();
+
+        expect(dialogService.open).toHaveBeenCalledTimes(dialogCount);
+        expect(dialogService.open.mock.calls[0][1]).toEqual(expect.objectContaining({ data: { hasPassword: true } }));
+        expect(authService.onLogoutAsync).toHaveBeenCalledTimes(logoutCount);
+        expect(facade.user()).toEqual(existing);
+        expect(facade.globalError()).toBeNull();
     });
 });
 
@@ -417,6 +501,21 @@ describe('ProfileManageFacade notification preferences', () => {
 
         expect(updatedUser).toBeNull();
         expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
+    });
+});
+
+describe('ProfileManageFacade saved language defaults', () => {
+    it('applies the default language preference when the saved profile omits a language', async () => {
+        const savedProfile: User = { ...user, firstName: 'Mira', language: undefined };
+        facade.initialize();
+        userService.update.mockReturnValueOnce(of(savedProfile));
+
+        const saved = await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Mira' }));
+
+        expect(saved).toBe(true);
+        expect(facade.user()).toEqual(savedProfile);
+        expect(localizationService.applyLanguagePreferenceAsync.mock.calls).toEqual([['ru'], [null]]);
+        expect(facade.profileSavedVersion()).toBe(1);
     });
 });
 
@@ -507,5 +606,20 @@ describe('ProfileManageFacade explicit profile save', () => {
         expect(facade.profileSavedVersion()).toBe(0);
         expect(facade.isSavingProfile()).toBe(false);
         expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
+    });
+});
+
+describe('ProfileManageFacade pending overview', () => {
+    it('leaves the initial read running when asked to save without an account baseline', async () => {
+        const result = new Subject<UserProfileOverview | null>();
+        userService.getOverview.mockReturnValueOnce(result);
+        facade.initialize();
+
+        expect(await facade.saveProfileAsync(new UpdateUserDto({ firstName: 'Incomplete profile' }))).toBe(false);
+        expect(userService.update).not.toHaveBeenCalled();
+        expect(result.observed).toBe(true);
+        result.next(overview);
+        result.complete();
+        expect(facade.user()).toEqual(user);
     });
 });

@@ -97,7 +97,7 @@ export class DietologistClientsPageComponent {
     protected readonly selectedClientIds = signal<ReadonlySet<UserId>>(new Set<UserId>());
     protected readonly bulkSending = signal(false);
     private bulkReviewOpen = false;
-    private readonly bulkRequest = signal<{ key: string; fingerprint: string } | null>(null);
+    private readonly pendingBulkRequestKeys = new Map<string, string>();
     protected readonly bulkModel = signal({ text: '' });
     protected readonly bulkForm = form(this.bulkModel, path => {
         required(path.text);
@@ -305,6 +305,9 @@ export class DietologistClientsPageComponent {
             .subscribe({
                 next: () => {
                     this.attentionSignals.update(signals => signals.filter(item => item.id !== attentionSignal.id));
+                    if (this.attentionLoading()) {
+                        this.loadAttentionSignals();
+                    }
                     this.toastService.success(
                         this.translateService.instant(action === 'Snooze' ? 'ATTENTION.SNOOZE_SUCCESS' : 'ATTENTION.ACKNOWLEDGE_SUCCESS'),
                     );
@@ -315,9 +318,8 @@ export class DietologistClientsPageComponent {
 
     private executeBulkRecommendation(clientIds: UserId[], text: string): void {
         const fingerprint = JSON.stringify([text, [...clientIds].sort()]);
-        const previousRequest = this.bulkRequest();
-        const idempotencyKey = previousRequest?.fingerprint === fingerprint ? previousRequest.key : crypto.randomUUID();
-        this.bulkRequest.set({ key: idempotencyKey, fingerprint });
+        const idempotencyKey = this.pendingBulkRequestKeys.get(fingerprint) ?? crypto.randomUUID();
+        this.pendingBulkRequestKeys.set(fingerprint, idempotencyKey);
         this.bulkSending.set(true);
         this.dietologistFacade
             .bulkCreateRecommendations(clientIds, text, idempotencyKey)
@@ -327,7 +329,7 @@ export class DietologistClientsPageComponent {
                     const failedRecipients = result.recipients.filter(recipient => !recipient.succeeded);
                     const failedCount = failedRecipients.length;
                     this.bulkSending.set(false);
-                    this.bulkRequest.set(null);
+                    this.pendingBulkRequestKeys.delete(fingerprint);
                     this.selectedClientIds.set(new Set(failedRecipients.map(recipient => recipient.clientUserId)));
                     if (failedCount === 0) {
                         this.bulkForm().reset({ text: '' });

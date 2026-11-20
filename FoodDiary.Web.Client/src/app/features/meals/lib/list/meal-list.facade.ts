@@ -72,15 +72,31 @@ export class MealListFacade {
 
     public async handleMealDetailsAsync(meal: Meal, filters: MealListStructuredFilters): Promise<boolean> {
         const { MealDetailComponent } = await import('../../components/detail/meal-detail/meal-detail');
-        const result = await firstValueFrom(
-            this.dialogService
-                .open<InstanceType<typeof MealDetailComponent>, Meal, MealDetailActionResult>(MealDetailComponent, {
-                    preset: 'detail',
-                    data: meal,
-                })
-                .afterClosed(),
+        if (this.isDestroyed()) {
+            return false;
+        }
+
+        const dialog = this.dialogService.open<InstanceType<typeof MealDetailComponent>, Meal, MealDetailActionResult>(
+            MealDetailComponent,
+            {
+                preset: 'detail',
+                data: meal,
+            },
         );
-        if (result === undefined) {
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        const result = await firstValueFrom(
+            dialog.afterClosed().pipe(
+                finalize(() => {
+                    if (!this.isDestroyed()) {
+                        unregisterClose();
+                    }
+                }),
+            ),
+            { defaultValue: undefined },
+        );
+        if (result === undefined || this.isDestroyed()) {
             return false;
         }
         if (result.action === 'FavoriteChanged') {
@@ -91,7 +107,7 @@ export class MealListFacade {
             if (result.favoriteChanged) {
                 await firstValueFrom(this.loadOverview(this.currentPageIndex() + 1, filters, true), { defaultValue: undefined });
             }
-            if (this.destroyRef.destroyed) {
+            if (this.isDestroyed()) {
                 return false;
             }
             await this.navigationService.navigateToMealEditAsync(result.id);
@@ -112,6 +128,10 @@ export class MealListFacade {
             );
         }
         return firstValueFrom(this.deleteMeal(result.id, filters, result.favoriteChanged), { defaultValue: false });
+    }
+
+    private isDestroyed(): boolean {
+        return this.destroyRef.destroyed;
     }
 
     public loadInitialOverview(filtersModel: MealListStructuredFilters, page = 1): Observable<void> {

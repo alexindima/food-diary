@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers -- Independent regression examples for portions and calorie basis. */
 import { describe, expect, it } from 'vitest';
 
-import { type Meal, MealSourceType } from '../../../../../shared/models/meal.data';
+import { createEmptyRecipeSnapshot, type Meal, MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../../shared/models/product.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
@@ -231,5 +231,88 @@ describe('buildMealDetailViewModel item preview state', () => {
         expect(viewModel.preMealSatietyMeta.title).toBe('translated:HUNGER_SCALE.LEVEL_0.TITLE');
         expect(viewModel.preMealSatietyMeta.description).toBe('translated:HUNGER_SCALE.LEVEL_0.DESCRIPTION');
         expect(viewModel.postMealSatietyMeta.title).toBe('translated:HUNGER_SCALE.LEVEL_0.TITLE');
+    });
+});
+
+describe('buildMealDetailViewModel historical fields', () => {
+    it('keeps the recipe snapshot name and fractional servings when recognition history is absent', () => {
+        const meal = createMeal({
+            mealType: null,
+            aiSessions: undefined,
+            items: [
+                {
+                    id: entityId<'meal-item'>('saved-recipe-item'),
+                    mealId: entityId<'meal'>('meal-1'),
+                    sourceType: MealSourceType.Recipe,
+                    product: null,
+                    recipe: { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('saved-recipe'), name: 'Tomato soup' },
+                    amount: recipeServingsFromStored(1.5),
+                },
+            ],
+        });
+
+        const view = buildMealDetailViewModel(meal, translate);
+
+        expect(view.mealTypeLabel).toBeNull();
+        expect(view.itemPreview).toEqual([{ name: 'Tomato soup', amount: 1.5, unitKey: 'MEAL_DETAIL.SERVINGS_OTHER', unitText: null }]);
+    });
+
+    it('uses the recognized English label when a historical AI item has no localized name', () => {
+        const meal = createMeal({
+            aiSessions: [
+                {
+                    id: 'session-1',
+                    mealId: 'meal-1',
+                    recognizedAtUtc: '2026-05-14T08:05:00Z',
+                    items: [
+                        {
+                            id: 'ai-1',
+                            sessionId: 'session-1',
+                            nameEn: '  Baked apple  ',
+                            amount: 125,
+                            unit: 'g',
+                            calories: 65,
+                            proteins: 0.3,
+                            fats: 0.2,
+                            carbs: 17,
+                            fiber: 3,
+                            alcohol: 0,
+                        },
+                    ],
+                },
+            ],
+        });
+
+        const view = buildMealDetailViewModel(meal, translate);
+
+        expect(view.itemPreview).toEqual([{ name: 'Baked apple', amount: 125, unitKey: 'GENERAL.UNITS.G', unitText: null }]);
+    });
+});
+
+describe('buildMealDetailViewModel satiety text', () => {
+    it('shows the separate recorded levels for hunger before and satiety after the meal', () => {
+        const view = buildMealDetailViewModel(createMeal({ preMealSatietyLevel: 2, postMealSatietyLevel: 4 }), translate);
+
+        expect(view.preMealSatietyMeta).toMatchObject({
+            title: 'translated:HUNGER_BEFORE_SCALE.LEVEL_2.TITLE',
+            description: 'translated:HUNGER_BEFORE_SCALE.LEVEL_2.DESCRIPTION',
+        });
+        expect(view.postMealSatietyMeta).toMatchObject({
+            title: 'translated:SATIETY_AFTER_SCALE.LEVEL_4.TITLE',
+            description: 'translated:SATIETY_AFTER_SCALE.LEVEL_4.DESCRIPTION',
+        });
+    });
+
+    it('normalizes a historical ten-point level and keeps the missing hunger label', () => {
+        const view = buildMealDetailViewModel(createMeal({ preMealSatietyLevel: 0, postMealSatietyLevel: 8 }), translate);
+
+        expect(view.preMealSatietyMeta).toMatchObject({
+            title: 'translated:HUNGER_SCALE.LEVEL_0.TITLE',
+            description: 'translated:HUNGER_SCALE.LEVEL_0.DESCRIPTION',
+        });
+        expect(view.postMealSatietyMeta).toMatchObject({
+            title: 'translated:SATIETY_AFTER_SCALE.LEVEL_4.TITLE',
+            description: 'translated:SATIETY_AFTER_SCALE.LEVEL_4.DESCRIPTION',
+        });
     });
 });

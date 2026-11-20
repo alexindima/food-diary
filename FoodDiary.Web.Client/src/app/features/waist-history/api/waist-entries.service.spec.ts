@@ -1,13 +1,13 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import type { Observable } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../../constants/global-loading-context.tokens';
-import { optionalCalendarDate } from '../../../shared/models/semantics/date-value';
-import { calendarDate } from '../../../shared/models/semantics/date-value';
+import type { WaistHistoryPageSummaryHttpResponse } from '../../../shared/api/sdk/generated/model/waist-history-page-summary-http-response';
+import { calendarDate, optionalCalendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { WaistEntry, WaistEntryFilters } from '../../../shared/models/waist-entry.data';
 import { WaistEntriesService } from './waist-entries.service';
@@ -201,6 +201,63 @@ describe('Summary and failure contracts', () => {
         httpMock.expectOne(() => true).flush(body, { status: 409, statusText: 'Conflict' });
         expect(next).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 409, error: body }));
+    });
+});
+
+describe('Waist history page goal records', () => {
+    it('preserves dates, instants and results for both active and replaced goals', async () => {
+        const dateFrom = calendarDate('2026-03-01');
+        const dateTo = calendarDate('2026-03-08');
+        const transition = '2026-03-08T07:55:00Z';
+        const active = {
+            id: 'waist-current-goal',
+            targetWaistCm: 78.5,
+            startWaistCm: 81,
+            startedAtUtc: transition,
+            status: 'Active',
+        };
+        const replaced = {
+            id: 'waist-previous-goal',
+            targetWaistCm: active.targetWaistCm,
+            startWaistCm: 85,
+            startedAtUtc: '2026-03-01T07:55:00Z',
+            endedAtUtc: transition,
+            endWaistCm: 82,
+            status: 'Replaced',
+        };
+        const wire = {
+            entries: [MOCK_ENTRY],
+            summary: [{ startDate: dateFrom, endDate: dateTo, averageCircumferenceCm: 81 }],
+            heightCm: 175,
+            goal: { desiredWaistCm: active.targetWaistCm, startWaistCm: active.startWaistCm, startedAtUtc: transition },
+            goalHistory: [active, replaced],
+        } satisfies WaistHistoryPageSummaryHttpResponse;
+
+        const pending = firstValueFrom(service.getPageSummary({ dateFrom, dateTo, quantizationDays: 1, entriesLimit: ENTRY_LIMIT }));
+        const request = httpMock.expectOne(candidate => candidate.method === 'GET' && candidate.url === `${BASE_URL}/page-summary`);
+        expect(request.request.params.get('dateFrom')).toBe(dateFrom);
+        expect(request.request.params.get('dateTo')).toBe(dateTo);
+        request.flush(wire);
+
+        await expect(pending).resolves.toEqual({
+            ...wire,
+            goal: { ...wire.goal, startedAtUtc: utcInstant(transition) },
+            goalHistory: [
+                {
+                    ...active,
+                    id: entityId<'waist-goal'>(active.id),
+                    startedAtUtc: utcInstant(transition),
+                    endWaistCm: null,
+                    endedAtUtc: null,
+                },
+                {
+                    ...replaced,
+                    id: entityId<'waist-goal'>(replaced.id),
+                    startedAtUtc: utcInstant(replaced.startedAtUtc),
+                    endedAtUtc: utcInstant(transition),
+                },
+            ],
+        });
     });
 });
 

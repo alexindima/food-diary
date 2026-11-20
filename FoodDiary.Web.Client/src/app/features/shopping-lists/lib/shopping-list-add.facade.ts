@@ -51,10 +51,13 @@ export class ShoppingListAddFacade {
         }
         this.busy.set(true);
         this.message.set(null);
+        const scope = this.scope;
         try {
             await this.chooseTargetAsync();
         } catch {
-            this.message.set('PUBLIC_RECIPES.SHOPPING_ERROR');
+            if (this.isCurrent(scope)) {
+                this.message.set('PUBLIC_RECIPES.SHOPPING_ERROR');
+            }
         } finally {
             this.busy.set(false);
         }
@@ -96,7 +99,7 @@ export class ShoppingListAddFacade {
             this.added.update(keys => new Set([...keys, ...pending.map(entry => `${list.id}:${entry.index}`)]));
             this.message.set('PUBLIC_RECIPES.SHOPPING_SUCCESS');
         } catch {
-            this.message.set('PUBLIC_RECIPES.SHOPPING_ERROR');
+            this.message.update(message => (this.isCurrent(scope) ? 'PUBLIC_RECIPES.SHOPPING_ERROR' : message));
         } finally {
             this.busy.set(false);
         }

@@ -364,8 +364,12 @@ export class PushNotificationService {
         }
         try {
             const { subscription: current, revoked } = await this.readRenewedSubscriptionAsync(oldSubscription, newSubscription, session);
+            this.requireCurrentSession(session);
             if (oldSubscription !== null) {
                 await firstValueFrom(this.notificationService.removeWebPushSubscription(oldSubscription.endpoint));
+                if (this.isCurrentSession(session)) {
+                    this.forgetSubscription(oldSubscription);
+                }
             }
 
             if (revoked) {
@@ -501,14 +505,14 @@ export class PushNotificationService {
             return this.upsertOrReplaceForeignSubscriptionAsync(subscription, session, publicKey, allowPermissionPrompt);
         }
 
+        this.setSubscriptionState(null);
         if (!(await this.revokeBrowserSubscriptionAsync(subscription, session))) {
-            return false;
+            throw new Error('The previous push subscription could not be revoked.');
         }
         await firstValueFrom(this.notificationService.removeWebPushSubscription(subscription.endpoint));
         if (!this.isCurrentSession(session)) {
             return false;
         }
-        this.setSubscriptionState(null);
         const replacement = await this.requestSubscriptionForSessionAsync(publicKey, session, allowPermissionPrompt);
         await this.upsertSubscriptionAsync(replacement, session);
         return true;
@@ -533,15 +537,15 @@ export class PushNotificationService {
 
         // The current owner received an explicit rejection for this endpoint.
         // Rotating that browser subscription stops delivery for its prior owner.
+        this.setSubscriptionState(null);
         if (!(await this.revokeBrowserSubscriptionAsync(subscription, session))) {
-            return false;
+            throw failure;
         }
         if (!this.isCurrentSession(session)) {
             return false;
         }
         this.knownSubscriptions.delete(subscription.endpoint);
         this.currentSubscription = null;
-        this.setSubscriptionState(null);
         if (publicKey === null) {
             throw new Error('A replacement push subscription requires the server public key.');
         }

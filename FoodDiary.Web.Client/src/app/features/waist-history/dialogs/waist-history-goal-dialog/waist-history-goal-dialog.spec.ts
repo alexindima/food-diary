@@ -1,9 +1,12 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form } from '@angular/forms/signals';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
@@ -165,6 +168,65 @@ describe('Waist goal keyboard submission', () => {
         component['cancelGoal']();
         expect(facade.saveDesiredWaist).not.toHaveBeenCalled();
         expect(facade.cancelWaistGoal).not.toHaveBeenCalled();
+    });
+});
+
+describe('Waist goal dialog with the real measurement facade', () => {
+    it('shows a restored invalid target only after interaction and sends the corrected target in centimeters', () => {
+        const close = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [WaistHistoryGoalDialogComponent],
+            providers: [
+                provideTranslateTesting(),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                WaistHistoryFacade,
+                { provide: FdUiDialogRef, useValue: { close } },
+            ],
+        });
+        const facade = TestBed.inject(WaistHistoryFacade);
+        const http = TestBed.inject(HttpTestingController);
+        facade.desiredWaistModel.set({ circumference: '0' });
+        const fixture = TestBed.createComponent(WaistHistoryGoalDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const input = host.querySelector('fd-ui-input input');
+        const formElement = host.querySelector('form');
+        if (!(input instanceof HTMLInputElement) || !(formElement instanceof HTMLFormElement)) {
+            throw new Error('Expected the waist goal form');
+        }
+        const errorKey = 'WAIST_HISTORY.GOAL_VALUE_RANGE';
+        const endpoint = `${environment.apiUrls.users}/desired-waist`;
+
+        expect(host.textContent).not.toContain(errorKey);
+        input.dispatchEvent(new FocusEvent('blur'));
+        fixture.detectChanges();
+        expect(host.textContent).toContain(errorKey);
+        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        http.expectNone(endpoint);
+        expect(close).not.toHaveBeenCalled();
+
+        input.value = '81,5';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(host.textContent).not.toContain(errorKey);
+        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+        const canonicalGoal = 81.5;
+        const goal = { desiredWaistCm: canonicalGoal };
+        const request = http.expectOne({ method: 'PUT', url: endpoint });
+        expect(request.request.body).toEqual(goal);
+        request.flush(goal);
+        http.expectOne(item => item.url === `${environment.apiUrls.waists}/page-summary`).flush({
+            entries: [],
+            summary: [],
+            goal,
+            goalHistory: [],
+        });
+        fixture.detectChanges();
+
+        expect(close).toHaveBeenCalledOnce();
+        http.verify();
     });
 });
 

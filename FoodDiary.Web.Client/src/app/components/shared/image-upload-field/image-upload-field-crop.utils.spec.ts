@@ -99,3 +99,53 @@ describe('image upload crop utils', () => {
         });
     });
 });
+
+describe('initial crop geometry', () => {
+    it('waits for a measurable crop surface before picking a rectangle', () => {
+        expect(
+            calculateContainedImageBounds({
+                surfaceWidth: 0,
+                surfaceHeight: SURFACE_HEIGHT,
+                imageWidth: WIDE_IMAGE_WIDTH,
+                imageHeight: WIDE_IMAGE_HEIGHT,
+            }),
+        ).toBeNull();
+    });
+
+    it.each([
+        [null, { x: 50, y: 0, width: 300, height: 300 }],
+        [2, { x: 0, y: 50, width: 400, height: 200 }],
+    ] as const)('starts centered for the configured aspect ratio %s', (aspectRatio, expected) => {
+        expect(createInitialCropSelection(BOUNDS, aspectRatio)).toEqual(expected);
+    });
+});
+
+describe('crop corner resizing', () => {
+    it('preserves the opposite corner when growing a fixed-ratio rectangle from the northwest', () => {
+        expect(
+            resizeCropSelection({
+                mode: 'resize-nw',
+                rect: { x: 100, y: 80, width: 120, height: 120 },
+                bounds: BOUNDS,
+                dx: -40,
+                dy: -40,
+                aspectRatio: SQUARE_ASPECT_RATIO,
+                minSize: MIN_SIZE,
+            }),
+        ).toEqual({ x: 60, y: 40, width: 160, height: 160 });
+    });
+
+    it('can grow a free rectangle independently in both directions from the southeast', () => {
+        expect(
+            resizeCropSelection({
+                mode: 'resize-se',
+                rect: { x: 100, y: 80, width: 120, height: 100 },
+                bounds: BOUNDS,
+                dx: 40,
+                dy: 30,
+                aspectRatio: null,
+                minSize: MIN_SIZE,
+            }),
+        ).toEqual({ x: 100, y: 80, width: 160, height: 130 });
+    });
+});

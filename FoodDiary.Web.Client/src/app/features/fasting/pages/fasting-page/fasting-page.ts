@@ -5,6 +5,7 @@ import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { EMPTY, type Observable } from 'rxjs';
@@ -15,7 +16,6 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { connectDevelopmentScreen } from '../../../../shared/development/development-tools';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import {
-    CURRENT_SESSION_RECENT_CHECK_INS_LIMIT,
     DEFAULT_CYCLIC_EAT_DAYS,
     DEFAULT_CYCLIC_EAT_FAST_HOURS,
     DEFAULT_CYCLIC_EAT_WINDOW_HOURS,
@@ -100,6 +100,9 @@ export class FastingPageComponent {
     protected readonly isEnding = this.facade.isEnding;
     protected readonly isStarting = this.facade.isStarting;
     protected readonly isUpdatingCycle = this.facade.isUpdatingCycle;
+    protected readonly isSessionMutationPending = computed(
+        () => this.isEnding() || this.facade.isExtending() || this.facade.isReducing() || this.isUpdatingCycle(),
+    );
     protected readonly isSavingCheckIn = this.facade.isSavingCheckIn;
     protected readonly isActive = this.facade.isActive;
     protected readonly currentSession = this.facade.currentSession;
@@ -142,22 +145,7 @@ export class FastingPageComponent {
         return this.visibleHistory().map(session => this.buildHistorySessionViewModel(session));
     });
     protected readonly canLoadMoreHistory = computed(() => this.facade.historyPage() < this.facade.historyTotalPages());
-    protected readonly isCheckInExpanded = signal(false);
     protected readonly expandedHistorySessionId = signal<string | null>(null);
-    protected readonly currentSessionLatestCheckIn = computed(() => this.getCurrentSessionLatestCheckIn());
-    protected readonly currentSessionLatestCheckInView = computed<FastingCheckInViewModel | null>(() => {
-        this.currentLanguage();
-        const checkIn = this.currentSessionLatestCheckIn();
-        return checkIn === null ? null : this.buildCheckInViewModel(checkIn);
-    });
-    protected readonly currentSessionRecentCheckIns = computed(() => {
-        const session = this.currentSession();
-        if (session === null) {
-            return [];
-        }
-
-        return this.getSessionCheckIns(session).slice(0, CURRENT_SESSION_RECENT_CHECK_INS_LIMIT);
-    });
     public constructor() {
         connectDevelopmentScreen({
             kind: 'fasting',
@@ -182,7 +170,6 @@ export class FastingPageComponent {
             }
 
             untracked(() => {
-                this.isCheckInExpanded.set(false);
                 this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
             });
         });
@@ -197,12 +184,15 @@ export class FastingPageComponent {
     }
 
     protected openCheckInForm(): void {
-        this.dialogService
-            .open<FastingCheckInDialogComponent, void, FastingCheckInDialogResult>(FastingCheckInDialogComponent, {
+        const dialog = this.dialogService.open<FastingCheckInDialogComponent, void, FastingCheckInDialogResult>(
+            FastingCheckInDialogComponent,
+            {
                 preset: 'detail',
                 size: 'lg',
                 providers: [{ provide: FastingFacade, useValue: this.facade }],
-            })
+            },
+        );
+        dialog
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
@@ -210,29 +200,32 @@ export class FastingPageComponent {
                     this.facade.resetCheckInDraft();
                 }
             });
+        this.closeDialogOnDestroy(dialog);
     }
 
     protected openSessionManagement(): void {
         const session = this.currentSession();
-        if (session?.endedAtUtc !== null) {
+        if (session?.endedAtUtc !== null || this.isSessionMutationPending()) {
             return;
         }
 
-        this.dialogService
-            .open<FastingEndConfirmDialogComponent, FastingEndConfirmDialogData, FastingEndConfirmDialogResult>(
-                FastingEndConfirmDialogComponent,
-                {
-                    preset: 'confirm',
-                    data: this.getEndConfirmDialogData(session),
-                },
-            )
+        const dialog = this.dialogService.open<
+            FastingEndConfirmDialogComponent,
+            FastingEndConfirmDialogData,
+            FastingEndConfirmDialogResult
+        >(FastingEndConfirmDialogComponent, {
+            preset: 'confirm',
+            data: this.getEndConfirmDialogData(session),
+        });
+        dialog
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (result === 'confirm') {
+                if (result === 'confirm' && !this.isSessionMutationPending()) {
                     this.facade.endFasting();
                 }
             });
+        this.closeDialogOnDestroy(dialog);
     }
 
     protected openProtocolSettings(): void {
@@ -240,45 +233,54 @@ export class FastingPageComponent {
             return;
         }
 
-        this.dialogService.open<FastingProtocolDialogComponent, void, void>(FastingProtocolDialogComponent, {
+        const dialog = this.dialogService.open<FastingProtocolDialogComponent, void, void>(FastingProtocolDialogComponent, {
             preset: 'detail',
             providers: [{ provide: FastingFacade, useValue: this.facade }],
         });
+        this.closeDialogOnDestroy(dialog);
     }
 
     protected openActiveSessionManagement(): void {
-        if (!this.isActive() || this.currentSession()?.planType === 'Intermittent') {
+        if (!this.isActive() || this.currentSession()?.planType === 'Intermittent' || this.isSessionMutationPending()) {
             return;
         }
 
-        this.dialogService.open<FastingSessionManagementDialogComponent, void, void>(FastingSessionManagementDialogComponent, {
-            preset: 'detail',
-            ariaLabel: this.translateService.instant('FASTING.REDESIGN.MANAGE'),
-            providers: [{ provide: FastingFacade, useValue: this.facade }],
-        });
+        const dialog = this.dialogService.open<FastingSessionManagementDialogComponent, void, void>(
+            FastingSessionManagementDialogComponent,
+            {
+                preset: 'detail',
+                ariaLabel: this.translateService.instant('FASTING.REDESIGN.MANAGE'),
+                providers: [{ provide: FastingFacade, useValue: this.facade }],
+            },
+        );
+        this.closeDialogOnDestroy(dialog);
     }
 
     protected openHistory(): void {
-        this.dialogService.open<FastingHistoryDialogComponent, FastingHistoryDialogData, void>(FastingHistoryDialogComponent, {
-            preset: 'detail',
-            data: {
-                historyItems: this.historyItems,
-                canLoadMoreHistory: this.canLoadMoreHistory,
-                isLoadingMoreHistory: this.isLoadingMoreHistory,
-                historyError: this.facade.historyError,
-                onSessionOpen: session => {
-                    this.openSessionDetails(session);
-                },
-                onHistoryLoadMore: () => {
-                    this.loadMoreHistory();
+        const dialog = this.dialogService.open<FastingHistoryDialogComponent, FastingHistoryDialogData, void>(
+            FastingHistoryDialogComponent,
+            {
+                preset: 'detail',
+                data: {
+                    historyItems: this.historyItems,
+                    canLoadMoreHistory: this.canLoadMoreHistory,
+                    isLoadingMoreHistory: this.isLoadingMoreHistory,
+                    historyError: this.facade.historyError,
+                    onSessionOpen: session => {
+                        this.openSessionDetails(session);
+                    },
+                    onHistoryLoadMore: () => {
+                        this.loadMoreHistory();
+                    },
                 },
             },
-        });
+        );
+        this.closeDialogOnDestroy(dialog);
     }
 
     protected openSessionDetails(session: FastingSession): void {
         const checkIns = this.getSessionCheckIns(session);
-        this.dialogService.open<FastingSessionDetailsDialogComponent, FastingSessionDetailsDialogData, void>(
+        const dialog = this.dialogService.open<FastingSessionDetailsDialogComponent, FastingSessionDetailsDialogData, void>(
             FastingSessionDetailsDialogComponent,
             {
                 preset: 'detail',
@@ -294,11 +296,14 @@ export class FastingPageComponent {
                 },
             },
         );
+        this.closeDialogOnDestroy(dialog);
     }
 
-    protected closeCheckInForm(): void {
-        this.isCheckInExpanded.set(false);
-        this.facade.resetCheckInDraft();
+    private closeDialogOnDestroy<T, R>(dialog: FdUiDialogRef<T, R>): void {
+        const unregisterCleanup = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        dialog.afterClosed().subscribe({ complete: unregisterCleanup });
     }
 
     protected startFastingTour(force = true): void {
@@ -384,22 +389,14 @@ export class FastingPageComponent {
         }
     }
 
-    protected getHistoryProtocolLabel(protocol: string): string {
-        const option = FASTING_PROTOCOLS.find(item => item.value === protocol);
-        return option === undefined ? protocol : this.translateService.instant(option.labelKey);
-    }
-
     protected getHistorySessionTypeLabel(session: FastingSession): string {
         if (session.planType === 'Cyclic') {
             return this.translateService.instant('FASTING.CYCLIC_TYPE');
         }
 
         const option = FASTING_PROTOCOLS.find(item => item.value === session.protocol);
-        if (option === undefined) {
-            return this.translateService.instant('FASTING.EXTENDED_TYPE');
-        }
-
-        return this.translateService.instant(option.category === 'intermittent' ? 'FASTING.INTERMITTENT_TYPE' : 'FASTING.EXTENDED_TYPE');
+        const isIntermittent = option === undefined ? session.planType === 'Intermittent' : option.category === 'intermittent';
+        return this.translateService.instant(isIntermittent ? 'FASTING.INTERMITTENT_TYPE' : 'FASTING.EXTENDED_TYPE');
     }
 
     protected getHistoryProtocolDisplay(session: FastingSession): string {
@@ -472,19 +469,6 @@ export class FastingPageComponent {
         });
     }
 
-    protected hasCurrentSessionTimeline(): boolean {
-        return this.currentSessionRecentCheckIns().length > 0;
-    }
-
-    protected getCurrentSessionOlderCheckInsCount(): number {
-        const session = this.currentSession();
-        if (session === null) {
-            return 0;
-        }
-
-        return Math.max(0, this.getSessionCheckIns(session).length - this.currentSessionRecentCheckIns().length);
-    }
-
     protected getSessionCheckIns(session: FastingSession): FastingCheckIn[] {
         if (session.checkIns.length > 0) {
             return session.checkIns;
@@ -544,16 +528,6 @@ export class FastingPageComponent {
 
     private getIntermittentRatioLabel(fastHours: number): string {
         return `${fastHours}:${HOURS_PER_DAY - fastHours}`;
-    }
-
-    private getCurrentSessionLatestCheckIn(): FastingCheckIn | null {
-        const session = this.currentSession();
-        if (session === null) {
-            return null;
-        }
-
-        const checkIns = this.getSessionCheckIns(session);
-        return checkIns.length > 0 ? (checkIns[0] ?? null) : null;
     }
 
     private getSymptomLabel(symptom: string): string {

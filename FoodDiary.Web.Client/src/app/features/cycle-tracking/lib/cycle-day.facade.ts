@@ -108,9 +108,13 @@ export class CycleDayFacade {
             savedToServer = true;
             this.applySavedDay(day, clearFertilitySignal);
             await this.refreshPredictionsAsync();
+            this.state.setRefreshError(null);
         } catch {
-            this.state.dayError.set(savedToServer ? 'CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED' : 'CYCLE_TRACKING.SAVE_DAY_FAILED');
-            return;
+            if (!savedToServer) {
+                this.state.dayError.set('CYCLE_TRACKING.SAVE_DAY_FAILED');
+                return;
+            }
+            this.state.setRefreshError('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
         } finally {
             this.state.isSavingDay.set(false);
         }

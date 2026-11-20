@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -29,10 +29,12 @@ type RequiredPasswordChangeFormModel = {
 export class RequiredPasswordChangeComponent {
     private readonly userFacade = inject(UserFacade);
     private readonly authService = inject(AuthService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly navigationService = inject(NavigationService);
     private readonly translateService = inject(TranslateService);
 
     private changedPassword: string | null = null;
+    private logoutRequested = false;
     protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
     protected readonly isSubmitting = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
@@ -57,44 +59,67 @@ export class RequiredPasswordChangeComponent {
     }
 
     protected logout(): void {
+        this.logoutRequested = true;
+        this.changedPassword = null;
         void this.authService.onLogoutAsync();
     }
 
     private async submitAsync(): Promise<void> {
         this.form().markAsTouched();
-        if (this.form().invalid() || this.isSubmitting()) {
+        if (this.form().invalid() || this.isSubmitting() || !this.isPageActive()) {
             return;
         }
 
         this.isSubmitting.set(true);
         this.errorMessage.set(null);
-        const value = this.formModel();
         try {
-            if (this.changedPassword === null) {
-                const success = await firstValueFrom(
-                    this.userFacade.changePassword({
-                        currentPassword: value.currentPassword,
-                        newPassword: value.newPassword,
-                    }),
-                );
-                if (!success) {
-                    this.errorMessage.set(this.translateService.instant('AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'));
-                    return;
-                }
-                this.changedPassword = value.newPassword;
+            const password = this.changedPassword ?? (await this.persistPasswordAsync(this.formModel()));
+            if (password === null || !this.isPageActive()) {
+                return;
             }
-            await this.authService.completeRequiredPasswordChangeAsync(this.changedPassword);
-            await this.navigationService.navigateToHomeAsync();
+            await this.authService.completeRequiredPasswordChangeAsync(password);
+            if (this.isPageActive()) {
+                await this.navigationService.navigateToHomeAsync();
+            }
         } catch (error: unknown) {
-            const key =
-                error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
-                    ? 'FORM_ERRORS.RATE_LIMITED'
-                    : this.changedPassword === null
-                      ? 'AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'
-                      : 'AUTH.REQUIRED_PASSWORD_CHANGE.SESSION_ERROR';
-            this.errorMessage.set(this.translateService.instant(key));
+            this.showSubmissionError(error);
         } finally {
             this.isSubmitting.set(false);
         }
+    }
+
+    private async persistPasswordAsync(value: RequiredPasswordChangeFormModel): Promise<string | null> {
+        const success = await firstValueFrom(
+            this.userFacade.changePassword({
+                currentPassword: value.currentPassword,
+                newPassword: value.newPassword,
+            }),
+        );
+        if (!this.isPageActive()) {
+            return null;
+        }
+        if (!success) {
+            this.errorMessage.set(this.translateService.instant('AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'));
+            return null;
+        }
+        this.changedPassword = value.newPassword;
+        return value.newPassword;
+    }
+
+    private showSubmissionError(error: unknown): void {
+        if (!this.isPageActive()) {
+            return;
+        }
+        const key =
+            error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
+                ? 'FORM_ERRORS.RATE_LIMITED'
+                : this.changedPassword === null
+                  ? 'AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'
+                  : 'AUTH.REQUIRED_PASSWORD_CHANGE.SESSION_ERROR';
+        this.errorMessage.set(this.translateService.instant(key));
+    }
+
+    private isPageActive(): boolean {
+        return !this.logoutRequested && !this.destroyRef.destroyed;
     }
 }

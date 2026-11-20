@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -248,3 +248,111 @@ describe('ChangePasswordDialogComponent cancel and set password mode', () => {
         });
     });
 });
+
+describe('Rendered password change validation', () => {
+    it('rejects reusing the current password and updates the error when the language changes', async () => {
+        vi.restoreAllMocks();
+        translateServiceSpy.setTranslation('en', { USER_MANAGE: { CHANGE_PASSWORD_SAME_ERROR: 'Choose a different password' } });
+        translateServiceSpy.setTranslation('ru', { USER_MANAGE: { CHANGE_PASSWORD_SAME_ERROR: 'Выберите другой пароль' } });
+        await firstValueFrom(translateServiceSpy.use('en'));
+        fixture.detectChanges();
+        writePassword('CURRENT_PASSWORD', 'same-test-password');
+        writePassword('NEW_PASSWORD', 'same-test-password');
+        writePassword('CONFIRM_NEW_PASSWORD', 'same-test-password');
+        expect(newPasswordError()).toBe('Choose a different password');
+        passwordButton('submit').click();
+        expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+
+        await firstValueFrom(translateServiceSpy.use('ru'));
+        fixture.detectChanges();
+        expect(newPasswordError()).toBe('Выберите другой пароль');
+
+        writePassword('NEW_PASSWORD', 'new-test-password');
+        writePassword('CONFIRM_NEW_PASSWORD', 'new-test-password');
+        userServiceSpy.changePassword.mockReturnValueOnce(of(true));
+        passwordButton('submit').click();
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith(true);
+        });
+        expect(userServiceSpy.changePassword).toHaveBeenCalledExactlyOnceWith({
+            currentPassword: 'same-test-password',
+            newPassword: 'new-test-password',
+        });
+    });
+});
+
+describe('Rendered first-password setup', () => {
+    it.each(['rejected', 'unavailable'] as const)('preserves the form and supports retry when setup is %s', async failure => {
+        TestBed.resetTestingModule();
+        configureComponent({ hasPassword: false });
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelectorAll('input[type="password"]')).toHaveLength(2);
+        expect(root.textContent).toContain('USER_MANAGE.SET_PASSWORD_HINT');
+        writePassword('NEW_PASSWORD', 'first-test-password');
+        writePassword('CONFIRM_NEW_PASSWORD', 'first-test-password');
+        const request = new Subject<boolean>();
+        userServiceSpy.setPassword.mockReturnValueOnce(request).mockReturnValueOnce(of(true));
+        const submit = passwordButton('submit');
+        submit.click();
+        fixture.detectChanges();
+        expect(root.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+        submit.click();
+        passwordButton('button').click();
+        expect(userServiceSpy.setPassword).toHaveBeenCalledExactlyOnceWith({ newPassword: 'first-test-password' });
+        expect(dialogRefSpy.close).not.toHaveBeenCalled();
+
+        if (failure === 'rejected') {
+            request.next(false);
+            request.complete();
+        } else {
+            request.error(new Error('Password service unavailable'));
+        }
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(root.querySelector('.change-password-dialog__submit-error')?.textContent).toContain('USER_MANAGE.SET_PASSWORD_ERROR');
+        });
+        expect(root.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+        expect(passwordInput('NEW_PASSWORD').value).toBe('first-test-password');
+        expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+
+        submit.click();
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith(true);
+        });
+        expect(userServiceSpy.setPassword).toHaveBeenCalledTimes(2);
+    });
+});
+
+function writePassword(field: string, value: string): void {
+    const input = passwordInput(field);
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    fixture.detectChanges();
+}
+
+function passwordInput(field: string): HTMLInputElement {
+    const root = fixture.nativeElement as HTMLElement;
+    const input = root.querySelector(`input[aria-label="USER_MANAGE.${field}"]`);
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error(`Expected the password field ${field}`);
+    }
+    return input;
+}
+
+function newPasswordError(): string | null {
+    return (
+        passwordInput('NEW_PASSWORD')
+            .closest('.change-password-dialog__field')
+            ?.querySelector('.change-password-dialog__error')
+            ?.textContent.trim() ?? null
+    );
+}
+
+function passwordButton(type: 'submit' | 'button'): HTMLButtonElement {
+    const root = fixture.nativeElement as HTMLElement;
+    const button = root.querySelector(`.change-password-dialog__footer button[type="${type}"]`);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error(`Expected the password action ${type}`);
+    }
+    return button;
+}

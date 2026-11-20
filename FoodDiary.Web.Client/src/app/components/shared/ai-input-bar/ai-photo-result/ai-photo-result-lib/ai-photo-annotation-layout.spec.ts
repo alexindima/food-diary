@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { evaluateAiPhotoAnnotationLayout, fitAiPhotoAnnotationLayout, optimizeAiPhotoAnnotationLayout } from './ai-photo-annotation-layout';
+import {
+    evaluateAiPhotoAnnotationLayout,
+    fitAiPhotoAnnotationLayout,
+    optimizeAiPhotoAnnotationLayout,
+    resolveAiPhotoAnnotationConnectorPath,
+} from './ai-photo-annotation-layout';
 import type { AiPhotoAnnotation } from './ai-photo-result.types';
 
 /* eslint-disable @typescript-eslint/no-magic-numbers -- Coordinates intentionally describe geometry test fixtures. */
@@ -83,6 +88,18 @@ function createAnnotations(points: ReadonlyArray<readonly [number, number]>): Ai
     }));
 }
 
+function createOversizedAnnotations(): AiPhotoAnnotation[] {
+    return createAnnotations(
+        Array.from(
+            { length: OVERSIZED_PRODUCT_COUNT },
+            (_, index) =>
+                [
+                    OVERSIZED_GRID_START + (index % OVERSIZED_GRID_COLUMNS) * OVERSIZED_GRID_X_STEP,
+                    OVERSIZED_GRID_START + Math.floor(index / OVERSIZED_GRID_COLUMNS) * OVERSIZED_GRID_Y_STEP,
+                ] as const,
+        ),
+    );
+}
 describe('AI photo annotation layout', () => {
     it.each(SCENARIO_CASES)('keeps cards within the image and avoids card overlaps', points => {
         const layout = optimizeAiPhotoAnnotationLayout(createAnnotations(points));
@@ -155,21 +172,56 @@ describe('AI photo annotation layout', () => {
     });
 
     it('reduces an oversized mobile layout while preserving the active annotation', () => {
-        const annotations = createAnnotations(
-            Array.from(
-                { length: OVERSIZED_PRODUCT_COUNT },
-                (_, index) =>
-                    [
-                        OVERSIZED_GRID_START + (index % OVERSIZED_GRID_COLUMNS) * OVERSIZED_GRID_X_STEP,
-                        OVERSIZED_GRID_START + Math.floor(index / OVERSIZED_GRID_COLUMNS) * OVERSIZED_GRID_Y_STEP,
-                    ] as const,
-            ),
-        );
+        const annotations = createOversizedAnnotations();
         const activeId = annotations.at(-1)?.id ?? null;
         const layout = fitAiPhotoAnnotationLayout(annotations, activeId);
 
         expect(layout.length).toBeGreaterThan(0);
         expect(layout.length).toBeLessThan(annotations.length);
         expect(layout.some(annotation => annotation.id === activeId)).toBe(true);
+    });
+});
+describe('AI photo connector geometry', () => {
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- Planned and rendered card fixtures use percentage coordinates. */
+    it.each([
+        ['left', { x: 15, y: 27 }, '43,61 10,34'],
+        ['right', { x: 45, y: 27 }, '43,61 50,34'],
+        ['top', { x: 30, y: 20 }, '43,61 30,24'],
+        ['bottom', { x: 30, y: 34 }, '43,61 30,44'],
+    ] as const)('keeps the planned %s attachment when the card changes size', (_edge, plannedAnchor, expected) => {
+        const [annotation] = createAnnotations([[43, 61]]);
+        const planned: AiPhotoAnnotation = {
+            ...annotation,
+            cardX: 15,
+            cardY: 20,
+            cardWidth: 30,
+            cardHeight: 14,
+            connectorPoints: [annotation.connectorPoints[0], plannedAnchor],
+        };
+
+        expect(resolveAiPhotoAnnotationConnectorPath(planned, { x: 10, y: 24, width: 40, height: 20 })).toBe(expected);
+    });
+
+    it('still detects close products when a connector starts and ends at the same point', () => {
+        const annotations = createAnnotations([
+            [50, 50],
+            [52, 50],
+            [82, 82],
+        ]);
+
+        expect(evaluateAiPhotoAnnotationLayout(annotations)).toMatchObject({ connectorLength: 0, connectorProductProximity: 2 });
+    });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- End of percentage geometry fixtures. */
+});
+
+describe('AI photo layout capacity', () => {
+    it('keeps input labels intact when the number of products exceeds the available card slots', () => {
+        const annotations = createOversizedAnnotations();
+
+        // The narrow search only needs one assignment path to reach the real slot limit.
+        const layout = optimizeAiPhotoAnnotationLayout(annotations, false, 1);
+
+        expect(layout).toEqual(annotations);
+        expect(layout).not.toBe(annotations);
     });
 });

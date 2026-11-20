@@ -24,7 +24,7 @@ import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { firstValueFrom, type Subscription } from 'rxjs';
+import { finalize, firstValueFrom, type Subscription } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -274,10 +274,11 @@ export class MealManageFormComponent implements UnsavedEditor {
                 read: () => this.readDevelopmentContext(),
                 fillDraft: this.fillDevelopmentDraftAsync.bind(this),
                 clearDraft: () => {
-                    if (this.meal() !== null || this.isBusy()) {
+                    if (this.meal() !== null || this.isSubmitBusy()) {
                         throw new Error('A ready new meal editor is required.');
                     }
                     this.mealSignalForm().reset(createMealManageFormValue());
+                    this.aiSessions.set([]);
                     this.updateSummary();
                 },
             }),
@@ -331,7 +332,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     }
 
     private async fillDevelopmentDraftAsync(draft: MealDevelopmentDraft, requireSession: () => void): Promise<void> {
-        if (this.meal() !== null || this.mealSignalForm().dirty() || this.isBusy()) {
+        if (this.meal() !== null || this.mealSignalForm().dirty() || this.isSubmitBusy()) {
             throw new Error('A clean new meal editor is required.');
         }
         const original = this.mealFormModel();
@@ -351,7 +352,7 @@ export class MealManageFormComponent implements UnsavedEditor {
                   };
         const items = await Promise.all(draft.items.map(resolveItemAsync));
         requireSession();
-        if (this.destroyRef.destroyed || this.mealFormModel() !== original || this.mealSignalForm().dirty() || this.isBusy()) {
+        if (this.destroyRef.destroyed || this.mealFormModel() !== original || this.mealSignalForm().dirty() || this.isSubmitBusy()) {
             throw new Error('Meal editor changed while resolving serving quantities.');
         }
         this.mealSignalForm.mealType().markAsDirty();
@@ -488,16 +489,16 @@ export class MealManageFormComponent implements UnsavedEditor {
 
     protected openManualItemDialog(index: number): void {
         const item = this.items[index];
-        void firstValueFrom(
-            this.fdDialogService
-                .open<MealManualItemDialogComponent, MealManualItemDialogData, MealItemFormValues | null>(MealManualItemDialogComponent, {
-                    preset: 'form',
-                    data: { item },
-                })
-                .afterClosed()
-                .pipe(takeUntilDestroyed(this.destroyRef)),
-            { defaultValue: null },
-        ).then(selectedItem => {
+        const dialog = this.fdDialogService.open<MealManualItemDialogComponent, MealManualItemDialogData, MealItemFormValues | null>(
+            MealManualItemDialogComponent,
+            { preset: 'form', data: { item } },
+        );
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close(null);
+        });
+        void firstValueFrom(dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose)), {
+            defaultValue: null,
+        }).then(selectedItem => {
             if (selectedItem === null || selectedItem === undefined || this.destroyRef.destroyed) {
                 return;
             }
@@ -663,7 +664,9 @@ export class MealManageFormComponent implements UnsavedEditor {
         try {
             await this.saveWithConsentAsync(meal, mealData);
         } catch (error: unknown) {
-            this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
+            if (this.isCurrentMeal(meal)) {
+                this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
+            }
         } finally {
             this.isSubmitting.set(false);
         }
@@ -794,20 +797,20 @@ export class MealManageFormComponent implements UnsavedEditor {
             this.createIntent = { fingerprint, key: crypto.randomUUID() };
         }
         const response = await this.mealManageFacade.submitMealAsync(null, mealData, this.createIntent.key);
-        await this.handleSubmitResponseAsync(response);
+        await this.handleSubmitResponseAsync(null, response);
     }
 
-    private async updateMealAsync(mealData: MealManageDto): Promise<void> {
-        const response = await this.mealManageFacade.submitMealAsync(this.meal() ?? null, mealData);
-        await this.handleSubmitResponseAsync(response);
+    private async updateMealAsync(meal: Meal, mealData: MealManageDto): Promise<void> {
+        const response = await this.mealManageFacade.submitMealAsync(meal, mealData);
+        await this.handleSubmitResponseAsync(meal, response);
     }
 
-    private async handleSubmitResponseAsync(response: Meal | null): Promise<void> {
-        if (this.destroyRef.destroyed) {
+    private async handleSubmitResponseAsync(meal: Meal | null, response: Meal | null): Promise<void> {
+        if (!this.isCurrentMeal(meal)) {
             return;
         }
         if (response !== null) {
-            if (this.meal() === null) {
+            if (meal === null) {
                 this.createIntent = null;
                 const resetValue = {
                     date: this.getDateInputValue(new Date()),
@@ -832,19 +835,23 @@ export class MealManageFormComponent implements UnsavedEditor {
                 this.updateSummary();
             }
             this.mealSignalForm().reset(this.mealFormModel());
-            await this.mealManageFacade.showSuccessToastAndRedirectAsync(Boolean(this.meal()));
+            await this.mealManageFacade.showSuccessToastAndRedirectAsync(meal !== null);
         } else {
             this.handleSubmitError();
         }
     }
 
+    private isCurrentMeal(meal: Meal | null): boolean {
+        return !this.destroyRef.destroyed && this.meal() === meal;
+    }
+
     private async saveWithConsentAsync(meal: Meal | null, mealData: MealManageDto): Promise<void> {
         const allowed = await this.privacy.ensureHealthConsentAsync(true, { acceptLabelKey: 'PRIVACY_CHOICES.ACCEPT_AND_SAVE' });
-        if (this.destroyRef.destroyed) {
+        if (!this.isCurrentMeal(meal)) {
             return;
         }
         if (allowed) {
-            await (meal !== null ? this.updateMealAsync(mealData) : this.addMealAsync(mealData));
+            await (meal !== null ? this.updateMealAsync(meal, mealData) : this.addMealAsync(mealData));
         } else if (this.privacy.failed()) {
             this.setGlobalError(this.privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR');
         }

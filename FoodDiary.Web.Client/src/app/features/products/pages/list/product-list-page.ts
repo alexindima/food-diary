@@ -86,7 +86,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
                     .writeAsync(readProductListQuery(convertToParamMap(devQuery(filters, fields))));
             },
             openEntityAsync: async id => {
-                if (!this.productData.items().some(product => product.id === id)) {
+                if (this.productData.isLoading() || !this.productData.items().some(product => product.id === id)) {
                     throw new DevelopmentToolError('ID is not in the current product list.');
                 }
                 await injector.get(Router).navigate(['/products', id, 'edit']);

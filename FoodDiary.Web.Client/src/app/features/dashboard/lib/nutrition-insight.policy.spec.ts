@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { type NutritionInsightInput, resolveNutritionInsight } from './nutrition-insight.policy';
+import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
+import { type NutritionInsightInput, resolveDashboardNutritionInsight, resolveNutritionInsight } from './nutrition-insight.policy';
 
 const BASE_INPUT: NutritionInsightInput = {
     mealCount: 3,
@@ -45,3 +46,63 @@ describe('resolveNutritionInsight', () => {
         expect(resolveNutritionInsight(BASE_INPUT)).toMatchObject({ kind: 'balanced', tone: 'positive' });
     });
 });
+describe('Dashboard snapshot nutrition insight', () => {
+    it('stays neutral until a snapshot has loaded', () => {
+        expect(resolveDashboardNutritionInsight(null)).toEqual({ kind: 'empty', tone: 'neutral' });
+    });
+
+    it('shows an excess warning at the fat threshold even when fiber also has a deficit', () => {
+        const snapshot = createDashboardSnapshot({ averageFats: 92, averageFiber: 10 });
+
+        expect(resolveDashboardNutritionInsight(snapshot)).toEqual({
+            kind: 'fat-excess',
+            tone: 'warning',
+            metric: 'fats',
+            current: 92,
+            goal: 80,
+        });
+    });
+
+    it('shows the fiber deficit once half of the calorie goal and the protein threshold are reached', () => {
+        const snapshot = createDashboardSnapshot({ totalCalories: 1100, averageProteins: 72, averageFats: 91, averageFiber: 14 });
+
+        expect(resolveDashboardNutritionInsight(snapshot)).toEqual({
+            kind: 'fiber-deficit',
+            tone: 'warning',
+            metric: 'fiber',
+            current: 14,
+            goal: 30,
+        });
+    });
+
+    it.each([null, undefined, 0])('omits a meaningful calorie comparison if the goal is %s', calorieGoal => {
+        const insight = resolveNutritionInsight({ ...BASE_INPUT, goals: { ...BASE_INPUT.goals, calories: calorieGoal } });
+
+        expect(insight).toEqual({ kind: 'in-progress', tone: 'neutral', metric: 'calories', current: BASE_INPUT.totals.calories });
+    });
+});
+
+function createDashboardSnapshot(statistics: Partial<DashboardSnapshot['statistics']>): DashboardSnapshot {
+    return {
+        date: '2026-07-16',
+        dateTo: '2026-07-16',
+        dailyGoal: 2200,
+        weeklyCalorieGoal: 15400,
+        statistics: {
+            totalCalories: BASE_INPUT.totals.calories,
+            averageProteins: BASE_INPUT.totals.proteins,
+            averageFats: BASE_INPUT.totals.fats,
+            averageCarbs: BASE_INPUT.totals.carbs,
+            averageFiber: BASE_INPUT.totals.fiber,
+            proteinGoal: BASE_INPUT.goals.proteins,
+            fatGoal: BASE_INPUT.goals.fats,
+            carbGoal: BASE_INPUT.goals.carbs,
+            fiberGoal: BASE_INPUT.goals.fiber,
+            ...statistics,
+        },
+        weeklyCalories: [],
+        weight: { latest: null, previous: null, desiredWeightKg: null },
+        waist: { latest: null, previous: null, desiredWaistCm: null },
+        meals: { items: [], total: BASE_INPUT.mealCount },
+    };
+}

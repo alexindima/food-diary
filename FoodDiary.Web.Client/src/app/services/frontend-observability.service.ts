@@ -37,8 +37,9 @@ export class FrontendObservabilityService {
 
         this.initialized = true;
         this.observeRouteTimings();
-        if (!this.isPublicRoute(this.browserWindow.getPathname() ?? '')) {
-            this.observeWebVitals();
+        const entryPath = this.browserWindow.getPathname() ?? this.router.url;
+        if (!this.isPublicRoute(entryPath)) {
+            this.observeWebVitals(entryPath);
         }
     }
 
@@ -274,8 +275,8 @@ export class FrontendObservabilityService {
             });
     }
 
-    private observeWebVitals(): void {
-        const entryRoute = this.normalizeRoute(this.browserWindow.getPathname() ?? this.router.url);
+    private observeWebVitals(entryPath: string): void {
+        const entryRoute = this.normalizeRoute(entryPath);
         void this.browserPerformance.observeWebVitalsAsync(metric => {
             this.recordWebVital(metric.name.toLowerCase(), metric.value, metric.name === 'CLS' ? 'score' : 'ms', {
                 metricId: metric.id,

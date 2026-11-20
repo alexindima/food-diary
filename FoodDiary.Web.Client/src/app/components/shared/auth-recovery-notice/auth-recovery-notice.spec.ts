@@ -103,15 +103,18 @@ describe('authentication recovery notice', () => {
         expect(root().querySelector('[aria-busy="true"]')).not.toBeNull();
     });
 
-    it('returns to sign-in when a pending logout retry is confirmed', async () => {
+    it.each(['/meals', null])('returns to sign-in after logout confirmation with return path %s', async returnUrl => {
         const pending = { sessionId: 'previous-session', contextId: null, telegram: false };
         recovery.beginLogout(pending);
-        recovery.returnUrl = '/meals';
+        recovery.returnUrl = returnUrl;
         fixture.detectChanges();
         retryButton().click();
         recovery.confirmLogout(pending);
         await fixture.whenStable();
-        expect(navigation.navigateToAuthAsync, 'Confirmed logout retry must reach sign-in').toHaveBeenCalledWith('login', '/meals');
+        expect(navigation.navigateToAuthAsync, 'Confirmed logout retry must reach sign-in').toHaveBeenCalledWith(
+            'login',
+            returnUrl ?? undefined,
+        );
         expect(auth.refreshSession).not.toHaveBeenCalled();
     });
 
@@ -125,4 +128,55 @@ describe('authentication recovery notice', () => {
         await fixture.whenStable();
         expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
     });
+});
+
+describe('recovery after a failed session restore', () => {
+    it('keeps the warning and ignores an early retry during Retry-After', async () => {
+        const initialTime = 1000;
+        const afterRetry = 4000;
+        const now = vi.spyOn(Date, 'now').mockReturnValue(initialTime);
+        try {
+            recovery.restorationFailed('3');
+            fixture.detectChanges();
+            retryButton().click();
+            await fixture.whenStable();
+
+            expect(auth.refreshSession).not.toHaveBeenCalled();
+            expect(root().querySelector('[role="status"]')?.textContent).toContain('SESSION_RECOVERY.RESTORE_UNAVAILABLE');
+
+            now.mockReturnValue(afterRetry);
+            retryButton().click();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(auth.refreshSession).toHaveBeenCalledOnce();
+            expect(root().querySelector('[role="status"]')?.textContent).toContain('SESSION_RECOVERY.RESTORE_UNAVAILABLE');
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+            expect(navigation.navigateToReturnUrlAsync).not.toHaveBeenCalled();
+        } finally {
+            now.mockRestore();
+        }
+    });
+
+    it.each(['/dashboard?date=2026-02-14', null])(
+        'continues to sign-in with return path %s after a definitive anonymous response',
+        async returnUrl => {
+            recovery.restorationFailed(null);
+            recovery.returnUrl = returnUrl;
+            auth.refreshSession.mockImplementation(() => {
+                recovery.restorationSucceeded();
+                return of(false);
+            });
+            fixture.detectChanges();
+
+            retryButton().click();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(auth.refreshSession).toHaveBeenCalledOnce();
+            expect(navigation.navigateToAuthAsync).toHaveBeenCalledExactlyOnceWith('login', returnUrl ?? undefined);
+            expect(navigation.navigateToReturnUrlAsync).not.toHaveBeenCalled();
+            expect(root().querySelector('[role="status"]')).toBeNull();
+        },
+    );
 });

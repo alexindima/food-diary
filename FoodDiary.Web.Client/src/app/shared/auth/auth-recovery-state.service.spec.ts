@@ -31,3 +31,52 @@ describe('pending logout transport isolation', () => {
         );
     });
 });
+
+describe('saved logout selectors in browser tabs', () => {
+    it('resumes the tab-scoped logout after reload and then retains the independent website logout', () => {
+        const browser = { sessionId: 'browser-session', contextId: null, telegram: false };
+        const context = { sessionId: null, contextId: 'admin-preview-context', telegram: false };
+        const recovery = TestBed.inject(AuthRecoveryStateService);
+        recovery.beginLogout(browser);
+        recovery.beginLogout(context);
+        expect(recovery.pendingLogout()).toEqual(context);
+        expect(localStorage.getItem('pendingImpersonationLogout')).toBeNull();
+        expect(sessionStorage.getItem('pendingImpersonationLogout')).toBe(JSON.stringify(context));
+
+        TestBed.resetTestingModule();
+        const reloaded = TestBed.inject(AuthRecoveryStateService);
+        expect(reloaded.pendingLogout()).toEqual(context);
+        expect(reloaded.issue()).toBe('logout');
+        reloaded.confirmLogout(context);
+
+        expect(sessionStorage.getItem('pendingImpersonationLogout')).toBeNull();
+        expect(reloaded.pendingLogout()).toEqual(browser);
+        expect(reloaded.issue()).toBe('logout');
+    });
+
+    it('reflects a website logout completed in another tab without clearing unrelated session storage', () => {
+        const browserKey = 'pendingBrowserLogout';
+        const saved = JSON.stringify({ sessionId: 'browser-session', contextId: null, telegram: false });
+        localStorage.setItem(browserKey, saved);
+        sessionStorage.setItem('draftReturnUrl', '/meals?dateFrom=2026-02-14');
+        const recovery = TestBed.inject(AuthRecoveryStateService);
+        expect(recovery.issue()).toBe('logout');
+
+        localStorage.removeItem(browserKey);
+        const event = new StorageEvent('storage', { key: browserKey, oldValue: saved, newValue: null });
+        Object.defineProperty(event, 'storageArea', { value: window.localStorage });
+        window.dispatchEvent(event);
+
+        expect(recovery.pendingLogout()).toBeNull();
+        expect(recovery.issue()).toBeNull();
+        expect(sessionStorage.getItem('draftReturnUrl')).toBe('/meals?dateFrom=2026-02-14');
+    });
+
+    it('allows startup with an older saved logout record that has neither selector', () => {
+        localStorage.setItem('pendingBrowserLogout', JSON.stringify({ sessionId: null, contextId: null, telegram: false }));
+        const recovery = TestBed.inject(AuthRecoveryStateService);
+
+        expect(recovery.pendingLogout()).toBeNull();
+        expect(recovery.issue()).toBeNull();
+    });
+});

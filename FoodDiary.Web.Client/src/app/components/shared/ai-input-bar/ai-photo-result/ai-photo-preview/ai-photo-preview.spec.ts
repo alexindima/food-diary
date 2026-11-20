@@ -121,6 +121,13 @@ describe('AiPhotoPreviewComponent image geometry', () => {
         });
         TestBed.tick();
         expect(connector?.getAttribute('points')).toBe('50,18 -2,10');
+        // A responsive card can temporarily have no layout while the preview remains mounted.
+        card = new DOMRect();
+        resizeCallbacks.forEach(callback => {
+            callback();
+        });
+        TestBed.tick();
+        expect(connector?.getAttribute('points')).toBe(annotation.connectorPath);
 
         fixture.componentRef.setInput('annotationsVisible', false);
         fixture.detectChanges();
@@ -132,6 +139,35 @@ describe('AiPhotoPreviewComponent image geometry', () => {
 });
 
 describe('AiPhotoPreviewComponent image aspect ratio', () => {
+    it('keeps the last decoded aspect ratio when a replacement preview has no height', async () => {
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'blob:first-preview');
+        fixture.componentRef.setInput('annotations', createAnnotations(1));
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const image = host.querySelector('.ai-photo-result__preview');
+        if (!(image instanceof HTMLImageElement)) {
+            throw new Error('Expected a photo preview');
+        }
+        const orientations: boolean[] = [];
+        fixture.componentInstance.imageOrientationChanged.subscribe(value => orientations.push(value));
+        Object.defineProperty(image, 'naturalWidth', { value: IMAGE_SHORT_SIDE });
+        Object.defineProperty(image, 'naturalHeight', { configurable: true, value: IMAGE_LONG_SIDE });
+        image.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+        expect(orientations).toEqual([true]);
+
+        fixture.componentRef.setInput('imageUrl', 'blob:replacement-preview');
+        fixture.detectChanges();
+        Object.defineProperty(image, 'naturalHeight', { value: 0 });
+        image.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+
+        const ratio = host.querySelector<HTMLElement>('.ai-photo-result__annotations')?.style.getPropertyValue('--ai-photo-aspect-ratio');
+        expect(Number(ratio)).toBeCloseTo(IMAGE_SHORT_SIDE / IMAGE_LONG_SIDE);
+        expect(orientations).toEqual([true]);
+    });
+
     it('updates the annotation aspect ratio when a different image loads', async () => {
         const fixture = await setupAiPhotoPreviewAsync();
         fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');
@@ -294,5 +330,28 @@ describe('AiPhotoPreviewComponent dense layout', () => {
                 expect(x < otherX + otherWidth && x + width > otherX && y < otherY + height && y + height > otherY).toBe(false);
             }
         }
+    });
+});
+describe('AiPhotoPreviewComponent changing recognition results', () => {
+    it('shows the first compact card when a prior selection is absent and emits a new marker selection', async () => {
+        const fixture = await setupAiPhotoPreviewAsync();
+        const annotations = createAnnotations(SEVEN_PRODUCTS);
+        fixture.componentRef.setInput('imageUrl', 'blob:replacement-preview');
+        fixture.componentRef.setInput('annotations', annotations);
+        fixture.componentRef.setInput('activeAnnotationId', 'previous-photo-food');
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const desktopCardSelector = '.ai-photo-result__annotation-card.ai-photo-result__annotation-desktop';
+        expect(host.querySelector(desktopCardSelector)?.getAttribute('aria-label')).toBe(annotations[0].name);
+
+        const selected: string[] = [];
+        fixture.componentInstance.annotationSelected.subscribe(value => selected.push(value));
+        const marker = host.querySelector<HTMLButtonElement>('.ai-photo-result__annotation-marker.ai-photo-result__annotation-desktop');
+        marker?.click();
+        expect(selected).toEqual([annotations[1].id]);
+
+        fixture.componentRef.setInput('activeAnnotationId', selected[0]);
+        fixture.detectChanges();
+        expect(host.querySelector(desktopCardSelector)?.getAttribute('aria-label')).toBe(annotations[1].name);
     });
 });

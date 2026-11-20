@@ -337,6 +337,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
         this.fdDialogService
             .open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, { size: 'lg' })
             .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
                     this.setBarcodeFromUserAction(barcode);
@@ -371,8 +372,10 @@ export class ProductManageFormComponent implements UnsavedEditor {
         this.patchProductForm(buildSourceProductPrefillPatch(offProduct));
     }
 
-    private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail): void {
-        this.patchProductForm(buildUsdaFoodDetailPrefillPatch(detail));
+    private prefillFromUsdaFoodDetail(detail: UsdaFoodDetail, selectedName: string): void {
+        const patch = buildUsdaFoodDetailPrefillPatch(detail);
+        const currentName = this.productFormModel().name;
+        this.patchProductForm(currentName === selectedName ? patch : { ...patch, name: currentName });
     }
 
     protected openAiRecognitionDialog(): void {
@@ -380,6 +383,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
             return;
         }
 
+        const product = this.product();
         const currentPhotos = this.productFormModel().images;
         const currentCover = this.productFormModel().imageUrl;
         this.fdDialogService
@@ -390,14 +394,14 @@ export class ProductManageFormComponent implements UnsavedEditor {
                     data: {
                         initialDescription: this.productFormModel().description ?? null,
                         initialPhotos: currentPhotos ?? (currentCover !== null ? [currentCover] : []),
-                        hasExistingData:
-                            this.productForm().dirty() || this.product() !== null || this.productFormModel().name.trim().length > 0,
+                        hasExistingData: this.productForm().dirty() || product !== null || this.productFormModel().name.trim().length > 0,
                     },
                 },
             )
             .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                if (result === null || result === undefined) {
+                if (result === null || result === undefined || this.product() !== product) {
                     return;
                 }
 
@@ -425,7 +429,13 @@ export class ProductManageFormComponent implements UnsavedEditor {
     protected async onDeleteProductAsync(): Promise<void> {
         const currentProduct = this.product();
 
-        if (currentProduct === null || !currentProduct.isOwnedByCurrentUser || this.isDeleting() || this.isSubmitting()) {
+        if (
+            currentProduct === null ||
+            !currentProduct.isOwnedByCurrentUser ||
+            this.isDeleting() ||
+            this.isSubmitting() ||
+            this.photosUploading()
+        ) {
             return;
         }
 
@@ -533,6 +543,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
             });
             this.patchProductForm(buildResetNutritionPatch());
             this.nameSearch.setSelectedSuggestion(suggestion);
+            const product = this.product();
             const requestId = ++this.usdaDetailRequestId;
             this.externalFoodFacade
                 .getUsdaFoodDetail(usdaFoodId(fdcId))
@@ -541,8 +552,13 @@ export class ProductManageFormComponent implements UnsavedEditor {
                     takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe(detail => {
-                    if (detail !== null && requestId === this.usdaDetailRequestId && this.productFormModel().usdaFdcId === fdcId) {
-                        this.prefillFromUsdaFoodDetail(detail);
+                    if (
+                        detail !== null &&
+                        requestId === this.usdaDetailRequestId &&
+                        this.product() === product &&
+                        this.productFormModel().usdaFdcId === fdcId
+                    ) {
+                        this.prefillFromUsdaFoodDetail(detail, suggestion.name);
                     }
                 });
             return;
@@ -569,6 +585,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     private applyAiResult(result: ProductAiRecognitionResult): void {
+        this.usdaDetailRequestId++;
         const values = this.productFormModel();
         const existing = values.images ?? (values.imageUrl !== null && (values.imageUrl.url?.length ?? 0) > 0 ? [values.imageUrl] : []);
         const ids = new Set([...existing, ...(result.images ?? [])].map(image => image.assetId ?? image.url));
@@ -642,7 +659,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
     }
 
     protected hasUnsavedChanges(): boolean {
-        return this.productForm().dirty();
+        return this.productForm().dirty() || this.photosUploading();
     }
 
     private async confirmDiscardChangesAsync(): Promise<boolean> {

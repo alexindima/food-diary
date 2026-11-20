@@ -9,8 +9,9 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
-import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
+import { FdUiConfirmDialogComponent, type FdUiConfirmDialogData } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiFormDirective, focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
@@ -18,6 +19,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
     distinctUntilChanged,
+    filter,
     finalize,
     firstValueFrom,
     forkJoin,
@@ -178,7 +180,9 @@ export class ClientDashboardComponent {
     protected readonly loadingMoreMeals = signal(false);
     protected readonly moreMealsError = signal(false);
     protected readonly savingRecommendation = signal(false);
+    protected readonly disconnecting = signal(false);
     protected readonly savingTemplate = signal(false);
+    protected readonly archivingTemplateIds = signal<ReadonlySet<RecommendationTemplate['id']>>(new Set());
     protected readonly savingTask = signal(false);
     protected readonly changingTaskIds = signal<ReadonlySet<string>>(new Set<string>());
     protected readonly openDiscussionId = signal<string | null>(null);
@@ -468,11 +472,12 @@ export class ClientDashboardComponent {
     private async applyDateFilterAsync(): Promise<void> {
         const client = this.client();
         const nextPeriod = this.getPeriodFromForm();
+        const skipUnchangedPeriod = this.detailsLoading() || this.dashboard() !== null;
         if (
             client === null ||
             nextPeriod === null ||
             this.dateFilterForm().invalid() ||
-            (nextPeriod.dateFrom === this.selectedDateFrom() && nextPeriod.dateTo === this.selectedDateTo())
+            (skipUnchangedPeriod && nextPeriod.dateFrom === this.selectedDateFrom() && nextPeriod.dateTo === this.selectedDateTo())
         ) {
             this.dateFilterForm().markAsTouched();
             return;
@@ -607,12 +612,28 @@ export class ClientDashboardComponent {
     }
 
     protected archiveRecommendationTemplate(template: RecommendationTemplate): void {
+        const id = template.id;
+        if (this.archivingTemplateIds().has(id)) {
+            return;
+        }
+
+        this.archivingTemplateIds.update(ids => new Set(ids).add(id));
         this.dietologistFacade
-            .archiveRecommendationTemplate(template.id)
-            .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef))
+            .archiveRecommendationTemplate(id)
+            .pipe(
+                takeUntil(this.clientChanged),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.archivingTemplateIds.update(ids => {
+                        const remaining = new Set(ids);
+                        remaining.delete(id);
+                        return remaining;
+                    });
+                }),
+            )
             .subscribe({
                 next: () => {
-                    this.recommendationTemplates.update(templates => templates.filter(item => item.id !== template.id));
+                    this.recommendationTemplates.update(templates => templates.filter(item => item.id !== id));
                 },
                 error: () => {
                     this.toastService.error(this.translateService.instant('RECOMMENDATION_TEMPLATES.ARCHIVE_ERROR'));
@@ -721,20 +742,12 @@ export class ClientDashboardComponent {
 
     protected disconnectClient(): void {
         const client = this.client();
-        if (client === null) {
+        if (client === null || this.disconnecting()) {
             return;
         }
 
-        const dialogRef = this.dialogService.open(FdUiConfirmDialogComponent, {
-            preset: 'confirm',
-            data: {
-                title: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_TITLE'),
-                message: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_MESSAGE'),
-                confirmLabel: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_CONFIRM'),
-                cancelLabel: this.translateService.instant('COMMON.CANCEL'),
-                danger: true,
-            },
-        });
+        this.disconnecting.set(true);
+        const dialogRef = this.openDisconnectConfirmation();
         const unregisterCleanup = this.destroyRef.onDestroy(() => {
             dialogRef.close();
         });
@@ -744,24 +757,18 @@ export class ClientDashboardComponent {
         dialogRef
             .afterClosed()
             .pipe(
-                takeUntil(this.clientChanged),
-                takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     clientChange.unsubscribe();
                     unregisterCleanup();
                 }),
+                filter(confirmed => confirmed === true),
+                switchMap(() => this.dietologistFacade.disconnectClient(client.userId)),
+                takeUntil(this.clientChanged),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    this.disconnecting.set(false);
+                }),
             )
-            .subscribe(confirmed => {
-                if (confirmed === true) {
-                    this.executeDisconnectClient(client);
-                }
-            });
-    }
-
-    private executeDisconnectClient(client: ClientSummary): void {
-        this.dietologistFacade
-            .disconnectClient(client.userId)
-            .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
                     this.toastService.info(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECTED'));
@@ -771,6 +778,19 @@ export class ClientDashboardComponent {
                     this.toastService.error(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_ERROR'));
                 },
             });
+    }
+
+    private openDisconnectConfirmation(): FdUiDialogRef<FdUiConfirmDialogComponent, boolean> {
+        return this.dialogService.open<FdUiConfirmDialogComponent, FdUiConfirmDialogData, boolean>(FdUiConfirmDialogComponent, {
+            preset: 'confirm',
+            data: {
+                title: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_TITLE'),
+                message: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_MESSAGE'),
+                confirmLabel: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_CONFIRM'),
+                cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+                danger: true,
+            },
+        });
     }
 
     private localizeProfileValue(value: string, client: ClientSummary | null): string {
@@ -913,12 +933,9 @@ export class ClientDashboardComponent {
     }
 
     private getSelectedPeriodValue(): { dateFrom: Date; dateTo: Date } {
-        const parsed = this.getPeriodFromForm();
         return {
-            dateFrom:
-                parseLocalDateInputValue(parsed?.dateFrom ?? this.selectedDateFrom()) ??
-                this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1)),
-            dateTo: parseLocalDateInputValue(parsed?.dateTo ?? this.selectedDateTo()) ?? new Date(),
+            dateFrom: parseLocalDateInputValue(this.selectedDateFrom()) ?? this.addDays(new Date(), -(DEFAULT_PERIOD_DAYS - 1)),
+            dateTo: parseLocalDateInputValue(this.selectedDateTo()) ?? new Date(),
         };
     }
 
@@ -988,7 +1005,7 @@ export class ClientDashboardComponent {
                 this.fillDevelopmentDraft(input);
             },
             clearDraft: () => {
-                if (this.savingRecommendation() || this.savingTask()) {
+                if (this.isDevelopmentDraftSaving()) {
                     throw new DevelopmentToolError('A save is running.');
                 }
                 this.recommendationForm().reset({ text: '', templateName: '' });
@@ -1008,7 +1025,7 @@ export class ClientDashboardComponent {
     }
 
     private fillDevelopmentDraft(input: unknown): void {
-        if (this.loading() || this.detailsLoading() || this.client() === null || this.savingRecommendation() || this.savingTask()) {
+        if (this.loading() || this.detailsLoading() || this.client() === null || this.isDevelopmentDraftSaving()) {
             throw new DevelopmentToolError('Client is not ready.');
         }
         const draft = devRecord(input, ['type', 'text', 'title', 'details', 'dueDate']);
@@ -1028,6 +1045,10 @@ export class ClientDashboardComponent {
             });
             this.taskForm().markAsDirty();
         }
+    }
+
+    private isDevelopmentDraftSaving(): boolean {
+        return this.savingRecommendation() || this.savingTemplate() || this.savingTask();
     }
 
     private hasDevelopmentDraft(): boolean {

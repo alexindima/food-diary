@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { STATISTICS_NUTRITION_TABS } from '../../lib/statistics-tabs.config';
+import type { StatisticsTrendInsight } from '../../models/statistics-dashboard-card.models';
 import { StatisticsNutritionTrendCardComponent } from './statistics-nutrition-trend-card';
 
 const CALORIE_GOAL = 2258;
@@ -103,5 +105,104 @@ describe('StatisticsNutritionTrendCardComponent', () => {
 
         root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__data-toggle button')[1].click();
         expect(tabChange).toHaveBeenCalledWith('macros');
+    });
+});
+
+describe('Statistics nutrient lines and insight rows', () => {
+    it('keeps recorded-diary context visible while switching to separate nutrient lines', async () => {
+        await TestBed.configureTestingModule({
+            imports: [StatisticsNutritionTrendCardComponent],
+            providers: [provideTranslateTesting()],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(StatisticsNutritionTrendCardComponent);
+        const insights: StatisticsTrendInsight[] = [
+            {
+                key: 'calories',
+                labelKey: 'STATISTICS.NUTRITION_TABS.CALORIES',
+                value: 5,
+                unitKey: 'STATISTICS.DASHBOARD.TREND.PERCENT_UNIT',
+                tone: 'positive',
+                detailKey: 'STATISTICS.DASHBOARD.TREND.VS_GOAL',
+            },
+            {
+                key: 'protein',
+                labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN',
+                value: null,
+                unitKey: 'STATISTICS.DASHBOARD.TREND.GRAM_UNIT',
+                tone: 'neutral',
+                detailKey: 'STATISTICS.DASHBOARD.TREND.VS_GOAL',
+            },
+            {
+                key: 'completeness',
+                labelKey: 'STATISTICS.DASHBOARD.TREND.INCOMPLETE_DATA',
+                value: null,
+                unitKey: '',
+                tone: 'neutral',
+                detailKey: 'STATISTICS.DASHBOARD.TREND.INCOMPLETE_DATA_HINT',
+            },
+        ];
+        fixture.componentRef.setInput('tabs', STATISTICS_NUTRITION_TABS);
+        fixture.componentRef.setInput('selectedTab', 'calories');
+        fixture.componentRef.setInput('calorieGoal', CALORIE_GOAL);
+        fixture.componentRef.setInput('days', [
+            { date: '2026-08-02', label: '2 Aug', calories: 1800, protein: 100, fat: 60, carbs: 180, fiber: 20 },
+            { date: '2026-08-03', label: '3 Aug', calories: 1900, protein: 110, fat: 65, carbs: 190, fiber: 25 },
+        ]);
+        fixture.componentRef.setInput('insights', insights);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+
+        root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__chart-mode button')[1].click();
+        fixture.detectChanges();
+        expect(root.querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(1);
+        root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__data-toggle button')[1].click();
+        fixture.detectChanges();
+
+        expect(root.querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(NUTRIENT_COUNT);
+        expect(root.querySelector('fd-ui-line-chart')?.textContent).toContain('GENERAL.UNITS.G');
+        const rows = root.querySelectorAll('.statistics-nutrition-trend-card__insight');
+        expect(rows[0].querySelector('.statistics-nutrition-trend-card__insight-value--positive')?.textContent).toContain('+5');
+        expect(rows[1].querySelector('.fd-ui-stat-value')?.textContent).toBe('—');
+        expect(rows[2].textContent).toContain('STATISTICS.DASHBOARD.TREND.INCOMPLETE_DATA_HINT');
+        expect(rows[2].querySelector('.fd-ui-stat-value')).toBeNull();
+    });
+});
+
+describe('Statistics nutrition insight icon mapping', () => {
+    it('distinguishes fat insights from other nutrient insights in the rendered card', async () => {
+        await TestBed.configureTestingModule({
+            imports: [StatisticsNutritionTrendCardComponent],
+            providers: [provideTranslateTesting()],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(StatisticsNutritionTrendCardComponent);
+        const insights: StatisticsTrendInsight[] = [
+            {
+                key: 'fat',
+                labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.FAT',
+                detailKey: 'STATISTICS.DASHBOARD.TREND.VS_GOAL',
+                value: null,
+                unitKey: 'STATISTICS.DASHBOARD.TREND.GRAM_UNIT',
+                tone: 'neutral',
+            },
+            {
+                key: 'fiber',
+                labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.FIBER',
+                detailKey: 'STATISTICS.DASHBOARD.TREND.VS_GOAL',
+                value: null,
+                unitKey: 'STATISTICS.DASHBOARD.TREND.GRAM_UNIT',
+                tone: 'neutral',
+            },
+        ];
+        fixture.componentRef.setInput('tabs', STATISTICS_NUTRITION_TABS);
+        fixture.componentRef.setInput('selectedTab', 'calories');
+        fixture.componentRef.setInput('calorieGoal', CALORIE_GOAL);
+        fixture.componentRef.setInput('days', []);
+        fixture.componentRef.setInput('insights', insights);
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+        const rows = Array.from(root.querySelectorAll('.statistics-nutrition-trend-card__insight'));
+        expect(rows.map(row => row.querySelector('.fd-ui-icon__glyph')?.textContent)).toEqual(['water_drop', 'monitoring']);
+        expect(rows.map(row => row.querySelector('.fd-ui-stat-value')?.textContent)).toEqual(['—', '—']);
     });
 });

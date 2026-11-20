@@ -1,9 +1,12 @@
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PaddleCheckoutService, type PaddleEnvironment } from './paddle-checkout.service';
 
 const PADDLE_SCRIPT_URL = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+const PRICE_IDS = { monthly: 'pri_month', yearly: 'pri_year' };
+const SANDBOX_OPTIONS = { token: 'test_token', environment: 'sandbox' } as const;
 
 type PaddleApi = NonNullable<Window['Paddle']>;
 type PaddleInitializeConfig = Parameters<PaddleApi['Initialize']>[0];
@@ -151,6 +154,97 @@ describe('PaddleCheckoutService prices', () => {
         expect(paddleCheckoutOpen).not.toHaveBeenCalled();
     });
 });
+
+describe('Paddle checkout availability', () => {
+    it('keeps scripts and checkout unavailable during server rendering', async () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: 'server' }] });
+        const serverCheckout = TestBed.inject(PaddleCheckoutService);
+
+        await expect(serverCheckout.openTransactionCheckoutAsync('txn_ssr', SANDBOX_OPTIONS)).rejects.toThrow(
+            'only available in the browser',
+        );
+        await expect(serverCheckout.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS)).rejects.toThrow('only available in the browser');
+
+        expect(document.querySelector(`script[src="${PADDLE_SCRIPT_URL}"]`)).toBeNull();
+        expect(paddleCheckoutOpen).not.toHaveBeenCalled();
+    });
+
+    it('can retry the price preview if checkout initialized before the price API was available', async () => {
+        addLoadedPaddleScript();
+        const paddle = installPaddleMock();
+
+        await expect(service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS)).rejects.toThrow('Paddle price preview is unavailable');
+        expect(paddleCheckoutOpen).not.toHaveBeenCalled();
+        paddle.PricePreview = vi.fn().mockResolvedValue(createPricePreview());
+
+        const prices = await service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS);
+        expect(prices.monthly.formattedTotal).toBe('$8.00');
+        expect(paddleInitialize).toHaveBeenCalledOnce();
+    });
+});
+
+describe('Paddle script ownership', () => {
+    it('shares one pending script between price preview and transaction checkout', async () => {
+        const preview = service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS);
+        const checkout = service.openTransactionCheckoutAsync('txn_pending', SANDBOX_OPTIONS);
+        const script = requirePaddleScript();
+        expect(document.querySelectorAll(`script[src="${PADDLE_SCRIPT_URL}"]`)).toHaveLength(1);
+        expect(paddleInitialize).not.toHaveBeenCalled();
+
+        const paddle = installPaddleMock();
+        paddle.PricePreview = vi.fn().mockResolvedValue(createPricePreview());
+        script.dispatchEvent(new Event('load'));
+        const [prices] = await Promise.all([preview, checkout]);
+
+        expect(prices.yearly.formattedTotal).toBe('$80.00');
+        expect(paddleInitialize).toHaveBeenCalledOnce();
+        expect(paddleCheckoutOpen).toHaveBeenCalledOnce();
+    });
+
+    it('waits for an already inserted script without appending a duplicate', async () => {
+        addLoadedPaddleScript();
+        const script = requirePaddleScript();
+        const pending = service.openTransactionCheckoutAsync('txn_existing_script', SANDBOX_OPTIONS);
+
+        expect(requirePaddleScript()).toBe(script);
+        expect(document.querySelectorAll(`script[src="${PADDLE_SCRIPT_URL}"]`)).toHaveLength(1);
+        expect(paddleInitialize).not.toHaveBeenCalled();
+        installPaddleMock();
+        script.dispatchEvent(new Event('load'));
+
+        await pending;
+        expect(paddleCheckoutOpen).toHaveBeenCalledOnce();
+    });
+
+    it('replaces a loaded script that did not provide the Paddle API on retry', async () => {
+        const first = service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS);
+        const brokenScript = requirePaddleScript();
+        brokenScript.dispatchEvent(new Event('load'));
+        await expect(first).rejects.toThrow('Paddle.js did not initialize');
+
+        expect(brokenScript.isConnected).toBe(false);
+        const retry = service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS);
+        const newScript = requirePaddleScript();
+        expect(newScript).not.toBe(brokenScript);
+        const paddle = installPaddleMock();
+        paddle.PricePreview = vi.fn().mockResolvedValue(createPricePreview());
+        newScript.dispatchEvent(new Event('load'));
+
+        const prices = await retry;
+        expect(prices.yearly.formattedTotal).toBe('$80.00');
+        expect(paddleInitialize).toHaveBeenCalledOnce();
+        expect(paddleCheckoutOpen).not.toHaveBeenCalled();
+    });
+});
+
+function requirePaddleScript(): HTMLScriptElement {
+    const script = document.querySelector<HTMLScriptElement>(`script[src="${PADDLE_SCRIPT_URL}"]`);
+    if (script === null) {
+        throw new Error('Expected a Paddle script to be present');
+    }
+    return script;
+}
 
 function createPricePreview(): unknown {
     return {

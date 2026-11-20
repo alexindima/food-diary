@@ -78,6 +78,23 @@ describe('LoggingApiService', () => {
         httpMock.verify();
     });
 
+    it('sends paths without URL query or fragment metadata', () => {
+        const { service, httpMock } = setup();
+        service
+            .logEvent({
+                ...EVENT,
+                location: 'https://diagnostics.example.test/catalog?query=sample#meta',
+                route: '/products?search=sample#section',
+                pageRoute: '/dashboard#section',
+            })
+            .subscribe();
+
+        const request = httpMock.expectOne(environment.apiUrls.logs);
+        expect(request.request.body).toEqual({ ...EVENT, location: '/catalog', route: '/products', pageRoute: '/dashboard' });
+        request.flush(null);
+        httpMock.verify();
+    });
+
     it('logs errors through the same telemetry endpoint', () => {
         const { service, httpMock } = setup();
 

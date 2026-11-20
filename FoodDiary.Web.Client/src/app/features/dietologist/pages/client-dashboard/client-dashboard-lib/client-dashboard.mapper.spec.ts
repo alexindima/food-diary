@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import type { MealResponseDto } from '../../../../../shared/models/meal.data';
 import { calendarDate, utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { createClientValueFormatting } from '../../../lib/client-value-formatting';
@@ -50,6 +51,19 @@ describe('client dashboard mapper', () => {
         expect(buildClientProfileDetails(createClient({ permissions: { ...createClient().permissions, shareProfile: false } }))).toEqual(
             [],
         );
+    });
+
+    it('keeps the shared birth date and shows placeholders for omitted profile fields', () => {
+        const client = createClient({
+            email: null,
+            heightCm: null,
+            gender: null,
+            activityLevel: null,
+            birthDate: calendarDate('1987-08-14'),
+        });
+
+        expect(buildClientProfileDetails(client).map(detail => detail.value)).toEqual(['-', '-', '-', '-', '1987-08-14']);
+        expect(buildClientDashboardSections(null)).toEqual([]);
     });
 
     it('returns sections matching shared permissions', () => {
@@ -156,6 +170,35 @@ describe('client dashboard wire projection', () => {
     });
 });
 
+describe('client dashboard archived meal projection', () => {
+    it('preserves the recorded totals for an unclassified meal whose original product is no longer available', () => {
+        const meal: MealResponseDto = {
+            id: 'older-meal',
+            date: '2026-05-22T12:00:00Z',
+            mealType: null,
+            totalCalories: 420,
+            totalProteins: 25,
+            totalFats: 15,
+            totalCarbs: 50,
+            totalFiber: 7,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            items: [{ id: 'archived-item', mealId: 'older-meal', amount: 2, productId: 'archived-product' }],
+        };
+        const snapshot = createDashboardSnapshot() as DietologistDashboardSnapshot;
+        snapshot.meals = { items: [meal], total: 1 };
+
+        expect(buildMealViews(snapshot)).toEqual([
+            expect.objectContaining({
+                id: meal.id,
+                title: 'MEAL_TYPES.OTHER',
+                calories: '420 kcal',
+                itemSummary: '-',
+            }),
+        ]);
+    });
+});
+
 describe('client dashboard detail mapper', () => {
     it('maps shared dashboard details for meals, body, hydration and fasting', () => {
         const snapshot = createDashboardSnapshot();
@@ -246,6 +289,40 @@ describe('client fasting localization', () => {
         expect(buildFastingView(snapshot)?.protocol).toBe('FASTING.MODE_CYCLIC');
         session.protocol = '';
         expect(buildFastingView(snapshot)?.protocol).toBe('FASTING.MODE_CYCLIC');
+    });
+});
+
+describe('client dashboard partial measurements', () => {
+    it('shows the recorded hydration amount when the client has no daily goal', () => {
+        const snapshot = createDashboardSnapshot() as DietologistDashboardSnapshot;
+        snapshot.hydration = { dateUtc: calendarDate('2026-05-23'), totalMl: 1500, goalMl: null };
+
+        expect(buildHydrationView(snapshot)).toEqual({ total: '1500 ml', goal: null, progress: null });
+    });
+
+    it('preserves a historical fasting check-in with one recorded rating and two unavailable ones', () => {
+        const snapshot = createDashboardSnapshot() as DietologistDashboardSnapshot;
+        const session = snapshot.currentFastingSession;
+        if (session === null || session === undefined) {
+            throw new Error('Fasting fixture must include a session');
+        }
+        session.checkInAtUtc = utcInstant('2026-05-23T10:00:00Z');
+        session.energyLevel = 4;
+
+        expect(buildFastingView(snapshot)?.checkInSummary).toBe('- / 4 / -');
+    });
+
+    it('shows no trend for rounding noise and a negative delta when the previous reading is genuinely higher', () => {
+        const snapshot = createDashboardSnapshot() as DietologistDashboardSnapshot;
+        snapshot.weight = {
+            ...snapshot.weight,
+            latest: { date: calendarDate('2026-05-23'), weightKg: 73.18 },
+            previous: { date: calendarDate('2026-05-22'), weightKg: 73.2 },
+        };
+        expect(buildWeightView(snapshot)?.delta).toBe('0 kg');
+
+        snapshot.weight.previous = { date: calendarDate('2026-05-22'), weightKg: 74.2 };
+        expect(buildWeightView(snapshot)?.delta).toBe('-1 kg');
     });
 });
 

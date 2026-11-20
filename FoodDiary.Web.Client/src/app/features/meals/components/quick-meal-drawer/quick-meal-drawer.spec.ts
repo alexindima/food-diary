@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, of, Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -366,6 +366,96 @@ describe('QuickMealDrawerComponent edit ownership', () => {
         );
     });
 });
+
+describe('QuickMealDrawerComponent native draft controls', () => {
+    it('makes the collapsed preview inert and reopens it when the first item arrives', async () => {
+        const { fixture, quickService } = await setupComponentAsync([]);
+        fixture.componentRef.setInput('forceShow', true);
+        fixture.componentRef.setInput('layout', 'inline');
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const body = host.querySelector('.quick-meal__body');
+        expect(host.querySelector('.quick-meal--inline [aria-live="polite"]')).not.toBeNull();
+        expect(host.textContent).toContain('QUICK_MEAL.PREVIEW_EMPTY');
+
+        const collapse = quickAction(host, 'QUICK_MEAL.COLLAPSE');
+        expect(collapse.getAttribute('aria-expanded')).toBe('true');
+        expect(body?.id).toBeTruthy();
+        expect(collapse.getAttribute('aria-controls')).toBe(body?.id);
+        collapse.click();
+        fixture.detectChanges();
+        expect(body?.getAttribute('aria-hidden')).toBe('true');
+        expect(body?.hasAttribute('inert')).toBe(true);
+        const expand = quickAction(host, 'QUICK_MEAL.EXPAND');
+        expect(expand.getAttribute('aria-expanded')).toBe('false');
+        expect(expand.getAttribute('aria-controls')).toBe(body?.id);
+
+        quickService.items.set([{ key: 'product-product-1', type: 'product', product, amount: PRODUCT_AMOUNT }]);
+        fixture.detectChanges();
+        expect(body?.getAttribute('aria-hidden')).toBe('false');
+        expect(body?.hasAttribute('inert')).toBe(false);
+        expect(quickAction(host, 'QUICK_MEAL.COLLAPSE').getAttribute('aria-expanded')).toBe('true');
+        expect(host.querySelector('.quick-meal__name')?.textContent).toBe(product.name);
+        expect(host.textContent).not.toContain('QUICK_MEAL.PREVIEW_EMPTY');
+    });
+
+    it('updates a native meal type and comment, then saves through the drawer action', async () => {
+        const { fixture, quickService } = await setupComponentAsync([createRecipeDraftItem()]);
+        if (Object.getOwnPropertyDescriptor(Element.prototype, 'scrollIntoView') === undefined) {
+            Object.defineProperty(Element.prototype, 'scrollIntoView', { configurable: true, value: vi.fn() });
+            onTestFinished(() => {
+                Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+            });
+        }
+        quickService.updateDetails.mockImplementation((changes: Partial<QuickMealDetails>) => {
+            quickService.details.update(current => ({ ...current, ...changes }));
+        });
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelector<HTMLButtonElement>('button[aria-haspopup="listbox"]')?.click();
+        fixture.detectChanges();
+        const dinnerOption = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="option"]')).find(
+            option => option.textContent.trim() === 'MEAL_TYPES.DINNER',
+        );
+        if (dinnerOption === undefined) {
+            throw new Error('Expected the Dinner option in the meal type selector');
+        }
+        dinnerOption.click();
+        fixture.detectChanges();
+        expect(quickService.updateDetails).toHaveBeenCalledWith({ mealType: 'DINNER' });
+        expect(host.querySelector('button[aria-haspopup="listbox"]')?.textContent).toContain('MEAL_TYPES.DINNER');
+
+        const openDetails = quickAction(host, 'MEAL_DETAILS.ADD');
+        expect(openDetails.getAttribute('aria-expanded')).toBe('false');
+        openDetails.click();
+        fixture.detectChanges();
+        const comment = host.querySelector<HTMLTextAreaElement>('fd-meal-details-fields textarea');
+        if (comment === null) {
+            throw new Error('Expected the meal comment field in the expanded details');
+        }
+        comment.value = 'Dinner after the walk';
+        comment.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(quickService.updateDetails).toHaveBeenCalledWith({ comment: 'Dinner after the walk' });
+        const closeDetails = quickAction(host, 'MEAL_DETAILS.HIDE');
+        expect(closeDetails.getAttribute('aria-expanded')).toBe('true');
+        closeDetails.click();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-meal-details-fields')).toBeNull();
+        expect(quickAction(host, 'MEAL_DETAILS.ADD').getAttribute('aria-expanded')).toBe('false');
+        quickAction(host, 'QUICK_MEAL.SAVE_ARIA').click();
+
+        expect(quickService.details()).toMatchObject({ mealType: 'DINNER', comment: 'Dinner after the walk' });
+        expect(quickService.saveDraft).toHaveBeenCalledOnce();
+    });
+});
+
+function quickAction(host: HTMLElement, label: string): HTMLButtonElement {
+    const button = host.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`);
+    if (button === null) {
+        throw new Error(`Expected the quick meal action "${label}"`);
+    }
+    return button;
+}
 
 async function setupComponentAsync(items: QuickMealItem[]): Promise<{
     component: QuickMealDrawerComponent;

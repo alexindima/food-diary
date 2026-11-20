@@ -2,16 +2,20 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable } from 'rxjs';
 import { of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import type { ClientTask, RecommendationTemplate } from '../../../../shared/models/dietologist.data';
+import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
+import type { ClientTask, DietologistRecommendation, RecommendationTemplate } from '../../../../shared/models/dietologist.data';
+import type { Meal } from '../../../../shared/models/meal.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { RecommendationsFacade } from '../../../recommendations/lib/recommendations.facade';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import type { DietologistDashboardSnapshot } from '../../lib/dietologist-dashboard.data';
 import { createClient } from '../clients/dietologist-clients-lib/dietologist-clients.test-data';
@@ -94,6 +98,501 @@ describe('ClientDashboardComponent', () => {
     registerActionTests();
 });
 
+describe('ClientDashboardComponent rendered period controls', () => {
+    const endDay = 23;
+    const firstWeekDay = 17;
+    const firstTwoWeekDay = 10;
+    const startPreviousMonthDay = 24;
+    const aprilMonth = 3;
+    const nextWeekStarts = 24;
+    const nextWeekEnds = 30;
+    const midday = 12;
+
+    it.each([
+        ['LAST_7', MAY_MONTH_INDEX, firstWeekDay],
+        ['LAST_14', MAY_MONTH_INDEX, firstTwoWeekDay],
+        ['LAST_30', aprilMonth, startPreviousMonthDay],
+    ] as const)('requests the inclusive calendar period from the %s preset', async (action, month, day) => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        try {
+            vi.setSystemTime(new Date(SELECTED_YEAR, MAY_MONTH_INDEX, endDay, midday));
+            createComponent('client-1');
+            dashboardButton(`DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.${action}`).click();
+            await fixture.whenStable();
+
+            expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
+            expect(getLastDashboardPeriod()).toMatchObject({
+                dateFrom: new Date(SELECTED_YEAR, month, day),
+                dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, endDay),
+            });
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('moves the displayed seven-day period forward, then restores today as a single day', async () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        try {
+            vi.setSystemTime(new Date(SELECTED_YEAR, MAY_MONTH_INDEX, endDay, midday));
+            createComponent('client-1');
+            dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_7').click();
+            await fixture.whenStable();
+            dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.NEXT_PERIOD').click();
+            await fixture.whenStable();
+
+            expect(getLastDashboardPeriod()).toMatchObject({
+                dateFrom: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, nextWeekStarts),
+                dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, nextWeekEnds),
+            });
+            dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TODAY').click();
+            await fixture.whenStable();
+            expect(getLastDashboardPeriod()).toMatchObject({
+                dateFrom: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, endDay),
+                dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, endDay),
+            });
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+describe('ClientDashboardComponent rendered recommendation and task actions', () => {
+    it('uses template text and keeps it editable after an archive failure and retry', () => {
+        const template: RecommendationTemplate = {
+            id: entityId<'recommendation-template'>('protein-guide'),
+            name: 'Protein guide',
+            text: 'Add beans to your next lunch.',
+            isArchived: false,
+            createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
+            modifiedAtUtc: null,
+        };
+        dietologistService.searchRecommendationTemplates.mockReturnValueOnce(of([template]));
+        dietologistService.archiveRecommendationTemplate
+            .mockReturnValueOnce(throwError(() => new Error('archive unavailable')))
+            .mockReturnValueOnce(of(void 0));
+        createComponent('client-1', true);
+        const host = fixture.nativeElement as HTMLElement;
+        dashboardButton(template.name).click();
+        fixture.detectChanges();
+        const draft = host.querySelector<HTMLTextAreaElement>('.client-dashboard__recommendation-form textarea');
+        expect(draft?.value).toBe(template.text);
+        expect(dietologistService.createRecommendation).not.toHaveBeenCalled();
+
+        dashboardButton('RECOMMENDATION_TEMPLATES.ARCHIVE_SHORT').click();
+        fixture.detectChanges();
+        expect(host.textContent).toContain(template.name);
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('RECOMMENDATION_TEMPLATES.ARCHIVE_ERROR');
+        dashboardButton('RECOMMENDATION_TEMPLATES.ARCHIVE_SHORT').click();
+        fixture.detectChanges();
+
+        expect(dietologistService.archiveRecommendationTemplate).toHaveBeenCalledTimes(2);
+        expect(dietologistService.archiveRecommendationTemplate).toHaveBeenLastCalledWith(template.id);
+        expect(host.textContent).toContain('RECOMMENDATION_TEMPLATES.EMPTY');
+        expect(draft?.value).toBe(template.text);
+        expect(draft?.disabled).toBe(false);
+    });
+
+    it('keeps a task open after a rejected cancellation, then renders its cancelled status on retry', () => {
+        const task: ClientTask = {
+            id: entityId<'client-task'>('check-lunch'),
+            dietologistUserId: entityId<'user'>('diet-1'),
+            clientUserId: entityId<'user'>('client-1'),
+            title: 'Check lunch',
+            details: 'Track protein portions',
+            dueAtUtc: null,
+            status: 'Open',
+            isOverdue: false,
+            createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
+            statusChangedAtUtc: null,
+        };
+        const pending = new Subject<ClientTask>();
+        dietologistService.getTasksForClient.mockReturnValueOnce(of([task]));
+        dietologistService.cancelTask.mockReturnValueOnce(pending).mockReturnValueOnce(of({ ...task, status: 'Cancelled' }));
+        createComponent('client-1');
+        const host = fixture.nativeElement as HTMLElement;
+        const cancel = dashboardButton('CLIENT_TASKS.CANCEL');
+        cancel.click();
+        fixture.detectChanges();
+        expect(cancel.disabled).toBe(true);
+        cancel.click();
+        expect(dietologistService.cancelTask).toHaveBeenCalledExactlyOnceWith(task.id);
+
+        pending.error(new Error('temporarily unavailable'));
+        fixture.detectChanges();
+        expect(host.textContent).toContain('CLIENT_TASKS.STATUS.OPEN');
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('CLIENT_TASKS.CHANGE_ERROR');
+        expect(cancel.disabled).toBe(false);
+        cancel.click();
+        fixture.detectChanges();
+
+        expect(host.textContent).toContain('CLIENT_TASKS.STATUS.CANCELLED');
+        expect(cancel.isConnected).toBe(false);
+        expect(dietologistService.cancelTask).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('Client dashboard recommendation template requests', () => {
+    it('allows independent archives but sends only one request per pending template', () => {
+        const first = recommendationTemplate('first', 'After training');
+        const second = recommendationTemplate('second', 'Before lunch');
+        const firstAttempt = new Subject<void>();
+        const secondAttempt = new Subject<void>();
+        dietologistService.searchRecommendationTemplates.mockReturnValueOnce(of([first, second]));
+        dietologistService.archiveRecommendationTemplate
+            .mockReturnValueOnce(firstAttempt)
+            .mockReturnValueOnce(secondAttempt)
+            .mockReturnValueOnce(of(void 0));
+        createComponent('client-1', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const firstArchive = archiveButton(host, first.name);
+        const secondArchive = archiveButton(host, second.name);
+
+        firstArchive.click();
+        firstArchive.click();
+        fixture.detectChanges();
+        expect(dietologistService.archiveRecommendationTemplate).toHaveBeenCalledExactlyOnceWith(first.id);
+        expect(firstArchive.disabled).toBe(true);
+        expect(secondArchive.disabled).toBe(false);
+        secondArchive.click();
+        fixture.detectChanges();
+        expect(secondArchive.disabled).toBe(true);
+
+        firstAttempt.error(new Error('Archive unavailable'));
+        fixture.detectChanges();
+        expect(firstArchive.disabled).toBe(false);
+        expect(secondArchive.disabled).toBe(true);
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('RECOMMENDATION_TEMPLATES.ARCHIVE_ERROR');
+
+        secondAttempt.next();
+        secondAttempt.complete();
+        fixture.detectChanges();
+        expect(secondArchive.isConnected).toBe(false);
+        firstArchive.click();
+        fixture.detectChanges();
+        expect(firstArchive.isConnected).toBe(false);
+        expect(dietologistService.archiveRecommendationTemplate.mock.calls).toEqual([[first.id], [second.id], [first.id]]);
+    });
+
+    it('retains the native form after a rejected save and places the successful retry in name order', () => {
+        const older = recommendationTemplate('older', 'Zinc foods');
+        const created = recommendationTemplate('created', 'A balanced breakfast');
+        dietologistService.searchRecommendationTemplates.mockReturnValueOnce(of([older]));
+        dietologistService.createRecommendationTemplate
+            .mockReturnValueOnce(throwError(() => new Error('Template unavailable')))
+            .mockReturnValueOnce(of(created));
+        createComponent('client-1', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const draft = host.querySelector('.client-dashboard__recommendation-form textarea');
+        if (!(draft instanceof HTMLTextAreaElement)) {
+            throw new Error('Expected the recommendation text field');
+        }
+        const name = templateNameField();
+        draft.value = `  ${created.text}  `;
+        draft.dispatchEvent(new Event('input', { bubbles: true }));
+        name.value = `  ${created.name}  `;
+        name.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        const save = dashboardButton('RECOMMENDATION_TEMPLATES.SAVE');
+        save.click();
+        fixture.detectChanges();
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('RECOMMENDATION_TEMPLATES.SAVE_ERROR');
+        expect(draft.value).toBe(`  ${created.text}  `);
+        expect(name.value).toBe(`  ${created.name}  `);
+        expect(host.querySelectorAll('.client-dashboard__template')).toHaveLength(1);
+
+        save.click();
+        fixture.detectChanges();
+        expect(dietologistService.createRecommendationTemplate).toHaveBeenLastCalledWith({ name: created.name, text: created.text });
+        expect(Array.from(host.querySelectorAll('.client-dashboard__template-name'), node => node.textContent.trim())).toEqual([
+            created.name,
+            older.name,
+        ]);
+        expect(draft.value).toBe(`  ${created.text}  `);
+        expect(name.value).toBe('');
+    });
+});
+
+function recommendationTemplate(key: string, name: string): RecommendationTemplate {
+    return {
+        id: entityId<'recommendation-template'>(key),
+        name,
+        text: `${name} suggested foods`,
+        isArchived: false,
+        createdAtUtc: utcInstant('2026-05-23T00:00:00Z'),
+        modifiedAtUtc: null,
+    };
+}
+
+function archiveButton(root: HTMLElement, name: string): HTMLButtonElement {
+    const row = Array.from(root.querySelectorAll('.client-dashboard__template')).find(
+        item => item.querySelector('.client-dashboard__template-name')?.textContent.trim() === name,
+    );
+    const button = row?.querySelector('button[aria-label^="RECOMMENDATION_TEMPLATES.ARCHIVE"]');
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error(`Expected the archive button for ${name}`);
+    }
+    return button;
+}
+
+describe('ClientDashboardComponent rendered help and discussions', () => {
+    it('opens one recommendation discussion at a time and closes the active discussion when selected again', () => {
+        const createdAtUtc = utcInstant('2026-05-23T08:00:00Z');
+        const first: DietologistRecommendation = {
+            id: entityId<'recommendation'>('protein'),
+            dietologistUserId: entityId<'user'>('diet-1'),
+            dietologistFirstName: 'Alex',
+            dietologistLastName: null,
+            text: 'Add protein at lunch',
+            isRead: false,
+            createdAtUtc,
+            readAtUtc: null,
+        };
+        const second = { ...first, id: entityId<'recommendation'>('hydration'), text: 'Add water after walking' };
+        const getComments = vi.fn(() => of([]));
+        TestBed.configureTestingModule({ providers: [{ provide: RecommendationsFacade, useValue: { getComments } }] });
+        dietologistService.getRecommendationsForClient.mockReturnValueOnce(of([first, second]));
+        createComponent('client-1', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const controls = host.querySelectorAll<HTMLButtonElement>('.client-dashboard__recommendation-list button');
+
+        controls[0].click();
+        fixture.detectChanges();
+        expect(getComments).toHaveBeenCalledExactlyOnceWith(first.id);
+        expect(host.querySelectorAll('fd-recommendation-thread')).toHaveLength(1);
+        expect(controls[0].getAttribute('aria-expanded')).toBe('true');
+
+        controls[1].click();
+        fixture.detectChanges();
+        expect(getComments).toHaveBeenLastCalledWith(second.id);
+        expect(host.querySelectorAll('fd-recommendation-thread')).toHaveLength(1);
+        expect(controls[0].getAttribute('aria-expanded')).toBe('false');
+        expect(controls[1].getAttribute('aria-expanded')).toBe('true');
+
+        controls[1].click();
+        fixture.detectChanges();
+        expect(host.querySelector('fd-recommendation-thread')).toBeNull();
+        expect(getComments).toHaveBeenCalledTimes(2);
+    });
+
+    it('opens the client dashboard tour through the header help button', () => {
+        createComponent('client-1');
+        const start = vi.spyOn(TestBed.inject(FdTourService), 'start').mockReturnValue(true);
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelector<HTMLButtonElement>('[data-tour-id="client-dashboard-tour-help"] button')?.click();
+
+        expect(start).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: 'dietologist-client-dashboard' }), { force: true });
+    });
+});
+
+describe('ClientDashboardComponent registered development screen', () => {
+    it('keeps development actions draft-only and protects a task during native form submission', async () => {
+        const response = new Subject<ClientTask>();
+        dietologistService.createTask.mockReturnValueOnce(response);
+        const { screen, detach } = createDevelopmentDashboard();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(screen.kind).toBe('client-dashboard');
+        expect(screen.isDirty?.()).toBe(false);
+
+        screen.fillDraft?.({ type: 'recommendation', text: 'Eat a varied lunch' });
+        fixture.detectChanges();
+        expect(host.querySelector<HTMLTextAreaElement>('.client-dashboard__recommendation-form textarea')?.value).toBe(
+            'Eat a varied lunch',
+        );
+        expect(dietologistService.createRecommendation).not.toHaveBeenCalled();
+        expect(screen.isDirty?.()).toBe(true);
+        screen.clearDraft?.();
+        expect(screen.isDirty?.()).toBe(false);
+
+        screen.fillDraft?.({ type: 'task', title: 'Log a meal', details: 'Include portions', dueDate: '' });
+        fixture.detectChanges();
+        expect(dietologistService.createTask).not.toHaveBeenCalled();
+        dashboardButton('CLIENT_TASKS.FORM.CREATE').click();
+        await vi.waitFor(() => {
+            expect(dietologistService.createTask).toHaveBeenCalledExactlyOnceWith('client-1', {
+                title: 'Log a meal',
+                details: 'Include portions',
+                dueAtUtc: null,
+            });
+        });
+        expect(() => screen.clearDraft?.()).toThrow('A save is running.');
+        expect(() => screen.fillDraft?.({ type: 'recommendation', text: 'Another recommendation' })).toThrow('Client is not ready.');
+        response.error(new Error('task service unavailable'));
+        await fixture.whenStable();
+        expect(screen.read()).toMatchObject({ task: { title: 'Log a meal', details: 'Include portions' } });
+
+        screen.clearDraft?.();
+        expect(screen.isDirty?.()).toBe(false);
+        fixture.destroy();
+        expect(detach).toHaveBeenCalledOnce();
+    });
+
+    it('honors meal sharing and validates the current timezone and calendar order before requesting a period', async () => {
+        dietologistService.getMyClients.mockReturnValueOnce(
+            of([
+                createClient({
+                    userId: entityId<'user'>('client-1'),
+                    permissions: { ...createClient().permissions, shareMeals: false, shareStatistics: true },
+                }),
+            ]),
+        );
+        const { screen } = createDevelopmentDashboard(false);
+        expect(screen.read()).toMatchObject({ meals: { available: false, permissionGranted: false, items: [] } });
+        const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const dates = { dateFrom: '2026-05-16', dateTo: '2026-05-22' };
+
+        expect(() => screen.setFilters?.({ ...dates, timeZone: '' })).toThrow('Use the current browser timezone');
+        expect(() => screen.setFilters?.({ dateFrom: dates.dateTo, dateTo: dates.dateFrom, timeZone })).toThrow('ordered calendar range');
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(1);
+
+        screen.setFilters?.({ ...dates, timeZone });
+        await fixture.whenStable();
+        expect(getLastDashboardPeriod()).toMatchObject({
+            dateFrom: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, PERIOD_START_DAY),
+            dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, SELECTED_DAY),
+        });
+        expect(screen.read()).toMatchObject({ ...dates, meals: { available: false, permissionGranted: false, items: [] } });
+    });
+});
+
+describe('ClientDashboardComponent pending template draft ownership', () => {
+    it.each(['clear', 'replace'] as const)('rejects a development %s while the native template save is pending', attempt => {
+        const pending = new Subject<RecommendationTemplate>();
+        dietologistService.createRecommendationTemplate.mockReturnValueOnce(pending);
+        const { screen } = createDevelopmentDashboard();
+        const draft = { name: 'Protein guide', text: 'Add beans to your next lunch.' };
+        screen.fillDraft?.({ type: 'recommendation', text: draft.text });
+        fixture.detectChanges();
+        const name = templateNameField();
+        name.value = draft.name;
+        name.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        dashboardButton('RECOMMENDATION_TEMPLATES.SAVE').click();
+        fixture.detectChanges();
+
+        expect(dietologistService.createRecommendationTemplate).toHaveBeenCalledExactlyOnceWith(draft);
+        expect(name.disabled).toBe(true);
+        const mutate =
+            attempt === 'clear'
+                ? (): void => {
+                      screen.clearDraft?.();
+                  }
+                : (): void => {
+                      screen.fillDraft?.({ type: 'recommendation', text: 'A different draft' });
+                  };
+        expect(mutate).toThrow(attempt === 'clear' ? 'A save is running.' : 'Client is not ready.');
+
+        pending.error(new Error('Template save unavailable'));
+        fixture.detectChanges();
+
+        expect(name.disabled).toBe(false);
+        expect(name.value).toBe(draft.name);
+        expect(screen.read()).toMatchObject({ recommendation: { text: draft.text } });
+    });
+});
+
+describe('ClientDashboardComponent rendered template validation', () => {
+    it('focuses the required template name without sending or deleting the recommendation draft', () => {
+        const { screen } = createDevelopmentDashboard();
+        const text = 'Choose a high-fibre snack';
+        screen.fillDraft?.({ type: 'recommendation', text });
+        fixture.detectChanges();
+
+        dashboardButton('RECOMMENDATION_TEMPLATES.SAVE').click();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.client-dashboard__recommendation-form')?.textContent).toContain('FORM_ERRORS.REQUIRED');
+        expect(document.activeElement).toBe(templateNameField());
+        expect(screen.read()).toMatchObject({ recommendation: { text, templateName: '' } });
+        expect(dietologistService.createRecommendationTemplate).not.toHaveBeenCalled();
+        expect(dietologistService.createRecommendation).not.toHaveBeenCalled();
+    });
+});
+
+describe('ClientDashboardComponent private client dashboard', () => {
+    it('shows the unnamed client safely and denies a recommendation draft without a sharing permission', () => {
+        dietologistService.getMyClients.mockReturnValueOnce(
+            of([
+                createClient({
+                    firstName: null,
+                    lastName: null,
+                    email: null,
+                    permissions: { ...createClient().permissions, shareMeals: false, shareProfile: false },
+                }),
+            ]),
+        );
+        const { screen } = createDevelopmentDashboard(false);
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.textContent).toContain('ATTENTION.UNNAMED_CLIENT');
+        const form = host.querySelector('.client-dashboard__recommendation-form');
+        expect(form?.querySelector('p:not([hidden])')?.textContent).toContain(
+            'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED',
+        );
+        expect(form?.querySelector('button[type="submit"]')?.matches(':disabled')).toBe(true);
+        expect(host.querySelector('.client-dashboard__date-filter')).toBeNull();
+        expect(dietologistService.getClientDashboard).not.toHaveBeenCalled();
+        expect(() => screen.fillDraft?.({ type: 'recommendation', text: 'Should remain private' })).toThrow(
+            'Client permissions do not allow recommendations.',
+        );
+        expect(screen.isDirty?.()).toBe(false);
+    });
+});
+
+describe('ClientDashboardComponent disconnect retry', () => {
+    it('keeps the dashboard after a confirmed disconnect fails and exits only after a successful retry', () => {
+        const confirm = new Subject<boolean>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => confirm, close: vi.fn() });
+        dietologistService.disconnectClient.mockReturnValueOnce(throwError(() => new Error('Disconnect unavailable')));
+        createComponent('client-1', true);
+        const disconnect = dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT');
+
+        disconnect.click();
+        expect(dietologistService.disconnectClient).not.toHaveBeenCalled();
+        confirm.next(true);
+        confirm.complete();
+        fixture.detectChanges();
+
+        expect(toastService.error).toHaveBeenCalledExactlyOnceWith('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_ERROR');
+        expect(router.navigate).not.toHaveBeenCalled();
+        expect(disconnect.isConnected).toBe(true);
+        disconnect.click();
+        fixture.detectChanges();
+
+        expect(dietologistService.disconnectClient).toHaveBeenCalledTimes(2);
+        expect(dietologistService.disconnectClient).toHaveBeenLastCalledWith('client-1');
+        expect(router.navigate).toHaveBeenCalledExactlyOnceWith(['/dietologist']);
+    });
+});
+
+function templateNameField(): HTMLInputElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const input = host.querySelector<HTMLInputElement>('.client-dashboard__recommendation-form input');
+    if (input === null) {
+        throw new Error('Recommendation template name input is missing');
+    }
+    return input;
+}
+
+function createDevelopmentDashboard(fullAccess = true): { screen: DevelopmentScreen; detach: ReturnType<typeof vi.fn> } {
+    const detach = vi.fn();
+    const attach = vi.fn<(screen: DevelopmentScreen) => () => void>().mockReturnValue(detach);
+    TestBed.configureTestingModule({ providers: [{ provide: DEVELOPMENT_SCREENS, useValue: { attach } }] });
+    createComponent('client-1', fullAccess);
+    expect(attach).toHaveBeenCalledOnce();
+    return { screen: attach.mock.calls[0][0], detach };
+}
+
+function dashboardButton(label: string): HTMLButtonElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const button = Array.from(host.querySelectorAll('button')).find(candidate => candidate.textContent.trim() === label);
+    if (button === undefined) {
+        throw new Error(`Dashboard button "${label}" was not found`);
+    }
+    return button;
+}
+
 describe('ClientDashboardComponent remaining meals', () => {
     it('loads remaining rows once, deduplicates IDs and preserves the period statistics', async () => {
         const { initial, next } = prepareMealPaging();
@@ -168,6 +667,118 @@ describe('ClientDashboardComponent remaining meals', () => {
         expect(component['moreMealsError']()).toBe(false);
     });
 });
+
+describe('ClientDashboardComponent applied period ownership', () => {
+    const currentDay = 23;
+    const draftStartDay = 5;
+    const draftEndDay = 8;
+    const firstDayOfNextWeek = 24;
+    const lastDayOfNextWeek = 30;
+    const midday = 12;
+    const draftStart = new Date(SELECTED_YEAR, MAY_MONTH_INDEX, draftStartDay);
+    const draftEnd = new Date(SELECTED_YEAR, MAY_MONTH_INDEX, draftEndDay);
+    const clock = new Date(SELECTED_YEAR, MAY_MONTH_INDEX, currentDay, midday);
+    const originalMealCount = 2;
+    const draftMealDate = '2026-05-06T12:30:00Z';
+
+    beforeEach(() => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(clock);
+    });
+    afterEach(() => vi.useRealTimers());
+
+    it('continues paging the applied period until the pending calendar selection is submitted', async () => {
+        dietologistService.getClientDashboard
+            .mockReturnValueOnce(of(mealPage('applied-lunch', 'Lunch', originalMealCount)))
+            .mockImplementationOnce((_client: string, period: { dateFrom: Date }) =>
+                of(
+                    period.dateFrom.getTime() === draftStart.getTime()
+                        ? mealPage('new-period-dinner', 'Dinner', originalMealCount, draftMealDate)
+                        : mealPage('applied-breakfast', 'Breakfast', originalMealCount),
+                ),
+            )
+            .mockReturnValueOnce(of(mealPage('new-period-dinner', 'Dinner', 1, draftMealDate)));
+        createComponent('client-1');
+        const appliedPeriod = getLastDashboardPeriod();
+        expect(visibleMealTitles()).toEqual(['MEAL_TYPES.LUNCH']);
+
+        await chooseDraftPeriodAsync();
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(1);
+        expect(visibleMealTitles()).toEqual(['MEAL_TYPES.LUNCH']);
+
+        dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.MEALS.LOAD_MORE').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(visibleMealTitles()).toEqual(['MEAL_TYPES.LUNCH', 'MEAL_TYPES.BREAKFAST']);
+        expect(getLastDashboardPeriod()).toMatchObject({ ...appliedPeriod, page: 2 });
+
+        dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY').click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(getLastDashboardPeriod()).toMatchObject({ dateFrom: draftStart, dateTo: draftEnd, page: 1 });
+        expect(visibleMealTitles()).toEqual(['MEAL_TYPES.DINNER']);
+    });
+
+    it('moves the applied week forward when the date fields contain an unsubmitted draft', async () => {
+        createComponent('client-1');
+        await chooseDraftPeriodAsync();
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(1);
+
+        dashboardButton('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.NEXT_PERIOD').click();
+        await fixture.whenStable();
+        expect(getLastDashboardPeriod()).toMatchObject({
+            dateFrom: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, firstDayOfNextWeek),
+            dateTo: new Date(SELECTED_YEAR, MAY_MONTH_INDEX, lastDayOfNextWeek),
+            page: 1,
+        });
+    });
+});
+
+function mealPage(id: string, mealType: string, total: number, date = '2026-05-23T12:30:00Z'): Record<string, unknown> {
+    const item = {
+        id: entityId<'meal'>(id),
+        date: utcInstant(date),
+        mealType,
+        totalCalories: 400,
+        totalProteins: 20,
+        totalFats: 10,
+        totalCarbs: 20,
+        totalFiber: 5,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: false,
+        items: [],
+    } satisfies Meal;
+    return { ...createDashboardSnapshot(), meals: { items: [item], total } };
+}
+
+function visibleMealTitles(): string[] {
+    const root = fixture.nativeElement as HTMLElement;
+    return [...root.querySelectorAll('fd-client-dashboard-meals-card article strong.client-dashboard__row-title')].map(title =>
+        title.textContent.trim(),
+    );
+}
+
+async function chooseDraftPeriodAsync(): Promise<void> {
+    const root = fixture.nativeElement as HTMLElement;
+    const triggers = root.querySelectorAll<HTMLButtonElement>('.client-dashboard__date-filter button[aria-haspopup="dialog"]');
+    let index = 0;
+    for (const day of ['2026-05-05', '2026-05-08']) {
+        const trigger = triggers[index++];
+        trigger.click();
+        const dayButton = await vi.waitFor(() => {
+            fixture.detectChanges();
+            const button = document.querySelector<HTMLButtonElement>(`[role="dialog"] [data-date="${day}"]`);
+            if (button === null) {
+                throw new Error(`Expected the selectable date ${day}`);
+            }
+            return button;
+        });
+        expect(dayButton.disabled).toBe(false);
+        dayButton.click();
+        fixture.detectChanges();
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    }
+}
 
 describe('ClientDashboardComponent meal page transitions', () => {
     it.each(['success', 'failure'])('ignores late page %s after changing the period', async outcome => {

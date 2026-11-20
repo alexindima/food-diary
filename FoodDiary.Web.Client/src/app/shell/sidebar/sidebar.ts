@@ -5,7 +5,7 @@ import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angul
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
 import {
     UnsavedChangesDialogComponent,
@@ -90,11 +90,10 @@ export class SidebarComponent {
     protected readonly mobileSheet = signal<MobileSheetId>(null);
     protected readonly isFoodTrackingOpen = computed(() => this.openDesktopSection() === 'food');
     protected readonly isBodyTrackingOpen = computed(() => this.openDesktopSection() === 'body');
-    protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
-    protected readonly isMobileViewport = signal(this.getIsMobileViewport());
     protected readonly pendingRoute = signal<string | null>(null);
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
+    private openingNotifications = false;
 
     public constructor() {
         effect(() => {
@@ -109,16 +108,17 @@ export class SidebarComponent {
         });
 
         const mobileMediaQuery = this.browserWindow.matchMedia(this.mobileViewportQuery);
-        const updateMobileViewport = (): void => {
-            const isMobile = this.getIsMobileViewport();
-            this.isMobileViewport.set(isMobile);
-            if (!isMobile) {
-                this.closeMobileMenus();
-            }
-        };
-
-        mobileMediaQuery?.addEventListener('change', updateMobileViewport);
-        this.destroyRef.onDestroy(() => mobileMediaQuery?.removeEventListener('change', updateMobileViewport));
+        if (mobileMediaQuery !== null) {
+            const updateMobileViewport = (): void => {
+                if (!mobileMediaQuery.matches) {
+                    this.closeMobileMenus();
+                }
+            };
+            mobileMediaQuery.addEventListener('change', updateMobileViewport);
+            this.destroyRef.onDestroy(() => {
+                mobileMediaQuery.removeEventListener('change', updateMobileViewport);
+            });
+        }
 
         this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             if (event instanceof NavigationEnd) {
@@ -176,10 +176,6 @@ export class SidebarComponent {
         this.onDirectRouteClick(request.route, request.exact ?? false);
     }
 
-    private getIsMobileViewport(): boolean {
-        return this.browserWindow.matchMedia(this.mobileViewportQuery)?.matches ?? false;
-    }
-
     protected toggleFoodTracking(): void {
         this.toggleDesktopSection('food');
     }
@@ -207,10 +203,24 @@ export class SidebarComponent {
     }
 
     protected async openNotificationsAsync(): Promise<void> {
-        const { NotificationsDialogComponent } = await import('../../components/shared/notifications-dialog/notifications-dialog');
-        this.dialogService.open(NotificationsDialogComponent, {
-            preset: 'list',
-        });
+        if (this.openingNotifications) {
+            return;
+        }
+
+        this.openingNotifications = true;
+        try {
+            const { NotificationsDialogComponent } = await import('../../components/shared/notifications-dialog/notifications-dialog');
+            if (this.destroyRef.destroyed) {
+                return;
+            }
+            const dialog = this.dialogService.open(NotificationsDialogComponent, { preset: 'list' });
+            const unregisterClose = this.destroyRef.onDestroy(() => {
+                dialog.close();
+            });
+            dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose)).subscribe();
+        } finally {
+            this.openingNotifications = false;
+        }
     }
 
     protected openAdminPanel(): void {

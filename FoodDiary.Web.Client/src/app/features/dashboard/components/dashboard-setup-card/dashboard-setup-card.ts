@@ -7,7 +7,6 @@ import { DashboardSetupFacade } from '../../lib/dashboard-setup.facade';
 @Component({
     selector: 'fd-dashboard-setup-card',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent],
-    providers: [DashboardSetupFacade],
     templateUrl: './dashboard-setup-card.html',
     styleUrl: './dashboard-setup-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

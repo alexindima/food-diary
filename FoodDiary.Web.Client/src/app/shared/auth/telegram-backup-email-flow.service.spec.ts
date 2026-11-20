@@ -1,10 +1,17 @@
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { LocalizationService } from '../i18n/localization.service';
+import { entityId } from '../models/semantics/entity-id';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import type { AuthResponse } from './auth.data';
 import { SessionEventsService } from './session-events.service';
 import { TelegramBackupEmailFlowService } from './telegram-backup-email-flow.service';
 import { telegramOAuthCode, telegramOAuthState } from './telegram-oidc-values';
@@ -14,6 +21,7 @@ describe('TelegramBackupEmailFlowService', () => {
     const state = 's'.repeat(stateLength);
     let flow: TelegramBackupEmailFlowService;
     let stored: unknown;
+    const authenticated = new Subject<void>();
     const ended = new Subject<void>();
     const auth = { getUserId: vi.fn(), startTelegramBackupEmail: vi.fn(), completeTelegramBackupEmail: vi.fn() };
     const browser = { open: vi.fn() };
@@ -28,7 +36,7 @@ describe('TelegramBackupEmailFlowService', () => {
             providers: [
                 { provide: AuthService, useValue: auth },
                 { provide: BrowserWindowService, useValue: browser },
-                { provide: SessionEventsService, useValue: { sessionEnded$: ended } },
+                { provide: SessionEventsService, useValue: { authenticated$: authenticated, sessionEnded$: ended } },
                 {
                     provide: BrowserStorageService,
                     useValue: {
@@ -91,3 +99,106 @@ describe('TelegramBackupEmailFlowService', () => {
         expect(browser.open).not.toHaveBeenCalled();
     });
 });
+
+describe('Telegram backup email HTTP completion after an account change', () => {
+    const baseUrl = `${environment.apiUrls.auth}/telegram/backup-email/oidc`;
+    const stateLength = 43;
+    const original = backupAccount('original-profile', 'original-browser-session');
+    const replacement = backupAccount('replacement-profile', 'replacement-browser-session');
+    let auth: AuthService;
+    let http: HttpTestingController;
+    let flow: TelegramBackupEmailFlowService;
+
+    beforeEach(() => {
+        vi.spyOn(window, 'open').mockReturnValue(null);
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                provideRouter([]),
+                { provide: LocalizationService, useValue: { applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined) } },
+            ],
+        });
+        auth = TestBed.inject(AuthService);
+        http = TestBed.inject(HttpTestingController);
+        flow = TestBed.inject(TelegramBackupEmailFlowService);
+        flow.clear();
+    });
+
+    afterEach(() => {
+        flow.clear();
+        http.verify();
+        localStorage.clear();
+        vi.restoreAllMocks();
+    });
+
+    async function openAttemptAsync(email: string, state: string): Promise<void> {
+        const started = flow.startAsync(email);
+        const request = http.expectOne({ method: 'POST', url: `${baseUrl}/start` });
+        expect(request.request.body).toEqual({ email });
+        request.flush({ authorizationUrl: `https://oauth.telegram.org/auth?state=${state}` });
+        await started;
+    }
+
+    it.each([
+        { outcome: 'accepted', change: 'an account switch', nextAuth: replacement },
+        { outcome: 'rejected', change: 'an account switch', nextAuth: replacement },
+        { outcome: 'accepted', change: 'reauthentication', nextAuth: { ...original } },
+    ] as const)('keeps the new attempt when the old confirmation is $outcome after $change', async ({ outcome, nextAuth }) => {
+        const originalState = 'a'.repeat(stateLength);
+        const replacementState = 'b'.repeat(stateLength);
+        const code = telegramOAuthCode('local-original-confirmation');
+        const originalEmail = 'original@example.test';
+        const replacementEmail = 'replacement@example.test';
+        auth.acceptExternalAuthentication(original);
+        await openAttemptAsync(originalEmail, originalState);
+        const finishing = flow.handleCallbackAsync(code, telegramOAuthState(originalState), false);
+        const confirmation = http.expectOne({ method: 'POST', url: `${baseUrl}/complete` });
+        expect(confirmation.request.body).toEqual({ code, state: originalState });
+
+        auth.acceptExternalAuthentication(nextAuth);
+        await openAttemptAsync(replacementEmail, replacementState);
+        const currentAttempt = flow.read();
+        expect(currentAttempt).toMatchObject({ userId: nextAuth.user.id, email: replacementEmail, state: replacementState });
+
+        if (outcome === 'accepted') {
+            confirmation.flush(null);
+        } else {
+            confirmation.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        }
+        await expect(finishing).resolves.toBe(true);
+
+        expect(auth.getUserId()).toBe(nextAuth.user.id);
+        expect(flow.read()).toEqual(currentAttempt);
+
+        const replacementCode = telegramOAuthCode('local-replacement-confirmation');
+        const current = flow.handleCallbackAsync(replacementCode, telegramOAuthState(replacementState), false);
+        const currentConfirmation = http.expectOne({ method: 'POST', url: `${baseUrl}/complete` });
+        expect(currentConfirmation.request.body).toEqual({ code: replacementCode, state: replacementState });
+        currentConfirmation.flush(null);
+        await expect(current).resolves.toBe(true);
+        const confirmed = flow.read();
+        expect(confirmed).toMatchObject({ userId: nextAuth.user.id, email: replacementEmail, state: null, failed: false });
+        expect(confirmed?.sentAt).toBeTypeOf('number');
+    });
+});
+
+function backupAccount(id: string, sessionId: string): AuthResponse {
+    return {
+        sessionId,
+        roles: ['User'],
+        user: {
+            id: entityId<'user'>(id),
+            email: null,
+            hasPassword: false,
+            hasTelegramIdentity: true,
+            isActive: true,
+            isEmailConfirmed: false,
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: false,
+            socialPushNotificationsEnabled: false,
+            fastingCheckInReminderHours: 12,
+            fastingCheckInFollowUpReminderHours: 20,
+        },
+    };
+}

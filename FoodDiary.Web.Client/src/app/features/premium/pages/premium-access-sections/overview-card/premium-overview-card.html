@@ -69,6 +69,8 @@
                 [fill]="showResume() ? 'outline' : 'solid'"
                 [hidden]="!vm.showStartTrial"
                 [loading]="trialLoading()"
+                [disabled]="startTrialBlocked()"
+                [disabledReason]="startTrialBlocked() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
                 (click)="startTrial.emit()"
             >
                 {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}

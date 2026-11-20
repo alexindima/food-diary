@@ -78,7 +78,7 @@ export function buildProductAiRecognitionModelFromNutrition(
     nutrition: FoodNutritionResponse,
 ): ProductAiRecognitionFormModel {
     const primary = items.length > 0 ? items[0] : null;
-    const name = primary === null ? '' : capitalizeName(primary.nameLocal?.trim() ?? primary.nameEn.trim());
+    const name = primary === null ? '' : getProductRecognitionItemName(primary);
     const baseUnit = resolveAiMeasurementUnit(primary?.unit);
 
     return {
@@ -167,7 +167,9 @@ export function mapAiNutritionErrorKey(error: unknown): string {
     );
 }
 
-export function capitalizeName(value: string): string {
+export function getProductRecognitionItemName(item: FoodVisionItem): string {
+    const localizedName = item.nameLocal?.trim() ?? '';
+    const value = localizedName.length > 0 ? localizedName : item.nameEn.trim();
     if (value.length === 0) {
         return '';
     }

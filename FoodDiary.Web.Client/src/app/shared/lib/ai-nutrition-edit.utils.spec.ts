@@ -102,4 +102,41 @@ describe('localized AI nutrition edits', () => {
             notes: 'base',
         });
     });
+
+    it('scales the remaining portion using its own baseline after another same-named row is removed', () => {
+        const portion = { id: 'remaining', name: 'Яблоко', nameEn: 'Apple', amount: EDITED_AMOUNT, unit: 'g' };
+        const removed = { ...portion, id: 'removed', amount: SOURCE_AMOUNT };
+        const ratio = EDITED_AMOUNT / SOURCE_AMOUNT;
+        const original = nutrition.items[0];
+        const larger = {
+            ...original,
+            name: 'Яблоко',
+            amount: EDITED_AMOUNT,
+            unit: 'grams',
+            calories: original.calories * ratio,
+            protein: original.protein * ratio,
+            fat: original.fat * ratio,
+            carbs: original.carbs * ratio,
+            fiber: original.fiber * ratio,
+        };
+        const updated = recalculateEditedAiNutrition(
+            { ...nutrition, items: [larger, original] },
+            [removed, portion],
+            [{ ...portion, amount: SOURCE_AMOUNT }],
+        );
+
+        expect(updated).toEqual({
+            ...nutrition,
+            items: [{ ...original, name: portion.name }],
+        });
+    });
+
+    it('keeps a saved rejected row from claiming an accepted portion with the same name and amount', () => {
+        const accepted = { id: 'accepted', name: 'Apple', amount: SOURCE_AMOUNT, unit: 'g' };
+        const rejected = { ...accepted, id: 'rejected', resolution: 'Rejected' as const };
+
+        const result = recalculateEditedAiNutrition(nutrition, [rejected, accepted], [{ ...accepted, amount: EDITED_AMOUNT }]);
+
+        expect(result?.items).toEqual([expect.objectContaining({ amount: EDITED_AMOUNT, calories: EDITED_AMOUNT, protein: 15 })]);
+    });
 });

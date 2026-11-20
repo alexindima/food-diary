@@ -47,6 +47,20 @@ describe('history-range.utils', () => {
         expect(range.end.toISOString()).toBe('2026-02-01T00:00:00.000Z');
     });
 
+    it('keeps the selected start while the end date is still empty', () => {
+        const start = new Date('2026-05-03T12:00:00Z');
+        const range = calculateHistoryRangeDates('custom', { start, end: null }, NOW);
+
+        expect(range).toEqual({ start, end: NOW });
+    });
+
+    it('keeps the selected end while the start date is still empty', () => {
+        const end = new Date('2026-05-09T12:00:00Z');
+        const range = calculateHistoryRangeDates('custom', { start: null, end }, NOW);
+
+        expect(range).toEqual({ start: new Date('2026-04-15T12:00:00Z'), end });
+    });
+
     it('builds normalized filters and summary quantization', () => {
         const filters = buildHistoryFiltersForRange(
             'custom',

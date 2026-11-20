@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -13,7 +13,7 @@ import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItem, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
-import { ShoppingListFacade } from '../../lib/shopping-list.facade';
+import { type ShoppingListDraftItem, ShoppingListFacade } from '../../lib/shopping-list.facade';
 import { ShoppingListPageComponent } from './shopping-list-page';
 
 const FIRST_LIST_ID = 'list-1';
@@ -21,6 +21,7 @@ const REVISION_LENGTH = 64;
 const SECOND_LIST_ID = 'list-2';
 const INVALID_SHOPPING_AMOUNT_ABOVE_MAXIMUM = 1_000_001;
 const SHOPPING_ITEM_API_LIMITS = { name: 256, category: 128, note: 512 };
+const EDITED_EGG_QUANTITY = 6;
 
 const SHOPPING_LIST_ITEM: ShoppingListItem = {
     id: entityId<'shopping-list-item'>('item-1'),
@@ -58,9 +59,11 @@ type ShoppingListFacadeMock = {
     createNewList: ReturnType<typeof vi.fn>;
     deleteCurrentList: ReturnType<typeof vi.fn>;
     deleteListById: ReturnType<typeof vi.fn>;
+    editItem: ReturnType<typeof vi.fn>;
     initialize: ReturnType<typeof vi.fn>;
     hasUnsavedChanges: ReturnType<typeof vi.fn>;
     isLoading: ReturnType<typeof signal<boolean>>;
+    overviewLoadError: ReturnType<typeof signal<boolean>>;
     isCreating: ReturnType<typeof signal<boolean>>;
     isSaving: ReturnType<typeof signal<boolean>>;
     isClearing: ReturnType<typeof signal<boolean>>;
@@ -76,6 +79,7 @@ type ShoppingListFacadeMock = {
     applyConsolidation: ReturnType<typeof vi.fn>;
     lists: ReturnType<typeof signal<ShoppingListSummary[]>>;
     removeItem: ReturnType<typeof vi.fn>;
+    removePurchased: ReturnType<typeof vi.fn>;
     renameListById: ReturnType<typeof vi.fn>;
     renameRequestedListId: ReturnType<typeof signal<string | null>>;
     selectList: ReturnType<typeof vi.fn>;
@@ -96,6 +100,7 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
         list: signal(SHOPPING_LIST),
         items: signal([SHOPPING_LIST_ITEM]),
         isLoading: signal(false),
+        overviewLoadError: signal(false),
         isSaving: signal(false),
         isClearing: signal(false),
         saveError: signal(false),
@@ -117,6 +122,8 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
         clearRenameRequest: vi.fn(),
         addItem: vi.fn(),
         removeItem: vi.fn(),
+        editItem: vi.fn(),
+        removePurchased: vi.fn(),
         toggleItemChecked: vi.fn(),
         clearCurrentList: vi.fn(),
         clearListById: vi.fn(),
@@ -148,6 +155,100 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
     fixture.detectChanges();
 
     return { component, dialogService, facade, fixture, isMobile };
+}
+
+describe('ShoppingListPageComponent rendered shopping actions', () => {
+    it('applies an item edit to the original list and ignores an edit submitted after switching lists', async () => {
+        const { facade, fixture, dialogService } = await setupShoppingListPageAsync();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        facade.selectList.mockClear();
+        const firstEdit = new Subject<ShoppingListDraftItem>();
+        const pendingEdit = new Subject<ShoppingListDraftItem>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => firstEdit }).mockReturnValueOnce({ afterClosed: () => pendingEdit });
+        const draft: ShoppingListDraftItem = {
+            name: 'Free-range eggs',
+            amount: EDITED_EGG_QUANTITY,
+            unit: MeasurementUnit.PCS,
+            category: 'Dairy',
+            note: null,
+        };
+
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS: Eggs', 'SHOPPING_LIST.EDIT_ITEM').click();
+        firstEdit.next(draft);
+        firstEdit.complete();
+        expect(facade.editItem).toHaveBeenCalledExactlyOnceWith(SHOPPING_LIST_ITEM.id, draft);
+
+        fixture.detectChanges();
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS: Eggs', 'SHOPPING_LIST.EDIT_ITEM').click();
+        const party = SHOPPING_LISTS[1];
+        facade.selectList.mockImplementation((id: ShoppingList['id']) => {
+            if (id === party.id) {
+                facade.list.set({ ...SHOPPING_LIST, ...party, items: [] });
+                facade.selectedListId.set(party.id);
+                facade.items.set([]);
+            }
+        });
+        const page = fixture.nativeElement as HTMLElement;
+        const tabs = Array.from(page.querySelectorAll<HTMLButtonElement>('.shopping-list__list-tab button'));
+        tabs.find(tab => tab.textContent.includes(party.name))?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        pendingEdit.next({ ...draft, name: 'Stale edit' });
+        pendingEdit.complete();
+
+        expect(facade.selectList).toHaveBeenCalledWith(party.id);
+        expect(dialogService.open).toHaveBeenCalledTimes(2);
+        expect(facade.editItem).toHaveBeenCalledOnce();
+    });
+
+    it('clears only the checked items after the user confirms', async () => {
+        const { facade, fixture, dialogService } = await setupShoppingListPageAsync();
+        await fixture.whenStable();
+        const purchased = { ...SHOPPING_LIST_ITEM, id: entityId<'shopping-list-item'>('purchased-eggs'), isChecked: true };
+        facade.items.set([SHOPPING_LIST_ITEM, purchased]);
+        fixture.detectChanges();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
+
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.CLEAR_PURCHASED').click();
+        expect(facade.removePurchased).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.CLEAR_PURCHASED').click();
+
+        expect(facade.removePurchased).toHaveBeenCalledExactlyOnceWith(SHOPPING_LIST.id, [purchased.id]);
+    });
+
+    it('asks for confirmation from the selected list menu before deleting it', async () => {
+        const { facade, fixture, dialogService } = await setupShoppingListPageAsync();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const confirmed = new Subject<boolean>();
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => confirmed });
+
+        openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.DELETE_LIST_BUTTON').click();
+        expect(facade.deleteListById).not.toHaveBeenCalled();
+        confirmed.next(true);
+        confirmed.complete();
+
+        expect(facade.deleteListById).toHaveBeenCalledExactlyOnceWith(SHOPPING_LIST.id);
+    });
+});
+
+function openShoppingMenu(
+    fixture: ComponentFixture<ShoppingListPageComponent>,
+    triggerLabel: string,
+    actionLabel: string,
+): HTMLButtonElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const region = triggerLabel === 'COMMON.MORE_ACTIONS' ? 'fd-shopping-list-manage-controls' : 'fd-shopping-list-items-panel';
+    host.querySelector<HTMLButtonElement>(`${region} button[aria-label="${triggerLabel}"]`)?.click();
+    fixture.detectChanges();
+    const items = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]'));
+    const button = items.find(item => item.textContent.trim().endsWith(actionLabel));
+    if (button === undefined) {
+        throw new Error(`Shopping list menu item "${actionLabel}" was not found`);
+    }
+    return button;
 }
 
 describe('ShoppingListPageComponent pending clear', () => {

@@ -38,4 +38,21 @@ describe('statistics-export.mapper', () => {
 
         expect(request.locale).toBe('en');
     });
+
+    it.each([null, ''])('leaves locale unset before a language has loaded when fallback is %j', fallbackLang => {
+        const request = buildStatisticsExportRequest({
+            range: {
+                start: new Date('2026-05-01T12:00:00'),
+                end: new Date('2026-05-07T12:00:00'),
+            },
+            format: 'pdf',
+            currentLang: '',
+            fallbackLang,
+            timeZoneOffsetMinutes: TIME_ZONE_OFFSET_MINUTES,
+        });
+
+        expect(request.locale).toBeUndefined();
+        expect(request.dateFrom).toBe(new Date('2026-05-01T00:00:00.000').toISOString());
+        expect(request.dateTo).toBe(new Date('2026-05-07T23:59:59.999').toISOString());
+    });
 });

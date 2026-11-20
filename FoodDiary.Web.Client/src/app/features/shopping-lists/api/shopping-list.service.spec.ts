@@ -1,9 +1,11 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import type { Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import type { ShoppingListOverviewHttpResponse } from '../../../shared/api/sdk/generated/model/shopping-list-overview-http-response';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import type {
@@ -16,6 +18,7 @@ import { ShoppingListService } from './shopping-list.service';
 
 const BASE_URL = environment.apiUrls.shoppingLists;
 const REVISION_LENGTH = 64;
+const DESTINATION_PAGE_SIZE = 50;
 const MOCK_LIST: ShoppingList = {
     id: entityId<'shopping-list'>('abc-123'),
     revision: 'a'.repeat(REVISION_LENGTH),
@@ -84,6 +87,76 @@ describe('ShoppingListService reads', () => {
     });
 });
 
+describe('ShoppingListService picker and overview contracts', () => {
+    it('loads all destination pages, keeping the list empty until the complete retry succeeds', () => {
+        const first = Array.from({ length: DESTINATION_PAGE_SIZE }, (_, index) => ({
+            id: `list-${index + 1}`,
+            name: `Shop ${index + 1}`,
+            createdAt: MOCK_LIST.createdAt,
+            itemsCount: 0,
+        }));
+        const last = { ...first[0], id: 'remote-destination', name: 'From another page', remainingCount: 0 };
+        const options = service.getSelectionPage();
+        const received = vi.fn();
+        const failed = vi.fn();
+        options.subscribe({ next: received, error: failed });
+        httpMock.expectOne(`${BASE_URL}/page?page=1&limit=${String(DESTINATION_PAGE_SIZE)}`).flush(first);
+        expect(received).not.toHaveBeenCalled();
+        httpMock.expectOne(`${BASE_URL}/page?page=2&limit=${String(DESTINATION_PAGE_SIZE)}`).flush('offline', {
+            status: HttpStatusCode.ServiceUnavailable,
+            statusText: 'Unavailable',
+        });
+        expect(failed).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.ServiceUnavailable }));
+        expect(received).not.toHaveBeenCalled();
+
+        options.subscribe({ next: received, error: failed });
+        httpMock.expectOne(`${BASE_URL}/page?page=1&limit=${String(DESTINATION_PAGE_SIZE)}`).flush(first);
+        httpMock.expectOne(`${BASE_URL}/page?page=2&limit=${String(DESTINATION_PAGE_SIZE)}`).flush([last]);
+
+        expect(received).toHaveBeenCalledExactlyOnceWith([...first, last]);
+        expect(failed).toHaveBeenCalledOnce();
+    });
+
+    it('loads the selected list with checked product data and pagination metadata', () => {
+        const item = {
+            id: 'selected-item',
+            shoppingListId: MOCK_LIST.id,
+            productId: 'linked-product',
+            name: 'Milk',
+            amount: 500,
+            unit: 'Ml',
+            isChecked: true,
+            checkedOnUtc: '2026-01-02T01:10:00+03:00',
+            sortOrder: 1,
+        };
+        const selected = { ...MOCK_LIST, items: [item] };
+        const lists = { items: MOCK_SUMMARIES, hasMore: true, nextPage: 2 };
+        const overview: ShoppingListOverviewHttpResponse = { selectedList: selected, lists };
+        const received = vi.fn();
+        service.getOverview().subscribe(received);
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/overview` }).flush(overview);
+
+        expect(received).toHaveBeenCalledExactlyOnceWith({ selectedList: selected, lists });
+    });
+
+    it('rejects an invalid selected-list revision and accepts a clean empty response on retry', () => {
+        const data: ShoppingListOverviewHttpResponse = { lists: { items: [], hasMore: false } };
+        const read = service.getOverview();
+        const failed = vi.fn();
+        const received = vi.fn();
+        read.subscribe({ next: received, error: failed });
+        httpMock.expectOne(`${BASE_URL}/overview`).flush({ ...data, selectedList: { ...MOCK_LIST, revision: 'invalid-revision' } });
+        expect(failed).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ message: 'API response contains an invalid shopping list revision.' }),
+        );
+        expect(received).not.toHaveBeenCalled();
+
+        read.subscribe(received);
+        httpMock.expectOne(`${BASE_URL}/overview`).flush(data);
+        expect(received).toHaveBeenCalledExactlyOnceWith({ selectedList: null, lists: { items: [], hasMore: false, nextPage: null } });
+    });
+});
+
 describe('ShoppingListService mutations', () => {
     it('should create shopping list', () => {
         const createData: ShoppingListCreateDto = { name: 'New List' };
@@ -123,6 +196,17 @@ describe('ShoppingListService mutations', () => {
 });
 
 describe('ShoppingListService failures', () => {
+    it.each(['create', 'delete'] as const)('returns a rejected %s to its caller without repeating it', operation => {
+        const failed = vi.fn();
+        const write: Observable<ShoppingList | void> =
+            operation === 'create' ? service.create({ name: 'Market' }) : service.deleteById(MOCK_LIST.id);
+        const method = operation === 'create' ? 'POST' : 'DELETE';
+        const url = operation === 'create' ? BASE_URL : `${BASE_URL}/${MOCK_LIST.id}`;
+        write.subscribe({ error: failed });
+        httpMock.expectOne({ method, url }).flush('offline', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(failed).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.ServiceUnavailable }));
+        httpMock.expectNone({ method, url });
+    });
     it('preserves a stale-revision conflict without retrying the PATCH', () => {
         const error = vi.fn();
         service.update(MOCK_LIST.id, { expectedRevision: MOCK_LIST.revision, items: [] }).subscribe({ error });

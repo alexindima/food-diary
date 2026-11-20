@@ -86,9 +86,9 @@ describe('ProductAiRecognitionDialogComponent state', () => {
         component['nutritionErrorKey'].set('NUTRITION_ERROR');
         component['hasAnalyzed'].set(true);
 
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
 
-        expect(component['selection']()).toEqual(createImageSelection());
+        expect(component['photos']()[0]).toEqual(createImageSelection());
         expect(component['results']()).toEqual([]);
         expect(component['nutrition']()).toBeNull();
         expect(component['errorKey']()).toBeNull();
@@ -100,7 +100,7 @@ describe('ProductAiRecognitionDialogComponent state', () => {
 
 describe('ProductAiRecognitionDialogComponent analysis', () => {
     it('runs image analysis, calculates nutrition, and applies dialog result', () => {
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
 
         component['startAnalysis']();
         component['apply']();
@@ -134,7 +134,7 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
 
     it('maps recognition API errors and skips nutrition calculation', () => {
         productAiRecognitionFacade.analyzeFoodImage.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.Forbidden })));
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
 
         component['startAnalysis']();
 
@@ -147,7 +147,7 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
         productAiRecognitionFacade.calculateNutrition.mockReturnValueOnce(
             throwError(() => ({ status: HttpStatusCode.InternalServerError })),
         );
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
 
         component['startAnalysis']();
 
@@ -160,7 +160,7 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
 
 describe('ProductAiRecognitionDialogComponent close', () => {
     it('preserves the uploaded image for background processing and closes', () => {
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
 
         component['close']();
 
@@ -192,7 +192,7 @@ describe('ProductAiRecognitionDialogComponent close', () => {
         expect(productAiRecognitionFacade.analyzeFoodImage).not.toHaveBeenCalled();
         expect(productAiRecognitionFacade.calculateNutrition).not.toHaveBeenCalled();
         expect(component['nutrition']()).toEqual(createNutrition());
-        expect(component['selection']()?.assetId).toBe('asset-1');
+        expect(component['photos']()[0]?.assetId).toBe('asset-1');
     });
 });
 
@@ -239,7 +239,7 @@ function createNutrition(): FoodNutritionResponse {
 
 describe('Product recognition review safeguards', () => {
     it('only applies the photo when explicitly selected as cover', () => {
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
         component['startAnalysis']();
         component['useAsCover'].set(true);
         component['apply']();
@@ -248,7 +248,7 @@ describe('Product recognition review safeguards', () => {
 
     it('does not call successful empty recognition done or allow applying it', () => {
         productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(of({ items: [] }));
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
         component['startAnalysis']();
         expect(component['isEmpty']()).toBe(true);
         expect(component['statusKey']()).toBeNull();
@@ -258,11 +258,11 @@ describe('Product recognition review safeguards', () => {
 
     it('preserves the photo and hint after failure and supports a retry', () => {
         productAiRecognitionFacade.analyzeFoodImage.mockReturnValueOnce(throwError(() => new Error('offline')));
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
         component['startAnalysis']();
         expect(component['statusKey']()).toBeNull();
         expect(component['isEmpty']()).toBe(false);
-        expect(component['selection']()).toEqual(createImageSelection());
+        expect(component['photos']()[0]).toEqual(createImageSelection());
         expect(component['descriptionModel']().description).toBe(' fresh apple ');
         component['reanalyze']();
         expect(component['canApply']()).toBe(true);
@@ -272,7 +272,7 @@ describe('Product recognition review safeguards', () => {
     it('prevents duplicate requests while recognition runs', () => {
         const pending = new Subject<{ items: FoodVisionItem[] }>();
         productAiRecognitionFacade.analyzeFoodImage.mockReturnValue(pending);
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
         component['startAnalysis']();
         component['startAnalysis']();
         expect(productAiRecognitionFacade.analyzeFoodImage).toHaveBeenCalledTimes(1);
@@ -284,7 +284,7 @@ describe('Product recognition review safeguards', () => {
     });
 
     it.each([NaN, Infinity, -1])('does not apply an invalid nutrient: %s', value => {
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
         component['startAnalysis']();
         component['resultFormModel'].update(model => ({ ...model, fiberPerBase: value }));
         component['apply']();
@@ -299,7 +299,7 @@ describe('Product recognition review safeguards', () => {
         fixture = TestBed.createComponent(ProductAiRecognitionDialogComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        component['onImageChanged'](createImageSelection());
+        component['onPhotosChanged']([createImageSelection()]);
         component['startAnalysis']();
         component['apply']();
         expect(dialogRef.close).not.toHaveBeenCalled();

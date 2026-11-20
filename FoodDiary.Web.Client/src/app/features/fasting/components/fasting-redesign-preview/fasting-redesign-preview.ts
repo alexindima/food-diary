@@ -52,6 +52,7 @@ export class FastingRedesignPreviewComponent {
     public readonly now = input.required<Date>();
     public readonly selectedDurationHours = input.required<number>();
     public readonly isStarting = input(false);
+    public readonly isSessionMutationPending = input(false);
     public readonly alerts = input<readonly FastingMessageViewModel[]>([]);
     public readonly insights = input<readonly FastingMessageViewModel[]>([]);
     public readonly startRequested = output();

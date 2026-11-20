@@ -1,4 +1,5 @@
 import { DOCUMENT } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -41,6 +42,23 @@ describe('CurrentLocalDayService', () => {
         vi.setSystemTime(new Date('2026-10-13T10:00:00'));
         browserDocument.defaultView?.dispatchEvent(new Event('focus'));
         expect(clock.today().getDate()).toBe(FOLLOWING_DAY);
+    });
+
+    it('keeps the server render date without scheduling browser work', () => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-10-11T23:59:59'));
+        TestBed.overrideProvider(PLATFORM_ID, { useValue: 'server' });
+        const clock = TestBed.inject(CurrentLocalDayService);
+        const renderDay = clock.today();
+        expect(renderDay.getDate()).toBe(INITIAL_DAY);
+        expect(vi.getTimerCount()).toBe(0);
+
+        vi.advanceTimersByTime(MILLISECONDS_PER_SECOND);
+        const document = TestBed.inject(DOCUMENT);
+        document.dispatchEvent(new Event('visibilitychange'));
+        document.defaultView?.dispatchEvent(new Event('focus'));
+        expect(clock.today()).toBe(renderDay);
+        expect(vi.getTimerCount()).toBe(0);
     });
 
     it('releases its timer and resume listeners when destroyed', () => {

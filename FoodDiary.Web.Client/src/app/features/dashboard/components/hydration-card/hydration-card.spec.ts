@@ -225,7 +225,7 @@ async function setupComponentAsync(
     fixture: ComponentFixture<HydrationCardComponent>;
     dialogOpen: ReturnType<typeof vi.fn>;
 }> {
-    const dialogOpen = vi.fn(() => ({ afterClosed: (): Observable<boolean | undefined> => closed }));
+    const dialogOpen = vi.fn(() => ({ close: vi.fn(), afterClosed: (): Observable<boolean | undefined> => closed }));
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [HydrationCardComponent],

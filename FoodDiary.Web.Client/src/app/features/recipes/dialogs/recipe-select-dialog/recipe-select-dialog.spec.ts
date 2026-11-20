@@ -3,6 +3,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
@@ -198,9 +199,69 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
     });
 });
 
+describe('RecipeSelectDialogComponent catalogue controls', () => {
+    it('applies an upper calorie bound and leaves the results alone if filters are unchanged or cancelled', () => {
+        const { fixture, recipeService } = setupComponent([createRecipe()], undefined, true);
+        const filters = { onlyMine: false, category: null, maxTotalTime: null, caloriesFrom: null, caloriesTo: 250, hasImage: null };
+        recipeService.openFilters.mockReturnValueOnce(of(filters)).mockReturnValueOnce(of(filters)).mockReturnValueOnce(of(undefined));
+        const element = fixture.nativeElement as HTMLElement;
+        const button = element.querySelector<HTMLButtonElement>('.recipe-select__filter-button button');
+        if (button === null) {
+            throw new Error('Recipe filter button was not rendered');
+        }
+
+        button.click();
+        fixture.detectChanges();
+        expect(element.querySelector('.recipe-select__filter-count')?.textContent.trim()).toBe('1');
+        expect(recipeService.query).toHaveBeenLastCalledWith(1, PAGE_SIZE, { search: undefined, caloriesTo: 250 }, true);
+        button.click();
+        button.click();
+        fixture.detectChanges();
+
+        expect(recipeService.openFilters).toHaveBeenLastCalledWith(filters);
+        expect(recipeService.query).toHaveBeenCalledTimes(2);
+        expect(element.querySelector('.recipe-select__item')?.textContent).toContain('Recipe');
+    });
+
+    it('shows the clear control only while searching and resets the results from that native control', async () => {
+        const { component, fixture, recipeService } = setupComponent([createRecipe()], undefined, true);
+        const clearSelector = 'button[aria-label="RECIPE_SELECT_DIALOG.SEARCH_CLEAR"]';
+        const element = fixture.nativeElement as HTMLElement;
+        const input = element.querySelector<HTMLInputElement>('input');
+        if (input === null) {
+            throw new Error('Recipe search field was not rendered');
+        }
+        const changed = vi.fn();
+        component.searchChanged.subscribe(changed);
+        expect(element.querySelector(clearSelector)).toBeNull();
+
+        input.value = 'Soup';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(recipeService.query).toHaveBeenLastCalledWith(1, PAGE_SIZE, { search: 'Soup' }, true);
+        });
+        expect(changed).toHaveBeenLastCalledWith('Soup');
+        const clear = element.querySelector<HTMLButtonElement>(clearSelector);
+        if (clear === null) {
+            throw new Error('Recipe search clear button was not rendered');
+        }
+        clear.click();
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(recipeService.query).toHaveBeenLastCalledWith(1, PAGE_SIZE, { search: '' }, true);
+        });
+
+        expect(input.value).toBe('');
+        expect(changed).toHaveBeenLastCalledWith('');
+        expect(element.querySelector(clearSelector)).toBeNull();
+    });
+});
+
 function setupComponent(
     recipes: Recipe[],
     initial?: Observable<PageOf<Recipe>>,
+    renderTemplate = false,
 ): {
     component: RecipeSelectDialogComponent;
     dialogRef: { close: ReturnType<typeof vi.fn> };
@@ -216,16 +277,15 @@ function setupComponent(
     TestBed.configureTestingModule({
         imports: [RecipeSelectDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: RecipeSelectFacade, useValue: recipeService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
         ],
     });
-    TestBed.overrideComponent(RecipeSelectDialogComponent, {
-        set: {
-            template: '<div #container></div>',
-        },
-    });
+    if (!renderTemplate) {
+        TestBed.overrideTemplate(RecipeSelectDialogComponent, '<div #container></div>');
+    }
 
     const fixture = TestBed.createComponent(RecipeSelectDialogComponent);
     fixture.detectChanges();

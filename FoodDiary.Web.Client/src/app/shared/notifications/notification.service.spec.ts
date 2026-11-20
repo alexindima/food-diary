@@ -1,7 +1,7 @@
 import { HTTP_INTERCEPTORS, HttpStatusCode, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -474,9 +474,19 @@ describe('NotificationService read state', () => {
 });
 
 describe('NotificationService push request session ownership', () => {
-    it('uses the captured session token for logout cleanup after the account changes', () => {
+    const capturedAccessToken = 'test-header.account-a.test-signature';
+
+    it.each([
+        { credential: 'browser session ID', token: 'session-a', sessionHeader: 'session-a', authorization: null },
+        {
+            credential: 'legacy access token',
+            token: capturedAccessToken,
+            sessionHeader: null,
+            authorization: `Bearer ${capturedAccessToken}`,
+        },
+    ])('uses the captured $credential for logout cleanup after the account changes', ({ token, sessionHeader, authorization }) => {
         const endpoint = 'https://push.example.com/subscriptions/account-a';
-        const pending = service.removeWebPushSubscription(endpoint, 'token-a');
+        const pending = service.removeWebPushSubscription(endpoint, token);
 
         authService.getUserId.mockReturnValue('user-b');
         sessionEvents.notifyAuthenticated();
@@ -484,8 +494,9 @@ describe('NotificationService push request session ownership', () => {
 
         const request = httpMock.expectOne(`${baseUrl}/push/subscription`);
         expect(request.request.method).toBe('DELETE');
-        expect(request.request.headers.get('X-FoodDiary-Session')).toBe('token-a');
-        expect(request.request.headers.has('Authorization')).toBe(false);
+        expect(request.request.body).toEqual({ endpoint });
+        expect(request.request.headers.get('X-FoodDiary-Session')).toBe(sessionHeader);
+        expect(request.request.headers.get('Authorization')).toBe(authorization);
         expect(request.request.context.get(SKIP_AUTH)).toBe(true);
         request.flush(null);
     });
@@ -618,5 +629,142 @@ describe('NotificationService settings endpoints', () => {
         const req = httpMock.expectOne(baseUrl);
         expect(req.request.method).toBe('GET');
         req.flush([]);
+    });
+});
+
+describe('NotificationService saved push subscriptions', () => {
+    const endpoint = 'https://push.example.test/subscriptions/device-1';
+    const endpointHost = 'push.example.test';
+    const createdAtUtc = '2026-05-27T09:15:00Z';
+    const updatedAtUtc = '2026-06-04T13:25:00+04:00';
+
+    it('keeps identifying fields for legacy subscriptions while normalizing optional metadata', async () => {
+        const pending = firstValueFrom(service.getWebPushSubscriptions());
+        const legacy = { endpoint, endpointHost, createdAtUtc };
+        const current = {
+            ...legacy,
+            endpoint: 'https://push.example.test/subscriptions/device-2',
+            updatedAtUtc,
+            locale: 'ru',
+            userAgent: 'Mozilla/5.0 (X11; Linux x86_64) Firefox/133.0',
+            expirationTimeUtc: null,
+        };
+        httpMock.expectOne({ method: 'GET', url: `${baseUrl}/push/subscriptions` }).flush([legacy, current]);
+
+        await expect(pending).resolves.toEqual([
+            { ...legacy, updatedAtUtc: null, locale: null, userAgent: null, expirationTimeUtc: null },
+            current,
+        ]);
+    });
+
+    it('rejects a list containing a subscription with no endpoint to identify the device', async () => {
+        const pending = firstValueFrom(service.getWebPushSubscriptions());
+        const response = [
+            { endpoint, endpointHost, createdAtUtc },
+            { endpointHost, createdAtUtc },
+        ];
+        httpMock.expectOne({ method: 'GET', url: `${baseUrl}/push/subscriptions` }).flush(response);
+
+        await expect(pending).rejects.toThrow('missing required field: endpoint');
+    });
+});
+
+describe('NotificationService scheduling and acknowledgement contracts', () => {
+    const delaySeconds = 20;
+
+    it('sends the selected reminder type and delay and returns the scheduled timestamp', async () => {
+        const schedule = { type: 'FastingCompleted', delaySeconds };
+        const pending = firstValueFrom(service.scheduleTestNotification(schedule));
+        const request = httpMock.expectOne({ method: 'POST', url: `${baseUrl}/test/schedule` });
+        expect(request.request.body).toEqual(schedule);
+        const scheduled = { ...schedule, scheduledAtUtc: '2026-05-27T09:15:20Z' };
+        request.flush(scheduled);
+
+        await expect(pending).resolves.toEqual(scheduled);
+    });
+
+    it('rejects an incomplete schedule response rather than reporting success to the caller', async () => {
+        const schedule = { type: 'FastingCompleted', delaySeconds };
+        const pending = firstValueFrom(service.scheduleTestNotification(schedule));
+        httpMock.expectOne({ method: 'POST', url: `${baseUrl}/test/schedule` }).flush(schedule);
+
+        await expect(pending).rejects.toThrow('missing required field: scheduledAtUtc');
+    });
+
+    it('rejects mixed read acknowledgements when one response ID is invalid', async () => {
+        const first = entityId<'notification'>('11111111-1111-1111-1111-111111111111');
+        const second = entityId<'notification'>('22222222-2222-2222-2222-222222222222');
+        const pending = firstValueFrom(service.getReadNotificationIds([first, second]));
+        httpMock.expectOne({ method: 'POST', url: `${baseUrl}/read-status` }).flush({ readIds: [first, 'invalid'] });
+
+        await expect(pending).rejects.toThrow('invalid notification id');
+    });
+
+    it('updates only the confirmed read item and keeps other loaded notifications unread', async () => {
+        const marked = notificationForSession('Opened notification');
+        const unrelated = { ...notificationForSession('Unopened notification'), id: entityId<'notification'>('n2') };
+        service.ensureNotificationsLoaded();
+        httpMock.expectOne(baseUrl).flush([
+            { ...marked, type: 'info' },
+            { ...unrelated, type: 'info' },
+        ]);
+        service.updateCount(2);
+
+        const pending = firstValueFrom(service.markAsRead(marked.id));
+        httpMock.expectOne({ method: 'PUT', url: `${baseUrl}/${marked.id}/read` }).flush(null);
+        await pending;
+
+        expect(service.notifications()).toEqual([{ ...marked, isRead: true }, unrelated]);
+        expect(service.unreadCount()).toBe(1);
+    });
+});
+
+describe('NotificationService events before an owner is established', () => {
+    it('ignores count and feed hints delivered after sign-out', () => {
+        service.updateCount(UNREAD_COUNT_INITIAL);
+        authService.isAuthenticated.mockReturnValue(false);
+        sessionEvents.notifySessionEnded();
+        const readStateChanged = vi.fn();
+        const subscription = service.readStateChanged$.subscribe(readStateChanged);
+
+        try {
+            service.updateCount(UNREAD_COUNT_INITIAL);
+            service.notifyNotificationsChanged();
+            expect(service.unreadCount()).toBe(0);
+            expect(service.notifications()).toEqual([]);
+            expect(readStateChanged).not.toHaveBeenCalled();
+            httpMock.expectNone(baseUrl);
+            httpMock.expectNone(`${baseUrl}/unread-count`);
+        } finally {
+            subscription.unsubscribe();
+        }
+    });
+
+    it('discards a feed started before the authenticated account ID was known', () => {
+        authService.getUserId.mockReturnValue(null);
+        service.ensureNotificationsLoaded();
+        const unowned = httpMock.expectOne(baseUrl);
+        authService.getUserId.mockReturnValue('user-a');
+        service.ensureNotificationsLoaded();
+        const account = httpMock.expectOne(baseUrl);
+
+        unowned.flush([{ ...notificationForSession('Pending session notification'), type: 'info' }]);
+        expect(service.notifications()).toEqual([]);
+        account.flush([{ ...notificationForSession('Account notification'), type: 'info' }]);
+
+        expect(service.notifications().map(item => item.title)).toEqual(['Account notification']);
+    });
+
+    it('isolates an impersonated feed from the same account’s earlier ordinary request', () => {
+        service.ensureNotificationsLoaded();
+        const ordinary = httpMock.expectOne(baseUrl);
+        authService.isImpersonating.mockReturnValue(true);
+        service.ensureNotificationsLoaded();
+        const impersonated = httpMock.expectOne(baseUrl);
+
+        impersonated.flush([{ ...notificationForSession('Current session notification'), type: 'info' }]);
+        ordinary.flush([{ ...notificationForSession('Previous session notification'), type: 'info' }]);
+
+        expect(service.notifications().map(item => item.title)).toEqual(['Current session notification']);
     });
 });

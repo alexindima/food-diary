@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -164,6 +165,23 @@ describe('GoalsService body target updates', () => {
         httpMock.expectOne(`${environment.apiUrls.users}/desired-waist`).flush({ desiredWaistCm: null });
         httpMock.expectOne(`${environment.apiUrls.users}/info`).flush(MOCK_USER);
         expect(next).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('GoalsService strict page reads', () => {
+    it('retains explicit cleared targets and enabled calorie cycling on the loaded goal plan', async () => {
+        const response: GoalsResponse = {
+            calorieCyclingEnabled: true,
+            dailyCalorieTarget: UPDATED_CALORIE_TARGET,
+            desiredWeightKg: null,
+            desiredWaistCm: 78,
+            mondayCalories: 2700,
+            tuesdayCalories: null,
+        };
+        const pending = firstValueFrom(service.getGoalsStrict());
+        httpMock.expectOne({ method: 'GET', url: baseUrl }).flush(response);
+
+        await expect(pending).resolves.toEqual(response);
     });
 });
 

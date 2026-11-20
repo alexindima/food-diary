@@ -25,6 +25,8 @@
             fill="text"
             class="shopping-list__all-lists-button"
             [hidden]="listsCount() <= 3"
+            [disabled]="isLoading()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
             [fdUiMenuTrigger]="isMobile() ? null : allListsMenu"
             (click)="openMobileLists()"
         >

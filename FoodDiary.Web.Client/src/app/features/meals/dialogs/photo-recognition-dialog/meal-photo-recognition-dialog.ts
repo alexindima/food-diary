@@ -25,7 +25,7 @@ import {
 import { getAiTrialQuotaErrorKey } from '../../../../shared/lib/ai-quota-error.utils';
 import { createClientId } from '../../../../shared/lib/client-id.utils';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
-import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
+import type { FoodNutritionItem, FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../../shared/models/image-upload.data';
@@ -270,10 +270,11 @@ export class MealPhotoRecognitionDialogComponent {
             return null;
         }
 
-        const nutritionByName = new Map(nutrition.items.map(item => [this.normalizeItemName(item.name), item]));
         const reviewItems = this.reviewItems();
         const sourceItems = reviewItems.length > 0 ? reviewItems : this.createReviewItemsFromNutrition(nutrition);
-        const items = sourceItems.map(item => this.toSessionItem(item, nutritionByName));
+        const activeItems = sourceItems.filter(item => item.resolution !== 'Rejected');
+        const portionsByItemId = new Map(alignAiPhotoNutrition(activeItems, nutrition).map(match => [match.item.id, match.nutrition]));
+        const items = sourceItems.map(item => this.toSessionItem(item, portionsByItemId.get(item.id) ?? null));
 
         const assetId = this.selection()?.assetId ?? null;
         return {
@@ -289,26 +290,19 @@ export class MealPhotoRecognitionDialogComponent {
         return nutrition.items.map(item => this.createReviewItemFromNutritionItem(item));
     }
 
-    private toSessionItem(
-        item: EditableAiItem,
-        nutritionByName: ReadonlyMap<string, FoodNutritionResponse['items'][number]>,
-    ): MealAiSessionManageDto['items'][number] {
-        const nutritionItem =
-            nutritionByName.get(this.normalizeItemName(item.name)) ??
-            nutritionByName.get(this.normalizeItemName(item.nameEn)) ??
-            nutritionByName.get(this.normalizeItemName(item.nameLocal));
-        const isRejected = item.resolution === 'Rejected';
+    private toSessionItem(item: EditableAiItem, nutritionItem: FoodNutritionItem | null): MealAiSessionManageDto['items'][number] {
+        const nutrients: Partial<FoodNutritionItem> = nutritionItem ?? {};
         return {
             nameEn: item.nameEn,
             nameLocal: item.nameLocal,
             amount: item.amount,
             unit: item.unit,
-            calories: this.resolveNutritionValue(nutritionItem?.calories, isRejected),
-            proteins: this.resolveNutritionValue(nutritionItem?.protein, isRejected),
-            fats: this.resolveNutritionValue(nutritionItem?.fat, isRejected),
-            carbs: this.resolveNutritionValue(nutritionItem?.carbs, isRejected),
-            fiber: this.resolveNutritionValue(nutritionItem?.fiber, isRejected),
-            alcohol: this.resolveNutritionValue(nutritionItem?.alcohol, isRejected),
+            calories: nutrients.calories ?? 0,
+            proteins: nutrients.protein ?? 0,
+            fats: nutrients.fat ?? 0,
+            carbs: nutrients.carbs ?? 0,
+            fiber: nutrients.fiber ?? 0,
+            alcohol: nutrients.alcohol ?? 0,
             confidence: item.confidence,
             resolution: item.resolution,
         };
@@ -342,10 +336,6 @@ export class MealPhotoRecognitionDialogComponent {
 
     private resolveReviewItemConfidence(match: FoodVisionItem | null): number {
         return match?.confidence ?? 1;
-    }
-
-    private resolveNutritionValue(value: number | null | undefined, isRejected: boolean): number {
-        return isRejected ? 0 : (value ?? 0);
     }
 
     private findVisionMatch(name: string | null | undefined): FoodVisionItem | null {

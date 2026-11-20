@@ -86,7 +86,7 @@
             [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
             [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
             [class.dashboard__settings-action--active]="layout.isEditingLayout()"
-            [disabled]="layout.isSaving()"
+            [disabled]="layout.isSaving() || setup.isSaving()"
             [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
             [ariaPressed]="layout.isEditingLayout()"
             (click)="layout.openSettings()"
@@ -125,7 +125,7 @@
                 <section
                     class="dashboard__grid fd-grid fd-align-start"
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
-                    [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
+                    [class.dashboard__grid--single]="!showDashboardAside()"
                 >
                     @if (isLoading()) {
                         <div class="dashboard__refresh-overlay" role="status" [attr.aria-label]="'DASHBOARD.LOADING' | translate">
@@ -207,7 +207,11 @@
                         />
                     </div>
 
-                    <div class="dashboard__column dashboard__column--aside fd-grid">
+                    <div
+                        class="dashboard__column dashboard__column--aside"
+                        [class.fd-grid]="showDashboardAside()"
+                        [hidden]="!showDashboardAside()"
+                    >
                         <ng-container [ngTemplateOutlet]="mobileHydrationFirst() ? null : hydrationBlock" />
 
                         <fd-dashboard-cycle-block

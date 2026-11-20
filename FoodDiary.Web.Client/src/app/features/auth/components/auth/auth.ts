@@ -114,12 +114,15 @@ export class AuthComponent {
     protected readonly passwordResetFieldErrors = this.formManager.passwordResetFieldErrors;
     protected readonly loginSubmitLabelKey = computed(() => (this.isSubmitting() ? 'COMMON.LOADING' : 'AUTH.LOGIN.LOGIN'));
     private stopPasswordResetCooldown: (() => void) | null = null;
+    private passwordResetViewVersion = 0;
+    private authTabVersion = 0;
     private loginAutofillCheckTimerIds: number[] = [];
     private hasLoginNativeInteraction = false;
     protected readonly authTabs = AUTH_TABS;
 
     private returnUrl: string | null = null;
     private adminReturnUrl: string | null = null;
+    private authenticatedNavigation: Promise<void> | null = null;
     private pendingGoogleLinkCredential: string | null = null;
     private failedLoginValues: LoginFormValues | null = null;
 
@@ -211,11 +214,11 @@ export class AuthComponent {
             return;
         }
         this.authMode = mode;
+        this.authTabVersion++;
         this.formManager.resetAll();
         this.pendingGoogleLinkCredential = null;
         this.googleLinkRequired.set(false);
-        this.showPasswordReset.set(false);
-        this.passwordResetSent.set(false);
+        this.onPasswordResetClose();
         this.hasLoginNativeInteraction = false;
         this.loginAutofillDetected.set(false);
         if (this.useRouting() && this.router !== null) {
@@ -230,7 +233,7 @@ export class AuthComponent {
     private async loginAsync(): Promise<void> {
         this.syncLoginNativeValues();
 
-        if (this.loginForm().invalid() || this.isSubmitting()) {
+        if (this.loginForm().invalid() || this.isLoginSubmitDisabled()) {
             this.loginForm().markAsTouched();
             this.formManager.updateFieldErrors();
             return;
@@ -239,9 +242,13 @@ export class AuthComponent {
         this.isSubmitting.set(true);
 
         const loginValues = this.loginModel();
+        const tabVersion = this.authTabVersion;
         const result = await firstValueFrom(
             this.authFlowFacade.login({ ...loginValues, expectedUserId: this.confirmationUserId() ?? undefined }),
         );
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         this.isSubmitting.set(false);
         if (result === 'success') {
             if (this.pendingGoogleLinkCredential !== null) {
@@ -253,12 +260,14 @@ export class AuthComponent {
             return;
         }
 
-        this.failedLoginValues = loginValues;
-        this.handleLoginResult(result);
+        if (tabVersion === this.authTabVersion) {
+            this.failedLoginValues = loginValues;
+            this.handleLoginResult(result);
+        }
     }
 
     protected isLoginSubmitDisabled(): boolean {
-        return this.isSubmitting();
+        return this.isSubmitting() || this.isRestoring();
     }
 
     protected onLoginNativeInput(): void {
@@ -268,9 +277,16 @@ export class AuthComponent {
     }
 
     protected onRestoreSubmit(): void {
+        const previousLogin = this.loginModel();
+        this.syncLoginNativeValues();
+        if (this.loginModel() !== previousLogin) {
+            this.clearGlobalError();
+            return;
+        }
+
         this.loginForm().markAsTouched();
         this.formManager.updateFieldErrors();
-        if (this.loginForm().invalid() || this.isRestoring()) {
+        if (this.loginForm().invalid() || this.isLoginSubmitDisabled()) {
             if (this.loginForm().invalid()) {
                 focusFirstInvalidField(this.loginForm);
             }
@@ -278,16 +294,26 @@ export class AuthComponent {
         }
 
         const rememberMe = this.loginModel().rememberMe;
+        const tabVersion = this.authTabVersion;
         this.isRestoring.set(true);
 
         this.authFlowFacade.restoreAccount(this.loginModel(), rememberMe).subscribe(success => {
-            this.isRestoring.set(false);
+            if (this.destroyRef.destroyed) {
+                return;
+            }
             if (success) {
-                this.completeAuthenticatedNavigationAndClose();
+                void this.completeAuthenticatedNavigationAndCloseAsync().finally(() => {
+                    if (!this.destroyRef.destroyed) {
+                        this.isRestoring.set(false);
+                    }
+                });
                 return;
             }
 
-            this.setGlobalError('AUTH.LOGIN.RESTORE_ERROR');
+            this.isRestoring.set(false);
+            if (tabVersion === this.authTabVersion) {
+                this.setGlobalError('AUTH.LOGIN.RESTORE_ERROR');
+            }
         });
     }
 
@@ -304,7 +330,11 @@ export class AuthComponent {
 
         this.isSubmitting.set(true);
 
+        const tabVersion = this.authTabVersion;
         const result = await firstValueFrom(this.authFlowFacade.register(this.registerModel()));
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         this.isSubmitting.set(false);
         if (result === 'success') {
             await this.navigationService.navigateToEmailVerificationPendingAsync();
@@ -312,7 +342,9 @@ export class AuthComponent {
             return;
         }
 
-        this.handleRegisterResult(result);
+        if (tabVersion === this.authTabVersion) {
+            this.handleRegisterResult(result);
+        }
     }
 
     private renderGoogleButton(): void {
@@ -325,11 +357,19 @@ export class AuthComponent {
 
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
+        const tabVersion = this.authTabVersion;
         const request: GoogleLoginRequest = { credential, rememberMe: true, expectedUserId: this.confirmationUserId() ?? undefined };
         this.authFlowFacade.loginWithGoogle(request).subscribe(result => {
+            if (this.destroyRef.destroyed) {
+                return;
+            }
             this.isSubmitting.set(false);
             if (result === 'success') {
-                this.completeAuthenticatedNavigationAndClose();
+                void this.completeAuthenticatedNavigationAndCloseAsync();
+                return;
+            }
+
+            if (tabVersion !== this.authTabVersion) {
                 return;
             }
 
@@ -359,6 +399,9 @@ export class AuthComponent {
 
     private async completeGoogleLinkAsync(credential: string): Promise<void> {
         const linked = await firstValueFrom(this.authFlowFacade.linkGoogle(credential));
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         this.pendingGoogleLinkCredential = null;
         this.googleLinkRequired.set(false);
         await this.navigationService.navigateToProfileAsync({ googleLink: linked ? 'success' : 'failed' });
@@ -378,6 +421,7 @@ export class AuthComponent {
     }
 
     protected onPasswordResetClose(): void {
+        this.passwordResetViewVersion++;
         this.showPasswordReset.set(false);
         this.passwordResetSent.set(false);
         this.clearGlobalError();
@@ -400,15 +444,24 @@ export class AuthComponent {
         this.clearGlobalError();
         this.isPasswordResetting.set(true);
 
+        const viewVersion = this.passwordResetViewVersion;
         const result = await firstValueFrom(this.authFlowFacade.requestPasswordReset(this.passwordResetModel()));
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         this.isPasswordResetting.set(false);
+        const currentView = viewVersion === this.passwordResetViewVersion;
         if (result === 'success') {
-            this.passwordResetSent.set(true);
+            if (currentView) {
+                this.passwordResetSent.set(true);
+            }
             this.startPasswordResetCooldown();
             return;
         }
 
-        this.setGlobalError(result === 'rateLimited' ? 'FORM_ERRORS.RATE_LIMITED' : 'FORM_ERRORS.UNKNOWN');
+        if (currentView) {
+            this.setGlobalError(result === 'rateLimited' ? 'FORM_ERRORS.RATE_LIMITED' : 'FORM_ERRORS.UNKNOWN');
+        }
     }
 
     private startPasswordResetCooldown(seconds = this.passwordResetCooldownSecondsDefault): void {
@@ -425,17 +478,23 @@ export class AuthComponent {
         this.dialogRef?.close();
     }
 
-    private completeAuthenticatedNavigationAndClose(): void {
-        void this.completeAuthenticatedNavigationAsync()
-            .then(() => {
-                this.closeDialogIfAny();
-            })
-            .catch(() => {
-                this.setGlobalError('FORM_ERRORS.UNKNOWN');
-            });
+    private async completeAuthenticatedNavigationAndCloseAsync(): Promise<void> {
+        try {
+            await this.completeAuthenticatedNavigationAsync();
+            this.closeDialogIfAny();
+        } catch {
+            this.setGlobalError('FORM_ERRORS.UNKNOWN');
+        }
     }
 
     private async completeAuthenticatedNavigationAsync(): Promise<void> {
+        this.authenticatedNavigation ??= this.navigateAfterAuthenticationAsync().finally(() => {
+            this.authenticatedNavigation = null;
+        });
+        return this.authenticatedNavigation;
+    }
+
+    private async navigateAfterAuthenticationAsync(): Promise<void> {
         if (this.authService.mustChangePassword()) {
             await this.navigationService.navigateToRequiredPasswordChangeAsync();
             this.closeDialogIfAny();
@@ -453,6 +512,9 @@ export class AuthComponent {
         }
 
         const adminRedirectUrl = await this.tryBuildAdminRedirectUrlAsync();
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         if (adminRedirectUrl !== null) {
             if (this.isBrowser) {
                 this.document.location.assign(adminRedirectUrl);

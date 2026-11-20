@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import type { Observable } from 'rxjs';
+import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
@@ -186,6 +186,134 @@ describe('MealService AI nutrition mapping', () => {
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
         req.flush(createAiOnlyMeal(MANUAL_TOTAL_CALORIES));
     });
+
+    it('recognizes matching nutrition across multiple saved sessions even when the first session found no items', async () => {
+        const baseMeal = createAiOnlyMeal(AI_TOTAL_CALORIES);
+        const [session] = baseMeal.aiSessions;
+        const toppingCalories = 32.5;
+        const toppingCarbs = 7.25;
+        const savedCalories = 351.7;
+        const savedCarbs = 74.34;
+        const meal = {
+            ...baseMeal,
+            totalCalories: savedCalories,
+            totalCarbs: savedCarbs,
+            manualCalories: savedCalories,
+            manualCarbs: savedCarbs,
+            aiSessions: [
+                { ...session, id: 'empty-session', items: [] },
+                session,
+                {
+                    ...session,
+                    id: 'topping-session',
+                    items: [
+                        {
+                            id: 'ai-topping',
+                            sessionId: 'topping-session',
+                            nameEn: 'Maple syrup',
+                            amount: 12.5,
+                            unit: 'g',
+                            calories: toppingCalories,
+                            proteins: 0,
+                            fats: 0,
+                            carbs: toppingCarbs,
+                            fiber: 0,
+                            alcohol: 0,
+                        },
+                    ],
+                },
+            ],
+        } satisfies MealResponseDto;
+        const pending = firstValueFrom(service.getById(entityId<'meal'>(meal.id)));
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${meal.id}` }).flush(meal);
+
+        await expect(pending).resolves.toMatchObject({
+            isNutritionAutoCalculated: true,
+            totalCalories: savedCalories,
+            totalCarbs: savedCarbs,
+            aiSessions: [
+                { id: 'empty-session', items: [] },
+                { id: session.id, items: [{ nameEn: 'Banana porridge' }] },
+                { id: 'topping-session', items: [{ nameEn: 'Maple syrup', calories: toppingCalories, carbs: toppingCarbs }] },
+            ],
+        });
+    });
+});
+
+describe('MealService legacy recognition and nutrition fields', () => {
+    it('recovers automatic recognition totals when the stored manual fields are null', async () => {
+        const meal = {
+            ...createAiOnlyMeal(AI_TOTAL_CALORIES),
+            date: '2026-05-03T00:30:00Z',
+            manualCalories: null,
+            manualProteins: null,
+            manualFats: null,
+            manualCarbs: null,
+            manualFiber: null,
+            manualAlcohol: null,
+            qualityGrade: 'yellow',
+            qualityScore: 64,
+        } satisfies MealResponseDto;
+        const pending = firstValueFrom(service.getById(entityId<'meal'>(meal.id)));
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${meal.id}` }).flush(meal);
+
+        await expect(pending).resolves.toMatchObject({
+            isNutritionAutoCalculated: true,
+            date: utcInstant(meal.date),
+            totalCalories: AI_TOTAL_CALORIES,
+            totalProteins: AI_TOTAL_PROTEINS,
+            totalFats: AI_TOTAL_FATS,
+            totalCarbs: AI_TOTAL_CARBS,
+            totalFiber: AI_TOTAL_FIBER,
+            totalAlcohol: 0,
+            manualCalories: null,
+            manualProteins: null,
+            qualityGrade: 'yellow',
+            qualityScore: meal.qualityScore,
+        });
+    });
+
+    it('keeps an explicit manual zero even when a recognition session has a nonzero total', async () => {
+        const meal = { ...createAiOnlyMeal(AI_TOTAL_CALORIES), manualProteins: 0 } satisfies MealResponseDto;
+        const pending = firstValueFrom(service.getById(entityId<'meal'>(meal.id)));
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${meal.id}` }).flush(meal);
+
+        await expect(pending).resolves.toMatchObject({
+            isNutritionAutoCalculated: false,
+            manualProteins: 0,
+            totalProteins: AI_TOTAL_PROTEINS,
+        });
+    });
+
+    it('keeps the server manual mode when a legacy recognition list contains no detected items', async () => {
+        const meal = {
+            ...MOCK_MEAL_DTO,
+            isNutritionAutoCalculated: false,
+            aiSessions: [{ id: 's1', mealId: MOCK_MEAL_DTO.id, recognizedAtUtc: '2026-03-28T10:00:00Z', items: [] }],
+        } satisfies MealResponseDto;
+        const pending = firstValueFrom(service.getById(entityId<'meal'>(meal.id)));
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${meal.id}` }).flush(meal);
+
+        await expect(pending).resolves.toMatchObject({ isNutritionAutoCalculated: false, totalCalories: TOTAL_CALORIES, items: [] });
+    });
+
+    it('keeps manual totals when an older meal has no saved recognition sessions', async () => {
+        const meal = {
+            ...MOCK_MEAL_DTO,
+            isNutritionAutoCalculated: false,
+            manualCalories: TOTAL_CALORIES,
+            aiSessions: undefined,
+        } satisfies MealResponseDto;
+        const pending = firstValueFrom(service.getById(entityId<'meal'>(meal.id)));
+        httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/${meal.id}` }).flush(meal);
+
+        await expect(pending).resolves.toMatchObject({
+            isNutritionAutoCalculated: false,
+            totalCalories: TOTAL_CALORIES,
+            manualCalories: TOTAL_CALORIES,
+            aiSessions: [],
+        });
+    });
 });
 
 describe('MealService create', () => {
@@ -305,7 +433,7 @@ function createMealManageDto(date?: string): MealManageDto {
     };
 }
 
-function createAiOnlyMeal(totalCalories: number): MealResponseDto {
+function createAiOnlyMeal(totalCalories: number): MealResponseDto & Required<Pick<MealResponseDto, 'aiSessions'>> {
     return {
         ...MOCK_MEAL_DTO,
         items: [],

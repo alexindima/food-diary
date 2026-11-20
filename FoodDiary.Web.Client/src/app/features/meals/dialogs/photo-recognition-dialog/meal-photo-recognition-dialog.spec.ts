@@ -28,6 +28,8 @@ const BASE_FAT = 5;
 const BASE_CARBS = 20;
 const BASE_FIBER = 2;
 const EXPECTED_EDITED_CALORIES = 150;
+const PARTIAL_PROTEIN_GRAMS = 3.4;
+const LOW_LOCATION_CONFIDENCE = 0.2;
 
 const visionItem: FoodVisionItem = {
     nameEn: 'Apple',
@@ -572,6 +574,211 @@ describe('Meal photo nutrition-only session mapping', () => {
         expect(dialogRef.close).toHaveBeenCalledWith(
             expect.objectContaining({
                 items: [expect.objectContaining({ nameEn: ['Apple', 'Яблоко'].includes(name) ? 'Apple' : name, amount: SOURCE_AMOUNT })],
+            }),
+        );
+    });
+});
+
+describe('Meal photo rendered nutrition recovery', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+
+    it('retries absent nutrition when the user corrects the amount and waits before adding the meal', async () => {
+        const calculation = new Subject<FoodNutritionResponse>();
+        aiFoodService.calculateNutrition
+            .mockReturnValueOnce(throwError(() => new Error('nutrition temporarily unavailable')))
+            .mockReturnValueOnce(calculation);
+        const { fixture } = await setupComponentAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const upload = fixture.debugElement.query(By.directive(MealPhotoUploadPanelComponent)).injector.get(MealPhotoUploadPanelComponent);
+        upload.imageChanged.emit(imageSelection(null, 'meal-photo'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.querySelector('.photo-ai-dialog__nutrition-error')?.textContent).toContain('NUTRITION_ERROR');
+        expect(photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL').disabled).toBe(true);
+
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        fixture.detectChanges();
+        const amount = host.querySelector<HTMLInputElement>('.photo-ai-dialog__edit-input--amount');
+        if (amount === null) {
+            throw new Error('Expected the recognized amount to be editable');
+        }
+        amount.value = String(EDITED_AMOUNT);
+        amount.dispatchEvent(new Event('input', { bubbles: true }));
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        fixture.detectChanges();
+
+        expect(aiFoodService.calculateNutrition).toHaveBeenCalledTimes(2);
+        expect(aiFoodService.calculateNutrition.mock.lastCall).toMatchObject([{ items: [{ amount: EDITED_AMOUNT, unit: 'g' }] }]);
+        expect(host.querySelector('.photo-ai-dialog__status')?.textContent).toContain('STATUS_NUTRITION');
+        expect(photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL').disabled).toBe(true);
+        calculation.next({
+            ...nutrition,
+            calories: EXPECTED_EDITED_CALORIES,
+            items: [{ ...nutrition.items[0], amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES }],
+        });
+        calculation.complete();
+        fixture.detectChanges();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL').click();
+        expect(dialogRef.close.mock.lastCall).toMatchObject([
+            { imageAssetId: 'meal-photo', items: [{ amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES }] },
+        ]);
+    });
+});
+
+describe('Meal photo rendered saved history and annotations', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+
+    it('restores an older session without a photo, displays fractional nutrition, and saves defaulted optional fields', async () => {
+        const original = createSession();
+        const session: MealAiSessionManageDto = {
+            ...original,
+            imageAssetId: null,
+            imageUrl: null,
+            items: [
+                {
+                    ...original.items[0],
+                    nameEn: 'oat flakes',
+                    nameLocal: null,
+                    confidence: null,
+                    resolution: null,
+                    proteins: PARTIAL_PROTEIN_GRAMS,
+                },
+            ],
+        };
+        const { fixture } = await setupComponentAsync({ initialSession: session, mode: 'edit' });
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.photo-ai-dialog__table-body')?.textContent).toContain('Oat flakes');
+        const macros = Array.from(host.querySelectorAll('.photo-ai-dialog__nutrition-value'));
+        expect(macros.some(macro => macro.textContent.includes(String(PARTIAL_PROTEIN_GRAMS)))).toBe(true);
+        expect(host.querySelector('.photo-ai-dialog__status')).toBeNull();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        fixture.detectChanges();
+        expect(host.querySelector<HTMLSelectElement>('.photo-ai-dialog__edit-select--resolution')?.value).toBe('Accepted');
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        fixture.detectChanges();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(dialogRef.close.mock.lastCall).toMatchObject([
+            {
+                imageAssetId: null,
+                imageUrl: null,
+                items: [{ nameEn: 'oat flakes', confidence: 1, resolution: 'Accepted', proteins: PARTIAL_PROTEIN_GRAMS }],
+            },
+        ]);
+    });
+    it('keeps an uncertain location out of annotations while retaining the item in the nutrition table', async () => {
+        const tea = { ...visionItem, nameEn: 'Tea', nameLocal: null, locationConfidence: LOW_LOCATION_CONFIDENCE };
+        const apple = { ...visionItem, locationConfidence: null };
+        aiFoodService.analyzeFoodImage.mockReturnValueOnce(of({ items: [tea, apple] }));
+        aiFoodService.calculateNutrition.mockReturnValueOnce(
+            of({
+                ...nutrition,
+                items: [{ ...nutrition.items[0], name: tea.nameEn }, nutrition.items[0]],
+            }),
+        );
+        const { fixture } = await setupComponentAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const upload = fixture.debugElement.query(By.directive(MealPhotoUploadPanelComponent)).injector.get(MealPhotoUploadPanelComponent);
+        upload.imageChanged.emit(imageSelection('https://example.test/meal.jpg', 'meal-photo'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.querySelector('.photo-ai-dialog__table-body')?.textContent).toContain('Tea');
+        const cards = host.querySelectorAll('.photo-ai-dialog__annotation-card');
+        expect(cards).toHaveLength(1);
+        expect(cards[0].textContent).toContain(visionItem.nameLocal);
+
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.HIDE_ANNOTATIONS').click();
+        fixture.detectChanges();
+        expect(host.querySelector('.photo-ai-dialog__annotations')).toBeNull();
+    });
+});
+
+function photoButton(host: HTMLElement, label: string): HTMLButtonElement {
+    const button = Array.from(host.querySelectorAll('button')).find(candidate => candidate.textContent.trim().endsWith(label));
+    if (button === undefined) {
+        throw new Error(`Expected the rendered photo action "${label}"`);
+    }
+    return button;
+}
+
+describe('Meal photo saving same-named portions', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+
+    it('adds separate amounts and nutrients even when the provider returns same-named portions in the reverse order', async () => {
+        const largerPortionProtein = 15;
+        const first = nutrition.items[0];
+        const second = { ...first, amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES, protein: largerPortionProtein };
+        aiFoodService.analyzeFoodImage.mockReturnValueOnce(of({ items: [visionItem, { ...visionItem, amount: EDITED_AMOUNT }] }));
+        aiFoodService.calculateNutrition.mockReturnValueOnce(
+            of({
+                ...nutrition,
+                calories: first.calories + second.calories,
+                protein: first.protein + second.protein,
+                items: [second, first],
+            }),
+        );
+        const { fixture } = await setupComponentAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const upload = fixture.debugElement.query(By.directive(MealPhotoUploadPanelComponent)).injector.get(MealPhotoUploadPanelComponent);
+        upload.imageChanged.emit(imageSelection('https://example.test/meal.jpg', 'meal-photo'));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const annotations = Array.from(host.querySelectorAll('.photo-ai-dialog__annotation-card'));
+        expect(annotations).toHaveLength(2);
+        expect(annotations[0].textContent).toContain(String(EXPECTED_EDITED_CALORIES));
+        expect(annotations[1].textContent).toContain(String(BASE_CALORIES));
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL').click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                imageAssetId: 'meal-photo',
+                items: [
+                    expect.objectContaining({
+                        nameEn: visionItem.nameEn,
+                        amount: SOURCE_AMOUNT,
+                        calories: BASE_CALORIES,
+                        proteins: BASE_PROTEIN,
+                    }),
+                    expect.objectContaining({
+                        nameEn: visionItem.nameEn,
+                        amount: EDITED_AMOUNT,
+                        calories: EXPECTED_EDITED_CALORIES,
+                        proteins: largerPortionProtein,
+                    }),
+                ],
+            }),
+        );
+    });
+
+    it('saves separately loaded portions and keeps the rejected matching row at zero', async () => {
+        const original = createSession();
+        const small = { ...original.items[0], amount: SOURCE_AMOUNT, calories: BASE_CALORIES, proteins: BASE_PROTEIN };
+        const large = { ...small, amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES, proteins: PARTIAL_PROTEIN_GRAMS };
+        const rejected = { ...small, resolution: 'Rejected', calories: 0, proteins: 0 };
+        const { fixture } = await setupComponentAsync({ initialSession: { ...original, items: [rejected, small, large] }, mode: 'edit' });
+        const host = fixture.nativeElement as HTMLElement;
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                items: [
+                    expect.objectContaining({ resolution: 'Rejected', amount: SOURCE_AMOUNT, calories: 0, proteins: 0 }),
+                    expect.objectContaining({ amount: SOURCE_AMOUNT, calories: BASE_CALORIES, proteins: BASE_PROTEIN }),
+                    expect.objectContaining({ amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES, proteins: PARTIAL_PROTEIN_GRAMS }),
+                ],
             }),
         );
     });

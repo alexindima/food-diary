@@ -1,27 +1,38 @@
-import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import type { FoodVisionResponse } from '../models/ai.data';
 import type { FoodRecognitionJob } from '../models/food-recognition.data';
 import { utcInstant } from '../models/semantics/date-value';
 import { entityId } from '../models/semantics/entity-id';
 import { publicImageUrl } from '../models/semantics/image-location';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { FoodRecognitionService } from './food-recognition.service';
+import type { FoodRecognitionJobHttpResponse } from './sdk/generated/model/food-recognition-job-http-response';
 
 const HASH_BYTES = 32;
 const POST_RETRY_MS = 1000;
 const POLL_INTERVAL_MS = 5000;
 
-const hub = vi.hoisted(() => ({ handlers: new Map<string, (id: string) => void>(), stop: vi.fn().mockResolvedValue(undefined) }));
+const hub = vi.hoisted(() => ({
+    handlers: new Map<string, (id: string) => void>(),
+    url: vi.fn<(url: string, options: { accessTokenFactory: () => string; headers: Record<string, string> }) => void>(),
+    start: vi.fn<() => Promise<void>>(),
+    stop: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    onreconnected: vi.fn<(handler: () => void) => void>(),
+    onclose: vi.fn<(handler: () => void) => void>(),
+}));
 vi.mock('@microsoft/signalr', () => ({
     LogLevel: { None: 0 },
     HubConnectionBuilder: class {
-        public withUrl(): this {
+        public withUrl(url: string, options: { accessTokenFactory: () => string; headers: Record<string, string> }): this {
+            hub.url(url, options);
             return this;
         }
         public withAutomaticReconnect(): this {
@@ -32,13 +43,13 @@ vi.mock('@microsoft/signalr', () => ({
         }
         public build(): object {
             return {
-                start: vi.fn().mockRejectedValue(new Error('websocket unavailable')),
+                start: hub.start,
                 stop: hub.stop,
                 on: (name: string, handler: (id: string) => void): void => {
                     hub.handlers.set(name, handler);
                 },
-                onreconnected: vi.fn(),
-                onclose: vi.fn(),
+                onreconnected: hub.onreconnected,
+                onclose: hub.onclose,
             };
         }
     },
@@ -46,6 +57,7 @@ vi.mock('@microsoft/signalr', () => ({
 const url = `${environment.apiUrls.ai}/food/recognitions`;
 const request = { imageAssetId: entityId<'image-asset'>('image-1') };
 const user = signal<string | null>('user-1');
+const getToken = vi.fn<() => string | null>();
 let service: FoodRecognitionService;
 let http: HttpTestingController;
 let storage: Map<string, string>;
@@ -70,13 +82,19 @@ beforeEach(() => {
     storage = new Map();
     user.set('user-1');
     hub.handlers.clear();
+    hub.url.mockClear();
+    getToken.mockReset().mockReturnValue('test-token');
+    hub.start.mockReset().mockRejectedValue(new Error('websocket unavailable'));
+    hub.stop.mockClear();
+    hub.onreconnected.mockClear();
+    hub.onclose.mockClear();
     TestBed.configureTestingModule({
         providers: [
             provideHttpClient(),
             provideHttpClientTesting(),
             {
                 provide: AuthService,
-                useValue: { getUserId: user, getToken: (): string => 'test-token', sessionHubUrl: (hubUrl: string): string => hubUrl },
+                useValue: { getUserId: user, getToken, sessionHubUrl: (hubUrl: string): string => hubUrl },
             },
             {
                 provide: BrowserStorageService,
@@ -249,4 +267,227 @@ it('requests a server-filtered page and preserves total count', () => {
     const page = { data: [job('page-2', 'Succeeded')], page: 2, limit: 20, totalPages: 2, totalItems: 21 };
     pageRequest.flush(page);
     expect(received).toHaveBeenCalledWith(page);
+});
+
+describe('saved product label recognition', () => {
+    it('keeps an explicit zero separate from unknown nutrition and preserves the photographed label’s basis', async () => {
+        const pending = firstValueFrom(service.list(1, undefined, true));
+        const baseAmount = 100;
+        const savedLabel = { name: 'Sparkling water', baseAmount, baseUnit: 'ml', calories: 0, carbs: 0 };
+        const saved: FoodRecognitionJobHttpResponse = {
+            ...job('water-label', 'Succeeded'),
+            isProductLabel: true,
+            vision: { items: [], productLabel: savedLabel },
+        };
+        const page = http.expectOne(item => item.url === `${url}/page` && item.method === 'GET');
+        expect(page.request.params.get('isProductLabel')).toBe('true');
+        page.flush({ data: [saved], page: 1, limit: 20, totalPages: 1, totalItems: 1 });
+
+        const result = await pending;
+        expect(result.data).toHaveLength(1);
+        expect(result.data[0].vision?.productLabel).toEqual({
+            ...savedLabel,
+            brand: null,
+            protein: null,
+            fat: null,
+            fiber: null,
+            alcohol: null,
+            notes: null,
+        });
+    });
+
+    it('rejects an unsupported saved label unit before exposing the page for import', async () => {
+        const pending = firstValueFrom(service.list(1, undefined, true));
+        const saved: FoodRecognitionJobHttpResponse = {
+            ...job('unsupported-basis', 'Succeeded'),
+            isProductLabel: true,
+            vision: { items: [], productLabel: { name: 'Dry beans', baseAmount: 1, baseUnit: 'kg' } },
+        };
+        http.expectOne(item => item.url === `${url}/page`).flush({ data: [saved], page: 1, limit: 20, totalPages: 1, totalItems: 1 });
+
+        await expect(pending).rejects.toThrow('unsupported enum value');
+    });
+});
+
+describe('recognition request ownership', () => {
+    it('rejects start and resume as a guest without creating a request', () => {
+        user.set(null);
+        TestBed.tick();
+        const onStartError = vi.fn();
+        const onResumeError = vi.fn();
+
+        service.start(request).subscribe({ error: onStartError });
+        service.resume(entityId<'food-recognition'>('guest-job')).subscribe({ error: onResumeError });
+
+        expect(onStartError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
+        expect(onResumeError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
+        http.expectNone(url);
+        http.expectNone(`${url}/guest-job`);
+        expect(storage.size).toBe(0);
+    });
+
+    it('does not submit photos for a former account when fingerprint creation finishes late', async () => {
+        let finishHash: (value: ArrayBuffer) => void = () => {};
+        vi.spyOn(crypto.subtle, 'digest').mockReturnValueOnce(
+            new Promise<ArrayBuffer>(resolve => {
+                finishHash = resolve;
+            }),
+        );
+        const onError = vi.fn();
+        const waiting = service.start(request).subscribe({ error: onError });
+
+        user.set('user-2');
+        TestBed.tick();
+        finishHash(new Uint8Array(HASH_BYTES).buffer);
+        await vi.advanceTimersByTimeAsync(0);
+        const oldPosts = http.match({ method: 'POST', url });
+        waiting.unsubscribe();
+
+        expect(oldPosts).toHaveLength(0);
+        expect(onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
+        expect(storage.size).toBe(0);
+    });
+
+    it('stops an automatic POST retry after an account change and retains the saved task token for its owner', async () => {
+        const onError = vi.fn();
+        const waiting = service.start(request).subscribe({ error: onError });
+        await vi.advanceTimersByTimeAsync(0);
+        const first = http.expectOne({ method: 'POST', url });
+        const taskId = (first.request.body as { id: string }).id;
+        first.error(new ProgressEvent('offline'));
+
+        user.set('user-2');
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(POST_RETRY_MS);
+        const oldPosts = http.match({ method: 'POST', url });
+        waiting.unsubscribe();
+
+        expect(oldPosts).toHaveLength(0);
+        expect(onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
+        expect([...storage.values()]).toEqual([taskId]);
+
+        user.set('user-1');
+        TestBed.tick();
+        const revisited = service.start(request).subscribe();
+        await vi.advanceTimersByTimeAsync(0);
+        const retry = http.expectOne({ method: 'POST', url });
+        expect(retry.request.body).toEqual({ id: taskId, ...request });
+        revisited.unsubscribe();
+    });
+});
+
+describe('recognition service rejection handling', () => {
+    it('does not retry validation failure and removes its saved request token', async () => {
+        const onError = vi.fn();
+        service.start(request).subscribe({ error: onError });
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne({ method: 'POST', url }).flush(
+            { error: 'Validation.Invalid' },
+            { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' },
+        );
+        await vi.advanceTimersByTimeAsync(POST_RETRY_MS);
+
+        http.expectNone(url);
+        expect(onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.BadRequest }));
+        expect(storage.size).toBe(0);
+    });
+
+    it.each([
+        ['Ai.QuotaExceeded', HttpStatusCode.TooManyRequests],
+        ['Ai.TrialEnded', HttpStatusCode.Forbidden],
+        ['Ai.ConsentRequired', HttpStatusCode.Forbidden],
+    ])('reports terminal %s without opening a new recognition', async (code, status) => {
+        const onError = vi.fn();
+        service.resume(entityId<'food-recognition'>('saved-job')).subscribe({ error: onError });
+        await vi.advanceTimersByTimeAsync(0);
+        const endpoint = `${url}/saved-job`;
+        http.expectOne(endpoint).flush({ ...job('saved-job', 'Failed'), errorCode: code });
+        await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS);
+
+        expect(onError).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                status,
+                error: { code, terminal: true },
+            }),
+        );
+        http.expectNone(endpoint);
+        http.expectNone(url);
+    });
+});
+
+describe('recognition hub lifecycle', () => {
+    it('shares a connection for two active jobs and checks both after reconnection', async () => {
+        hub.start.mockResolvedValue(undefined);
+        const first = vi.fn<(value: FoodVisionResponse) => void>();
+        const second = vi.fn<(value: FoodVisionResponse) => void>();
+        service.resume(entityId<'food-recognition'>('first-job')).subscribe(first);
+        service.resume(entityId<'food-recognition'>('second-job')).subscribe(second);
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/first-job`).flush(job('first-job'));
+        http.expectOne(`${url}/second-job`).flush(job('second-job'));
+        expect(hub.start).toHaveBeenCalledOnce();
+
+        const reconnected = hub.onreconnected.mock.calls[0][0];
+        reconnected();
+        http.expectOne(`${url}/first-job`).flush(job('first-job', 'Succeeded'));
+        http.expectOne(`${url}/second-job`).flush(job('second-job', 'Succeeded'));
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(first).toHaveBeenCalledOnce();
+        expect(second).toHaveBeenCalledOnce();
+        expect(first.mock.calls[0][0].recognition?.id).toBe('first-job');
+        expect(second.mock.calls[0][0].recognition?.id).toBe('second-job');
+    });
+
+    it('stops the old connection once and ignores its late close after another account connects', async () => {
+        hub.start.mockResolvedValue(undefined);
+        const error = vi.fn();
+        service.resume(entityId<'food-recognition'>('old-job')).subscribe({ error });
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/old-job`).flush(job('old-job'));
+        const oldClosed = hub.onclose.mock.calls[0][0];
+
+        user.set('user-2');
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(hub.stop).toHaveBeenCalledOnce();
+        expect(error).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
+
+        const newJob = service.resume(entityId<'food-recognition'>('new-job')).subscribe();
+        await vi.advanceTimersByTimeAsync(0);
+        const joined = http.expectOne(`${url}/new-job`);
+        oldClosed();
+        const otherJob = service.resume(entityId<'food-recognition'>('other-job')).subscribe();
+        await vi.advanceTimersByTimeAsync(0);
+        const other = http.expectOne(`${url}/other-job`);
+
+        expect(hub.start).toHaveBeenCalledTimes(2);
+        expect(joined.cancelled).toBe(false);
+        expect(other.cancelled).toBe(false);
+        newJob.unsubscribe();
+        otherJob.unsubscribe();
+    });
+
+    it('uses browser cookie transport and reconnects on the next job after the current hub closes', async () => {
+        hub.start.mockResolvedValue(undefined);
+        getToken.mockReturnValue(null);
+        const first = service.resume(entityId<'food-recognition'>('cookie-job')).subscribe();
+        await vi.advanceTimersByTimeAsync(0);
+        const firstRead = http.expectOne(`${url}/cookie-job`);
+        expect(hub.url).toHaveBeenCalledOnce();
+        const [hubUrl, options] = hub.url.mock.calls[0];
+        expect(hubUrl).toContain('/hubs/food-recognition');
+        expect(options.accessTokenFactory()).toBe('');
+        expect(options.headers).toEqual({ 'X-Requested-With': 'XMLHttpRequest' });
+        first.unsubscribe();
+        expect(firstRead.cancelled).toBe(true);
+
+        const closed = hub.onclose.mock.calls[0][0];
+        closed();
+        const next = service.resume(entityId<'food-recognition'>('next-job')).subscribe();
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne(`${url}/next-job`);
+        expect(hub.start).toHaveBeenCalledTimes(2);
+        next.unsubscribe();
+    });
 });

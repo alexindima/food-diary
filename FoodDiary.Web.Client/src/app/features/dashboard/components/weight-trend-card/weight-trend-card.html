@@ -24,8 +24,8 @@
                 @if (measurementCount() >= 2) {
                     <div class="fd-stack fd-gap-xxs">
                         <div class="weight-trend-card__delta fd-ui-stat-value">
-                            @if (hasMeaningfulChange()) {
-                                {{ formattedChangeValue() }} {{ displayUnitKey() | translate }}
+                            @if (formattedChangeValue(); as delta) {
+                                {{ delta }} {{ displayUnitKey() | translate }}
                             } @else {
                                 {{ 'WEIGHT_TREND_CARD.NO_CHANGE' | translate }}
                             }

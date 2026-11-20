@@ -54,6 +54,14 @@ describe('cycle calendar day', () => {
         ).toBeNull();
     });
 
+    it('ignores an unparseable saved episode when a recorded calendar start is present', () => {
+        const episodes = [episode('invalid'), episode('2026-10-16T00:00:00Z')];
+
+        expect(resolveCycleStartDateKey({ mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING, menstrualEpisodes: episodes }, '2026-10-18')).toBe(
+            '2026-10-16',
+        );
+    });
+
     it.each([
         ['2026-10-16', '2026-10-18', THIRD_DAY],
         ['2026-10-16', '2026-10-16', 1],

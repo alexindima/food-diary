@@ -259,3 +259,57 @@ describe('statistics meal structure mapper', () => {
         expect(percentages.reduce((sum, value) => sum + value, 0)).toBe(100);
     });
 });
+
+describe('statistics nutrition insight availability', () => {
+    it('shows goal comparisons only when each date is recorded, with the diary-completeness hint', () => {
+        const full = buildInsightView([1800, 2000, 2200], USER);
+        expect(full.insights).toMatchObject([
+            { key: 'calories', value: 0, tone: 'positive' },
+            { key: 'protein', value: 10, tone: 'positive' },
+            { key: 'completeness', value: null, detailKey: 'STATISTICS.DASHBOARD.TREND.INCOMPLETE_DATA_HINT' },
+        ]);
+
+        const missingDay = buildInsightView([1800, 0, 2200], USER);
+        expect(missingDay.overview.trackedDays).toBe(2);
+        expect(missingDay.insights).toEqual([]);
+    });
+
+    it('does not present a missing target as a zero comparison', () => {
+        const view = buildInsightView([1800, 2000, 2200], null);
+
+        expect(view.overview.trackedDays).toBe(3);
+        expect(view.insights).toMatchObject([
+            { key: 'calories', value: null, tone: 'neutral' },
+            { key: 'protein', value: null, tone: 'neutral' },
+            { key: 'completeness', value: null, tone: 'neutral' },
+        ]);
+    });
+
+    it('preserves the direction of differences when intake is outside the daily goal band', () => {
+        const view = buildInsightView([2500, 2500, 2500], { ...USER, proteinTarget: 120 });
+
+        expect(view.insights.slice(0, 2)).toMatchObject([
+            { key: 'calories', value: 25, tone: 'neutral' },
+            { key: 'protein', value: -10, tone: 'neutral' },
+        ]);
+    });
+});
+
+function buildInsightView(calories: number[], user: User | null): ReturnType<typeof buildStatisticsDashboardCardsView> {
+    return buildStatisticsDashboardCardsView({
+        statistics: {
+            date: ['2026-08-02', '2026-08-03', '2026-08-04'].map(date => new Date(`${date}T00:00:00`)),
+            calories,
+            nutrientsStatistic: { proteins: [100, 110, 120], fats: [60, 70, 80], carbs: [240, 250, 260], fiber: [20, 25, 30] },
+            aggregatedNutrients: { proteins: 330, fats: 210, carbs: 750, fiber: 75 },
+        },
+        user,
+        weightPoints: [],
+        weightMeasurements: { first: null, last: null, count: 0 },
+        waistPoints: [],
+        waistMeasurements: { first: null, last: null, count: 0 },
+        quantizationDays: 1,
+        periodDays: 3,
+        formatDate: date => date.toISOString(),
+    });
+}

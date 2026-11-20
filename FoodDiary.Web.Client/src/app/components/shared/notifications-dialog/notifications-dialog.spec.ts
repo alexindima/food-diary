@@ -1,8 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -169,6 +170,141 @@ describe('NotificationsDialogComponent recommendations', () => {
         expect((component as NotificationsDialogComponentTestApi).notificationItems()[0].icon).toBe('medical_information');
     });
 });
+
+describe('Notifications inbox bulk acknowledgment', () => {
+    it('retains unread rows after a failed bulk action and reflects a successful retry', () => {
+        const items = [createInvitationNotification(), createRecommendationNotification()];
+        const { fixture, notificationService } = setupNotificationsDialog(items);
+        const host = fixture.nativeElement as HTMLElement;
+        const bulkRead = noticeButton(host, '.notifications-dialog__footer button');
+        const firstAttempt = new Subject<void>();
+        const retry = new Subject<void>();
+        notificationService.markAllRead.mockReturnValueOnce(firstAttempt).mockReturnValueOnce(retry);
+
+        bulkRead.click();
+        fixture.detectChanges();
+        expect(bulkRead.disabled).toBe(true);
+        bulkRead.click();
+        expect(notificationService.markAllRead).toHaveBeenCalledOnce();
+        firstAttempt.error(new Error('Read status unavailable'));
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('NOTIFICATIONS.MARK_ALL_READ_ERROR');
+        expect(host.querySelectorAll('.notifications-dialog__item:not(.is-read)')).toHaveLength(items.length);
+        expect(bulkRead.disabled).toBe(false);
+
+        bulkRead.click();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]:not([hidden])')).toBeNull();
+        expect(bulkRead.disabled).toBe(true);
+        notificationService.notifications.set(items.map(item => ({ ...item, isRead: true })));
+        retry.next();
+        retry.complete();
+        fixture.detectChanges();
+        expect(host.querySelectorAll('.notifications-dialog__item.is-read')).toHaveLength(items.length);
+        expect(bulkRead.disabled).toBe(true);
+    });
+});
+
+describe('Notifications inbox row actions', () => {
+    it.each([null, '  '])('acknowledges a notice without navigating when its destination is %s', targetUrl => {
+        const notice = { ...createRecommendationNotification(), targetUrl };
+        const { fixture, dialogRef, notificationService, router } = setupNotificationsDialog([notice]);
+        const host = fixture.nativeElement as HTMLElement;
+        const row = noticeButton(host, '.notifications-dialog__item');
+        row.click();
+        expect(notificationService.markAsRead).toHaveBeenCalledExactlyOnceWith(notice.id);
+
+        notificationService.notifications.set([{ ...notice, isRead: true }]);
+        fixture.detectChanges();
+        expect(row.classList.contains('is-read')).toBe(true);
+        row.click();
+        expect(notificationService.markAsRead).toHaveBeenCalledOnce();
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+    });
+
+    it('opens the chosen destination after the read acknowledgment fails', () => {
+        const notice = createRecommendationNotification();
+        const { fixture, dialogRef, notificationService, router } = setupNotificationsDialog([notice]);
+        const pending = new Subject<void>();
+        notificationService.markAsRead.mockReturnValueOnce(pending);
+        noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item').click();
+        expect(notificationService.markAsRead).toHaveBeenCalledExactlyOnceWith(notice.id);
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        pending.error(new Error('Read acknowledgment unavailable'));
+        expect(router.navigateByUrl).toHaveBeenCalledExactlyOnceWith(notice.targetUrl);
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+    });
+
+    it('opens the destination of an already-read notification immediately', () => {
+        const notice = { ...createPasswordSetupNotification(), isRead: true };
+        const { fixture, dialogRef, notificationService, router } = setupNotificationsDialog([notice]);
+        noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item').click();
+
+        expect(router.navigateByUrl).toHaveBeenCalledExactlyOnceWith(notice.targetUrl);
+        expect(dialogRef.close).toHaveBeenCalledOnce();
+        expect(notificationService.markAsRead).not.toHaveBeenCalled();
+    });
+    it('cancels a pending read acknowledgment if the user dismisses the inbox', () => {
+        const { fixture, notificationService, router } = setupNotificationsDialog([createInvitationNotification()]);
+        const pending = new Subject<void>();
+        notificationService.markAsRead.mockReturnValueOnce(pending);
+        noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item').click();
+        expect(pending.observed).toBe(true);
+        fixture.destroy();
+        expect(pending.observed).toBe(false);
+        pending.next();
+        pending.complete();
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+    });
+});
+
+describe('Notifications inbox locale', () => {
+    it('reformats a retained row when the language changes without loading the inbox again', async () => {
+        const entry = {
+            ...createRecommendationNotification(),
+            title: '  New recommendation  ',
+            body: '  Review the new suggestion.  ',
+            createdAtUtc: utcInstant('2026-04-15T12:30:00Z'),
+        };
+        const { fixture, notificationService } = setupNotificationsDialog([entry]);
+        const translate = TestBed.inject(TranslateService);
+        const originalRow = noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item');
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+        const date = originalRow.querySelector('.notifications-dialog__item-date');
+        const originalDate = date?.textContent.trim();
+        expect(originalDate).toBe(formatNoticeTimestamp(entry.createdAtUtc, 'en-US'));
+        expect(originalRow.getAttribute('aria-label')).toBe('New recommendation. Review the new suggestion.');
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(date?.textContent.trim()).toBe(formatNoticeTimestamp(entry.createdAtUtc, 'ru-RU'));
+        expect(date?.textContent.trim()).not.toBe(originalDate);
+        expect(noticeButton(fixture.nativeElement as HTMLElement, '.notifications-dialog__item')).toBe(originalRow);
+        expect(notificationService.ensureNotificationsLoaded).toHaveBeenCalledOnce();
+    });
+});
+
+function noticeButton(root: HTMLElement, selector: string): HTMLButtonElement {
+    const button = root.querySelector(selector);
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error(`Expected the inbox control ${selector}`);
+    }
+    return button;
+}
+
+function formatNoticeTimestamp(value: string, locale: string): string {
+    return new Intl.DateTimeFormat(locale, {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(new Date(value));
+}
 
 function createInvitationNotification(): NotificationItem {
     return {

@@ -71,7 +71,8 @@ export class FavoritesPickerActions<T extends { id: string }> {
 
     public restore(item: T): void {
         const { page } = this.options;
-        if (this.busy() || !page.removedIds().has(item.id)) {
+        const removedId = item.id;
+        if (this.busy() || !page.removedIds().has(removedId)) {
             return;
         }
         const revision = page.revision();
@@ -91,7 +92,8 @@ export class FavoritesPickerActions<T extends { id: string }> {
                         return;
                     }
                     if (restored) {
-                        page.markRestored(item.id);
+                        // The restored row may already have a new ID.
+                        page.markRestored(removedId);
                         this.focusTarget.set(item.id);
                     } else {
                         this.restoreErrors.update(ids => new Set([...ids, item.id]));

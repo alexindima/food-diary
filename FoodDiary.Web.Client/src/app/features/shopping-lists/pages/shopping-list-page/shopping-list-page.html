@@ -43,11 +43,21 @@
         @if (isLoading() && !hasLists()) {
             <fd-ui-loader class="shopping-list__loader" />
         } @else if (!hasLists()) {
-            <section class="shopping-list__no-lists">
-                <fd-ui-icon name="shopping_cart" size="xl" />
-                <h2>{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
-                <p>{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
-            </section>
+            @if (facade.overviewLoadError()) {
+                <fd-ui-inline-alert
+                    role="alert"
+                    severity="danger"
+                    [message]="'SHOPPING_LIST.LOAD_ERROR' | translate"
+                    [primaryActionLabel]="'ERRORS.RETRY' | translate"
+                    (primaryAction)="facade.initialize()"
+                />
+            } @else {
+                <section class="shopping-list__no-lists">
+                    <fd-ui-icon name="shopping_cart" size="xl" />
+                    <h2>{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
+                    <p>{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
+                </section>
+            }
         } @else {
             <fd-shopping-list-manage-controls
                 data-tour-id="shopping-list-manage"
@@ -61,7 +71,7 @@
                 [canClearPurchased]="checkedItemsCount() > 0"
                 (mergeDuplicates)="mergeDuplicates()"
                 (createList)="createNewList($event)"
-                (clearPurchased)="clearPurchased()"
+                (clearPurchased)="clearPurchasedAsync()"
                 (clearListById)="clearListById($event)"
                 (deleteListById)="deleteListById($event)"
                 (renameListById)="renameListById($event.listId, $event.name)"

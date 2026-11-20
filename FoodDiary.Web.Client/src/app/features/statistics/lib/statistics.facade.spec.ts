@@ -260,6 +260,116 @@ describe('StatisticsFacade errors', () => {
     });
 });
 
+describe('StatisticsFacade chart projections', () => {
+    it('starts without measurements and keeps a waist-only report available after the first request', () => {
+        const summary$ = new Subject<StatisticsSummary>();
+        statisticsService.getSummary.mockReturnValueOnce(summary$);
+        TestBed.tick();
+
+        expect(statisticsService.getSummary).not.toHaveBeenCalled();
+        expect(facade.hasStatisticsData()).toBe(false);
+        expect(facade.weightSummaryPoints()).toEqual([]);
+        expect(facade.waistSummaryPoints()).toEqual([]);
+        expect(facade.dashboardCardsView().body.weight).toMatchObject({ current: null, change: null, measurementCount: 0 });
+        expect(facade.dashboardCardsView().body.waist).toMatchObject({ current: null, change: null, measurementCount: 0 });
+
+        facade.initialize();
+        TestBed.tick();
+        facade.initialize();
+        TestBed.tick();
+
+        expect(statisticsService.getSummary).toHaveBeenCalledOnce();
+        expect(facade.hasStatisticsResponse()).toBe(false);
+        expect(facade.hasBodyData()).toBe(false);
+
+        summary$.next({
+            ...createStatisticsSummary(FIRST_TOTAL_CALORIES),
+            nutrition: [],
+            weight: [],
+            weightMeasurements: { first: null, last: null, count: 0 },
+        });
+        summary$.complete();
+
+        expect(facade.hasStatisticsResponse()).toBe(true);
+        expect(facade.hasStatisticsData()).toBe(false);
+        expect(facade.hasBodyData()).toBe(true);
+        expect(facade.dashboardCardsView().days).toEqual([]);
+        expect(facade.dashboardCardsView().body.weight.points).toEqual([]);
+        expect(facade.dashboardCardsView().body.waist.points).toMatchObject([{ value: DEFAULT_WAIST_AVERAGE }]);
+    });
+
+    it('relabels annual nutrition and body charts for a language change without refreshing the report', () => {
+        const summary = createStatisticsSummary(FIRST_TOTAL_CALORIES);
+        const date = new Date('2026-04-15T12:00:00Z');
+        summary.nutrition = summary.nutrition.map(bucket => ({ ...bucket, dateFrom: date, dateTo: date }));
+        summary.weight = [{ ...summary.weight[0], startDate: calendarDate('2026-04-15') }];
+        summary.waist = [{ ...summary.waist[0], startDate: calendarDate('2026-04-15') }];
+        statisticsService.getSummary.mockReturnValueOnce(of(summary));
+        facade.selectedRange.set('year');
+
+        facade.initialize();
+        TestBed.tick();
+
+        expect(facade.hasStatisticsData()).toBe(true);
+        expect(facade.dashboardCardsView().days).toMatchObject([{ label: 'Apr', calories: FIRST_TOTAL_CALORIES }]);
+        expect(facade.dashboardCardsView().body.weight.points).toEqual([{ label: 'Apr', value: DEFAULT_WEIGHT_AVERAGE }]);
+
+        currentLanguage = 'ru';
+        languageChanges.next({ lang: currentLanguage });
+        TestBed.tick();
+
+        expect(facade.dashboardCardsView().days[0].label).toMatch(/^Апр\.?$/u);
+        expect(facade.dashboardCardsView().body.waist.points[0].label).toMatch(/^Апр\.?$/u);
+        expect(statisticsService.getSummary).toHaveBeenCalledOnce();
+    });
+});
+
+describe('StatisticsFacade custom date editing', () => {
+    it('keeps the applied report while a date is cleared and fetches only after restoring both endpoints', () => {
+        facade.initialize();
+        TestBed.tick();
+        facade.changeRange('custom');
+        TestBed.tick();
+        const previous = facade.appliedRange();
+        statisticsService.getSummary.mockClear();
+        const start = new Date('2026-04-10T12:00:00');
+        const end = new Date('2026-04-15T12:00:00');
+
+        facade.customRangeForm.range().value.set({ start, end: null });
+        TestBed.tick();
+
+        expect(statisticsService.getSummary).not.toHaveBeenCalled();
+        expect(facade.appliedRange()).toBe(previous);
+
+        facade.customRangeForm.range().value.set({ start, end });
+        TestBed.tick();
+
+        expect(statisticsService.getSummary).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ bodyDateFrom: '2026-04-10', bodyDateTo: '2026-04-15' }),
+            expect.any(HttpContext),
+        );
+        expect(facade.appliedRange()).toEqual({ start, end });
+    });
+
+    it('repopulates both dates when leaving an unfinished custom period', () => {
+        facade.initialize();
+        TestBed.tick();
+        facade.changeRange('custom');
+        TestBed.tick();
+        facade.customRangeForm.range().value.set({ start: null, end: new Date('2026-04-15T12:00:00') });
+        TestBed.tick();
+        statisticsService.getSummary.mockClear();
+
+        facade.changeRange('year');
+        TestBed.tick();
+
+        expect(facade.selectedRange()).toBe('year');
+        expect(facade.customRangeForm.range().value()?.start).toBeInstanceOf(Date);
+        expect(facade.customRangeForm.range().value()?.end).toBeInstanceOf(Date);
+        expect(statisticsService.getSummary).toHaveBeenCalledOnce();
+    });
+});
+
 function createStatisticsResponse(totalCalories: number): AggregatedStatistics[] {
     return [
         {

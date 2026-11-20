@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
@@ -62,6 +62,72 @@ describe('FdCardHoverDirective', () => {
     });
 });
 
+const ORIGINAL_CARD_STYLES = 'transform: scale(0.98); box-shadow: 0 1px 3px #222; cursor: grab; transition: opacity 0.3s ease;';
+
+@Component({
+    imports: [FdCardHoverDirective],
+    template: `<button type="button" fdCardHover [fdCardHoverDisabled]="disabled()" style="${ORIGINAL_CARD_STYLES}">Open card</button>`,
+})
+class InlineStyleCardHostComponent {
+    public readonly disabled = signal(false);
+}
+
+describe('FdCardHoverDirective with existing inline styles', () => {
+    it('uses the theme defaults for keyboard focus and restores the original styles on blur', () => {
+        const fixture = TestBed.createComponent(InlineStyleCardHostComponent);
+        fixture.detectChanges();
+        const card = getButton(fixture);
+        const original = originalCardStyle();
+
+        card.focus();
+
+        expect(document.activeElement).toBe(card);
+        expect(card.style.transform).toBe('var(--fd-card-hover-transform)');
+        expect(card.style.boxShadow).toBe('var(--fd-card-hover-shadow)');
+        card.blur();
+
+        expect(card.style.transform).toBe(original.transform);
+        expect(card.style.boxShadow).toBe(original.boxShadow);
+        expect(card.style.cursor).toBe('pointer');
+    });
+
+    it('restores all inline styles when disabled and when destroyed while still hovered', () => {
+        const fixture = TestBed.createComponent(InlineStyleCardHostComponent);
+        fixture.detectChanges();
+        const card = getButton(fixture);
+        const original = originalCardStyle();
+        card.dispatchEvent(new MouseEvent('mouseenter'));
+        expect(card.style.transform).toBe('var(--fd-card-hover-transform)');
+
+        fixture.componentInstance.disabled.set(true);
+        fixture.detectChanges();
+        card.dispatchEvent(new FocusEvent('focusin'));
+
+        expectCardStyle(card, original);
+        fixture.componentInstance.disabled.set(false);
+        fixture.detectChanges();
+        card.dispatchEvent(new MouseEvent('mouseenter'));
+        expect(card.style.transform).toBe('var(--fd-card-hover-transform)');
+
+        fixture.destroy();
+
+        expectCardStyle(card, original);
+    });
+});
+
+function originalCardStyle(): CSSStyleDeclaration {
+    const sample = document.createElement('button');
+    sample.style.cssText = ORIGINAL_CARD_STYLES;
+    return sample.style;
+}
+
+function expectCardStyle(card: HTMLButtonElement, original: CSSStyleDeclaration): void {
+    expect(card.style.transform).toBe(original.transform);
+    expect(card.style.boxShadow).toBe(original.boxShadow);
+    expect(card.style.cursor).toBe(original.cursor);
+    expect(card.style.transition).toBe(original.transition);
+}
+
 function expectHoverShadow(element: HTMLButtonElement): void {
     // Compare the shadow in the DOM's own serialization format.
     const expectedStyle = document.createElement('button').style;
@@ -76,7 +142,7 @@ function createFixture(): ComponentFixture<CardHoverHostComponent> {
     return fixture;
 }
 
-function getButton(fixture: ComponentFixture<CardHoverHostComponent>): HTMLButtonElement {
+function getButton<T>(fixture: ComponentFixture<T>): HTMLButtonElement {
     const host = fixture.nativeElement as HTMLElement;
     return host.querySelector('button') as HTMLButtonElement;
 }

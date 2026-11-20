@@ -116,16 +116,13 @@ class MealResponseNormalizer {
 
     private resolveIsNutritionAutoCalculated(response: MealResponseDto): boolean {
         const isAuto = response.isNutritionAutoCalculated;
-        if (this.shouldUseServerNutritionAutoCalculated(response, isAuto)) {
+        const aiSessions = response.aiSessions;
+        if (isAuto || response.items.length > 0 || aiSessions?.some(session => session.items.length > 0) !== true) {
             return isAuto;
         }
 
-        const aiTotals = this.calculateAiTotals(response);
+        const aiTotals = this.calculateAiTotals(aiSessions);
         return MEAL_NUTRITION_FIELDS.every(field => this.areClose(this.resolveResponseNutrition(response, field), aiTotals[field]));
-    }
-
-    private shouldUseServerNutritionAutoCalculated(response: MealResponseDto, isAuto: boolean): boolean {
-        return isAuto || response.items.length > 0 || !this.hasAiItems(response);
     }
 
     private resolveResponseNutrition(response: MealResponseDto, field: NutritionField): number {
@@ -141,27 +138,21 @@ class MealResponseNormalizer {
         return nutrition[field];
     }
 
-    private hasAiItems(response: MealResponseDto): boolean {
-        return response.aiSessions?.some(session => session.items.length > 0) ?? false;
-    }
-
-    private calculateAiTotals(response: MealResponseDto): NutritionTotals {
-        return (
-            response.aiSessions?.reduce(
-                (totals, session) =>
-                    session.items.reduce(
-                        (sessionTotals, item) => ({
-                            calories: sessionTotals.calories + item.calories,
-                            proteins: sessionTotals.proteins + item.proteins,
-                            fats: sessionTotals.fats + item.fats,
-                            carbs: sessionTotals.carbs + item.carbs,
-                            fiber: sessionTotals.fiber + item.fiber,
-                            alcohol: sessionTotals.alcohol + item.alcohol,
-                        }),
-                        totals,
-                    ),
-                this.createEmptyNutritionTotals(),
-            ) ?? this.createEmptyNutritionTotals()
+    private calculateAiTotals(aiSessions: readonly MealAiSessionResponseDto[]): NutritionTotals {
+        return aiSessions.reduce(
+            (totals, session) =>
+                session.items.reduce(
+                    (sessionTotals, item) => ({
+                        calories: sessionTotals.calories + item.calories,
+                        proteins: sessionTotals.proteins + item.proteins,
+                        fats: sessionTotals.fats + item.fats,
+                        carbs: sessionTotals.carbs + item.carbs,
+                        fiber: sessionTotals.fiber + item.fiber,
+                        alcohol: sessionTotals.alcohol + item.alcohol,
+                    }),
+                    totals,
+                ),
+            this.createEmptyNutritionTotals(),
         );
     }
 

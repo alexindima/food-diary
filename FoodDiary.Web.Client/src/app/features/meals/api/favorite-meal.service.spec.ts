@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
@@ -67,6 +68,26 @@ describe('FavoriteMealService', () => {
         });
         httpMock.expectOne(request => request.url === `${BASE_URL}/page`).flush('offline', { status: 500, statusText: 'Error' });
         expect(failed).toBe(true);
+    });
+
+    it('keeps ordered item names and photos and fills missing favorite titles and meal types', async () => {
+        const pending = firstValueFrom(service.getPage(1, PAGE_SIZE));
+        const stored = {
+            ...favoriteMeal,
+            itemNames: ['Roasted peppers', 'Brown rice'],
+            itemImageUrls: ['https://cdn.example.test/peppers.jpg', 'https://cdn.example.test/rice.jpg'],
+        };
+        const unnamed = {
+            ...favoriteMeal,
+            id: entityId<'favorite-meal'>('favorite-2'),
+            mealId: entityId<'meal'>('meal-2'),
+            name: undefined,
+            mealType: undefined,
+        };
+        const page = { data: [stored, unnamed], page: 1, limit: PAGE_SIZE, totalPages: 1, totalItems: 2 };
+        httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.method === 'GET').flush(page);
+
+        await expect(pending).resolves.toEqual({ ...page, data: [stored, { ...unnamed, name: null, mealType: null }] });
     });
 });
 

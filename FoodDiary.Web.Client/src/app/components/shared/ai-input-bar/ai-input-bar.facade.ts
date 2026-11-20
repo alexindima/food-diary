@@ -84,6 +84,7 @@ export class AiInputBarFacade {
     }
 
     public setEditResult(state: AiInputBarChannelState, items: FoodVisionItem[], nutrition: FoodNutritionResponse | null): void {
+        this.nutritionSubscriptions.get(state)?.unsubscribe();
         state.results.set(items);
         if (items.length === 0) {
             this.setEmptyItemsError(state);

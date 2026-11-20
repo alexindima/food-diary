@@ -29,7 +29,7 @@ import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../serv
 import { devDay, devRecord } from '../../../shared/development/development-input';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../shared/development/development-tools';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
-import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
+import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { ViewportService } from '../../../shared/platform/viewport.service';
@@ -44,6 +44,7 @@ import { shouldPrioritizeDashboardFasting } from '../lib/dashboard-fasting-prior
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardLocalDayFacade } from '../lib/dashboard-local-day.facade';
 import { DashboardNutritionDialogFacade } from '../lib/dashboard-nutrition-dialog.facade';
+import { DashboardSetupFacade } from '../lib/dashboard-setup.facade';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
     DashboardBlockId,
@@ -101,7 +102,14 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardTdeeBlockComponent,
         DashboardAdviceBlockComponent,
     ],
-    providers: [AiMealCreateFacade, DashboardLayoutService, DashboardLocalDayFacade, DashboardFacade, DashboardNutritionDialogFacade],
+    providers: [
+        AiMealCreateFacade,
+        DashboardLayoutService,
+        DashboardLocalDayFacade,
+        DashboardFacade,
+        DashboardNutritionDialogFacade,
+        DashboardSetupFacade,
+    ],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -142,6 +150,7 @@ export class DashboardComponent {
     });
     protected readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
+    protected readonly setup = inject(DashboardSetupFacade);
     private readonly languageVersion = signal(0);
     private readonly fastingPriorityOnOpen = signal<boolean | null>(null);
 
@@ -193,14 +202,11 @@ export class DashboardComponent {
 
         return this.isTodaySelected() && this.layout.isBlockVisible('fasting') && this.fastingIsActive();
     });
-    protected readonly hasRenderedAsideBlocks = computed(() => {
-        if (this.layout.isEditingLayout()) {
-            return this.layout.hasAsideBlocks();
-        }
-
-        const visibleBlocks = this.layout.visibleBlocks();
-        return visibleBlocks.some(block => isDashboardAsideBlock(block));
-    });
+    protected readonly showDashboardAside = computed(
+        () =>
+            this.layout.isEditingLayout() ||
+            this.layout.visibleBlocks().some(block => isDashboardAsideBlock(block) && (block !== 'cycle' || !this.cycleHidden())),
+    );
     protected readonly editSaveActionLabelKey = computed(() => (this.layout.hasLayoutChanges() ? 'DASHBOARD.SETTINGS.SAVE' : null));
     protected readonly editSaveActionLabel = computed(() => {
         const labelKey = this.editSaveActionLabelKey();
@@ -288,8 +294,12 @@ export class DashboardComponent {
 
     public constructor() {
         const setDateAsync = async (input: unknown): Promise<void> => {
-            const date = parseLocalDateInputValue(devDay(devRecord(input, ['date'])['date']));
-            if (date === null || !(await this.navigateDashboardDateAsync(date))) {
+            const date = devDay(devRecord(input, ['date'])['date']);
+            const currentDates = this.route.snapshot.queryParamMap.getAll('date');
+            if (currentDates.length === 1 && currentDates[0] === date) {
+                return;
+            }
+            if (!(await this.navigateDashboardDateAsync(date))) {
                 throw new DevelopmentToolError('Dashboard date navigation was cancelled.');
             }
         };
@@ -347,13 +357,13 @@ export class DashboardComponent {
             return;
         }
 
-        void this.navigateDashboardDateAsync(value);
+        void this.navigateDashboardDateAsync(formatDate(value, 'yyyy-MM-dd', 'en'));
     }
 
-    private async navigateDashboardDateAsync(value: Date): Promise<boolean> {
+    private async navigateDashboardDateAsync(date: string): Promise<boolean> {
         return this.router.navigate([], {
             relativeTo: this.route,
-            queryParams: { date: formatDate(value, 'yyyy-MM-dd', 'en') },
+            queryParams: { date },
             queryParamsHandling: 'merge',
         });
     }
@@ -385,6 +395,9 @@ export class DashboardComponent {
     protected async openNotificationSettingsAsync(): Promise<void> {
         const { DashboardNotificationSettingsDialogComponent } =
             await import('../dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog');
+        if (this.destroyRef.destroyed) {
+            return;
+        }
 
         this.dialogService
             .open(DashboardNotificationSettingsDialogComponent, {
@@ -397,6 +410,9 @@ export class DashboardComponent {
 
     protected async openAppearanceDialogAsync(): Promise<void> {
         const { AppearanceDialogComponent } = await import('../../../components/shared/appearance-dialog/appearance-dialog');
+        if (this.destroyRef.destroyed) {
+            return;
+        }
 
         this.dialogService
             .open(AppearanceDialogComponent, {

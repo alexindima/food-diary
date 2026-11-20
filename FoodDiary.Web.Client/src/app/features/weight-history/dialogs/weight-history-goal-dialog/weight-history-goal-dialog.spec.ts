@@ -1,9 +1,12 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form } from '@angular/forms/signals';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
@@ -165,6 +168,65 @@ describe('Weight goal keyboard submission', () => {
         component['cancelGoal']();
         expect(facade.saveDesiredWeight).not.toHaveBeenCalled();
         expect(facade.cancelWeightGoal).not.toHaveBeenCalled();
+    });
+});
+
+describe('Weight goal dialog with the real measurement facade', () => {
+    it('shows a restored invalid target only after interaction and sends the corrected target in kilograms', () => {
+        const close = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [WeightHistoryGoalDialogComponent],
+            providers: [
+                provideTranslateTesting(),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                WeightHistoryFacade,
+                { provide: FdUiDialogRef, useValue: { close } },
+            ],
+        });
+        const facade = TestBed.inject(WeightHistoryFacade);
+        const http = TestBed.inject(HttpTestingController);
+        facade.desiredWeightModel.set({ weight: '0' });
+        const fixture = TestBed.createComponent(WeightHistoryGoalDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const input = host.querySelector('fd-ui-input input');
+        const formElement = host.querySelector('form');
+        if (!(input instanceof HTMLInputElement) || !(formElement instanceof HTMLFormElement)) {
+            throw new Error('Expected the weight goal form');
+        }
+        const errorKey = 'WEIGHT_HISTORY.GOAL_VALUE_RANGE';
+        const endpoint = `${environment.apiUrls.users}/desired-weight`;
+
+        expect(host.textContent).not.toContain(errorKey);
+        input.dispatchEvent(new FocusEvent('blur'));
+        fixture.detectChanges();
+        expect(host.textContent).toContain(errorKey);
+        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        http.expectNone(endpoint);
+        expect(close).not.toHaveBeenCalled();
+
+        input.value = '72,5';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(host.textContent).not.toContain(errorKey);
+        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+        const canonicalGoal = 72.5;
+        const goal = { desiredWeightKg: canonicalGoal };
+        const request = http.expectOne({ method: 'PUT', url: endpoint });
+        expect(request.request.body).toEqual(goal);
+        request.flush(goal);
+        http.expectOne(item => item.url === `${environment.apiUrls.weights}/page-summary`).flush({
+            entries: [],
+            summary: [],
+            goal,
+            goalHistory: [],
+        });
+        fixture.detectChanges();
+
+        expect(close).toHaveBeenCalledOnce();
+        http.verify();
     });
 });
 

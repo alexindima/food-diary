@@ -174,7 +174,6 @@ export class MealListComponent {
             );
         }
         this.mealListFacade.currentPageIndex.set(this.routeState.initial.page - 1);
-        this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
         this.routeState.changes
             .pipe(
                 filter(query => mealListQueryKey(query) !== this.activeQueryKey),
@@ -186,6 +185,8 @@ export class MealListComponent {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
+        // An immediate overview result can normalize the URL before navigation finishes.
+        this.loadInitialOverview().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -193,6 +194,9 @@ export class MealListComponent {
 
     protected async openFavoritesAsync(): Promise<void> {
         const { MealFavoritesPickerComponent } = await import('../../dialogs/meal-favorites-picker/meal-favorites-picker');
+        if (this.destroyRef.destroyed) {
+            return;
+        }
         this.fdDialogService
             .open(MealFavoritesPickerComponent, {
                 preset: 'list',

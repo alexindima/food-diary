@@ -36,6 +36,11 @@ describe('product filter chips', () => {
         expect(removeProductFilter(query, 'unknown')).toBe(query);
     });
 
+    it('clears only the ownership filter and restarts the same filtered search', () => {
+        expect(removeProductFilter(query, 'onlyMine')).toEqual({ ...query, page: 1, onlyMine: false });
+        expect(query.onlyMine).toBe(true);
+    });
+
     it('resets structured filters while retaining search and returning to page one', () => {
         const reset = resetProductFilters(query);
         expect(reset).toEqual({

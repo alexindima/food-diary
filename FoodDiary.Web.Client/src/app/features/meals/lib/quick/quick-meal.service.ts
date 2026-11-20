@@ -13,7 +13,7 @@ import type { Recipe } from '../../../../shared/models/recipe.data';
 import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
-import { getDateInputValue, getTimeInputValue } from '../meal-date-input.utils';
+import { getDateInputValue, getTimeInputValue, isExistingMealLocalDateTime } from '../meal-date-input.utils';
 import { QUICK_MEAL_DEFAULT_ITEM_AMOUNT } from './quick-meal.config';
 
 export type QuickMealItemType = 'product' | 'recipe';
@@ -166,7 +166,13 @@ export class QuickMealService {
             return;
         }
 
-        const payload = this.toMealDto(items);
+        const { date, time } = this.detailsSignal();
+        if (!isExistingMealLocalDateTime(date, time)) {
+            this.toastService.error(this.translateService.instant('MEAL_MANAGE.NONEXISTENT_TIME'));
+            return;
+        }
+
+        const payload = this.toMealDto(items, new Date(`${date}T${time}`));
         if (payload.items.length === 0) {
             this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
             return;
@@ -289,7 +295,7 @@ export class QuickMealService {
         this.submittedAmounts = new WeakMap<QuickMealItem, number>();
     }
 
-    private toMealDto(items: QuickMealItem[]): MealManageDto {
+    private toMealDto(items: QuickMealItem[], date: Date): MealManageDto {
         const mappedItems = items.reduce<MealItemManageDto[]>((result, item) => {
             if (item.type === 'product' && item.product !== undefined) {
                 result.push({
@@ -312,8 +318,8 @@ export class QuickMealService {
         }, []);
 
         return {
-            date: this.getDetailsDateTime(),
-            mealType: this.detailsSignal().mealType ?? resolveMealTypeByTime(this.getDetailsDateTime()),
+            date,
+            mealType: this.detailsSignal().mealType ?? resolveMealTypeByTime(date),
             comment: this.resolveComment(),
             imageUrl: undefined,
             imageAssetId: undefined,
@@ -334,12 +340,6 @@ export class QuickMealService {
             preMealSatietyLevel: null,
             postMealSatietyLevel: null,
         };
-    }
-
-    private getDetailsDateTime(): Date {
-        const details = this.detailsSignal();
-        const parsed = new Date(`${details.date}T${details.time}`);
-        return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
     }
 
     private resolveComment(): string | undefined {
