@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 126,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -1698,7 +1698,7 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.spec.ts"
     },
     {
       "class": "ShoppingMergePreviewComponent",
@@ -2473,7 +2473,7 @@
           "required": false
         },
         {
-          "name": "isConfirmationPending",
+          "name": "isRequestPending",
           "type": "",
           "required": false
         }
@@ -3688,10 +3688,6 @@
           "type": ""
         },
         {
-          "name": "extendHoursChange",
-          "type": "string | number"
-        },
-        {
           "name": "extendCustom",
           "type": ""
         },
@@ -3708,16 +3704,20 @@
           "type": ""
         },
         {
-          "name": "reduceHoursChange",
-          "type": "string | number"
-        },
-        {
           "name": "reduceCustom",
           "type": ""
         },
         {
           "name": "end",
           "type": ""
+        },
+        {
+          "name": "extendHoursChange",
+          "type": "number"
+        },
+        {
+          "name": "reduceHoursChange",
+          "type": "number"
         }
       ],
       "specPath": null
@@ -4379,24 +4379,6 @@
         }
       ],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FdUiMenuComponent",
-      "selector": "fd-ui-menu",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.scss"
-      ],
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "closed",
-          "type": ""
-        }
-      ],
       "specPath": null
     },
     {
@@ -5214,30 +5196,6 @@
       "specPath": null
     },
     {
-      "class": "PublicProductGalleryComponent",
-      "selector": "fd-public-product-gallery",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.scss"
-      ],
-      "inputs": [
-        {
-          "name": "images",
-          "type": "readonly string[]",
-          "required": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AccountDeletionOfferComponent",
       "selector": "fd-account-deletion-offer",
       "feature": "profile",
@@ -5455,30 +5413,6 @@
       ],
       "inputs": [],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "PublicSiteFooterComponent",
-      "selector": "fd-public-site-footer",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.scss"
-      ],
-      "inputs": [
-        {
-          "name": "path",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "marketingSettingsRequested",
-          "type": ""
-        }
-      ],
       "specPath": null
     },
     {
@@ -5919,17 +5853,6 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
-      "stylePaths": [],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "ShoppingListPickerComponent",
-      "selector": "fd-shopping-list-picker",
-      "feature": "shopping-lists",
-      "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
       "stylePaths": [],
       "inputs": [],
       "outputs": [],

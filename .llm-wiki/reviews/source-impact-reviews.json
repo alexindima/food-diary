@@ -194,14 +194,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "71e5c062a35560463bd4fdf139a3a051328450c1386943e27f3ec6c0304f3d4e",
-          "reviewReason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build."
+          "sha256": "0a63480dcc45ea19b7df3e04af427ecf73e0db0daa21329bd56f8b5667a5e72d",
+          "reviewReason": "Updated minimums on the existing Admin coverage target while retaining the same 202 source paths. Verified the current Angular project discovery, startup entry points, and coverage selection for Admin and fd-ui-kit."
         }
       ],
-      "reason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build.",
-      "baseRef": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reason": "Updated minimums on the existing Admin coverage target while retaining the same 202 source paths. Verified the current Angular project discovery, startup entry points, and coverage selection for Admin and fd-ui-kit.",
+      "baseRef": "500547d99",
       "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T20:57:28.5841319Z"
+      "reviewedAtUtc": "2026-11-19T19:41:23.2424447Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -276,14 +276,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "71e5c062a35560463bd4fdf139a3a051328450c1386943e27f3ec6c0304f3d4e",
-          "reviewReason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build."
+          "sha256": "0a63480dcc45ea19b7df3e04af427ecf73e0db0daa21329bd56f8b5667a5e72d",
+          "reviewReason": "The Admin and fd-ui-kit coverage thresholds belong to the existing unit test targets. Project and target inventory matches the current Angular configuration."
         }
       ],
-      "reason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build.",
-      "baseRef": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reason": "The Admin and fd-ui-kit coverage thresholds belong to the existing unit test targets. Project and target inventory matches the current Angular configuration.",
+      "baseRef": "500547d99",
       "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T20:57:28.7404069Z"
+      "reviewedAtUtc": "2026-11-19T19:41:23.5347489Z"
     },
     {
       "pageId": "system.runtime-topology",
@@ -1714,14 +1714,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "4bdbe4f1055db4f65383d8c13e88ce5e885509e1ac34abcf9b81ef7e151500a2",
-          "reviewReason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build."
+          "sha256": "669bdf0a037e3f7f40bd9e1773c62b42f8ed2f0e87087332a192759410010917",
+          "reviewReason": "Checked that the documented Admin 100/100/99/100 and UI kit 100/100/100/100 minimums match Angular. Admin coverage, Chromium smoke, and build remain the applicable checks."
         }
       ],
-      "reason": "Verified the Admin 100/100/99/100 thresholds on the current Angular target with 793 passing tests across the same 202 source paths, plus 16 Chromium smoke checks and the production build.",
-      "baseRef": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reason": "Checked that the documented Admin 100/100/99/100 and UI kit 100/100/100/100 minimums match Angular. Admin coverage, Chromium smoke, and build remain the applicable checks.",
+      "baseRef": "500547d99",
       "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T20:57:28.9920361Z"
+      "reviewedAtUtc": "2026-11-19T19:41:23.9392294Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1877,8 +1877,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b96065179ca0790b93f36cfe568c501fe853c16eee18810a174aeadf0be35777",
-          "reviewReason": "The catalog was regenerated for the reviewed security source additions. The context query implementation, provider selection and source-freshness rules have no runtime changes."
+          "sha256": "df8896ac7e108a6d242a503c5c4723dd501c56b35b10a14cb0bcce9dfe63bed0",
+          "reviewReason": "Verified that the generated repository catalog adds only the public recipe moderation implementation plan and increments the documentation count. Its schema, source inventory rules and query behavior are unaffected."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1921,10 +1921,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "The catalog was regenerated for the reviewed security source additions. The context query implementation, provider selection and source-freshness rules have no runtime changes.",
-      "baseRef": "dec68096ea47cbeef9203fa2adffc523a8aa3181",
-      "gitHead": "2f201b8ec3b4ada163bb77bc24a24fae34c3acfb",
-      "reviewedAtUtc": "2026-11-18T20:55:52.1363141Z"
+      "reason": "Verified that the generated repository catalog adds only the public recipe moderation implementation plan and increments the documentation count. Its schema, source inventory rules and query behavior are unaffected.",
+      "baseRef": "HEAD",
+      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
+      "reviewedAtUtc": "2026-11-19T19:33:51.6924943Z"
     },
     {
       "pageId": "workflow.review-diff",

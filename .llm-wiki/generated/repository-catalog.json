@@ -22,7 +22,7 @@
     "controllers": 116,
     "endpoints": 384,
     "agentGuides": 298,
-    "documentationPages": 254
+    "documentationPages": 255
   },
   "dotnet": {
     "projects": [
@@ -18422,6 +18422,7 @@
       "docs/plans/TELEGRAM_CLIENT_IMPLEMENTATION_PLAN.md",
       "docs/plans/accessibility-hardening-plan.md",
       "docs/plans/dietologist-collaboration-completion-plan.md",
+      "docs/plans/public-recipe-moderation-plan.md",
       "docs/plans/wiki-git-precedents-improvement-plan.md",
       "docs/privacy/GDPR_OWNER_INPUTS.md",
       "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
