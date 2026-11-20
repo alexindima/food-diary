@@ -457,7 +457,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      # Skip optional GSS negotiation, which can crash the Alpine Kerberos resolver.
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD};GSS Encryption Mode=Disable
       MailRelayClient__BaseUrl: http://mail-relay:5088
       MailRelayClient__AllowInsecureHttp: "true"
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
