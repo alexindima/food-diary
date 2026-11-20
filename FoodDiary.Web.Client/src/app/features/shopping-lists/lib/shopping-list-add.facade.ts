@@ -24,12 +24,16 @@ export class ShoppingListAddFacade {
     private scope = '';
     private scopeRevision = 0;
     private name = '';
+    private closePicker: (() => void) | undefined;
     private readonly added = signal<ReadonlySet<string>>(new Set());
     public readonly target = signal<ShoppingListTarget | null>(null);
     public readonly busy = signal(false);
     public readonly message = signal<string | null>(null);
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.closePicker?.();
+        });
         effect(() => {
             if (!this.auth.isAuthenticated()) {
                 this.reset();
@@ -150,12 +154,20 @@ export class ShoppingListAddFacade {
                 data: { lists, name: this.name, selected: this.target(), item, count },
             },
         );
-        const target = await firstValueFrom(ref.afterClosed());
-        if (target === undefined || !this.isCurrent(scopeRevision)) {
-            return false;
+        this.closePicker = (): void => {
+            this.closePicker = undefined;
+            ref.close();
+        };
+        try {
+            const target = await firstValueFrom(ref.afterClosed());
+            if (target === undefined || !this.isCurrent(scopeRevision)) {
+                return false;
+            }
+            this.target.set(target);
+            return true;
+        } finally {
+            this.closePicker = undefined;
         }
-        this.target.set(target);
-        return true;
     }
     private async authenticateAsync(): Promise<void> {
         if (!this.auth.isAuthenticated()) {
@@ -169,6 +181,7 @@ export class ShoppingListAddFacade {
         return scopeRevision === this.scopeRevision && !this.destroyRef.destroyed && this.auth.isAuthenticated();
     }
     private reset(): void {
+        this.closePicker?.();
         this.target.set(null);
         this.added.set(new Set());
         this.message.set(null);

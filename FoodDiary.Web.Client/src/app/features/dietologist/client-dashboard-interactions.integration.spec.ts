@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { GuardsCheckEnd, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, of, Subject } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, take } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
@@ -307,6 +307,83 @@ function enterRecommendation(harness: RouterTestingHarness, draft: HTMLTextAreaE
     draft.value = value;
     draft.dispatchEvent(new Event('input', { bubbles: true }));
     harness.detectChanges();
+}
+
+it('keeps old task and recommendation failures from appearing on the next client dashboard', async () => {
+    const { createTask, createRecommendation, toastError, toastSuccess } = setupDashboardRouter();
+    const oldTask = new Subject<ClientTask>();
+    const oldRecommendation = new Subject<DietologistRecommendation>();
+    const activeTask = new Subject<ClientTask>();
+    const activeRecommendation = new Subject<DietologistRecommendation>();
+    createTask.mockReturnValueOnce(oldTask).mockReturnValueOnce(activeTask);
+    createRecommendation.mockReturnValueOnce(oldRecommendation).mockReturnValueOnce(activeRecommendation);
+    const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
+    const first = recommendationEditor(harness);
+    submitDashboardTask(harness, 'Review breakfast');
+    enterRecommendation(harness, first.draft, 'Try more breakfast options');
+    first.send.click();
+    await vi.waitFor(() => {
+        expect(oldTask.observed).toBe(true);
+        expect(oldRecommendation.observed).toBe(true);
+    });
+
+    let responsesWerePending = false;
+    // Settle the requests as the real router enters the new client, before the previous forms handle the rejections.
+    TestBed.inject(Router)
+        .events.pipe(
+            filter(event => event instanceof GuardsCheckEnd && event.urlAfterRedirects === SECOND_DASHBOARD_URL),
+            take(1),
+        )
+        .subscribe(() => {
+            responsesWerePending = oldTask.observed && oldRecommendation.observed;
+            oldTask.error(new Error('Previous task service unavailable'));
+            oldRecommendation.error(new Error('Previous recommendation service unavailable'));
+        });
+    await harness.navigateByUrl(SECOND_DASHBOARD_URL);
+
+    const host = dashboardHost(harness);
+    const active = recommendationEditor(harness);
+    expect(responsesWerePending).toBe(true);
+    expect(host.querySelector('h1')?.textContent).toContain('Mira');
+    expect(active.draft.value).toBe('');
+    expect(active.draft.disabled).toBe(false);
+    expect(toastError).not.toHaveBeenCalled();
+    expect(toastSuccess).not.toHaveBeenCalled();
+
+    submitDashboardTask(harness, 'Review water intake');
+    enterRecommendation(harness, active.draft, 'Keep a bottle nearby');
+    active.send.click();
+    await vi.waitFor(() => {
+        expect(activeTask.observed).toBe(true);
+        expect(activeRecommendation.observed).toBe(true);
+    });
+    expect(createTask).toHaveBeenLastCalledWith(SECOND_CLIENT.userId, { title: 'Review water intake', details: null, dueAtUtc: null });
+    expect(createRecommendation).toHaveBeenLastCalledWith(SECOND_CLIENT.userId, { text: 'Keep a bottle nearby' });
+
+    activeTask.error(new Error('Active task service unavailable'));
+    activeRecommendation.error(new Error('Active recommendation service unavailable'));
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(toastError.mock.calls.map(([key]) => key)).toEqual([
+            'CLIENT_TASKS.CREATE_ERROR',
+            'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR',
+        ]);
+        expect(active.draft.disabled).toBe(false);
+    });
+    expect(active.draft.value).toBe('Keep a bottle nearby');
+    expect(host.querySelector<HTMLInputElement>('[aria-labelledby="dietologist-client-tasks-title"] form fd-ui-input input')?.value).toBe(
+        'Review water intake',
+    );
+});
+
+function recommendationEditor(harness: RouterTestingHarness): { draft: HTMLTextAreaElement; send: HTMLButtonElement } {
+    const form = dashboardHost(harness).querySelector('.client-dashboard__recommendation-form');
+    const draft = form?.querySelector('textarea') ?? null;
+    const send = form?.querySelector<HTMLButtonElement>('button[type="submit"]') ?? null;
+    if (draft === null || send === null) {
+        throw new Error('Expected the client recommendation form');
+    }
+    return { draft, send };
 }
 
 function recommendationTexts(host: HTMLElement): string[] {

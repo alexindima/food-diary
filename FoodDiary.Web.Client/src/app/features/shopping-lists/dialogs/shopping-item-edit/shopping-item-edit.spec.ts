@@ -67,31 +67,68 @@ describe('shopping item editing', () => {
         fixture.componentInstance['save'](new Event('submit'));
         expect(ref.close).toHaveBeenCalledWith(expect.objectContaining({ name: 'Oats', unit: 'G', amount: 200, note: 'For breakfast' }));
     });
+});
 
-    it('returns valid edits and rejects blank names and invalid amounts', async () => {
+describe('Shopping item editor native validation', () => {
+    it('guides correction of an invalid row and saves the new name and category', async () => {
         const ref = { close: vi.fn() };
         await TestBed.configureTestingModule({
             imports: [ShoppingItemEditComponent],
             providers: [
                 provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: ref },
-                { provide: FD_UI_DIALOG_DATA, useValue: { name: 'Salt', amount: null, unit: null, category: null, note: 'to taste' } },
+                { provide: FD_UI_DIALOG_DATA, useValue: { name: 'Salt', amount: null, unit: null, category: 'Pantry', note: 'to taste' } },
             ],
         }).compileComponents();
         const fixture = TestBed.createComponent(ShoppingItemEditComponent);
-        const component = fixture.componentInstance;
-        fixture.detectChanges();
-        component['draft'].update(value => ({ ...value, name: ' ' }));
-        component['save'](new Event('submit'));
-        expect(ref.close).not.toHaveBeenCalled();
-        component['draft'].update(value => ({ ...value, name: 'Salt', amount: -1 }));
-        expect(component['valid']()).toBe(false);
-        await expectQuantityErrorAsync(fixture);
-        component['draft'].update(value => ({ ...value, amount: null, note: 'optional' }));
         fixture.detectChanges();
         await fixture.whenStable();
-        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
-        component['save'](new Event('submit'));
-        expect(ref.close).toHaveBeenCalledWith(expect.objectContaining({ name: 'Salt', amount: null, note: 'optional' }));
+        const element = fixture.nativeElement as HTMLElement;
+        const name = editorInput(element, 'SHOPPING_LIST.ADD_ITEM_NAME');
+        const amount = editorInput(element, 'SHOPPING_LIST.ADD_ITEM_AMOUNT');
+        const submit = element.querySelector<HTMLButtonElement>('button[type="submit"]');
+        if (submit === null) {
+            throw new Error('Expected the shopping item save button');
+        }
+
+        enterValue(name, '  ');
+        submit.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(ref.close).not.toHaveBeenCalled();
+        expect(element.ownerDocument.activeElement).toBe(name);
+
+        const correctedName = 'Sea salt flakes';
+        enterValue(name, correctedName);
+        enterValue(amount, '-1');
+        submit.click();
+        await expectQuantityErrorAsync(fixture);
+        expect(ref.close).not.toHaveBeenCalled();
+        expect(element.ownerDocument.activeElement).toBe(amount);
+
+        const category = 'Seasonings';
+        enterValue(amount, '');
+        enterValue(editorInput(element, 'SHOPPING_LIST.ADD_ITEM_CATEGORY'), category);
+        enterValue(editorInput(element, 'SHOPPING_LIST.ADD_ITEM_NOTE'), 'optional');
+        submit.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(element.querySelector('[role="alert"]')).toBeNull();
+        expect(ref.close).toHaveBeenCalledExactlyOnceWith({ name: correctedName, amount: null, unit: null, category, note: 'optional' });
     });
 });
+
+function editorInput(element: HTMLElement, label: string): HTMLInputElement {
+    const input = Array.from(element.querySelectorAll('input')).find(field => field.getAttribute('aria-label') === label);
+    if (input === undefined) {
+        throw new Error(`Expected the shopping item editor field ${label}`);
+    }
+    return input;
+}
+
+function enterValue(input: HTMLInputElement, value: string): void {
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}

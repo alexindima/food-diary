@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    output,
+    signal,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -51,11 +63,13 @@ export class ShoppingListManageControlsComponent {
     public readonly initialPage = input<ShoppingListPage | null>(null);
     public readonly lists = input.required<readonly ShoppingListSummary[]>();
     public readonly isLoading = input.required<boolean>();
+    public readonly hasConflict = input(false);
     public readonly isSaving = input(false);
     public readonly canDeleteList = input.required<boolean>();
     public readonly isMobile = input(false);
     public readonly renameRequestedListId = input<ShoppingListId | null>(null);
-    protected readonly isBusy = computed(() => this.isLoading() || this.isSaving());
+    private readonly isSelectionBlocked = computed(() => this.isLoading() || this.hasConflict());
+    protected readonly isBusy = computed(() => this.isSelectionBlocked() || this.isSaving());
     protected readonly selectedListId = computed(() => optionalEntityId<'shopping-list'>(this.listSelectField()().value()));
     protected readonly selectedList = computed(() => this.lists().find(list => list.id === this.selectedListId()));
     protected readonly quickLists = computed(() => {
@@ -67,7 +81,10 @@ export class ShoppingListManageControlsComponent {
             .slice(0, QUICK_LIST_LIMIT);
     });
     protected readonly listsCount = computed(() => this.lists().length);
-    protected readonly editingListId = signal<ShoppingListId | null>(null);
+    protected readonly editingListId = linkedSignal<boolean, ShoppingListId | null>({
+        source: this.hasConflict,
+        computation: (hasConflict, previous) => (hasConflict ? (previous?.value ?? null) : null),
+    });
     protected readonly renameDraft = signal('');
 
     public readonly mergeDuplicates = output();
@@ -107,7 +124,7 @@ export class ShoppingListManageControlsComponent {
 
     protected selectList(listId: ShoppingListId): void {
         // A list chosen from an open picker can wait for the current autosave in the facade.
-        if (this.isLoading() || listId === this.selectedListId()) {
+        if (this.isSelectionBlocked() || listId === this.selectedListId()) {
             return;
         }
 

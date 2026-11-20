@@ -211,7 +211,6 @@ export class MealManageFormComponent implements UnsavedEditor {
     protected readonly manageHeaderState = computed(() => ({
         titleKey: this.meal() !== null ? 'MEAL_MANAGE.EDIT_TITLE' : 'MEAL_MANAGE.ADD_TITLE',
     }));
-    private populatedMeal: Meal | null = null;
 
     protected readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
@@ -252,13 +251,13 @@ export class MealManageFormComponent implements UnsavedEditor {
         const presetMealType = this.resolvePresetMealType();
         if (presetMealType !== null) {
             this.patchMealFormModel({ mealType: presetMealType });
-        } else if (this.meal() === null) {
+        } else {
             this.setAutoMealTypeFromDate();
         }
 
         this.watchMealInput();
 
-        if (presetMealType === null && this.meal() === null) {
+        if (presetMealType === null) {
             this.watchAutoMealTypeChanges();
         }
     }
@@ -385,22 +384,14 @@ export class MealManageFormComponent implements UnsavedEditor {
     private watchMealInput(): void {
         effect(onCleanup => {
             const meal = this.meal();
-            untracked(() => {
-                if (meal === null) {
-                    this.populatedMeal = null;
-                    this.isLoadingRecipeAmounts.set(false);
-                    return;
-                }
+            if (meal === null) {
+                this.isLoadingRecipeAmounts.set(false);
+                return;
+            }
 
-                if (this.populatedMeal === meal) {
-                    return;
-                }
-
-                this.populatedMeal = meal;
-                const subscription = this.populateForm(meal);
-                onCleanup(() => {
-                    subscription.unsubscribe();
-                });
+            const subscription = untracked(() => this.populateForm(meal));
+            onCleanup(() => {
+                subscription.unsubscribe();
             });
         });
     }
@@ -736,12 +727,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             return;
         }
 
-        const date = this.buildDateTime();
-        if (Number.isNaN(date.getTime())) {
-            return;
-        }
-
-        const mealType = resolveMealTypeByTime(date);
+        const mealType = resolveMealTypeByTime(this.buildDateTime());
         if (this.mealFormModel().mealType === mealType) {
             return;
         }

@@ -1535,6 +1535,61 @@ describe('Shopping revision conflict recovery', () => {
     });
 });
 
+describe('Shopping list rename draft during conflict recovery', () => {
+    it('keeps both drafts through cancellation and reload failure, then discards them after a successful reload', async () => {
+        const { harness, api, toastError } = await renderShoppingAsync();
+        const host = page(harness);
+        const saving = new Subject<ShoppingList>();
+        api.update.mockReturnValueOnce(saving);
+        addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+        chooseSummaryAction(harness, 'SHOPPING_LIST.RENAME_LIST_BUTTON');
+
+        const nameDraft = 'Local new list name';
+        const editorSelector = '.shopping-list__list-card-rename-input';
+        const editor = requiredInput(host, editorSelector);
+        inputText(editor, nameDraft);
+        editor.focus();
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, expect.objectContaining({ name: GROCERIES.name }));
+
+        saving.error(new HttpErrorResponse({ status: 409 }));
+        harness.detectChanges();
+        editor.blur();
+        harness.detectChanges();
+        expect(requiredInput(host, editorSelector).value).toBe(nameDraft);
+        expect(host.textContent).toContain(CREATED_SHOPPING_ITEM_NAME);
+        expect(api.update).toHaveBeenCalledTimes(1);
+
+        nativeButton(openConflictConfirmation(harness), 'CONFIRM_DELETE.CANCEL').click();
+        harness.detectChanges();
+        expect(requiredInput(host, editorSelector).value).toBe(nameDraft);
+        expect(api.getById).not.toHaveBeenCalled();
+
+        api.getById.mockReturnValueOnce(throwError(() => new Error('Reload unavailable')));
+        nativeButton(openConflictConfirmation(harness), 'SHOPPING_LIST.CONFLICT_RELOAD').click();
+        harness.detectChanges();
+        expect(toastError).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.LOAD_ERROR');
+        expect(requiredInput(host, editorSelector).value).toBe(nameDraft);
+        expect(host.textContent).toContain(CREATED_SHOPPING_ITEM_NAME);
+
+        const serverList = { ...makeList(GROCERIES.id, 'Saved market list', ['Fresh pears']), revision: SAVED_REVISION };
+        api.getById.mockReturnValueOnce(of(serverList));
+        nativeButton(openConflictConfirmation(harness), 'SHOPPING_LIST.CONFLICT_RELOAD').click();
+        harness.detectChanges();
+
+        expect(api.getById.mock.calls).toEqual([[GROCERIES.id], [GROCERIES.id]]);
+        expect(host.querySelector('fd-ui-inline-alert')).toBeNull();
+        expect(host.querySelector(editorSelector)).toBeNull();
+        expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(serverList.name);
+        expect(host.textContent).toContain(serverList.items[0].name);
+        expect(host.textContent).not.toContain(CREATED_SHOPPING_ITEM_NAME);
+
+        chooseSummaryAction(harness, 'SHOPPING_LIST.RENAME_LIST_BUTTON');
+        expect(requiredInput(host, editorSelector).value).toBe(serverList.name);
+        expect(api.update).toHaveBeenCalledTimes(1);
+    });
+});
+
 describe('Shopping consolidation preview', () => {
     it('offers dismissal only when no items can be combined', async () => {
         const { harness, api } = await renderShoppingAsync();

@@ -109,9 +109,9 @@ export class WeightHistoryFacade {
             required(path.date);
             required(path.weight);
             validate(path.weight, ({ value }) => {
-                const parsed = parseDecimalInput(value());
+                const parsed = this.parseDisplayedWeight(value());
                 const weightKg = parsed === null ? null : this.measurements.canonicalWeight(parsed);
-                return weightKg === null || weightKg < MIN_WEIGHT_KG || weightKg > MAX_WEIGHT_KG
+                return weightKg === null || weightKg < MIN_WEIGHT_KG
                     ? { kind: 'weightRange', message: 'Weight is out of range' }
                     : undefined;
             });
@@ -126,16 +126,9 @@ export class WeightHistoryFacade {
     public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weight: '' });
     public readonly desiredWeightForm = form(this.desiredWeightModel, path => {
         disabled(path.weight, { when: () => this.isDesiredWeightSaving() });
-        validate(path.weight, ({ value }) => {
-            if (value().trim().length === 0) {
-                return;
-            }
-            const parsed = parseDecimalInput(value());
-            const target = parsed === null ? null : this.measurements.canonicalWeight(parsed);
-            return target === null || target <= 0 || target > MAX_WEIGHT_KG
-                ? { kind: 'goalRange', message: 'Goal is out of range' }
-                : undefined;
-        });
+        validate(path.weight, ({ value }) =>
+            this.parseDesiredWeight(value()) === undefined ? { kind: 'goalRange', message: 'Goal is out of range' } : undefined,
+        );
     });
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
@@ -289,11 +282,8 @@ export class WeightHistoryFacade {
         if (this.isDesiredWeightSaving()) {
             return;
         }
-        if (this.desiredWeightForm().invalid()) {
-            return;
-        }
 
-        const parsedValue = this.parseDesiredWeight();
+        const parsedValue = this.parseDesiredWeight(this.desiredWeightModel().weight);
         if (parsedValue === undefined) {
             return;
         }
@@ -350,15 +340,25 @@ export class WeightHistoryFacade {
             });
     }
 
-    private parseDesiredWeight(): number | null | undefined {
-        const rawValue = this.desiredWeightModel().weight.trim();
+    private parseDesiredWeight(value: string): number | null | undefined {
+        const rawValue = value.trim();
         if (rawValue.length === 0) {
             return null;
         }
 
-        const parsedValue = parseDecimalInput(rawValue);
-        const weightKg = parsedValue === null ? null : this.measurements.canonicalWeight(parsedValue);
-        return weightKg === null || weightKg <= 0 || weightKg > MAX_WEIGHT_KG ? undefined : weightKg;
+        const parsedValue = this.parseDisplayedWeight(rawValue);
+        if (parsedValue === null) {
+            return undefined;
+        }
+
+        const weightKg = this.measurements.canonicalWeight(parsedValue);
+        return weightKg > 0 ? weightKg : undefined;
+    }
+
+    private parseDisplayedWeight(value: string): number | null {
+        const parsed = parseDecimalInput(value);
+        const maximum = this.measurements.displayWeight(MAX_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS);
+        return parsed !== null && parsed <= maximum ? parsed : null;
     }
 
     public changeRange(value: string): void {
@@ -516,12 +516,8 @@ export class WeightHistoryFacade {
 
     private buildPayload(): CreateWeightEntryPayload | null {
         const { date: rawDate, weight: rawWeight } = this.formModel();
-        if (rawDate.length === 0 || rawWeight.length === 0) {
-            return null;
-        }
-
         const date = toMeasurementDateIso(rawDate);
-        const parsedValue = parseDecimalInput(rawWeight);
+        const parsedValue = this.parseDisplayedWeight(rawWeight);
         if (date === null || parsedValue === null) {
             return null;
         }

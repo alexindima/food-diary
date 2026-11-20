@@ -86,6 +86,15 @@ export class MealAiSessionsComponent {
     }
 
     protected onDeleteSession(index: number): void {
+        this.expandedAiSessions.update(expanded => {
+            const remaining = new Set<number>();
+            for (const expandedIndex of expanded) {
+                if (expandedIndex !== index) {
+                    remaining.add(expandedIndex > index ? expandedIndex - 1 : expandedIndex);
+                }
+            }
+            return remaining;
+        });
         this.deleteSession.emit(index);
     }
 }

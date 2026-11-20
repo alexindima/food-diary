@@ -96,16 +96,9 @@ export class WaistHistoryFacade {
     public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
     public readonly desiredWaistForm = form(this.desiredWaistModel, path => {
         disabled(path.circumference, { when: () => this.isDesiredWaistSaving() });
-        validate(path.circumference, ({ value }) => {
-            if (value().trim().length === 0) {
-                return;
-            }
-            const parsed = parseDecimalInput(value());
-            const target = parsed === null ? null : this.measurements.canonicalLength(parsed);
-            return target === null || target <= 0 || target > MAX_DESIRED_WAIST_CM
-                ? { kind: 'goalRange', message: 'Goal is out of range' }
-                : undefined;
-        });
+        validate(path.circumference, ({ value }) =>
+            this.parseDesiredWaist(value()) === undefined ? { kind: 'goalRange', message: 'Goal is out of range' } : undefined,
+        );
     });
 
     public readonly formModel = signal<WaistEntryFormModel>({
@@ -123,9 +116,9 @@ export class WaistHistoryFacade {
             required(path.date);
             required(path.circumference);
             validate(path.circumference, ({ value }) => {
-                const parsed = parseDecimalInput(value());
+                const parsed = this.parseDisplayedWaist(value(), MAX_WAIST_CM);
                 const circumferenceCm = parsed === null ? null : this.measurements.canonicalLength(parsed);
-                return circumferenceCm === null || circumferenceCm < MIN_WAIST_CM || circumferenceCm > MAX_WAIST_CM
+                return circumferenceCm === null || circumferenceCm < MIN_WAIST_CM
                     ? { kind: 'waistRange', message: 'Waist circumference is out of range' }
                     : undefined;
             });
@@ -289,11 +282,7 @@ export class WaistHistoryFacade {
         if (this.isDesiredWaistSaving()) {
             return;
         }
-        if (this.desiredWaistForm().invalid()) {
-            return;
-        }
-
-        const parsedValue = this.parseDesiredWaist();
+        const parsedValue = this.parseDesiredWaist(this.desiredWaistModel().circumference);
         if (parsedValue === undefined) {
             return;
         }
@@ -368,15 +357,25 @@ export class WaistHistoryFacade {
         this.customRangeModel.set({ range: null });
     }
 
-    private parseDesiredWaist(): number | null | undefined {
-        const rawValue = this.desiredWaistModel().circumference.trim();
+    private parseDesiredWaist(value: string): number | null | undefined {
+        const rawValue = value.trim();
         if (rawValue.length === 0) {
             return null;
         }
 
-        const parsedValue = parseDecimalInput(rawValue);
-        const circumferenceCm = parsedValue === null ? null : this.measurements.canonicalLength(parsedValue);
-        return circumferenceCm === null || circumferenceCm <= 0 || circumferenceCm > MAX_DESIRED_WAIST_CM ? undefined : circumferenceCm;
+        const parsedValue = this.parseDisplayedWaist(rawValue, MAX_DESIRED_WAIST_CM);
+        if (parsedValue === null) {
+            return undefined;
+        }
+
+        const circumferenceCm = this.measurements.canonicalLength(parsedValue);
+        return circumferenceCm > 0 ? circumferenceCm : undefined;
+    }
+
+    private parseDisplayedWaist(value: string, maximumCm: number): number | null {
+        const parsed = parseDecimalInput(value);
+        const maximum = this.measurements.displayLength(maximumCm, WAIST_INPUT_FRACTION_DIGITS);
+        return parsed !== null && parsed <= maximum ? parsed : null;
     }
 
     public retryPageLoad(): void {
@@ -516,12 +515,8 @@ export class WaistHistoryFacade {
 
     private buildPayload(): CreateWaistEntryPayload | null {
         const { date: rawDate, circumference: rawCircumference } = this.formModel();
-        if (rawDate.length === 0 || rawCircumference.length === 0) {
-            return null;
-        }
-
         const date = toMeasurementDateIso(rawDate);
-        const parsedValue = parseDecimalInput(rawCircumference);
+        const parsedValue = this.parseDisplayedWaist(rawCircumference, MAX_WAIST_CM);
         if (date === null || parsedValue === null) {
             return null;
         }

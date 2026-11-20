@@ -190,7 +190,11 @@
                                         }}
                                     </p>
                                     <div [hidden]="prediction.limitedReasonKey !== 'CYCLE_TRACKING.PREDICTIONS_AMBIGUOUS'">
-                                        <fd-ui-button variant="secondary" fill="outline" (click)="openEpisodeHistory()">
+                                        <fd-ui-button
+                                            variant="secondary"
+                                            fill="outline"
+                                            (click)="openEpisodeHistory(episodeHistory, episodeHistorySummary)"
+                                        >
                                             {{ 'CYCLE_TRACKING.CHECK_EPISODE_HISTORY' | translate }}
                                         </fd-ui-button>
                                     </div>
@@ -280,7 +284,7 @@
             </div>
 
             <details #episodeHistory class="cycle-tracking__details">
-                <summary class="cycle-tracking__details-summary fd-ui-action-text">
+                <summary #episodeHistorySummary class="cycle-tracking__details-summary fd-ui-action-text">
                     <span>{{ 'CYCLE_TRACKING.ALL_DATA_AND_TOOLS' | translate }}</span>
                     <span class="cycle-tracking__details-hint fd-ui-body-sm">{{ 'CYCLE_TRACKING.ALL_DATA_HINT' | translate }}</span>
                 </summary>

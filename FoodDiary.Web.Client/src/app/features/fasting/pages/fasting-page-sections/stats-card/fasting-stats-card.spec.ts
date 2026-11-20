@@ -67,6 +67,17 @@ describe('FastingStatsCardComponent', () => {
         expect(element.textContent).toContain('62.5%');
     });
 
+    it('shows personal rates when no check-in symptom was reported', () => {
+        const fixture = createComponent(createStats({ topSymptom: null }));
+        const summary = getElement(fixture).querySelector('.fasting__personal-summary');
+        const symptom = summary?.querySelector('.fasting__personal-summary-text');
+
+        expect(summary?.textContent).toContain('FASTING.PERSONAL_SUMMARY.TITLE');
+        expect(summary?.textContent).toContain(`${COMPLETION_RATE}%`);
+        expect(summary?.textContent).toContain(`${CHECK_IN_RATE}%`);
+        expect(symptom?.textContent.trim()).toBe('FASTING.PERSONAL_SUMMARY.NO_SYMPTOM');
+    });
+
     it('hides personal summary when no personal data is available', () => {
         const fixture = createComponent(
             createStats({

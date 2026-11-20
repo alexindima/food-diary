@@ -3,7 +3,7 @@
   "summary": {
     "components": 525,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1682,
+    "inputs": 1683,
     "outputs": 564,
     "apiCalls": 336,
     "templatesWithTranslations": 380,
@@ -16947,6 +16947,11 @@
           "name": "isLoading",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "hasConflict",
+          "type": "",
+          "required": false
         },
         {
           "name": "isSaving",
@@ -46414,6 +46419,7 @@
       "inputsUsed": [
         "canClearPurchased",
         "canDeleteList",
+        "hasConflict",
         "initialPage",
         "isLoading",
         "isMobile",

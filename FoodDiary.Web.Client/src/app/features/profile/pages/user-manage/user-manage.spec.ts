@@ -1427,7 +1427,6 @@ type ProfileManageFacadeMock = {
     removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     initialize: ReturnType<typeof vi.fn>;
     clearGlobalError: ReturnType<typeof vi.fn>;
-    submitUpdate: ReturnType<typeof vi.fn>;
     saveProfileAsync: ReturnType<typeof vi.fn<ProfileManageFacade['saveProfileAsync']>>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
     unlinkTelegramAsync: ReturnType<typeof vi.fn<ProfileManageFacade['unlinkTelegramAsync']>>;
@@ -1630,7 +1629,6 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         removingWebPushSubscriptionEndpoint: signal<string | null>(null),
         initialize: vi.fn(),
         clearGlobalError: vi.fn(),
-        submitUpdate: vi.fn(),
         saveProfileAsync: vi.fn<ProfileManageFacade['saveProfileAsync']>().mockResolvedValue(true),
         openChangePasswordDialog: vi.fn(),
         unlinkTelegramAsync: vi.fn<ProfileManageFacade['unlinkTelegramAsync']>().mockResolvedValue(undefined),

@@ -9,7 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
-import { MAX_WAIST_CM, MIN_WAIST_CM } from '../../lib/waist-history.constants';
+import { MAX_WAIST_CM, MIN_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS } from '../../lib/waist-history.constants';
 
 @Component({
     selector: 'fd-waist-history-form-card',
@@ -49,6 +49,6 @@ export class WaistHistoryFormCardComponent {
     });
     protected readonly circumferenceRange = computed(() => ({
         min: this.measurements.displayLength(MIN_WAIST_CM),
-        max: this.measurements.displayLength(MAX_WAIST_CM),
+        max: this.measurements.displayLength(MAX_WAIST_CM, WAIST_INPUT_FRACTION_DIGITS),
     }));
 }

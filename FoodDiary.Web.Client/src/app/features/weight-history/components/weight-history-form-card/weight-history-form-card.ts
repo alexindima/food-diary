@@ -9,7 +9,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
-import { MAX_WEIGHT_KG, MIN_WEIGHT_KG } from '../../lib/weight-history.constants';
+import { MAX_WEIGHT_KG, MIN_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS } from '../../lib/weight-history.constants';
 
 @Component({
     selector: 'fd-weight-history-form-card',
@@ -49,6 +49,6 @@ export class WeightHistoryFormCardComponent {
     });
     protected readonly weightRange = computed(() => ({
         min: this.measurements.displayWeight(MIN_WEIGHT_KG),
-        max: this.measurements.displayWeight(MAX_WEIGHT_KG),
+        max: this.measurements.displayWeight(MAX_WEIGHT_KG, WEIGHT_INPUT_FRACTION_DIGITS),
     }));
 }

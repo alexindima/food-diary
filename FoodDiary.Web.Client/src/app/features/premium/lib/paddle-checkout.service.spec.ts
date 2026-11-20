@@ -217,6 +217,47 @@ describe('Paddle script ownership', () => {
         expect(paddleCheckoutOpen).toHaveBeenCalledOnce();
     });
 
+    it('replaces a previously inserted script after its load fails and retries checkout', async () => {
+        addLoadedPaddleScript();
+        const failedScript = requirePaddleScript();
+        const first = service.openTransactionCheckoutAsync('txn_retry', SANDBOX_OPTIONS);
+        expect(requirePaddleScript()).toBe(failedScript);
+
+        failedScript.dispatchEvent(new Event('error'));
+        await expect(first).rejects.toThrow('Failed to load Paddle.js');
+        expect(failedScript.isConnected).toBe(false);
+        expect(paddleCheckoutOpen).not.toHaveBeenCalled();
+
+        const retry = service.openTransactionCheckoutAsync('txn_retry', SANDBOX_OPTIONS);
+        const replacement = requirePaddleScript();
+        expect(replacement).not.toBe(failedScript);
+        installPaddleMock();
+        replacement.dispatchEvent(new Event('load'));
+        await retry;
+
+        expect(paddleInitialize).toHaveBeenCalledOnce();
+        expect(paddleCheckoutOpen).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ transactionId: 'txn_retry' }));
+    });
+
+    it('initializes a refreshed checkout token after a pending price preview loads the SDK', async () => {
+        const preview = service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS);
+        const script = requirePaddleScript();
+        const refreshedOptions = { ...SANDBOX_OPTIONS, token: 'test_refreshed_token' };
+        const checkout = service.openTransactionCheckoutAsync('txn_refreshed_token', refreshedOptions);
+        expect(requirePaddleScript()).toBe(script);
+        expect(paddleCheckoutOpen).not.toHaveBeenCalled();
+
+        const paddle = installPaddleMock();
+        paddle.PricePreview = vi.fn().mockResolvedValue(createPricePreview());
+        script.dispatchEvent(new Event('load'));
+        const [prices] = await Promise.all([preview, checkout]);
+
+        expect(prices.yearly.formattedTotal).toBe('$80.00');
+        expect(paddleInitialize.mock.calls.map(([config]) => config.token)).toEqual([SANDBOX_OPTIONS.token, refreshedOptions.token]);
+        expect(document.querySelectorAll(`script[src="${PADDLE_SCRIPT_URL}"]`)).toHaveLength(1);
+        expect(paddleCheckoutOpen).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ transactionId: 'txn_refreshed_token' }));
+    });
+
     it('replaces a loaded script that did not provide the Paddle API on retry', async () => {
         const first = service.previewPlanPricesAsync(PRICE_IDS, SANDBOX_OPTIONS);
         const brokenScript = requirePaddleScript();

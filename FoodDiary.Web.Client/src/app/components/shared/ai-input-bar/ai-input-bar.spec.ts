@@ -1009,6 +1009,16 @@ describe('AI input native recognition controls', () => {
         const openNativePicker = vi.spyOn(fileInput, 'click').mockImplementation(() => {});
         const camera = selectRecognitionControl(fixture, 'button[aria-label="AI_INPUT_BAR.PHOTO_TITLE"]', HTMLButtonElement);
 
+        fixture.componentRef.setInput('isProcessing', true);
+        expect(camera.disabled).toBe(false);
+        camera.click();
+        expect(askHealthConsent).not.toHaveBeenCalled();
+        expect(openNativePicker).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(camera.disabled).toBe(true);
+
+        fixture.componentRef.setInput('isProcessing', false);
+        fixture.detectChanges();
         camera.click();
         await fixture.whenStable();
 
@@ -1298,6 +1308,38 @@ describe('AI input dismissal during reanalysis', () => {
 
         expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: 'eggs' });
         expect((fixture.nativeElement as HTMLElement).querySelector(result)).toBeNull();
+    });
+
+    it('ignores queued Add and retry actions before a dismissed text result is removed', async () => {
+        const { aiFoodService, component, fixture } = await setupAiInputBarAsync();
+        const recognized = vi.fn<(value: AiInputBarResult) => void>();
+        component.mealRecognized.subscribe(recognized);
+        fixture.detectChanges();
+        const input = enterRecognitionText(fixture, 'egg');
+        const panel = '.ai-input-bar__result-panel';
+        const add = await vi.waitFor(() => {
+            fixture.detectChanges();
+            const button = selectRecognitionControl(fixture, `${panel} .ai-photo-result__submit-action button`, HTMLButtonElement);
+            expect(button.disabled).toBe(false);
+            return button;
+        });
+        const retry = selectRecognitionControl(
+            fixture,
+            `${panel} button[aria-label="MEAL_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION"]`,
+            HTMLButtonElement,
+        );
+        selectRecognitionControl(fixture, `${panel} button[aria-label="COMMON.CANCEL"]`, HTMLButtonElement).click();
+
+        expect(add.disabled || retry.disabled).toBe(false);
+        add.click();
+        retry.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(recognized).not.toHaveBeenCalled();
+        expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: 'egg' });
+        expect(input.value).toBe('egg');
+        expect((fixture.nativeElement as HTMLElement).querySelector(panel)).toBeNull();
     });
 });
 
@@ -1630,6 +1672,53 @@ describe('AI input meal review before submission', () => {
     });
 });
 
+describe('AI input photo reanalysis', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    it('ignores the previous Add action as soon as new photo analysis starts', async () => {
+        const uploaded = new Subject<ImageSelection>();
+        const { aiFoodService, component, fixture } = await setupPhotoUploadPreviewAsync(uploaded);
+        const recognized = vi.fn<(value: AiInputBarResult) => void>();
+        component.mealRecognized.subscribe(recognized);
+        selectPreviewImage(fixture, 'reanalyze.gif');
+        await waitForPhotoPreviewAsync('blob:food-preview');
+        uploaded.next(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
+        uploaded.complete();
+        const addSelector = '.ai-photo-result__submit-action button';
+        const add = await vi.waitFor(() => {
+            TestBed.tick();
+            const button = photoPreviewButton(addSelector);
+            expect(button.disabled).toBe(false);
+            return button;
+        });
+        const analysis = new Subject<FoodVisionResponse>();
+        const started = new Promise<void>(resolve => {
+            aiFoodService.analyzeFoodImage.mockImplementationOnce(() => {
+                resolve();
+                return analysis;
+            });
+        });
+        photoPreviewButton('button[aria-label="MEAL_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION"]').click();
+        await started;
+
+        expect(analysis.observed).toBe(true);
+        expect(add.disabled).toBe(false);
+        add.click();
+        expect(recognized).not.toHaveBeenCalled();
+
+        analysis.next({ items: VISION_ITEMS });
+        analysis.complete();
+        TestBed.tick();
+        photoPreviewButton(addSelector).click();
+        expect(recognized).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ source: 'Photo', imageAssetId: RECENT_JOB.imageAssetId }),
+        );
+    });
+});
+
 describe('AI input after an empty recognition result', () => {
     it('skips calculation when the text response has no items and accepts a new description', async () => {
         const { aiFoodService, fixture } = await setupAiInputBarAsync();
@@ -1670,7 +1759,10 @@ describe('AI input history label space', () => {
         vi.unstubAllGlobals();
     });
 
-    it('compacts the history label when actions overflow and restores it when space returns', async () => {
+    it.each([
+        { observesResize: true, browser: 'a browser with resize observation' },
+        { observesResize: false, browser: 'a browser without resize observation' },
+    ])('keeps the history action accessible when space is tight in $browser', async ({ observesResize }) => {
         const resize = new Subject<void>();
         const observe = vi.fn();
         const disconnect = vi.fn();
@@ -1685,8 +1777,8 @@ describe('AI input history label space', () => {
             public unobserve = vi.fn();
             public disconnect = disconnect;
         }
-        vi.stubGlobal('ResizeObserver', HistoryResizeObserver);
-        const { fixture } = await setupAiInputBarAsync();
+        vi.stubGlobal('ResizeObserver', observesResize ? HistoryResizeObserver : undefined);
+        const { dialogService, fixture } = await setupAiInputBarAsync();
         fixture.detectChanges();
         const actions = selectRecognitionControl(fixture, '.ai-input-bar__actions', HTMLElement);
         const history = selectRecognitionControl(fixture, '.ai-input-bar__history', HTMLElement);
@@ -1704,13 +1796,21 @@ describe('AI input history label space', () => {
         button.style.padding = '0px';
         button.style.borderWidth = '0px';
         button.style.columnGap = '8px';
-        Object.defineProperty(actions, 'clientWidth', { configurable: true, value: roomyWidth });
+        Object.defineProperty(actions, 'clientWidth', { configurable: true, value: observesResize ? roomyWidth : crampedWidth });
         vi.spyOn(manual, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, manualWidth, iconSize));
         vi.spyOn(label, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, labelWidth, iconSize));
         vi.spyOn(icon, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, iconSize, iconSize));
 
         fixture.componentRef.setInput('historyLabelKey', 'AI_RECOGNITION.SHOW_RECENT');
         fixture.detectChanges();
+
+        if (!observesResize) {
+            expect(history.classList.contains('ai-input-bar__history--compact')).toBe(true);
+            expect(button.getAttribute('aria-label')).toBe('AI_RECOGNITION.SHOW_RECENT');
+            button.click();
+            expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(FoodRecognitionHistoryDialogComponent, expect.anything());
+            return;
+        }
 
         expect(history.classList.contains('ai-input-bar__history--compact')).toBe(false);
         expect(observe).toHaveBeenCalledWith(actions);

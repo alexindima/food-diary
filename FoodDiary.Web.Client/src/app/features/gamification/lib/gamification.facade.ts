@@ -1,15 +1,14 @@
-import { computed, inject, resource, Service } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { computed, inject, Service } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import { GamificationService } from '../api/gamification.service';
-import type { GamificationData } from '../models/gamification.data';
 
 @Service()
 export class GamificationFacade {
     private readonly gamificationService = inject(GamificationService);
-    private readonly dataResource = resource({
-        loader: async (): Promise<GamificationData> => firstValueFrom(this.gamificationService.getData()),
+    private readonly dataResource = rxResource({
+        stream: () => this.gamificationService.getData(),
     });
 
     public readonly isLoading = computed(() => this.dataResource.isLoading());

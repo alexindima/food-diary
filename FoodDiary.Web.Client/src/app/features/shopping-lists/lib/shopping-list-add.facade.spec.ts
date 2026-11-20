@@ -176,13 +176,15 @@ describe('recipe shopping target state', () => {
     });
     it('ignores double clicks while selecting and ignores selection after navigating away', async () => {
         const selection = new Subject<ShoppingListTarget | undefined>();
-        dialogs.open.mockReturnValue({ afterClosed: () => selection });
+        const close = vi.fn();
+        dialogs.open.mockReturnValue({ afterClosed: () => selection, close });
         const pending = facade.addAsync(0, { name: 'Rice' });
         await vi.waitFor(() => {
             expect(dialogs.open).toHaveBeenCalledTimes(1);
         });
         await facade.addAsync(1, { name: 'Salt' });
         facade.setScope('recipe-2', 'Salad');
+        expect(close).toHaveBeenCalledExactlyOnceWith();
         selection.next({ id: null, name: 'Soup' });
         await pending;
         expect(api.create).not.toHaveBeenCalled();

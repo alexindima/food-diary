@@ -378,7 +378,9 @@ describe('Authentication HTTP outcomes', () => {
             }
         },
     );
+});
 
+describe('Google account linking', () => {
     it('maps the linked Google profile and retains the current browser session', async () => {
         signIn();
         const result = firstValueFrom(service.linkGoogle('new-google-link-fixture'));
@@ -389,6 +391,31 @@ describe('Authentication HTTP outcomes', () => {
         await expect(result).resolves.toMatchObject({ id: response.user.id, username: 'Updated profile', hasGoogleIdentity: true });
         expect(service.getSessionKey()).toBe(sessionId);
         expect(service.getUserId()).toBe(response.user.id);
+    });
+
+    it('returns a Google identity conflict while keeping the signed-in account', async () => {
+        signIn();
+        const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const payload = { error: 'Authentication.GoogleIdentityAlreadyLinked' };
+        const credential = 'google-identity-already-linked-fixture';
+
+        try {
+            const rejected = expect(firstValueFrom(service.linkGoogle(credential))).rejects.toMatchObject({
+                status: HttpStatusCode.Conflict,
+                error: payload,
+            });
+            const request = requests.expectOne({ method: 'POST', url: `${base}/google/link` });
+            expect(request.request.body).toEqual({ credential });
+            request.flush(payload, { status: HttpStatusCode.Conflict, statusText: 'Conflict' });
+            await rejected;
+
+            expect(service.isAuthenticated()).toBe(true);
+            expect(service.getSessionKey()).toBe(sessionId);
+            expect(service.getUserId()).toBe(response.user.id);
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        } finally {
+            log.mockRestore();
+        }
     });
 });
 
@@ -514,6 +541,35 @@ describe('server-backed browser session isolation', () => {
 });
 
 describe('browser session validation', () => {
+    it('rejects a bearer response for a browser sign-in and accepts a later cookie session', async () => {
+        const onAuthenticated = vi.fn<() => void>();
+        const subscription = TestBed.inject(SessionEventsService).authenticated$.subscribe(onAuthenticated);
+
+        try {
+            const rejected = expect(firstValueFrom(service.login(login))).rejects.toThrow(
+                'Unexpected bearer credential in a browser session response',
+            );
+            requests.expectOne({ method: 'POST', url: `${base}/login` }).flush({ ...response, accessToken: 'test-bearer' });
+            await rejected;
+
+            expect(service.isAuthenticated()).toBe(false);
+            expect(service.getSessionKey()).toBeNull();
+            expect(service.getToken()).toBeNull();
+            expect(onAuthenticated).not.toHaveBeenCalled();
+
+            const retry = firstValueFrom(service.login(login));
+            requests.expectOne({ method: 'POST', url: `${base}/login` }).flush(response);
+            await retry;
+
+            expect(service.getUserId()).toBe(response.user.id);
+            expect(service.getSessionKey()).toBe(sessionId);
+            expect(service.getToken()).toBeNull();
+            expect(onAuthenticated).toHaveBeenCalledOnce();
+        } finally {
+            subscription.unsubscribe();
+        }
+    });
+
     it('keeps ordinary browser validation failures retryable even when a required-field error is returned', async () => {
         const initial = service.restoreSessionAsync();
         requests

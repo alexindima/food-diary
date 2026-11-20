@@ -8,7 +8,7 @@ import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { environment } from '../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
+import { type MeasurementSystem, MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WaistHistoryGoalDialogComponent } from './waist-history-goal-dialog';
 
@@ -173,28 +173,7 @@ describe('Waist goal keyboard submission', () => {
 
 describe('Waist goal dialog with the real measurement facade', () => {
     it('shows a restored invalid target only after interaction and sends the corrected target in centimeters', () => {
-        const close = vi.fn();
-        TestBed.configureTestingModule({
-            imports: [WaistHistoryGoalDialogComponent],
-            providers: [
-                provideTranslateTesting(),
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                WaistHistoryFacade,
-                { provide: FdUiDialogRef, useValue: { close } },
-            ],
-        });
-        const facade = TestBed.inject(WaistHistoryFacade);
-        const http = TestBed.inject(HttpTestingController);
-        facade.desiredWaistModel.set({ circumference: '0' });
-        const fixture = TestBed.createComponent(WaistHistoryGoalDialogComponent);
-        fixture.detectChanges();
-        const host = fixture.nativeElement as HTMLElement;
-        const input = host.querySelector('fd-ui-input input');
-        const formElement = host.querySelector('form');
-        if (!(input instanceof HTMLInputElement) || !(formElement instanceof HTMLFormElement)) {
-            throw new Error('Expected the waist goal form');
-        }
+        const { close, fixture, formElement, host, http, input } = openRealWaistGoalDialog('metric', '0');
         const errorKey = 'WAIST_HISTORY.GOAL_VALUE_RANGE';
         const endpoint = `${environment.apiUrls.users}/desired-waist`;
 
@@ -228,7 +207,77 @@ describe('Waist goal dialog with the real measurement facade', () => {
         expect(close).toHaveBeenCalledOnce();
         http.verify();
     });
+
+    it('rejects inches above the displayed goal maximum and saves its exact centimeter value', () => {
+        const { close, fixture, host, http, input } = openRealWaistGoalDialog('imperial');
+        const endpoint = `${environment.apiUrls.users}/desired-waist`;
+        const rangeError = 'WAIST_HISTORY.GOAL_VALUE_RANGE';
+        const save = findGoalButton(host, 'WAIST_HISTORY.SET_GOAL');
+        input.value = '118,111';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        save.click();
+
+        http.expectNone(endpoint);
+        expect(host.textContent).toContain(rangeError);
+        expect(close).not.toHaveBeenCalled();
+
+        input.value = '118,11';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(host.textContent).not.toContain(rangeError);
+        save.click();
+        const goal = { desiredWaistCm: FIXTURE_METRIC_LIMIT };
+        const request = http.expectOne({ method: 'PUT', url: endpoint });
+        expect(request.request.body).toEqual(goal);
+        request.flush(goal);
+        http.expectOne(item => item.url === `${environment.apiUrls.waists}/page-summary`).flush({
+            entries: [],
+            summary: [],
+            goal,
+            goalHistory: [],
+        });
+        fixture.detectChanges();
+        expect(close).toHaveBeenCalledOnce();
+        http.verify();
+    });
 });
+
+function openRealWaistGoalDialog(
+    system: MeasurementSystem,
+    initialTarget = '',
+): {
+    close: Mock;
+    fixture: ComponentFixture<WaistHistoryGoalDialogComponent>;
+    formElement: HTMLFormElement;
+    host: HTMLElement;
+    http: HttpTestingController;
+    input: HTMLInputElement;
+} {
+    const close = vi.fn();
+    TestBed.configureTestingModule({
+        imports: [WaistHistoryGoalDialogComponent],
+        providers: [
+            provideTranslateTesting(),
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            WaistHistoryFacade,
+            { provide: FdUiDialogRef, useValue: { close } },
+        ],
+    });
+    TestBed.inject(MeasurementSystemService).setSystem(system);
+    TestBed.inject(WaistHistoryFacade).desiredWaistModel.set({ circumference: initialTarget });
+    const http = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(WaistHistoryGoalDialogComponent);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const input = host.querySelector('fd-ui-input input');
+    const formElement = host.querySelector('form');
+    if (!(input instanceof HTMLInputElement) || !(formElement instanceof HTMLFormElement)) {
+        throw new Error('Expected the waist goal form');
+    }
+    return { close, fixture, formElement, host, http, input };
+}
 
 describe('Waist goal rendered controls', () => {
     it.each(['', '   '])('disables submission for blank target %j without cancelling the goal', value => {

@@ -813,18 +813,19 @@ describe('WaistHistoryFacade pending entry edits', () => {
 });
 
 describe('Waist goal pending draft', () => {
+    const tenInchesInCentimeters = 25.4;
     it.each([
-        { system: 'metric', draft: '', expected: null },
-        { system: 'metric', draft: 'not-a-number', expected: undefined },
-        { system: 'metric', draft: '0', expected: undefined },
-        { system: 'metric', draft: '301', expected: undefined },
-        { system: 'imperial', draft: '124', expected: undefined },
-        { system: 'imperial', draft: '10', expected: 25.4 },
-    ] as const)('normalizes the defensive $system goal boundary for $draft', ({ system, draft, expected }) => {
+        { system: 'metric', draft: '', expectedCalls: [[null]] },
+        { system: 'metric', draft: 'not-a-number', expectedCalls: [] },
+        { system: 'metric', draft: '0', expectedCalls: [] },
+        { system: 'metric', draft: '301', expectedCalls: [] },
+        { system: 'imperial', draft: '124', expectedCalls: [] },
+        { system: 'imperial', draft: '10', expectedCalls: [[tenInchesInCentimeters]] },
+    ] as const)('sends only valid canonical $system goal values for $draft', ({ system, draft, expectedCalls }) => {
         measurements.setSystem(system);
         facade.desiredWaistModel.set({ circumference: draft });
-        expect(facade['parseDesiredWaist']()).toBe(expected);
-        expect(userService.updateWaistGoal).not.toHaveBeenCalled();
+        facade.saveDesiredWaist();
+        expect(userService.updateWaistGoal.mock.calls).toEqual(expectedCalls);
     });
 
     it('locks the target until failure and preserves the draft for retry', () => {

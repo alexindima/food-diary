@@ -4127,7 +4127,7 @@
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 135
+      "line": 123
     },
     {
       "name": "DashboardService",
@@ -4855,7 +4855,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/gamification/lib/gamification.facade.ts",
-      "line": 9
+      "line": 8
     },
     {
       "name": "GamificationHabitPathComponent",
@@ -5835,7 +5835,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 37
+      "line": 35
     },
     {
       "name": "PrivacySettingsComponent",
@@ -5926,7 +5926,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 98
+      "line": 96
     },
     {
       "name": "DietologistPromoComponent",
@@ -6535,7 +6535,7 @@
       "role": "Component",
       "selector": "fd-shopping-list-manage-controls",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.ts",
-      "line": 44
+      "line": 56
     },
     {
       "name": "ShoppingListPageComponent",

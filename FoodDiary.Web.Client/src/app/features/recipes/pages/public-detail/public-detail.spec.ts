@@ -5,6 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -350,15 +351,7 @@ describe('Shopping from successive visits to a public recipe', () => {
 
     beforeEach(() => {
         http = null;
-        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
-        TestBed.overrideComponent(PublicRecipeDetailComponent, {
-            set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }, ShoppingListAddFacade] },
-        });
-        vi.stubGlobal(
-            'matchMedia',
-            vi.fn(() => ({ matches: false })),
-        );
-        getById.mockImplementation(id => of(shoppingRecipe(id)));
+        provideRecipeShoppingOwner();
     });
 
     afterEach(() => {
@@ -419,6 +412,86 @@ describe('Shopping from successive visits to a public recipe', () => {
         http.expectNone(request => request.method !== 'GET');
     });
 });
+
+describe('Shopping picker owned by the public recipe', () => {
+    const firstRecipeUrl = '/explore/recipe';
+    const nextRecipeUrl = '/explore/other-recipe';
+    const overviewUrl = '/explore';
+
+    beforeEach(() => {
+        authenticated.set(true);
+        provideRecipeShoppingOwner();
+    });
+
+    afterEach(() => {
+        TestBed.inject(FdUiDialogService).closeAll();
+        vi.unstubAllGlobals();
+        const http = TestBed.inject(HttpTestingController);
+        http.match(request => request.url.startsWith('./assets/i18n/'));
+        http.verify();
+    });
+
+    it.each([
+        { destination: nextRecipeUrl, title: 'Salad' },
+        { destination: overviewUrl, title: 'Soup' },
+    ])('closes a mounted picker without writing when navigation opens $destination', async ({ destination, title }) => {
+        const harness = await RouterTestingHarness.create(firstRecipeUrl);
+        const http = TestBed.inject(HttpTestingController);
+        for (const translation of http.match(request => request.url.startsWith('./assets/i18n/'))) {
+            translation.flush({});
+        }
+        const originalPicker = await openShoppingIngredientPickerAsync(harness, http, 'Rice');
+
+        await harness.navigateByUrl(destination);
+        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe(title);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(originalPicker.isConnected).toBe(false);
+        });
+        http.expectNone(request => request.method !== 'GET', 'shopping write for the closed picker');
+
+        if (destination === nextRecipeUrl) {
+            await openShoppingIngredientPickerAsync(harness, http, 'Lettuce');
+        }
+    });
+});
+
+function provideRecipeShoppingOwner(): void {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.overrideComponent(PublicRecipeDetailComponent, {
+        set: { providers: [{ provide: PublicRecipesFacade, useValue: facade }, ShoppingListAddFacade] },
+    });
+    vi.stubGlobal(
+        'matchMedia',
+        vi.fn(() => ({ matches: false })),
+    );
+    getById.mockImplementation(id => of(shoppingRecipe(id)));
+}
+
+async function openShoppingIngredientPickerAsync(
+    harness: RouterTestingHarness,
+    http: HttpTestingController,
+    ingredient: string,
+): Promise<HTMLElement> {
+    const trigger = await vi.waitFor(() => {
+        harness.detectChanges();
+        const action = shoppingAction(harness, 'add');
+        expect(action.disabled).toBe(false);
+        return action;
+    });
+    trigger.click();
+    await waitForAsyncTasksAsync();
+    http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.shoppingLists}/page`).flush([]);
+    return vi.waitFor(() => {
+        harness.detectChanges();
+        const picker = document.querySelector<HTMLElement>('fd-shopping-list-picker');
+        if (picker === null) {
+            throw new Error('Expected the shopping destination dialog');
+        }
+        expect(picker.textContent).toContain(ingredient);
+        return picker;
+    });
+}
 
 function shoppingRecipe(id: RecipeId): PublicRecipe {
     const recipe = publicRecipeFixture();

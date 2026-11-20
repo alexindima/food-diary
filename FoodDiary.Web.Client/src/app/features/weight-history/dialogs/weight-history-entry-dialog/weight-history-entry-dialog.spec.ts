@@ -1,9 +1,15 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form } from '@angular/forms/signals';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
@@ -12,6 +18,8 @@ import { WeightHistoryEntryDialogComponent } from './weight-history-entry-dialog
 
 const FIXTURE_INITIAL_VERSION = 7;
 const FIXTURE_TARGET_MEASUREMENT = 75;
+const IMPERIAL_ENTRY_MAXIMUM = '1102,31';
+const METRIC_ENTRY_MAXIMUM = 500;
 const createFacade = (): {
     formModel: WritableSignal<{ date: string; weight: string }>;
     form: FieldTree<{ date: string; weight: string }>;
@@ -160,6 +168,64 @@ describe('Weight entry dialog lifecycle', () => {
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('Duplicate date');
         expect(close).not.toHaveBeenCalled();
+    });
+});
+
+describe('Weight entry dialog with the real measurement facade', () => {
+    it('checks the displayed imperial maximum before posting the canonical measurement', async () => {
+        const close = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [WeightHistoryEntryDialogComponent],
+            providers: [
+                provideTranslateTesting(),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                WeightHistoryFacade,
+                { provide: FdUiDialogRef, useValue: { close } },
+            ],
+        });
+        TestBed.inject(MeasurementSystemService).setSystem('imperial');
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { WEIGHT_HISTORY: { VALUE_RANGE: 'Enter a value no greater than {{max}}.' } });
+        await firstValueFrom(translate.use('en'));
+        const http = TestBed.inject(HttpTestingController);
+        const fixture = TestBed.createComponent(WeightHistoryEntryDialogComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const input = host.querySelector<HTMLInputElement>('fd-ui-input input');
+        const submit = host.querySelector<HTMLButtonElement>('button[type="submit"]');
+        if (input === null || submit === null) {
+            throw new Error('Expected the measurement entry form');
+        }
+
+        input.value = '1102,32';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        submit.click();
+        await waitForAsyncTasksAsync();
+        http.expectNone(environment.apiUrls.weights);
+        fixture.detectChanges();
+        expect(host.textContent).toContain('Enter a value no greater than 1102.31.');
+        expect(close).not.toHaveBeenCalled();
+
+        input.value = IMPERIAL_ENTRY_MAXIMUM;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        submit.click();
+        await waitForAsyncTasksAsync();
+        const request = http.expectOne({ method: 'POST', url: environment.apiUrls.weights });
+        expect(request.request.body).toMatchObject({ weightKg: METRIC_ENTRY_MAXIMUM });
+        request.flush({ id: 'entry', userId: 'owner', date: '2026-06-21', weightKg: METRIC_ENTRY_MAXIMUM });
+        await waitForAsyncTasksAsync();
+        http.expectOne(item => item.url === `${environment.apiUrls.weights}/page-summary`).flush({
+            entries: [],
+            summary: [],
+            goal: {},
+            goalHistory: [],
+        });
+        fixture.detectChanges();
+        expect(close).toHaveBeenCalledOnce();
+        http.verify();
     });
 });
 

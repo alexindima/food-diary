@@ -6,7 +6,6 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { finalize, firstValueFrom, merge, type Subscription, take } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
-import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
 import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
@@ -29,7 +28,6 @@ import {
     TelegramDisconnectDialogComponent,
     type TelegramDisconnectDialogData,
 } from '../dialogs/telegram-disconnect-dialog/telegram-disconnect-dialog';
-import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';
 
 const BACKUP_EMAIL_RESEND_MS = 60_000;
 
@@ -44,7 +42,6 @@ export class ProfileManageFacade {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly toastService = inject(FdUiToastService);
-    private readonly navigationService = inject(NavigationService);
     private readonly authService = inject(AuthService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly localizationService = inject(LocalizationService);
@@ -138,27 +135,6 @@ export class ProfileManageFacade {
                     this.measurementsRequest.fail(requestId, 'USER_MANAGE.LOAD_ERROR');
                 },
             });
-    }
-
-    public submitUpdate(updateData: UpdateUserDto): void {
-        this.cancelProfileRead();
-        this.userService.update(updateData).subscribe({
-            next: user => {
-                if (user === null) {
-                    this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                    return;
-                }
-
-                this.user.set(user);
-                void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
-                this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
-                this.clearGlobalError();
-                this.showSuccessDialog();
-            },
-            error: () => {
-                this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-            },
-        });
     }
 
     public openChangePasswordDialog(): void {
@@ -361,17 +337,6 @@ export class ProfileManageFacade {
     private cancelProfileRead(): void {
         this.profileRead?.unsubscribe();
         this.profileRequest.reset();
-    }
-
-    private showSuccessDialog(): void {
-        this.dialogService
-            .open(UpdateSuccessDialogComponent, { size: 'sm' })
-            .afterClosed()
-            .subscribe(goToHome => {
-                if (goToHome === true) {
-                    void this.navigationService.navigateToHomeAsync();
-                }
-            });
     }
 
     private openPasswordSuccessDialog(): void {

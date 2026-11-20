@@ -1,16 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    DestroyRef,
-    effect,
-    type ElementRef,
-    inject,
-    signal,
-    type Type,
-    untracked,
-    viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, type Type, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -135,7 +123,6 @@ const RECENT_DAY_LIMIT = 5;
 export class CycleTrackingPageComponent {
     private readonly facade = inject(CycleTrackingFacade);
     private readonly localDay = inject(CurrentLocalDayService);
-    private readonly episodeHistory = viewChild<ElementRef<HTMLDetailsElement>>('episodeHistory');
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
@@ -422,13 +409,10 @@ export class CycleTrackingPageComponent {
         this.isHistoryExpanded.update(isExpanded => !isExpanded);
     }
 
-    protected openEpisodeHistory(): void {
-        const history = this.episodeHistory()?.nativeElement;
-        if (history !== undefined) {
-            history.open = true;
-            scrollElementIntoView(history);
-            history.querySelector('summary')?.focus();
-        }
+    protected openEpisodeHistory(history: HTMLDetailsElement, summary: HTMLElement): void {
+        history.open = true;
+        scrollElementIntoView(history);
+        summary.focus();
     }
 
     protected editMenstrualEpisode(episodeId: MenstrualEpisodeId): void {

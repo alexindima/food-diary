@@ -32,7 +32,6 @@ import { PwaInstallCardComponent } from '../../../../components/shared/pwa-insta
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
-import type { DietologistPermissions } from '../../../../shared/models/dietologist.data';
 import type { ActivityLevelOption, Gender } from '../../../../shared/models/user.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -53,7 +52,6 @@ import {
     createUserManageFormModel,
     mapUserToForm,
     normalizeOptionalTextInput,
-    parseOptionalNumberInput,
 } from '../../lib/user-manage-form.mapper';
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
@@ -127,9 +125,6 @@ export class UserManageComponent {
     protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
     protected readonly birthDateInputInvalid = signal(false);
-    protected readonly profileValidationErrorKey = computed(() =>
-        this.birthDateInputInvalid() ? 'USER_MANAGE.BIRTH_DATE_INVALID' : 'USER_MANAGE.HEIGHT_INVALID',
-    );
     private readonly lastSyncedUserFormData = signal<UserFormValues>(createUserManageFormModel());
     private readonly userFormInputVersion = signal(0);
     protected readonly userForm = form(this.userFormModel, path => {
@@ -248,10 +243,6 @@ export class UserManageComponent {
     }
 
     private listenToUserFormDomEvents(formElement: HTMLFormElement): void {
-        if (!this.isBrowser) {
-            return;
-        }
-
         const stopInputListener = this.renderer.listen(formElement, 'input', (event: Event) => {
             this.onUserFormInput(event);
         });
@@ -438,10 +429,6 @@ export class UserManageComponent {
         this.dietologist.onDietologistPermissionChangeRequest(change);
     }
 
-    protected persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
-        this.dietologist.persistDietologistPermissions(previousPermissions);
-    }
-
     protected revokeDietologistRelationship(): void {
         this.dietologist.revokeDietologistRelationship();
     }
@@ -510,10 +497,6 @@ export class UserManageComponent {
             }
             case 'lastName': {
                 this.userForm.lastName().value.set(normalizeOptionalTextInput(value));
-                break;
-            }
-            case 'heightCm': {
-                this.userForm.heightCm().value.set(parseOptionalNumberInput(value));
                 break;
             }
             default: {

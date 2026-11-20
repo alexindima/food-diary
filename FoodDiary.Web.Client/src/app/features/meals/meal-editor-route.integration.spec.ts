@@ -133,6 +133,58 @@ function savedMeal(comment = ORIGINAL_NOTE, amount = PRODUCT_AMOUNT, product?: P
     };
 }
 
+describe('Routed meal type after changing the local time', () => {
+    const breakfastTime = '08:15';
+
+    it.each([
+        { url: ADD_URL, initial: 'LUNCH', after: 'BREAKFAST' },
+        { url: `${ADD_URL}?mealType=DINNER`, initial: 'DINNER', after: 'DINNER' },
+    ])('uses the expected type for $url when the clock selection changes', async ({ url, initial, after }) => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(new Date('2026-05-04T13:00:00'));
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+        setupEditorRoutes();
+        const harness = await RouterTestingHarness.create(url);
+        const editor = requireEditor(harness, 'fd-meal-add');
+        const typeControl = editor.querySelector('fd-meal-general-info fd-ui-select');
+        expect(typeControl?.textContent).toContain(`MEAL_TYPES.${initial}`);
+
+        selectMealEditorTime(editor, breakfastTime);
+        harness.detectChanges();
+        expect(typeControl?.textContent).toContain(`MEAL_TYPES.${after}`);
+    });
+
+    it('retains the saved meal type and dirty note across a query change and a new time', async () => {
+        const api = setupEditorRoutes();
+        api.update.mockReturnValueOnce(of(savedMeal()));
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-edit');
+        const changedNote = 'Dinner remains dinner at another time';
+        changeComment(commentInput(editor), changedNote);
+        harness.detectChanges();
+
+        await harness.navigateByUrl(`${MEAL_URL}?mealType=BREAKFAST`);
+        expect(requireEditor(harness, 'fd-meal-edit')).toBe(editor);
+        expect(commentInput(editor).value).toBe(changedNote);
+        expect(api.getById).toHaveBeenCalledExactlyOnceWith(MEAL_ID);
+
+        selectMealEditorTime(editor, breakfastTime);
+        harness.detectChanges();
+        expect(editor.querySelector('fd-meal-general-info fd-ui-select')?.textContent).toContain('MEAL_TYPES.DINNER');
+        nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await waitForDiaryAsync(harness);
+        const expectedDate = new Date(savedMeal().date);
+        const [hour, minute] = breakfastTime.split(':').map(Number);
+        expectedDate.setHours(hour, minute, 0, 0);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            MEAL_ID,
+            expect.objectContaining({ mealType: 'DINNER', comment: changedNote, date: expectedDate }),
+        );
+    });
+});
+
 describe('Routed meal editor inline hunger and satiety', () => {
     it('updates hunger and clears an existing satiety answer through the inline controls', async () => {
         const before = 2;
@@ -731,6 +783,26 @@ function commentInput(editor: HTMLElement): HTMLTextAreaElement {
 function changeComment(comment: HTMLTextAreaElement, value: string): void {
     comment.value = value;
     comment.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function selectMealEditorTime(editor: ParentNode, time: string): void {
+    const control = editor.querySelector<HTMLInputElement>('fd-ui-time-input input[role="combobox"]');
+    if (control === null) {
+        throw new Error('Expected the native meal time control');
+    }
+    control.click();
+    TestBed.tick();
+    const hours = document.querySelector('[role="group"][aria-label="MEAL_DETAILS.HOURS"]');
+    const minutes = document.querySelector('[role="group"][aria-label="MEAL_DETAILS.MINUTES"]');
+    if (hours === null || minutes === null) {
+        throw new Error('Expected the rendered hours and minutes');
+    }
+    const [hour, minute] = time.split(':');
+    nativeEditorButton(hours, hour).click();
+    TestBed.tick();
+    nativeEditorButton(minutes, minute).click();
+    TestBed.tick();
+    expect(control.value).toBe(time);
 }
 
 function satietyOption(host: ParentNode, label: string): HTMLButtonElement {

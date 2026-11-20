@@ -7,7 +7,6 @@ import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
-import { NavigationService } from '../../../services/navigation.service';
 import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
 import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
@@ -81,7 +80,6 @@ let authService: {
 };
 let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
-let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
 const telegram = { initializeAsync: vi.fn(), getInitData: vi.fn() };
 const backupEmailFlow = { startAsync: vi.fn(), markSent: vi.fn(), read: vi.fn().mockReturnValue(null), clear: vi.fn() };
 const browser = { open: vi.fn() };
@@ -140,10 +138,6 @@ beforeEach(() => {
     localizationService = {
         applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(void 0),
     };
-    navigationService = {
-        navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
-    };
-
     dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
     telegram.initializeAsync.mockResolvedValue(void 0);
     telegram.getInitData.mockReturnValue('signed-proof');
@@ -170,7 +164,6 @@ beforeEach(() => {
             { provide: FdUiToastService, useValue: toastService },
             { provide: AuthService, useValue: authService },
             { provide: LocalizationService, useValue: localizationService },
-            { provide: NavigationService, useValue: navigationService },
             {
                 provide: TranslateService,
                 useValue: {
@@ -211,14 +204,16 @@ afterEach(() => {
     vi.useRealTimers();
 });
 
-describe('ProfileManageFacade loading and submit', () => {
-    it('keeps a saved profile when an older overview completes afterward', () => {
+describe('ProfileManageFacade overview loading', () => {
+    it('keeps a saved profile when an older overview completes afterward', async () => {
+        facade.initialize();
         const pending = new Subject<UserProfileOverview>();
         userService.getOverview.mockReturnValueOnce(pending);
         facade.initialize();
+        expect(pending.observed).toBe(true);
         userService.update.mockReturnValueOnce(of({ ...user, username: 'saved' }));
 
-        facade.submitUpdate(new UpdateUserDto({ username: 'saved' }));
+        expect(await facade.saveProfileAsync(new UpdateUserDto({ username: 'saved' }))).toBe(true);
         pending.next({ ...overview, user: { ...user, username: 'stale' } });
 
         expect(facade.user()?.username).toBe('saved');
@@ -247,24 +242,6 @@ describe('ProfileManageFacade loading and submit', () => {
         expect(facade.user()?.pushNotificationsEnabled).toBe(true);
         expect(facade.webPushSubscriptions()).toHaveLength(1);
         expect(facade.globalError()).toBeNull();
-    });
-
-    it('sets global error when update returns null', () => {
-        userService.update.mockReturnValueOnce(of(null));
-
-        facade.submitUpdate(new UpdateUserDto({ username: 'alex' }));
-
-        expect(facade.globalError()).toBe('USER_MANAGE.UPDATE_ERROR');
-    });
-
-    it('shows success dialog and navigates home after successful update', () => {
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
-
-        facade.submitUpdate(new UpdateUserDto({ username: 'alex' }));
-
-        expect(userService.update).toHaveBeenCalledTimes(1);
-        expect(dialogService.open).toHaveBeenCalled();
-        expect(navigationService.navigateToHomeAsync).toHaveBeenCalled();
     });
 });
 
@@ -524,7 +501,7 @@ describe('ProfileManageFacade saved language defaults', () => {
 });
 
 describe('ProfileManageFacade save session ownership', () => {
-    it('keeps the new account preferences when the previous account save is accepted late', async () => {
+    it.each(['accepted', 'rejected'] as const)('keeps the new account state when the previous account save is %s late', async result => {
         const app = TestBed.inject(EnvironmentInjector);
         const firstPage = createEnvironmentInjector([ProfileManageFacade], app);
         const nextPage = createEnvironmentInjector([ProfileManageFacade], app);
@@ -549,18 +526,23 @@ describe('ProfileManageFacade save session ownership', () => {
         authService.getUserId.mockReturnValue(newUser.id);
         sessions.notifyAuthenticated();
         userService.getOverview.mockReturnValueOnce(of({ ...overview, user: newUser }));
-        nextPage.get(ProfileManageFacade).initialize();
+        const nextProfile = nextPage.get(ProfileManageFacade);
+        nextProfile.initialize();
         expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
         expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
 
         expect(pending.observed).toBe(true);
-        pending.next({ ...user, theme: 'dark' });
+        pending.next(result === 'accepted' ? { ...user, theme: 'dark' } : null);
         pending.complete();
         const saved = await saving;
 
         expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
         expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
+        expect(nextProfile.user()?.id).toBe(newUser.id);
+        expect(nextProfile.globalError()).toBeNull();
+        expect(firstProfile.globalError()).toBeNull();
         expect(firstProfile.profileSavedVersion()).toBe(0);
+        expect(firstProfile.isSavingProfile()).toBe(false);
         expect(saved).toBe(false);
     });
 

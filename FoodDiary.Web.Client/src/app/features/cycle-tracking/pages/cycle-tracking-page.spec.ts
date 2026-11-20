@@ -428,10 +428,13 @@ describe('Cycle episode history', () => {
         await renderAsync();
 
         const history = requiredElementOfType(page, 'details.cycle-tracking__details', HTMLDetailsElement);
+        const scrollHistory = vi.fn();
+        Object.defineProperty(history, 'scrollIntoView', { value: scrollHistory });
         expect(history.open).toBe(false);
         click('CYCLE_TRACKING.CHECK_EPISODE_HISTORY', page);
         await stabilizeAsync();
         expect(history.open).toBe(true);
+        expect(scrollHistory).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ block: 'start' }));
         expect(document.activeElement).toBe(history.querySelector('summary'));
 
         const card = requiredElement(page, '[data-tour-id="cycle-tracking-episode-history"]');

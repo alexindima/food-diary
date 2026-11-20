@@ -551,6 +551,30 @@ describe('recognition request recovery across browser and API changes', () => {
 });
 
 describe('recognition hub ownership during connection startup', () => {
+    it('does not start an obsolete hub when the account changes before SignalR can load', async () => {
+        hub.start.mockResolvedValue(undefined);
+        const old = entityId<'food-recognition'>('pending-old-account');
+        const cancelled = expect(firstValueFrom(service.resume(old))).rejects.toMatchObject({ status: HttpStatusCode.Unauthorized });
+
+        user.set('user-2');
+        TestBed.tick();
+        await cancelled;
+        await vi.dynamicImportSettled();
+        http.expectNone(`${url}/${old}`);
+        expect(hub.url).not.toHaveBeenCalled();
+
+        const active = entityId<'food-recognition'>('current-account');
+        const result = firstValueFrom(service.resume(active));
+        await vi.advanceTimersByTimeAsync(0);
+        http.expectOne({ method: 'GET', url: `${url}/${active}` }).flush(job(active, 'Succeeded'));
+        await vi.advanceTimersByTimeAsync(0);
+
+        await expect(result).resolves.toMatchObject({ recognition: { id: active } });
+        expect(hub.start).toHaveBeenCalledOnce();
+        expect(hub.stop).not.toHaveBeenCalled();
+        http.expectNone({ method: 'POST', url });
+    });
+
     it('stops a hub that finishes connecting after the active account has changed', async () => {
         const connected = new Subject<void>();
         const connectionStart = firstValueFrom(connected);
@@ -585,4 +609,23 @@ describe('recognition hub ownership during connection startup', () => {
         expect(activeResult).toHaveBeenCalledOnce();
         expect(activeResult.mock.calls[0][0].recognition?.id).toBe(active);
     });
+});
+
+it('stops polling an invalid saved recognition response and retries the same job on request', async () => {
+    const id = entityId<'food-recognition'>('saved-recognition');
+    const endpoint = `${url}/${id}`;
+    const failed = expect(firstValueFrom(service.resume(id))).rejects.toThrow('API response is missing required field: imageAssetId.');
+    await vi.advanceTimersByTimeAsync(0);
+    http.expectOne({ method: 'GET', url: endpoint }).flush({ ...job(id, 'Succeeded'), imageAssetId: null });
+    await failed;
+    await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS);
+    http.expectNone(endpoint);
+
+    const reopened = firstValueFrom(service.resume(id));
+    await vi.advanceTimersByTimeAsync(0);
+    http.expectOne({ method: 'GET', url: endpoint }).flush(job(id, 'Succeeded'));
+    await vi.advanceTimersByTimeAsync(0);
+
+    await expect(reopened).resolves.toMatchObject({ recognition: { id } });
+    http.expectNone({ method: 'POST', url });
 });
