@@ -59,11 +59,9 @@ export class DietologistInvitationPageComponent {
     });
 
     public constructor() {
-        ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.currentLanguage.set(this.resolveCurrentLanguage());
-            });
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.currentLanguage.set(this.resolveCurrentLanguage());
+        });
         this.route.paramMap
             .pipe(
                 map(params => params.get('invitationId')),

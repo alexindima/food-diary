@@ -1,6 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { FdTourTargetRegistry } from 'fd-tour';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -15,6 +16,7 @@ import { HeaderActionsOverflowComponent } from './header-actions-overflow';
             <button
                 type="button"
                 aria-label="First action"
+                [attr.aria-disabled]="firstActionDisabled() || null"
                 [attr.data-fd-overflow-primary]="primary() ? true : null"
                 (click)="recordFirstAction()"
             >
@@ -31,12 +33,15 @@ import { HeaderActionsOverflowComponent } from './header-actions-overflow';
                     <span class="fd-ui-icon__glyph">delete</span>
                 </button>
             }
+            <a [attr.href]="activityHref()">Open activity</a>
         </fd-header-actions-overflow>
     `,
 })
 class TestHostComponent {
     public readonly primary = signal(false);
     public readonly showSecond = signal(false);
+    public readonly firstActionDisabled = signal(false);
+    public readonly activityHref = signal<string | null>(null);
     public readonly firstClicks = signal(0);
     public readonly secondClicks = signal(0);
     public firstActionFocus: Element | null = null;
@@ -140,6 +145,33 @@ describe('HeaderActionsOverflowComponent', () => {
     });
 });
 
+it('does not activate a projected action disabled while its menu proxy is still rendered', async () => {
+    await TestBed.configureTestingModule({
+        imports: [TestHostComponent],
+        providers: [provideTranslateTesting(), provideRouter([])],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TestHostComponent);
+    const host = fixture.nativeElement as HTMLElement;
+    const component = fixture.componentInstance;
+    component.showSecond.set(true);
+    await settleHeaderActionsAsync(fixture);
+    host.querySelector<HTMLButtonElement>('.fd-header-actions-overflow__trigger button')?.click();
+    await settleHeaderActionsAsync(fixture);
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    const firstAction = Array.from(overlay.querySelectorAll<HTMLButtonElement>('.fd-ui-menu__item')).find(button =>
+        button.textContent.includes('First action'),
+    );
+
+    component.firstActionDisabled.set(true);
+    fixture.detectChanges();
+    expect(host.querySelector('button[aria-label="First action"]')?.getAttribute('aria-disabled')).toBe('true');
+    expect(firstAction?.isConnected).toBe(true);
+    expect(firstAction?.disabled).toBe(false);
+    firstAction?.click();
+
+    expect(component.firstClicks()).toBe(0);
+});
+
 describe('Header action focus handoff', () => {
     it('focuses the stable trigger before launching a temporary menu action', async () => {
         await TestBed.configureTestingModule({
@@ -212,6 +244,35 @@ describe('Header action reactive metadata', () => {
     });
 });
 
+describe('Header overflow links', () => {
+    it('adds and removes a projected link when its destination changes', async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestHostComponent],
+            providers: [provideTranslateTesting(), provideRouter([])],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(TestHostComponent);
+        const host = fixture.nativeElement as HTMLElement;
+        const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+        const trigger = (): HTMLButtonElement | null => host.querySelector('.fd-header-actions-overflow__trigger button');
+        await settleHeaderActionsAsync(fixture);
+        expect(trigger()).toBeNull();
+
+        fixture.componentInstance.activityHref.set('/activity');
+        await settleHeaderActionsAsync(fixture);
+
+        const menuButton = trigger();
+        expect(menuButton).not.toBeNull();
+        menuButton?.click();
+        await settleHeaderActionsAsync(fixture);
+        expect(Array.from(overlay.querySelectorAll('.fd-ui-menu__item')).map(item => item.textContent.trim())).toContain('Open activity');
+
+        fixture.componentInstance.activityHref.set(null);
+        await settleHeaderActionsAsync(fixture);
+        expect(trigger()).toBeNull();
+        expect(overlay.querySelector('.fd-ui-menu__item')).toBeNull();
+    });
+});
+
 const SECONDARY_TOUR_TARGET = '[data-tour-id="secondary-action"]';
 
 describe('Header overflow guided tour', () => {
@@ -273,6 +334,59 @@ describe('Header overflow guided tour', () => {
         expect(overlay.querySelector(SECONDARY_TOUR_TARGET)).not.toBeNull();
         expect(fixture.componentInstance.secondClicks()).toBe(0);
     });
+});
+
+it('keeps a keyboard-opened overflow in its local tour scope and disposes it with the header', async () => {
+    await TestBed.configureTestingModule({
+        imports: [TestHostComponent],
+        providers: [provideTranslateTesting(), provideRouter([])],
+    })
+        .overrideComponent(HeaderActionsOverflowComponent, { add: { providers: [FdTourTargetRegistry] } })
+        .compileComponents();
+
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.showSecond.set(true);
+    await settleHeaderActionsAsync(fixture);
+
+    const trigger = overflowHost(fixture).querySelector('button');
+    if (trigger === null) {
+        throw new Error('Expected the header menu trigger');
+    }
+
+    const header = fixture.debugElement.query(By.directive(HeaderActionsOverflowComponent));
+    const registry = header.injector.get(FdTourTargetRegistry);
+    const applicationRegistry = TestBed.inject(FdTourTargetRegistry);
+    const resolver = registry.find(SECONDARY_TOUR_TARGET);
+    expect(applicationRegistry.find(SECONDARY_TOUR_TARGET)).toBeUndefined();
+    if (resolver === undefined) {
+        throw new Error('Expected the header to register its own tour target');
+    }
+
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    trigger.focus();
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    await settleHeaderActionsAsync(fixture);
+    const firstAction = overlay.querySelector('[role="menuitem"]');
+    expect(firstAction?.textContent).toContain('First action');
+    expect(document.activeElement).toBe(firstAction);
+
+    resolver.reveal(SECONDARY_TOUR_TARGET)();
+    await settleHeaderActionsAsync(fixture);
+    expect(overlay.querySelector(SECONDARY_TOUR_TARGET)?.textContent).toContain('Second action');
+    expect(document.activeElement).toBe(firstAction);
+
+    firstAction?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    await settleHeaderActionsAsync(fixture);
+    expect(overlay.querySelector('[role="menu"]')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+    expect(fixture.componentInstance.secondClicks()).toBe(0);
+
+    resolver.reveal(SECONDARY_TOUR_TARGET);
+    await settleHeaderActionsAsync(fixture);
+    expect(overlay.querySelector(SECONDARY_TOUR_TARGET)).not.toBeNull();
+    fixture.destroy();
+    expect(overlay.querySelector('[role="menu"]')).toBeNull();
+    expect(registry.resolvers()).toEqual([]);
 });
 
 function overflowHost(fixture: ComponentFixture<TestHostComponent>): HTMLElement {

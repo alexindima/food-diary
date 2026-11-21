@@ -25,6 +25,7 @@ import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
 import { SeoService } from '../services/seo.service';
+import { AuthRecoveryStateService } from '../shared/auth/auth-recovery-state.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { editorUnsavedChangesGuard } from '../shared/forms/editor-unsaved-changes.guard';
 import { LocalizationService } from '../shared/i18n/localization.service';
@@ -75,6 +76,9 @@ class SessionLatePrivateEditor {
 @Component({ template: 'Public sign in', changeDetection: ChangeDetectionStrategy.OnPush })
 class SessionPublicLogin {}
 
+@Component({ selector: 'fd-shell-public-catalog-test', template: 'Public catalog', changeDetection: ChangeDetectionStrategy.OnPush })
+class SessionPublicCatalog {}
+
 @Component({
     template: '<p>Private Alice overlay draft</p><button type="button" (click)="save()">Save draft</button>',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -88,6 +92,52 @@ class SessionRootDialog {
         saveRootDialog();
     }
 }
+
+it('keeps the native main region and skip link on the active signed-out route', async () => {
+    stubMatchMedia();
+    TestBed.configureTestingModule({
+        imports: [AppComponent],
+        providers: [
+            provideTranslateTesting(),
+            provideRouter([
+                { path: 'mobile/login', component: SessionPublicLogin, data: { shell: 'public' } },
+                { path: 'explore', component: SessionPublicCatalog, data: { shell: 'public' } },
+            ]),
+            {
+                provide: AuthService,
+                useValue: { isAuthenticated: signal(false), isImpersonating: signal(false), impersonationReason: signal(null) },
+            },
+            { provide: AuthRecoveryStateService, useValue: { issue: signal(null) } },
+            { provide: SeoService, useValue: { update: vi.fn() } },
+            { provide: LocalizationService, useValue: { loadTranslationsForRouteAsync: vi.fn().mockResolvedValue(undefined) } },
+            { provide: GlobalLoadingService, useValue: { isVisible: signal(false) } },
+            { provide: RouteLoadingService, useValue: { isVisible: signal(false), beginLoad: vi.fn(), endLoad: vi.fn() } },
+            { provide: ThemeService, useValue: { applyThemeForRoute: vi.fn() } },
+            { provide: ViewportScroller, useValue: { scrollToPosition: vi.fn(), setHistoryScrollRestoration: vi.fn() } },
+            { provide: BrowserWindowService, useValue: createBrowserWindowStub(false, false) },
+            { provide: PwaInstallPromotionService, useValue: { setActive: vi.fn(), shouldShowBanner: signal(false) } },
+        ],
+    });
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/mobile/login?returnUrl=%2Fdashboard#form');
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const main = host.querySelector('main#main-content');
+
+    expect(main?.querySelector('[role="region"]')?.textContent).toContain('Public sign in');
+    expect(host.querySelector('a.fd-skip-nav')?.getAttribute('href')).toBe('/mobile/login?returnUrl=%2Fdashboard#main-content');
+    expect(host.querySelector('fd-sidebar')).toBeNull();
+    expect(host.querySelector('fd-quick-meal-drawer')).toBeNull();
+
+    await router.navigateByUrl('/explore?category=public#preview');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(main?.querySelector('[role="region"]')?.textContent).toContain('Public catalog');
+    expect(main?.textContent).not.toContain('Public sign in');
+    expect(host.querySelector('a.fd-skip-nav')?.getAttribute('href')).toBe('/explore?category=public#main-content');
+});
 
 describe('AppComponent session-owned route lifetime', () => {
     it('mounts the marketing notice only on public marketing pages', async () => {

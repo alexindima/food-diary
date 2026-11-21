@@ -1718,6 +1718,163 @@ describe('Product editor nutrition input', () => {
     });
 });
 
+describe('Product editor zero serving recovery', () => {
+    it('preserves per-base nutrition when correcting a rejected zero serving', async () => {
+        const editor = await setupComponentAsync();
+        const { el, fixture, productManageFacade } = editor;
+        fixture.componentRef.setInput('product', PRODUCT);
+        fixture.detectChanges();
+        selectProductPortionMode(editor);
+
+        const amount = requiredProductInput(el, 'input[aria-label="PRODUCT_MANAGE.DEFAULT_PORTION_AMOUNT"]');
+        const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+        const save = requiredFormButton(el, 'button[type="submit"]');
+        expect(Number(proteins.value)).toBe(PRODUCT.proteinsPerBase);
+
+        enterProductValue(amount, '0');
+        fixture.detectChanges();
+        save.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(amount.getAttribute('aria-invalid')).toBe('true');
+        expect(proteins.getAttribute('aria-invalid')).not.toBe('true');
+        expect(Number(proteins.value)).toBe(PRODUCT.proteinsPerBase);
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+
+        enterProductValue(amount, String(PORTION_AMOUNT));
+        fixture.detectChanges();
+        const expectedPortionProteins = 5;
+        expect(amount.getAttribute('aria-invalid')).not.toBe('true');
+        expect(Number(proteins.value)).toBe(expectedPortionProteins);
+        save.click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({
+                defaultPortionAmount: PORTION_AMOUNT,
+                caloriesPerBase: PRODUCT.caloriesPerBase,
+                proteinsPerBase: PRODUCT.proteinsPerBase,
+                fatsPerBase: PRODUCT.fatsPerBase,
+                carbsPerBase: PRODUCT.carbsPerBase,
+            }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor portion nutrition warning', () => {
+    it('shows the serving-limit warning and saves the corrected protein on its per-base basis', async () => {
+        const editor = await setupComponentAsync();
+        const { el, fixture, productManageFacade } = editor;
+        const portionGrams = 250;
+        const perBaseCalories = 400;
+        const savedProtein = 100;
+        const overflowProtein = 251;
+        const correctedPortionProtein = 225;
+        const correctedBaseProtein = 90;
+        fixture.componentRef.setInput('product', {
+            ...PRODUCT,
+            name: 'Protein isolate',
+            defaultPortionAmount: portionGrams,
+            caloriesPerBase: perBaseCalories,
+            proteinsPerBase: savedProtein,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+        });
+        fixture.detectChanges();
+        selectProductPortionMode(editor);
+
+        const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+        const save = requiredFormButton(el, 'button[type="submit"]');
+        const warning = (): Element | null => el.querySelector('.nutrition-editor-messages__warning');
+        expect(proteins.value).toBe(String(portionGrams));
+        expect(warning()).toBeNull();
+
+        enterProductValue(proteins, String(overflowProtein));
+        fixture.detectChanges();
+        expect(proteins.value).toBe(String(overflowProtein));
+        expect(warning()?.textContent.trim()).toBe('PRODUCT_MANAGE.NUTRITION_WARNINGS.PORTION_LIMIT');
+
+        save.click();
+        await fixture.whenStable();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+
+        enterProductValue(proteins, String(correctedPortionProtein));
+        fixture.detectChanges();
+        expect(warning()).toBeNull();
+        save.click();
+        await fixture.whenStable();
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({
+                baseUnit: MeasurementUnit.G,
+                baseAmount: PRODUCT.baseAmount,
+                defaultPortionAmount: portionGrams,
+                caloriesPerBase: perBaseCalories,
+                proteinsPerBase: correctedBaseProtein,
+            }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
+describe('Product editor nutrition for a portion measured in pieces', () => {
+    it('shows two-piece nutrition and saves the edited values for one piece', async () => {
+        const editor = await setupComponentAsync();
+        const { el, fixture, productManageFacade } = editor;
+        const portionPieces = 2;
+        const originalPieceCalories = 80;
+        const originalPieceProtein = 5;
+        const editedPortionCalories = 180;
+        const editedPortionProtein = 14;
+        const savedPieceCalories = 90;
+        const savedPieceProtein = 7;
+        fixture.componentRef.setInput('product', {
+            ...PRODUCT,
+            name: 'Oat bites',
+            baseUnit: MeasurementUnit.PCS,
+            baseAmount: 1,
+            defaultPortionAmount: portionPieces,
+            caloriesPerBase: originalPieceCalories,
+            proteinsPerBase: originalPieceProtein,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+        });
+        fixture.detectChanges();
+        selectProductPortionMode(editor);
+
+        const calories = requiredProductInput(el, '.nutrition-editor__input--calories input');
+        const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+        expect(calories.value).toBe(String(originalPieceCalories * portionPieces));
+        expect(proteins.value).toBe(String(originalPieceProtein * portionPieces));
+
+        enterProductValue(calories, String(editedPortionCalories));
+        enterProductValue(proteins, String(editedPortionProtein));
+        fixture.detectChanges();
+        requiredFormButton(el, 'button[type="submit"]').click();
+        await fixture.whenStable();
+
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ id: PRODUCT.id }),
+            expect.objectContaining({
+                baseUnit: MeasurementUnit.PCS,
+                baseAmount: 1,
+                defaultPortionAmount: portionPieces,
+                caloriesPerBase: savedPieceCalories,
+                proteinsPerBase: savedPieceProtein,
+            }),
+            expect.any(Boolean),
+            expect.any(Function),
+        );
+    });
+});
+
 describe('Product editor rendered nutrition precision', () => {
     const baseProtein = 0.1;
     const portionProtein = 0.001;

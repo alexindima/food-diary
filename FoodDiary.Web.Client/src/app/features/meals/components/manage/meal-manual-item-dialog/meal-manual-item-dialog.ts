@@ -7,6 +7,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import type { Subscription } from 'rxjs';
@@ -17,8 +18,10 @@ import { MealSourceType } from '../../../../../shared/models/meal.data';
 import type { Product } from '../../../../../shared/models/product.data';
 import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { MAXIMUM_CONSUMED_QUANTITY, recipeServings } from '../../../../../shared/models/semantics/meal-quantity';
+import { displayRecipeServings, type ServingMassResult, UNKNOWN_SERVING_MASS } from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
+import { createMealItemValue } from '../meal-manage-lib/meal-manage-form.mapper';
 
 const MIN_AMOUNT = 0.01;
 
@@ -49,10 +52,15 @@ export class MealManualItemDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<MealManualItemDialogComponent, MealItemFormValues | null>);
     private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly translateService = inject(TranslateService);
+    private readonly quantityErrors: FdValidationErrors = {
+        ...inject(FD_VALIDATION_ERRORS),
+        max: () => ({ key: 'MEAL_MANAGE.MAX_AMOUNT_ERROR', params: { max: this.maximumAmount() } }),
+    };
 
     protected readonly showPicker = signal(this.data.item.product === null && this.data.item.recipe === null);
     protected readonly isLoadingRecipeAmount = signal(false);
-    private readonly usesRecipeGrams = signal(this.recipeWeight.hasServingWeight(this.data.item.recipe));
+    private readonly recipeMass = signal<ServingMassResult>(this.data.item.recipeMass);
+    private readonly usesRecipeGrams = computed(() => this.recipeMass().kind === 'known');
     protected readonly amountLabel = computed(() => {
         if (this.recipe() !== null && !this.usesRecipeGrams()) {
             return this.translateService.instant('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
@@ -67,7 +75,7 @@ export class MealManualItemDialogComponent {
     protected readonly amountModel = signal<number | null>(this.data.item.amount);
     protected readonly maximumAmount = computed(() =>
         this.recipe() !== null && this.usesRecipeGrams()
-            ? this.recipeWeight.displayServings(this.recipe(), recipeServings(MAXIMUM_CONSUMED_QUANTITY)).value
+            ? displayRecipeServings(recipeServings(MAXIMUM_CONSUMED_QUANTITY), this.recipeMass()).value
             : MAXIMUM_CONSUMED_QUANTITY,
     );
     protected readonly amount = form(this.amountModel, path => {
@@ -77,8 +85,6 @@ export class MealManualItemDialogComponent {
         max(path, () => this.maximumAmount());
     });
 
-    protected readonly selectedItemName = computed(() => this.recipe()?.name ?? this.product()?.name ?? null);
-
     protected readonly sourceActionLabelKey = computed(() =>
         this.sourceType() === MealSourceType.Recipe ? 'MEAL_MANAGE.MANUAL_ITEM_CHOOSE_RECIPE' : 'MEAL_MANAGE.MANUAL_ITEM_CHOOSE_PRODUCT',
     );
@@ -87,36 +93,34 @@ export class MealManualItemDialogComponent {
         this.sourceType() === MealSourceType.Recipe ? 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe' : 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product',
     );
 
-    protected readonly selectedItemMeta = computed(() => {
+    protected readonly selectedItem = computed(() => {
         const recipe = this.recipe();
         if (recipe !== null) {
             const totalCalories = recipe.manualCalories ?? recipe.totalCalories;
             const calories = totalCalories === null || totalCalories === undefined ? null : totalCalories / Math.max(recipe.servings, 1);
-            return calories === null
-                ? this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe')
-                : this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_RECIPE_META', { calories: Math.round(calories) });
+            return {
+                name: recipe.name,
+                icon: 'menu_book',
+                meta:
+                    calories === null
+                        ? this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe')
+                        : this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_RECIPE_META', { calories: Math.round(calories) }),
+            };
         }
 
         const product = this.product();
-        if (product !== null) {
-            return this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_PRODUCT_META', {
+        if (product === null) {
+            return null;
+        }
+        return {
+            name: product.name,
+            icon: 'restaurant',
+            meta: this.translateService.instant('MEAL_MANAGE.MANUAL_ITEM_PRODUCT_META', {
                 amount: product.baseAmount,
                 unit: this.translateService.instant(`PRODUCT_AMOUNT_UNITS_SHORT.${product.baseUnit.toUpperCase()}`),
                 calories: Math.round(product.caloriesPerBase),
-            });
-        }
-
-        return null;
-    });
-
-    protected readonly itemSourceIcon = computed(() => {
-        if (this.recipe() !== null) {
-            return 'menu_book';
-        }
-        if (this.product() !== null) {
-            return 'restaurant';
-        }
-        return 'search';
+            }),
+        };
     });
 
     protected readonly amountPlaceholderKey = computed(() => {
@@ -134,30 +138,11 @@ export class MealManualItemDialogComponent {
         return this.translateService.instant('MEAL_MANAGE.ITEM_SOURCE_ERROR');
     });
 
-    protected readonly amountError = computed(() => {
-        const state = this.amount();
-        if (!state.invalid() || !state.touched()) {
-            return null;
-        }
-
-        if (state.getError('required') !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.REQUIRED');
-        }
-
-        if (state.getError('min') !== undefined) {
-            return this.translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min: MIN_AMOUNT });
-        }
-
-        if (state.getError('max') !== undefined) {
-            return this.translateService.instant('MEAL_MANAGE.MAX_AMOUNT_ERROR', { max: this.maximumAmount() });
-        }
-
-        return this.translateService.instant('FORM_ERRORS.UNKNOWN');
-    });
-
-    protected readonly canSave = computed(
-        () => !this.isLoadingRecipeAmount() && (this.product() !== null || this.recipe() !== null) && !this.amount().invalid(),
+    protected readonly amountError = computed(() =>
+        resolveSignalFormFieldError(this.amount, this.quantityErrors, this.translateService, { showOnDirty: false }),
     );
+
+    protected readonly canSave = computed(() => !this.isLoadingRecipeAmount() && this.selectedItem() !== null && !this.amount().invalid());
 
     protected showItemPicker(): void {
         this.showPicker.set(true);
@@ -175,7 +160,7 @@ export class MealManualItemDialogComponent {
         this.showPicker.set(false);
         this.servingWeightSubscription?.unsubscribe();
         this.isLoadingRecipeAmount.set(false);
-        this.usesRecipeGrams.set(false);
+        this.recipeMass.set(UNKNOWN_SERVING_MASS);
         if (selection.type === 'Product') {
             this.sourceType.set(MealSourceType.Product);
             this.product.set(selection.product);
@@ -197,8 +182,7 @@ export class MealManualItemDialogComponent {
             .loadServingMass(recipe)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(mass => {
-                const hasWeight = mass.kind === 'known';
-                this.usesRecipeGrams.set(hasWeight);
+                this.recipeMass.set(mass);
                 if (mass.kind === 'known' && this.amountModel() === 1) {
                     this.amount().value.set(mass.gramsPerServing);
                 }
@@ -221,12 +205,8 @@ export class MealManualItemDialogComponent {
             return;
         }
 
-        this.dialogRef.close({
-            sourceType: this.sourceType(),
-            product: this.product(),
-            recipe: this.recipe(),
-            amount: this.amountModel(),
-        });
+        const item = createMealItemValue(this.product(), this.recipe(), this.amountModel(), this.sourceType());
+        this.dialogRef.close({ ...item, recipeMass: this.recipeMass() });
     }
 
     protected cancel(): void {

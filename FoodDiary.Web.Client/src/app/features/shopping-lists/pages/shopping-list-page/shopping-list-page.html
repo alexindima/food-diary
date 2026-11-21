@@ -1,4 +1,4 @@
-<div class="shopping-list" fdPageContainer [fdUiPreventUnload]="facade.hasUnsavedChanges()">
+<div class="shopping-list" fdPageContainer [fdUiPreventUnload]="facade.hasUnsavedChanges()" [attr.inert]="isDeparting() ? '' : null">
     <fd-page-header [title]="'SHOPPING_LIST.TITLE' | translate" [subtitle]="'SHOPPING_LIST.SUBTITLE' | translate" [compactActions]="true">
         <fd-ui-button
             appearance="brand-action"
@@ -85,6 +85,7 @@
                         data-tour-id="shopping-list-items"
                         [itemForm]="itemForm"
                         [items]="items()"
+                        [isWorkspaceBusy]="isItemWorkspaceBusy()"
                         (itemAdd)="addItem()"
                         (itemRemove)="removeItem($event)"
                         (itemEdit)="editItem($event)"

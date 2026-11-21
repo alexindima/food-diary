@@ -6,6 +6,7 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
+import { badgeIcon, badgeNameKey } from '../../lib/gamification-badge-view';
 import type { Badge } from '../../models/gamification.data';
 
 export type GamificationAchievementsDialogData = {
@@ -24,12 +25,6 @@ export class GamificationAchievementsDialogComponent {
     private readonly data = inject<GamificationAchievementsDialogData>(FD_UI_DIALOG_DATA);
 
     protected readonly badges = this.data.badges;
-
-    protected badgeIcon(badge: Badge): string {
-        return badge.icon ?? (badge.category === 'streak' ? 'local_fire_department' : 'restaurant');
-    }
-
-    protected badgeNameKey(badge: Badge): string {
-        return `GAMIFICATION.BADGE_${badge.key.toUpperCase()}`;
-    }
+    protected readonly badgeIcon = badgeIcon;
+    protected readonly badgeNameKey = badgeNameKey;
 }

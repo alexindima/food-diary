@@ -5,8 +5,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService, type TranslationObject } from '@ngx-translate/core';
 import { filter, firstValueFrom, type Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { isPublicMarketingPath, type PublicSiteLocale, publicSiteLocale } from '../../config/public-site-paths';
+import { isPublicMarketingPath, type PublicSiteLocale, publicSiteLocale, stripPublicLocale } from '../../config/public-site-paths';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
@@ -21,7 +20,6 @@ export class LocalizationService {
     private readonly storage = inject(BrowserStorageService);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly translationLoader = inject(FoodDiaryTranslationLoader);
-    private readonly russianDefaultHosts = new Set(environment.russianDefaultHosts);
     private readonly storageKey = 'fd_language';
     private readonly loadedTranslationKeys = new Set<string>();
     private readonly translationRequests = new Map<string, Promise<void>>();
@@ -48,10 +46,9 @@ export class LocalizationService {
 
         const browserLang = this.translateService.getBrowserLang();
         const storedLang = this.getStoredLanguage();
-        const domainLang = this.getDomainDefaultLanguage();
         const initialPath = this.browserWindow.getPathname() ?? this.document.location.pathname;
         const routeLang = typeof initialPath === 'string' && isPublicMarketingPath(initialPath) ? publicSiteLocale(initialPath) : null;
-        const normalizedLang = this.normalizeLanguage(routeLang ?? storedLang ?? domainLang ?? browserLang);
+        const normalizedLang = this.normalizeLanguage(routeLang ?? storedLang ?? browserLang);
 
         return firstValueFrom(this.translateService.use(normalizedLang)).then(translations => {
             if (typeof initialPath === 'string' && Object.keys(translations).length > 0) {
@@ -124,7 +121,7 @@ export class LocalizationService {
     }
 
     private translationKey(language: string, pathname?: string): string {
-        return pathname === undefined ? `application:${language}` : `route:${language}:${this.normalizeRouteKey(pathname)}`;
+        return pathname === undefined ? `application:${language}` : `route:${language}:${stripPublicLocale(pathname).toLowerCase()}`;
     }
 
     private normalizeLanguage(lang?: string | null): PublicSiteLocale {
@@ -144,13 +141,6 @@ export class LocalizationService {
         return 'en';
     }
 
-    private normalizeRouteKey(pathname: string): string {
-        const withoutHash = pathname.split('#', 1)[0] ?? '/';
-        const withoutQuery = withoutHash.split('?', 1)[0] ?? '/';
-
-        return withoutQuery.length > 0 ? withoutQuery : '/';
-    }
-
     private persistLanguage(lang: string): void {
         this.storage.setItem('local', this.storageKey, lang);
     }
@@ -161,15 +151,6 @@ export class LocalizationService {
             return null;
         }
         return value;
-    }
-
-    private getDomainDefaultLanguage(): string | null {
-        const hostname = (this.browserWindow.getHostname() ?? this.document.location.hostname).toLowerCase();
-        if (hostname.length === 0) {
-            return null;
-        }
-
-        return this.russianDefaultHosts.has(hostname) ? 'ru' : null;
     }
 
     private setDocumentLang(lang: string): void {

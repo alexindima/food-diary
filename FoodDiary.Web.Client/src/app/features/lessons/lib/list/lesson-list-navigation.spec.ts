@@ -8,7 +8,7 @@ import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { LessonService } from '../../api/lesson.service';
 import type { LessonPage, LessonQuery } from '../../models/lesson.data';
-import { LessonFacade } from '../lesson.facade';
+import { LessonListFacade } from './lesson-list.facade';
 import { type LessonListQuery, lessonListQueryKey } from './lesson-list-query';
 import { LESSON_LIST_QUERY_STATE } from './lesson-list-query-state';
 
@@ -59,8 +59,8 @@ beforeEach(() => {
     getAll.mockReset().mockImplementation((query: LessonQuery) => of(response(query.page)));
     TestBed.configureTestingModule({
         providers: [
-            LessonFacade,
-            { provide: LessonService, useValue: { getAll, getById: vi.fn(), markRead: vi.fn() } },
+            LessonListFacade,
+            { provide: LessonService, useValue: { getAll } },
             { provide: TranslateService, useValue: { getCurrentLang: (): string => locale(), getFallbackLang: (): string => 'en' } },
             {
                 provide: LESSON_LIST_QUERY_STATE,
@@ -89,7 +89,7 @@ function cachedPage(): LessonPage {
 it('keeps the catalogue usable when restoring or updating the browser URL fails', async () => {
     normalizePageAsync.mockRejectedValueOnce(new Error('Cannot replace the browser history entry'));
     getAll.mockReturnValueOnce(of(cachedPage()));
-    const facade = TestBed.inject(LessonFacade);
+    const facade = TestBed.inject(LessonListFacade);
     await settleAsync();
     expect(normalizePageAsync).toHaveBeenCalledOnce();
     expect(facade.lessons()).toEqual(cachedPage().items);
@@ -107,10 +107,10 @@ it('keeps the catalogue usable when restoring or updating the browser URL fails'
     expect(facade.hasLoadError()).toBe(false);
 });
 
-describe('LessonFacade result identity', () => {
+describe('LessonListFacade result identity', () => {
     it('never reuses a previous category while the new category loads or fails', async () => {
         getAll.mockReturnValueOnce(of(cachedPage()));
-        const facade = TestBed.inject(LessonFacade);
+        const facade = TestBed.inject(LessonListFacade);
         await settleAsync();
         expect(facade.lessons()).toHaveLength(1);
         await settleAsync();
@@ -129,7 +129,7 @@ describe('LessonFacade result identity', () => {
 
     it('keeps cached results only for retries with the same locale and query', async () => {
         getAll.mockReturnValueOnce(of(cachedPage()));
-        const facade = TestBed.inject(LessonFacade);
+        const facade = TestBed.inject(LessonListFacade);
         await settleAsync();
         const retry = new Subject<LessonPage>();
         getAll.mockReturnValueOnce(retry);
@@ -147,17 +147,16 @@ describe('LessonFacade result identity', () => {
         expect(facade.lessons()).toEqual([]);
     });
 });
-describe('LessonFacade route list state', () => {
-    it('restores all URL fields without default constructor load overwriting them', async () => {
-        const facade = TestBed.inject(LessonFacade);
-        facade.loadLessons();
+describe('LessonListFacade route list state', () => {
+    it('restores all URL fields before fetching the catalogue', async () => {
+        const facade = TestBed.inject(LessonListFacade);
         await settleAsync();
         expect(getAll).toHaveBeenLastCalledWith({ ...initial, locale: 'ru', pageSize: 18 });
         expect(facade.pageIndex()).toBe(1);
         expect(facade.categoryFilter()).toBe('Micronutrients');
     });
     it('restores browser query changes and keeps a genuine empty first page without retry loops', async () => {
-        const facade = TestBed.inject(LessonFacade);
+        const facade = TestBed.inject(LessonListFacade);
         await settleAsync();
         getAll.mockImplementation((query: LessonQuery) => of({ ...response(query.page, 0), totalCount: 0 }));
         const query = { ...initial, page: 1, search: 'missing' };
@@ -172,7 +171,7 @@ describe('LessonFacade route list state', () => {
     });
     it('recovers only the current out-of-range page with replacement history', async () => {
         getAll.mockImplementation((query: LessonQuery) => of(response(query.page, 1)));
-        TestBed.inject(LessonFacade);
+        TestBed.inject(LessonListFacade);
         await settleAsync();
         await settleAsync();
         expect(writeAsync).toHaveBeenCalledWith({ ...initial, page: 1 }, { replaceUrl: true });
@@ -181,7 +180,7 @@ describe('LessonFacade route list state', () => {
     it('ignores an obsolete empty response after a newer browser query', async () => {
         const old = new Subject<LessonPage>();
         getAll.mockReturnValueOnce(old);
-        const facade = TestBed.inject(LessonFacade);
+        const facade = TestBed.inject(LessonListFacade);
         await settleAsync();
         const next = { ...initial, page: 1, category: 'Macronutrients' };
         current.set(next);
@@ -198,7 +197,7 @@ describe('LessonFacade route list state', () => {
     it('keeps a pending search edit when the old page becomes empty before debounce', async () => {
         const old = new Subject<LessonPage>();
         getAll.mockReturnValueOnce(old);
-        const facade = TestBed.inject(LessonFacade);
+        const facade = TestBed.inject(LessonListFacade);
         await settleAsync();
         facade.searchQuery.set('new draft');
         facade.resetPage();

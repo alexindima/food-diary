@@ -11,9 +11,9 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import type { MealPlanId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
+import { MealPlanListFacade } from '../../lib/list/meal-plan-list.facade';
 import { MEAL_PLAN_LIST_QUERY_STATE } from '../../lib/list/meal-plan-list-query-state';
 import { MealPlanListRouteStateFacade } from '../../lib/list/meal-plan-list-route-state.facade';
-import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanCards } from '../../lib/meal-plan-view.mapper';
 import type { DietType } from '../../models/meal-plan.data';
 import { MealPlanListContentComponent } from './meal-plan-list-sections/meal-plan-list-content/meal-plan-list-content';
@@ -34,7 +34,7 @@ import { MEAL_PLANS_LIST_TOUR } from './meal-plans-list-tour';
         MealPlanListContentComponent,
     ],
     providers: [
-        MealPlanFacade,
+        MealPlanListFacade,
         MealPlanListRouteStateFacade,
         { provide: MEAL_PLAN_LIST_QUERY_STATE, useExisting: MealPlanListRouteStateFacade },
     ],
@@ -46,12 +46,8 @@ export class MealPlansListPageComponent {
     private readonly router = inject(Router);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
-    protected readonly facade = inject(MealPlanFacade);
+    protected readonly facade = inject(MealPlanListFacade);
     protected readonly planCards = computed(() => buildMealPlanCards(this.facade.plans()));
-
-    public constructor() {
-        this.facade.loadPlans();
-    }
 
     protected filterByDiet(type: DietType | null): void {
         this.facade.loadPlans(type);

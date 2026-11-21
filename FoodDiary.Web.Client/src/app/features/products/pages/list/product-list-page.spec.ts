@@ -128,7 +128,6 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         onAddToMeal: vi.fn(),
         loadFavorites: vi.fn(),
         onProductFavoriteToggle: vi.fn(),
-        addFavoriteProductToMeal: vi.fn(),
         reloadCurrentPage: vi.fn(),
         deleteProductAndReload: vi.fn().mockReturnValue(of(void 0)),
         handleProductDetailsAsync: vi.fn().mockResolvedValue(false),

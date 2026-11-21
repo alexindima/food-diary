@@ -95,10 +95,13 @@ export class ShoppingListFacade {
                 summary.id === this.list()?.id
                     ? { remaining: this.items().filter(item => !item.isChecked).length, total: this.items().length }
                     : this.listCounts()[summary.id];
+            const itemsCount = counts?.total ?? summary.itemsCount;
+            const remainingCount = counts?.remaining ?? summary.remainingCount;
             return {
                 ...summary,
-                remainingCount: counts?.remaining ?? summary.remainingCount,
-                completed: (counts?.total ?? summary.itemsCount) > 0 && (counts?.remaining ?? summary.remainingCount) === 0,
+                itemsCount,
+                remainingCount,
+                completed: itemsCount > 0 && remainingCount === 0,
             };
         }),
     );

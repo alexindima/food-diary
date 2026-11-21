@@ -22,13 +22,12 @@ import {
 import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
-import type { RecipeServings } from '../../../../shared/models/semantics/meal-quantity';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type { MealFormValues, MealItemFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
-import { displayRecipeServings, recipeDisplayFromInput, servingMassFromObservation } from '../recipe-serving/recipe-display-amount';
+import { recipeServingsFromInput, servingMassFromObservation, UNKNOWN_SERVING_MASS } from '../recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MealManageFacade } from './meal-manage.facade';
 
@@ -122,8 +121,6 @@ let dialogService: { open: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn> };
 let recipeWeightService: {
     loadServingMass: ReturnType<typeof vi.fn>;
-    displayAmountFromInput: ReturnType<typeof vi.fn>;
-    displayServings: ReturnType<typeof vi.fn>;
 };
 
 const meal: Meal = {
@@ -168,10 +165,6 @@ describe('MealManageFacade', () => {
         };
         recipeWeightService = {
             loadServingMass: vi.fn(),
-            displayAmountFromInput: vi.fn(),
-            displayServings: vi.fn((_recipe: unknown, amount: RecipeServings) =>
-                displayRecipeServings(amount, servingMassFromObservation(RECIPE_SERVING_WEIGHT)),
-            ),
         };
 
         mealService.create.mockReturnValue(of(meal));
@@ -179,9 +172,6 @@ describe('MealManageFacade', () => {
         authService.isPremium.mockReturnValue(true);
         dialogService.open.mockReturnValue({ afterClosed: () => of('MealList') });
         recipeWeightService.loadServingMass.mockReturnValue(of(servingMassFromObservation(RECIPE_SERVING_WEIGHT)));
-        recipeWeightService.displayAmountFromInput.mockImplementation((_recipe: unknown, amount: number) =>
-            recipeDisplayFromInput(amount, servingMassFromObservation(RECIPE_SERVING_WEIGHT)),
-        );
         navigationService.navigateToHomeAsync.mockResolvedValue(true);
         navigationService.navigateToMealListAsync.mockResolvedValue(true);
         navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
@@ -294,16 +284,17 @@ function registerItemSelectionTests(): void {
                 product: null,
                 recipe: null,
                 amount: null,
+                recipeMass: UNKNOWN_SERVING_MASS,
             });
         });
 
         it('should resolve recipe servings to grams', async () => {
             const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r1') };
 
-            const amount = await facade.resolveRecipeDisplayValueAsync(recipe, recipeServingsFromStored(RECIPE_SERVING_AMOUNT));
+            const item = await facade.prepareRecipeItemAsync(recipe, recipeServingsFromStored(RECIPE_SERVING_AMOUNT));
 
-            expect(recipeWeightService.loadServingMass).toHaveBeenCalled();
-            expect(amount).toBe(EXPECTED_RECIPE_AMOUNT);
+            expect(recipeWeightService.loadServingMass).toHaveBeenCalledWith(recipe);
+            expect(item).toMatchObject({ amount: EXPECTED_RECIPE_AMOUNT, recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT) });
         });
 
         it('should use product default portion amount after manual selection', async () => {
@@ -399,12 +390,14 @@ function createNutritionFormValue(isAuto: boolean): MealFormValues {
                 product: createNutritionProduct(),
                 recipe: null,
                 amount: PRODUCT_AMOUNT,
+                recipeMass: UNKNOWN_SERVING_MASS,
             },
             {
                 sourceType: MealSourceType.Recipe,
                 product: null,
                 recipe: createNutritionRecipe(),
                 amount: RECIPE_AMOUNT,
+                recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT),
             },
         ],
         comment: null,
@@ -505,28 +498,28 @@ function registerManageBoundaryTests(): void {
             recipe,
             product: null,
             amount: null,
+            recipeMass: UNKNOWN_SERVING_MASS,
         });
         expect(facade.configureItemType(item, MealSourceType.Product, true)).toEqual({
             sourceType: MealSourceType.Product,
             product,
             recipe: null,
             amount: null,
+            recipeMass: UNKNOWN_SERVING_MASS,
         });
         expect(facade.configureItemType(item, MealSourceType.Product)).toEqual(item);
-        expect(facade.createMealItemValue()).toEqual({ sourceType: MealSourceType.Product, product: null, recipe: null, amount: null });
-    });
-    it('uses the same serving conversion in both directions', () => {
-        const recipe = createNutritionRecipe();
-        expect(facade.recipeServingsFromDisplayInput(recipe, EXPECTED_RECIPE_AMOUNT)).toBe(RECIPE_SERVING_AMOUNT);
-        expect(facade.recipeDisplayValueFromStoredServings(recipe, recipeServingsFromStored(RECIPE_SERVING_AMOUNT))).toBe(
-            EXPECTED_RECIPE_AMOUNT,
-        );
+        expect(facade.createMealItemValue()).toEqual({
+            sourceType: MealSourceType.Product,
+            product: null,
+            recipe: null,
+            amount: null,
+            recipeMass: UNKNOWN_SERVING_MASS,
+        });
     });
     it.each([null, 0, -1])('falls back to input servings when weight is unavailable: %s', async weight => {
         recipeWeightService.loadServingMass.mockReturnValue(of(servingMassFromObservation(weight)));
-        expect(await facade.resolveRecipeDisplayValueAsync(null, recipeServingsFromStored(RECIPE_SERVING_AMOUNT))).toBe(
-            RECIPE_SERVING_AMOUNT,
-        );
+        const item = await facade.prepareRecipeItemAsync(createNutritionRecipe(), recipeServingsFromStored(RECIPE_SERVING_AMOUNT));
+        expect(item).toMatchObject({ amount: RECIPE_SERVING_AMOUNT, recipeMass: UNKNOWN_SERVING_MASS });
     });
     it('copies all automatic nutrients into a manual patch', () => {
         expect(facade.buildManualNutritionPatchFromTotals(EXPECTED_AUTO_TOTALS)).toEqual({
@@ -550,8 +543,14 @@ function registerNutritionBoundaryTests(): void {
     it.each([null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])('ignores invalid item amount %s in the preview', amount => {
         const formValue = createNutritionFormValue(true);
         formValue.items = [
-            { sourceType: MealSourceType.Product, product: createNutritionProduct(), recipe: null, amount },
-            { sourceType: MealSourceType.Recipe, product: null, recipe: createNutritionRecipe(), amount },
+            {
+                sourceType: MealSourceType.Product,
+                product: createNutritionProduct(),
+                recipe: null,
+                amount,
+                recipeMass: UNKNOWN_SERVING_MASS,
+            },
+            { sourceType: MealSourceType.Recipe, product: null, recipe: createNutritionRecipe(), amount, recipeMass: UNKNOWN_SERVING_MASS },
         ];
         const result = facade.buildNutritionSummaryStateFromValues(formValue, [], CALORIE_MISMATCH_THRESHOLD);
         expect(Object.values(result.autoTotals).every(value => value === 0)).toBe(true);
@@ -564,12 +563,14 @@ function registerNutritionBoundaryTests(): void {
                 product: { ...createNutritionProduct(), baseAmount: value },
                 recipe: null,
                 amount: PRODUCT_AMOUNT,
+                recipeMass: UNKNOWN_SERVING_MASS,
             },
             {
                 sourceType: MealSourceType.Recipe,
                 product: null,
                 recipe: { ...createNutritionRecipe(), servings: value },
                 amount: RECIPE_AMOUNT,
+                recipeMass: UNKNOWN_SERVING_MASS,
             },
         ];
         expect(
@@ -591,9 +592,15 @@ function registerNutritionBoundaryTests(): void {
     it('treats recipes without calculated totals as zero and ignores missing references', () => {
         const formValue = createNutritionFormValue(true);
         formValue.items = [
-            { sourceType: MealSourceType.Product, product: null, recipe: null, amount: PRODUCT_AMOUNT },
-            { sourceType: MealSourceType.Recipe, product: null, recipe: null, amount: RECIPE_AMOUNT },
-            { sourceType: MealSourceType.Recipe, product: null, recipe: createEmptyRecipeSnapshot(), amount: RECIPE_AMOUNT },
+            { sourceType: MealSourceType.Product, product: null, recipe: null, amount: PRODUCT_AMOUNT, recipeMass: UNKNOWN_SERVING_MASS },
+            { sourceType: MealSourceType.Recipe, product: null, recipe: null, amount: RECIPE_AMOUNT, recipeMass: UNKNOWN_SERVING_MASS },
+            {
+                sourceType: MealSourceType.Recipe,
+                product: null,
+                recipe: createEmptyRecipeSnapshot(),
+                amount: RECIPE_AMOUNT,
+                recipeMass: UNKNOWN_SERVING_MASS,
+            },
         ];
         expect(
             Object.values(facade.buildNutritionSummaryStateFromValues(formValue, [], CALORIE_MISMATCH_THRESHOLD).autoTotals).every(
@@ -665,13 +672,12 @@ describe('MealManageFacade cold recipe amount loading', () => {
         const { facade: coldFacade, getById } = setupColdFacade(of(lookup));
         const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
         expect(getById).toHaveBeenCalledWith(recipe.id);
-        expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_GRAMS });
-        expect(coldFacade.recipeServingsFromDisplayInput(recipe, COLD_MEAL_GRAMS)).toBe(COLD_MEAL_SERVINGS);
+        expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_GRAMS, recipeMass: { kind: 'known' } });
+        expect(recipeServingsFromInput(COLD_MEAL_GRAMS, items[0].recipeMass)).toBe(COLD_MEAL_SERVINGS);
         const values = { ...createNutritionFormValue(true), items };
         expect(coldFacade.buildNutritionSummaryStateFromValues(values, [], CALORIE_MISMATCH_THRESHOLD).summaryTotals.calories).toBe(
             COLD_MEAL_CALORIES,
         );
-        expect(TestBed.inject(RecipeServingWeightService).hasServingWeight(recipe)).toBe(true);
     });
 
     it('waits for an asynchronous lookup and cancels it when initialization is abandoned', () => {
@@ -692,13 +698,11 @@ describe('MealManageFacade cold recipe amount loading', () => {
         const result = reason === 'lookup failure' ? throwError(() => new Error('offline')) : of({ ...lookup, steps: [] });
         const { facade: coldFacade } = setupColdFacade(result);
         const items = await firstValueFrom(coldFacade.prepareMealItems([recipeItem]));
-        expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_SERVINGS });
-        expect(coldFacade.recipeServingsFromDisplayInput(recipe, COLD_MEAL_SERVINGS)).toBe(COLD_MEAL_SERVINGS);
+        expect(items[0]).toMatchObject({ recipe, amount: COLD_MEAL_SERVINGS, recipeMass: UNKNOWN_SERVING_MASS });
         expect(
             coldFacade.buildNutritionSummaryStateFromValues({ ...createNutritionFormValue(true), items }, [], CALORIE_MISMATCH_THRESHOLD)
                 .summaryTotals.calories,
         ).toBe(COLD_MEAL_CALORIES);
-        expect(TestBed.inject(RecipeServingWeightService).hasServingWeight(recipe)).toBe(false);
     });
 
     it('preserves product quantities and item order when mixed with recipes', async () => {

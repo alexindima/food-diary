@@ -1,81 +1,58 @@
 import { inject, Service } from '@angular/core';
-import { catchError, map, type Observable, of } from 'rxjs';
+import { catchError, defer, map, type Observable, of, tap } from 'rxjs';
 
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
 import type { Recipe, RecipeIngredient } from '../../../../shared/models/recipe.data';
 import type { RecipeLookup, RecipeLookupIngredient } from '../../../../shared/models/recipe-lookup.data';
-import type { RecipeServings } from '../../../../shared/models/semantics/meal-quantity';
-import {
-    displayRecipeServings,
-    type RecipeDisplayAmount,
-    recipeDisplayFromInput,
-    servingMassFromObservation,
-    type ServingMassResult,
-    UNKNOWN_SERVING_MASS,
-} from './recipe-display-amount';
+import { servingMassFromObservation, type ServingMassResult, UNKNOWN_SERVING_MASS } from './recipe-display-amount';
 
 @Service()
 export class RecipeServingWeightService {
     private readonly recipeLookupService = inject(RecipeLookupService);
-    private readonly cache = new Map<string, { recipeKey: string; mass: ServingMassResult }>();
+    private readonly cache = new Map<Recipe['id'], { recipeKey: string; mass: ServingMassResult; revision: number }>();
+    private observationRevision = 0;
 
-    public loadServingMass(recipe: Recipe | null): Observable<ServingMassResult> {
-        if (recipe?.id === undefined || recipe.id.length === 0) {
+    public loadServingMass(recipe: Recipe): Observable<ServingMassResult> {
+        if (recipe.id.length === 0) {
             return of(UNKNOWN_SERVING_MASS);
         }
 
+        const recipeKey = this.recipeWeightKey(recipe);
         const cached = this.cache.get(recipe.id);
-        if (cached?.recipeKey === this.recipeWeightKey(recipe)) {
+        if (cached?.recipeKey === recipeKey) {
             return of(cached.mass);
         }
 
         const immediateWeight = this.calculateRecipeWeight(recipe);
         if (immediateWeight !== null && immediateWeight > 0 && recipe.servings > 0) {
             const mass = servingMassFromObservation(immediateWeight / recipe.servings);
-            this.storeServingMass(recipe, mass);
+            this.storeServingMass(recipe.id, recipeKey, mass, ++this.observationRevision);
             return of(mass);
         }
 
-        return this.recipeLookupService.getById(recipe.id).pipe(
-            map(fullRecipe => {
-                const computedWeight = this.calculateRecipeWeight(fullRecipe);
-                if (computedWeight !== null && computedWeight > 0 && fullRecipe.servings > 0) {
-                    const mass = servingMassFromObservation(computedWeight / fullRecipe.servings);
-                    this.storeServingMass(recipe, mass);
-                    return mass;
-                }
-                this.storeServingMass(recipe, UNKNOWN_SERVING_MASS);
-                return UNKNOWN_SERVING_MASS;
-            }),
-            catchError(() => {
-                this.storeServingMass(recipe, UNKNOWN_SERVING_MASS);
-                return of(UNKNOWN_SERVING_MASS);
-            }),
-        );
+        return defer(() => {
+            const revision = ++this.observationRevision;
+            return this.recipeLookupService.getById(recipe.id).pipe(
+                map(fullRecipe => {
+                    const computedWeight = this.calculateRecipeWeight(fullRecipe);
+                    return computedWeight !== null && computedWeight > 0 && fullRecipe.servings > 0
+                        ? servingMassFromObservation(computedWeight / fullRecipe.servings)
+                        : UNKNOWN_SERVING_MASS;
+                }),
+                tap(mass => {
+                    this.storeServingMass(recipe.id, recipeKey, mass, revision);
+                }),
+                catchError(() => of(UNKNOWN_SERVING_MASS)),
+            );
+        });
     }
 
-    public displayServings(recipe: Recipe | null, servings: RecipeServings): RecipeDisplayAmount {
-        return displayRecipeServings(servings, this.cachedServingMass(recipe));
-    }
-
-    public displayAmountFromInput(recipe: Recipe | null, amount: number): RecipeDisplayAmount {
-        return recipeDisplayFromInput(amount, this.cachedServingMass(recipe));
-    }
-
-    public hasServingWeight(recipe: Recipe | null): boolean {
-        return this.cachedServingMass(recipe).kind === 'known';
-    }
-
-    private cachedServingMass(recipe: Recipe | null): ServingMassResult {
-        if (recipe === null) {
-            return UNKNOWN_SERVING_MASS;
+    private storeServingMass(recipeId: Recipe['id'], recipeKey: string, mass: ServingMassResult, revision: number): void {
+        const cached = this.cache.get(recipeId);
+        if (cached !== undefined && cached.revision > revision) {
+            return;
         }
-        const cached = this.cache.get(recipe.id);
-        return cached?.recipeKey === this.recipeWeightKey(recipe) ? cached.mass : UNKNOWN_SERVING_MASS;
-    }
-
-    private storeServingMass(recipe: Recipe, mass: ServingMassResult): void {
-        this.cache.set(recipe.id, { recipeKey: this.recipeWeightKey(recipe), mass });
+        this.cache.set(recipeId, { recipeKey, mass, revision });
     }
 
     private recipeWeightKey(recipe: Recipe): string {

@@ -1752,7 +1752,120 @@ test('keeps native menu focus and expanded state in sync with its overlay', asyn
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 });
 
+test.describe('profile height native draft', () => {
+    test.use({ serviceWorkers: 'block' });
+
+    test('does not save an unfinished metric height and saves the corrected height', async ({ page, baseURL }, testInfo) => {
+        const errors: string[] = [];
+        page.on('pageerror', error => errors.push(error.message));
+        const writes = await mockMetricHeightProfileAsync(page, baseURL, errors);
+        const { firstName, height, save } = await openMetricHeightProfileAsync(page);
+
+        await firstName.fill(PROFILE_HEIGHT_FIRST_NAME);
+        await expect(save).toBeVisible();
+        await observeMetricHeightDraftAsync(height);
+        await height.selectText();
+        await height.pressSequentially('-');
+
+        await expect(height).toHaveAttribute('data-profile-height-native-draft', PROFILE_HEIGHT_BAD_INPUT);
+        if (await save.isEnabled()) {
+            await save.click();
+        }
+        await expect.poll(async () => writes.length > 0 || (await height.getAttribute('aria-invalid')) === 'true').toBe(true);
+        await testInfo.attach('native-height-draft-and-patches', {
+            body: JSON.stringify({ draft: await height.getAttribute('data-profile-height-native-draft'), writes }),
+            contentType: 'application/json',
+        });
+        expect(writes).toEqual([]);
+        await expect(height).toHaveAttribute('aria-invalid', 'true');
+
+        await height.fill(String(PROFILE_HEIGHT_CORRECTED_CM));
+        await expect(height).not.toHaveAttribute('aria-invalid', 'true');
+        await save.click();
+        await expect(save).toBeHidden();
+        expect(writes).toEqual([{ heightCm: PROFILE_HEIGHT_CORRECTED_CM, firstName: PROFILE_HEIGHT_FIRST_NAME }]);
+
+        await page.reload();
+        await expect(height).toHaveValue(String(PROFILE_HEIGHT_CORRECTED_CM));
+        await expect(firstName).toHaveValue(PROFILE_HEIGHT_FIRST_NAME);
+        expect(errors).toEqual([]);
+    });
+});
+
+const PROFILE_HEIGHT_ORIGINAL_CM = 170;
+const PROFILE_HEIGHT_CORRECTED_CM = 180;
+const PROFILE_HEIGHT_FIRST_NAME = 'Height draft';
+const PROFILE_HEIGHT_BAD_INPUT = JSON.stringify({ value: '', badInput: true, trusted: true });
+
+type MetricHeightPatch = Pick<UserHttpResponse, 'heightCm' | 'firstName'>;
+type MetricHeightProfile = { firstName: Locator; height: Locator; save: Locator };
+async function mockMetricHeightProfileAsync(page: Page, baseURL: string | undefined, errors: string[]): Promise<MetricHeightPatch[]> {
+    if (baseURL === undefined) {
+        throw new Error('Missing loopback profile origin');
+    }
+    const localOrigin = new URL(baseURL).origin;
+    await page.route('**/*', async route => {
+        if (new URL(route.request().url()).origin === localOrigin) {
+            await route.continue();
+        } else {
+            await route.abort('blockedbyclient');
+        }
+    });
+    page.on('console', message => {
+        if (message.type() === 'error' && message.text().startsWith('ERROR ')) {
+            errors.push(message.text());
+        }
+    });
+    await authenticateUserAsync(page);
+    await mockAuthenticatedClientApiAsync(page);
+    await page.route('**/api/v1/logs', async route => {
+        await route.fulfill({ status: HTTP_NO_CONTENT_STATUS });
+    });
+    let user: UserHttpResponse = { ...createUser(), language: 'en', heightCm: PROFILE_HEIGHT_ORIGINAL_CM };
+    const writes: MetricHeightPatch[] = [];
+    await page.route('**/api/v1/users/info', async route => {
+        const request = route.request();
+        if (request.method() === 'PATCH') {
+            const patch = request.postDataJSON() as MetricHeightPatch;
+            writes.push({ heightCm: patch.heightCm, firstName: patch.firstName });
+            user = { ...user, heightCm: patch.heightCm, firstName: patch.firstName };
+        }
+        await route.fulfill(jsonFixture(fixtureContract, request.method(), request.url(), user));
+    });
+    await page.route('**/api/v1/users/overview', async route => {
+        await route.fulfill(jsonFixture(fixtureContract, 'GET', route.request().url(), { ...createUserOverview(), user }));
+    });
+    return writes;
+}
+
+async function openMetricHeightProfileAsync(page: Page): Promise<MetricHeightProfile> {
+    await page.goto('/profile');
+    const firstName = page.locator('[data-user-field="firstName"] input');
+    const height = page.locator('[data-user-field="height"] input');
+    const save = page.locator('fd-unsaved-changes-bar').getByRole('button', { name: 'Save changes', exact: true });
+    await expect(page.getByRole('heading', { name: 'Profile', exact: true, level: 1 })).toBeVisible();
+    await expect(height).toHaveValue(String(PROFILE_HEIGHT_ORIGINAL_CM));
+    return { firstName, height, save };
+}
+
+async function observeMetricHeightDraftAsync(height: Locator): Promise<void> {
+    await height.evaluate((input: HTMLInputElement) => {
+        input.addEventListener(
+            'input',
+            event => {
+                input.dataset['profileHeightNativeDraft'] = JSON.stringify({
+                    value: input.value,
+                    badInput: input.validity.badInput,
+                    trusted: event.isTrusted,
+                });
+            },
+            { capture: true, once: true },
+        );
+    });
+}
+
 test('crops a profile photo in the browser and saves the resulting asset', async ({ page, baseURL }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
     const runtimeErrors: string[] = [];
     page.on('pageerror', error => runtimeErrors.push(error.message));
     page.on('console', message => {
@@ -1762,6 +1875,13 @@ test('crops a profile photo in the browser and saves the resulting asset', async
     });
     await authenticateUserAsync(page);
     await mockAuthenticatedClientApiAsync(page);
+    await page.route('**/api/v1/logs', async route => {
+        if (route.request().method() === 'POST') {
+            await route.fulfill({ status: HTTP_NO_CONTENT_STATUS });
+            return;
+        }
+        await route.fallback();
+    });
     const { imageUrl, uploads, profileUpdates } = await mockProfileAvatarUploadAsync(page, baseURL);
 
     await page.goto('/profile');
@@ -1773,6 +1893,8 @@ test('crops a profile photo in the browser and saves the resulting asset', async
     const apply = cropper.getByRole('button', { name: 'Apply' });
     await expect(apply).toBeEnabled();
     await dragAvatarCropAsync(page, cropper.getByRole('group', { name: 'Crop image' }));
+    await expectAvatarCropSurvivesResizeAsync(page, cropper);
+    await expect(apply).toBeEnabled();
     expect(uploads).toHaveLength(0);
 
     await apply.click();
@@ -1879,6 +2001,78 @@ async function dragAvatarCropAsync(page: Page, selection: Locator): Promise<void
             return moved?.x ?? 0;
         })
         .toBeGreaterThan(before.x + minimumShift);
+}
+
+type AvatarCropGeometry = {
+    surfaceWidth: number;
+    displayedWidth: number;
+    displayedHeight: number;
+    source: { x: number; y: number; width: number; height: number };
+};
+
+async function expectAvatarCropSurvivesResizeAsync(page: Page, cropper: Locator): Promise<void> {
+    const before = await readAvatarCropGeometryAsync(cropper);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect
+        .poll(async () => {
+            const current = await readAvatarCropGeometryAsync(cropper);
+            return current.surfaceWidth;
+        })
+        .toBeLessThan(before.surfaceWidth);
+
+    const pixelTolerance = 2;
+    await expect
+        .poll(
+            async () => {
+                const after = await readAvatarCropGeometryAsync(cropper);
+                return cropResizeErrorInPixels(before, after);
+            },
+            { message: 'The resized crop should preserve the selected area of the photograph' },
+        )
+        .toBeLessThanOrEqual(pixelTolerance);
+}
+
+async function readAvatarCropGeometryAsync(cropper: Locator): Promise<AvatarCropGeometry> {
+    return cropper.evaluate(dialog => {
+        const image = dialog.querySelector('.image-upload-field__cropper-image');
+        const selection = dialog.querySelector('.image-upload-field__crop-selection');
+        if (!(image instanceof HTMLImageElement) || !(selection instanceof HTMLElement)) {
+            throw new Error('The crop photograph and selection must be visible');
+        }
+
+        const imageBox = image.getBoundingClientRect();
+        const selectionBox = selection.getBoundingClientRect();
+        const scale = Math.min(imageBox.width / image.naturalWidth, imageBox.height / image.naturalHeight);
+        const displayedWidth = image.naturalWidth * scale;
+        const displayedHeight = image.naturalHeight * scale;
+        const imageLeft = imageBox.x + (imageBox.width - displayedWidth) / 2;
+        const imageTop = imageBox.y + (imageBox.height - displayedHeight) / 2;
+        return {
+            surfaceWidth: imageBox.width,
+            displayedWidth,
+            displayedHeight,
+            source: {
+                x: (selectionBox.x - imageLeft) / displayedWidth,
+                y: (selectionBox.y - imageTop) / displayedHeight,
+                width: selectionBox.width / displayedWidth,
+                height: selectionBox.height / displayedHeight,
+            },
+        };
+    });
+}
+
+function cropResizeErrorInPixels(before: AvatarCropGeometry, after: AvatarCropGeometry): number {
+    const { x, y, width, height } = after.source;
+    return Math.max(
+        Math.abs(x - before.source.x) * after.displayedWidth,
+        Math.abs(y - before.source.y) * after.displayedHeight,
+        Math.abs(width - before.source.width) * after.displayedWidth,
+        Math.abs(height - before.source.height) * after.displayedHeight,
+        -x * after.displayedWidth,
+        -y * after.displayedHeight,
+        (x + width - 1) * after.displayedWidth,
+        (y + height - 1) * after.displayedHeight,
+    );
 }
 
 async function expectCroppedAvatarAsync(renderedAvatar: Locator, upload: Buffer): Promise<void> {

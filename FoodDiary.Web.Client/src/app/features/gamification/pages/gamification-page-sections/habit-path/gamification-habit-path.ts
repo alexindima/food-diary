@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
@@ -12,6 +12,7 @@ import {
     GamificationAchievementsDialogComponent,
     type GamificationAchievementsDialogData,
 } from '../../../dialogs/gamification-achievements-dialog/gamification-achievements-dialog';
+import { badgeIcon, badgeNameKey } from '../../../lib/gamification-badge-view';
 import type { Badge } from '../../../models/gamification.data';
 
 type RewardFilter = 'all' | 'habits' | 'nutrition' | 'academy';
@@ -47,6 +48,7 @@ const RECENT_ACHIEVEMENT_LIMIT = 2;
 })
 export class GamificationHabitPathComponent {
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
     protected readonly language = toSignal(this.translate.onLangChange.pipe(map(event => event.lang)), {
         initialValue: this.translate.getCurrentLang() ?? 'en',
@@ -64,6 +66,8 @@ export class GamificationHabitPathComponent {
 
     protected readonly activeFilter = signal<RewardFilter>('all');
     protected readonly filters: RewardFilter[] = ['all', 'habits', 'nutrition', 'academy'];
+    protected readonly badgeIcon = badgeIcon;
+    protected readonly badgeNameKey = badgeNameKey;
     protected readonly earnedBadges = computed(() =>
         this.badges()
             .filter(badge => badge.isEarned)
@@ -110,21 +114,17 @@ export class GamificationHabitPathComponent {
     }
 
     protected openAchievementsDialog(): void {
-        this.dialogService.open<GamificationAchievementsDialogComponent, GamificationAchievementsDialogData>(
+        const dialog = this.dialogService.open<GamificationAchievementsDialogComponent, GamificationAchievementsDialogData>(
             GamificationAchievementsDialogComponent,
             {
                 data: { badges: this.earnedBadges() },
                 preset: 'form',
             },
         );
-    }
-
-    protected badgeIcon(badge: Badge): string {
-        return badge.icon ?? (badge.category === 'streak' ? 'local_fire_department' : 'restaurant');
-    }
-
-    protected badgeNameKey(badge: Badge): string {
-        return `GAMIFICATION.BADGE_${badge.key.toUpperCase()}`;
+        const unregisterClose = this.destroyRef.onDestroy(() => {
+            dialog.close();
+        });
+        dialog.afterClosed().subscribe({ complete: unregisterClose });
     }
 
     protected badgeFilter(badge: Badge): RewardFilter {

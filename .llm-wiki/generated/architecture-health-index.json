@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 119,
+    "selectorUnreferencedComponents": 114,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 125,
+    "componentsWithoutDirectSpecs": 123,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -1053,14 +1053,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.spec.ts"
     },
     {
-      "class": "RecipeCommentsComponent",
-      "selector": "fd-recipe-comments",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.spec.ts"
-    },
-    {
       "class": "ReportDialogComponent",
       "selector": "fd-report-dialog",
       "feature": "explore",
@@ -1163,14 +1155,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.spec.ts"
-    },
-    {
-      "class": "FastingTimerCardComponent",
-      "selector": "fd-fasting-timer-card",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.spec.ts"
     },
     {
       "class": "DataTablePreviewComponent",
@@ -1317,14 +1301,6 @@
       "specPath": null
     },
     {
-      "class": "CalorieGoalDialogComponent",
-      "selector": "fd-calorie-goal-dialog",
-      "feature": "goals",
-      "path": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.spec.ts"
-    },
-    {
       "class": "MealDetailComponent",
       "selector": "fd-meal-detail",
       "feature": "meals",
@@ -1419,14 +1395,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.spec.ts"
-    },
-    {
-      "class": "ProductListBaseComponent",
-      "selector": "fd-product-list-base",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.spec.ts"
     },
     {
       "class": "ProductListFavoritesComponent",
@@ -1715,14 +1683,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/usda/components/micronutrient-panel/micronutrient-panel.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/usda/components/micronutrient-panel/micronutrient-panel.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/usda/components/micronutrient-panel/micronutrient-panel.spec.ts"
-    },
-    {
-      "class": "UsdaFoodSearchDialogComponent",
-      "selector": "fd-usda-food-search-dialog",
-      "feature": "usda",
-      "path": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.spec.ts"
     },
     {
       "class": "WaistGoalHistoryDialogComponent",
@@ -3736,7 +3696,7 @@
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
@@ -3794,12 +3754,12 @@
           "type": "string | number"
         },
         {
-          "name": "cyclicEatDayProtocolChange",
-          "type": "string"
-        },
-        {
           "name": "cyclicEatDayFastHoursChange",
           "type": "string | number"
+        },
+        {
+          "name": "cyclicEatDayProtocolChange",
+          "type": "FastingProtocol"
         }
       ],
       "specPath": null
@@ -3855,7 +3815,7 @@
       "inputs": [
         {
           "name": "modeOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingMode>>",
           "required": true
         },
         {
@@ -3865,12 +3825,12 @@
         },
         {
           "name": "intermittentProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
           "name": "extendedProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
@@ -3880,7 +3840,7 @@
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
@@ -3972,11 +3932,11 @@
       "outputs": [
         {
           "name": "modeChange",
-          "type": "string"
+          "type": "FastingMode"
         },
         {
           "name": "protocolChange",
-          "type": "string"
+          "type": "FastingProtocol"
         },
         {
           "name": "customIntermittentFastHoursChange",
@@ -3999,54 +3959,18 @@
           "type": "string | number"
         },
         {
-          "name": "cyclicEatDayProtocolChange",
-          "type": "string"
-        },
-        {
           "name": "cyclicEatDayFastHoursChange",
           "type": "string | number"
         },
         {
           "name": "startFasting",
           "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "FastingTimerCardGroupsComponent",
-      "selector": "fd-fasting-timer-card-groups",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.html",
-      "stylePaths": [],
-      "inputs": [
+        },
         {
-          "name": "groups",
-          "type": "readonly FastingTimerCardDisplayGroup[]",
-          "required": true
+          "name": "cyclicEatDayProtocolChange",
+          "type": "FastingProtocol"
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FastingTimerCardItemsComponent",
-      "selector": "fd-fasting-timer-card-items",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.scss"
-      ],
-      "inputs": [
-        {
-          "name": "items",
-          "type": "readonly FastingTimerCardDisplayItem[]",
-          "required": true
-        }
-      ],
-      "outputs": [],
       "specPath": null
     },
     {
@@ -4871,7 +4795,7 @@
         },
         {
           "name": "presets",
-          "type": "MacroPreset[]",
+          "type": "MacroPresetCatalog",
           "required": true
         },
         {

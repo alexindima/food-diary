@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, type Provider, signal, type Writabl
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, type Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { SwPush } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, of, Subject } from 'rxjs';
-import { describe, expect, it, type Mock, vi } from 'vitest';
+import { defer, firstValueFrom, type Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -69,8 +70,9 @@ class NotificationDepartureComponent {}
 function setup(
     preferences = initialPreferences,
     devices = knownDevices,
+    providers: Provider[] = [],
 ): ProfileNotificationBoundaries & { fixture: ComponentFixture<UserManageComponent> } {
-    const boundaries = configureProfileNotifications(preferences, [], devices);
+    const boundaries = configureProfileNotifications(preferences, [], devices, providers);
     const fixture = TestBed.createComponent(UserManageComponent);
     fixture.detectChanges();
     openNotificationSettings(fixture.nativeElement as HTMLElement);
@@ -82,6 +84,7 @@ function configureProfileNotifications(
     preferences: NotificationPreferences,
     routes: Routes,
     devices = knownDevices,
+    providers: Provider[] = [],
 ): ProfileNotificationBoundaries {
     const account = createAccountMocks(devices);
     const browser = createBrowserMocks();
@@ -97,6 +100,7 @@ function configureProfileNotifications(
             { provide: PushNotificationService, useValue: browser.push },
             { provide: BrowserNotificationCapabilityService, useValue: browser.capability },
             { provide: FdUiToastService, useValue: toast },
+            ...providers,
         ],
     });
     const translation = TestBed.inject(TranslateService);
@@ -130,6 +134,8 @@ function openNotificationSettings(profile: ParentNode): void {
 
 function createAccountMocks(devices: WebPushSubscriptionItem[]): {
     notificationsChangedVersion: WritableSignal<number>;
+    getWebPushConfiguration: Mock<NotificationService['getWebPushConfiguration']>;
+    upsertWebPushSubscription: Mock<NotificationService['upsertWebPushSubscription']>;
     updateNotificationPreferences: Mock<NotificationService['updateNotificationPreferences']>;
     scheduleTestNotification: Mock<NotificationService['scheduleTestNotification']>;
     removeWebPushSubscription: Mock<NotificationService['removeWebPushSubscription']>;
@@ -137,6 +143,10 @@ function createAccountMocks(devices: WebPushSubscriptionItem[]): {
 } {
     return {
         notificationsChangedVersion: signal(0),
+        getWebPushConfiguration: vi
+            .fn<NotificationService['getWebPushConfiguration']>()
+            .mockReturnValue(of({ enabled: true, publicKey: 'public-key' })),
+        upsertWebPushSubscription: vi.fn<NotificationService['upsertWebPushSubscription']>().mockReturnValue(of(void 0)),
         updateNotificationPreferences: vi
             .fn<NotificationService['updateNotificationPreferences']>()
             .mockReturnValue(of(initialPreferences)),
@@ -148,6 +158,7 @@ function createAccountMocks(devices: WebPushSubscriptionItem[]): {
 
 function createBrowserMocks(): {
     push: {
+        canCheckBrowserSubscription: boolean;
         isSupported: WritableSignal<boolean>;
         isSubscribed: WritableSignal<boolean>;
         isBusy: WritableSignal<boolean>;
@@ -158,10 +169,13 @@ function createBrowserMocks(): {
     capability: {
         getPermission: Mock<BrowserNotificationCapabilityService['getPermission']>;
         requestPermissionAsync: Mock<BrowserNotificationCapabilityService['requestPermissionAsync']>;
+        isPermissionDenied: BrowserNotificationCapabilityService['isPermissionDenied'];
+        getUserAgent: BrowserNotificationCapabilityService['getUserAgent'];
     };
 } {
     return {
         push: {
+            canCheckBrowserSubscription: true,
             isSupported: signal(true),
             isSubscribed: signal(true),
             isBusy: signal(false),
@@ -172,6 +186,8 @@ function createBrowserMocks(): {
         capability: {
             getPermission: vi.fn<BrowserNotificationCapabilityService['getPermission']>().mockReturnValue('granted'),
             requestPermissionAsync: vi.fn<BrowserNotificationCapabilityService['requestPermissionAsync']>(),
+            isPermissionDenied: () => false,
+            getUserAgent: () => localDevice.userAgent ?? '',
         },
     };
 }
@@ -420,6 +436,198 @@ describe('Profile connected notification devices', () => {
     });
 });
 
+describe('Profile connected notification device discovery', () => {
+    it('checks the pending browser subscription before removing the device from the account', async () => {
+        const discovery = new ReplaySubject<PushSubscription | null>(1);
+        const unsubscribe = vi.fn<PushSubscription['unsubscribe']>().mockResolvedValue(true);
+        const { worker, providers } = createDiscoveryWorker(discovery);
+        const storageKey = 'webPushSubscriptionOwner';
+        localStorage.setItem(storageKey, JSON.stringify({ endpoint: localDevice.endpoint, userId: 'profile-user' }));
+        onTestFinished(() => {
+            discovery.complete();
+            localStorage.removeItem(storageKey);
+            localStorage.removeItem('webPushDeviceOptIn:profile-user');
+        });
+
+        const { fixture, account, toast } = setup(initialPreferences, knownDevices, providers);
+        account.getWebPushSubscriptions.mockReturnValueOnce(of([remoteDevice]));
+        expect(discovery.observed).toBe(true);
+        const remove = removeButton(fixture, 'Chrome / Windows');
+        expect(remove.closest('.user-manage__notifications-device-item')?.textContent).not.toContain(
+            'USER_MANAGE.NOTIFICATIONS_DEVICE_CURRENT',
+        );
+
+        remove.click();
+        expect(account.removeWebPushSubscription).not.toHaveBeenCalled();
+
+        discovery.next(
+            createExistingBrowserSubscription(async () => {
+                const removed = await unsubscribe();
+                discovery.next(null);
+                return removed;
+            }),
+        );
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(unsubscribe).toHaveBeenCalledOnce();
+            expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(localDevice.endpoint);
+            expect(element(fixture, 'fd-user-manage-connected-devices').textContent).not.toContain('Chrome / Windows');
+        });
+
+        expect(unsubscribe.mock.invocationCallOrder[0]).toBeLessThan(account.removeWebPushSubscription.mock.invocationCallOrder[0]);
+        expect(removeButton(fixture, 'Firefox / Linux').disabled).toBe(false);
+        expect(worker.requestSubscription).not.toHaveBeenCalled();
+        expect(account.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(toast.info).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVED_TOAST');
+    });
+});
+
+type BrowserDiscoveryWorker = Pick<SwPush, 'isEnabled' | 'subscription' | 'pushSubscriptionChanges' | 'notificationClicks'> & {
+    requestSubscription: Mock<SwPush['requestSubscription']>;
+};
+
+function createDiscoveryWorker(
+    discovery: Observable<PushSubscription | null>,
+    enabled = true,
+): {
+    worker: BrowserDiscoveryWorker;
+    providers: Provider[];
+} {
+    const worker: BrowserDiscoveryWorker = {
+        isEnabled: enabled,
+        subscription: discovery,
+        pushSubscriptionChanges: new Subject(),
+        notificationClicks: new Subject(),
+        requestSubscription: vi.fn<SwPush['requestSubscription']>(),
+    };
+    const auth: Pick<AuthService, 'isAdmin' | 'isAuthenticated' | 'isImpersonating' | 'getUserId' | 'getSessionKey'> = {
+        isAdmin: signal(false),
+        isAuthenticated: signal(true),
+        isImpersonating: signal(false),
+        getUserId: () => 'profile-user',
+        getSessionKey: () => 'profile-session',
+    };
+    return {
+        worker,
+        providers: [PushNotificationService, { provide: SwPush, useValue: worker }, { provide: AuthService, useValue: auth }],
+    };
+}
+
+function createExistingBrowserSubscription(unsubscribe: PushSubscription['unsubscribe']): PushSubscription {
+    const keys = {
+        p256dh: 'BGsX0fLhLEJH-Lzm5WOkQPJ3A32BLeszoPShOUXYmMJWT-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU',
+        auth: 'AAECAwQFBgcICQoLDA0ODw',
+    };
+    return {
+        endpoint: localDevice.endpoint,
+        expirationTime: null,
+        options: { userVisibleOnly: true, applicationServerKey: null },
+        unsubscribe,
+        getKey: name =>
+            Uint8Array.from(atob(keys[name].replaceAll('-', '+').replaceAll('_', '/')), value => value.codePointAt(0) ?? 0).buffer,
+        toJSON: () => ({ endpoint: localDevice.endpoint, expirationTime: null, keys }),
+    };
+}
+
+describe('Profile device removal with browser discovery unavailable', () => {
+    it('keeps both devices after a failed browser read and removes just the remote device on retry', async () => {
+        const firstRead = new ReplaySubject<PushSubscription | null>(1);
+        let read: Observable<PushSubscription | null> = firstRead;
+        const { worker, providers } = createDiscoveryWorker(defer(() => read));
+        const unsubscribe = vi.fn<PushSubscription['unsubscribe']>().mockResolvedValue(true);
+        const { fixture, account, toast } = setup(initialPreferences, knownDevices, providers);
+        const remote = removeButton(fixture, 'Firefox / Linux');
+
+        remote.click();
+        firstRead.error(new Error('Worker read was interrupted'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(toast.error).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE_ERROR');
+            expect(removeButton(fixture, 'Firefox / Linux').disabled).toBe(false);
+        });
+        expect(account.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(removeButton(fixture, 'Chrome / Windows').disabled).toBe(false);
+
+        read = of(createExistingBrowserSubscription(unsubscribe));
+        account.getWebPushSubscriptions.mockReturnValueOnce(of([localDevice]));
+        removeButton(fixture, 'Firefox / Linux').click();
+        await waitForDeviceRemovalAsync(fixture, 'Firefox / Linux');
+
+        expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(remoteDevice.endpoint);
+        expect(unsubscribe).not.toHaveBeenCalled();
+        expect(worker.requestSubscription).not.toHaveBeenCalled();
+        expect(removeButton(fixture, 'Chrome / Windows').disabled).toBe(false);
+    });
+
+    it('removes other devices without consulting a permanently disabled worker', async () => {
+        const browserRead = vi.fn<() => Observable<PushSubscription | null>>().mockReturnValue(of(null));
+        const { worker, providers } = createDiscoveryWorker(defer(browserRead), false);
+        const { fixture, account } = setup(initialPreferences, [remoteDevice], providers);
+        account.getWebPushSubscriptions.mockReturnValueOnce(of([]));
+
+        removeButton(fixture, 'Firefox / Linux').click();
+        await waitForDeviceRemovalAsync(fixture, 'Firefox / Linux');
+
+        expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(remoteDevice.endpoint);
+        expect(browserRead).not.toHaveBeenCalled();
+        expect(worker.requestSubscription).not.toHaveBeenCalled();
+    });
+});
+
+describe('Profile disconnect with device registration in flight', () => {
+    it('removes the current account registration after the earlier request settles', async () => {
+        const discovery = new ReplaySubject<PushSubscription | null>(1);
+        const unsubscribe = vi.fn<PushSubscription['unsubscribe']>().mockResolvedValue(true);
+        const { worker, providers } = createDiscoveryWorker(discovery);
+        const registration = new Subject<void>();
+        const ownerStorageKey = 'webPushSubscriptionOwner';
+        const optInKey = 'webPushDeviceOptIn:profile-user';
+        localStorage.setItem(ownerStorageKey, JSON.stringify({ endpoint: localDevice.endpoint, userId: 'profile-user' }));
+        onTestFinished(() => {
+            discovery.complete();
+            localStorage.removeItem(ownerStorageKey);
+            localStorage.removeItem(optInKey);
+        });
+        const { fixture, account } = setup(initialPreferences, knownDevices, providers);
+        account.upsertWebPushSubscription.mockReturnValueOnce(registration);
+        account.getWebPushSubscriptions.mockReturnValueOnce(of([remoteDevice]));
+        discovery.next(
+            createExistingBrowserSubscription(async () => {
+                const removed = await unsubscribe();
+                discovery.next(null);
+                return removed;
+            }),
+        );
+        await vi.waitFor(() => {
+            expect(registration.observed).toBe(true);
+        });
+
+        removeButton(fixture, 'Chrome / Windows').click();
+        await vi.waitFor(() => {
+            expect(unsubscribe).toHaveBeenCalledOnce();
+        });
+        expect(account.removeWebPushSubscription).not.toHaveBeenCalled();
+
+        registration.next();
+        registration.complete();
+        await waitForDeviceRemovalAsync(fixture, 'Chrome / Windows');
+
+        expect(account.upsertWebPushSubscription).toHaveBeenCalledOnce();
+        expect(account.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(localDevice.endpoint);
+        expect(worker.requestSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(ownerStorageKey)).toBeNull();
+        expect(localStorage.getItem(optInKey)).toBe('false');
+        expect(removeButton(fixture, 'Firefox / Linux').disabled).toBe(false);
+    });
+});
+
+async function waitForDeviceRemovalAsync(fixture: ComponentFixture<UserManageComponent>, device: string): Promise<void> {
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(element(fixture, 'fd-user-manage-connected-devices').textContent).not.toContain(device);
+    });
+}
+
 describe('Profile device ownership across real route navigation', () => {
     it('does not refresh the abandoned profile or notify the diary when its current device removal succeeds', async () => {
         const { harness, profile, account, browser, toast, recordSubscription } = await setupRoutedProfileAsync();
@@ -576,6 +784,43 @@ describe('Profile fasting reminder drafts', () => {
         });
         expect(toast.info).toHaveBeenLastCalledWith('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED');
         expect(followUp.value).toBe(String(correctedFollowUp));
+    });
+});
+
+describe('Profile fasting reminder empty fields', () => {
+    it('keeps each cleared input empty and saves only after both reminder times are valid', async () => {
+        const { fixture, account, toast } = setup();
+        const first = reminderInput(fixture, 0);
+        const followUp = reminderInput(fixture, 1);
+        const save = notificationButton(fixture, '.user-manage__notifications-reminder-save button');
+        const request = { fastingCheckInReminderHours: 15, fastingCheckInFollowUpReminderHours: 22 };
+        const inputError = 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_INPUT_ERROR';
+
+        inputReminder(fixture, first, '');
+        save.click();
+        expect(first.value).toBe('');
+        expect(followUp.value).toBe(String(initialPreferences.fastingCheckInFollowUpReminderHours));
+        expect(account.updateNotificationPreferences).not.toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalledExactlyOnceWith(inputError);
+
+        inputReminder(fixture, first, String(request.fastingCheckInReminderHours));
+        inputReminder(fixture, followUp, '');
+        save.click();
+        expect(first.value).toBe(String(request.fastingCheckInReminderHours));
+        expect(followUp.value).toBe('');
+        expect(account.updateNotificationPreferences).not.toHaveBeenCalled();
+        expect(toast.error.mock.calls).toEqual([[inputError], [inputError]]);
+
+        inputReminder(fixture, followUp, String(request.fastingCheckInFollowUpReminderHours));
+        account.updateNotificationPreferences.mockReturnValueOnce(of({ ...initialPreferences, ...request }));
+        save.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith(request);
+        expect(toast.info).toHaveBeenCalledExactlyOnceWith('USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVED');
+        expect(first.value).toBe(String(request.fastingCheckInReminderHours));
+        expect(followUp.value).toBe(String(request.fastingCheckInFollowUpReminderHours));
     });
 });
 

@@ -93,7 +93,7 @@ export class TelegramDisconnectDialogComponent {
                 },
             });
             const target = this.googleButton()?.nativeElement;
-            if (target !== undefined) {
+            if (target !== undefined && !this.destroyRef.destroyed) {
                 this.google.renderButton(target, 'filled_blue', this.locale());
             }
         } catch {

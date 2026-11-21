@@ -6,7 +6,7 @@
         <p class="day-summary__interaction-hint fd-ui-caption fd-ui-text-muted" [hidden]="!interactive()">
             {{ 'DASHBOARD.NUTRITION_DETAILS.INTERACTION_HINT' | translate }}
         </p>
-        <div class="day-summary__layout">
+        <div #visualLayout class="day-summary__layout">
             <div #visual class="day-summary__visual">
                 <!-- A data-shaped SVG is local to this summary; UI-kit rings encode a single metric. -->
                 <svg class="day-summary__contour" viewBox="-48 -48 416 416" aria-hidden="true" focusable="false">
@@ -151,7 +151,7 @@
                             size="sm"
                             icon="chevron_left"
                             [ariaLabel]="'DASHBOARD.DAY_SUMMARY.PULSE_PREVIOUS' | translate"
-                            (click)="moveInsight(-1)"
+                            (click)="moveInsight(pulseViewport, -1)"
                         />
                         <span class="fd-ui-caption">{{ insightIndex() + 1 }} / {{ insights().length }}</span>
                         <fd-ui-button
@@ -159,7 +159,7 @@
                             size="sm"
                             icon="chevron_right"
                             [ariaLabel]="'DASHBOARD.DAY_SUMMARY.PULSE_NEXT' | translate"
-                            (click)="moveInsight(1)"
+                            (click)="moveInsight(pulseViewport, 1)"
                         />
                     </div>
                 </div>

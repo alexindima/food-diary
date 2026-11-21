@@ -32,7 +32,6 @@ export class TdeeInsightCardContentComponent {
         const insight = this.insight();
         return insight !== null && insight.confidence !== 'none' ? `TDEE_CARD.CONFIDENCE.${insight.confidence.toUpperCase()}` : null;
     });
-    protected readonly confidenceClass = computed(() => this.insight()?.confidence ?? 'none');
     protected readonly weightTrendFormatted = computed(() => formatTdeeWeightTrend(this.insight()?.weightTrendPerWeek));
     protected readonly hintKey = computed(() => buildTdeeHintKey(this.insight()?.goalAdjustmentHint));
     protected readonly showSuggestion = computed(() => hasMeaningfulTdeeSuggestion(this.insight()));

@@ -482,7 +482,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
         this.synchronizePortionNutrition();
         this.productForm().markAsTouched();
 
-        if (this.hasCurrentPortionNutritionWarning() || this.productForm().invalid()) {
+        if (this.productForm().invalid() || this.hasCurrentPortionNutritionWarning()) {
             return null;
         }
 
@@ -718,10 +718,6 @@ export class ProductManageFormComponent implements UnsavedEditor {
         const values = this.productFormModel();
         const baseAmount = getDefaultProductBaseAmount(values.baseUnit);
         const portionAmount = getProductControlNumberValue(values.defaultPortionAmount);
-        if (portionAmount <= 0) {
-            return false;
-        }
-
         const factor = portionAmount / baseAmount;
         const maxCalories = getProductMaxCaloriesPerBaseForUnit(values.baseUnit) * factor;
         const maxNutrient = getProductMaxNutrientPerBaseForUnit(values.baseUnit) * factor;

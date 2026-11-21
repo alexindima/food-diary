@@ -3,10 +3,10 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-export type FdUiSegmentedToggleOption = {
+export type FdUiSegmentedToggleOption<Value extends string = string> = {
     label?: string;
     labelKey?: string;
-    value: string;
+    value: Value;
 };
 
 export type FdUiSegmentedToggleAppearance = 'default' | 'soft';
@@ -23,13 +23,13 @@ export type FdUiSegmentedToggleSize = 'compact' | 'sm' | 'md';
         '[class.fd-ui-segmented-toggle-host--fit-content]': 'fitContent()',
     },
 })
-export class FdUiSegmentedToggleComponent {
+export class FdUiSegmentedToggleComponent<Value extends string = string> {
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly languageVersion = signal(0);
 
-    public readonly options = input<FdUiSegmentedToggleOption[]>([]);
-    public readonly selectedValue = model.required<string>();
+    public readonly options = input<Array<FdUiSegmentedToggleOption<Value>>>([]);
+    public readonly selectedValue = model.required<Value>();
     public readonly ariaLabel = input<string | null>(null);
     public readonly appearance = input<FdUiSegmentedToggleAppearance>('default');
     public readonly size = input<FdUiSegmentedToggleSize>('md');
@@ -73,7 +73,7 @@ export class FdUiSegmentedToggleComponent {
         });
     }
 
-    protected select(value: string): void {
+    protected select(value: Value): void {
         if (value === this.selectedValue()) {
             return;
         }

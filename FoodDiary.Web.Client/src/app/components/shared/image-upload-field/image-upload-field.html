@@ -23,7 +23,7 @@
             [accept]="acceptedTypes()"
             [multiple]="multiple() && !cropEnabled()"
             [disabled]="disabled() || isUploading()"
-            (change)="onFileSelected($event)"
+            (change)="onFileSelected(fileInput)"
         />
 
         @if (selection().url; as previewUrl) {
@@ -115,7 +115,7 @@
                         height="512"
                         [src]="cropPreviewUrl()"
                         [alt]="'IMAGE_PREVIEW.ALT' | translate: { name: label() }"
-                        (load)="onCropImageLoaded(cropImage)"
+                        (load)="onCropImageLoaded(cropImage, cropSurface)"
                         (error)="onCropImageFailed(cropImage)"
                     />
                     @if (cropImageBounds() && cropSelection()) {

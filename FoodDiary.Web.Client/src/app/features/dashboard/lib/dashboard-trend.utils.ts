@@ -14,15 +14,12 @@ function hasTrendValue(point: WeightTrendPoint): point is WeightTrendValuePoint 
 
 function computeTrendChange(series: WeightTrendPoint[]): number | null {
     const validPoints = series.filter(hasTrendValue);
-    if (validPoints.length === 0) {
-        return null;
-    }
-
-    const first = validPoints[0];
     const last = validPoints.at(-1);
     if (last === undefined) {
         return null;
     }
+
+    const first = validPoints[0];
 
     const diff = last.value - first.value;
     return Math.round(diff * TREND_ROUNDING_FACTOR) / TREND_ROUNDING_FACTOR;

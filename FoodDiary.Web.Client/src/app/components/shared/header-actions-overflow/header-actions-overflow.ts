@@ -108,6 +108,7 @@ export class HeaderActionsOverflowComponent {
                     'class',
                     'disabled',
                     'hidden',
+                    'href',
                     'title',
                 ],
                 characterData: true,
@@ -122,7 +123,7 @@ export class HeaderActionsOverflowComponent {
     }
 
     protected activateAction(action: HeaderOverflowAction, menuEvent?: Event): void {
-        if (action.disabled) {
+        if (this.isDisabled(action.target)) {
             return;
         }
 

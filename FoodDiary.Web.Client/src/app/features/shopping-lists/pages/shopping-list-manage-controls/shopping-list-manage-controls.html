@@ -50,6 +50,7 @@
                 <!-- Native input preserves the existing inline rename/select-all interaction. -->
                 <div class="shopping-list__rename">
                     <input
+                        #renameInput
                         class="shopping-list__list-card-rename-input"
                         enterkeyhint="done"
                         fdUiFocusSelect
@@ -57,7 +58,7 @@
                         [fdUiFocusWhen]="true"
                         [value]="renameDraft()"
                         [attr.aria-label]="'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate"
-                        (input)="updateRenameDraft($event)"
+                        (input)="renameDraft.set(renameInput.value)"
                         (blur)="saveRename(list.id)"
                         (fdUiTextEnter)="saveRename(list.id)"
                         (keydown.escape)="cancelRename()"

@@ -1,8 +1,12 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../services/auth.service';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
@@ -245,6 +249,62 @@ describe('recent recognition history states', () => {
         } finally {
             vi.useRealTimers();
         }
+    });
+});
+
+describe('recognition history HTTP deletion', () => {
+    it('keeps both results after a failed delete and refreshes only after the same result is deleted', () => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                AiFoodFacade,
+                { provide: AuthService, useValue: { getUserId: (): string => 'history-owner' } },
+            ],
+        });
+        const url = `${environment.apiUrls.ai}/food/recognitions`;
+        const http = TestBed.inject(HttpTestingController);
+        const remaining = {
+            ...historyJob,
+            id: entityId<'food-recognition'>('remaining-result'),
+            imageUrl: publicImageUrl('/remaining.jpg'),
+        };
+        const fixture = TestBed.createComponent(FoodRecognitionHistoryComponent);
+        fixture.componentRef.setInput('screen', true);
+        fixture.componentRef.setInput('productLabel', true);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const flushPage = (jobs: FoodRecognitionJob[]): void => {
+            const request = http.expectOne(req => req.method === 'GET' && req.url === `${url}/page`);
+            expect(request.request.params.get('isProductLabel')).toBe('true');
+            request.flush(pageOf(jobs));
+        };
+        const remove = (): void => {
+            requiredElement(host, '[aria-label="AI_RECOGNITION.DELETE"]').click();
+            fixture.detectChanges();
+        };
+        const deletion = { method: 'DELETE', url: `${url}/${historyJob.id}` };
+
+        flushPage([historyJob, remaining]);
+        fixture.detectChanges();
+        expect(host.querySelector('.history-list__row img')?.getAttribute('src')).toBe(historyJob.imageUrl);
+        remove();
+        http.expectOne(deletion).flush(null, { status: 503, statusText: 'Service Unavailable' });
+        fixture.detectChanges();
+        expect(requiredElement(host, '[role="alert"]').hidden).toBe(false);
+        expect(host.querySelectorAll('.history-list__row')).toHaveLength(2);
+        http.expectNone(request => request.method === 'GET' && request.url === `${url}/page`);
+
+        remove();
+        const retry = http.expectOne(deletion);
+        expect(host.querySelectorAll('.history-list__row')).toHaveLength(2);
+        retry.flush(null, { status: 204, statusText: 'No Content' });
+        flushPage([remaining]);
+        fixture.detectChanges();
+        expect(host.querySelectorAll('.history-list__row')).toHaveLength(1);
+        expect(host.querySelector('.history-list__row img')?.getAttribute('src')).toBe(remaining.imageUrl);
+        expect(requiredElement(host, '[role="alert"]').hidden).toBe(true);
+        http.verify();
     });
 });
 

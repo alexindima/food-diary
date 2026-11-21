@@ -5,11 +5,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import type { PageOf } from '../../../../shared/models/page-of.data';
-import { QuickMealService } from '../../../meals/contracts/quick-meal';
-import { RECIPE_LOOKUP } from '../../../recipes/contracts/recipe-lookup';
 import { MealPlanService } from '../../api/meal-plan.service';
 import type { MealPlanSummary } from '../../models/meal-plan.data';
-import { MealPlanFacade } from '../meal-plan.facade';
+import { MealPlanListFacade } from './meal-plan-list.facade';
 import { type MealPlanListQuery, mealPlanListQueryKey } from './meal-plan-list-query';
 import { MEAL_PLAN_LIST_QUERY_STATE } from './meal-plan-list-query-state';
 
@@ -46,10 +44,8 @@ beforeEach(() => {
     getPage.mockReset().mockImplementation((_diet: string, page: number) => of(response(page)));
     TestBed.configureTestingModule({
         providers: [
-            MealPlanFacade,
-            { provide: MealPlanService, useValue: { getPage, getById: vi.fn() } },
-            { provide: QuickMealService, useValue: { hasItems: signal(false) } },
-            { provide: RECIPE_LOOKUP, useValue: { getById: vi.fn() } },
+            MealPlanListFacade,
+            { provide: MealPlanService, useValue: { getPage } },
             {
                 provide: MEAL_PLAN_LIST_QUERY_STATE,
                 useValue: { initial, current, changes, writeAsync, normalizePageAsync: vi.fn().mockResolvedValue(false) },
@@ -57,9 +53,9 @@ beforeEach(() => {
         ],
     });
 });
-describe('MealPlanFacade route list state', () => {
+describe('MealPlanListFacade route list state', () => {
     it('switches to saved plans on page one while keeping the diet and excluding previous counts', async () => {
-        const facade = TestBed.inject(MealPlanFacade);
+        const facade = TestBed.inject(MealPlanListFacade);
         await settleAsync();
         const pending = new Subject<PageOf<MealPlanSummary>>();
         getPage.mockReturnValueOnce(pending);
@@ -83,14 +79,13 @@ describe('MealPlanFacade route list state', () => {
         expect(getPage).toHaveBeenLastCalledWith('Balanced', 2, PAGE_SIZE, true);
     });
     it('restores URL diet/page and does not reset on initial load', async () => {
-        const f = TestBed.inject(MealPlanFacade);
-        f.loadPlans();
+        const f = TestBed.inject(MealPlanListFacade);
         await settleAsync();
         expect(getPage).toHaveBeenLastCalledWith('Balanced', 2, PAGE_SIZE, undefined);
         expect(f.pageIndex()).toBe(1);
     });
     it('resets a new diet to page one and preserves a valid empty result without looping', async () => {
-        const f = TestBed.inject(MealPlanFacade);
+        const f = TestBed.inject(MealPlanListFacade);
         await settleAsync();
         getPage.mockImplementation((_diet: string, page: number) => of({ ...response(page, 0), totalItems: 0 }));
         f.loadPlans('Keto');
@@ -102,7 +97,7 @@ describe('MealPlanFacade route list state', () => {
     });
     it('recovers a current stale page once with replacement history', async () => {
         getPage.mockImplementation((_diet: string, page: number) => of(response(page, 1)));
-        TestBed.inject(MealPlanFacade);
+        TestBed.inject(MealPlanListFacade);
         await settleAsync();
         await settleAsync();
         expect(writeAsync).toHaveBeenCalledWith({ page: 1, dietType: 'Balanced', source: 'all' }, { replaceUrl: true });
@@ -111,7 +106,7 @@ describe('MealPlanFacade route list state', () => {
     it('never lets an older response overwrite a newer browser diet', async () => {
         const old = new Subject<PageOf<MealPlanSummary>>();
         getPage.mockReturnValueOnce(old);
-        TestBed.inject(MealPlanFacade);
+        TestBed.inject(MealPlanListFacade);
         await settleAsync();
         const next: MealPlanListQuery = { page: 1, dietType: 'Keto', source: 'all' };
         current.set(next);
@@ -126,9 +121,9 @@ describe('MealPlanFacade route list state', () => {
     });
 });
 
-describe('MealPlanFacade result identity', () => {
+describe('MealPlanListFacade result identity', () => {
     it('never exposes another diet count while a browser query loads or fails', async () => {
-        const facade = TestBed.inject(MealPlanFacade);
+        const facade = TestBed.inject(MealPlanListFacade);
         await settleAsync();
         await settleAsync();
         expect(facade.totalItems()).toBe(TOTAL_ITEMS);
@@ -146,7 +141,7 @@ describe('MealPlanFacade result identity', () => {
     });
 
     it('retains the current count during a retry for the same query', async () => {
-        const facade = TestBed.inject(MealPlanFacade);
+        const facade = TestBed.inject(MealPlanListFacade);
         await settleAsync();
         await settleAsync();
         const pending = new Subject<PageOf<MealPlanSummary>>();

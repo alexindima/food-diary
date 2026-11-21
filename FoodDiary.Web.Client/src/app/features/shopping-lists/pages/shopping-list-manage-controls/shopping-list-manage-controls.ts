@@ -24,7 +24,7 @@ import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 import { finalize } from 'rxjs';
 
-import { entityId, optionalEntityId, type ShoppingListId } from '../../../../shared/models/semantics/entity-id';
+import { optionalEntityId, type ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
 import { ShoppingListBrowserComponent } from '../../components/shopping-list-browser/shopping-list-browser';
 import {
@@ -135,9 +135,10 @@ export class ShoppingListManageControlsComponent {
     private recordUse(id: ShoppingListId): void {
         const slots: ShoppingListId[] = this.quickLists().map(list => list.id);
         if (!slots.includes(id)) {
-            const oldest = [...this.recency()].reverse().find(entry => slots.includes(entry));
-            const unused = [...slots].reverse().find(entry => !this.recency().includes(entry));
-            const index = slots.indexOf(unused ?? oldest ?? entityId<'shopping-list'>(''));
+            const recency = this.recency();
+            const unused = [...slots].reverse().find(entry => !recency.includes(entry));
+            const replacement = unused ?? [...recency].reverse().find(entry => slots.includes(entry));
+            const index = slots.findIndex(entry => entry === replacement);
             slots.splice(Math.max(0, index), 1, id);
         }
         this.slots.set(slots);
@@ -173,10 +174,6 @@ export class ShoppingListManageControlsComponent {
             });
     }
 
-    protected createAndRenameList(): void {
-        this.createList.emit();
-    }
-
     protected renameList(listId: string): void {
         const list = this.lists().find(entry => entry.id === listId);
         if (list === undefined) {
@@ -188,15 +185,6 @@ export class ShoppingListManageControlsComponent {
 
     protected canClearListCard(list: ShoppingListSummary): boolean {
         return list.itemsCount > 0 && !this.isBusy();
-    }
-
-    protected updateRenameDraft(event: Event): void {
-        const target = event.target;
-        if (!(target instanceof HTMLInputElement)) {
-            return;
-        }
-
-        this.renameDraft.set(target.value);
     }
 
     protected saveRename(listId: ShoppingListId): void {

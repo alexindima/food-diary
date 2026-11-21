@@ -2,8 +2,9 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -135,6 +136,34 @@ function agree(dialog: HTMLElement, selector: string): void {
     checkbox.click();
     expect(checkbox.checked).toBe(true);
 }
+
+describe('Routed privacy policy link', () => {
+    it('updates the policy destination and label in both directions when the UI language changes', async () => {
+        const { getPrivacy, updatePrivacy } = configurePrivacy();
+        const translate = TestBed.inject(TranslateService);
+        const english = 'Privacy policy';
+        const russian = 'Политика конфиденциальности';
+        translate.setTranslation('en', { USER_MANAGE: { PRIVACY_POLICY_LINK: english } });
+        translate.setTranslation('ru', { USER_MANAGE: { PRIVACY_POLICY_LINK: russian } });
+        await firstValueFrom(translate.use('en'));
+        const harness = await renderPrivacyAsync();
+        const link = renderedSurface(document, 'fd-privacy-settings a.privacy-settings__policy');
+        expect(link.getAttribute('href')).toBe('/privacy-policy');
+        expect(link.textContent).toContain(english);
+
+        await firstValueFrom(translate.use('ru'));
+        await redrawAsync(harness);
+        expect(link.getAttribute('href')).toBe('/ru/privacy-policy');
+        expect(link.textContent).toContain(russian);
+
+        await firstValueFrom(translate.use('en'));
+        await redrawAsync(harness);
+        expect(link.getAttribute('href')).toBe('/privacy-policy');
+        expect(link.textContent).toContain(english);
+        expect(getPrivacy).toHaveBeenCalledOnce();
+        expect(updatePrivacy).not.toHaveBeenCalled();
+    });
+});
 
 describe('Routed privacy consent choices', () => {
     it('recovers from the initial read error and grants health consent after native review', async () => {

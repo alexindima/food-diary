@@ -47,9 +47,7 @@ export class MealListFacade {
     public readonly mealData = new PagedData<Meal>();
     public readonly currentPageIndex = signal(0);
     public readonly errorKey = signal<string | null>(null);
-    public readonly favorites = signal<FavoriteMeal[]>([]);
     public readonly favoriteTotalCount = signal(0);
-    public readonly isFavoritesLoadingMore = signal(false);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
 
     public loadFavorites(): void {
@@ -141,6 +139,7 @@ export class MealListFacade {
     private loadOverview(page: number, filtersModel: MealListStructuredFilters, includeFavorites: boolean): Observable<void> {
         return defer(() => {
             this.overviewRequests.next();
+            this.clearError();
             this.mealData.setLoading(true);
             return this.queryOverview(page, filtersModel, includeFavorites).pipe(
                 switchMap(data => {
@@ -152,7 +151,6 @@ export class MealListFacade {
                     this.daySummaries.set(data.daySummaries ?? []);
                     this.currentPageIndex.set(data.allMeals.page - 1);
                     if (includeFavorites) {
-                        this.favorites.set(data.favoriteItems);
                         this.favoriteTotalCount.set(data.favoriteTotalCount);
                     }
                     this.clearError();
@@ -162,7 +160,6 @@ export class MealListFacade {
                     this.mealData.clearData();
                     this.daySummaries.set([]);
                     if (includeFavorites) {
-                        this.favorites.set([]);
                         this.favoriteTotalCount.set(0);
                     }
                     this.showLoadError();
@@ -225,14 +222,9 @@ export class MealListFacade {
         return refreshFavorites ? this.loadOverview(this.currentPageIndex() + 1, filters, true).pipe(map(() => false)) : of(false);
     }
 
-    public removeFavorite(favorite: FavoriteMeal): void {
-        this.removeFavoriteRequest(favorite).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-    }
-
     public removeFavoriteRequest(favorite: FavoriteMeal): Observable<boolean> {
         return this.favoriteMealService.remove(favorite.id).pipe(
             tap(() => {
-                this.favorites.update(list => list.filter(item => item.id !== favorite.id));
                 this.favoriteTotalCount.update(count => Math.max(0, count - 1));
                 this.syncMealFavoriteState(favorite.mealId, false, null);
             }),

@@ -353,6 +353,30 @@ describe('MealService create', () => {
     });
 });
 
+describe('MealService saved recognition metadata', () => {
+    it.each(['Photo', 'Voice'])('preserves the %s source and recognition instant in a loaded meal update', async source => {
+        const saved = createAiOnlyMeal(AI_TOTAL_CALORIES);
+        const initialSession = { ...saved.aiSessions[0], source };
+        const loaded = firstValueFrom(service.getById(entityId<'meal'>(saved.id)));
+        const url = `${BASE_URL}/${saved.id}`;
+        httpMock.expectOne({ method: 'GET', url }).flush({ ...saved, aiSessions: [initialSession] });
+        const meal = await loaded;
+        if (meal === null) {
+            throw new Error('Expected the saved meal and its recognition history');
+        }
+        const update = firstValueFrom(service.update(meal.id, { ...createMealManageDto(meal.date), aiSessions: meal.aiSessions }));
+
+        const request = httpMock.expectOne({ method: 'PATCH', url });
+        expect(request.request.body).toMatchObject({
+            aiSessions: [{ source, recognizedAtUtc: initialSession.recognizedAtUtc }],
+        });
+        request.flush({ ...saved, aiSessions: [initialSession] });
+        await expect(update).resolves.toMatchObject({
+            aiSessions: [{ source, recognizedAtUtc: initialSession.recognizedAtUtc }],
+        });
+    });
+});
+
 describe('MealService update', () => {
     it('should update meal via PATCH', () => {
         const updateData: MealManageDto = {

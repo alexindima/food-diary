@@ -11,6 +11,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { RequestStateController } from '../../../shared/lib/request-state';
+import { capitalizeFirstLetter } from '../../../shared/lib/text-display.utils';
 import type { ExportFormat } from '../../../shared/models/export.models';
 import type { WaistEntrySummaryPoint } from '../../../shared/models/waist-entry.data';
 import type { WeightEntrySummaryPoint } from '../../../shared/models/weight-entry.data';
@@ -266,7 +267,7 @@ export class StatisticsFacade {
     private formatDateLabel(date: Date): string {
         const label = this.getDateLabelFormatter().format(date);
 
-        return this.selectedRange() === 'year' ? this.capitalizeFirstLetter(label) : label;
+        return this.selectedRange() === 'year' ? capitalizeFirstLetter(label) : label;
     }
 
     private getDateLabelFormatter(): Intl.DateTimeFormat {
@@ -285,14 +286,6 @@ export class StatisticsFacade {
 
     private resolveCurrentLocale(): string {
         return resolveAppLocale(resolveTranslateLanguage(this.translateService));
-    }
-
-    private capitalizeFirstLetter(value: string): string {
-        if (value.length === 0) {
-            return value;
-        }
-
-        return `${value.at(0)?.toLocaleUpperCase(this.currentLocale()) ?? ''}${value.slice(1)}`;
     }
 
     private formatSummaryLabel(dateString: string): string {

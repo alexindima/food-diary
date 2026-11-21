@@ -37,6 +37,16 @@ describe('patchSignalFormModel', () => {
         expect(model()).toBe(initial);
     });
 
+    it('applies an explicitly supplied value while ignoring inherited patch fields', () => {
+        const model = signal<TestFormModel>({ count: 1, name: 'Apple' });
+        const patch = { count: 2 };
+        Object.setPrototypeOf(patch, { name: 'Pear' });
+
+        patchSignalFormModel(model, patch);
+
+        expect(model()).toEqual({ count: 2, name: 'Apple' });
+    });
+
     it('does not depend on Object.hasOwn browser support', () => {
         const initial: TestFormModel = { count: 1, name: 'Apple' };
         const model = signal(initial);

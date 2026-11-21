@@ -23,17 +23,14 @@ export class ShoppingListBrowserComponent {
     public readonly focusSearch = input(true);
     public readonly createRequested = output<string | void>();
     protected readonly maxNameLength = 128;
+    protected readonly search = signal<string | number | null>('');
+    private readonly searchText = computed(() => String(this.search() ?? '').trim());
     protected readonly createName = computed(() =>
-        !this.browser.loading() && !this.browser.failed() && this.matches().length === 0 ? String(this.search() ?? '').trim() : '',
+        !this.browser.loading() && !this.browser.failed() && this.matches().length === 0 ? this.searchText() : '',
     );
     public readonly listSelected = output<ShoppingListId>();
-    protected readonly search = signal<string | number | null>('');
     protected readonly completedOpen = signal(false);
-    protected readonly query = computed(() =>
-        String(this.search() ?? '')
-            .trim()
-            .toLocaleLowerCase(),
-    );
+    protected readonly query = computed(() => this.searchText().toLocaleLowerCase());
     protected readonly matches = computed(() => {
         const current = new Map(this.lists().map(list => [list.id, list]));
         return this.browser.lists().map(list => {

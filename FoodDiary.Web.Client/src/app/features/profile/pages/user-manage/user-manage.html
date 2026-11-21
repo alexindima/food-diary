@@ -39,6 +39,7 @@
                     [securityExpanded]="securityExpanded()"
                     (userFormPatch)="onUserFormPatch($event)"
                     (birthDateInputInvalidChange)="birthDateInputInvalid.set($event)"
+                    (heightInputInvalidChange)="heightInputInvalid.set($event)"
                 >
                     <fd-user-manage-backup-email profileSecurity />
                     <fd-user-manage-security-card

@@ -147,14 +147,10 @@ export function aiEditableItemError(item: AiEditableFoodItem): 'name' | 'amount'
 export function requiresAiNutritionRecalculation(source: readonly AiEditableFoodItem[], edited: readonly AiEditableFoodItem[]): boolean {
     const sourceById = new Map(source.map(item => [item.id, item]));
 
-    if (edited.some(item => !sourceById.has(item.id))) {
-        return true;
-    }
-
     return edited.some(item => {
         const previous = sourceById.get(item.id);
         if (previous === undefined) {
-            return false;
+            return true;
         }
 
         const nameChanged = normalizeAiNutritionItemName(previous.name) !== normalizeAiNutritionItemName(item.name);

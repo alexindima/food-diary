@@ -19,6 +19,7 @@ import {
 } from '../../../../../testing/weekly-check-in-page.test-helpers';
 import { WeeklyGoalDialogComponent } from '../../dialogs/weekly-goal-dialog/weekly-goal-dialog';
 import { WeeklyReviewDialogComponent } from '../../dialogs/weekly-review-dialog/weekly-review-dialog';
+import { buildWeeklyReview } from '../../lib/weekly-review.mapper';
 import type { UpsertWeeklyGoalPayload } from '../../models/weekly-goal.data';
 
 const CURRENT_GOAL = '[data-tour-id="weekly-check-in-current-goal"]';
@@ -221,6 +222,34 @@ describe('WeeklyCheckInPageComponent week selection and display', () => {
         expect(definition.id).toBe('weekly-check-in');
         expect(definition.steps.map(step => step.title)).toContain('WEEKLY_CHECK_IN.TOUR.TRENDS_TITLE');
         expect(options).toEqual({ force: true });
+    });
+});
+
+describe('WeeklyCheckInPageComponent report after changing weeks', () => {
+    it('replaces the summary and detailed report together when the previous week loads fewer insights', () => {
+        context.facade.review.set(buildWeeklyReview(WEEK, undefined, ['ADD_PROTEIN']));
+        const fixture = renderWeeklyPage();
+        const element = getElement(fixture);
+        const previousWeek = { ...WEEK, daysLogged: 2 };
+        const previousReview = buildWeeklyReview(previousWeek, undefined, []);
+        expect(element.querySelectorAll('.check-in__insight')).toHaveLength(2);
+        expect(element.querySelector('.check-in__insights')?.textContent).toContain('WEEKLY_CHECK_IN.INSIGHTS.PROTEIN_LOW');
+
+        getButton(element, 'button[aria-label="WEEKLY_CHECK_IN.WEEK_PICKER.PREVIOUS"]').click();
+        expect(context.facade.selectedWeek()).toEqual(new Date('2026-03-09T00:00:00'));
+        context.facade.isSelectedWeekPast.set(true);
+        context.facade.thisWeek.set(previousWeek);
+        context.facade.review.set(previousReview);
+        fixture.detectChanges();
+
+        const insights = element.querySelectorAll('.check-in__insight');
+        expect(insights).toHaveLength(1);
+        expect(insights[0].textContent).toContain('WEEKLY_CHECK_IN.INSIGHTS.LOGGING_PROGRESS_FEW');
+        getButton(element, '.check-in__report-action button').click();
+        expect(context.dialog.open).toHaveBeenCalledExactlyOnceWith(WeeklyReviewDialogComponent, {
+            preset: 'detail',
+            data: { review: previousReview, week: previousWeek, goal: null },
+        });
     });
 });
 

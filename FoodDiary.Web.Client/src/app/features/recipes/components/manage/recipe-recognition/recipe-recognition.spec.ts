@@ -1,9 +1,11 @@
-import { signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { firstValueFrom, of, Subject } from 'rxjs';
+import { firstValueFrom, Observable, of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../../services/auth.service';
 import { AiFoodService } from '../../../../../shared/api/ai-food.service';
@@ -32,6 +34,7 @@ const clipboardPermission = vi.fn<BrowserClipboardService['canReadWithoutPromptA
 const onClipboardReturn = vi.fn<BrowserClipboardService['onReturn']>();
 const storePreference = vi.fn<BrowserStorageService['setItem']>();
 let fixture: ComponentFixture<RecipeRecognitionComponent>;
+let sourceUrlDraft: WritableSignal<string>;
 
 beforeEach(async () => {
     ai.importRecipe.mockReset().mockReturnValue(of(draft));
@@ -66,6 +69,8 @@ beforeEach(async () => {
         ],
     }).compileComponents();
     fixture = TestBed.createComponent(RecipeRecognitionComponent);
+    sourceUrlDraft = signal('');
+    fixture.componentRef.setInput('sourceUrl', sourceUrlDraft.asReadonly());
     fixture.detectChanges();
 });
 
@@ -144,6 +149,79 @@ describe('RecipeRecognitionComponent clipboard opt-out', () => {
     });
 });
 
+describe('RecipeRecognitionComponent clipboard re-enablement', () => {
+    it.each(['a stale link', 'a permission denial'])('uses a fresh suggestion after toggling off and on despite %s', async outcome => {
+        const previousRead = new Subject<string>();
+        const freshLink = 'https://www.instagram.com/reel/fresh/';
+        const suggested = vi.fn();
+        fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
+        clipboardRead.mockReturnValueOnce(firstValueFrom(previousRead)).mockResolvedValueOnce(freshLink);
+        const host = fixture.nativeElement as HTMLElement;
+        const checkbox = clipboardCheckbox();
+
+        checkbox.click();
+        fixture.detectChanges();
+        expect(checkbox.checked).toBe(true);
+        checkbox.click();
+        fixture.detectChanges();
+        expect(checkbox.checked).toBe(false);
+        checkbox.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(checkbox.checked).toBe(true);
+        const freshSuggestionWhilePending = host.textContent.includes('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+
+        if (outcome === 'a permission denial') {
+            previousRead.error(new DOMException('Permission denied', 'NotAllowedError'));
+        } else {
+            previousRead.next('https://www.instagram.com/reel/previous/');
+            previousRead.complete();
+        }
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_UNAVAILABLE');
+        recipeAction('RECIPE_MANAGE.IMPORT.USE_LINK').click();
+        expect(suggested).toHaveBeenCalledExactlyOnceWith(freshLink);
+        expect(freshSuggestionWhilePending).toBe(true);
+        expect(clipboardRead).toHaveBeenCalledTimes(2);
+    });
+
+    it.each([
+        { action: 'changing the opt-in', readCount: 2 },
+        { action: 'leaving the editor', readCount: 1 },
+    ])('does not read for an old return permission after $action', async ({ action, readCount }) => {
+        const permission = new Subject<boolean>();
+        clipboardPermission.mockReturnValueOnce(firstValueFrom(permission));
+        const checkbox = clipboardCheckbox();
+
+        checkbox.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(checkbox.checked).toBe(true);
+        expect(clipboardRead).toHaveBeenCalledOnce();
+        onClipboardReturn.mock.calls[0][0]();
+        expect(clipboardPermission).toHaveBeenCalledOnce();
+
+        if (action === 'leaving the editor') {
+            fixture.destroy();
+        } else {
+            checkbox.click();
+            fixture.detectChanges();
+            checkbox.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(checkbox.checked).toBe(true);
+        }
+        expect(clipboardRead).toHaveBeenCalledTimes(readCount);
+        permission.next(true);
+        permission.complete();
+        await waitForAsyncTasksAsync();
+
+        expect(clipboardRead).toHaveBeenCalledTimes(readCount);
+    });
+});
+
 describe('RecipeRecognitionComponent manual paste and review', () => {
     it('reacts to clipboard permission denial and allows a later explicit paste', async () => {
         const suggested = vi.fn();
@@ -181,6 +259,129 @@ describe('RecipeRecognitionComponent manual paste and review', () => {
         expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.REVIEW_HINT');
         expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.SERVINGS_HINT');
         expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.STEPS_HINT');
+    });
+});
+
+describe('RecipeRecognitionComponent clipboard return', () => {
+    it('finishes the current clipboard read without starting duplicate reads on return', async () => {
+        const pendingRead = new Subject<string>();
+        clipboardRead.mockReturnValueOnce(firstValueFrom(pendingRead));
+        clipboardPermission.mockResolvedValue(true);
+        clipboardCheckbox().click();
+        fixture.detectChanges();
+        const onReturn = onClipboardReturn.mock.calls[0][0];
+        onReturn();
+        onReturn();
+        await waitForAsyncTasksAsync();
+        expect(clipboardRead).toHaveBeenCalledOnce();
+
+        pendingRead.next('https://www.instagram.com/reel/fresh/');
+        pendingRead.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+    });
+
+    it('ignores an incomplete shared VK redirect and offers the next valid Instagram link', async () => {
+        const link = 'https://www.instagram.com/reel/example/';
+        const suggested = vi.fn();
+        fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
+        clipboardRead
+            .mockResolvedValueOnce('https://vk.ru/away.php')
+            .mockResolvedValueOnce(`https://vk.ru/away.php?to=${encodeURIComponent(link)}`);
+
+        clipboardCheckbox().click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+
+        clipboardPermission.mockResolvedValueOnce(true);
+        onClipboardReturn.mock.calls[0][0]();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+        });
+        recipeAction('RECIPE_MANAGE.IMPORT.USE_LINK').click();
+        expect(suggested).toHaveBeenCalledExactlyOnceWith(link);
+    });
+
+    it('keeps a delayed clipboard result hidden after opt-out and lets the user paste it explicitly', async () => {
+        const pendingRead = new Subject<string>();
+        const link = 'https://www.instagram.com/reel/example/';
+        const suggested = vi.fn();
+        fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
+        clipboardRead.mockReturnValueOnce(firstValueFrom(pendingRead)).mockResolvedValueOnce(link);
+        const host = fixture.nativeElement as HTMLElement;
+        const checkbox = clipboardCheckbox();
+
+        checkbox.click();
+        fixture.detectChanges();
+        expect(clipboardRead).toHaveBeenCalledOnce();
+        checkbox.click();
+        fixture.detectChanges();
+        pendingRead.next(link);
+        pendingRead.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(checkbox.checked).toBe(false);
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
+        expect(suggested).not.toHaveBeenCalled();
+        recipeAction('RECIPE_MANAGE.IMPORT.PASTE_LINK').click();
+        await fixture.whenStable();
+        expect(suggested).toHaveBeenCalledExactlyOnceWith(link);
+    });
+});
+
+describe('RecipeRecognitionComponent recognition recovery', () => {
+    it('offers retry after the video source fails and emits the replacement draft only after success', async () => {
+        const pending = new Subject<RecipeImportResult>();
+        const recognized = vi.fn();
+        fixture.componentInstance.draftRecognized.subscribe(recognized);
+        ai.importRecipeVideo.mockReturnValueOnce(pending);
+        setInputs(reportedUrl);
+        recipeAction('RECIPE_MANAGE.IMPORT.RECOGNIZE').click();
+        await vi.waitFor(() => {
+            expect(ai.importRecipeVideo).toHaveBeenCalledOnce();
+        });
+        fixture.detectChanges();
+
+        expect(videoCheckbox().disabled).toBe(true);
+        pending.error(new HttpErrorResponse({ status: 502, error: { error: 'Ai.RecipeVideoUnavailable' } }));
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('RECIPE_MANAGE.IMPORT.VIDEO_SOURCE_ERROR');
+        expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.REVIEW_HINT');
+        expect(recognized).not.toHaveBeenCalled();
+
+        expect(videoCheckbox().disabled).toBe(false);
+        setVideoEnabled(false);
+        setInputs(reportedUrl, caption);
+        await recognizeAsync();
+        expect(ai.importRecipe).toHaveBeenCalledExactlyOnceWith({ sourceUrl: reportedUrl, text: caption });
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(recognized).toHaveBeenCalledExactlyOnceWith(draft);
+    });
+
+    it('unsubscribes from recognition if the recipe editor leaves with a request pending', async () => {
+        const cancel = vi.fn();
+        const recognized = vi.fn();
+        fixture.componentInstance.draftRecognized.subscribe(recognized);
+        ai.importRecipe.mockReturnValueOnce(new Observable<RecipeImportResult>(() => cancel));
+        setInputs('', caption);
+        recipeAction('RECIPE_MANAGE.IMPORT.RECOGNIZE').click();
+        await vi.waitFor(() => {
+            expect(ai.importRecipe).toHaveBeenCalledExactlyOnceWith({ sourceUrl: null, text: caption });
+        });
+        expect(cancel).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        await waitForAsyncTasksAsync();
+
+        expect(cancel).toHaveBeenCalledOnce();
+        expect(recognized).not.toHaveBeenCalled();
     });
 });
 
@@ -285,6 +486,8 @@ describe('RecipeRecognitionComponent other inputs', () => {
             'https://www.youtube.com:444/watch?v=ncD_3gaRKbM',
             'https://www.youtube.com/@recipe-channel',
             'https://www.youtube.com/watch?v=invalid',
+            'https://www.youtube.com/watch?v=ncD_3gaRKbM&v=zHY7PKWZ31k',
+            'https://www.youtube.com/watch?v=ncD_3gaRKbM&v=',
             'https://www.youtube.com/watch',
         ];
 
@@ -322,7 +525,7 @@ describe('RecipeRecognitionComponent other inputs', () => {
 });
 
 function setInputs(sourceUrl: string, text = ''): void {
-    fixture.componentRef.setInput('sourceUrl', sourceUrl);
+    sourceUrlDraft.set(sourceUrl);
     fixture.componentRef.setInput('text', text);
     fixture.detectChanges();
 }

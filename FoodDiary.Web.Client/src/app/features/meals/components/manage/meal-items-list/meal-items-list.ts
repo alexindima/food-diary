@@ -8,8 +8,7 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { MealSourceType } from '../../../../../shared/models/meal.data';
-import { recipeDisplayToServings } from '../../../lib/recipe-serving/recipe-display-amount';
-import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
+import { recipeServingsFromInput, type ServingMassResult } from '../../../lib/recipe-serving/recipe-display-amount';
 import type { MealItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
 import {
     formatMealManageAmount,
@@ -27,7 +26,6 @@ import {
 })
 export class MealItemsListComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly recipeWeight = inject(RecipeServingWeightService);
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly items = input.required<readonly MealItemsListItemState[]>();
@@ -36,20 +34,21 @@ export class MealItemsListComponent {
     public readonly renderVersion = input<number>(0);
 
     public readonly editItem = output<number>();
-    public readonly removeItemEvent = output<number>();
+    public readonly removeItemEvent = output<MealItemFormValues>();
     public readonly openItemSelect = output<number>();
     protected readonly manualItemRows = computed<ManualItemRowViewModel[]>(() => {
         this.renderVersion();
         this.activeLang();
 
         return this.items()
-            .map((item, index) => ({ index, item }))
+            .map(({ formItem }, index) => ({ index, item: formItem }))
             .filter(({ item }) => item.product !== null || item.recipe !== null)
             .map(({ index, item }) => {
                 const totals = this.getManualItemTotals(item);
 
                 return {
                     index,
+                    formItem: item,
                     imageUrl: this.getManualItemImageUrl(item),
                     icon: this.getItemSourceIcon(item),
                     sourceName: this.getItemSourceName(item),
@@ -69,7 +68,7 @@ export class MealItemsListComponent {
         });
     }
 
-    private getItemSourceName(item: MealItemsListItemState): string {
+    private getItemSourceName(item: MealItemFormValues): string {
         const isRecipe = item.sourceType === MealSourceType.Recipe;
         const name = isRecipe ? item.recipe?.name : item.product?.name;
         if (name !== undefined && name.trim().length > 0) {
@@ -79,7 +78,7 @@ export class MealItemsListComponent {
         return this.translateService.instant(isRecipe ? 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe' : 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product');
     }
 
-    private getItemSourceIcon(item: MealItemsListItemState): string {
+    private getItemSourceIcon(item: MealItemFormValues): string {
         if (item.sourceType === MealSourceType.Recipe && item.recipe !== null) {
             return 'menu_book';
         }
@@ -89,14 +88,14 @@ export class MealItemsListComponent {
         return 'search';
     }
 
-    private getManualItemTotals(item: MealItemsListItemState): NutritionTotals {
+    private getManualItemTotals(item: MealItemFormValues): NutritionTotals {
         const amount = item.amount ?? 0;
 
         if (item.sourceType === MealSourceType.Product) {
             return this.getProductManualItemTotals(item.product, amount);
         }
 
-        return this.getRecipeManualItemTotals(item.recipe, amount);
+        return this.getRecipeManualItemTotals(item.recipe, amount, item.recipeMass);
     }
 
     private getProductManualItemTotals(product: MealItemFormValues['product'], amount: number): NutritionTotals {
@@ -115,12 +114,12 @@ export class MealItemsListComponent {
         };
     }
 
-    private getRecipeManualItemTotals(recipe: MealItemFormValues['recipe'], amount: number): NutritionTotals {
+    private getRecipeManualItemTotals(recipe: MealItemFormValues['recipe'], amount: number, mass: ServingMassResult): NutritionTotals {
         if (recipe === null || recipe.servings <= 0) {
             return getEmptyNutritionTotals();
         }
 
-        const servingsAmount = recipeDisplayToServings(this.recipeWeight.displayAmountFromInput(recipe, amount));
+        const servingsAmount = recipeServingsFromInput(amount, mass);
         return {
             calories: ((recipe.totalCalories ?? 0) / recipe.servings) * servingsAmount,
             proteins: ((recipe.totalProteins ?? 0) / recipe.servings) * servingsAmount,
@@ -131,13 +130,13 @@ export class MealItemsListComponent {
         };
     }
 
-    private formatManualAmount(item: MealItemsListItemState): string {
+    private formatManualAmount(item: MealItemFormValues): string {
         const amount = item.amount ?? 0;
         const unitLabel = this.getAmountUnitLabelForItem(item);
         return formatMealManageAmount(amount, unitLabel, this.translateService);
     }
 
-    private getManualItemImageUrl(item: MealItemsListItemState): string | null {
+    private getManualItemImageUrl(item: MealItemFormValues): string | null {
         if (item.sourceType === MealSourceType.Recipe) {
             return item.recipe?.imageUrl ?? null;
         }
@@ -149,8 +148,8 @@ export class MealItemsListComponent {
         this.editItem.emit(index);
     }
 
-    protected onRemoveItem(index: number): void {
-        this.removeItemEvent.emit(index);
+    protected onRemoveItem(item: MealItemFormValues): void {
+        this.removeItemEvent.emit(item);
     }
 
     protected onItemSourceClick(index: number): void {
@@ -163,19 +162,17 @@ export class MealItemsListComponent {
         return this.translateService.instant(isSingleServing ? 'MEAL_MANAGE.AMOUNT_UNIT_SERVING' : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS');
     }
 
-    private getAmountUnitLabelForItem(item: MealItemsListItemState): string | null {
-        if (item.sourceType === MealSourceType.Product) {
-            const unit = item.product?.baseUnit;
-            return unit !== undefined ? this.translateService.instant(`GENERAL.UNITS.${unit.toUpperCase()}`) : null;
+    private getAmountUnitLabelForItem(item: MealItemFormValues): string {
+        if (item.product !== null) {
+            return this.translateService.instant(`GENERAL.UNITS.${item.product.baseUnit.toUpperCase()}`);
         }
 
-        return this.recipeWeight.hasServingWeight(item.recipe)
-            ? this.translateService.instant('GENERAL.UNITS.G')
-            : this.getServingUnitLabel(item.amount);
+        return item.recipeMass.kind === 'known' ? this.translateService.instant('GENERAL.UNITS.G') : this.getServingUnitLabel(item.amount);
     }
 }
 
-export type MealItemsListItemState = MealItemFormValues & {
+export type MealItemsListItemState = {
+    formItem: MealItemFormValues;
     amountError: string | null;
     productInvalid: boolean;
     recipeInvalid: boolean;
@@ -184,6 +181,7 @@ export type MealItemsListItemState = MealItemFormValues & {
 
 type ManualItemRowViewModel = {
     index: number;
+    formItem: MealItemFormValues;
     imageUrl: string | null;
     icon: string;
     sourceName: string;

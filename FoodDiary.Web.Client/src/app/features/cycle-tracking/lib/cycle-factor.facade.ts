@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, required, validate } from '@angular/forms/signals';
+import { disabled, form, required, submit, validate } from '@angular/forms/signals';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
@@ -25,7 +25,7 @@ export class CycleFactorFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly state = inject(CycleTrackingStateFacade);
-    private readonly profileDeleted = new Subject<void>();
+    private readonly profileChanged = new Subject<void>();
     public readonly factorModel = signal<CycleFactorFormModel>({
         type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
         startDate: formatDateInputValue(new Date()),
@@ -33,48 +33,31 @@ export class CycleFactorFacade {
         notes: null,
     });
 
-    private readonly submitFactorFormAsync = async (): Promise<void> => {
-        await this.saveFactorAsync();
-    };
+    public readonly factorForm = form(this.factorModel, path => {
+        disabled(path, { when: () => this.state.isSavingFactor() });
+        required(path.type);
+        required(path.startDate);
+        validate(path.notes, context => {
+            // Match the trimmed payload and the server's Unicode whitespace trimming.
+            return getCycleNotesLength(context.value()) > MAX_CYCLE_NOTES_LENGTH ? { kind: 'notesTooLong' } : undefined;
+        });
+        validate(path.endDate, context => {
+            const start = context.valueOf(path.startDate);
+            const end = context.value();
+            if (start === null || end === null || start.length === 0 || end.length === 0) {
+                return;
+            }
+            return toCycleDateKey(end) < toCycleDateKey(start) ? { kind: 'dateOrder' } : undefined;
+        });
+    });
 
-    public readonly factorForm = form(
-        this.factorModel,
-        path => {
-            disabled(path, { when: () => this.state.isSavingFactor() });
-            required(path.type);
-            required(path.startDate);
-            validate(path.notes, context => {
-                // Match the trimmed payload and the server's Unicode whitespace trimming.
-                return getCycleNotesLength(context.value()) > MAX_CYCLE_NOTES_LENGTH ? { kind: 'notesTooLong' } : undefined;
-            });
-            validate(path.endDate, context => {
-                const start = context.valueOf(path.startDate);
-                const end = context.value();
-                if (start === null || end === null || start.length === 0 || end.length === 0) {
-                    return;
-                }
-                return toCycleDateKey(end) < toCycleDateKey(start) ? { kind: 'dateOrder' } : undefined;
-            });
-        },
-        {
-            submission: {
-                action: this.submitFactorFormAsync,
-            },
-        },
-    );
-
-    public saveFactor(): void {
-        void this.saveFactorAsync();
+    public async submitFactorAsync(): Promise<boolean> {
+        return submit(this.factorForm, async () => this.saveFactorAsync());
     }
 
     private async saveFactorAsync(): Promise<void> {
         const currentCycle = this.state.cycle();
         if (currentCycle === null || currentCycle.id.length === 0 || this.state.isSavingFactor()) {
-            return;
-        }
-
-        if (this.factorForm().invalid()) {
-            this.factorForm().markAsTouched();
             return;
         }
 
@@ -89,7 +72,7 @@ export class CycleFactorFacade {
             const cycle = await firstValueFrom(
                 this.cyclesService
                     .upsertFactor(currentCycle.id, payload)
-                    .pipe(takeUntil(this.profileDeleted), takeUntilDestroyed(this.destroyRef)),
+                    .pipe(takeUntil(this.profileChanged), takeUntilDestroyed(this.destroyRef)),
                 { defaultValue: null },
             );
             if (!this.isCurrentProfile(cycle)) {
@@ -155,8 +138,8 @@ export class CycleFactorFacade {
         this.resetFactorForm();
     }
 
-    public clearAfterProfileDeletion(): void {
-        this.profileDeleted.next();
+    public clearAfterProfileChange(): void {
+        this.profileChanged.next();
         this.state.factorError.set(null);
         this.resetFactorForm();
     }
@@ -205,7 +188,7 @@ export class CycleFactorFacade {
                         notes: factor.notes ?? undefined,
                         clearNotes: false,
                     })
-                    .pipe(takeUntil(this.profileDeleted), takeUntilDestroyed(this.destroyRef)),
+                    .pipe(takeUntil(this.profileChanged), takeUntilDestroyed(this.destroyRef)),
                 { defaultValue: null },
             );
             if (!this.isCurrentProfile(cycle)) {

@@ -192,7 +192,7 @@ function transferFailure(code: string): Observable<never> {
 }
 
 describe('Telegram diary transfer through the verification route', () => {
-    it('removes the proof before the verified ticket arrives, retries a busy transfer, and confirms Telegram goals', async () => {
+    it('removes the proof, retries a busy transfer, and confirms Telegram goals only once', async () => {
         const receipt = new Subject<string | null>();
         const { auth, harness, login } = await openVerificationAsync({ backup: receipt });
         expect(verificationPage(harness).textContent).toContain('AUTH.VERIFY.PENDING');
@@ -220,8 +220,19 @@ describe('Telegram diary transfer through the verification route', () => {
         radios[1].click();
         harness.detectChanges();
         expect(confirm.disabled).toBe(false);
+        const confirmation = new Subject<TelegramDiaryPreview>();
+        auth.transferTelegramDiary.mockReturnValueOnce(confirmation);
         confirm.click();
+        expect(confirm.disabled).toBe(false);
+        confirm.click();
+        expect(auth.transferTelegramDiary.mock.calls).toEqual([
+            [TICKET, undefined],
+            [TICKET, undefined],
+            [TICKET, true],
+        ]);
 
+        confirmation.next(PREVIEW);
+        confirmation.complete();
         await expectVerificationTextAsync(harness, 'AUTH.TELEGRAM_DIARY.DONE');
         expect(auth.transferTelegramDiary).toHaveBeenLastCalledWith(TICKET, true);
         verificationControl(harness, 'AUTH.VERIFY.BACK_TO_LOGIN').click();
@@ -410,16 +421,24 @@ describe('Choosing another email on the verification route', () => {
     });
 });
 
-it('retries a transient email verification failure using the resolved link and then continues home', async () => {
+it('retries email verification with the resolved link only once and then continues home', async () => {
     const request = new Subject<void>();
     const { auth, harness, navigation } = await openVerificationAsync({ standard: request });
     expect(verificationPage(harness).textContent).toContain('AUTH.VERIFY.PENDING');
     expect(auth.verifyEmail).toHaveBeenCalledExactlyOnceWith(ACCOUNT, 'regular-fixture');
-    auth.verifyEmail.mockReturnValueOnce(of(undefined));
+    const retryRequest = new Subject<void>();
+    auth.verifyEmail.mockReturnValueOnce(retryRequest);
     request.error(new Error('temporary verification outage'));
     await expectVerificationTextAsync(harness, 'AUTH.VERIFY.ERROR_GENERIC');
 
-    verificationControl(harness, 'AUTH.VERIFY.RETRY').click();
+    const retry = verificationControl(harness, 'AUTH.VERIFY.RETRY');
+    retry.click();
+    expect(retry.disabled).toBe(false);
+    retry.click();
+    expect(auth.verifyEmail).toHaveBeenCalledTimes(2);
+
+    retryRequest.next(undefined);
+    retryRequest.complete();
     await expectVerificationTextAsync(harness, 'AUTH.VERIFY.SUCCESS');
     expect(auth.verifyEmail).toHaveBeenCalledTimes(2);
     expect(auth.verifyEmail).toHaveBeenLastCalledWith(ACCOUNT, 'regular-fixture');

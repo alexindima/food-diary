@@ -96,6 +96,21 @@ describe('TdeeInsightCardComponent', () => {
     });
 });
 
+it('shows a formula estimate without claiming adaptive confidence', async () => {
+    const { fixture } = await setupComponentAsync({
+        ...createInsight(),
+        adaptiveTdee: null,
+        estimatedTdee: ESTIMATED_TDEE,
+        confidence: 'none',
+    });
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('.tdee-card__number')?.textContent.trim()).toBe(ESTIMATED_TDEE.toLocaleString('en'));
+    expect(host.textContent).toContain('TDEE_CARD.FORMULA_DESCRIPTION');
+    expect(host.querySelector('.tdee-card__confidence')).toBeNull();
+});
+
 async function setupComponentAsync(insight: TdeeInsight | null): Promise<{
     component: TdeeInsightCardComponent;
     fixture: ComponentFixture<TdeeInsightCardComponent>;

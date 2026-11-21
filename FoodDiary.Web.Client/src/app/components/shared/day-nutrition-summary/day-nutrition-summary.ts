@@ -55,6 +55,7 @@ type DayNutritionSummaryData = {
 })
 export class DayNutritionSummaryComponent {
     private readonly visual = viewChild<ElementRef<HTMLElement>>('visual');
+    private readonly visualLayout = viewChild.required<ElementRef<HTMLElement>>('visualLayout');
     private readonly pulseViewport = viewChild<ElementRef<HTMLElement>>('pulseViewport');
     private readonly nutrientLabels = viewChildren<ElementRef<HTMLElement>>('nutrientLabel');
     protected readonly connectorEnds = signal<Record<string, { x: number; y: number }>>({});
@@ -88,11 +89,7 @@ export class DayNutritionSummaryComponent {
     });
     protected readonly activeInsight = computed(() => this.insights()[this.insightIndex() % this.insights().length]);
 
-    protected moveInsight(direction: number): void {
-        const viewport = this.pulseViewport()?.nativeElement;
-        if (viewport === undefined) {
-            return;
-        }
+    protected moveInsight(viewport: HTMLElement, direction: number): void {
         const index = (this.insightIndex() + direction + this.insights().length) % this.insights().length;
         viewport.scrollTo({ left: index * viewport.clientWidth });
     }
@@ -192,9 +189,7 @@ export class DayNutritionSummaryComponent {
             };
             const observer = new ResizeObserver(update);
             observer.observe(visual);
-            if (visual.parentElement !== null) {
-                observer.observe(visual.parentElement);
-            }
+            observer.observe(this.visualLayout().nativeElement);
             labels.forEach(label => {
                 observer.observe(label);
             });

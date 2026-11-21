@@ -3,13 +3,14 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { of, Subject } from 'rxjs';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
+import { ShoppingListService } from '../../api/shopping-list.service';
 import { ShoppingListBrowserDialogComponent } from '../../dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog';
 import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls';
 
@@ -22,11 +23,18 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
     component: ShoppingListManageControlsComponent;
     fixture: ComponentFixture<ShoppingListManageControlsComponent>;
     openDialog: ReturnType<typeof vi.fn>;
+    getPage: Mock<ShoppingListService['getPage']>;
 }> {
     const openDialog = vi.fn();
+    const getPage = vi.fn<ShoppingListService['getPage']>().mockReturnValue(of([]));
     await TestBed.configureTestingModule({
         imports: [ShoppingListManageControlsComponent],
-        providers: [provideTranslateTesting(), provideRouter([]), { provide: FdUiDialogService, useValue: { open: openDialog } }],
+        providers: [
+            provideTranslateTesting(),
+            provideRouter([]),
+            { provide: FdUiDialogService, useValue: { open: openDialog } },
+            { provide: ShoppingListService, useValue: { getPage } },
+        ],
     }).compileComponents();
 
     const listSelectModel = signal({ id: 'list-1' });
@@ -38,7 +46,7 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
     fixture.componentRef.setInput('canDeleteList', true);
     fixture.detectChanges();
 
-    return { component: fixture.componentInstance, fixture, openDialog };
+    return { component: fixture.componentInstance, fixture, openDialog, getPage };
 }
 
 describe('ShoppingListManageControlsComponent rendered actions', () => {
@@ -66,6 +74,34 @@ describe('ShoppingListManageControlsComponent rendered actions', () => {
         fixture.detectChanges();
         expect(host.querySelector('input')).toBeNull();
         expect(rename).toHaveBeenCalledExactlyOnceWith({ listId: LISTS[0].id, name: 'Next week' });
+    });
+
+    it('submits a rename once when clicking Save also blurs the name input', async () => {
+        const { component, fixture } = await setupManageControlsAsync();
+        const renamed = vi.fn<(event: { listId: ShoppingListSummary['id']; name: string }) => void>();
+        component.renameListById.subscribe(renamed);
+        const host = fixture.nativeElement as HTMLElement;
+        const input = openRename(fixture);
+        input.focus();
+        input.value = '  Next week  ';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const save = host.querySelector<HTMLButtonElement>('button[aria-label="SHOPPING_LIST.SAVE_NAME_BUTTON"]');
+        if (save === null) {
+            throw new Error('Expected the inline shopping list save button');
+        }
+        expect(save.disabled).toBe(false);
+        expect(document.activeElement).toBe(input);
+        expect(renamed).not.toHaveBeenCalled();
+
+        save.focus();
+        expect(document.activeElement).toBe(save);
+        expect(renamed).toHaveBeenCalledExactlyOnceWith({ listId: LISTS[0].id, name: 'Next week' });
+        save.click();
+        fixture.detectChanges();
+
+        expect(renamed).toHaveBeenCalledOnce();
+        expect(input.isConnected).toBe(false);
     });
 
     it('applies selection and creation from the mobile list dialog and ignores dismissal', async () => {
@@ -165,28 +201,6 @@ describe('ShoppingListManageControlsComponent', () => {
         expect(handledSpy).toHaveBeenCalledWith(newList.id);
     });
 
-    it('emits create, rename, delete by id, and clear actions', async () => {
-        const { component } = await setupManageControlsAsync();
-        const createSpy = vi.fn();
-        const renameSpy = vi.fn();
-        const deleteByIdSpy = vi.fn();
-        const clearSpy = vi.fn();
-        component.createList.subscribe(createSpy);
-        component.renameListById.subscribe(renameSpy);
-        component.deleteListById.subscribe(deleteByIdSpy);
-        component.clearListById.subscribe(clearSpy);
-
-        component.createList.emit();
-        component.renameListById.emit({ listId: entityId<'shopping-list'>('list-2'), name: 'Weekend groceries' });
-        component.deleteListById.emit(entityId<'shopping-list'>('list-2'));
-        component.clearListById.emit(entityId<'shopping-list'>('list-1'));
-
-        expect(createSpy).toHaveBeenCalledOnce();
-        expect(renameSpy).toHaveBeenCalledWith({ listId: 'list-2', name: 'Weekend groceries' });
-        expect(deleteByIdSpy).toHaveBeenCalledWith('list-2');
-        expect(clearSpy).toHaveBeenCalledWith('list-1');
-    });
-
     it('supports single-list delete state', async () => {
         const { component, fixture } = await setupManageControlsAsync([LISTS[0]]);
         fixture.componentRef.setInput('canDeleteList', false);
@@ -194,5 +208,52 @@ describe('ShoppingListManageControlsComponent', () => {
 
         expect(component['listsCount']()).toBe(1);
         expect(component.canDeleteList()).toBe(false);
+    });
+});
+
+describe('ShoppingListManageControlsComponent desktop list creation', () => {
+    it('closes the desktop browser and requests a list with the trimmed unmatched name', async () => {
+        const extras = ['Party', 'Vacation'].map(name => ({ ...LISTS[1], id: entityId<'shopping-list'>(name), name }));
+        const lists = [...LISTS, ...extras];
+        const { component, fixture, getPage, openDialog } = await setupManageControlsAsync(lists);
+        fixture.componentRef.setInput('initialPage', { items: lists, hasMore: false, nextPage: null });
+        fixture.detectChanges();
+        const results = new Subject<ShoppingListSummary[]>();
+        getPage.mockReturnValueOnce(results);
+        const create = vi.fn<(name: string | void) => void>();
+        component.createList.subscribe(create);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const trigger = host.querySelector<HTMLButtonElement>('.shopping-list__all-lists-button button');
+        expect(trigger).not.toBeNull();
+        trigger?.click();
+        fixture.detectChanges();
+        const browser = document.querySelector<HTMLElement>('.cdk-overlay-container fd-shopping-list-browser');
+        const search = browser?.querySelector<HTMLInputElement>('input');
+        const action = browser?.querySelector<HTMLButtonElement>('.list-browser__create button');
+        if (search === null || search === undefined || action === null || action === undefined) {
+            throw new Error('Expected the desktop list search and create action');
+        }
+
+        search.value = '  Market trip  ';
+        search.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(getPage).toHaveBeenCalledExactlyOnceWith(1, 'market trip');
+        });
+        expect(action.textContent).toContain('SHOPPING_LIST.CREATE_LIST');
+        expect(create).not.toHaveBeenCalled();
+
+        results.next([]);
+        results.complete();
+        fixture.detectChanges();
+        expect(browser?.textContent).toContain('SHOPPING_LIST.NO_MATCHES');
+        expect(action.textContent).toContain('SHOPPING_LIST.CREATE_NAMED_LIST');
+        action.click();
+        fixture.detectChanges();
+
+        expect(create).toHaveBeenCalledExactlyOnceWith('Market trip');
+        expect(document.querySelector('.cdk-overlay-container fd-shopping-list-browser')).toBeNull();
+        expect(openDialog).not.toHaveBeenCalled();
     });
 });

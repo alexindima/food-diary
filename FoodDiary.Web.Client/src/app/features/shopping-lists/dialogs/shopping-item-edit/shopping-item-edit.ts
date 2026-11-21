@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, type Signal, signal } from '@angular/core';
 import { disabled, form, FormField, maxLength, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
@@ -11,7 +11,11 @@ import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.valida
 import { SHOPPING_ITEM_CATEGORY_LIMIT, SHOPPING_ITEM_NAME_LIMIT, SHOPPING_ITEM_NOTE_LIMIT } from '../../lib/shopping-list-input.constants';
 import { buildShoppingListUnitOptions, normalizeShoppingListUnit, shoppingListCategoryLabel } from '../../lib/shopping-list-item.mapper';
 
-export type ShoppingItemEditData = ShoppingListDraftItem & { productId?: string | null };
+export type ShoppingItemEditData = {
+    initial: ShoppingListDraftItem;
+    productId: string | null;
+    saveBlocked: Signal<boolean>;
+};
 
 @Component({
     selector: 'fd-shopping-item-edit',
@@ -32,14 +36,15 @@ export class ShoppingItemEditComponent {
     private readonly ref = inject(FdUiDialogRef<ShoppingItemEditComponent, ShoppingListDraftItem>);
     private readonly translate = inject(TranslateService);
     protected readonly isProductLinked = Boolean(this.data.productId);
-    private readonly originalCategoryLabel = shoppingListCategoryLabel(this.data.category, this.data.productId, key =>
+    protected readonly saveBlocked = this.data.saveBlocked;
+    private readonly originalCategoryLabel = shoppingListCategoryLabel(this.data.initial.category, this.data.productId, key =>
         this.translate.instant(key),
     );
-    protected readonly draft = signal<ShoppingItemEditData & { category: string; note: string }>({
-        ...this.data,
-        unit: normalizeShoppingListUnit(this.data.unit),
+    protected readonly draft = signal<ShoppingListDraftItem & { category: string; note: string }>({
+        ...this.data.initial,
+        unit: normalizeShoppingListUnit(this.data.initial.unit),
         category: this.originalCategoryLabel,
-        note: this.data.note ?? '',
+        note: this.data.initial.note ?? '',
     });
     protected readonly fields = form(this.draft, path => {
         validate(path.name, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));
@@ -55,7 +60,7 @@ export class ShoppingItemEditComponent {
     });
     protected readonly units = buildShoppingListUnitOptions(key => this.translate.instant(key));
     protected readonly valid = computed(() => {
-        return this.draft().name.trim().length > 0 && !this.fields().invalid();
+        return !this.saveBlocked() && this.draft().name.trim().length > 0 && !this.fields().invalid();
     });
     protected close(): void {
         this.ref.close();
@@ -64,7 +69,10 @@ export class ShoppingItemEditComponent {
         event.preventDefault();
         if (this.valid()) {
             const draft = this.draft();
-            this.ref.close({ ...draft, category: draft.category === this.originalCategoryLabel ? this.data.category : draft.category });
+            this.ref.close({
+                ...draft,
+                category: draft.category === this.originalCategoryLabel ? this.data.initial.category : draft.category,
+            });
         }
     }
 }

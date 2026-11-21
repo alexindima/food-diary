@@ -353,7 +353,7 @@ export class DashboardFacade {
             return;
         }
         void this.applyTdeeGoalAsync(target).then(saved => {
-            if (!saved) {
+            if (!saved && !this.destroyRef.destroyed) {
                 this.toastService.error(this.translateService.instant('TDEE_CARD.APPLY_ERROR'));
             }
         });

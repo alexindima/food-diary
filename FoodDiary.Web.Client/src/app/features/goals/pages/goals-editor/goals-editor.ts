@@ -6,7 +6,7 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import { type DayCalorieKey, DAYS_OF_WEEK, type UpdateGoalsRequest } from '../../../../shared/models/goals.data';
-import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
+import type { BodyTargetKey, MacroKey, MacroPresetCatalog, MacroPresetKey } from '../../lib/goals.facade';
 import { createDayCalories } from '../../lib/goals-state.mapper';
 import { GoalsCyclingRowComponent } from './goals-cycling-row';
 import {
@@ -43,7 +43,7 @@ export class GoalsEditorComponent {
     public readonly calories = input.required<number>();
     public readonly macros = input.required<GoalsMacroDraft[]>();
     public readonly preset = input.required<MacroPresetKey>();
-    public readonly presets = input.required<MacroPreset[]>();
+    public readonly presets = input.required<MacroPresetCatalog>();
     public readonly presetOptions = input.required<Array<FdUiSelectOption<MacroPresetKey>>>();
     public readonly water = input.required<number>();
     public readonly bodyTargets = input.required<Record<BodyTargetKey, number>>();
@@ -57,10 +57,9 @@ export class GoalsEditorComponent {
     protected readonly dirty = signal(false);
     protected readonly draftValid = computed(() => isGoalsDraftValid(this.requireDraft()));
     protected readonly macroDrafts = computed(() => {
-        const draft = this.draft();
-        const calories = draft?.calories ?? this.calories();
+        const { calories, macros } = this.requireDraft();
         return this.macros().map(macro => {
-            const value = draft?.macros[macro.key] ?? macro.value;
+            const value = macros[macro.key];
             return { ...macro, value, percent: calculateMacroPercent(macro.key, value, calories) };
         });
     });
@@ -92,8 +91,7 @@ export class GoalsEditorComponent {
             return;
         }
         const current = { ...draft, calories: value };
-        const preset = this.presets().find(item => item.key === current.preset);
-        this.replaceDraft(preset === undefined ? current : applyMacroPreset(current, preset));
+        this.replaceDraft(applyMacroPreset(current, this.presets()[current.preset]));
     }
 
     protected updateMacro({ key, value }: { key: MacroKey; value: number | null }): void {
@@ -103,8 +101,7 @@ export class GoalsEditorComponent {
     }
 
     protected updatePreset(value: MacroPresetKey): void {
-        const preset = this.presets().find(item => item.key === value);
-        this.replaceDraft(preset === undefined ? { ...this.requireDraft(), preset: value } : applyMacroPreset(this.requireDraft(), preset));
+        this.replaceDraft(applyMacroPreset(this.requireDraft(), this.presets()[value]));
     }
 
     protected updateWater(value: number | null): void {
@@ -169,8 +166,7 @@ export class GoalsEditorComponent {
     }
 
     private updateDraft(change: Partial<GoalsDraft>): void {
-        this.draft.update(current => ({ ...(current ?? this.sourceDraft()), ...change }));
-        this.dirty.set(true);
+        this.replaceDraft({ ...this.requireDraft(), ...change });
     }
 
     private replaceDraft(draft: GoalsDraft): void {

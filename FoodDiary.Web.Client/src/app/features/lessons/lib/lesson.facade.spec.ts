@@ -10,8 +10,9 @@ import { entityId } from '../../../shared/models/semantics/entity-id';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonPage, LessonSummary } from '../models/lesson.data';
 import { LessonFacade } from './lesson.facade';
-import type { LessonListQuery } from './list/lesson-list-query';
-import { LESSON_LIST_QUERY_STATE } from './list/lesson-list-query-state';
+import { LessonListFacade } from './list/lesson-list.facade';
+import { type LessonListQuery, lessonListQueryKey } from './list/lesson-list-query';
+import { LESSON_LIST_QUERY_STATE, type LessonListQueryState } from './list/lesson-list-query-state';
 
 const WAIT_ATTEMPTS = 20;
 const READ_MINUTES = 5;
@@ -24,16 +25,18 @@ type LessonServiceMock = {
 };
 
 let facade: LessonFacade;
+let listFacade: LessonListFacade;
 let lessonService: LessonServiceMock;
 let translateService: {
     getCurrentLang: ReturnType<typeof vi.fn>;
     getFallbackLang: ReturnType<typeof vi.fn>;
 };
 
-describe('LessonFacade request lifetime', () => {
+describe('Lesson list and detail request lifetime', () => {
     beforeEach(setupFacade);
 
     it('unsubscribes catalogue and detail reads on owner destruction', async () => {
+        TestBed.inject(LessonListFacade);
         const page = new Subject<LessonPage>();
         const detail = new Subject<LessonDetail>();
         lessonService.getAll.mockReturnValue(page);
@@ -48,6 +51,7 @@ describe('LessonFacade request lifetime', () => {
     });
 
     it('unsubscribes old catalogue and detail requests when their parameters change', async () => {
+        const catalogue = TestBed.inject(LessonListFacade);
         const page = new Subject<LessonPage>();
         const detail = new Subject<LessonDetail>();
         lessonService.getAll.mockReturnValueOnce(page);
@@ -56,9 +60,9 @@ describe('LessonFacade request lifetime', () => {
             .mockReturnValueOnce(of({ ...createDetail(), id: entityId<'lesson'>('lesson-2') }));
         facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => page.observed && detail.observed);
-        facade.loadLessons('Micronutrients');
+        catalogue.categoryFilter.set('Micronutrients');
         facade.loadLesson(entityId<'lesson'>('lesson-2'));
-        await waitForAsync(() => facade.selectedLesson()?.id === 'lesson-2' && !facade.isLoading());
+        await waitForAsync(() => facade.selectedLesson()?.id === 'lesson-2' && !catalogue.isLoading());
 
         expect([page.observed, detail.observed]).toEqual([false, false]);
         expect(facade.selectedLesson()?.id).toBe('lesson-2');
@@ -72,7 +76,7 @@ describe('LessonFacade request lifetime', () => {
         const writeAsync = vi.fn().mockResolvedValue(true);
         TestBed.configureTestingModule({
             providers: [
-                LessonFacade,
+                LessonListFacade,
                 { provide: LessonService, useValue: lessonService },
                 { provide: TranslateService, useValue: translateService },
                 {
@@ -87,7 +91,7 @@ describe('LessonFacade request lifetime', () => {
                 },
             ],
         });
-        facade = TestBed.inject(LessonFacade);
+        TestBed.inject(LessonListFacade);
         await waitForAsync(() => pending.observed);
         expect(pending.observed).toBe(true);
         writeAsync.mockClear();
@@ -168,21 +172,21 @@ describe('LessonFacade', () => {
     });
 });
 
-describe('LessonFacade catalogue', () => {
-    beforeEach(setupFacade);
+describe('LessonListFacade catalogue', () => {
+    beforeEach(setupListFacade);
 
     it('retries failed catalogue loading with the selected filters intact', async () => {
         lessonService.getAll.mockReturnValue(throwError(() => new Error('Unavailable')));
-        facade.loadLessons('Macronutrients');
-        facade.difficultyFilter.set('Beginner');
-        facade.sortOrder.set('shortest');
-        await waitForAsync(() => facade.hasLoadError());
-        expect(facade.hasLoadError()).toBe(true);
+        listFacade.categoryFilter.set('Macronutrients');
+        listFacade.difficultyFilter.set('Beginner');
+        listFacade.sortOrder.set('shortest');
+        await waitForAsync(() => listFacade.hasLoadError());
+        expect(listFacade.hasLoadError()).toBe(true);
 
         lessonService.getAll.mockReturnValue(of(createPage()));
-        facade.retryLessons();
-        await waitForAsync(() => !facade.hasLoadError() && facade.lessons().length > 0);
-        expect(facade.hasLoadError()).toBe(false);
+        listFacade.retryLessons();
+        await waitForAsync(() => !listFacade.hasLoadError() && listFacade.lessons().length > 0);
+        expect(listFacade.hasLoadError()).toBe(false);
         expect(lessonService.getAll).toHaveBeenLastCalledWith(
             expect.objectContaining({
                 category: 'Macronutrients',
@@ -193,9 +197,9 @@ describe('LessonFacade catalogue', () => {
     });
 
     it('loads lessons with normalized current locale and category filter', async () => {
-        facade.loadLessons('Macronutrients');
+        listFacade.categoryFilter.set('Macronutrients');
 
-        await waitForAsync(() => facade.lessons().length > 0);
+        await waitForAsync(() => listFacade.lessons().length > 0);
 
         expect(lessonService.getAll).toHaveBeenLastCalledWith({
             locale: 'ru',
@@ -206,7 +210,7 @@ describe('LessonFacade catalogue', () => {
             page: 1,
             pageSize: 18,
         });
-        expect(facade.lessons()).toEqual([createSummary()]);
+        expect(listFacade.lessons()).toEqual([createSummary()]);
     });
 
     it('falls back to English locale when translate service has no language', async () => {
@@ -215,12 +219,13 @@ describe('LessonFacade catalogue', () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             providers: [
-                LessonFacade,
+                LessonListFacade,
                 { provide: LessonService, useValue: lessonService },
                 { provide: TranslateService, useValue: translateService },
+                { provide: LESSON_LIST_QUERY_STATE, useValue: createCatalogueRoute() },
             ],
         });
-        facade = TestBed.inject(LessonFacade);
+        listFacade = TestBed.inject(LessonListFacade);
 
         await waitForAsync(() => lessonService.getAll.mock.calls.length > 0);
 
@@ -254,10 +259,7 @@ describe('LessonFacade detail and reading progress', () => {
         expect(lessonService.getById).toHaveBeenCalledExactlyOnceWith('lesson-1');
     });
 
-    it('marks loaded lessons and selected lesson as read after service succeeds', async () => {
-        const unrelated = { ...createSummary(), id: entityId<'lesson'>('lesson-2'), title: 'Choosing a snack' };
-        const items = [createSummary(), unrelated];
-        lessonService.getAll.mockReturnValueOnce(of({ ...createPage(), items, totalCount: items.length, totalLessonCount: items.length }));
+    it('marks the selected lesson as read after service succeeds', async () => {
         facade.loadLesson(entityId<'lesson'>('lesson-1'));
         await waitForAsync(() => facade.selectedLesson() !== null);
 
@@ -266,23 +268,22 @@ describe('LessonFacade detail and reading progress', () => {
 
         expect(lessonService.markRead).toHaveBeenCalledWith('lesson-1');
         expect(facade.selectedLesson()?.isRead).toBe(true);
-        expect(facade.lessons()).toEqual([{ ...createSummary(), isRead: true }, unrelated]);
     });
 });
 
-describe('LessonFacade refresh state', () => {
-    beforeEach(setupFacade);
+describe('LessonListFacade refresh state', () => {
+    beforeEach(setupListFacade);
 
     it('does not show the previous category while a new category loads', async () => {
-        await waitForAsync(() => facade.lessons().length > 0);
+        await waitForAsync(() => listFacade.lessons().length > 0);
         const nextPage = new Subject<LessonPage>();
         lessonService.getAll.mockReturnValue(nextPage);
 
-        facade.loadLessons('Micronutrients');
-        await waitForAsync(() => facade.isLoading());
+        listFacade.categoryFilter.set('Micronutrients');
+        await waitForAsync(() => listFacade.isLoading());
 
-        expect(facade.lessons()).toEqual([]);
-        expect(facade.page().availableCategories).toEqual([]);
+        expect(listFacade.lessons()).toEqual([]);
+        expect(listFacade.page().availableCategories).toEqual([]);
 
         nextPage.next({
             ...createPage(),
@@ -290,13 +291,23 @@ describe('LessonFacade refresh state', () => {
             availableCategories: ['Macronutrients', 'Micronutrients'],
         });
         nextPage.complete();
-        await waitForAsync(() => facade.lessons().at(0)?.id === 'lesson-2');
+        await waitForAsync(() => listFacade.lessons().at(0)?.id === 'lesson-2');
 
-        expect(facade.page().availableCategories).toEqual(['Macronutrients', 'Micronutrients']);
+        expect(listFacade.page().availableCategories).toEqual(['Macronutrients', 'Micronutrients']);
     });
 });
 
 function setupFacade(): void {
+    setupLessonProviders();
+    facade = TestBed.inject(LessonFacade);
+}
+
+function setupListFacade(): void {
+    setupLessonProviders();
+    listFacade = TestBed.inject(LessonListFacade);
+}
+
+function setupLessonProviders(): void {
     TestBed.resetTestingModule();
     lessonService = {
         getAll: vi.fn(() => of(createPage())),
@@ -311,12 +322,28 @@ function setupFacade(): void {
     TestBed.configureTestingModule({
         providers: [
             LessonFacade,
+            LessonListFacade,
             { provide: LessonService, useValue: lessonService },
             { provide: TranslateService, useValue: translateService },
+            { provide: LESSON_LIST_QUERY_STATE, useValue: createCatalogueRoute() },
         ],
     });
+}
 
-    facade = TestBed.inject(LessonFacade);
+function createCatalogueRoute(): LessonListQueryState {
+    const initial: LessonListQuery = { page: 1, search: '', category: null, difficulty: null, sort: 'recommended' };
+    const current = signal(initial, { equal: (left, right) => lessonListQueryKey(left) === lessonListQueryKey(right) });
+    const commitAsync = vi.fn<() => Promise<boolean>>().mockResolvedValue(true);
+    return {
+        initial,
+        current,
+        changes: EMPTY,
+        writeAsync: async (query): Promise<boolean> => {
+            current.set(query);
+            return commitAsync();
+        },
+        normalizePageAsync: vi.fn().mockResolvedValue(false),
+    };
 }
 
 async function waitForAsync(predicate: () => boolean): Promise<void> {

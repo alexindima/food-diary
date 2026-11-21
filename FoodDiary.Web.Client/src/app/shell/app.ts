@@ -110,10 +110,7 @@ export class AppComponent {
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
     protected readonly currentUrl = computed(() => this.completedUrl() ?? this.router.url);
     protected readonly currentPath = computed(() => this.getCurrentPath(this.currentUrl()));
-    protected readonly skipToMainHref = computed(() => {
-        const path = this.currentUrl().split('#', 1)[0];
-        return `${path.length > 0 ? path : '/'}#main-content`;
-    });
+    protected readonly skipToMainHref = computed(() => `${this.currentUrl().split('#', 1)[0]}#main-content`);
     protected readonly usesPublicSiteChrome = computed(() => usesPublicSiteChrome(this.currentPath(), this.isAuthenticated()));
     protected readonly isSidebarCollapsed = signal(false);
     protected readonly usesCompactMobileNavigation = computed(() => {
@@ -276,8 +273,7 @@ export class AppComponent {
 
     private getCurrentPath(url = this.router.url): string {
         const path = url.split(/[?#]/, 1)[0];
-        const normalized = path.length > 0 ? path : '/';
-        return normalized.endsWith('/') && normalized.length > 1 ? normalized.slice(0, -1) : normalized;
+        return path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
     }
 
     protected stopImpersonation(): void {

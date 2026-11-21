@@ -12,6 +12,7 @@ import {
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId, optionalEntityId } from '../../../../../shared/models/semantics/entity-id';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../../shared/models/semantics/meal-quantity';
+import { servingMassFromObservation } from '../../../lib/recipe-serving/recipe-display-amount';
 import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 import {
     buildMealDateTime,
@@ -110,7 +111,7 @@ describe('meal manage DTO mapping', () => {
     });
 
     it('should build manual nutrition DTO and convert recipe grams to servings', () => {
-        const recipeServingsFromDisplayInput = vi.fn().mockReturnValue(RECIPE_AMOUNT_SERVINGS);
+        const recipeMass = servingMassFromObservation(RECIPE_AMOUNT_GRAMS / RECIPE_AMOUNT_SERVINGS);
         const formValue = {
             ...createBaseFormValue(),
             isNutritionAutoCalculated: false,
@@ -120,16 +121,13 @@ describe('meal manage DTO mapping', () => {
                     product: null,
                     recipe,
                     amount: RECIPE_AMOUNT_GRAMS,
+                    recipeMass,
                 },
             ],
         };
 
-        const dto = buildMealManageDto(formValue, {
-            ...createDtoCallbacks(),
-            recipeServingsFromDisplayInput,
-        });
+        const dto = buildMealManageDto(formValue, createDtoCallbacks());
 
-        expect(recipeServingsFromDisplayInput).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
         expect(dto.items).toEqual([{ recipeId: recipe.id, productId: null, amount: RECIPE_AMOUNT_SERVINGS, origin: 'Manual' }]);
         expect(dto.manualCalories).toBe(MANUAL_TOTALS.calories);
         expect(dto.manualAlcohol).toBe(MANUAL_TOTALS.alcohol);
@@ -235,19 +233,13 @@ function createBaseFormValue(): MealFormValues {
 }
 
 function createProductItem(): MealItemFormValues {
-    return {
-        sourceType: MealSourceType.Product,
-        product,
-        recipe: null,
-        amount: PRODUCT_AMOUNT,
-    };
+    return createMealItemValue(product, null, PRODUCT_AMOUNT);
 }
 
 function createDtoCallbacks(): Parameters<typeof buildMealManageDto>[1] {
     return {
         aiSessions: AI_SESSIONS,
         buildDateTime: () => SUBMIT_DATE,
-        recipeServingsFromDisplayInput: () => RECIPE_AMOUNT_SERVINGS,
         manualTotals: MANUAL_TOTALS,
     };
 }

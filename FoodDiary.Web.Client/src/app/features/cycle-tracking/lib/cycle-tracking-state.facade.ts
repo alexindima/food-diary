@@ -1,12 +1,13 @@
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { Subscription } from 'rxjs';
+import { type Observable, of, type Subscription, switchMap } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { RequestStateController } from '../../../shared/lib/request-state';
 import {
     type BleedingEntry,
     CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
+    CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
     type CycleConsentPurpose,
     type CycleFactor,
     type CycleNutritionSummary,
@@ -31,6 +32,7 @@ export class CycleTrackingStateFacade {
     private readonly nutritionLoad = new RequestStateController<CycleNutritionSummary | null>();
     private readonly refreshError = signal<string | null>(null);
     private cycleRead: Subscription | undefined;
+    private settingsWriteRevision = 0;
     private nutritionRead: Subscription | undefined;
     public readonly isLoading = this.cycleLoad.isLoading;
 
@@ -128,6 +130,15 @@ export class CycleTrackingStateFacade {
         });
     }
 
+    public acceptSettingsWrite(cycle: CycleResponse): void {
+        const nutritionPurpose = CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS;
+        if (this.hasActiveConsent(this.cycle(), nutritionPurpose) && !this.hasActiveConsent(cycle, nutritionPurpose)) {
+            this.loadNutritionSummary(null);
+        }
+        this.settingsWriteRevision += 1;
+        this.cycle.set(cycle);
+    }
+
     public loadNutritionSummary(cycle: CycleResponse | null): void {
         this.nutritionRead?.unsubscribe();
         if (cycle === null) {
@@ -150,15 +161,14 @@ export class CycleTrackingStateFacade {
             });
     }
 
-    public loadCycle(onLoaded: () => void): void {
+    public loadCycle(onLoaded: (cycle: CycleResponse | null) => void): void {
         if (this.isLoading()) {
             return;
         }
         this.cycleRead?.unsubscribe();
         this.refreshError.set(null);
         const requestId = this.cycleLoad.begin();
-        this.cycleRead = this.cyclesService
-            .getCurrent()
+        this.cycleRead = this.readCurrentCycle()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: cycle => {
@@ -166,15 +176,27 @@ export class CycleTrackingStateFacade {
                         return;
                     }
                     this.cycle.set(cycle);
-                    if (cycle !== null) {
-                        onLoaded();
-                    }
+                    onLoaded(cycle);
                     this.loadNutritionSummary(cycle);
                 },
                 error: () => {
                     this.cycleLoad.fail(requestId, 'CYCLE_TRACKING.LOAD_FAILED');
                 },
             });
+    }
+
+    private readCurrentCycle(): Observable<CycleResponse | null> {
+        const profileId = this.cycle()?.id;
+        const settingsWriteRevision = this.settingsWriteRevision;
+        return this.cyclesService.getCurrent().pipe(
+            switchMap(cycle => {
+                if (cycle?.id === profileId && this.cycle()?.id === profileId && settingsWriteRevision !== this.settingsWriteRevision) {
+                    // A new read starts after the acknowledged write and its consent changes.
+                    return this.readCurrentCycle();
+                }
+                return of(cycle);
+            }),
+        );
     }
 
     public clearCycle(): void {

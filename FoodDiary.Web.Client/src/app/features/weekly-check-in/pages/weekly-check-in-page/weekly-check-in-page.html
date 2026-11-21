@@ -32,7 +32,8 @@
 
         @if (isLoading()) {
             <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
-        } @else if (review(); as review) {
+        } @else if (report(); as report) {
+            @let review = report.review;
             <fd-ui-card class="check-in__coverage" data-tour-id="weekly-check-in-trends">
                 <h2 class="check-in__status fd-ui-card-title">
                     {{ (review.hasEnoughData ? 'WEEKLY_CHECK_IN.STATUS.READY' : 'WEEKLY_CHECK_IN.STATUS.PRELIMINARY') | translate }}
@@ -68,7 +69,7 @@
                             <span class="fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.SUMMARY.PAST_WEEK_NO_DATA' | translate }}</span>
                         </div>
                     } @else {
-                        @for (insight of summaryInsights(); track insight.key) {
+                        @for (insight of report.summaryInsights; track insight.key) {
                             <div class="check-in__insight">
                                 <span class="check-in__insight-icon" [attr.data-tone]="insight.tone">
                                     <fd-ui-icon [name]="insight.icon" />
@@ -77,9 +78,9 @@
                             </div>
                         }
                     }
-                    @if (!(isSelectedWeekPast() && review.daysLogged === 0) && remainingInsightCount() > 0) {
+                    @if (!(isSelectedWeekPast() && review.daysLogged === 0) && report.remainingInsightCount > 0) {
                         <span class="check-in__insights-more fd-ui-helper-text">
-                            {{ 'WEEKLY_CHECK_IN.MORE_INSIGHTS' | translate: { count: remainingInsightCount() } }}
+                            {{ 'WEEKLY_CHECK_IN.MORE_INSIGHTS' | translate: { count: report.remainingInsightCount } }}
                         </span>
                     }
                 </div>

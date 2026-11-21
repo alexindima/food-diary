@@ -6,6 +6,7 @@ import { catchError, finalize, type Observable, of, tap } from 'rxjs';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import type { Meal } from '../../../../shared/models/meal.data';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
+import { isExistingMealLocalDateTime } from '../meal-date-input.utils';
 import { AiMealCreateService } from './ai-meal-create.service';
 
 @Injectable()
@@ -26,6 +27,11 @@ export class AiMealCreateFacade {
             return of(null);
         }
 
+        const { date = '', time = '' } = result;
+        if (date.length > 0 && time.length > 0 && !isExistingMealLocalDateTime(date, time)) {
+            return this.reportSaveError('MEAL_MANAGE.NONEXISTENT_TIME');
+        }
+
         this.errorKey.set(null);
         this.savingCount.update(count => count + 1);
 
@@ -34,14 +40,16 @@ export class AiMealCreateFacade {
                 this.invalidation.reportMealMutation();
                 this.clearVersion.update(version => version + 1);
             }),
-            catchError(() => {
-                this.errorKey.set('AI_INPUT_BAR.CREATE_MEAL_ERROR');
-                this.toastService.error(this.translateService.instant('AI_INPUT_BAR.CREATE_MEAL_ERROR'));
-                return of(null);
-            }),
+            catchError(() => this.reportSaveError('AI_INPUT_BAR.CREATE_MEAL_ERROR')),
             finalize(() => {
                 this.savingCount.update(count => Math.max(0, count - 1));
             }),
         );
+    }
+
+    private reportSaveError(errorKey: string): Observable<null> {
+        this.errorKey.set(errorKey);
+        this.toastService.error(this.translateService.instant(errorKey));
+        return of(null);
     }
 }

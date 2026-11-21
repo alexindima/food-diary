@@ -1,10 +1,13 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
+import { Gender } from '../../../../../shared/models/user.data';
+import { getClientInitials, getClientTitle } from '../dietologist-clients-lib/dietologist-clients.mapper';
 import { createClient } from '../dietologist-clients-lib/dietologist-clients.test-data';
 import type { ClientCardViewModel } from '../dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientCardComponent } from './dietologist-client-card';
@@ -58,6 +61,59 @@ describe('DietologistClientCardComponent', () => {
     });
 });
 
+describe('Dietologist client card shared profile', () => {
+    it.each([
+        [Gender.Male, 'Male', 'Мужской'],
+        [Gender.Female, 'Female', 'Женский'],
+        [Gender.Other, 'Other', 'Другой'],
+    ])('translates shared gender code %s in English and Russian', async (gender, english, russian) => {
+        const fixture = createComponent();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { USER_MANAGE: { GENDER_OPTIONS: { [gender]: english } } }, true);
+        translate.setTranslation('ru', { USER_MANAGE: { GENDER_OPTIONS: { [gender]: russian } } });
+        fixture.componentRef.setInput('item', { ...createViewModel(), client: createClient({ gender }) });
+        fixture.detectChanges();
+
+        expect(getProfileChips(fixture)).toContain(english);
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+
+        expect(getProfileChips(fixture)).toContain(russian);
+    });
+
+    it('hides shared profile data when a refreshed client withdraws profile access', () => {
+        const fixture = createComponent();
+        expect(getProfileChips(fixture)).toEqual(['180 cm', 'Male', 'Moderate']);
+
+        const shared = createClient();
+        const client = createClient({
+            firstName: null,
+            lastName: null,
+            gender: null,
+            heightCm: null,
+            activityLevel: null,
+            permissions: { ...shared.permissions, shareProfile: false },
+        });
+        fixture.componentRef.setInput('item', {
+            ...createViewModel(),
+            client,
+            title: getClientTitle(client),
+            initials: getClientInitials(client),
+        });
+        fixture.detectChanges();
+
+        const host = getHost(fixture);
+        expect(host.querySelector('.dietologist-clients__meta')).toBeNull();
+        expect(host.querySelector('fd-ui-card')?.getAttribute('aria-label')).toBe('client@example.com');
+        expect(host.textContent).not.toContain('Alex Ivanov');
+    });
+});
+
+function getProfileChips(fixture: ComponentFixture<DietologistClientCardComponent>): string[] {
+    return Array.from(getHost(fixture).querySelectorAll('.dietologist-clients__chip'), chip => chip.textContent.trim());
+}
+
 function createComponent(): ComponentFixture<DietologistClientCardComponent> {
     TestBed.configureTestingModule({
         imports: [DietologistClientCardComponent],
@@ -65,7 +121,10 @@ function createComponent(): ComponentFixture<DietologistClientCardComponent> {
     });
 
     const translate = TestBed.inject(TranslateService);
-    translate.setTranslation('en', { GENERAL: { UNITS: { CM: 'cm', FT: 'ft', IN: 'in' } } });
+    translate.setTranslation('en', {
+        GENERAL: { UNITS: { CM: 'cm', FT: 'ft', IN: 'in' } },
+        USER_MANAGE: { GENDER_OPTIONS: { M: 'Male' }, ACTIVITY_LEVEL_OPTIONS: { MODERATE: 'Moderate' } },
+    });
     translate.use('en');
 
     const fixture = TestBed.createComponent(DietologistClientCardComponent);

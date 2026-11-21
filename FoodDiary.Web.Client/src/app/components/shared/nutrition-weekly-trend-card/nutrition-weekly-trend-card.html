@@ -57,7 +57,7 @@
             </div>
 
             @if (interactive()) {
-                @if (selectedPoint(); as day) {
+                @if (selectedDay(); as day) {
                     <aside class="nutrition-trend__day" aria-live="polite">
                         <div class="nutrition-trend__day-header">
                             <div class="nutrition-trend__day-date">
@@ -88,11 +88,11 @@
                                 [attr.aria-label]="'NUTRITION_TREND.GOAL' | translate"
                             ></progress>
                             <span class="fd-ui-body-sm fd-ui-text-muted">
-                                {{ 'NUTRITION_TREND.DAY_GOAL' | translate: { value: formatChartCalories(selectedGoalPercent()) } }}
+                                {{ 'NUTRITION_TREND.DAY_GOAL' | translate: { value: formatChartCalories(day.goalPercent) } }}
                             </span>
                         </div>
                         <div class="nutrition-trend__day-metrics">
-                            @for (metric of selectedMetrics(); track metric.key) {
+                            @for (metric of day.metrics; track metric.key) {
                                 <div [class]="`nutrition-trend__metric nutrition-trend__metric--${metric.key}`">
                                     <span class="fd-ui-caption">{{ metric.label | translate }}</span>
                                     <strong>{{ formatChartCalories(metric.value) }} {{ 'GENERAL.UNITS.G' | translate }}</strong>

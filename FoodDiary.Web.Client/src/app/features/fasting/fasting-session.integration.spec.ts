@@ -1,4 +1,6 @@
 import { registerLocaleData } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import localeRu from '@angular/common/locales/ru';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -10,6 +12,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, NEVER, of, Subject } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
 import { UserService } from '../../shared/api/user.service';
@@ -484,6 +487,94 @@ describe('Rendered fasting check-in during an ending request', () => {
     });
 });
 
+describe('Fasting check-in ownership after ending', () => {
+    it('keeps a finished fast in history when an older check-in response arrives late', async () => {
+        const session = makeSession({ startedAtUtc: utcInstant('2026-05-19T08:00:00Z') });
+        const { harness, api, reportEvent } = await renderFastingAsync(session);
+        const saving = new Subject<FastingSession>();
+        const ending = new Subject<FastingSession>();
+        const checkIn = { ...session, checkInAtUtc: utcInstant('2026-05-19T11:00:00Z'), checkInNotes: SAVED_NOTE };
+        const ended = { ...checkIn, endedAtUtc: utcInstant(FIXTURE_TIME), status: 'Completed', isCompleted: true } satisfies FastingSession;
+        api.updateCheckIn.mockReturnValueOnce(saving);
+        api.end.mockReturnValueOnce(ending);
+        api.getOverviewStrict.mockReturnValueOnce(of(makeOverview(null, [ended])));
+
+        saveAndDismissFastingCheckIn(harness);
+        expect(saving.observed).toBe(true);
+        expect(api.updateCheckIn).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ checkInNotes: SAVED_NOTE }));
+        confirmFastingEnd(harness);
+        expect(ending.observed).toBe(true);
+        ending.next(ended);
+        ending.complete();
+        redraw(harness);
+        expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.READY');
+
+        saving.next(checkIn);
+        saving.complete();
+        redraw(harness);
+
+        const page = pageRoot(harness);
+        expect(page.textContent).toContain('FASTING.REDESIGN.READY');
+        expect(page.textContent).not.toContain('FASTING.END_FAST');
+        expect(page.querySelector('button[aria-label="FASTING.REDESIGN.OPEN_SESSION_DETAILS"]')?.textContent).toContain(
+            'FASTING.BADGE_ENDED_EARLY',
+        );
+        expect(api.getOverviewStrict).toHaveBeenCalledOnce();
+        expect(reportEvent).toHaveBeenCalledWith('session.completed', expect.objectContaining({ sessionId: session.id }));
+    });
+
+    it('leaves the next session check-in clear when the previous save fails', async () => {
+        const session = makeSession({ startedAtUtc: utcInstant('2026-05-19T08:00:00Z') });
+        const { harness, api } = await renderFastingAsync(session);
+        const saving = new Subject<FastingSession>();
+        const ended = { ...session, endedAtUtc: utcInstant(FIXTURE_TIME), status: 'Completed', isCompleted: true } satisfies FastingSession;
+        const replacement = makeSession({ id: REPLACEMENT_SESSION_ID, startedAtUtc: utcInstant(FIXTURE_TIME) });
+        api.updateCheckIn.mockReturnValueOnce(saving);
+        api.end.mockReturnValueOnce(of(ended));
+        api.start.mockReturnValueOnce(of(replacement));
+        api.getOverviewStrict.mockReturnValueOnce(of(makeOverview(null, [ended]))).mockReturnValueOnce(of(makeOverview(replacement)));
+
+        saveAndDismissFastingCheckIn(harness);
+        expect(saving.observed).toBe(true);
+        confirmFastingEnd(harness);
+        getButton(pageRoot(harness), 'FASTING.START_FAST').click();
+        redraw(harness);
+        const nextCheckIn = openFastingCheckIn(harness);
+
+        saving.error(new Error('Previous check-in unavailable'));
+        redraw(harness);
+
+        expect(nextCheckIn.querySelector('fd-ui-form-error [role="alert"]')).toBeNull();
+        expect(getButton(nextCheckIn, 'FASTING.CHECK_IN.SAVE').disabled).toBe(false);
+        expect(checkInNotesField(nextCheckIn).value).toBe('');
+        expect(api.updateCheckIn).toHaveBeenCalledOnce();
+    });
+});
+
+function saveAndDismissFastingCheckIn(harness: RouterTestingHarness): void {
+    const dialog = openFastingCheckIn(harness);
+    const notes = checkInNotesField(dialog);
+    notes.value = SAVED_NOTE;
+    notes.dispatchEvent(new Event('input', { bubbles: true }));
+    redraw(harness);
+    getButton(dialog, 'FASTING.CHECK_IN.SAVE').click();
+    redraw(harness);
+    const close = dialog.querySelector<HTMLButtonElement>('button[aria-label="COMMON.CLOSE"]');
+    if (close === null) {
+        throw new Error('Expected the check-in close button');
+    }
+    close.click();
+    redraw(harness);
+    expect(dialog.isConnected).toBe(false);
+}
+
+function confirmFastingEnd(harness: RouterTestingHarness): void {
+    getButton(pageRoot(harness), 'FASTING.END_FAST').click();
+    redraw(harness);
+    getButton(getDialog('fd-fasting-end-confirm-dialog'), 'FASTING.END_FAST').click();
+    redraw(harness);
+}
+
 describe('Mounted fasting check-in translations', () => {
     it('updates the open check-in when the active language receives its application dictionary', async () => {
         registerLocaleData(localeRu);
@@ -629,19 +720,7 @@ describe('Fasting actions with an older overview request pending', () => {
         submitFastingCheckInNote(harness, SAVED_NOTE);
         expect(olderOverview.observed).toBe(true);
         const page = pageRoot(harness);
-        getButton(page, 'FASTING.REDESIGN.MANAGE').click();
-        redraw(harness);
-        const management = getDialog('fd-fasting-session-management-dialog');
-        const extendPanel = management.querySelector<HTMLButtonElement>(
-            '.fasting-controls__extend-panel:not(.fasting-controls__extend-panel--subtle) > button',
-        );
-        if (extendPanel === null) {
-            throw new Error('Expected the fasting extension panel');
-        }
-        extendPanel.click();
-        redraw(harness);
-        getButton(management, 'FASTING.ADD_DAY').click();
-        redraw(harness);
+        extendFastingByOneDay(harness);
         expect(api.extend).toHaveBeenCalledExactlyOnceWith({ additionalHours: EXTEND_ONE_DAY_HOURS });
         const extendedTarget = `${extended.plannedDurationHours} FASTING.HOURS`;
         expect(page.querySelector('.fasting-redesign__protocol')?.textContent.trim()).toBe(extendedTarget);
@@ -654,6 +733,62 @@ describe('Fasting actions with an older overview request pending', () => {
         expect(api.getOverviewStrict).toHaveBeenCalledOnce();
     });
 });
+
+describe('Fasting check-in and extension response ordering', () => {
+    it('keeps a confirmed target extension when a check-in write responds afterward', async () => {
+        const originalHours = 36;
+        const session = makeSession({
+            planType: 'Extended',
+            protocol: 'Fast36',
+            plannedDurationHours: originalHours,
+            initialPlannedDurationHours: originalHours,
+        });
+        const { harness, api } = await renderFastingAsync(session);
+        const saving = new Subject<FastingSession>();
+        const refreshing = new Subject<FastingOverview>();
+        const checkedIn = { ...session, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: SAVED_NOTE };
+        const extended = {
+            ...session,
+            plannedDurationHours: originalHours + EXTEND_ONE_DAY_HOURS,
+            addedDurationHours: EXTEND_ONE_DAY_HOURS,
+        };
+        api.updateCheckIn.mockReturnValueOnce(saving);
+        api.extend.mockReturnValueOnce(of(extended));
+        api.getOverviewStrict.mockReturnValueOnce(refreshing);
+
+        saveAndDismissFastingCheckIn(harness);
+        expect(saving.observed).toBe(true);
+        extendFastingByOneDay(harness);
+        expect(api.extend).toHaveBeenCalledExactlyOnceWith({ additionalHours: EXTEND_ONE_DAY_HOURS });
+        const protocol = pageRoot(harness).querySelector('.fasting-redesign__protocol');
+        const extendedTarget = `${extended.plannedDurationHours} FASTING.HOURS`;
+        expect(protocol?.textContent.trim()).toBe(extendedTarget);
+
+        saving.next(checkedIn);
+        saving.complete();
+        redraw(harness);
+
+        expect(refreshing.observed).toBe(true);
+        expect(protocol?.textContent.trim()).toBe(extendedTarget);
+        expect(checkInNotesField(openFastingCheckIn(harness)).value).toBe(SAVED_NOTE);
+    });
+});
+
+function extendFastingByOneDay(harness: RouterTestingHarness): void {
+    getButton(pageRoot(harness), 'FASTING.REDESIGN.MANAGE').click();
+    redraw(harness);
+    const management = getDialog('fd-fasting-session-management-dialog');
+    const extendPanel = management.querySelector<HTMLButtonElement>(
+        '.fasting-controls__extend-panel:not(.fasting-controls__extend-panel--subtle) > button',
+    );
+    if (extendPanel === null) {
+        throw new Error('Expected the fasting extension panel');
+    }
+    extendPanel.click();
+    redraw(harness);
+    getButton(management, 'FASTING.ADD_DAY').click();
+    redraw(harness);
+}
 
 function submitFastingCheckInNote(harness: RouterTestingHarness, note: string): void {
     const dialog = openFastingCheckIn(harness);
@@ -765,6 +900,89 @@ describe('Rendered fasting actions during a session update', () => {
 
         expect(api.end).toHaveBeenCalledTimes(2);
         expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.READY');
+    });
+});
+
+describe('Visible fasting End controls during an overview refresh', () => {
+    it.each([
+        { surface: 'management', transition: 'replacement' },
+        { surface: 'page', transition: 'replacement' },
+        { surface: 'page', transition: 'completion' },
+    ])('keeps the $surface End action attached to its rendered session after overview $transition', async ({ surface, transition }) => {
+        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+        const session = makeSession({
+            startedAtUtc: utcInstant('2026-05-19T08:00:00Z'),
+            planType: 'Extended',
+            protocol: 'Custom',
+            plannedDurationHours: EXTENDED_HOURS,
+            initialPlannedDurationHours: EXTENDED_HOURS,
+        });
+        const { harness, api } = await renderFastingAsync(session);
+        const transport = TestBed.runInInjectionContext(() => new FastingService());
+        const http = TestBed.inject(HttpTestingController);
+        const request = { method: 'PUT', url: `${environment.apiUrls.fasting}/end` };
+        const overview = new Subject<FastingOverview>();
+        api.end.mockImplementation(() => transport.end());
+        api.updateCheckIn.mockReturnValueOnce(of({ ...session, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: SAVED_NOTE }));
+        api.getOverviewStrict.mockReturnValueOnce(overview);
+
+        submitFastingCheckInNote(harness, SAVED_NOTE);
+        expect(overview.observed).toBe(true);
+        if (surface === 'management') {
+            getButton(pageRoot(harness), 'FASTING.REDESIGN.MANAGE').click();
+            redraw(harness);
+        }
+        const management = surface === 'management' ? getDialog('fd-fasting-session-management-dialog') : null;
+        const oldInterrupt = getButton(management ?? pageRoot(harness), 'FASTING.INTERRUPT_FAST');
+        const ended = { ...session, endedAtUtc: utcInstant(FIXTURE_TIME), status: 'Completed', isCompleted: true } satisfies FastingSession;
+        const replacement = makeSession({
+            id: REPLACEMENT_SESSION_ID,
+            startedAtUtc: utcInstant(FIXTURE_TIME),
+            planType: 'Cyclic',
+            protocol: 'Cyclic',
+            occurrenceKind: 'FastDay',
+            cyclicFastDays: CYCLIC_FAST_DAYS,
+            cyclicEatDays: CYCLIC_EAT_DAYS,
+            cyclicEatDayFastHours: CYCLIC_EAT_DAY_FAST_HOURS,
+            cyclicEatDayEatingWindowHours: CYCLIC_EAT_DAY_WINDOW_HOURS,
+        });
+
+        overview.next(transition === 'replacement' ? makeOverview(replacement, [replacement, ended]) : makeOverview(null, [ended]));
+        overview.complete();
+        expect(oldInterrupt.isConnected).toBe(true);
+        expect(oldInterrupt.disabled).toBe(false);
+        oldInterrupt.click();
+        redraw(harness);
+        const staleConfirmation = document.querySelector('fd-fasting-end-confirm-dialog');
+        if (staleConfirmation !== null) {
+            getButton(staleConfirmation, 'FASTING.STOP_CYCLE').click();
+            redraw(harness);
+        }
+        http.expectNone(request, 'the rendered Interrupt button must not stop a replacement cycle');
+        expect(staleConfirmation).toBeNull();
+        if (transition === 'completion') {
+            expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.READY');
+        } else {
+            getButton(management ?? pageRoot(harness), 'FASTING.STOP_CYCLE').click();
+            redraw(harness);
+            const confirmation = getDialog('fd-fasting-end-confirm-dialog');
+            expect(confirmation.textContent).toContain('FASTING.STOP_CYCLE_CONFIRM_MESSAGE');
+            getButton(confirmation, 'FASTING.STOP_CYCLE').click();
+            redraw(harness);
+            const endedReplacement = {
+                ...replacement,
+                endedAtUtc: utcInstant(FIXTURE_TIME),
+                status: 'Completed',
+                isCompleted: true,
+            } satisfies FastingSession;
+            api.getOverviewStrict.mockReturnValue(of(makeOverview(null, [endedReplacement, ended])));
+            http.expectOne(request).flush(endedReplacement);
+            redraw(harness);
+            if (management !== null) {
+                expect(management.isConnected).toBe(false);
+            }
+        }
+        http.verify();
     });
 });
 
@@ -935,6 +1153,88 @@ describe('Rendered fasting setup locale', () => {
         );
         expect(dialog.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe(String(CUSTOM_TARGET_HOURS));
         expect(api.start).not.toHaveBeenCalled();
+    });
+});
+
+const EXTEND_VISIBLE_TARGET = {
+    panel: '.fasting-controls__extend-panel:not(.fasting-controls__extend-panel--subtle) > button',
+    label: 'FASTING.ADD_DAY',
+    endpoint: 'current/duration',
+    body: { additionalHours: EXTEND_ONE_DAY_HOURS },
+    durationChange: EXTEND_ONE_DAY_HOURS,
+};
+const REDUCE_VISIBLE_TARGET = {
+    panel: '.fasting-controls__extend-panel--subtle > button',
+    label: 'FASTING.REDUCE_4_HOURS',
+    endpoint: 'current/duration/reduce',
+    body: { reducedHours: REDUCED_HOURS },
+    durationChange: -REDUCED_HOURS,
+};
+
+describe('Visible fasting target controls during an overview refresh', () => {
+    it.each([
+        { action: 'extend', target: EXTEND_VISIBLE_TARGET, transition: 'replacement' },
+        { action: 'extend', target: EXTEND_VISIBLE_TARGET, transition: 'completion' },
+        { action: 'reduce', target: REDUCE_VISIBLE_TARGET, transition: 'replacement' },
+        { action: 'reduce', target: REDUCE_VISIBLE_TARGET, transition: 'completion' },
+    ])('waits for current controls before sending $action after an overview $transition', async ({ target, transition }) => {
+        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+        const session = makeSession({
+            startedAtUtc: utcInstant('2026-05-19T08:00:00Z'),
+            planType: 'Extended',
+            protocol: 'Custom',
+            plannedDurationHours: EXTENDED_HOURS,
+            initialPlannedDurationHours: EXTENDED_HOURS,
+        });
+        const { harness, api } = await renderFastingAsync(session);
+        const transport = TestBed.runInInjectionContext(() => new FastingService());
+        const http = TestBed.inject(HttpTestingController);
+        api.extend.mockImplementation(payload => transport.extend(payload));
+        api.reduceTarget.mockImplementation(payload => transport.reduceTarget(payload));
+        const request = { method: 'PUT', url: `${environment.apiUrls.fasting}/${target.endpoint}` };
+        const overview = new Subject<FastingOverview>();
+        api.updateCheckIn.mockReturnValueOnce(of({ ...session, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: SAVED_NOTE }));
+        api.getOverviewStrict.mockReturnValueOnce(overview);
+        submitFastingCheckInNote(harness, SAVED_NOTE);
+        expect(overview.observed).toBe(true);
+
+        getButton(pageRoot(harness), 'FASTING.REDESIGN.MANAGE').click();
+        redraw(harness);
+        const dialog = getDialog('fd-fasting-session-management-dialog');
+        const header = dialog.querySelector<HTMLButtonElement>(target.panel);
+        if (header === null) {
+            throw new Error('Expected the visible fasting target action panel');
+        }
+        header.click();
+        redraw(harness);
+        const oldControl = getButton(dialog, target.label);
+        expect(oldControl.disabled).toBe(false);
+
+        const ended = { ...session, endedAtUtc: utcInstant(FIXTURE_TIME), status: 'Completed', isCompleted: true } satisfies FastingSession;
+        const replacement = { ...session, id: REPLACEMENT_SESSION_ID, startedAtUtc: utcInstant(FIXTURE_TIME) };
+        overview.next(transition === 'replacement' ? makeOverview(replacement, [replacement, ended]) : makeOverview(null, [ended]));
+        overview.complete();
+        expect(oldControl.isConnected).toBe(true);
+        expect(oldControl.disabled).toBe(false);
+        oldControl.click();
+        http.expectNone(request, 'an old rendered fasting control must not change the current session');
+
+        redraw(harness);
+        if (transition === 'replacement') {
+            getButton(dialog, target.label).click();
+            const updated = http.expectOne(request);
+            expect(updated.request.body).toEqual(target.body);
+            updated.flush({
+                ...replacement,
+                addedDurationHours: target.durationChange,
+                plannedDurationHours: replacement.plannedDurationHours + target.durationChange,
+            });
+            redraw(harness);
+        } else {
+            expect(dialog.isConnected).toBe(false);
+            expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.READY');
+        }
+        http.verify();
     });
 });
 
@@ -1112,7 +1412,142 @@ describe('Routed fasting cycle setup', () => {
         expect(intent.eatDayWindow.fastHours).toBe(CYCLIC_EAT_DAY_FAST_HOURS);
         expect(intent.eatDayWindow.eatingWindowHours).toBe(CYCLIC_EAT_DAY_WINDOW_HOURS);
     });
+
+    it('selects the mode defaults and starts the chosen fixed cycle with a different eating-day protocol', async () => {
+        const { harness, api } = await renderFastingAsync(null);
+        api.start.mockReturnValueOnce(new Subject<FastingSession>());
+        const dialog = openIdleProtocolSettings(harness);
+        expect(getButton(dialog, 'FASTING.PROTOCOL_16_8').getAttribute('aria-checked')).toBe('true');
+
+        getButton(dialog, 'FASTING.MODE_EXTENDED').click();
+        redraw(harness);
+        expect(getButton(dialog, 'FASTING.PROTOCOL_24_0').getAttribute('aria-checked')).toBe('true');
+
+        getButton(dialog, 'FASTING.MODE_INTERMITTENT').click();
+        redraw(harness);
+        expect(getButton(dialog, 'FASTING.PROTOCOL_16_8').getAttribute('aria-checked')).toBe('true');
+
+        getButton(dialog, 'FASTING.MODE_CYCLIC').click();
+        redraw(harness);
+        const preset = getButton(dialog, '2:1');
+        const eatingDay = getButton(dialog, 'FASTING.PROTOCOL_18_6');
+        preset.click();
+        redraw(harness);
+        eatingDay.click();
+        redraw(harness);
+        expect(preset.getAttribute('aria-checked')).toBe('true');
+        expect(eatingDay.getAttribute('aria-checked')).toBe('true');
+        expect(api.start).not.toHaveBeenCalled();
+
+        getButton(dialog, 'FASTING.START_FAST').click();
+        expect(api.start).toHaveBeenCalledOnce();
+        const [intent] = api.start.mock.calls[0];
+        if (intent.planType !== 'Cyclic') {
+            throw new Error('Expected to start a cyclic fasting plan');
+        }
+        expect({
+            fastDays: intent.fastDays,
+            eatDays: intent.eatDays,
+            fastHours: intent.eatDayWindow.fastHours,
+            eatingWindowHours: intent.eatDayWindow.eatingWindowHours,
+        }).toEqual({
+            fastDays: 2,
+            eatDays: 1,
+            fastHours: 18,
+            eatingWindowHours: 6,
+        });
+    });
 });
+
+describe('Routed idle fasting selection', () => {
+    it('shows the chosen cyclic preset before the session is started', async () => {
+        const { harness, api } = await renderFastingAsync(null);
+        const dialog = openIdleProtocolSettings(harness);
+        getButton(dialog, 'FASTING.MODE_CYCLIC').click();
+        redraw(harness);
+        const preset = getButton(dialog, '2:1');
+        preset.click();
+        redraw(harness);
+        expect(preset.getAttribute('aria-checked')).toBe('true');
+
+        expect(closeIdleProtocolSettings(harness, dialog)).toBe('2:1');
+        expect(api.start).not.toHaveBeenCalled();
+    });
+
+    it('shows a short custom extended fast in hours before the session is started', async () => {
+        const duration = 8;
+        const { harness, api } = await renderFastingAsync(null);
+        const dialog = openIdleProtocolSettings(harness);
+        getButton(dialog, 'FASTING.MODE_EXTENDED').click();
+        redraw(harness);
+        getButton(dialog, 'FASTING.PROTOCOL_CUSTOM').click();
+        redraw(harness);
+        enterNumber(dialog, 'FASTING.CUSTOM_HOURS', duration, harness);
+
+        expect(closeIdleProtocolSettings(harness, dialog)).toBe(`${duration} FASTING.HOURS`);
+        expect(api.start).not.toHaveBeenCalled();
+    });
+
+    it('shows one hour after clearing the custom extended target and submits that value', async () => {
+        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+        const { harness, api } = await renderFastingAsync(null);
+        const transport = TestBed.runInInjectionContext(() => new FastingService());
+        const http = TestBed.inject(HttpTestingController);
+        api.start.mockImplementationOnce(intent => transport.start(intent));
+
+        const dialog = openIdleProtocolSettings(harness);
+        getButton(dialog, 'FASTING.MODE_EXTENDED').click();
+        redraw(harness);
+        getButton(dialog, 'FASTING.PROTOCOL_CUSTOM').click();
+        redraw(harness);
+        enterNumber(dialog, 'FASTING.CUSTOM_HOURS', CUSTOM_TARGET_HOURS, harness);
+        const durationInput = dialog.querySelector('input[type="number"]');
+        if (!(durationInput instanceof HTMLInputElement)) {
+            throw new Error('Expected the custom extended target field');
+        }
+        durationInput.value = '';
+        durationInput.dispatchEvent(new Event('input', { bubbles: true }));
+        redraw(harness);
+
+        expect(durationInput.value).toBe('1');
+        expect(closeIdleProtocolSettings(harness, dialog)).toBe('1 FASTING.HOURS');
+        expect(api.start).not.toHaveBeenCalled();
+
+        getButton(openIdleProtocolSettings(harness), 'FASTING.START_FAST').click();
+        redraw(harness);
+        const start = http.expectOne({ method: 'POST', url: `${environment.apiUrls.fasting}/start` });
+        expect(start.request.body).toEqual({ planType: 'Extended', protocol: 'Custom', plannedDurationHours: 1 });
+        const active = makeSession({ planType: 'Extended', protocol: 'Custom', initialPlannedDurationHours: 1, plannedDurationHours: 1 });
+        api.getOverviewStrict.mockReturnValueOnce(of(makeOverview(active)));
+        start.flush(active);
+        redraw(harness);
+
+        expect(document.querySelector('fd-fasting-protocol-dialog')).toBeNull();
+        expect(pageRoot(harness).textContent).toContain('FASTING.REDESIGN.MANAGE');
+        http.verify();
+    });
+});
+
+function openIdleProtocolSettings(harness: RouterTestingHarness): HTMLElement {
+    getButton(pageRoot(harness), 'FASTING.REDESIGN.CHANGE_PROTOCOL').click();
+    redraw(harness);
+    return getDialog('fd-fasting-protocol-dialog');
+}
+
+function closeIdleProtocolSettings(harness: RouterTestingHarness, dialog: HTMLElement): string {
+    const close = dialog.querySelector<HTMLButtonElement>('button[aria-label="COMMON.CLOSE"]');
+    if (close === null) {
+        throw new Error('Expected the close button');
+    }
+    close.click();
+    redraw(harness);
+    expect(document.querySelector('fd-fasting-protocol-dialog')).toBeNull();
+    const preview = pageRoot(harness).querySelector('.fasting-redesign__time');
+    if (preview === null) {
+        throw new Error('Expected the idle fasting plan summary');
+    }
+    return preview.textContent.trim();
+}
 
 describe('Routed fasting history', () => {
     it('keeps the first page on a failed request and opens the legacy cyclic check-in after retry', async () => {

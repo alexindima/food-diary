@@ -4,7 +4,6 @@ import { expect, it, vi } from 'vitest';
 
 import { AiFoodService } from '../../../shared/api/ai-food.service';
 import { FoodRecognitionService } from '../../../shared/api/food-recognition.service';
-import { ImageUploadService } from '../../../shared/api/image-upload.service';
 import { ProductAiRecognitionFacade } from './product-ai-recognition.facade';
 
 const TOTAL_RECOGNITIONS = 42;
@@ -15,7 +14,6 @@ it('requests only one product-label row and uses the total rather than the page 
         providers: [
             ProductAiRecognitionFacade,
             { provide: AiFoodService, useValue: {} },
-            { provide: ImageUploadService, useValue: {} },
             { provide: FoodRecognitionService, useValue: { list } },
         ],
     });

@@ -147,9 +147,7 @@ export class AuthComponent {
 
     private subscribeFormChanges(): void {
         effect(() => {
-            const values = this.loginModel();
-            const failed = this.failedLoginValues;
-            if (values.email !== failed?.email || values.password !== failed.password || values.rememberMe !== failed.rememberMe) {
+            if (!this.loginValuesMatch(this.failedLoginValues)) {
                 this.clearGlobalError();
             }
         });
@@ -161,6 +159,11 @@ export class AuthComponent {
             this.passwordResetModel();
             this.clearGlobalError();
         });
+    }
+
+    private loginValuesMatch(expected: LoginFormValues | null): boolean {
+        const current = this.loginModel();
+        return current.email === expected?.email && current.password === expected.password && current.rememberMe === expected.rememberMe;
     }
 
     private registerRenderingEffects(): void {
@@ -241,7 +244,7 @@ export class AuthComponent {
                 return;
             }
 
-            if (tabVersion === this.authTabVersion) {
+            if (tabVersion === this.authTabVersion && this.loginValuesMatch(loginValues)) {
                 this.failedLoginValues = loginValues;
                 this.handleLoginResult(result);
             }
@@ -275,28 +278,37 @@ export class AuthComponent {
             return;
         }
 
-        const rememberMe = this.loginModel().rememberMe;
+        if (!this.loginValuesMatch(this.failedLoginValues)) {
+            this.clearGlobalError();
+            return;
+        }
+
+        const login = this.loginModel();
         const tabVersion = this.authTabVersion;
         this.isRestoring.set(true);
 
-        this.authFlowFacade.restoreAccount(this.loginModel(), rememberMe).subscribe(success => {
-            if (this.destroyRef.destroyed) {
-                return;
-            }
-            if (success) {
-                void this.completeAuthenticatedNavigationAndCloseAsync().finally(() => {
-                    if (!this.destroyRef.destroyed) {
-                        this.isRestoring.set(false);
-                    }
-                });
-                return;
-            }
-
-            this.isRestoring.set(false);
-            if (tabVersion === this.authTabVersion) {
-                this.setGlobalError('AUTH.LOGIN.RESTORE_ERROR');
-            }
+        this.authFlowFacade.restoreAccount(login, login.rememberMe).subscribe(success => {
+            this.handleRestoreResult(success, tabVersion);
         });
+    }
+
+    private handleRestoreResult(success: boolean, tabVersion: number): void {
+        if (this.destroyRef.destroyed) {
+            return;
+        }
+        if (success) {
+            void this.completeAuthenticatedNavigationAndCloseAsync().finally(() => {
+                if (!this.destroyRef.destroyed) {
+                    this.isRestoring.set(false);
+                }
+            });
+            return;
+        }
+
+        this.isRestoring.set(false);
+        if (tabVersion === this.authTabVersion) {
+            this.setGlobalError('AUTH.LOGIN.RESTORE_ERROR');
+        }
     }
 
     private async registerAsync(): Promise<void> {
@@ -309,8 +321,9 @@ export class AuthComponent {
         this.isSubmitting.set(true);
 
         const tabVersion = this.authTabVersion;
+        const submitted = this.registerModel();
         try {
-            const result = await firstValueFrom(this.authFlowFacade.register(this.registerModel()));
+            const result = await firstValueFrom(this.authFlowFacade.register(submitted));
             if (this.destroyRef.destroyed) {
                 return;
             }
@@ -321,7 +334,7 @@ export class AuthComponent {
             }
 
             if (tabVersion === this.authTabVersion) {
-                this.handleRegisterResult(result);
+                this.handleRegisterResult(result, submitted.email);
             }
         } finally {
             this.isSubmitting.set(false);
@@ -396,6 +409,7 @@ export class AuthComponent {
         if (this.showPasswordReset()) {
             return;
         }
+        this.syncLoginNativeValues();
         this.clearGlobalError();
         this.passwordResetForm().reset({
             email: this.loginModel().email,
@@ -491,9 +505,7 @@ export class AuthComponent {
             return;
         }
         if (adminRedirectUrl !== null) {
-            if (this.isBrowser) {
-                this.document.location.assign(adminRedirectUrl);
-            }
+            this.document.location.assign(adminRedirectUrl);
             return;
         }
 
@@ -508,10 +520,6 @@ export class AuthComponent {
         }
 
         const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl, this.document.location.origin);
-        if (adminPath === null) {
-            return null;
-        }
-
         if (!this.authService.isAdmin()) {
             return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
         }
@@ -553,9 +561,9 @@ export class AuthComponent {
         }
     }
 
-    private handleRegisterResult(result: AuthRegisterResult): void {
+    private handleRegisterResult(result: AuthRegisterResult, submittedEmail: string): void {
         if (result === 'emailExists') {
-            this.formManager.setRegisterEmailExistsError();
+            this.formManager.setRegisterEmailExistsError(submittedEmail);
         } else if (result === 'rateLimited') {
             this.setGlobalError('FORM_ERRORS.RATE_LIMITED');
         } else if (result === 'accountDeleted') {

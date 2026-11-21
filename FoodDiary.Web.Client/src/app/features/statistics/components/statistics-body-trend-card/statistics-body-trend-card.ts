@@ -96,17 +96,11 @@ export class StatisticsBodyTrendCardComponent {
         const goal = this.displayMetric().goal;
         return current === null || goal === null ? null : Math.abs(current - goal);
     });
-    protected readonly hasPositiveChange = computed(() => (this.metric().change ?? 0) < 0);
-    protected readonly hasNegativeChange = computed(() => (this.metric().change ?? 0) > 0);
-    protected readonly changePrefix = computed(() => (this.hasNegativeChange() ? '+' : ''));
     protected readonly bounds = computed(() => {
         const metric = this.displayMetric();
         const values = metric.points.map(point => point.value).filter((value): value is number => value !== null);
         if (metric.goal !== null) {
             values.push(metric.goal);
-        }
-        if (values.length === 0) {
-            return { minimum: 0, maximum: 1 };
         }
         const minimum = Math.min(...values);
         const maximum = Math.max(...values);

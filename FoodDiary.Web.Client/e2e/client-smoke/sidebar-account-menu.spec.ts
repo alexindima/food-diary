@@ -45,6 +45,29 @@ test('shows complete account menu labels with collapsed desktop navigation', asy
     await expect(trigger).toBeFocused();
 });
 
+test('closes the desktop account menu when keyboard focus moves to the page', async ({ page }) => {
+    await openSidebarAtWidthAsync(page, DESKTOP_WIDTH);
+    const trigger = page.locator('fd-sidebar-desktop .sidebar__user');
+    const menu = page.getByRole('menu', { name: 'User menu' });
+    const profile = menu.getByRole('menuitem', { name: 'Profile', exact: true });
+    const logout = menu.getByRole('menuitem', { name: 'Logout', exact: true });
+    const collapse = page.getByRole('button', { name: 'Collapse navigation' });
+    const viewport = page.getByRole('region', { name: 'Skip to main content' });
+
+    await trigger.press('Enter');
+    await expect(profile).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(logout).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(collapse).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(viewport).toBeFocused();
+
+    await expect.soft(menu).toBeHidden();
+    await page.keyboard.press('Escape');
+    await expect(viewport).toBeFocused();
+});
+
 test.describe('sidebar viewport transitions', () => {
     test('dismisses the desktop account menu at the mobile breakpoint', async ({ page }) => {
         await openSidebarAtWidthAsync(page, DESKTOP_WIDTH);

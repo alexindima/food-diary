@@ -529,6 +529,11 @@
           "reviewReason": "The frozen query still measures persistence retrieval. Its expected file follows the write repository used by ImportDailyAdvicesCommandHandler and ImportDailyAdvicePairsCommandHandler. The old repository only reads projections. The query and score thresholds are unchanged. The focused corpus passed with the corrected owner."
         },
         {
+          "path": ".llm-wiki/evals/context-search-probe-3.json",
+          "sha256": "d09ea2ea0b6dc4030a8291525d200b6c9e8e3e146f4af3a973c2b6bc82be3c66",
+          "reviewReason": "The affected corpus now points to the active Signal Forms resolver after the retired app helper was removed. The current and baseline SQLite checks agree on all 30 probe-three ranks and all 40 probe-seven ranks. The graph execution and acceptance thresholds remain as described."
+        },
+        {
           "path": ".llm-wiki/evals/context-search.json",
           "sha256": "6ae5c83d72936d239c644b2ff32dfa3ce484855a3163185b4e03f9ff9695b92e",
           "reviewReason": "The primary retrieval corpus now asks for the password login command handler for email credentials. This disambiguates the intended diary LoginCommandHandler from other sign-in methods while preserving the expected owner and thresholds."
@@ -549,10 +554,10 @@
           "reviewReason": "Reviewed the ten HashSet collection expressions. SDK IL calls the same enumerable/comparer constructor; the linked SQLite reader preserves graph lookup and ranking. The 242 SQLite reader tests passed."
         }
       ],
-      "reason": "The primary retrieval corpus now asks for the password login command handler for email credentials. This disambiguates the intended diary LoginCommandHandler from other sign-in methods while preserving the expected owner and thresholds.",
+      "reason": "The affected corpus now points to the active Signal Forms resolver after the retired app helper was removed. The current and baseline SQLite checks agree on all 30 probe-three ranks and all 40 probe-seven ranks. The graph execution and acceptance thresholds remain as described.",
       "baseRef": "HEAD",
-      "gitHead": "5484cd036da1258254fe11a19c21621605fb2d83",
-      "reviewedAtUtc": "2026-11-15T14:03:25.6203522Z"
+      "gitHead": "8b06edff06cd74b84550f33abf0ddb5ad0d05e25",
+      "reviewedAtUtc": "2026-11-21T00:40:28.3749157Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1876,6 +1881,11 @@
       "pageSha256": "102735042edf1a9568331b8d86d23e006f4d4649c39d401f231351591829325a",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-probe-3.json",
+          "sha256": "d09ea2ea0b6dc4030a8291525d200b6c9e8e3e146f4af3a973c2b6bc82be3c66",
+          "reviewReason": "The source scenario still asks how translated validation errors are resolved for touched or changed Angular fields. The current query finds the live resolver first, and all retrieval thresholds pass for this corpus."
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
           "sha256": "df8896ac7e108a6d242a503c5c4723dd501c56b35b10a14cb0bcce9dfe63bed0",
           "reviewReason": "Verified that the generated repository catalog adds only the public recipe moderation implementation plan and increments the documentation count. Its schema, source inventory rules and query behavior are unaffected."
@@ -1921,10 +1931,10 @@
           "reviewReason": "Reviewed repository catalog changes for net11.0 and SDK-provided dependencies. The context search and retrieval smoke groups passed with the new extractor and scoped input overlay."
         }
       ],
-      "reason": "Verified that the generated repository catalog adds only the public recipe moderation implementation plan and increments the documentation count. Its schema, source inventory rules and query behavior are unaffected.",
+      "reason": "The source scenario still asks how translated validation errors are resolved for touched or changed Angular fields. The current query finds the live resolver first, and all retrieval thresholds pass for this corpus.",
       "baseRef": "HEAD",
-      "gitHead": "500547d999f4b6f916cf9dee022de2a8f848d714",
-      "reviewedAtUtc": "2026-11-19T19:33:51.6924943Z"
+      "gitHead": "8b06edff06cd74b84550f33abf0ddb5ad0d05e25",
+      "reviewedAtUtc": "2026-11-21T00:40:28.7396169Z"
     },
     {
       "pageId": "workflow.review-diff",

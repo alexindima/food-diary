@@ -2,11 +2,9 @@ import { signal, type WritableSignal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { LocalizationService } from '../../../../shared/i18n/localization.service';
-import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
 import { FastingCheckInCardComponent } from './fasting-check-in-card';
 
 const INITIAL_HUNGER_LEVEL = 1;
@@ -17,96 +15,57 @@ const UPDATED_ENERGY_LEVEL = 5;
 const UPDATED_MOOD_LEVEL = 2;
 const CHECK_IN_NOTES_LIMIT = 500;
 
-// eslint-disable-next-line max-lines-per-function -- the component states share one compact fixture setup and interaction contract.
 describe('FastingCheckInCardComponent', () => {
     beforeEach(() => {
-        setupTestBed();
+        TestBed.configureTestingModule({
+            imports: [FastingCheckInCardComponent],
+            providers: [provideTranslateTesting()],
+        });
     });
 
-    it('renders nothing while fasting is inactive', () => {
-        const fixture = createComponent({ isActive: false });
-
-        expect(getElement(fixture).textContent.trim()).toBe('');
-    });
-
-    it('renders collapsed summary and emits form-open action', () => {
-        const fixture = createComponent({ latestCheckIn: createCheckInViewModel() });
-        const formOpen = vi.fn();
-        fixture.componentInstance['formOpen'].subscribe(formOpen);
-        const element = getElement(fixture);
-
-        expect(element.textContent).toContain('FASTING.CHECK_IN.UPDATE_ACTION');
-        expect(element.textContent).toContain('Latest check-in');
-        getButtonByText(element, 'FASTING.CHECK_IN.UPDATE_ACTION').click();
-
-        expect(formOpen).toHaveBeenCalledTimes(1);
-    });
-
-    it('updates writable signals and emits save/close actions from expanded form', () => {
+    it('updates writable signals from the rendered check-in controls', () => {
         const hungerLevel = signal(INITIAL_HUNGER_LEVEL);
         const energyLevel = signal(INITIAL_ENERGY_LEVEL);
         const moodLevel = signal(DEFAULT_CHECK_IN_LEVEL);
         const selectedSymptoms = signal<string[]>([]);
         const notes = signal('');
-        const fixture = createComponent({
-            isExpanded: true,
-            hungerLevel,
-            energyLevel,
-            moodLevel,
-            selectedSymptoms,
-            notes,
-        });
-        const formClose = vi.fn();
-        const save = vi.fn();
-        fixture.componentInstance['formClose'].subscribe(formClose);
-        fixture.componentInstance['save'].subscribe(save);
-
-        const emojiPickers = fixture.debugElement.queryAll(By.css('fd-ui-emoji-picker'));
-        emojiPickers[0].triggerEventHandler('selectedValueChange', UPDATED_HUNGER_LEVEL);
-        emojiPickers[1].triggerEventHandler('selectedValueChange', UPDATED_ENERGY_LEVEL);
-        emojiPickers[2].triggerEventHandler('selectedValueChange', UPDATED_MOOD_LEVEL);
-        fixture.debugElement.queryAll(By.css('fd-ui-chip-select'))[1].triggerEventHandler('selectedValuesChange', ['headache']);
-        const notesInput = fixture.debugElement.query(By.css('textarea')).nativeElement as HTMLTextAreaElement;
-        notesInput.value = 'Feeling okay';
-        notesInput.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
-
+        const fixture = createComponent({ hungerLevel, energyLevel, moodLevel, selectedSymptoms, notes });
         const element = getElement(fixture);
-        getButtonByText(element, 'FASTING.CHECK_IN.HIDE_ACTION').click();
-        getButtonByText(element, 'FASTING.CHECK_IN.SAVE').click();
+
+        getButtonByLabel(element, `FASTING.CHECK_IN.HUNGER_LEVEL_${UPDATED_HUNGER_LEVEL}`).click();
+        getButtonByLabel(element, `FASTING.CHECK_IN.ENERGY_LEVEL_${UPDATED_ENERGY_LEVEL}`).click();
+        getButtonByLabel(element, `FASTING.CHECK_IN.MOOD_LEVEL_${UPDATED_MOOD_LEVEL}`).click();
+        getButtonByLabel(element, 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE').click();
+        const notesInput = getNotesInput(element);
+        notesInput.value = 'Feeling okay';
+        notesInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
 
         expect(hungerLevel()).toBe(UPDATED_HUNGER_LEVEL);
         expect(energyLevel()).toBe(UPDATED_ENERGY_LEVEL);
         expect(moodLevel()).toBe(UPDATED_MOOD_LEVEL);
         expect(selectedSymptoms()).toEqual(['headache']);
         expect(notes()).toBe('Feeling okay');
-        expect(formClose).toHaveBeenCalledTimes(1);
-        expect(save).toHaveBeenCalledTimes(1);
     });
 
     it('disables the draft when another terminal action is running', () => {
-        const fixture = createComponent({ isExpanded: true, isUpdatingCycle: true });
+        const fixture = createComponent({ isUpdatingCycle: true });
 
-        expect((fixture.componentInstance as unknown as { draftDisabled: () => boolean }).draftDisabled()).toBe(true);
+        expect(getElement(fixture).querySelector('fieldset')?.disabled).toBe(true);
     });
 
     it('allows a full 500-character note while limiting native input to the API boundary', () => {
         const notes = signal('x'.repeat(CHECK_IN_NOTES_LIMIT));
-        const fixture = createComponent({ isExpanded: true, notes });
-        const save = vi.fn();
-        fixture.componentInstance.save.subscribe(save);
-        const input = fixture.debugElement.query(By.css('textarea')).nativeElement as HTMLTextAreaElement;
+        const fixture = createComponent({ notes });
+        const input = getNotesInput(getElement(fixture));
 
         expect(input.maxLength).toBe(CHECK_IN_NOTES_LIMIT);
         expect(input.value).toBe(notes());
-        getButtonByText(getElement(fixture), 'FASTING.CHECK_IN.SAVE').click();
-
         expect(notes()).toHaveLength(CHECK_IN_NOTES_LIMIT);
-        expect(save).toHaveBeenCalledTimes(1);
     });
 
     it('provides descriptive hints for emoji scales and symptom chips', () => {
-        const fixture = createComponent({ isExpanded: true });
+        const fixture = createComponent();
         const emojiPicker = fixture.debugElement.query(By.css('fd-ui-emoji-picker')).componentInstance as OptionsHost;
         const symptomChips = fixture.debugElement.queryAll(By.css('fd-ui-chip-select'))[1].componentInstance as OptionsHost;
 
@@ -122,13 +81,14 @@ describe('FastingCheckInCardComponent', () => {
 
     it('keeps the no-symptoms choice mutually exclusive with warning symptoms', () => {
         const selectedSymptoms = signal<string[]>(['headache']);
-        const fixture = createComponent({ isExpanded: true, selectedSymptoms });
-        const symptomPickers = fixture.debugElement.queryAll(By.css('fd-ui-chip-select'));
+        const fixture = createComponent({ selectedSymptoms });
+        const element = getElement(fixture);
 
-        symptomPickers[0].triggerEventHandler('selectedValuesChange', ['good']);
+        getButtonByLabel(element, 'FASTING.CHECK_IN.SYMPTOMS.GOOD').click();
+        fixture.detectChanges();
         expect(selectedSymptoms()).toEqual(['good']);
 
-        symptomPickers[1].triggerEventHandler('selectedValuesChange', ['dizziness']);
+        getButtonByLabel(element, 'FASTING.CHECK_IN.SYMPTOMS.DIZZINESS').click();
         expect(selectedSymptoms()).toEqual(['dizziness']);
     });
 });
@@ -137,28 +97,10 @@ type OptionsHost = {
     options: () => Array<Record<string, unknown>>;
 };
 
-function setupTestBed(): void {
-    TestBed.configureTestingModule({
-        imports: [FastingCheckInCardComponent],
-        providers: [
-            provideTranslateTesting(),
-            {
-                provide: LocalizationService,
-                useValue: {
-                    getCurrentLanguage: vi.fn(() => 'en'),
-                },
-            },
-        ],
-    });
-}
-
 type CheckInCardInput = {
-    isActive: boolean;
     isSaving: boolean;
     isEnding: boolean;
     isUpdatingCycle: boolean;
-    isExpanded: boolean;
-    latestCheckIn: FastingCheckInViewModel | null;
     hungerLevel: WritableSignal<number>;
     energyLevel: WritableSignal<number>;
     moodLevel: WritableSignal<number>;
@@ -168,12 +110,9 @@ type CheckInCardInput = {
 
 function createComponent(overrides: Partial<CheckInCardInput> = {}): ComponentFixture<FastingCheckInCardComponent> {
     const input: CheckInCardInput = {
-        isActive: true,
         isSaving: false,
         isEnding: false,
         isUpdatingCycle: false,
-        isExpanded: false,
-        latestCheckIn: null,
         hungerLevel: signal(DEFAULT_CHECK_IN_LEVEL),
         energyLevel: signal(DEFAULT_CHECK_IN_LEVEL),
         moodLevel: signal(DEFAULT_CHECK_IN_LEVEL),
@@ -182,17 +121,9 @@ function createComponent(overrides: Partial<CheckInCardInput> = {}): ComponentFi
         ...overrides,
     };
     const fixture = TestBed.createComponent(FastingCheckInCardComponent);
-    fixture.componentRef.setInput('isActive', input.isActive);
-    fixture.componentRef.setInput('isSaving', input.isSaving);
-    fixture.componentRef.setInput('isEnding', input.isEnding);
-    fixture.componentRef.setInput('isUpdatingCycle', input.isUpdatingCycle);
-    fixture.componentRef.setInput('isExpanded', input.isExpanded);
-    fixture.componentRef.setInput('latestCheckIn', input.latestCheckIn);
-    fixture.componentRef.setInput('hungerLevel', input.hungerLevel);
-    fixture.componentRef.setInput('energyLevel', input.energyLevel);
-    fixture.componentRef.setInput('moodLevel', input.moodLevel);
-    fixture.componentRef.setInput('selectedSymptoms', input.selectedSymptoms);
-    fixture.componentRef.setInput('notes', input.notes);
+    for (const [name, value] of Object.entries(input)) {
+        fixture.componentRef.setInput(name, value);
+    }
     fixture.detectChanges();
 
     return fixture;
@@ -202,29 +133,20 @@ function getElement(fixture: ComponentFixture<FastingCheckInCardComponent>): HTM
     return fixture.nativeElement as HTMLElement;
 }
 
-function getButtonByText(element: HTMLElement, text: string): HTMLElement {
-    const button = Array.from(element.querySelectorAll<HTMLElement>('fd-ui-button')).find(item => item.textContent.includes(text));
-    if (button === undefined) {
-        throw new Error(`Button with text "${text}" was not found.`);
+function getButtonByLabel(element: HTMLElement, label: string): HTMLButtonElement {
+    const button = element.querySelector<HTMLButtonElement>(`button[aria-label^="${label}."]`);
+    if (button === null) {
+        throw new Error(`Button with label "${label}" was not found.`);
     }
 
     return button;
 }
 
-function createCheckInViewModel(): FastingCheckInViewModel {
-    return {
-        checkIn: {
-            id: 'check-in-1',
-            checkedInAtUtc: '2026-05-16T10:00:00.000Z',
-            hungerLevel: 3,
-            energyLevel: 4,
-            moodLevel: 5,
-            symptoms: [],
-            notes: null,
-        },
-        checkedInAtLabel: '10:00',
-        relativeCheckedInAt: '5 minutes ago',
-        summary: 'Latest check-in',
-        symptomLabels: [],
-    };
+function getNotesInput(element: HTMLElement): HTMLTextAreaElement {
+    const input = element.querySelector('textarea');
+    if (input === null) {
+        throw new Error('Expected the check-in notes field');
+    }
+
+    return input;
 }

@@ -124,9 +124,9 @@
     },
     {
       "id": "validation-error-utility-probe-3",
-      "query": "frontend utility resolves translated form validation errors",
+      "query": "Resolve translated validation error messages for touched or dirty fields in Angular Signal Forms",
       "changeType": "Frontend",
-      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/lib/validation-error.utils.ts"]
+      "expectedPaths": ["FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts"]
     },
     {
       "id": "localized-number-pipe-probe-3",

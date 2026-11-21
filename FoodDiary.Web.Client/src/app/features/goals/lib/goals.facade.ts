@@ -43,6 +43,39 @@ export type MacroPreset = {
     percent?: MacroPercent;
 };
 
+export type MacroPresetCatalog = {
+    readonly [Key in MacroPresetKey]: MacroPreset & { key: Key };
+};
+
+export const MACRO_PRESETS: MacroPresetCatalog = {
+    custom: { key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' },
+    balancedGym: {
+        key: 'balancedGym',
+        labelKey: 'GOALS_PAGE.MACRO_PRESET_BALANCED_GYM',
+        percent: { protein: 0.4, fats: 0.4, carbs: 0.2 },
+    },
+    classic: {
+        key: 'classic',
+        labelKey: 'GOALS_PAGE.MACRO_PRESET_CLASSIC',
+        percent: { protein: 0.3, fats: 0.3, carbs: 0.4 },
+    },
+    lowCarb: {
+        key: 'lowCarb',
+        labelKey: 'GOALS_PAGE.MACRO_PRESET_LOW_CARB',
+        percent: { protein: 0.5, fats: 0.3, carbs: 0.2 },
+    },
+    highCarb: {
+        key: 'highCarb',
+        labelKey: 'GOALS_PAGE.MACRO_PRESET_HIGH_CARB',
+        percent: { protein: 0.25, fats: 0.25, carbs: 0.5 },
+    },
+    endurance: {
+        key: 'endurance',
+        labelKey: 'GOALS_PAGE.MACRO_PRESET_ENDURANCE',
+        percent: { protein: 0.2, fats: 0.3, carbs: 0.5 },
+    },
+};
+
 @Injectable()
 export class GoalsFacade {
     private readonly goalsService = inject(GoalsService);
@@ -132,34 +165,7 @@ export class GoalsFacade {
     public readonly isLoadingGoals = signal(true);
     public readonly isSavingGoals = signal(false);
     public readonly hasLoadError = signal(false);
-    public readonly macroPresets: MacroPreset[] = [
-        { key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' },
-        {
-            key: 'balancedGym',
-            labelKey: 'GOALS_PAGE.MACRO_PRESET_BALANCED_GYM',
-            percent: { protein: 0.4, fats: 0.4, carbs: 0.2 },
-        },
-        {
-            key: 'classic',
-            labelKey: 'GOALS_PAGE.MACRO_PRESET_CLASSIC',
-            percent: { protein: 0.3, fats: 0.3, carbs: 0.4 },
-        },
-        {
-            key: 'lowCarb',
-            labelKey: 'GOALS_PAGE.MACRO_PRESET_LOW_CARB',
-            percent: { protein: 0.5, fats: 0.3, carbs: 0.2 },
-        },
-        {
-            key: 'highCarb',
-            labelKey: 'GOALS_PAGE.MACRO_PRESET_HIGH_CARB',
-            percent: { protein: 0.25, fats: 0.25, carbs: 0.5 },
-        },
-        {
-            key: 'endurance',
-            labelKey: 'GOALS_PAGE.MACRO_PRESET_ENDURANCE',
-            percent: { protein: 0.2, fats: 0.3, carbs: 0.5 },
-        },
-    ];
+    public readonly macroPresets = MACRO_PRESETS;
 
     public readonly macroStates = computed(() =>
         this.macroConfigs.map(cfg => {

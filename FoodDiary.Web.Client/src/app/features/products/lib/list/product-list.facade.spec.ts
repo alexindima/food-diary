@@ -45,7 +45,6 @@ const PRODUCT_FATS = 4;
 const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
 const DEFAULT_PORTION_AMOUNT = 100;
-const FAVORITE_DEFAULT_PORTION_AMOUNT = 180;
 
 let facade: ProductListFacade;
 let productService: {
@@ -416,26 +415,6 @@ describe('ProductListFacade favorites', () => {
         expect(favoriteProductService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.productData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteProductId: null }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
-    });
-
-    it('adds favorite product to quick meal draft from favorite snapshot', () => {
-        const favorite = createFavoriteProduct({ defaultPortionAmount: FAVORITE_DEFAULT_PORTION_AMOUNT, preferredPortionAmount: 250 });
-
-        facade.addFavoriteProductToMeal(favorite);
-
-        expect(productService.getById).not.toHaveBeenCalled();
-        expect(quickMealService.addProduct).toHaveBeenCalledWith(
-            expect.objectContaining({
-                id: favorite.productId,
-                name: favorite.name,
-                brand: favorite.brand,
-                barcode: favorite.barcode,
-                caloriesPerBase: favorite.caloriesPerBase,
-                isFavorite: true,
-                favoriteProductId: favorite.id,
-            }),
-            favorite.preferredPortionAmount,
-        );
     });
 });
 

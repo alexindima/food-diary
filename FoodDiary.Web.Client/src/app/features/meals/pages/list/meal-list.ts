@@ -19,7 +19,6 @@ import { devQuery } from '../../../../shared/development/development-input';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
 import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from '../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
-import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -33,7 +32,7 @@ import { emptyMealFilters, mealFilterChips, removeMealFilter } from '../../lib/l
 import { mealListQueryKey, readMealListQuery, writeMealListQuery } from '../../lib/list/meal-list-query';
 import { MealListRouteStateFacade } from '../../lib/list/meal-list-route-state.facade';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog/meal-list-filters-dialog';
-import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
+import type { MealDateGroupView } from './meal-list-lib/meal-list.types';
 import { MealListContentComponent, type MealListEmptyState } from './meal-list-sections/meal-list-content/meal-list-content';
 import { MEAL_LIST_TOUR } from './meal-list-tour';
 
@@ -59,6 +58,8 @@ export class MealListComponent {
     private readonly mealListFacade = inject(MealListFacade);
     private readonly routeState = inject(MealListRouteStateFacade);
     private activeQueryKey = mealListQueryKey(this.routeState.initial);
+    private routeWriteRevision = 0;
+    private readonly routeWriteFailed = signal(false);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
@@ -71,20 +72,10 @@ export class MealListComponent {
 
     protected readonly searchModel = signal<SearchFormValues>(this.routeState.initial);
     protected readonly mealData = this.mealListFacade.mealData;
-    protected readonly errorKey = this.mealListFacade.errorKey;
-    protected readonly favorites = this.mealListFacade.favorites;
-    protected readonly favoriteViews = computed<FavoriteMealView[]>(() =>
-        this.favorites().map(favorite => {
-            const mealType = normalizeMealType(favorite.mealType);
-            return {
-                favorite,
-                displayName: favorite.name,
-                displayNameKey: mealType === null ? 'MEAL_LIST.FAVORITE_UNNAMED' : `MEAL_TYPES.${mealType}`,
-            };
-        }),
+    protected readonly errorKey = computed(
+        () => this.mealListFacade.errorKey() ?? (this.routeWriteFailed() && !this.mealData.isLoading() ? 'ERRORS.LOAD_FAILED_TITLE' : null),
     );
     protected readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
-    protected readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;
     protected readonly favoriteLoadingIds = this.mealListFacade.favoriteLoadingIds;
     protected readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
     protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
@@ -96,7 +87,6 @@ export class MealListComponent {
         this.languageVersion();
         return this.groupByDate(this.currentMeals(), 'desc');
     });
-    protected readonly isFavoritesOpen = signal(false);
     protected readonly isPlannedOpen = signal(true);
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly hasDateFilter = computed(() => {
@@ -127,7 +117,6 @@ export class MealListComponent {
 
         return this.hasActiveFilters() ? 'no-results' : 'empty';
     });
-    protected readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     protected readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
@@ -227,32 +216,8 @@ export class MealListComponent {
             });
     }
 
-    protected loadFavorites(): void {
-        this.mealListFacade.loadFavorites();
-    }
-
-    protected toggleFavorites(): void {
-        this.isFavoritesOpen.update(v => !v);
-    }
-
     protected togglePlanned(): void {
         this.isPlannedOpen.update(v => !v);
-    }
-
-    protected repeatFavorite(favorite: FavoriteMeal): void {
-        const targetDate = new Date();
-        this.mealListFacade
-            .repeatMeal(favorite.mealId, utcInstant(targetDate.toISOString()), resolveMealTypeByTime(targetDate), this.structuredFilters)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(repeated => {
-                if (repeated) {
-                    this.scrollToTop();
-                }
-            });
-    }
-
-    protected removeFavorite(favorite: FavoriteMeal): void {
-        this.mealListFacade.removeFavorite(favorite);
     }
 
     protected onMealFavoriteToggle(meal: Meal): void {
@@ -302,6 +267,9 @@ export class MealListComponent {
     }
 
     protected retryLoad(): void {
+        if (this.mealData.isLoading()) {
+            return;
+        }
         const request = this.hasActiveFilters() ? this.loadMeals(this.currentPageIndex() + 1) : this.loadInitialOverview();
         request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
@@ -411,8 +379,12 @@ export class MealListComponent {
     private syncRoute(page: number, replaceUrl = false): void {
         const query = { ...this.structuredFilters, page };
         this.activeQueryKey = mealListQueryKey(query);
+        const revision = ++this.routeWriteRevision;
+        this.routeWriteFailed.set(false);
         void this.routeState.writeAsync(query, replaceUrl).catch(() => {
-            this.errorKey.set('ERRORS.LOAD_FAILED_TITLE');
+            if (revision === this.routeWriteRevision && !this.destroyRef.destroyed) {
+                this.routeWriteFailed.set(true);
+            }
         });
     }
 

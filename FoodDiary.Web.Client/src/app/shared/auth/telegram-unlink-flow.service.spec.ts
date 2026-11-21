@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../services/auth.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
-import { BrowserWindowService } from '../platform/browser-window.service';
 import { SessionEventsService } from './session-events.service';
 import { telegramOAuthCode, telegramOAuthState } from './telegram-oidc-values';
 import { TelegramUnlinkFlowService } from './telegram-unlink-flow.service';
@@ -14,14 +13,13 @@ const ATTEMPT_TTL_MS = 300_000;
 const state = 's'.repeat(STATE_LENGTH);
 const ended = new Subject<void>();
 const authenticated = new Subject<void>();
-const auth = { getUserId: vi.fn(), startTelegramUnlink: vi.fn(), completeTelegramUnlink: vi.fn() };
-const browser = { open: vi.fn() };
+const auth = { getUserId: vi.fn(), completeTelegramUnlink: vi.fn() };
 let stored: unknown;
 let flow: TelegramUnlinkFlowService;
 
 describe('Telegram unlink callback ownership', () => {
     it('leaves unrelated Telegram callbacks available to their owning flow', async () => {
-        await flow.startAsync();
+        storeLegacyAttempt();
         expect(
             await flow.handleCallbackAsync(telegramOAuthCode('other-code'), telegramOAuthState('x'.repeat(STATE_LENGTH)), false),
             'Unrelated Telegram callbacks must keep their own flow',
@@ -31,7 +29,7 @@ describe('Telegram unlink callback ownership', () => {
     });
 
     it('does not end a newer session of the same account after a delayed completion', async () => {
-        await flow.startAsync();
+        storeLegacyAttempt();
         const response = new Subject<void>();
         auth.completeTelegramUnlink.mockReturnValue(response);
         const completion = flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false);
@@ -41,7 +39,7 @@ describe('Telegram unlink callback ownership', () => {
     });
 
     it('does not restore an old attempt when a completion fails after logout', async () => {
-        await flow.startAsync();
+        storeLegacyAttempt();
         const response = new Subject<void>();
         auth.completeTelegramUnlink.mockReturnValue(response);
         const completion = flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false);
@@ -52,35 +50,27 @@ describe('Telegram unlink callback ownership', () => {
         expect(stored).toBeNull();
     });
 
-    it('clears an expired attempt when the profile resumes', async () => {
-        await flow.startAsync();
+    it('clears an expired attempt when the profile resumes', () => {
+        storeLegacyAttempt();
         vi.advanceTimersByTime(ATTEMPT_TTL_MS);
         expect(flow.consumeError()).toBeNull();
         expect(stored).toBeNull();
     });
-
-    it('does not redirect a newer session after a delayed start', async () => {
-        const response = new Subject<{ authorizationUrl: string }>();
-        auth.startTelegramUnlink.mockReturnValue(response);
-        const start = flow.startAsync();
-        authenticated.next();
-        response.next({ authorizationUrl: `https://oauth.telegram.org/auth?state=${state}` });
-        await expect(start).rejects.toThrow('Account changed');
-        expect(browser.open).not.toHaveBeenCalled();
-        expect(stored).toBeNull();
-    });
 });
+
+function storeLegacyAttempt(): void {
+    stored = { userId: 'user-1', state, expiresAt: Date.now() + ATTEMPT_TTL_MS, errorKey: null };
+}
+
 beforeEach(() => {
     vi.useFakeTimers();
     vi.clearAllMocks();
     stored = null;
     auth.getUserId.mockReturnValue('user-1');
-    auth.startTelegramUnlink.mockReturnValue(of({ authorizationUrl: `https://oauth.telegram.org/auth?state=${state}` }));
     auth.completeTelegramUnlink.mockReturnValue(of(void 0));
     TestBed.configureTestingModule({
         providers: [
             { provide: AuthService, useValue: auth },
-            { provide: BrowserWindowService, useValue: browser },
             { provide: SessionEventsService, useValue: { sessionEnded$: ended, authenticated$: authenticated } },
             {
                 provide: BrowserStorageService,
@@ -103,10 +93,8 @@ afterEach(() => {
 });
 
 describe('TelegramUnlinkFlowService', () => {
-    it('completes only the unlink intent once without storing provider proof', async () => {
-        await flow.startAsync();
-        expect(browser.open).toHaveBeenCalledWith(`https://oauth.telegram.org/auth?state=${state}`, '_self');
-        expect(stored).toEqual({ userId: 'user-1', state, expiresAt: Date.now() + ATTEMPT_TTL_MS, errorKey: null });
+    it('completes a previously stored unlink attempt once', async () => {
+        storeLegacyAttempt();
         expect(await flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false)).toBe('completed');
         expect(auth.completeTelegramUnlink).toHaveBeenCalledWith('code', state);
         expect(stored).toBeNull();
@@ -114,7 +102,7 @@ describe('TelegramUnlinkFlowService', () => {
     });
 
     it.each(['cancelled', 'missing-code', 'expired', 'account', 'logout'])('rejects %s without disconnecting', async scenario => {
-        await flow.startAsync();
+        storeLegacyAttempt();
         if (scenario === 'expired') {
             vi.advanceTimersByTime(ATTEMPT_TTL_MS);
         }
@@ -140,14 +128,14 @@ describe('TelegramUnlinkFlowService', () => {
     });
 
     it('keeps provider failures visible for a retry in the profile', async () => {
-        await flow.startAsync();
+        storeLegacyAttempt();
         auth.completeTelegramUnlink.mockReturnValue(throwError(() => new Error('rejected')));
         expect(await flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false)).toBe('failed');
         expect(flow.consumeError()).toBe('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
     });
 
     it('does not end a replacement account session when an old completion arrives', async () => {
-        await flow.startAsync();
+        storeLegacyAttempt();
         const response = new Subject<void>();
         auth.completeTelegramUnlink.mockReturnValue(response);
         const completion = flow.handleCallbackAsync(telegramOAuthCode('code'), telegramOAuthState(state), false);
@@ -156,14 +144,4 @@ describe('TelegramUnlinkFlowService', () => {
         expect(await completion).toBe('failed');
         expect(flow.consumeError()).toBeNull();
     });
-
-    it.each(['https://example.test/auth', 'https://oauth.telegram.org/wrong?state=invalid'])(
-        'rejects an untrusted redirect %s',
-        async authorizationUrl => {
-            auth.startTelegramUnlink.mockReturnValue(of({ authorizationUrl }));
-            await expect(flow.startAsync()).rejects.toThrow('Invalid authorization URL');
-            expect(browser.open).not.toHaveBeenCalled();
-            expect(stored).toBeNull();
-        },
-    );
 });

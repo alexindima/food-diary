@@ -2,6 +2,7 @@ import type { ImageSelection } from '../../../../../shared/models/image-upload.d
 import type { MealSourceType } from '../../../../../shared/models/meal.data';
 import type { Product } from '../../../../../shared/models/product.data';
 import type { Recipe } from '../../../../../shared/models/recipe.data';
+import type { ServingMassResult } from '../../../lib/recipe-serving/recipe-display-amount';
 
 export type MealFormValues = {
     date: string;
@@ -26,6 +27,8 @@ export type MealItemFormValues = {
     product: Product | null;
     recipe: Recipe | null;
     amount: number | null;
+    // The unit and conversion rate of the current recipe input. Empty and product rows carry unknown.
+    recipeMass: ServingMassResult;
 };
 
 export type NutritionTotals = {

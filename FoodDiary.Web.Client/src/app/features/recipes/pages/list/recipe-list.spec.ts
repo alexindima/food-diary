@@ -97,7 +97,7 @@ describe('RecipeListComponent detail actions', () => {
         component['onRecipeClick'](recipe);
         await waitForAsync(() => dialogService.open.mock.calls.length > 0);
 
-        expect(facade.getRecipeDetailAsync).toHaveBeenCalledWith(recipe.id);
+        expect(facade.getRecipeDetailAsync).toHaveBeenCalledWith(recipe.id, expect.any(AbortSignal));
         expect(dialogService.open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ data: currentRecipe }));
     });
 
@@ -512,7 +512,7 @@ describe('RecipeListComponent rendered catalogue', () => {
         recipeListButton(fixture, 'button[aria-label="Recipe"]').click();
         await flushPromisesAsync();
 
-        expect(facade.getRecipeDetailAsync).toHaveBeenCalledExactlyOnceWith('recipe-1');
+        expect(facade.getRecipeDetailAsync).toHaveBeenCalledExactlyOnceWith('recipe-1', expect.any(AbortSignal));
         expect(dialogService.open).not.toHaveBeenCalled();
         expect(recipeListButton(fixture, 'button[aria-label="Recipe"]').isConnected).toBe(true);
     });

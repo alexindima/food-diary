@@ -31,9 +31,15 @@ describe('buildRealtimeHubUrl', () => {
         expect(buildRealtimeHubUrl('http://localhost:5300', '/hubs/notifications')).toBe('http://localhost:5300/hubs/notifications');
     });
 
-    it('should keep auth API suffix when version segment is invalid', () => {
-        expect(buildRealtimeHubUrl('http://localhost:5300/api/v.1/auth', '/hubs/notifications')).toBe(
-            'http://localhost:5300/api/v.1/auth/hubs/notifications',
+    it('preserves the deployment prefix when stripping a versioned auth API suffix', () => {
+        expect(buildRealtimeHubUrl('http://localhost:5300/preview/api/v1.2/auth', '/hubs/notifications')).toBe(
+            'http://localhost:5300/preview/hubs/notifications',
         );
+    });
+
+    it.each(['/api/v.1/auth', '/preview/auth', '/api/views/auth'])('preserves an auth path without a numeric API version: %s', path => {
+        const base = `http://localhost:5300${path}`;
+
+        expect(buildRealtimeHubUrl(base, '/hubs/notifications')).toBe(`${base}/hubs/notifications`);
     });
 });

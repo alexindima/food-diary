@@ -9,7 +9,7 @@ describe('recipe ingredient source observations', () => {
     it('decodes product quantities without imposing meal consumption bounds', () => {
         const ingredient = recipeIngredientFromStored({ id: 'i', productId: 'p', amount: LARGE_INGREDIENT_AMOUNT, productBaseUnit: 'ML' });
         expect(ingredient).toMatchObject({ kind: 'product', productId: 'p', amount: LARGE_INGREDIENT_AMOUNT, productBaseUnit: 'ML' });
-        expect(ingredientEditorSource(ingredient)).toBe('product');
+        expect(ingredientEditorSource(ingredient)).toMatchObject({ kind: 'product', productId: 'p' });
     });
 
     it('retains fractional nested servings and incomplete nutrition snapshots', () => {
@@ -22,7 +22,7 @@ describe('recipe ingredient source observations', () => {
         };
         const ingredient = recipeIngredientFromStored(fields);
         expect(ingredient).toMatchObject({ ...fields, kind: 'recipe' });
-        expect(ingredientEditorSource(ingredient)).toBe('recipe');
+        expect(ingredientEditorSource(ingredient)).toMatchObject({ kind: 'recipe', nestedRecipeId: 'r' });
     });
 
     it('preserves blank text and an observed amount without inventing a numeric text quantity', () => {
@@ -31,16 +31,17 @@ describe('recipe ingredient source observations', () => {
     });
 
     it.each([
-        { productId: 'p', nestedRecipeId: 'r', textName: 'text', expected: 'text' },
-        { productId: 'p', nestedRecipeId: 'r', expected: 'recipe' },
-        { productId: '', nestedRecipeId: null, expected: 'missing' },
-        { productName: 'deleted product', expected: 'missing' },
-    ])('retains historical sources and editor precedence for $expected', ({ expected, ...sources }) => {
+        { productId: 'p', nestedRecipeId: 'r', textName: 'text', expected: { kind: 'text', textName: 'text' } },
+        { productId: 'p', nestedRecipeId: 'r', expected: { kind: 'recipe', nestedRecipeId: 'r' } },
+        { productId: 'p', nestedRecipeId: '', expected: { kind: 'product', productId: 'p' } },
+        { productId: '', nestedRecipeId: null, expected: { kind: 'missing' } },
+        { productName: 'deleted product', expected: { kind: 'missing' } },
+    ])('retains historical sources and editor precedence for $expected.kind', ({ expected, ...sources }) => {
         const fields = { id: 'i', amount: FRACTIONAL_SERVINGS, productBaseUnit: 'G', productFiberPerBase: 0, ...sources };
         const ingredient = recipeIngredientFromStored(fields);
         expect(ingredient.kind).toBe('legacy');
         expect(ingredient).toMatchObject(fields);
-        expect(ingredientEditorSource(ingredient)).toBe(expected);
+        expect(ingredientEditorSource(ingredient)).toEqual(expected);
     });
 
     it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])('retains stored numeric observation %s', amount => {

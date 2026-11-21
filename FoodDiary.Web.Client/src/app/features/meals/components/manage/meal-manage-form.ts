@@ -49,6 +49,8 @@ import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentDraft } from '../../contrac
 import { MEAL_MANAGE_COMMENT_LIMIT, MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { isExistingMealLocalDateTime } from '../../lib/meal-date-input.utils';
+import { recipeServingsFromInput } from '../../lib/recipe-serving/recipe-display-amount';
+import type { MealAiSessionRemoval } from './meal-ai-sessions/meal-ai-sessions';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
@@ -65,6 +67,7 @@ import {
     buildMealDateTime,
     buildMealManageDto,
     buildMealManageFormPatchValue,
+    createMealItemValue,
     createMealManageFormValue,
     findReusableEmptyMealItemIndex,
     getDateInputValue,
@@ -225,7 +228,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             const sourceError = productInvalid || recipeInvalid ? this.translateService.instant('MEAL_MANAGE.ITEM_SOURCE_ERROR') : null;
             const amountError = this.getItemAmountError(value, touched);
             return {
-                ...value,
+                formItem: value,
                 amountError,
                 productInvalid,
                 recipeInvalid,
@@ -291,9 +294,7 @@ export class MealManageFormComponent implements UnsavedEditor {
             time: this.mealFormModel().time,
             mealType: this.mealFormModel().mealType,
             comment: this.mealFormModel().comment,
-            items: this.mealFormModel()
-                .items.filter(item => item.product !== null || item.recipe !== null)
-                .map(item => this.readDevelopmentItem(item)),
+            items: this.items.map(item => this.readDevelopmentItem(item)).filter(item => item !== null),
             calories: this.totalCalories(),
             dirty: this.mealSignalForm().dirty(),
             valid:
@@ -324,9 +325,9 @@ export class MealManageFormComponent implements UnsavedEditor {
             name: item.recipe.name,
             productId: null,
             recipeId: item.recipe.id,
-            servings: item.amount === null ? null : this.mealManageFacade.recipeServingsFromDisplayInput(item.recipe, item.amount),
+            servings: item.amount === null ? null : recipeServingsFromInput(item.amount, item.recipeMass),
             amount: item.amount,
-            unit: this.mealManageFacade.recipeDisplayUnit(item.recipe),
+            unit: item.recipeMass.kind === 'known' ? 'grams' : 'servings',
         };
     }
 
@@ -337,18 +338,8 @@ export class MealManageFormComponent implements UnsavedEditor {
         const original = this.mealFormModel();
         const resolveItemAsync = async (item: MealDevelopmentDraft['items'][number]): Promise<MealItemFormValues> =>
             item.recipe === undefined
-                ? {
-                      sourceType: MealSourceType.Product,
-                      product: item.product,
-                      recipe: null,
-                      amount: item.amount,
-                  }
-                : {
-                      sourceType: MealSourceType.Recipe,
-                      product: null,
-                      recipe: item.recipe,
-                      amount: await this.mealManageFacade.resolveRecipeDisplayValueAsync(item.recipe, item.servings),
-                  };
+                ? createMealItemValue(item.product, null, item.amount)
+                : this.mealManageFacade.prepareRecipeItemAsync(item.recipe, item.servings);
         const items = await Promise.all(draft.items.map(resolveItemAsync));
         requireSession();
         if (this.destroyRef.destroyed || this.mealFormModel() !== original || this.mealSignalForm().dirty() || this.isSubmitBusy()) {
@@ -464,13 +455,15 @@ export class MealManageFormComponent implements UnsavedEditor {
         );
     }
 
-    protected removeItem(index: number): void {
-        if (index < 0 || index >= this.items.length) {
+    protected removeItem(item: MealItemFormValues): void {
+        const items = this.items;
+        const index = items.indexOf(item);
+        if (index === -1) {
             return;
         }
         this.mealSignalForm.items().markAsDirty();
         this.patchMealFormModel({
-            items: this.items.filter((_, currentIndex) => currentIndex !== index),
+            items: items.filter((_, currentIndex) => currentIndex !== index),
         });
     }
 
@@ -536,22 +529,20 @@ export class MealManageFormComponent implements UnsavedEditor {
         this.updateSummary();
     }
 
-    protected onDeleteAiSession(index: number): void {
-        if (index < 0 || index >= this.aiSessions().length) {
+    protected onDeleteAiSession({ session, onRemoved }: MealAiSessionRemoval): void {
+        const current = this.aiSessions();
+        const index = current.indexOf(session);
+        if (index === -1) {
             return;
         }
         this.mealSignalForm().markAsDirty();
-        this.aiSessions.update(current => this.mealManageFacade.removeAiSession(current, index));
+        this.aiSessions.set(this.mealManageFacade.removeAiSession(current, index));
+        onRemoved(index);
         this.updateSummary();
     }
 
-    protected onEditAiSession(index: number): void {
-        if (!this.ensurePremiumAccess()) {
-            return;
-        }
-
-        const session = (this.aiSessions() as Array<MealAiSessionManageDto | undefined>)[index];
-        if (session === undefined) {
+    protected onEditAiSession(session: MealAiSessionManageDto): void {
+        if (!this.aiSessions().includes(session) || !this.ensurePremiumAccess()) {
             return;
         }
         void this.editAiSessionAsync(session);
@@ -704,7 +695,6 @@ export class MealManageFormComponent implements UnsavedEditor {
         return buildMealManageDto(this.getMealFormValue(), {
             aiSessions: this.aiSessions(),
             buildDateTime: () => this.buildDateTime(),
-            recipeServingsFromDisplayInput: (recipe, amount) => this.mealManageFacade.recipeServingsFromDisplayInput(recipe, amount),
             manualTotals: this.mealManageFacade.getManualNutritionTotalsFromValue(this.mealFormModel()),
         });
     }

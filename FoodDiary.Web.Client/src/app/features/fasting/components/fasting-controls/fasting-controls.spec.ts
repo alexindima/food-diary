@@ -132,7 +132,7 @@ describe('FastingControlsComponent active cyclic session', () => {
         facade.currentSession.set(createCyclicSession());
         fixture.detectChanges();
 
-        component['endFasting']();
+        getNativeButtonByText(fixture, 'FASTING.STOP_CYCLE').click();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.endFasting).toHaveBeenCalledTimes(1);
@@ -300,8 +300,9 @@ describe('FastingControlsComponent active extended session', () => {
     });
 
     it('expands extended controls and delegates custom duration actions', () => {
+        const session = createExtendedSession();
         facade.isActive.set(true);
-        facade.currentSession.set(createExtendedSession());
+        facade.currentSession.set(session);
         facade.extendHours.set(CUSTOM_EXTEND_HOURS);
         facade.reduceHours.set(CUSTOM_REDUCE_HOURS);
         fixture.detectChanges();
@@ -314,32 +315,34 @@ describe('FastingControlsComponent active extended session', () => {
         expect(text).toContain('FASTING.ADD_TIME');
         expect(text).toContain('FASTING.REDUCE_TIME');
 
-        component['extendByCustom']();
-        component['reduceByCustom']();
+        component['extendByCustom'](session.id);
+        component['reduceByCustom'](session.id);
 
         expect(facade.extendByHours).toHaveBeenCalledWith(CUSTOM_EXTEND_HOURS);
         expect(facade.reduceTargetByHours).toHaveBeenCalledWith(CUSTOM_REDUCE_HOURS);
     });
 
     it('asks for safety confirmation before extending beyond the warning threshold', () => {
+        const session = { ...createExtendedSession(), plannedDurationHours: WARNING_PLANNED_DURATION_HOURS };
         facade.isActive.set(true);
-        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: WARNING_PLANNED_DURATION_HOURS });
+        facade.currentSession.set(session);
         facade.extendHours.set(CUSTOM_EXTEND_HOURS);
         fixture.detectChanges();
 
-        component['extendByCustom']();
+        component['extendByCustom'](session.id);
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.extendByHours).toHaveBeenCalledWith(CUSTOM_EXTEND_HOURS);
     });
 
     it('blocks extensions beyond the hard stop threshold', () => {
+        const session = { ...createExtendedSession(), plannedDurationHours: HARD_STOP_PLANNED_DURATION_HOURS };
         facade.isActive.set(true);
-        facade.currentSession.set({ ...createExtendedSession(), plannedDurationHours: HARD_STOP_PLANNED_DURATION_HOURS });
+        facade.currentSession.set(session);
         fixture.detectChanges();
 
         component['onExtendHoursChange'](HARD_STOP_EXTEND_HOURS);
-        component['extendByCustom']();
+        component['extendByCustom'](session.id);
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.extendByHours).not.toHaveBeenCalled();
@@ -423,15 +426,16 @@ describe('Fasting safety approval after the extension target changes', () => {
 
 describe('FastingControlsComponent target reductions', () => {
     it('does not request unavailable target reductions', () => {
+        const session = createExtendedSession();
         facade.isActive.set(true);
-        facade.currentSession.set(createExtendedSession());
+        facade.currentSession.set(session);
         facade.maxReducibleHours.set(SHORT_REDUCIBLE_HOURS);
         facade.reduceHours.set(DEFAULT_REDUCE_HOURS);
         fixture.detectChanges();
 
-        component['reduceBy4Hours']();
-        component['reduceBy8Hours']();
-        component['reduceByCustom']();
+        component['reduceBy4Hours'](session.id);
+        component['reduceBy8Hours'](session.id);
+        component['reduceByCustom'](session.id);
 
         expect(facade.reduceTargetByHours).not.toHaveBeenCalled();
     });
@@ -455,13 +459,14 @@ describe('FastingControlsComponent target reductions', () => {
     });
 
     it('allows custom target reduction when it fits the remaining time', () => {
+        const session = createExtendedSession();
         facade.isActive.set(true);
-        facade.currentSession.set(createExtendedSession());
+        facade.currentSession.set(session);
         facade.maxReducibleHours.set(SHORT_REDUCIBLE_HOURS);
         facade.reduceHours.set(SHORT_REDUCIBLE_HOURS);
         fixture.detectChanges();
 
-        component['reduceByCustom']();
+        component['reduceByCustom'](session.id);
 
         expect(facade.reduceTargetByHours).toHaveBeenCalledWith(SHORT_REDUCIBLE_HOURS);
     });

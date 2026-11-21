@@ -3,7 +3,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, EMPTY, filter, finalize, firstValueFrom, map, type Observable, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+    catchError,
+    EMPTY,
+    filter,
+    finalize,
+    firstValueFrom,
+    fromEvent,
+    map,
+    type Observable,
+    of,
+    Subject,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs';
 
 import { NavigationService } from '../../../services/navigation.service';
 import { developmentRequestContext } from '../../../shared/development/development-request-context';
@@ -268,7 +282,14 @@ export class RecipeListFacade {
         this.recipeData.setLoading(true);
 
         return this.recipeService.deleteById(recipe.id).pipe(
-            switchMap(() => this.loadRecipes(1, this.pageSize, { search }, onlyMine)),
+            switchMap(() => {
+                if (this.queryState === null) {
+                    return this.loadRecipes(1, this.pageSize, { search }, onlyMine);
+                }
+
+                const query = this.queryState.current();
+                return this.loadRecipes(1, this.pageSize, recipeQueryFilters(query), query.onlyMine);
+            }),
             catchError(() => {
                 this.toastService.error(this.translateService.instant('RECIPE_LIST.DELETE_ERROR'));
                 return of(void 0);
@@ -329,8 +350,18 @@ export class RecipeListFacade {
         return this.recipeService.getById(favorite.recipeId);
     }
 
-    public async getRecipeDetailAsync(recipeId: RecipeId): Promise<Recipe | null> {
-        const recipe = await firstValueFrom(this.recipeService.getById(recipeId, true).pipe(catchError(() => of(null))));
+    public async getRecipeDetailAsync(recipeId: RecipeId, request: AbortSignal): Promise<Recipe | null> {
+        const recipe = await firstValueFrom(
+            this.recipeService.getById(recipeId, true).pipe(
+                takeUntilDestroyed(this.destroyRef),
+                takeUntil(fromEvent(request, 'abort')),
+                catchError(() => of(null)),
+            ),
+            { defaultValue: null },
+        );
+        if (this.destroyRef.destroyed || request.aborted) {
+            return null;
+        }
         if (recipe === null) {
             this.toastService.error(this.translateService.instant('ERRORS.LOAD_FAILED_MESSAGE'));
         }

@@ -1,5 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
@@ -42,6 +44,31 @@ describe('RecipeListResultsComponent', () => {
         const { fixture } = setupComponent({ recentCount: 0, allCount: 0, emptyState: 'no-results' });
 
         expect(getText(fixture)).toContain('RECIPE_LIST.NO_RESULTS_TITLE');
+    });
+});
+
+describe('Recent recipe nutrition in the catalogue', () => {
+    it.each([
+        { language: 'en', suffix: 'kcal / serving', grouped: '1,234' },
+        { language: 'ru', suffix: 'ккал / порция', grouped: '1\u00A0234' },
+    ])('distinguishes unknown, zero and known calories in $language', async ({ language, suffix, grouped }) => {
+        const { fixture } = setupComponent({ recentCount: 0, allCount: 0 });
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation(language, { RECIPE_LIST: { RECENT_SERVING: `{{calories}} ${suffix}` } }, true);
+        await firstValueFrom(translate.use(language));
+
+        const unknown = { ...createRecipe('unknown'), name: 'Uncalculated recipe', totalCalories: null, missingIngredientCount: 1 };
+        const zero = { ...createRecipe('zero'), name: 'Zero-calorie recipe', totalCalories: 0 };
+        const known = { ...createRecipe('known'), name: 'Calculated recipe', totalCalories: 2468 };
+        fixture.componentRef.setInput(
+            'recentRecipeItems',
+            [unknown, zero, known].map(recipe => ({ recipe, imageUrl: undefined })),
+        );
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const captions = Array.from(host.querySelectorAll('.recent-recipes__copy .fd-ui-meta-text'), element => element.textContent.trim());
+        expect(captions).toEqual([`— ${suffix}`, `0 ${suffix}`, `${grouped} ${suffix}`]);
     });
 });
 

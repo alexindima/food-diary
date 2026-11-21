@@ -284,6 +284,53 @@ describe('rendered sidebar menu and notification overlay', () => {
     });
 });
 
+describe('desktop account menu keyboard focus', () => {
+    it('allows keyboard focus to move past the closed account menu trigger', async () => {
+        const { fixture } = await setupSidebarAsync();
+        const trigger = desktopElement(fixture, '.sidebar__user');
+        const collapse = desktopElement(fixture, 'button[aria-label="SIDEBAR.COLLAPSE"]');
+
+        trigger.focus();
+        expect(document.activeElement).toBe(trigger);
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+        collapse.focus();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(collapse);
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-sidebar-desktop [role="menu"]')).toBeNull();
+    });
+
+    it('keeps focus on the next sidebar control when keyboard focus leaves the account menu', async () => {
+        const { fixture } = await setupSidebarAsync();
+        const trigger = desktopElement(fixture, '.sidebar__user');
+        trigger.focus();
+        trigger.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(document.activeElement).toBe(desktopElement(fixture, 'a[role="menuitem"][href="/profile"]'));
+
+        const logout = desktopElement(fixture, 'button[role="menuitem"]');
+        logout.focus();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(logout);
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+        const collapse = desktopElement(fixture, 'button[aria-label="SIDEBAR.COLLAPSE"]');
+        collapse.focus();
+        fixture.detectChanges();
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect((fixture.nativeElement as HTMLElement).querySelector('fd-sidebar-desktop [role="menu"]')).toBeNull();
+        expect(document.activeElement).toBe(collapse);
+
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        collapse.dispatchEvent(escape);
+        fixture.detectChanges();
+        expect(escape.defaultPrevented).toBe(false);
+        expect(document.activeElement).toBe(collapse);
+    });
+});
+
 describe('Sidebar navigation across viewport changes', () => {
     it('closes the desktop account menu when entering the mobile viewport', async () => {
         const viewport = Object.assign(new EventTarget(), { matches: false });

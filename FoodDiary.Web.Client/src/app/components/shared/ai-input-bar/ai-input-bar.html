@@ -13,6 +13,7 @@
         />
         <fd-ui-icon class="ai-input-bar__icon" name="auto_awesome" />
         <input
+            #textInput
             type="text"
             enterkeyhint="send"
             class="ai-input-bar__input fd-ui-body-sm"
@@ -20,7 +21,7 @@
             [attr.aria-label]="'MEAL_LIST.VOICE_PLACEHOLDER' | translate"
             [value]="voiceText()"
             [disabled]="isDisabled()"
-            (input)="onTextInput($event)"
+            (input)="onTextInput(textInput.value)"
             (fdUiTextEnter)="submitTextAsync()"
         />
         @let hasText = !!voiceText().trim();

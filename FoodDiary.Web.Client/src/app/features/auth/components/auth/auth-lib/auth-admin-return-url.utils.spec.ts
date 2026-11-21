@@ -40,7 +40,7 @@ describe('normalizeAdminReturnUrl', () => {
         const path = normalizeAdminReturnUrl(value, ADMIN_APP_URL, APP_ORIGIN);
 
         expect(path).toBe('/');
-        expect(new URL(path ?? '/', ADMIN_APP_URL).origin).toBe(ADMIN_APP_URL);
+        expect(new URL(path, ADMIN_APP_URL).origin).toBe(ADMIN_APP_URL);
     });
 
     it.each([

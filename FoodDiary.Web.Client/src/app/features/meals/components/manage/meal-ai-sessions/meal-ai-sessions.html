@@ -33,7 +33,7 @@
                         icon="edit"
                         [fdUiHint]="'MEAL_MANAGE.ITEMS_AI_EDIT' | translate"
                         [ariaLabel]="'MEAL_MANAGE.ITEMS_AI_EDIT' | translate"
-                        (click)="onEditSession(row.index)"
+                        (click)="editSession.emit(row.session)"
                     />
                     <fd-ui-button
                         class="meal-manage__ai-summary-action meal-manage__ai-summary-action--danger"
@@ -42,7 +42,7 @@
                         icon="delete"
                         [fdUiHint]="'MEAL_MANAGE.ITEMS_AI_DELETE' | translate"
                         [ariaLabel]="'MEAL_MANAGE.ITEMS_AI_DELETE' | translate"
-                        (click)="onDeleteSession(row.index)"
+                        (click)="onDeleteSession(row.session)"
                     />
                 </div>
             </div>

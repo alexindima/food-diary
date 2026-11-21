@@ -64,7 +64,12 @@ import {
     FASTING_MOOD_EMOJI_SCALE,
     FASTING_SESSION_CHECK_INS_PAGE_SIZE,
 } from '../../lib/fasting-page.constants';
-import type { FastingCheckInViewModel, FastingHistorySessionViewModel, FastingMessageViewModel } from '../../lib/fasting-page.types';
+import type {
+    FastingCheckInViewModel,
+    FastingHistorySessionViewModel,
+    FastingMessageViewModel,
+    FastingProtocolPreview,
+} from '../../lib/fasting-page.types';
 import { isFastingEndedEarly } from '../../lib/fasting-session-state';
 import { FASTING_TOUR } from '../fasting-page-lib/fasting-tour';
 
@@ -109,7 +114,12 @@ export class FastingPageComponent {
     protected readonly elapsedFormatted = this.facade.elapsedFormatted;
     protected readonly remainingFormatted = this.facade.remainingFormatted;
     protected readonly progressPercent = this.facade.progressPercent;
-    protected readonly plannedDurationHours = this.facade.plannedDurationHours;
+    protected readonly selectedProtocolPreview = computed<FastingProtocolPreview>(() => {
+        const mode = this.facade.selectedMode();
+        return mode === 'cyclic'
+            ? { mode, fastDays: this.facade.cyclicFastDays(), eatDays: this.facade.cyclicEatDays() }
+            : { mode, durationHours: this.facade.plannedDurationHours() };
+    });
     protected readonly now = this.facade.now;
     protected readonly stats = this.facade.stats;
     protected readonly history = this.facade.history;
@@ -203,9 +213,9 @@ export class FastingPageComponent {
         this.closeDialogOnDestroy(dialog);
     }
 
-    protected openSessionManagement(): void {
+    protected openSessionManagement(renderedSessionId: FastingSession['id']): void {
         const session = this.currentSession();
-        if (session?.endedAtUtc !== null || this.isSessionMutationPending()) {
+        if (session?.endedAtUtc !== null || session.id !== renderedSessionId || this.isSessionMutationPending()) {
             return;
         }
 

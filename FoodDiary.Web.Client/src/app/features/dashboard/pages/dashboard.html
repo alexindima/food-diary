@@ -116,8 +116,8 @@
                 @if (showQuickAdd()) {
                     <fd-dashboard-quick-add
                         [isAiMealSaving]="isAiMealSaving()"
-                        [aiMealClearToken]="aiMealClearToken()"
-                        (mealCreateRequested)="onAiMealCreateRequested($event)"
+                        [aiMealClearToken]="aiMealClearTokens.quickAdd()"
+                        (mealCreateRequested)="onAiMealCreateRequested($event, 'quickAdd')"
                         (manualAdd)="addMealAsync()"
                     />
                 }
@@ -173,12 +173,12 @@
                             [entries]="mealPreviewEntries()"
                             [previewState]="mealsPreviewState()"
                             [isAiMealSaving]="isAiMealSaving()"
-                            [aiMealClearToken]="aiMealClearToken()"
+                            [aiMealClearToken]="aiMealClearTokens.slots()"
                             [favoriteLoadingIds]="facade.favoriteLoadingIds()"
                             (blockToggle)="layout.toggleBlock('meals')"
                             (viewAll)="manageMealsAsync()"
                             (add)="addMealAsync($event)"
-                            (aiMealCreateRequested)="onAiMealCreateRequested($event)"
+                            (aiMealCreateRequested)="onAiMealCreateRequested($event, 'slots')"
                             (open)="openMeal($event)"
                             (favoriteToggle)="onMealFavoriteToggle($event.id)"
                         />

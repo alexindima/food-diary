@@ -3,6 +3,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Subscription } from 'rxjs';
 import {
@@ -58,7 +59,7 @@ import {
     type ProductFavoritesPickerData,
 } from '../../dialogs/product-favorites-picker/product-favorites-picker';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
-import { buildFavoriteProductSnapshot, getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
+import { getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
 import { productFilterChips, removeProductFilter, resetProductFilters } from './product-list-filter-chips';
 import { normalizeProductListSearch, type ProductListQuery, productListQueryKey } from './product-list-query';
 import { PRODUCT_LIST_QUERY_STATE } from './product-list-query-state';
@@ -232,12 +233,9 @@ export class ProductListFacade {
     }
 
     public openBarcodeScanner(): void {
-        this.fdDialogService
-            .open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, {
-                size: 'lg',
-            })
-            .afterClosed()
-            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+        const dialog = this.fdDialogService.open<BarcodeScannerComponent, null, string | null>(BarcodeScannerComponent, { size: 'lg' });
+        this.afterOwnedDialogClosed(dialog)
+            .pipe(take(1))
             .subscribe(barcode => {
                 if (barcode !== null && barcode !== undefined && barcode.length > 0) {
                     this.searchForm.search().value.set(barcode);
@@ -536,10 +534,6 @@ export class ProductListFacade {
             });
     }
 
-    public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
-        this.quickMealService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.preferredPortionAmount);
-    }
-
     public reloadCurrentPage(): void {
         this.loadProducts(this.currentPageIndex + 1, this.pageSize, this.searchValue()).subscribe();
     }
@@ -600,12 +594,20 @@ export class ProductListFacade {
         if (this.destroyRef.destroyed) {
             return null;
         }
-        return firstValueFrom(
-            this.fdDialogService
-                .open(ProductDetailComponent, { preset: 'detail', data: product })
-                .afterClosed()
-                .pipe(takeUntilDestroyed(this.destroyRef)),
-            { defaultValue: null },
+        const dialog = this.fdDialogService.open(ProductDetailComponent, { preset: 'detail', data: product });
+        return firstValueFrom(this.afterOwnedDialogClosed(dialog), { defaultValue: null });
+    }
+
+    private afterOwnedDialogClosed<Result>(
+        dialog: Pick<FdUiDialogRef<unknown, Result>, 'afterClosed' | 'close'>,
+    ): Observable<Result | undefined> {
+        return dialog.afterClosed().pipe(
+            takeUntilDestroyed(this.destroyRef),
+            finalize(() => {
+                if (this.destroyRef.destroyed) {
+                    dialog.close();
+                }
+            }),
         );
     }
 

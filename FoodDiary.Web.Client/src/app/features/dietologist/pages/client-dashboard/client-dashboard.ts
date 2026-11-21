@@ -810,7 +810,6 @@ export class ClientDashboardComponent {
 
     private loadClientDetails(client: ClientSummary): Observable<ClientDashboardDetails> {
         const reloadSequence = ++this.dashboardReloadSequence;
-        const revision = this.clientRevision;
         const language = resolveTranslateLanguage(this.translateService);
         this.sectionLoadError.set(null);
 
@@ -834,9 +833,6 @@ export class ClientDashboardComponent {
                 .pipe(this.handleSectionLoadError<RecommendationTemplate[], RecommendationTemplate[]>([])),
         }).pipe(
             tap(result => {
-                if (!this.isCurrentClient(revision)) {
-                    return;
-                }
                 this.applyDashboardIfCurrent(result.dashboard, reloadSequence);
                 this.goals.set(result.goals);
                 this.recommendations.update(items => this.mergeInitialItems(result.recommendations, items));

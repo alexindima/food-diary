@@ -78,14 +78,14 @@ export class MealSatietyFieldsComponent {
 
     private getSatietyLevelMeta(kind: 'before' | 'after', value: number | null): { label: string; description: string } {
         const normalizedValue = normalizeSatietyLevel(value);
-        if (normalizedValue === null) {
-            return { label: this.translateService.instant('MEAL_DETAILS.SATIETY_UNANSWERED'), description: '' };
-        }
         const levels = kind === 'before' ? DEFAULT_HUNGER_LEVELS : DEFAULT_SATIETY_LEVELS;
         const config = levels.find(level => level.value === normalizedValue);
+        if (config === undefined) {
+            return { label: this.translateService.instant('MEAL_DETAILS.SATIETY_UNANSWERED'), description: '' };
+        }
         return {
-            label: this.translateService.instant(config?.titleKey ?? ''),
-            description: this.translateService.instant(config?.descriptionKey ?? ''),
+            label: this.translateService.instant(config.titleKey),
+            description: this.translateService.instant(config.descriptionKey),
         };
     }
 }

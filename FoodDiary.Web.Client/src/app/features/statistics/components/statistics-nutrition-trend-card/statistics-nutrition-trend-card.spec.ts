@@ -50,7 +50,7 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         fixture.componentRef.setInput('selectedTab', 'calories');
         fixture.componentRef.setInput('calorieGoal', CALORIE_GOAL);
         fixture.componentRef.setInput('days', [
-            { date: '2026-08-02', label: '2 Aug', calories: 1800, protein: 100, fat: 60, carbs: 180, fiber: 20 },
+            { date: '2026-08-02', label: '2 Aug', calories: 1800, protein: 100, fat: 60, carbs: 300, fiber: 20 },
             { date: '2026-08-03', label: '3 Aug', calories: null, protein: 0, fat: 0, carbs: 0, fiber: 0 },
         ]);
         fixture.componentRef.setInput('insights', []);
@@ -59,6 +59,8 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         fixture.detectChanges();
 
         const root = fixture.nativeElement as HTMLElement;
+        const axisLabels = (): string[] =>
+            Array.from(root.querySelectorAll('.fd-ui-bar-chart__axis-label'), label => label.textContent.trim());
         expect(root.querySelectorAll('.fd-ui-bar-chart__categorical-bar[role="img"]')).toHaveLength(1);
         expect(root.querySelector('.statistics-nutrition-trend-card__missing')).toBeNull();
         const chartModeButtons = root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__chart-mode button');
@@ -77,14 +79,14 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         fixture.detectChanges();
         expect(root.querySelector('.fd-ui-bar-chart__categorical-bar--grouped')?.querySelectorAll('span')).toHaveLength(NUTRIENT_COUNT);
         expect(root.querySelector('.fd-ui-bar-chart__axis-unit')?.textContent).toContain('GENERAL.UNITS.G');
+        expect(axisLabels()).toEqual(['300', '225', '150', '75', '0']);
 
         fixture.componentRef.setInput('days', [
             { date: '2026-08-02', label: '2 Aug', calories: 1800, protein: 13, fat: 6, carbs: 29, fiber: 2 },
             { date: '2026-08-03', label: '3 Aug', calories: null, protein: 0, fat: 0, carbs: 0, fiber: 0 },
         ]);
         fixture.detectChanges();
-        expect(fixture.componentInstance['chartMaximum']()).toBe(NUTRIENT_SCALE_MAXIMUM);
-        expect(fixture.componentInstance['ticks']()).toEqual(NUTRIENT_TICKS);
+        expect(axisLabels()).toEqual(NUTRIENT_TICKS.map(String));
 
         fixture.componentRef.setInput('selectedTab', 'distribution');
         fixture.detectChanges();

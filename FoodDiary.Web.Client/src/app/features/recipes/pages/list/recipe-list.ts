@@ -92,6 +92,7 @@ export class RecipeListComponent {
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
+    private detailRequest: AbortController | undefined;
 
     protected readonly pageSize = this.recipeListFacade.pageSize;
     protected recipeData = this.recipeListFacade.recipeData;
@@ -206,15 +207,21 @@ export class RecipeListComponent {
     }
 
     protected onRecipeClick(recipe: Recipe): void {
-        void this.openRecipeDetailAsync(recipe);
+        this.detailRequest?.abort();
+        const request = new AbortController();
+        this.detailRequest = request;
+        void this.openRecipeDetailAsync(recipe, request.signal);
     }
 
-    private async openRecipeDetailAsync(recipe: Recipe): Promise<void> {
-        const currentRecipe = await this.recipeListFacade.getRecipeDetailAsync(recipe.id);
+    private async openRecipeDetailAsync(recipe: Recipe, request: AbortSignal): Promise<void> {
+        const currentRecipe = await this.recipeListFacade.getRecipeDetailAsync(recipe.id, request);
         if (currentRecipe === null) {
             return;
         }
         const { RecipeDetailComponent } = await import('../../components/detail/recipe-detail/recipe-detail');
+        if (this.destroyRef.destroyed || request.aborted) {
+            return;
+        }
         this.fdDialogService
             .open(RecipeDetailComponent, {
                 preset: 'detail',

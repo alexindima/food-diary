@@ -23,6 +23,7 @@ export class CycleTrackingFacade {
     private readonly factor = inject(CycleFactorFacade);
     private readonly episode = inject(CycleEpisodeFacade);
     private readonly export = inject(CycleExportFacade);
+    private activeCycleDeletion: symbol | null = null;
     public readonly isLoading = this.state.isLoading;
     public readonly loadError = this.state.loadError;
     public readonly isSavingCycle = this.state.isSavingCycle;
@@ -79,14 +80,17 @@ export class CycleTrackingFacade {
     public saveDay(): void {
         this.day.saveDay();
     }
+    public beginDayEntry(): void {
+        this.day.beginDayEntry();
+    }
     public editDay(date: string): void {
         this.day.editDay(date);
     }
     public cancelDayEdit(): void {
         this.day.cancelDayEdit();
     }
-    public saveFactor(): void {
-        this.factor.saveFactor();
+    public async submitFactorAsync(): Promise<boolean> {
+        return this.factor.submitFactorAsync();
     }
     public editFactor(factorId: CycleFactorId): void {
         this.factor.editFactor(factorId);
@@ -125,8 +129,17 @@ export class CycleTrackingFacade {
         this.export.exportSensitiveCycle(currentPassword, range);
     }
     public initialize(): void {
-        this.state.loadCycle(() => {
-            this.settings.cancelSettingsEdit();
+        const profileId = this.state.cycle()?.id;
+        this.state.loadCycle(cycle => {
+            const sameProfile = cycle?.id === profileId;
+            if (profileId !== undefined && !sameProfile) {
+                this.releaseCycleDeletion();
+                this.day.resetDayDraft();
+                this.factor.clearAfterProfileChange();
+            }
+            if (cycle !== null && (!sameProfile || !this.settingsForm().dirty())) {
+                this.settings.cancelSettingsEdit();
+            }
         });
     }
     public async deleteCycleAsync(): Promise<void> {
@@ -135,18 +148,33 @@ export class CycleTrackingFacade {
             return;
         }
 
+        const deletion = Symbol();
+        const ownsProfile = (): boolean => this.activeCycleDeletion === deletion && this.state.cycle()?.id === currentCycle.id;
+        this.activeCycleDeletion = deletion;
         this.state.settingsError.set(null);
         this.state.isDeletingCycle.set(true);
         try {
             await firstValueFrom(this.cyclesService.deleteCycle(currentCycle.id).pipe(takeUntilDestroyed(this.destroyRef)));
+            if (!ownsProfile()) {
+                return;
+            }
             this.state.clearCycle();
-            this.day.cancelDayEdit();
-            this.factor.clearAfterProfileDeletion();
+            this.day.resetDayDraft();
+            this.factor.clearAfterProfileChange();
             this.episode.clearAfterProfileDeletion();
         } catch {
-            this.state.settingsError.set('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
+            if (ownsProfile()) {
+                this.state.settingsError.set('CYCLE_TRACKING.DELETE_CYCLE_FAILED');
+            }
         } finally {
-            this.state.isDeletingCycle.set(false);
+            if (this.activeCycleDeletion === deletion) {
+                this.releaseCycleDeletion();
+            }
         }
+    }
+
+    private releaseCycleDeletion(): void {
+        this.activeCycleDeletion = null;
+        this.state.isDeletingCycle.set(false);
     }
 }

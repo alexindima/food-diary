@@ -178,30 +178,43 @@
             <div class="profile-comparison__fields fd-grid fd-gap-sm">
                 @if (measurementSystem() === 'metric') {
                     <fd-ui-input
+                        #heightField
+                        data-profile-height-field
                         size="sm"
                         data-user-field="height"
                         type="number"
+                        [preserveInvalidNumberDraft]="true"
                         [formField]="userForm().heightCm"
                         [label]="'USER_MANAGE.COMPARISON.HEIGHT_CM' | translate"
-                        [error]="userForm().heightCm().invalid() ? ('USER_MANAGE.HEIGHT_INVALID' | translate) : null"
+                        [error]="hasHeightError('metric') ? ('USER_MANAGE.HEIGHT_INVALID' | translate) : null"
+                        (nativeNumberDraftInvalidChange)="onHeightDraftInvalidChange('metric', $event)"
                         (valueChange)="onHeightChange($event)"
                     />
                 } @else {
                     <div class="profile-comparison__imperial-height fd-grid fd-grid-cols-2 fd-gap-sm">
                         <fd-ui-input
+                            #heightField
+                            data-profile-height-field
+                            data-profile-imperial-height-feet
                             size="sm"
                             type="number"
+                            [preserveInvalidNumberDraft]="true"
                             [value]="imperialHeight().feet"
                             [label]="'USER_MANAGE.COMPARISON.HEIGHT_FT' | translate"
-                            [error]="userForm().heightCm().invalid() ? ('USER_MANAGE.HEIGHT_INVALID' | translate) : null"
+                            [error]="hasHeightError('feet') ? ('USER_MANAGE.HEIGHT_INVALID' | translate) : null"
+                            (nativeNumberDraftInvalidChange)="onHeightDraftInvalidChange('feet', $event)"
                             (valueChange)="onImperialHeightChange('feet', $event)"
                         />
                         <fd-ui-input
+                            #heightField
+                            data-profile-height-field
                             size="sm"
                             type="number"
+                            [preserveInvalidNumberDraft]="true"
                             [value]="imperialHeight().inches"
                             [label]="'USER_MANAGE.COMPARISON.HEIGHT_IN' | translate"
-                            [error]="userForm().heightCm().invalid() ? ('USER_MANAGE.HEIGHT_INVALID' | translate) : null"
+                            [error]="hasHeightError('inches') ? ('USER_MANAGE.HEIGHT_INVALID' | translate) : null"
+                            (nativeNumberDraftInvalidChange)="onHeightDraftInvalidChange('inches', $event)"
                             (valueChange)="onImperialHeightChange('inches', $event)"
                         />
                     </div>

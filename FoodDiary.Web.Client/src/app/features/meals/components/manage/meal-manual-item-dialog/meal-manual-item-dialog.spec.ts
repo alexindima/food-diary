@@ -16,11 +16,10 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
-import { recipeServings } from '../../../../../shared/models/semantics/meal-quantity';
 import {
-    displayRecipeServings,
     servingMassFromObservation,
     type ServingMassResult,
+    UNKNOWN_SERVING_MASS,
 } from '../../../lib/recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
 import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
@@ -94,6 +93,7 @@ describe('MealManualItemDialogComponent selection', () => {
             product: null,
             recipe,
             amount: editedAmount,
+            recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT),
         });
     });
     it('should apply selected product default portion amount', async () => {
@@ -142,6 +142,7 @@ describe('MealManualItemDialogComponent save', () => {
             product,
             recipe: null,
             amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
+            recipeMass: UNKNOWN_SERVING_MASS,
         });
     });
 
@@ -183,10 +184,6 @@ async function setupComponentAsync(
                 provide: RecipeServingWeightService,
                 useValue: {
                     loadServingMass: vi.fn().mockReturnValue(of(servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
-                    hasServingWeight: vi.fn().mockReturnValue(values.servingWeightAvailable ?? true),
-                    displayServings: vi.fn((_recipe: Recipe | null, servings: number) =>
-                        displayRecipeServings(recipeServings(servings), servingMassFromObservation(RECIPE_SERVING_WEIGHT)),
-                    ),
                 },
             },
         ],
@@ -208,12 +205,18 @@ async function setupComponentAsync(
     };
 }
 
-function createItemValue(values: Partial<{ product: Product; recipe: Recipe; amount: number }>): MealItemFormValues {
+function createItemValue(
+    values: Partial<{ product: Product; recipe: Recipe; amount: number; servingWeightAvailable: boolean }>,
+): MealItemFormValues {
     return {
         sourceType: values.recipe === undefined ? MealSourceType.Product : MealSourceType.Recipe,
         product: values.product ?? null,
         recipe: values.recipe ?? null,
         amount: values.amount ?? null,
+        recipeMass:
+            values.recipe === undefined || values.servingWeightAvailable === false
+                ? UNKNOWN_SERVING_MASS
+                : servingMassFromObservation(RECIPE_SERVING_WEIGHT),
     };
 }
 
@@ -312,6 +315,75 @@ describe('MealManualItemDialogComponent asynchronous serving weight', () => {
     });
 });
 
+describe('Meal manual item native quantity errors', () => {
+    it.each([
+        {
+            scenario: 'a cleared product quantity',
+            item: { product: createProduct(), amount: PRODUCT_DEFAULT_PORTION_AMOUNT },
+            entered: '',
+            error: 'Enter a quantity.',
+        },
+        {
+            scenario: 'a product quantity below the minimum',
+            item: { product: createProduct(), amount: PRODUCT_DEFAULT_PORTION_AMOUNT },
+            entered: '0',
+            error: 'Enter at least 0.01.',
+        },
+        {
+            scenario: 'a product quantity above the maximum',
+            item: { product: createProduct(), amount: 1_000_000 },
+            entered: '1000001',
+            error: 'Enter no more than 1000000.',
+        },
+        {
+            scenario: 'a recipe quantity above the maximum in grams',
+            item: { recipe: createRecipe(), amount: 80_000_000 },
+            entered: '80000001',
+            error: 'Enter no more than 80000000.',
+        },
+        {
+            scenario: 'a recipe quantity above the maximum in servings',
+            item: { recipe: createRecipe(), servingWeightAvailable: false, amount: 1_000_000 },
+            entered: '1000001',
+            error: 'Enter no more than 1000000.',
+        },
+    ])('announces $scenario and saves only after correction', async ({ item, entered, error }) => {
+        const { fixture, dialogRef } = await setupComponentAsync(item);
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            FORM_ERRORS: {
+                REQUIRED: 'Enter a quantity.',
+                INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO: 'Enter at least {{min}}.',
+            },
+            MEAL_MANAGE: { MAX_AMOUNT_ERROR: 'Enter no more than {{max}}.' },
+        });
+        await firstValueFrom(translate.use('en'));
+        const host = fixture.nativeElement as HTMLElement;
+        const amount = host.querySelector<HTMLInputElement>('input[type="number"]');
+        if (amount === null) {
+            throw new Error('Expected a native quantity input');
+        }
+        const save = dialogAction(host, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE');
+        fixture.detectChanges();
+        expect(save.disabled).toBe(false);
+
+        enterAndBlurQuantity(amount, entered);
+        fixture.detectChanges();
+        expect(host.querySelector('.fd-ui-input__error[role="alert"]')?.textContent.trim()).toBe(error);
+        expect(amount.getAttribute('aria-invalid')).toBe('true');
+        expect(save.disabled).toBe(true);
+        save.click();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        enterAndBlurQuantity(amount, String(item.amount));
+        fixture.detectChanges();
+        expect(host.querySelector('.fd-ui-input__error[role="alert"]')).toBeNull();
+        expect(save.disabled).toBe(false);
+        save.click();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ amount: item.amount }));
+    });
+});
+
 describe('MealManualItemDialogComponent validation and selection boundaries', () => {
     it.each([
         [80_000_000, true],
@@ -384,6 +456,7 @@ describe('Meal item picker legacy portions', () => {
             product: replacement,
             recipe: null,
             amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
+            recipeMass: UNKNOWN_SERVING_MASS,
         });
     });
 
@@ -412,6 +485,7 @@ describe('Meal item picker legacy portions', () => {
             product,
             recipe: null,
             amount: expectedAmount,
+            recipeMass: UNKNOWN_SERVING_MASS,
         });
     });
 });
@@ -439,4 +513,11 @@ function dialogAction(host: HTMLElement, label: string): HTMLButtonElement {
         throw new Error(`Expected the native ${label} action`);
     }
     return button;
+}
+
+function enterAndBlurQuantity(control: HTMLInputElement, value: string): void {
+    control.focus();
+    control.value = value;
+    control.dispatchEvent(new Event('input', { bubbles: true }));
+    control.blur();
 }

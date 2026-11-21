@@ -33,8 +33,8 @@ export type CycleSettingsFormModel = Omit<StartCycleFormModel, 'trackingStartDat
 export type CycleDayFormModel = {
     date: string | null;
     isBleeding: boolean;
-    bleedingType: BleedingType | null;
-    flow: CycleFlowLevel | null;
+    bleedingType: BleedingType;
+    flow: CycleFlowLevel;
     pain: number;
     mood: number;
     energy: number;

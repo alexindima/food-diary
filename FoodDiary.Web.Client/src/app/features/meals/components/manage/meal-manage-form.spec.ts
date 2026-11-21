@@ -28,6 +28,7 @@ import { productQuantityFromStored, recipeServingsFromStored } from '../../../..
 import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen, type MealDevelopmentTools } from '../../contracts/meal-development-tools';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
+import { servingMassFromObservation } from '../../lib/recipe-serving/recipe-display-amount';
 import { MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import { MealManageFormComponent } from './meal-manage-form';
@@ -36,6 +37,7 @@ import { createMealItemValue, getDateInputValue, getTimeInputValue } from './mea
 
 const PRODUCT_AMOUNT = 150;
 const FRACTIONAL_RECIPE_SERVINGS = 0.5;
+const RECIPE_DRAFT_MASS = servingMassFromObservation(PRODUCT_AMOUNT / FRACTIONAL_RECIPE_SERVINGS);
 const TOTAL_CALORIES = 300;
 const UPDATED_TOTAL_CALORIES = 450;
 const NORMALIZED_SATIETY_LEVEL = 5;
@@ -52,13 +54,10 @@ const EMPTY_TOTALS: NutritionTotals = {
 };
 
 type MealManageFacadeMock = {
-    resolveRecipeDisplayValueAsync: ReturnType<typeof vi.fn<MealManageFacade['resolveRecipeDisplayValueAsync']>>;
-    recipeDisplayUnit: ReturnType<typeof vi.fn<MealManageFacade['recipeDisplayUnit']>>;
+    prepareRecipeItemAsync: ReturnType<typeof vi.fn<MealManageFacade['prepareRecipeItemAsync']>>;
     addAiSession: ReturnType<typeof vi.fn>;
     buildManualNutritionPatchFromTotals: ReturnType<typeof vi.fn>;
     buildNutritionSummaryStateFromValues: ReturnType<typeof vi.fn>;
-    recipeServingsFromDisplayInput: ReturnType<typeof vi.fn>;
-    recipeDisplayValueFromStoredServings: ReturnType<typeof vi.fn<MealManageFacade['recipeDisplayValueFromStoredServings']>>;
     configureItemType: ReturnType<typeof vi.fn>;
     confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
     createMealItem: ReturnType<typeof vi.fn<MealManageFacade['createMealItem']>>;
@@ -533,8 +532,8 @@ describe('MealManageFormComponent item and AI behavior', () => {
         expect(component['items'].length).toBe(1);
     });
 
-    it('should append AI sessions and remove them by index', async () => {
-        const { component, mealManageFacade } = await setupComponentAsync();
+    it('appends a recognition and removes it through its rendered action', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
         const session: MealAiSessionManageDto = { notes: 'recognized', items: [] };
         mealManageFacade.addAiSession.mockReturnValue([session]);
         mealManageFacade.removeAiSession.mockReturnValue([]);
@@ -549,17 +548,19 @@ describe('MealManageFormComponent item and AI behavior', () => {
         });
         expect(component['aiSessions']()).toEqual([session]);
 
-        component['onDeleteAiSession'](0);
+        fixture.detectChanges();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_DELETE"]').click();
 
         expect(component['aiSessions']()).toEqual([]);
     });
 
     it('should skip AI session edit when premium access is rejected', async () => {
-        const { component, mealManageFacade } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
         mealManageFacade.ensurePremiumAccess.mockReturnValueOnce(false);
         component['aiSessions'].set([{ notes: 'recognized', items: [] }]);
 
-        component['onEditAiSession'](0);
+        fixture.detectChanges();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_EDIT"]').click();
         await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).not.toHaveBeenCalled();
@@ -567,14 +568,15 @@ describe('MealManageFormComponent item and AI behavior', () => {
     });
 
     it('should replace AI session after successful edit', async () => {
-        const { component, mealManageFacade } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
         const session: MealAiSessionManageDto = { notes: 'recognized', items: [] };
         const updatedSession: MealAiSessionManageDto = { notes: 'updated', items: [] };
         component['aiSessions'].set([session]);
         mealManageFacade.openEditAiPhotoSessionDialogAsync.mockResolvedValueOnce(updatedSession);
         mealManageFacade.replaceAiSession.mockReturnValueOnce([updatedSession]);
 
-        component['onEditAiSession'](0);
+        fixture.detectChanges();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_EDIT"]').click();
         await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledWith(
@@ -760,8 +762,8 @@ describe('Meal editor development capability', () => {
             },
         });
         const recipe = createEmptyRecipeSnapshot();
-        let complete: ((value: number) => void) | undefined;
-        mealManageFacade.resolveRecipeDisplayValueAsync.mockImplementationOnce(
+        let complete: ((value: MealItemFormValues) => void) | undefined;
+        mealManageFacade.prepareRecipeItemAsync.mockImplementationOnce(
             async () =>
                 new Promise(resolve => {
                     complete = resolve;
@@ -778,7 +780,7 @@ describe('Meal editor development capability', () => {
             vi.fn(),
         );
         component['patchMealFormModel']({ comment: 'User typed during lookup' });
-        complete?.(PRODUCT_AMOUNT);
+        complete?.(createRecipeEditorItem(recipe, PRODUCT_AMOUNT));
         await expect(pending).rejects.toThrow('changed');
         expect(component['mealFormModel']().comment).toBe('User typed during lookup');
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
@@ -803,12 +805,13 @@ describe('Meal editor development capability', () => {
             },
             vi.fn(),
         );
-        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledWith(recipe, FRACTIONAL_RECIPE_SERVINGS);
+        expect(mealManageFacade.prepareRecipeItemAsync).toHaveBeenCalledWith(recipe, FRACTIONAL_RECIPE_SERVINGS);
         expect(component['mealFormModel']().items[0]).toMatchObject({
             sourceType: MealSourceType.Recipe,
             recipe,
             product: null,
             amount: PRODUCT_AMOUNT,
+            recipeMass: RECIPE_DRAFT_MASS,
         });
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
     });
@@ -864,8 +867,9 @@ describe('Meal editor development draft guards', () => {
 
 function createMealManageFacadeMock(): MealManageFacadeMock {
     const facade: MealManageFacadeMock = {
-        resolveRecipeDisplayValueAsync: vi.fn<MealManageFacade['resolveRecipeDisplayValueAsync']>().mockResolvedValue(PRODUCT_AMOUNT),
-        recipeDisplayUnit: vi.fn<MealManageFacade['recipeDisplayUnit']>().mockReturnValue('grams'),
+        prepareRecipeItemAsync: vi
+            .fn<MealManageFacade['prepareRecipeItemAsync']>()
+            .mockImplementation(async recipe => firstValueFrom(of(createRecipeEditorItem(recipe, PRODUCT_AMOUNT)))),
         addAiSession: vi.fn((_sessions: MealAiSessionManageDto[], session: MealAiSessionManageDto) => [session]),
         buildManualNutritionPatchFromTotals: vi.fn((totals: NutritionTotals) => ({
             manualCalories: totals.calories,
@@ -878,8 +882,6 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         buildNutritionSummaryStateFromValues: vi.fn((_formValue, _aiSessions, _threshold) => createNutritionSummaryState()),
         confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
         configureItemType: vi.fn((item: MealItemFormValues) => item),
-        recipeServingsFromDisplayInput: vi.fn((_recipe, amount: number) => amount),
-        recipeDisplayValueFromStoredServings: vi.fn((_recipe, amount: number) => amount),
         createMealItem: vi.fn(() => createMealItemValue()),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotalsFromValue: vi.fn().mockReturnValue(EMPTY_TOTALS),
@@ -896,16 +898,9 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         of(
             items.length === 0
                 ? [facade.createMealItem()]
-                : items.map(item =>
-                      createMealItemValue(
-                          item.sourceType === MealSourceType.Product ? (item.product ?? null) : null,
-                          item.sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null,
-                          item.sourceType === MealSourceType.Recipe
-                              ? facade.recipeDisplayValueFromStoredServings(item.recipe ?? null, item.amount)
-                              : item.amount,
-                          item.sourceType,
-                      ),
-                  ),
+                : items.map(item => {
+                      return createMealItemValue(item.product, item.recipe, item.amount, item.sourceType);
+                  }),
         ),
     );
     return facade;
@@ -913,6 +908,10 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
 
 function createNutritionSummaryState(): MealNutritionSummaryState {
     return createNutritionSummaryStateWithCalories(0);
+}
+
+function createRecipeEditorItem(recipe: ReturnType<typeof createEmptyRecipeSnapshot>, amount: number): MealItemFormValues {
+    return { ...createMealItemValue(null, recipe, amount, MealSourceType.Recipe), recipeMass: RECIPE_DRAFT_MASS };
 }
 
 function createNutritionSummaryStateWithCalories(calories: number): MealNutritionSummaryState {
@@ -1050,12 +1049,13 @@ describe('MealManageForm existing meal editing', () => {
     it('converts saved recipe servings into editable grams and back into the update payload', async () => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
         const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r'), name: 'Soup' };
+        const savedServings = 2;
         const original = createMeal({
             items: [
                 {
                     id: entityId<'meal-item'>('i'),
                     mealId: entityId<'meal'>('meal-1'),
-                    amount: recipeServingsFromStored(2),
+                    amount: recipeServingsFromStored(savedServings),
                     sourceType: MealSourceType.Recipe,
                     recipe,
                     product: null,
@@ -1063,8 +1063,10 @@ describe('MealManageForm existing meal editing', () => {
             ],
         });
         mealManageFacade.createMealItem.mockImplementation(createMealItemValue);
-        mealManageFacade.recipeDisplayValueFromStoredServings.mockReturnValue(PRODUCT_AMOUNT);
-        mealManageFacade.recipeServingsFromDisplayInput.mockReturnValue(2);
+        const mass = servingMassFromObservation(PRODUCT_AMOUNT / savedServings);
+        mealManageFacade.prepareMealItems.mockReturnValueOnce(
+            of([{ ...createMealItemValue(null, recipe, PRODUCT_AMOUNT, MealSourceType.Recipe), recipeMass: mass }]),
+        );
         fixture.componentRef.setInput('meal', original);
         fixture.detectChanges();
         expect(component['mealFormModel']().items[0].amount).toBe(PRODUCT_AMOUNT);
@@ -1072,14 +1074,14 @@ describe('MealManageForm existing meal editing', () => {
         await component['onSubmitAsync']();
         expect(mealManageFacade.submitMealAsync).toHaveBeenCalledWith(
             original,
-            expect.objectContaining({ items: [expect.objectContaining({ recipeId: 'r', amount: 2 })] }),
+            expect.objectContaining({ items: [expect.objectContaining({ recipeId: 'r', amount: savedServings })] }),
         );
     });
 });
 
 describe('MealManageForm manual item dialog', () => {
     it.each([true, false])('updates an item only when selection is accepted=%s', async accepted => {
-        const { component } = await setupComponentAsync();
+        const { component, fixture } = await setupComponentAsync();
         const original = createMealItemValue(
             { ...createEmptyProductSnapshot(), id: entityId<'product'>('original') },
             null,
@@ -1094,7 +1096,8 @@ describe('MealManageForm manual item dialog', () => {
         component['onItemSourceClick'](0);
         await waitForAsyncTasksAsync();
         expect(component['mealFormModel']().items).toEqual([accepted ? selected : original]);
-        component['removeItem'](0);
+        fixture.detectChanges();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]').click();
         expect(component['mealFormModel']().items).toEqual([]);
     });
 });
@@ -1247,7 +1250,7 @@ function setValidManualMeal(component: MealManageFormComponent): void {
 
 describe('Meal form delayed item dialog', () => {
     it('does not overwrite another row when the edited item was removed while its dialog was open', async () => {
-        const { component } = await setupComponentAsync();
+        const { component, fixture } = await setupComponentAsync();
         const original = createMealItemValue(
             { ...createEmptyProductSnapshot(), id: entityId<'product'>('original') },
             null,
@@ -1264,7 +1267,8 @@ describe('Meal form delayed item dialog', () => {
         const dialogs = TestBed.inject(FdUiDialogService);
         vi.spyOn(dialogs, 'open').mockReturnValue({ afterClosed: () => response } as unknown as ReturnType<typeof dialogs.open>);
         component['onItemSourceClick'](0);
-        component['removeItem'](0);
+        fixture.detectChanges();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]').click();
         response.next(selected);
         await waitForAsyncTasksAsync();
         expect(component['items']).toEqual([other]);
@@ -1273,7 +1277,7 @@ describe('Meal form delayed item dialog', () => {
 
 describe('Meal form custom controls preserve unsaved changes', () => {
     it.each(['satiety', 'nutrition', 'remove', 'ai'] as const)('asks before discarding a %s change', async action => {
-        const { component, mealManageFacade, navigationService } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade, navigationService } = await setupComponentAsync();
         mealManageFacade.confirmDiscardChangesAsync.mockResolvedValue(false);
         if (action === 'satiety') {
             component['onSatietyLevelChange']('postMealSatietyLevel', NORMALIZED_SATIETY_LEVEL);
@@ -1282,7 +1286,9 @@ describe('Meal form custom controls preserve unsaved changes', () => {
             component['onNutritionModeChange']('manual');
         }
         if (action === 'remove') {
-            component['removeItem'](0);
+            component['patchMealFormModel']({ items: [createCommentTestItem()] });
+            fixture.detectChanges();
+            requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]').click();
         }
         if (action === 'ai') {
             component['onAiMealRecognized']({
@@ -1327,7 +1333,7 @@ describe('Meal form detached dialog results', () => {
         expect(response.observed).toBe(false);
     });
     it('ignores a photo session editor result when its original session was removed', async () => {
-        const { component, mealManageFacade } = await setupComponentAsync();
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
         const original = { notes: 'old', items: [] };
         const other = { notes: 'other', items: [] };
         component['aiSessions'].set([original, other]);
@@ -1337,8 +1343,9 @@ describe('Meal form detached dialog results', () => {
                 complete = resolve;
             }),
         );
-        component['onEditAiSession'](0);
-        component['onDeleteAiSession'](0);
+        fixture.detectChanges();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_EDIT"]').click();
+        requiredMealButton(fixture.nativeElement as HTMLElement, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_DELETE"]').click();
         complete?.({ notes: 'edited', items: [] });
         await waitForAsyncTasksAsync();
         expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
@@ -1724,8 +1731,8 @@ describe('Meal editor development capability during photo preparation', () => {
     it('does not apply a pending development draft after photo preparation starts', async () => {
         const screens: MealDevelopmentScreen[] = [];
         const { fixture, mealManageFacade } = await setupComponentAsync(captureMealDevelopment(screens));
-        let resolveAmount: ((amount: number) => void) | undefined;
-        mealManageFacade.resolveRecipeDisplayValueAsync.mockReturnValueOnce(
+        let resolveAmount: ((item: MealItemFormValues) => void) | undefined;
+        mealManageFacade.prepareRecipeItemAsync.mockReturnValueOnce(
             new Promise(resolve => {
                 resolveAmount = resolve;
             }),
@@ -1739,15 +1746,15 @@ describe('Meal editor development capability during photo preparation', () => {
             items: [{ recipe: createEmptyRecipeSnapshot(), servings: recipeServingsFromStored(FRACTIONAL_RECIPE_SERVINGS) }],
         };
         const pending = screens[0].fillDraft?.(draft, vi.fn());
-        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(1);
+        expect(mealManageFacade.prepareRecipeItemAsync).toHaveBeenCalledTimes(1);
         control.imagePreparationStarted.emit('blob:meal-draft-photo');
         fixture.detectChanges();
-        resolveAmount?.(PRODUCT_AMOUNT);
+        resolveAmount?.(createRecipeEditorItem(draft.items[0].recipe, PRODUCT_AMOUNT));
 
         await expect(pending).rejects.toThrow('Meal editor changed while resolving serving quantities.');
         await expect(screens[0].fillDraft?.(draft, vi.fn())).rejects.toThrow('A clean new meal editor is required.');
         expect(screens[0].read()).toMatchObject({ items: [], dirty: false });
-        expect(mealManageFacade.resolveRecipeDisplayValueAsync).toHaveBeenCalledTimes(1);
+        expect(mealManageFacade.prepareRecipeItemAsync).toHaveBeenCalledTimes(1);
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
     });
 });
@@ -1774,14 +1781,14 @@ describe('Meal editor visible language and development projection', () => {
         expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
     });
 
-    it('reports both the editable recipe quantity and the stored servings alongside ordinary product amounts', async () => {
+    it('reports product and recipe quantities after the user cancels adding an empty item', async () => {
         const screens: MealDevelopmentScreen[] = [];
-        const { fixture, mealManageFacade } = await setupComponentAsync(captureMealDevelopment(screens));
+        const { fixture, mealManageFacade, openDialog } = await setupComponentAsync(captureMealDevelopment(screens));
         const meal = mealWithProduct('loaded-ingredients', 'Meal with recipe and product');
         const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('soup'), name: 'Soup' };
-        mealManageFacade.recipeDisplayValueFromStoredServings.mockReturnValue(PRODUCT_AMOUNT);
-        mealManageFacade.recipeDisplayUnit.mockReturnValue('grams');
-        mealManageFacade.recipeServingsFromDisplayInput.mockReturnValue(FRACTIONAL_RECIPE_SERVINGS);
+        mealManageFacade.prepareMealItems.mockReturnValueOnce(
+            of([createMealItemValue(meal.items[0].product, null, PRODUCT_AMOUNT), createRecipeEditorItem(recipe, PRODUCT_AMOUNT)]),
+        );
         fixture.componentRef.setInput('meal', {
             ...meal,
             items: [
@@ -1798,6 +1805,19 @@ describe('Meal editor visible language and development projection', () => {
         });
         fixture.detectChanges();
 
+        const picker = new Subject<MealItemFormValues | null>();
+        openDialog.mockReturnValueOnce({ afterClosed: () => picker, close: vi.fn() });
+        const host = fixture.nativeElement as HTMLElement;
+        requiredMealButton(host, 'button[aria-label="AI_INPUT_BAR.MANUAL_ACTION"]').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(openDialog.mock.lastCall?.[1]).toMatchObject({ data: { item: { product: null, recipe: null } } });
+        });
+        picker.next(null);
+        picker.complete();
+        await waitForAsyncTasksAsync();
+        fixture.detectChanges();
+
         expect(screens[0].read()).toMatchObject({
             kind: 'edit-meal-editor',
             items: [
@@ -1812,7 +1832,7 @@ describe('Meal editor visible language and development projection', () => {
                 },
             ],
         });
-        expect(mealManageFacade.recipeServingsFromDisplayInput).toHaveBeenCalledWith(recipe, PRODUCT_AMOUNT);
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
     });
 });
 

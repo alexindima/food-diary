@@ -63,6 +63,7 @@ export class ShoppingListItemsPanelComponent {
 
     public readonly itemForm = input.required<FieldTree<ShoppingListItemFormModel>>();
     public readonly items = input.required<readonly ShoppingListItem[]>();
+    public readonly isWorkspaceBusy = input(false);
     protected readonly unitOptions = computed(() => {
         this.activeLang();
         return buildShoppingListUnitOptions(key => this.translateService.instant(key));

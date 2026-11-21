@@ -8,8 +8,6 @@ import {
     formatMealManageAmount,
     formatMealManageMacro,
     getAiSessionTotals,
-    type MealManageControlErrorState,
-    resolveMealManageControlError,
 } from './meal-manage-view.utils';
 
 const FRACTION_AMOUNT = 12.5;
@@ -19,10 +17,7 @@ const AI_FRACTION_AMOUNT = 37.51234;
 
 const currentLanguageMock = vi.fn(() => 'en-US');
 const translateService = {
-    instant: vi.fn((key: string, params?: Record<string, unknown>) => {
-        const min = params?.['min'];
-        return typeof min === 'number' ? `${key}:${min}` : key;
-    }),
+    instant: vi.fn((key: string) => key),
     getCurrentLang: currentLanguageMock,
     getFallbackLang: vi.fn(() => 'en'),
 } as unknown as TranslateService;
@@ -33,11 +28,22 @@ describe('meal manage view formatting', () => {
         expect(formatMealManageMacro(KCAL_AMOUNT, 'GENERAL.UNITS.KCAL', translateService)).toBe('100 GENERAL.UNITS.KCAL');
     });
 
-    it('should normalize AI amount unit and food name labels', () => {
-        expect(formatMealAiAmount(AI_GRAMS_AMOUNT, 'grams', translateService)).toBe('150 GENERAL.UNITS.G');
-        expect(formatMealAiAmount(2, 'slice', translateService)).toBe('2 slice');
-        expect(formatMealAiName(' apple')).toBe('Apple');
-        expect(formatMealAiName('   ')).toBe('');
+    it.each([
+        [' GrAmS ', '150 GENERAL.UNITS.G'],
+        ['l', '150 l'],
+        [' Slice ', '150  Slice'],
+        ['', '150'],
+        ['   ', '150'],
+    ])('displays recognition amount with unit %j', (unit, expected) => {
+        expect(formatMealAiAmount(AI_GRAMS_AMOUNT, unit, translateService)).toBe(expected);
+    });
+
+    it.each([
+        [' apple', 'Apple'],
+        [' груша ', 'Груша'],
+        ['   ', ''],
+    ])('displays recognition item name %j', (name, expected) => {
+        expect(formatMealAiName(name)).toBe(expected);
     });
 
     it.each([
@@ -68,40 +74,6 @@ describe('meal manage view totals', () => {
         });
     });
 });
-
-describe('meal manage control errors', () => {
-    it('should resolve required and min errors only after touch', () => {
-        const requiredControl = createControlState({
-            errors: { required: true },
-            invalid: true,
-        });
-
-        expect(resolveMealManageControlError(requiredControl, translateService)).toBeNull();
-
-        requiredControl.touched = true;
-
-        expect(resolveMealManageControlError(requiredControl, translateService)).toBe('FORM_ERRORS.REQUIRED');
-
-        const minControl = createControlState({
-            errors: { min: { min: 1 } },
-            invalid: true,
-            touched: true,
-        });
-
-        expect(resolveMealManageControlError(minControl, translateService)).toBe('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:1');
-    });
-});
-
-function createControlState(overrides: Partial<MealManageControlErrorState> = {}): MealManageControlErrorState {
-    const state: MealManageControlErrorState = {
-        errors: null,
-        getError: errorCode => state.errors?.[errorCode] ?? null,
-        invalid: false,
-        touched: false,
-        ...overrides,
-    };
-    return state;
-}
 
 function createAiItem(values: {
     calories: number;

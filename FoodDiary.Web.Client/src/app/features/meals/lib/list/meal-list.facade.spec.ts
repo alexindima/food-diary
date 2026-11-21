@@ -174,7 +174,7 @@ describe('MealListFacade', () => {
 
 function registerLoadTests(): void {
     describe('loading', () => {
-        it('keeps full-day totals separate from page meals and preserves favorites on pagination', () => {
+        it('keeps full-day totals separate from page meals and preserves the favorite count on pagination', () => {
             const summary = { date: '2026-05-05', totalCalories: 2500, mealCount: 8 };
             mealService.queryOverview.mockReturnValueOnce(
                 of({ ...createOverview([createMeal()], [createFavorite()]), daySummaries: [summary] }),
@@ -184,7 +184,7 @@ function registerLoadTests(): void {
             mealService.queryOverview.mockReturnValueOnce(of({ ...createOverview([createMeal()], NEXT_PAGE), daySummaries: [summary] }));
             facade.loadMeals(NEXT_PAGE, emptyMealFilters()).subscribe();
             expect(facade.daySummaries()).toEqual([summary]);
-            expect(facade.favorites()).toHaveLength(1);
+            expect(facade.favoriteTotalCount()).toBe(1);
             mealService.queryOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
             facade.loadMeals(NEXT_PAGE, emptyMealFilters()).subscribe();
             expect(facade.daySummaries()).toEqual([]);
@@ -217,7 +217,6 @@ function registerLoadTests(): void {
                 { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, include: true },
             );
             expect(facade.mealData.items()).toEqual([meal]);
-            expect(facade.favorites()).toEqual([favorite]);
             expect(facade.favoriteTotalCount()).toBe(1);
             expect(facade.errorKey()).toBeNull();
         });
@@ -234,12 +233,12 @@ function registerLoadTests(): void {
 
         it('shows a toast when favorites load fails', () => {
             favoriteMealService.getPage.mockReturnValue(throwError(() => new Error('favorites failed')));
+            facade.favoriteTotalCount.set(NEXT_PAGE);
 
             facade.loadFavorites();
 
             expect(toastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
-            expect(facade.favorites()).toEqual([]);
-            expect(facade.isFavoritesLoadingMore()).toBe(false);
+            expect(facade.favoriteTotalCount()).toBe(NEXT_PAGE);
         });
     });
 }
@@ -306,13 +305,13 @@ function registerMutationTests(): void {
             const favorite = createFavorite();
             const meal = createMeal({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id });
             facade.mealData.setData(createPageOf([meal]));
-            facade.favorites.set([favorite]);
             facade.favoriteTotalCount.set(1);
 
-            facade.removeFavorite(favorite);
+            const removed = vi.fn();
+            facade.removeFavoriteRequest(favorite).subscribe(removed);
+            expect(removed).toHaveBeenCalledExactlyOnceWith(true);
 
             expect(favoriteMealService.remove).toHaveBeenCalledWith(favorite.id);
-            expect(facade.favorites()).toEqual([]);
             expect(facade.favoriteTotalCount()).toBe(0);
             expect(facade.mealData.items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
         });
@@ -400,12 +399,10 @@ function registerFavoriteMutationTests(): void {
 
 function registerListFailureTests(): void {
     it('clears obsolete data on initial failure and recovers on retry', () => {
-        facade.favorites.set([createFavorite()]);
         facade.favoriteTotalCount.set(1);
         facade.daySummaries.set([{ date: '2026-05-05', totalCalories: 1, mealCount: 1 }]);
         mealService.queryOverview.mockReturnValueOnce(throwError(() => new Error('offline')));
         facade.loadInitialOverview(emptyMealFilters()).subscribe();
-        expect(facade.favorites()).toEqual([]);
         expect(facade.favoriteTotalCount()).toBe(0);
         expect(facade.daySummaries()).toEqual([]);
         expect(facade.errorKey()).not.toBeNull();
@@ -414,13 +411,15 @@ function registerListFailureTests(): void {
     });
     it('preserves favorite count and cards when removal fails', () => {
         facade.favoriteTotalCount.set(1);
-        facade.favorites.set([createFavorite()]);
+        const favorite = createFavorite();
+        const meal = createMeal({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id });
+        facade.mealData.setData(createPageOf([meal]));
         favoriteMealService.remove.mockReturnValue(throwError(() => new Error('offline')));
-        facade.removeFavoriteRequest(createFavorite()).subscribe(result => {
+        facade.removeFavoriteRequest(favorite).subscribe(result => {
             expect(result).toBe(false);
         });
         expect(facade.favoriteTotalCount()).toBe(1);
-        expect(facade.favorites()).toEqual([createFavorite()]);
+        expect(facade.mealData.items()).toEqual([meal]);
     });
     it('does not invalidate nutrition or reload after failed deletion', () => {
         const invalidation = vi.spyOn(TestBed.inject(NutritionDataInvalidationService), 'reportMealMutation');
@@ -569,7 +568,6 @@ function registerDetailFavoriteRefreshTests(): void {
             await facade.handleMealDetailsAsync(createMeal(), emptyMealFilters());
 
             expect(facade.favoriteTotalCount()).toBe(1);
-            expect(facade.favorites()).toEqual([favorite]);
             expect(facade.mealData.items()[0].isFavorite).toBe(true);
             expect(mealService.queryOverview).toHaveBeenCalledExactlyOnceWith(
                 DEFAULT_PAGE,
@@ -594,7 +592,6 @@ function registerDetailFavoriteRefreshTests(): void {
         await expect(facade.handleMealDetailsAsync(createMeal(), emptyMealFilters())).resolves.toBe(false);
 
         expect(facade.favoriteTotalCount()).toBe(1);
-        expect(facade.favorites()).toEqual([favorite]);
         expect(mealService.queryOverview).toHaveBeenCalledOnce();
         expect(favoriteMealService.getPage).not.toHaveBeenCalled();
         expect(toastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');

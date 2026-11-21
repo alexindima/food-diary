@@ -81,7 +81,6 @@
                             class="cycle-tracking__form-control"
                             [label]="'CYCLE_TRACKING.TRACKING_START_DATE' | translate"
                             [formField]="startCycleForm.trackingStartDate"
-                            [error]="trackingStartDateError() | translate"
                         />
                         <fd-ui-select
                             class="cycle-tracking__form-control"
@@ -120,7 +119,7 @@
                     </div>
                 </form>
             </fd-ui-card>
-        } @else {
+        } @else if (cycle(); as renderedCycle) {
             @if (overviewView(); as overview) {
                 <fd-cycle-overview-card [overview]="overview" (dateSelected)="editDay($event)" (logToday)="openDayEditor()" />
             }
@@ -304,6 +303,7 @@
                                 class="cycle-tracking__form fd-stack fd-gap-card-header"
                                 [formRoot]="factorForm"
                                 [attr.aria-busy]="isSavingFactor()"
+                                (submit)="submitFactor(renderedCycle.id)"
                             >
                                 <fd-ui-select
                                     [label]="'CYCLE_TRACKING.FACTOR_TYPE' | translate"
@@ -314,7 +314,6 @@
                                     <fd-ui-date-input
                                         [label]="'CYCLE_TRACKING.FACTOR_START_DATE' | translate"
                                         [formField]="factorForm.startDate"
-                                        [error]="factorStartDateError() | translate"
                                     />
                                     <fd-ui-date-input
                                         [label]="'CYCLE_TRACKING.FACTOR_END_DATE' | translate"
@@ -483,7 +482,7 @@
                                                                 [loading]="deletingEpisodeId() === episode.id"
                                                                 [disabled]="isEpisodeBusy()"
                                                                 [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
-                                                                (click)="deleteMenstrualEpisode(episode.id)"
+                                                                (click)="deleteMenstrualEpisode(episode.id, renderedCycle.id)"
                                                             >
                                                                 {{ 'CYCLE_TRACKING.DELETE_EPISODE' | translate }}
                                                             </fd-ui-button>

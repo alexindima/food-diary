@@ -1,10 +1,11 @@
+import { DOCUMENT } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { of, Subject } from 'rxjs';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { WearableService } from '../../api/wearable.service';
-import type { WearableConnection } from '../../models/wearable.data';
+import type { WearableAuthUrl, WearableConnection } from '../../models/wearable.data';
 import { WearableConnectionsComponent } from './wearable-connections';
 
 const CONNECTION: WearableConnection = {
@@ -37,26 +38,58 @@ describe('WearableConnectionsComponent', () => {
         expect(service.disconnect).toHaveBeenCalledWith('Fitbit');
         expect(service.getConnections).toHaveBeenCalledTimes(2);
     });
+
+    it('requests the selected Fitbit authorization and navigates when the response arrives', () => {
+        const navigate = vi.fn<(url: string) => void>();
+        const { fixture, service } = setupComponent(withNavigation(navigate), []);
+        const authorization = new Subject<WearableAuthUrl>();
+        service.getAuthUrl.mockReturnValueOnce(authorization);
+        const element = fixture.nativeElement as HTMLElement;
+        const row = [...element.querySelectorAll('.provider-row')].find(
+            candidate => candidate.querySelector('.provider-name')?.textContent.trim() === 'Fitbit',
+        );
+        const button = row?.querySelector<HTMLButtonElement>('button');
+        expect(button?.textContent).toContain('WEARABLES.CONNECT');
+        button?.click();
+
+        expect(service.getAuthUrl).toHaveBeenCalledOnce();
+        const [provider, state] = service.getAuthUrl.mock.lastCall ?? [];
+        expect(provider).toBe('Fitbit');
+        expect(state).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u);
+        expect(navigate).not.toHaveBeenCalled();
+
+        const authorizationUrl = 'https://provider.example.test/authorize';
+        authorization.next({ authorizationUrl });
+        authorization.complete();
+        expect(navigate).toHaveBeenCalledExactlyOnceWith(authorizationUrl);
+    });
 });
 
-function setupComponent(): {
+function setupComponent(
+    ownedDocument: Document = document,
+    connections = [CONNECTION],
+): {
     component: WearableConnectionsComponent;
     fixture: ComponentFixture<WearableConnectionsComponent>;
     service: {
         disconnect: ReturnType<typeof vi.fn>;
-        getAuthUrl: ReturnType<typeof vi.fn>;
+        getAuthUrl: Mock<WearableService['getAuthUrl']>;
         getConnections: ReturnType<typeof vi.fn>;
     };
 } {
     const service = {
         disconnect: vi.fn().mockReturnValue(of(void 0)),
-        getAuthUrl: vi.fn().mockReturnValue(of({ authorizationUrl: 'https://example.com/oauth' })),
-        getConnections: vi.fn().mockReturnValue(of([CONNECTION])),
+        getAuthUrl: vi.fn<WearableService['getAuthUrl']>(),
+        getConnections: vi.fn().mockReturnValue(of(connections)),
     };
 
     TestBed.configureTestingModule({
         imports: [WearableConnectionsComponent],
-        providers: [provideTranslateTesting(), { provide: WearableService, useValue: service }],
+        providers: [
+            provideTranslateTesting(),
+            { provide: WearableService, useValue: service },
+            { provide: DOCUMENT, useValue: ownedDocument },
+        ],
     });
 
     const fixture = TestBed.createComponent(WearableConnectionsComponent);
@@ -67,6 +100,23 @@ function setupComponent(): {
         fixture,
         service,
     };
+}
+
+function withNavigation(navigate: (url: string) => void): Document {
+    const location = {
+        set href(url: string) {
+            navigate(url);
+        },
+    };
+    return new Proxy(document, {
+        get(target, property): unknown {
+            if (property === 'location') {
+                return location;
+            }
+            const value: unknown = Reflect.get(target, property, target);
+            return typeof value === 'function' ? (value.bind(target) as unknown) : value;
+        },
+    });
 }
 
 function getText(fixture: ComponentFixture<WearableConnectionsComponent>): string {

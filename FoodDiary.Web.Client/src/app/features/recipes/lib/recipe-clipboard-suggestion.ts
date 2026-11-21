@@ -7,6 +7,8 @@ const preferenceKey = 'recipe.clipboardSuggestions';
 const dismissedKey = 'recipe.dismissedClipboardUrl';
 const maxClipboardUrlLength = 2048;
 
+type SuggestionScope = { reading: boolean };
+
 export function instagramRecipeUrl(text: string): string | null {
     if (text.length > maxClipboardUrlLength) {
         return null;
@@ -40,7 +42,7 @@ function hasInstagramAuthority(url: URL): boolean {
 export class RecipeClipboardSuggestion {
     private readonly clipboard = inject(BrowserClipboardService);
     private readonly storage = inject(BrowserStorageService);
-    private reading = false;
+    private suggestionScope: SuggestionScope = { reading: false };
     public readonly enabled = signal(this.storage.getItem('local', preferenceKey) === 'true');
     public readonly suggestion = signal<string | null>(null);
     public readonly unavailable = signal(false);
@@ -49,16 +51,21 @@ export class RecipeClipboardSuggestion {
         const stop = this.clipboard.onReturn(() => {
             void this.checkOnReturnAsync();
         });
-        inject(DestroyRef).onDestroy(stop);
+        inject(DestroyRef).onDestroy(() => {
+            this.suggestionScope = { reading: false };
+            stop();
+        });
     }
 
     public async setEnabledAsync(enabled: boolean): Promise<void> {
+        const scope = { reading: false };
+        this.suggestionScope = scope;
         this.enabled.set(enabled);
         this.storage.setItem('local', preferenceKey, String(enabled));
         this.suggestion.set(null);
         if (enabled) {
             // This read follows the user's click, allowing browser permission UI if needed.
-            await this.readSuggestionAsync();
+            await this.readSuggestionAsync(scope);
         }
     }
 
@@ -82,29 +89,30 @@ export class RecipeClipboardSuggestion {
     }
 
     private async checkOnReturnAsync(): Promise<void> {
+        const scope = this.suggestionScope;
         if (this.enabled() && (await this.clipboard.canReadWithoutPromptAsync())) {
-            await this.readSuggestionAsync();
+            await this.readSuggestionAsync(scope);
         }
     }
 
-    private async readSuggestionAsync(): Promise<void> {
-        if (!this.enabled() || this.reading) {
+    private async readSuggestionAsync(scope: SuggestionScope): Promise<void> {
+        if (scope !== this.suggestionScope || scope.reading) {
             return;
         }
-        this.reading = true;
+        scope.reading = true;
         try {
             const text = await this.clipboard.readTextAsync();
-            if (this.enabled()) {
+            if (scope === this.suggestionScope) {
                 const url = instagramRecipeUrl(text);
                 this.unavailable.set(false);
                 this.suggestion.set(url !== this.storage.getItem('session', dismissedKey) ? url : null);
             }
         } catch {
-            if (this.enabled()) {
+            if (scope === this.suggestionScope) {
                 this.unavailable.set(true);
             }
         } finally {
-            this.reading = false;
+            scope.reading = false;
         }
     }
 }

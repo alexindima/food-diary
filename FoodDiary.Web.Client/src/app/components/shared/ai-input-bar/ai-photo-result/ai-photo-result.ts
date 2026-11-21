@@ -216,14 +216,13 @@ export class AiPhotoResultComponent {
 
     private resolveDisplayName(item: FoodVisionItem): string {
         const localName = item.nameLocal?.trim() ?? '';
-        return this.capitalizeLabel(localName.length > 0 ? localName : item.nameEn);
+        const name = localName.length > 0 ? localName : item.nameEn.trim();
+        return name.replace(/^./u, first => first.toLocaleUpperCase());
     }
 
     private resolveAmountLabel(item: FoodVisionItem): string {
         const amount = new Intl.NumberFormat(this.activeLang(), { maximumFractionDigits: 20 }).format(item.amount);
-        const unitKey = resolveAiPhotoUnitKey(item.unit);
-        const unitLabel = unitKey !== null ? this.translateService.instant(unitKey) : item.unit;
-        return unitLabel.length > 0 ? `${amount} ${unitLabel}`.trim() : amount.trim();
+        return `${amount} ${this.resolveUnitLabel(item.unit)}`.trim();
     }
 
     private resolveUnitLabel(unit: string): string {
@@ -336,20 +335,6 @@ export class AiPhotoResultComponent {
             preMealSatietyLevel: normalizeSatietyLevel(this.preMealSatietyLevel()),
             postMealSatietyLevel: normalizeSatietyLevel(this.postMealSatietyLevel()),
         });
-    }
-
-    private capitalizeLabel(value?: string | null): string {
-        if (value === null || value === undefined) {
-            return '';
-        }
-
-        const trimmed = value.trim();
-        if (trimmed.length === 0) {
-            return '';
-        }
-
-        const [first, ...rest] = trimmed;
-        return `${first.toLocaleUpperCase()}${rest.join('')}`;
     }
 
     private createEditId(): string {

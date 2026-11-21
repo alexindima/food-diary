@@ -25,7 +25,7 @@ export class ShoppingListBrowserDialogComponent {
     protected create(name: string | void): void {
         this.ref.close({ create: true, name });
     }
-    protected close(id?: ShoppingListId): void {
-        this.ref.close(id === undefined ? undefined : { id });
+    protected selectList(id: ShoppingListId): void {
+        this.ref.close({ id });
     }
 }

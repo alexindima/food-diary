@@ -4,6 +4,7 @@ import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 import { injectCurrentLanguage } from '../../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../../shared/i18n/localized-number.pipe';
+import { recipeNutrientPerServing } from '../../../../../../shared/lib/recipe-nutrition-display.utils';
 import type { Recipe } from '../../../../../../shared/models/recipe.data';
 import type { RecipeCardViewModel } from '../../../../lib/recipe-list.types';
 
@@ -20,7 +21,7 @@ export class RecipeListRecentComponent {
     public readonly recipeOpen = output<Recipe>();
     public readonly recipeAddToMeal = output<Recipe>();
 
-    protected caloriesPerServing(recipe: Recipe): number {
-        return (recipe.totalCalories ?? 0) / Math.max(1, recipe.servings);
+    protected caloriesPerServing(recipe: Recipe): number | null {
+        return recipeNutrientPerServing(recipe.totalCalories, recipe.servings);
     }
 }

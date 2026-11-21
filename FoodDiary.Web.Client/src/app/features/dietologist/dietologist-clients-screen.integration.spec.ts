@@ -3,10 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { FdTourService } from 'fd-tour';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { WebmcpScreenRegistry } from 'fd-webmcp';
 import { of, Subject, throwError } from 'rxjs';
-import { describe, expect, it, type Mock, vi } from 'vitest';
+import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { DEVELOPMENT_SCREENS } from '../../shared/development/development-tools';
@@ -262,3 +263,80 @@ describe('Dietologist attention panel recovery', () => {
         expect(api.getAttentionSignals.mock.calls[1]).toEqual(api.getAttentionSignals.mock.calls[2]);
     });
 });
+
+describe('Dietologist bulk review for a client without a name or email', () => {
+    it('shows the unnamed recipient, preserves their selection on cancel, and submits only their user ID', async () => {
+        vi.stubGlobal(
+            'matchMedia',
+            vi.fn(() => ({ matches: false })),
+        );
+        onTestFinished(() => {
+            TestBed.inject(FdUiDialogService).closeAll();
+            vi.unstubAllGlobals();
+        });
+        const { api, showSuccess } = configureDirectory();
+        const client = createClient({ userId: entityId<'user'>('unnamed-client'), firstName: null, lastName: null, email: null });
+        api.getMyClients.mockReturnValueOnce(of([FIRST_CLIENT, client]));
+        api.bulkCreateRecommendations.mockImplementationOnce((_ids, _text, idempotencyKey) =>
+            of({
+                idempotencyKey,
+                recipients: [
+                    {
+                        clientUserId: client.userId,
+                        succeeded: true,
+                        recommendationId: entityId<'recommendation'>('unnamed-client-recommendation'),
+                        wasAlreadyProcessed: false,
+                        errorCode: null,
+                    },
+                ],
+            }),
+        );
+        const harness = await RouterTestingHarness.create(DIRECTORY);
+        const host = root(harness);
+        const recipient = host.querySelector<HTMLInputElement>(`#bulk-client-${client.userId}`);
+        if (recipient === null) {
+            throw new Error('Expected the unnamed client to be selectable');
+        }
+        recipient.click();
+        const text = 'Try the meal planning suggestions';
+        fillDraft(harness, ` ${text} `);
+        const send = button(host, 'BULK_RECOMMENDATIONS.SEND');
+        send.click();
+        const firstReview = await bulkReviewAsync(harness);
+        expect(firstReview.querySelector('.bulk-review__recipients strong')?.textContent).toBe('ATTENTION.UNNAMED_CLIENT');
+        expect(firstReview.querySelector('.bulk-review__recipients li span')).toBeNull();
+        expect(firstReview.querySelector('.bulk-review__text')?.textContent).toBe(text);
+
+        button(firstReview, 'COMMON.CANCEL').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(firstReview.isConnected).toBe(false);
+        });
+        expect(recipient.checked).toBe(true);
+        expect(host.querySelector('textarea')?.value).toBe(` ${text} `);
+        expect(api.bulkCreateRecommendations).not.toHaveBeenCalled();
+
+        send.click();
+        const reopened = await bulkReviewAsync(harness);
+        expect(reopened.querySelector('.bulk-review__recipients strong')?.textContent).toBe('ATTENTION.UNNAMED_CLIENT');
+        button(reopened, 'BULK_RECOMMENDATIONS.CONFIRM').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(showSuccess).toHaveBeenCalledExactlyOnceWith('BULK_RECOMMENDATIONS.SUCCESS');
+        });
+        expect(api.bulkCreateRecommendations).toHaveBeenCalledExactlyOnceWith([client.userId], text, expect.any(String));
+        expect(recipient.checked).toBe(false);
+        expect(host.querySelector('textarea')?.value).toBe('');
+    });
+});
+
+async function bulkReviewAsync(harness: RouterTestingHarness): Promise<HTMLElement> {
+    return vi.waitFor(() => {
+        harness.detectChanges();
+        const review = document.querySelector('fd-bulk-recommendation-review');
+        if (!(review instanceof HTMLElement)) {
+            throw new Error('Expected the bulk recommendation review');
+        }
+        return review;
+    });
+}

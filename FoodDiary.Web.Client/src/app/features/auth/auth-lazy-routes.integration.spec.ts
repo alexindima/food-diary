@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -10,6 +10,7 @@ import { describe, expect, it, type Mock, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
+import { AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../config/runtime-ui.tokens';
 import { AuthService } from '../../services/auth.service';
 import { AuthCookieSessionService } from '../../shared/auth/auth-cookie-session.service';
 import { EmailVerificationCooldownService } from '../../shared/auth/email-verification-cooldown.service';
@@ -19,6 +20,7 @@ import { telegramLoginTicket } from '../../shared/auth/telegram-oidc-values';
 import { TelegramUnlinkFlowService } from '../../shared/auth/telegram-unlink-flow.service';
 import { TelegramWebAppService } from '../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../shared/i18n/localization.service';
+import { MS_PER_SECOND } from '../../shared/lib/time.constants';
 import { UserFacade } from '../../shared/lib/user.facade';
 import { entityId } from '../../shared/models/semantics/entity-id';
 import type { User } from '../../shared/models/user.data';
@@ -121,11 +123,13 @@ function telegramBoundary(): TelegramBoundary {
     };
 }
 
-type BrowserBoundary = { [Method in 'open' | 'replaceCurrentUrl' | 'clearInterval']: Mock<BrowserWindowService[Method]> };
+type BrowserBoundary = { [Method in 'open' | 'replaceCurrentUrl' | 'setInterval' | 'clearInterval']: Mock<BrowserWindowService[Method]> };
 type UsersBoundary = Pick<UserFacade, 'user'> & { [Method in 'getInfo' | 'changePassword']: Mock<UserFacade[Method]> };
 type RealtimeBoundary = { [Method in 'connectAsync' | 'disconnectAsync']: Mock<EmailVerificationRealtimeService[Method]> };
+type AuthFlowBoundary = { [Method in 'login' | 'restoreAccount' | 'requestPasswordReset']: Mock<AuthFlowFacade[Method]> };
 type RouteFixture = {
     auth: AuthBoundary;
+    authFlow: AuthFlowBoundary;
     telegramApi: TelegramBoundary;
     browser: BrowserBoundary;
     users: UsersBoundary;
@@ -134,10 +138,16 @@ type RouteFixture = {
 
 function configureAuthRoutes(authenticated = false, requiresPasswordChange = false): RouteFixture {
     const auth = authBoundary(authenticated, requiresPasswordChange);
+    const authFlow: AuthFlowBoundary = {
+        login: vi.fn<AuthFlowFacade['login']>(),
+        restoreAccount: vi.fn<AuthFlowFacade['restoreAccount']>(),
+        requestPasswordReset: vi.fn<AuthFlowFacade['requestPasswordReset']>(),
+    };
     const telegramApi = telegramBoundary();
     const browser: BrowserBoundary = {
         open: vi.fn<BrowserWindowService['open']>(),
         replaceCurrentUrl: vi.fn<BrowserWindowService['replaceCurrentUrl']>(),
+        setInterval: vi.fn<BrowserWindowService['setInterval']>(),
         clearInterval: vi.fn<BrowserWindowService['clearInterval']>(),
     };
     const users: UsersBoundary = {
@@ -150,6 +160,7 @@ function configureAuthRoutes(authenticated = false, requiresPasswordChange = fal
         disconnectAsync: vi.fn<EmailVerificationRealtimeService['disconnectAsync']>().mockResolvedValue(undefined),
     };
     TestBed.configureTestingModule({
+        imports: [AuthComponent],
         providers: [
             provideRouter([
                 ...authRoutes,
@@ -160,29 +171,22 @@ function configureAuthRoutes(authenticated = false, requiresPasswordChange = fal
             provideHttpClient(),
             provideHttpClientTesting(),
             { provide: AuthService, useValue: auth },
+            { provide: AuthFlowFacade, useValue: authFlow },
+            { provide: AUTH_PASSWORD_RESET_COOLDOWN_SECONDS, useValue: 2 },
             { provide: UserFacade, useValue: users },
             { provide: TelegramAuthService, useValue: telegramApi },
             { provide: BrowserWindowService, useValue: browser },
             { provide: EmailVerificationRealtimeService, useValue: realtime },
             ...localBoundaryProviders(),
         ],
-    }).overrideComponent(AuthComponent, {
-        remove: { providers: [AuthGoogleManager] },
-        add: {
-            providers: [
-                {
-                    provide: AuthGoogleManager,
-                    useValue: { ready: signal(false), initializeAsync: vi.fn().mockResolvedValue(undefined), renderButton: vi.fn() },
-                },
-            ],
-        },
+    }).overrideProvider(AuthGoogleManager, {
+        useValue: { ready: signal(false), initializeAsync: vi.fn().mockResolvedValue(undefined), renderButton: vi.fn() },
     });
-    return { auth, telegramApi, browser, users, realtime };
+    return { auth, authFlow, telegramApi, browser, users, realtime };
 }
 
 function localBoundaryProviders(): Provider[] {
     return [
-        { provide: AuthFlowFacade, useValue: {} },
         { provide: PwaInstallService, useValue: { shouldRememberSession: (): boolean => false } },
         { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } },
         { provide: EmailVerificationCooldownService, useValue: { remainingSeconds: (): number => 0 } },
@@ -243,6 +247,36 @@ async function expectDashboardAsync(harness: RouterTestingHarness): Promise<void
 }
 
 describe('Lazy mobile and Telegram routes', () => {
+    it('restores the account from mobile login and leaves the sign-in form when the diary opens', async () => {
+        stubScrollIntoView();
+        const { authFlow } = configureAuthRoutes();
+        authFlow.login.mockReturnValueOnce(of('accountDeleted'));
+        const restoration = new Subject<boolean>();
+        authFlow.restoreAccount.mockReturnValueOnce(restoration);
+        const harness = await RouterTestingHarness.create(MOBILE_LOGIN);
+        const form = root(harness).querySelector('form');
+        const email = form?.querySelector<HTMLInputElement>('#auth-login-email');
+        if (form === null || email === null || email === undefined) {
+            throw new Error('Expected a rendered mobile sign-in form');
+        }
+        email.value = EMAIL;
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        enterPasswords(harness, [FIXTURE_PASSWORD]);
+
+        form.requestSubmit();
+        const restore = await vi.waitFor(() => action(harness, 'AUTH.LOGIN.RESTORE'));
+        restore.click();
+        expect(root(harness).querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+
+        restoration.next(true);
+        restoration.complete();
+        await expectDashboardAsync(harness);
+
+        expect(form.isConnected).toBe(false);
+        expect(authFlow.login).toHaveBeenCalledOnce();
+        expect(authFlow.restoreAccount).toHaveBeenCalledOnce();
+    });
+
     it('redirects the mobile alias to its usable login and hands off through the rendered Telegram route', async () => {
         stubScrollIntoView();
         const { telegramApi, browser } = configureAuthRoutes();
@@ -283,6 +317,44 @@ describe('Lazy mobile and Telegram routes', () => {
 
         expect(telegramApi.complete).toHaveBeenCalledExactlyOnceWith(TELEGRAM_TICKET, 'login', 'en', expect.any(String));
         expect(auth.acceptExternalAuthentication).toHaveBeenCalledExactlyOnceWith({ user: signedInUser });
+    });
+});
+
+describe('Mobile password reset cooldown lifetime', () => {
+    it('clears an expired countdown once and leaves the next route usable', async () => {
+        stubScrollIntoView();
+        const { authFlow, browser } = configureAuthRoutes();
+        const timerId = 17;
+        browser.setInterval.mockReturnValueOnce(timerId);
+        authFlow.requestPasswordReset.mockReturnValueOnce(of('success'));
+        const harness = await RouterTestingHarness.create(MOBILE_LOGIN);
+
+        action(harness, 'AUTH.LOGIN.FORGOT_PASSWORD').click();
+        const email = root(harness).querySelector<HTMLInputElement>('input[autocomplete="email"]');
+        if (email === null) {
+            throw new Error('Expected a rendered recovery email field');
+        }
+        email.value = EMAIL;
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        action(harness, 'AUTH.RESET.SEND').click();
+
+        await vi.waitFor(() => {
+            expect(root(harness).textContent).toContain('AUTH.RESET.RESEND_COOLDOWN');
+        });
+        expect(action(harness, 'AUTH.RESET.SEND').disabled).toBe(true);
+        expect(browser.setInterval).toHaveBeenCalledExactlyOnceWith(expect.any(Function), MS_PER_SECOND);
+        const tick = browser.setInterval.mock.calls[0][0];
+        tick();
+        expect(action(harness, 'AUTH.RESET.SEND').disabled).toBe(true);
+        tick();
+        expect(action(harness, 'AUTH.RESET.SEND').disabled).toBe(false);
+        expect(root(harness).textContent).not.toContain('AUTH.RESET.RESEND_COOLDOWN');
+        expect(browser.clearInterval).toHaveBeenCalledExactlyOnceWith(timerId);
+
+        await harness.navigateByUrl('/');
+        expect(root(harness).querySelector('h1')?.textContent).toBe('Diary login destination');
+        expect(authFlow.requestPasswordReset).toHaveBeenCalledExactlyOnceWith({ email: EMAIL });
+        expect(browser.clearInterval).toHaveBeenCalledExactlyOnceWith(timerId);
     });
 });
 
@@ -406,7 +478,7 @@ describe('Leaving during a required password change', () => {
         });
     });
 
-    it('does not redirect a login destination after an earlier session renewal finishes', async () => {
+    it.each(['success', 'failure'] as const)('keeps the login destination after an earlier renewal ends with %s', async outcome => {
         const { auth, users } = configureAuthRoutes(true, true);
         const renewal = new Subject<void>();
         auth.completeRequiredPasswordChangeAsync.mockReturnValueOnce(firstValueFrom(renewal));
@@ -424,14 +496,19 @@ describe('Leaving during a required password change', () => {
         await vi.waitFor(() => {
             expect(root(harness).querySelector('h1')?.textContent).toBe('Diary login destination');
         });
-        renewal.next();
-        renewal.complete();
+        if (outcome === 'failure') {
+            renewal.error(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }));
+        } else {
+            renewal.next();
+            renewal.complete();
+        }
         await waitForAsyncTasksAsync();
         await harness.fixture.whenStable();
 
         expect(users.changePassword).toHaveBeenCalledOnce();
         expect(router.url).toBe(loginUrl);
         expect(root(harness).querySelector('h1')?.textContent).toBe('Diary login destination');
+        expect(root(harness).querySelector('[role="alert"]')).toBeNull();
     });
 
     it('leaves the reset page open when a password write finishes after route replacement', async () => {

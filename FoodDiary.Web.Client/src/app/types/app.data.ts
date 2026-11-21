@@ -13,7 +13,6 @@ export type AppConfig = {
     adminAppUrl?: string;
     supportEmail?: string;
     siteUrls?: AppConfigSiteUrls;
-    russianDefaultHosts?: readonly string[];
     enableGlobalErrorHandler?: boolean;
     enableClientObservability?: boolean;
     enableMarketingAttribution?: boolean;

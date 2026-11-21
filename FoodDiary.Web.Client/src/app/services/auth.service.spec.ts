@@ -913,6 +913,31 @@ describe('browser session recovery boundaries', () => {
         requests.expectNone(`${base}/logout`);
     });
 
+    it('logs out after cleanup rejects and the remaining session cleanup completes', async () => {
+        signIn();
+        const sessions = TestBed.inject(SessionEventsService);
+        const failed = new Subject<void>();
+        const remaining = new Subject<void>();
+        sessions.registerSessionEndCleanup(async () => firstValueFrom(failed));
+        sessions.registerSessionEndCleanup(async () => firstValueFrom(remaining));
+
+        const logout = service.onLogoutAsync();
+        expect(service.isAuthenticated()).toBe(false);
+        failed.error(new Error('Device cleanup unavailable'));
+        await waitForAsyncTasksAsync();
+        requests.expectNone(`${base}/logout`);
+        expect(navigation.navigateToLandingAsync).not.toHaveBeenCalled();
+
+        remaining.next();
+        remaining.complete();
+        const request = await vi.waitFor(() => requests.expectOne({ method: 'POST', url: `${base}/logout` }));
+        request.flush(null);
+        await logout;
+
+        expect(localStorage.getItem('pendingBrowserLogout')).toBeNull();
+        expect(navigation.navigateToLandingAsync).toHaveBeenCalledOnce();
+    });
+
     it('treats an already replaced cookie as a completed logout', async () => {
         signIn();
 
@@ -1044,25 +1069,30 @@ function publishAccountAccess(access: string[]): void {
 }
 
 describe('Telegram recovery SDK contracts', () => {
-    it.each(['backup-email', 'unlink'] as const)('starts and completes the %s provider flow with separate request bodies', async kind => {
+    it('starts the backup email provider flow with the requested address', async () => {
         const email = response.user.email;
-        const started = firstValueFrom(kind === 'backup-email' ? service.startTelegramBackupEmail(email) : service.startTelegramUnlink());
-        const start = requests.expectOne({ method: 'POST', url: `${base}/telegram/${kind}/oidc/start` });
-        expect(start.request.body).toEqual(kind === 'backup-email' ? { email } : null);
+        const started = firstValueFrom(service.startTelegramBackupEmail(email));
+        const start = requests.expectOne({ method: 'POST', url: `${base}/telegram/backup-email/oidc/start` });
+        expect(start.request.body).toEqual({ email });
         const authorizationUrl = 'https://oauth.telegram.org/auth?state=fixture';
         start.flush({ authorizationUrl });
         await expect(started).resolves.toEqual({ authorizationUrl });
-
-        const code = telegramOAuthCode('fixture-code');
-        const state = telegramOAuthState('fixture-state');
-        const completed = firstValueFrom(
-            kind === 'backup-email' ? service.completeTelegramBackupEmail(code, state) : service.completeTelegramUnlink(code, state),
-        );
-        const finish = requests.expectOne({ method: 'POST', url: `${base}/telegram/${kind}/oidc/complete` });
-        expect(finish.request.body).toEqual({ code, state });
-        finish.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
-        await expect(completed).resolves.toBeNull();
     });
+
+    it.each(['backup-email', 'unlink'] as const)(
+        'completes the previously started %s provider flow with its callback values',
+        async kind => {
+            const code = telegramOAuthCode('fixture-code');
+            const state = telegramOAuthState('fixture-state');
+            const completed = firstValueFrom(
+                kind === 'backup-email' ? service.completeTelegramBackupEmail(code, state) : service.completeTelegramUnlink(code, state),
+            );
+            const finish = requests.expectOne({ method: 'POST', url: `${base}/telegram/${kind}/oidc/complete` });
+            expect(finish.request.body).toEqual({ code, state });
+            finish.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+            await expect(completed).resolves.toBeNull();
+        },
+    );
 
     it('uses the Mini App proof when requesting backup email and unlinking without an OIDC redirect', async () => {
         const email = response.user.email;

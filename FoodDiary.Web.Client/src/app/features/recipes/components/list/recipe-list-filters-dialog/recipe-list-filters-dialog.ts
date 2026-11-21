@@ -51,7 +51,8 @@ export class RecipeListFiltersDialogComponent {
     protected maxTotalTimeValue: string | number | null = this.data.maxTotalTime;
     protected caloriesFromValue: string | number | null = this.data.caloriesFrom;
     protected caloriesToValue: string | number | null = this.data.caloriesTo;
-    protected readonly caloriesRangeError = signal(false);
+    protected readonly caloriesFromError = signal<string | null>(null);
+    protected readonly caloriesToError = signal<string | null>(null);
     protected readonly maxTotalTimeError = signal(false);
     protected readonly maxTotalTimeMaximum = RECIPE_FILTER_MAX_TOTAL_TIME;
     protected imageValue: 'any' | 'with' | 'without' =
@@ -69,9 +70,14 @@ export class RecipeListFiltersDialogComponent {
         const from = this.toNumberOrNull(this.caloriesFromValue);
         const to = this.toNumberOrNull(this.caloriesToValue);
         const maxTotalTime = this.toNumberOrNull(this.maxTotalTimeValue);
+        const fromError = this.calorieBoundError(this.caloriesFromValue, from);
+        const invalidRange = from !== null && to !== null && from > to;
+        const toError =
+            this.calorieBoundError(this.caloriesToValue, to) ?? (invalidRange ? 'RECIPE_LIST.FILTER_CALORIES_ORDER_ERROR' : null);
+        this.caloriesFromError.set(fromError);
+        this.caloriesToError.set(toError);
         this.maxTotalTimeError.set(this.hasInvalidMaxTime(maxTotalTime));
-        this.caloriesRangeError.set(from !== null && to !== null && from > to);
-        if (this.caloriesRangeError() || this.maxTotalTimeError()) {
+        if (fromError !== null || toError !== null || this.maxTotalTimeError()) {
             return;
         }
         this.dialogRef.close({
@@ -101,12 +107,16 @@ export class RecipeListFiltersDialogComponent {
         return text.length > 0 ? text : null;
     }
 
+    private calorieBoundError(raw: string | number | null, parsed: number | null): string | null {
+        return parsed === null && raw !== null && String(raw).trim().length > 0 ? 'FORM_ERRORS.INVALID_NUMBER' : null;
+    }
+
     private toNumberOrNull(value: string | number | null): number | null {
         if (value === null || value === '') {
             return null;
         }
 
-        const numericValue = typeof value === 'number' ? value : Number(value);
+        const numericValue = Number(value);
         return Number.isFinite(numericValue) && numericValue >= 0 ? numericValue : null;
     }
 }

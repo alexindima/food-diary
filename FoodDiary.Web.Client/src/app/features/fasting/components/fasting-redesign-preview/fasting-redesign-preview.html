@@ -38,7 +38,7 @@
                     <fd-ui-button
                         [disabled]="isSessionMutationPending()"
                         [disabledReason]="'DISABLED_HINTS.FASTING_BUSY' | translate"
-                        (click)="manageRequested.emit()"
+                        (click)="manageRequested.emit(activeSession.id)"
                     >
                         {{ managementLabelKey() | translate }}
                     </fd-ui-button>

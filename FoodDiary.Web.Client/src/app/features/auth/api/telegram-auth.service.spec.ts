@@ -7,6 +7,21 @@ import { environment } from '../../../../environments/environment';
 import { telegramLoginTicket, telegramOAuthCode, telegramOAuthState } from '../../../shared/auth/telegram-oidc-values';
 import { TelegramAuthService } from './telegram-auth.service';
 
+const SESSION_RESPONSE = {
+    accessToken: 'fixture-access',
+    user: {
+        id: 'user-1',
+        hasPassword: true,
+        isActive: true,
+        isEmailConfirmed: true,
+        pushNotificationsEnabled: true,
+        fastingPushNotificationsEnabled: true,
+        socialPushNotificationsEnabled: true,
+        fastingCheckInReminderHours: 12,
+        fastingCheckInFollowUpReminderHours: 20,
+    },
+};
+
 describe('Telegram generated transport', () => {
     let service: TelegramAuthService;
     let http: HttpTestingController;
@@ -29,22 +44,31 @@ describe('Telegram generated transport', () => {
         request.flush({ loginEnabled: false, registrationEnabled: true, oidcEnabled: true });
     });
 
-    it('starts the selected OIDC flow without a request body', () => {
-        service.startOidc(true).subscribe(value => {
+    it.each([
+        { link: false, path: 'start' },
+        { link: true, path: 'start-link' },
+    ])('starts the $path OIDC flow without a request body', ({ link, path }) => {
+        service.startOidc(link).subscribe(value => {
             expect(value.authorizationUrl).toBe('https://example.com/authorize');
         });
-        const request = http.expectOne(`${base}/oidc/start-link`);
+        const request = http.expectOne({ method: 'POST', url: `${base}/oidc/${path}` });
+        expect(request.request.withCredentials).toBe(true);
         expect(request.request.body).toBeNull();
         request.flush({ authorizationUrl: 'https://example.com/authorize' });
     });
 
-    it('retains the intent and passes signed Mini App data unchanged', () => {
-        service.beginMiniApp('signed-data', false).subscribe(value => {
-            expect(value.nextAction).toBe('onboarding');
+    it.each([
+        { link: false, path: 'begin', nextAction: 'onboarding' },
+        { link: true, path: 'begin-link', nextAction: 'link' },
+    ])('retains the intent and passes Mini App data unchanged for $path', ({ link, path, nextAction }) => {
+        const initData = 'fixture-init-data';
+        service.beginMiniApp(initData, link).subscribe(value => {
+            expect(value.nextAction).toBe(nextAction);
         });
-        const request = http.expectOne(`${base}/mini-app/begin`);
-        expect(request.request.body).toEqual({ initData: 'signed-data' });
-        request.flush({ ticket: 'ticket', nextAction: 'onboarding', expiresAtUtc: '2026-10-07T00:00:00Z' });
+        const request = http.expectOne({ method: 'POST', url: `${base}/mini-app/${path}` });
+        expect(request.request.withCredentials).toBe(true);
+        expect(request.request.body).toEqual({ initData });
+        request.flush({ ticket: 'ticket', nextAction, expiresAtUtc: '2026-10-07T00:00:00Z' });
     });
 
     it('keeps the OAuth callback and completion wire values separate and unchanged', () => {
@@ -63,19 +87,19 @@ describe('Telegram generated transport', () => {
         const completion = http.expectOne(`${base}/complete-link`);
         expect(completion.request.body).toEqual({ ticket });
         expect(completion.request.withCredentials).toBe(true);
-        completion.flush({
-            accessToken: 'access',
-            user: {
-                id: 'user-1',
-                hasPassword: true,
-                isActive: true,
-                isEmailConfirmed: true,
-                pushNotificationsEnabled: true,
-                fastingPushNotificationsEnabled: true,
-                socialPushNotificationsEnabled: true,
-                fastingCheckInReminderHours: 12,
-                fastingCheckInFollowUpReminderHours: 20,
-            },
+        completion.flush(SESSION_RESPONSE);
+    });
+
+    it.each(['login', 'register'] as const)('completes %s using the requested language and timezone', action => {
+        const ticket = telegramLoginTicket('abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG');
+        const language = 'ru';
+        const timeZoneId = 'Asia/Tbilisi';
+        service.complete(ticket, action, language, timeZoneId).subscribe(session => {
+            expect(session.user.id).toBe(SESSION_RESPONSE.user.id);
         });
+        const completion = http.expectOne({ method: 'POST', url: `${base}/complete` });
+        expect(completion.request.body).toEqual({ ticket, action, language, timeZoneId });
+        expect(completion.request.withCredentials).toBe(true);
+        completion.flush(SESSION_RESPONSE);
     });
 });

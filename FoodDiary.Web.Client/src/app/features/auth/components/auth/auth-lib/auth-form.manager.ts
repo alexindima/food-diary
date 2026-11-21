@@ -1,4 +1,4 @@
-import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, linkedSignal, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { email, form, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,7 +32,6 @@ export class AuthFormManager {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
-    private readonly registerEmailExists = signal(false);
     private readonly fieldErrorsVersion = signal(0);
     private readonly languageVersion = signal(0);
     private loginSubmissionActionAsync: () => Promise<void> = async () => {};
@@ -51,6 +50,8 @@ export class AuthFormManager {
     public readonly loginModel = signal(createLoginFormModel());
     public readonly registerModel = signal(createRegisterFormModel());
     public readonly passwordResetModel = signal(createPasswordResetFormModel());
+    private readonly registerEmail = computed(() => this.registerModel().email);
+    private readonly registerEmailExists = linkedSignal({ source: this.registerEmail, computation: (): boolean => false });
     public readonly loginForm = form(
         this.loginModel,
         path => {
@@ -138,11 +139,6 @@ export class AuthFormManager {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
-
-        effect(() => {
-            this.registerModel().email;
-            this.registerEmailExists.set(false);
-        });
     }
 
     public resetAll(): void {
@@ -158,7 +154,11 @@ export class AuthFormManager {
         this.registerSubmissionActionAsync = actions.register;
     }
 
-    public setRegisterEmailExistsError(): void {
+    public setRegisterEmailExistsError(submittedEmail: string): void {
+        if (submittedEmail !== this.registerEmail()) {
+            return;
+        }
+
         this.registerEmailExists.set(true);
         this.registerForm.email().markAsTouched();
         this.updateFieldErrors();

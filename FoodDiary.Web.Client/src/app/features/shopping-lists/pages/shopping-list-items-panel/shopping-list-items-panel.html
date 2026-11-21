@@ -126,7 +126,7 @@
                 fill="text"
                 icon="more_horiz"
                 [ariaLabel]="`${('COMMON.MORE_ACTIONS' | translate)}: ${item.name}`"
-                [fdUiMenuTrigger]="itemMenu"
+                [fdUiMenuTrigger]="isWorkspaceBusy() ? null : itemMenu"
             />
             <fd-ui-menu #itemMenu="fdUiMenu">
                 <fd-ui-menu-item

@@ -341,12 +341,6 @@ const manualRecipeEdits: Array<[string, (component: RecipeManageComponent) => vo
         },
     ],
     [
-        'step cover',
-        (component): void => {
-            component['onStepImageChange']({ stepIndex: 0, value: imageSelection('/second.jpg', 'second') });
-        },
-    ],
-    [
         'adding a step',
         (component): void => {
             component['addStep']();

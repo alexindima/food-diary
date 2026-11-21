@@ -1,12 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
-import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
+import type { Meal, MealAiItemManageDto, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import { formatMealAiAmount, formatMealAiName, formatMealManageMacro, getAiSessionTotals } from '../meal-manage-lib/meal-manage-view.utils';
+
+export type MealAiSessionRemoval = {
+    session: MealAiSessionManageDto;
+    onRemoved: (index: number) => void;
+};
 
 @Component({
     selector: 'fd-meal-ai-sessions',
@@ -20,12 +25,16 @@ export class MealAiSessionsComponent {
     private readonly destroyRef = inject(DestroyRef);
 
     public readonly aiSessions = input.required<MealAiSessionManageDto[]>();
+    public readonly mealId = input<Meal['id'] | null>(null);
 
-    public readonly editSession = output<number>();
-    public readonly deleteSession = output<number>();
+    public readonly editSession = output<MealAiSessionManageDto>();
+    public readonly deleteSession = output<MealAiSessionRemoval>();
 
     protected readonly aiPreviewMaxItems = 2;
-    protected readonly expandedAiSessions = signal<Set<number>>(new Set());
+    private readonly expandedAiSessions = linkedSignal({
+        source: this.mealId,
+        computation: () => new Set<number>(),
+    });
     protected readonly aiSessionRows = computed<AiSessionRowViewModel[]>(() => {
         const expandedAiSessions = this.expandedAiSessions();
         this.activeLang();
@@ -81,11 +90,16 @@ export class MealAiSessionsComponent {
         return Math.max(0, items.length - Math.max(0, maxVisible));
     }
 
-    protected onEditSession(index: number): void {
-        this.editSession.emit(index);
+    protected onDeleteSession(session: MealAiSessionManageDto): void {
+        this.deleteSession.emit({
+            session,
+            onRemoved: index => {
+                this.reindexExpandedAfterRemoval(index);
+            },
+        });
     }
 
-    protected onDeleteSession(index: number): void {
+    private reindexExpandedAfterRemoval(index: number): void {
         this.expandedAiSessions.update(expanded => {
             const remaining = new Set<number>();
             for (const expandedIndex of expanded) {
@@ -95,7 +109,6 @@ export class MealAiSessionsComponent {
             }
             return remaining;
         });
-        this.deleteSession.emit(index);
     }
 }
 

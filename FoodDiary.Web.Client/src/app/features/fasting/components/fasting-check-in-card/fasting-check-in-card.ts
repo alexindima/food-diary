@@ -1,9 +1,6 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, type WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, type WritableSignal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -15,21 +12,10 @@ import {
     FASTING_MOOD_EMOJI_SCALE,
     type FastingEmojiScaleOption,
 } from '../../lib/fasting-page.constants';
-import type { FastingCheckInViewModel } from '../../lib/fasting-page.types';
-import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fasting-check-in-summary';
 
 @Component({
     selector: 'fd-fasting-check-in-card',
-    imports: [
-        NgTemplateOutlet,
-        TranslatePipe,
-        FdUiChipSelectComponent,
-        FdUiEmojiPickerComponent,
-        FdUiTextareaComponent,
-        FdUiButtonComponent,
-        FdUiCardComponent,
-        FastingCheckInSummaryComponent,
-    ],
+    imports: [TranslatePipe, FdUiChipSelectComponent, FdUiEmojiPickerComponent, FdUiTextareaComponent],
     templateUrl: './fasting-check-in-card.html',
     styleUrl: './fasting-check-in-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,33 +23,22 @@ import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fast
 export class FastingCheckInCardComponent {
     private readonly translateService = inject(TranslateService);
 
-    public readonly isActive = input.required<boolean>();
-    public readonly presentation = input<'card' | 'dialog'>('card');
     public readonly isSaving = input.required<boolean>();
     public readonly isEnding = input.required<boolean>();
     public readonly isUpdatingCycle = input.required<boolean>();
-    public readonly isExpanded = input.required<boolean>();
-    public readonly latestCheckIn = input.required<FastingCheckInViewModel | null>();
     public readonly hungerLevel = input.required<WritableSignal<number>>();
     public readonly energyLevel = input.required<WritableSignal<number>>();
     public readonly moodLevel = input.required<WritableSignal<number>>();
     public readonly selectedSymptoms = input.required<WritableSignal<string[]>>();
     public readonly notes = input.required<WritableSignal<string>>();
 
-    public readonly formOpen = output();
-    public readonly formClose = output();
-    public readonly save = output();
-
     protected readonly draftDisabled = (): boolean => this.isSaving() || this.isEnding() || this.isUpdatingCycle();
     protected readonly maxCheckInNotesLength = FASTING_CHECK_IN_NOTES_MAX_LENGTH;
-    protected readonly ctaKey = computed(() =>
-        this.latestCheckIn() === null ? 'FASTING.CHECK_IN.ADD_ACTION' : 'FASTING.CHECK_IN.UPDATE_ACTION',
-    );
     protected readonly hungerOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.HUNGER', FASTING_HUNGER_EMOJI_SCALE));
     protected readonly energyOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.ENERGY', FASTING_ENERGY_EMOJI_SCALE));
     protected readonly moodOptions = computed(() => this.buildEmojiPickerOptions('FASTING.CHECK_IN.MOOD', FASTING_MOOD_EMOJI_SCALE));
-    protected readonly symptomOptions = computed(() => {
-        return FASTING_SYMPTOM_OPTIONS.filter(symptom => symptom.value !== 'good').map<FdUiChipSelectOption>(symptom => {
+    private readonly translatedSymptomOptions = computed(() =>
+        FASTING_SYMPTOM_OPTIONS.map<FdUiChipSelectOption>(symptom => {
             const label = this.translateService.instant(symptom.labelKey);
             const description = this.translateService.instant(symptom.descriptionKey);
             return {
@@ -72,18 +47,10 @@ export class FastingCheckInCardComponent {
                 ariaLabel: `${label}. ${description}`,
                 hint: description,
             };
-        });
-    });
-    protected readonly noSymptomsOptions = computed(() => {
-        const option = FASTING_SYMPTOM_OPTIONS.find(symptom => symptom.value === 'good');
-        if (option === undefined) {
-            return [];
-        }
-
-        const label = this.translateService.instant(option.labelKey);
-        const description = this.translateService.instant(option.descriptionKey);
-        return [{ value: option.value, label, ariaLabel: `${label}. ${description}`, hint: description }];
-    });
+        }),
+    );
+    protected readonly symptomOptions = computed(() => this.translatedSymptomOptions().filter(option => option.value !== 'good'));
+    protected readonly noSymptomsOptions = computed(() => this.translatedSymptomOptions().filter(option => option.value === 'good'));
 
     protected setHungerLevel(value: FdUiEmojiPickerValue | null): void {
         this.setNumericLevel(this.hungerLevel(), value);

@@ -36,7 +36,7 @@ const MAX_NICE_NUTRIENT_TICK_FACTOR = 10;
 const LARGE_RANGE_FRACTIONAL_TICK_FACTOR = 7.5;
 const LARGE_RANGE_MINIMUM_MAGNITUDE = 10;
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- Standard nice-number scale factors.
-const NICE_NUTRIENT_TICK_FACTORS = [1, 1.5, 2, 2.5, 5, 7.5, 10] as const;
+const NICE_NUTRIENT_TICK_FACTORS = [1, 1.5, 2, 2.5, 5, 7.5] as const;
 
 type TrendDayView = StatisticsNutritionDay & {
     nutrientBars: readonly TrendNutrientBar[];

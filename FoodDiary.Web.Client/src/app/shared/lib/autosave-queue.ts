@@ -5,8 +5,7 @@ import { Subject, switchMap, takeUntil, timer } from 'rxjs';
 export class AutosaveQueue<T> {
     private readonly queue = new Subject<void>();
     private readonly cancelPendingFlush = new Subject<void>();
-    private pendingValue!: T;
-    private hasPendingValue = false;
+    private pending: { value: T } | null = null;
 
     public constructor(
         destroyRef: DestroyRef,
@@ -25,8 +24,7 @@ export class AutosaveQueue<T> {
     }
 
     public schedule(value: T): void {
-        this.pendingValue = value;
-        this.hasPendingValue = true;
+        this.pending = { value };
 
         if (this.isBusy()) {
             return;
@@ -41,16 +39,15 @@ export class AutosaveQueue<T> {
     }
 
     public restore(value: T): void {
-        if (this.hasPendingValue) {
+        if (this.pending !== null) {
             return;
         }
 
-        this.pendingValue = value;
-        this.hasPendingValue = true;
+        this.pending = { value };
     }
 
     public scheduleIfPending(): void {
-        if (!this.hasPendingValue) {
+        if (this.pending === null) {
             return;
         }
 
@@ -58,7 +55,7 @@ export class AutosaveQueue<T> {
     }
 
     public hasPending(): boolean {
-        return this.hasPendingValue;
+        return this.pending !== null;
     }
 
     public clearPending(): void {
@@ -66,30 +63,17 @@ export class AutosaveQueue<T> {
     }
 
     private flush(): void {
-        if (this.isBusy()) {
+        if (this.isBusy() || this.pending === null) {
             return;
         }
 
-        const value = this.takePending();
-        if (value === null) {
-            return;
-        }
-
+        const { value } = this.pending;
+        this.clear();
         this.persist(value);
     }
 
-    private takePending(): T | null {
-        if (!this.hasPendingValue) {
-            return null;
-        }
-
-        const value = this.pendingValue;
-        this.clear();
-        return value;
-    }
-
     private clear(): void {
-        this.hasPendingValue = false;
+        this.pending = null;
         this.cancelPendingFlush.next();
     }
 }

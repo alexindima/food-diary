@@ -97,14 +97,12 @@ export class DashboardFastingCardComponent {
         return date === null ? '' : new Intl.DateTimeFormat(this.currentLanguage(), { day: 'numeric', month: 'short' }).format(date);
     }
 
-    protected readonly state = computed(() => {
-        this.currentLanguage();
-        return buildFastingTimerCardComputedState({
+    protected readonly state = computed(() =>
+        buildFastingTimerCardComputedState({
             session: this.session(),
             elapsedMs: this.elapsedMs(),
-            translate: (key, params) => this.translateService.instant(key, params),
-        });
-    });
+        }),
+    );
     protected readonly progress = computed(() => Math.min(PERCENT_MULTIPLIER, Math.max(EMPTY_DURATION_MS, this.state().progressPercent)));
     protected readonly stageColor = computed(() => {
         const state = this.state();

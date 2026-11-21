@@ -1,13 +1,14 @@
+import { Location } from '@angular/common';
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { NavigationEnd, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -68,11 +69,11 @@ describe('Premium checkout return stays with its owning screen', () => {
         readOverview.mockReturnValue(of(overview()));
         await harness.navigateByUrl(TRANSACTION_ROUTE);
         await redrawAsync(harness);
-        expect(openWidget).toHaveBeenCalledExactlyOnceWith(RETURNED_TRANSACTION, {
-            token: 'test_fixture',
-            environment: 'sandbox',
-            locale: 'en',
-        });
+        expect(openWidget).toHaveBeenCalledExactlyOnceWith(
+            RETURNED_TRANSACTION,
+            { token: 'test_fixture', environment: 'sandbox', locale: 'en' },
+            expect.objectContaining({ destroyed: false }),
+        );
         expect(router.url).toBe(PREMIUM_ROUTE);
         expect(createCheckout).not.toHaveBeenCalled();
     });
@@ -98,6 +99,78 @@ describe('Premium checkout return stays with its owning screen', () => {
         expect(toast.toasts()).toEqual([]);
     });
 });
+
+describe('Premium deferred Paddle checkout', () => {
+    it('opens only the fresh checkout after going back while Paddle loads', async () => {
+        const api = createDeferredPaddleFixture();
+        TestBed.overrideProvider(PaddleCheckoutService, { useFactory: (): PaddleCheckoutService => new PaddleCheckoutService(), deps: [] });
+        const { harness, router, createCheckout, toast } = await renderPremiumAsync(OTHER_ROUTE);
+        router.setUpLocationChangeListener();
+
+        await harness.navigateByUrl(TRANSACTION_ROUTE);
+        await redrawAsync(harness);
+        expect(router.url).toBe(TRANSACTION_ROUTE);
+        expect(api.waitingForLoad()).toBe(true);
+        expect(api.open).not.toHaveBeenCalled();
+
+        const returned = firstValueFrom(
+            router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === OTHER_ROUTE)),
+        );
+        TestBed.inject(Location).back();
+        await returned;
+        expect(harness.routeNativeElement?.textContent).toContain('Another page');
+
+        api.completeLoad();
+        await redrawAsync(harness);
+        expect(api.initialize).toHaveBeenCalledOnce();
+        expect(api.open).not.toHaveBeenCalled();
+        expect(router.url).toBe(OTHER_ROUTE);
+        expect(toast.toasts()).toEqual([]);
+
+        const nextTransaction = 'txn_fixture_return_next';
+        await harness.navigateByUrl(`${PREMIUM_ROUTE}?_ptxn=${nextTransaction}`);
+        await vi.waitFor(async () => {
+            await redrawAsync(harness);
+            expect(api.open).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ transactionId: nextTransaction }));
+            expect(router.url).toBe(PREMIUM_ROUTE);
+        });
+        expect(api.initialize).toHaveBeenCalledOnce();
+        expect(createCheckout).not.toHaveBeenCalled();
+    });
+});
+
+type PaddleApi = NonNullable<Window['Paddle']>;
+
+function createDeferredPaddleFixture(): {
+    waitingForLoad: () => boolean;
+    initialize: Mock<PaddleApi['Initialize']>;
+    open: Mock<PaddleApi['Checkout']['open']>;
+    completeLoad: () => void;
+} {
+    const script = document.createElement('script');
+    script.type = 'text/plain';
+    script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+    document.head.append(script);
+    const listen = vi.spyOn(script, 'addEventListener');
+    const initialize = vi.fn<PaddleApi['Initialize']>();
+    const open = vi.fn<PaddleApi['Checkout']['open']>();
+    const previous = window.Paddle;
+    Reflect.deleteProperty(window, 'Paddle');
+    onTestFinished(() => {
+        script.remove();
+        if (previous === undefined) {
+            Reflect.deleteProperty(window, 'Paddle');
+        } else {
+            window.Paddle = previous;
+        }
+    });
+    const completeLoad = (): void => {
+        window.Paddle = { Environment: { set: vi.fn<PaddleApi['Environment']['set']>() }, Initialize: initialize, Checkout: { open } };
+        script.dispatchEvent(new Event('load'));
+    };
+    const waitingForLoad = (): boolean => listen.mock.calls.some(([type]) => type === 'load');
+    return { waitingForLoad, initialize, open, completeLoad };
+}
 
 describe('Premium activation return ownership', () => {
     it('clears an unfamiliar checkout return code and renders normal Premium without an activation result', async () => {
@@ -209,6 +282,33 @@ describe('Premium rendered account and plan controls', () => {
         expect(scroll).toHaveBeenCalledExactlyOnceWith({ behavior: 'smooth', block: 'start' });
         expect(createCheckout).not.toHaveBeenCalled();
     });
+});
+
+it('shows the configured YooKassa plans when the account cannot start a trial', async () => {
+    const account = overview({
+        canStartPremiumTrial: false,
+        provider: 'yookassa',
+        paddleClientToken: null,
+        availableProviders: ['yookassa'],
+    });
+    const { harness, openWidget, previewPrices } = await renderPremiumAsync(PREMIUM_ROUTE, undefined, false, account);
+    const http = TestBed.inject(HttpTestingController);
+    const root = premiumRoot(harness);
+    expect(root.textContent).toContain('PREMIUM_PAGE.OVERVIEW.CHECKOUT_HINT');
+    const checkout = nativeButton(root, 'PREMIUM_PAGE.PLANS.MONTHLY.ACTION');
+    expect(checkout.disabled).toBe(false);
+    checkout.click();
+
+    const request = http.expectOne({ method: 'POST', url: `${BILLING_URL}/checkout-session` });
+    expect(request.request.body).toEqual({ plan: 'monthly', provider: 'yookassa' });
+    request.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+    await redrawAsync(harness);
+
+    expect(root.textContent).toContain('PREMIUM_PAGE.ERROR_CHECKOUT');
+    expect(checkout.disabled).toBe(false);
+    expect(openWidget).not.toHaveBeenCalled();
+    expect(previewPrices).not.toHaveBeenCalled();
+    http.verify();
 });
 
 describe('Premium payment recovery details', () => {

@@ -164,13 +164,13 @@ describe('Dashboard fasting card timing and older cyclic plans', () => {
         expect(progress?.getAttribute('aria-valuetext')).toBe('00:00:01');
     });
 
-    it('shows one fasting day and one eating day when an older cyclic plan has no day counts', () => {
+    it.each([1, null])('shows both days when an older cyclic plan has no counts and phase number is %s', cyclicPhaseDayNumber => {
         fixture.componentRef.setInput('session', {
             ...createSession(),
             planType: 'Cyclic',
             occurrenceKind: 'FastDay',
-            cyclicPhaseDayNumber: 1,
-            cyclicPhaseDayTotal: 1,
+            cyclicPhaseDayNumber,
+            cyclicPhaseDayTotal: cyclicPhaseDayNumber,
         });
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;

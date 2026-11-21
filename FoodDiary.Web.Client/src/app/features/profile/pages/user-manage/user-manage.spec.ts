@@ -1501,6 +1501,7 @@ type ProfileManageFacadeMock = {
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: WritableSignal<WebPushSubscriptionItem[]>;
     dietologistRelationship: WritableSignal<DietologistRelationship | null>;
+    setDietologistRelationship: ProfileManageFacade['setDietologistRelationship'];
     currentWeight: WritableSignal<number | null>;
     currentWaist: WritableSignal<number | null>;
     isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
@@ -1688,6 +1689,7 @@ function configureTranslateService(): void {
 }
 
 function createFacadeMock(relationship: DietologistRelationship | null, user: User | null = null): ProfileManageFacadeMock {
+    const currentRelationship = signal(relationship);
     return {
         user: signal(user),
         globalError: signal<string | null>(null),
@@ -1702,7 +1704,10 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         requestBackupEmailAsync: vi.fn().mockResolvedValue(void 0),
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
-        dietologistRelationship: signal(relationship),
+        dietologistRelationship: currentRelationship,
+        setDietologistRelationship: (next): void => {
+            currentRelationship.set(next);
+        },
         currentWeight: signal<number | null>(null),
         currentWaist: signal<number | null>(null),
         isLoadingWebPushSubscriptions: signal(false),

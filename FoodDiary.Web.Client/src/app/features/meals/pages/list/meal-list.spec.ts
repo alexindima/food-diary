@@ -52,7 +52,6 @@ type TestContext = {
     mockMealService: typeof mockMealService;
     mockNavigationService: typeof mockNavigationService;
     mockFdDialogService: typeof mockFdDialogService;
-    mockToastService: typeof mockToastService;
     mockFavoriteMealService: typeof mockFavoriteMealService;
 };
 
@@ -206,7 +205,6 @@ describe('MealListComponent', () => {
         mockMealService,
         mockNavigationService,
         mockFdDialogService,
-        mockToastService,
         mockFavoriteMealService,
     };
 
@@ -219,7 +217,6 @@ describe('MealListComponent', () => {
     registerGroupingTests(context);
     registerPlannedGroupingTests(context);
     registerRangeTests(context);
-    registerFavoriteTests(context);
     registerDialogTests(context);
     registerFilterInteractionTests(context);
     registerFavoritesPickerWiringTests(context);
@@ -408,77 +405,6 @@ function registerRangeTests(context: TestContext): void {
                 },
                 { limit: 0, include: false },
             );
-        });
-    });
-}
-
-function registerFavoriteTests(context: TestContext): void {
-    describe('favorites', () => {
-        it('should repeat favorite meal for the current local time and meal type', () => {
-            vi.useFakeTimers();
-            vi.setSystemTime(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, HALF_PAST_MIDNIGHT_MINUTES));
-            context.fixture().detectChanges();
-            setPageContainerScrollMock(context.fixture(), true);
-
-            context.component()['repeatFavorite'](createFavorite());
-
-            expect(context.mockMealService.repeat).toHaveBeenCalledWith(
-                'meal-1',
-                new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, HALF_PAST_MIDNIGHT_MINUTES).toISOString(),
-                'SNACK',
-            );
-        });
-
-        it('should show toast when favorite repeat fails', () => {
-            const favorite = createFavorite();
-            context.mockMealService.repeat.mockReturnValue(throwError(() => new Error('Repeat failed')));
-
-            context.component()['repeatFavorite'](favorite);
-
-            expect(context.mockToastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
-            expect(context.component()['errorKey']()).toBeNull();
-            expect(context.mockMealService.query).not.toHaveBeenCalled();
-        });
-
-        it('should sync favorite count and meal card state when favorite is removed', () => {
-            const favorite = createFavorite();
-            const meal = createMockMeal({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id });
-            context.component()['mealData'].setData(createPageOf([meal]));
-            context.component()['favorites'].set([favorite]);
-            context.component()['favoriteTotalCount'].set(1);
-
-            context.component()['removeFavorite'](favorite);
-
-            expect(context.component()['favorites']()).toEqual([]);
-            expect(context.component()['favoriteTotalCount']()).toBe(0);
-            expect(context.component()['mealData'].items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
-        });
-
-        it('should add meal favorite and refresh favorites', () => {
-            const meal = createMockMeal({ id: entityId<'meal'>('meal-1'), isFavorite: false, favoriteMealId: null });
-            context.component()['mealData'].setData(createPageOf([meal]));
-
-            context.component()['onMealFavoriteToggle'](meal);
-
-            expect(context.mockFavoriteMealService.add).toHaveBeenCalledWith('meal-1');
-            expect(context.component()['mealData'].items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
-            expect(context.mockFavoriteMealService.getPage).toHaveBeenCalled();
-        });
-
-        it('should normalize favorite meal type translation keys', () => {
-            context
-                .component()
-                ['favorites'].set([
-                    createFavorite({ id: entityId<'favorite-meal'>('favorite-dinner'), mealType: 'Dinner' }),
-                    createFavorite({ id: entityId<'favorite-meal'>('favorite-unknown'), mealType: null }),
-                ]);
-
-            expect(
-                context
-                    .component()
-                    ['favoriteViews']()
-                    .map(view => view.displayNameKey),
-            ).toEqual(['MEAL_TYPES.DINNER', 'MEAL_LIST.FAVORITE_UNNAMED']);
         });
     });
 }
@@ -755,20 +681,24 @@ describe('Meal diary favorite undo ownership', () => {
     });
 
     it('announces a failed undo and restores the same favorite on retry', async () => {
-        const diary = await renderMealDiaryAsync({ isFavorite: true });
-        const { harness, meal, favoriteService } = diary;
-        const favorite = createFavorite({ mealId: meal.id, name: 'Saved breakfast' });
+        const favorite = createFavorite({ name: 'Saved breakfast' });
+        const diary = await renderMealDiaryAsync({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id }, [favorite]);
+        const { harness, favoriteService } = diary;
         favoriteService.remove.mockReturnValueOnce(of(undefined));
         favoriteService.restore.mockReturnValueOnce(throwError(() => new Error('Restore unavailable'))).mockReturnValueOnce(of(favorite));
         const picker = await openRenderedFavoritesPickerAsync(diary, favorite);
+        const badge = (): Element | null | undefined => harness.routeNativeElement?.querySelector('.meal-list__favorite-count');
+        expect(badge()?.textContent).toBe('1');
 
         requireButton(picker, 'button[aria-label="MEAL_DETAIL.REMOVE_FAVORITE"]').click();
         harness.detectChanges();
         expect(picker.querySelector('[role="status"]')?.textContent).toContain('MEAL_FAVORITES.REMOVED');
+        expect(badge()).toBeNull();
         clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.UNDO');
         harness.detectChanges();
 
         expect(picker.querySelector('[role="status"]')?.textContent).toContain('MEAL_FAVORITES.RESTORE_ERROR');
+        expect(badge()).toBeNull();
         expect(picker.querySelector('[role="status"]')?.textContent).toContain(favorite.name);
         expect(requireButton(picker, '.favorite-row__undo button').disabled).toBe(false);
         expect(harness.routeNativeElement?.querySelector('fd-meal-card button[aria-label="MEAL_DETAIL.ADD_FAVORITE"]')).not.toBeNull();
@@ -776,6 +706,7 @@ describe('Meal diary favorite undo ownership', () => {
         clickDetailAction('fd-meal-favorites-picker', 'MEAL_FAVORITES.UNDO');
         harness.detectChanges();
         expect(picker.querySelector('.favorite-row__undo')).toBeNull();
+        expect(badge()?.textContent).toBe('1');
         expect(picker.querySelector('.favorite-row__heading strong')?.textContent).toBe(favorite.name);
         expect(favoriteService.remove).toHaveBeenCalledExactlyOnceWith(favorite.id);
         expect(favoriteService.restore.mock.calls).toEqual([[favorite.id], [favorite.id]]);
@@ -844,10 +775,14 @@ type RenderedMealDiary = {
     };
 };
 
-async function renderMealDiaryAsync(overrides: Partial<Meal> = {}): Promise<RenderedMealDiary> {
+async function renderMealDiaryAsync(overrides: Partial<Meal> = {}, initialFavorites: FavoriteMeal[] = []): Promise<RenderedMealDiary> {
     const meal = createMockMeal({ id: entityId<'meal'>('diary-meal'), ...overrides });
     const mealService = {
-        queryOverview: vi.fn<MealService['queryOverview']>().mockReturnValue(of(createOverview([meal]))),
+        queryOverview: vi
+            .fn<MealService['queryOverview']>()
+            .mockReturnValue(
+                of({ ...createOverview([meal]), favoriteItems: initialFavorites, favoriteTotalCount: initialFavorites.length }),
+            ),
         repeat: vi.fn<MealService['repeat']>().mockReturnValue(of(meal)),
         deleteById: vi.fn<MealService['deleteById']>().mockReturnValue(of(undefined)),
     };
@@ -974,6 +909,17 @@ function registerFilterInteractionTests(context: TestContext): void {
 }
 
 function registerFavoritesPickerWiringTests(context: TestContext): void {
+    it('should add meal favorite and refresh favorites', () => {
+        const meal = createMockMeal({ id: entityId<'meal'>('meal-1'), isFavorite: false, favoriteMealId: null });
+        context.component()['mealData'].setData(createPageOf([meal]));
+
+        context.component()['onMealFavoriteToggle'](meal);
+
+        expect(context.mockFavoriteMealService.add).toHaveBeenCalledWith('meal-1');
+        expect(context.component()['mealData'].items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
+        expect(context.mockFavoriteMealService.getPage).toHaveBeenCalled();
+    });
+
     it('wires remove, restore and repeat to the current diary filters', async () => {
         const fixture = context.fixture();
         const favorite = createFavorite();
@@ -1020,16 +966,13 @@ function registerFavoritesPickerWiringTests(context: TestContext): void {
 
         expect(context.mockFdDialogService.open).not.toHaveBeenCalled();
     });
-    it('refreshes the current page after creating a meal and toggles sections independently', () => {
+    it('refreshes the current page after creating a meal and toggles the planned section', () => {
         const component = context.component();
         context.fixture().detectChanges();
-        component['toggleFavorites']();
-        component['toggleFavorites']();
         component['togglePlanned']();
-        component['loadFavorites']();
+        expect(component['isPlannedOpen']()).toBe(false);
         component['container']().nativeElement.scrollIntoView = vi.fn();
         component['onMealCreated']();
-        expect(context.mockFavoriteMealService.getPage).toHaveBeenCalledWith(1, 1);
         expect(context.mockMealService.queryOverview).toHaveBeenLastCalledWith(
             1,
             expect.any(Number),

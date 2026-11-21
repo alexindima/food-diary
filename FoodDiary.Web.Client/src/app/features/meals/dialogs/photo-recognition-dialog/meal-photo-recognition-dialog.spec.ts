@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -31,6 +31,7 @@ const BASE_FIBER = 2;
 const EXPECTED_EDITED_CALORIES = 150;
 const PARTIAL_PROTEIN_GRAMS = 3.4;
 const LOW_LOCATION_CONFIDENCE = 0.2;
+const REVIEW_TIME = '2026-11-21T03:00:00.000Z';
 
 const visionItem: FoodVisionItem = {
     nameEn: 'Apple',
@@ -669,13 +670,14 @@ describe('Meal photo review resolution', () => {
 });
 
 describe('Meal photo rendered recognition order', () => {
-    it('saves the reordered draft with each recognized portion and its original nutrients', async () => {
+    it.each([0, 1])('retains each portion and its own nutrients after dropping the second row at index %s', async currentIndex => {
         aiFoodService = createAiFoodServiceMock();
         dialogRef = { close: vi.fn() };
         const original = createSession();
         const apple = { ...original.items[0], nameLocal: null };
         const pear = { ...apple, nameEn: 'Pear', amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES };
         const session = { ...original, items: [apple, pear] };
+        const expected = currentIndex === 0 ? [pear, apple] : [apple, pear];
         const { fixture } = await setupComponentAsync({ initialSession: session, mode: 'edit' });
         const host = fixture.nativeElement as HTMLElement;
         photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
@@ -685,7 +687,7 @@ describe('Meal photo rendered recognition order', () => {
         const item = fixture.debugElement.queryAll(By.directive(CdkDrag))[1].injector.get<CdkDrag<unknown>>(CdkDrag);
         container.dropped.emit({
             previousIndex: 1,
-            currentIndex: 0,
+            currentIndex,
             container,
             previousContainer: container,
             item,
@@ -696,14 +698,81 @@ describe('Meal photo rendered recognition order', () => {
         });
         fixture.detectChanges();
         const draftNames = Array.from(host.querySelectorAll<HTMLInputElement>('.photo-ai-dialog__edit-input--name'), input => input.value);
-        expect(draftNames).toEqual(['Pear', 'Apple']);
+        expect(draftNames).toEqual(expected.map(row => row.nameEn));
         photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
         fixture.detectChanges();
         expect(dialogRef.close).not.toHaveBeenCalled();
         photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
 
-        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ items: [pear, apple] }));
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ items: expected }));
         expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal photo historical recognition metadata', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(new Date(REVIEW_TIME));
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+    });
+
+    it('keeps the original source and recognition instant when correcting a saved amount', async () => {
+        const original = { ...createSession(), source: 'Photo' };
+        const { fixture } = await setupComponentAsync({ initialSession: original, mode: 'edit' });
+        const host = fixture.nativeElement as HTMLElement;
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        fixture.detectChanges();
+        const amount = host.querySelector<HTMLInputElement>('.photo-ai-dialog__edit-input--amount');
+        if (amount === null) {
+            throw new Error('Expected the saved amount to be editable');
+        }
+        amount.value = String(EDITED_AMOUNT);
+        amount.dispatchEvent(new Event('input', { bubbles: true }));
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        fixture.detectChanges();
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                source: original.source,
+                recognizedAtUtc: original.recognizedAtUtc,
+                items: [expect.objectContaining({ amount: EDITED_AMOUNT, calories: EXPECTED_EDITED_CALORIES })],
+            }),
+        );
+    });
+
+    it('retains a legacy asset without its own URL or recognition time', async () => {
+        const saved = { ...createSession(), imageUrl: null, recognizedAtUtc: undefined };
+        const { fixture } = await setupComponentAsync({ initialSession: saved, mode: 'edit' });
+        const host = fixture.nativeElement as HTMLElement;
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ imageAssetId: saved.imageAssetId, imageUrl: null, recognizedAtUtc: REVIEW_TIME }),
+        );
+        expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+    });
+
+    it('records fresh photo recognition metadata when the user explicitly analyzes the photo again', async () => {
+        const saved = { ...createSession(), source: 'Text' };
+        const { fixture } = await setupComponentAsync({ initialSession: saved, mode: 'edit' });
+        const host = fixture.nativeElement as HTMLElement;
+        const reanalyze = host.querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION"]');
+        if (reanalyze === null) {
+            throw new Error('Expected the reanalyze action for a saved photo');
+        }
+        reanalyze.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(aiFoodService.analyzeFoodImage).toHaveBeenCalledExactlyOnceWith({ imageAssetId: saved.imageAssetId });
+        photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ source: 'Photo', recognizedAtUtc: REVIEW_TIME }));
     });
 });
 
@@ -779,6 +848,44 @@ describe('Meal photo rendered saved history and annotations', () => {
         fixture.detectChanges();
         expect(host.querySelector('.photo-ai-dialog__annotations')).toBeNull();
     });
+});
+
+describe('Meal photo recognized title display', () => {
+    beforeEach(() => {
+        aiFoodService = createAiFoodServiceMock();
+        dialogRef = { close: vi.fn() };
+    });
+
+    it.each([
+        { nameEn: '2% greek yogurt', nameLocal: null, displayName: '2% Greek yogurt' },
+        { nameEn: 'greek yogurt', nameLocal: '«греческий йогурт»', displayName: '«Греческий йогурт»' },
+    ])(
+        'capitalizes a recognized title for display and saves its original spelling ($displayName)',
+        async ({ nameEn, nameLocal, displayName }) => {
+            const original = createSession();
+            const session: MealAiSessionManageDto = {
+                ...original,
+                imageAssetId: null,
+                imageUrl: null,
+                items: [{ ...original.items[0], nameEn, nameLocal }],
+            };
+            const { fixture } = await setupComponentAsync({ initialSession: session, mode: 'edit' });
+            const host = fixture.nativeElement as HTMLElement;
+            const nameCell = host.querySelector('.photo-ai-dialog__table-body .photo-ai-dialog__cell--name');
+            expect(nameCell?.textContent.trim()).toBe(displayName);
+
+            photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+            fixture.detectChanges();
+            expect(host.querySelector<HTMLInputElement>('.photo-ai-dialog__edit-input--name')?.value).toBe(nameLocal ?? nameEn);
+            photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+            fixture.detectChanges();
+            photoButton(host, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+
+            expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ items: session.items }));
+            expect(aiFoodService.analyzeFoodImage).not.toHaveBeenCalled();
+            expect(aiFoodService.calculateNutrition).not.toHaveBeenCalled();
+        },
+    );
 });
 
 function photoButton(host: HTMLElement, label: string): HTMLButtonElement {

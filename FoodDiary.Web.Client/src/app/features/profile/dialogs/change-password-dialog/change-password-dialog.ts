@@ -18,6 +18,7 @@ import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shar
 
 export type ChangePasswordDialogData = {
     hasPassword?: boolean;
+    ownerDestroyRef?: DestroyRef;
 };
 
 const ERROR_FIELDS = ['currentPassword', 'newPassword', 'confirmPassword'] as const;
@@ -110,6 +111,13 @@ export class ChangePasswordDialogComponent {
     }));
 
     public constructor() {
+        const ownerDestroyRef = this.data.ownerDestroyRef;
+        if (ownerDestroyRef !== undefined) {
+            const unregister = ownerDestroyRef.onDestroy(() => {
+                this.onCancel();
+            });
+            this.destroyRef.onDestroy(unregister);
+        }
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -165,6 +173,10 @@ export class ChangePasswordDialogComponent {
     }
 
     private setPasswordError(key: string): void {
+        if (this.data.ownerDestroyRef?.destroyed === true) {
+            this.dialogRef.close(false);
+            return;
+        }
         this.passwordError.set(this.translateService.instant(key));
     }
 

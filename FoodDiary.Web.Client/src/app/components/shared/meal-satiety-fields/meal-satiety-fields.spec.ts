@@ -1,4 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -53,12 +55,45 @@ describe('MealSatietyFieldsComponent', () => {
         expect(component['postMealSatietyLevel']()).toBe(MIN_SATIETY_LEVEL);
     });
 
-    it('should build translated aria labels from configured label keys', async () => {
+    it('keeps the keyboard-selected rating focused while translating its label and option', async () => {
         const { component, fixture } = await setupComponentAsync();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            MEAL_MANAGE: { HUNGER_BEFORE_LABEL: 'Before the meal' },
+            MEAL_DETAILS: { SATIETY_UNANSWERED: 'Unanswered' },
+            HUNGER_BEFORE_SCALE: { LEVEL_2: { TITLE: 'Hungry', DESCRIPTION: 'Ready to eat' } },
+        });
+        translate.setTranslation('ru', {
+            MEAL_MANAGE: { HUNGER_BEFORE_LABEL: 'До еды' },
+            HUNGER_BEFORE_SCALE: { LEVEL_2: { TITLE: 'Голоден', DESCRIPTION: 'Хочется поесть' } },
+        });
+        await firstValueFrom(translate.use('en'));
+        const changed = vi.fn();
+        component.preMealSatietyLevel.subscribe(changed);
         fixture.componentRef.setInput('labelBeforeKey', 'MEAL_MANAGE.HUNGER_BEFORE_LABEL');
         fixture.detectChanges();
 
-        expect(component['preMealSatietyAriaLabel']()).toContain('MEAL_MANAGE.HUNGER_BEFORE_LABEL');
+        const group = (fixture.nativeElement as HTMLElement).querySelector('[role="radiogroup"]');
+        const first = group?.querySelector('button[role="radio"][tabindex="0"]');
+        if (!(first instanceof HTMLButtonElement)) {
+            throw new Error('Expected the first keyboard-accessible hunger rating');
+        }
+        expect(group?.getAttribute('aria-label')).toBe('Before the meal. Unanswered.');
+        first.focus();
+        first.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+
+        const selected = document.activeElement;
+        expect(selected?.getAttribute('aria-checked')).toBe('true');
+        expect(selected?.getAttribute('aria-label')).toBe('Hungry. Ready to eat');
+        expect(group?.getAttribute('aria-label')).toBe('Before the meal. Hungry. Ready to eat');
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+
+        expect(document.activeElement).toBe(selected);
+        expect(selected?.getAttribute('aria-label')).toBe('Голоден. Хочется поесть');
+        expect(group?.getAttribute('aria-label')).toBe('До еды. Голоден. Хочется поесть');
+        expect(changed).toHaveBeenCalledExactlyOnceWith(2);
     });
 });
 

@@ -27,7 +27,6 @@ export class BarcodeScannerComponent {
     private stream: MediaStream | null = null;
     private animationFrameId: number | null = null;
     private isClosed = false;
-    private readonly detector: BarcodeDetector | null = null;
 
     public constructor() {
         const detector = this.browserWindow.createBarcodeDetector([
@@ -49,8 +48,7 @@ export class BarcodeScannerComponent {
             this.isUnsupported.set(true);
             return;
         }
-        this.detector = detector;
-        void this.startCameraAsync();
+        void this.startCameraAsync(detector);
         this.destroyRef.onDestroy(() => {
             this.stopCamera();
         });
@@ -61,7 +59,7 @@ export class BarcodeScannerComponent {
         this.dialogRef.close(null);
     }
 
-    private async startCameraAsync(): Promise<void> {
+    private async startCameraAsync(detector: BarcodeDetector): Promise<void> {
         try {
             const stream = await this.browserWindow.getUserMediaAsync({
                 video: { facingMode: 'environment' },
@@ -90,7 +88,7 @@ export class BarcodeScannerComponent {
                 return;
             }
             this.isCameraReady.set(true);
-            this.scanLoop();
+            this.scanLoop(video, detector);
         } catch {
             if (!this.isInactive()) {
                 this.stopCamera();
@@ -103,38 +101,34 @@ export class BarcodeScannerComponent {
         return this.isClosed || this.destroyRef.destroyed;
     }
 
-    private scanLoop(): void {
-        const video = this.videoRef()?.nativeElement;
-        if (video === undefined || this.isClosed || this.detector === null) {
+    private scanLoop(video: HTMLVideoElement, detector: BarcodeDetector): void {
+        if (this.isClosed) {
             return;
         }
 
         this.animationFrameId = this.browserWindow.requestAnimationFrame(() => {
-            void this.scanFrameAsync(video);
+            void this.scanFrameAsync(video, detector);
         });
     }
 
-    private async scanFrameAsync(video: HTMLVideoElement): Promise<void> {
+    private async scanFrameAsync(video: HTMLVideoElement, detector: BarcodeDetector): Promise<void> {
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             try {
-                const detector = this.detector;
-                if (detector === null) {
-                    return;
-                }
                 const barcodes = await detector.detect(video);
                 if (this.isClosed) {
                     return;
                 }
-                if (barcodes.length > 0) {
+                const barcode = barcodes.at(0);
+                if (barcode !== undefined) {
                     this.stopCamera();
-                    this.dialogRef.close(barcodes[0]?.rawValue ?? null);
+                    this.dialogRef.close(barcode.rawValue);
                     return;
                 }
             } catch {
                 /* ignore detection errors */
             }
         }
-        this.scanLoop();
+        this.scanLoop(video, detector);
     }
 
     private stopCamera(): void {

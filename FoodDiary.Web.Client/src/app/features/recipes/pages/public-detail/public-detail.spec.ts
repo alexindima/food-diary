@@ -258,6 +258,31 @@ describe('Public recipe loading feedback', () => {
     });
 });
 
+it('ignores a competing diary action in the same turn as Save and allows it after Save finishes', async () => {
+    authenticated.set(true);
+    const saved = new Subject<void>();
+    facade.saveAsync.mockReturnValueOnce(firstValueFrom(saved));
+    const harness = await RouterTestingHarness.create('/explore/recipe');
+    const save = recipeAction(harness, 'PUBLIC_RECIPES.SAVE');
+    const add = recipeAction(harness, 'PUBLIC_RECIPES.ADD_DIARY');
+
+    save.click();
+    add.click();
+    expect(facade.saveAsync).toHaveBeenCalledOnce();
+    expect(facade.addToDiaryAsync).not.toHaveBeenCalled();
+    harness.detectChanges();
+    expect(add.disabled).toBe(true);
+
+    saved.next();
+    saved.complete();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    expect(add.disabled).toBe(false);
+    add.click();
+    await harness.fixture.whenStable();
+    expect(facade.addToDiaryAsync).toHaveBeenCalledExactlyOnceWith('recipe', publicRecipeFixture().servings);
+});
+
 function recipeAction(harness: RouterTestingHarness, label: string): HTMLButtonElement {
     const actions = harness.routeNativeElement?.querySelectorAll<HTMLButtonElement>('button');
     const selected = Array.from(actions ?? []).find(button => button.querySelector('.fd-ui-button__label')?.textContent.trim() === label);
@@ -395,7 +420,9 @@ describe('Shopping from successive visits to a public recipe', () => {
         await waitForAsyncTasksAsync();
         const lookup = http.expectOne(request => request.method === 'GET' && request.url === `${listUrl}/page`);
         lookup.flush([]);
+        await vi.dynamicImportSettled();
         const close = await vi.waitFor(() => {
+            harness.detectChanges();
             const button = Array.from(document.querySelectorAll<HTMLButtonElement>('fd-shopping-list-picker button')).find(item =>
                 item.textContent.includes('PUBLIC_RECIPES.SHOPPING_CANCEL'),
             );

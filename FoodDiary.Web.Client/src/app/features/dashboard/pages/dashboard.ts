@@ -9,6 +9,7 @@ import {
     type ElementRef,
     inject,
     signal,
+    type Type,
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,7 +19,7 @@ import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
@@ -154,6 +155,7 @@ export class DashboardComponent {
     protected readonly setup = inject(DashboardSetupFacade);
     private readonly languageVersion = signal(0);
     private readonly fastingPriorityOnOpen = signal<boolean | null>(null);
+    private toolbarDialogOpening = false;
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
     private resizeObserver: ResizeObserver | null = null;
@@ -195,7 +197,10 @@ export class DashboardComponent {
     protected readonly fastingCurrentSession = this.facade.currentFastingSession;
     protected readonly fastingFirst = computed(() => this.isTodaySelected() && this.fastingPriorityOnOpen() === true);
     protected readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
-    protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
+    protected readonly aiMealClearTokens = {
+        quickAdd: signal(0),
+        slots: signal(0),
+    };
     protected readonly shouldRenderFastingWidget = computed(() => {
         if (this.layout.isEditingLayout()) {
             return this.layout.shouldRenderBlock('fasting');
@@ -269,7 +274,7 @@ export class DashboardComponent {
         this.languageVersion();
         const editing = this.layout.isEditingLayout();
 
-        const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions = {}): DashboardBlockState =>
+        const stateFor = (blockId: DashboardBlockId, options: DashboardBlockStateOptions): DashboardBlockState =>
             this.buildDashboardBlockState(blockId, editing, options);
 
         return {
@@ -394,30 +399,46 @@ export class DashboardComponent {
     }
 
     protected async openNotificationSettingsAsync(): Promise<void> {
-        const { DashboardNotificationSettingsDialogComponent } =
-            await import('../dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog');
-        if (this.destroyRef.destroyed) {
-            return;
-        }
-
-        const dialog = this.dialogService.open(DashboardNotificationSettingsDialogComponent, { preset: 'form' });
-        this.closeDialogOnDestroy(dialog);
+        await this.openToolbarDialogAsync(
+            async () => {
+                const { DashboardNotificationSettingsDialogComponent } =
+                    await import('../dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog');
+                return DashboardNotificationSettingsDialogComponent;
+            },
+            () => ({ preset: 'form' }),
+        );
     }
 
     protected async openAppearanceDialogAsync(): Promise<void> {
-        const { AppearanceDialogComponent } = await import('../../../components/shared/appearance-dialog/appearance-dialog');
-        if (this.destroyRef.destroyed) {
+        await this.openToolbarDialogAsync(
+            async () => {
+                const { AppearanceDialogComponent } = await import('../../../components/shared/appearance-dialog/appearance-dialog');
+                return AppearanceDialogComponent;
+            },
+            () => ({
+                size: 'md',
+                data: {
+                    theme: this.themeService.theme(),
+                    uiStyle: this.themeService.uiStyle(),
+                },
+            }),
+        );
+    }
+
+    private async openToolbarDialogAsync<T, D>(load: () => Promise<Type<T>>, getConfig: () => FdUiDialogConfig<D>): Promise<void> {
+        if (this.toolbarDialogOpening) {
             return;
         }
 
-        const dialog = this.dialogService.open(AppearanceDialogComponent, {
-            size: 'md',
-            data: {
-                theme: this.themeService.theme(),
-                uiStyle: this.themeService.uiStyle(),
-            },
-        });
-        this.closeDialogOnDestroy(dialog);
+        this.toolbarDialogOpening = true;
+        try {
+            const component = await load();
+            if (!this.destroyRef.destroyed) {
+                this.closeDialogOnDestroy(this.dialogService.open(component, getConfig()));
+            }
+        } finally {
+            this.toolbarDialogOpening = false;
+        }
     }
 
     private closeDialogOnDestroy<T, R>(dialog: FdUiDialogRef<T, R>): void {
@@ -451,12 +472,13 @@ export class DashboardComponent {
         this.facade.reload(false);
     }
 
-    protected onAiMealCreateRequested(result: AiInputBarResult): void {
+    protected onAiMealCreateRequested(result: AiInputBarResult, source: keyof typeof this.aiMealClearTokens): void {
         this.aiMealCreateFacade
             .createFromAiResult(result)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(meal => {
                 if (meal !== null) {
+                    this.aiMealClearTokens[source].update(token => token + 1);
                     this.onMealCreated();
                 }
             });
@@ -571,7 +593,7 @@ export class DashboardComponent {
     }
 
     private resolveDashboardBlockAriaLabel(editing: boolean, options: DashboardBlockStateOptions): string | null {
-        const ariaLabelKey = editing ? (options.editingLabelKey ?? null) : (options.defaultLabelKey ?? null);
-        return ariaLabelKey !== null ? this.translateService.instant(ariaLabelKey) : null;
+        const ariaLabelKey = editing ? options.editingLabelKey : options.defaultLabelKey;
+        return ariaLabelKey === undefined ? null : this.translateService.instant(ariaLabelKey);
     }
 }

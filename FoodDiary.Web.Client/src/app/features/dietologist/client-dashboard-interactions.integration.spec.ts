@@ -390,6 +390,49 @@ function recommendationTexts(host: HTMLElement): string[] {
     return Array.from(host.querySelectorAll('.client-dashboard__recommendation > p'), item => item.textContent.trim());
 }
 
+describe('Dietologist dashboard initial recommendation ownership', () => {
+    it.each(['success', 'error'] as const)('keeps only the active client’s recommendation after a late initial %s', async outcome => {
+        const { loadRecommendations } = setupDashboardRouter();
+        const pendingRead = new Subject<DietologistRecommendation[]>();
+        const current: DietologistRecommendation = {
+            id: entityId<'recommendation'>('mira-current-note'),
+            dietologistUserId: entityId<'user'>('coach'),
+            dietologistFirstName: null,
+            dietologistLastName: null,
+            text: 'Plan the next check-in',
+            isRead: false,
+            createdAtUtc: utcInstant('2026-05-20T00:00:00Z'),
+            readAtUtc: null,
+        };
+        loadRecommendations.mockReturnValueOnce(pendingRead).mockReturnValueOnce(of([current]));
+
+        const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
+        const firstHost = dashboardHost(harness);
+        expect(firstHost.querySelector('h1')?.textContent).toContain('Alex');
+        expect(pendingRead.observed).toBe(true);
+        expect(recommendationTexts(firstHost)).toEqual([]);
+
+        await harness.navigateByUrl(SECOND_DASHBOARD_URL);
+        const activeHost = dashboardHost(harness);
+        expect(activeHost).toBe(firstHost);
+        expect(activeHost.querySelector('h1')?.textContent).toContain('Mira');
+        expect(pendingRead.observed).toBe(false);
+        expect(loadRecommendations.mock.calls).toEqual([[FIRST_CLIENT.userId], [SECOND_CLIENT.userId]]);
+        expect(recommendationTexts(activeHost)).toEqual([current.text]);
+
+        if (outcome === 'success') {
+            pendingRead.next([{ ...current, id: entityId<'recommendation'>('alex-old-note'), text: 'Previous client’s private note' }]);
+            pendingRead.complete();
+        } else {
+            pendingRead.error(new Error('Previous client’s recommendations are unavailable'));
+        }
+        harness.detectChanges();
+
+        expect(recommendationTexts(activeHost)).toEqual([current.text]);
+        expect(activeHost.textContent).not.toContain('DIETOLOGIST.CLIENT_DASHBOARD.PARTIAL_LOAD_ERROR');
+    });
+});
+
 describe('Dietologist dashboard period retry', () => {
     it.each(['initial period', 'selected period'] as const)('retries the exact failed %s from the rendered date form', async failure => {
         const { listClients, loadDashboard } = setupDashboardRouter();

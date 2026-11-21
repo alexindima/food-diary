@@ -161,7 +161,10 @@ describe('ShoppingListPageComponent rendered shopping actions', () => {
         facade.selectList.mockClear();
         const firstEdit = new Subject<ShoppingListDraftItem>();
         const pendingEdit = new Subject<ShoppingListDraftItem>();
-        dialogService.open.mockReturnValueOnce({ afterClosed: () => firstEdit }).mockReturnValueOnce({ afterClosed: () => pendingEdit });
+        const closePendingEdit = vi.fn();
+        dialogService.open
+            .mockReturnValueOnce({ afterClosed: () => firstEdit, close: vi.fn() })
+            .mockReturnValueOnce({ afterClosed: () => pendingEdit, close: closePendingEdit });
         const draft: ShoppingListDraftItem = {
             name: 'Free-range eggs',
             amount: EDITED_EGG_QUANTITY,
@@ -190,6 +193,7 @@ describe('ShoppingListPageComponent rendered shopping actions', () => {
         tabs.find(tab => tab.textContent.includes(party.name))?.click();
         await fixture.whenStable();
         fixture.detectChanges();
+        expect(closePendingEdit).toHaveBeenCalledOnce();
         pendingEdit.next({ ...draft, name: 'Stale edit' });
         pendingEdit.complete();
 
@@ -509,15 +513,18 @@ describe('ShoppingListPageComponent browser navigation', () => {
 });
 
 describe('ShoppingListPageComponent list management', () => {
-    it('computes delete and clear availability from list state', async () => {
-        const { component, facade } = await setupShoppingListPageAsync();
+    it('enables clearing purchased when the only list has a checked item', async () => {
+        const { facade, fixture } = await setupShoppingListPageAsync();
+        facade.navigationLists.set([SHOPPING_LISTS[0]]);
+        await fixture.whenStable();
+        fixture.detectChanges();
 
-        expect(component['canDeleteList']()).toBe(true);
-        expect(component['canClearList']()).toBe(true);
+        const clear = openShoppingMenu(fixture, 'COMMON.MORE_ACTIONS', 'SHOPPING_LIST.CLEAR_PURCHASED');
+        expect(clear.disabled).toBe(true);
 
-        facade.lists.set([SHOPPING_LISTS[0]]);
-        expect(component['canDeleteList']()).toBe(true);
-        expect(component['canClearList']()).toBe(true);
+        facade.items.set([{ ...SHOPPING_LIST_ITEM, isChecked: true }]);
+        fixture.detectChanges();
+        expect(clear.disabled).toBe(false);
     });
 
     it('allows deleting the only list after confirmation from its menu', async () => {

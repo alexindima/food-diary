@@ -1,16 +1,19 @@
-import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injector, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { catchError, EMPTY, finalize, from, type Observable, Subject, switchMap, takeUntil, throwError } from 'rxjs';
 
 import { SessionEventsService } from '../../../../shared/auth/session-events.service';
 import { type MealTypeOption, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
-import type { MealItemManageDto, MealManageDto } from '../../../../shared/models/meal.data';
+import type { Meal, MealItemManageDto, MealManageDto } from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
+import { MAXIMUM_CONSUMED_QUANTITY } from '../../../../shared/models/semantics/meal-quantity';
 import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
+import { isHealthConsentRequiredError } from '../../../../shared/privacy/health-consent-error';
+import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import { getDateInputValue, getTimeInputValue, isExistingMealLocalDateTime } from '../meal-date-input.utils';
@@ -34,6 +37,7 @@ export type QuickMealDetails = {
 @Service()
 export class QuickMealService {
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly resetDraft = new Subject<void>();
     private readonly mealService = inject(MealService);
@@ -167,12 +171,12 @@ export class QuickMealService {
             return;
         }
 
-        const payload = this.toMealDto(items, new Date(`${date}T${time}`));
-        if (payload.items.length === 0) {
-            this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
+        if (items.some(item => item.amount > MAXIMUM_CONSUMED_QUANTITY)) {
+            this.toastService.error(this.translateService.instant('MEAL_MANAGE.MAX_AMOUNT_ERROR', { max: MAXIMUM_CONSUMED_QUANTITY }));
             return;
         }
 
+        const payload = this.toMealDto(items, new Date(`${date}T${time}`));
         const fingerprint = JSON.stringify(payload);
         if (this.createOperation?.fingerprint !== fingerprint) {
             this.createOperation = { fingerprint, key: crypto.randomUUID() };
@@ -183,6 +187,9 @@ export class QuickMealService {
         this.mealService
             .create(payload, operation.key)
             .pipe(
+                catchError((error: unknown) =>
+                    isHealthConsentRequiredError(error) ? this.retryAfterConsent(payload, operation.key) : throwError(() => error),
+                ),
                 takeUntil(this.resetDraft),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
@@ -191,9 +198,7 @@ export class QuickMealService {
             )
             .subscribe({
                 next: () => {
-                    if (this.createOperation === operation) {
-                        this.createOperation = null;
-                    }
+                    this.createOperation = null;
                     this.isSavingSignal.set(false);
                     this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'), { key: MEAL_FEEDBACK_TOAST_KEY });
                     this.invalidation.reportMealMutation();
@@ -207,6 +212,23 @@ export class QuickMealService {
                     this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
                 },
             });
+    }
+
+    private retryAfterConsent(payload: MealManageDto, idempotencyKey: string): Observable<Meal> {
+        const privacy = this.injector.get(PrivacyConsentFacade);
+        return from(privacy.ensureHealthConsentAsync(true, { acceptLabelKey: 'PRIVACY_CHOICES.ACCEPT_AND_SAVE' })).pipe(
+            switchMap(allowed => {
+                if (allowed) {
+                    return this.mealService.create(payload, idempotencyKey);
+                }
+                if (privacy.failed()) {
+                    this.toastService.error(
+                        this.translateService.instant(privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR'),
+                    );
+                }
+                return EMPTY;
+            }),
+        );
     }
 
     public setPreviewItems(items: QuickMealItem[]): void {

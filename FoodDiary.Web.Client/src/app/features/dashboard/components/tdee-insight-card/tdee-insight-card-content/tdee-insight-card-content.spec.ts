@@ -15,13 +15,13 @@ const SUGGESTED_TARGET = 1900;
 const CURRENT_TARGET = 2000;
 
 describe('TdeeInsightCardContentComponent', () => {
-    it('derives confidence, hint, trend and suggestion state from insight', async () => {
+    it('renders medium confidence and derives hint, trend and suggestion state', async () => {
         const { component, fixture } = await setupComponentAsync(createInsight());
 
         fixture.detectChanges();
 
-        expect(component['confidenceLabel']()).toBe('TDEE_CARD.CONFIDENCE.MEDIUM');
-        expect(component['confidenceClass']()).toBe('medium');
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.tdee-card__confidence')?.textContent.trim()).toBe('TDEE_CARD.CONFIDENCE.MEDIUM');
         expect(component['weightTrendFormatted']()).toBe('-0.25');
         expect(component['hintKey']()).toBe('TDEE_CARD.HINTS.REDUCE');
         expect(component['showSuggestion']()).toBe(true);

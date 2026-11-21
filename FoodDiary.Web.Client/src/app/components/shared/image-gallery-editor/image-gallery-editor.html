@@ -77,13 +77,9 @@
                 [cropEnabled]="false"
                 [deleteOnClear]="false"
                 [resizeMaxDimension]="2048"
-                [clearRequest]="clearRequest()"
                 [description]="'PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION' | translate"
                 (imagesAdded)="addBatch($event)"
                 (batchUploading)="uploading.set($event)"
-                (imagePreparationStarted)="uploading.set(true)"
-                (imagePreparationFailed)="uploading.set(false)"
-                (imageChanged)="add($event)"
                 (hasErrorChange)="hasUploadError.set($event)"
             />
             @for (slot of emptySlots(); track slot) {

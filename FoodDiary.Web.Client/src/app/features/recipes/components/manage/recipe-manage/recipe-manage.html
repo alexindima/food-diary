@@ -75,7 +75,7 @@
                                 </div>
 
                                 <fd-recipe-recognition
-                                    [sourceUrl]="importUrl()"
+                                    [sourceUrl]="importUrl"
                                     [text]="importText()"
                                     (sourceUrlSuggested)="onImportUrlChange($event)"
                                     (draftRecognized)="applyRecognizedDraft($event)"
@@ -129,7 +129,6 @@
                         (stepTitleChange)="onStepTitleChange($event)"
                         (stepPhotosChange)="onStepPhotosChange($event)"
                         (photosUploading)="stepPhotosUploading.set($event)"
-                        (stepImageChange)="onStepImageChange($event)"
                         (fieldBlur)="onStepFieldBlur($event)"
                         (stepDescriptionChange)="onStepDescriptionChange($event)"
                         (ingredientTextChange)="onIngredientTextChange($event)"

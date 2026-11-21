@@ -270,7 +270,9 @@ export class UserManageNotificationsFacade {
         }
 
         const currentDevice = this.isCurrentDevice(subscription);
-        const removed = currentDevice
+        const checkBrowser =
+            currentDevice || (this.currentSubscriptionEndpoint() === null && this.pushNotifications.canCheckBrowserSubscription);
+        const removed = checkBrowser
             ? await this.pushNotifications.removeSubscriptionAsync(endpoint)
             : await this.facade.removeWebPushSubscriptionAsync(endpoint);
         if (!this.isCurrentProfileUser(owner)) {

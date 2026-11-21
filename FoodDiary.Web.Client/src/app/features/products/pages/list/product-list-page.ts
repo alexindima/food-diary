@@ -94,7 +94,7 @@ export class ProductListPageComponent extends ProductListBaseComponent {
         });
     }
 
-    protected override handleProductClick(product: Product): void {
+    protected override onProductClick(product: Product): void {
         void this.openProductDetailsAsync(product);
     }
 

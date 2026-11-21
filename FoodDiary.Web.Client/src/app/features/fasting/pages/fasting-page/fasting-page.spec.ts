@@ -335,8 +335,9 @@ describe('FastingPageComponent setup and actions', () => {
     it('opens session management confirmation and ends the active fast after confirmation', () => {
         facade.currentSession.set(createSession());
         dialogService.open.mockReturnValue({ afterClosed: () => of('confirm') });
+        fixture.detectChanges();
 
-        component['openSessionManagement']();
+        pageButton('FASTING.END_FAST').click();
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         expect(facade.endFasting).toHaveBeenCalledTimes(1);

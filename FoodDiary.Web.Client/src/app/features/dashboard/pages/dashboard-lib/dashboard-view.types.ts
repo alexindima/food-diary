@@ -30,7 +30,7 @@ export type DashboardBlockState = {
 export type DashboardBlockStateOptions = {
     alwaysInteractive?: boolean;
     locked?: boolean;
-    editingLabelKey?: string;
+    editingLabelKey: string;
     defaultLabelKey?: string;
 };
 

@@ -1,10 +1,11 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
-import { ShoppingItemEditComponent } from './shopping-item-edit';
+import { ShoppingItemEditComponent, type ShoppingItemEditData } from './shopping-item-edit';
 
 async function expectQuantityErrorAsync(fixture: ComponentFixture<ShoppingItemEditComponent>): Promise<void> {
     fixture.detectChanges();
@@ -28,7 +29,11 @@ describe('shopping item editing', () => {
                 { provide: FdUiDialogRef, useValue: ref },
                 {
                     provide: FD_UI_DIALOG_DATA,
-                    useValue: { name: 'Oats', amount: 150, unit: persistedUnit, category: null, note: null },
+                    useValue: {
+                        initial: { name: 'Oats', amount: 150, unit: persistedUnit, category: null, note: null },
+                        productId: null,
+                        saveBlocked: signal(false),
+                    } satisfies ShoppingItemEditData,
                 },
             ],
         }).compileComponents();
@@ -51,7 +56,11 @@ describe('shopping item editing', () => {
                 { provide: FdUiDialogRef, useValue: ref },
                 {
                     provide: FD_UI_DIALOG_DATA,
-                    useValue: { productId, name: 'Oats', amount: 150, unit: 'G', category: null, note: null },
+                    useValue: {
+                        initial: { name: 'Oats', amount: 150, unit: 'G', category: null, note: null },
+                        productId,
+                        saveBlocked: signal(false),
+                    } satisfies ShoppingItemEditData,
                 },
             ],
         }).compileComponents();
@@ -77,7 +86,14 @@ describe('Shopping item editor native validation', () => {
             providers: [
                 provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: ref },
-                { provide: FD_UI_DIALOG_DATA, useValue: { name: 'Salt', amount: null, unit: null, category: 'Pantry', note: 'to taste' } },
+                {
+                    provide: FD_UI_DIALOG_DATA,
+                    useValue: {
+                        initial: { name: 'Salt', amount: null, unit: null, category: 'Pantry', note: 'to taste' },
+                        productId: null,
+                        saveBlocked: signal(false),
+                    } satisfies ShoppingItemEditData,
+                },
             ],
         }).compileComponents();
         const fixture = TestBed.createComponent(ShoppingItemEditComponent);

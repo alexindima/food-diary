@@ -1,7 +1,7 @@
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { disabled, form, max, min, required, validate } from '@angular/forms/signals';
-import { firstValueFrom } from 'rxjs';
+import { concatMap, filter, firstValueFrom, type Observable, of, take, takeUntil, tap } from 'rxjs';
 
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import {
@@ -37,6 +37,8 @@ export class CycleSettingsFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly state = inject(CycleTrackingStateFacade);
+    private readonly cycleProfileId = computed(() => this.state.cycle()?.id);
+    private readonly cycleProfileChanges = toObservable(this.cycleProfileId);
     public readonly startCycleModel = signal<StartCycleFormModel>({
         trackingStartDate: formatDateInputValue(new Date()),
         mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -171,30 +173,13 @@ export class CycleSettingsFacade {
             return;
         }
 
-        const payload = this.buildCreatePayload(this.startCycleModel());
-        if (payload === null) {
+        const formValue = this.startCycleModel();
+        const { trackingStartDate } = formValue;
+        if (trackingStartDate === null || trackingStartDate.length === 0) {
             return;
         }
-
-        this.state.createError.set(null);
-        this.state.isSavingCycle.set(true);
-        try {
-            const cycle = await firstValueFrom(this.cyclesService.create(payload).pipe(takeUntilDestroyed(this.destroyRef)));
-            this.state.cycle.set(cycle);
-            this.state.loadNutritionSummary(cycle);
-        } catch {
-            this.state.createError.set('CYCLE_TRACKING.CREATE_CYCLE_FAILED');
-        } finally {
-            this.state.isSavingCycle.set(false);
-        }
-    }
-
-    private buildCreatePayload(formValue: StartCycleFormModel): CreateCyclePayload | null {
-        if (formValue.trackingStartDate === null || formValue.trackingStartDate.length === 0) {
-            return null;
-        }
-        return {
-            trackingStartDate: toCycleDateKey(formValue.trackingStartDate),
+        const payload: CreateCyclePayload = {
+            trackingStartDate: toCycleDateKey(trackingStartDate),
             mode: formValue.mode,
             averageCycleLength: formValue.averageCycleLength ?? undefined,
             averagePeriodLength: formValue.averagePeriodLength ?? undefined,
@@ -210,6 +195,18 @@ export class CycleSettingsFacade {
             nutritionInsightsConsentGranted: formValue.nutritionInsightsConsentGranted,
             fertilitySignalsConsentGranted: formValue.fertilitySignalsConsentGranted,
         };
+
+        this.state.createError.set(null);
+        this.state.isSavingCycle.set(true);
+        try {
+            const cycle = await firstValueFrom(this.cyclesService.create(payload).pipe(takeUntilDestroyed(this.destroyRef)));
+            this.state.cycle.set(cycle);
+            this.state.loadNutritionSummary(cycle);
+        } catch {
+            this.state.createError.set('CYCLE_TRACKING.CREATE_CYCLE_FAILED');
+        } finally {
+            this.state.isSavingCycle.set(false);
+        }
     }
 
     private async saveSettingsAsync(): Promise<void> {
@@ -217,45 +214,67 @@ export class CycleSettingsFacade {
         if (this.state.isSettingsBusy()) {
             return;
         }
-        if (currentCycle === null || this.settingsForm().invalid()) {
-            this.settingsForm().markAsTouched();
-            return;
-        }
 
         const formValue = this.settingsModel();
-        const payload = this.buildSettingsPayload(formValue);
-        if (payload === null) {
+        const { averageCycleLength, averagePeriodLength, lutealLength } = formValue;
+        if (currentCycle === null || averageCycleLength === null || averagePeriodLength === null || lutealLength === null) {
             return;
         }
+        const payload: Required<UpdateCycleSettingsPayload> = {
+            mode: formValue.mode,
+            averageCycleLength,
+            averagePeriodLength,
+            lutealLength,
+            isRegular: formValue.isRegular,
+            showFertilityEstimates: formValue.showFertilityEstimates,
+            discreetNotifications: formValue.discreetNotifications,
+            goal: formValue.goal,
+            reproductiveState: formValue.reproductiveState,
+            hideFromDashboard: formValue.hideFromDashboard,
+        };
 
         this.state.settingsError.set(null);
         this.state.isSavingSettings.set(true);
+        const ownsProfile = (): boolean => this.cycleProfileId() === currentCycle.id && !this.destroyRef.destroyed;
+        const profileChanged = this.cycleProfileChanges.pipe(filter(() => !ownsProfile()));
+        const applyOwnedWrite = (request: Observable<CycleResponse>): Observable<CycleResponse> =>
+            request.pipe(
+                take(1),
+                filter(ownsProfile),
+                tap(cycle => {
+                    this.state.acceptSettingsWrite(cycle);
+                }),
+            );
+        const updateConsentIfChanged = (cycle: CycleResponse, purpose: CycleConsentPurpose, granted: boolean): Observable<CycleResponse> =>
+            this.state.hasActiveConsent(cycle, purpose) === granted
+                ? of(cycle)
+                : applyOwnedWrite(this.cyclesService.updateConsent(cycle.id, purpose, { granted }));
         try {
-            let updatedCycle = currentCycle;
-            if (this.hasSettingsChanges(currentCycle, payload)) {
-                updatedCycle = await firstValueFrom(
-                    this.cyclesService.updateSettings(currentCycle.id, payload).pipe(takeUntilDestroyed(this.destroyRef)),
-                );
-                this.state.cycle.set(updatedCycle);
+            const settings = this.hasSettingsChanges(currentCycle, payload)
+                ? applyOwnedWrite(this.cyclesService.updateSettings(currentCycle.id, payload))
+                : of(currentCycle);
+            const updatedCycle = await firstValueFrom(
+                settings.pipe(
+                    concatMap(cycle =>
+                        updateConsentIfChanged(cycle, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS, formValue.nutritionInsightsConsentGranted),
+                    ),
+                    concatMap(cycle =>
+                        updateConsentIfChanged(cycle, CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS, formValue.fertilitySignalsConsentGranted),
+                    ),
+                    takeUntil(profileChanged),
+                    takeUntilDestroyed(this.destroyRef),
+                ),
+            );
+            if (!ownsProfile()) {
+                return;
             }
-            updatedCycle = await this.updateConsentIfChangedAsync(
-                updatedCycle,
-                CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
-                formValue.nutritionInsightsConsentGranted,
-            );
-            this.state.cycle.set(updatedCycle);
-            updatedCycle = await this.updateConsentIfChangedAsync(
-                updatedCycle,
-                CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
-                formValue.fertilitySignalsConsentGranted,
-            );
-
-            this.state.cycle.set(updatedCycle);
             this.state.loadNutritionSummary(updatedCycle);
             this.state.settingsSaveRevision.update(revision => revision + 1);
         } catch {
-            this.state.settingsError.set('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
-            this.state.loadNutritionSummary(this.state.cycle());
+            if (ownsProfile()) {
+                this.state.settingsError.set('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
+                this.state.loadNutritionSummary(this.state.cycle());
+            }
         } finally {
             this.state.isSavingSettings.set(false);
         }
@@ -266,36 +285,5 @@ export class CycleSettingsFacade {
         const persisted: Readonly<Record<string, unknown>> = cycle;
         const requested: Array<[string, unknown]> = Object.entries(payload);
         return requested.some(([field, value]) => field !== 'mode' && value !== persisted[field]);
-    }
-
-    private buildSettingsPayload(formValue: CycleSettingsFormModel): Required<UpdateCycleSettingsPayload> | null {
-        if (formValue.averageCycleLength === null || formValue.averagePeriodLength === null || formValue.lutealLength === null) {
-            return null;
-        }
-
-        return {
-            mode: formValue.mode,
-            averageCycleLength: formValue.averageCycleLength,
-            averagePeriodLength: formValue.averagePeriodLength,
-            lutealLength: formValue.lutealLength,
-            isRegular: formValue.isRegular,
-            showFertilityEstimates: formValue.showFertilityEstimates,
-            discreetNotifications: formValue.discreetNotifications,
-            goal: formValue.goal,
-            reproductiveState: formValue.reproductiveState,
-            hideFromDashboard: formValue.hideFromDashboard,
-        };
-    }
-
-    private async updateConsentIfChangedAsync(
-        cycle: CycleResponse,
-        purpose: CycleConsentPurpose,
-        granted: boolean,
-    ): Promise<CycleResponse> {
-        if (this.state.hasActiveConsent(cycle, purpose) === granted) {
-            return cycle;
-        }
-
-        return firstValueFrom(this.cyclesService.updateConsent(cycle.id, purpose, { granted }).pipe(takeUntilDestroyed(this.destroyRef)));
     }
 }

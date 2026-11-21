@@ -18,7 +18,7 @@ const LATE_HTTP_ID = 13;
 const REPLACEMENT_HTTP_ID = 14;
 
 describe('HTTP response application provenance', () => {
-    it('keeps the newer applied response when both HTTP requests return 200 in reverse order', () => {
+    it('keeps the newer applied response when older and unrelated HTTP requests finish', () => {
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(withInterceptorsFromDi()),
@@ -54,13 +54,21 @@ describe('HTTP response application provenance', () => {
         latest.flush('new');
         const applied = owner.provenance();
         old.flush('old');
+
+        const unrelated = vi.fn<(value: string) => void>();
+        http.get<string>('/api/v1/products?search=private-unrelated').subscribe(unrelated);
+        const unbound = testing.expectOne('/api/v1/products?search=private-unrelated');
+        unbound.flush('unrelated');
+        expect(unrelated).toHaveBeenCalledExactlyOnceWith('unrelated');
+
         expect(owner.data()).toBe('new');
         expect(owner.provenance()).toEqual(applied);
         expect(applied).toEqual({ queryRevision: current, lastAppliedQueryRevision: current, lastAppliedRequestId: 2 });
         const history = TestBed.inject(LocalWebmcpRequestsService).read();
-        expect(history.map(item => item.status)).toEqual([HTTP_OK, HTTP_OK]);
+        expect(history.map(item => item.status)).toEqual([HTTP_OK, HTTP_OK, HTTP_OK]);
         expect(JSON.stringify(history)).not.toContain('private-');
         expect(latest.request.headers.keys()).toEqual([]);
+        expect(unbound.request.headers.keys()).toEqual([]);
         testing.verify();
     });
 

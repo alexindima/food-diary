@@ -3,9 +3,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { AiInputActionBarComponent } from '../../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../../components/shared/ai-input-bar/ai-input-bar.types';
-import type { MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
-import { MealAiSessionsComponent } from '../meal-ai-sessions/meal-ai-sessions';
+import type { Meal, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
+import { type MealAiSessionRemoval, MealAiSessionsComponent } from '../meal-ai-sessions/meal-ai-sessions';
 import { MealItemsListComponent, type MealItemsListItemState } from '../meal-items-list/meal-items-list';
+import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 
 @Component({
     selector: 'fd-meal-items-section',
@@ -17,6 +18,7 @@ import { MealItemsListComponent, type MealItemsListItemState } from '../meal-ite
 export class MealItemsSectionComponent {
     public readonly items = input.required<readonly MealItemsListItemState[]>();
     public readonly aiSessions = input.required<MealAiSessionManageDto[]>();
+    public readonly mealId = input<Meal['id'] | null>(null);
     public readonly selectedMealType = input.required<string | null>();
     public readonly isProcessing = input.required<boolean>();
     public readonly itemsError = input<string | null>(null);
@@ -25,8 +27,8 @@ export class MealItemsSectionComponent {
     public readonly mealRecognized = output<AiInputBarResult>();
     public readonly addItem = output();
     public readonly editItem = output<number>();
-    public readonly removeItem = output<number>();
+    public readonly removeItem = output<MealItemFormValues>();
     public readonly openItemSelect = output<number>();
-    public readonly editSession = output<number>();
-    public readonly deleteSession = output<number>();
+    public readonly editSession = output<MealAiSessionManageDto>();
+    public readonly deleteSession = output<MealAiSessionRemoval>();
 }

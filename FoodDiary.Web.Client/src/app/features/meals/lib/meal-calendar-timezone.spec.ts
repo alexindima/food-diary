@@ -26,7 +26,6 @@ describe('Meal calendar round trip in the process timezone', () => {
             const payload = buildMealManageDto(form, {
                 aiSessions: [],
                 buildDateTime: () => instant,
-                recipeServingsFromDisplayInput: (_recipe, amount) => amount,
                 manualTotals: NO_NUTRIENTS,
             });
             const stored: Meal = {

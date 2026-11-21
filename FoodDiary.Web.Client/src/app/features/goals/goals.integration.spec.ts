@@ -364,6 +364,49 @@ describe('Routed goals load', () => {
     });
 });
 
+describe('Routed goal preset catalog', () => {
+    it('lists every macro preset and preserves the selected amounts when switching back to custom', async () => {
+        stubScrollIntoView();
+        const { api } = configureGoals();
+        const options = [
+            { label: 'CUSTOM', grams: ['110', '65', '210'] },
+            { label: 'BALANCED_GYM', grams: ['200', '89', '100'] },
+            { label: 'CLASSIC', grams: ['150', '67', '200'] },
+            { label: 'LOW_CARB', grams: ['250', '67', '100'] },
+            { label: 'HIGH_CARB', grams: ['125', '56', '250'] },
+            { label: 'ENDURANCE', grams: ['100', '67', '250'] },
+        ];
+        const harness = await RouterTestingHarness.create('/goals');
+        const host = page(harness);
+        const control = requiredButton(host, '.goals-editor-nutrition__preset button[aria-haspopup="listbox"]');
+        const labels = options.map(option => `GOALS_PAGE.MACRO_PRESET_${option.label}`);
+        const macroInputs = ['protein', 'fats', 'carbs'].map(macro => requiredInput(host, `#goals-editor-${macro}`));
+        const readMacros = (): string[] => macroInputs.map(input => input.value);
+        const select = (index: number): void => {
+            control.click();
+            redraw(harness);
+            const menu = [...document.querySelectorAll<HTMLButtonElement>('[role="listbox"] [role="option"]')];
+            expect(menu.map(option => option.textContent.trim())).toEqual(labels);
+            menu[index].click();
+            redraw(harness);
+            expect(control.textContent).toContain(labels[index]);
+        };
+
+        for (const [index, option] of options.entries()) {
+            select(index);
+            expect(readMacros()).toEqual(option.grams);
+            expect(requiredInput(host, '#goals-editor-fiber').value).toBe(String(GOALS.fiberTarget));
+        }
+
+        const enduranceMacros = readMacros();
+        select(0);
+        editNumber(requiredInput(host, '#goals-editor-calories'), UPDATED_CALORIES);
+        redraw(harness);
+        expect(readMacros()).toEqual(enduranceMacros);
+        expect(api.updateGoals).not.toHaveBeenCalled();
+    });
+});
+
 describe('Routed goal preset', () => {
     it('recalculates a selected preset for changed calories, then saves a manually customized macro', async () => {
         stubScrollIntoView();

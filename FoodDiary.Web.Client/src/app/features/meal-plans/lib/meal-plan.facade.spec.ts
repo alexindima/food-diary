@@ -15,7 +15,8 @@ import type { MealPlan, MealPlanMeal, MealPlanSummary } from '../models/meal-pla
 import { planDurationDaysFromStored } from '../models/meal-plan-values';
 import { plannedServingsFromStored } from '../models/meal-plan-values';
 import { plannedMealTypeFromStored } from '../models/meal-plan-values';
-import type { MealPlanListQuery } from './list/meal-plan-list-query';
+import { MealPlanListFacade } from './list/meal-plan-list.facade';
+import { type MealPlanListQuery, mealPlanListQueryKey } from './list/meal-plan-list-query';
 import { MEAL_PLAN_LIST_QUERY_STATE, type MealPlanListQueryState } from './list/meal-plan-list-query-state';
 import { MealPlanFacade } from './meal-plan.facade';
 
@@ -36,6 +37,7 @@ type MealPlanServiceMock = {
 };
 
 let facade: MealPlanFacade;
+let listFacade: MealPlanListFacade;
 let mealPlanService: MealPlanServiceMock;
 const recipeLookup = { getById: vi.fn() };
 const quickMeal = { hasItems: signal(false), addRecipe: vi.fn(), updateDetails: vi.fn() };
@@ -54,16 +56,32 @@ beforeEach(() => {
         generateShoppingList: vi.fn(() => of(createShoppingList())),
     };
 
+    const initial: MealPlanListQuery = { page: 1, dietType: null, source: 'all' };
+    const current = signal(initial, { equal: (left, right) => mealPlanListQueryKey(left) === mealPlanListQueryKey(right) });
+    const commitAsync = vi.fn<() => Promise<boolean>>().mockResolvedValue(true);
+    const catalogueRoute: MealPlanListQueryState = {
+        initial,
+        current,
+        changes: EMPTY,
+        writeAsync: async (query): Promise<boolean> => {
+            current.set(query);
+            return commitAsync();
+        },
+        normalizePageAsync: vi.fn().mockResolvedValue(false),
+    };
     TestBed.configureTestingModule({
         providers: [
             MealPlanFacade,
+            MealPlanListFacade,
             { provide: MealPlanService, useValue: mealPlanService },
             { provide: RECIPE_LOOKUP, useValue: recipeLookup },
             { provide: QuickMealService, useValue: quickMeal },
+            { provide: MEAL_PLAN_LIST_QUERY_STATE, useValue: catalogueRoute },
         ],
     });
 
     facade = TestBed.inject(MealPlanFacade);
+    listFacade = TestBed.inject(MealPlanListFacade);
 });
 
 describe('MealPlanFacade request lifetime', () => {
@@ -90,9 +108,9 @@ describe('MealPlanFacade request lifetime', () => {
             .mockReturnValueOnce(of({ ...createMealPlan(), id: entityId<'meal-plan'>('plan-2') }));
         facade.loadPlan(entityId<'meal-plan'>('plan-1'));
         await waitForAsync(() => page.observed && detail.observed);
-        facade.loadPlans('Vegan');
+        listFacade.loadPlans('Vegan');
         facade.loadPlan(entityId<'meal-plan'>('plan-2'));
-        await waitForAsync(() => facade.selectedPlan()?.id === 'plan-2' && !facade.isLoading());
+        await waitForAsync(() => facade.selectedPlan()?.id === 'plan-2' && !listFacade.isLoading());
 
         expect([page.observed, detail.observed]).toEqual([false, false]);
         expect(facade.selectedPlan()?.id).toBe('plan-2');
@@ -106,10 +124,8 @@ describe('MealPlanFacade request lifetime', () => {
         const writeAsync = vi.fn().mockResolvedValue(true);
         TestBed.configureTestingModule({
             providers: [
-                MealPlanFacade,
+                MealPlanListFacade,
                 { provide: MealPlanService, useValue: mealPlanService },
-                { provide: RECIPE_LOOKUP, useValue: recipeLookup },
-                { provide: QuickMealService, useValue: quickMeal },
                 {
                     provide: MEAL_PLAN_LIST_QUERY_STATE,
                     useValue: {
@@ -122,7 +138,7 @@ describe('MealPlanFacade request lifetime', () => {
                 },
             ],
         });
-        facade = TestBed.inject(MealPlanFacade);
+        listFacade = TestBed.inject(MealPlanListFacade);
         await waitForAsync(() => pending.observed);
         expect(pending.observed).toBe(true);
         writeAsync.mockClear();
@@ -252,12 +268,13 @@ describe('MealPlanFacade', () => {
         expect(facade.actionErrorKey()).toBe('MEAL_PLANS.ERROR_ADD_MEAL');
     });
     it('loads meal plans with selected diet type filter', async () => {
-        facade.loadPlans('Keto');
+        await waitForAsync(() => listFacade.plans().length > 0);
+        listFacade.loadPlans('Keto');
 
-        await waitForAsync(() => facade.plans().length > 0);
+        await waitForAsync(() => listFacade.plans().length > 0);
 
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, undefined);
-        expect(facade.plans()).toEqual([createSummary()]);
+        expect(listFacade.plans()).toEqual([createSummary()]);
     });
 
     it('loads selected plan detail and ignores empty ids', async () => {
@@ -284,17 +301,18 @@ describe('MealPlanFacade', () => {
     });
 
     it('recovers from catalog failure while preserving the diet filter', async () => {
+        await waitForAsync(() => listFacade.plans().length > 0);
         mealPlanService.getPage.mockReturnValueOnce(throwError(() => new Error('Unavailable')));
-        facade.loadPlans('Keto');
-        await waitForAsync(() => facade.hasLoadError());
-        expect(facade.hasLoadError()).toBe(true);
-        expect(facade.plans()).toEqual([]);
+        listFacade.loadPlans('Keto');
+        await waitForAsync(() => listFacade.hasLoadError());
+        expect(listFacade.hasLoadError()).toBe(true);
+        expect(listFacade.plans()).toEqual([]);
 
-        facade.retryPlans();
-        await waitForAsync(() => facade.plans().length > 0);
-        expect(facade.hasLoadError()).toBe(false);
+        listFacade.retryPlans();
+        await waitForAsync(() => listFacade.plans().length > 0);
+        expect(listFacade.hasLoadError()).toBe(false);
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, undefined);
-        expect(facade.plans()).toEqual([createSummary()]);
+        expect(listFacade.plans()).toEqual([createSummary()]);
     });
 
     it('runs success callback after generating a shopping list', () => {
@@ -329,82 +347,82 @@ describe('MealPlanFacade', () => {
     });
 });
 
-describe('MealPlanFacade pagination', () => {
+describe('MealPlanListFacade pagination', () => {
     beforeEach(() => {
         mealPlanService.getPage.mockReset();
         mealPlanService.getPage.mockReturnValue(of(createPage(1, MULTI_PAGE_TOTAL)));
     });
     it('keeps pagination while loading and retries the requested page after failure', async () => {
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, MULTI_PAGE_TOTAL)));
-        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        await waitForAsync(() => listFacade.totalItems() === MULTI_PAGE_TOTAL);
         const pending = new Subject<PageOf<MealPlanSummary>>();
         mealPlanService.getPage.mockReturnValueOnce(pending);
-        facade.changePage(1);
-        await waitForAsync(() => facade.isLoading());
-        expect(facade.totalItems()).toBe(MULTI_PAGE_TOTAL);
+        listFacade.changePage(1);
+        await waitForAsync(() => listFacade.isLoading());
+        expect(listFacade.totalItems()).toBe(MULTI_PAGE_TOTAL);
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
         pending.error(new Error('Unavailable'));
-        await waitForAsync(() => facade.hasLoadError());
-        expect(facade.pageIndex()).toBe(1);
-        expect(facade.totalItems()).toBe(MULTI_PAGE_TOTAL);
+        await waitForAsync(() => listFacade.hasLoadError());
+        expect(listFacade.pageIndex()).toBe(1);
+        expect(listFacade.totalItems()).toBe(MULTI_PAGE_TOTAL);
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
-        facade.retryPlans();
-        await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
+        listFacade.retryPlans();
+        await waitForAsync(() => listFacade.plans()[0]?.id === 'page-2');
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
-        expect(facade.hasLoadError()).toBe(false);
+        expect(listFacade.hasLoadError()).toBe(false);
     });
 
     it('resets pagination on filtering and ignores a late response from the previous filter', async () => {
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, MULTI_PAGE_TOTAL)));
-        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        await waitForAsync(() => listFacade.totalItems() === MULTI_PAGE_TOTAL);
         const stalePage = new Subject<PageOf<MealPlanSummary>>();
         mealPlanService.getPage.mockReturnValueOnce(stalePage);
-        facade.changePage(1);
-        await waitForAsync(() => facade.isLoading());
+        listFacade.changePage(1);
+        await waitForAsync(() => listFacade.isLoading());
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, 1)));
-        facade.loadPlans('Keto');
-        await waitForAsync(() => facade.plans()[0]?.id === 'page-1');
+        listFacade.loadPlans('Keto');
+        await waitForAsync(() => listFacade.plans()[0]?.id === 'page-1');
         stalePage.next(createPage(2, MULTI_PAGE_TOTAL));
         await waitForAsyncTasksAsync();
         TestBed.tick();
-        expect(facade.pageIndex()).toBe(0);
-        expect(facade.totalItems()).toBe(1);
-        expect(facade.plans()[0]?.id).toBe('page-1');
+        expect(listFacade.pageIndex()).toBe(0);
+        expect(listFacade.totalItems()).toBe(1);
+        expect(listFacade.plans()[0]?.id).toBe('page-1');
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith('Keto', 1, PAGE_SIZE, undefined);
     });
 
     it('bounds page requests and avoids reloading the current page', async () => {
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(1, MULTI_PAGE_TOTAL)));
-        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
-        facade.changePage(-1);
+        await waitForAsync(() => listFacade.totalItems() === MULTI_PAGE_TOTAL);
+        listFacade.changePage(-1);
         TestBed.tick();
         expect(mealPlanService.getPage).toHaveBeenCalledOnce();
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
-        facade.changePage(OUT_OF_RANGE_PAGE);
-        await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
-        expect(facade.pageIndex()).toBe(1);
+        listFacade.changePage(OUT_OF_RANGE_PAGE);
+        await waitForAsync(() => listFacade.plans()[0]?.id === 'page-2');
+        expect(listFacade.pageIndex()).toBe(1);
         expect(mealPlanService.getPage).toHaveBeenLastCalledWith(undefined, 2, PAGE_SIZE, undefined);
     });
 
     it('keeps the current page when either active filter is selected again', async () => {
-        await waitForAsync(() => facade.totalItems() === MULTI_PAGE_TOTAL);
+        await waitForAsync(() => listFacade.totalItems() === MULTI_PAGE_TOTAL);
         mealPlanService.getPage.mockReturnValueOnce(of(createPage(2, MULTI_PAGE_TOTAL)));
-        facade.changePage(1);
-        await waitForAsync(() => facade.plans()[0]?.id === 'page-2');
+        listFacade.changePage(1);
+        await waitForAsync(() => listFacade.plans()[0]?.id === 'page-2');
 
-        facade.loadPlans(null);
+        listFacade.loadPlans(null);
         TestBed.tick();
-        expect(facade.pageIndex()).toBe(1);
-        facade.filterBySource('all');
+        expect(listFacade.pageIndex()).toBe(1);
+        listFacade.filterBySource('all');
         TestBed.tick();
 
-        expect(facade.pageIndex()).toBe(1);
-        expect(facade.plans()[0]?.id).toBe('page-2');
+        expect(listFacade.pageIndex()).toBe(1);
+        expect(listFacade.plans()[0]?.id).toBe('page-2');
         expect(mealPlanService.getPage).toHaveBeenCalledTimes(2);
     });
 });
 
-describe('MealPlanFacade catalogue navigation', () => {
+describe('MealPlanListFacade catalogue navigation', () => {
     it('keeps the filtered catalogue available when normalizing and writing its URL fail', async () => {
         TestBed.resetTestingModule();
         const query: MealPlanListQuery = { page: 1, dietType: 'Keto', source: 'curated' };
@@ -417,22 +435,20 @@ describe('MealPlanFacade catalogue navigation', () => {
         };
         TestBed.configureTestingModule({
             providers: [
-                MealPlanFacade,
+                MealPlanListFacade,
                 { provide: MealPlanService, useValue: mealPlanService },
-                { provide: RECIPE_LOOKUP, useValue: recipeLookup },
-                { provide: QuickMealService, useValue: quickMeal },
                 { provide: MEAL_PLAN_LIST_QUERY_STATE, useValue: routeState },
             ],
         });
-        facade = TestBed.inject(MealPlanFacade);
-        await waitForAsync(() => facade.plans().length > 0);
+        listFacade = TestBed.inject(MealPlanListFacade);
+        await waitForAsync(() => listFacade.plans().length > 0);
         await waitForAsyncTasksAsync();
 
         expect(routeState.normalizePageAsync).toHaveBeenCalledOnce();
         expect(routeState.writeAsync).toHaveBeenCalledWith(query, { replaceUrl: false });
         expect(mealPlanService.getPage).toHaveBeenCalledExactlyOnceWith('Keto', 1, PAGE_SIZE, true);
-        expect(facade.plans()).toEqual([createSummary()]);
-        expect(facade.hasLoadError()).toBe(false);
+        expect(listFacade.plans()).toEqual([createSummary()]);
+        expect(listFacade.hasLoadError()).toBe(false);
     });
 });
 

@@ -9,14 +9,13 @@ import {
     type MealManageDto,
     MealSourceType,
 } from '../../../../../shared/models/meal.data';
-import type { Recipe } from '../../../../../shared/models/recipe.data';
 import { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
+import { recipeServingsFromInput, UNKNOWN_SERVING_MASS } from '../../../lib/recipe-serving/recipe-display-amount';
 import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 
 export type MealManageDtoCallbacks = {
     aiSessions: MealManageDto['aiSessions'];
     buildDateTime: () => Date;
-    recipeServingsFromDisplayInput: (recipe: Recipe, amount: number) => number;
     manualTotals: NutritionTotals;
 };
 
@@ -53,6 +52,7 @@ export function createMealItemValue(
         product,
         recipe,
         amount,
+        recipeMass: UNKNOWN_SERVING_MASS,
     };
 }
 
@@ -87,7 +87,7 @@ export function buildMealManageDto(formValue: MealFormValues, callbacks: MealMan
         comment: formValue.comment ?? undefined,
         imageUrl: image?.url ?? undefined,
         imageAssetId: image?.assetId ?? undefined,
-        items: mapMealItems(formValue.items, callbacks.recipeServingsFromDisplayInput),
+        items: formValue.items.flatMap(mapMealItem),
         aiSessions: callbacks.aiSessions,
         isNutritionAutoCalculated,
         ...buildManualNutritionPayload(isNutritionAutoCalculated, callbacks.manualTotals),
@@ -117,17 +117,7 @@ export function getMealItemInitialAmount(item: MealItem, recipeDisplayValueFromS
 
 export { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 
-function mapMealItems(
-    items: MealItemFormValues[],
-    recipeServingsFromDisplayInput: (recipe: Recipe, amount: number) => number,
-): MealItemManageDto[] {
-    return items.flatMap(item => mapMealItem(item, recipeServingsFromDisplayInput));
-}
-
-function mapMealItem(
-    item: MealItemFormValues,
-    recipeServingsFromDisplayInput: (recipe: Recipe, amount: number) => number,
-): MealItemManageDto[] {
+function mapMealItem(item: MealItemFormValues): MealItemManageDto[] {
     const amount = normalizeItemAmount(item.amount);
     const sourceType = item.sourceType;
 
@@ -140,7 +130,7 @@ function mapMealItem(
             {
                 recipeId: item.recipe.id,
                 productId: null,
-                amount: recipeServingsFromDisplayInput(item.recipe, amount),
+                amount: recipeServingsFromInput(amount, item.recipeMass),
                 origin: 'Manual',
             },
         ];

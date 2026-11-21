@@ -24,6 +24,8 @@ export type RecipeStepCardField<T> = {
     value: T;
 };
 
+export type RecipeStepFieldBlur = { field: 'description' } | { field: 'amount' | 'foodName'; ingredientIndex: number };
+
 export type RecipeStepCardState = {
     images?: ImageSelection[];
     description: RecipeStepCardField<StepFormValues['description']>;
@@ -80,7 +82,7 @@ export class RecipeStepCardComponent {
     public readonly focusDescription = input(false);
     public readonly focusHandled = output();
 
-    public readonly fieldBlur = output<{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
+    public readonly fieldBlur = output<RecipeStepFieldBlur>();
     public readonly removeStep = output();
     public readonly moveStep = output<-1 | 1>();
     public readonly toggleExpanded = output();
@@ -96,7 +98,6 @@ export class RecipeStepCardComponent {
         const image = step.imageUrl.value;
         return step.images ?? (image !== null && (image.url?.length ?? 0) > 0 ? [image] : []);
     });
-    public readonly stepImageChange = output<ImageSelection | null>();
     public readonly stepDescriptionChange = output<string>();
     public readonly ingredientTextChange = output<{ ingredientIndex: number; field: 'textName' | 'amountText'; value: string }>();
     public readonly ingredientAmountChange = output<{ ingredientIndex: number; amount: number | null }>();
@@ -228,10 +229,6 @@ export class RecipeStepCardComponent {
     protected onUploadingChange(uploading: boolean): void {
         this.uploading.set(uploading);
         this.photosUploading.emit(uploading);
-    }
-
-    protected onStepImageChange(value: ImageSelection | null | undefined): void {
-        this.stepImageChange.emit(value ?? null);
     }
 
     protected onStepDescriptionInput(value: FdUiInputValue): void {

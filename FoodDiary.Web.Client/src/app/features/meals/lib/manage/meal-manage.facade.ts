@@ -42,7 +42,7 @@ import type {
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import { createMealItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
-import { displayRecipeServings, recipeDisplayToServings } from '../recipe-serving/recipe-display-amount';
+import { displayRecipeServings, recipeServingsFromInput, type ServingMassResult } from '../recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
 
@@ -170,24 +170,13 @@ export class MealManageFacade {
 
         return forkJoin(
             items.map(item => {
-                const recipe = item.sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null;
-                const amount =
-                    recipe !== null && item.sourceType === MealSourceType.Recipe
-                        ? this.recipeWeight
-                              .loadServingMass(recipe)
-                              .pipe(map(() => this.recipeDisplayValueFromStoredServings(recipe, item.amount)))
-                        : of(item.amount);
-
-                return amount.pipe(
-                    map(value =>
-                        this.createMealItem(
-                            item.sourceType === MealSourceType.Product ? (item.product ?? null) : null,
-                            recipe,
-                            value,
-                            item.sourceType,
-                        ),
-                    ),
-                );
+                if (item.sourceType === MealSourceType.Product) {
+                    return of(this.createMealItem(item.product, null, item.amount, item.sourceType));
+                }
+                const recipe = item.recipe;
+                return recipe === null
+                    ? of(this.createMealItem(null, null, item.amount, item.sourceType))
+                    : this.recipeWeight.loadServingMass(recipe).pipe(map(mass => this.createRecipeItem(recipe, item.amount, mass)));
             }),
         );
     }
@@ -198,12 +187,7 @@ export class MealManageFacade {
         amount: number | null = null,
         sourceType: MealSourceType = MealSourceType.Product,
     ): MealItemFormValues {
-        return {
-            sourceType,
-            product,
-            recipe,
-            amount,
-        };
+        return createMealItemValue(product, recipe, amount, sourceType);
     }
 
     public configureItemType(item: MealItemFormValues, type: MealSourceType, clearSelection = false): MealItemFormValues {
@@ -237,28 +221,22 @@ export class MealManageFacade {
             return createMealItemValue(selection.product, null, this.resolveProductAmount(selection.product), MealSourceType.Product);
         }
 
-        const amount = await this.resolveRecipeDisplayValueAsync(
-            selection.recipe,
-            recipeServingsFromStored(MEAL_MANAGE_DEFAULT_ITEM_AMOUNT),
-        );
-        return createMealItemValue(null, selection.recipe, amount, MealSourceType.Recipe);
+        return this.prepareRecipeItemAsync(selection.recipe, recipeServingsFromStored(MEAL_MANAGE_DEFAULT_ITEM_AMOUNT));
     }
 
-    public async resolveRecipeDisplayValueAsync(recipe: Recipe | null, servingsAmount: RecipeServings): Promise<number> {
+    public async prepareRecipeItemAsync(recipe: Recipe, servings: RecipeServings): Promise<MealItemFormValues> {
         const mass = await firstValueFrom(this.recipeWeight.loadServingMass(recipe));
-        return displayRecipeServings(servingsAmount, mass).value;
+        return this.createRecipeItem(recipe, servings, mass);
     }
 
-    public recipeServingsFromDisplayInput(recipe: Recipe | null, amount: number): RecipeServings {
-        return recipeDisplayToServings(this.recipeWeight.displayAmountFromInput(recipe, amount));
-    }
-
-    public recipeDisplayUnit(recipe: Recipe): 'grams' | 'servings' {
-        return this.recipeWeight.hasServingWeight(recipe) ? 'grams' : 'servings';
-    }
-
-    public recipeDisplayValueFromStoredServings(recipe: Recipe | null, servings: RecipeServings): number {
-        return this.recipeWeight.displayServings(recipe, servings).value;
+    private createRecipeItem(recipe: Recipe, servings: RecipeServings, recipeMass: ServingMassResult): MealItemFormValues {
+        return {
+            sourceType: MealSourceType.Recipe,
+            product: null,
+            recipe,
+            amount: displayRecipeServings(servings, recipeMass).value,
+            recipeMass,
+        };
     }
 
     public buildNutritionSummaryStateFromValues(
@@ -324,7 +302,7 @@ export class MealManageFacade {
             return this.addProductNutritionTotals(totals, item.product, amount);
         }
 
-        return this.addRecipeNutritionTotals(totals, item.recipe, amount);
+        return this.addRecipeNutritionTotals(totals, item.recipe, amount, item.recipeMass);
     }
 
     private addProductNutritionTotals(totals: NutritionTotals, food: Product | null, amount: number): NutritionTotals {
@@ -342,7 +320,12 @@ export class MealManageFacade {
         return totals;
     }
 
-    private addRecipeNutritionTotals(totals: NutritionTotals, recipe: Recipe | null, amount: number): NutritionTotals {
+    private addRecipeNutritionTotals(
+        totals: NutritionTotals,
+        recipe: Recipe | null,
+        amount: number,
+        mass: ServingMassResult,
+    ): NutritionTotals {
         if (recipe === null || !Number.isFinite(recipe.servings) || recipe.servings <= 0) {
             return totals;
         }
@@ -353,7 +336,7 @@ export class MealManageFacade {
         const carbsPerServing = (recipe.totalCarbs ?? 0) / recipe.servings;
         const fiberPerServing = (recipe.totalFiber ?? 0) / recipe.servings;
         const alcoholPerServing = (recipe.totalAlcohol ?? 0) / recipe.servings;
-        const servingsAmount = this.recipeServingsFromDisplayInput(recipe, amount);
+        const servingsAmount = recipeServingsFromInput(amount, mass);
 
         totals.calories += caloriesPerServing * servingsAmount;
         totals.proteins += proteinsPerServing * servingsAmount;

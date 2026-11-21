@@ -1150,7 +1150,7 @@ describe('CycleTrackingFacade factors', () => {
             notes: 'pill',
         });
 
-        facade.saveFactor();
+        void facade.submitFactorAsync();
 
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -1170,14 +1170,14 @@ describe('CycleTrackingFacade factors', () => {
             startDate: calendarDate('2026-04-01'),
         }));
 
-        const success = await submit(facade.factorForm);
+        const success = await facade.submitFactorAsync();
 
         expect(success).toBe(true);
         expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
     });
 
     it('does not save a factor when current cycle is missing', () => {
-        facade.saveFactor();
+        void facade.submitFactorAsync();
 
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });
@@ -1220,7 +1220,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const notes = 'я'.repeat(NOTE_LIMIT + 1);
         facade.factorModel.update(value => ({ ...value, notes }));
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(facade.factorForm.notes().invalid()).toBe(true);
         expect(facade.factorForm.notes().touched()).toBe(true);
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
@@ -1238,17 +1238,17 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.initialize();
         facade.factorModel.update(value => ({ ...value, notes }));
         expect(facade.factorForm.notes().invalid()).toBe(false);
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
     });
 
     it('allows correcting a rejected draft and then saves once', async () => {
         facade.initialize();
         facade.factorModel.update(value => ({ ...value, notes: `${'🙂'.repeat(EMOJI_NOTE_LIMIT)}x` }));
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
         facade.factorModel.update(value => ({ ...value, notes: 'valid note' }));
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ notes: 'valid note' }));
     });
@@ -1259,7 +1259,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.initialize();
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02') }));
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith(
             'cycle-1',
             expect.objectContaining({ factorId: 'factor-1', startDate: '2026-04-02' }),
@@ -1271,7 +1271,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), notes: 'draft' }));
         cyclesService.upsertFactor.mockReturnValue(throwError(() => ({ error: { error: 'Cycle.FactorIdentityConflict' } })));
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(facade.factorError()).toBe('CYCLE_TRACKING.FACTOR_IDENTITY_CONFLICT');
         expect(facade.editingFactorId()).toBe('factor-1');
         expect(facade.factorModel().notes).toBe('draft');
@@ -1297,7 +1297,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         facade.factorModel.update(value => ({ ...value, notes: '   ' }));
 
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
 
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ clearNotes: true }));
     });
@@ -1306,7 +1306,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.initialize();
         facade.factorModel.update(value => ({ ...value, notes: 'saved note' }));
 
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
 
         expect(facade.factorModel().notes).toBeNull();
         expect(facade.editingFactorId()).toBeNull();
@@ -1317,7 +1317,7 @@ describe('CycleTrackingFacade factor drafts', () => {
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-02'), endDate: calendarDate('2026-04-01') }));
 
         expect(facade.factorForm().invalid()).toBe(true);
-        expect(await submit(facade.factorForm)).toBe(false);
+        expect(await facade.submitFactorAsync()).toBe(false);
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });
 });
@@ -1329,13 +1329,13 @@ describe('CycleTrackingFacade factor save lifecycle', () => {
         facade.factorModel.update(value => ({ ...value, notes: 'retry note' }));
         cyclesService.upsertFactor.mockReturnValueOnce(throwError(() => new Error('offline')));
 
-        await expect(submit(facade.factorForm)).resolves.toBe(true);
+        await expect(facade.submitFactorAsync()).resolves.toBe(true);
 
         expect(facade.isSavingFactor()).toBe(false);
         expect(facade.editingFactorId()).toBe('factor-1');
         expect(facade.factorModel().notes).toBe('retry note');
         expect(facade.factorError()).toBe('CYCLE_TRACKING.SAVE_FACTOR_FAILED');
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).toHaveBeenCalledTimes(2);
         expect(facade.factorError()).toBeNull();
     });
@@ -1345,11 +1345,11 @@ describe('CycleTrackingFacade factor save lifecycle', () => {
         facade.editFactor(entityId<'cycle-factor'>('factor-1'));
         const pending = new Subject<CycleResponse>();
         cyclesService.upsertFactor.mockReturnValue(pending);
-        const submission = submit(facade.factorForm);
+        const submission = facade.submitFactorAsync();
 
         facade.cancelFactorEdit();
         facade.editFactor(entityId<'cycle-factor'>('missing-factor'));
-        facade.saveFactor();
+        void facade.submitFactorAsync();
 
         expect(facade.editingFactorId()).toBe('factor-1');
         expect(facade.factorForm.notes().disabled()).toBe(true);
@@ -1404,7 +1404,7 @@ describe('CycleTrackingFacade ending factors', () => {
         const ending = facade.endFactorTodayAsync(entityId<'cycle-factor'>('factor-1'));
 
         facade.cancelFactorEdit();
-        facade.saveFactor();
+        void facade.submitFactorAsync();
 
         expect(facade.editingFactorId()).toBe('factor-1');
         expect(facade.factorForm.notes().disabled()).toBe(true);
@@ -1421,14 +1421,14 @@ describe('CycleTrackingFacade ending factors', () => {
         facade.factorModel.update(value => ({ ...value, startDate: calendarDate('2026-04-01'), endDate: calendarDate('2026-04-01') }));
 
         expect(facade.factorForm().invalid()).toBe(false);
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
         expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
     });
 
     it('does not clear an existing note through a blank new-factor form', async () => {
         facade.initialize();
 
-        await submit(facade.factorForm);
+        await facade.submitFactorAsync();
 
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', expect.objectContaining({ clearNotes: false }));
     });

@@ -58,18 +58,51 @@ describe('MealAiSessionsComponent rows', () => {
 });
 
 describe('MealAiSessionsComponent actions', () => {
-    it('should emit session actions with session index', async () => {
-        const { component } = await setupComponentAsync([createSession()]);
-        const editHandler = vi.fn();
-        const deleteHandler = vi.fn();
+    it('emits the rendered session for editing and removal', async () => {
+        const session = createSession();
+        const { component, fixture } = await setupComponentAsync([session]);
+        const host = fixture.nativeElement as HTMLElement;
+        const editHandler = vi.fn<(rendered: MealAiSessionManageDto) => void>();
+        const deleteHandler = vi.fn<(rendered: MealAiSessionManageDto) => void>();
         component['editSession'].subscribe(editHandler);
-        component['deleteSession'].subscribe(deleteHandler);
+        component['deleteSession'].subscribe(request => {
+            deleteHandler(request.session);
+        });
 
-        component['onEditSession'](1);
-        component['onDeleteSession'](2);
+        summaryButton(host, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_EDIT"]').click();
+        summaryButton(host, 'button[aria-label="MEAL_MANAGE.ITEMS_AI_DELETE"]').click();
 
-        expect(editHandler).toHaveBeenCalledWith(1);
-        expect(deleteHandler).toHaveBeenCalledWith(2);
+        expect(editHandler).toHaveBeenCalledOnce();
+        expect(editHandler.mock.calls[0][0]).toBe(session);
+        expect(deleteHandler).toHaveBeenCalledOnce();
+        expect(deleteHandler.mock.calls[0][0]).toBe(session);
+    });
+});
+
+describe('Saved meal photo quantities', () => {
+    it('preserves the saved litres and still localizes millilitres when language changes', async () => {
+        const { fixture } = await setupComponentAsync([
+            {
+                items: [
+                    createAiItem({ nameEn: 'juice', amount: 0.5, unit: 'l' }),
+                    createAiItem({ nameEn: 'milk', amount: 250, unit: 'ml' }),
+                ],
+            },
+        ]);
+        const host = fixture.nativeElement as HTMLElement;
+        const amounts = (): string[] =>
+            Array.from(host.querySelectorAll('.meal-manage__ai-summary-amount'), amount => amount.textContent.trim());
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { GENERAL: { UNITS: { ML: 'ml' } } });
+        translate.setTranslation('ru', { GENERAL: { UNITS: { ML: 'мл' } } });
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(amounts()).toEqual(['0,5 l', '250 мл']);
+
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+        expect(amounts()).toEqual(['0.5 l', '250 ml']);
     });
 });
 
@@ -96,11 +129,12 @@ describe('Meal photo summary after deleting a recognition session', () => {
             const host = fixture.nativeElement as HTMLElement;
             const rowSelector = '.meal-manage__ai-summary';
             const toggleSelector = '.meal-manage__ai-summary-more button';
-            component.deleteSession.subscribe(index => {
+            component.deleteSession.subscribe(({ session, onRemoved }) => {
                 fixture.componentRef.setInput(
                     'aiSessions',
-                    sessions.filter((_, rowIndex) => rowIndex !== index),
+                    sessions.filter(current => current !== session),
                 );
+                onRemoved(sessions.indexOf(session));
             });
 
             const rows = host.querySelectorAll<HTMLElement>(rowSelector);

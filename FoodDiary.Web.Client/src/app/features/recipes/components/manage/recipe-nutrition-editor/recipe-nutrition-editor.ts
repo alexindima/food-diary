@@ -181,12 +181,8 @@ export class RecipeNutritionEditorComponent {
         return warning === null ? null : { kind: 'caloriesMismatch', ...warning };
     }
 
-    private getNumberValue(value: number | string | null): number {
-        if (value === null || value === '') {
-            return 0;
-        }
-
-        const normalized = typeof value === 'string' ? Number(value.replace(',', '.').replaceAll(/[^\d.-]/g, '')) : Number(value);
+    private getNumberValue(value: number | null): number {
+        const normalized = value ?? 0;
         return Number.isFinite(normalized) ? Math.max(0, normalized) : 0;
     }
 

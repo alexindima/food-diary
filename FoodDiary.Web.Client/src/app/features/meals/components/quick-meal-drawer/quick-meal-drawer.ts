@@ -19,7 +19,9 @@ import { ProductType } from '../../../../shared/models/product.data';
 import { recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { type QuickMealItem, QuickMealService } from '../../lib/quick/quick-meal.service';
+import { recipeServingsFromInput } from '../../lib/recipe-serving/recipe-display-amount';
 import type { MealItemFormValues } from '../manage/meal-manage-lib/meal-manage.types';
+import { createMealItemValue } from '../manage/meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions } from '../manage/meal-manage-lib/meal-manage-options.mapper';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from '../manage/meal-manual-item-dialog/meal-manual-item-dialog';
 
@@ -123,12 +125,18 @@ export class QuickMealDrawerComponent {
         });
         let hadItems = this.hasItems();
         effect(() => {
-            const hasItems = this.hasItems();
+            const items = this.items();
+            const hasItems = items.length > 0;
             untracked(() => {
                 if (!hasItems) {
                     this.resetUiState();
                 } else if (!hadItems) {
                     this.isCollapsed.set(false);
+                }
+
+                const edit = this.activeEdit;
+                if (edit !== undefined && !items.includes(edit.item)) {
+                    this.cancelEdit();
                 }
                 hadItems = hasItems;
             });
@@ -268,16 +276,10 @@ export class QuickMealDrawerComponent {
 
     private async createDialogItemAsync(item: QuickMealItem): Promise<MealItemFormValues> {
         if (item.type === 'product') {
-            return { sourceType: MealSourceType.Product, product: item.product, recipe: null, amount: item.amount };
+            return createMealItemValue(item.product, null, item.amount);
         }
 
-        const amount = await this.mealManageFacade.resolveRecipeDisplayValueAsync(item.recipe, recipeServingsFromStored(item.amount));
-        return {
-            sourceType: MealSourceType.Recipe,
-            product: null,
-            recipe: item.recipe,
-            amount,
-        };
+        return this.mealManageFacade.prepareRecipeItemAsync(item.recipe, recipeServingsFromStored(item.amount));
     }
 
     private toQuickMealItem(item: MealItemFormValues): QuickMealItem | null {
@@ -306,7 +308,7 @@ export class QuickMealDrawerComponent {
             key: `recipe-${recipe.id}`,
             type: 'recipe',
             recipe,
-            amount: this.mealManageFacade.recipeServingsFromDisplayInput(recipe, amount),
+            amount: recipeServingsFromInput(amount, item.recipeMass),
         };
     }
 }

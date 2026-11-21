@@ -118,16 +118,23 @@ export type FastingHistoryQuery = {
     limit?: number;
 };
 
-export const FASTING_PROTOCOLS: FastingProtocolOption[] = [
-    { value: 'Fast16Eat8', labelKey: 'FASTING.PROTOCOL_16_8', hours: 16, category: 'intermittent' },
-    { value: 'Fast18Eat6', labelKey: 'FASTING.PROTOCOL_18_6', hours: 18, category: 'intermittent' },
-    { value: 'Fast20Eat4', labelKey: 'FASTING.PROTOCOL_20_4', hours: 20, category: 'intermittent' },
-    { value: 'CustomIntermittent', labelKey: 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT', hours: 16, category: 'intermittent' },
-    { value: 'Fast24', labelKey: 'FASTING.PROTOCOL_24_0', hours: 24, category: 'extended' },
-    { value: 'Fast36', labelKey: 'FASTING.PROTOCOL_36_0', hours: 36, category: 'extended' },
-    { value: 'Fast72', labelKey: 'FASTING.PROTOCOL_72_0', hours: 72, category: 'extended' },
-    { value: 'Custom', labelKey: 'FASTING.PROTOCOL_CUSTOM', hours: 16, category: 'extended' },
-];
+export const FASTING_PROTOCOL_CATALOG: { readonly [Protocol in FastingProtocol]: FastingProtocolOption & { value: Protocol } } = {
+    Fast16Eat8: { value: 'Fast16Eat8', labelKey: 'FASTING.PROTOCOL_16_8', hours: 16, category: 'intermittent' },
+    Fast18Eat6: { value: 'Fast18Eat6', labelKey: 'FASTING.PROTOCOL_18_6', hours: 18, category: 'intermittent' },
+    Fast20Eat4: { value: 'Fast20Eat4', labelKey: 'FASTING.PROTOCOL_20_4', hours: 20, category: 'intermittent' },
+    CustomIntermittent: {
+        value: 'CustomIntermittent',
+        labelKey: 'FASTING.PROTOCOL_CUSTOM_INTERMITTENT',
+        hours: 16,
+        category: 'intermittent',
+    },
+    Fast24: { value: 'Fast24', labelKey: 'FASTING.PROTOCOL_24_0', hours: 24, category: 'extended' },
+    Fast36: { value: 'Fast36', labelKey: 'FASTING.PROTOCOL_36_0', hours: 36, category: 'extended' },
+    Fast72: { value: 'Fast72', labelKey: 'FASTING.PROTOCOL_72_0', hours: 72, category: 'extended' },
+    Custom: { value: 'Custom', labelKey: 'FASTING.PROTOCOL_CUSTOM', hours: 16, category: 'extended' },
+};
+
+export const FASTING_PROTOCOLS: FastingProtocolOption[] = Object.values(FASTING_PROTOCOL_CATALOG);
 
 export type CyclicPresetOption = {
     fastDays: number;

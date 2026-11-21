@@ -222,11 +222,9 @@ export class AiInputBarComponent {
         });
     }
 
-    protected onTextInput(event: Event): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.speechErrorKey.set(null);
-            this.voiceText.set(event.target.value);
-        }
+    protected onTextInput(value: string): void {
+        this.speechErrorKey.set(null);
+        this.voiceText.set(value);
     }
 
     protected async submitTextAsync(source: AiRecognitionSource = 'Text'): Promise<void> {

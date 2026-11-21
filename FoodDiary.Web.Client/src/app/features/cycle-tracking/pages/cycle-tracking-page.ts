@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, type Type, untracked } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    linkedSignal,
+    signal,
+    type Type,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -47,7 +58,7 @@ import {
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
 } from '../../../shared/models/cycle.data';
-import type { CycleFactorId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
+import type { CycleFactorId, CycleProfileId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CurrentLocalDayService } from '../../../shared/platform/current-local-day.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
@@ -129,8 +140,15 @@ export class CycleTrackingPageComponent {
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly languageVersion = signal(0);
-    protected readonly isDayEditorOpen = signal(false);
-    protected readonly isSettingsOpen = signal(false);
+    private readonly cycleProfileId = computed(() => this.facade.cycle()?.id);
+    protected readonly isDayEditorOpen = linkedSignal({
+        source: this.cycleProfileId,
+        computation: () => false,
+    });
+    protected readonly isSettingsOpen = linkedSignal({
+        source: this.cycleProfileId,
+        computation: () => false,
+    });
     protected readonly isHistoryExpanded = signal(false);
 
     protected readonly isLoading = this.facade.isLoading;
@@ -166,10 +184,6 @@ export class CycleTrackingPageComponent {
         const field = this.startCycleForm.cycleTrackingConsentGranted();
         return field.invalid() && field.touched() ? 'CYCLE_TRACKING.CONSENT_REQUIRED' : null;
     });
-    protected readonly trackingStartDateError = computed(() => {
-        const field = this.startCycleForm.trackingStartDate();
-        return field.invalid() && field.touched() ? 'FORM_ERRORS.REQUIRED' : null;
-    });
     protected readonly settingsForm = this.facade.settingsForm;
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
@@ -179,10 +193,6 @@ export class CycleTrackingPageComponent {
         return field.touched() && field.errors().some(error => error.kind === 'notesTooLong')
             ? 'CYCLE_TRACKING.FACTOR_NOTES_TOO_LONG'
             : null;
-    });
-    protected readonly factorStartDateError = computed(() => {
-        const field = this.factorForm.startDate();
-        return field.invalid() && field.touched() ? 'FORM_ERRORS.REQUIRED' : null;
     });
     protected readonly factorEndDateError = computed(() => {
         const field = this.factorForm.endDate();
@@ -308,14 +318,6 @@ export class CycleTrackingPageComponent {
                 });
             }
         });
-        effect(() => {
-            if (this.facade.cycle() === null) {
-                untracked(() => {
-                    this.isSettingsOpen.set(false);
-                    this.isDayEditorOpen.set(false);
-                });
-            }
-        });
         this.facade.initialize();
     }
 
@@ -349,7 +351,7 @@ export class CycleTrackingPageComponent {
             this.editDay(formatDateInputValue(today));
             return;
         }
-        this.facade.cancelDayEdit();
+        this.facade.beginDayEntry();
         this.isSettingsOpen.set(false);
         this.isDayEditorOpen.set(true);
     }
@@ -383,7 +385,8 @@ export class CycleTrackingPageComponent {
     }
 
     protected clearDay(date: string): void {
-        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
+        const profileId = this.cycle()?.id;
+        if (profileId === undefined || this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
             return;
         }
         this.openRouteDialog(FdUiConfirmDialogComponent, {
@@ -397,7 +400,9 @@ export class CycleTrackingPageComponent {
         })
             .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
-                this.facade.clearDay(date);
+                if (this.cycle()?.id === profileId) {
+                    this.facade.clearDay(date);
+                }
             });
     }
 
@@ -427,7 +432,7 @@ export class CycleTrackingPageComponent {
         void this.facade.toggleMenstrualEpisodePredictionAsync(episodeId);
     }
 
-    protected deleteMenstrualEpisode(episodeId: MenstrualEpisodeId): void {
+    protected deleteMenstrualEpisode(episodeId: MenstrualEpisodeId, renderedProfileId: CycleProfileId): void {
         this.openRouteDialog(FdUiConfirmDialogComponent, {
             size: 'sm',
             data: {
@@ -439,12 +444,15 @@ export class CycleTrackingPageComponent {
         })
             .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
-                void this.facade.deleteMenstrualEpisodeAsync(episodeId);
+                if (this.cycle()?.id === renderedProfileId) {
+                    void this.facade.deleteMenstrualEpisodeAsync(episodeId);
+                }
             });
     }
 
     protected deleteCycle(): void {
-        if (this.isSavingSettings() || this.isDeletingCycle() || this.cycle() === null) {
+        const profileId = this.cycle()?.id;
+        if (profileId === undefined || this.isSavingSettings() || this.isDeletingCycle()) {
             return;
         }
         this.openRouteDialog(FdUiConfirmDialogComponent, {
@@ -458,8 +466,16 @@ export class CycleTrackingPageComponent {
         })
             .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
-                void this.facade.deleteCycleAsync();
+                if (this.cycle()?.id === profileId) {
+                    void this.facade.deleteCycleAsync();
+                }
             });
+    }
+
+    protected submitFactor(renderedProfileId: CycleProfileId): void {
+        if (this.cycle()?.id === renderedProfileId) {
+            void this.facade.submitFactorAsync();
+        }
     }
 
     protected editFactor(factorId: CycleFactorId): void {

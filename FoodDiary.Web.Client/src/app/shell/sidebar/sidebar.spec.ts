@@ -31,8 +31,7 @@ type SidebarHarness = {
     pendingRoute: WritableSignal<string | null>;
     toggleBodyTracking: () => void;
     toggleFoodTracking: () => void;
-    toggleMobileFood: (trigger?: HTMLElement) => void;
-    toggleUserMenu: (trigger?: HTMLElement) => void;
+    toggleMobileFood: (trigger: HTMLElement) => void;
 };
 
 describe('SidebarComponent behavior', () => {

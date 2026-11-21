@@ -27,6 +27,7 @@ import {
 } from '../../shared/models/product.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
+import { BrowserWindowService } from '../../shared/platform/browser-window.service';
 import { ViewportService } from '../../shared/platform/viewport.service';
 import { QuickMealService } from '../meals/contracts/quick-meal';
 import { USDA_PRODUCT_LINK } from '../usda/contracts/usda-product-link';
@@ -322,6 +323,53 @@ describe('Routed product catalog state', () => {
     });
 });
 
+describe('Routed catalog pagination', () => {
+    it('scrolls the catalog header into view and shows the selected page', async () => {
+        const { products } = configureRealCatalogDialogs();
+        products.queryOverview.mockReturnValueOnce(
+            of({
+                allProducts: page([CATALOG_ITEM], 1, LAST_AVAILABLE_PAGE),
+                recentItems: [],
+                favoriteItems: [],
+                favoriteTotalCount: 0,
+            }),
+        );
+        products.query.mockReturnValueOnce(of(page([COFFEE_ITEM], LAST_AVAILABLE_PAGE, LAST_AVAILABLE_PAGE)));
+        const harness = await RouterTestingHarness.create('/products');
+        const host = catalogRoot(harness);
+        const header = host.querySelector('fd-page-header');
+        const pagination = host.querySelector('fd-ui-pagination');
+        if (!(header instanceof HTMLElement) || !(pagination instanceof HTMLElement)) {
+            throw new Error('Expected a catalog header and pagination');
+        }
+        const scroll = vi.fn<HTMLElement['scrollIntoView']>();
+        Object.defineProperty(header, 'scrollIntoView', { value: scroll });
+
+        dialogButton(pagination, String(LAST_AVAILABLE_PAGE)).click();
+        await waitForCatalogAsync(harness, COFFEE_ITEM.name);
+
+        expect(scroll).toHaveBeenCalledExactlyOnceWith({ behavior: 'smooth', block: 'start' });
+        expect(products.query).toHaveBeenCalledWith(LAST_AVAILABLE_PAGE, PAGE_SIZE, expect.any(Object), expect.any(Object));
+        expect(host.textContent).not.toContain(CATALOG_ITEM.name);
+        const router = TestBed.inject(Router);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ page: String(LAST_AVAILABLE_PAGE) });
+    });
+});
+
+describe('Routed catalog quick meal actions', () => {
+    it('adds a recent product to the meal draft from its separate add action', async () => {
+        const { addToMeal, openDialog } = configureCatalog();
+        const harness = await RouterTestingHarness.create('/products');
+        const host = catalogRoot(harness);
+        expect(host.querySelector('.recent-products__open')?.textContent).toContain(RECENT_ITEM.name);
+
+        button(host, '.recent-products__item fd-ui-button button').click();
+
+        expect(addToMeal).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: RECENT_ITEM.id, name: RECENT_ITEM.name }));
+        expect(openDialog).not.toHaveBeenCalled();
+    });
+});
+
 describe('Routed catalog advanced filters', () => {
     it('keeps an invalid range local and updates the URL only when the corrected filters are applied', async () => {
         vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
@@ -494,7 +542,8 @@ describe('Routed catalog barcode scanner', () => {
     it('releases a pending scan when the catalog route is left', async () => {
         const { openDialog, products } = configureCatalog();
         const closed = new Subject<string | null>();
-        openDialog.mockReturnValueOnce({ afterClosed: () => closed });
+        const close = vi.fn<() => void>();
+        openDialog.mockReturnValueOnce({ afterClosed: () => closed, close });
         const harness = await RouterTestingHarness.create('/products');
         button(catalogRoot(harness), 'button[aria-label="PRODUCT_LIST.SCAN_BARCODE"]').click();
         expect(closed.observed).toBe(true);
@@ -502,6 +551,7 @@ describe('Routed catalog barcode scanner', () => {
         await harness.navigateByUrl('/other');
 
         expect(closed.observed).toBe(false);
+        expect(close).toHaveBeenCalledOnce();
         closed.next(SCANNED_BARCODE);
         closed.complete();
         expect(products.query).not.toHaveBeenCalled();
@@ -692,11 +742,20 @@ describe('Rendered catalog favorites picker', () => {
         expect(removeFavorite).toHaveBeenLastCalledWith(restored.id);
     });
 
-    it('keeps an inaccessible saved product in the picker and allows adding it when access returns', async () => {
+    it('keeps an inaccessible favorite in the picker and uses the current product when access returns', async () => {
         const { products, addToMeal } = configureFavoritesPicker();
         const harness = await RouterTestingHarness.create('/products');
         const picker = openFavoritesPicker(harness);
-        products.getById.mockReturnValueOnce(of(null));
+        const currentProduct: Product = {
+            ...CATALOG_ITEM,
+            name: 'Olive oil with updated packaging',
+            imageUrl: '/current-front.jpg',
+            images: [
+                { imageAssetId: null, imageUrl: '/current-front.jpg' },
+                { imageAssetId: null, imageUrl: '/current-back.jpg' },
+            ],
+        };
+        products.getById.mockReturnValueOnce(of(null)).mockReturnValueOnce(of(currentProduct));
 
         dialogButton(picker, 'PRODUCT_FAVORITES.ADD').click();
         TestBed.tick();
@@ -706,7 +765,7 @@ describe('Rendered catalog favorites picker', () => {
         dialogButton(picker, 'PRODUCT_FAVORITES.ADD').click();
         TestBed.tick();
         expect(products.getById).toHaveBeenCalledTimes(2);
-        expect(addToMeal).toHaveBeenCalledExactlyOnceWith(CATALOG_ITEM, favoriteFor(CATALOG_ITEM).preferredPortionAmount);
+        expect(addToMeal).toHaveBeenCalledExactlyOnceWith(currentProduct, favoriteFor(CATALOG_ITEM).preferredPortionAmount);
         expect(picker.isConnected).toBe(false);
     });
 });
@@ -1286,7 +1345,8 @@ describe('Product dialog actions', () => {
     it('releases a pending product detail result when the catalog route is left', async () => {
         const { openDialog, navigateToEdit } = configureCatalog();
         const closed = new Subject<ProductDetailActionResult>();
-        openDialog.mockReturnValueOnce({ afterClosed: () => closed });
+        const close = vi.fn<() => void>();
+        openDialog.mockReturnValueOnce({ afterClosed: () => closed, close });
         const harness = await RouterTestingHarness.create('/products');
         button(catalogRoot(harness), '.recent-products__open').click();
         await vi.waitFor(() => {
@@ -1301,6 +1361,7 @@ describe('Product dialog actions', () => {
 
         expect(navigateToEdit).not.toHaveBeenCalled();
         expect(listenerSurvived).toBe(false);
+        expect(close).toHaveBeenCalledOnce();
         expect(catalogRoot(harness).textContent).toContain('Other page');
     });
 
@@ -1376,6 +1437,55 @@ describe('Catalog product gallery details', () => {
         });
         expect(TestBed.inject(Router).url).toBe('/products');
         expect(navigateToEdit).not.toHaveBeenCalled();
+    });
+});
+
+describe('Product catalog owned dialogs on route departure', () => {
+    it('closes the current product details and leaves an independent dialog open', async () => {
+        const { navigateToEdit } = configureRealCatalogDialogs();
+        const harness = await RouterTestingHarness.create('/products');
+        button(catalogRoot(harness), '.recent-products__open').click();
+        const detail = await vi.waitFor(() => {
+            const opened = document.querySelector('fd-product-detail');
+            expect(opened?.querySelector('h2')?.textContent).toContain(RECENT_ITEM.name);
+            return opened;
+        });
+        const independent = TestBed.inject(FdUiDialogService).open(IndependentDialogComponent, { closeOnNavigation: false });
+
+        await harness.navigateByUrl('/other', OtherPageComponent);
+
+        expect(catalogRoot(harness).textContent).toContain('Other page');
+        expect(detail?.isConnected).toBe(false);
+        expect(document.querySelector('fd-product-detail')).toBeNull();
+        expect(document.querySelector('fd-test-independent-dialog')?.textContent).toContain('Independent dialog');
+        expect(navigateToEdit).not.toHaveBeenCalled();
+        independent.close();
+    });
+
+    it('closes the scanner and stops camera tracks granted after leaving the catalog', async () => {
+        const { products } = configureRealCatalogDialogs();
+        const browserWindow = TestBed.inject(BrowserWindowService);
+        const camera = new Subject<MediaStream>();
+        const stopTrack = vi.fn<MediaStreamTrack['stop']>();
+        const stream = { getTracks: () => [{ stop: stopTrack }] } as unknown as MediaStream;
+        vi.spyOn(browserWindow, 'createBarcodeDetector').mockReturnValue({ detect: vi.fn() });
+        const requestCamera = vi.spyOn(browserWindow, 'getUserMediaAsync').mockReturnValue(firstValueFrom(camera));
+        const harness = await RouterTestingHarness.create('/products');
+        button(catalogRoot(harness), 'button[aria-label="PRODUCT_LIST.SCAN_BARCODE"]').click();
+        TestBed.tick();
+        expect(document.querySelector('fd-barcode-scanner')).not.toBeNull();
+        expect(requestCamera).toHaveBeenCalledExactlyOnceWith({ video: { facingMode: 'environment' } });
+
+        await harness.navigateByUrl('/other', OtherPageComponent);
+
+        expect(catalogRoot(harness).textContent).toContain('Other page');
+        expect(document.querySelector('fd-barcode-scanner')).toBeNull();
+        camera.next(stream);
+        camera.complete();
+        await vi.waitFor(() => {
+            expect(stopTrack).toHaveBeenCalledOnce();
+        });
+        expect(products.query).not.toHaveBeenCalled();
     });
 });
 

@@ -161,9 +161,7 @@ export class MealListFiltersDialogComponent {
         return value === 'yes' || value === 'no' ? value : 'any';
     }
 
-    private normalizeMealTypes(values: readonly string[] | null | undefined): string[] {
-        return [
-            ...new Set((values ?? []).map(value => normalizeMealType(value)).filter((value): value is MealTypeOption => value !== null)),
-        ];
+    private normalizeMealTypes(values: readonly string[]): string[] {
+        return [...new Set(values.map(value => normalizeMealType(value)).filter((value): value is MealTypeOption => value !== null))];
     }
 }

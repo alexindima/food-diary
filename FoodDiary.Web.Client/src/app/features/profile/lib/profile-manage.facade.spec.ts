@@ -1,4 +1,4 @@
-import { createEnvironmentInjector, EnvironmentInjector } from '@angular/core';
+import { createEnvironmentInjector, DestroyRef, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -72,7 +72,6 @@ let notificationService: {
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let authService: {
     getUserId: ReturnType<typeof vi.fn>;
-    startTelegramUnlink: ReturnType<typeof vi.fn>;
     requestTelegramBackupEmail: ReturnType<typeof vi.fn>;
     onLogoutAsync: ReturnType<typeof vi.fn>;
     startAdminSso: ReturnType<typeof vi.fn>;
@@ -84,7 +83,6 @@ const telegram = { initializeAsync: vi.fn(), getInitData: vi.fn() };
 const backupEmailFlow = { startAsync: vi.fn(), markSent: vi.fn(), read: vi.fn().mockReturnValue(null), clear: vi.fn() };
 const browser = { open: vi.fn() };
 const syncProfileTheme = vi.fn<ThemeService['syncWithUserPreferences']>();
-const STATE_LENGTH = 43;
 const BACKUP_EMAIL_RECORD_TTL_MS = 900_000;
 
 function createStorageMock(session: Map<string, unknown>): Pick<BrowserStorageService, 'getJson' | 'setJson' | 'removeItem'> {
@@ -123,9 +121,6 @@ beforeEach(() => {
     dialogService = { open: vi.fn() };
     authService = {
         getUserId: vi.fn().mockReturnValue(user.id),
-        startTelegramUnlink: vi
-            .fn()
-            .mockReturnValue(of({ authorizationUrl: `https://oauth.telegram.org/auth?state=${'s'.repeat(STATE_LENGTH)}` })),
         requestTelegramBackupEmail: vi.fn().mockReturnValue(of(void 0)),
         onLogoutAsync: vi.fn().mockResolvedValue(void 0),
         startAdminSso: vi.fn().mockReturnValue(of({ code: 'abc123', expiresAtUtc: '2026-04-02T00:00:00Z' })),
@@ -392,7 +387,7 @@ describe('ProfileManageFacade password and deletion actions', () => {
         expect(dialogService.open).toHaveBeenCalledTimes(2);
         expect(dialogService.open.mock.calls[0][1]).toEqual(
             expect.objectContaining({
-                data: { hasPassword: false },
+                data: { hasPassword: false, ownerDestroyRef: TestBed.inject(DestroyRef) },
             }),
         );
         expect(facade.user()?.hasPassword).toBe(true);
@@ -413,7 +408,9 @@ describe('ProfileManageFacade existing password lifecycle', () => {
         facade.openChangePasswordDialog();
 
         expect(dialogService.open).toHaveBeenCalledTimes(dialogCount);
-        expect(dialogService.open.mock.calls[0][1]).toEqual(expect.objectContaining({ data: { hasPassword: true } }));
+        expect(dialogService.open.mock.calls[0][1]).toEqual(
+            expect.objectContaining({ data: { hasPassword: true, ownerDestroyRef: TestBed.inject(DestroyRef) } }),
+        );
         expect(authService.onLogoutAsync).toHaveBeenCalledTimes(logoutCount);
         expect(facade.user()).toEqual(existing);
         expect(facade.globalError()).toBeNull();

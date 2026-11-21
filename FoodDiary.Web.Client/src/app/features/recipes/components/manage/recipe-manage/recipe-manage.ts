@@ -42,6 +42,7 @@ import {
     RECIPE_STEP_TITLE_MAX_LENGTH,
     RECIPE_TEXT_AMOUNT_MAX_LENGTH,
     RECIPE_TEXT_NAME_MAX_LENGTH,
+    type RecipeFormSubmission,
 } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionFormManager } from '../recipe-manage-lib/recipe-nutrition-form.manager';
 import { mapRecognizedRecipe } from '../recipe-manage-lib/recipe-recognition.mapper';
@@ -52,6 +53,7 @@ import {
     type RecipeStepListItem,
     RecipeStepsListComponent,
     type StepDropEvent,
+    type StepFieldBlurEvent,
     type StepFieldEvent,
     type StepIngredientAmountEvent,
     type StepIngredientEvent,
@@ -143,17 +145,15 @@ export class RecipeManageComponent implements UnsavedEditor {
         max(path.servings, RECIPE_MAX_INTEGER_VALUE);
         validate(path.servings, ({ value }) => (Number.isInteger(value()) ? undefined : { kind: 'integer' }));
         required(path.visibility);
-        min(path.manualCalories, 0);
+        for (const field of ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'] as const) {
+            min(path[field], 0);
+            validate(path[field], ({ value }) => (value() === null || Number.isFinite(value()) ? undefined : { kind: 'invalidNumber' }));
+        }
         max(path.manualCalories, MANUAL_NUTRITION_MAX_CALORIES);
-        min(path.manualProteins, 0);
         max(path.manualProteins, MANUAL_NUTRITION_MAX_NUTRIENT);
-        min(path.manualFats, 0);
         max(path.manualFats, MANUAL_NUTRITION_MAX_NUTRIENT);
-        min(path.manualCarbs, 0);
         max(path.manualCarbs, MANUAL_NUTRITION_MAX_NUTRIENT);
-        min(path.manualFiber, 0);
         max(path.manualFiber, MANUAL_NUTRITION_MAX_NUTRIENT);
-        min(path.manualAlcohol, 0);
         max(path.manualAlcohol, MANUAL_NUTRITION_MAX_NUTRIENT);
     });
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
@@ -174,8 +174,6 @@ export class RecipeManageComponent implements UnsavedEditor {
     protected readonly totalAlcohol: RecipeNutritionFormManager['totalAlcohol'];
     protected readonly nutrientChartData: RecipeNutritionFormManager['nutrientChartData'];
     protected readonly nutritionMode: RecipeNutritionFormManager['nutritionMode'];
-
-    private summaryUpdatesSuspended = false;
 
     public constructor() {
         this.recipeManageFacade.committed$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -332,15 +330,10 @@ export class RecipeManageComponent implements UnsavedEditor {
         this.recipeSignalForm().markAsDirty();
     }
 
-    protected onStepImageChange(event: StepFieldEvent<StepFormValues['imageUrl']>): void {
-        this.patchStep(event.stepIndex, { imageUrl: event.value });
-        this.recipeSignalForm().markAsDirty();
-    }
-
-    protected onStepFieldBlur(event: { stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }): void {
+    protected onStepFieldBlur(event: StepFieldBlurEvent): void {
         if (event.field === 'description') {
             this.patchStep(event.stepIndex, { descriptionTouched: true });
-        } else if (event.ingredientIndex !== undefined) {
+        } else {
             this.stepFormManager.patchIngredient(
                 { stepIndex: event.stepIndex, ingredientIndex: event.ingredientIndex },
                 event.field === 'amount' ? { amountTouched: true } : { foodNameTouched: true },
@@ -416,7 +409,7 @@ export class RecipeManageComponent implements UnsavedEditor {
         this.saveWithLanguageCheck(this.prepareRecipeDto());
     }
 
-    private saveWithLanguageCheck(recipeData: RecipeDto): void {
+    private saveWithLanguageCheck(recipeData: RecipeFormSubmission): void {
         const previous = this.recipe();
         const text = recipeLanguageText(recipeData);
         const detected = detectRecipeLanguage(text);
@@ -436,10 +429,10 @@ export class RecipeManageComponent implements UnsavedEditor {
 
     private languageAcknowledgement: { language: string; text: string } | null = null;
 
-    private async confirmLanguageAndSaveAsync(data: RecipeDto, detected: string): Promise<void> {
+    private async confirmLanguageAndSaveAsync(data: RecipeFormSubmission, detected: string): Promise<void> {
         this.checkingLanguage.set(true);
         try {
-            const choice = await this.recipeManageFacade.confirmRecipeLanguageAsync(detected, data.language ?? 'en');
+            const choice = await this.recipeManageFacade.confirmRecipeLanguageAsync(detected, data.language);
             if (choice === undefined) {
                 return;
             }
@@ -450,7 +443,7 @@ export class RecipeManageComponent implements UnsavedEditor {
             ) {
                 return;
             }
-            const language = choice === 'change' ? detected : (data.language ?? 'en');
+            const language = choice === 'change' ? detected : data.language;
             this.languageAcknowledgement = choice === 'keep' ? { language, text: recipeLanguageText(data) } : null;
             this.patchRecipeFormModel({ language });
             this.persistRecipe({ ...data, language, languageConfirmed: choice === 'keep' });
@@ -577,7 +570,7 @@ export class RecipeManageComponent implements UnsavedEditor {
         this.nutritionFormManager.initialize();
     }
 
-    private prepareRecipeDto(): RecipeDto {
+    private prepareRecipeDto(): RecipeFormSubmission {
         const formValue = this.recipeFormModel();
 
         return buildRecipeDto(
@@ -589,16 +582,14 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     private populateForm(recipeData: Recipe): void {
-        this.runWithSummaryUpdatesSuspended(() => {
-            const formPatchValue = this.buildRecipeFormPatchValue(recipeData);
-            this.patchRecipeFormModel(formPatchValue);
+        const formPatchValue = this.buildRecipeFormPatchValue(recipeData);
+        this.patchRecipeFormModel(formPatchValue);
 
-            this.stepFormManager.resetSteps();
-            this.stepFormManager.populateRecipeSteps(recipeData);
-            this.stepsTouchedState.reset();
+        this.stepFormManager.resetSteps();
+        this.stepFormManager.populateRecipeSteps(recipeData);
+        this.stepsTouchedState.reset();
 
-            this.nutritionFormManager.updateNutrientSummary(recipeData);
-        });
+        this.nutritionFormManager.updateNutrientSummary(recipeData);
         this.nutritionFormManager.initialize();
         if (this.hasNoRecipeNutritionTotals(recipeData)) {
             this.nutritionFormManager.recalculateNutrientsFromForm();
@@ -622,10 +613,6 @@ export class RecipeManageComponent implements UnsavedEditor {
             this.recipeFormModel();
 
             untracked(() => {
-                if (this.summaryUpdatesSuspended) {
-                    return;
-                }
-
                 this.updateSummaryFromCurrentForm();
             });
         });
@@ -638,20 +625,7 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     private updateSummaryFromCurrentForm(): void {
-        if (this.summaryUpdatesSuspended) {
-            return;
-        }
-
         this.nutritionFormManager.updateSummaryFromForm();
-    }
-
-    private runWithSummaryUpdatesSuspended(action: () => void): void {
-        this.summaryUpdatesSuspended = true;
-        try {
-            action();
-        } finally {
-            this.summaryUpdatesSuspended = false;
-        }
     }
 
     private patchRecipeFormModel(value: Partial<RecipeFormValues>): void {

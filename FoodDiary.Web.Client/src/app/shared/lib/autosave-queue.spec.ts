@@ -48,6 +48,26 @@ describe('AutosaveQueue', () => {
         expect(queue.hasPending()).toBe(false);
     });
 
+    it('persists an explicit null after a busy interval delays the queued save', () => {
+        vi.useFakeTimers();
+        let busy = false;
+        const persist = vi.fn<(value: string | null) => void>();
+        const queue = new AutosaveQueue<string | null>(createDestroyRef(), DEBOUNCE_MS, () => busy, persist);
+
+        queue.schedule('previous value');
+        queue.schedule(null);
+        busy = true;
+        vi.advanceTimersByTime(DEBOUNCE_MS);
+        expect(persist).not.toHaveBeenCalled();
+        expect(queue.hasPending()).toBe(true);
+
+        busy = false;
+        queue.scheduleIfPending();
+        vi.advanceTimersByTime(DEBOUNCE_MS);
+        expect(persist).toHaveBeenCalledExactlyOnceWith(null);
+        expect(queue.hasPending()).toBe(false);
+    });
+
     it('flushes immediate value and clears pending state', () => {
         const persist = vi.fn();
         const queue = new AutosaveQueue<string>(createDestroyRef(), DEBOUNCE_MS, () => false, persist);

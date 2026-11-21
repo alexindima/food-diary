@@ -4,6 +4,7 @@ import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -30,6 +31,7 @@ const openDialog = vi.fn<(...args: DialogOpenCall) => unknown>();
 
 beforeEach(() => {
     openDialog.mockReset();
+    openDialog.mockReturnValue({ afterClosed: () => of(undefined), close: vi.fn() });
     TestBed.configureTestingModule({
         imports: [GamificationHabitPathComponent],
         providers: [provideTranslateTesting(), { provide: FdUiDialogService, useValue: { open: openDialog } }],

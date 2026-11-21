@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, output, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    output,
+    type Signal,
+    signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCheckboxComponent, FdUiInlineAlertComponent } from 'fd-ui-kit';
 
@@ -17,21 +29,25 @@ import { RecipeVideoInputComponent } from '../recipe-video-input/recipe-video-in
 export class RecipeRecognitionComponent {
     protected readonly facade = inject(RecipeImportFacade);
     protected readonly clipboard = inject(RecipeClipboardSuggestion);
-    public readonly sourceUrl = input('');
+    public readonly sourceUrl = input.required<Signal<string>>();
     public readonly text = input('');
     public readonly draftRecognized = output<RecipeImportResult>();
     public readonly sourceUrlSuggested = output<string>();
     public readonly busyChanged = output<boolean>();
     protected readonly reviewKeys = signal<string[]>([]);
     protected readonly videoFile = signal<File | null>(null);
+    private readonly pasteRequest = linkedSignal<string, symbol | null>({
+        source: () => this.sourceUrl()(),
+        computation: () => null,
+    });
     private readonly videoModeOverride = linkedSignal<string, boolean | null>({
-        source: () => this.sourceUrl().trim(),
+        source: () => this.sourceUrl()().trim(),
         computation: (_sourceUrl, previous) => (previous?.value === true ? true : null),
     });
     protected readonly videoMode = computed(
         () =>
             this.videoModeOverride() ??
-            (this.videoFile() !== null || (isYouTubeVideoUrl(this.sourceUrl()) && this.text().trim().length === 0)),
+            (this.videoFile() !== null || (isYouTubeVideoUrl(this.sourceUrl()()) && this.text().trim().length === 0)),
     );
 
     protected selectVideo(file: File | null): void {
@@ -49,6 +65,9 @@ export class RecipeRecognitionComponent {
     }
 
     public constructor() {
+        inject(DestroyRef).onDestroy(() => {
+            this.pasteRequest.set(null);
+        });
         effect(() => {
             this.busyChanged.emit(this.facade.busy());
         });
@@ -56,7 +75,12 @@ export class RecipeRecognitionComponent {
 
     protected async recognizeAsync(): Promise<void> {
         this.reviewKeys.set([]);
-        const draft = await this.facade.recognizeAsync(this.sourceUrl(), this.text(), this.videoMode(), this.videoFile());
+        const recognition = this.facade.recognizeAsync(this.sourceUrl()(), this.text(), this.videoMode(), this.videoFile());
+        // An admitted recognition holds the source through the first asynchronous access check.
+        if (this.facade.busy()) {
+            this.pasteRequest.set(null);
+        }
+        const draft = await recognition;
         if (draft !== null) {
             const keys = ['RECIPE_MANAGE.IMPORT.REVIEW_HINT'];
             if (draft.servings === null) {
@@ -71,8 +95,10 @@ export class RecipeRecognitionComponent {
     }
 
     protected async pasteAsync(): Promise<void> {
+        const request = Symbol();
+        this.pasteRequest.set(request);
         const text = await this.clipboard.pasteAsync();
-        if (text !== null) {
+        if (text !== null && this.pasteRequest() === request) {
             this.sourceUrlSuggested.emit(text);
         }
     }
@@ -103,7 +129,7 @@ function isYouTubeVideoUrl(source: string): boolean {
             return true;
         }
         const ids = url.searchParams.getAll('v');
-        return url.pathname === '/watch' && ids.length === 1 && /^[\w-]{11}$/.test(ids[0] ?? '');
+        return url.pathname === '/watch' && ids.length === 1 && /^[\w-]{11}$/.test(ids[0]);
     } catch {
         return false;
     }

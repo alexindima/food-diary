@@ -1,55 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
-import { TranslatePipe } from '@ngx-translate/core';
+import { computed, Directive, ElementRef, inject, viewChild } from '@angular/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
-import { ActiveFiltersComponent } from '../../../../../components/shared/active-filters/active-filters';
-import { ErrorStateComponent } from '../../../../../components/shared/error-state/error-state';
-import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
-import { SkeletonCardComponent } from '../../../../../components/shared/skeleton-card/skeleton-card';
-import type { FavoriteProduct, Product } from '../../../../../shared/models/product.data';
+import type { Product } from '../../../../../shared/models/product.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
-import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { scrollElementIntoView } from '../../../../../shared/ui/scroll/scroll-element-into-view';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
-import { ProductListEmptyStateComponent } from '../product-list-sections/product-list-empty-state/product-list-empty-state';
-import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups';
-import { ProductListOffSectionComponent } from '../product-list-sections/product-list-off-section/product-list-off-section';
-import { ProductListPaginationComponent } from '../product-list-sections/product-list-pagination/product-list-pagination';
 import { PRODUCT_LIST_TOUR } from './product-list-tour';
 
-@Component({
-    selector: 'fd-product-list-base',
-    templateUrl: './product-list-base.html',
-    styleUrls: ['./product-list-base.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ProductListFacade],
-    imports: [
-        FormField,
-        FdUiFormDirective,
-        TranslatePipe,
-        FdUiHintDirective,
-        FdUiInputComponent,
-        FdUiButtonComponent,
-        SkeletonCardComponent,
-        ErrorStateComponent,
-        PageHeaderComponent,
-        PageBodyComponent,
-        FdPageContainerDirective,
-        ActiveFiltersComponent,
-        ProductListGroupsComponent,
-        ProductListEmptyStateComponent,
-        ProductListOffSectionComponent,
-        ProductListPaginationComponent,
-    ],
-})
-export class ProductListBaseComponent {
+@Directive()
+export abstract class ProductListBaseComponent {
     protected readonly productListFacade = inject(ProductListFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
@@ -114,14 +75,6 @@ export class ProductListBaseComponent {
         this.productListFacade.clearSearch();
     }
 
-    protected toggleOnlyMine(): void {
-        this.productListFacade.toggleOnlyMine();
-    }
-
-    protected toggleMobileSearch(): void {
-        this.productListFacade.toggleMobileSearch();
-    }
-
     protected openFilters(): void {
         this.productListFacade.openFilters();
     }
@@ -138,18 +91,10 @@ export class ProductListBaseComponent {
         scrollElementIntoView(this.header().nativeElement);
     }
 
-    protected onProductClick(product: Product): void {
-        this.handleProductClick(product);
-    }
-
-    protected handleProductClick(_product: Product): void {}
+    protected abstract onProductClick(product: Product): void;
 
     protected onAddToMeal(product: Product): void {
         this.productListFacade.onAddToMeal(product);
-    }
-
-    protected loadFavorites(): void {
-        this.productListFacade.loadFavorites();
     }
 
     protected onProductFavoriteToggle(product: Product): void {
@@ -158,13 +103,5 @@ export class ProductListBaseComponent {
 
     protected openFavorites(): void {
         this.productListFacade.openFavorites();
-    }
-
-    protected addFavoriteProductToMeal(favorite: FavoriteProduct): void {
-        this.productListFacade.addFavoriteProductToMeal(favorite);
-    }
-
-    protected reloadCurrentPage(): void {
-        this.productListFacade.reloadCurrentPage();
     }
 }

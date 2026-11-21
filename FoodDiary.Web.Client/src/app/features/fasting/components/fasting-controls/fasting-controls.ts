@@ -8,7 +8,6 @@ import type { Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import {
-    EMPTY_FASTING_DURATION_HOURS,
     EXTEND_DAY_AND_HALF_HOURS,
     EXTEND_DAY_HOURS,
     MIN_FASTING_HOURS,
@@ -19,6 +18,7 @@ import { parseIntegerInput } from '../../../../shared/lib/number.utils';
 import { HOURS_PER_DAY } from '../../../../shared/lib/time.constants';
 import {
     CYCLIC_PRESETS,
+    FASTING_PROTOCOL_CATALOG,
     FASTING_PROTOCOLS,
     type FastingMode,
     type FastingProtocol,
@@ -41,7 +41,6 @@ import { FastingActiveExtendedControlsComponent } from './active-extended/fastin
 import { FastingSetupControlsComponent } from './setup/fasting-setup-controls';
 
 const CYCLIC_PRESET_SEPARATOR = ':';
-const FASTING_MODES = new Set<FastingMode>(['intermittent', 'extended', 'cyclic']);
 
 @Component({
     selector: 'fd-fasting-controls',
@@ -91,7 +90,10 @@ export class FastingControlsComponent {
     protected readonly isCustomReduceExpanded = signal(false);
     protected readonly isExtendPanelExpanded = signal(false);
     protected readonly isReducePanelExpanded = signal(false);
-    protected readonly isActiveExtendedSession = computed(() => this.currentSession()?.planType === 'Extended' && this.isActive());
+    protected readonly activeExtendedSession = computed(() => {
+        const session = this.currentSession();
+        return session?.planType === 'Extended' && this.isActive() ? session : null;
+    });
     protected readonly intermittentProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     protected readonly cyclicEatDayProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'intermittent');
     protected readonly extendedProtocols = FASTING_PROTOCOLS.filter(protocol => protocol.category === 'extended');
@@ -102,13 +104,23 @@ export class FastingControlsComponent {
     protected readonly cyclicEatDayEatingWindowHours = computed(() =>
         Math.max(MIN_FASTING_HOURS, HOURS_PER_DAY - this.cyclicEatDayFastHours()),
     );
-    protected readonly endActionLabelKey = computed(() => {
-        if (this.isCurrentSessionCyclic()) {
-            return 'FASTING.STOP_CYCLE';
-        }
-
-        return this.isCurrentSessionIntermittent() ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST';
-    });
+    protected readonly endConfirmationKeys = {
+        Intermittent: {
+            titleKey: 'FASTING.END_CONFIRM_TITLE',
+            messageKey: 'FASTING.END_CONFIRM_MESSAGE',
+            actionKey: 'FASTING.END_FAST',
+        },
+        Extended: {
+            titleKey: 'FASTING.INTERRUPT_CONFIRM_TITLE',
+            messageKey: 'FASTING.INTERRUPT_CONFIRM_MESSAGE',
+            actionKey: 'FASTING.INTERRUPT_FAST',
+        },
+        Cyclic: {
+            titleKey: 'FASTING.STOP_CYCLE_CONFIRM_TITLE',
+            messageKey: 'FASTING.STOP_CYCLE_CONFIRM_MESSAGE',
+            actionKey: 'FASTING.STOP_CYCLE',
+        },
+    } satisfies Record<FastingSession['planType'], { titleKey: string; messageKey: string; actionKey: string }>;
     protected readonly canManageCurrentCyclicDay = computed(() => {
         const session = this.currentSession();
         return (
@@ -124,15 +136,15 @@ export class FastingControlsComponent {
     protected readonly postponeCycleActionLabelKey = computed(() => 'FASTING.SKIP_DAY');
     protected readonly isCustomCyclicPresetSelected = computed(() => this.cyclicUsesCustomPreset());
     protected readonly modeOptions = computed(() =>
-        this.buildSegmentedToggleOptions([
+        this.buildSegmentedToggleOptions<FastingMode>([
             { labelKey: 'FASTING.MODE_INTERMITTENT', value: 'intermittent' },
             { labelKey: 'FASTING.MODE_EXTENDED', value: 'extended' },
             { labelKey: 'FASTING.MODE_CYCLIC', value: 'cyclic' },
         ]),
     );
-    protected readonly intermittentProtocolOptions = computed(() => this.buildProtocolOptions(this.intermittentProtocols));
-    protected readonly extendedProtocolOptions = computed(() => this.buildProtocolOptions(this.extendedProtocols));
-    protected readonly cyclicEatDayProtocolOptions = computed(() => this.buildProtocolOptions(this.cyclicEatDayProtocols));
+    protected readonly intermittentProtocolOptions = computed(() => this.buildSegmentedToggleOptions(this.intermittentProtocols));
+    protected readonly extendedProtocolOptions = computed(() => this.buildSegmentedToggleOptions(this.extendedProtocols));
+    protected readonly cyclicEatDayProtocolOptions = computed(() => this.buildSegmentedToggleOptions(this.cyclicEatDayProtocols));
     protected readonly cyclicPresetOptions = computed(() => {
         this.currentLanguage();
 
@@ -167,13 +179,13 @@ export class FastingControlsComponent {
             });
         }
 
-        const protocol = FASTING_PROTOCOLS.find(option => option.value === this.selectedProtocol());
+        const protocol = this.selectedProtocol();
         const hours =
-            mode === 'intermittent' && this.selectedProtocol() === 'CustomIntermittent'
+            mode === 'intermittent' && protocol === 'CustomIntermittent'
                 ? this.customIntermittentFastHours()
-                : mode === 'extended' && this.selectedProtocol() === 'Custom'
+                : mode === 'extended' && protocol === 'Custom'
                   ? this.customHours()
-                  : (protocol?.hours ?? MIN_FASTING_HOURS);
+                  : FASTING_PROTOCOL_CATALOG[protocol].hours;
         const key = mode === 'extended' ? 'FASTING.REDESIGN.EXTENDED_SELECTION_SUMMARY' : 'FASTING.REDESIGN.INTERMITTENT_SELECTION_SUMMARY';
         return this.translateService.instant(key, { hours, eatHours: Math.max(0, HOURS_PER_DAY - hours) });
     });
@@ -184,16 +196,12 @@ export class FastingControlsComponent {
         });
     }
 
-    protected onModeChange(mode: string): void {
-        if (this.isFastingMode(mode)) {
-            this.facade.selectMode(mode);
-        }
+    protected onModeChange(mode: FastingMode): void {
+        this.facade.selectMode(mode);
     }
 
-    protected onProtocolChange(protocol: string): void {
-        if (this.isFastingProtocol(protocol)) {
-            this.facade.selectProtocol(protocol);
-        }
+    protected onProtocolChange(protocol: FastingProtocol): void {
+        this.facade.selectProtocol(protocol);
     }
 
     protected onCustomHoursChange(value: string | number): void {
@@ -241,10 +249,8 @@ export class FastingControlsComponent {
         }
     }
 
-    protected onCyclicEatDayProtocolChange(protocol: string): void {
-        if (this.isFastingProtocol(protocol)) {
-            this.facade.selectCyclicEatDayProtocol(protocol);
-        }
+    protected onCyclicEatDayProtocolChange(protocol: FastingProtocol): void {
+        this.facade.selectCyclicEatDayProtocol(protocol);
     }
 
     protected onCyclicEatDayFastHoursChange(value: string | number): void {
@@ -258,15 +264,19 @@ export class FastingControlsComponent {
         this.facade.startFasting();
     }
 
-    protected endFasting(): void {
-        const sessionId = this.currentSession()?.id;
+    protected endFasting(sessionId: FastingSession['id']): void {
+        const session = this.currentSession();
+        if (session?.id !== sessionId || session.endedAtUtc !== null) {
+            return;
+        }
+
         const dialog = this.dialogService.open<
             FastingEndConfirmDialogComponent,
             FastingEndConfirmDialogData,
             FastingEndConfirmDialogResult
         >(FastingEndConfirmDialogComponent, {
             preset: 'confirm',
-            data: this.getEndConfirmDialogData(),
+            data: this.getEndConfirmDialogData(session.planType),
         });
         this.observeOwnedDialog(dialog)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -291,18 +301,18 @@ export class FastingControlsComponent {
         }
     }
 
-    protected extendByDay(): void {
+    protected extendByDay(sessionId: FastingSession['id']): void {
         this.isCustomExtendExpanded.set(false);
-        this.requestExtendByHours(EXTEND_DAY_HOURS);
+        this.requestExtendByHours(sessionId, EXTEND_DAY_HOURS);
     }
 
-    protected extendBy36Hours(): void {
+    protected extendBy36Hours(sessionId: FastingSession['id']): void {
         this.isCustomExtendExpanded.set(false);
-        this.requestExtendByHours(EXTEND_DAY_AND_HALF_HOURS);
+        this.requestExtendByHours(sessionId, EXTEND_DAY_AND_HALF_HOURS);
     }
 
-    protected extendByCustom(): void {
-        this.requestExtendByHours(this.extendHours());
+    protected extendByCustom(sessionId: FastingSession['id']): void {
+        this.requestExtendByHours(sessionId, this.extendHours());
     }
 
     protected showCustomExtend(): void {
@@ -314,18 +324,18 @@ export class FastingControlsComponent {
         this.isExtendPanelExpanded.update(isExpanded => !isExpanded);
     }
 
-    protected reduceBy4Hours(): void {
+    protected reduceBy4Hours(sessionId: FastingSession['id']): void {
         this.isCustomReduceExpanded.set(false);
-        this.requestReduceByHours(REDUCE_SHORT_HOURS);
+        this.requestReduceByHours(sessionId, REDUCE_SHORT_HOURS);
     }
 
-    protected reduceBy8Hours(): void {
+    protected reduceBy8Hours(sessionId: FastingSession['id']): void {
         this.isCustomReduceExpanded.set(false);
-        this.requestReduceByHours(REDUCE_LONG_HOURS);
+        this.requestReduceByHours(sessionId, REDUCE_LONG_HOURS);
     }
 
-    protected reduceByCustom(): void {
-        this.requestReduceByHours(this.reduceHours());
+    protected reduceByCustom(sessionId: FastingSession['id']): void {
+        this.requestReduceByHours(sessionId, this.reduceHours());
     }
 
     protected showCustomReduce(): void {
@@ -359,16 +369,9 @@ export class FastingControlsComponent {
         );
     }
 
-    private buildProtocolOptions(protocols: ReadonlyArray<{ labelKey: string; value: FastingProtocol }>): FdUiSegmentedToggleOption[] {
-        this.currentLanguage();
-
-        return protocols.map(protocol => ({
-            label: this.translateService.instant(protocol.labelKey),
-            value: protocol.value,
-        }));
-    }
-
-    private buildSegmentedToggleOptions(items: ReadonlyArray<{ labelKey: string; value: string }>): FdUiSegmentedToggleOption[] {
+    private buildSegmentedToggleOptions<Value extends string>(
+        items: ReadonlyArray<{ labelKey: string; value: Value }>,
+    ): Array<FdUiSegmentedToggleOption<Value>> {
         this.currentLanguage();
 
         return items.map(item => ({
@@ -377,48 +380,18 @@ export class FastingControlsComponent {
         }));
     }
 
-    private isFastingMode(value: string): value is FastingMode {
-        return (FASTING_MODES as ReadonlySet<string>).has(value);
-    }
-
-    private isFastingProtocol(value: string): value is FastingProtocol {
-        return FASTING_PROTOCOLS.some(protocol => protocol.value === value);
-    }
-
     private getCyclicPresetSelectionValue(fastDays: number, eatDays: number): string {
         return `${fastDays}${CYCLIC_PRESET_SEPARATOR}${eatDays}`;
     }
 
-    private getEndConfirmDialogData(): FastingEndConfirmDialogData {
-        if (this.isCurrentSessionCyclic()) {
-            return {
-                title: this.translateService.instant('FASTING.STOP_CYCLE_CONFIRM_TITLE'),
-                message: this.translateService.instant('FASTING.STOP_CYCLE_CONFIRM_MESSAGE'),
-                confirmLabel: this.translateService.instant('FASTING.STOP_CYCLE'),
-                cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
-            };
-        }
-
-        const isIntermittent = this.isCurrentSessionIntermittent();
+    private getEndConfirmDialogData(planType: FastingSession['planType']): FastingEndConfirmDialogData {
+        const { titleKey, messageKey, actionKey } = this.endConfirmationKeys[planType];
         return {
-            title: this.translateService.instant(isIntermittent ? 'FASTING.END_CONFIRM_TITLE' : 'FASTING.INTERRUPT_CONFIRM_TITLE'),
-            message: this.translateService.instant(isIntermittent ? 'FASTING.END_CONFIRM_MESSAGE' : 'FASTING.INTERRUPT_CONFIRM_MESSAGE'),
-            confirmLabel: this.translateService.instant(isIntermittent ? 'FASTING.END_FAST' : 'FASTING.INTERRUPT_FAST'),
+            title: this.translateService.instant(titleKey),
+            message: this.translateService.instant(messageKey),
+            confirmLabel: this.translateService.instant(actionKey),
             cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
         };
-    }
-
-    private isCurrentSessionIntermittent(): boolean {
-        const session = this.currentSession();
-        if (session === null) {
-            return true;
-        }
-
-        return session.planType !== 'Extended';
-    }
-
-    private isCurrentSessionCyclic(): boolean {
-        return this.currentSession()?.planType === 'Cyclic';
     }
 
     private getSkipCycleConfirmTitleKey(): string {
@@ -454,10 +427,14 @@ export class FastingControlsComponent {
         return session.occurrenceKind;
     }
 
-    private requestExtendByHours(additionalHours: number): void {
+    private requestExtendByHours(sessionId: FastingSession['id'], additionalHours: number): void {
+        const session = this.activeExtendedSession();
+        if (session?.id !== sessionId) {
+            return;
+        }
+
         const normalizedHours = Math.max(MIN_FASTING_HOURS, Math.min(FASTING_HARD_STOP_THRESHOLD_HOURS, additionalHours));
-        const currentSession = this.currentSession();
-        const currentDuration = currentSession?.plannedDurationHours ?? EMPTY_FASTING_DURATION_HOURS;
+        const currentDuration = session.plannedDurationHours;
         const targetDuration = currentDuration + normalizedHours;
 
         if (targetDuration > FASTING_HARD_STOP_THRESHOLD_HOURS) {
@@ -480,7 +457,7 @@ export class FastingControlsComponent {
             })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(result => {
-                    if (result === 'confirm' && this.matchesActiveSession(currentSession?.id, currentDuration)) {
+                    if (result === 'confirm' && this.matchesActiveSession(sessionId, currentDuration)) {
                         this.facade.extendByHours(normalizedHours);
                     }
                 });
@@ -490,9 +467,8 @@ export class FastingControlsComponent {
         this.facade.extendByHours(normalizedHours);
     }
 
-    private requestReduceByHours(reducedHours: number): void {
-        const session = this.currentSession();
-        if (session === null) {
+    private requestReduceByHours(sessionId: FastingSession['id'], reducedHours: number): void {
+        if (this.activeExtendedSession()?.id !== sessionId) {
             return;
         }
 

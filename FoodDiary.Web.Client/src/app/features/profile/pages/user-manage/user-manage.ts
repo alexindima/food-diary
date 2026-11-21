@@ -112,6 +112,7 @@ export class UserManageComponent {
     private readonly renderer = inject<Renderer2>(Renderer2);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly userFormElement = viewChild<ElementRef<HTMLFormElement>>('userFormElement');
+    private readonly comparisonWidgets = viewChild(UserManageComparisonWidgetsComponent);
     private lastNotificationSyncVersion = -1;
     private lastProfileSavedVersion = 0;
     private pendingProfileSave: ProfileSaveSnapshot | null = null;
@@ -125,11 +126,15 @@ export class UserManageComponent {
     protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
     protected readonly birthDateInputInvalid = signal(false);
+    protected readonly heightInputInvalid = signal(false);
     private readonly lastSyncedUserFormData = signal<UserFormValues>(createUserManageFormModel());
     private readonly userFormInputVersion = signal(0);
     protected readonly userForm = form(this.userFormModel, path => {
         validate(path.birthDate, () => (this.birthDateInputInvalid() ? { kind: 'birthDateInput' } : undefined));
         validate(path.heightCm, ({ value }) => {
+            if (this.heightInputInvalid()) {
+                return { kind: 'heightDraft' };
+            }
             const height = value();
             return height !== null && (!Number.isFinite(height) || height <= 0 || height > MAX_PROFILE_HEIGHT_CM)
                 ? { kind: 'heightRange' }
@@ -184,7 +189,7 @@ export class UserManageComponent {
     protected readonly dietologistInviteEmailError = this.dietologist.dietologistInviteEmailError;
     protected readonly hasUnsavedProfileChanges = computed(() => {
         this.userFormInputVersion();
-        return this.birthDateInputInvalid() || this.hasUserFormChanges();
+        return this.birthDateInputInvalid() || this.heightInputInvalid() || this.hasUserFormChanges();
     });
 
     public constructor() {
@@ -356,7 +361,7 @@ export class UserManageComponent {
         this.userForm().markAsTouched();
         if (this.userForm().invalid() || this.facade.isSavingProfile()) {
             if (this.userForm().invalid()) {
-                focusFirstInvalidField(this.userForm);
+                this.focusInvalidProfileField();
             }
             return false;
         }
@@ -376,6 +381,15 @@ export class UserManageComponent {
     protected onUserFormSubmit(event: SubmitEvent): void {
         event.preventDefault();
         void this.onSubmit();
+    }
+
+    private focusInvalidProfileField(): void {
+        focusFirstInvalidField(this.userForm);
+        if (this.userForm.heightCm().invalid() && !this.userForm.birthDate().invalid()) {
+            this.userFormElement()
+                ?.nativeElement.querySelector<HTMLInputElement>('[data-profile-height-field] input[aria-invalid="true"]')
+                ?.focus();
+        }
     }
 
     protected startUserManageTour(force = true): void {
@@ -525,6 +539,7 @@ export class UserManageComponent {
         }
 
         this.userForm().reset(syncedFormData);
+        this.comparisonWidgets()?.resetHeightInputDrafts();
         this.facade.clearGlobalError();
         this.userFormInputVersion.update(version => version + 1);
     }

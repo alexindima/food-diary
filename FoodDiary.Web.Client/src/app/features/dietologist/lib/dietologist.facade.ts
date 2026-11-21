@@ -90,13 +90,6 @@ export class DietologistFacade {
         return this.dietologistService.createRecommendationTemplate(request);
     }
 
-    public updateRecommendationTemplate(
-        templateId: RecommendationTemplateId,
-        request: RecommendationTemplateRequest,
-    ): Observable<RecommendationTemplate> {
-        return this.dietologistService.updateRecommendationTemplate(templateId, request);
-    }
-
     public archiveRecommendationTemplate(templateId: RecommendationTemplateId): Observable<void> {
         return this.dietologistService.archiveRecommendationTemplate(templateId);
     }

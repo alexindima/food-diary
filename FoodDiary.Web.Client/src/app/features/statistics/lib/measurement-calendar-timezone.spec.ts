@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
-import { measurementMonthRange, toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
+import { measurementDateInputValue, measurementMonthRange, toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
 import { calendarDate } from '../../../shared/models/semantics/date-value';
 import { formatWaistHistoryNumericDate } from '../../waist-history/lib/waist-history-chart.mapper';
 import { buildWaistHistoryFiltersForRange } from '../../waist-history/lib/waist-history-range.utils';
@@ -46,7 +46,9 @@ describe('measurement calendar dates in the host time zone', () => {
             const formDate = formatDateInputValue(now);
             const stored = required(toMeasurementDateIso(formDate));
             expect(stored).toBe(`${value}T00:00:00.000Z`);
-            expect(toMeasurementDateIso(stored.split('T')[0] ?? '')).toBe(stored);
+            const editValue = measurementDateInputValue(stored);
+            expect(editValue).toBe(formDate);
+            expect(toMeasurementDateIso(editValue)).toBe(stored);
             const expectedLabel = value.split('-').reverse().join('.');
             expect(formatWeightHistoryNumericDate(stored, 'ru')).toBe(expectedLabel);
             expect(formatWaistHistoryNumericDate(stored, 'ru')).toBe(expectedLabel);

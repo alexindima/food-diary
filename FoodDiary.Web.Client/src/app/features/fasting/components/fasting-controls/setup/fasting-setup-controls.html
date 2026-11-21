@@ -92,17 +92,16 @@
             [cyclicPresetOptions]="cyclicPresetOptions()"
             [cyclicEatDayProtocolOptions]="cyclicEatDayProtocolOptions()"
             [selectedCyclicPresetValue]="selectedCyclicPresetValue()"
-            [cyclicEatDayProtocol]="cyclicEatDayProtocol()"
             [cyclicFastDays]="cyclicFastDays()"
             [cyclicEatDays]="cyclicEatDays()"
             [cyclicEatDayFastHours]="cyclicEatDayFastHours()"
             [cyclicEatDayEatingWindowHours]="cyclicEatDayEatingWindowHours()"
             [isCustomCyclicPresetSelected]="isCustomCyclicPresetSelected()"
             [inlineCustomControls]="inlineCustomControls()"
+            [(cyclicEatDayProtocol)]="cyclicEatDayProtocol"
             (cyclicPresetChange)="cyclicPresetChange.emit($event)"
             (cyclicFastDaysChange)="cyclicFastDaysChange.emit($event)"
             (cyclicEatDaysChange)="cyclicEatDaysChange.emit($event)"
-            (cyclicEatDayProtocolChange)="cyclicEatDayProtocolChange.emit($event)"
             (cyclicEatDayFastHoursChange)="cyclicEatDayFastHoursChange.emit($event)"
         />
     }

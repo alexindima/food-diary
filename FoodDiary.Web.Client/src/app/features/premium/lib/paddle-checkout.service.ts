@@ -1,5 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID, RendererFactory2, Service } from '@angular/core';
+import { type DestroyRef, inject, PLATFORM_ID, RendererFactory2, Service } from '@angular/core';
 
 import type { BillingPlan } from '../../../shared/models/billing.models';
 import type { PaddlePlanPriceIds, PremiumPlanPrice } from '../models/premium-plan-price';
@@ -81,12 +81,15 @@ export class PaddleCheckoutService {
         return mapPaddlePlanPrices(response, priceIds);
     }
 
-    public async openTransactionCheckoutAsync(transactionId: string, options: PaddleInitOptions): Promise<void> {
+    public async openTransactionCheckoutAsync(transactionId: string, options: PaddleInitOptions, owner?: DestroyRef): Promise<void> {
         if (!this.isBrowser) {
             throw new Error('Paddle Checkout is only available in the browser');
         }
 
         await this.initializeAsync(options);
+        if (owner?.destroyed === true) {
+            return;
+        }
 
         const paddle = this.document.defaultView?.Paddle;
         if (paddle?.Checkout === undefined) {
@@ -163,10 +166,6 @@ export class PaddleCheckoutService {
     }
 
     private async loadScriptAsync(): Promise<void> {
-        if (!this.isBrowser) {
-            return;
-        }
-
         if (this.scriptLoadPromise !== null) {
             return this.scriptLoadPromise;
         }

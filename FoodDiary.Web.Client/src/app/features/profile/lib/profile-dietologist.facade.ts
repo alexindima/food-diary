@@ -153,7 +153,7 @@ export class ProfileDietologistFacade {
                     }
 
                     this.dietologistError.set(null);
-                    this.facade.dietologistRelationship.set({ ...relationship, permissions: nextPermissions });
+                    this.facade.setDietologistRelationship({ ...relationship, permissions: nextPermissions });
                     this.refreshPendingRelationshipRead();
                 },
                 error: () => {
@@ -249,7 +249,7 @@ export class ProfileDietologistFacade {
             .subscribe({
                 next: relationship => {
                     if (this.relationshipRequest.succeed(requestId, true)) {
-                        this.facade.dietologistRelationship.set(relationship);
+                        this.facade.setDietologistRelationship(relationship);
                         this.dietologistError.set(null);
                     }
                 },
@@ -304,7 +304,7 @@ export class ProfileDietologistFacade {
                     }
 
                     this.toastService.info(this.translateService.instant('USER_MANAGE.DIETOLOGIST_DISCONNECTED'));
-                    this.facade.dietologistRelationship.set(null);
+                    this.facade.setDietologistRelationship(null);
                     this.dietologistError.set(null);
                     this.refreshPendingRelationshipRead();
                 },

@@ -173,7 +173,40 @@ function filterButton(root: HTMLElement, label: string): HTMLButtonElement {
     return button;
 }
 
-function changeNumberField(root: HTMLElement, label: string, value: number): void {
+describe('RecipeListFiltersDialogComponent calorie validation', () => {
+    it.each([
+        ['RECIPE_LIST.FILTER_CALORIES_FROM', 'caloriesFrom'],
+        ['RECIPE_LIST.FILTER_CALORIES_TO', 'caloriesTo'],
+    ] as const)('keeps a negative bound open and accepts an explicit zero (%s)', (label, key) => {
+        createComponent({ ...DEFAULT_DIALOG_DATA, category: 'desserts', hasImage: true });
+        const root = fixture.nativeElement as HTMLElement;
+        const input = changeNumberField(root, label, -1);
+        const apply = filterButton(root, 'RECIPE_LIST.FILTER_APPLY_BUTTON');
+        expect(input.value).toBe('-1');
+        apply.click();
+        fixture.detectChanges();
+
+        expect(dialogRefSpy.close).not.toHaveBeenCalled();
+        expect(input.validity.rangeUnderflow).toBe(true);
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        const errorId = input.getAttribute('aria-describedby');
+        expect(errorId).toBeTruthy();
+        expect(errorId === null ? null : document.getElementById(errorId)?.textContent).toContain('FORM_ERRORS.INVALID_NUMBER');
+
+        changeNumberField(root, label, 0);
+        apply.click();
+        fixture.detectChanges();
+        expect(root.textContent).not.toContain('FORM_ERRORS.INVALID_NUMBER');
+        expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith({
+            ...DEFAULT_DIALOG_DATA,
+            category: 'desserts',
+            hasImage: true,
+            [key]: 0,
+        });
+    });
+});
+
+function changeNumberField(root: HTMLElement, label: string, value: number): HTMLInputElement {
     const field = Array.from(root.querySelectorAll('label')).find(control => control.textContent.trim() === label)?.control;
     if (!(field instanceof HTMLInputElement)) {
         throw new Error(`Expected recipe filter field "${label}"`);
@@ -181,4 +214,5 @@ function changeNumberField(root: HTMLElement, label: string, value: number): voi
     field.value = String(value);
     field.dispatchEvent(new Event('input', { bubbles: true }));
     fixture.detectChanges();
+    return field;
 }

@@ -13,7 +13,14 @@ import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { AuthService } from '../../services/auth.service';
 import { FoodDiaryTranslationLoader } from '../../shared/i18n/food-diary-translation.loader';
-import { createEmptyProductSnapshot, type Meal, type MealOverview, MealSourceType } from '../../shared/models/meal.data';
+import {
+    createEmptyProductSnapshot,
+    type Meal,
+    type MealAiSession,
+    type MealOverview,
+    MealSourceType,
+    type ProductMealItem,
+} from '../../shared/models/meal.data';
 import type { Product } from '../../shared/models/product.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
@@ -185,6 +192,52 @@ describe('Routed meal type after changing the local time', () => {
     });
 });
 
+const mealClockGap = new Map([
+    ['America/Los_Angeles', { savedUtc: '2026-03-08T09:30:00.000Z', correctedUtc: '2026-03-08T10:30:00.000Z' }],
+    ['Asia/Tbilisi', { savedUtc: '2005-03-26T22:30:00.000Z', correctedUtc: '2005-03-26T23:30:00.000Z' }],
+]).get(new Intl.DateTimeFormat().resolvedOptions().timeZone);
+if (mealClockGap !== undefined) {
+    it('shows the nonexistent native local time error and saves the corrected instant', async () => {
+        const api = setupEditorRoutes();
+        const message = 'This time does not exist on this date in your time zone. Choose another time.';
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { MEAL_MANAGE: { NONEXISTENT_TIME: message } });
+        await firstValueFrom(translate.use('en'));
+        const original = { ...savedMeal(), date: utcInstant(mealClockGap.savedUtc) };
+        api.getById.mockReturnValueOnce(of(original));
+        api.update.mockReturnValueOnce(of({ ...original, date: utcInstant(mealClockGap.correctedUtc) }));
+
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-edit');
+        const time = editor.querySelector<HTMLInputElement>('fd-ui-time-input input[role="combobox"]');
+        expect(time?.value).toBe('01:30');
+        const save = nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON');
+
+        selectMealEditorTime(editor, '02:30');
+        harness.detectChanges();
+        expect(save.disabled).toBe(false);
+        save.click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(editor.querySelector('fd-ui-time-input [role="alert"]')?.textContent.trim()).toBe(message);
+        });
+        expect(time?.getAttribute('aria-invalid')).toBe('true');
+        expect(time?.value).toBe('02:30');
+        expect(api.update).not.toHaveBeenCalled();
+        expect(TestBed.inject(Router).url).toBe(MEAL_URL);
+
+        selectMealEditorTime(editor, '03:30');
+        harness.detectChanges();
+        expect(editor.querySelector('fd-ui-time-input [role="alert"]')).toBeNull();
+        save.click();
+        await waitForDiaryAsync(harness);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            MEAL_ID,
+            expect.objectContaining({ date: new Date(mealClockGap.correctedUtc), mealType: 'DINNER', comment: ORIGINAL_NOTE }),
+        );
+    });
+}
+
 describe('Routed meal editor inline hunger and satiety', () => {
     it('updates hunger and clears an existing satiety answer through the inline controls', async () => {
         const before = 2;
@@ -278,6 +331,52 @@ describe('Production lazy meal editors', () => {
         expect(router.url).toBe(OTHER_URL);
         expect(harness.routeNativeElement?.textContent).toContain('Home');
         expect(api.getById).not.toHaveBeenCalled();
+        expect(api.create).not.toHaveBeenCalled();
+    });
+});
+
+describe('Returning to the meal diary after saving a meal', () => {
+    it('keeps the active diary retry and shows the committed meal without saving again', async () => {
+        const api = setupEditorRoutes();
+        const saving = new Subject<Meal>();
+        const retryingOverview = new Subject<MealOverview>();
+        const note = 'Updated dinner in the diary';
+        const saved = savedMeal(note);
+        api.update.mockReturnValueOnce(saving);
+        api.queryOverview.mockReturnValueOnce(throwError(() => new Error('Diary unavailable'))).mockReturnValueOnce(retryingOverview);
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-edit');
+        changeComment(commentInput(editor), note);
+        harness.detectChanges();
+        nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await vi.waitFor(() => {
+            expect(api.update).toHaveBeenCalledExactlyOnceWith(MEAL_ID, expect.objectContaining({ comment: note }));
+        });
+        expect(TestBed.inject(Router).url).toBe(MEAL_URL);
+        expect(api.queryOverview).not.toHaveBeenCalled();
+
+        saving.next(saved);
+        saving.complete();
+        await waitForDiaryAsync(harness);
+        const diary = requireEditor(harness, 'fd-meal-list');
+        expect(diary.querySelector('[role="alert"]')?.textContent).toContain('ERRORS.LOAD_FAILED_TITLE');
+        const retry = nativeEditorButton(diary, 'ERRORS.RETRY');
+        retry.click();
+        retry.click();
+
+        expect(api.queryOverview).toHaveBeenCalledTimes(2);
+        expect(retryingOverview.observed).toBe(true);
+        harness.detectChanges();
+        expect(diary.querySelector('fd-skeleton-card')).not.toBeNull();
+        expect(diary.querySelector('fd-error-state')).toBeNull();
+
+        retryingOverview.next({ ...DIARY, allMeals: { ...DIARY.allMeals, data: [saved], totalItems: 1 } });
+        retryingOverview.complete();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(diary.querySelector('fd-meal-card')?.textContent).toContain(note);
+        });
+        expect(api.update).toHaveBeenCalledTimes(1);
         expect(api.create).not.toHaveBeenCalled();
     });
 });
@@ -474,6 +573,39 @@ describe('Meal quantity ownership when the edit route is reused', () => {
 });
 
 describe('Meal recognition review route ownership', () => {
+    it('starts another meal with its recognition items collapsed even when the editor is reused', async () => {
+        const api = setupEditorRoutes({ premium: true });
+        const nextMealId = entityId<'meal'>('next-dinner');
+        api.getById
+            .mockReturnValueOnce(of(mealWithRecognition(MEAL_ID, ORIGINAL_NOTE, 'Broccoli', 'Carrots', 'Spinach')))
+            .mockReturnValueOnce(of(mealWithRecognition(nextMealId, 'Next dinner', 'Cauliflower', 'Peas', 'Cabbage')));
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const originalPreview = requireEditor(harness, 'fd-meal-ai-sessions');
+
+        expect(originalPreview.textContent).toContain('Broccoli');
+        expect(originalPreview.textContent).not.toContain('Spinach');
+        expect(recognitionPreviewToggle(originalPreview).getAttribute('aria-expanded')).toBe('false');
+        recognitionPreviewToggle(originalPreview).click();
+        harness.detectChanges();
+        expect(originalPreview.textContent).toContain('Spinach');
+        expect(recognitionPreviewToggle(originalPreview).getAttribute('aria-expanded')).toBe('true');
+
+        await harness.navigateByUrl(`/meals/${nextMealId}/edit`);
+        const nextPreview = requireEditor(harness, 'fd-meal-ai-sessions');
+        expect(nextPreview).toBe(originalPreview);
+        expect(nextPreview.textContent).toContain('Cauliflower');
+        expect(nextPreview.textContent).toContain('Peas');
+        expect(nextPreview.textContent).not.toContain('Spinach');
+        expect(nextPreview.textContent).not.toContain('Cabbage');
+        expect(recognitionPreviewToggle(nextPreview).getAttribute('aria-expanded')).toBe('false');
+
+        recognitionPreviewToggle(nextPreview).click();
+        harness.detectChanges();
+        expect(nextPreview.textContent).toContain('Cabbage');
+        expect(recognitionPreviewToggle(nextPreview).getAttribute('aria-expanded')).toBe('true');
+        expect(api.update).not.toHaveBeenCalled();
+    });
+
     it('closes an open recognition review when leaving the meal and keeps the saved items unchanged', async () => {
         const api = setupEditorRoutes({ premium: true });
         api.getById.mockReturnValue(of(mealWithRecognition(MEAL_ID, ORIGINAL_NOTE, 'Broccoli')));
@@ -521,36 +653,217 @@ describe('Meal recognition review route ownership', () => {
     });
 });
 
-function mealWithRecognition(mealId: Meal['id'], comment: string, food: string): Meal {
+describe('Recognition row removal on the meal edit route', () => {
+    it('does not remove the next recognition when the same visible delete button receives a second click', async () => {
+        const api = setupEditorRoutes({ premium: true });
+        const firstSession = recognitionSession(MEAL_ID, 'broccoli-recognition', ['Broccoli']);
+        const nextSession = recognitionSession(MEAL_ID, 'cauliflower-recognition', ['Cauliflower']);
+        const remaining = { ...savedMeal(), aiSessions: [nextSession] };
+        api.getById.mockReturnValueOnce(of({ ...remaining, aiSessions: [firstSession, nextSession] })).mockReturnValueOnce(of(remaining));
+        api.update.mockReturnValueOnce(of(remaining)).mockReturnValueOnce(of({ ...remaining, aiSessions: [] }));
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const preview = requireEditor(harness, 'fd-meal-ai-sessions');
+        const firstRow = recognitionRow(preview, 'Broccoli');
+        const remove = nativeEditorButton(firstRow, 'MEAL_MANAGE.ITEMS_AI_DELETE');
+
+        remove.click();
+        expect(remove.isConnected).toBe(true);
+        expect(firstRow.textContent).toContain('Broccoli');
+        remove.click();
+        harness.detectChanges();
+
+        const editor = requireEditor(harness, 'fd-meal-manage-form');
+        const remainingPreviewText = editor.querySelector('fd-meal-ai-sessions')?.textContent ?? '';
+        expect(remainingPreviewText).toContain('Cauliflower');
+        expect(remainingPreviewText).not.toContain('Broccoli');
+        nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        const router = TestBed.inject(Router);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(router.url.split('?')[0]).toBe(MEALS_URL);
+        });
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            MEAL_ID,
+            expect.objectContaining({
+                aiSessions: [expect.objectContaining({ items: [expect.objectContaining({ nameEn: 'Cauliflower' })] })],
+            }),
+        );
+
+        await harness.navigateByUrl(MEAL_URL);
+        const freshPreview = requireEditor(harness, 'fd-meal-ai-sessions');
+        nativeEditorButton(recognitionRow(freshPreview, 'Cauliflower'), 'MEAL_MANAGE.ITEMS_AI_DELETE').click();
+        harness.detectChanges();
+        const freshEditor = requireEditor(harness, 'fd-meal-manage-form');
+        expect(freshEditor.querySelector('fd-meal-ai-sessions')).toBeNull();
+        nativeEditorButton(freshEditor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.update).toHaveBeenNthCalledWith(2, MEAL_ID, expect.objectContaining({ aiSessions: [] }));
+        });
+    });
+});
+
+it('does not open a neighboring recognition from a removed row edit button', async () => {
+    const api = setupEditorRoutes({ premium: true });
+    const broccoli = recognitionSession(MEAL_ID, 'broccoli-recognition', ['Broccoli']);
+    const cauliflower = recognitionSession(MEAL_ID, 'cauliflower-recognition', ['Cauliflower']);
+    api.getById.mockReturnValueOnce(of({ ...savedMeal(), aiSessions: [broccoli, cauliflower] }));
+    const harness = await RouterTestingHarness.create(MEAL_URL);
+    const preview = requireEditor(harness, 'fd-meal-ai-sessions');
+    const firstRow = recognitionRow(preview, 'Broccoli');
+    const edit = nativeEditorButton(firstRow, 'MEAL_MANAGE.ITEMS_AI_EDIT');
+    expect(edit.disabled).toBe(false);
+
+    nativeEditorButton(firstRow, 'MEAL_MANAGE.ITEMS_AI_DELETE').click();
+    expect(edit.isConnected).toBe(true);
+    expect(firstRow.textContent).toContain('Broccoli');
+    edit.click();
+    await vi.dynamicImportSettled();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(document.querySelector('fd-meal-photo-recognition-dialog')?.textContent ?? null).toBeNull();
+    const nextPreview = requireEditor(harness, 'fd-meal-ai-sessions');
+    expect(nextPreview.textContent).not.toContain('Broccoli');
+    nativeEditorButton(recognitionRow(nextPreview, 'Cauliflower'), 'MEAL_MANAGE.ITEMS_AI_EDIT').click();
+    const review = await waitForRecognitionReviewAsync(harness, 'Cauliflower');
+    nativeEditorButton(review, 'COMMON.CANCEL').click();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(document.querySelector('fd-meal-photo-recognition-dialog')).toBeNull();
+    });
+    expect(api.update).not.toHaveBeenCalled();
+});
+
+describe('Manual row removal on the meal edit route', () => {
+    it('keeps the later manual items in order after a second click on the same visible remove button', async () => {
+        const api = setupEditorRoutes();
+        const original = savedMeal();
+        const bananaAmount = 60;
+        const carrotAmount = 25;
+        const banana = savedProductItem('banana', 'Banana', bananaAmount);
+        const carrot = savedProductItem('carrot', 'Carrot', carrotAmount);
+        const remaining = { ...original, items: [banana, carrot] };
+        api.getById.mockReturnValueOnce(of({ ...original, items: [...original.items, banana, carrot] })).mockReturnValueOnce(of(remaining));
+        api.update.mockReturnValueOnce(of(remaining)).mockReturnValueOnce(of({ ...remaining, items: [carrot] }));
+        const router = TestBed.inject(Router);
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-manage-form');
+        const firstRow = manualItemRow(editor, 'Green apple');
+        const remove = nativeEditorButton(firstRow, 'MEAL_MANAGE.REMOVE_ITEM');
+
+        remove.click();
+        expect(remove.isConnected).toBe(true);
+        expect(firstRow.textContent).toContain('Green apple');
+        remove.click();
+        harness.detectChanges();
+
+        expect(manualItemNames(editor)).toEqual(['Banana', 'Carrot']);
+        nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(router.url.split('?')[0]).toBe(MEALS_URL);
+        });
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            MEAL_ID,
+            expect.objectContaining({
+                items: [
+                    { productId: banana.product.id, recipeId: null, amount: banana.amount, origin: 'Manual' },
+                    { productId: carrot.product.id, recipeId: null, amount: carrot.amount, origin: 'Manual' },
+                ],
+            }),
+        );
+
+        await harness.navigateByUrl(MEAL_URL);
+        const freshEditor = requireEditor(harness, 'fd-meal-manage-form');
+        nativeEditorButton(manualItemRow(freshEditor, 'Banana'), 'MEAL_MANAGE.REMOVE_ITEM').click();
+        harness.detectChanges();
+        expect(manualItemNames(freshEditor)).toEqual(['Carrot']);
+        nativeEditorButton(freshEditor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(api.update).toHaveBeenNthCalledWith(
+                2,
+                MEAL_ID,
+                expect.objectContaining({
+                    items: [{ productId: carrot.product.id, recipeId: null, amount: carrot.amount, origin: 'Manual' }],
+                }),
+            );
+        });
+    });
+});
+
+function savedProductItem(productId: string, name: string, amount: number): ProductMealItem & { product: Product } {
+    return {
+        id: entityId<'meal-item'>(`${productId}-portion`),
+        mealId: MEAL_ID,
+        amount: productQuantityFromStored(amount),
+        sourceType: MealSourceType.Product,
+        product: { ...createEmptyProductSnapshot(), id: entityId<'product'>(productId), name },
+        recipe: null,
+    };
+}
+
+function manualItemRow(editor: HTMLElement, name: string): HTMLElement {
+    const rows = [...editor.querySelectorAll<HTMLElement>('.meal-manage__manual-summary')];
+    const row = rows.find(candidate => candidate.querySelector('.meal-manage__ai-summary-name')?.textContent.trim() === name);
+    if (row === undefined) {
+        throw new Error(`Expected the visible manual row for ${name}`);
+    }
+    return row;
+}
+
+function manualItemNames(editor: HTMLElement): string[] {
+    return [...editor.querySelectorAll('.meal-manage__manual-summary .meal-manage__ai-summary-name')].map(node => node.textContent.trim());
+}
+
+function recognitionRow(preview: HTMLElement, food: string): HTMLElement {
+    const rows = [...preview.querySelectorAll<HTMLElement>('.meal-manage__ai-summary')];
+    const row = rows.find(item => item.textContent.includes(food));
+    if (row === undefined) {
+        throw new Error(`Expected the visible recognition row for ${food}`);
+    }
+    return row;
+}
+
+function recognitionPreviewToggle(preview: HTMLElement): HTMLButtonElement {
+    const button = preview.querySelector('.meal-manage__ai-summary-more button');
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('Expected a recognition preview expansion button');
+    }
+    return button;
+}
+
+function mealWithRecognition(mealId: Meal['id'], comment: string, food: string, ...additionalItems: string[]): Meal {
     const meal = savedMeal(comment);
     const sessionId = `${mealId}-recognition`;
     return {
         ...meal,
         id: mealId,
         items: meal.items.map(item => ({ ...item, id: entityId<'meal-item'>(`${mealId}-portion`), mealId })),
-        aiSessions: [
-            {
-                id: sessionId,
-                mealId,
-                imageUrl: `/images/${mealId}.jpg`,
-                recognizedAtUtc: '2026-05-04T15:00:00Z',
-                items: [
-                    {
-                        id: `${sessionId}-item`,
-                        sessionId,
-                        nameEn: food,
-                        amount: 100,
-                        unit: 'g',
-                        calories: 34,
-                        proteins: 3,
-                        fats: 0,
-                        carbs: 7,
-                        fiber: 3,
-                        alcohol: 0,
-                    },
-                ],
-            },
-        ],
+        aiSessions: [recognitionSession(mealId, sessionId, [food, ...additionalItems])],
+    };
+}
+
+function recognitionSession(mealId: Meal['id'], sessionId: string, foods: readonly string[]): MealAiSession {
+    return {
+        id: sessionId,
+        mealId,
+        imageUrl: `/images/${mealId}.jpg`,
+        recognizedAtUtc: '2026-05-04T15:00:00Z',
+        items: foods.map((nameEn, index) => ({
+            id: `${sessionId}-item-${index}`,
+            sessionId,
+            nameEn,
+            amount: 100,
+            unit: 'g',
+            calories: 34,
+            proteins: 3,
+            fats: 0,
+            carbs: 7,
+            fiber: 3,
+            alcohol: 0,
+        })),
     };
 }
 

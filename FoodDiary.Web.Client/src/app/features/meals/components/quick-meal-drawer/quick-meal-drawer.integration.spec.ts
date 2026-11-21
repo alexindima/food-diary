@@ -181,6 +181,46 @@ describe('Quick meal quantity editing with the real dialog', () => {
     });
 });
 
+describe('Quick meal serving mass after a temporary lookup failure', () => {
+    it('reopens a recipe in recovered grams and still saves its original servings', async () => {
+        const { fixture, lookupRecipe, createMeal } = await renderDrawerAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        lookupRecipe.mockReturnValueOnce(throwError(() => new Error('Temporary recipe lookup failure'))).mockReturnValueOnce(
+            of({
+                id: RECIPE.id,
+                servings: RECIPE_SERVINGS,
+                steps: [{ ingredients: [{ amount: GRAMS_PER_SERVING * RECIPE_SERVINGS, productBaseUnit: 'G' }] }],
+            }),
+        );
+
+        editButton(host).click();
+        const fallback = await visibleEditorAsync();
+        expect(amountInput(fallback).getAttribute('aria-label')).toBe('MEAL_MANAGE.AMOUNT_LABEL_RECIPE_SERVINGS');
+        expect(amountInput(fallback).valueAsNumber).toBe(INITIAL_SERVINGS);
+        editorAction(fallback, 'PRODUCT_MANAGE.CANCEL_BUTTON').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(editButton(host).disabled).toBe(false);
+        });
+
+        editButton(host).click();
+        const recovered = await visibleEditorAsync();
+        expect(lookupRecipe.mock.calls).toEqual([[RECIPE.id], [RECIPE.id]]);
+        expect(amountInput(recovered).valueAsNumber).toBe(INITIAL_SERVINGS * GRAMS_PER_SERVING);
+        editorAction(recovered, 'MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(draftSaveButton(host).disabled).toBe(false);
+        });
+
+        draftSaveButton(host).click();
+        expect(createMeal).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ items: [{ recipeId: RECIPE.id, productId: null, amount: INITIAL_SERVINGS }] }),
+            expect.any(String),
+        );
+    });
+});
+
 describe('Quick meal with recipes that have no computable serving mass', () => {
     const editedServings = 2.5;
     const recipes = [
@@ -439,6 +479,7 @@ describe('Quick meal local date and time', () => {
     const missingTimes: Partial<Record<string, { date: string; missing: string; corrected: string; expected: string }>> = {
         'America/Los_Angeles': { date: '2026-03-08', missing: '02:30', corrected: '03:30', expected: '2026-03-08T10:30:00.000Z' },
         'America/St_Johns': { date: '2026-03-08', missing: '02:30', corrected: '03:30', expected: '2026-03-08T06:00:00.000Z' },
+        'Asia/Tbilisi': { date: '2005-03-27', missing: '02:30', corrected: '03:30', expected: '2005-03-26T23:30:00.000Z' },
         'Europe/Berlin': { date: '2026-03-29', missing: '02:30', corrected: '03:30', expected: '2026-03-29T01:30:00.000Z' },
         'Australia/Lord_Howe': { date: '2026-10-04', missing: '02:15', corrected: '02:45', expected: '2026-10-03T15:45:00.000Z' },
     };

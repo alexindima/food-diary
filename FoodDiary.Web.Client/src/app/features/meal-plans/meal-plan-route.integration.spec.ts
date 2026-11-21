@@ -499,6 +499,47 @@ describe('Meal plan diary entry handoff recovery', () => {
     });
 });
 
+describe('Meal plan diary handoff for an older serving quantity', () => {
+    it('saves one serving when an older planned recipe has a zero quantity', async () => {
+        const planned = mealPlanRecipe('legacy-portion', 'Planned soup');
+        const plan = planWithRecipe(CURATED_PLAN, planned, 'Lunch', 0);
+        const getRecipe = vi.fn<RecipeLookup['getById']>().mockReturnValue(of(planned));
+        const api = setupMealPlans(getRecipe);
+        api.getById.mockReturnValueOnce(of(plan));
+        const harness = await RouterTestingHarness.create(CURATED_PLAN_URL);
+        const detail = await waitForPlanAsync(harness, plan);
+
+        renderedAction(detail, ADD_TO_DIARY).click();
+        harness.detectChanges();
+
+        const draft = TestBed.inject(QuickMealService);
+        expect(draft.items()).toMatchObject([{ recipe: planned, amount: 1 }]);
+        expect(detail.querySelector('[role="alert"]')).toBeNull();
+        draft.saveDraft();
+
+        const request = TestBed.inject(HttpTestingController).expectOne(
+            candidate => candidate.method === 'POST' && candidate.url.endsWith('/api/v1/meals'),
+        );
+        expect(request.request.body).toMatchObject({
+            mealType: 'LUNCH',
+            items: [{ recipeId: planned.id, productId: null, amount: 1 }],
+        });
+        request.flush({
+            id: 'saved-legacy-portion',
+            date: '2026-05-14T12:00:00Z',
+            totalCalories: 0,
+            totalProteins: 0,
+            totalFats: 0,
+            totalCarbs: 0,
+            totalFiber: 0,
+            totalAlcohol: 0,
+            isNutritionAutoCalculated: true,
+            items: [],
+        });
+        expect(draft.hasItems()).toBe(false);
+    });
+});
+
 describe('Meal plan diary entry handoff', () => {
     it('preserves a diary draft added during recipe loading, then retries with the planned servings and a legacy meal type', async () => {
         const planned = mealPlanRecipe('planned-salad', 'Planned salad');
@@ -584,7 +625,7 @@ function mealPlanRecipe(id: string, name: string): Recipe {
     };
 }
 
-function planWithRecipe(plan: MealPlan, recipe: Recipe, mealType: string): MealPlan {
+function planWithRecipe(plan: MealPlan, recipe: Recipe, mealType: string, servings = PLANNED_SERVINGS): MealPlan {
     return {
         ...plan,
         days: [
@@ -597,7 +638,7 @@ function planWithRecipe(plan: MealPlan, recipe: Recipe, mealType: string): MealP
                         mealType: plannedMealTypeFromStored(mealType),
                         recipeId: recipe.id,
                         recipeName: recipe.name,
-                        servings: plannedServingsFromStored(PLANNED_SERVINGS),
+                        servings: plannedServingsFromStored(servings),
                     },
                 ],
             },

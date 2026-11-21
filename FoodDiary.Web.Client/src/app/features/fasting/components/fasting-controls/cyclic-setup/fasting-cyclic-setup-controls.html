@@ -51,13 +51,12 @@
             class="fasting-controls__segmented-toggle"
             size="sm"
             [options]="cyclicEatDayProtocolOptions()"
-            [selectedValue]="cyclicEatDayProtocol()"
             [ariaLabel]="'FASTING.EAT_DAY_WINDOW_GROUP' | translate"
             [shrinkItems]="true"
             [fitContent]="inlineCustomControls()"
             [stackOnNarrow]="false"
             [wrapOnNarrow]="true"
-            (selectedValueChange)="cyclicEatDayProtocolChange.emit($event)"
+            [(selectedValue)]="cyclicEatDayProtocol"
         />
 
         @if (cyclicEatDayProtocol() === 'CustomIntermittent') {

@@ -1,13 +1,9 @@
 <fd-ui-dialog-shell size="lg" [title]="'FASTING.CHECK_IN.TITLE' | translate" [subtitle]="'FASTING.CHECK_IN.DIALOG_SUBTITLE' | translate">
     <div class="fasting-check-in-dialog__body">
         <fd-fasting-check-in-card
-            presentation="dialog"
-            [isActive]="true"
-            [isExpanded]="true"
             [isSaving]="isSaving()"
             [isEnding]="isEnding()"
             [isUpdatingCycle]="isUpdatingCycle()"
-            [latestCheckIn]="null"
             [hungerLevel]="hungerLevel"
             [energyLevel]="energyLevel"
             [moodLevel]="moodLevel"

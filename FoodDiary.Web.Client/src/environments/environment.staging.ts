@@ -51,7 +51,6 @@ export const environment: AppConfig = {
         en: 'https://fooddiary.club',
         ru: 'https://fooddiary.club/ru',
     },
-    russianDefaultHosts: [],
     enableGlobalErrorHandler: true,
     enableClientObservability: true,
 };

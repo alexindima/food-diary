@@ -567,11 +567,11 @@ describe('PremiumAccessPageComponent Paddle transaction return', () => {
             billingService.getOverview.mockReturnValue(of({ ...createOverview(), paddleClientToken: token }));
             setupComponent();
             await settleAsync();
-            expect(paddleOpen).toHaveBeenCalledExactlyOnceWith('txn_returned', {
-                token: token.trim(),
-                environment: expectedEnvironment,
-                locale: language,
-            });
+            expect(paddleOpen).toHaveBeenCalledExactlyOnceWith(
+                'txn_returned',
+                { token: token.trim(), environment: expectedEnvironment, locale: language },
+                expect.objectContaining({ destroyed: false }),
+            );
             expect(router.navigate).toHaveBeenCalledWith([], { relativeTo: routeStub, queryParams: {}, replaceUrl: true });
             expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
         },
@@ -581,11 +581,11 @@ describe('PremiumAccessPageComponent Paddle transaction return', () => {
         environment.paddleClientToken = ' live_fallback ';
         setupComponent();
         await settleAsync();
-        expect(paddleOpen).toHaveBeenCalledExactlyOnceWith('txn_returned', {
-            token: 'live_fallback',
-            environment: 'production',
-            locale: 'en',
-        });
+        expect(paddleOpen).toHaveBeenCalledExactlyOnceWith(
+            'txn_returned',
+            { token: 'live_fallback', environment: 'production', locale: 'en' },
+            expect.objectContaining({ destroyed: false }),
+        );
         expect(router.navigate).toHaveBeenCalledOnce();
     });
 

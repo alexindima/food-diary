@@ -7,9 +7,11 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import type { FastingSession } from '../../../../shared/models/fasting.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import type { FastingProtocolPreview } from '../../lib/fasting-page.types';
 import { FastingRedesignPreviewComponent } from './fasting-redesign-preview';
 
 const INTERMITTENT_HOURS = 16;
+const SELECTED_INTERMITTENT_PROTOCOL = { mode: 'intermittent', durationHours: INTERMITTENT_HOURS } satisfies FastingProtocolPreview;
 const TEST_PROGRESS_PERCENT = 6.25;
 const TUESDAY_AFTERNOON = '2026-08-11T18:00:00';
 const TUESDAY_MORNING_START = '2026-08-11T09:00:00';
@@ -60,7 +62,7 @@ describe('FastingRedesignPreviewComponent', () => {
         fixture.componentRef.setInput('remainingFormatted', '15:00:00');
         fixture.componentRef.setInput('progressPercent', TEST_PROGRESS_PERCENT);
         fixture.componentRef.setInput('now', new Date('2026-08-11T16:00:00Z'));
-        fixture.componentRef.setInput('selectedDurationHours', INTERMITTENT_HOURS);
+        fixture.componentRef.setInput('selectedProtocol', SELECTED_INTERMITTENT_PROTOCOL);
     });
 
     it('flags an overdue active session without presenting a further fasting stage', () => {
@@ -307,7 +309,7 @@ describe('FastingRedesignPreviewComponent notes', () => {
             remainingFormatted: '15:00:00',
             progressPercent: TEST_PROGRESS_PERCENT,
             now: new Date('2026-08-11T16:00:00Z'),
-            selectedDurationHours: INTERMITTENT_HOURS,
+            selectedProtocol: SELECTED_INTERMITTENT_PROTOCOL,
         })) {
             fixture.componentRef.setInput(name, value);
         }
@@ -342,7 +344,7 @@ describe('FastingRedesignPreviewComponent notes', () => {
         fixture.componentRef.setInput('remainingFormatted', '15:00:00');
         fixture.componentRef.setInput('progressPercent', TEST_PROGRESS_PERCENT);
         fixture.componentRef.setInput('now', new Date('2026-08-11T16:00:00Z'));
-        fixture.componentRef.setInput('selectedDurationHours', INTERMITTENT_HOURS);
+        fixture.componentRef.setInput('selectedProtocol', SELECTED_INTERMITTENT_PROTOCOL);
         fixture.detectChanges();
 
         const detailsRequested = vi.fn();
@@ -379,7 +381,7 @@ describe('FastingRedesignPreviewComponent notes', () => {
         fixture.componentRef.setInput('remainingFormatted', '15:00:00');
         fixture.componentRef.setInput('progressPercent', TEST_PROGRESS_PERCENT);
         fixture.componentRef.setInput('now', new Date('2026-08-11T16:00:00Z'));
-        fixture.componentRef.setInput('selectedDurationHours', INTERMITTENT_HOURS);
+        fixture.componentRef.setInput('selectedProtocol', SELECTED_INTERMITTENT_PROTOCOL);
         fixture.componentRef.setInput('alerts', [
             {
                 message: { id: 'alert-1', titleKey: 'alert', bodyKey: 'body', tone: 'warning', bodyParams: null },
@@ -447,7 +449,7 @@ describe('FastingRedesignPreviewComponent active management action', () => {
             remainingFormatted: '15:00:00',
             progressPercent: TEST_PROGRESS_PERCENT,
             now: new Date('2026-08-11T16:00:00Z'),
-            selectedDurationHours: INTERMITTENT_HOURS,
+            selectedProtocol: SELECTED_INTERMITTENT_PROTOCOL,
         })) {
             fixture.componentRef.setInput(name, value);
         }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit';
 import { fdUiCoerceInputNumberValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
@@ -21,9 +21,9 @@ export class FastingCyclicSetupControlsComponent {
     protected readonly normalizeIntermittentFastHours = normalizeIntermittentFastHours;
 
     public readonly cyclicPresetOptions = input.required<FdUiSegmentedToggleOption[]>();
-    public readonly cyclicEatDayProtocolOptions = input.required<FdUiSegmentedToggleOption[]>();
+    public readonly cyclicEatDayProtocolOptions = input.required<Array<FdUiSegmentedToggleOption<FastingProtocol>>>();
     public readonly selectedCyclicPresetValue = input.required<string>();
-    public readonly cyclicEatDayProtocol = input.required<FastingProtocol>();
+    public readonly cyclicEatDayProtocol = model.required<FastingProtocol>();
     public readonly cyclicFastDays = input.required<number>();
     public readonly cyclicEatDays = input.required<number>();
     public readonly cyclicEatDayFastHours = input.required<number>();
@@ -34,7 +34,6 @@ export class FastingCyclicSetupControlsComponent {
     public readonly cyclicPresetChange = output<string>();
     public readonly cyclicFastDaysChange = output<string | number>();
     public readonly cyclicEatDaysChange = output<string | number>();
-    public readonly cyclicEatDayProtocolChange = output<string>();
     public readonly cyclicEatDayFastHoursChange = output<string | number>();
 
     protected normalizeNumericControlValue(value: FdUiInputValue): string | number {

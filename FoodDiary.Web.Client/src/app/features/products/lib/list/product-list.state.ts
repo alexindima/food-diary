@@ -1,14 +1,5 @@
-import {
-    type FavoriteProduct,
-    MeasurementUnit,
-    type Product,
-    ProductType,
-    ProductVisibility,
-} from '../../../../shared/models/product.data';
-import { entityId } from '../../../../shared/models/semantics/entity-id';
+import type { ProductType } from '../../../../shared/models/product.data';
 import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
-
-const FAVORITE_GRAM_BASE_AMOUNT = 100;
 
 export type ProductListFilterState = {
     onlyMine: boolean;
@@ -56,42 +47,6 @@ export function resolveProductListFilterChanges(
     };
 }
 
-export function buildFavoriteProductSnapshot(favorite: FavoriteProduct): Product {
-    const baseUnit = normalizeMeasurementUnit(favorite.baseUnit);
-    const name = favorite.name?.trim();
-
-    return {
-        id: entityId<'product'>(favorite.productId),
-        name: name !== undefined && name.length > 0 ? name : favorite.productName,
-        barcode: favorite.barcode ?? null,
-        brand: favorite.brand ?? null,
-        productType: ProductType.Unknown,
-        category: null,
-        description: null,
-        comment: favorite.comment ?? null,
-        imageUrl: favorite.imageUrl ?? null,
-        images: favorite.imageUrls?.map(imageUrl => ({ imageAssetId: null, imageUrl })),
-        imageAssetId: null,
-        baseUnit,
-        baseAmount: baseUnit === MeasurementUnit.PCS ? 1 : FAVORITE_GRAM_BASE_AMOUNT,
-        defaultPortionAmount: favorite.defaultPortionAmount,
-        caloriesPerBase: favorite.caloriesPerBase,
-        proteinsPerBase: favorite.proteinsPerBase,
-        fatsPerBase: favorite.fatsPerBase,
-        carbsPerBase: favorite.carbsPerBase,
-        fiberPerBase: favorite.fiberPerBase,
-        alcoholPerBase: favorite.alcoholPerBase,
-        usageCount: 0,
-        visibility: ProductVisibility.Private,
-        createdAt: new Date(favorite.createdAtUtc),
-        isOwnedByCurrentUser: favorite.isOwnedByCurrentUser,
-        qualityScore: favorite.qualityScore,
-        qualityGrade: favorite.qualityGrade,
-        isFavorite: true,
-        favoriteProductId: entityId<'favorite-product'>(favorite.id),
-    };
-}
-
 function areProductTypesEqual(left: readonly ProductType[], right: readonly ProductType[]): boolean {
     if (left.length !== right.length) {
         return false;
@@ -99,16 +54,4 @@ function areProductTypesEqual(left: readonly ProductType[], right: readonly Prod
 
     const leftSet = new Set(left);
     return right.every(type => leftSet.has(type));
-}
-
-function normalizeMeasurementUnit(value: string): MeasurementUnit {
-    if (value === 'ML') {
-        return MeasurementUnit.ML;
-    }
-
-    if (value === 'PCS') {
-        return MeasurementUnit.PCS;
-    }
-
-    return MeasurementUnit.G;
 }

@@ -35,8 +35,7 @@
                         (stepTitleChange)="onStepTitleChange($index, $event)"
                         (stepPhotosChange)="stepPhotosChange.emit({ stepIndex: $index, value: $event })"
                         (photosUploading)="onPhotosUploading($index, $event)"
-                        (stepImageChange)="onStepImageChange($index, $event)"
-                        (fieldBlur)="fieldBlur.emit({ stepIndex: $index, field: $event.field, ingredientIndex: $event.ingredientIndex })"
+                        (fieldBlur)="fieldBlur.emit({ stepIndex: $index, ...$event })"
                         (stepDescriptionChange)="onStepDescriptionChange($index, $event)"
                         (ingredientTextChange)="
                             ingredientTextChange.emit({

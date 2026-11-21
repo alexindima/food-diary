@@ -475,22 +475,25 @@ describe('ShoppingListFacade persistence operations', () => {
         expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.DELETE_ERROR');
     });
 
-    it('should delete inactive list without replacing the current list', async () => {
+    it('ignores a repeated delete of an inactive list without replacing the current list', async () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const deletedId = entityId<'shopping-list'>('list-2');
         shoppingListService.getOverview.mockReturnValueOnce(
             of(
                 makeOverview([
                     { id: entityId<'shopping-list'>('list-1'), name: 'Main list', createdAt: utcInstant(''), itemsCount: 0 },
-                    { id: entityId<'shopping-list'>('list-2'), name: 'Weekend', createdAt: utcInstant(''), itemsCount: 0 },
+                    { id: deletedId, name: 'Weekend', createdAt: utcInstant(''), itemsCount: 0 },
                 ]),
             ),
         );
         facade.initialize();
         await waitForAsyncTasksAsync();
 
-        facade.deleteListById(entityId<'shopping-list'>('list-2'));
+        facade.deleteListById(deletedId);
+        expect(facade.lists().map(entry => entry.id)).toEqual([list.id]);
+        facade.deleteListById(deletedId);
 
-        expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-2');
+        expect(shoppingListService.deleteById).toHaveBeenCalledExactlyOnceWith(deletedId);
         expect(facade.list()).toEqual(list);
         expect(facade.selectedListId()).toBe('list-1');
     });
@@ -719,6 +722,9 @@ describe('ShoppingListFacade new list summaries', () => {
             itemsCount: 0,
         });
 
+        facade.clearRenameRequest(entityId<'shopping-list'>('older-list'));
+        expect(facade.renameRequestedListId()).toBe(createdList.id);
+
         facade.clearRenameRequest(createdList.id);
 
         expect(facade.renameRequestedListId()).toBeNull();
@@ -737,6 +743,87 @@ describe('ShoppingListFacade localized names', () => {
 
         expect(shoppingListService.create).toHaveBeenCalledWith({ name: `SHOPPING_LIST.NEW_LIST ${dateLabel}` });
     });
+});
+
+describe('ShoppingListFacade item and name draft boundaries', () => {
+    it('keeps the list empty through an early add and a whitespace-only name, then accepts a valid item', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const overview = new Subject<ShoppingListOverview>();
+        shoppingListService.getOverview.mockReturnValueOnce(overview);
+        facade.initialize();
+        expect(facade.list()).toBeNull();
+        addMilk(facade);
+        expect(facade.items()).toEqual([]);
+
+        overview.next(makeOverview([{ id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: 0 }]));
+        overview.complete();
+        facade.addItem({ name: '   ', amount: null, unit: null, category: null, note: null });
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(facade.items()).toEqual([]);
+        expect(shoppingListService.update).not.toHaveBeenCalled();
+
+        addMilk(facade);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenCalledExactlyOnceWith(
+            list.id,
+            expect.objectContaining({
+                expectedRevision: list.revision,
+                items: [expect.objectContaining({ name: 'Milk' })],
+            }),
+        );
+    });
+
+    it('keeps the admitted inline rename while the request is pending and rejects a later blank name', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const renamed = new Subject<ShoppingList>();
+        const acceptedName = 'Weekend shopping';
+        shoppingListService.update.mockReturnValueOnce(renamed);
+        facade.initialize();
+        facade.renameListById(list.id, acceptedName);
+        expect(facade.isSaving()).toBe(true);
+        facade.renameListById(list.id, 'Repeated rename');
+        expect(facade.list()?.name).toBe(acceptedName);
+
+        renamed.next({ ...list, name: acceptedName });
+        renamed.complete();
+        expect(facade.isSaving()).toBe(false);
+        facade.renameListById(list.id, '  ');
+
+        expect(facade.list()?.name).toBe(acceptedName);
+        expect(shoppingListService.update).toHaveBeenCalledExactlyOnceWith(list.id, {
+            expectedRevision: list.revision,
+            name: acceptedName,
+        });
+    });
+});
+
+it('keeps an item that was unchecked before a previously confirmed purchased cleanup is applied', () => {
+    const { facade, list, shoppingListService } = setupShoppingListFacade();
+    const itemId = entityId<'shopping-list-item'>('milk-item');
+    const purchased = { id: itemId, shoppingListId: list.id, name: 'Milk', isChecked: true, sortOrder: 1 };
+    const overview = makeOverview([{ id: list.id, name: list.name, createdAt: list.createdAt, itemsCount: 1, remainingCount: 0 }]);
+    shoppingListService.getOverview.mockReturnValueOnce(of({ ...overview, selectedList: { ...list, items: [purchased] } }));
+    facade.initialize();
+    const confirmedIds = facade
+        .items()
+        .filter(item => item.isChecked)
+        .map(item => item.id);
+    expect(confirmedIds).toEqual([itemId]);
+
+    const saved = { ...list, revision: 'b'.repeat(REVISION_LENGTH), items: [{ ...purchased, isChecked: false }] };
+    shoppingListService.update.mockReturnValueOnce(of(saved));
+    facade.toggleItemChecked(itemId, false);
+    vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+    expect(shoppingListService.update).toHaveBeenCalledExactlyOnceWith(
+        list.id,
+        expect.objectContaining({ items: [expect.objectContaining({ id: itemId, isChecked: false })] }),
+    );
+
+    facade.removePurchased(list.id, confirmedIds);
+    vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+    expect(facade.items()).toEqual(saved.items);
+    expect(facade.hasUnsavedChanges()).toBe(false);
+    expect(shoppingListService.update).toHaveBeenCalledOnce();
 });
 
 function setupShoppingListFacade(language = 'ru'): ShoppingListFacadeContext {

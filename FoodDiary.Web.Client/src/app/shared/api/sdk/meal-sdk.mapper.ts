@@ -225,6 +225,7 @@ class MealResponseNormalizer {
             mealId: response.mealId,
             imageAssetId: response.imageAssetId ?? null,
             imageUrl: response.imageUrl ?? null,
+            source: response.source,
             status: response.status ?? null,
             recognizedAtUtc: response.recognizedAtUtc,
             notes: response.notes ?? null,

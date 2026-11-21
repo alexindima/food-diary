@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output, signal, viewChildren } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -22,6 +22,8 @@ import type { ActivityLevelOption, Gender } from '../../../../../shared/models/u
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
 import type { UserFormValues, UserManageAccountFormPatch, UserManageBodyFormPatch } from '../../../lib/user-manage.types';
 import { calculateProfileCompleteness } from '../../user-manage/user-manage-lib/user-profile-completeness.mapper';
+
+type HeightField = 'metric' | 'feet' | 'inches';
 
 type ImperialHeightDraft = {
     canonicalCm: number | null;
@@ -57,6 +59,8 @@ export class UserManageComparisonWidgetsComponent {
     protected readonly latestBirthDate = new Date();
     protected readonly measurements = inject(MeasurementSystemService);
     protected readonly avatarClearRequest = signal(0);
+    private readonly heightFields = viewChildren<FdUiInputComponent>('heightField');
+    private readonly invalidHeightDrafts = signal<readonly HeightField[]>([]);
     public readonly userForm = input.required<FieldTree<UserFormValues>>();
     public readonly genderOptions = input.required<Array<FdUiSelectOption<Gender | null>>>();
     public readonly languageOptions = input.required<Array<FdUiSelectOption<string | null>>>();
@@ -69,6 +73,7 @@ export class UserManageComparisonWidgetsComponent {
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
     public readonly birthDateInputInvalidChange = output<boolean>();
+    public readonly heightInputInvalidChange = output<boolean>();
     protected readonly timeZoneQuery = signal<string | null>(null);
     protected readonly timeZoneValue = computed(() => this.timeZoneQuery() ?? this.userForm().timeZoneId().value());
     protected readonly timeZoneOptions = computed<Array<FdUiAutocompleteOption<string>>>(() => {
@@ -164,7 +169,25 @@ export class UserManageComparisonWidgetsComponent {
     }
 
     protected onMeasurementSystemChange(value: string | null): void {
+        this.resetHeightInputDrafts();
         this.measurements.setSystem(value === 'imperial' ? 'imperial' : 'metric');
+    }
+
+    protected hasHeightError(field: HeightField): boolean {
+        const invalidDrafts = this.invalidHeightDrafts();
+        return invalidDrafts.length > 0 ? invalidDrafts.includes(field) : this.userForm().heightCm().invalid();
+    }
+
+    protected onHeightDraftInvalidChange(field: HeightField, invalid: boolean): void {
+        this.invalidHeightDrafts.update(fields => (invalid ? [...fields, field] : fields.filter(value => value !== field)));
+        this.heightInputInvalidChange.emit(this.invalidHeightDrafts().length > 0);
+    }
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- The profile page owns form discard.
+    public resetHeightInputDrafts(): void {
+        for (const field of this.heightFields()) {
+            field.resetNativeNumberDraft();
+        }
     }
 
     protected onImperialHeightChange(part: 'feet' | 'inches', value: string | number | null): void {

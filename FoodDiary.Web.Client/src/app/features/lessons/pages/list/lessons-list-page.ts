@@ -14,8 +14,8 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import type { LessonId } from '../../../../shared/models/semantics/entity-id';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
-import { LessonFacade } from '../../lib/lesson.facade';
 import { buildLessonListItems, buildLessonProgress } from '../../lib/lesson-view.mapper';
+import { LessonListFacade } from '../../lib/list/lesson-list.facade';
 import { LESSON_LIST_QUERY_STATE } from '../../lib/list/lesson-list-query-state';
 import { LessonListRouteStateFacade } from '../../lib/list/lesson-list-route-state.facade';
 import { LessonsListFiltersComponent } from './lessons-list-sections/lessons-list-filters/lessons-list-filters';
@@ -41,7 +41,11 @@ import { LESSONS_LIST_TOUR } from './lessons-list-tour';
         FdUiLevelIndicatorComponent,
         FdUiPaginationComponent,
     ],
-    providers: [LessonFacade, LessonListRouteStateFacade, { provide: LESSON_LIST_QUERY_STATE, useExisting: LessonListRouteStateFacade }],
+    providers: [
+        LessonListFacade,
+        LessonListRouteStateFacade,
+        { provide: LESSON_LIST_QUERY_STATE, useExisting: LessonListRouteStateFacade },
+    ],
     templateUrl: './lessons-list-page.html',
     styleUrl: './lessons-list-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +59,7 @@ export class LessonsListPageComponent {
         merge(this.translateService.onLangChange, this.translateService.onTranslationChange).pipe(startWith(null)),
         { initialValue: null },
     );
-    protected readonly facade = inject(LessonFacade);
+    protected readonly facade = inject(LessonListFacade);
     protected readonly progress = computed(() => {
         const page = this.facade.page();
         return buildLessonProgress(page.readLessonCount, page.totalLessonCount);
@@ -86,10 +90,6 @@ export class LessonsListPageComponent {
         const nextLesson = this.nextLesson();
         return this.lessons().find(lesson => !lesson.isRead && lesson.id !== nextLesson?.id) ?? nextLesson;
     });
-
-    public constructor() {
-        this.facade.loadLessons();
-    }
 
     protected filterByCategory(category: string | null): void {
         this.selectedCategory.set(category);

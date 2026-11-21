@@ -55,19 +55,26 @@ export class WeeklyCheckInPageComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly translateService = inject(TranslateService);
+    private readonly review = this.facade.review;
     protected readonly measurements = inject(MeasurementSystemService);
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isRefreshing = this.facade.isRefreshing;
     protected readonly hasDataError = this.facade.hasDataError;
     protected readonly thisWeek = this.facade.thisWeek;
-    protected readonly review = this.facade.review;
-    protected readonly summaryInsights = computed(
-        () => this.review()?.insights.slice(0, WeeklyCheckInPageComponent.SUMMARY_INSIGHT_LIMIT) ?? [],
-    );
-    protected readonly remainingInsightCount = computed(() =>
-        Math.max((this.review()?.insights.length ?? 0) - WeeklyCheckInPageComponent.SUMMARY_INSIGHT_LIMIT, 0),
-    );
+    protected readonly report = computed(() => {
+        const review = this.review();
+        if (review === null) {
+            return null;
+        }
+
+        const limit = WeeklyCheckInPageComponent.SUMMARY_INSIGHT_LIMIT;
+        return {
+            review,
+            summaryInsights: review.insights.slice(0, limit),
+            remainingInsightCount: Math.max(review.insights.length - limit, 0),
+        };
+    });
     protected readonly weightChange = computed(() => {
         const week = this.thisWeek();
         const start = week?.weightStart ?? null;

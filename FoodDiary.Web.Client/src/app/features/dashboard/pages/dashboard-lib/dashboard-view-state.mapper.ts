@@ -31,7 +31,7 @@ export function buildDashboardBlockState(options: {
     isVisible: boolean;
     canToggle: boolean;
     ariaLabel: string | null;
-    stateOptions?: DashboardBlockStateOptions;
+    stateOptions?: Pick<DashboardBlockStateOptions, 'alwaysInteractive' | 'locked'>;
 }): DashboardBlockState {
     const stateOptions = options.stateOptions ?? {};
     const isInteractive = options.editing || stateOptions.alwaysInteractive === true;

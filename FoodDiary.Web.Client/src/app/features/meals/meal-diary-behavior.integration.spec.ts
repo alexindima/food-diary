@@ -1,17 +1,17 @@
-import { registerLocaleData } from '@angular/common';
+import { PlatformLocation, registerLocaleData } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import localeRu from '@angular/common/locales/ru';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideRouter, Router } from '@angular/router';
+import { NavigationError, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../testing/dom-testing';
@@ -269,6 +269,87 @@ describe('Routed meal diary search controls', () => {
             expect(routeHost(harness).textContent).toContain('Meal editor destination');
         });
     });
+});
+
+it('keeps retry actionable when a late diary result follows a rejected filter History write', async () => {
+    const { api } = configureDiary();
+    const pending = new Subject<MealOverview>();
+    const addedComment = 'Dinner found after removing the AI filter';
+    const additional = makeMeal('ai-dinner', addedComment, DIARY_DATE);
+    const filtered = overview([MEAL, additional]);
+    api.queryOverview
+        .mockReturnValueOnce(of(overview([MEAL])))
+        .mockReturnValueOnce(pending)
+        .mockReturnValueOnce(of(filtered));
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { COMMON: { REMOVE_FILTER: 'Remove {{filter}}' } }, true);
+    await firstValueFrom(translate.use('en'));
+
+    const harness = await RouterTestingHarness.create('/meals?mealTypes=DINNER&hasAiSession=false&campaign=summer');
+    const router = TestBed.inject(Router);
+    const originalUrl = router.url;
+    const host = routeHost(harness);
+    const expectedQuery = { mealTypes: 'DINNER', campaign: 'summer' };
+    expect(host.textContent).toContain(MEAL.comment);
+    expect(api.queryOverview).toHaveBeenCalledOnce();
+
+    const error = new DOMException('History write temporarily rejected', 'SecurityError');
+    const platform = TestBed.inject(PlatformLocation);
+    const pushState = platform.pushState.bind(platform);
+    const writeHistory = vi.spyOn(platform, 'pushState').mockImplementationOnce((state: unknown, title, url) => {
+        const query = router.parseUrl(url).queryParams;
+        if (
+            query['hasAiSession'] === undefined &&
+            query['mealTypes'] === expectedQuery.mealTypes &&
+            query['campaign'] === expectedQuery.campaign
+        ) {
+            throw error;
+        }
+        pushState(state, title, url);
+    });
+    onTestFinished(() => {
+        writeHistory.mockRestore();
+    });
+    const navigationFailure = firstValueFrom(router.events.pipe(filter(event => event instanceof NavigationError)));
+
+    requiredButton(host, 'button[aria-label="Remove MEAL_LIST.FILTER_AI_WITHOUT"]').click();
+    const rejectedNavigation = await navigationFailure;
+    expect(rejectedNavigation.error).toBe(error);
+    await harness.fixture.whenStable();
+    redraw(harness);
+    expect(router.parseUrl(writeHistory.mock.calls[0][2]).queryParams).toEqual(expectedQuery);
+    expect(pending.observed).toBe(true);
+    expect(router.url).toBe(originalUrl);
+
+    pending.next(filtered);
+    pending.complete();
+    redraw(harness);
+    expect(pending.observed).toBe(false);
+    expect(router.url).toBe(originalUrl);
+    const updatedRowVisible = host.textContent.includes(addedComment);
+    expect(
+        host.querySelector('fd-error-state [role="alert"]'),
+        `Retry must remain after loading. New result shown ${String(updatedRowVisible)}.`,
+    ).not.toBeNull();
+
+    writeHistory.mockRestore();
+    const retry = requiredButton(host, 'fd-error-state button');
+    expect(retry.disabled).toBe(false);
+    retry.click();
+
+    await vi.waitFor(() => {
+        redraw(harness);
+        expect(router.parseUrl(router.url).queryParams).toEqual(expectedQuery);
+        expect(host.querySelector('fd-error-state')).toBeNull();
+        expect(host.textContent).toContain(addedComment);
+    });
+    expect(api.queryOverview).toHaveBeenLastCalledWith(
+        1,
+        PAGE_SIZE,
+        expect.objectContaining({ mealTypes: 'DINNER' }),
+        expect.objectContaining({ include: false }),
+    );
+    expect(api.queryOverview.mock.lastCall?.[2]?.hasAiSession).toBeUndefined();
 });
 
 describe('Routed meal diary persisted media filters', () => {

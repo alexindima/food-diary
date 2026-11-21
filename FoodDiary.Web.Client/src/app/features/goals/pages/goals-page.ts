@@ -53,7 +53,7 @@ export class GoalsPageComponent {
     protected readonly bodyTargetDraftValues = this.facade.bodyTargetValues;
     protected readonly macroPresetOptions = computed<Array<FdUiSelectOption<MacroPresetKey>>>(() => {
         this.translateService.currentLang();
-        return this.macroPresets.map(preset => ({
+        return Object.values(this.macroPresets).map(preset => ({
             value: preset.key,
             label: this.translateService.instant(preset.labelKey),
         }));

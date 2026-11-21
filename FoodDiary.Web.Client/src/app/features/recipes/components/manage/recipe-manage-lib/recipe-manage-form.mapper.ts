@@ -5,7 +5,7 @@ import { type Recipe, type RecipeDto, type RecipeIngredient, RecipeVisibility } 
 import { isRecipeCategory } from '../../../../../shared/models/recipe-category';
 import { ingredientEditorSource } from '../../../../../shared/models/recipe-ingredient';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
-import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import type { ProductId, RecipeId } from '../../../../../shared/models/semantics/entity-id';
 import type { IngredientFormValues, NutritionScaleMode, RecipeFormValues, StepFormValues } from './recipe-manage.types';
 
 export const RECIPE_TEXT_NAME_MAX_LENGTH = 256;
@@ -97,12 +97,14 @@ function resolveIngredientFoodName(
     return textName ?? food?.name ?? nestedRecipe?.name ?? nestedRecipeName;
 }
 
+export type RecipeFormSubmission = RecipeDto & { language: string };
+
 export function buildRecipeDto(
     formValue: RecipeFormValues,
     scaleMode: NutritionScaleMode,
     servings: number,
     toRecipeTotal: (value: number | null | undefined, scaleMode: NutritionScaleMode, servings: number) => number,
-): RecipeDto {
+): RecipeFormSubmission {
     return {
         language: formValue.language,
         name: formValue.name,
@@ -125,10 +127,11 @@ export function buildRecipeDto(
 }
 
 export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
+    const { images } = recipeData;
     return {
         language: recipeData.language ?? 'en',
-        ...((recipeData.images?.length ?? 0) > 0
-            ? { images: (recipeData.images ?? []).map(image => imageSelection(image.imageUrl, image.imageAssetId)) }
+        ...(images !== undefined && images.length > 0
+            ? { images: images.map(image => imageSelection(image.imageUrl, image.imageAssetId)) }
             : {}),
         name: recipeData.name,
         description: recipeData.description ?? '',
@@ -145,10 +148,11 @@ export function buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFor
 }
 
 export function mapRecipeStepToFormValue(step: Recipe['steps'][number], labels: RecipeIngredientMappingLabels): StepFormValues {
+    const { images } = step;
     return {
         title: step.title ?? null,
-        ...((step.images?.length ?? 0) > 0
-            ? { images: (step.images ?? []).map(image => imageSelection(image.imageUrl, image.imageAssetId)) }
+        ...(images !== undefined && images.length > 0
+            ? { images: images.map(image => imageSelection(image.imageUrl, image.imageAssetId)) }
             : {}),
         imageUrl: imageSelection(step.imageUrl ?? null, step.imageAssetId ?? null),
         description: step.instruction,
@@ -253,26 +257,27 @@ function resolveRecipeManualNutritionValue(manual: number | null | undefined, to
 }
 
 function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIngredientMappingLabels): IngredientFormValues | null {
-    if (ingredientEditorSource(ingredient) === 'text' && typeof ingredient.textName === 'string') {
-        return createRecipeIngredientValue({ textName: ingredient.textName, amountText: ingredient.amountText });
+    const source = ingredientEditorSource(ingredient);
+    if (source.kind === 'text') {
+        return createRecipeIngredientValue({ textName: source.textName, amountText: ingredient.amountText });
     }
-    if (ingredientEditorSource(ingredient) === 'recipe') {
+    if (source.kind === 'recipe') {
         return {
             food: null,
             productId: null,
             amount: ingredient.amount,
             foodName: ingredient.nestedRecipeName ?? labels.selectIngredient,
-            nestedRecipe: buildNestedRecipe(ingredient),
-            nestedRecipeId: ingredient.nestedRecipeId ?? null,
+            nestedRecipe: buildNestedRecipe(ingredient, source.nestedRecipeId),
+            nestedRecipeId: source.nestedRecipeId,
             nestedRecipeName: ingredient.nestedRecipeName ?? null,
         };
     }
 
-    const product = buildIngredientProduct(ingredient, labels.unknownProduct);
-    if (product === null) {
+    if (source.kind === 'missing') {
         return null;
     }
 
+    const product = buildIngredientProduct(ingredient, source.productId, labels.unknownProduct);
     return {
         food: product,
         productId: product.id,
@@ -284,14 +289,9 @@ function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIn
     };
 }
 
-function buildNestedRecipe(ingredient: RecipeIngredient): Recipe | null {
-    const nestedRecipeId = ingredient.nestedRecipeId ?? null;
-    if (nestedRecipeId === null || nestedRecipeId.length === 0) {
-        return null;
-    }
-
+function buildNestedRecipe(ingredient: RecipeIngredient, nestedRecipeId: RecipeId): Recipe {
     return {
-        id: entityId<'recipe'>(nestedRecipeId),
+        id: nestedRecipeId,
         name: ingredient.nestedRecipeName ?? '',
         description: null,
         comment: null,
@@ -325,17 +325,13 @@ function buildNestedRecipeNutrition(
     };
 }
 
-function buildIngredientProduct(ingredient: RecipeIngredient, unknownProductName: string): Product | null {
-    if (ingredient.productId === null || ingredient.productId === undefined || ingredient.productId.length === 0) {
-        return null;
-    }
-
+function buildIngredientProduct(ingredient: RecipeIngredient, productId: ProductId, unknownProductName: string): Product {
     const rawUnit = ingredient.productBaseUnit?.toUpperCase();
     const unit = isMeasurementUnit(rawUnit) ? rawUnit : MeasurementUnit.G;
     const baseAmount = ingredient.productBaseAmount ?? DEFAULT_NUTRITION_BASE_AMOUNT;
 
     return {
-        id: entityId<'product'>(ingredient.productId),
+        id: productId,
         name: ingredient.productName ?? unknownProductName,
         baseUnit: unit,
         productType: ProductType.Unknown,

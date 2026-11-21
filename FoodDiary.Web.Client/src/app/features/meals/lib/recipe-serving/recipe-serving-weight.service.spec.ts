@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { defer, firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
@@ -10,7 +10,7 @@ import type { RecipeLookup } from '../../../../shared/models/recipe-lookup.data'
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
-import { recipeDisplayToServings, servingMassFromObservation, UNKNOWN_SERVING_MASS } from './recipe-display-amount';
+import { displayRecipeServings, recipeServingsFromInput, servingMassFromObservation, UNKNOWN_SERVING_MASS } from './recipe-display-amount';
 import { RecipeServingWeightService } from './recipe-serving-weight.service';
 
 const SERVINGS = 2;
@@ -25,17 +25,16 @@ let recipeLookupService: { getById: ReturnType<typeof vi.fn> };
 
 describe('RecipeServingWeightService', () => {
     registerIncompleteMassTests();
-    it('should compute serving weight from complete gram ingredient snapshots and cache conversions', () => {
+    it('provides a round-trip quantity basis from complete gram ingredient snapshots', async () => {
         setupService();
         const recipe = createRecipe();
 
-        service.loadServingMass(recipe).subscribe(result => {
-            expect(result).toEqual(servingMassFromObservation(SERVING_WEIGHT));
-        });
+        const mass = await firstValueFrom(service.loadServingMass(recipe));
+        expect(mass).toEqual(servingMassFromObservation(SERVING_WEIGHT));
 
         expect(recipeLookupService.getById).not.toHaveBeenCalled();
-        expect(service.displayServings(recipe, recipeServingsFromStored(SERVINGS)).value).toBe(TOTAL_WEIGHT);
-        expect(recipeDisplayToServings(service.displayAmountFromInput(recipe, TOTAL_WEIGHT))).toBe(SERVINGS);
+        expect(displayRecipeServings(recipeServingsFromStored(SERVINGS), mass).value).toBe(TOTAL_WEIGHT);
+        expect(recipeServingsFromInput(TOTAL_WEIGHT, mass)).toBe(SERVINGS);
     });
 
     it('should load full recipe when list recipe has no ingredient weights', () => {
@@ -61,29 +60,36 @@ describe('RecipeServingWeightService', () => {
         expect(recipeLookupService.getById).toHaveBeenCalledTimes(1);
     });
 
-    it('keeps an explicit servings display for a missing recipe id', () => {
+    it('keeps an explicit servings display for a missing recipe id', async () => {
         setupService(createUnsupportedRecipeLookup());
         const recipe = createRecipe({ id: entityId<'recipe'>('') });
 
-        service.loadServingMass(recipe).subscribe(result => {
-            expect(result).toEqual(UNKNOWN_SERVING_MASS);
-        });
+        const mass = await firstValueFrom(service.loadServingMass(recipe));
+        expect(mass).toEqual(UNKNOWN_SERVING_MASS);
+        expect(recipeLookupService.getById).not.toHaveBeenCalled();
 
-        expect(service.displayServings(recipe, recipeServingsFromStored(SERVINGS)).value).toBe(SERVINGS);
-        expect(recipeDisplayToServings(service.displayAmountFromInput(recipe, TOTAL_WEIGHT))).toBe(TOTAL_WEIGHT);
+        expect(displayRecipeServings(recipeServingsFromStored(SERVINGS), mass).value).toBe(SERVINGS);
+        expect(recipeServingsFromInput(TOTAL_WEIGHT, mass)).toBe(TOTAL_WEIGHT);
     });
 
-    it('caches unknown mass when lookup fails', () => {
+    it('retries a failed lookup on the next load and caches the recovered mass', async () => {
         setupService(null, true);
         const recipe = createRecipe({ steps: [] });
 
-        service.loadServingMass(recipe).subscribe(result => {
-            expect(result).toEqual(UNKNOWN_SERVING_MASS);
-        });
-        service.loadServingMass(recipe).subscribe(result => {
-            expect(result).toEqual(UNKNOWN_SERVING_MASS);
-        });
+        expect(await firstValueFrom(service.loadServingMass(recipe))).toEqual(UNKNOWN_SERVING_MASS);
+        recipeLookupService.getById.mockReturnValue(of(createRecipeLookup()));
+        expect(await firstValueFrom(service.loadServingMass(recipe))).toEqual(servingMassFromObservation(SERVING_WEIGHT));
+        expect(await firstValueFrom(service.loadServingMass(recipe))).toEqual(servingMassFromObservation(SERVING_WEIGHT));
 
+        expect(recipeLookupService.getById).toHaveBeenCalledTimes(2);
+    });
+
+    it('caches a successful lookup when the ingredients have no gram equivalent', async () => {
+        setupService(createUnsupportedRecipeLookup());
+        const recipe = createRecipe({ steps: [] });
+
+        expect(await firstValueFrom(service.loadServingMass(recipe))).toEqual(UNKNOWN_SERVING_MASS);
+        expect(await firstValueFrom(service.loadServingMass(recipe))).toEqual(UNKNOWN_SERVING_MASS);
         expect(recipeLookupService.getById).toHaveBeenCalledTimes(1);
     });
 
@@ -110,7 +116,7 @@ describe('RecipeServingWeightService', () => {
 });
 
 function registerIncompleteMassTests(): void {
-    it.each(['ML', 'Pcs', null])('keeps servings when a gram ingredient is mixed with %s without a mass conversion', unit => {
+    it.each(['ML', 'Pcs', null])('keeps servings when a gram ingredient is mixed with %s without a mass conversion', async unit => {
         setupService({
             id: entityId<'recipe'>('recipe-1'),
             servings: SERVINGS,
@@ -136,11 +142,9 @@ function registerIncompleteMassTests(): void {
                 },
             ],
         });
-        service.loadServingMass(recipe).subscribe(weight => {
-            expect(weight).toEqual(UNKNOWN_SERVING_MASS);
-        });
-        expect(service.hasServingWeight(recipe)).toBe(false);
-        expect(service.displayServings(recipe, recipeServingsFromStored(SERVINGS)).value).toBe(SERVINGS);
+        const mass = await firstValueFrom(service.loadServingMass(recipe));
+        expect(mass).toEqual(UNKNOWN_SERVING_MASS);
+        expect(displayRecipeServings(recipeServingsFromStored(SERVINGS), mass).value).toBe(SERVINGS);
     });
 }
 
@@ -158,8 +162,9 @@ describe('Recipe serving weight after recipe changes', () => {
                 },
             ],
         });
-        expect(await firstValueFrom(service.loadServingMass(changed))).toEqual(servingMassFromObservation(UPDATED_WEIGHT));
-        expect(service.displayServings(changed, recipeServingsFromStored(1)).value).toBe(UPDATED_WEIGHT);
+        const mass = await firstValueFrom(service.loadServingMass(changed));
+        expect(mass).toEqual(servingMassFromObservation(UPDATED_WEIGHT));
+        expect(displayRecipeServings(recipeServingsFromStored(1), mass).value).toBe(UPDATED_WEIGHT);
     });
 
     it('stops offering grams when a cached gram recipe gains an ingredient without known mass', async () => {
@@ -175,9 +180,56 @@ describe('Recipe serving weight after recipe changes', () => {
                 },
             ],
         });
-        expect(await firstValueFrom(service.loadServingMass(changed))).toEqual(UNKNOWN_SERVING_MASS);
-        expect(service.hasServingWeight(changed)).toBe(false);
-        expect(service.displayServings(changed, recipeServingsFromStored(1)).value).toBe(1);
+        const mass = await firstValueFrom(service.loadServingMass(changed));
+        expect(mass).toEqual(UNKNOWN_SERVING_MASS);
+        expect(displayRecipeServings(recipeServingsFromStored(1), mass).value).toBe(1);
+    });
+});
+
+describe('Recipe serving weight observation order', () => {
+    it('retains the latest successful unknown mass and orders reads by subscription', async () => {
+        setupService();
+        const recipe = createRecipe({ steps: [] });
+        const earlierRead = new Subject<RecipeLookup>();
+        const laterRead = new Subject<RecipeLookup>();
+        const startLookup = vi.fn<() => Observable<RecipeLookup>>().mockReturnValueOnce(earlierRead).mockReturnValueOnce(laterRead);
+        recipeLookupService.getById.mockReturnValue(defer(startLookup));
+
+        const queuedRead = service.loadServingMass(recipe);
+        const earlier = firstValueFrom(service.loadServingMass(recipe));
+        const later = firstValueFrom(queuedRead);
+        laterRead.next(createUnsupportedRecipeLookup());
+        earlierRead.next(createRecipeLookup());
+
+        expect(await later).toEqual(UNKNOWN_SERVING_MASS);
+        expect(await earlier).toEqual(servingMassFromObservation(SERVING_WEIGHT));
+        expect(await firstValueFrom(service.loadServingMass(recipe))).toEqual(UNKNOWN_SERVING_MASS);
+        expect(recipeLookupService.getById).toHaveBeenCalledTimes(2);
+    });
+
+    it('retains a newer recipe snapshot alongside a separately observed recipe', async () => {
+        setupService();
+        const oldRecipe = createRecipe({ steps: [] });
+        const revisedRecipe = { ...oldRecipe, servings: 1 };
+        const otherRecipe = { ...oldRecipe, id: entityId<'recipe'>('other-recipe') };
+        const olderRead = new Subject<RecipeLookup>();
+        const revisedRead = new Subject<RecipeLookup>();
+        const otherRead = new Subject<RecipeLookup>();
+        recipeLookupService.getById.mockReturnValueOnce(olderRead).mockReturnValueOnce(revisedRead).mockReturnValueOnce(otherRead);
+
+        const older = firstValueFrom(service.loadServingMass(oldRecipe));
+        const revised = firstValueFrom(service.loadServingMass(revisedRecipe));
+        const other = firstValueFrom(service.loadServingMass(otherRecipe));
+        revisedRead.next({ ...createRecipeLookup(), servings: revisedRecipe.servings });
+        olderRead.next(createRecipeLookup());
+        otherRead.next({ ...createRecipeLookup(), id: otherRecipe.id });
+
+        expect(await older).toEqual(servingMassFromObservation(SERVING_WEIGHT));
+        expect(await revised).toEqual(servingMassFromObservation(TOTAL_WEIGHT));
+        expect(await other).toEqual(servingMassFromObservation(SERVING_WEIGHT));
+        expect(await firstValueFrom(service.loadServingMass(revisedRecipe))).toEqual(servingMassFromObservation(TOTAL_WEIGHT));
+        expect(await firstValueFrom(service.loadServingMass(otherRecipe))).toEqual(servingMassFromObservation(SERVING_WEIGHT));
+        expect(recipeLookupService.getById.mock.calls).toEqual([[oldRecipe.id], [revisedRecipe.id], [otherRecipe.id]]);
     });
 });
 

@@ -39,6 +39,26 @@ describe('SkeletonComponent', () => {
     });
 });
 
+describe('Skeleton rendered dimensions', () => {
+    it('uses the explicit circle width with its own height', () => {
+        const fixture = createComponent({ variant: 'circle', width: RECT_WIDTH, height: CIRCLE_SIZE });
+        const skeleton = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.fd-skeleton');
+
+        expect(skeleton?.style.width).toBe(RECT_WIDTH);
+        expect(skeleton?.style.height).toBe(CIRCLE_SIZE);
+        expect(skeleton?.style.borderRadius).toBe('50%');
+    });
+
+    it('uses a custom rectangle height with the default rectangular radius', () => {
+        const fixture = createComponent({ variant: 'rect', width: RECT_WIDTH, height: CIRCLE_SIZE });
+        const skeleton = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.fd-skeleton');
+
+        expect(skeleton?.style.width).toBe(RECT_WIDTH);
+        expect(skeleton?.style.height).toBe(CIRCLE_SIZE);
+        expect(skeleton?.style.borderRadius).toBe('var(--fd-radius-md)');
+    });
+});
+
 function createComponent(
     inputs: Partial<{ variant: string; width: string; height: string; borderRadius: string }> = {},
 ): ComponentFixture<SkeletonComponent> {

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, type Type } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, maxLength, required, validate } from '@angular/forms/signals';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
@@ -9,7 +10,7 @@ import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
-import { finalize, type Observable, skip } from 'rxjs';
+import { EMPTY, filter, finalize, merge, type Observable, skip } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -58,18 +59,27 @@ export class ShoppingListPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly router = inject(Router);
     private readonly viewportService = inject(ViewportService);
     private readonly facade = inject(ShoppingListFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
+    private readonly approvedDepartureId = signal<number | undefined>(undefined);
+
+    protected readonly isDeparting = computed(() => {
+        const approvedId = this.approvedDepartureId();
+        return approvedId !== undefined && this.router.currentNavigation()?.id === approvedId;
+    });
+    private readonly approvedDeparture = toObservable(this.isDeparting).pipe(filter(Boolean));
 
     protected readonly list = this.facade.list;
+    private readonly listIdChanges = toObservable(computed(() => this.list()?.id));
     protected readonly items = this.facade.items;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
     protected readonly isClearing = this.facade.isClearing;
     protected readonly isItemWorkspaceBusy = computed(
-        () => this.isLoading() || this.isClearing() || (this.list() === null && this.isSaving()),
+        () => this.isDeparting() || this.isLoading() || this.isClearing() || (this.list() === null && this.isSaving()),
     );
     protected readonly saveError = this.facade.saveError;
     protected readonly conflictListId = this.facade.conflictListId;
@@ -84,9 +94,7 @@ export class ShoppingListPageComponent {
     protected readonly canDeleteList = computed(
         () => this.list() !== null && this.conflictListId() === null && !this.isSaving() && !this.isLoading(),
     );
-    protected readonly canClearList = computed(
-        () => this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
-    );
+    private readonly canClearPurchased = computed(() => this.checkedItemsCount() > 0 && !this.isSaving() && !this.isLoading());
     protected readonly listSelectModel = signal<{ id: string | null }>({ id: null });
     protected readonly itemFormModel = signal<ShoppingListItemFormModel>({
         name: '',
@@ -115,7 +123,12 @@ export class ShoppingListPageComponent {
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Router canDeactivate contract is called outside the component.
     public async saveBeforeLeaveAsync(): Promise<boolean> {
-        return this.facade.saveBeforeLeaveAsync();
+        const navigationId = this.router.currentNavigation()?.id;
+        const canLeave = await this.facade.saveBeforeLeaveAsync();
+        if (canLeave) {
+            this.approvedDepartureId.set(navigationId);
+        }
+        return canLeave;
     }
 
     public constructor() {
@@ -154,13 +167,8 @@ export class ShoppingListPageComponent {
         }
 
         const value = this.itemFormModel();
-        const name = value.name.trim();
-        if (name.length === 0) {
-            return;
-        }
-
         this.facade.addItem({
-            name,
+            name: value.name.trim(),
             amount: value.amount,
             unit: value.unit ?? null,
             category: value.category?.trim() ?? null,
@@ -182,18 +190,27 @@ export class ShoppingListPageComponent {
         if (item === undefined) {
             return;
         }
-        this.openRouteDialog<ShoppingItemEditComponent, ShoppingItemEditData, ShoppingListDraftItem>(ShoppingItemEditComponent, {
-            preset: 'form',
-            data: {
-                productId: item.productId ?? null,
-                name: item.name,
-                amount: item.amount ?? null,
-                unit: item.unit ?? null,
-                category: item.category ?? null,
-                note: item.note ?? null,
+        const ownsList = (): boolean => this.list()?.id === listId;
+        const ownerLost = this.listIdChanges.pipe(filter(() => !ownsList()));
+        this.openRouteDialog<ShoppingItemEditComponent, ShoppingItemEditData, ShoppingListDraftItem>(
+            ShoppingItemEditComponent,
+            {
+                preset: 'form',
+                data: {
+                    productId: item.productId ?? null,
+                    initial: {
+                        name: item.name,
+                        amount: item.amount ?? null,
+                        unit: item.unit ?? null,
+                        category: item.category ?? null,
+                        note: item.note ?? null,
+                    },
+                    saveBlocked: computed(() => this.isLoading() || !ownsList()),
+                },
             },
-        }).subscribe(draft => {
-            if (draft !== undefined && this.list()?.id === listId) {
+            ownerLost,
+        ).subscribe(draft => {
+            if (draft !== undefined && ownsList()) {
                 this.facade.editItem(itemId, draft);
             }
         });
@@ -315,13 +332,13 @@ export class ShoppingListPageComponent {
 
     protected async clearPurchasedAsync(): Promise<void> {
         const current = this.list();
-        if (current === null || !this.canClearList() || this.checkedItemsCount() === 0) {
+        if (current === null || !this.canClearPurchased()) {
             return;
         }
         if (this.facade.hasUnsavedChanges() && !(await this.facade.saveBeforeLeaveAsync())) {
             return;
         }
-        if (this.destroyRef.destroyed || this.list()?.id !== current.id) {
+        if (this.destroyRef.destroyed || this.isCreating() || this.list()?.id !== current.id) {
             return;
         }
         const ids = this.items()
@@ -378,12 +395,24 @@ export class ShoppingListPageComponent {
         });
     }
 
-    private openRouteDialog<T, D, R>(component: Type<T>, config: FdUiDialogConfig<D>): Observable<R | undefined> {
+    private openRouteDialog<T, D, R>(
+        component: Type<T>,
+        config: FdUiDialogConfig<D>,
+        additionalClose: Observable<unknown> = EMPTY,
+    ): Observable<R | undefined> {
         const dialog = this.dialogService.open<T, D, R>(component, config);
-        const unregisterClose = this.destroyRef.onDestroy(() => {
+        const close = (): void => {
             dialog.close();
-        });
-        return dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef), finalize(unregisterClose));
+        };
+        const unregisterClose = this.destroyRef.onDestroy(close);
+        const closeTriggers = merge(this.approvedDeparture, additionalClose).subscribe(close);
+        return dialog.afterClosed().pipe(
+            takeUntilDestroyed(this.destroyRef),
+            finalize(() => {
+                closeTriggers.unsubscribe();
+                unregisterClose();
+            }),
+        );
     }
 
     protected startShoppingListTour(force = true): void {

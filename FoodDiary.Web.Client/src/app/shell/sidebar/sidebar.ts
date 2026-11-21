@@ -191,10 +191,8 @@ export class SidebarComponent {
         this.toggleDesktopSection('body');
     }
 
-    protected toggleUserMenu(trigger?: HTMLElement): void {
-        if (trigger !== undefined) {
-            this.lastUserMenuTrigger = trigger;
-        }
+    protected toggleUserMenu(trigger: HTMLElement): void {
+        this.lastUserMenuTrigger = trigger;
 
         if (this.isUserMenuOpen()) {
             this.closeUserMenu();
@@ -229,19 +227,19 @@ export class SidebarComponent {
         this.adminPanelLauncher.open(this.isAdmin());
     }
 
-    protected toggleMobileFood(trigger?: HTMLElement): void {
+    protected toggleMobileFood(trigger: HTMLElement): void {
         this.toggleMobileSheet('food', trigger);
     }
 
-    protected toggleMobileBody(trigger?: HTMLElement): void {
+    protected toggleMobileBody(trigger: HTMLElement): void {
         this.toggleMobileSheet('body', trigger);
     }
 
-    protected toggleMobileReports(trigger?: HTMLElement): void {
+    protected toggleMobileReports(trigger: HTMLElement): void {
         this.toggleMobileSheet('reports', trigger);
     }
 
-    protected toggleMobileUser(trigger?: HTMLElement): void {
+    protected toggleMobileUser(trigger: HTMLElement): void {
         this.toggleMobileSheet('user', trigger);
     }
 
@@ -318,10 +316,8 @@ export class SidebarComponent {
         this.openDesktopSection.update(current => (current === section ? null : section));
     }
 
-    private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>, trigger?: HTMLElement): void {
-        if (trigger !== undefined) {
-            this.lastMobileSheetTrigger = trigger;
-        }
+    private toggleMobileSheet(sheet: Exclude<MobileSheetId, null>, trigger: HTMLElement): void {
+        this.lastMobileSheetTrigger = trigger;
 
         if (this.mobileSheet() === sheet) {
             this.closeMobileMenus();

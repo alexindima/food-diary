@@ -67,6 +67,17 @@ describe('AiMealCreateFacade', () => {
         expect(facade.isSaving()).toBe(false);
     });
 
+    it.each([{ date: undefined }, { time: undefined }, { time: '' }])('retains the default time policy with %o', details => {
+        const { facade, aiMealCreateService, toastService } = setupFacade(of(createMeal()));
+        const result = { ...AI_RESULT, ...details };
+
+        facade.createFromAiResult(result).subscribe();
+
+        expect(aiMealCreateService.createFromAiResult).toHaveBeenCalledExactlyOnceWith(result);
+        expect(toastService.error).not.toHaveBeenCalled();
+        expect(facade.clearToken()).toBe(1);
+    });
+
     it('ignores duplicate create while a save is in flight', () => {
         const pending = new Subject<Meal>();
         const { facade, aiMealCreateService } = setupFacade(pending.asObservable());

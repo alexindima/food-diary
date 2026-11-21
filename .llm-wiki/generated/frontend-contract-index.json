@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 523,
-    "componentsWithoutDirectSpecs": 125,
-    "inputs": 1687,
-    "outputs": 563,
-    "apiCalls": 336,
-    "templatesWithTranslations": 379,
-    "translationKeys": 2304,
-    "consumerEdges": 1357,
-    "consumedComponents": 331,
-    "unconsumedComponents": 191
+    "components": 513,
+    "componentsWithoutDirectSpecs": 123,
+    "inputs": 1676,
+    "outputs": 555,
+    "apiCalls": 335,
+    "templatesWithTranslations": 372,
+    "translationKeys": 2283,
+    "consumerEdges": 1336,
+    "consumedComponents": 326,
+    "unconsumedComponents": 186
   },
   "components": [
     {
@@ -3711,100 +3711,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.spec.ts"
     },
     {
-      "class": "RecipeCommentItemComponent",
-      "selector": "fd-recipe-comment-item",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comment-item/recipe-comment-item.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comment-item/recipe-comment-item.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.scss"
-      ],
-      "inputs": [
-        {
-          "name": "item",
-          "type": "RecipeCommentViewModel",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "edit",
-          "type": "RecipeComment"
-        },
-        {
-          "name": "delete",
-          "type": "RecipeComment"
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comment-item/recipe-comment-item.spec.ts"
-    },
-    {
-      "class": "RecipeCommentsComponent",
-      "selector": "fd-recipe-comments",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.scss"
-      ],
-      "inputs": [
-        {
-          "name": "recipeId",
-          "type": "RecipeId",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.spec.ts"
-    },
-    {
-      "class": "RecipeCommentsListComponent",
-      "selector": "fd-recipe-comments-list",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.scss"
-      ],
-      "inputs": [
-        {
-          "name": "isLoading",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "commentsCount",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "items",
-          "type": "RecipeCommentViewModel[]",
-          "required": true
-        },
-        {
-          "name": "hasMore",
-          "type": "boolean",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "edit",
-          "type": "RecipeComment"
-        },
-        {
-          "name": "delete",
-          "type": "RecipeComment"
-        },
-        {
-          "name": "loadMore",
-          "type": ""
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.spec.ts"
-    },
-    {
       "class": "ReportDialogComponent",
       "selector": "fd-report-dialog",
       "feature": "explore",
@@ -4043,16 +3949,6 @@
       ],
       "inputs": [
         {
-          "name": "isActive",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "presentation",
-          "type": "'card' | 'dialog'",
-          "required": false
-        },
-        {
           "name": "isSaving",
           "type": "boolean",
           "required": true
@@ -4065,16 +3961,6 @@
         {
           "name": "isUpdatingCycle",
           "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "isExpanded",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "latestCheckIn",
-          "type": "FastingCheckInViewModel | null",
           "required": true
         },
         {
@@ -4103,20 +3989,7 @@
           "required": true
         }
       ],
-      "outputs": [
-        {
-          "name": "formOpen",
-          "type": ""
-        },
-        {
-          "name": "formClose",
-          "type": ""
-        },
-        {
-          "name": "save",
-          "type": ""
-        }
-      ],
+      "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.spec.ts"
     },
     {
@@ -4165,23 +4038,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.spec.ts"
     },
     {
-      "class": "FastingCheckInSummaryComponent",
-      "selector": "fd-fasting-check-in-summary",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.html",
-      "stylePaths": [],
-      "inputs": [
-        {
-          "name": "latestCheckIn",
-          "type": "FastingCheckInViewModel | null",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.spec.ts"
-    },
-    {
       "class": "FastingControlsComponent",
       "selector": "fd-fasting-controls",
       "feature": "fasting",
@@ -4222,7 +4078,7 @@
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
@@ -4280,12 +4136,12 @@
           "type": "string | number"
         },
         {
-          "name": "cyclicEatDayProtocolChange",
-          "type": "string"
-        },
-        {
           "name": "cyclicEatDayFastHoursChange",
           "type": "string | number"
+        },
+        {
+          "name": "cyclicEatDayProtocolChange",
+          "type": "FastingProtocol"
         }
       ],
       "specPath": null
@@ -4526,8 +4382,8 @@
           "required": true
         },
         {
-          "name": "selectedDurationHours",
-          "type": "number",
+          "name": "selectedProtocol",
+          "type": "FastingProtocolPreview",
           "required": true
         },
         {
@@ -4562,7 +4418,7 @@
         },
         {
           "name": "manageRequested",
-          "type": ""
+          "type": "FastingSession['id']"
         },
         {
           "name": "sessionManagementRequested",
@@ -4636,7 +4492,7 @@
       "inputs": [
         {
           "name": "modeOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingMode>>",
           "required": true
         },
         {
@@ -4646,12 +4502,12 @@
         },
         {
           "name": "intermittentProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
           "name": "extendedProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
@@ -4661,7 +4517,7 @@
         },
         {
           "name": "cyclicEatDayProtocolOptions",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<FastingProtocol>>",
           "required": true
         },
         {
@@ -4753,11 +4609,11 @@
       "outputs": [
         {
           "name": "modeChange",
-          "type": "string"
+          "type": "FastingMode"
         },
         {
           "name": "protocolChange",
-          "type": "string"
+          "type": "FastingProtocol"
         },
         {
           "name": "customIntermittentFastHoursChange",
@@ -4780,16 +4636,16 @@
           "type": "string | number"
         },
         {
-          "name": "cyclicEatDayProtocolChange",
-          "type": "string"
-        },
-        {
           "name": "cyclicEatDayFastHoursChange",
           "type": "string | number"
         },
         {
           "name": "startFasting",
           "type": ""
+        },
+        {
+          "name": "cyclicEatDayProtocolChange",
+          "type": "FastingProtocol"
         }
       ],
       "specPath": null
@@ -4812,66 +4668,6 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.spec.ts"
-    },
-    {
-      "class": "FastingTimerCardComponent",
-      "selector": "fd-fasting-timer-card",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.scss"
-      ],
-      "inputs": [
-        {
-          "name": "layout",
-          "type": "FastingTimerCardLayout",
-          "required": false
-        },
-        {
-          "name": "session",
-          "type": "FastingSession | null",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.spec.ts"
-    },
-    {
-      "class": "FastingTimerCardGroupsComponent",
-      "selector": "fd-fasting-timer-card-groups",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.html",
-      "stylePaths": [],
-      "inputs": [
-        {
-          "name": "groups",
-          "type": "readonly FastingTimerCardDisplayGroup[]",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "FastingTimerCardItemsComponent",
-      "selector": "fd-fasting-timer-card-items",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.scss"
-      ],
-      "inputs": [
-        {
-          "name": "items",
-          "type": "readonly FastingTimerCardDisplayItem[]",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": null
     },
     {
       "class": "FdTourHostComponent",
@@ -6545,6 +6341,11 @@
           "required": false
         },
         {
+          "name": "preserveInvalidNumberDraft",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "numberNormalizer",
           "type": "(value: number | null) => number | null",
           "required": false
@@ -6688,6 +6489,10 @@
         {
           "name": "suffixButtonClicked",
           "type": ""
+        },
+        {
+          "name": "nativeNumberDraftInvalidChange",
+          "type": "boolean"
         },
         {
           "name": "valueChange",
@@ -7656,12 +7461,12 @@
       "inputs": [
         {
           "name": "options",
-          "type": "FdUiSegmentedToggleOption[]",
+          "type": "Array<FdUiSegmentedToggleOption<Value>>",
           "required": false
         },
         {
           "name": "selectedValue",
-          "type": "string",
+          "type": "Value",
           "required": true
         },
         {
@@ -7708,7 +7513,7 @@
       "outputs": [
         {
           "name": "selectedValueChange",
-          "type": "string"
+          "type": "Value"
         }
       ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.spec.ts"
@@ -8738,19 +8543,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.spec.ts"
     },
     {
-      "class": "CalorieGoalDialogComponent",
-      "selector": "fd-calorie-goal-dialog",
-      "feature": "goals",
-      "path": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.spec.ts"
-    },
-    {
       "class": "GoalsCyclingDayComponent",
       "selector": "fd-goals-cycling-day",
       "feature": "goals",
@@ -8874,7 +8666,7 @@
         },
         {
           "name": "presets",
-          "type": "MacroPreset[]",
+          "type": "MacroPresetCatalog",
           "required": true
         },
         {
@@ -9464,16 +9256,21 @@
           "name": "aiSessions",
           "type": "MealAiSessionManageDto[]",
           "required": true
+        },
+        {
+          "name": "mealId",
+          "type": "Meal['id'] | null",
+          "required": false
         }
       ],
       "outputs": [
         {
           "name": "editSession",
-          "type": "number"
+          "type": "MealAiSessionManageDto"
         },
         {
           "name": "deleteSession",
-          "type": "number"
+          "type": "MealAiSessionRemoval"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-ai-sessions/meal-ai-sessions.spec.ts"
@@ -9686,7 +9483,7 @@
         },
         {
           "name": "removeItemEvent",
-          "type": "number"
+          "type": "MealItemFormValues"
         },
         {
           "name": "openItemSelect",
@@ -9714,6 +9511,11 @@
           "name": "aiSessions",
           "type": "MealAiSessionManageDto[]",
           "required": true
+        },
+        {
+          "name": "mealId",
+          "type": "Meal['id'] | null",
+          "required": false
         },
         {
           "name": "selectedMealType",
@@ -9751,7 +9553,7 @@
         },
         {
           "name": "removeItem",
-          "type": "number"
+          "type": "MealItemFormValues"
         },
         {
           "name": "openItemSelect",
@@ -9759,11 +9561,11 @@
         },
         {
           "name": "editSession",
-          "type": "number"
+          "type": "MealAiSessionManageDto"
         },
         {
           "name": "deleteSession",
-          "type": "number"
+          "type": "MealAiSessionRemoval"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-section/meal-items-section.spec.ts"
@@ -11060,19 +10862,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-favorites-picker/product-favorites-picker.spec.ts"
     },
     {
-      "class": "ProductListBaseComponent",
-      "selector": "fd-product-list-base",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.spec.ts"
-    },
-    {
       "class": "ProductListDialogComponent",
       "selector": "fd-product-list-dialog",
       "feature": "products",
@@ -11623,6 +11412,10 @@
         },
         {
           "name": "birthDateInputInvalidChange",
+          "type": "boolean"
+        },
+        {
+          "name": "heightInputInvalidChange",
           "type": "boolean"
         }
       ],
@@ -13108,8 +12901,8 @@
       "inputs": [
         {
           "name": "sourceUrl",
-          "type": "",
-          "required": false
+          "type": "Signal<string>",
+          "required": true
         },
         {
           "name": "text",
@@ -13257,7 +13050,7 @@
         },
         {
           "name": "fieldBlur",
-          "type": "{ field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }"
+          "type": "RecipeStepFieldBlur"
         },
         {
           "name": "removeStep",
@@ -13294,10 +13087,6 @@
         {
           "name": "photosUploading",
           "type": "boolean"
-        },
-        {
-          "name": "stepImageChange",
-          "type": "ImageSelection | null"
         },
         {
           "name": "stepDescriptionChange",
@@ -13382,12 +13171,8 @@
           "type": "boolean"
         },
         {
-          "name": "stepImageChange",
-          "type": "StepFieldEvent<RecipeStepCardState['imageUrl']['value']>"
-        },
-        {
           "name": "fieldBlur",
-          "type": "{ stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }"
+          "type": "StepFieldBlurEvent"
         },
         {
           "name": "stepDescriptionChange",
@@ -16885,6 +16670,11 @@
           "name": "items",
           "type": "readonly ShoppingListItem[]",
           "required": true
+        },
+        {
+          "name": "isWorkspaceBusy",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -17258,19 +17048,6 @@
       ],
       "outputs": [],
       "specPath": null
-    },
-    {
-      "class": "UsdaFoodSearchDialogComponent",
-      "selector": "fd-usda-food-search-dialog",
-      "feature": "usda",
-      "path": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.spec.ts"
     },
     {
       "class": "WaistGoalHistoryDialogComponent",
@@ -20554,7 +20331,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/login",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 208,
+      "line": 204,
       "publicMethod": "requestLogin",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20566,7 +20343,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/register",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 227,
+      "line": 223,
       "publicMethod": "register",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20578,7 +20355,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 252,
+      "line": 248,
       "publicMethod": "verifyEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20590,7 +20367,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/verify-email/resend",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 271,
+      "line": 267,
       "publicMethod": "resendEmailVerification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20602,7 +20379,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/restore",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 288,
+      "line": 284,
       "publicMethod": "restoreAccount",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20614,7 +20391,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 309,
+      "line": 305,
       "publicMethod": "loginWithGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20626,7 +20403,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/google/link",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 320,
+      "line": 316,
       "publicMethod": "linkGoogle",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20638,7 +20415,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 327,
+      "line": 323,
       "publicMethod": "unlinkTelegram",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20648,21 +20425,9 @@
       "feature": "shell",
       "method": "POST",
       "responseType": null,
-      "urlExpression": "/api/v{version}/auth/telegram/unlink/oidc/start",
-      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 331,
-      "publicMethod": "startTelegramUnlink",
-      "transport": "GeneratedApiClient",
-      "baseUrlExpression": "environment.apiUrls.auth",
-      "resolvedUrlExpression": "/api/v{version}/auth/telegram/unlink/oidc/start"
-    },
-    {
-      "feature": "shell",
-      "method": "POST",
-      "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/disconnect/confirm",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 344,
+      "line": 334,
       "publicMethod": "disconnectTelegram",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20674,7 +20439,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/unlink/oidc/complete",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 364,
+      "line": 354,
       "publicMethod": "completeTelegramUnlink",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20686,7 +20451,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 371,
+      "line": 361,
       "publicMethod": "requestTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20698,7 +20463,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/verify",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 378,
+      "line": 368,
       "publicMethod": "verifyTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20710,7 +20475,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/diary-transfer",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 384,
+      "line": 374,
       "publicMethod": "transferTelegramDiary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20722,7 +20487,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 393,
+      "line": 383,
       "publicMethod": "startTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20734,7 +20499,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/telegram/backup-email/oidc/complete",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 399,
+      "line": 389,
       "publicMethod": "completeTelegramBackupEmail",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20746,7 +20511,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/request",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 406,
+      "line": 396,
       "publicMethod": "requestPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20758,7 +20523,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/password-reset/confirm",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 419,
+      "line": 409,
       "publicMethod": "confirmPasswordReset",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20770,7 +20535,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/start",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 430,
+      "line": 420,
       "publicMethod": "startAdminSso",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20782,7 +20547,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/refresh",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 448,
+      "line": 438,
       "publicMethod": "refreshSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20794,7 +20559,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/session",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 449,
+      "line": 439,
       "publicMethod": "refreshSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20806,7 +20571,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/logout",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 592,
+      "line": 582,
       "publicMethod": "retryPendingLogoutAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -20818,7 +20583,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/impersonation/exchange",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 737,
+      "line": 727,
       "publicMethod": "restoreSessionInternalAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -21178,7 +20943,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/password/set",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 214,
+      "line": 218,
       "publicMethod": "setPassword",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21190,7 +20955,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/ai-consent",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 234,
+      "line": 238,
       "publicMethod": "revokeAiConsent",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21202,7 +20967,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 247,
+      "line": 251,
       "publicMethod": "deleteCurrentUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21214,7 +20979,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-weight",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 257,
+      "line": 261,
       "publicMethod": "getDesiredWeight",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21226,7 +20991,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-weight",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 264,
+      "line": 268,
       "publicMethod": "getWeightGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21238,7 +21003,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/weight-goals/page",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 277,
+      "line": 281,
       "publicMethod": "getWeightGoalHistoryPage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21250,7 +21015,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-weight",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 288,
+      "line": 292,
       "publicMethod": "updateDesiredWeight",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21262,7 +21027,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-weight",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 297,
+      "line": 301,
       "publicMethod": "updateWeightGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21274,7 +21039,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-waist",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 306,
+      "line": 310,
       "publicMethod": "getDesiredWaist",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21286,7 +21051,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-waist",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 313,
+      "line": 317,
       "publicMethod": "getWaistGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21298,7 +21063,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/waist-goals/page",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 326,
+      "line": 330,
       "publicMethod": "getWaistGoalHistoryPage",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21310,7 +21075,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-waist",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 337,
+      "line": 341,
       "publicMethod": "updateDesiredWaist",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -21322,7 +21087,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/users/desired-waist",
       "path": "FoodDiary.Web.Client/src/app/shared/api/user.service.ts",
-      "line": 346,
+      "line": 350,
       "publicMethod": "updateWaistGoal",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.users",
@@ -23651,33 +23416,6 @@
     },
     {
       "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comment-item/recipe-comment-item.html",
-      "keys": [
-        "COMMENTS.DELETE",
-        "COMMENTS.EDIT",
-        "COMMENTS.EDITED"
-      ]
-    },
-    {
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.html",
-      "keys": [
-        "COMMENTS.LOAD_MORE",
-        "COMMENTS.NO_COMMENTS",
-        "COMMENTS.NO_COMMENTS_MESSAGE"
-      ]
-    },
-    {
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
-      "keys": [
-        "COMMENTS.TITLE",
-        "COMMENTS.WRITE_PLACEHOLDER",
-        "COMMON.CANCEL"
-      ]
-    },
-    {
-      "feature": "explore",
       "path": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY"
@@ -23709,20 +23447,14 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.html",
       "keys": [
-        "DISABLED_HINTS.FASTING_BUSY",
-        "DISABLED_HINTS.OPERATION_BUSY",
         "FASTING.CHECK_IN.ENERGY",
-        "FASTING.CHECK_IN.HIDE_ACTION",
         "FASTING.CHECK_IN.HUNGER",
         "FASTING.CHECK_IN.MOOD",
         "FASTING.CHECK_IN.NOTES",
         "FASTING.CHECK_IN.NOTES_PLACEHOLDER",
         "FASTING.CHECK_IN.NO_SYMPTOMS_TITLE",
-        "FASTING.CHECK_IN.SAVE",
-        "FASTING.CHECK_IN.SUBTITLE",
         "FASTING.CHECK_IN.SYMPTOMS_QUESTION",
-        "FASTING.CHECK_IN.SYMPTOMS_TITLE",
-        "FASTING.CHECK_IN.TITLE"
+        "FASTING.CHECK_IN.SYMPTOMS_TITLE"
       ]
     },
     {
@@ -23740,13 +23472,6 @@
         "FASTING.CHECK_IN.DIALOG_SUBTITLE",
         "FASTING.CHECK_IN.SAVE",
         "FASTING.CHECK_IN.TITLE"
-      ]
-    },
-    {
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.html",
-      "keys": [
-        "FASTING.CHECK_IN.LAST_SAVED"
       ]
     },
     {
@@ -23912,13 +23637,6 @@
     },
     {
       "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "keys": [
-        "FASTING.TITLE"
-      ]
-    },
-    {
-      "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.html",
       "keys": [
         "FASTING.PROMPTS.DISMISS",
@@ -24069,18 +23787,6 @@
         "GAMIFICATION.SUBTITLE",
         "GAMIFICATION.TITLE",
         "GAMIFICATION.TOUR.START_TOUR"
-      ]
-    },
-    {
-      "feature": "goals",
-      "path": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html",
-      "keys": [
-        "COMMON.CANCEL",
-        "COMMON.SAVE",
-        "USER_MANAGE.CALORIE_TARGET_HINT",
-        "USER_MANAGE.CALORIE_TARGET_LABEL",
-        "USER_MANAGE.DAILY_CALORIES",
-        "USER_MANAGE.DAILY_CALORIES_PLACEHOLDER"
       ]
     },
     {
@@ -25444,7 +25150,6 @@
         "RECIPE_LIST.FILTERS_TITLE",
         "RECIPE_LIST.FILTER_APPLY_BUTTON",
         "RECIPE_LIST.FILTER_CALORIES_FROM",
-        "RECIPE_LIST.FILTER_CALORIES_ORDER_ERROR",
         "RECIPE_LIST.FILTER_CALORIES_TO",
         "RECIPE_LIST.FILTER_CATEGORY",
         "RECIPE_LIST.FILTER_DETAILS",
@@ -26376,6 +26081,7 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
       "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
         "PUBLIC_RECIPES.SHOPPING_CANCEL",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT",
         "SHOPPING_LIST.ADD_ITEM_CATEGORY",
@@ -26589,19 +26295,6 @@
       "keys": [
         "MICRONUTRIENTS.NO_DATA",
         "MICRONUTRIENTS.TITLE"
-      ]
-    },
-    {
-      "feature": "usda",
-      "path": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
-      "keys": [
-        "COMMON.CANCEL",
-        "COMMON.LOADING",
-        "DISABLED_HINTS.SELECT_FOOD",
-        "USDA_SEARCH.LINK",
-        "USDA_SEARCH.NO_RESULTS",
-        "USDA_SEARCH.PLACEHOLDER",
-        "USDA_SEARCH.TITLE"
       ]
     },
     {
@@ -29012,18 +28705,6 @@
       "component": "DashboardWidgetFrameComponent",
       "selector": "fd-dashboard-widget-frame",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "DashboardWidgetFrameComponent",
-      "selector": "fd-dashboard-widget-frame",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.html",
       "occurrences": 1,
@@ -29512,15 +29193,11 @@
       "inputsUsed": [
         "energyLevel",
         "hungerLevel",
-        "isActive",
         "isEnding",
-        "isExpanded",
         "isSaving",
         "isUpdatingCycle",
-        "latestCheckIn",
         "moodLevel",
         "notes",
-        "presentation",
         "selectedSymptoms"
       ],
       "outputsHandled": []
@@ -29550,18 +29227,6 @@
       "outputsHandled": []
     },
     {
-      "component": "FastingCheckInSummaryComponent",
-      "selector": "fd-fasting-check-in-summary",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-summary/fasting-check-in-summary.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "latestCheckIn"
-      ],
-      "outputsHandled": []
-    },
-    {
       "component": "FastingControlsComponent",
       "selector": "fd-fasting-controls",
       "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
@@ -29585,16 +29250,6 @@
         "presentation",
         "showSetupStartAction"
       ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FastingControlsComponent",
-      "selector": "fd-fasting-controls",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "occurrences": 1,
-      "inputsUsed": [],
       "outputsHandled": []
     },
     {
@@ -29695,7 +29350,7 @@
         "now",
         "progressPercent",
         "remainingFormatted",
-        "selectedDurationHours",
+        "selectedProtocol",
         "session",
         "stats"
       ],
@@ -29754,30 +29409,6 @@
         "protocolChange",
         "startFasting"
       ]
-    },
-    {
-      "component": "FastingTimerCardGroupsComponent",
-      "selector": "fd-fasting-timer-card-groups",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "groups"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FastingTimerCardItemsComponent",
-      "selector": "fd-fasting-timer-card-items",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "items"
-      ],
-      "outputsHandled": []
     },
     {
       "component": "FavoriteMealRowComponent",
@@ -31953,50 +31584,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comment-item/recipe-comment-item.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "fill",
-        "icon",
-        "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "loading",
-        "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "loading",
-        "size",
-        "type",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "explore",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -32035,22 +31622,6 @@
         "fill",
         "icon",
         "size",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.html",
-      "occurrences": 3,
-      "inputsUsed": [
-        "disabled",
-        "disabledReason",
-        "fill",
-        "loading",
         "variant"
       ],
       "outputsHandled": []
@@ -32288,21 +31859,6 @@
         "ariaLabel",
         "fill",
         "icon",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "goals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "fill",
-        "icon",
-        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -33920,6 +33476,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "fill",
         "type",
         "variant"
@@ -34037,20 +33595,6 @@
         "fill",
         "icon",
         "loading",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "usda",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "variant"
       ],
       "outputsHandled": []
@@ -34908,34 +34452,9 @@
       "selector": "fd-ui-card",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-card/fasting-check-in-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-card/fasting-history-card.html",
       "occurrences": 1,
       "inputsUsed": [
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
         "title"
       ],
       "outputsHandled": []
@@ -36337,19 +35856,6 @@
       "component": "FdUiDialogComponent",
       "selector": "fd-ui-dialog",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "consumerFeature": "goals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "size",
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiDialogComponent",
-      "selector": "fd-ui-dialog",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
       "occurrences": 1,
@@ -36615,18 +36121,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "size",
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiDialogComponent",
-      "selector": "fd-ui-dialog",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "consumerFeature": "usda",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
         "title"
       ],
       "outputsHandled": []
@@ -39531,20 +39025,6 @@
       "component": "FdUiInputComponent",
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "goals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "label",
-        "placeholder",
-        "type"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "lessons",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/list/lessons-list-page.html",
       "occurrences": 1,
@@ -39756,12 +39236,14 @@
       "inputsUsed": [
         "error",
         "label",
+        "preserveInvalidNumberDraft",
         "readonly",
         "size",
         "type",
         "value"
       ],
       "outputsHandled": [
+        "nativeNumberDraftInvalidChange",
         "valueChange"
       ]
     },
@@ -40027,21 +39509,6 @@
         "type"
       ],
       "outputsHandled": []
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "usda",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/usda/dialogs/usda-food-search-dialog/usda-food-search-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "placeholder",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -40448,16 +39915,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.html",
-      "occurrences": 1,
-      "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiLoaderComponent",
-      "selector": "fd-ui-loader",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
-      "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
@@ -42859,19 +42316,6 @@
       "selector": "fd-ui-textarea",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
       "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "placeholder",
-        "rows"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiTextareaComponent",
-      "selector": "fd-ui-textarea",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
-      "consumerFeature": "explore",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -43672,7 +43116,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-section/meal-items-section.html",
       "occurrences": 1,
       "inputsUsed": [
-        "aiSessions"
+        "aiSessions",
+        "mealId"
       ],
       "outputsHandled": [
         "deleteSession",
@@ -43873,6 +43318,7 @@
         "isProcessing",
         "items",
         "itemsError",
+        "mealId",
         "renderVersion",
         "selectedMealType"
       ],
@@ -46027,40 +45473,6 @@
       ]
     },
     {
-      "component": "RecipeCommentItemComponent",
-      "selector": "fd-recipe-comment-item",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comment-item/recipe-comment-item.ts",
-      "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "item"
-      ],
-      "outputsHandled": [
-        "delete",
-        "edit"
-      ]
-    },
-    {
-      "component": "RecipeCommentsListComponent",
-      "selector": "fd-recipe-comments-list",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments-list/recipe-comments-list.ts",
-      "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "commentsCount",
-        "hasMore",
-        "isLoading",
-        "items"
-      ],
-      "outputsHandled": [
-        "delete",
-        "edit",
-        "loadMore"
-      ]
-    },
-    {
       "component": "RecipeCookModeComponent",
       "selector": "fd-recipe-cook-mode",
       "componentPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-cook-mode/recipe-cook-mode.ts",
@@ -46265,7 +45677,6 @@
         "stepDescriptionChange",
         "stepDrop",
         "stepExpandedToggle",
-        "stepImageChange",
         "stepPhotosChange",
         "stepTitleChange"
       ]
@@ -46383,6 +45794,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-page/shopping-list-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "isWorkspaceBusy",
         "itemForm",
         "items"
       ],
@@ -46890,6 +46302,7 @@
       ],
       "outputsHandled": [
         "birthDateInputInvalidChange",
+        "heightInputInvalidChange",
         "userFormPatch"
       ]
     },

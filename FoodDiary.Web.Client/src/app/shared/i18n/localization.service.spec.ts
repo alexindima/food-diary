@@ -29,7 +29,6 @@ type TranslationLoaderMock = {
 };
 
 type BrowserWindowServiceMock = {
-    getHostname: ReturnType<typeof vi.fn<BrowserWindowService['getHostname']>>;
     getPathname: ReturnType<typeof vi.fn<BrowserWindowService['getPathname']>>;
 };
 
@@ -67,7 +66,6 @@ beforeEach(() => {
     translateSpy.getFallbackLang.mockReturnValue('en');
     translateSpy.getBrowserLang.mockReturnValue('en');
     browserWindowSpy = {
-        getHostname: vi.fn().mockReturnValue('fooddiary.club'),
         getPathname: vi.fn().mockReturnValue('/dashboard'),
     };
     translationLoaderSpy = {
@@ -138,16 +136,16 @@ describe('LocalizationService initialization', () => {
     });
 
     it('does not infer a Russian default from the retired domain', async () => {
-        browserWindowSpy.getHostname.mockReturnValue('xn--b1adbcbrouc8l.xn--p1ai');
+        Object.assign(mockDocument.location, { hostname: 'xn--b1adbcbrouc8l.xn--p1ai' });
 
         await service.initializeLocalizationAsync();
 
         expect(translateSpy.use).toHaveBeenCalledWith('en');
     });
 
-    it('should prefer stored language over domain default', async () => {
+    it('keeps the stored language when the browser prefers a different one', async () => {
         localStorage.setItem('fd_language', 'en');
-        browserWindowSpy.getHostname.mockReturnValue('xn--b1adbcbrouc8l.xn--p1ai');
+        translateSpy.getBrowserLang.mockReturnValue('ru-RU');
 
         await service.initializeLocalizationAsync();
 
@@ -175,7 +173,6 @@ describe('LocalizationService document fallback', () => {
     it('uses the server document path to load and retain the dictionary for a localized public page', async () => {
         const path = '/ru/pricing';
         browserWindowSpy.getPathname.mockReturnValue(null);
-        browserWindowSpy.getHostname.mockReturnValue(null);
         Object.assign(mockDocument.location, { hostname: '', pathname: path });
         const setDocumentAttribute = vi.spyOn(mockDocument.documentElement, 'setAttribute');
         translateSpy.use.mockReturnValue(of({ PUBLIC_PAGES: { PRICING: { TITLE: 'Тарифы' } } }));
@@ -330,6 +327,26 @@ describe('LocalizationService concurrent translations', () => {
         expect(load).toHaveBeenCalledTimes(2);
         expect(translateSpy.setTranslation).toHaveBeenCalledOnce();
     });
+});
+
+it('reuses public translations across a canonical redirect and loads a different language separately', async () => {
+    const initialPath = '/ru/pricing/';
+    const redirectedPath = '/ru/pricing?source=footer#plans';
+    browserWindowSpy.getPathname.mockReturnValue(initialPath);
+    translateSpy.getCurrentLang.mockReturnValue('ru');
+    translateSpy.use.mockReturnValue(of({ PUBLIC_PAGES: { PRICING: { TITLE: 'Тарифы' } } }));
+
+    await service.initializeLocalizationAsync();
+    await service.loadTranslationsForRouteAsync(redirectedPath);
+    expect(translateSpy.use).toHaveBeenCalledExactlyOnceWith('ru');
+    expect(translationLoaderSpy.loadRouteTranslations).not.toHaveBeenCalled();
+    expect(translateSpy.setTranslation).not.toHaveBeenCalled();
+
+    await service.applyLanguagePreferenceAsync('en');
+    translateSpy.getCurrentLang.mockReturnValue('en');
+    await service.loadTranslationsForRouteAsync('/pricing');
+    expect(translationLoaderSpy.loadRouteTranslations).toHaveBeenCalledExactlyOnceWith('en', '/pricing');
+    expect(translateSpy.setTranslation).toHaveBeenCalledExactlyOnceWith('en', { SEO_PAGE: { TRUST_TITLE: 'Trust' } }, true);
 });
 
 describe('LocalizationService translation loading', () => {

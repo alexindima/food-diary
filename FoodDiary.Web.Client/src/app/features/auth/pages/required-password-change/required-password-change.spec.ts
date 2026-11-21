@@ -1,9 +1,12 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
@@ -75,6 +78,61 @@ describe('RequiredPasswordChangeComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance).toBeTruthy();
+    });
+});
+
+describe('Required password change endpoint', () => {
+    it('shows the rate limit from the password endpoint and completes only after a successful retry', async () => {
+        const renew = vi.fn().mockResolvedValue(undefined);
+        const navigate = vi.fn().mockResolvedValue(undefined);
+        const fixture = TestBed.configureTestingModule({
+            imports: [RequiredPasswordChangeComponent],
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                provideTranslateTesting(),
+                { provide: AuthService, useValue: { completeRequiredPasswordChangeAsync: renew } },
+                { provide: NavigationService, useValue: { navigateToHomeAsync: navigate } },
+            ],
+        }).createComponent(RequiredPasswordChangeComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const http = TestBed.inject(HttpTestingController);
+        const url = `${environment.apiUrls.users}/password`;
+        const request = { currentPassword: 'temporary-password', newPassword: 'changed-password' };
+        const values = [request.currentPassword, request.newPassword, request.newPassword];
+        const inputs = host.querySelectorAll<HTMLInputElement>('input[type="password"]');
+        expect(inputs).toHaveLength(values.length);
+        values.forEach((value, index) => {
+            inputs[index].value = value;
+            inputs[index].dispatchEvent(new Event('input', { bubbles: true }));
+        });
+        const submit = host.querySelector<HTMLButtonElement>('button[type="submit"]');
+        expect(submit).not.toBeNull();
+
+        submit?.click();
+        const throttled = http.expectOne({ method: 'PATCH', url });
+        expect(throttled.request.body).toEqual(request);
+        throttled.flush(null, { status: HttpStatusCode.TooManyRequests, statusText: 'Too Many Requests' });
+        await fixture.whenStable();
+        fixture.detectChanges();
+        http.expectNone({ method: 'PATCH', url });
+        expect(renew).not.toHaveBeenCalled();
+        expect(navigate).not.toHaveBeenCalled();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('FORM_ERRORS.RATE_LIMITED');
+
+        submit?.click();
+        const retried = http.expectOne({ method: 'PATCH', url });
+        expect(retried.request.body).toEqual(request);
+        retried.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(renew).toHaveBeenCalledExactlyOnceWith(request.newPassword);
+        expect(navigate).toHaveBeenCalledOnce();
+        http.verify();
     });
 });
 

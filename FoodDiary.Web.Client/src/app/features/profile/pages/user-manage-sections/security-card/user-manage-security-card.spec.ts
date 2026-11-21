@@ -3,7 +3,7 @@ import localeRu from '@angular/common/locales/ru';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../../../environments/environment';
@@ -11,6 +11,8 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { ActiveSessionsService } from '../../../api/active-sessions.service';
+import type { ActiveSession } from '../../../models/active-session.model';
 import { UserManageSecurityCardComponent } from './user-manage-security-card';
 
 const originalClientId = environment.googleClientId;
@@ -104,8 +106,8 @@ describe('UserManageSecurityCardComponent', () => {
         await verifySessionDateLocalesAsync(await createFixtureAsync(true));
     });
 
-    it('keeps known sessions visible after an error and offers a guarded reload', async () => {
-        verifySessionRecoveryUi(await createFixtureAsync(true));
+    it('keeps known sessions after a failed revoke and recovers through a scoped retry', async () => {
+        await verifySessionRecoveryUiAsync();
     });
 });
 
@@ -189,10 +191,9 @@ async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManag
     }
 }
 
-function verifySessionRecoveryUi(fixture: ComponentFixture<UserManageSecurityCardComponent>): void {
-    const activeSessions = fixture.componentInstance['activeSessions'];
+async function verifySessionRecoveryUiAsync(): Promise<void> {
     const timestamp = utcInstant('2026-10-02T19:37:23Z');
-    const currentSession = {
+    const currentSession: ActiveSession = {
         id: entityId<'refresh-token-session'>('current'),
         isCurrent: true,
         authProvider: 'password',
@@ -202,33 +203,79 @@ function verifySessionRecoveryUi(fixture: ComponentFixture<UserManageSecurityCar
         createdAtUtc: timestamp,
         lastActiveAtUtc: timestamp,
     };
-    activeSessions.isLoading.set(false);
-    activeSessions.sessions.set([currentSession, { ...currentSession, id: entityId<'refresh-token-session'>('other'), isCurrent: false }]);
-    activeSessions.error.set('revoke');
-    fixture.detectChanges();
-
+    const otherSession: ActiveSession = {
+        ...currentSession,
+        id: entityId<'refresh-token-session'>('other'),
+        browser: 'Firefox',
+        isCurrent: false,
+    };
+    const retry = new Subject<ActiveSession[]>();
+    const revocation = new Subject<void>();
+    const api = {
+        getAll: vi
+            .fn<ActiveSessionsService['getAll']>()
+            .mockReturnValueOnce(of([currentSession, otherSession]))
+            .mockReturnValueOnce(retry),
+        revoke: vi.fn<ActiveSessionsService['revoke']>().mockReturnValueOnce(revocation),
+    };
+    const fixture = await createFixtureAsync(true, api);
     const section = (fixture.nativeElement as HTMLElement).querySelector('.user-manage__sessions');
-    expect(section?.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
-    expect(section?.querySelector('[role="alert"]')).not.toBeNull();
-    const reload = Array.from(section?.querySelectorAll('button') ?? []).find(button =>
-        button.textContent.includes('USER_MANAGE.ACTIVE_SESSIONS_RELOAD'),
-    );
-    expect(reload).toBeDefined();
-    const load = vi.spyOn(activeSessions, 'load').mockImplementation(() => {});
-    reload?.click();
-    expect(load).toHaveBeenCalledOnce();
+    if (section === null) {
+        throw new Error('Expected the rendered active sessions');
+    }
 
-    activeSessions.isLoading.set(true);
+    const revoke = sessionButton(section, 'USER_MANAGE.REVOKE_SESSION');
+    revoke.click();
     fixture.detectChanges();
-    expect(section?.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
-    expect(Array.from(section?.querySelectorAll('button') ?? []).every(button => button.disabled)).toBe(true);
+    expect(revoke.disabled).toBe(true);
+    revoke.click();
+    expect(api.revoke).toHaveBeenCalledExactlyOnceWith(otherSession.id);
+    revocation.error(new Error('Session revoke failed'));
+    fixture.detectChanges();
+
+    expect(section.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
+    expect(section.querySelector('[role="alert"]')?.textContent).toContain('USER_MANAGE.ACTIVE_SESSIONS_REVOKE_ERROR');
+    sessionButton(section, 'USER_MANAGE.ACTIVE_SESSIONS_RELOAD').click();
+    fixture.detectChanges();
+
+    expect(api.getAll).toHaveBeenCalledTimes(2);
+    expect(section.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
+    expect(section.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.ACTIVE_SESSIONS_LOADING');
+    expect(Array.from(section.querySelectorAll('button')).every(button => button.disabled)).toBe(true);
+
+    retry.next([currentSession]);
+    retry.complete();
+    fixture.detectChanges();
+
+    expect(section.querySelectorAll('.user-manage__login-method')).toHaveLength(1);
+    expect(section.textContent).toContain('Edge');
+    expect(section.textContent).not.toContain('Firefox');
+    expect(section.querySelector('[role="alert"]')).toBeNull();
+    expect(api.revoke).toHaveBeenCalledOnce();
 }
 
-async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
-    await TestBed.configureTestingModule({
+function sessionButton(section: Element, label: string): HTMLButtonElement {
+    const button = Array.from(section.querySelectorAll('button')).find(candidate => candidate.textContent.trim() === label);
+    if (button === undefined) {
+        throw new Error(`Expected the active session action ${label}`);
+    }
+    return button;
+}
+
+async function createFixtureAsync(
+    hasGoogleIdentity: boolean,
+    sessionApi?: Pick<ActiveSessionsService, 'getAll' | 'revoke'>,
+): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
+    const testingModule = TestBed.configureTestingModule({
         imports: [UserManageSecurityCardComponent],
         providers: [provideTranslateTesting(), provideRouter([]), { provide: GoogleIdentityService, useValue: googleIdentityService }],
-    }).compileComponents();
+    });
+    if (sessionApi !== undefined) {
+        testingModule.overrideComponent(UserManageSecurityCardComponent, {
+            add: { providers: [{ provide: ActiveSessionsService, useValue: sessionApi }] },
+        });
+    }
+    await testingModule.compileComponents();
 
     const fixture = TestBed.createComponent(UserManageSecurityCardComponent);
     fixture.componentRef.setInput('email', 'alex@example.com');

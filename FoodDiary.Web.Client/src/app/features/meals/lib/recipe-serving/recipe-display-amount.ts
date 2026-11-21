@@ -1,4 +1,8 @@
-import { type RecipeServings, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import {
+    MAXIMUM_CONSUMED_QUANTITY,
+    type RecipeServings,
+    recipeServingsFromStored,
+} from '../../../../shared/models/semantics/meal-quantity';
 import {
     type RecipeDisplayGrams,
     recipeDisplayGramsFromInput,
@@ -33,4 +37,12 @@ export function recipeDisplayFromInput(value: number, mass: ServingMassResult): 
     return mass.kind === 'known'
         ? { unit: 'grams', value: recipeDisplayGramsFromInput(value), gramsPerServing: mass.gramsPerServing }
         : { unit: 'servings', value: recipeServingsFromStored(value) };
+}
+
+export function recipeServingsFromInput(value: number, mass: ServingMassResult): RecipeServings {
+    // Match the gram limit displayed by the editor before division can round past the serving limit.
+    if (mass.kind === 'known' && Number.isFinite(value) && value === MAXIMUM_CONSUMED_QUANTITY * mass.gramsPerServing) {
+        return recipeServingsFromStored(MAXIMUM_CONSUMED_QUANTITY);
+    }
+    return recipeDisplayToServings(recipeDisplayFromInput(value, mass));
 }

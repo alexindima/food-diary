@@ -24,6 +24,7 @@ import {
 } from '../../../../shared/lib/ai-photo-edit.utils';
 import { getAiTrialQuotaErrorKey } from '../../../../shared/lib/ai-quota-error.utils';
 import { createClientId } from '../../../../shared/lib/client-id.utils';
+import { capitalizeFirstLetter } from '../../../../shared/lib/text-display.utils';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionItem, FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
@@ -99,6 +100,7 @@ export class MealPhotoRecognitionDialogComponent {
     private readonly dialogData = inject<PhotoAiDialogData>(FD_UI_DIALOG_DATA, { optional: true }) ?? {};
     private readonly aiFoodFacade = inject(AiFoodFacade);
     private readonly destroyRef = inject(DestroyRef);
+    private recognitionMetadata: Pick<MealAiSessionManageDto, 'source' | 'recognizedAtUtc'> = this.dialogData.initialSession ?? {};
     private analysisSubscription: Subscription | null = null;
     private nutritionSubscription: Subscription | null = null;
     private readonly privacy = inject(PrivacyConsentFacade);
@@ -194,26 +196,12 @@ export class MealPhotoRecognitionDialogComponent {
 
     private toDisplayName(item: FoodVisionItem): string {
         const rawName = this.usableLocalName(item.nameLocal) ?? item.nameEn;
-        return this.capitalizeLabel(rawName);
+        return capitalizeFirstLetter(rawName.trim());
     }
 
     private usableLocalName(value: string | null | undefined): string | null {
         const trimmed = value?.trim() ?? '';
         return trimmed.length > 0 ? trimmed : null;
-    }
-
-    private capitalizeLabel(value?: string | null): string {
-        if (value === null || value === undefined) {
-            return '';
-        }
-
-        const trimmed = value.trim();
-        if (trimmed.length === 0) {
-            return '';
-        }
-
-        const [first, ...rest] = trimmed;
-        return `${first.toLocaleUpperCase()}${rest.join('')}`;
     }
 
     protected async onImageChangedAsync(selection: ImageSelection | null): Promise<void> {
@@ -285,7 +273,8 @@ export class MealPhotoRecognitionDialogComponent {
         return {
             imageAssetId: assetId,
             imageUrl: this.selection()?.url ?? null,
-            recognizedAtUtc: new Date().toISOString(),
+            source: this.recognitionMetadata.source,
+            recognizedAtUtc: this.recognitionMetadata.recognizedAtUtc ?? new Date().toISOString(),
             notes: nutrition.notes ?? null,
             items,
         };
@@ -426,6 +415,7 @@ export class MealPhotoRecognitionDialogComponent {
                 if (response === null) {
                     return;
                 }
+                this.recognitionMetadata = { source: 'Photo', recognizedAtUtc: new Date().toISOString() };
                 const items = response.items;
                 this.results.set(items);
                 this.reviewItems.set(buildAiEditableItems(items, null, () => this.createEditId()));

@@ -87,7 +87,7 @@ export function mapUserToForm(user: User): Partial<UserFormValues> {
         uiStyle: normalizeUiStyle(user.uiStyle),
         birthDate: mapUserBirthDate(user.birthDate),
         heightCm: toNullable(user.heightCm),
-        activityLevel: mapUserActivityLevel(user.activityLevel),
+        activityLevel: user.activityLevel ?? null,
         stepGoal: toNullable(user.stepGoal),
         profileImage: mapUserProfileImage(user),
     };
@@ -175,19 +175,6 @@ function normalizeUiStyle(value: string | null | undefined): AppUiStyleName | nu
 
 function mapUserBirthDate(value: string | null | undefined): string | null {
     return parseCalendarDateUtc(value)?.toISOString().split('T')[0] ?? null;
-}
-
-function mapUserActivityLevel(value: string | null | undefined): ActivityLevelOption | null {
-    const normalized = value?.toUpperCase();
-    if (normalized === undefined || normalized.length === 0) {
-        return null;
-    }
-
-    return isActivityLevelOption(normalized) ? normalized : null;
-}
-
-function isActivityLevelOption(value: string): value is ActivityLevelOption {
-    return (ACTIVITY_LEVEL_OPTIONS as readonly string[]).includes(value);
 }
 
 function mapUserProfileImage(user: User): ImageSelection | null {

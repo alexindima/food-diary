@@ -8,7 +8,10 @@ import {
     type RecipeIngredientSelectEvent,
     RecipeStepCardComponent,
     type RecipeStepCardState,
+    type RecipeStepFieldBlur,
 } from '../recipe-step-card/recipe-step-card';
+
+export type StepFieldBlurEvent = { stepIndex: number } & RecipeStepFieldBlur;
 
 export type StepIngredientEvent = {
     stepIndex: number;
@@ -52,8 +55,7 @@ export class RecipeStepsListComponent {
     public readonly stepPhotosChange = output<StepFieldEvent<NonNullable<RecipeStepCardState['images']>>>();
     public readonly photosUploading = output<boolean>();
     protected readonly uploadingSteps = signal<ReadonlySet<number>>(new Set());
-    public readonly stepImageChange = output<StepFieldEvent<RecipeStepCardState['imageUrl']['value']>>();
-    public readonly fieldBlur = output<{ stepIndex: number; field: 'description' | 'amount' | 'foodName'; ingredientIndex?: number }>();
+    public readonly fieldBlur = output<StepFieldBlurEvent>();
     public readonly stepDescriptionChange = output<StepFieldEvent<string>>();
     public readonly ingredientTextChange = output<StepIngredientEvent & { field: 'textName' | 'amountText'; value: string }>();
     public readonly ingredientAmountChange = output<StepIngredientAmountEvent>();
@@ -121,10 +123,6 @@ export class RecipeStepsListComponent {
 
     protected onStepTitleChange(stepIndex: number, value: string | null): void {
         this.stepTitleChange.emit({ stepIndex, value });
-    }
-
-    protected onStepImageChange(stepIndex: number, value: RecipeStepCardState['imageUrl']['value']): void {
-        this.stepImageChange.emit({ stepIndex, value });
     }
 
     protected onStepDescriptionChange(stepIndex: number, value: string): void {

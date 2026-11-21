@@ -756,6 +756,8 @@ Segmented toggle control.
 - `fitContent?: boolean` (sizes the host to its segments for compact inline compositions)
 - `shrinkItems?: boolean`
 
+Supply `FdUiSegmentedToggleOption<Value>[]` with a string literal union to carry that union through the selected value and selection event.
+
 `compact` with `fullWidth` uses caption text and tighter horizontal spacing for dense chart metric rows. Choices share the available width and can wrap their labels when text is enlarged.
 
 #### `fd-ui-chip-select`
@@ -1088,7 +1090,7 @@ use native button pressed-state semantics; the kit has no standalone thumbnail p
 
 `fd-ui-textarea` supports opt-in `[autosize]="true"`. It grows and shrinks with content, including programmatic updates, using `rows` as its minimum height. The default remains a manually resizable textarea.
 
-For numeric forms, `fd-ui-input type="number" [localizedNumber]="true"` accepts comma and dot decimals using a text input with decimal keyboard. It emits numbers, null for empty input and NaN for invalid input; consumers must validate finite values. The default native number input is unchanged.
+For numeric forms, `fd-ui-input type="number" [localizedNumber]="true"` accepts comma and dot decimals using a text input with decimal keyboard. It emits numbers, null for empty input and NaN for invalid input; consumers must validate finite values. The default native number input is unchanged. Set `[preserveInvalidNumberDraft]="true"` on a native number input to retain its last valid model value on browser `badInput`. Subscribe to `nativeNumberDraftInvalidChange` to report validity and prevent submission while the draft is invalid. An intentional empty value still emits null. Call `resetNativeNumberDraft()` when discarding the draft.
 
 The image preview dialog accepts an optional zero-based `initialIndex` for opening a selected original without changing the cover. Invalid indices fall back to the first image.
 

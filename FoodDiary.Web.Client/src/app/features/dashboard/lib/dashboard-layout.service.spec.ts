@@ -253,7 +253,7 @@ describe('Dashboard layout save recovery', () => {
         },
     );
 
-    it('deduplicates pending saves and locks the draft until the response', async () => {
+    it('locks the draft during save and keeps repeated save calls idempotent', async () => {
         const { service, userService } = setupService();
         const pending = new Subject<{ dashboardLayout: DashboardLayoutSettings }>();
         service.initializeLayout({ web: ['summary', 'hydration'], mobile: ['summary'] });
@@ -276,6 +276,9 @@ describe('Dashboard layout save recovery', () => {
         expect(await duplicateSave).toBe(true);
         expect(service.isSaving()).toBe(false);
         expect(service.isEditingLayout()).toBe(false);
+
+        expect(await service.saveAsync()).toBe(true);
+        expect(userService.updateDashboardLayout).toHaveBeenCalledOnce();
     });
 });
 

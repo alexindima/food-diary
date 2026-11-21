@@ -97,7 +97,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
             });
     }
 
-    protected override handleProductClick(product: Product): void {
+    protected override onProductClick(product: Product): void {
         this.handleSelection(product);
     }
 

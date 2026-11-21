@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -49,6 +49,7 @@ export class RecipeManageFacade {
     private readonly committed = new Subject<void>();
     public readonly committed$ = this.committed.asObservable();
     private readonly publication = inject(RecipePublicationService);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly recipeService = inject(RecipeService);
     private readonly translateService = inject(TranslateService);
@@ -59,7 +60,7 @@ export class RecipeManageFacade {
     private readonly userFacade = inject(UserFacade);
     public readonly preferredLanguage = computed(() => normalizeRecipeLanguage(this.userFacade.user()?.language));
     public async preparePublicationAsync(data: RecipeDto): Promise<RecipeDto | null> {
-        return this.publication.prepareAsync(data);
+        return this.publication.prepareAsync(data, this.destroyRef);
     }
     public async confirmRecipeLanguageAsync(detected: string, selected: string): Promise<RecipeLanguageChoice | undefined> {
         return firstValueFrom(
@@ -350,6 +351,10 @@ export class RecipeManageFacade {
     }
 
     private async handleSubmitResponseAsync(response: Recipe): Promise<void> {
+        if (this.destroyRef.destroyed) {
+            return;
+        }
+
         this.clearGlobalError();
         this.committed.next();
         if (this.dialogRef !== null) {

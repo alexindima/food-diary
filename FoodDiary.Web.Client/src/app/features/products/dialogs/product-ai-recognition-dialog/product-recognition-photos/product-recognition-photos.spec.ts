@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { ProductRecognitionPhotosComponent } from './product-recognition-photos';
-const MAX_PHOTOS = 5;
 const openPreview = vi.fn();
 const photo = (index: number): ImageSelection => imageSelection(`https://example.test/${index}.jpg`, `image-${index}`);
 beforeEach(() => {
@@ -16,31 +15,16 @@ beforeEach(() => {
     TestBed.overrideComponent(ProductRecognitionPhotosComponent, { set: { template: '' } });
 });
 describe('product recognition photos', () => {
-    it('adds distinct photos in order, clears the uploader and stops at five', () => {
-        const fixture = TestBed.createComponent(ProductRecognitionPhotosComponent);
-        fixture.componentRef.setInput('photos', []);
-        const component = fixture.componentInstance;
-        for (let index = 0; index <= MAX_PHOTOS; index++) {
-            component['add'](photo(index));
-        }
-        expect(component.photos()).toHaveLength(MAX_PHOTOS);
-        expect(component.photos()[0]).toEqual(photo(0));
-        component['add'](photo(0));
-        expect(component.photos()).toHaveLength(MAX_PHOTOS);
-        component['add'](null);
-        expect(component.photos()).toHaveLength(MAX_PHOTOS);
-    });
     it('removes only the selected photo and preserves order', () => {
         const fixture = TestBed.createComponent(ProductRecognitionPhotosComponent);
         fixture.componentRef.setInput('photos', [photo(0), photo(1), photo(2)]);
         fixture.componentInstance['remove'](photo(1));
         expect(fixture.componentInstance.photos()).toEqual([photo(0), photo(2)]);
     });
-    it('does not mutate photos during recognition or remove a photo during upload', () => {
+    it('keeps photos when recognition or upload prevents deletion', () => {
         const fixture = TestBed.createComponent(ProductRecognitionPhotosComponent);
         fixture.componentRef.setInput('photos', [photo(0)]);
         fixture.componentRef.setInput('disabled', true);
-        fixture.componentInstance['add'](photo(1));
         fixture.componentInstance['remove'](photo(0));
         expect(fixture.componentInstance.photos()).toEqual([photo(0)]);
         fixture.componentRef.setInput('disabled', false);

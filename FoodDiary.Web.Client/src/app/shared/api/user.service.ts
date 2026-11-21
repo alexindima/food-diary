@@ -1,4 +1,4 @@
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, map, type Observable, tap } from 'rxjs';
@@ -205,7 +205,11 @@ export class UserService {
     public changePassword(request: ChangePasswordRequest): Observable<boolean> {
         return this.sdk.client.patchUsersPassword({ version: this.sdk.version, changePasswordHttpRequest: request }).pipe(
             map(() => true),
-            catchError((error: unknown) => fallbackApiError('Change password error', error, false)),
+            catchError((error: unknown) =>
+                error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
+                    ? rethrowApiError('Change password error', error)
+                    : fallbackApiError('Change password error', error, false),
+            ),
         );
     }
 

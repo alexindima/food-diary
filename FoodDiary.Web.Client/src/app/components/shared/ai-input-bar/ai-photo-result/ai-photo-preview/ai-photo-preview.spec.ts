@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideChildTranslateService, TranslateService } from '@ngx-translate/core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -56,6 +57,10 @@ async function setupAiPhotoPreviewAsync(): Promise<ComponentFixture<AiPhotoPrevi
         providers: [provideTranslateTesting()],
     }).compileComponents();
 
+    return createAiPhotoPreview();
+}
+
+function createAiPhotoPreview(): ComponentFixture<AiPhotoPreviewComponent> {
     const fixture = TestBed.createComponent(AiPhotoPreviewComponent);
     fixture.componentRef.setInput('imageUrl', null);
     fixture.componentRef.setInput('sourceText', 'eggs');
@@ -136,6 +141,83 @@ describe('AiPhotoPreviewComponent image geometry', () => {
         expect(host.querySelector('polyline')).toBeNull();
     });
     /* eslint-enable @typescript-eslint/no-magic-numbers -- End of pixel geometry regression. */
+});
+
+describe('AiPhotoPreviewComponent with local translations', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    it('keeps scoped accessible labels, connector geometry and selection with the rendered photo', async () => {
+        await TestBed.configureTestingModule({
+            imports: [AiPhotoPreviewComponent],
+            providers: [provideTranslateTesting({ lang: 'en' })],
+        })
+            .overrideComponent(AiPhotoPreviewComponent, { add: { providers: provideChildTranslateService() } })
+            .compileComponents();
+
+        const rootTranslations = TestBed.inject(TranslateService);
+        rootTranslations.setTranslation('en', {
+            AI_INPUT_BAR: { PHOTO_PREVIEW_ALT: 'Meal photo' },
+            MEAL_MANAGE: { PHOTO_AI_DIALOG: { ANNOTATIONS_LABEL: 'Annotations' } },
+        });
+
+        let measuredCard = DOMRect.fromRect({ x: 8, y: 116, width: 180, height: 56 });
+        const frameBounds = DOMRect.fromRect({ x: 200, y: 100, width: 600, height: 800 });
+        const observe = vi.fn();
+        const disconnect = vi.fn();
+        const resizeCallbacks: Array<() => void> = [];
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                public constructor(callback: () => void) {
+                    resizeCallbacks.push(callback);
+                }
+
+                public observe = observe;
+                public disconnect = disconnect;
+            },
+        );
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+            return this.classList.contains('ai-photo-result__annotation-frame') ? frameBounds : measuredCard;
+        });
+
+        const fixture = createAiPhotoPreview();
+        const localTranslations = fixture.debugElement.injector.get(TranslateService);
+        localTranslations.setTranslation('en', { MEAL_MANAGE: { PHOTO_AI_DIALOG: { ANNOTATIONS_LABEL: 'Photo ingredients' } } });
+        const annotation: AiPhotoAnnotation = { ...createAnnotations(1)[0], centerX: 50, centerY: 18 };
+        fixture.componentRef.setInput('imageUrl', 'blob:local-preview');
+        fixture.componentRef.setInput('annotations', [annotation]);
+        fixture.detectChanges();
+        TestBed.tick();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const frame = host.querySelector('.ai-photo-result__annotation-frame');
+        const card = host.querySelector<HTMLButtonElement>('button[aria-label="Food 1"]');
+        const connector = host.querySelector('.ai-photo-result__annotation-connector-core');
+        expect(host.querySelector('.ai-photo-result__annotations')?.getAttribute('aria-label')).toBe('Photo ingredients');
+        expect(rootTranslations.instant('MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL')).toBe('Annotations');
+        expect(host.querySelector('img')?.getAttribute('alt')).toBe('Meal photo');
+        expect(observe).toHaveBeenCalledWith(frame);
+        expect(observe).toHaveBeenCalledWith(card);
+        expect(connector?.getAttribute('points')).toBe('50,18 -2,5.5');
+
+        measuredCard = DOMRect.fromRect({ x: 8, y: 140, width: 180, height: 56 });
+        resizeCallbacks.forEach(callback => {
+            callback();
+        });
+        TestBed.tick();
+        expect(connector?.getAttribute('points')).toBe('50,18 -2,8.5');
+
+        const selected = vi.fn<(id: string) => void>();
+        fixture.componentInstance.annotationSelected.subscribe(selected);
+        card?.click();
+        expect(selected).toHaveBeenCalledExactlyOnceWith(annotation.id);
+
+        fixture.destroy();
+        expect(disconnect).toHaveBeenCalledOnce();
+    });
 });
 
 describe('AiPhotoPreviewComponent image aspect ratio', () => {

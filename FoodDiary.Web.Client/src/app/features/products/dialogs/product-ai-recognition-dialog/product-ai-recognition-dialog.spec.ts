@@ -31,7 +31,6 @@ let productAiRecognitionFacade: {
     resumeRecognition: ReturnType<typeof vi.fn>;
     analyzeFoodImage: ReturnType<typeof vi.fn>;
     calculateNutrition: ReturnType<typeof vi.fn>;
-    deleteAsset: ReturnType<typeof vi.fn>;
 };
 let dialogRef: { close: ReturnType<typeof vi.fn> };
 let logger: { warn: ReturnType<typeof vi.fn> };
@@ -42,7 +41,6 @@ beforeEach(() => {
         resumeRecognition: vi.fn(),
         analyzeFoodImage: vi.fn(),
         calculateNutrition: vi.fn(),
-        deleteAsset: vi.fn().mockReturnValue(of(null)),
     };
     dialogRef = {
         close: vi.fn(),
@@ -159,12 +157,11 @@ describe('ProductAiRecognitionDialogComponent analysis', () => {
 });
 
 describe('ProductAiRecognitionDialogComponent close', () => {
-    it('preserves the uploaded image for background processing and closes', () => {
+    it('closes without applying the selected photo', () => {
         component['onPhotosChanged']([createImageSelection()]);
 
         component['close']();
 
-        expect(productAiRecognitionFacade.deleteAsset).not.toHaveBeenCalled();
         expect(dialogRef.close).toHaveBeenCalledWith(null);
     });
 
@@ -280,7 +277,6 @@ describe('Product recognition review safeguards', () => {
         expect(component['canApply']()).toBe(false);
         fixture.destroy();
         expect(pending.observed).toBe(false);
-        expect(productAiRecognitionFacade.deleteAsset).not.toHaveBeenCalled();
     });
 
     it.each([NaN, Infinity, -1])('does not apply an invalid nutrient: %s', value => {

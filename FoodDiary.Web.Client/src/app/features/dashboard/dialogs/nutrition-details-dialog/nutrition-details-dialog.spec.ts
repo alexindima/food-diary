@@ -130,6 +130,22 @@ describe('Nutrition detail totals after a concurrent diary edit', () => {
     });
 });
 
+describe('Nutrition detail sources for a day rounded to zero', () => {
+    it('keeps a persisted trace contribution and displays a finite zero share', async () => {
+        const traceProtein = 0.004;
+        const meal = nutritionMealFixture({ isNutritionAutoCalculated: false, totalProteins: traceProtein, manualProteins: traceProtein });
+        const snapshot = nutritionSnapshotFixture([meal]);
+        snapshot.statistics.averageProteins = 0;
+        snapshot.statistics.proteinGoal = 40;
+        const { host } = await setupAsync({}, vi.fn().mockReturnValue(of(snapshot)));
+
+        const source = host.querySelector('.nutrition-details__source');
+        expect(source?.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.MANUAL');
+        expect(source?.querySelector('span.nutrition-details__amount')?.textContent.trim()).toBe('0%');
+        expect(host.querySelector('fd-ui-progress-ring')?.textContent.trim()).toBe('0%');
+    });
+});
+
 describe('Nutrition detail labels for recorded sources', () => {
     it('keeps a named product contribution for a meal without a recorded slot', async () => {
         const meal = nutritionMealFixture({

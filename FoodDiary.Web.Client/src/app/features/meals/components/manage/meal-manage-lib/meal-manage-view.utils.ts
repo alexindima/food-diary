@@ -1,41 +1,30 @@
 import type { TranslateService } from '@ngx-translate/core';
 
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
-import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../../../shared/models/meal.data';
 import type { NutritionTotals } from './meal-manage.types';
 
 const FRACTION_EPSILON = 0.01;
 
-export type MealManageControlErrorState = {
-    errors: Record<string, unknown> | null;
-    getError: (errorCode: string) => unknown;
-    invalid: boolean;
-    touched: boolean;
-};
+const AI_UNIT_TRANSLATION_KEYS = new Map([
+    ['g', 'GENERAL.UNITS.G'],
+    ['gram', 'GENERAL.UNITS.G'],
+    ['grams', 'GENERAL.UNITS.G'],
+    ['gr', 'GENERAL.UNITS.G'],
+    ['ml', 'GENERAL.UNITS.ML'],
+    ['pcs', 'GENERAL.UNITS.PCS'],
+    ['pc', 'GENERAL.UNITS.PCS'],
+    ['piece', 'GENERAL.UNITS.PCS'],
+    ['pieces', 'GENERAL.UNITS.PCS'],
+    ['kcal', 'GENERAL.UNITS.KCAL'],
+]);
 
-const AI_UNIT_TRANSLATION_KEYS: Record<string, string> = {
-    g: 'GENERAL.UNITS.G',
-    gram: 'GENERAL.UNITS.G',
-    grams: 'GENERAL.UNITS.G',
-    gr: 'GENERAL.UNITS.G',
-    ml: 'GENERAL.UNITS.ML',
-    l: 'GENERAL.UNITS.ML',
-    pcs: 'GENERAL.UNITS.PCS',
-    pc: 'GENERAL.UNITS.PCS',
-    piece: 'GENERAL.UNITS.PCS',
-    pieces: 'GENERAL.UNITS.PCS',
-    kcal: 'GENERAL.UNITS.KCAL',
-};
-
-export function formatMealManageAmount(amount: number, unitLabel: string | null, translateService: TranslateService): string {
-    const formattedAmount = formatMealManageNumber(amount, translateService);
-    return unitLabel !== null ? `${formattedAmount} ${unitLabel}`.trim() : formattedAmount;
+export function formatMealManageAmount(amount: number, unitLabel: string, translateService: TranslateService): string {
+    return `${formatMealManageNumber(amount, translateService)} ${unitLabel}`.trim();
 }
 
 export function formatMealManageMacro(value: number, unitKey: string, translateService: TranslateService): string {
-    const unitLabel = translateService.instant(unitKey);
-    return `${formatMealManageNumber(value, translateService)} ${unitLabel}`.trim();
+    return formatMealManageAmount(value, translateService.instant(unitKey), translateService);
 }
 
 export function formatMealManageNumber(value: number, translateService: TranslateService): string {
@@ -47,15 +36,14 @@ export function formatMealManageNumber(value: number, translateService: Translat
 }
 
 export function formatMealAiAmount(amount: number, unit: string, translateService: TranslateService): string {
-    const normalized = unit.trim().toLowerCase();
-    const unitKey = normalized.length > 0 ? AI_UNIT_TRANSLATION_KEYS[normalized] : undefined;
+    const unitKey = AI_UNIT_TRANSLATION_KEYS.get(unit.trim().toLowerCase());
     const unitLabel = unitKey !== undefined ? translateService.instant(unitKey) : unit;
     const formattedAmount = new Intl.NumberFormat(getMealManageLanguage(translateService), { maximumFractionDigits: 20 }).format(amount);
-    return unitLabel.length > 0 ? `${formattedAmount} ${unitLabel}`.trim() : formattedAmount;
+    return `${formattedAmount} ${unitLabel}`.trim();
 }
 
-export function formatMealAiName(name?: string | null): string {
-    const trimmed = name?.trim() ?? '';
+export function formatMealAiName(name: string): string {
+    const trimmed = name.trim();
     if (trimmed.length === 0) {
         return '';
     }
@@ -76,28 +64,6 @@ export function getAiSessionTotals(session: MealAiSessionManageDto): NutritionTo
     return session.items
         .filter(item => item.resolution !== 'Rejected')
         .reduce((totals, item) => addAiItemTotals(totals, item), getEmptyNutritionTotals());
-}
-
-export function resolveMealManageControlError(
-    control: MealManageControlErrorState | null,
-    translateService: TranslateService,
-    minFallback = 0,
-): string | null {
-    if (control === null || !control.invalid || !control.touched) {
-        return null;
-    }
-
-    if (control.errors?.['required'] === true) {
-        return translateService.instant('FORM_ERRORS.REQUIRED');
-    }
-
-    const minError: unknown = control.getError('min');
-    if (minError !== null) {
-        const min = getNumberProperty(minError, 'min') ?? minFallback;
-        return translateService.instant('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO', { min });
-    }
-
-    return translateService.instant('FORM_ERRORS.UNKNOWN');
 }
 
 function addAiItemTotals(totals: NutritionTotals, item: MealAiItemManageDto): NutritionTotals {

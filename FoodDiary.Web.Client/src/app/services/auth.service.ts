@@ -137,10 +137,6 @@ export class AuthService {
         this.observeSessionActivity();
     }
 
-    public initializeAuth(): void {
-        // The HttpOnly session is restored by restoreSessionAsync before protected routing.
-    }
-
     private observeSessionActivity(): void {
         if (!this.isBrowser) {
             return;
@@ -325,12 +321,6 @@ export class AuthService {
 
     public unlinkTelegram(initData: string): Observable<void> {
         return this.telegram.client.postAuthTelegramUnlink({ version: this.telegram.version, telegramAuthHttpRequest: { initData } });
-    }
-
-    public startTelegramUnlink(): Observable<{ authorizationUrl: string }> {
-        return this.telegram.client
-            .postAuthTelegramUnlinkOidcStart({ version: this.telegram.version })
-            .pipe(map(value => requireSdkFields(value, ['authorizationUrl'])));
     }
 
     public disconnectTelegram(owner: User['id'], confirmation: TelegramDisconnectConfirmation): Observable<User> {
@@ -567,7 +557,7 @@ export class AuthService {
             this.localizationService.clearStoredLanguage();
         }
         if (cleanup !== null) {
-            await cleanup.catch(() => {});
+            await cleanup;
         }
         if (version !== this.sessionVersion) {
             return;

@@ -34,7 +34,7 @@ export class DashboardLayoutService {
     });
     public readonly layoutSettings = this.normalizedLayout.asReadonly();
 
-    public readonly isEditingLayout = signal<boolean>(false);
+    public readonly isEditingLayout = computed(() => this.layoutSnapshot() !== null);
     public readonly isSaving = signal(false);
     public readonly saveFailed = signal(false);
 
@@ -52,9 +52,6 @@ export class DashboardLayoutService {
     });
 
     public readonly hasLayoutChanges = computed(() => {
-        if (!this.isEditingLayout()) {
-            return false;
-        }
         const previous = this.layoutSnapshot();
         if (previous === null) {
             return false;
@@ -90,7 +87,6 @@ export class DashboardLayoutService {
         }
         this.saveFailed.set(false);
         this.layoutSnapshot.set(this.normalizeLayout(this.layoutSettings()));
-        this.isEditingLayout.set(true);
     }
 
     public async saveAsync(): Promise<boolean> {
@@ -113,14 +109,12 @@ export class DashboardLayoutService {
     }
 
     public discard(): void {
-        if (!this.isEditingLayout() || this.isSaving()) {
+        const snapshot = this.layoutSnapshot();
+        if (snapshot === null || this.isSaving()) {
             return;
         }
 
-        const snapshot = this.layoutSnapshot();
-        if (snapshot !== null) {
-            this.normalizedLayout.set(this.normalizeLayout(snapshot));
-        }
+        this.normalizedLayout.set(this.normalizeLayout(snapshot));
         this.finishEditing();
     }
 
@@ -215,7 +209,6 @@ export class DashboardLayoutService {
     }
 
     private finishEditing(): void {
-        this.isEditingLayout.set(false);
         this.layoutSnapshot.set(null);
         this.saveFailed.set(false);
     }

@@ -10,7 +10,6 @@ import { environment } from '../../../environments/environment';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { AuthService } from '../../services/auth.service';
 import { authRoutes } from './auth.routes';
-import { AdminConfirmationComponent } from './pages/admin-confirmation/admin-confirmation';
 
 const ADMIN_ORIGIN = 'https://admin.example.test';
 const AUTH_PATH = '/auth/confirm-admin';
@@ -33,9 +32,23 @@ function configureConfirmation(account: string | null, expectedAccount: string |
     const startAdminSso = vi.fn<AuthService['startAdminSso']>().mockReturnValue(of(CODE));
     const replace = vi.fn<(url: string) => void>();
     const hash = expectedAccount === null ? '' : `#${new URLSearchParams({ account: expectedAccount })}`;
+    const location = { origin: 'https://diary.example.test', hash, replace };
+    const confirmationDocument = new Proxy(document, {
+        get(target, property): unknown {
+            if (property === 'location') {
+                return location;
+            }
+            const value: unknown = Reflect.get(target, property, target);
+            return typeof value === 'function' ? (value.bind(target) as unknown) : value;
+        },
+    });
+    const confirmationProviders = [{ provide: DOCUMENT, useValue: confirmationDocument }];
+    const routes = authRoutes.map(route =>
+        route.path === AUTH_PATH.slice(1) ? { ...route, providers: [...(route.providers ?? []), ...confirmationProviders] } : route,
+    );
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([...authRoutes, { path: 'profile', component: ProfileDestinationComponent }]),
+            provideRouter([...routes, { path: 'profile', component: ProfileDestinationComponent }]),
             provideTranslateTesting(),
             {
                 provide: AuthService,
@@ -47,8 +60,6 @@ function configureConfirmation(account: string | null, expectedAccount: string |
                 },
             },
         ],
-    }).overrideComponent(AdminConfirmationComponent, {
-        add: { providers: [{ provide: DOCUMENT, useValue: { location: { origin: 'https://diary.example.test', hash, replace } } }] },
     });
     return { ensureSessionReadyAsync, startAdminSso, replace };
 }
@@ -76,6 +87,17 @@ describe('Client admin confirmation route', () => {
         session.complete();
         await vi.waitFor(() => {
             expect(replace).toHaveBeenCalledExactlyOnceWith(`${ADMIN_ORIGIN}${EXPECTED_RETURN}#code=${CODE.code}&account=${ACCOUNT}`);
+        });
+        expect(startAdminSso).toHaveBeenCalledOnce();
+    });
+
+    it('opens the configured admin home after confirming a matching session with an empty return path', async () => {
+        environment.adminAppUrl = ADMIN_ORIGIN;
+        const { startAdminSso, replace } = configureConfirmation(ACCOUNT, ACCOUNT);
+        await RouterTestingHarness.create(`${AUTH_PATH}?adminReturnUrl=`);
+
+        await vi.waitFor(() => {
+            expect(replace).toHaveBeenCalledExactlyOnceWith(`${ADMIN_ORIGIN}/#code=${CODE.code}&account=${ACCOUNT}`);
         });
         expect(startAdminSso).toHaveBeenCalledOnce();
     });

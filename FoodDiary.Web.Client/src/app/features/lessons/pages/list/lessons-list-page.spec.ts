@@ -6,16 +6,15 @@ import { describe, expect, it, vi } from 'vitest';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
-import { LessonFacade } from '../../lib/lesson.facade';
+import { LessonListFacade } from '../../lib/list/lesson-list.facade';
 import type { LessonSummary } from '../../models/lesson.data';
 import { LessonsListPageComponent } from './lessons-list-page';
 
 describe('LessonsListPageComponent', () => {
-    it('loads lessons on creation and maps list state', () => {
+    it('maps authoritative list progress and lesson metadata', () => {
         const facade = createFacadeStub([createSummary({ isRead: true })]);
         const component = createComponent(facade);
 
-        expect(facade.loadLessons).toHaveBeenCalledWith();
         expect(component['progress']()).toEqual({ read: 1, total: 1, percent: 100 });
         expect(component['lessons']()[0]).toMatchObject({
             categoryLabelKey: 'LESSONS.CATEGORY.Macronutrients',
@@ -32,7 +31,6 @@ describe('LessonsListPageComponent', () => {
 
         expect(facade.categoryFilter()).toBe('Hydration');
         expect(facade.resetPage).toHaveBeenCalledOnce();
-        expect(facade.loadLessons).toHaveBeenCalledTimes(1);
     });
 
     it('updates server search query', () => {
@@ -79,13 +77,12 @@ type FacadeStub = {
     >;
     lessons: ReturnType<typeof signal<LessonSummary[]>>;
     isLoading: ReturnType<typeof signal<boolean>>;
-    loadLessons: ReturnType<typeof vi.fn<(category?: string | null) => void>>;
     resetPage: ReturnType<typeof vi.fn<() => void>>;
 };
 
 function createComponent(facade: FacadeStub, router = createRouterStub()): LessonsListPageComponent {
     TestBed.configureTestingModule({
-        providers: [provideTranslateTesting(), { provide: LessonFacade, useValue: facade }, { provide: Router, useValue: router }],
+        providers: [provideTranslateTesting(), { provide: LessonListFacade, useValue: facade }, { provide: Router, useValue: router }],
     });
 
     return TestBed.runInInjectionContext(() => new LessonsListPageComponent());
@@ -119,7 +116,6 @@ function createFacadeStub(lessons: LessonSummary[] = []): FacadeStub {
         }),
         lessons: signal(lessons),
         isLoading: signal(false),
-        loadLessons: vi.fn(),
         resetPage: vi.fn(),
     };
 }

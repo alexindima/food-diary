@@ -48,6 +48,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
         expect(root.querySelector('fd-ui-button')).not.toBeNull();
         expect(root.textContent).toContain('113');
         expect(root.textContent).toContain('−3');
+        expect(root.querySelector('.statistics-body-trend-card__change--positive')).not.toBeNull();
         expect(root.querySelectorAll('.statistics-body-trend-card__insight')[3].textContent).toContain('22');
 
         const translateService = TestBed.inject(TranslateService);
@@ -68,6 +69,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
         expect(root.textContent).toContain('STATISTICS.DASHBOARD.BODY.CURRENT_WAIST');
         expect(root.querySelector('.statistics-body-trend-card__change')?.textContent.trim()).toContain('+2');
         expect(root.querySelector('.statistics-body-trend-card__change')?.textContent.trim()).toContain('GENERAL.UNITS.CM');
+        expect(root.querySelector('.statistics-body-trend-card__change--negative')).not.toBeNull();
         expect(root.querySelectorAll('.statistics-body-trend-card__insight')[3].textContent).toContain('21');
 
         const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
@@ -94,7 +96,15 @@ describe('StatisticsBodyTrendCard empty metrics', () => {
                 measurementCount: 1,
                 points: [{ label: '20 Jul', value: 80 }],
             },
-            waist: { key: 'waist', current: null, change: null, goal: null, timeframeDays: 7, measurementCount: 0, points: [] },
+            waist: {
+                key: 'waist',
+                current: null,
+                change: null,
+                goal: null,
+                timeframeDays: 7,
+                measurementCount: 0,
+                points: [{ label: '20 Jul', value: null }],
+            },
         });
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
@@ -105,8 +115,49 @@ describe('StatisticsBodyTrendCard empty metrics', () => {
         fixture.detectChanges();
 
         expect(root.querySelector('fd-ui-line-chart')).toBeNull();
+        expect(root.querySelector('.statistics-body-trend-card__change')).toBeNull();
         expect(root.textContent).toContain('STATISTICS.DASHBOARD.BODY.EMPTY_WAIST');
         expect(root.textContent).toContain('STATISTICS.DASHBOARD.BODY.OPEN_WAIST_HISTORY');
+    });
+});
+
+describe('StatisticsBodyTrendCard small changes', () => {
+    const INITIAL_WEIGHT_KG = 80;
+    const SMALL_WEIGHT_INCREASE_KG = 0.04;
+
+    it.each([
+        { change: 0, displayed: '0', hasIncreaseClass: false },
+        { change: SMALL_WEIGHT_INCREASE_KG, displayed: '+0', hasIncreaseClass: true },
+    ])('displays a $change kg weight change with the correct direction', async ({ change, displayed, hasIncreaseClass }) => {
+        await TestBed.configureTestingModule({
+            imports: [StatisticsBodyTrendCardComponent],
+            providers: [provideTranslateTesting(), provideRouter([])],
+        }).compileComponents();
+        TestBed.inject(MeasurementSystemService).setSystem('metric');
+        const fixture = TestBed.createComponent(StatisticsBodyTrendCardComponent);
+        fixture.componentRef.setInput('data', {
+            weight: {
+                key: 'weight',
+                current: INITIAL_WEIGHT_KG + change,
+                change,
+                goal: null,
+                timeframeDays: 7,
+                measurementCount: 2,
+                points: [
+                    { label: '20 Jul', value: INITIAL_WEIGHT_KG },
+                    { label: '21 Jul', value: INITIAL_WEIGHT_KG + change },
+                ],
+            },
+            waist: { key: 'waist', current: null, change: null, goal: null, timeframeDays: 7, measurementCount: 0, points: [] },
+        });
+        fixture.detectChanges();
+
+        const root = fixture.nativeElement as HTMLElement;
+        const changeLabel = root.querySelector('.statistics-body-trend-card__change');
+        expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
+        expect(changeLabel?.textContent.trim()).toBe(`${displayed} GENERAL.UNITS.KG`);
+        expect(changeLabel?.classList.contains('statistics-body-trend-card__change--negative')).toBe(hasIncreaseClass);
+        expect(changeLabel?.classList.contains('statistics-body-trend-card__change--positive')).toBe(false);
     });
 });
 

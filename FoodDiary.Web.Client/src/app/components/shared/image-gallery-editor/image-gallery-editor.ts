@@ -62,19 +62,8 @@ export class ImageGalleryEditorComponent {
 
     protected readonly maxPhotos = MAX_PHOTOS;
     protected readonly hasUploadError = signal(false);
-    protected readonly clearRequest = signal(0);
     protected addBatch(photos: ImageSelection[]): void {
         this.photos.set([...this.photos(), ...photos].slice(0, MAX_PHOTOS));
-    }
-    protected add(photo: ImageSelection | null): void {
-        if (photo === null || (photo.assetId ?? '').length === 0) {
-            return;
-        }
-        this.uploading.set(false);
-        if (!this.disabled() && this.photos().length < MAX_PHOTOS && !this.photos().some(item => item.assetId === photo.assetId)) {
-            this.photos.set([...this.photos(), photo]);
-        }
-        this.clearRequest.update(value => value + 1);
     }
     protected remove(photo: ImageSelection): void {
         if (this.disabled() || this.uploading()) {

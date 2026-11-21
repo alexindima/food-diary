@@ -34,16 +34,17 @@
             <fd-ui-input
                 type="number"
                 size="sm"
-                min="0"
+                [minimum]="0"
                 [label]="'RECIPE_LIST.FILTER_CALORIES_FROM' | translate"
+                [error]="caloriesFromError() | translate"
                 [(value)]="caloriesFromValue"
             />
             <fd-ui-input
                 type="number"
                 size="sm"
-                min="0"
+                [minimum]="0"
                 [label]="'RECIPE_LIST.FILTER_CALORIES_TO' | translate"
-                [error]="caloriesRangeError() ? ('RECIPE_LIST.FILTER_CALORIES_ORDER_ERROR' | translate) : null"
+                [error]="caloriesToError() | translate"
                 [(value)]="caloriesToValue"
             />
         </div>

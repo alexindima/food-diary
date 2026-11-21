@@ -35,7 +35,7 @@
             (cyclicEatDayFastHoursChange)="onCyclicEatDayFastHoursChange($event)"
             (startFasting)="startFasting()"
         />
-    } @else if (isActiveExtendedSession()) {
+    } @else if (activeExtendedSession(); as extendedSession) {
         <fd-fasting-active-extended-controls
             [canExtendActiveSession]="canExtendActiveSession()"
             [isExtendPanelExpanded]="isExtendPanelExpanded()"
@@ -49,32 +49,32 @@
             [isReducing]="isReducing()"
             [isEnding]="isEnding()"
             [isUpdatingCycle]="isUpdatingCycle()"
-            [endActionLabelKey]="endActionLabelKey()"
+            [endActionLabelKey]="endConfirmationKeys[extendedSession.planType].actionKey"
             (extendPanelToggle)="toggleExtendPanel()"
             (reducePanelToggle)="toggleReducePanel()"
-            (extendDay)="extendByDay()"
-            (extend36Hours)="extendBy36Hours()"
+            (extendDay)="extendByDay(extendedSession.id)"
+            (extend36Hours)="extendBy36Hours(extendedSession.id)"
             (customExtendShow)="showCustomExtend()"
             (extendHoursChange)="onExtendHoursChange($event)"
-            (extendCustom)="extendByCustom()"
-            (reduce4Hours)="reduceBy4Hours()"
-            (reduce8Hours)="reduceBy8Hours()"
+            (extendCustom)="extendByCustom(extendedSession.id)"
+            (reduce4Hours)="reduceBy4Hours(extendedSession.id)"
+            (reduce8Hours)="reduceBy8Hours(extendedSession.id)"
             (customReduceShow)="showCustomReduce()"
             (reduceHoursChange)="onReduceHoursChange($event)"
-            (reduceCustom)="reduceByCustom()"
-            (end)="endFasting()"
+            (reduceCustom)="reduceByCustom(extendedSession.id)"
+            (end)="endFasting(extendedSession.id)"
         />
-    } @else {
+    } @else if (currentSession(); as basicSession) {
         <fd-fasting-active-basic-controls
             [canManageCurrentCyclicDay]="canManageCurrentCyclicDay()"
             [skipCycleActionLabelKey]="skipCycleActionLabelKey()"
             [postponeCycleActionLabelKey]="postponeCycleActionLabelKey()"
-            [endActionLabelKey]="endActionLabelKey()"
+            [endActionLabelKey]="endConfirmationKeys[basicSession.planType].actionKey"
             [isUpdatingCycle]="isUpdatingCycle()"
             [isEnding]="isEnding()"
             (skip)="skipCyclicDay()"
             (postpone)="postponeCyclicDay()"
-            (end)="endFasting()"
+            (end)="endFasting(basicSession.id)"
         />
     }
 </div>

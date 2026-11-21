@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
-import { createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
+import { createRecipeIngredientValue, createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeStepCardComponent } from '../recipe-step-card/recipe-step-card';
 import { type RecipeStepListItem, RecipeStepsListComponent } from './recipe-steps-list';
 
@@ -171,31 +171,53 @@ function createRecipeStepListItem(step: StepFormValues = createRecipeStepValue()
 }
 
 describe('RecipeStepsListComponent child event wiring', () => {
+    it('relays native blur events with the actual step and ingredient indexes', () => {
+        const { component, fixture } = setupComponent(new Set([0, 1]));
+        const second = { ...createRecipeStepValue(), ingredients: [createRecipeIngredientValue()] };
+        fixture.componentRef.setInput('steps', [createRecipeStepListItem(), createRecipeStepListItem(second)]);
+        fixture.detectChanges();
+        const blurred = vi.fn();
+        component.fieldBlur.subscribe(blurred);
+        const step = (fixture.nativeElement as HTMLElement).querySelectorAll('fd-recipe-step-card')[1];
+
+        for (const selector of ['textarea', '.recipe-ingredient__name input', '.recipe-ingredient__amount input']) {
+            const field = step.querySelector(selector);
+            if (!(field instanceof HTMLElement)) {
+                throw new Error(`Missing recipe step field ${selector}`);
+            }
+            field.focus();
+            expect(document.activeElement).toBe(field);
+            field.blur();
+        }
+
+        expect(blurred.mock.calls).toEqual([
+            [{ stepIndex: 1, field: 'description' }],
+            [{ stepIndex: 1, field: 'foodName', ingredientIndex: 0 }],
+            [{ stepIndex: 1, field: 'amount', ingredientIndex: 0 }],
+        ]);
+    });
+
     it('routes edited fields from the second step with its actual index', () => {
         const { component, fixture } = setupComponent(new Set([0, 1]));
         const child: RecipeStepCardComponent = fixture.debugElement
             .queryAll(By.directive(RecipeStepCardComponent))[1]
             .injector.get(RecipeStepCardComponent);
         const title = vi.fn();
-        const image = vi.fn();
         const description = vi.fn();
         const amount = vi.fn();
         const added = vi.fn();
         const removed = vi.fn();
         component.stepTitleChange.subscribe(title);
-        component.stepImageChange.subscribe(image);
         component.stepDescriptionChange.subscribe(description);
         component.ingredientAmountChange.subscribe(amount);
         component.addIngredient.subscribe(added);
         component.removeStep.subscribe(removed);
         child.stepTitleChange.emit('Bake');
-        child.stepImageChange.emit(null);
         child.stepDescriptionChange.emit('Bake until ready');
         child.ingredientAmountChange.emit({ ingredientIndex: 0, amount: 25 });
         child.addIngredient.emit();
         child.removeStep.emit();
         expect(title).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, value: 'Bake' });
-        expect(image).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, value: null });
         expect(description).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, value: 'Bake until ready' });
         expect(amount).toHaveBeenCalledExactlyOnceWith({ stepIndex: 1, ingredientIndex: 0, amount: 25 });
         expect(added).toHaveBeenCalledExactlyOnceWith(1);

@@ -61,6 +61,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly placeholder = input<string>();
     public readonly type = input<'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time'>('text');
     public readonly localizedNumber = input(false);
+    public readonly preserveInvalidNumberDraft = input(false);
     public readonly numberNormalizer = input<(value: number | null) => number | null>();
     public readonly autocomplete = input<FdUiInputAutocomplete>();
     public readonly enterKeyHint = input<FdUiEnterKeyHint>();
@@ -92,6 +93,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly disabled = input(false);
 
     public readonly suffixButtonClicked = output();
+    public readonly nativeNumberDraftInvalidChange = output<boolean>();
 
     protected readonly internalValue = signal<string | number>('');
     protected readonly isFocused = signal(false);
@@ -103,10 +105,14 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     );
 
     private readonly autofillSyncTimers = new Set<ReturnType<typeof setTimeout>>();
+    private nativeNumberDraftInvalid = false;
 
     public constructor() {
         effect(() => {
             const value = this.value();
+            if (this.nativeNumberDraftInvalid) {
+                return;
+            }
             const raw = untracked(this.internalValue);
             if (this.localizedNumber() && this.type() === 'number' && Object.is(this.toModelValue(String(raw)), value)) {
                 return;
@@ -179,6 +185,18 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         }
     }
 
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public reset contract for a consumer that discards an unfinished number.
+    public resetNativeNumberDraft(): void {
+        if (!this.nativeNumberDraftInvalid) {
+            return;
+        }
+
+        const value = this.value() ?? '';
+        this.control().nativeElement.value = String(value);
+        this.internalValue.set(value);
+        this.setNativeNumberDraftInvalid(false);
+    }
+
     protected onBlur(): void {
         this.isFocused.set(false);
         this.touched.set(true);
@@ -226,18 +244,23 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
     private syncValue(control: HTMLInputElement): void {
         const value = control.value;
-        if (value === String(this.internalValue())) {
+        if (this.nativeNumberDraftInvalid || value === String(this.internalValue())) {
             return;
         }
 
-        this.internalValue.set(value);
-
-        if (!this.disabled()) {
-            this.updateInputValue(control);
+        if (this.disabled()) {
+            this.internalValue.set(value);
+            return;
         }
+        this.updateInputValue(control);
     }
 
     private updateInputValue(control: HTMLInputElement): void {
+        this.setNativeNumberDraftInvalid(this.preserveInvalidNumberDraft() && control.type === 'number' && control.validity.badInput);
+        if (this.nativeNumberDraftInvalid) {
+            return;
+        }
+
         const raw = control.value;
         const parsed = this.toModelValue(raw);
         const normalizer = this.numberNormalizer();
@@ -251,6 +274,13 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         }
         this.internalValue.set(raw);
         this.value.set(parsed);
+    }
+
+    private setNativeNumberDraftInvalid(invalid: boolean): void {
+        if (this.nativeNumberDraftInvalid !== invalid) {
+            this.nativeNumberDraftInvalid = invalid;
+            this.nativeNumberDraftInvalidChange.emit(invalid);
+        }
     }
 
     private toModelValue(value: string): string | number | null {

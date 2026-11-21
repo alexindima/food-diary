@@ -10,7 +10,7 @@ import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pi
 import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasting-timer-card-state';
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
-import type { FastingMessageViewModel } from '../../lib/fasting-page.types';
+import type { FastingMessageViewModel, FastingProtocolPreview } from '../../lib/fasting-page.types';
 import { getFastingDurationDisplay, getNextCyclicDayLabelKey, isFastingEndedEarly } from '../../lib/fasting-session-state';
 
 type RhythmDay = {
@@ -50,14 +50,14 @@ export class FastingRedesignPreviewComponent {
     public readonly remainingFormatted = input.required<string>();
     public readonly progressPercent = input.required<number>();
     public readonly now = input.required<Date>();
-    public readonly selectedDurationHours = input.required<number>();
+    public readonly selectedProtocol = input.required<FastingProtocolPreview>();
     public readonly isStarting = input(false);
     public readonly isSessionMutationPending = input(false);
     public readonly alerts = input<readonly FastingMessageViewModel[]>([]);
     public readonly insights = input<readonly FastingMessageViewModel[]>([]);
     public readonly startRequested = output();
     public readonly checkInRequested = output();
-    public readonly manageRequested = output();
+    public readonly manageRequested = output<FastingSession['id']>();
     public readonly sessionManagementRequested = output();
     public readonly protocolSettingsRequested = output();
     public readonly historyRequested = output();
@@ -102,7 +102,6 @@ export class FastingRedesignPreviewComponent {
         return buildFastingTimerCardComputedState({
             session,
             elapsedMs: Math.max(0, this.now().getTime() - new Date(session.startedAtUtc).getTime()),
-            translate: (key, params) => this.translateService.instant(key, params),
         }).stage;
     });
     protected readonly managementLabelKey = computed(() => {
@@ -141,20 +140,23 @@ export class FastingRedesignPreviewComponent {
 
         return this.isEatingPhase() ? 'FASTING.FASTING_WINDOW' : 'FASTING.EATING_WINDOW';
     });
-    protected readonly flowView = computed<FastingFlowView>((): FastingFlowView => {
+    private readonly displayedProtocol = computed<FastingProtocolPreview>(() => {
         const session = this.session();
-        if (session?.planType === 'Cyclic') {
-            return {
-                key: 'FASTING.REDESIGN.CYCLIC_FLOW',
-                params: {
-                    fastDays: session.cyclicFastDays ?? 1,
-                    eatDays: session.cyclicEatDays ?? 1,
-                },
-            };
+        if (session === null) {
+            return this.selectedProtocol();
         }
-
-        const fastHours = session?.plannedDurationHours ?? this.selectedDurationHours();
-        if (session?.planType === 'Extended') {
+        if (session.planType === 'Cyclic') {
+            return { mode: 'cyclic', fastDays: session.cyclicFastDays ?? 1, eatDays: session.cyclicEatDays ?? 1 };
+        }
+        return { mode: session.planType === 'Extended' ? 'extended' : 'intermittent', durationHours: session.plannedDurationHours };
+    });
+    protected readonly flowView = computed<FastingFlowView>((): FastingFlowView => {
+        const protocol = this.displayedProtocol();
+        if (protocol.mode === 'cyclic') {
+            return { key: 'FASTING.REDESIGN.CYCLIC_FLOW', params: { fastDays: protocol.fastDays, eatDays: protocol.eatDays } };
+        }
+        const fastHours = protocol.durationHours;
+        if (protocol.mode === 'extended') {
             return { key: 'FASTING.REDESIGN.EXTENDED_FLOW', params: { hours: fastHours } };
         }
 
@@ -165,13 +167,13 @@ export class FastingRedesignPreviewComponent {
     });
     protected readonly protocolLabel = computed(() => {
         this.languageVersion();
-        const session = this.session();
-        if (session?.planType === 'Cyclic') {
-            return `${session.cyclicFastDays ?? 1}:${session.cyclicEatDays ?? 1}`;
+        const protocol = this.displayedProtocol();
+        if (protocol.mode === 'cyclic') {
+            return `${protocol.fastDays}:${protocol.eatDays}`;
         }
 
-        const duration = session?.plannedDurationHours ?? this.selectedDurationHours();
-        return session?.planType === 'Extended' || duration >= HOURS_PER_DAY
+        const duration = protocol.durationHours;
+        return protocol.mode === 'extended' || duration >= HOURS_PER_DAY
             ? `${duration} ${this.translateService.instant('FASTING.HOURS')}`
             : `${duration}:${HOURS_PER_DAY - duration}`;
     });

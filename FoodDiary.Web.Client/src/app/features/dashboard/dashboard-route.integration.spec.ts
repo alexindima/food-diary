@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import localeRu from '@angular/common/locales/ru';
 import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -10,6 +10,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
@@ -17,10 +18,12 @@ import { provideTranslateTesting } from '../../../testing/translate-testing.modu
 import type { AiInputBarResult } from '../../components/shared/ai-input-bar/ai-input-bar.types';
 import { AuthService } from '../../services/auth.service';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
+import type { MealHttpResponse } from '../../shared/api/sdk/generated/model/meal-http-response';
 import { UserService } from '../../shared/api/user.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../shared/development/development-tools';
 import { LocalizationService } from '../../shared/i18n/localization.service';
 import type { DashboardSnapshot } from '../../shared/models/dashboard.data';
+import type { GoalsResponse } from '../../shared/models/goals.data';
 import type { Meal } from '../../shared/models/meal.data';
 import { calendarDate, utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
@@ -29,7 +32,8 @@ import { BrowserNotificationCapabilityService } from '../../shared/notifications
 import { NotificationService } from '../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../shared/notifications/push-notification.service';
 import { ViewportService } from '../../shared/platform/viewport.service';
-import { CALORIE_GOAL_ACTIONS } from '../goals/contracts/calorie-goal-actions';
+import { PrivacyConsentFacade } from '../../shared/privacy/privacy-consent.facade';
+import { CALORIE_GOAL_ACTIONS, type CalorieGoalActions } from '../goals/contracts/calorie-goal-actions';
 import { HYDRATION_ACTIONS } from '../hydration/contracts/hydration-actions';
 import { AiMealCreateFacade } from '../meals/contracts/ai-meal-create';
 import { FAVORITE_MEAL_ACTIONS, MEAL_ACTIONS } from '../meals/contracts/meal-actions';
@@ -50,6 +54,7 @@ const DASHBOARD_TEST_ROUTES: Routes = [
     { path: 'goals', component: OtherPageComponent },
     { path: 'cycle-tracking', component: OtherPageComponent },
     { path: 'meals/add', component: OtherPageComponent },
+    { path: 'weight-history', component: OtherPageComponent },
 ];
 const DASHBOARD_DATE = '2026-05-18';
 const DASHBOARD_URL = `/dashboard?date=${DASHBOARD_DATE}`;
@@ -69,6 +74,7 @@ type DashboardFixture = {
     harness: RouterTestingHarness;
     router: Router;
     updateLayout: Mock<UserService['updateDashboardLayout']>;
+    updateGoal: Mock<CalorieGoalActions['updateGoals']>;
     readSnapshot: Mock<DashboardService['getSnapshot']>;
     refreshSnapshot: Mock<DashboardService['getSnapshotSilentlyStrict']>;
     readAccount: Mock<UserService['getInfoSilently']>;
@@ -85,26 +91,29 @@ afterEach(() => {
 async function renderDashboardAsync(
     initialSnapshot: DashboardSnapshot | null = makeSnapshot(),
     cachedAccount: User | null = null,
-    options: { startUrl?: string; initialRead?: Observable<DashboardSnapshot | null> } = {},
+    options: { startUrl?: string; initialRead?: Observable<DashboardSnapshot | null>; realMealComposer?: boolean } = {},
 ): Promise<DashboardFixture> {
     vi.stubGlobal(
         'matchMedia',
         vi.fn(() => ({ matches: false })),
     );
     const updateLayout = vi.fn<UserService['updateDashboardLayout']>();
+    const updateGoal = vi.fn<CalorieGoalActions['updateGoals']>().mockReturnValue(of(null));
     const readSnapshot = vi.fn<DashboardService['getSnapshot']>().mockReturnValue(options.initialRead ?? of(initialSnapshot));
     const refreshSnapshot = vi.fn<DashboardService['getSnapshotSilentlyStrict']>().mockReturnValue(of(initialSnapshot ?? makeSnapshot()));
     const readAccount = vi.fn<UserService['getInfoSilently']>().mockReturnValue(of(null));
     const createAiMeal = vi.fn<AiMealCreateFacade['createFromAiResult']>().mockReturnValue(of(null));
     const developmentScreens = new Map<string, DevelopmentScreen>();
-    TestBed.configureTestingModule({
+    const testingModule = TestBed.configureTestingModule({
+        imports: [DashboardComponent],
         providers: [
             provideRouter(DASHBOARD_TEST_ROUTES),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
-            ...dashboardBoundaryProviders(),
+            ...dashboardBoundaryProviders(options.realMealComposer),
             ...notificationBoundaryProviders(),
+            { provide: CALORIE_GOAL_ACTIONS, useValue: { updateGoals: updateGoal } },
             {
                 provide: DEVELOPMENT_SCREENS,
                 useValue: {
@@ -129,17 +138,16 @@ async function renderDashboardAsync(
                 },
             },
         ],
-    }).overrideComponent(DashboardComponent, {
-        remove: { providers: [AiMealCreateFacade] },
-        add: {
-            providers: [
-                {
-                    provide: AiMealCreateFacade,
-                    useValue: { isSaving: signal(false), clearToken: signal(0), createFromAiResult: createAiMeal },
-                },
-            ],
-        },
     });
+    if (options.realMealComposer === true) {
+        testingModule.overrideProvider(PrivacyConsentFacade, {
+            useValue: { ensureHealthConsentAsync: vi.fn<PrivacyConsentFacade['ensureHealthConsentAsync']>().mockResolvedValue(true) },
+        });
+    } else {
+        testingModule.overrideProvider(AiMealCreateFacade, {
+            useValue: { isSaving: signal(false), clearToken: signal(0), createFromAiResult: createAiMeal },
+        });
+    }
     const translate = TestBed.inject(TranslateService);
     translate.setFallbackLang('en');
     translate.use('en');
@@ -148,6 +156,7 @@ async function renderDashboardAsync(
         harness,
         router: TestBed.inject(Router),
         updateLayout,
+        updateGoal,
         readSnapshot,
         refreshSnapshot,
         readAccount,
@@ -157,13 +166,12 @@ async function renderDashboardAsync(
     };
 }
 
-function dashboardBoundaryProviders(): Provider[] {
+function dashboardBoundaryProviders(isPremium = false): Provider[] {
     return [
         { provide: MEAL_ACTIONS, useValue: {} },
         { provide: FAVORITE_MEAL_ACTIONS, useValue: {} },
-        { provide: CALORIE_GOAL_ACTIONS, useValue: {} },
         { provide: HYDRATION_ACTIONS, useValue: {} },
-        { provide: AuthService, useValue: { isAuthenticated: signal(true), isPremium: signal(false), getUserId: (): null => null } },
+        { provide: AuthService, useValue: { isAuthenticated: signal(true), isPremium: signal(isPremium), getUserId: (): null => null } },
         { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } },
         { provide: ViewportService, useValue: { isMobile: signal(false) } },
     ];
@@ -219,6 +227,35 @@ function dashboardScreen(developmentScreens: Map<string, DevelopmentScreen>): De
     }
     return { ...screen, setFiltersAsync: screen.setFiltersAsync };
 }
+
+describe('Dashboard once a first weight measurement has been recorded', () => {
+    it('shows the first measurement and opens its add-entry route without a trend chart', async () => {
+        const snapshot = makeSnapshot();
+        const date = calendarDate(DASHBOARD_DATE);
+        const firstWeightKg = 76.5;
+        const { harness, router } = await renderDashboardAsync({
+            ...snapshot,
+            dashboardLayout: {
+                web: ['summary', 'weight'],
+                mobile: ['summary', 'weight'],
+            },
+            weight: { ...snapshot.weight, latest: { date, weightKg: firstWeightKg } },
+            weightTrend: [{ startDate: date, endDate: date, averageWeightKg: firstWeightKg }],
+        });
+        const card = element(harness, 'fd-weight-trend-card.dashboard__card--weight-trend');
+        expect(card.querySelector('.weight-trend-card__value')?.textContent.trim()).toBe(String(firstWeightKg));
+        expect(card.querySelector('.weight-trend-card__sparse')?.textContent).toContain('WEIGHT_TREND_CARD.FIRST_MEASUREMENT');
+        expect(card.querySelector('fd-ui-line-chart')).toBeNull();
+        expect(card.querySelector('.weight-trend-card__delta')).toBeNull();
+
+        const addMeasurement = element(harness, 'fd-weight-trend-card.dashboard__card--weight-trend .weight-trend-card__action button');
+        expect(addMeasurement.textContent).toContain('WEIGHT_TREND_CARD.ADD_WEIGHT');
+        addMeasurement.click();
+        await vi.waitFor(() => {
+            expect(router.url).toBe('/weight-history?addEntry=true');
+        });
+    });
+});
 
 function useDashboardDay(): void {
     vi.useFakeTimers({ toFake: ['Date'] });
@@ -783,6 +820,90 @@ describe('Dashboard recognition quick add', () => {
     });
 });
 
+describe('Dashboard independent meal recognition drafts', () => {
+    it.each(['dinner', 'quick add'] as const)('clears only the submitting composer after %s saves a meal', async source => {
+        useDashboardDay();
+        const { harness } = await renderDashboardAsync(
+            makeSnapshot(),
+            { ...savedUser(), dashboardLayout: BASE_LAYOUT, aiConsentAcceptedAt: utcInstant(`${DASHBOARD_DATE}T11:00:00Z`) },
+            { realMealComposer: true },
+        );
+        const http = TestBed.inject(HttpTestingController);
+        onTestFinished(() => {
+            http.verify();
+        });
+        const quickAdd = element(harness, 'fd-dashboard-quick-add');
+        const dinner = Array.from(element(harness, 'fd-meals-preview').querySelectorAll('fd-meals-preview-entry')).find(entry =>
+            entry.textContent.includes('MEAL_CARD.MEAL_TYPES.DINNER'),
+        );
+        if (dinner === undefined) {
+            throw new Error('Expected the empty Dinner slot');
+        }
+        button(dinner, 'MEALS_PREVIEW.ADD_TO_MEAL').click();
+        redraw(harness);
+
+        const [submitting, other] = source === 'dinner' ? [dinner, quickAdd] : [quickAdd, dinner];
+        const otherDraft = 'A separate unsent meal description';
+        const mealName = 'Lentil soup';
+        const nutrients = { calories: 160, protein: 8, fat: 4, carbs: 24, fiber: 6, alcohol: 0 };
+        const amount = 200;
+        typeComposerText(other, otherDraft);
+        typeComposerText(submitting, mealName);
+        redraw(harness);
+
+        button(submitting, 'AI_INPUT_BAR.ADD_ACTION').click();
+        const parsing = await vi.waitFor(() => http.expectOne(request => request.url.endsWith('/ai/food/text')));
+        expect(parsing.request.body).toEqual({ text: mealName });
+        parsing.flush({ items: [{ nameEn: mealName, amount, unit: 'g', confidence: 1 }] });
+        http.expectOne(request => request.url.endsWith('/ai/food/nutrition')).flush({
+            ...nutrients,
+            items: [{ name: mealName, amount, unit: 'g', ...nutrients }],
+        });
+        redraw(harness);
+        const review = submitting.querySelector('fd-ai-photo-result');
+        if (review === null) {
+            throw new Error('Expected the submitting composer to show its meal review');
+        }
+        expect(review.textContent).toContain(mealName);
+        button(review, 'MEAL_LIST.VOICE_CREATE_MEAL').click();
+        const write = http.expectOne(request => request.method === 'POST' && request.url.endsWith('/meals'));
+        expect(write.request.body).toMatchObject({ aiSessions: [{ source: 'Text' }] });
+        expect(composerInput(other).value).toBe(otherDraft);
+        write.flush({
+            id: '32de1050-da71-4ebb-9e46-7344b563b407',
+            date: `${DASHBOARD_DATE}T12:00:00Z`,
+            totalCalories: nutrients.calories,
+            totalProteins: nutrients.protein,
+            totalFats: nutrients.fat,
+            totalCarbs: nutrients.carbs,
+            totalFiber: nutrients.fiber,
+            totalAlcohol: nutrients.alcohol,
+            isNutritionAutoCalculated: true,
+            items: [],
+        } satisfies MealHttpResponse);
+        redraw(harness);
+
+        expect(composerInput(other).value).toBe(otherDraft);
+        expect(composerInput(submitting).value).toBe('');
+        expect(submitting.querySelector('fd-ai-photo-result')).toBeNull();
+        http.expectNone(request => request.method === 'POST' && request.url.endsWith('/meals'));
+    });
+});
+
+function composerInput(composer: ParentNode): HTMLInputElement {
+    const input = composer.querySelector('input.ai-input-bar__input');
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected the rendered meal description input');
+    }
+    return input;
+}
+
+function typeComposerText(composer: ParentNode, text: string): void {
+    const input = composerInput(composer);
+    input.value = text;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 describe('Dashboard lazy toolbar dialogs', () => {
     it.each([
         ['DASHBOARD.ACTIONS.OPEN_APPEARANCE', 'fd-appearance-dialog'],
@@ -815,6 +936,32 @@ describe('Dashboard lazy toolbar dialogs', () => {
         await loadDialog();
 
         expect(open).not.toHaveBeenCalled();
+    });
+});
+
+describe('Dashboard repeated toolbar activation', () => {
+    it.each([
+        ['DASHBOARD.ACTIONS.OPEN_APPEARANCE', 'fd-appearance-dialog'],
+        ['DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS', 'fd-dashboard-notification-settings-dialog'],
+    ] as const)('opens one dialog for repeated %s clicks and allows reopening after close', async (action, selector) => {
+        const { harness } = await renderDashboardAsync();
+        const trigger = button(element(harness, '.dashboard'), action);
+        trigger.click();
+        trigger.click();
+        await vi.dynamicImportSettled();
+        redraw(harness);
+
+        const opened = document.querySelectorAll<HTMLElement>(selector);
+        expect(opened).toHaveLength(1);
+        button(opened[0], 'COMMON.CLOSE').click();
+        redraw(harness);
+        expect(document.querySelector(selector)).toBeNull();
+
+        trigger.click();
+        await vi.waitFor(() => {
+            redraw(harness);
+            expect(document.querySelectorAll(selector)).toHaveLength(1);
+        });
     });
 });
 
@@ -966,6 +1113,95 @@ function readHydrationDetails(dialog: Element): {
         total: dialog.querySelector('dd')?.textContent,
         amount: dialog.querySelector('.hydration-history__amount')?.textContent,
         timestamp: dialog.querySelector('time')?.getAttribute('datetime'),
+    };
+}
+
+describe('Dashboard TDEE goal request ownership', () => {
+    const target = 1950;
+    const apply = 'TDEE_CARD.APPLY';
+    const dialogSelector = 'fd-tdee-insight-dialog';
+
+    it('cancels the card request on route departure without showing its failure on the next page', async () => {
+        const { harness, updateGoal, readSnapshot, refreshSnapshot } = await renderDashboardAsync(dashboardSnapshotWithTdee(target));
+        const toastError = vi.spyOn(TestBed.inject(FdUiToastService), 'error');
+        const saving = new Subject<GoalsResponse | null>();
+        updateGoal.mockReturnValueOnce(saving);
+        const card = element(harness, 'fd-dashboard-tdee-block');
+        const readsBefore = readSnapshot.mock.calls.length;
+        button(card, apply).click();
+        redraw(harness);
+        expect(updateGoal).toHaveBeenCalledExactlyOnceWith({ dailyCalorieTarget: target });
+        expect(saving.observed).toBe(true);
+        expect(button(card, apply).disabled).toBe(true);
+
+        await harness.navigateByUrl(OTHER_URL, OtherPageComponent);
+        await harness.fixture.whenStable();
+        await new Promise<void>(resolve => {
+            setTimeout(resolve, 0);
+        });
+        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Another page');
+        expect(saving.observed).toBe(false);
+        expect(readSnapshot).toHaveBeenCalledTimes(readsBefore);
+        expect(refreshSnapshot).not.toHaveBeenCalled();
+        expect(toastError).not.toHaveBeenCalled();
+    });
+
+    it('completes the card and details Apply through a single pending goal update', async () => {
+        const { harness, updateGoal, refreshSnapshot } = await renderDashboardAsync(dashboardSnapshotWithTdee(target));
+        const saving = new Subject<GoalsResponse | null>();
+        updateGoal.mockReturnValueOnce(saving);
+        const card = element(harness, 'fd-dashboard-tdee-block');
+        button(card, apply).click();
+        redraw(harness);
+        expect(saving.observed).toBe(true);
+
+        button(card, 'TDEE_CARD.TITLE').click();
+        const dialog = await vi.waitFor(() => {
+            redraw(harness);
+            const mounted = document.querySelector(dialogSelector);
+            if (mounted === null) {
+                throw new Error('Expected to open the TDEE details dialog while the card saves');
+            }
+            return mounted;
+        });
+        const dialogApply = [...dialog.querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button')].find(control =>
+            control.textContent.trim().endsWith(apply),
+        );
+        if (dialogApply === undefined) {
+            throw new Error('Expected the TDEE suggestion action in the dialog footer');
+        }
+        dialogApply.click();
+        redraw(harness);
+        expect(dialogApply.disabled).toBe(true);
+        expect(updateGoal).toHaveBeenCalledExactlyOnceWith({ dailyCalorieTarget: target });
+
+        saving.next({ dailyCalorieTarget: target, calorieCyclingEnabled: false });
+        saving.complete();
+        await vi.waitFor(() => {
+            redraw(harness);
+            expect(document.querySelector(dialogSelector)).toBeNull();
+        });
+        expect(refreshSnapshot).toHaveBeenCalledOnce();
+        expect(updateGoal).toHaveBeenCalledOnce();
+    });
+});
+
+function dashboardSnapshotWithTdee(target: number): DashboardSnapshot {
+    const snapshot = makeSnapshot();
+    return {
+        ...snapshot,
+        dashboardLayout: { web: ['summary', 'tdee'], mobile: ['summary', 'tdee'] },
+        tdeeInsight: {
+            estimatedTdee: 2300,
+            adaptiveTdee: null,
+            bmr: null,
+            suggestedCalorieTarget: target,
+            currentCalorieTarget: snapshot.dailyGoal,
+            weightTrendPerWeek: null,
+            confidence: 'low',
+            dataDaysUsed: 0,
+            goalAdjustmentHint: null,
+        },
     };
 }
 

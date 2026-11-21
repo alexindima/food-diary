@@ -23,6 +23,7 @@
             @if (aiSessions().length) {
                 <fd-meal-ai-sessions
                     [aiSessions]="aiSessions()"
+                    [mealId]="mealId()"
                     (editSession)="editSession.emit($event)"
                     (deleteSession)="deleteSession.emit($event)"
                 />

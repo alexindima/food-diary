@@ -10,6 +10,7 @@ import {
     FdUiMenuItemComponent,
     FdUiMenuTriggerDirective,
 } from 'fd-ui-kit';
+import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
@@ -45,6 +46,7 @@ export class PublicRecipeNavigationComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
+    private appearanceDialogActive = false;
 
     protected async changeLanguageAsync(language: string): Promise<void> {
         await this.localization.applyLanguagePreferenceAsync(language);
@@ -52,11 +54,29 @@ export class PublicRecipeNavigationComponent {
     }
 
     protected async openAppearanceDialogAsync(): Promise<void> {
-        const { AppearanceDialogComponent } = await import('../../../../components/shared/appearance-dialog/appearance-dialog');
-        this.dialogService.open(AppearanceDialogComponent, {
-            size: 'md',
-            data: { theme: this.theme.theme(), uiStyle: this.theme.uiStyle(), persistence: 'local' },
-        });
+        if (this.appearanceDialogActive) {
+            return;
+        }
+
+        this.appearanceDialogActive = true;
+        try {
+            const { AppearanceDialogComponent } = await import('../../../../components/shared/appearance-dialog/appearance-dialog');
+            if (this.destroyRef.destroyed) {
+                return;
+            }
+
+            const dialog = this.dialogService.open(AppearanceDialogComponent, {
+                size: 'md',
+                data: { theme: this.theme.theme(), uiStyle: this.theme.uiStyle(), persistence: 'local' },
+            });
+            const unregisterClose = this.destroyRef.onDestroy(() => {
+                dialog.close();
+            });
+            await firstValueFrom(dialog.afterClosed());
+            unregisterClose();
+        } finally {
+            this.appearanceDialogActive = false;
+        }
     }
 
     protected login(): void {

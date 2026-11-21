@@ -446,11 +446,15 @@ export class PremiumAccessPageComponent {
     }
 
     private async openPaddleTransactionCheckoutAsync(transactionId: string, paddleClientToken: string): Promise<void> {
-        await this.paddleCheckoutService.openTransactionCheckoutAsync(transactionId, {
-            token: paddleClientToken,
-            environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
-            locale: this.resolveCheckoutLocale(),
-        });
+        await this.paddleCheckoutService.openTransactionCheckoutAsync(
+            transactionId,
+            {
+                token: paddleClientToken,
+                environment: paddleClientToken.startsWith('test_') ? 'sandbox' : 'production',
+                locale: this.resolveCheckoutLocale(),
+            },
+            this.destroyRef,
+        );
     }
 
     private getErrorMessage(error: unknown, fallbackKey = 'PREMIUM_PAGE.ERROR_GENERIC'): string {

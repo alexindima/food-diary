@@ -262,24 +262,29 @@ describe('AiInputBarComponent speech feedback', () => {
 
 describe('AiInputBarComponent speech recovery', () => {
     it('allows manual text after a failure and clears the obsolete speech alert', async () => {
-        const { component, fixture, speechRecognition, aiFoodService } = await setupAiInputBarAsync('emit', { speechSupported: true });
+        const { fixture, speechRecognition, aiFoodService } = await setupAiInputBarAsync('emit', { speechSupported: true });
         fixture.detectChanges();
-        await component['toggleMicAsync']();
+        selectRecognitionControl(fixture, 'button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]', HTMLButtonElement).click();
+        await vi.waitFor(() => {
+            expect(speechRecognition.start).toHaveBeenCalledOnce();
+        });
         reportSpeechFailure(speechRecognition, 'permission-denied');
         fixture.detectChanges();
-        const input = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.ai-input-bar__input');
-        if (input === null) {
-            throw new Error('Meal text input was not rendered');
-        }
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('AI_INPUT_BAR.VOICE_ERROR_PERMISSION');
+        const input = selectRecognitionControl(fixture, '.ai-input-bar__input', HTMLInputElement);
 
         input.value = 'two eggs';
         input.dispatchEvent(new Event('input', { bubbles: true }));
         fixture.detectChanges();
 
-        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
-        expect(component['voiceText']()).toBe('two eggs');
-        await component['submitTextAsync']();
-        expect(aiFoodService.parseFoodText).toHaveBeenCalledWith({ text: 'two eggs' });
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(host.querySelector('.ai-input-bar__controls--text')).not.toBeNull();
+        expect(aiFoodService.parseFoodText).not.toHaveBeenCalled();
+        enterRecognitionText(fixture, '  three eggs  ');
+        await vi.waitFor(() => {
+            expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: 'three eggs' });
+        });
     });
 
     it('clears local speech failure when the parent resets the input', async () => {

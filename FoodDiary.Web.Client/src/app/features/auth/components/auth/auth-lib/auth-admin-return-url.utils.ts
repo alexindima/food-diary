@@ -22,7 +22,7 @@ export function buildAdminUnauthorizedUrl(
     return unauthorizedUrl.toString();
 }
 
-export function normalizeAdminReturnUrl(value: string, adminAppUrl: string, fallbackOrigin: string): string | null {
+export function normalizeAdminReturnUrl(value: string, adminAppUrl: string, fallbackOrigin: string): string {
     if (value.length === 0) {
         return '/';
     }

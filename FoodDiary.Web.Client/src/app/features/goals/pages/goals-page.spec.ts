@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
 import type { DayCalorieKey } from '../../../shared/models/goals.data';
-import { GoalsFacade, type MacroPreset } from '../lib/goals.facade';
+import { GoalsFacade, MACRO_PRESETS, type MacroPresetCatalog } from '../lib/goals.facade';
 import { createDayCalories } from '../lib/goals-state.mapper';
 import { GoalsEditorComponent } from './goals-editor/goals-editor';
 import { GoalsPageComponent } from './goals-page';
@@ -283,7 +283,7 @@ type GoalsFacadeMock = {
     isSavingGoals: WritableSignal<boolean>;
     hasLoadError: WritableSignal<boolean>;
     saveStatusKey: Signal<string | null>;
-    macroPresets: MacroPreset[];
+    macroPresets: MacroPresetCatalog;
     waterValue: WritableSignal<number>;
     macroStates: WritableSignal<MacroState[]>;
     calorieCyclingEnabled: WritableSignal<boolean>;
@@ -311,7 +311,7 @@ function createFacadeMock(): GoalsFacadeMock {
         isSavingGoals: signal(false),
         hasLoadError: signal(false),
         saveStatusKey: computed(() => null),
-        macroPresets: [{ key: 'custom', labelKey: 'GOALS_PAGE.MACRO_PRESET_CUSTOM' }],
+        macroPresets: MACRO_PRESETS,
         waterValue: signal(WATER_TARGET),
         macroStates: signal([createMacroState('protein'), createMacroState('fiber')]),
         calorieCyclingEnabled: signal(false),

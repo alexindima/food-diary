@@ -31,6 +31,7 @@ type ImageUploadFieldTestContext = {
 
 const TINY_MAX_SIZE_MB = 0.000001;
 const CROP_SHIFTED_X = 20;
+const CROP_SURFACE_SIZE = { width: 400, height: 300 };
 const PREVIEW_URL = 'blob:image-upload-preview';
 const DECODE_URL = 'blob:image-upload-decode';
 const RESIZE_LIMIT = 1200;
@@ -426,15 +427,18 @@ describe('ImageUploadFieldComponent clearing', () => {
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
     });
 
-    it('clears selection and deletes asset when configured', async () => {
+    it('removes the rendered preview and deletes its asset when configured', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         fixture.componentRef.setInput('deleteOnClear', true);
         component.value.set(imageSelection('https://example.com/image.jpg', 'asset-1'));
         fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const removal = requireElement(host, 'button[aria-label="IMAGE_UPLOAD_FIELD.REMOVE"]', HTMLButtonElement);
 
-        component['clearImage']();
+        removal.click();
+        fixture.detectChanges();
 
-        expect(component['selection']()).toEqual(imageSelection(null, null));
+        expect(host.querySelector('img.image-upload-field__preview')).toBeNull();
         expect(component.value()).toEqual(imageSelection(null, null));
         expect(component.touched()).toBe(true);
         expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
@@ -550,7 +554,7 @@ describe('ImageUploadFieldComponent native preparation ownership', () => {
 });
 
 describe('ImageUploadFieldComponent disabled preparation', () => {
-    it('blocks a photo still being prepared when the owner disables the picker and accepts a later selection', async () => {
+    it('settles disabled photo preparation and accepts a later selection', async () => {
         const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
         const { host, image, revokeObjectUrl } = prepareNativeResize(fixture);
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
@@ -558,18 +562,26 @@ describe('ImageUploadFieldComponent disabled preparation', () => {
         component.value.set(saved);
         fixture.detectChanges();
         const first = new File(['first photo'], 'first.png', { type: 'image/png' });
+        const preparationStarted = vi.fn();
+        const preparationFailed = vi.fn();
+        component.imagePreparationStarted.subscribe(preparationStarted);
+        component.imagePreparationFailed.subscribe(preparationFailed);
 
         selectFiles(host, first);
         expect(image.src).toBe(DECODE_URL);
+        expect(preparationStarted).toHaveBeenCalledExactlyOnceWith(PREVIEW_URL);
         fixture.componentRef.setInput('disabled', true);
         fixture.detectChanges();
         expect(requireElement(host, 'input[type="file"]', HTMLInputElement).disabled).toBe(true);
         image.dispatchEvent(new Event('load'));
-        await waitForAsyncTasksAsync();
+        await vi.waitFor(() => {
+            expect(preparationFailed).toHaveBeenCalledOnce();
+        });
 
         expect(imageUploadService.upload).not.toHaveBeenCalled();
         expect(component.value()).toEqual(saved);
         expect(revokeObjectUrl).toHaveBeenCalledWith(DECODE_URL);
+        expect(revokeObjectUrl).toHaveBeenCalledWith(PREVIEW_URL);
 
         fixture.componentRef.setInput('disabled', false);
         fixture.detectChanges();
@@ -686,7 +698,39 @@ describe('ImageUploadFieldComponent drag, drop and crop controls', () => {
         expect(preventDefault).toHaveBeenCalled();
         expect(stopPropagation).toHaveBeenCalled();
     });
+});
 
+describe('ImageUploadFieldComponent interrupted drag', () => {
+    it('clears the highlighted drop target when the owner disables and re-enables it', async () => {
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const zone = requireElement(host, '.image-upload-field__dropzone', HTMLElement);
+        const draggingClass = 'image-upload-field__dropzone--dragging';
+
+        zone.dispatchEvent(new Event('dragover', { bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        expect(zone.classList.contains(draggingClass)).toBe(true);
+
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        expect(zone.getAttribute('aria-disabled')).toBe('true');
+        expect(zone.classList.contains(draggingClass)).toBe(false);
+
+        fixture.componentRef.setInput('disabled', false);
+        fixture.detectChanges();
+        expect(zone.getAttribute('aria-disabled')).toBe('false');
+        expect(zone.classList.contains(draggingClass)).toBe(false);
+        dropFiles(host, new File(['photo'], 'next.png', { type: 'image/png' }));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(imageUploadService.upload).toHaveBeenCalledOnce();
+            expect(zone.querySelector('.image-upload-field__preview')).not.toBeNull();
+        });
+    });
+});
+
+describe('ImageUploadFieldComponent keyboard crop controls', () => {
     it('moves crop selection with keyboard arrows and ignores unrelated keys', async () => {
         const { component, fixture } = await setupImageUploadFieldAsync();
         const preventDefault = vi.fn();
@@ -823,6 +867,48 @@ describe('ImageUploadFieldComponent partial batches and retry', () => {
     });
 });
 
+describe('ImageUploadFieldComponent batch response after clearing', () => {
+    it('discards an already queued upload error when the owner clears the batch', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const pending = new Subject<ImageSelection>();
+        const saved = imageSelection('https://example.test/new.png', 'new');
+        const added = vi.fn<(photos: ImageSelection[]) => void>();
+        const busy = vi.fn<(pending: boolean) => void>();
+        component.imagesAdded.subscribe(added);
+        component.batchUploading.subscribe(busy);
+        imageUploadService.upload.mockReturnValueOnce(pending).mockReturnValueOnce(of(saved));
+        fixture.componentRef.setInput('multiple', true);
+        fixture.componentRef.setInput('maxFiles', 2);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const old = new File(['old'], 'old.png', { type: 'image/png' });
+        const ignored = new File(['ignored'], 'ignored.png', { type: 'image/png' });
+        const next = new File(['new'], 'new.png', { type: 'image/png' });
+
+        dropFiles(host, old, ignored);
+        await vi.waitFor(() => {
+            expect(pending.observed).toBe(true);
+        });
+
+        pending.error(new Error('upload failed'));
+        fixture.componentRef.setInput('clearRequest', 1);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(host.querySelector('[role="status"]')).toBeNull();
+        expect(added).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(old);
+
+        dropFiles(host, next);
+        await vi.waitFor(() => {
+            expect(added).toHaveBeenCalledExactlyOnceWith([saved]);
+        });
+        expect(imageUploadService.upload.mock.calls).toEqual([[old], [next]]);
+        expect(busy.mock.calls).toEqual([[true], [false], [true], [false]]);
+    });
+});
+
 describe('ImageUploadFieldComponent health consent', () => {
     it('waits for consent before sending a selected attachment', async () => {
         const { fixture, imageUploadService, privacyConsent } = await setupImageUploadFieldAsync();
@@ -924,11 +1010,18 @@ function mockNativeDialogMethods(): () => void {
     };
 }
 
-async function openCropperAsync(
+type CropperDom = {
+    dialog: HTMLDialogElement;
+    apply: HTMLButtonElement;
+    surface: HTMLDivElement;
+    image: HTMLImageElement;
+};
+
+async function mountCropperAsync(
     fixture: ComponentFixture<ImageUploadFieldComponent>,
     fileName: string,
     type = 'image/png',
-): Promise<{ dialog: HTMLDialogElement; apply: HTMLButtonElement; surface: HTMLDivElement; image: HTMLImageElement }> {
+): Promise<CropperDom> {
     fixture.componentRef.setInput('cropEnabled', true);
     fixture.detectChanges();
     const host = fixture.nativeElement as HTMLElement;
@@ -942,14 +1035,22 @@ async function openCropperAsync(
     const apply = requireElement(dialog, '.image-upload-field__cropper-actions fd-ui-button:last-child button', HTMLButtonElement);
     expect(apply.disabled).toBe(true);
     const surface = requireElement(dialog, '.image-upload-field__cropper-body', HTMLDivElement);
-    const surfaceSize = { width: 400, height: 300 };
-    vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, surfaceSize.width, surfaceSize.height));
+    vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, CROP_SURFACE_SIZE.width, CROP_SURFACE_SIZE.height));
     const image = requireElement(surface, 'img', HTMLImageElement);
-    Object.defineProperties(image, { naturalWidth: { value: 800 }, naturalHeight: { value: 600 } });
-    image.dispatchEvent(new Event('load'));
-    fixture.detectChanges();
-    expect(apply.disabled).toBe(false);
     return { dialog, apply, surface, image };
+}
+
+async function openCropperAsync(
+    fixture: ComponentFixture<ImageUploadFieldComponent>,
+    fileName: string,
+    type = 'image/png',
+): Promise<CropperDom> {
+    const cropper = await mountCropperAsync(fixture, fileName, type);
+    Object.defineProperties(cropper.image, { naturalWidth: { value: 800 }, naturalHeight: { value: 600 } });
+    cropper.image.dispatchEvent(new Event('load'));
+    fixture.detectChanges();
+    expect(cropper.apply.disabled).toBe(false);
+    return cropper;
 }
 
 describe('ImageUploadFieldComponent rendered cropper', () => {
@@ -1020,6 +1121,178 @@ describe('ImageUploadFieldComponent rendered cropper', () => {
     });
 });
 
+describe('ImageUploadFieldComponent responsive cropper', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('preserves the crop source pixels across a resize during a drag', async () => {
+        const { notifyResize, observe, disconnect } = mockCropResizeObserver();
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { apply, surface, image } = await openCropperAsync(fixture, 'photo.png');
+        const release = vi.fn();
+        Object.defineProperties(surface, {
+            setPointerCapture: { value: vi.fn() },
+            hasPointerCapture: { value: vi.fn().mockReturnValue(true) },
+            releasePointerCapture: { value: release },
+        });
+        const drawImage = vi.fn();
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage } as unknown as CanvasRenderingContext2D);
+        vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(new Blob(['cropped'], { type: 'image/png' }));
+        });
+
+        const pointerId = 7;
+        const selection = requireElement(surface, '[role="group"]', HTMLElement);
+        selection.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId, clientX: 100, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId, clientX: 130, clientY: 80 }));
+        fixture.detectChanges();
+        expect(selection.style.left).toBe('80px');
+        expect(observe).toHaveBeenCalledExactlyOnceWith(surface);
+
+        const resizedSurface = { width: 200, height: 300 };
+        vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, resizedSurface.width, resizedSurface.height));
+        notifyResize();
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId, clientX: 140, clientY: 85 }));
+        fixture.detectChanges();
+
+        expect(selection.style.left).toBe('40px');
+        expect(selection.style.top).toBe('75px');
+        expect(selection.style.width).toBe('150px');
+        expect(release).toHaveBeenCalledExactlyOnceWith(pointerId);
+
+        apply.click();
+        fixture.detectChanges();
+        const sourceCrop = { left: 160, size: 600 };
+        const avatarSize = 512;
+        expect(drawImage).toHaveBeenCalledExactlyOnceWith(
+            image,
+            sourceCrop.left,
+            0,
+            sourceCrop.size,
+            sourceCrop.size,
+            0,
+            0,
+            avatarSize,
+            avatarSize,
+        );
+        expect(imageUploadService.upload).toHaveBeenCalledOnce();
+        expect(disconnect).toHaveBeenCalledOnce();
+    });
+
+    it.each(['cancel', 'destroy'] as const)('stops watching the crop surface after %s', async action => {
+        const { observe, disconnect } = mockCropResizeObserver();
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { dialog, surface } = await openCropperAsync(fixture, 'photo.png');
+        expect(observe).toHaveBeenCalledExactlyOnceWith(surface);
+        if (action === 'cancel') {
+            dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+            fixture.detectChanges();
+            expect(dialog.open).toBe(false);
+        } else {
+            fixture.destroy();
+        }
+        expect(disconnect).toHaveBeenCalledOnce();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+describe('ImageUploadFieldComponent crop surface observations', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('waits for a decoded image and preserves a finished drag through an ordinary resize', async () => {
+        const { notifyResize, observe, disconnect } = mockCropResizeObserver();
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const cold = await mountCropperAsync(fixture, 'slow-photo.png');
+        expect(observe).toHaveBeenNthCalledWith(1, cold.surface);
+        notifyResize();
+        fixture.detectChanges();
+        expect(cold.apply.disabled).toBe(true);
+        expect(cold.surface.querySelector('[role="group"]')).toBeNull();
+
+        cold.dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+        fixture.detectChanges();
+        expect(cold.dialog.open).toBe(false);
+        expect(disconnect).toHaveBeenCalledOnce();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+
+        const { apply, surface, image } = await openCropperAsync(fixture, 'next-photo.png');
+        expect(observe).toHaveBeenNthCalledWith(2, surface);
+        const selection = requireElement(surface, '[role="group"]', HTMLElement);
+        const initialGeometry = selection.style.cssText;
+        expect(initialGeometry).toContain('width: 300px');
+        notifyResize();
+        fixture.detectChanges();
+        expect(selection.style.cssText).toBe(initialGeometry);
+        expect(apply.disabled).toBe(false);
+
+        const release = vi.fn();
+        Object.defineProperties(surface, { setPointerCapture: { value: vi.fn() }, releasePointerCapture: { value: release } });
+        const pointerId = 7;
+        selection.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId, clientX: 100, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointermove', { pointerId, clientX: 130, clientY: 80 }));
+        surface.dispatchEvent(new PointerEvent('pointerup', { pointerId }));
+        fixture.detectChanges();
+        expect(selection.style.left).toBe('80px');
+
+        const resizedSurface = { width: 200, height: 300 };
+        vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, resizedSurface.width, resizedSurface.height));
+        notifyResize();
+        fixture.detectChanges();
+        expect(selection.style.left).toBe('40px');
+        expect(selection.style.top).toBe('75px');
+        expect(selection.style.width).toBe('150px');
+        expect(release).toHaveBeenCalledExactlyOnceWith(pointerId);
+
+        const drawImage = vi.fn();
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage } as unknown as CanvasRenderingContext2D);
+        vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(new Blob(['cropped'], { type: 'image/png' }));
+        });
+        apply.click();
+        fixture.detectChanges();
+        const sourceCrop = { left: 160, size: 600 };
+        const avatarSize = 512;
+        expect(drawImage).toHaveBeenCalledExactlyOnceWith(
+            image,
+            sourceCrop.left,
+            0,
+            sourceCrop.size,
+            sourceCrop.size,
+            0,
+            0,
+            avatarSize,
+            avatarSize,
+        );
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ name: 'next-photo.png' }));
+    });
+});
+
+function mockCropResizeObserver(): { notifyResize: () => void; observe: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn> } {
+    let notifyResize = (): void => {};
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+        'ResizeObserver',
+        class implements ResizeObserver {
+            public readonly observe = observe;
+            public readonly unobserve = vi.fn();
+            public readonly disconnect = disconnect;
+
+            public constructor(callback: ResizeObserverCallback) {
+                notifyResize = (): void => {
+                    callback([], this);
+                };
+            }
+        },
+    );
+    return {
+        notifyResize: (): void => {
+            notifyResize();
+        },
+        observe,
+        disconnect,
+    };
+}
+
 describe('ImageUploadFieldComponent rendered cropper dismissal', () => {
     beforeEach(mockNativeDialogMethods);
     it('closes the dialog on native cancel and discards a late canvas result', async () => {
@@ -1045,12 +1318,15 @@ describe('ImageUploadFieldComponent rendered cropper dismissal', () => {
         expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
     });
 
-    it('retains the existing image when the field is disabled before the pending crop finishes', async () => {
+    it('cancels the pending crop and releases its preview when the field becomes disabled', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         const previous = imageSelection('https://example.test/avatar.png', 'existing');
         component.value.set(previous);
         const changed = vi.fn();
+        const preparationFailed = vi.fn();
+        const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
         component.imageChanged.subscribe(changed);
+        component.imagePreparationFailed.subscribe(preparationFailed);
         const { dialog, apply } = await openCropperAsync(fixture, 'replacement.png');
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
         const toBlob = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(() => {});
@@ -1066,6 +1342,8 @@ describe('ImageUploadFieldComponent rendered cropper dismissal', () => {
         expect(component.value()).toEqual(previous);
         expect(changed).not.toHaveBeenCalled();
         expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(preparationFailed).toHaveBeenCalledOnce();
+        expect(revokePreview).toHaveBeenCalledExactlyOnceWith(PREVIEW_URL);
     });
 });
 
@@ -1132,28 +1410,156 @@ describe('ImageUploadFieldComponent reading crop files', () => {
         const [first, second] = readers;
         expect(readers).toHaveLength(2);
 
-        const completeRead = (reader: FileReader, content: string): void => {
-            Object.defineProperty(reader, 'result', { value: `data:image/png;base64,${content}` });
-            reader.dispatchEvent(new ProgressEvent('load'));
-            fixture.detectChanges();
-        };
-        completeRead(second, 'c2Vjb25k');
+        completeCropRead(second, 'c2Vjb25k');
         await vi.waitFor(() => {
             fixture.detectChanges();
             expect(host.querySelector('dialog[open] img')?.getAttribute('src')).toBe('data:image/png;base64,c2Vjb25k');
         });
         if (event === 'load') {
-            completeRead(first, 'Zmlyc3Q=');
+            completeCropRead(first, 'Zmlyc3Q=');
         } else {
             first.dispatchEvent(new ProgressEvent('error'));
-            fixture.detectChanges();
         }
+        fixture.detectChanges();
 
         expect(host.querySelector('dialog[open] img')?.getAttribute('src')).toBe('data:image/png;base64,c2Vjb25k');
         expect(host.querySelector('[role="alert"]')).toBeNull();
         expect(imageUploadService.upload).not.toHaveBeenCalled();
     });
 });
+
+describe('ImageUploadFieldComponent crop preparation after disabling', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('discards the pending crop read if the owner disables the field before it completes', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, readers } = captureCropReads(fixture);
+        const saved = imageSelection('https://example.test/saved.png', 'saved-avatar');
+        const failed = vi.fn<() => void>();
+        const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
+        component.value.set(saved);
+        component.imagePreparationFailed.subscribe(failed);
+        fixture.detectChanges();
+
+        selectFiles(host, new File(['old'], 'old.png', { type: 'image/png' }));
+        expect(readers).toHaveLength(1);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        completeCropRead(readers[0], 'b2xk');
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(host.querySelector('dialog[open]')).toBeNull();
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(component.value()).toEqual(saved);
+        expect(revokePreview).toHaveBeenCalledWith(PREVIEW_URL);
+        expect(failed).toHaveBeenCalledOnce();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('disabled', false);
+        fixture.detectChanges();
+        selectFiles(host, new File(['new'], 'new.png', { type: 'image/png' }));
+        expect(readers).toHaveLength(2);
+        completeCropRead(readers[1], 'bmV3');
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('dialog[open] img')?.getAttribute('src')).toBe('data:image/png;base64,bmV3');
+        });
+    });
+});
+
+describe('ImageUploadFieldComponent replaced crop preview', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('keeps crop controls unavailable when only the replaced image has decoded', async () => {
+        const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, readers } = captureCropReads(fixture);
+        selectFiles(host, new File(['old'], 'old.png', { type: 'image/png' }));
+        completeCropRead(readers[0], 'b2xk');
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('dialog[open] img')).not.toBeNull();
+        });
+        const oldImage = requireElement(host, 'dialog[open] img', HTMLImageElement);
+        const surface = requireElement(host, '.image-upload-field__cropper-body', HTMLDivElement);
+        Object.defineProperties(oldImage, {
+            naturalWidth: { value: RESIZED_IMAGE_SIZE.width },
+            naturalHeight: { value: RESIZED_IMAGE_SIZE.height },
+        });
+        vi.spyOn(surface, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, CROP_SURFACE_SIZE.width, CROP_SURFACE_SIZE.height));
+
+        selectFiles(host, new File(['new'], 'new.png', { type: 'image/png' }));
+        expect(readers).toHaveLength(2);
+        oldImage.dispatchEvent(new Event('load'));
+        completeCropRead(readers[1], 'bmV3');
+        fixture.detectChanges();
+
+        const dialog = requireElement(host, 'dialog[open]', HTMLDialogElement);
+        expect(dialog.querySelector('img')?.getAttribute('src')).toBe('data:image/png;base64,bmV3');
+        expect(dialog.querySelector('.image-upload-field__crop-selection')).toBeNull();
+        expect(
+            requireElement(dialog, '.image-upload-field__cropper-actions fd-ui-button:last-child button', HTMLButtonElement).disabled,
+        ).toBe(true);
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+describe('ImageUploadFieldComponent crop decode after cancel', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('opens a fresh picker while decoding and only enables the current crop', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const { host, readers } = captureCropReads(fixture);
+        const saved = imageSelection('https://example.test/saved.png', 'saved-photo');
+        component.value.set(saved);
+        fixture.detectChanges();
+
+        selectFiles(host, new File(['first photo'], 'first.png', { type: 'image/png' }));
+        completeCropRead(readers[0], 'Zmlyc3Q=');
+        const first = await vi.waitFor(() => {
+            fixture.detectChanges();
+            return requireElement(host, 'dialog[open]', HTMLDialogElement);
+        });
+        const firstImage = requireElement(first, 'img', HTMLImageElement);
+        expect(first.querySelector('.image-upload-field__crop-selection')).toBeNull();
+        first.dispatchEvent(new Event('cancel', { cancelable: true }));
+        firstImage.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+
+        expect(first.open).toBe(false);
+        expect(host.querySelector('dialog')).toBeNull();
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+
+        selectFiles(host, new File(['second photo'], 'second.png', { type: 'image/png' }));
+        completeCropRead(readers[1], 'c2Vjb25k');
+        fixture.detectChanges();
+        const current = requireElement(host, 'dialog[open]', HTMLDialogElement);
+        const apply = requireElement(current, '.image-upload-field__cropper-actions fd-ui-button:last-child button', HTMLButtonElement);
+        expect(apply.disabled).toBe(true);
+
+        const body = requireElement(current, '.image-upload-field__cropper-body', HTMLDivElement);
+        vi.spyOn(body, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, CROP_SURFACE_SIZE.width, CROP_SURFACE_SIZE.height));
+        const image = requireElement(body, 'img', HTMLImageElement);
+        Object.defineProperties(image, {
+            naturalWidth: { value: RESIZED_IMAGE_SIZE.width },
+            naturalHeight: { value: RESIZED_IMAGE_SIZE.height },
+        });
+        image.dispatchEvent(new Event('load'));
+        fixture.detectChanges();
+
+        expect(current.open).toBe(true);
+        expect(current.querySelector('.image-upload-field__crop-selection')).not.toBeNull();
+        expect(apply.disabled).toBe(false);
+        expect(component.value()).toEqual(saved);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
+function completeCropRead(reader: FileReader, content: string): void {
+    Object.defineProperty(reader, 'result', { value: `data:image/png;base64,${content}` });
+    reader.dispatchEvent(new ProgressEvent('load'));
+}
 
 function captureCropReads(fixture: ComponentFixture<ImageUploadFieldComponent>): { host: HTMLElement; readers: FileReader[] } {
     const readers: FileReader[] = [];
@@ -1303,6 +1709,59 @@ describe('ImageUploadFieldComponent native crop export', () => {
             expect(imageUploadService.upload).not.toHaveBeenCalled();
         },
     );
+});
+
+describe('ImageUploadFieldComponent crop retry', () => {
+    beforeEach(mockNativeDialogMethods);
+
+    it('retries a capped crop after the smaller canvas could not allocate its context', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        const saved = imageSelection('https://example.test/saved-avatar.png', 'saved-avatar');
+        const cropLimit = 256;
+        const sourceSize = 600;
+        component.value.set(saved);
+        fixture.componentRef.setInput('cropSize', null);
+        fixture.componentRef.setInput('cropMaxSize', cropLimit);
+        const ctx = { drawImage: vi.fn(), fillRect: vi.fn() } as unknown as CanvasRenderingContext2D;
+        const canvases: number[] = [];
+        let failDownscale = true;
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(function (this: HTMLCanvasElement) {
+            canvases.push(this.width);
+            return failDownscale && this.width === cropLimit ? null : ctx;
+        });
+        const uploaded = new Blob(['cropped PNG'], { type: 'image/png' });
+        const encoded = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(uploaded);
+        });
+        const host = fixture.nativeElement as HTMLElement;
+        const first = await openCropperAsync(fixture, 'first.png');
+        first.apply.click();
+        fixture.detectChanges();
+
+        expect(canvases).toEqual([sourceSize, cropLimit]);
+        expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');
+        expect(first.dialog.open).toBe(false);
+        expect(component.value()).toEqual(saved);
+        expect(encoded).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+
+        failDownscale = false;
+        const second = await openCropperAsync(fixture, 'second.png');
+        second.apply.click();
+        fixture.detectChanges();
+
+        expect(canvases).toEqual([sourceSize, cropLimit, sourceSize, cropLimit]);
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(second.dialog.open).toBe(false);
+        expect(imageUploadService.upload).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ name: 'second.png', size: uploaded.size, type: 'image/png' }),
+        );
+        expect(component.value()).toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
+    });
+});
+
+describe('ImageUploadFieldComponent JPEG crop dimensions', () => {
+    beforeEach(mockNativeDialogMethods);
 
     it.each([
         { maximum: 256, expectedSize: 256 },

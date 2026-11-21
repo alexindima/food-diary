@@ -35,23 +35,18 @@ export function buildShoppingListItemViewModels(
     translate: ShoppingListTranslateFn,
     language: string | null | undefined = 'en',
 ): ShoppingListItemViewModel[] {
-    return items.map(item => ({
-        ...item,
-        meta: formatShoppingListItemMeta(item, translate, language),
-        quantity:
-            (item.amount === null || item.amount === undefined) && isTextQuantity(item.note)
-                ? (item.note?.trim() ?? '')
+    return items.map(item => {
+        const note = item.note ?? '';
+        const hasTextQuantity = (item.amount === null || item.amount === undefined) && isTextQuantity(note);
+        return {
+            ...item,
+            meta: formatShoppingListItemMeta(item, translate, language),
+            quantity: hasTextQuantity
+                ? note.trim()
                 : formatShoppingListItemMeta({ ...item, note: null, category: null, sources: [] }, translate, language),
-        detail: formatShoppingListItemMeta(
-            {
-                ...item,
-                amount: null,
-                note: (item.amount === null || item.amount === undefined) && isTextQuantity(item.note) ? null : item.note,
-            },
-            translate,
-            language,
-        ),
-    }));
+            detail: formatShoppingListItemMeta({ ...item, amount: null, note: hasTextQuantity ? null : item.note }, translate, language),
+        };
+    });
 }
 
 export function formatShoppingListItemMeta(
@@ -90,11 +85,15 @@ export function normalizeShoppingListAmount(value: number | null): number | null
     return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
-export function normalizeShoppingListUnit(unit: MeasurementUnit | string | null | undefined): MeasurementUnit | string | null {
+export function normalizeShoppingListUnit(unit: string | null | undefined): string | null {
     if (unit === null || unit === undefined) {
         return null;
     }
 
+    return normalizeUnitName(unit);
+}
+
+function normalizeUnitName(unit: string): string {
     return Object.values(MeasurementUnit).find(value => value.toString() === unit.trim().toUpperCase()) ?? unit;
 }
 
@@ -119,8 +118,7 @@ function getUnitLabel(unit: MeasurementUnit | string | null | undefined, transla
         return null;
     }
 
-    const normalizedUnit = normalizeShoppingListUnit(unit);
-    const key = `GENERAL.UNITS.${normalizedUnit ?? unit}`;
+    const key = `GENERAL.UNITS.${normalizeUnitName(unit)}`;
     const translated = translate(key);
     return translated === key ? unit : translated;
 }

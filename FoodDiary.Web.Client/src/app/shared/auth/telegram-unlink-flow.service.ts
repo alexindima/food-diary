@@ -4,7 +4,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
-import { BrowserWindowService } from '../platform/browser-window.service';
 import { SessionEventsService } from './session-events.service';
 import type { TelegramOAuthCode, TelegramOAuthState } from './telegram-oidc-values';
 
@@ -12,12 +11,11 @@ const KEY = 'fooddiary.telegram.unlink';
 const ATTEMPT_TTL_MS = 300_000;
 type UnlinkAttempt = { userId: string; state: string | null; expiresAt: number; errorKey: string | null };
 
-/** Separate from sign-in: this callback can only remove the initiating account's identity. */
+/** Handles persisted unlink callbacks from earlier clients for the initiating account. */
 @Service()
 export class TelegramUnlinkFlowService {
     private readonly auth = inject(AuthService);
     private readonly storage = inject(BrowserStorageService);
-    private readonly browser = inject(BrowserWindowService);
     private sessionRevision = 0;
 
     public constructor() {
@@ -29,27 +27,6 @@ export class TelegramUnlinkFlowService {
             this.sessionRevision++;
             this.clear();
         });
-    }
-
-    public async startAsync(): Promise<void> {
-        const userId = this.auth.getUserId();
-        if (userId === null) {
-            throw new Error('Authentication required');
-        }
-        this.clear();
-        const revision = this.sessionRevision;
-        const response = await firstValueFrom(this.auth.startTelegramUnlink());
-        if (!this.isCurrentSession(userId, revision)) {
-            throw new Error('Account changed');
-        }
-        const { url, state } = authorizationRedirect(response.authorizationUrl);
-        // The server stores PKCE and nonce; browser persistence contains no provider proof.
-        this.storage.setJson('session', KEY, { userId, state, expiresAt: Date.now() + ATTEMPT_TTL_MS, errorKey: null });
-        const saved = this.storage.getJson('session', KEY);
-        if (!isAttempt(saved) || saved.userId !== userId || saved.state !== state || saved.expiresAt <= Date.now()) {
-            throw new Error('Session storage unavailable');
-        }
-        this.browser.open(url.href, '_self');
     }
 
     public async handleCallbackAsync(
@@ -145,13 +122,4 @@ function isErrorKey(value: unknown): value is string | null {
 
 function validCallback(attempt: UnlinkAttempt, state: TelegramOAuthState | null, denied: boolean): state is TelegramOAuthState {
     return state !== null && !denied && attempt.expiresAt > Date.now() && state === attempt.state;
-}
-
-function authorizationRedirect(authorizationUrl: string): { url: URL; state: string } {
-    const url = new URL(authorizationUrl);
-    const state = url.searchParams.get('state');
-    if (!isState(state) || url.origin !== 'https://oauth.telegram.org' || url.pathname !== '/auth') {
-        throw new Error('Invalid authorization URL');
-    }
-    return { url, state };
 }

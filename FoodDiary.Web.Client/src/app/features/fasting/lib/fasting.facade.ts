@@ -23,6 +23,7 @@ import { formatFastingDuration } from '../../../shared/lib/fasting-timer-card-st
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import { MS_PER_HOUR, MS_PER_SECOND } from '../../../shared/lib/time.constants';
 import {
+    FASTING_PROTOCOL_CATALOG,
     FASTING_PROTOCOLS,
     type FastingInsights,
     type FastingMessage,
@@ -123,7 +124,7 @@ export class FastingFacade {
         if (protocol === 'Custom') {
             return this.customHours();
         }
-        return FASTING_PROTOCOLS.find(p => p.value === protocol)?.hours ?? DEFAULT_INTERMITTENT_FAST_HOURS;
+        return FASTING_PROTOCOL_CATALOG[protocol].hours;
     });
 
     public readonly elapsedMs = computed(() => {
@@ -368,7 +369,11 @@ export class FastingFacade {
         if (session?.endedAtUtc !== null) {
             return;
         }
-        const checkInNotes = this.checkInNotes().trim();
+        const notes = this.checkInNotes().trim();
+        const activeCheckInOwner = (): FastingSession | null => {
+            const current = this.currentSession();
+            return current?.id === session.id && current.endedAtUtc === null ? current : null;
+        };
         this.checkInError.set(null);
 
         this.trackRequest(
@@ -378,10 +383,24 @@ export class FastingFacade {
                 energyLevel: this.energyLevel(),
                 moodLevel: this.moodLevel(),
                 symptoms: this.selectedSymptoms(),
-                checkInNotes: checkInNotes.length > 0 ? checkInNotes : null,
+                checkInNotes: notes.length > 0 ? notes : null,
             }),
             updated => {
-                this.applyCurrentSessionUpdate(updated);
+                const current = activeCheckInOwner();
+                if (current === null) {
+                    return;
+                }
+                const { checkInAtUtc, hungerLevel, energyLevel, moodLevel, symptoms, checkInNotes, checkIns } = updated;
+                this.applyCurrentSessionUpdate({
+                    ...current,
+                    checkInAtUtc,
+                    hungerLevel,
+                    energyLevel,
+                    moodLevel,
+                    symptoms,
+                    checkInNotes,
+                    checkIns,
+                });
                 this.checkInSavedVersion.update(version => version + 1);
                 this.frontendObservability.recordFastingLifecycleEvent('check-in.saved', {
                     sessionId: updated.id,
@@ -398,7 +417,9 @@ export class FastingFacade {
                 this.refreshOverview();
             },
             (): void => {
-                this.checkInError.set('FASTING.REQUEST_ERROR');
+                if (activeCheckInOwner() !== null) {
+                    this.checkInError.set('FASTING.REQUEST_ERROR');
+                }
             },
         );
     }

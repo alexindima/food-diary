@@ -54,6 +54,11 @@ describe('FastingCheckInChartComponent', () => {
         const points = lineChart(fixture).series()[0]?.points ?? [];
 
         expect(points.map(point => point.xPosition)).toEqual([0, QUARTER_POSITION, 1]);
+        const host = fixture.nativeElement as HTMLElement;
+        const markers = Array.from(host.querySelectorAll<HTMLElement>('.fd-ui-line-chart__point'));
+        expect(markers).toHaveLength(CHECK_IN_METRIC_COUNT * points.length);
+        const [first, middle, last] = markers.slice(0, points.length).map(point => Number.parseFloat(point.style.left));
+        expect((middle - first) / (last - first)).toBeCloseTo(QUARTER_POSITION);
     });
 
     it('updates the rendered legend and tooltip when the language changes without dropping any check-ins', async () => {

@@ -102,18 +102,24 @@ export function recipeIngredientFromStored(fields: RecipeIngredientFields): Reci
     };
 }
 
+type RecipeIngredientEditorSource =
+    | { kind: 'product'; productId: ProductId }
+    | { kind: 'recipe'; nestedRecipeId: RecipeId }
+    | { kind: 'text'; textName: string }
+    | { kind: 'missing' };
+
 /** The editor historically selects text, then a nested recipe, then a product. */
-export function ingredientEditorSource(ingredient: RecipeIngredient): 'product' | 'recipe' | 'text' | 'missing' {
+export function ingredientEditorSource(ingredient: RecipeIngredient): RecipeIngredientEditorSource {
     if (ingredient.kind !== 'legacy') {
-        return ingredient.kind;
+        return ingredient;
     }
     if (typeof ingredient.textName === 'string') {
-        return 'text';
+        return { kind: 'text', textName: ingredient.textName };
     }
     if (isSourceId(ingredient.nestedRecipeId)) {
-        return 'recipe';
+        return { kind: 'recipe', nestedRecipeId: ingredient.nestedRecipeId };
     }
-    return isSourceId(ingredient.productId) ? 'product' : 'missing';
+    return isSourceId(ingredient.productId) ? { kind: 'product', productId: ingredient.productId } : { kind: 'missing' };
 }
 
 function isAbsent(value: string | null | undefined): value is null | undefined {

@@ -22,6 +22,7 @@ import { focusFirstSidebarInteractiveElement, isSidebarRouterLinkActivation } fr
 @Component({
     selector: 'fd-sidebar-user-menu',
     imports: [NgOptimizedImage, RouterModule, FdUiIconComponent, SlicePipe, TranslatePipe, UpperCasePipe],
+    host: { '(focusout)': 'onFocusOut($event)' },
     templateUrl: './sidebar-user-menu.html',
     styleUrl: '../sidebar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,10 +52,7 @@ export class SidebarUserMenuComponent {
             }
 
             const handleOutsidePointerDown = (event: PointerEvent): void => {
-                const target = event.target;
-                if (target instanceof Node && !this.host.nativeElement.contains(target)) {
-                    this.dismissMenu.emit();
-                }
+                this.dismissIfOutside(event.target);
             };
 
             this.document.addEventListener('pointerdown', handleOutsidePointerDown, true);
@@ -77,9 +75,21 @@ export class SidebarUserMenuComponent {
         });
     }
 
+    protected onFocusOut(event: FocusEvent): void {
+        if (this.isOpen()) {
+            this.dismissIfOutside(event.relatedTarget);
+        }
+    }
+
     protected activateProfileRoute(event: MouseEvent): void {
         if (isSidebarRouterLinkActivation(event)) {
             this.directRouteClick.emit({ route: '/profile' });
+            this.dismissMenu.emit();
+        }
+    }
+
+    private dismissIfOutside(target: EventTarget | null): void {
+        if (target instanceof Node && !this.host.nativeElement.contains(target)) {
             this.dismissMenu.emit();
         }
     }

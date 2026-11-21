@@ -9,12 +9,8 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
-import {
-    recipeDisplayFromInput,
-    servingMassFromObservation,
-    UNKNOWN_SERVING_MASS,
-} from '../../../lib/recipe-serving/recipe-display-amount';
-import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
+import { servingMassFromObservation, UNKNOWN_SERVING_MASS } from '../../../lib/recipe-serving/recipe-display-amount';
+import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealItemsListComponent, type MealItemsListItemState } from './meal-items-list';
 
 const PRODUCT_AMOUNT = 150;
@@ -29,7 +25,6 @@ const RECIPE_DECIMAL_SINGLE_SERVING = 1.01;
 const SINGLE_SERVING_UNIT = 'MEAL_MANAGE.AMOUNT_UNIT_SERVING';
 const MULTIPLE_SERVINGS_UNIT = 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS';
 const EDIT_ITEM_INDEX = 1;
-const REMOVE_ITEM_INDEX = 2;
 const OPEN_ITEM_INDEX = 3;
 
 describe('MealItemsListComponent rows', () => {
@@ -56,18 +51,17 @@ describe('MealItemsListComponent rows', () => {
 
     it('should build recipe row with serving weight conversion', async () => {
         const recipe = createRecipe();
-        const recipeWeight = {
-            displayAmountFromInput: vi
-                .fn()
-                .mockReturnValue(recipeDisplayFromInput(RECIPE_AMOUNT_GRAMS, servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
-            hasServingWeight: vi.fn().mockReturnValue(true),
-        };
         const { component } = await setupComponentAsync({
-            items: [createItemState({ sourceType: MealSourceType.Recipe, recipe, amount: RECIPE_AMOUNT_GRAMS })],
-            recipeWeight,
+            items: [
+                createItemState({
+                    sourceType: MealSourceType.Recipe,
+                    recipe,
+                    amount: RECIPE_AMOUNT_GRAMS,
+                    recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT),
+                }),
+            ],
         });
 
-        expect(recipeWeight.displayAmountFromInput).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
         expect(component['manualItemRows']()).toEqual([
             expect.objectContaining({
                 index: 0,
@@ -94,13 +88,15 @@ describe('MealItemsListComponent rows', () => {
         expect(host.querySelector('.meal-manage__items-empty')).toBeNull();
     });
     it('displays recipe servings and matching nutrition when weight is unavailable', async () => {
-        const recipeWeight = {
-            displayAmountFromInput: vi.fn().mockReturnValue(recipeDisplayFromInput(RECIPE_FALLBACK_SERVINGS, UNKNOWN_SERVING_MASS)),
-            hasServingWeight: vi.fn().mockReturnValue(false),
-        };
         const { component } = await setupComponentAsync({
-            items: [createItemState({ sourceType: MealSourceType.Recipe, recipe: createRecipe(), amount: RECIPE_FALLBACK_SERVINGS })],
-            recipeWeight,
+            items: [
+                createItemState({
+                    sourceType: MealSourceType.Recipe,
+                    recipe: createRecipe(),
+                    amount: RECIPE_FALLBACK_SERVINGS,
+                    recipeMass: UNKNOWN_SERVING_MASS,
+                }),
+            ],
         });
         expect(component['manualItemRows']()[0]).toMatchObject({
             amountLabel: '1.5 MEAL_MANAGE.AMOUNT_UNIT_SERVINGS',
@@ -119,13 +115,10 @@ describe('MealItemsListComponent serving labels', () => {
         { language: 'ru', amount: RECIPE_SINGLE_SERVING, number: '1', unit: SINGLE_SERVING_UNIT },
         { language: 'ru', amount: RECIPE_FALLBACK_SERVINGS, number: '1,5', unit: MULTIPLE_SERVINGS_UNIT },
     ])('matches the displayed serving count $number in $language', async ({ language, amount, number, unit }) => {
-        const recipeWeight = {
-            displayAmountFromInput: vi.fn().mockReturnValue(recipeDisplayFromInput(amount, UNKNOWN_SERVING_MASS)),
-            hasServingWeight: vi.fn().mockReturnValue(false),
-        };
         const { fixture } = await setupComponentAsync({
-            items: [createItemState({ sourceType: MealSourceType.Recipe, recipe: createRecipe(), amount })],
-            recipeWeight,
+            items: [
+                createItemState({ sourceType: MealSourceType.Recipe, recipe: createRecipe(), amount, recipeMass: UNKNOWN_SERVING_MASS }),
+            ],
         });
         TestBed.inject(TranslateService).use(language);
         fixture.detectChanges();
@@ -172,40 +165,34 @@ describe('MealItemsListComponent validation', () => {
 });
 
 describe('MealItemsListComponent actions', () => {
-    it('should emit item actions with item index', async () => {
+    it('emits item indices for edit and source selection', async () => {
         const { component } = await setupComponentAsync();
         const editHandler = vi.fn();
-        const removeHandler = vi.fn();
         const openHandler = vi.fn();
         component['editItem'].subscribe(editHandler);
-        component['removeItemEvent'].subscribe(removeHandler);
         component['openItemSelect'].subscribe(openHandler);
 
         component['onEditItem'](EDIT_ITEM_INDEX);
-        component['onRemoveItem'](REMOVE_ITEM_INDEX);
         component['onItemSourceClick'](OPEN_ITEM_INDEX);
 
         expect(editHandler).toHaveBeenCalledWith(EDIT_ITEM_INDEX);
-        expect(removeHandler).toHaveBeenCalledWith(REMOVE_ITEM_INDEX);
         expect(openHandler).toHaveBeenCalledWith(OPEN_ITEM_INDEX);
     });
 });
 
 describe('MealItemsListComponent archived sources without display names', () => {
     it('identifies both sources and keeps their original row actions after omitting an empty draft row', async () => {
+        const recipeRow = createItemState({
+            sourceType: MealSourceType.Recipe,
+            recipe: { ...createRecipe(), name: '  ' },
+            amount: RECIPE_AMOUNT_GRAMS,
+            recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT),
+        });
         const { component, fixture } = await setupComponentAsync({
-            items: [
-                createItemState(),
-                createItemState({ product: { ...createProduct(), name: '' }, amount: PRODUCT_AMOUNT }),
-                createItemState({
-                    sourceType: MealSourceType.Recipe,
-                    recipe: { ...createRecipe(), name: '  ' },
-                    amount: RECIPE_AMOUNT_GRAMS,
-                }),
-            ],
+            items: [createItemState(), createItemState({ product: { ...createProduct(), name: '' }, amount: PRODUCT_AMOUNT }), recipeRow],
         });
         const edit = vi.fn();
-        const remove = vi.fn();
+        const remove = vi.fn<(rendered: MealItemFormValues) => void>();
         component.editItem.subscribe(edit);
         component.removeItemEvent.subscribe(remove);
         const host = fixture.nativeElement as HTMLElement;
@@ -236,29 +223,22 @@ describe('MealItemsListComponent archived sources without display names', () => 
         editButton?.click();
         removeButton?.click();
         expect(edit).toHaveBeenCalledExactlyOnceWith(EDIT_ITEM_INDEX);
-        expect(remove).toHaveBeenCalledExactlyOnceWith(REMOVE_ITEM_INDEX);
+        expect(remove).toHaveBeenCalledOnce();
+        expect(remove.mock.calls[0][0]).toBe(recipeRow.formItem);
     });
 });
 type MealItemsListSetupOptions = {
     arrayError?: string | null;
     hasExternalItems?: boolean;
     items?: MealItemsListItemState[];
-    recipeWeight?: { displayAmountFromInput: ReturnType<typeof vi.fn>; hasServingWeight: ReturnType<typeof vi.fn> };
 };
 
 async function setupComponentAsync(
     options: MealItemsListSetupOptions = {},
 ): Promise<{ component: MealItemsListComponent; fixture: ComponentFixture<MealItemsListComponent> }> {
-    const recipeWeight = options.recipeWeight ?? {
-        displayAmountFromInput: vi
-            .fn()
-            .mockReturnValue(recipeDisplayFromInput(RECIPE_AMOUNT_GRAMS, servingMassFromObservation(RECIPE_SERVING_WEIGHT))),
-        hasServingWeight: vi.fn().mockReturnValue(true),
-    };
-
     await TestBed.configureTestingModule({
         imports: [MealItemsListComponent],
-        providers: [provideTranslateTesting(), { provide: RecipeServingWeightService, useValue: recipeWeight }],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     TestBed.inject(TranslateService).use('en');
@@ -276,17 +256,17 @@ async function setupComponentAsync(
     };
 }
 
-function createItemState(values: Partial<MealItemsListItemState> = {}): MealItemsListItemState {
-    return {
-        sourceType: values.sourceType ?? MealSourceType.Product,
-        product: values.product ?? null,
-        recipe: values.recipe ?? null,
-        amount: values.amount ?? null,
-        amountError: values.amountError ?? null,
-        productInvalid: values.productInvalid ?? false,
-        recipeInvalid: values.recipeInvalid ?? false,
-        sourceError: values.sourceError ?? null,
+function createItemState(values: Partial<MealItemFormValues & Omit<MealItemsListItemState, 'formItem'>> = {}): MealItemsListItemState {
+    const { amountError = null, productInvalid = false, recipeInvalid = false, sourceError = null, ...itemValues } = values;
+    const formItem: MealItemFormValues = {
+        sourceType: MealSourceType.Product,
+        product: null,
+        recipe: null,
+        amount: null,
+        recipeMass: UNKNOWN_SERVING_MASS,
+        ...itemValues,
     };
+    return { formItem, amountError, productInvalid, recipeInvalid, sourceError };
 }
 
 function createProduct(): Product {

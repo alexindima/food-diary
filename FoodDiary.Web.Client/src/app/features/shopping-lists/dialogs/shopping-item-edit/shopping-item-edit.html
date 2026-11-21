@@ -17,7 +17,9 @@
             <fd-ui-button variant="secondary" fill="text" (click)="close()">{{
                 'PUBLIC_RECIPES.SHOPPING_CANCEL' | translate
             }}</fd-ui-button>
-            <fd-ui-button type="submit">{{ 'SHOPPING_LIST.SAVE_ITEM' | translate }}</fd-ui-button>
+            <fd-ui-button type="submit" [disabled]="saveBlocked()" [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate">
+                {{ 'SHOPPING_LIST.SAVE_ITEM' | translate }}
+            </fd-ui-button>
         </div>
     </form>
 </fd-ui-dialog>

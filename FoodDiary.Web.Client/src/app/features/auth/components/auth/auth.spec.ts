@@ -286,19 +286,23 @@ describe('AuthComponent login', () => {
         expect(component['isSubmitting']()).toBe(false);
     });
 
-    it('explains a failed account restoration and keeps the form available for retry', () => {
-        const { authFlowFacadeSpy, component, dialogRefSpy } = createComponent();
+    it('explains a failed account restoration and keeps the form available for retry', async () => {
+        const { fixture, authFlowFacadeSpy, dialogRefSpy, host } = await createDeletedAccountPromptAsync();
         authFlowFacadeSpy.restoreAccount.mockReturnValue(of(false));
-        const credentials = { email: 'deleted@example.com', password: 'password123', rememberMe: false };
-        component['loginModel'].set(credentials);
-        component['showRestoreAction'].set(true);
+        const email = loginInput(host, 'email');
+        const password = loginInput(host, 'password');
+        const credentials = { email: email.value, password: password.value, rememberMe: false };
+        const restore = authButton(host, 'button', 'AUTH.LOGIN.RESTORE');
 
-        component['onRestoreSubmit']();
+        restore.click();
+        fixture.detectChanges();
 
-        expect(component['globalError']()).toBe('AUTH.LOGIN.RESTORE_ERROR');
-        expect(component['isRestoring']()).toBe(false);
-        expect(component['showRestoreAction']()).toBe(true);
-        expect(component['loginModel']()).toEqual(credentials);
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('AUTH.LOGIN.RESTORE_ERROR');
+        expect(restore.isConnected).toBe(true);
+        expect(restore.disabled).toBe(false);
+        expect(email.value).toBe(credentials.email);
+        expect(password.value).toBe(credentials.password);
+        expect(authFlowFacadeSpy.restoreAccount).toHaveBeenCalledExactlyOnceWith(credentials, false);
         expect(dialogRefSpy.close).not.toHaveBeenCalled();
     });
 
@@ -584,11 +588,11 @@ describe('Rendered navigation after sign-in with an unavailable admin destinatio
         expect(authServiceSpy.startAdminSso).toHaveBeenCalledOnce();
     });
 
-    it('continues to the diary after sign-in on a deployment without an admin app', async () => {
+    it.each(['', undefined])('continues to the diary when the admin app setting is %s', async adminUrl => {
         const savedAdminUrl = environment.adminAppUrl;
         const returnUrl = '/diary?view=today';
         const assign = vi.fn<Location['assign']>();
-        environment.adminAppUrl = '';
+        environment.adminAppUrl = adminUrl;
         try {
             const { fixture, authServiceSpy, authFlowFacadeSpy, navigationServiceSpy } = createComponent(
                 'login',
@@ -676,6 +680,85 @@ describe('AuthComponent register', () => {
         expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
     });
 });
+
+describe('AuthComponent registration email feedback', () => {
+    const taken = 'taken@example.test';
+    const fresh = 'fresh@example.test';
+    const password = 'original-password';
+    const conflict = 'FORM_ERRORS.USER_EXISTS';
+
+    it('keeps the address conflict when only the password is edited', async () => {
+        const { authFlowFacadeSpy, fixture } = createComponent('register', true);
+        const host = fixture.nativeElement as HTMLElement;
+        authFlowFacadeSpy.register.mockReturnValueOnce(of('emailExists')).mockReturnValue(of('success'));
+
+        fillRegistration(host, taken, password);
+        fixture.detectChanges();
+        submitAuthForm(host);
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.textContent).toContain(conflict);
+
+        updateRegistrationInput(host, 'password', 'replacement-password');
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(host.textContent).toContain(conflict);
+        submitAuthForm(host);
+        await fixture.whenStable();
+        expect(authFlowFacadeSpy.register).toHaveBeenCalledOnce();
+
+        updateRegistrationInput(host, 'email', fresh);
+        fixture.detectChanges();
+        submitAuthForm(host);
+        await fixture.whenStable();
+        expect(authFlowFacadeSpy.register).toHaveBeenNthCalledWith(2, { email: fresh, password: 'replacement-password', agreeTerms: true });
+    });
+
+    it('applies a late conflict only to the address submitted with that request', async () => {
+        const { authFlowFacadeSpy, fixture } = createComponent('register', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const pending = new Subject<AuthRegisterResult>();
+        authFlowFacadeSpy.register.mockReturnValueOnce(pending).mockReturnValue(of('success'));
+
+        fillRegistration(host, taken, password);
+        fixture.detectChanges();
+        submitAuthForm(host);
+        await vi.waitFor(() => {
+            expect(authFlowFacadeSpy.register).toHaveBeenCalledExactlyOnceWith({ email: taken, password, agreeTerms: true });
+        });
+
+        updateRegistrationInput(host, 'email', fresh);
+        fixture.detectChanges();
+        pending.next('emailExists');
+        pending.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.textContent).not.toContain(conflict);
+
+        submitAuthForm(host);
+        await fixture.whenStable();
+        expect(authFlowFacadeSpy.register).toHaveBeenNthCalledWith(2, { email: fresh, password, agreeTerms: true });
+    });
+});
+
+function fillRegistration(host: HTMLElement, email: string, password: string): void {
+    updateRegistrationInput(host, 'email', email);
+    updateRegistrationInput(host, 'password', password);
+    const terms = host.querySelector<HTMLInputElement>('input[type="checkbox"]');
+    if (terms === null) {
+        throw new Error('Expected the rendered registration terms checkbox');
+    }
+    terms.click();
+}
+
+function updateRegistrationInput(host: HTMLElement, type: 'email' | 'password', value: string): void {
+    const input = host.querySelector<HTMLInputElement>(`input[type="${type}"]`);
+    if (input === null || input.disabled) {
+        throw new Error(`Expected an editable registration ${type} input`);
+    }
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}
 
 describe('AuthComponent register results', () => {
     it('should mark email as existing when register returns conflict', async () => {
@@ -1094,6 +1177,54 @@ describe('Account restoration after browser autofill', () => {
     });
 });
 
+describe('Account restoration before the prompt redraws', () => {
+    it('requires a fresh sign-in for an address entered before the restore prompt redraws', async () => {
+        const { fixture, authFlowFacadeSpy, host } = await createDeletedAccountPromptAsync();
+        authFlowFacadeSpy.restoreAccount.mockReturnValue(of(false));
+        const email = loginInput(host, 'email');
+        const replacement = 'replacement-account@example.test';
+        const restore = authButton(host, 'button', 'AUTH.LOGIN.RESTORE');
+
+        email.value = replacement;
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(restore.isConnected).toBe(true);
+        restore.click();
+
+        expect(authFlowFacadeSpy.restoreAccount).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(host.textContent).not.toContain('AUTH.LOGIN.RESTORE');
+
+        authFlowFacadeSpy.login.mockReturnValueOnce(of('accountDeleted'));
+        authButton(host, 'button[type="submit"]', 'AUTH.LOGIN.LOGIN').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('[role="alert"]')?.textContent).toContain('AUTH.LOGIN.ACCOUNT_DELETED');
+        });
+        expect(authFlowFacadeSpy.login).toHaveBeenCalledTimes(2);
+        expect(authFlowFacadeSpy.login).toHaveBeenLastCalledWith(expect.objectContaining({ email: replacement }));
+        authButton(host, 'button', 'AUTH.LOGIN.RESTORE').click();
+        expect(authFlowFacadeSpy.restoreAccount).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ email: replacement }), false);
+    });
+
+    it('focuses the newly invalid address before the restore prompt redraws', async () => {
+        const { fixture, authFlowFacadeSpy, host } = await createDeletedAccountPromptAsync();
+        const email = loginInput(host, 'email');
+        const restore = authButton(host, 'button', 'AUTH.LOGIN.RESTORE');
+        restore.focus();
+        expect(document.activeElement).toBe(restore);
+
+        email.value = 'missing-at-symbol';
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(restore.isConnected).toBe(true);
+        restore.click();
+
+        expect(authFlowFacadeSpy.restoreAccount).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(email);
+        fixture.detectChanges();
+        expect(email.getAttribute('aria-invalid')).toBe('true');
+    });
+});
+
 async function createDeletedAccountPromptAsync(): Promise<AuthComponentTestContext & { host: HTMLElement }> {
     const context = createComponent('login', true);
     const { fixture, authFlowFacadeSpy } = context;
@@ -1202,6 +1333,81 @@ describe('AuthComponent pending form results after destruction', () => {
         } finally {
             startInterval.mockRestore();
         }
+    });
+});
+
+describe('Sign-in responses after editing the submitted account', () => {
+    it('keeps a revised email clear of the previous account restoration prompt', async () => {
+        const { fixture, authFlowFacadeSpy } = createComponent('login', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const pending = new Subject<AuthLoginResult>();
+        authFlowFacadeSpy.login.mockReturnValueOnce(pending);
+        submitRenderedLogin(fixture);
+        await vi.waitFor(() => {
+            expect(authFlowFacadeSpy.login).toHaveBeenCalledOnce();
+        });
+
+        const email = loginInput(host, 'email');
+        email.value = 'updated@example.test';
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        pending.next('accountDeleted');
+        pending.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(email.value).toBe('updated@example.test');
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(host.textContent).not.toContain('AUTH.LOGIN.RESTORE');
+        expect(authFlowFacadeSpy.restoreAccount).not.toHaveBeenCalled();
+
+        expect(authButton(host, 'button[type="submit"]', 'AUTH.LOGIN.LOGIN').disabled).toBe(false);
+    });
+
+    it('offers restoration when the delayed response still matches the submitted credentials', async () => {
+        const { fixture, authFlowFacadeSpy } = createComponent('login', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const pending = new Subject<AuthLoginResult>();
+        authFlowFacadeSpy.login.mockReturnValueOnce(pending);
+        submitRenderedLogin(fixture);
+        await vi.waitFor(() => {
+            expect(authFlowFacadeSpy.login).toHaveBeenCalledOnce();
+        });
+
+        pending.next('accountDeleted');
+        pending.complete();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('AUTH.LOGIN.ACCOUNT_DELETED');
+        expect(authButton(host, 'button', 'AUTH.LOGIN.RESTORE').disabled).toBe(false);
+    });
+
+    it('completes a successful sign-in while an email edit is still visible', async () => {
+        const { fixture, authFlowFacadeSpy, navigationServiceSpy, dialogRefSpy } = createComponent('login', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const pending = new Subject<AuthLoginResult>();
+        authFlowFacadeSpy.login.mockReturnValueOnce(pending);
+        submitRenderedLogin(fixture);
+        await vi.waitFor(() => {
+            expect(authFlowFacadeSpy.login).toHaveBeenCalledOnce();
+        });
+
+        const email = loginInput(host, 'email');
+        email.value = 'updated@example.test';
+        email.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        pending.next('success');
+        pending.complete();
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledOnce();
+        });
+        expect(navigationServiceSpy.navigateToReturnUrlAsync).toHaveBeenCalledOnce();
+        expect(authFlowFacadeSpy.login).toHaveBeenCalledOnce();
     });
 });
 
@@ -1493,6 +1699,30 @@ describe('Reselecting the active authentication tab', () => {
         expect(loginInput(host, 'email').value).toBe('draft@example.test');
         expect(authFlowFacadeSpy[mode]).not.toHaveBeenCalled();
         expect(routerSpy.navigate).not.toHaveBeenCalled();
+    });
+});
+
+describe('Password reset from an autofilled login', () => {
+    it('prefills password reset with the visible autofilled address', async () => {
+        const { fixture, authFlowFacadeSpy } = createComponent('login', true, { useRouting: false });
+        const host = fixture.nativeElement as HTMLElement;
+        enterAuthEmail(fixture, 'previous-address@example.test');
+
+        const autofilledAddress = 'autofilled-address@example.test';
+        loginInput(host, 'email').value = autofilledAddress;
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValueOnce(of('success'));
+        authButton(host, 'button', 'AUTH.LOGIN.FORGOT_PASSWORD').click();
+        fixture.detectChanges();
+
+        expect(host.querySelector('fd-auth-password-reset-form')).not.toBeNull();
+        expect(loginInput(host, 'email').value).toBe(autofilledAddress);
+        authButton(host, 'button[type="submit"]', 'AUTH.RESET.SEND').click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.textContent).toContain('AUTH.RESET.SENT');
+        });
+        expect(authFlowFacadeSpy.requestPasswordReset).toHaveBeenCalledExactlyOnceWith({ email: autofilledAddress });
+        expect(authFlowFacadeSpy.login).not.toHaveBeenCalled();
     });
 });
 

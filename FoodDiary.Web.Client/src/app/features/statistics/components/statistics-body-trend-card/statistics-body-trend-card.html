@@ -83,13 +83,15 @@
                         {{ changeLabelKey() | translate: { days: metric().timeframeDays } }}
                     </span>
                 </div>
-                @if (displayMetric().change !== null) {
+                @let change = metric().change;
+                @if (change !== null) {
                     <strong
                         class="statistics-body-trend-card__change fd-ui-stat-value"
-                        [class.statistics-body-trend-card__change--positive]="hasPositiveChange()"
-                        [class.statistics-body-trend-card__change--negative]="hasNegativeChange()"
+                        [class.statistics-body-trend-card__change--positive]="change < 0"
+                        [class.statistics-body-trend-card__change--negative]="change > 0"
                     >
-                        {{ changePrefix() }}{{ displayMetric().change | localizedNumber: locale() : 0 : 1 }} {{ unitKey() | translate }}
+                        {{ change > 0 ? '+' : '' }}{{ displayMetric().change | localizedNumber: locale() : 0 : 1 }}
+                        {{ unitKey() | translate }}
                     </strong>
                 } @else {
                     <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>

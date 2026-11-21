@@ -2,12 +2,14 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { MealSourceType } from '../../../../../shared/models/meal.data';
+import { createEmptyProductSnapshot, type MealAiSessionManageDto, MealSourceType } from '../../../../../shared/models/meal.data';
+import { entityId } from '../../../../../shared/models/semantics/entity-id';
+import { UNKNOWN_SERVING_MASS } from '../../../lib/recipe-serving/recipe-display-amount';
 import type { MealItemsListItemState } from '../meal-items-list/meal-items-list';
+import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealItemsSectionComponent } from './meal-items-section';
 
 const ITEM_INDEX = 1;
-const SESSION_INDEX = 2;
 
 describe('MealItemsSectionComponent', () => {
     it('should emit add item requests', async () => {
@@ -21,35 +23,62 @@ describe('MealItemsSectionComponent', () => {
     });
 
     it('should emit item action requests', async () => {
-        const { component } = await setupComponentAsync();
+        const { component, fixture } = await setupComponentAsync();
+        const amount = 100;
+        const selected = createItemState({
+            product: { ...createEmptyProductSnapshot(), id: entityId<'product'>('apple'), name: 'Apple' },
+            amount,
+        });
+        fixture.componentRef.setInput('items', [selected]);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
         const editHandler = vi.fn();
-        const removeHandler = vi.fn();
+        const removeHandler = vi.fn<(rendered: MealItemFormValues) => void>();
         const openHandler = vi.fn();
         component['editItem'].subscribe(editHandler);
         component['removeItem'].subscribe(removeHandler);
         component['openItemSelect'].subscribe(openHandler);
 
-        component['editItem'].emit(ITEM_INDEX);
-        component['removeItem'].emit(ITEM_INDEX);
+        const edit = host.querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.MANUAL_ITEM_EDIT"]');
+        const remove = host.querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.REMOVE_ITEM"]');
+        if (edit === null || remove === null) {
+            throw new Error('Expected the rendered manual item actions');
+        }
+        edit.click();
+        remove.click();
         component['openItemSelect'].emit(ITEM_INDEX);
 
-        expect(editHandler).toHaveBeenCalledWith(ITEM_INDEX);
-        expect(removeHandler).toHaveBeenCalledWith(ITEM_INDEX);
+        expect(editHandler).toHaveBeenCalledWith(0);
+        expect(removeHandler).toHaveBeenCalledOnce();
+        expect(removeHandler.mock.calls[0][0]).toBe(selected.formItem);
         expect(openHandler).toHaveBeenCalledWith(ITEM_INDEX);
     });
 
-    it('should emit session action requests', async () => {
-        const { component } = await setupComponentAsync();
-        const editHandler = vi.fn();
-        const deleteHandler = vi.fn();
-        component['editSession'].subscribe(editHandler);
-        component['deleteSession'].subscribe(deleteHandler);
+    it('forwards the rendered session action requests', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        const session: MealAiSessionManageDto = { items: [] };
+        fixture.componentRef.setInput('aiSessions', [session]);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const editHandler = vi.fn<(rendered: MealAiSessionManageDto) => void>();
+        const deleteHandler = vi.fn<(rendered: MealAiSessionManageDto) => void>();
+        component.editSession.subscribe(editHandler);
+        component.deleteSession.subscribe(request => {
+            deleteHandler(request.session);
+        });
+        const edit = host.querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.ITEMS_AI_EDIT"]');
+        const remove = host.querySelector<HTMLButtonElement>('button[aria-label="MEAL_MANAGE.ITEMS_AI_DELETE"]');
+        if (edit === null || remove === null) {
+            throw new Error('Expected native edit and delete actions for the recognition');
+        }
 
-        component['editSession'].emit(SESSION_INDEX);
-        component['deleteSession'].emit(SESSION_INDEX);
+        edit.click();
+        remove.click();
 
-        expect(editHandler).toHaveBeenCalledWith(SESSION_INDEX);
-        expect(deleteHandler).toHaveBeenCalledWith(SESSION_INDEX);
+        expect(editHandler).toHaveBeenCalledOnce();
+        expect(editHandler.mock.calls[0][0]).toBe(session);
+        expect(deleteHandler).toHaveBeenCalledOnce();
+        expect(deleteHandler.mock.calls[0][0]).toBe(session);
     });
 });
 
@@ -79,12 +108,16 @@ async function setupComponentAsync(): Promise<MealItemsSectionSetup> {
     };
 }
 
-function createItemState(): MealItemsListItemState {
+function createItemState(values: Partial<MealItemFormValues> = {}): MealItemsListItemState {
     return {
-        sourceType: MealSourceType.Product,
-        product: null,
-        recipe: null,
-        amount: null,
+        formItem: {
+            sourceType: MealSourceType.Product,
+            product: null,
+            recipe: null,
+            amount: null,
+            recipeMass: UNKNOWN_SERVING_MASS,
+            ...values,
+        },
         amountError: null,
         productInvalid: false,
         recipeInvalid: false,

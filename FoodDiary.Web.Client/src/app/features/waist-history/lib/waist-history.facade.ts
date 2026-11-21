@@ -7,7 +7,7 @@ import { finalize, firstValueFrom } from 'rxjs';
 import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
-import { toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
+import { measurementDateInputValue, toMeasurementDateIso } from '../../../shared/lib/measurement-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { RECENT_MEASUREMENT_FETCH_LIMIT } from '../../../shared/measurements/measurement-history.constants';
@@ -63,6 +63,7 @@ export class WaistHistoryFacade {
     private readonly userHeightCm = signal<number | null>(null);
     private readonly initialized = signal(false);
     private lastLoadedRangeKey: string | null = null;
+    private pageRequestVersion = 0;
     private summaryRequestVersion = 0;
     private currentMeasurementSystem: MeasurementSystem = this.measurements.system();
 
@@ -217,7 +218,7 @@ export class WaistHistoryFacade {
             );
             this.entrySaveVersion.update(version => version + 1);
             this.invalidation.reportBodyMetricMutation();
-            this.loadPageSummary(true);
+            this.loadPageSummary();
             this.loadRollingMonthSummaryIfNeeded();
             if (editingId !== null) {
                 this.resetEditingState();
@@ -235,7 +236,7 @@ export class WaistHistoryFacade {
         this.editingEntryId.set(entry.id);
         this.editingEntry.set(entry);
         this.formModel.set({
-            date: entry.date.split('T')[0] ?? '',
+            date: measurementDateInputValue(entry.date),
             circumference: this.formatDisplayWaist(entry.circumferenceCm),
         });
     }
@@ -266,7 +267,7 @@ export class WaistHistoryFacade {
             .subscribe({
                 next: () => {
                     this.invalidation.reportBodyMetricMutation();
-                    this.loadPageSummary(true);
+                    this.loadPageSummary();
                     this.loadRollingMonthSummaryIfNeeded();
                     if (this.editingEntryId() === entry.id) {
                         this.resetEditingState();
@@ -303,7 +304,7 @@ export class WaistHistoryFacade {
                     this.waistGoal.set(goal);
                     this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(goal.desiredWaistCm) });
                     this.desiredWaistSaveVersion.update(version => version + 1);
-                    this.loadPageSummary(true);
+                    this.loadPageSummary();
                 },
                 error: () => {
                     this.goalActionError.set(this.translate.instant('WAIST_HISTORY.ERROR_SAVE_GOAL'));
@@ -331,7 +332,7 @@ export class WaistHistoryFacade {
                     this.waistGoal.set(goal);
                     this.desiredWaistModel.set({ circumference: '' });
                     this.desiredWaistSaveVersion.update(version => version + 1);
-                    this.loadPageSummary(true);
+                    this.loadPageSummary();
                 },
                 error: () => {
                     this.goalActionError.set(this.translate.instant('WAIST_HISTORY.ERROR_CANCEL_GOAL'));
@@ -382,7 +383,7 @@ export class WaistHistoryFacade {
         if (this.isLoading()) {
             return;
         }
-        this.loadPageSummary(true);
+        this.loadPageSummary();
         this.loadRollingMonthSummaryIfNeeded();
     }
 
@@ -403,13 +404,10 @@ export class WaistHistoryFacade {
         this.loadSummary(summaryParams, this.selectedRange() === 'month');
     }
 
-    private loadPageSummary(force = false): void {
+    private loadPageSummary(): void {
         const { summaryParams, rangeKey } = buildWaistHistoryFiltersForRange(this.selectedRange(), this.customRangeModel().range);
-        if (!force && rangeKey === this.lastLoadedRangeKey) {
-            return;
-        }
-
         this.lastLoadedRangeKey = rangeKey;
+        const pageRequestVersion = ++this.pageRequestVersion;
         const summaryRequestVersion = ++this.summaryRequestVersion;
         const updateRollingMonth = this.selectedRange() === 'month';
         this.pageLoadError.set(false);
@@ -420,6 +418,9 @@ export class WaistHistoryFacade {
             .getPageSummary({ ...summaryParams, entriesLimit: RECENT_MEASUREMENT_FETCH_LIMIT })
             .pipe(
                 finalize(() => {
+                    if (pageRequestVersion !== this.pageRequestVersion) {
+                        return;
+                    }
                     this.isLoading.set(false);
                     if (summaryRequestVersion === this.summaryRequestVersion) {
                         this.isSummaryLoading.set(false);
@@ -429,6 +430,9 @@ export class WaistHistoryFacade {
             )
             .subscribe({
                 next: page => {
+                    if (pageRequestVersion !== this.pageRequestVersion) {
+                        return;
+                    }
                     const latestEntry = page.entries.at(0) ?? null;
                     this.entries.set(page.entries);
                     this.latestEntry.set(latestEntry);
@@ -447,7 +451,9 @@ export class WaistHistoryFacade {
                     }
                 },
                 error: () => {
-                    this.pageLoadError.set(true);
+                    if (pageRequestVersion === this.pageRequestVersion) {
+                        this.pageLoadError.set(true);
+                    }
                 },
             });
     }

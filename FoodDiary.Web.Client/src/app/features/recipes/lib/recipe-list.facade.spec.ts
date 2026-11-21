@@ -224,19 +224,21 @@ it('reconciles a stale favorite marker without deleting the unrelated saved reci
 describe('RecipeListFacade overview', () => {
     it('opens a visible public recipe without requiring ownership', async () => {
         const publicRecipe = { ...recipe, isOwnedByCurrentUser: false };
+        const request = new AbortController();
         recipeService.getById.mockImplementation((_id: string, includePublic: boolean) => of(includePublic ? publicRecipe : null));
 
-        expect(await facade.getRecipeDetailAsync(publicRecipe.id)).toEqual(publicRecipe);
+        expect(await facade.getRecipeDetailAsync(publicRecipe.id, request.signal)).toEqual(publicRecipe);
         expect(recipeService.getById).toHaveBeenCalledWith(publicRecipe.id, true);
         expect(toastService.error).not.toHaveBeenCalled();
     });
 
     it.each(['absent', 'error'])('reports unavailable detail (%s) and allows another opening attempt', async failure => {
+        const request = new AbortController();
         recipeService.getById.mockReturnValueOnce(failure === 'absent' ? of(null) : throwError(() => new Error('offline')));
 
-        expect(await facade.getRecipeDetailAsync(recipe.id)).toBeNull();
+        expect(await facade.getRecipeDetailAsync(recipe.id, request.signal)).toBeNull();
         expect(toastService.error).toHaveBeenCalledExactlyOnceWith('ERRORS.LOAD_FAILED_MESSAGE');
-        expect(await facade.getRecipeDetailAsync(recipe.id)).toEqual(recipe);
+        expect(await facade.getRecipeDetailAsync(recipe.id, request.signal)).toEqual(recipe);
         expect(toastService.error).toHaveBeenCalledTimes(1);
     });
 

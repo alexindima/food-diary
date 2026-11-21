@@ -7,7 +7,7 @@
                 (productSelected)="onProductSelected($event)"
                 (recipeSelected)="onRecipeSelected($event)"
             />
-        } @else {
+        } @else if (selectedItem(); as item) {
             <section class="meal-manual-item-dialog__section">
                 <h3 class="meal-manual-item-dialog__label">{{ sourceTypeLabelKey() | translate }}</h3>
                 <button
@@ -16,12 +16,12 @@
                     [class.is-invalid]="sourceError() !== null"
                     (click)="showItemPicker()"
                 >
-                    <fd-ui-icon class="meal-manual-item-dialog__source-icon" [name]="itemSourceIcon()" />
+                    <fd-ui-icon class="meal-manual-item-dialog__source-icon" [name]="item.icon" />
                     <span class="meal-manual-item-dialog__source-content">
-                        @if (selectedItemName(); as itemName) {
-                            <span class="meal-manual-item-dialog__source-name">{{ itemName }}</span>
-                            @if (selectedItemMeta(); as meta) {
-                                <span class="meal-manual-item-dialog__source-meta">{{ meta }}</span>
+                        @if (item.name) {
+                            <span class="meal-manual-item-dialog__source-name">{{ item.name }}</span>
+                            @if (item.meta) {
+                                <span class="meal-manual-item-dialog__source-meta">{{ item.meta }}</span>
                             }
                         } @else {
                             <span class="meal-manual-item-dialog__source-placeholder">{{ sourceActionLabelKey() | translate }}</span>

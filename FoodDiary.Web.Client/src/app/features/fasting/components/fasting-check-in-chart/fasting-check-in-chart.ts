@@ -25,18 +25,22 @@ export class FastingCheckInChartComponent {
     protected readonly minLevel = FASTING_CHECK_IN_MIN_LEVEL;
     protected readonly maxLevel = FASTING_CHECK_IN_MAX_LEVEL;
     protected readonly series = computed<readonly FdUiLineChartSeries[]>(() => {
-        const checkIns = [...this.checkIns()].sort(
-            (left, right) => new Date(left.checkedInAtUtc).getTime() - new Date(right.checkedInAtUtc).getTime(),
-        );
-        const timestamps = checkIns.map(checkIn => new Date(checkIn.checkedInAtUtc).getTime());
-        const firstTimestamp = timestamps[0] ?? 0;
-        const timeRange = (timestamps.at(-1) ?? firstTimestamp) - firstTimestamp;
-        const buildPoints = (getValue: (checkIn: FastingCheckIn) => number): FdUiLineChartPoint[] =>
-            checkIns.map((checkIn, index) => ({
+        const readings = this.checkIns()
+            .map(checkIn => ({ checkIn, timestamp: new Date(checkIn.checkedInAtUtc).getTime() }))
+            .sort((left, right) => left.timestamp - right.timestamp);
+        // The projection uses the endpoints only when there is a reading to plot.
+        const [first] = readings;
+        const [last] = readings.slice(-1);
+        const plottedReadings = readings.map(({ checkIn, timestamp }) => {
+            const timeRange = last.timestamp - first.timestamp;
+            return {
+                checkIn,
                 label: this.formatAxisLabel(checkIn.checkedInAtUtc),
-                value: getValue(checkIn),
-                xPosition: timeRange > 0 ? ((timestamps[index] ?? firstTimestamp) - firstTimestamp) / timeRange : undefined,
-            }));
+                xPosition: timeRange > 0 ? (timestamp - first.timestamp) / timeRange : undefined,
+            };
+        });
+        const buildPoints = (getValue: (checkIn: FastingCheckIn) => number): FdUiLineChartPoint[] =>
+            plottedReadings.map(({ checkIn, label, xPosition }) => ({ label, value: getValue(checkIn), xPosition }));
 
         return [
             {

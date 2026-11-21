@@ -123,20 +123,26 @@ export class NutritionWeeklyTrendCardComponent {
     protected readonly selectedPoint = computed(
         () => this.trendPoints().find(point => point.date === this.selectedDate()) ?? this.trendPoints().at(-1),
     );
-    protected readonly selectedGoalPercent = computed(() => {
+    protected readonly selectedDay = computed(() => {
+        const point = this.selectedPoint();
+        if (point === undefined) {
+            return;
+        }
+
         const goal = this.dailyGoal();
-        return goal > 0 ? ((this.selectedPoint()?.calories ?? 0) / goal) * PERCENT_SCALE : 0;
+        return {
+            ...point,
+            goalPercent: goal > 0 ? (point.calories / goal) * PERCENT_SCALE : 0,
+            metrics: (['proteins', 'fats', 'carbs', 'fiber'] as const).map(key => ({
+                key,
+                label: METRIC_LABEL_KEYS[key],
+                value: point[key],
+            })),
+        };
     });
     protected selectDay(index: number): void {
         this.selectedDate.set(this.trendPoints()[index]?.date ?? null);
     }
-    protected readonly selectedMetrics = computed(() => {
-        const point = this.selectedPoint();
-        return point === undefined
-            ? []
-            : (['proteins', 'fats', 'carbs', 'fiber'] as const).map(key => ({ key, label: METRIC_LABEL_KEYS[key], value: point[key] }));
-    });
-
     protected readonly visibleDays = signal<TrendRange>(DEFAULT_TREND_DAYS);
     protected readonly rangeOptions: FdUiSegmentedToggleOption[] = [
         { value: String(SHORT_TREND_DAYS), labelKey: 'NUTRITION_TREND.THREE_DAYS' },

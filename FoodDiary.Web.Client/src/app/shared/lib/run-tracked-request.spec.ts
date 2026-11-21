@@ -12,13 +12,18 @@ function createDestroyRef(): DestroyRef {
 }
 
 describe('runTrackedRequest', () => {
-    it('sets state around successful request and forwards value', () => {
+    it('sets state around a successful request and forwards value and completion', () => {
         const state = signal(false);
-        const next = vi.fn();
+        const next = vi.fn(() => state());
+        const error = vi.fn();
+        const complete = vi.fn();
 
-        runTrackedRequest(createDestroyRef(), state, of('done'), { next });
+        runTrackedRequest(createDestroyRef(), state, of('done'), { next, error, complete });
 
-        expect(next).toHaveBeenCalledWith('done');
+        expect(next).toHaveBeenCalledExactlyOnceWith('done');
+        expect(next).toHaveReturnedWith(true);
+        expect(error).not.toHaveBeenCalled();
+        expect(complete).toHaveBeenCalledOnce();
         expect(state()).toBe(false);
     });
 

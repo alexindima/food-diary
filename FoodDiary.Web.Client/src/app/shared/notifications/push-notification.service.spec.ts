@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { DefaultUrlSerializer, NavigationEnd, Router, type UrlTree } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
-import { firstValueFrom, type Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
+import { defer, firstValueFrom, from, type Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
@@ -98,6 +98,10 @@ beforeEach(() => {
         parseUrl: (url): UrlTree => new DefaultUrlSerializer().parse(url),
     };
 
+    mountPushFixture();
+});
+
+function mountPushFixture(): void {
     TestBed.configureTestingModule({
         providers: [
             PushNotificationService,
@@ -111,7 +115,7 @@ beforeEach(() => {
 
     service = TestBed.inject(PushNotificationService);
     sessionEvents = TestBed.inject(SessionEventsService);
-});
+}
 
 function createPushSubscription(
     endpoint: string,
@@ -885,6 +889,79 @@ describe('Push notification device removal across session and network changes', 
     });
 });
 
+describe('Push notification removal reservations across logout', () => {
+    useSessionCleanupTimers();
+
+    it('keeps the new account device removal when the prior account server removal finishes late', async () => {
+        const previous = createPushSubscription('https://push.example.com/subscriptions/previous-device');
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        subscription$.next(previous);
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service.currentSubscriptionEndpoint()).toBe(previous.endpoint);
+        notificationService.getWebPushConfiguration.mockClear();
+        notificationService.upsertWebPushSubscription.mockClear();
+
+        const previousServerRemoval = new Subject<void>();
+        notificationService.removeWebPushSubscription.mockReturnValueOnce(previousServerRemoval);
+        const priorRemoval = service.removeSubscriptionAsync(previous.endpoint);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(previous.unsubscribeMock).toHaveBeenCalledOnce();
+        expect(previousServerRemoval.observed).toBe(true);
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(previous.endpoint);
+
+        const signOut = sessionEvents.prepareSessionEnd();
+        sessionEvents.notifySessionEnded();
+        authService.isAuthenticated.mockReturnValue(false);
+        authService.getUserId.mockReturnValue(null);
+        authService.getSessionKey.mockReturnValue(null);
+        await signOut;
+
+        const discovery = new ReplaySubject<PushSubscription | null>(1);
+        const browserRemoval = new Subject<boolean>();
+        const unsubscribe = vi.fn<PushSubscription['unsubscribe']>().mockImplementation(async () => {
+            const removed = await firstValueFrom(browserRemoval);
+            swPush.subscription = of(null);
+            return removed;
+        });
+        const current: PushSubscription = createPushSubscription('https://push.example.com/subscriptions/receiving-device');
+        current.unsubscribe = unsubscribe;
+        // The receiving account has already enrolled this browser in another tab.
+        confirmSubscriptionOwner(current, 'user-b');
+        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
+        swPush.subscription = discovery;
+        authService.isAuthenticated.mockReturnValue(true);
+        authService.getUserId.mockReturnValue('user-b');
+        authService.getSessionKey.mockReturnValue('token-b');
+        sessionEvents.notifyAuthenticated();
+        const currentRemoval = service.removeSubscriptionAsync(current.endpoint);
+        expect(discovery.observed).toBe(true);
+        expect(service.isBusy()).toBe(true);
+
+        previousServerRemoval.next();
+        previousServerRemoval.complete();
+        await priorRemoval;
+        expect(service.isBusy()).toBe(true);
+
+        discovery.next(current);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(unsubscribe).toHaveBeenCalledOnce();
+        expect(browserRemoval.observed).toBe(true);
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(previous.endpoint);
+        expect(notificationService.getWebPushConfiguration).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+
+        browserRemoval.next(true);
+        await expect(currentRemoval).resolves.toBe(true);
+        expect(notificationService.removeWebPushSubscription.mock.calls).toEqual([[previous.endpoint], [current.endpoint]]);
+        expect(localStorage.getItem('webPushDeviceOptIn:user-b')).toBe('false');
+        expect(service.currentSubscriptionEndpoint()).toBeNull();
+        expect(service.isBusy()).toBe(false);
+    });
+});
+
 describe('PushNotificationService delayed browser subscription discovery', () => {
     useSessionCleanupTimers();
 
@@ -1489,6 +1566,58 @@ describe('PushNotificationService revoked device permission', () => {
             expect(localStorage.getItem(pushOwnerStorageKey)).toBeNull();
         } finally {
             permission.mockRestore();
+        }
+    });
+});
+
+describe('Push notification worker read recovery', () => {
+    it('restores push availability on browser focus after a transient startup subscription read error', async () => {
+        TestBed.resetTestingModule();
+        const getSubscription = vi
+            .fn<() => Promise<PushSubscription | null>>()
+            .mockRejectedValue(new DOMException('The browser subscription could not be read', 'AbortError'));
+        swPush.subscription = defer(() => from(getSubscription()));
+        mountPushFixture();
+
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+        try {
+            TestBed.tick();
+            await vi.waitFor(() => {
+                expect(service.isSupported()).toBe(false);
+            });
+            await waitForAsyncTasksAsync();
+            const failedReads = getSubscription.mock.calls.length;
+            expect(failedReads).toBeGreaterThan(0);
+
+            getSubscription.mockResolvedValue(null);
+            window.dispatchEvent(new Event('focus'));
+            await vi.waitFor(() => {
+                expect(getSubscription.mock.calls.length).toBeGreaterThan(failedReads);
+            });
+            await waitForAsyncTasksAsync();
+
+            expect(swPush.requestSubscription).not.toHaveBeenCalled();
+            expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+            expect({
+                supported: service.isSupported(),
+                subscribed: service.isSubscribed(),
+                endpoint: service.currentSubscriptionEndpoint(),
+            }).toEqual({ supported: true, subscribed: false, endpoint: null });
+
+            const created = createPushSubscription('https://push.example.com/subscriptions/recovered-worker');
+            const registration = new Subject<PushSubscription>();
+            swPush.requestSubscription.mockReturnValue(firstValueFrom(registration));
+            const enabling = service.ensureSubscriptionAsync();
+            await vi.waitFor(() => {
+                expect(swPush.requestSubscription).toHaveBeenCalledOnce();
+            });
+            getSubscription.mockResolvedValue(created);
+            registration.next(created);
+            await expect(enabling).resolves.toBe('subscribed');
+            expect(swPush.requestSubscription).toHaveBeenCalledExactlyOnceWith({ serverPublicKey: 'public-key' });
+            expect(service.currentSubscriptionEndpoint()).toBe(created.endpoint);
+        } finally {
+            visibility.mockRestore();
         }
     });
 });

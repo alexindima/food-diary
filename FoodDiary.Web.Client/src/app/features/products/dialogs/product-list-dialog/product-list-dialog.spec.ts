@@ -183,7 +183,6 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         onAddToMeal: vi.fn(),
         loadFavorites: vi.fn(),
         onProductFavoriteToggle: vi.fn(),
-        addFavoriteProductToMeal: vi.fn(),
         reloadCurrentPage: vi.fn(),
     } as unknown as ProductListFacadeMock;
 }

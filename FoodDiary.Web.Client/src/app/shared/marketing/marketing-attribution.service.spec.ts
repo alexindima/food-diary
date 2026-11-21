@@ -13,6 +13,8 @@ import { MarketingAttributionService } from './marketing-attribution.service';
 import { MARKETING_ATTRIBUTION_ENABLED } from './marketing-attribution-enabled';
 import { MARKETING_NOTICE_VERSION, MarketingConsentService } from './marketing-consent.service';
 
+const MAXIMUM_CONSENT_AGE_MS = 15_552_000_000;
+
 describe('MarketingAttributionService', () => {
     it('clears old campaign data and skips landing and signup even after prior consent when disabled', () => {
         const { service, httpMock, storage } = setup({}, true, false);
@@ -91,11 +93,10 @@ describe('Marketing attribution recovery with stored consent', () => {
         try {
             const { service, httpMock, storage, browserWindow } = setup();
             const now = Date.now();
-            const maximumConsentAgeMs = 15_552_000_000;
             storage.setJson('local', 'fd_marketing_consent', {
                 version: MARKETING_NOTICE_VERSION,
                 allowed: true,
-                decidedAt: new Date(now - maximumConsentAgeMs + 1).toISOString(),
+                decidedAt: new Date(now - MAXIMUM_CONSENT_AGE_MS + 1).toISOString(),
             });
             const consent = TestBed.inject(MarketingConsentService);
             expect(consent.isAllowed()).toBe(true);
@@ -115,6 +116,47 @@ describe('Marketing attribution recovery with stored consent', () => {
             vi.useRealTimers();
         }
     });
+});
+
+it('does not submit signup attribution when consent expires while reading its saved campaign', () => {
+    vi.useFakeTimers();
+    try {
+        const { service, httpMock, storage } = setup();
+        const now = Date.now();
+        const consent = TestBed.inject(MarketingConsentService);
+        storage.setJson('local', 'fd_marketing_consent', {
+            version: MARKETING_NOTICE_VERSION,
+            allowed: true,
+            decidedAt: new Date(now - MAXIMUM_CONSENT_AGE_MS + 1).toISOString(),
+        });
+        const firstTouchKey = 'fd_marketing_first_touch';
+        storage.setJson('local', firstTouchKey, {
+            anonymousId: 'saved-visitor',
+            sessionId: 'saved-session',
+            landingPath: '/food-diary?utm_source=campaign',
+        });
+        expect(consent.isAllowed()).toBe(true);
+        const readJson = storage.getJson.bind(storage);
+        let readForSanitization = false;
+        vi.spyOn(storage, 'getJson').mockImplementation((scope, key) => {
+            const value = readJson(scope, key);
+            if (scope === 'local' && key === firstTouchKey) {
+                if (readForSanitization) {
+                    vi.setSystemTime(now + 1);
+                }
+                readForSanitization = true;
+            }
+            return value;
+        });
+
+        service.recordSignupCompleted();
+
+        expect(consent.grantedAt()).toBeNull();
+        httpMock.expectNone(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        httpMock.verify();
+    } finally {
+        vi.useRealTimers();
+    }
 });
 describe('MarketingAttributionService capture', () => {
     it('captures UTM landing attribution once per session', () => {
@@ -193,6 +235,33 @@ describe('MarketingAttributionService capture', () => {
         expect(req.request.body).not.toHaveProperty('userId');
         req.flush(null);
         httpMock.verify();
+    });
+});
+
+describe('Marketing attribution without a configured build version', () => {
+    it.each([
+        { action: 'initialize', endpoint: 'attribution-events' },
+        { action: 'recordSignupCompleted', endpoint: 'attribution-events/signup' },
+    ] as const)('omits the optional build version for $endpoint', ({ action, endpoint }) => {
+        const originalVersion = environment.buildVersion;
+        try {
+            environment.buildVersion = undefined;
+            const { service, httpMock } = setup();
+            const consent = TestBed.inject(MarketingConsentService);
+
+            service[action]();
+
+            const request = httpMock.expectOne(`${environment.apiUrls.marketing}/${endpoint}`);
+            expect(request.request.body).toMatchObject({
+                consentNoticeVersion: MARKETING_NOTICE_VERSION,
+                consentGrantedAtUtc: consent.grantedAt(),
+            });
+            expect(request.request.body).not.toHaveProperty('buildVersion');
+            request.flush(null);
+            httpMock.verify();
+        } finally {
+            environment.buildVersion = originalVersion;
+        }
     });
 });
 

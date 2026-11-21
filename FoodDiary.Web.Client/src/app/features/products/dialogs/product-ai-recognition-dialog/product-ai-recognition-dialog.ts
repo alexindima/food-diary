@@ -164,14 +164,19 @@ export class ProductAiRecognitionDialogComponent {
             return;
         }
         this.photos.set(photos);
-        this.primaryAnalysisAssetId.set(this.uploadedAssetIds().at(0) ?? null);
-        this.cover.set(null);
+        const uploadedAssetIds = this.uploadedAssetIds();
+        const primaryAssetId = this.primaryAnalysisAssetId();
+        this.primaryAnalysisAssetId.set(uploadedAssetIds.find(assetId => assetId === primaryAssetId) ?? uploadedAssetIds.at(0) ?? null);
+        const cover = this.cover();
+        if (cover === null || !photos.some(photo => (photo.assetId ?? photo.url) === (cover.assetId ?? cover.url))) {
+            this.cover.set(null);
+            this.useAsCover.set(false);
+        }
         this.analysisSubscription?.unsubscribe();
         this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(false);
         this.isNutritionLoading.set(false);
         this.productLabel.set(null);
-        this.useAsCover.set(false);
         this.replacementAccepted.set(false);
         this.errorKey.set(null);
         this.nutritionErrorKey.set(null);

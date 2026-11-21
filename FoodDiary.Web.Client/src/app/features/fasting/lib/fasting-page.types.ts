@@ -33,3 +33,6 @@ export type FastingHistorySessionViewModel = {
     visibleCheckIns: FastingCheckInViewModel[];
     canLoadMoreCheckIns: boolean;
 };
+
+export type FastingProtocolPreview =
+    { mode: 'cyclic'; fastDays: number; eatDays: number } | { mode: 'intermittent' | 'extended'; durationHours: number };

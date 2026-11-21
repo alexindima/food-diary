@@ -202,6 +202,31 @@ describe('Rendered trend comparisons', () => {
     });
 });
 
+it('removes stale day details when history clears and restores them for the new period', async () => {
+    const fixture = await setupAsync();
+    fixture.componentRef.setInput('interactive', true);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    host.querySelector<HTMLElement>(BAR)?.click();
+    fixture.detectChanges();
+    expect(host.querySelector<HTMLAnchorElement>('.nutrition-trend__open-day')?.getAttribute('href')).toBe(
+        `/dashboard?date=${FIRST_VISIBLE_DAY}`,
+    );
+
+    fixture.componentRef.setInput('points', []);
+    fixture.detectChanges();
+    expect(host.querySelectorAll(BAR)).toHaveLength(0);
+    expect(host.querySelector('.nutrition-trend__day')).toBeNull();
+
+    fixture.componentRef.setInput('points', [{ date: `${LATEST_VISIBLE_DAY}T12:00:00`, calories: BASE_CALORIES, proteins: 100 }]);
+    fixture.detectChanges();
+    expect(host.querySelector(`${BAR}[aria-pressed="true"]`)).not.toBeNull();
+    expect(host.querySelector<HTMLAnchorElement>('.nutrition-trend__open-day')?.getAttribute('href')).toBe(
+        `/dashboard?date=${LATEST_VISIBLE_DAY}`,
+    );
+    expect(host.querySelector('.nutrition-trend__metric--proteins strong')?.textContent.trim()).toBe('100 GENERAL.UNITS.G');
+});
+
 async function setupAsync(insight: NutritionTrendInsight = DEFAULT_INSIGHT): Promise<ComponentFixture<NutritionWeeklyTrendCardComponent>> {
     await TestBed.resetTestingModule()
         .configureTestingModule({

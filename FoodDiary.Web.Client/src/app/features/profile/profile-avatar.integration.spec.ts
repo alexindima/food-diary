@@ -11,8 +11,10 @@ import { afterEach, describe, expect, it, type Mock, onTestFinished, vi } from '
 
 import { environment } from '../../../environments/environment';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
+import { FEATURE_ACTION_PROVIDERS } from '../../composition/feature-action.providers';
 import { AuthService } from '../../services/auth.service';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
+import type { DietologistRelationshipHttpResponse } from '../../shared/api/sdk/generated/model/dietologist-relationship-http-response';
 import { type UserProfileOverview, UserService } from '../../shared/api/user.service';
 import { GoogleIdentityService } from '../../shared/auth/google-identity.service';
 import { TelegramBackupEmailFlowService } from '../../shared/auth/telegram-backup-email-flow.service';
@@ -22,6 +24,7 @@ import { LocalizationService } from '../../shared/i18n/localization.service';
 import { ImageUploadFacade } from '../../shared/lib/image-upload.facade';
 import { UserFacade } from '../../shared/lib/user.facade';
 import { imageSelection } from '../../shared/models/image-upload.data';
+import { calendarDate } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
 import { Gender, type User } from '../../shared/models/user.data';
 import { BrowserNotificationCapabilityService } from '../../shared/notifications/browser-notification-capability.service';
@@ -33,6 +36,7 @@ import { PrivacyConsentFacade } from '../../shared/privacy/privacy-consent.facad
 import { ThemeService } from '../../shared/theme/theme.service';
 import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../dietologist/contracts/relationship-actions';
 import { ProfileMeasurementsService, type ProfileMeasurementSummary } from './api/profile-measurements.service';
+import { DEFAULT_DIETOLOGIST_PERMISSIONS } from './lib/user-manage.config';
 import profileRoutes from './profile.routes';
 
 const PROFILE_URL = '/profile';
@@ -604,6 +608,169 @@ describe('Profile account save and leave', () => {
     });
 });
 
+describe('Profile overview HTTP recovery', () => {
+    it('cancels the departed request and recovers from a profile HTTP error on a later visit', async () => {
+        const { router } = await renderProfileAsync({ providers: [provideHttpClient(), provideHttpClientTesting(), UserService] });
+        const http = TestBed.inject(HttpTestingController);
+        const usersUrl = environment.apiUrls.users;
+        const overviewRequest = { method: 'GET', url: `${usersUrl}/overview` };
+        const updateRequest = { method: 'PATCH', url: `${usersUrl}/info` };
+        const sessionsRequest = { method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` };
+        http.expectOne(sessionsRequest).flush([]);
+        const departedRead = http.expectOne(overviewRequest);
+        expect(departedRead.cancelled).toBe(false);
+
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        expect(departedRead.cancelled).toBe(true);
+        await router.navigateByUrl(PROFILE_URL);
+        http.expectOne(sessionsRequest).flush([]);
+        http.expectOne(overviewRequest).flush('Unavailable', { status: 503, statusText: 'Service Unavailable' });
+        router.detectChanges();
+
+        const unavailable = profilePage(router);
+        expect(unavailable.querySelector('.user-manage__form > .user-manage__error [role="alert"]')?.textContent).toContain(
+            'USER_MANAGE.LOAD_ERROR',
+        );
+        expect(unavailable.querySelector('fd-user-manage-comparison-widgets[inert]')).not.toBeNull();
+        expect(unavailable.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        http.expectNone(updateRequest);
+
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        await router.navigateByUrl(PROFILE_URL);
+        http.expectOne(sessionsRequest).flush([]);
+        const loaded = profileOverview({ firstName: 'Recovered name' });
+        http.expectOne(overviewRequest).flush(loaded);
+        router.detectChanges();
+
+        const profile = profilePage(router);
+        const firstName = accountField(profile, '[data-user-field="firstName"] input');
+        expect(profile.querySelector('.user-manage__form > .user-manage__error')).toBeNull();
+        expect(profile.querySelector('fd-user-manage-comparison-widgets[inert]')).toBeNull();
+        expect(firstName.value).toBe('Recovered name');
+        typeIntoProfile(firstName, 'Saved name', router);
+        getButton(profile, 'UNSAVED_CHANGES.SAVE').click();
+        const patch = http.expectOne(updateRequest);
+        expect(patch.request.body).toEqual(expect.objectContaining({ firstName: 'Saved name' }));
+        patch.flush({ ...loaded.user, firstName: 'Saved name' });
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        });
+        http.verify();
+    });
+});
+
+it('keeps a newer dietologist acceptance when the initial profile overview finishes last', async () => {
+    const overview = profileOverview();
+    const pendingInvitation = {
+        invitationId: 'invitation-1',
+        status: 'Pending',
+        email: 'dietologist@example.test',
+        createdAtUtc: '2026-11-18T08:00:00Z',
+        expiresAtUtc: '2026-11-25T08:00:00Z',
+        permissions: DEFAULT_DIETOLOGIST_PERMISSIONS,
+    } satisfies DietologistRelationshipHttpResponse;
+    const acceptedInvitation = {
+        ...pendingInvitation,
+        status: 'Accepted',
+        dietologistUserId: 'dietologist-1',
+        acceptedAtUtc: '2026-11-19T08:00:00Z',
+    } satisfies DietologistRelationshipHttpResponse;
+    const { router } = await renderProfileAsync({
+        providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            UserService,
+            NotificationService,
+            ...FEATURE_ACTION_PROVIDERS,
+            {
+                provide: AuthService,
+                useValue: {
+                    isAdmin: (): boolean => false,
+                    isAuthenticated: (): boolean => true,
+                    isImpersonating: (): boolean => false,
+                    getUserId: (): User['id'] => overview.user.id,
+                },
+            },
+        ],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        http.verify();
+    });
+    http.expectOne({ method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` }).flush([]);
+    const older = http.expectOne({ method: 'GET', url: `${environment.apiUrls.users}/overview` });
+    const relationshipRequest = { method: 'GET', url: `${environment.apiUrls.dietologist}/relationship` };
+    const connected = 'USER_MANAGE.DIETOLOGIST_CONNECTED_INFO';
+
+    // The current notification connection emits this service event when a dietologist accepts.
+    TestBed.inject(NotificationService).notifyNotificationsChanged();
+    http.expectOne({ method: 'GET', url: environment.apiUrls.auth.replace('/auth', '/notifications') }).flush([]);
+    router.detectChanges();
+    const latest = await vi.waitFor(() => http.expectOne(relationshipRequest));
+    latest.flush(acceptedInvitation);
+    router.detectChanges();
+    const card = profilePage(router).querySelector('fd-user-manage-dietologist-card');
+    const details = card?.closest('details');
+    const summary = details?.querySelector('summary');
+    if (!(card instanceof HTMLElement) || !(details instanceof HTMLDetailsElement) || !(summary instanceof HTMLElement)) {
+        throw new Error('Expected the rendered dietologist accordion');
+    }
+    expect(card.textContent).toContain(connected);
+
+    older.flush({ ...overview, dietologistRelationship: pendingInvitation });
+    router.detectChanges();
+    summary.click();
+    expect(details.open).toBe(true);
+    expect(card.textContent).toContain(connected);
+    expect(card.textContent).not.toContain('USER_MANAGE.DIETOLOGIST_PENDING_TITLE');
+    http.expectNone(relationshipRequest);
+});
+
+it('persists a cleared birthday when reopening the profile', async () => {
+    const { router } = await renderProfileAsync({ providers: [provideHttpClient(), provideHttpClientTesting(), UserService] });
+    const http = TestBed.inject(HttpTestingController);
+    const overviewRequest = { method: 'GET', url: `${environment.apiUrls.users}/overview` };
+    const updateRequest = { method: 'PATCH', url: `${environment.apiUrls.users}/info` };
+    const sessionsRequest = { method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` };
+    const loaded = profileOverview({ birthDate: calendarDate('1990-01-02') });
+    http.expectOne(sessionsRequest).flush([]);
+    http.expectOne(overviewRequest).flush(loaded);
+    router.detectChanges();
+
+    const profile = profilePage(router);
+    const birthdaySelector = 'fd-ui-date-input input';
+    const birthday = accountField(profile, birthdaySelector);
+    expect(birthday.value).not.toBe('');
+    expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+    http.expectNone(updateRequest);
+
+    typeIntoProfile(birthday, '', router);
+    expect(birthday.getAttribute('aria-invalid')).toBeNull();
+    getButton(profile, 'UNSAVED_CHANGES.SAVE').click();
+
+    const patch = http.expectOne(updateRequest);
+    expect(patch.request.body).toHaveProperty('birthDate', null);
+    expect(patch.request.serializeBody()).toContain('"birthDate":null');
+    const saved = { ...loaded.user, birthDate: null };
+    patch.flush(saved);
+    await vi.waitFor(() => {
+        router.detectChanges();
+        expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+    });
+
+    await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+    await router.navigateByUrl(PROFILE_URL);
+    http.expectOne(sessionsRequest).flush([]);
+    http.expectOne(overviewRequest).flush({ ...loaded, user: saved });
+    router.detectChanges();
+
+    const reopened = profilePage(router);
+    expect(accountField(reopened, birthdaySelector).value).toBe('');
+    expect(reopened.querySelector('fd-unsaved-changes-bar')).toBeNull();
+    http.verify();
+});
+
 describe('Profile overview ownership', () => {
     it('waits for the authenticated account before allowing a save of its full profile', async () => {
         const account = new Subject<UserProfileOverview | null>();
@@ -731,6 +898,161 @@ describe('Profile height editing', () => {
     });
 });
 
+describe('Profile unfinished metric height drafts', () => {
+    it('restores the saved height on discard and treats a later intentional clear as empty', async () => {
+        const { router, update } = await renderProfileAsync();
+        const profile = profilePage(router);
+        const height = accountField(profile, '[data-user-field="height"] input');
+        expect(height.value).toBe('170');
+        typeIntoProfile(height, '180', router);
+
+        typeUnfinishedProfileHeight(height, router);
+        expect(height.getAttribute('aria-invalid')).toBe('true');
+        getButton(profile, 'UNSAVED_CHANGES.SAVE').click();
+        router.detectChanges();
+        expect(update).not.toHaveBeenCalled();
+
+        getButton(profile, 'UNSAVED_CHANGES.DISCARD').click();
+        router.detectChanges();
+        expect(height.value).toBe('170');
+        expect(height.getAttribute('aria-invalid')).toBeNull();
+        expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+
+        typeUnfinishedProfileHeight(height, router);
+        typeIntoProfile(height, '', router);
+        expect(height.getAttribute('aria-invalid')).toBeNull();
+        const saved = profileOverview();
+        delete saved.user.heightCm;
+        update.mockReturnValueOnce(of(saved.user));
+        getButton(profile, 'UNSAVED_CHANGES.SAVE').click();
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        });
+        expect(update).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ heightCm: null }));
+    });
+
+    it('preserves the canonical height and clears the hidden draft when changing units', async () => {
+        installOptionScrolling();
+        const { router, update } = await renderProfileAsync();
+        const profile = profilePage(router);
+        const metric = 'USER_MANAGE.COMPARISON.UNIT_SYSTEM_METRIC';
+        const imperial = 'USER_MANAGE.COMPARISON.UNIT_SYSTEM_IMPERIAL';
+        const height = accountField(profile, '[data-user-field="height"] input');
+        typeUnfinishedProfileHeight(height, router);
+
+        chooseProfileSelect(router, profile, metric, metric);
+        expect(height.getAttribute('aria-invalid')).toBe('true');
+        expect(profile.querySelector('fd-unsaved-changes-bar')).not.toBeNull();
+
+        chooseProfileSelect(router, profile, metric, imperial);
+        const feet = accountField(profile, '.profile-comparison__imperial-height fd-ui-input:first-child input');
+        const inches = accountField(profile, '.profile-comparison__imperial-height fd-ui-input:last-child input');
+        expect([feet.value, inches.value]).toEqual(['5', '6.9']);
+        expect(inches.getAttribute('aria-invalid')).toBeNull();
+        expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        chooseProfileSelect(router, profile, imperial, metric);
+        expect(accountField(profile, '[data-user-field="height"] input').value).toBe('170');
+        expect(update).not.toHaveBeenCalled();
+    });
+});
+
+describe('Profile unfinished imperial height drafts', () => {
+    it('requires both invalid parts to be corrected and submits the replacement canonical height', async () => {
+        installOptionScrolling();
+        const { router, update } = await renderProfileAsync();
+        const profile = profilePage(router);
+        chooseProfileSelect(router, profile, 'USER_MANAGE.COMPARISON.UNIT_SYSTEM_METRIC', 'USER_MANAGE.COMPARISON.UNIT_SYSTEM_IMPERIAL');
+        const feet = accountField(profile, '.profile-comparison__imperial-height fd-ui-input:first-child input');
+        const inches = accountField(profile, '.profile-comparison__imperial-height fd-ui-input:last-child input');
+        typeUnfinishedProfileHeight(feet, router);
+        typeUnfinishedProfileHeight(inches, router);
+        expect(feet.getAttribute('aria-invalid')).toBe('true');
+        expect(inches.getAttribute('aria-invalid')).toBe('true');
+
+        typeIntoProfile(feet, '5', router);
+        expect(feet.getAttribute('aria-invalid')).toBeNull();
+        expect(inches.getAttribute('aria-invalid')).toBe('true');
+        const save = getButton(profile, 'UNSAVED_CHANGES.SAVE');
+        save.click();
+        router.detectChanges();
+        expect(update).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(inches);
+
+        typeIntoProfile(inches, '8', router);
+        expect(inches.getAttribute('aria-invalid')).toBeNull();
+        const canonicalHeight = 172.7;
+        update.mockReturnValueOnce(of(profileOverview({ heightCm: canonicalHeight }).user));
+        save.click();
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        });
+        expect(update).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ heightCm: canonicalHeight }));
+    });
+});
+
+function typeUnfinishedProfileHeight(input: HTMLInputElement, router: RouterTestingHarness): void {
+    const draft = vi.spyOn(input.validity, 'badInput', 'get').mockReturnValue(true);
+    typeIntoProfile(input, '', router);
+    draft.mockRestore();
+}
+
+describe('Profile height error focus', () => {
+    const imperialHeight = '.profile-comparison__imperial-height';
+
+    it.each([
+        { system: 'metric', selector: '[data-user-field="height"] input', invalid: '301', corrected: '180', canonical: 180 },
+        {
+            system: 'imperial',
+            selector: `${imperialHeight} fd-ui-input:first-child input`,
+            invalid: '10',
+            corrected: '6',
+            canonical: 182.9,
+        },
+    ])('focuses the invalid $system height when Save is pressed and submits the corrected height', async options => {
+        installOptionScrolling();
+        const { router, update } = await renderProfileAsync();
+        const profile = profilePage(router);
+        if (options.system === 'imperial') {
+            chooseProfileSelect(
+                router,
+                profile,
+                'USER_MANAGE.COMPARISON.UNIT_SYSTEM_METRIC',
+                'USER_MANAGE.COMPARISON.UNIT_SYSTEM_IMPERIAL',
+            );
+        }
+        const height = accountField(profile, options.selector);
+        typeIntoProfile(height, options.invalid, router);
+        expect(height.getAttribute('aria-invalid')).toBe('true');
+        const description = height.getAttribute('aria-describedby');
+        expect(document.getElementById(description ?? '')?.textContent).toContain('USER_MANAGE.HEIGHT_INVALID');
+
+        const save = getButton(profile, 'UNSAVED_CHANGES.SAVE');
+        save.focus();
+        expect(document.activeElement).toBe(save);
+        save.click();
+        router.detectChanges();
+        expect(update).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(height);
+
+        typeIntoProfile(height, options.corrected, router);
+        if (options.system === 'imperial') {
+            const inches = accountField(profile, `${imperialHeight} fd-ui-input:last-child input`);
+            typeIntoProfile(inches, '0', router);
+            expect(inches.getAttribute('aria-invalid')).toBeNull();
+        }
+        expect(height.getAttribute('aria-invalid')).toBeNull();
+        update.mockReturnValueOnce(of(profileOverview({ heightCm: options.canonical }).user));
+        save.click();
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(profile.querySelector('fd-unsaved-changes-bar')).toBeNull();
+        });
+        expect(update).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ heightCm: options.canonical }));
+    });
+});
+
 describe('Profile password setup and replacement', () => {
     const oldPassword = 'fixture-old-password-17';
     const newPassword = 'fixture-new-password-28';
@@ -799,6 +1121,98 @@ describe('Profile password setup and replacement', () => {
             });
         },
     );
+});
+
+describe('Profile password draft ownership', () => {
+    it('discards an unsubmitted password draft on leaving Profile and starts blank on return', async () => {
+        vi.spyOn(window.history, 'pushState').mockImplementation(() => {});
+        const change = vi.fn<UserFacade['changePassword']>().mockReturnValue(of(false));
+        const logout = vi.fn<AuthService['onLogoutAsync']>().mockResolvedValue(undefined);
+        const { router } = await renderProfileAsync({
+            providers: [
+                { provide: UserFacade, useValue: { changePassword: change } },
+                { provide: AuthService, useValue: { isAdmin: (): boolean => false, onLogoutAsync: logout } },
+            ],
+        });
+        const action = 'USER_MANAGE.CHANGE_PASSWORD';
+        const dialog = openProfilePasswordDialog(router, action);
+        const input = accountField(dialog, 'input[type="password"]');
+        const draft = 'unsaved-fixture-password';
+        typeIntoProfile(input, draft, router);
+        expect(input.value).toBe(draft);
+
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        expect(TestBed.inject(Router).url).toBe(OTHER_URL);
+        expect(router.routeNativeElement?.textContent).toContain('Another page');
+        expect(dialog.isConnected).toBe(false);
+        expect(document.querySelector('fd-change-password-dialog')).toBeNull();
+
+        await router.navigateByUrl(PROFILE_URL);
+        const reopened = openProfilePasswordDialog(router, action);
+        expect(reopened).not.toBe(dialog);
+        expect(accountField(reopened, 'input[type="password"]').value).toBe('');
+        expect(change).not.toHaveBeenCalled();
+        expect(logout).not.toHaveBeenCalled();
+    });
+});
+
+describe('Profile password submission after leaving', () => {
+    it.each([
+        { scenario: 'completes an already submitted change and requests sign-in', saved: true },
+        { scenario: 'discards a rejected password change after the owner has left', saved: false },
+    ])('$scenario', async ({ saved }) => {
+        vi.spyOn(window.history, 'pushState').mockImplementation(() => {});
+        const pending = new Subject<boolean>();
+        const change = vi.fn<UserFacade['changePassword']>().mockReturnValue(pending);
+        const logout = vi.fn<AuthService['onLogoutAsync']>().mockResolvedValue(undefined);
+        const { router } = await renderProfileAsync({
+            providers: [
+                { provide: UserFacade, useValue: { changePassword: change } },
+                { provide: AuthService, useValue: { isAdmin: (): boolean => false, onLogoutAsync: logout } },
+            ],
+        });
+        const dialog = openProfilePasswordDialog(router, 'USER_MANAGE.CHANGE_PASSWORD');
+        const inputs = Array.from(dialog.querySelectorAll<HTMLInputElement>('input[type="password"]'));
+        const fields = ['current-fixture-password', 'new-fixture-password', 'new-fixture-password'];
+        expect(inputs).toHaveLength(fields.length);
+        for (const [index, field] of inputs.entries()) {
+            typeIntoProfile(field, fields[index], router);
+        }
+        const submit = dialog.querySelector<HTMLButtonElement>('button[type="submit"]');
+        if (submit === null) {
+            throw new Error('Expected the password submit action');
+        }
+        submit.click();
+        await vi.waitFor(() => {
+            expect(change).toHaveBeenCalledExactlyOnceWith({ currentPassword: fields[0], newPassword: fields[1] });
+        });
+
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        expect(pending.observed).toBe(true);
+        expect(logout).not.toHaveBeenCalled();
+
+        pending.next(saved);
+        pending.complete();
+        if (!saved) {
+            await vi.waitFor(() => {
+                TestBed.tick();
+                expect(dialog.isConnected).toBe(false);
+            });
+            expect(TestBed.inject(Router).url).toBe(OTHER_URL);
+            expect(document.querySelector('fd-user-manage-password-success-dialog')).toBeNull();
+            expect(logout).not.toHaveBeenCalled();
+            return;
+        }
+        const success = await vi.waitFor(() => {
+            TestBed.tick();
+            return profilePasswordSuccessButton();
+        });
+        success.click();
+        await vi.waitFor(() => {
+            expect(logout).toHaveBeenCalledExactlyOnceWith(true);
+        });
+        expect(dialog.isConnected).toBe(false);
+    });
 });
 
 describe('Profile Google connection', () => {
@@ -897,6 +1311,47 @@ function profilePasswordSuccessButton(): HTMLButtonElement {
     }
     return button;
 }
+
+describe('Profile while a legacy Telegram disconnect is pending', () => {
+    it('keeps the connected account and the pending attempt when viewing the same profile', async () => {
+        const account = profileOverview({ hasTelegramIdentity: true });
+        const key = 'fooddiary.telegram.unlink';
+        const stateLength = 43;
+        const attemptTtlMs = 300_000;
+        const attempt = JSON.stringify({
+            userId: account.user.id,
+            state: 's'.repeat(stateLength),
+            expiresAt: Date.now() + attemptTtlMs,
+            errorKey: null,
+        });
+        window.sessionStorage.setItem(key, attempt);
+        onTestFinished(() => {
+            window.sessionStorage.removeItem(key);
+        });
+        const complete = vi.fn<AuthService['completeTelegramUnlink']>();
+        const { router } = await renderProfileAsync({
+            account: of(account),
+            providers: [
+                {
+                    provide: AuthService,
+                    useValue: {
+                        isAdmin: (): boolean => false,
+                        getUserId: (): User['id'] => account.user.id,
+                        completeTelegramUnlink: complete,
+                    },
+                },
+                { provide: TelegramUnlinkFlowService, useClass: TelegramUnlinkFlowService },
+                { provide: BrowserStorageService, useClass: BrowserStorageService },
+            ],
+        });
+
+        const connection = profilePage(router).querySelector('fd-user-manage-telegram-connection');
+        expect(connection?.textContent).toContain('USER_MANAGE.METHOD_CONNECTED');
+        expect(connection?.querySelector('.user-manage__method-feedback')).toBeNull();
+        expect(window.sessionStorage.getItem(key)).toBe(attempt);
+        expect(complete).not.toHaveBeenCalled();
+    });
+});
 
 describe('Profile backup email handoff', () => {
     const backupEmail = 'backup@example.test';

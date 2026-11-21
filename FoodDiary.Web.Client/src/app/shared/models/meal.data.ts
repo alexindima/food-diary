@@ -97,6 +97,7 @@ export type MealAiSession = {
     mealId: string;
     imageAssetId?: string | null;
     imageUrl?: string | null;
+    source?: string | null;
     status?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
@@ -195,6 +196,7 @@ export type MealAiSessionResponseDto = {
     mealId: string;
     imageAssetId?: string | null;
     imageUrl?: string | null;
+    source?: string | null;
     status?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;

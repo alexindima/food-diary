@@ -1,4 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideChildTranslateService, TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -192,13 +194,14 @@ describe('Day summary nutrient connectors', () => {
             const fixture = await createSummaryAsync([PROTEIN_BAR, SODIUM_BAR]);
             const host = fixture.nativeElement as HTMLElement;
             const chart = getElement(fixture, '.day-summary__visual');
+            const layout = getElement(fixture, '.day-summary__layout');
             const protein = getElement(fixture, '.day-summary__nutrient--protein');
             const observer = observers.find(candidate => candidate.observe.mock.calls.some(([observed]) => observed === chart));
             if (observer === undefined) {
                 throw new Error('Expected a resize observer for the nutrient contour');
             }
             expect(observer.observe).toHaveBeenCalledWith(protein);
-            expect(observer.observe).toHaveBeenCalledWith(chart.parentElement);
+            expect(observer.observe).toHaveBeenCalledWith(layout);
             expect(host.querySelector('.day-summary__connector')).toBeNull();
 
             vi.spyOn(chart, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect(SUMMARY_RECT));
@@ -224,8 +227,19 @@ describe('Day summary nutrient connectors', () => {
             expect(connector.getAttribute('y1')).not.toBe(firstLabelEndY);
             expect(connector.getAttribute('y2')).toBe(anchorY);
 
-            fixture.destroy();
+            fixture.componentRef.setInput('data', { ...fixture.componentInstance.data(), nutrientBars: [PROTEIN_BAR] });
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const nextObserver = observers.at(-1);
+            if (nextObserver === undefined || nextObserver === observer) {
+                throw new Error('Expected a replacement observer after the nutrient update');
+            }
             expect(observer.disconnect).toHaveBeenCalledOnce();
+            expect(nextObserver.observe.mock.calls).toEqual([[chart], [layout], [protein]]);
+            expect(host.querySelector('.day-summary__nutrient--sodium')).toBeNull();
+
+            fixture.destroy();
+            expect(nextObserver.disconnect).toHaveBeenCalledOnce();
         } finally {
             vi.unstubAllGlobals();
         }
@@ -302,6 +316,54 @@ describe('Day summary pulse navigation', () => {
         expect(announcement.textContent).toContain('DASHBOARD.DAY_SUMMARY.PULSE_EMPTY_TITLE');
         expect(viewport.children).toHaveLength(1);
     });
+});
+
+it('keeps the selected nutrient visible and announces its translation after a locale switch', async () => {
+    await TestBed.configureTestingModule({
+        imports: [DayNutritionSummaryComponent],
+        providers: [provideTranslateTesting({ lang: 'en' })],
+    })
+        .overrideComponent(DayNutritionSummaryComponent, { add: { providers: provideChildTranslateService() } })
+        .compileComponents();
+    const applicationTranslations = TestBed.inject(TranslateService);
+    applicationTranslations.setTranslation('en', {
+        GENERAL: { NUTRIENTS: { PROTEIN: 'Proteins' }, UNITS: { G: 'g' } },
+        DASHBOARD: { DAY_SUMMARY: { REMAINING: '{{value}} {{unit}} remaining' } },
+    });
+    applicationTranslations.setTranslation('ru', {
+        GENERAL: { NUTRIENTS: { PROTEIN: 'Белки' }, UNITS: { G: 'г' } },
+        DASHBOARD: { DAY_SUMMARY: { REMAINING: 'Осталось {{value}} {{unit}}' } },
+    });
+
+    const fixture = TestBed.createComponent(DayNutritionSummaryComponent);
+    const widgetTranslations = fixture.debugElement.injector.get(TranslateService);
+    widgetTranslations.setTranslation('en', { GENERAL: { NUTRIENTS: { PROTEIN: 'Protein' } } });
+    widgetTranslations.setTranslation('ru', { GENERAL: { NUTRIENTS: { PROTEIN: 'Белок' } } });
+    fixture.componentRef.setInput('data', {
+        ...NO_GOAL_DATA,
+        nutrientBars: [{ ...PROTEIN_BAR, labelKey: 'GENERAL.NUTRIENTS.PROTEIN', unitKey: 'GENERAL.UNITS.G' }],
+    });
+    fixture.detectChanges();
+
+    const viewport = getElement(fixture, '.day-summary__pulse-content');
+    const controls = getElement(fixture, '.day-summary__pulse-controls');
+    const announcement = getElement(fixture, '[aria-live="polite"]');
+    const slideWidth = 300;
+    Object.defineProperty(viewport, 'clientWidth', { value: slideWidth });
+    viewport.scrollLeft = slideWidth;
+    viewport.dispatchEvent(new Event('scroll'));
+    fixture.detectChanges();
+    expect(controls.textContent).toContain('2 / 2');
+    expect(announcement.textContent).toMatch(/Protein\s*·\s*80 g remaining/u);
+
+    await firstValueFrom(applicationTranslations.use('ru'));
+    fixture.detectChanges();
+
+    expect(viewport.scrollLeft).toBe(slideWidth);
+    expect(controls.textContent).toContain('2 / 2');
+    expect(announcement.textContent).toMatch(/Белок\s*·\s*Осталось 80 г/u);
+    expect(viewport.children.item(1)?.textContent).toMatch(/Белок\s*·\s*Осталось 80 г/u);
+    expect(applicationTranslations.instant('GENERAL.NUTRIENTS.PROTEIN')).toBe('Белки');
 });
 
 describe('Day summary nutrition and geometry fallbacks', () => {

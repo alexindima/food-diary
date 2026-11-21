@@ -7,17 +7,16 @@ const TEST_PLAN_DURATION_DAYS = 7;
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
-import { MealPlanFacade } from '../../lib/meal-plan.facade';
+import { MealPlanListFacade } from '../../lib/list/meal-plan-list.facade';
 import type { DietType, MealPlanSummary } from '../../models/meal-plan.data';
 import { planDurationDaysFromStored } from '../../models/meal-plan-values';
 import { MealPlansListPageComponent } from './meal-plans-list-page';
 
 describe('MealPlansListPageComponent', () => {
-    it('loads plans on creation and maps plan cards', () => {
+    it('maps the catalogue plans to cards', () => {
         const facade = createFacadeStub([createSummary({ dietType: 'Vegan' })]);
         const component = createComponent(facade);
 
-        expect(facade.loadPlans).toHaveBeenCalledWith();
         expect(component['planCards']()[0]).toMatchObject({
             id: 'plan-1',
             dietTypeKey: 'MEAL_PLANS.DIET_TYPE.VEGAN',
@@ -48,13 +47,13 @@ type FacadeStub = {
     dietTypeFilter: ReturnType<typeof signal<DietType | null>>;
     plans: ReturnType<typeof signal<MealPlanSummary[]>>;
     isLoading: ReturnType<typeof signal<boolean>>;
-    loadPlans: ReturnType<typeof vi.fn<(dietType?: DietType | null) => void>>;
+    loadPlans: ReturnType<typeof vi.fn<(dietType: DietType | null) => void>>;
 };
 
 function createComponent(facade: FacadeStub, router = createRouterStub()): MealPlansListPageComponent {
     TestBed.configureTestingModule({
         providers: [
-            { provide: MealPlanFacade, useValue: facade },
+            { provide: MealPlanListFacade, useValue: facade },
             { provide: Router, useValue: router },
         ],
     });

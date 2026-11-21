@@ -649,6 +649,84 @@ describe('FdUiInput numeric model contract', () => {
     });
 });
 
+describe('FdUiInput unfinished native numeric drafts', () => {
+    const committedAmount = 170;
+    const replacementAmount = 180;
+
+    it('preserves the model until a native bad input is intentionally cleared', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('preserveInvalidNumberDraft', true);
+        fixture.componentRef.setInput('value', committedAmount);
+        const invalidChanged = vi.fn();
+        component.nativeNumberDraftInvalidChange.subscribe(invalidChanged);
+        fixture.detectChanges();
+
+        const field = input();
+        const badInput = vi.spyOn(field.validity, 'badInput', 'get').mockReturnValue(true);
+        field.value = '';
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(component.value()).toBe(committedAmount);
+        expect(invalidChanged.mock.calls).toEqual([[true]]);
+
+        badInput.mockRestore();
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(component.value()).toBeNull();
+        expect(invalidChanged.mock.calls).toEqual([[true], [false]]);
+    });
+
+    it('does not promote an unfinished focus sync and restores the current value on discard', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('preserveInvalidNumberDraft', true);
+        fixture.componentRef.setInput('value', committedAmount);
+        fixture.detectChanges();
+        const invalidChanged = vi.fn();
+        component.nativeNumberDraftInvalidChange.subscribe(invalidChanged);
+        const field = input();
+        const badInput = vi.spyOn(field.validity, 'badInput', 'get').mockReturnValue(true);
+        field.value = '';
+        field.dispatchEvent(new Event('focus'));
+        expect(component.value()).toBe(committedAmount);
+        expect(invalidChanged.mock.calls).toEqual([[true]]);
+
+        badInput.mockRestore();
+        field.dispatchEvent(new Event('focus'));
+        fixture.componentRef.setInput('value', replacementAmount);
+        fixture.detectChanges();
+        expect(field.value).toBe('');
+        component.resetNativeNumberDraft();
+        component.resetNativeNumberDraft();
+        expect(field.value).toBe(String(replacementAmount));
+        expect(invalidChanged.mock.calls).toEqual([[true], [false]]);
+    });
+
+    it('restores an empty numeric model without converting a text input', async () => {
+        const { component, fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('preserveInvalidNumberDraft', true);
+        fixture.detectChanges();
+        const field = input();
+        const invalidChanged = vi.fn();
+        component.nativeNumberDraftInvalidChange.subscribe(invalidChanged);
+        field.value = 'native text';
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(component.value()).toBe('native text');
+        expect(invalidChanged).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('type', 'number');
+        fixture.componentRef.setInput('value', null);
+        fixture.detectChanges();
+        const badInput = vi.spyOn(field.validity, 'badInput', 'get').mockReturnValue(true);
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        badInput.mockRestore();
+        component.resetNativeNumberDraft();
+        expect(field.value).toBe('');
+        expect(component.value()).toBeNull();
+        expect(invalidChanged.mock.calls).toEqual([[true], [false]]);
+    });
+});
+
 it('shows an empty placeholder without focus when floatLabel is always and does not write a value', async () => {
     const { fixture, input, component } = await setupInputAsync();
     fixture.componentRef.setInput('label', 'Calories');
