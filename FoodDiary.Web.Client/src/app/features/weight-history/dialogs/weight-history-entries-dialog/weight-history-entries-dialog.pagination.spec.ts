@@ -42,17 +42,21 @@ function setup(): {
     return { fixture, component: fixture.componentInstance, fetch, responses, close };
 }
 function page(): WeightEntry[] {
-    return Array.from({ length: FETCH_SIZE }, (_, index) => ({
-        id: entityId<'weight-entry'>(String(index)),
-        userId: entityId<'user'>('u'),
-        date: calendarDate(`2026-09-${String(FETCH_SIZE - index).padStart(2, '0')}`),
-        weightKg: BASE_MEASUREMENT + index,
-    }));
+    return Array.from({ length: FETCH_SIZE }, (_, index) => {
+        const day = index === PAGE_SIZE ? '2025-12-31' : `2026-01-${String(PAGE_SIZE - index).padStart(2, '0')}`;
+        return {
+            id: entityId<'weight-entry'>(String(index)),
+            userId: entityId<'user'>('u'),
+            date: calendarDate(`${day}T00:00:00Z`),
+            weightKg: BASE_MEASUREMENT + index,
+        };
+    });
 }
 describe('Weight measurement dialog pagination', () => {
-    it('shows 20 rows with the last delta, then appends the final row and passes it to editing', () => {
+    it('keeps the last delta across New Year and lets the user load and edit the December entry', () => {
         const { fixture, component, responses, fetch, close } = setup();
-        responses[0].next(page());
+        const entries = page();
+        responses[0].next(entries);
         responses[0].complete();
         fixture.detectChanges();
         expect(component['items']()).toHaveLength(PAGE_SIZE);
@@ -62,8 +66,8 @@ describe('Weight measurement dialog pagination', () => {
             button.textContent.includes('MEASUREMENT_HISTORY_PAGING.MORE'),
         );
         more?.click();
-        expect(fetch).toHaveBeenLastCalledWith('2026-09-01');
-        const oldest = page()[PAGE_SIZE];
+        expect(fetch).toHaveBeenLastCalledWith('2025-12-31');
+        const oldest = entries[PAGE_SIZE];
         responses[1].next([oldest]);
         responses[1].complete();
         fixture.detectChanges();

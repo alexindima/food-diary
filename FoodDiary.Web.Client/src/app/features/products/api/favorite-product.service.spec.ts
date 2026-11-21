@@ -227,10 +227,14 @@ describe('Favorite product mutation errors', () => {
 });
 
 describe('FavoriteProductService API measurement units', () => {
-    it.each(['Ml', 'Pcs'])('normalizes %s in favorite pages and lists', wireUnit => {
+    it.each([
+        { wireUnit: 'Ml', expectedUnit: 'ML' },
+        { wireUnit: 'Pcs', expectedUnit: 'PCS' },
+        { wireUnit: 'Cup', expectedUnit: 'Cup' },
+    ])('maps the displayed unit $wireUnit to $expectedUnit without changing favorite portions', ({ wireUnit, expectedUnit }) => {
         let page: unknown;
         let all: unknown;
-        const item = { ...createFavoriteProduct(), baseUnit: wireUnit };
+        const item = { ...createFavoriteProduct(), baseUnit: wireUnit, preferredPortionAmount: CREATED_PORTION_AMOUNT };
         service.getPage(1).subscribe(value => {
             page = value;
         });
@@ -249,7 +253,13 @@ describe('FavoriteProductService API measurement units', () => {
         httpMock
             .expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100')
             .flush({ data: [item], page: 1, limit: 100, totalItems: 1, totalPages: 1 });
-        expect(page).toMatchObject({ data: [{ baseUnit: wireUnit.toUpperCase() }] });
-        expect(all).toMatchObject([{ baseUnit: wireUnit.toUpperCase() }]);
+        const expected = {
+            id: item.id,
+            baseUnit: expectedUnit,
+            preferredPortionAmount: CREATED_PORTION_AMOUNT,
+            defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
+        };
+        expect(page).toMatchObject({ data: [expected] });
+        expect(all).toMatchObject([expected]);
     });
 });

@@ -213,7 +213,7 @@ export class RecipeStepCardComponent {
     }
 
     protected onStepTitleInput(value: FdUiInputValue): void {
-        this.stepTitleChange.emit(value === null || value === undefined ? null : fdUiCoerceInputTextValue(value));
+        this.stepTitleChange.emit(fdUiCoerceInputTextValue(value));
     }
 
     protected onPhotosChange(images: ImageSelection[]): void {

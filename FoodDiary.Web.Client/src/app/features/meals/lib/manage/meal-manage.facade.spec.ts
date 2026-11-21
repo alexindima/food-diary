@@ -34,8 +34,6 @@ import { MealManageFacade } from './meal-manage.facade';
 const RECIPE_SERVING_WEIGHT = 50;
 const RECIPE_SERVING_AMOUNT = 2;
 const EXPECTED_RECIPE_AMOUNT = 100;
-const PRODUCT_PORTION_AMOUNT = 180;
-const MANUAL_RECIPE_WEIGHT = 75;
 const PRODUCT_AMOUNT = 200;
 const RECIPE_AMOUNT = 100;
 const PRODUCT_CALORIES_PER_BASE = 250;
@@ -197,7 +195,6 @@ describe('MealManageFacade', () => {
     registerItemSelectionTests();
     registerNutritionSummaryTests();
     registerNutritionBoundaryTests();
-    registerProductPortionBoundaryTests();
     registerManageDialogTests();
     registerManageBoundaryTests();
 });
@@ -295,32 +292,6 @@ function registerItemSelectionTests(): void {
 
             expect(recipeWeightService.loadServingMass).toHaveBeenCalledWith(recipe);
             expect(item).toMatchObject({ amount: EXPECTED_RECIPE_AMOUNT, recipeMass: servingMassFromObservation(RECIPE_SERVING_WEIGHT) });
-        });
-
-        it('should use product default portion amount after manual selection', async () => {
-            const product = {
-                ...createEmptyProductSnapshot(),
-                id: entityId<'product'>('p1'),
-                defaultPortionAmount: PRODUCT_PORTION_AMOUNT,
-                baseAmount: RECIPE_AMOUNT,
-            };
-            dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
-
-            const item = await facade.openItemSelectionDialogAsync('Product');
-
-            expect(item?.product).toBe(product);
-            expect(item?.amount).toBe(PRODUCT_PORTION_AMOUNT);
-        });
-
-        it('should convert one recipe serving to grams after manual selection', async () => {
-            const recipe = { ...createEmptyRecipeSnapshot(), id: entityId<'recipe'>('r1') };
-            dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Recipe', recipe }) });
-            recipeWeightService.loadServingMass.mockReturnValue(of(servingMassFromObservation(MANUAL_RECIPE_WEIGHT)));
-
-            const item = await facade.openItemSelectionDialogAsync('Recipe');
-
-            expect(item?.recipe).toBe(recipe);
-            expect(item?.amount).toBe(MANUAL_RECIPE_WEIGHT);
         });
     });
 }
@@ -475,10 +446,6 @@ function registerManageDialogTests(): void {
         await expect(result).resolves.toBeNull();
         expect(dialogService.open).not.toHaveBeenCalled();
     });
-    it.each([null, undefined])('cancelling product selection returns null: %s', async selection => {
-        dialogService.open.mockReturnValue({ afterClosed: () => of(selection) });
-        expect(await facade.openItemSelectionDialogAsync('Product')).toBeNull();
-    });
 }
 
 function registerManageBoundaryTests(): void {
@@ -610,24 +577,6 @@ function registerNutritionBoundaryTests(): void {
     });
 }
 
-function registerProductPortionBoundaryTests(): void {
-    it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])(
-        'falls back from an invalid default product portion %s',
-        async defaultPortionAmount => {
-            const product = { ...createNutritionProduct(), defaultPortionAmount };
-            dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
-            const selected = await facade.openItemSelectionDialogAsync('Product');
-            expect(selected?.amount).toBe(product.baseAmount);
-        },
-    );
-    it('uses one unit when both product amounts are unusable', async () => {
-        const product = { ...createNutritionProduct(), defaultPortionAmount: 0, baseAmount: 0 };
-        dialogService.open.mockReturnValue({ afterClosed: () => of({ type: 'Product', product }) });
-        const selected = await facade.openItemSelectionDialogAsync('Product');
-        expect(selected?.amount).toBe(1);
-    });
-}
-
 function setupColdFacade(lookupResult: Observable<RecipeLookup>): { facade: MealManageFacade; getById: ReturnType<typeof vi.fn> } {
     const getById = vi.fn().mockReturnValue(lookupResult);
     TestBed.configureTestingModule({
@@ -739,4 +688,21 @@ describe('MealManageFacade cold recipe amount loading', () => {
         expect(items[0]).toMatchObject({ product, amount: 125 });
         expect(getById).not.toHaveBeenCalled();
     });
+});
+
+it('retains the servings of a historical meal row without a recipe snapshot', async () => {
+    const { facade: coldFacade, getById } = setupColdFacade(of(lookup));
+    const storedItem: MealItem = { ...recipeItem, recipe: null };
+    const items = await firstValueFrom(coldFacade.prepareMealItems([storedItem]));
+
+    expect(items).toEqual([
+        {
+            sourceType: MealSourceType.Recipe,
+            recipe: null,
+            product: null,
+            amount: COLD_MEAL_SERVINGS,
+            recipeMass: UNKNOWN_SERVING_MASS,
+        },
+    ]);
+    expect(getById).not.toHaveBeenCalled();
 });

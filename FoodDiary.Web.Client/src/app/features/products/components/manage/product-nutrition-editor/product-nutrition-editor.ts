@@ -102,7 +102,7 @@ export class ProductNutritionEditorComponent {
     private buildNutritionModeOptions(): FdUiSegmentedToggleOption[] {
         const baseUnit = this.form().baseUnit().value();
         const amount = this.getDefaultBaseAmount(baseUnit);
-        const unitLabel = this.getUnitLabel(baseUnit);
+        const unitLabel = this.translateService.instant(`GENERAL.UNITS.${baseUnit}`);
 
         return [
             {
@@ -117,13 +117,6 @@ export class ProductNutritionEditorComponent {
                 label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.PORTION'),
             },
         ];
-    }
-
-    private getUnitLabel(baseUnit: MeasurementUnit | null): string {
-        if (baseUnit === null) {
-            return '';
-        }
-        return this.translateService.instant(`GENERAL.UNITS.${baseUnit}`);
     }
 
     private getDefaultBaseAmount(unit: MeasurementUnit): number {
@@ -195,13 +188,12 @@ export class ProductNutritionEditorComponent {
         return calculateMacroBarState(proteins, fats, carbs);
     }
 
-    private getNumberValue(value: number | string | null): number {
-        if (value === null || value === '') {
+    private getNumberValue(value: number | null): number {
+        if (value === null) {
             return 0;
         }
 
-        const normalized = typeof value === 'string' ? Number(value.replace(',', '.').replaceAll(/[^\d.-]/g, '')) : Number(value);
-        return Number.isFinite(normalized) ? Math.max(0, normalized) : 0;
+        return Number.isFinite(value) ? Math.max(0, value) : 0;
     }
 
     private getControlState(

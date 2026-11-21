@@ -1,9 +1,11 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import type { HydrationDailyHttpResponse } from '../../../shared/api/sdk/generated/model/hydration-daily-http-response';
 import type { HydrationDaily, HydrationEntry } from '../../../shared/models/hydration.data';
 import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
@@ -60,6 +62,19 @@ describe('HydrationService reading and additions', () => {
         const req = httpMock.expectOne(r => r.url === `${BASE_URL}/daily`);
         expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
         req.flush(MOCK_DAILY);
+    });
+
+    it.each([
+        { shape: 'null', goal: { goalMl: null } },
+        { shape: 'omitted', goal: {} },
+    ])('preserves recorded water after a successful read without a goal ($shape)', async ({ goal }) => {
+        const daily = firstValueFrom(service.getDaily(TEST_DATE));
+        const req = httpMock.expectOne(candidate => candidate.url === `${BASE_URL}/daily` && candidate.method === 'GET');
+        expect(req.request.params.get('dateUtc')).toBe('2026-03-28');
+        const response: HydrationDailyHttpResponse = { dateUtc: MOCK_DAILY.dateUtc, totalMl: MOCK_DAILY.totalMl, ...goal };
+        req.flush(response);
+
+        expect(await daily).toStrictEqual({ ...MOCK_DAILY, goalMl: null });
     });
 
     it('should return default daily on error', () => {

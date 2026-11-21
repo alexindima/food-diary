@@ -3,12 +3,12 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { GuardsCheckEnd, NavigationEnd, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { filter, firstValueFrom, of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, of, Subject, tap, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
@@ -211,6 +211,42 @@ describe('Premium activation return ownership', () => {
         expect(router.url).toBe(OTHER_ROUTE);
         expect(readOverview).toHaveBeenCalledOnce();
     });
+
+    it('ignores an activation response delivered while the router leaves the return screen', async () => {
+        const pending = new Subject<BillingOverview>();
+        const readOverview = vi.fn<PremiumBillingService['getOverview']>().mockReturnValueOnce(pending);
+        const { harness, router, refreshSession, createCheckout, toast } = await renderPremiumAsync(
+            '/premium?checkout=success',
+            readOverview,
+        );
+        const returnScreen = premiumRoot(harness);
+        expect(returnScreen.textContent).toContain('PREMIUM_PAGE.BANNERS.CHECKOUT_SUCCESS_MESSAGE');
+        expect(pending.observed).toBe(true);
+
+        const responseDelivered = firstValueFrom(
+            router.events.pipe(
+                filter(event => event instanceof GuardsCheckEnd && event.urlAfterRedirects === OTHER_ROUTE && event.shouldActivate),
+                tap(() => {
+                    // Fulfil the read while the previous outlet is still active, before the router replaces it.
+                    expect(harness.routeNativeElement).toBe(returnScreen);
+                    expect(pending.observed).toBe(true);
+                    pending.next(overview({ isPremium: true, subscriptionStatus: 'active' }));
+                    pending.complete();
+                }),
+            ),
+        );
+        await harness.navigateByUrl(OTHER_ROUTE);
+        await responseDelivered;
+        await redrawAsync(harness);
+
+        expect(harness.routeNativeElement?.textContent).toContain('Another page');
+        expect(router.url).toBe(OTHER_ROUTE);
+        expect(pending.observed).toBe(false);
+        expect(readOverview).toHaveBeenCalledOnce();
+        expect(refreshSession).not.toHaveBeenCalled();
+        expect(createCheckout).not.toHaveBeenCalled();
+        expect(toast.toasts()).toEqual([]);
+    });
 });
 
 describe('Premium rendered account and plan controls', () => {
@@ -281,6 +317,63 @@ describe('Premium rendered account and plan controls', () => {
         expect(document.activeElement).toBe(plans);
         expect(scroll).toHaveBeenCalledExactlyOnceWith({ behavior: 'smooth', block: 'start' });
         expect(createCheckout).not.toHaveBeenCalled();
+    });
+});
+
+describe('Premium trial and price recovery', () => {
+    it.each([
+        { response: 'an older free account snapshot', status: HttpStatusCode.Ok },
+        { response: 'a 503 response', status: HttpStatusCode.ServiceUnavailable },
+    ])('keeps a confirmed trial active after a price retry returns $response', async ({ status }) => {
+        const freeAccount = overview({ provider: 'paddle', paddleMonthlyPriceId: null, paddleYearlyPriceId: null });
+        const trialStart = '2026-11-20T12:00:00Z';
+        const trialEnd = '2026-11-27T12:00:00Z';
+        const trialAccount = overview({
+            ...freeAccount,
+            isPremium: true,
+            subscriptionStatus: 'trialing',
+            currentPeriodStartUtc: trialStart,
+            currentPeriodEndUtc: trialEnd,
+            premiumTrialStartUtc: trialStart,
+            premiumTrialEndUtc: trialEnd,
+            premiumTrialActive: true,
+            premiumTrialUsed: true,
+            canStartPremiumTrial: false,
+        });
+        const { harness, toast } = await renderPremiumAsync(PREMIUM_ROUTE, undefined, false, freeAccount);
+        const http = TestBed.inject(HttpTestingController);
+        const root = premiumRoot(harness);
+        const trialAction = 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION';
+        const startTrial = nativeButton(root, trialAction);
+        expect(startTrial.closest('[hidden]')).toBeNull();
+        expect(root.textContent).toContain('PREMIUM_PAGE.PLANS.PRICE_UNAVAILABLE');
+
+        startTrial.click();
+        const trial = http.expectOne({ method: 'POST', url: `${BILLING_URL}/trial` });
+        harness.detectChanges();
+        nativeButton(root, 'PREMIUM_PAGE.PLANS.PRICE_RETRY').click();
+        const staleOverview = http.expectOne({ method: 'GET', url: `${BILLING_URL}/overview` });
+
+        trial.flush(trialAccount);
+        await vi.waitFor(() => {
+            expect(toast.toasts().map(item => item.message)).toContain('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE');
+        });
+        if (status === HttpStatusCode.ServiceUnavailable) {
+            staleOverview.flush(null, { status, statusText: 'Service Unavailable' });
+        } else {
+            staleOverview.flush(freeAccount);
+        }
+        await redrawAsync(harness);
+
+        expect(root.textContent).toContain('PREMIUM_PAGE.STATUS.TRIALING');
+        expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_TITLE');
+        expect(root.textContent).not.toContain('PREMIUM_PAGE.ERROR_GENERIC');
+        const availableTrial = [...root.querySelectorAll('button')].find(
+            button => button.textContent.trim() === trialAction && button.closest('[hidden]') === null,
+        );
+        expect(availableTrial).toBeUndefined();
+        http.expectNone({ method: 'POST', url: `${BILLING_URL}/checkout-session` });
+        http.verify();
     });
 });
 

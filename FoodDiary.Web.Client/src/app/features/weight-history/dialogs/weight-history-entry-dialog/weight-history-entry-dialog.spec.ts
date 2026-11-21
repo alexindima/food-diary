@@ -110,6 +110,34 @@ describe('Weight entry WebMCP drafts', () => {
         expect(attach.mock.results[0].value).toHaveBeenCalledOnce();
     });
 
+    it('does not let a local draft fill replace the weight entered in the open dialog', () => {
+        const { fixture, facade, close, attach } = setup();
+        const host = fixture.nativeElement as HTMLElement;
+        const input = host.querySelector<HTMLInputElement>('fd-ui-input input');
+        const screen = attach.mock.calls[0][0];
+        const fillDraft = screen.fillDraft;
+        if (input === null || fillDraft === undefined) {
+            throw new Error('Expected the rendered weight input and its registered draft action');
+        }
+        expect(screen.isDirty?.()).toBe(false);
+        const date = facade.formModel().date;
+        const unit = TestBed.inject(MeasurementSystemService).system() === 'metric' ? 'kg' : 'lb';
+
+        input.value = '81.5';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(screen.isDirty?.()).toBe(true);
+
+        expect(() => {
+            fillDraft({ date: '2026-06-21', value: FIXTURE_TARGET_MEASUREMENT, unit });
+        }).toThrow('Unsaved measurement draft exists.');
+        fixture.detectChanges();
+        expect(screen.read()).toMatchObject({ date, value: '81.5' });
+        expect(input.value).toBe('81.5');
+        expect(facade.entrySaveVersion()).toBe(FIXTURE_INITIAL_VERSION);
+        expect(close).not.toHaveBeenCalled();
+    });
+
     it('preserves the owner draft while editing or saving and prevents navigation during save', () => {
         const { facade, close, attach } = setup();
         const screen = attach.mock.calls[0][0];

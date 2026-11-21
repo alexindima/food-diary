@@ -12,6 +12,7 @@ export type PublicAuthDialogOptions = {
     adminReturnUrl?: string | null;
     destroyRef?: DestroyRef;
     messageKey?: string;
+    canOpen?: () => boolean;
 };
 
 export type PublicAuthDialogRef = {
@@ -30,12 +31,13 @@ export class PublicAuthDialogService {
         adminReturnUrl = null,
         destroyRef,
         messageKey,
+        canOpen,
     }: PublicAuthDialogOptions): Promise<PublicAuthDialogRef | null> {
         if (!this.isBrowser) {
             return null;
         }
         const { AuthDialogComponent } = await import('../../auth/contracts/auth-dialog');
-        if (destroyRef?.destroyed === true) {
+        if (destroyRef?.destroyed === true || canOpen?.() === false) {
             return null;
         }
 

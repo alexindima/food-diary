@@ -24,7 +24,6 @@ import {
     type AuthRegisterResult,
     type GoogleLoginResult,
 } from './auth-lib/auth-flow.facade';
-import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
 
 const PASSWORD_CONTRACT_MAX_LENGTH = 256;
@@ -40,7 +39,6 @@ type AuthComponentTestContext = {
     };
     component: AuthComponent;
     fixture: ComponentFixture<AuthComponent>;
-    formManager: AuthFormManager;
     authServiceSpy: {
         mustChangePassword: ReturnType<typeof vi.fn>;
         requiresEmailVerification: ReturnType<typeof vi.fn>;
@@ -116,7 +114,7 @@ function createComponent(
     TestBed.overrideComponent(AuthComponent, {
         set: {
             ...(renderTemplate ? {} : { template: '' }),
-            providers: [AuthFormManager, { provide: AuthGoogleManager, useValue: googleManagerSpy }, ...locationProviders],
+            providers: [{ provide: AuthGoogleManager, useValue: googleManagerSpy }, ...locationProviders],
         },
     });
 
@@ -135,7 +133,6 @@ function createComponent(
         initializeGoogle,
         component: fixture.componentInstance,
         fixture,
-        formManager: fixture.debugElement.injector.get(AuthFormManager),
         navigationServiceSpy,
         routerSpy,
         dialogRefSpy,
@@ -633,26 +630,26 @@ describe('AuthComponent register', () => {
         expect(component['registerForm'].email().getError('userExists')).toBeDefined();
     });
 
-    it('should not show register field errors while typing before blur or submit', () => {
-        const { component, formManager } = createComponent('register');
+    it('keeps the registration password field free of errors while typing before blur', () => {
+        const { fixture } = createComponent('register', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const password = updateRegistrationInput(host, 'password', 'abc');
+        fixture.detectChanges();
 
-        component['registerModel'].update(value => ({ ...value, password: 'abc' }));
-        component['registerForm'].password().markAsDirty();
-        formManager.updateFieldErrors();
-
-        expect(component['registerForm'].password().dirty()).toBe(true);
-        expect(component['registerForm'].password().touched()).toBe(false);
-        expect(component['registerFieldErrors']().password).toBeNull();
+        expect(password.getAttribute('aria-invalid')).toBeNull();
+        expect(host.textContent).not.toContain('FORM_ERRORS.PASSWORD.MIN_LENGTH');
     });
 
-    it('should show register field errors after blur', () => {
-        const { component, formManager } = createComponent('register');
+    it('shows the registration password error after leaving the field', () => {
+        const { fixture } = createComponent('register', true);
+        const host = fixture.nativeElement as HTMLElement;
+        const password = updateRegistrationInput(host, 'password', 'abc');
+        password.focus();
+        password.blur();
+        fixture.detectChanges();
 
-        component['registerModel'].update(value => ({ ...value, password: 'abc' }));
-        component['registerForm'].password().markAsTouched();
-        formManager.updateFieldErrors();
-
-        expect(component['registerFieldErrors']().password).toContain('FORM_ERRORS.PASSWORD.MIN_LENGTH');
+        expect(password.getAttribute('aria-invalid')).toBe('true');
+        expect(host.textContent).toContain('FORM_ERRORS.PASSWORD.MIN_LENGTH');
     });
 
     it('should show register field errors after invalid submit', async () => {
@@ -751,13 +748,14 @@ function fillRegistration(host: HTMLElement, email: string, password: string): v
     terms.click();
 }
 
-function updateRegistrationInput(host: HTMLElement, type: 'email' | 'password', value: string): void {
+function updateRegistrationInput(host: HTMLElement, type: 'email' | 'password', value: string): HTMLInputElement {
     const input = host.querySelector<HTMLInputElement>(`input[type="${type}"]`);
     if (input === null || input.disabled) {
         throw new Error(`Expected an editable registration ${type} input`);
     }
     input.value = value;
     input.dispatchEvent(new Event('input', { bubbles: true }));
+    return input;
 }
 
 describe('AuthComponent register results', () => {
@@ -1703,15 +1701,21 @@ describe('Reselecting the active authentication tab', () => {
 });
 
 describe('Password reset from an autofilled login', () => {
-    it('prefills password reset with the visible autofilled address', async () => {
+    it('prefills password reset once when the autofilled login control is activated twice before redraw', async () => {
         const { fixture, authFlowFacadeSpy } = createComponent('login', true, { useRouting: false });
         const host = fixture.nativeElement as HTMLElement;
         enterAuthEmail(fixture, 'previous-address@example.test');
 
         const autofilledAddress = 'autofilled-address@example.test';
-        loginInput(host, 'email').value = autofilledAddress;
+        const loginEmail = loginInput(host, 'email');
+        loginEmail.value = autofilledAddress;
         authFlowFacadeSpy.requestPasswordReset.mockReturnValueOnce(of('success'));
-        authButton(host, 'button', 'AUTH.LOGIN.FORGOT_PASSWORD').click();
+        const forgotPassword = authButton(host, 'button', 'AUTH.LOGIN.FORGOT_PASSWORD');
+        forgotPassword.click();
+        loginEmail.value = 'later-autofilled-address@example.test';
+        expect(forgotPassword.isConnected).toBe(true);
+        expect(forgotPassword.disabled).toBe(false);
+        forgotPassword.click();
         fixture.detectChanges();
 
         expect(host.querySelector('fd-auth-password-reset-form')).not.toBeNull();

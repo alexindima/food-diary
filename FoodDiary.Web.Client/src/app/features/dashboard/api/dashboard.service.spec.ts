@@ -1,6 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
@@ -156,6 +157,21 @@ describe('DashboardService composed snapshot', () => {
         expect(snapshot.hydrationHistory).toEqual(wire.hydrationHistory);
         expect(snapshot.dashboardLayout).toStrictEqual({ web: ['hydration'], mobile: undefined, setupHintDismissed: undefined });
         expect(snapshot.tdeeInsight).toMatchObject({ confidence: 'medium', dataDaysUsed: 14, estimatedTdee: 2150, adaptiveTdee: null });
+    });
+
+    it('preserves the saved mobile order when a user has no web layout', async () => {
+        const snapshot = firstValueFrom(
+            service.getSnapshotSilentlyStrict({ date: TEST_DATE, timeZoneOffsetMinutes: TEST_TIME_ZONE_OFFSET_MINUTES }),
+        );
+        const mobile = ['meals', 'hydration'];
+        const wire: DashboardSnapshotHttpResponse = {
+            ...dashboardSnapshotFixture(),
+            dashboardLayout: { web: null, mobile, setupHintDismissed: true },
+        };
+        httpMock.expectOne(candidate => candidate.url === BASE_URL && candidate.method === 'GET').flush(wire);
+
+        const result = await snapshot;
+        expect(result.dashboardLayout).toStrictEqual({ web: undefined, mobile, setupHintDismissed: true });
     });
 
     it('rejects an incomplete hydration entry and accepts the complete snapshot when retried', () => {

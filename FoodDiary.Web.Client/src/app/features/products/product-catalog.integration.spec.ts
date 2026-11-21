@@ -1,13 +1,21 @@
 import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { type CanActivateFn, type ParamMap, provideRouter, Router, type Routes, withComponentInputBinding } from '@angular/router';
+import {
+    type CanActivateFn,
+    GuardsCheckEnd,
+    type ParamMap,
+    provideRouter,
+    Router,
+    type Routes,
+    withComponentInputBinding,
+} from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, type Observable, of, Subject, tap, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
@@ -1277,6 +1285,40 @@ describe('Catalog deletion and route ownership', () => {
         expect(catalogRoot(harness).textContent).not.toContain(RECENT_ITEM.name);
         expect(showError).not.toHaveBeenCalled();
     });
+});
+
+it('ignores a deletion failure delivered while the router leaves the catalog', async () => {
+    const { openDialog, products, showError } = configureCatalog();
+    const deletion = new Subject<void>();
+    products.deleteById.mockReturnValueOnce(deletion);
+    openDialog.mockReturnValueOnce({ afterClosed: () => of(new ProductDetailActionResult(RECENT_ITEM.id, 'Delete')) });
+    const harness = await RouterTestingHarness.create('/products');
+    const catalog = catalogRoot(harness);
+    button(catalog, '.recent-products__open').click();
+    await vi.waitFor(() => {
+        expect(products.deleteById).toHaveBeenCalledExactlyOnceWith(RECENT_ITEM.id);
+        expect(deletion.observed).toBe(true);
+    });
+
+    const router = TestBed.inject(Router);
+    const responseDelivered = firstValueFrom(
+        router.events.pipe(
+            filter(event => event instanceof GuardsCheckEnd && event.urlAfterRedirects === '/other' && event.shouldActivate),
+            tap(() => {
+                expect(harness.routeNativeElement).toBe(catalog);
+                expect(deletion.observed).toBe(true);
+                deletion.error(new Error('Product could not be deleted'));
+            }),
+        ),
+    );
+    await harness.navigateByUrl('/other');
+    await responseDelivered;
+    await harness.fixture.whenStable();
+
+    expect(catalogRoot(harness).textContent).toContain('Other page');
+    expect(router.url).toBe('/other');
+    expect(showError).not.toHaveBeenCalled();
+    expect(products.queryOverview).toHaveBeenCalledOnce();
 });
 
 describe('Creating a product from the catalog', () => {

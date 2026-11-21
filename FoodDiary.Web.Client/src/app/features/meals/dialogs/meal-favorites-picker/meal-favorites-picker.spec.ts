@@ -58,7 +58,53 @@ describe('MealFavoritesPickerComponent', () => {
     registerUndoRenderingTests();
     registerUndoPositionTests();
     registerPickerAsyncTests();
+    registerSearchRecoveryTest();
 });
+
+function registerSearchRecoveryTest(): void {
+    it('retries a failed favorite-meal search and shows the full list after clearing it', async () => {
+        api.getPage
+            .mockReturnValueOnce(of({ data: [favorite], totalItems: 1 }))
+            .mockReturnValueOnce(throwError(() => new Error('Offline while searching')))
+            .mockReturnValueOnce(of({ data: [], totalItems: 0 }));
+        vi.useFakeTimers();
+        try {
+            const fixture = TestBed.createComponent(MealFavoritesPickerComponent);
+            fixture.detectChanges();
+            const host = fixture.nativeElement as HTMLElement;
+            const input = host.querySelector<HTMLInputElement>('input[aria-label="MEAL_FAVORITES.SEARCH"]');
+            if (input === null) {
+                throw new Error('Expected the favorite-meal search field');
+            }
+            expect(host.querySelector('fd-favorite-meal-row')?.textContent).toContain('Rice');
+
+            input.value = '  soup  ';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            fixture.detectChanges();
+            expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'soup');
+            expect(host.querySelector('[role="alert"]')?.textContent).toContain('MEAL_FAVORITES.LOAD_ERROR');
+            const retry = Array.from(host.querySelectorAll('button')).find(button => button.textContent.trim() === 'MEAL_FAVORITES.RETRY');
+            if (retry === undefined) {
+                throw new Error('Expected a retry action after the search error');
+            }
+            retry.click();
+            fixture.detectChanges();
+            expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, 'soup');
+            expect(host.textContent).toContain('MEAL_FAVORITES.NO_RESULTS');
+
+            input.value = '';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await vi.advanceTimersByTimeAsync(SEARCH_DELAY_MS);
+            fixture.detectChanges();
+            expect(api.getPage).toHaveBeenLastCalledWith(1, PAGE_SIZE, '');
+            expect(host.querySelector('[role="alert"]')).toBeNull();
+            expect(host.querySelector('fd-favorite-meal-row')?.textContent).toContain('Rice');
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+}
 
 function registerUndoPositionTests(): void {
     it('keeps a tombstone on the last page without fetching replacement rows', () => {

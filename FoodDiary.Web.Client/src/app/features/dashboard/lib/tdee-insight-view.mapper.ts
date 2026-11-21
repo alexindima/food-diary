@@ -7,13 +7,12 @@ export function getEffectiveTdee(insight: TdeeInsight | null | undefined): numbe
     return insight?.adaptiveTdee ?? insight?.estimatedTdee ?? null;
 }
 
-export function formatTdeeWeightTrend(value: number | null | undefined): string | null {
-    if (value === null || value === undefined) {
+export function getTdeeWeightTrendKg(value: number | null | undefined): number | null {
+    if (value === null || value === undefined || !Number.isFinite(value)) {
         return null;
     }
 
-    const sign = value > 0 ? '+' : '';
-    return `${sign}${value.toFixed(TDEE_WEIGHT_TREND_FRACTION_DIGITS)}`;
+    return Number(value.toFixed(TDEE_WEIGHT_TREND_FRACTION_DIGITS));
 }
 
 export function buildTdeeHintKey(hint: string | null | undefined = ''): string | null {

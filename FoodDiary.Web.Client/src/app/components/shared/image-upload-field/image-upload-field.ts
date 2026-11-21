@@ -211,11 +211,25 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         if (this.disabled() || this.isUploading() || files.length === 0) {
             return;
         }
-        if (this.requireHealthConsent() && !(await this.confirmUploadConsentAsync())) {
-            return;
+        if (this.requireHealthConsent()) {
+            const revision = ++this.uploadRevision;
+            const privacy = this.injector.get(PrivacyConsentFacade);
+            const allowed = await privacy.ensureHealthConsentAsync(true);
+            if (!this.isCurrentUpload(revision) || this.disabled() || this.isUploading()) {
+                return;
+            }
+            if (!allowed) {
+                this.reportUploadConsentFailure(privacy);
+                return;
+            }
         }
+
+        this.startSelectedFiles(files);
+    }
+
+    private startSelectedFiles(files: File[]): void {
         if (!this.multiple() || this.cropEnabled()) {
-            this.handleIncomingFile(files[0]);
+            void this.handleIncomingFileAsync(files[0]);
             return;
         }
         if (files.length > this.maxFiles()) {
@@ -225,17 +239,10 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         void this.uploadBatchAsync(files);
     }
 
-    private async confirmUploadConsentAsync(): Promise<boolean> {
-        const revision = ++this.uploadRevision;
-        const privacy = this.injector.get(PrivacyConsentFacade);
-        const allowed = await privacy.ensureHealthConsentAsync(true);
-        if (!this.isCurrentUpload(revision) || this.disabled() || this.isUploading()) {
-            return false;
-        }
-        if (!allowed && privacy.failed()) {
+    private reportUploadConsentFailure(privacy: PrivacyConsentFacade): void {
+        if (privacy.failed()) {
             this.error.set(this.translateService.instant(privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR'));
         }
-        return allowed;
     }
 
     private async uploadBatchAsync(files: File[]): Promise<void> {
@@ -460,6 +467,17 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         fileInput.click();
     }
 
+    protected onZoneKeydown(event: Event, fileInput: HTMLInputElement, preventDefault = false): void {
+        if (event.target !== event.currentTarget) {
+            return;
+        }
+
+        this.onZoneClick(fileInput);
+        if (preventDefault) {
+            event.preventDefault();
+        }
+    }
+
     protected onDeleteClick(event: Event): void {
         event.stopPropagation();
         if (this.disabled() || this.isUploading()) {
@@ -468,15 +486,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         this.clearImage();
     }
 
-    protected handleIncomingFile(file: File): void {
-        void this.handleIncomingFileAsync(file);
-    }
-
     private async handleIncomingFileAsync(file: File): Promise<void> {
-        if (this.disabled() || this.isUploading()) {
-            return;
-        }
-
         this.error.set(null);
         if (!this.validateUploadType(file)) {
             return;

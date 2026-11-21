@@ -13,6 +13,13 @@ import { LandingStepsComponent } from '../../components/landing-steps/landing-st
 import { PublicAuthDialogService, type PublicAuthMode } from '../../lib/public-auth-dialog.service';
 import { LANDING_FAQ_ITEMS, LANDING_SEO_GUIDES } from './landing-main.config';
 
+type LandingAuthRequest = {
+    key: string;
+    mode: PublicAuthMode;
+    returnUrl: string | null;
+    adminReturnUrl: string | null;
+};
+
 @Component({
     selector: 'fd-main',
     imports: [
@@ -37,7 +44,7 @@ export class MainComponent {
     protected readonly faqItems = LANDING_FAQ_ITEMS;
     protected readonly seoGuides = LANDING_SEO_GUIDES;
     private authDialogOpen = false;
-    private handledAuthQueryKey: string | null = null;
+    private authRequest: LandingAuthRequest | null = null;
 
     public constructor() {
         effect(() => {
@@ -55,32 +62,44 @@ export class MainComponent {
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             const authParam = params.get('auth');
             if (authParam === null) {
-                this.handledAuthQueryKey = null;
+                this.authRequest = null;
                 return;
             }
 
             const mode: PublicAuthMode = authParam === 'register' ? 'register' : 'login';
             const returnUrl = params.get('returnUrl');
             const adminReturnUrl = params.get('adminReturnUrl');
-            const authQueryKey = this.createAuthQueryKey(mode, returnUrl, adminReturnUrl);
-            if (authQueryKey === this.handledAuthQueryKey) {
+            const key = JSON.stringify({ mode, returnUrl, adminReturnUrl });
+            if (this.authRequest?.key === key) {
                 return;
             }
 
-            this.handledAuthQueryKey = authQueryKey;
-            void this.openAuthDialogAsync(mode, returnUrl, adminReturnUrl);
+            const request = { key, mode, returnUrl, adminReturnUrl };
+            this.authRequest = request;
+            void this.openAuthDialogAsync(request);
         });
     }
 
-    private async openAuthDialogAsync(mode: PublicAuthMode, returnUrl: string | null, adminReturnUrl: string | null): Promise<void> {
+    private async openAuthDialogAsync(request: LandingAuthRequest): Promise<void> {
         if (this.authDialogOpen) {
             return;
         }
 
         this.authDialogOpen = true;
-        const dialogRef = await this.authDialogService.openAsync({ mode, returnUrl, adminReturnUrl, destroyRef: this.destroyRef });
+        const { mode, returnUrl, adminReturnUrl } = request;
+        const dialogRef = await this.authDialogService.openAsync({
+            mode,
+            returnUrl,
+            adminReturnUrl,
+            destroyRef: this.destroyRef,
+            canOpen: () => this.authRequest === request,
+        });
         if (dialogRef === null || this.destroyRef.destroyed) {
             this.authDialogOpen = false;
+            const replacement = this.authRequest;
+            if (replacement !== null && replacement !== request && !this.destroyRef.destroyed) {
+                void this.openAuthDialogAsync(replacement);
+            }
             return;
         }
 
@@ -100,9 +119,5 @@ export class MainComponent {
                     replaceUrl: true,
                 });
             });
-    }
-
-    private createAuthQueryKey(mode: PublicAuthMode, returnUrl: string | null, adminReturnUrl: string | null): string {
-        return JSON.stringify({ mode, returnUrl, adminReturnUrl });
     }
 }

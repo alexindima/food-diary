@@ -111,6 +111,23 @@ describe('GamificationHabitPathComponent', () => {
 });
 
 describe('Mounted gamification progress', () => {
+    it('shows earned badges from older snapshots without inventing achievement dates', () => {
+        const fixture = createComponent();
+        const legacyBadges = BADGES.filter(badge => badge.category !== 'academy').map(({ key, category, threshold, isEarned }) => ({
+            key,
+            category,
+            threshold,
+            isEarned,
+        }));
+        fixture.componentRef.setInput('badges', legacyBadges);
+        fixture.detectChanges();
+
+        const element = getElement(fixture);
+        const recentTitles = Array.from(element.querySelectorAll('.habit-path__recent-copy strong'), title => title.textContent.trim());
+        expect(recentTitles).toEqual(['GAMIFICATION.BADGE_STREAK_3', 'GAMIFICATION.BADGE_MEALS_10']);
+        expect(element.querySelector('.habit-path__recent-item time')).toBeNull();
+    });
+
     it('updates the earned badge date and streak label when switching languages', () => {
         registerLocaleData(localeRu);
         const translate = TestBed.inject(TranslateService);

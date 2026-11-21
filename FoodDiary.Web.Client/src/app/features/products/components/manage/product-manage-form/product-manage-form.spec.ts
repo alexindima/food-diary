@@ -1718,6 +1718,35 @@ describe('Product editor nutrition input', () => {
     });
 });
 
+it('clears the calorie mismatch when an optional protein value is removed and saves normalized nutrition', async () => {
+    const { el, fixture, productManageFacade } = await setupComponentAsync();
+    fixture.componentRef.setInput('product', { ...PRODUCT, fatsPerBase: 0, carbsPerBase: 0 });
+    fixture.detectChanges();
+    const proteins = requiredProductInput(el, '.nutrition-editor__input--proteins input');
+    const warning = (): Element | null => el.querySelector('.nutrition-editor-messages__warning');
+    expect(proteins.value).toBe(String(PRODUCT.proteinsPerBase));
+    expect(warning()?.textContent).toContain('NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING');
+
+    enterProductValue(proteins, '');
+    fixture.detectChanges();
+    expect(proteins.value).toBe('');
+    expect(warning()).toBeNull();
+
+    requiredFormButton(el, 'button[type="submit"]').click();
+    await fixture.whenStable();
+    expect(productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ id: PRODUCT.id }),
+        expect.objectContaining({
+            caloriesPerBase: PRODUCT.caloriesPerBase,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+        }),
+        expect.any(Boolean),
+        expect.any(Function),
+    );
+});
+
 describe('Product editor zero serving recovery', () => {
     it('preserves per-base nutrition when correcting a rejected zero serving', async () => {
         const editor = await setupComponentAsync();

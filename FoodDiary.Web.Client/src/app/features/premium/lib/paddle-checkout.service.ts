@@ -117,21 +117,18 @@ export class PaddleCheckoutService {
             return;
         }
 
-        if (this.initializationPromise !== null) {
+        while (this.initializationPromise !== null) {
             await this.initializationPromise;
             if (this.initializedToken === options.token && this.initializedEnvironment === options.environment) {
                 return;
             }
         }
 
-        const initialization = this.initializePaddleAsync(options);
-        this.initializationPromise = initialization;
+        this.initializationPromise = this.initializePaddleAsync(options);
         try {
-            await initialization;
+            await this.initializationPromise;
         } finally {
-            if (this.initializationPromise === initialization) {
-                this.initializationPromise = null;
-            }
+            this.initializationPromise = null;
         }
     }
 

@@ -192,6 +192,41 @@ describe('Application router public pages', () => {
     });
 });
 
+describe('Application router not-found recovery', () => {
+    it.each([
+        ['NOT_FOUND.GO_HOME', '/', 'fd-main', 'LANDING_HERO.HEADLINE'],
+        ['NOT_FOUND.VIEW_FOOD_DIARY', '/food-diary', 'fd-seo-landing-page', 'NUTRITION_DIARY_PAGE.TITLE'],
+    ] as const)('recovers an English guest from an unknown URL through %s', async (label, target, selector, heading) => {
+        const { localization, navigation, authDialog } = setupRouting();
+        const router = TestBed.inject(Router);
+        const bookmark = '/no-longer-available';
+        const harness = await RouterTestingHarness.create(bookmark);
+        const missing = renderedRoute(harness);
+
+        expect(router.url).toBe(bookmark);
+        expect(missing.matches('fd-not-found')).toBe(true);
+        expect(missing.querySelector('h1')?.textContent.trim()).toBe('NOT_FOUND.TITLE');
+        expect(localization.applyLanguagePreferenceAsync).toHaveBeenCalledExactlyOnceWith('en');
+        expect(TestBed.inject(TranslateService).getCurrentLang()).toBe('en');
+
+        const action = Array.from(missing.querySelectorAll<HTMLButtonElement>('fd-ui-button button')).find(
+            button => button.textContent.trim() === label,
+        );
+        expect(action).toBeInstanceOf(HTMLButtonElement);
+        action?.click();
+
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(router.url).toBe(target);
+            expect(renderedRoute(harness).matches(selector)).toBe(true);
+        });
+        expect(renderedRoute(harness).querySelector('h1')?.textContent.trim()).toBe(heading);
+        expect(TestBed.inject(TranslateService).getCurrentLang()).toBe('en');
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        expect(authDialog.openAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('Application router guest recipe catalog', () => {
     it('renders a missing recipe bookmark and returns to the filtered catalog through Back', async () => {
         const { navigation, privacy } = setupRouting();

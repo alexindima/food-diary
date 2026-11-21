@@ -1,6 +1,6 @@
-import { computed, DestroyRef, inject, linkedSignal, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, linkedSignal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { email, form, maxLength, minLength, required, validate } from '@angular/forms/signals';
+import { email, type FieldTree, form, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import {
     FD_VALIDATION_ERRORS,
@@ -10,7 +10,14 @@ import {
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import { AUTH_PASSWORD_MAX_LENGTH, AUTH_PASSWORD_MIN_LENGTH } from '../../../../../shared/auth/auth.constants';
-import type { LoginFieldErrors, PasswordResetFieldErrors, RegisterFieldErrors } from './auth.types';
+import type {
+    LoginFieldErrors,
+    LoginFormValues,
+    PasswordResetFieldErrors,
+    PasswordResetFormValues,
+    RegisterFieldErrors,
+    RegisterFormValues,
+} from './auth.types';
 import { LOGIN_ERROR_FIELDS, PASSWORD_RESET_ERROR_FIELDS, REGISTER_ERROR_FIELDS } from './auth-form.config';
 import {
     createEmptyLoginFieldErrors,
@@ -22,88 +29,26 @@ import {
 } from './auth-form.factory';
 
 type AuthFormSubmissionActions = {
-    login: () => Promise<void>;
-    passwordReset: () => Promise<void>;
-    register: () => Promise<void>;
+    loginAsync: () => Promise<void>;
+    requestPasswordResetAsync: () => Promise<void>;
+    registerAsync: () => Promise<void>;
 };
 
-@Service()
 export class AuthFormManager {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly fieldErrorsVersion = signal(0);
     private readonly languageVersion = signal(0);
-    private loginSubmissionActionAsync: () => Promise<void> = async () => {};
-    private passwordResetSubmissionActionAsync: () => Promise<void> = async () => {};
-    private registerSubmissionActionAsync: () => Promise<void> = async () => {};
-    private readonly submitLoginFormAsync = async (): Promise<void> => {
-        await this.loginSubmissionActionAsync();
-    };
-    private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
-        await this.passwordResetSubmissionActionAsync();
-    };
-    private readonly submitRegisterFormAsync = async (): Promise<void> => {
-        await this.registerSubmissionActionAsync();
-    };
 
     public readonly loginModel = signal(createLoginFormModel());
     public readonly registerModel = signal(createRegisterFormModel());
     public readonly passwordResetModel = signal(createPasswordResetFormModel());
     private readonly registerEmail = computed(() => this.registerModel().email);
     private readonly registerEmailExists = linkedSignal({ source: this.registerEmail, computation: (): boolean => false });
-    public readonly loginForm = form(
-        this.loginModel,
-        path => {
-            required(path.email);
-            email(path.email);
-            required(path.password);
-            minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
-            maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
-        },
-        {
-            submission: {
-                action: this.submitLoginFormAsync,
-                ignoreValidators: 'all',
-            },
-        },
-    );
-    public readonly registerForm = form(
-        this.registerModel,
-        path => {
-            required(path.email);
-            email(path.email);
-            validate(path.email, () => (this.registerEmailExists() ? { kind: 'userExists' } : undefined));
-            required(path.password);
-            minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
-            maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
-            validate(path.agreeTerms, ({ value }) => (value() ? undefined : { kind: 'required' }));
-        },
-        {
-            submission: {
-                action: this.submitRegisterFormAsync,
-                onInvalid: () => {
-                    this.registerForm().markAsTouched();
-                    this.updateFieldErrors();
-                },
-            },
-        },
-    );
-    public readonly passwordResetForm = form(
-        this.passwordResetModel,
-        path => {
-            required(path.email);
-            email(path.email);
-        },
-        {
-            submission: {
-                action: this.submitPasswordResetFormAsync,
-                onInvalid: () => {
-                    this.updateFieldErrors();
-                },
-            },
-        },
-    );
+    public readonly loginForm: FieldTree<LoginFormValues>;
+    public readonly registerForm: FieldTree<RegisterFormValues>;
+    public readonly passwordResetForm: FieldTree<PasswordResetFormValues>;
     public readonly loginFieldErrors = computed<LoginFieldErrors>(() => {
         this.fieldErrorsVersion();
         this.languageVersion();
@@ -135,7 +80,60 @@ export class AuthFormManager {
         }, createEmptyPasswordResetFieldErrors());
     });
 
-    public constructor() {
+    public constructor(actions: AuthFormSubmissionActions) {
+        this.loginForm = form(
+            this.loginModel,
+            path => {
+                required(path.email);
+                email(path.email);
+                required(path.password);
+                minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
+                maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
+            },
+            {
+                submission: {
+                    action: actions.loginAsync,
+                    ignoreValidators: 'all',
+                },
+            },
+        );
+        this.registerForm = form(
+            this.registerModel,
+            path => {
+                required(path.email);
+                email(path.email);
+                validate(path.email, () => (this.registerEmailExists() ? { kind: 'userExists' } : undefined));
+                required(path.password);
+                minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
+                maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
+                validate(path.agreeTerms, ({ value }) => (value() ? undefined : { kind: 'required' }));
+            },
+            {
+                submission: {
+                    action: actions.registerAsync,
+                    onInvalid: () => {
+                        this.registerForm().markAsTouched();
+                        this.updateFieldErrors();
+                    },
+                },
+            },
+        );
+        this.passwordResetForm = form(
+            this.passwordResetModel,
+            path => {
+                required(path.email);
+                email(path.email);
+            },
+            {
+                submission: {
+                    action: actions.requestPasswordResetAsync,
+                    onInvalid: () => {
+                        this.updateFieldErrors();
+                    },
+                },
+            },
+        );
+
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
@@ -146,12 +144,6 @@ export class AuthFormManager {
         this.registerForm().reset(createRegisterFormModel());
         this.passwordResetForm().reset(createPasswordResetFormModel());
         this.registerEmailExists.set(false);
-    }
-
-    public configureSubmissionActions(actions: AuthFormSubmissionActions): void {
-        this.loginSubmissionActionAsync = actions.login;
-        this.passwordResetSubmissionActionAsync = actions.passwordReset;
-        this.registerSubmissionActionAsync = actions.register;
     }
 
     public setRegisterEmailExistsError(submittedEmail: string): void {

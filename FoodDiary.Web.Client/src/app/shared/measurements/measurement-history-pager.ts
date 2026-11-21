@@ -1,6 +1,7 @@
 import { computed, DestroyRef, inject, signal } from '@angular/core';
 import { finalize, type Observable } from 'rxjs';
 
+import { measurementDateInputValue } from '../lib/measurement-date.utils';
 import type { CalendarDate } from '../models/semantics/date-value';
 import { calendarDate } from '../models/semantics/date-value';
 import { MEASUREMENT_HISTORY_PAGE_SIZE } from './measurement-history.constants';
@@ -9,9 +10,9 @@ type DatedMeasurement = { id: string; date: CalendarDate };
 
 /** Date is unique per user in both measurement tables. Keep pagination independent of local time. */
 export function previousMeasurementDay(value: CalendarDate): CalendarDate {
-    const date = new Date(`${value.split('T')[0]}T00:00:00.000Z`);
+    const date = new Date(`${measurementDateInputValue(value)}T00:00:00.000Z`);
     date.setUTCDate(date.getUTCDate() - 1);
-    return calendarDate(date.toISOString().split('T')[0] ?? '');
+    return calendarDate(measurementDateInputValue(date.toISOString()));
 }
 
 /** Dialog-owned rows include one hidden lookahead for the final visible row's delta. */

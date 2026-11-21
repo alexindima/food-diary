@@ -10,19 +10,14 @@ export function buildAdminSignInUrl(adminOrigin: URL, path: string, expectedUser
     return url;
 }
 
-export function buildAdminUnauthorizedUrl(
-    returnUrl: string,
-    reason: AdminUnauthorizedReason,
-    adminAppUrl: string,
-    fallbackOrigin: string,
-): string {
-    const unauthorizedUrl = new URL('/unauthorized', adminAppUrl.length > 0 ? adminAppUrl : fallbackOrigin);
+export function buildAdminUnauthorizedUrl(returnUrl: string, reason: AdminUnauthorizedReason, adminAppUrl: string): string {
+    const unauthorizedUrl = new URL('/unauthorized', adminAppUrl);
     unauthorizedUrl.searchParams.set('reason', reason);
     unauthorizedUrl.searchParams.set('returnUrl', returnUrl);
     return unauthorizedUrl.toString();
 }
 
-export function normalizeAdminReturnUrl(value: string, adminAppUrl: string, fallbackOrigin: string): string {
+export function normalizeAdminReturnUrl(value: string, adminAppUrl: string): string {
     if (value.length === 0) {
         return '/';
     }
@@ -33,12 +28,10 @@ export function normalizeAdminReturnUrl(value: string, adminAppUrl: string, fall
     }
 
     try {
-        const parsed = new URL(decoded, adminAppUrl.length > 0 ? adminAppUrl : fallbackOrigin);
-        if (adminAppUrl.length > 0) {
-            const adminOrigin = new URL(adminAppUrl).origin;
-            if (parsed.origin !== adminOrigin) {
-                return '/';
-            }
+        const parsed = new URL(decoded, adminAppUrl);
+        const adminOrigin = new URL(adminAppUrl).origin;
+        if (parsed.origin !== adminOrigin) {
+            return '/';
         }
 
         const search = parsed.searchParams.toString();

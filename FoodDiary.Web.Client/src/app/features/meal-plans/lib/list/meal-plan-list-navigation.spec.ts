@@ -122,6 +122,33 @@ describe('MealPlanListFacade route list state', () => {
 });
 
 describe('MealPlanListFacade result identity', () => {
+    it('ignores an obsolete page limit delivered while a newer browser filter is being reconciled', async () => {
+        const old = new Subject<PageOf<MealPlanSummary>>();
+        const pending = new Subject<PageOf<MealPlanSummary>>();
+        getPage.mockReturnValueOnce(old).mockReturnValueOnce(pending);
+        const facade = TestBed.inject(MealPlanListFacade);
+        await settleAsync();
+        expect(old.observed).toBe(true);
+        const next: MealPlanListQuery = { page: 1, dietType: 'Keto', source: 'saved' };
+
+        current.set(next);
+        changes.next(next);
+        old.next(response(initial.page, 1));
+        old.complete();
+
+        expect(current()).toEqual(next);
+        expect(facade.totalItems()).toBe(0);
+        expect(writeAsync).not.toHaveBeenCalledWith(expect.anything(), { replaceUrl: true });
+        await settleAsync();
+        expect(pending.observed).toBe(true);
+        expect(getPage).toHaveBeenLastCalledWith('Keto', next.page, PAGE_SIZE, false);
+        pending.next(response(next.page));
+        pending.complete();
+        await settleAsync();
+        expect(current()).toEqual(next);
+        expect(facade.totalItems()).toBe(TOTAL_ITEMS);
+    });
+
     it('never exposes another diet count while a browser query loads or fails', async () => {
         const facade = TestBed.inject(MealPlanListFacade);
         await settleAsync();

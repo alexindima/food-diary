@@ -119,6 +119,30 @@ describe('ProductCardComponent', () => {
         expect(opened).not.toHaveBeenCalled();
     });
 
+    it('ignores the mounted thumbnail when the current product has lost its cover', async () => {
+        const { component, el, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('imageUrl', '/saved-cover.jpg');
+        const dialogOpen = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+        fixture.detectChanges();
+
+        const thumbnail = el.querySelector<HTMLElement>('.entity-card__thumb[role="button"]');
+        if (thumbnail === null) {
+            throw new Error('Expected the product thumbnail to be interactive');
+        }
+        fixture.componentRef.setInput('imageUrl', null);
+        expect(thumbnail.isConnected).toBe(true);
+        expect(thumbnail.getAttribute('role')).toBe('button');
+        thumbnail.click();
+
+        expect(dialogOpen).not.toHaveBeenCalled();
+        expect(opened).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__thumb[role="button"]')).toBeNull();
+        expect(el.querySelector('.entity-card__placeholder-icon')).not.toBeNull();
+    });
+
     it('should create', async () => {
         const { component, fixture } = await setupProductCardAsync();
         fixture.detectChanges();

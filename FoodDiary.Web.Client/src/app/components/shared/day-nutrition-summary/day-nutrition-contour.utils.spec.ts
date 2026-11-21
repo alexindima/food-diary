@@ -101,3 +101,10 @@ describe('day nutrient contour', () => {
         }
     });
 });
+
+describe('day nutrient markers', () => {
+    it.each([Number.NaN, Number.POSITIVE_INFINITY])('places a marker at zero progress for non-finite value %s', percent => {
+        const emptyMarker = getDayNutrientAnchor('protein', 0);
+        expect(getDayNutrientAnchor('protein', percent)).toEqual(emptyMarker);
+    });
+});

@@ -292,6 +292,35 @@ describe('MealCardComponent collage images', () => {
     });
 });
 
+describe('MealCardComponent collage ownership', () => {
+    it('ignores the mounted collage preview after a refreshed meal loses its item photos', async () => {
+        const { component, dialogService, el, fixture } = await setupMealCardAsync();
+        fixture.componentRef.setInput('meal', createItemCollageMeal());
+        fixture.detectChanges();
+        const preview = vi.spyOn(dialogService, 'open');
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+
+        const thumbnail = el.querySelector<HTMLElement>('.entity-card__thumb[role="button"]');
+        if (thumbnail === null) {
+            throw new Error('Expected the meal collage to be interactive');
+        }
+        expect(thumbnail.querySelector('.entity-card__collage')).not.toBeNull();
+
+        fixture.componentRef.setInput('meal', { ...MOCK_MEAL, imageUrl: null });
+        expect(thumbnail.isConnected).toBe(true);
+        expect(thumbnail.getAttribute('role')).toBe('button');
+        thumbnail.click();
+
+        expect(preview).not.toHaveBeenCalled();
+        expect(opened).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(el.querySelector('.entity-card__collage')).toBeNull();
+        expect(el.querySelector('.entity-card__thumb img')?.getAttribute('src')).toBe('assets/images/stubs/meals/lunch.svg');
+        expect(el.querySelector('.entity-card__thumb[role="button"]')).toBeNull();
+    });
+});
+
 describe('MealCardComponent AI images', () => {
     it('should use AI session image when meal imageUrl is empty', async () => {
         const { component, fixture } = await setupMealCardAsync();

@@ -47,7 +47,7 @@ import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardLocalDayFacade } from '../lib/dashboard-local-day.facade';
 import { DashboardNutritionDialogFacade } from '../lib/dashboard-nutrition-dialog.facade';
 import { DashboardSetupFacade } from '../lib/dashboard-setup.facade';
-import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
+import { DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
     DashboardBlockId,
     DashboardBlockState,
@@ -557,12 +557,9 @@ export class DashboardComponent {
         }
 
         this.resizeObserver = new ResizeObserver(entries => {
-            const entry = entries[DASHBOARD_FIRST_RESIZE_ENTRY_INDEX] as ResizeObserverEntry | undefined;
-            if (entry === undefined) {
-                return;
+            for (const entry of entries) {
+                updateWidth(entry.contentRect.width);
             }
-
-            updateWidth(entry.contentRect.width);
         });
 
         this.resizeObserver.observe(element);

@@ -56,6 +56,16 @@ describe('lesson view mapper', () => {
         expect(buildLessonDetailView({ ...lesson, content: 'Lesson content' })).toMatchObject(difficulty);
     });
 
+    it('keeps a lesson with a new difficulty available without assigning a known level', () => {
+        const lesson = createSummary({ difficulty: 'Expert' });
+        const presentation = { difficultyLabelKey: 'LESSONS.DIFFICULTY.Expert', difficultyLevel: 0 };
+
+        expect(buildLessonListItems([lesson])).toEqual([
+            { ...lesson, ...presentation, categoryLabelKey: 'LESSONS.CATEGORY.Macronutrients' },
+        ]);
+        expect(buildLessonDetailView({ ...lesson, content: 'Lesson content' })).toMatchObject({ id: lesson.id, ...presentation });
+    });
+
     it('returns null detail view for missing lesson', () => {
         expect(buildLessonDetailView(null)).toBeNull();
     });

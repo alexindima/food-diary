@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
@@ -16,9 +16,5 @@ export class TdeeInsightDialogMetricsComponent {
     protected readonly measurements = inject(MeasurementSystemService);
     public readonly locale = input.required<string>();
     public readonly insight = input.required<TdeeInsight>();
-    public readonly weightTrendFormatted = input.required<string | null>();
-    protected readonly displayWeightTrend = computed(() => {
-        const value = Number(this.weightTrendFormatted());
-        return Number.isFinite(value) ? this.measurements.displayWeight(value) : null;
-    });
+    public readonly weightTrendKgPerWeek = input.required<number | null>();
 }

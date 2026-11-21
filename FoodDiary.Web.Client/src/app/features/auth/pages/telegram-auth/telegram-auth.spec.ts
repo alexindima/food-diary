@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
+import { stubScrollIntoView } from '../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -552,6 +553,45 @@ describe('Telegram registration', () => {
         expect(harness.root.querySelector('fd-auth')).not.toBeNull();
         expect(harness.facade.completeAsync).not.toHaveBeenCalled();
     });
+});
+
+it('registers with a rendered fallback timezone when the browser cannot enumerate zones', async () => {
+    stubScrollIntoView();
+    const detectedLabel = new Intl.DateTimeFormat().resolvedOptions().timeZone.replaceAll('_', ' ');
+    const enumeration = Object.getOwnPropertyDescriptor(Intl, 'supportedValuesOf');
+    expect(Reflect.deleteProperty(Intl, 'supportedValuesOf')).toBe(true);
+    try {
+        const harness = await createIntentHarnessAsync();
+        const control = harness.root.querySelector<HTMLButtonElement>('fd-ui-select button[aria-haspopup="listbox"]');
+        if (control === null) {
+            throw new Error('Timezone selector is missing.');
+        }
+        control.click();
+        await settleAsync(harness);
+
+        const listbox = document.getElementById(control.getAttribute('aria-controls') ?? '');
+        const options = [...(listbox?.querySelectorAll<HTMLButtonElement>('button[role="option"]') ?? [])];
+        expect(options.map(option => option.textContent.trim().split(' (')[0])).toEqual([...new Set([detectedLabel, 'UTC'])].sort());
+        expect(options.find(option => option.getAttribute('aria-selected') === 'true')?.textContent.trim()).toContain(
+            `${detectedLabel} (UTC`,
+        );
+        const utc = options.find(option => /^UTC \(UTC(?:\+00:00)?\)$/u.test(option.textContent.trim()));
+        if (utc === undefined) {
+            throw new Error('The UTC fallback is missing.');
+        }
+        const utcLabel = utc.textContent.trim();
+        utc.click();
+        await settleAsync(harness);
+        expect(control.textContent.trim()).toBe(utcLabel);
+        expect(harness.facade.completeAsync).not.toHaveBeenCalled();
+
+        await clickAsync(harness, 'AUTH.TELEGRAM.CREATE');
+        expect(harness.facade.completeAsync).toHaveBeenCalledExactlyOnceWith('register', 'ru', 'UTC');
+    } finally {
+        if (enumeration !== undefined) {
+            Object.defineProperty(Intl, 'supportedValuesOf', enumeration);
+        }
+    }
 });
 
 describe('Telegram existing-account choices', () => {

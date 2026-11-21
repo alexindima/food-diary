@@ -1,34 +1,60 @@
 import { HTTP_INTERCEPTORS, HttpStatusCode, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { DefaultUrlSerializer } from '@angular/router';
+import { DefaultUrlSerializer, provideRouter } from '@angular/router';
+import { provideTranslateService, type TranslationObject } from '@ngx-translate/core';
+import { type Observable, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
+import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { TelegramAuthFacade } from '../../features/auth/lib/telegram-auth.facade';
 import { AuthInterceptor } from '../../interceptor/auth.interceptor';
 import { AuthService } from '../../services/auth.service';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
 import { NavigationService } from '../../services/navigation.service';
-import { UserService } from '../api/user.service';
+import type { AuthenticationHttpResponse } from '../api/sdk/generated/model/authentication-http-response';
 import { AuthRecoveryStateService } from '../auth/auth-recovery-state.service';
 import { BrowserSessionStateService } from '../auth/browser-session-state.service';
 import { TelegramWebAppService } from '../auth/telegram-web-app.service';
-import { LocalizationService } from '../i18n/localization.service';
+import { FoodDiaryTranslationLoader } from '../i18n/food-diary-translation.loader';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
-import { ThemeService } from '../theme/theme.service';
 import { AppBootstrapService } from './app-bootstrap.service';
 
 const base = environment.apiUrls.auth;
 const proof = `user=${encodeURIComponent(JSON.stringify({ id: 123, first_name: 'Synthetic & fixture + Кириллица' }))}&auth_date=1793664000&hash=synthetic-signature`;
 const launch = `/profile#tgWebAppData=${encodeURIComponent(proof)}&tgWebAppVersion=8.0`;
+const restoredSession = {
+    sessionId: 'dd281aa8-5d85-4fda-bc28-a7e1fd6085db',
+    accessToken: 'synthetic-mini-app-token',
+    roles: ['User'],
+    user: {
+        id: 'restored-user',
+        email: 'restored@example.test',
+        isActive: true,
+        isEmailConfirmed: true,
+        hasPassword: true,
+        pushNotificationsEnabled: false,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: false,
+        fastingCheckInReminderHours: 12,
+        fastingCheckInFollowUpReminderHours: 20,
+        language: 'ru',
+        theme: 'dark',
+        uiStyle: 'modern',
+        surfaceStyle: 'matte',
+    },
+} satisfies AuthenticationHttpResponse;
+const startupAttributes = ['lang', 'data-i18n-ready', 'data-theme', 'data-ui-style', 'data-surface-style', 'style'] as const;
 let requests: HttpTestingController;
 let auth: AuthService;
 let recovery: AuthRecoveryStateService;
 let replaceUrl: MockInstance<BrowserWindowService['replaceCurrentUrl']>;
+let initialAttributes: ReadonlyArray<readonly [string, string | null]>;
 
 beforeEach(() => {
+    initialAttributes = startupAttributes.map(name => [name, document.documentElement.getAttribute(name)] as const);
     localStorage.clear();
     sessionStorage.clear();
     window.history.replaceState({}, '', launch);
@@ -37,15 +63,15 @@ beforeEach(() => {
             TelegramAuthFacade,
             provideHttpClient(withInterceptorsFromDi()),
             provideHttpClientTesting(),
+            provideRouter([]),
+            provideTranslateService(),
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
             { provide: FrontendObservabilityService, useValue: { initialize: vi.fn() } },
             { provide: NavigationService, useValue: { navigateToAuthAsync: vi.fn(), navigateToLandingAsync: vi.fn() } },
             {
-                provide: LocalizationService,
-                useValue: { initializeLocalizationAsync: vi.fn().mockResolvedValue(undefined) },
+                provide: FoodDiaryTranslationLoader,
+                useValue: { loadApplicationTranslations: (): Observable<TranslationObject> => of({}) },
             },
-            { provide: ThemeService, useValue: {} },
-            { provide: UserService, useValue: {} },
         ],
     });
     const browser = TestBed.inject(BrowserWindowService);
@@ -60,6 +86,13 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+    for (const [name, value] of initialAttributes) {
+        if (value === null) {
+            document.documentElement.removeAttribute(name);
+        } else {
+            document.documentElement.setAttribute(name, value);
+        }
+    }
     requests.verify();
     vi.restoreAllMocks();
     localStorage.clear();
@@ -116,6 +149,33 @@ describe('Telegram launch with the real session restoration boundary', () => {
         expect(replaceUrl).toHaveBeenCalledExactlyOnceWith(
             `/auth/telegram?returnUrl=%2Fprofile#tgWebAppData=${encodeURIComponent(proof)}&tgWebAppVersion=8.0`,
         );
+    });
+
+    it('keeps the restored account and its confirmed appearance when the optional profile read is unavailable', async () => {
+        const startup = TestBed.inject(AppBootstrapService).initializeSessionAsync();
+        const refresh = await vi.waitFor(() => requests.expectOne({ method: 'POST', url: `${base}/refresh` }));
+        refresh.flush(restoredSession);
+
+        const profile = await vi.waitFor(() => requests.expectOne({ method: 'GET', url: `${environment.apiUrls.users}/info` }));
+        expect(profile.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        expect(profile.request.headers.get('Authorization')).toBe(`Bearer ${restoredSession.accessToken}`);
+        expect(document.documentElement.getAttribute('lang')).toBe('ru');
+        expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+        profile.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Profile temporarily unavailable' });
+        await startup;
+
+        expect(auth.isAuthReady()).toBe(true);
+        expect(auth.isAuthenticated()).toBe(true);
+        expect(auth.getUserId()).toBe(restoredSession.user.id);
+        expect(recovery.issue()).toBeNull();
+        expect(replaceUrl).not.toHaveBeenCalled();
+        const root = document.documentElement;
+        expect([root.lang, root.dataset['theme'], root.dataset['uiStyle'], root.dataset['surfaceStyle']]).toEqual([
+            'ru',
+            'dark',
+            'modern',
+            'matte',
+        ]);
     });
 
     it.each([

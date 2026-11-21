@@ -49,8 +49,7 @@ export class AiPhotoEditListComponent {
     }
 
     protected removeItemAriaLabel(item: EditableAiItem): string {
-        const name = item.name.trim().length > 0 ? item.name.trim() : item.nameEn.trim().length > 0 ? item.nameEn.trim() : '?';
-
-        return this.translateService.instant('AI_INPUT_BAR.REMOVE_AI_ITEM', { name });
+        const name = item.name.trim();
+        return this.translateService.instant('AI_INPUT_BAR.REMOVE_AI_ITEM', { name: name.length === 0 ? '?' : name });
     }
 }

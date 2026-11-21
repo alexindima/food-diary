@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
 import type { Meal } from '../../../../shared/models/meal.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
@@ -32,6 +32,49 @@ describe('AiMealCreateService', () => {
                 mealType: 'SNACK',
                 isNutritionAutoCalculated: true,
                 aiSessions: [expect.objectContaining({ source: 'Text', recognizedAtUtc: RECOGNIZED_AT_UTC })],
+            }),
+        );
+    });
+
+    it('uses the current local time for a legacy recognition without editable date or time', () => {
+        const { service, mealService } = setupService();
+        const now = new Date('2026-05-03T00:20:15.025');
+        vi.useFakeTimers({ toFake: ['Date'] });
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+        vi.setSystemTime(now);
+        const notes = 'A banana after the evening shift';
+        const items = [
+            {
+                nameEn: 'Banana',
+                amount: 120,
+                unit: 'g',
+                calories: 107,
+                proteins: 1,
+                fats: 0,
+                carbs: 27,
+                fiber: 3,
+                alcohol: 0,
+            },
+        ];
+
+        service.createFromAiResult({ source: 'Voice', recognizedAtUtc: RECOGNIZED_AT_UTC, notes, items }).subscribe();
+
+        expect(mealService.create).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({
+                date: now,
+                mealType: 'SNACK',
+                isNutritionAutoCalculated: true,
+                aiSessions: [
+                    expect.objectContaining({
+                        source: 'Voice',
+                        status: 'Reviewed',
+                        recognizedAtUtc: RECOGNIZED_AT_UTC,
+                        notes,
+                        items,
+                    }),
+                ],
             }),
         );
     });

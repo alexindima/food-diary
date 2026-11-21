@@ -72,16 +72,6 @@ export function buildPremiumOverviewBadges(overview: BillingOverview | null, isP
     };
 }
 
-function getPremiumAccessStatusLabelKey(status: string | null, isPremium: boolean): string {
-    if (status === 'active' && !isPremium) {
-        return 'PREMIUM_PAGE.STATUS.EXPIRED';
-    }
-    if (status === 'canceled') {
-        return isPremium ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : 'PREMIUM_PAGE.STATUS.EXPIRED';
-    }
-    return isPremium && status === null ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : getPremiumStatusLabelKey(status);
-}
-
 export function buildPremiumOverviewCopyState(overview: BillingOverview | null, isPremium: boolean): PremiumOverviewCopyState {
     const isTrialActive = overview?.premiumTrialActive === true;
     return {
@@ -229,29 +219,26 @@ export function getPremiumPlanLabelKey(plan: BillingPlan): string {
     return plan === 'yearly' ? 'PREMIUM_PAGE.PLANS.YEARLY.TITLE' : 'PREMIUM_PAGE.PLANS.MONTHLY.TITLE';
 }
 
-export function getPremiumStatusLabelKey(status: string | null): string {
+const premiumStatusLabels = new Map([
+    ['trialing', 'PREMIUM_PAGE.STATUS.TRIALING'],
+    ['past_due', 'PREMIUM_PAGE.STATUS.PAYMENT_ISSUE'],
+    ['unpaid', 'PREMIUM_PAGE.STATUS.PAYMENT_ISSUE'],
+    ['incomplete', 'PREMIUM_PAGE.STATUS.INCOMPLETE'],
+]);
+
+function getPremiumAccessStatusLabelKey(status: string | null, isPremium: boolean): string {
     switch (status) {
         case 'active': {
-            return 'PREMIUM_PAGE.STATUS.ACTIVE';
-        }
-        case 'trialing': {
-            return 'PREMIUM_PAGE.STATUS.TRIALING';
-        }
-        case 'past_due':
-        case 'unpaid': {
-            return 'PREMIUM_PAGE.STATUS.PAYMENT_ISSUE';
+            return isPremium ? 'PREMIUM_PAGE.STATUS.ACTIVE' : 'PREMIUM_PAGE.STATUS.EXPIRED';
         }
         case 'canceled': {
-            return 'PREMIUM_PAGE.STATUS.CANCELED';
-        }
-        case 'incomplete': {
-            return 'PREMIUM_PAGE.STATUS.INCOMPLETE';
+            return isPremium ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : 'PREMIUM_PAGE.STATUS.EXPIRED';
         }
         case null: {
-            return 'PREMIUM_PAGE.STATUS.NONE';
+            return isPremium ? 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' : 'PREMIUM_PAGE.STATUS.NONE';
         }
         default: {
-            return 'PREMIUM_PAGE.STATUS.NONE';
+            return premiumStatusLabels.get(status) ?? 'PREMIUM_PAGE.STATUS.NONE';
         }
     }
 }

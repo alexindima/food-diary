@@ -176,6 +176,33 @@ describe('Rendered trend selections', () => {
         expect(host.querySelector(`${BAR}[aria-pressed="true"]`)?.getAttribute('aria-label')).toContain('24 May');
         expect(host.querySelector('.nutrition-trend__open-day[hidden]')).not.toBeNull();
     });
+
+    it('falls back to the latest visible day when an old bar is clicked while shortening the range', async () => {
+        const fixture = await setupAsync();
+        fixture.componentRef.setInput('interactive', true);
+        fixture.componentRef.setInput('currentDate', new Date(`${LATEST_VISIBLE_DAY}T00:00:00Z`));
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const bars = Array.from(host.querySelectorAll<HTMLElement>(BAR));
+        const oldBar = bars.at(SHORT_TREND_DAYS);
+        const latestBar = bars.at(-1);
+        const threeDays = host.querySelector<HTMLButtonElement>('.nutrition-trend__range [role="radio"]');
+        if (oldBar === undefined || latestBar === undefined || threeDays === null) {
+            throw new Error('Expected the seven-day bars and range control');
+        }
+        expect(bars).toHaveLength(TREND_DAYS);
+        const latestLabel = latestBar.getAttribute('aria-label');
+
+        threeDays.click();
+        expect(oldBar.isConnected).toBe(true);
+        oldBar.click();
+        fixture.detectChanges();
+
+        expect(host.querySelectorAll(BAR)).toHaveLength(SHORT_TREND_DAYS);
+        expect(threeDays.getAttribute('aria-checked')).toBe('true');
+        expect(host.querySelector(`${BAR}[aria-pressed="true"]`)?.getAttribute('aria-label')).toBe(latestLabel);
+        expect(host.querySelector('.nutrition-trend__open-day[hidden]')).not.toBeNull();
+    });
 });
 
 describe('Rendered trend comparisons', () => {

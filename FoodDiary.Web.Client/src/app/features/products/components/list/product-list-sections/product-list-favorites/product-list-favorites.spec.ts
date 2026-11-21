@@ -31,6 +31,24 @@ describe('ProductListFavoritesComponent', () => {
         expect(element.querySelector('input')).toBeNull();
     });
 
+    it('shows the product name and opens the correct favorite when no nickname was saved', async () => {
+        const favorite = { ...createFavoriteProduct(), name: null, productName: 'Plain skyr' };
+        const { component, fixture } = await setupComponentAsync({ favorites: [favorite] });
+        const opened = vi.fn();
+        component.openProduct.subscribe(opened);
+        const host = fixture.nativeElement as HTMLElement;
+        const card = host.querySelector<HTMLButtonElement>('fd-product-card button.entity-card__open-button');
+        if (card === null) {
+            throw new Error('Expected the saved product card');
+        }
+
+        expect(card.getAttribute('aria-label')).toBe(favorite.productName);
+        expect(host.querySelector('fd-product-card')?.textContent).toContain(favorite.productName);
+        card.click();
+
+        expect(opened).toHaveBeenCalledExactlyOnceWith(favorite);
+    });
+
     it('should emit favorite section actions', async () => {
         const favorite = createFavoriteProduct();
         const { component } = await setupComponentAsync({ favorites: [favorite] });

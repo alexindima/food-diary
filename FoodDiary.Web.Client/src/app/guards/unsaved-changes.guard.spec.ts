@@ -66,6 +66,23 @@ describe('unsavedChangesGuard', () => {
         expect(handler.save).toHaveBeenCalled();
     });
 
+    it.each([
+        { outcome: 'false', saveResult: false, canNavigate: false },
+        { outcome: 'true', saveResult: true, canNavigate: true },
+        { outcome: 'void', saveResult: undefined, canNavigate: true },
+    ])('allows navigation according to a synchronous save returning $outcome', async ({ saveResult, canNavigate }) => {
+        const handler: UnsavedChangesHandler = {
+            hasChanges: () => true,
+            save: vi.fn(() => saveResult),
+            discard: vi.fn(),
+        };
+        setupGuard(handler, 'save');
+
+        expect(await runGuard()).toBe(canNavigate);
+        expect(handler.save).toHaveBeenCalledOnce();
+        expect(handler.discard).not.toHaveBeenCalled();
+    });
+
     it('should discard changes when dialog returns discard', async () => {
         const handler = createHandler({ hasChanges: true });
         setupGuard(handler, 'discard');
@@ -89,12 +106,6 @@ function setupGuard(handler: UnsavedChangesHandler | null, dialogResult?: 'save'
     TestBed.configureTestingModule({
         providers: [
             {
-                provide: UnsavedChangesService,
-                useValue: {
-                    getHandler: vi.fn().mockReturnValue(handler),
-                },
-            },
-            {
                 provide: FdUiDialogService,
                 useValue: {
                     open: vi.fn().mockReturnValue({
@@ -104,12 +115,15 @@ function setupGuard(handler: UnsavedChangesHandler | null, dialogResult?: 'save'
             },
         ],
     });
+    if (handler !== null) {
+        TestBed.inject(UnsavedChangesService).register(handler);
+    }
 }
 
 function createHandler(options: { hasChanges: boolean; saveResult?: boolean }): UnsavedChangesHandler {
     return {
         hasChanges: vi.fn().mockReturnValue(options.hasChanges),
-        save: vi.fn().mockResolvedValue(options.saveResult),
+        save: vi.fn<UnsavedChangesHandler['save']>().mockResolvedValue(options.saveResult ?? true),
         discard: vi.fn(),
     };
 }

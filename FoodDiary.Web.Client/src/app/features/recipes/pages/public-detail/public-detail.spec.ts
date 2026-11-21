@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
@@ -482,6 +482,79 @@ describe('Shopping picker owned by the public recipe', () => {
         }
     });
 });
+
+describe('Shopping lookup across a reused public recipe page', () => {
+    beforeEach(() => {
+        authenticated.set(true);
+        provideRecipeShoppingOwner();
+    });
+
+    afterEach(() => {
+        TestBed.inject(FdUiDialogService).closeAll();
+        vi.unstubAllGlobals();
+        const http = TestBed.inject(HttpTestingController);
+        http.match(request => request.url.startsWith('./assets/i18n/'));
+        http.verify();
+    });
+
+    it('keeps the replacement recipe actionable while the previous shopping lookup stays pending', async () => {
+        const harness = await RouterTestingHarness.create('/explore/recipe');
+        const http = TestBed.inject(HttpTestingController);
+        for (const translation of http.match(request => request.url.startsWith('./assets/i18n/'))) {
+            translation.flush({});
+        }
+        const firstPage = harness.routeNativeElement;
+        const previous = shoppingAction(harness, 'add');
+        expect(previous.disabled).toBe(false);
+        previous.click();
+        await waitForAsyncTasksAsync();
+
+        const pending = new Set<TestRequest>();
+        const previousLookup = holdShoppingLookup(http, pending);
+        expect(previousLookup.cancelled).toBe(false);
+        try {
+            await harness.navigateByUrl('/explore/other-recipe');
+            expect(harness.routeNativeElement).toBe(firstPage);
+            expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Salad');
+            const next = shoppingAction(harness, 'add');
+            expect(next.disabled, 'A held lookup must not disable shopping for Salad').toBe(false);
+            next.click();
+            await waitForAsyncTasksAsync();
+            const nextLookup = holdShoppingLookup(http, pending);
+            harness.detectChanges();
+            expect(next.disabled).toBe(true);
+
+            previousLookup.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'Fixture old lookup failure' });
+            pending.delete(previousLookup);
+            await vi.dynamicImportSettled();
+            await waitForAsyncTasksAsync();
+            harness.detectChanges();
+            expect(next.disabled, 'The previous response must not unlock the current request').toBe(true);
+            expect(harness.routeNativeElement?.querySelector('.shopping-message')?.textContent.trim()).toBe('');
+            expect(document.querySelector('fd-shopping-list-picker')).toBeNull();
+
+            nextLookup.flush([]);
+            pending.delete(nextLookup);
+            await vi.waitFor(() => {
+                harness.detectChanges();
+                expect(document.querySelector('fd-shopping-list-picker')?.textContent).toContain('Lettuce');
+            });
+            http.expectNone(request => request.method !== 'GET', 'no ingredient write before choosing its destination');
+        } finally {
+            for (const request of pending) {
+                if (!request.cancelled) {
+                    request.flush([]);
+                }
+            }
+        }
+    });
+});
+
+function holdShoppingLookup(http: HttpTestingController, pending: Set<TestRequest>): TestRequest {
+    const lookup = http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.shoppingLists}/page`);
+    pending.add(lookup);
+    return lookup;
+}
 
 function provideRecipeShoppingOwner(): void {
     TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });

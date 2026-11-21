@@ -25,8 +25,8 @@ const bodyTrackingItems: SidebarRouteItem[] = [
 const desktopBottomItems: SidebarRouteItem[] = [{ id: 'settings', icon: 'settings', labelKey: 'SIDEBAR.SETTINGS', route: '/settings' }];
 
 const primaryActionItems: SidebarActionItem[] = [
-    { id: 'admin', icon: 'admin_panel_settings', labelKey: 'SIDEBAR.ADMIN', action: 'openAdminPanel' },
-    { id: 'logout', icon: 'logout', labelKey: 'HEADER.LOGOUT', action: 'logout', variant: 'danger', badge: 2 },
+    { id: 'admin', icon: 'admin_panel_settings', labelKey: 'SIDEBAR.ADMIN', action: 'openAdminPanel', tone: 'danger' },
+    { id: 'logout', icon: 'logout', labelKey: 'HEADER.LOGOUT', action: 'logout', tone: 'danger', badge: 2 },
 ];
 
 const user: User = {

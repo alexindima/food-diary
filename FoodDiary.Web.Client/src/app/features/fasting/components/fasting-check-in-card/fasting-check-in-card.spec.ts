@@ -46,6 +46,12 @@ describe('FastingCheckInCardComponent', () => {
         expect(moodLevel()).toBe(UPDATED_MOOD_LEVEL);
         expect(selectedSymptoms()).toEqual(['headache']);
         expect(notes()).toBe('Feeling okay');
+
+        notesInput.value = '';
+        notesInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        expect(notes()).toBe('');
     });
 
     it('disables the draft when another terminal action is running', () => {

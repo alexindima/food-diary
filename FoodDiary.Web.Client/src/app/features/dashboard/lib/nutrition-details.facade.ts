@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -11,6 +11,8 @@ import { getDashboardDateUtc } from './dashboard-date.utils';
 import { loadNutritionDay, type NutritionDay } from './nutrition-details.loader';
 import { hasMatchingNutritionTotal, nutritionDayProgress } from './nutrition-details.mapper';
 
+type NutritionDetailsDay = NutritionDay & { progress: ReturnType<typeof nutritionDayProgress> };
+
 @Injectable()
 export class NutritionDetailsFacade {
     private readonly service = inject(DashboardService);
@@ -19,11 +21,7 @@ export class NutritionDetailsFacade {
     private readonly reloadRequest = new Subject<void>();
     public readonly loading = signal(true);
     public readonly failed = signal(false);
-    public readonly day = signal<NutritionDay | null>(null);
-    public readonly progress = computed(() => {
-        const day = this.day();
-        return day === null ? null : nutritionDayProgress(day.snapshot, this.data.metric);
-    });
+    public readonly day = signal<NutritionDetailsDay | null>(null);
 
     public constructor() {
         this.reloadRequest
@@ -43,11 +41,11 @@ export class NutritionDetailsFacade {
                     ).pipe(
                         map(day => {
                             const metric = this.data.metric;
-                            const { current } = nutritionDayProgress(day.snapshot, metric);
-                            if (!hasMatchingNutritionTotal(day.meals, metric, current)) {
+                            const progress = nutritionDayProgress(day.snapshot, metric);
+                            if (!hasMatchingNutritionTotal(day.meals, metric, progress.current)) {
                                 throw new Error('Nutrition statistics and meals describe different versions of the day');
                             }
-                            return day;
+                            return { ...day, progress };
                         }),
                         catchError(() => {
                             this.failed.set(true);

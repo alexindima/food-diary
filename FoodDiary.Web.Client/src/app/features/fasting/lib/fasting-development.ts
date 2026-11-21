@@ -33,18 +33,22 @@ export function hasFastingDevelopmentDraft(facade: FastingFacade): boolean {
     );
 }
 
-function readSetup(input: unknown): {
-    mode: 'intermittent' | 'extended' | 'cyclic';
-    hours: number;
-    fastDays: number | null;
-    eatDays: number | null;
-} {
+type FastingSetupDraft =
+    | { mode: 'intermittent'; hours: number }
+    | { mode: 'extended'; hours: number }
+    | { mode: 'cyclic'; hours: number; fastDays: number; eatDays: number };
+
+function readSetup(input: unknown): FastingSetupDraft {
     const value = devRecord(input, ['mode', 'fastHours', 'fastDays', 'eatDays']);
     const mode = devEnum(value['mode'], ['intermittent', 'extended', 'cyclic']);
     const hours = devNumber(value['fastHours'], 1, mode === 'extended' ? MAX_FASTING_HOURS : MAX_INTERMITTENT_FAST_HOURS);
-    const fastDays = mode === 'cyclic' ? fastingCycleDays(devNumber(value['fastDays'], 1, MAX_CYCLIC_DAYS)) : null;
-    const eatDays = mode === 'cyclic' ? fastingCycleDays(devNumber(value['eatDays'], 1, MAX_CYCLIC_DAYS)) : null;
-    if (mode !== 'cyclic' && (value['fastDays'] !== undefined || value['eatDays'] !== undefined)) {
+    if (mode === 'cyclic') {
+        const fastDays = fastingCycleDays(devNumber(value['fastDays'], 1, MAX_CYCLIC_DAYS));
+        const eatDays = fastingCycleDays(devNumber(value['eatDays'], 1, MAX_CYCLIC_DAYS));
+        fastingDailyWindow(hours);
+        return { mode, hours, fastDays, eatDays };
+    }
+    if (value['fastDays'] !== undefined || value['eatDays'] !== undefined) {
         throw new DevelopmentToolError('Cycle days apply only to cyclic setup.');
     }
     if (mode === 'extended') {
@@ -52,7 +56,7 @@ function readSetup(input: unknown): {
     } else {
         fastingDailyWindow(hours);
     }
-    return { mode, hours, fastDays, eatDays };
+    return { mode, hours };
 }
 
 export function readFastingDevelopmentContext(facade: FastingFacade): unknown {
@@ -132,17 +136,18 @@ export function connectFastingDevelopmentSetup(facade: FastingFacade): void {
         },
         fillDraft: input => {
             requireReady();
-            const { mode, hours, fastDays, eatDays } = readSetup(input);
+            const setup = readSetup(input);
+            const { hours } = setup;
             // All fields validate before the first owner mutation.
-            facade.selectMode(mode);
-            if (mode === 'extended') {
+            facade.selectMode(setup.mode);
+            if (setup.mode === 'extended') {
                 facade.selectProtocol('Custom');
                 facade.setCustomHours(hours);
-            } else if (mode === 'intermittent') {
+            } else if (setup.mode === 'intermittent') {
                 facade.selectProtocol('CustomIntermittent');
                 facade.setCustomIntermittentFastHours(hours);
-            } else if (fastDays !== null && eatDays !== null) {
-                facade.setCyclicPreset(fastDays, eatDays);
+            } else {
+                facade.setCyclicPreset(setup.fastDays, setup.eatDays);
                 facade.setCyclicEatDayFastHours(hours);
             }
         },

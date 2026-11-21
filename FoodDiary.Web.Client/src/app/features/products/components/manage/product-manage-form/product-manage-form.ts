@@ -522,13 +522,11 @@ export class ProductManageFormComponent implements UnsavedEditor {
                 ? currentPortionAmount
                 : (this.nutritionPortionBasis ?? baseAmount);
 
-        if (portionAmount > 0) {
-            const factor = resolvedMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
-            this.convertNutritionControls(factor);
-        }
+        const factor = resolvedMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
+        this.convertNutritionControls(factor);
 
         this.nutritionMode = resolvedMode;
-        this.nutritionPortionBasis = resolvedMode === 'portion' && portionAmount > 0 ? portionAmount : null;
+        this.nutritionPortionBasis = resolvedMode === 'portion' ? portionAmount : null;
     }
 
     protected startProductManageTour(force = true): void {

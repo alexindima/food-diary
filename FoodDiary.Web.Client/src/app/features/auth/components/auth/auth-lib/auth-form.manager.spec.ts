@@ -13,6 +13,8 @@ const PASSWORD_CONTRACT_MAX_LENGTH = 256;
 describe('AuthFormManager', () => {
     let languageChanges: Subject<LangChangeEvent>;
     let language: string;
+    let manager: AuthFormManager;
+    let register: ReturnType<typeof vi.fn<() => Promise<void>>>;
 
     beforeEach(() => {
         languageChanges = new Subject<LangChangeEvent>();
@@ -20,7 +22,6 @@ describe('AuthFormManager', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                AuthFormManager,
                 {
                     provide: TranslateService,
                     useValue: {
@@ -30,17 +31,23 @@ describe('AuthFormManager', () => {
                 },
             ],
         });
+        register = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+        manager = TestBed.runInInjectionContext(
+            () =>
+                new AuthFormManager({
+                    loginAsync: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                    requestPasswordResetAsync: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                    registerAsync: register,
+                }),
+        );
     });
 
     it('accepts email, one password and terms without requiring a second password entry', () => {
-        const manager = TestBed.inject(AuthFormManager);
         manager.registerModel.update(value => ({ ...value, email: 'user@example.test', password: 'password123', agreeTerms: true }));
         expect(manager.registerForm().valid()).toBe(true);
     });
 
     it('recomputes translated field errors when the language changes', () => {
-        const manager = TestBed.inject(AuthFormManager);
-
         manager.registerModel.update(value => ({
             ...value,
             password: 'a'.repeat(AUTH_PASSWORD_MIN_LENGTH - 1),
@@ -56,8 +63,6 @@ describe('AuthFormManager', () => {
     });
 
     it('shows terms acceptance error after invalid register submit', async () => {
-        const manager = TestBed.inject(AuthFormManager);
-
         manager.registerModel.set({
             email: 'user@example.com',
             password: 'a'.repeat(AUTH_PASSWORD_MIN_LENGTH),
@@ -70,7 +75,6 @@ describe('AuthFormManager', () => {
     });
 
     it('accepts the 256-character login boundary literally and rejects longer passwords', () => {
-        const manager = TestBed.inject(AuthFormManager);
         const password = ` ${'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH - 2)} `;
         manager.loginModel.set({ email: 'user@example.test', password, rememberMe: false });
 
@@ -80,10 +84,7 @@ describe('AuthFormManager', () => {
         expect(manager.loginForm.password().getError('maxLength')).toBeDefined();
     });
 
-    it('blocks oversized registration before invoking the submission action', async () => {
-        const manager = TestBed.inject(AuthFormManager);
-        const register = vi.fn().mockResolvedValue(undefined);
-        manager.configureSubmissionActions({ login: register, passwordReset: register, register });
+    it('does not submit until an oversized password is corrected', async () => {
         manager.registerModel.set({
             email: 'user@example.test',
             password: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH),
@@ -99,5 +100,10 @@ describe('AuthFormManager', () => {
 
         expect(manager.registerForm.password().getError('maxLength')).toBeDefined();
         expect(register).not.toHaveBeenCalled();
+
+        manager.registerForm.password().value.set('p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH));
+        await submit(manager.registerForm);
+
+        expect(register).toHaveBeenCalledOnce();
     });
 });

@@ -1,22 +1,19 @@
 import { inject } from '@angular/core';
 import type { CanDeactivateFn } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { from, isObservable, type Observable, of, switchMap } from 'rxjs';
+import { from, type Observable, of, switchMap } from 'rxjs';
 
 import {
     UnsavedChangesDialogComponent,
     type UnsavedChangesDialogResult,
 } from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog';
-import { UnsavedChangesService } from '../services/unsaved-changes.service';
+import { type UnsavedChangesHandler, UnsavedChangesService } from '../services/unsaved-changes.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 
 const isPromiseLike = (value: unknown): value is PromiseLike<unknown> =>
     typeof value === 'object' && value !== null && 'then' in value && typeof value.then === 'function';
 
-const toObservable = (value: unknown): Observable<unknown> => {
-    if (isObservable(value)) {
-        return value;
-    }
+const toObservable = (value: ReturnType<UnsavedChangesHandler['save']>): Observable<boolean | void> => {
     if (isPromiseLike(value)) {
         return from(value);
     }

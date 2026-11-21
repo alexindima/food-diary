@@ -106,6 +106,23 @@ describe('Dashboard midnight rollover', () => {
 });
 
 describe('Dashboard live updates', () => {
+    it('defers a nutrition refresh until the dashboard has an initial date', () => {
+        const { facade, dashboardService } = setupFacade();
+        TestBed.inject(NutritionDataInvalidationService).reportMealMutation();
+        TestBed.tick();
+
+        expect(dashboardService.getSnapshot).not.toHaveBeenCalled();
+        expect(dashboardService.getSnapshotSilentlyStrict).not.toHaveBeenCalled();
+
+        facade.initialize(new Date(TEST_YEAR, 2, SELECTED_DAY));
+        TestBed.tick();
+        expect(dashboardService.getSnapshot).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ date: new Date(Date.UTC(TEST_YEAR, 2, SELECTED_DAY)) }),
+            expect.any(HttpContext),
+        );
+        expect(dashboardService.getSnapshotSilentlyStrict).not.toHaveBeenCalled();
+    });
+
     it('refreshes the selected day after a meal is saved elsewhere without resetting the page', () => {
         const { facade, dashboardService } = setupFacade();
         facade.initialize(new Date(TEST_YEAR, 2, SELECTED_DAY));
@@ -801,6 +818,16 @@ describe('Dashboard TDEE goal application failure', () => {
 });
 
 describe('Dashboard asynchronous TDEE persistence', () => {
+    it.each([0, Number.NaN])('leaves the saved goal unchanged for invalid target %s', async target => {
+        const { facade, goalsService, dashboardService } = setupFacade();
+        facade.initialize();
+
+        expect(await facade.applyTdeeGoalAsync(target)).toBe(false);
+        expect(facade.isApplyingTdeeGoal()).toBe(false);
+        expect(goalsService.updateGoals).not.toHaveBeenCalled();
+        expect(dashboardService.getSnapshotSilentlyStrict).not.toHaveBeenCalled();
+    });
+
     it.each([of(null), throwError(() => new Error('offline'))])(
         'returns a failed result and allows retry without a stale refresh',
         async failed => {

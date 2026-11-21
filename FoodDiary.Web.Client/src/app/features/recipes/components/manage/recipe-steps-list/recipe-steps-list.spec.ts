@@ -95,7 +95,6 @@ function setupComponent(expandedSteps: ReadonlySet<number>): {
     const fixture = TestBed.createComponent(RecipeStepsListComponent);
     fixture.componentRef.setInput('steps', [createRecipeStepListItem(), createRecipeStepListItem()]);
     fixture.componentRef.setInput('expandedSteps', expandedSteps);
-    fixture.componentRef.setInput('stepsError', null);
     fixture.detectChanges();
 
     return { component: fixture.componentInstance, fixture };

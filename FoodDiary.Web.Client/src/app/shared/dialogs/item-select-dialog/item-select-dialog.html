@@ -37,7 +37,7 @@
             </fd-ui-button>
         </div>
         <div fdUiDialogFooter class="meal-item-select__footer fd-ui-actions fd-ui-actions--end">
-            <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateAction()">
+            <fd-ui-button variant="primary" fill="solid" icon="add" [hidden]="activeTab() !== 'Product'" (click)="onCreateAction()">
                 {{ createActionLabelKey() | translate }}
             </fd-ui-button>
         </div>

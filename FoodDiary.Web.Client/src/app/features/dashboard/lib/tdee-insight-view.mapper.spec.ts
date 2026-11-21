@@ -4,8 +4,8 @@ import type { TdeeInsight } from '../../../shared/models/tdee-insight.data';
 import {
     buildTdeeConfidenceKey,
     buildTdeeHintKey,
-    formatTdeeWeightTrend,
     getEffectiveTdee,
+    getTdeeWeightTrendKg,
     hasMeaningfulTdeeSuggestion,
 } from './tdee-insight-view.mapper';
 
@@ -24,6 +24,7 @@ const ADAPTIVE_TDEE = 2050;
 const ESTIMATED_TDEE = 2100;
 const POSITIVE_WEIGHT_TREND = 0.125;
 const NEGATIVE_WEIGHT_TREND = -0.125;
+const ROUNDED_WEIGHT_TREND = 0.13;
 
 describe('tdee insight view mapper', () => {
     it('prefers adaptive tdee over estimated value', () => {
@@ -32,10 +33,14 @@ describe('tdee insight view mapper', () => {
         expect(getEffectiveTdee(null)).toBeNull();
     });
 
-    it('formats weekly weight trend with sign and fixed precision', () => {
-        expect(formatTdeeWeightTrend(POSITIVE_WEIGHT_TREND)).toBe('+0.13');
-        expect(formatTdeeWeightTrend(NEGATIVE_WEIGHT_TREND)).toBe('-0.13');
-        expect(formatTdeeWeightTrend(null)).toBeNull();
+    it('rounds weekly weight trend to two decimal places and keeps its sign and zero', () => {
+        expect(getTdeeWeightTrendKg(POSITIVE_WEIGHT_TREND)).toBe(ROUNDED_WEIGHT_TREND);
+        expect(getTdeeWeightTrendKg(NEGATIVE_WEIGHT_TREND)).toBe(-ROUNDED_WEIGHT_TREND);
+        expect(getTdeeWeightTrendKg(0)).toBe(0);
+    });
+
+    it.each([null, undefined, Number.NaN, Number.POSITIVE_INFINITY])('omits an unavailable weekly trend (%s)', trend => {
+        expect(getTdeeWeightTrendKg(trend)).toBeNull();
     });
 
     it('builds translation keys for hints and confidence', () => {

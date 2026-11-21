@@ -57,9 +57,11 @@ describe('unsaved fasting preparation', () => {
         expect(screen.isDirty?.()).toBe(false);
     });
     it.each([
+        { mode: 'cyclic', fastHours: 16, fastDays: 1 },
         { mode: 'cyclic', fastHours: 16, fastDays: 1, eatDays: 0 },
         { mode: 'cyclic', fastHours: 16.5, fastDays: 1, eatDays: 2 },
         { mode: 'extended', fastHours: 169 },
+        { mode: 'extended', fastHours: 48, eatDays: 2 },
         { mode: 'intermittent', fastHours: 24 },
     ])('rejects invalid setup atomically: %j', draft => {
         const baseline = screen.read();

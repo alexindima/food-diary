@@ -13,6 +13,7 @@ import { UserService } from '../../../../shared/api/user.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../../shared/development/development-tools';
 import { calendarDate } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import type { WaistEntrySummaryPoint } from '../../../../shared/models/waist-entry.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { WaistEntriesService } from '../../api/waist-entries.service';
@@ -167,23 +168,55 @@ describe('Waist history page retry actions', () => {
         expect(load).toHaveBeenCalledTimes(initialLoadCount + 2);
     });
 
-    it('retries the failed chart from the rendered button without reloading measurements', () => {
+    it('keeps one chart retry in flight without reloading the visible measurements', () => {
         const { fixture, facade } = context;
+        const host = fixture.nativeElement as HTMLElement;
         const service = TestBed.inject(WaistEntriesService);
         const load = vi.spyOn(service, 'getSummary');
         const pageLoad = vi.spyOn(service, 'getPageSummary');
         const entries = facade.entries();
         const pageLoadCount = pageLoad.mock.calls.length;
+        const chartLoadCount = load.mock.calls.length;
+        const year = [...host.querySelectorAll<HTMLButtonElement>('fd-period-filter button')].find(
+            button => button.textContent.trim() === 'WAIST_HISTORY.RANGE_YEAR',
+        );
+        if (year === undefined) {
+            throw new Error('Expected the annual range control');
+        }
         load.mockReturnValueOnce(throwError(() => new Error('Chart unavailable')));
-        facade.changeRange('week');
+        year.click();
         TestBed.tick();
         fixture.detectChanges();
-        const banner = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.waist-history-page__chart-section > div');
-        expect(banner?.hidden).toBe(false);
-        banner?.querySelector<HTMLButtonElement>('button')?.click();
+        const filters = load.mock.lastCall?.[0];
+        const banner = host.querySelector<HTMLElement>('.waist-history-page__chart-section > div');
+        const retry = banner?.querySelector<HTMLButtonElement>('button');
+        if (filters === undefined || banner === null || !(retry instanceof HTMLButtonElement)) {
+            throw new Error('Expected the failed chart Retry action');
+        }
+        expect(year.getAttribute('aria-checked')).toBe('true');
+        expect(load).toHaveBeenCalledTimes(chartLoadCount + 1);
+        expect(banner.hidden).toBe(false);
+        const pending = new Subject<WaistEntrySummaryPoint[]>();
+        load.mockReturnValueOnce(pending);
+
+        retry.click();
+        expect(retry.isConnected).toBe(true);
+        retry.click();
+        expect(load).toHaveBeenCalledTimes(chartLoadCount + 2);
+        expect(load).toHaveBeenLastCalledWith(filters);
+        expect(pending.observed).toBe(true);
+        fixture.detectChanges();
+        expect(banner.hidden).toBe(true);
+        expect(host.querySelector('fd-waist-history-chart-card [role="status"]')?.textContent).toContain('WAIST_HISTORY.LOADING');
+        expect(host.querySelector('.waist-history-page__metric-value')?.textContent).toContain(String(FIXTURE_REFERENCE_MEASUREMENT));
+        expect(pageLoad).toHaveBeenCalledTimes(pageLoadCount);
+
+        const firstDay = calendarDate(filters.dateFrom);
+        pending.next([{ startDate: firstDay, endDate: firstDay, averageCircumferenceCm: FIXTURE_CURRENT_MEASUREMENT }]);
+        pending.complete();
         fixture.detectChanges();
         expect(facade.summaryLoadError()).toBe(false);
-        expect(banner?.hidden).toBe(true);
+        expect(host.querySelector('fd-waist-history-chart-card fd-ui-line-chart')).not.toBeNull();
         expect(facade.entries()).toEqual(entries);
         expect(pageLoad).toHaveBeenCalledTimes(pageLoadCount);
     });

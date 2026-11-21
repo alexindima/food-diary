@@ -14,17 +14,17 @@ beforeEach(() => {
 });
 
 describe('PremiumPlanPricingFacade', () => {
-    it('loads both current prices without passing customer data', async () => {
+    it.each([
+        { token: 'test_token', environment: 'sandbox' },
+        { token: 'live_catalog_fixture', environment: 'production' },
+    ])('loads both $environment prices without passing customer data', async ({ token, environment }) => {
         preview.mockResolvedValue(PRICES);
         const facade = setupFacade();
-        const pending = facade.loadPricesAsync(overview(), 'ru');
+        const pending = facade.loadPricesAsync({ ...overview(), paddleClientToken: ` ${token} ` }, 'ru');
         expect(facade.loading()).toBe(true);
         await pending;
 
-        expect(preview).toHaveBeenCalledWith(
-            { monthly: 'pri_month', yearly: 'pri_year' },
-            { token: 'test_token', environment: 'sandbox', locale: 'ru' },
-        );
+        expect(preview).toHaveBeenCalledExactlyOnceWith({ monthly: 'pri_month', yearly: 'pri_year' }, { token, environment, locale: 'ru' });
         expect(facade.prices()).toEqual(PRICES);
         expect(facade.loading()).toBe(false);
         expect(facade.unavailable()).toBe(false);

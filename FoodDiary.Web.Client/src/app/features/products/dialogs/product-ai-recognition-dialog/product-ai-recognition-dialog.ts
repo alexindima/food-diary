@@ -199,9 +199,6 @@ export class ProductAiRecognitionDialogComponent {
     }
 
     protected refineRecognition(): void {
-        if (this.isBusy()) {
-            return;
-        }
         this.productLabel.set(null);
         this.nutrition.set(null);
         this.results.set([]);

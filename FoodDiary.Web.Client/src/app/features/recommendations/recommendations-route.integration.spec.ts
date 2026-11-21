@@ -190,7 +190,7 @@ describe('Recommendation discussions on the lazy route', () => {
 });
 
 describe('Recommendation tasks on the lazy route', () => {
-    it('keeps the pending state and server response attached to the matching task row', async () => {
+    it('submits a repeated task action once and keeps the response attached to its row', async () => {
         const harness = await renderRecommendationsAsync();
         const http = TestBed.inject(HttpTestingController);
         expectList(http, RECOMMENDATIONS_URL).flush([]);
@@ -201,7 +201,9 @@ describe('Recommendation tasks on the lazy route', () => {
         expect(firstRow.textContent).toContain('CLIENT_TASKS.OVERDUE');
         expect(root.textContent).toContain('RECOMMENDATIONS.EMPTY_TITLE');
 
-        button(firstRow, COMPLETE_LABEL).click();
+        const completeButton = button(firstRow, COMPLETE_LABEL);
+        completeButton.click();
+        completeButton.click();
         view(harness);
         expect(button(firstRow, COMPLETE_LABEL).disabled).toBe(true);
         expect(button(secondRow, REOPEN_LABEL).disabled).toBe(false);

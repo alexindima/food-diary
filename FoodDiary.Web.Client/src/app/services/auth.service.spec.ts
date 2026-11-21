@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vite
 import { environment } from '../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
+import type { AuthenticationHttpResponse } from '../shared/api/sdk/generated/model/authentication-http-response';
 import type { TelegramDiaryTransferHttpResponse } from '../shared/api/sdk/generated/model/telegram-diary-transfer-http-response';
 import {
     ConfirmPasswordResetRequest,
@@ -505,6 +506,31 @@ describe('anonymous browser session restoration', () => {
         await restored;
         expect(service.isAuthReady()).toBe(false);
         expect(service.isAuthenticated()).toBe(false);
+    });
+
+    it('does not authenticate a returned profile without session binding and accepts a complete retry', async () => {
+        const recovery = TestBed.inject(AuthRecoveryStateService);
+        const unbound = { user: response.user, roles: response.roles } satisfies AuthenticationHttpResponse;
+        const restored = service.restoreSessionAsync();
+        requests.expectOne({ method: 'POST', url: `${base}/session` }).flush(unbound);
+        await restored;
+
+        expect(recovery.issue()).toBe('restore');
+        expect(service.isAuthReady()).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getUserId()).toBeNull();
+        expect(service.getSessionKey()).toBeNull();
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+
+        const retry = service.restoreSessionAsync();
+        requests.expectOne({ method: 'POST', url: `${base}/session` }).flush(response);
+        await retry;
+
+        expect(service.isAuthReady()).toBe(true);
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getUserId()).toBe(response.user.id);
+        expect(service.getSessionKey()).toBe(sessionId);
+        expect(recovery.issue()).toBeNull();
     });
 });
 

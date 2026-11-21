@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, type Writa
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComponent, type FdUiEmojiPickerOption } from 'fd-ui-kit';
 import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
+import { fdUiCoerceInputTextValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { FASTING_SYMPTOM_OPTIONS } from '../../../../shared/models/fasting.data';
@@ -65,7 +66,7 @@ export class FastingCheckInCardComponent {
     }
 
     protected setNotesValue(value: string | number | null): void {
-        this.notes().set(value === null ? '' : String(value));
+        this.notes().set(fdUiCoerceInputTextValue(value));
     }
 
     protected selectedHungerLabel(): string {

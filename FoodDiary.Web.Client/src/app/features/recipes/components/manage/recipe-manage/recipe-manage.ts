@@ -7,14 +7,13 @@ import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../../shared/development/development-tools';
 import type { UnsavedEditor } from '../../../../../shared/forms/unsaved-editor';
-import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import type { Recipe, RecipeDto } from '../../../../../shared/models/recipe.data';
@@ -98,12 +97,7 @@ export class RecipeManageComponent implements UnsavedEditor {
     private readonly checkingPublication = signal(false);
 
     private readonly recipeManageFacade = inject(RecipeManageFacade);
-    private readonly languageVersion = signal(0);
-    private readonly stepsTouchedState = createCollectionTouchedState({
-        hasItems: () => this.steps.length > 0,
-        errorMessage: () => this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY'),
-        dependencies: [this.languageVersion],
-    });
+    private readonly stepsTouched = signal(false);
 
     public readonly recipe = input<Recipe | null>(null);
     protected globalError = this.recipeManageFacade.globalError;
@@ -113,7 +107,6 @@ export class RecipeManageComponent implements UnsavedEditor {
     protected readonly isSubmitting = computed(() => this.recipeManageFacade.isSubmitting() || this.checkingPublication());
     protected readonly isImporting = signal(false);
     protected readonly isFormLocked = computed(() => this.isSubmitting() || this.checkingLanguage() || this.isImporting());
-    protected readonly stepsTouched = this.stepsTouchedState.touched;
     protected readonly importUrl = signal('');
     protected readonly importText = signal('');
     protected readonly importErrorKey = signal<string | null>(null);
@@ -168,7 +161,6 @@ export class RecipeManageComponent implements UnsavedEditor {
         const touched = this.stepsTouched();
         return this.steps.map(step => ({ state: this.createStepCardState(step, touched) }));
     });
-    protected readonly stepsError = this.stepsTouchedState.error;
     protected readonly totalCalories: RecipeNutritionFormManager['totalCalories'];
     protected readonly totalFiber: RecipeNutritionFormManager['totalFiber'];
     protected readonly totalAlcohol: RecipeNutritionFormManager['totalAlcohol'];
@@ -203,7 +195,6 @@ export class RecipeManageComponent implements UnsavedEditor {
         this.nutrientChartData = this.nutritionFormManager.nutrientChartData;
         this.nutritionMode = this.nutritionFormManager.nutritionMode;
 
-        this.watchLanguageChanges();
         this.stepFormManager.addStep();
         this.updateSummaryFromCurrentForm();
         this.watchSignalFormModelChanges();
@@ -395,9 +386,9 @@ export class RecipeManageComponent implements UnsavedEditor {
         }
 
         this.recipeSignalForm().markAsTouched();
-        this.stepsTouchedState.markTouched();
+        this.stepsTouched.set(true);
 
-        if (this.nutritionFormManager.hasMacrosError()) {
+        if (this.nutritionFormManager.hasInvalidSubmittedMacros()) {
             return;
         }
 
@@ -516,17 +507,21 @@ export class RecipeManageComponent implements UnsavedEditor {
         return this.leaveDecision;
     }
 
-    protected onImportUrlChange(value: string | number | null): void {
-        this.importUrl.set(String(value ?? ''));
+    protected onImportUrlChange(value: FdUiInputValue): void {
+        this.importUrl.set(fdUiCoerceInputTextValue(value));
         this.importErrorKey.set(null);
     }
 
-    protected onImportTextChange(value: string | number | null): void {
-        this.importText.set(String(value ?? ''));
+    protected onImportTextChange(value: FdUiInputValue): void {
+        this.importText.set(fdUiCoerceInputTextValue(value));
         this.importErrorKey.set(null);
     }
 
     protected applyImportDraft(): void {
+        if (this.stepPhotosUploading()) {
+            return;
+        }
+
         const sourceUrl = this.importUrl().trim();
         const draft = parseRecipeImportDraft({
             text: this.importText(),
@@ -587,7 +582,7 @@ export class RecipeManageComponent implements UnsavedEditor {
 
         this.stepFormManager.resetSteps();
         this.stepFormManager.populateRecipeSteps(recipeData);
-        this.stepsTouchedState.reset();
+        this.stepsTouched.set(false);
 
         this.nutritionFormManager.updateNutrientSummary(recipeData);
         this.nutritionFormManager.initialize();
@@ -615,12 +610,6 @@ export class RecipeManageComponent implements UnsavedEditor {
             untracked(() => {
                 this.updateSummaryFromCurrentForm();
             });
-        });
-    }
-
-    private watchLanguageChanges(): void {
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.languageVersion.update(version => version + 1);
         });
     }
 
@@ -655,18 +644,11 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     private createNutritionControl<Field extends RecipeNutritionField>(field: Field): RecipeNutritionValueControl<RecipeFormValues[Field]> {
-        const getFieldState = (): RecipeSignalFieldState => this.recipeSignalForm[field]();
         const getValue = (): RecipeFormValues[Field] => this.recipeFormModel()[field];
         const setValue = (value: RecipeFormValues[Field]): void => {
             this.patchRecipeFormModel({ [field]: value });
         };
         return {
-            get dirty(): boolean {
-                return getFieldState().dirty();
-            },
-            get touched(): boolean {
-                return getFieldState().touched();
-            },
             get value(): RecipeFormValues[Field] {
                 return getValue();
             },
@@ -912,15 +894,8 @@ type RecipeNutritionField =
     | 'servings';
 
 type RecipeNutritionValueControl<T> = {
-    readonly dirty: boolean;
-    readonly touched: boolean;
     readonly value: T;
     setValue: (value: T) => void;
-};
-
-type RecipeSignalFieldState = {
-    dirty: () => boolean;
-    touched: () => boolean;
 };
 
 type RecipeNutritionFormAdapter = {

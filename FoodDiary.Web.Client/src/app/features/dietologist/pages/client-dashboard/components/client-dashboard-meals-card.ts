@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -17,7 +17,6 @@ import type { ClientMealView } from '../client-dashboard-lib/client-dashboard.ma
 })
 export class ClientDashboardMealsCardComponent {
     protected readonly locale = injectCurrentLanguage();
-    private readonly translateService = inject(TranslateService);
 
     public readonly meals = input<readonly ClientMealView[]>([]);
     public readonly total = input(0);
@@ -26,7 +25,6 @@ export class ClientDashboardMealsCardComponent {
     public readonly loadError = input(false);
     public readonly loadMore = output();
     protected readonly countLabelKey = computed(
-        () =>
-            `DIETOLOGIST.CLIENT_DASHBOARD.MEALS.COUNT_${new Intl.PluralRules(this.translateService.currentLang() ?? 'en').select(this.total()).toUpperCase()}`,
+        () => `DIETOLOGIST.CLIENT_DASHBOARD.MEALS.COUNT_${new Intl.PluralRules(this.locale()).select(this.total()).toUpperCase()}`,
     );
 }

@@ -447,6 +447,54 @@ describe('QuickMealDrawerComponent native draft controls', () => {
     });
 });
 
+it('keeps a pending recipe edit when the user removes a different draft row', async () => {
+    const recipeItem = createRecipeDraftItem();
+    const productKey = 'product-product-1';
+    const { fixture, mealManageFacade, quickService } = await setupComponentAsync([
+        recipeItem,
+        { key: productKey, type: 'product', product, amount: PRODUCT_AMOUNT },
+    ]);
+    const preparation = deferRecipeWeight(mealManageFacade);
+    const { closed } = mockPendingEditDialog();
+    const open = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
+    const host = fixture.nativeElement as HTMLElement;
+    const rows = host.querySelectorAll<HTMLElement>('.quick-meal__item');
+    expect(rows).toHaveLength(2);
+    const edit = quickAction(rows[0], 'QUICK_MEAL.EDIT_ITEM_NAMED');
+    const remove = quickAction(rows[1], 'QUICK_MEAL.REMOVE_ITEM_NAMED');
+    const save = quickAction(host, 'QUICK_MEAL.SAVE_ARIA');
+
+    edit.click();
+    fixture.detectChanges();
+    expect(mealManageFacade.prepareRecipeItemAsync).toHaveBeenCalledExactlyOnceWith(recipe, RECIPE_SERVINGS);
+    expect(save.disabled).toBe(true);
+    expect(remove.disabled).toBe(false);
+
+    remove.click();
+    fixture.detectChanges();
+    expect(quickService.removeItem).toHaveBeenCalledExactlyOnceWith(productKey);
+    expect(host.querySelectorAll('.quick-meal__item')).toHaveLength(1);
+    expect(host.querySelector('.quick-meal__name')?.textContent).toBe(recipe.name);
+    expect(edit.disabled).toBe(true);
+    expect(save.disabled).toBe(true);
+    expect(open).not.toHaveBeenCalled();
+
+    preparation.next(createPreparedRecipeItem());
+    preparation.complete();
+    await flushPromisesAsync();
+    expect(open).toHaveBeenCalledOnce();
+    expect(save.disabled).toBe(true);
+
+    const updatedGrams = (RECIPE_GRAMS * UPDATED_RECIPE_SERVINGS) / RECIPE_SERVINGS;
+    closed.next(createItemValue(MealSourceType.Recipe, null, recipe, updatedGrams));
+    closed.complete();
+    await flushPromisesAsync();
+    fixture.detectChanges();
+    expect(quickService.updateItem).toHaveBeenCalledExactlyOnceWith(recipeItem.key, { ...recipeItem, amount: UPDATED_RECIPE_SERVINGS });
+    expect(edit.disabled).toBe(false);
+    expect(save.disabled).toBe(false);
+});
+
 function quickAction(host: HTMLElement, label: string): HTMLButtonElement {
     const button = host.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`);
     if (button === null) {

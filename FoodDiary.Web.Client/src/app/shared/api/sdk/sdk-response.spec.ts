@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { requireSdkFields, sdkEnum, sdkInstant, sdkMaybe } from './sdk-response';
+import { requireSdkFields, sdkDefinedFields, sdkEnum, sdkInstant, sdkMaybe, sdkNullableFields } from './sdk-response';
 
 describe('SDK application boundaries', () => {
     it('preserves zero, false, fractional nutrition and optional null values', () => {
@@ -21,6 +21,34 @@ describe('SDK application boundaries', () => {
         const date = new Date('2026-10-05T18:30:00.000Z');
         expect(sdkInstant(date)).toBe(date);
     });
+    it.each([
+        { normalize: sdkDefinedFields, absent: undefined, convention: 'undefined' },
+        { normalize: sdkNullableFields, absent: null, convention: 'null' },
+    ])('writes selected fields as own data properties using $convention for absence', ({ normalize, absent }) => {
+        const readLabel = vi.fn<() => string | null>().mockReturnValueOnce('spread value').mockReturnValue(null);
+        const response = {
+            get label(): string | null {
+                return readLabel();
+            },
+            optional: undefined,
+            untouched: null,
+            amount: 0,
+            completed: false,
+        };
+
+        const result = normalize(response, ['label', 'optional', 'amount', 'completed']);
+
+        expect(result).toStrictEqual({ label: absent, optional: absent, untouched: null, amount: 0, completed: false });
+        expect(readLabel).toHaveBeenCalledTimes(2);
+        expect(Object.getOwnPropertyDescriptor(result, 'label')).toEqual({
+            value: absent,
+            enumerable: true,
+            configurable: true,
+            writable: true,
+        });
+        expect(Object.getOwnPropertyDescriptor(response, 'label')).toHaveProperty('get', expect.any(Function));
+    });
+
     it('retains omitted, null, zero and false optional fields', () => {
         const mapper = (value: number | boolean): number | boolean => value;
         expect(sdkMaybe(undefined, mapper)).toBeUndefined();

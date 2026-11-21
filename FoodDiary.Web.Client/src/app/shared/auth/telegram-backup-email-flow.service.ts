@@ -56,7 +56,11 @@ export class TelegramBackupEmailFlowService {
         if (userId === null) {
             throw new Error('Authentication required');
         }
+        const revision = this.sessionRevision;
         const response = await firstValueFrom(this.auth.startTelegramBackupEmail(email));
+        if (revision !== this.sessionRevision || userId !== this.auth.getUserId()) {
+            return;
+        }
         const url = new URL(response.authorizationUrl);
         const state = url.searchParams.get('state');
         if (url.origin !== 'https://oauth.telegram.org' || url.pathname !== '/auth' || state?.length !== STATE_LENGTH) {

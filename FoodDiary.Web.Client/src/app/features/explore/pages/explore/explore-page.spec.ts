@@ -58,14 +58,6 @@ describe('ExplorePageComponent', () => {
         expect(component['recipeData'].items()).toEqual([createRecipe()]);
     });
 
-    it('reloads first page when sort changes', () => {
-        component['onSortChange']('popular');
-
-        expect(component['sortBy']()).toBe('popular');
-        expect(component['currentPageIndex']()).toBe(0);
-        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'popular' });
-    });
-
     it('loads selected page using one-based API page number', () => {
         component['onPageChange'](SELECTED_PAGE_INDEX);
 
@@ -120,6 +112,46 @@ describe('ExplorePageComponent', () => {
         host.querySelector<HTMLButtonElement>('[data-tour-id="explore-tour-help"] button')?.click();
 
         expect(start).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ id: 'explore' }), { force: true });
+    });
+});
+
+describe('Explore rendered sort controls', () => {
+    it('marks the active sort choice and returns to the first page when switching sort order', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        const sortButtons = Array.from(host.querySelectorAll<HTMLButtonElement>('.explore-sort button'));
+        const newest = sortButtons.find(button => button.textContent.trim() === 'EXPLORE.SORT_NEWEST');
+        const popular = sortButtons.find(button => button.textContent.trim() === 'EXPLORE.SORT_POPULAR');
+        const nextPage = host.querySelector<HTMLButtonElement>('fd-ui-pagination button:last-child');
+        if (newest === undefined || popular === undefined || nextPage === null) {
+            throw new Error('Expected Explore sort buttons and pagination');
+        }
+        expect(newest.classList).toContain('fd-ui-button--primary');
+        expect(popular.classList).toContain('fd-ui-button--outline');
+
+        const olderRecipe = { ...createRecipe(), id: entityId<'recipe'>('older-recipe'), name: 'Second page stew' };
+        const popularRecipe = { ...createRecipe(), id: entityId<'recipe'>('popular-recipe'), name: 'Most liked ramen' };
+        exploreService.queryRecipes
+            .mockReturnValueOnce(of({ ...createPage(), page: 2, data: [olderRecipe] }))
+            .mockReturnValueOnce(of({ ...createPage(), data: [popularRecipe] }))
+            .mockReturnValueOnce(of(createPage()));
+        nextPage.click();
+        fixture.detectChanges();
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(2, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
+        expect(host.querySelector('.explore-grid')?.textContent).toContain(olderRecipe.name);
+
+        popular.click();
+        fixture.detectChanges();
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'popular' });
+        expect(newest.classList).toContain('fd-ui-button--outline');
+        expect(popular.classList).toContain('fd-ui-button--primary');
+        expect(host.querySelector('.explore-grid')?.textContent).toContain(popularRecipe.name);
+
+        newest.click();
+        fixture.detectChanges();
+        expect(exploreService.queryRecipes).toHaveBeenLastCalledWith(1, EXPLORE_PAGE_SIZE, { search: '', sortBy: 'newest' });
+        expect(newest.classList).toContain('fd-ui-button--primary');
+        expect(popular.classList).toContain('fd-ui-button--outline');
+        expect(host.querySelector('.explore-grid')?.textContent).toContain(createRecipe().name);
     });
 });
 

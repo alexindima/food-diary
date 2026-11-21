@@ -139,4 +139,19 @@ describe('localized AI nutrition edits', () => {
 
         expect(result?.items).toEqual([expect.objectContaining({ amount: EDITED_AMOUNT, calories: EDITED_AMOUNT, protein: 15 })]);
     });
+
+    it('uses the resolved nutrition for an added portion with no previous amount', () => {
+        const original = { id: 'original', name: 'Apple', amount: SOURCE_AMOUNT, unit: 'g' };
+        const addedAmount = 40;
+        const added = { id: 'added', name: 'Banana', amount: addedAmount, unit: 'g' };
+        const resolved = { ...nutrition.items[0], name: added.name, amount: addedAmount, calories: 35, protein: 0.4 };
+        const result = recalculateEditedAiNutrition(
+            { ...nutrition, items: [nutrition.items[0], resolved] },
+            [original],
+            [{ ...original, amount: EDITED_AMOUNT }, added],
+        );
+
+        expect(result?.items).toEqual([expect.objectContaining({ name: 'Apple', amount: EDITED_AMOUNT, calories: 150 }), resolved]);
+        expect(result).toMatchObject({ calories: 185 });
+    });
 });

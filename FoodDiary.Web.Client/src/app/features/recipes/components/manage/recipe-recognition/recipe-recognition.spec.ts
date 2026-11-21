@@ -75,10 +75,11 @@ beforeEach(async () => {
 });
 
 describe('RecipeRecognitionComponent clipboard and review', () => {
-    it('offers a copied Instagram recipe after enabling suggestions and fills it only when accepted', async () => {
+    it('applies a copied recipe only once when the accept action is clicked repeatedly', async () => {
+        const link = 'https://www.instagram.com/reel/example/';
         const suggested = vi.fn();
         fixture.componentInstance.sourceUrlSuggested.subscribe(suggested);
-        clipboardRead.mockResolvedValueOnce('https://www.instagram.com/reel/example/?igsh=sharing');
+        clipboardRead.mockResolvedValueOnce(`${link}?igsh=sharing`);
         const host = fixture.nativeElement as HTMLElement;
         clipboardCheckbox().click();
         await fixture.whenStable();
@@ -87,10 +88,15 @@ describe('RecipeRecognitionComponent clipboard and review', () => {
         expect(host.textContent).toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
         expect(suggested).not.toHaveBeenCalled();
         expect(storePreference).toHaveBeenCalledWith('local', 'recipe.clipboardSuggestions', 'true');
-        recipeAction('RECIPE_MANAGE.IMPORT.USE_LINK').click();
+        const accept = recipeAction('RECIPE_MANAGE.IMPORT.USE_LINK');
+        accept.click();
+        accept.click();
         fixture.detectChanges();
 
-        expect(suggested).toHaveBeenCalledExactlyOnceWith('https://www.instagram.com/reel/example/');
+        expect(suggested).toHaveBeenCalledExactlyOnceWith(link);
+        expect(storePreference.mock.calls.filter(([scope]) => scope === 'session')).toEqual([
+            ['session', 'recipe.dismissedClipboardUrl', link],
+        ]);
         expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.CLIPBOARD_FOUND');
         expect(ai.importRecipe).not.toHaveBeenCalled();
     });
@@ -335,7 +341,7 @@ describe('RecipeRecognitionComponent clipboard return', () => {
 });
 
 describe('RecipeRecognitionComponent recognition recovery', () => {
-    it('offers retry after the video source fails and emits the replacement draft only after success', async () => {
+    it('ignores a late file selection during video recognition and allows retry after failure', async () => {
         const pending = new Subject<RecipeImportResult>();
         const recognized = vi.fn();
         fixture.componentInstance.draftRecognized.subscribe(recognized);
@@ -348,10 +354,18 @@ describe('RecipeRecognitionComponent recognition recovery', () => {
         fixture.detectChanges();
 
         expect(videoCheckbox().disabled).toBe(true);
+        const fileInput = inputElement('#recipe-video-file');
+        const lateFile = new File(['replacement video'], 'replacement.mp4', { type: 'video/mp4' });
+        expect(fileInput.disabled).toBe(true);
+        Object.defineProperty(fileInput, 'files', { value: { item: () => lateFile } });
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+        fixture.detectChanges();
+
         pending.error(new HttpErrorResponse({ status: 502, error: { error: 'Ai.RecipeVideoUnavailable' } }));
         await fixture.whenStable();
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('#recipe-video-file-name')?.textContent).toContain('RECIPE_MANAGE.IMPORT.VIDEO_NO_FILE');
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('RECIPE_MANAGE.IMPORT.VIDEO_SOURCE_ERROR');
         expect(host.textContent).not.toContain('RECIPE_MANAGE.IMPORT.REVIEW_HINT');
         expect(recognized).not.toHaveBeenCalled();
@@ -522,6 +536,31 @@ describe('RecipeRecognitionComponent other inputs', () => {
         expect(ai.importRecipe).toHaveBeenCalledExactlyOnceWith({ sourceUrl, text: caption });
         expect(ai.importRecipeVideo).toHaveBeenCalledOnce();
     });
+});
+
+it('uses the recipe link after an empty file selection replaces a previously selected video', async () => {
+    setInputs(reportedUrl);
+    expect(videoCheckbox().checked).toBe(true);
+    const fileInput = inputElement('fd-recipe-video-input input[type="file"]');
+    const emptySelection = fileInput.files;
+    const file = new File(['video'], 'recipe.mp4', { type: 'video/mp4' });
+    let selection: Pick<FileList, 'item'> | null = { item: () => file };
+    Object.defineProperty(fileInput, 'files', { get: () => selection });
+    const selectedName = (fixture.nativeElement as HTMLElement).querySelector('#recipe-video-file-name');
+    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+    expect(selectedName?.textContent).toContain(file.name);
+
+    expect(emptySelection?.length).toBe(0);
+    selection = emptySelection;
+    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+    expect(selectedName?.textContent).toContain('RECIPE_MANAGE.IMPORT.VIDEO_NO_FILE');
+    expect(videoCheckbox().checked).toBe(true);
+    await recognizeAsync();
+
+    expect(ai.importRecipeVideo).toHaveBeenCalledExactlyOnceWith({ sourceUrl: reportedUrl, text: null }, null);
+    expect(ai.importRecipe).not.toHaveBeenCalled();
 });
 
 function setInputs(sourceUrl: string, text = ''): void {

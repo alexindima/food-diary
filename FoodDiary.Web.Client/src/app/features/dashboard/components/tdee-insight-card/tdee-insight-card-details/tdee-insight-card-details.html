@@ -14,11 +14,12 @@
         >
     </div>
 }
-@if (weightTrendFormatted()) {
+@let trendKg = weightTrendKgPerWeek();
+@if (trendKg !== null) {
     <div class="tdee-card__meta fd-row fd-justify-between fd-gap-sm">
         <span class="tdee-card__meta-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
         <span class="tdee-card__meta-value fd-ui-stat-value"
-            >{{ displayWeightTrend() | number: '1.1-1' : locale() }} {{ measurements.weightUnitKey() | translate }}/{{
+            >{{ measurements.displayWeight(trendKg) | number: '1.1-1' : locale() }} {{ measurements.weightUnitKey() | translate }}/{{
                 'GENERAL.TIME.WEEK_SHORT' | translate
             }}</span
         >

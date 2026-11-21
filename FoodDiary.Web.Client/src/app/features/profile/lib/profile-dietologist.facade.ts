@@ -10,7 +10,6 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Subscription } from 'rxjs';
 import { finalize } from 'rxjs';
 
-import { RequestStateController } from '../../../shared/lib/request-state';
 import type { DietologistPermissions, DietologistRelationship } from '../../../shared/models/dietologist.data';
 import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../../dietologist/contracts/relationship-actions';
 import { ProfileManageFacade } from './profile-manage.facade';
@@ -42,9 +41,9 @@ export class ProfileDietologistFacade {
 
     public readonly dietologistPermissions = signal<DietologistPermissions>(DEFAULT_DIETOLOGIST_PERMISSIONS);
 
-    private readonly relationshipRequest = new RequestStateController<true>();
+    private readonly relationshipLoading = signal(false);
     private relationshipRead: Subscription | undefined;
-    public readonly isLoadingDietologist = this.relationshipRequest.isLoading;
+    public readonly isLoadingDietologist = this.relationshipLoading.asReadonly();
 
     public readonly isSavingDietologistPermissions = signal(false);
 
@@ -242,27 +241,25 @@ export class ProfileDietologistFacade {
 
     public loadDietologistRelationship(): void {
         this.relationshipRead?.unsubscribe();
-        const requestId = this.relationshipRequest.begin();
+        this.relationshipLoading.set(true);
         this.relationshipRead = this.dietologistFacade
             .getRelationship()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: relationship => {
-                    if (this.relationshipRequest.succeed(requestId, true)) {
-                        this.facade.setDietologistRelationship(relationship);
-                        this.dietologistError.set(null);
-                    }
+                    this.relationshipLoading.set(false);
+                    this.facade.setDietologistRelationship(relationship);
+                    this.dietologistError.set(null);
                 },
                 error: () => {
-                    if (this.relationshipRequest.fail(requestId, 'USER_MANAGE.DIETOLOGIST_LOAD_ERROR')) {
-                        this.setDietologistError('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
-                    }
+                    this.relationshipLoading.set(false);
+                    this.setDietologistError('USER_MANAGE.DIETOLOGIST_LOAD_ERROR');
                 },
             });
     }
     private cancelRelationshipRead(): void {
         this.relationshipRead?.unsubscribe();
-        this.relationshipRequest.reset();
+        this.relationshipLoading.set(false);
     }
 
     private refreshPendingRelationshipRead(): void {

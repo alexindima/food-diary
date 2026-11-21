@@ -10,7 +10,7 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 114,
+    "selectorUnreferencedComponents": 111,
     "routedStandaloneComponents": 72,
     "componentsWithoutDirectSpecs": 123,
     "criticalSymbolsWithoutTestReferences": 45,
@@ -1045,14 +1045,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/dietologist/dialogs/bulk-recommendation-review/bulk-recommendation-review.spec.ts"
     },
     {
-      "class": "LikeButtonComponent",
-      "selector": "fd-like-button",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.spec.ts"
-    },
-    {
       "class": "ReportDialogComponent",
       "selector": "fd-report-dialog",
       "feature": "explore",
@@ -1147,14 +1139,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-management-dialog/fasting-session-management-dialog.spec.ts"
-    },
-    {
-      "class": "FastingStatsCardComponent",
-      "selector": "fd-fasting-stats-card",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.spec.ts"
     },
     {
       "class": "DataTablePreviewComponent",
@@ -1739,14 +1723,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-daily-card/wearable-daily-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-daily-card/wearable-daily-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/wearables/components/wearable-daily-card/wearable-daily-card.spec.ts"
-    },
-    {
-      "class": "WeeklyCheckInStatsCardComponent",
-      "selector": "fd-weekly-check-in-stats-card",
-      "feature": "weekly-check-in",
-      "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.spec.ts"
     },
     {
       "class": "WeeklyCheckInSuggestionsCardComponent",
@@ -3112,8 +3088,8 @@
           "required": true
         },
         {
-          "name": "weightTrendFormatted",
-          "type": "string | null",
+          "name": "weightTrendKgPerWeek",
+          "type": "number | null",
           "required": true
         }
       ],
@@ -3208,8 +3184,8 @@
           "required": true
         },
         {
-          "name": "weightTrendFormatted",
-          "type": "string | null",
+          "name": "weightTrendKgPerWeek",
+          "type": "number | null",
           "required": true
         }
       ],

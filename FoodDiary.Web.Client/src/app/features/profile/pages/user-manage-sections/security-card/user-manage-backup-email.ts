@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiTextEnterDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { interval } from 'rxjs';
 
 import { ProfileManageFacade } from '../../../lib/profile-manage.facade';
@@ -42,7 +42,7 @@ export class UserManageBackupEmailComponent {
     );
 
     protected setEmail(value: string | number | null): void {
-        this.email.set(typeof value === 'string' ? value : '');
+        this.email.set(fdUiCoerceInputTextValue(value));
     }
 
     protected submit(event?: Event): void {

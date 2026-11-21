@@ -46,4 +46,21 @@ describe('Premium meal input round trip', () => {
         });
         expect(drafts.take('user-1', '/dashboard')).toBe('');
     });
+
+    it('clears a fresh stored draft without text and restores the next valid meal description', () => {
+        const storage = TestBed.inject(BrowserStorageService);
+        const drafts = TestBed.inject(AiMealInputDraftService);
+        const draftWithoutText = { userId: 'user-1', path: '/dashboard', savedAt: Date.now() };
+        storage.setJson('session', DRAFT_KEY, draftWithoutText);
+        expect(storage.getJson('session', DRAFT_KEY)).toEqual(draftWithoutText);
+
+        expect(drafts.take('user-1', '/dashboard')).toBe('');
+        expect(storage.getItem('session', DRAFT_KEY)).toBeNull();
+
+        const description = 'Tea and toast';
+        drafts.save('user-1', '/dashboard', description);
+        TestBed.resetTestingModule();
+        expect(TestBed.inject(AiMealInputDraftService).take('user-1', '/dashboard')).toBe(description);
+        expect(TestBed.inject(BrowserStorageService).getItem('session', DRAFT_KEY)).toBeNull();
+    });
 });

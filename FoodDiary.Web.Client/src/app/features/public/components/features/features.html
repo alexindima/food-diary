@@ -28,7 +28,7 @@
                     [attr.aria-controls]="category.panelId"
                     [attr.id]="category.tabId"
                     [attr.tabindex]="activeCategoryKey() === category.key ? 0 : -1"
-                    (click)="selectCategory(category.key)"
+                    (click)="selectCategory(category)"
                     (keydown)="onCategoryKeydown($index, $event)"
                 >
                     <fd-ui-icon size="md" [name]="category.icon" />

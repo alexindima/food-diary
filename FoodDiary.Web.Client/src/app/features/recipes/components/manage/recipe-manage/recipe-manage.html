@@ -97,8 +97,12 @@
                                         variant="secondary"
                                         fill="outline"
                                         icon="description"
-                                        [disabled]="importText().trim().length === 0"
-                                        [disabledReason]="'RECIPE_MANAGE.IMPORT.TEXT_REQUIRED' | translate"
+                                        [disabled]="stepPhotosUploading() || importText().trim().length === 0"
+                                        [disabledReason]="
+                                            stepPhotosUploading()
+                                                ? ('DISABLED_HINTS.OPERATION_BUSY' | translate)
+                                                : ('RECIPE_MANAGE.IMPORT.TEXT_REQUIRED' | translate)
+                                        "
                                         (click)="applyImportDraft()"
                                     >
                                         {{ 'RECIPE_MANAGE.IMPORT.APPLY_BUTTON' | translate }}
@@ -118,7 +122,6 @@
                         data-tour-id="recipe-manage-steps"
                         [steps]="stepListItems()"
                         [expandedSteps]="expandedStepsSet"
-                        [stepsError]="stepsError()"
                         (stepExpandedToggle)="toggleStepExpanded($event)"
                         (stepDrop)="onStepDrop($event)"
                         (addStep)="addStep()"

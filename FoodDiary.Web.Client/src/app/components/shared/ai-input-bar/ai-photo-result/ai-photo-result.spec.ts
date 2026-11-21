@@ -338,7 +338,9 @@ describe('AiPhotoResultComponent meal details', () => {
 
 describe('Rendered photo correction', () => {
     it('validates a new row and publishes only the corrected food after removal and apply', async () => {
-        const { component, fixture } = await setupAiPhotoResultAsync();
+        const { component, fixture, translateService } = await setupAiPhotoResultAsync();
+        translateService.setTranslation('en', { AI_INPUT_BAR: { REMOVE_AI_ITEM: 'Remove {{name}} from analysis' } });
+        translateService.use('en');
         const applied = vi.fn();
         component.editApplied.subscribe(applied);
         fixture.detectChanges();
@@ -349,6 +351,10 @@ describe('Rendered photo correction', () => {
         photoButton(host, '.ai-photo-result__edit-add button').click();
         fixture.detectChanges();
         expect(host.querySelectorAll('.ai-photo-result__edit-row')).toHaveLength(2);
+        const removeOriginal = photoButton(host, '.ai-photo-result__edit-row:first-child .ai-photo-result__edit-remove button');
+        const removeNew = photoButton(host, '.ai-photo-result__edit-row:nth-child(2) .ai-photo-result__edit-remove button');
+        expect(removeOriginal.getAttribute('aria-label')).toBe('Remove яйцо from analysis');
+        expect(removeNew.getAttribute('aria-label')).toBe('Remove ? from analysis');
 
         photoButton(host, action).click();
         fixture.detectChanges();
@@ -356,10 +362,11 @@ describe('Rendered photo correction', () => {
         expect(host.querySelector('[role="alert"]')?.textContent).toContain('PHOTO_AI_DIALOG.ROW_INVALID');
         changePhotoField(host, '.ai-photo-result__edit-row:nth-child(2) input[type="text"]', '  pear  ');
         changePhotoField(host, '.ai-photo-result__edit-row:nth-child(2) input[type="number"]', '100');
-        photoButton(host, '.ai-photo-result__edit-row:first-child .ai-photo-result__edit-remove button').click();
+        removeOriginal.click();
         fixture.detectChanges();
         expect(host.querySelectorAll('.ai-photo-result__edit-row')).toHaveLength(1);
         expect(host.querySelector('[role="alert"]')).toBeNull();
+        expect(removeNew.getAttribute('aria-label')).toBe('Remove pear from analysis');
 
         photoButton(host, action).click();
         fixture.detectChanges();

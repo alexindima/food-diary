@@ -1,6 +1,6 @@
 import { Location, PlatformLocation } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from '@angular/router';
@@ -274,6 +274,91 @@ it('keeps a pending recipe paste when recognition rejects the empty source', asy
         harness.detectChanges();
         expect(source.value).toBe(clipboardUrl);
     });
+});
+
+it.each([
+    { target: 'the first step', addSecondStep: false },
+    { target: 'the second step', addSecondStep: true },
+])('waits for a photo upload for $target before replacing the recipe from pasted text', async ({ addSecondStep }) => {
+    const harness = await RouterTestingHarness.create(ADD_RECIPE);
+    const host = harness.routeNativeElement;
+    if (host === null) {
+        throw new Error('Expected the routed new recipe editor');
+    }
+    openRecipeImportSource(harness);
+    const importText = recipeTextarea(host, 'fd-ui-textarea.recipe-manage__import-text textarea');
+
+    const originalName = 'Tomato soup draft';
+    const importedName = 'Roasted onion soup';
+    typeText(recipeName(harness), originalName);
+    typeText(importText, `${importedName}\nInstructions:\n${REVISED_INSTRUCTIONS}`);
+    harness.detectChanges();
+    if (addSecondStep) {
+        recipeTextButton(host, 'RECIPE_MANAGE.ADD_STEP').click();
+        harness.detectChanges();
+    }
+
+    const targetStepIndex = addSecondStep ? 1 : 0;
+    const gallery = [...host.querySelectorAll('fd-recipe-step-card fd-image-gallery-editor')].at(targetStepIndex);
+    if (gallery === undefined) {
+        throw new Error('Expected the selected step photo gallery');
+    }
+    const input = gallery.querySelector('input[type="file"]');
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected the selected step’s native photo chooser');
+    }
+    const form = host.querySelector('form.recipe-manage__form');
+    const apply = recipeTextButton(host, 'RECIPE_MANAGE.IMPORT.APPLY_BUTTON');
+    const originalStepCount = targetStepIndex + 1;
+    expect(host.querySelectorAll('fd-recipe-step-card')).toHaveLength(originalStepCount);
+    expect(apply.disabled).toBe(false);
+
+    const pendingPhoto = holdRecipeStepPhotoConfirmationAsync(input);
+    expect(apply.isConnected).toBe(true);
+    expect(apply.disabled).toBe(false);
+    apply.click();
+    harness.detectChanges();
+    expect(recipeName(harness).value).toBe(originalName);
+    expect(host.querySelectorAll('fd-recipe-step-card')).toHaveLength(originalStepCount);
+
+    const { confirmation, fileUrl, assetId } = await pendingPhoto;
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(form?.getAttribute('aria-busy')).toBe('true');
+    });
+
+    expect(apply.disabled).toBe(true);
+    apply.click();
+    harness.detectChanges();
+    const nameWhileUploading = recipeName(harness).value;
+    const stepsWhileUploading = host.querySelectorAll('fd-recipe-step-card').length;
+    const cancelled = confirmation.cancelled;
+    if (!cancelled) {
+        confirmation.flush({ assetId, fileUrl });
+    }
+    await waitForAsyncTasksAsync();
+    harness.detectChanges();
+
+    expect({
+        nameWhileUploading,
+        stepsWhileUploading,
+        cancelled,
+        busyAfterUpload: form?.getAttribute('aria-busy'),
+        attachmentOnOriginalStep: gallery.querySelector('img')?.getAttribute('src'),
+    }).toEqual({
+        nameWhileUploading: originalName,
+        stepsWhileUploading: originalStepCount,
+        cancelled: false,
+        busyAfterUpload: 'false',
+        attachmentOnOriginalStep: fileUrl,
+    });
+    expect(apply.disabled).toBe(false);
+    apply.click();
+    harness.detectChanges();
+    expect(recipeName(harness).value).toBe(importedName);
+    expect(host.querySelectorAll('fd-recipe-step-card')).toHaveLength(1);
+    expect(recipeTextarea(host, 'fd-recipe-step-card textarea').value).toBe(REVISED_INSTRUCTIONS);
+    expect(host.querySelector('fd-recipe-step-card img')).toBeNull();
 });
 
 it('keeps a new recipe draft when departure is cancelled and leaves only after discard', async () => {
@@ -722,6 +807,56 @@ it('preserves the draft on publication cancel and converts only the private ingr
     http.verify();
 });
 
+it('keeps a public recipe draft when ingredient visibility cannot be checked and saves after retry', async () => {
+    const { stored, publicFood } = publicationRecipeFixture();
+    const published: Recipe = {
+        ...stored,
+        visibility: RecipeVisibility.Public,
+        steps: stored.steps.map(step => ({
+            ...step,
+            ingredients: step.ingredients.filter(ingredient => ingredient.productId === publicFood.id),
+        })),
+    };
+    const draftName = 'Roasted tomato soup';
+    readRecipe.mockReturnValueOnce(of(published));
+    updateRecipe.mockReturnValueOnce(of({ ...published, name: draftName }));
+    const http = TestBed.inject(HttpTestingController);
+    const harness = await RouterTestingHarness.create(EDIT_RECIPE);
+    for (const bundle of http.match(request => request.method === 'GET' && request.url.startsWith('./assets/i18n/en/'))) {
+        bundle.flush({});
+    }
+
+    typeText(recipeName(harness), draftName);
+    harness.detectChanges();
+    const submit = getButton(harness.routeNativeElement, 'button[type="submit"]');
+    submit.click();
+    const failedLookup = http.expectOne(request => request.method === 'GET' && request.url.endsWith(`/api/v1/products/${publicFood.id}`));
+    failedLookup.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(harness.routeNativeElement?.querySelector('[role="alert"]')?.textContent).toContain('RECIPE_PUBLICATION.ERROR');
+        expect(submit.disabled).toBe(false);
+    });
+    expect(TestBed.inject(Router).url).toBe(EDIT_RECIPE);
+    expect(recipeName(harness).value).toBe(draftName);
+    expect(updateRecipe).not.toHaveBeenCalled();
+
+    submit.click();
+    replyWithRecipePublicationFoods(http, [publicFood]);
+    await vi.waitFor(() => {
+        expect(TestBed.inject(Router).url).toBe(RECIPES);
+    });
+    expect(updateRecipe).toHaveBeenCalledExactlyOnceWith(
+        published.id,
+        expect.objectContaining({ name: draftName, visibility: RecipeVisibility.Public }),
+    );
+    expect(updateRecipe.mock.lastCall?.[1].steps[0]?.ingredients).toEqual([
+        expect.objectContaining({ productId: publicFood.id, amount: 40 }),
+    ]);
+    http.verify();
+});
+
 it.each(['Public', 'Private'] as const)('ignores a late %s ingredient after going back from a published recipe edit', async visibility => {
     const { stored, publicFood } = publicationRecipeFixture();
     const published: Recipe = {
@@ -936,6 +1071,38 @@ it('keeps known nutrition when a stored nested ingredient lacks calories', async
     expect(harness.routeNativeElement?.querySelector('fd-recipe-nutrition-editor [role="status"]')?.textContent).toContain(
         'NUTRITION_COMPLETENESS.PARTIAL',
     );
+});
+
+it('keeps known recipe nutrition when a stored product has zero base amount', async () => {
+    const source = confirmedRecipe();
+    const flour = recipeIngredientFromStored({
+        id: 'stored-flour',
+        amount: 50,
+        productId: 'flour',
+        productName: 'Flour',
+        productBaseUnit: 'G',
+        productBaseAmount: 100,
+        productCaloriesPerBase: 120,
+        productProteinsPerBase: 10,
+    });
+    const legacyOil = recipeIngredientFromStored({
+        id: 'stored-oil',
+        amount: 25,
+        productId: 'legacy-oil',
+        productName: 'Legacy oil',
+        productBaseUnit: 'G',
+        productBaseAmount: 0,
+        productCaloriesPerBase: 40,
+    });
+    readRecipe.mockReturnValueOnce(of({ ...source, steps: [{ ...source.steps[0], ingredients: [flour, legacyOil] }] }));
+    const harness = await RouterTestingHarness.create(EDIT_RECIPE);
+
+    const names = harness.routeNativeElement?.querySelectorAll<HTMLInputElement>('fd-recipe-step-card .recipe-ingredient__name input');
+    expect(Array.from(names ?? [], input => input.value)).toEqual(['Flour', 'Legacy oil']);
+    const calories = recipeNutritionInput(harness, 'calories');
+    expect(calories.readOnly).toBe(true);
+    expect(calories.value).toBe('60');
+    expect(recipeNutritionInput(harness, 'proteins').value).toBe('5');
 });
 
 it('saves a mixed stored ingredient as a nested recipe while keeping text as the first choice', async () => {
@@ -1272,6 +1439,52 @@ function publicationRecipeFixture(): { stored: Recipe; privateFood: PublicationF
 function typeText(input: HTMLInputElement | HTMLTextAreaElement, value: string): void {
     input.value = value;
     input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function recipeTextarea(host: ParentNode, selector: string): HTMLTextAreaElement {
+    const input = host.querySelector(selector);
+    if (!(input instanceof HTMLTextAreaElement)) {
+        throw new Error(`Expected the rendered recipe field ${selector}`);
+    }
+    return input;
+}
+
+async function holdRecipeStepPhotoConfirmationAsync(
+    input: HTMLInputElement,
+): Promise<{ confirmation: TestRequest; fileUrl: string; assetId: string }> {
+    // jsdom has no image decoder or native file picker. Exercise the existing upload pipeline after those browser boundaries.
+    const decodedImage = document.createElement('img');
+    Object.defineProperties(decodedImage, { naturalWidth: { value: 1 }, naturalHeight: { value: 1 } });
+    vi.stubGlobal('Image', function createDecodedImage(): HTMLImageElement {
+        return decodedImage;
+    });
+    const createObjectUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValueOnce('blob:recipe-step-photo');
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        createObjectUrl.mockRestore();
+        http.verify();
+    });
+    const png = atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aB5cAAAAASUVORK5CYII=');
+    const file = new File([Uint8Array.from(png, byte => byte.codePointAt(0) ?? 0)], 'tomato-step.png', { type: 'image/png' });
+    Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    decodedImage.dispatchEvent(new Event('load'));
+
+    const assetId = 'fba6230e-ab99-4eb4-a8bb-7ec39ffdd560';
+    const fileUrl = 'https://images.example.test/recipe-step.png';
+    const uploadUrl = 'https://uploads.example.test/recipe-step.png?signature=recipe-step';
+    const presign = await vi.waitFor(() =>
+        http.expectOne(request => request.method === 'POST' && request.url.endsWith('/images/upload-url')),
+    );
+    expect(presign.request.body).toEqual({ fileName: file.name, contentType: file.type, fileSizeBytes: file.size });
+    presign.flush({ assetId, uploadUrl, fileUrl, expiresAtUtc: '2026-05-17T10:00:00.000Z' });
+    const upload = await vi.waitFor(() => http.expectOne({ method: 'PUT', url: uploadUrl }));
+    expect(upload.request.body).toBe(file);
+    upload.flush('');
+    const confirmation = await vi.waitFor(() =>
+        http.expectOne(request => request.method === 'POST' && request.url.endsWith(`/images/${assetId}/confirm`)),
+    );
+    return { confirmation, fileUrl, assetId };
 }
 
 function expectRecipeGalleryImage(harness: RouterTestingHarness, selector: string, expectedUrl: string): void {

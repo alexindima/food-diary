@@ -13,7 +13,7 @@ import { type UserPrivacyState, UserService } from '../api/user.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import { MarketingConsentService } from '../marketing/marketing-consent.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
-import { PrivacyConsentPurpose } from './privacy-consent-purpose';
+import { PrivacyConsentPurpose, type PrivacyConsentPurposeValue } from './privacy-consent-purpose';
 import { PRIVACY_NOTICE_VERSION } from './privacy-notice-version';
 
 @Service()
@@ -110,7 +110,7 @@ export class PrivacyConsentFacade {
         return state;
     }
 
-    public async chooseAsync(purpose: PrivacyConsentPurpose, granted: boolean): Promise<boolean> {
+    public async chooseAsync(purpose: PrivacyConsentPurposeValue, granted: boolean): Promise<boolean> {
         const session = this.sessionVersion;
         const userId = this.users.user()?.id;
         this.markPendingWithdrawal(purpose, granted, userId);
@@ -128,14 +128,14 @@ export class PrivacyConsentFacade {
         }
     }
 
-    private markPendingWithdrawal(purpose: PrivacyConsentPurpose, granted: boolean, userId: string | undefined): void {
+    private markPendingWithdrawal(purpose: PrivacyConsentPurposeValue, granted: boolean, userId: string | undefined): void {
         if (!granted && userId !== undefined && purpose === PrivacyConsentPurpose.MarketingAttribution) {
             this.storage.setItem('local', `fd_marketing_withdrawal:${userId}`, 'pending');
         }
     }
 
     private async saveChoiceAsync(
-        purpose: PrivacyConsentPurpose,
+        purpose: PrivacyConsentPurposeValue,
         granted: boolean,
         session: number,
         userId: string | undefined,
@@ -233,7 +233,7 @@ export class PrivacyConsentFacade {
     }
 }
 
-function isGranted(state: UserPrivacyState, purpose: PrivacyConsentPurpose): boolean {
+function isGranted(state: UserPrivacyState, purpose: PrivacyConsentPurposeValue): boolean {
     switch (purpose) {
         case PrivacyConsentPurpose.HealthTracking: {
             return state.healthAcceptedAtUtc !== null;

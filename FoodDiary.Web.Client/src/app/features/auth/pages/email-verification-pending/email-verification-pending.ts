@@ -173,9 +173,6 @@ export class EmailVerificationPendingComponent {
     }
 
     private startResendCooldown(): void {
-        if (!this.ensureCurrentOwner()) {
-            return;
-        }
         this.browserWindow.clearInterval(this.cooldownIntervalId);
         this.resendCooldownSeconds.set(this.cooldown.remainingSeconds(this.userId));
         if (this.resendCooldownSeconds() === 0) {

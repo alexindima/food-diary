@@ -8,7 +8,6 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { EMPTY, type Observable } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -167,11 +166,9 @@ export class FastingPageComponent {
         });
         this.facade.initialize();
 
-        ((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.currentLanguage.set(this.localizationService.getCurrentLanguage());
-            });
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.currentLanguage.set(this.localizationService.getCurrentLanguage());
+        });
 
         effect(() => {
             const version = this.facade.checkInSavedVersion();

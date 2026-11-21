@@ -189,13 +189,11 @@ export class HeaderActionsOverflowComponent {
         const metadata = target.closest<HTMLElement>('[data-fd-overflow-label]');
         const metadataLabel = metadata?.getAttribute('data-fd-overflow-label')?.trim();
         const ariaLabel = target.getAttribute('aria-label')?.trim();
-        const textContent = target.cloneNode(true);
-        if (textContent instanceof HTMLElement) {
-            for (const decorative of textContent.querySelectorAll('[aria-hidden="true"], [hidden], .fd-ui-icon__glyph')) {
-                decorative.remove();
-            }
+        const labelSource = target.ownerDocument.importNode(target, true);
+        for (const decorative of labelSource.querySelectorAll('[aria-hidden="true"], [hidden], .fd-ui-icon__glyph')) {
+            decorative.remove();
         }
-        const textLabel = textContent.textContent?.trim();
+        const textLabel = labelSource.textContent.trim();
         const titleLabel = target.getAttribute('title')?.trim();
 
         return this.firstNonEmpty(metadataLabel, ariaLabel, textLabel, titleLabel) ?? '';

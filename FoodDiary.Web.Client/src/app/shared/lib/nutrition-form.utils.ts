@@ -174,8 +174,10 @@ export function checkMacrosError(controls: Array<{ value: number | null; touched
         return false;
     }
 
-    return controls.every(c => {
-        const value = Number(c.value);
-        return c.value === null || !Number.isFinite(value) || value < 0;
-    });
+    return controls.every(control => isMissingOrInvalidMacroValue(control.value));
+}
+
+export function isMissingOrInvalidMacroValue(value: number | null): boolean {
+    const numeric = Number(value);
+    return value === null || !Number.isFinite(numeric) || numeric < 0;
 }

@@ -56,7 +56,7 @@ export class ItemSelectDialogComponent {
     protected useText(): void {
         const name = this.textQuery().trim();
         if (this.allowText && name.length > 0 && name.length <= MAX_TEXT_NAME_LENGTH) {
-            this.completeWith({ type: 'Text', name });
+            this.closeDialogIfPresent({ type: 'Text', name });
         }
     }
     protected readonly tabs: FdUiTab[] = [
@@ -130,9 +130,16 @@ export class ItemSelectDialogComponent {
         this.onCreateRecipeRequested();
     }
 
-    private completeWith(selection: ItemSelection | null): void {
-        if (!this.embedded() && this.dialogRef !== null) {
-            this.dialogRef.close(selection);
+    private closeDialogIfPresent(selection: ItemSelection | null): boolean {
+        if (this.embedded() || this.dialogRef === null) {
+            return false;
+        }
+        this.dialogRef.close(selection);
+        return true;
+    }
+
+    private completeWith(selection: Exclude<ItemSelection, { type: 'Text' }> | null): void {
+        if (this.closeDialogIfPresent(selection)) {
             return;
         }
 
@@ -143,7 +150,7 @@ export class ItemSelectDialogComponent {
 
         if (selection.type === 'Product') {
             this.productSelected.emit(selection.product);
-        } else if (selection.type === 'Recipe') {
+        } else {
             this.recipeSelected.emit(selection.recipe);
         }
     }

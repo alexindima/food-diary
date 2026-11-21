@@ -23,7 +23,7 @@ import type {
     WaistGoalHistoryItem,
     WeightGoalHistoryItem,
 } from '../models/user.data';
-import { PrivacyConsentPurpose } from '../privacy/privacy-consent-purpose';
+import { PrivacyConsentPurpose, type PrivacyConsentPurposeValue } from '../privacy/privacy-consent-purpose';
 import { PRIVACY_NOTICE_VERSION } from '../privacy/privacy-notice-version';
 import { UsersSdk } from './sdk/generated/api/users.service';
 import { createSdkConnection, sdkRequestOptions } from './sdk/sdk-connection';
@@ -91,7 +91,7 @@ export class UserService {
         );
     }
 
-    public updatePrivacy(purpose: PrivacyConsentPurpose, granted: boolean, noticeVersion: string): Observable<void> {
+    public updatePrivacy(purpose: PrivacyConsentPurposeValue, granted: boolean, noticeVersion: string): Observable<void> {
         const session = this.sessionVersion;
         return this.sdk.client
             .putUsersPrivacy({

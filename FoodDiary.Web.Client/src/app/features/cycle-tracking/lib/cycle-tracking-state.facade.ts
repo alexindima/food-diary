@@ -32,7 +32,9 @@ export class CycleTrackingStateFacade {
     private readonly nutritionLoad = new RequestStateController<CycleNutritionSummary | null>();
     private readonly refreshError = signal<string | null>(null);
     private cycleRead: Subscription | undefined;
-    private settingsWriteRevision = 0;
+    private profileWriteRevision = 0;
+    private profileReadRevision = 0;
+    private latestFullReadRevision = 0;
     private nutritionRead: Subscription | undefined;
     public readonly isLoading = this.cycleLoad.isLoading;
 
@@ -135,8 +137,20 @@ export class CycleTrackingStateFacade {
         if (this.hasActiveConsent(this.cycle(), nutritionPurpose) && !this.hasActiveConsent(cycle, nutritionPurpose)) {
             this.loadNutritionSummary(null);
         }
-        this.settingsWriteRevision += 1;
+        this.acceptProfileWrite(cycle);
+    }
+
+    public acceptProfileWrite(cycle: CycleResponse): void {
+        this.profileWriteRevision += 1;
         this.cycle.set(cycle);
+    }
+
+    public startProfileRead(): { revision: number; response: Observable<CycleResponse | null> } {
+        return { revision: ++this.profileReadRevision, response: this.cyclesService.getCurrent() };
+    }
+
+    public hasNewerFullRead(revision: number): boolean {
+        return this.latestFullReadRevision > revision;
     }
 
     public loadNutritionSummary(cycle: CycleResponse | null): void {
@@ -171,10 +185,12 @@ export class CycleTrackingStateFacade {
         this.cycleRead = this.readCurrentCycle()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: cycle => {
+                next: ({ cycle, revision }) => {
                     if (!this.cycleLoad.succeed(requestId, true)) {
                         return;
                     }
+                    this.latestFullReadRevision = revision;
+                    this.refreshError.set(null);
                     this.cycle.set(cycle);
                     onLoaded(cycle);
                     this.loadNutritionSummary(cycle);
@@ -185,16 +201,17 @@ export class CycleTrackingStateFacade {
             });
     }
 
-    private readCurrentCycle(): Observable<CycleResponse | null> {
+    private readCurrentCycle(): Observable<{ cycle: CycleResponse | null; revision: number }> {
         const profileId = this.cycle()?.id;
-        const settingsWriteRevision = this.settingsWriteRevision;
-        return this.cyclesService.getCurrent().pipe(
+        const writeRevision = this.profileWriteRevision;
+        const { revision, response } = this.startProfileRead();
+        return response.pipe(
             switchMap(cycle => {
-                if (cycle?.id === profileId && this.cycle()?.id === profileId && settingsWriteRevision !== this.settingsWriteRevision) {
-                    // A new read starts after the acknowledged write and its consent changes.
+                if (cycle?.id === profileId && this.cycle()?.id === profileId && writeRevision !== this.profileWriteRevision) {
+                    // Read again after a write made while this profile snapshot was in flight.
                     return this.readCurrentCycle();
                 }
-                return of(cycle);
+                return of({ cycle, revision });
             }),
         );
     }

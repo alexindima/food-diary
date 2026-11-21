@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { MealHttpResponse } from '../../../shared/api/sdk/generated/model/meal-http-response';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import {
     type MealFilters,
@@ -29,7 +30,7 @@ const AI_TOTAL_FATS = 4.8;
 const AI_TOTAL_CARBS = 67.09;
 const AI_TOTAL_FIBER = 13.79;
 const MANUAL_TOTAL_CALORIES = 350;
-const MOCK_MEAL_DTO: MealResponseDto = {
+const MOCK_MEAL_DTO = {
     id: entityId<'meal'>('m1'),
     date: utcInstant('2026-03-28'),
     mealType: 'Lunch',
@@ -53,7 +54,7 @@ const MOCK_MEAL_DTO: MealResponseDto = {
     postMealSatietyLevel: POST_MEAL_SATIETY_LEVEL,
     items: [],
     aiSessions: [],
-};
+} satisfies MealResponseDto;
 const MOCK_PAGE_DTO: PageOf<MealResponseDto> = {
     data: [MOCK_MEAL_DTO],
     page: DEFAULT_PAGE,
@@ -610,6 +611,43 @@ describe('MealService populated snapshots', () => {
             });
         });
         httpMock.expectOne(`${BASE_URL}/m1`).flush({ ...MOCK_MEAL_DTO, items: [product, recipe] });
+    });
+});
+
+it('keeps both historical item snapshots and uses product quantity when reading a meal', async () => {
+    const stored = {
+        ...MOCK_MEAL_DTO,
+        items: [
+            {
+                id: 'legacy-item',
+                mealId: 'm1',
+                amount: 125.75,
+                productId: 'legacy-product',
+                productName: 'Broth',
+                productBaseUnit: 'ml',
+                productBaseAmount: 100,
+                productCaloriesPerBase: 34,
+                recipeId: 'legacy-recipe',
+                recipeName: 'Soup',
+                recipeServings: 6,
+                recipeTotalCalories: 780,
+            },
+        ],
+    } satisfies MealHttpResponse;
+    const pending = firstValueFrom(service.getById(entityId<'meal'>('m1')));
+    httpMock.expectOne({ method: 'GET', url: `${BASE_URL}/m1` }).flush(stored);
+
+    const meal = await pending;
+    expect(meal?.id).toBe('m1');
+    expect(meal?.items).toHaveLength(1);
+    expect(meal?.items[0]).toMatchObject({
+        id: 'legacy-item',
+        mealId: 'm1',
+        sourceType: MealSourceType.Product,
+        legacyDualSource: true,
+        amount: 125.75,
+        product: { id: 'legacy-product', name: 'Broth', baseUnit: 'ML', baseAmount: 100, caloriesPerBase: 34 },
+        recipe: { id: 'legacy-recipe', name: 'Soup', servings: 6, totalCalories: 780 },
     });
 });
 

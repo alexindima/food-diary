@@ -132,7 +132,7 @@ export class MealItemsListComponent {
 
     private formatManualAmount(item: MealItemFormValues): string {
         const amount = item.amount ?? 0;
-        const unitLabel = this.getAmountUnitLabelForItem(item);
+        const unitLabel = this.getAmountUnitLabelForItem(item, amount);
         return formatMealManageAmount(amount, unitLabel, this.translateService);
     }
 
@@ -156,18 +156,17 @@ export class MealItemsListComponent {
         this.openItemSelect.emit(index);
     }
 
-    private getServingUnitLabel(amount: number | null): string {
-        const isSingleServing =
-            formatMealManageNumber(amount ?? 0, this.translateService) === formatMealManageNumber(1, this.translateService);
+    private getServingUnitLabel(amount: number): string {
+        const isSingleServing = formatMealManageNumber(amount, this.translateService) === formatMealManageNumber(1, this.translateService);
         return this.translateService.instant(isSingleServing ? 'MEAL_MANAGE.AMOUNT_UNIT_SERVING' : 'MEAL_MANAGE.AMOUNT_UNIT_SERVINGS');
     }
 
-    private getAmountUnitLabelForItem(item: MealItemFormValues): string {
+    private getAmountUnitLabelForItem(item: MealItemFormValues, amount: number): string {
         if (item.product !== null) {
             return this.translateService.instant(`GENERAL.UNITS.${item.product.baseUnit.toUpperCase()}`);
         }
 
-        return item.recipeMass.kind === 'known' ? this.translateService.instant('GENERAL.UNITS.G') : this.getServingUnitLabel(item.amount);
+        return item.recipeMass.kind === 'known' ? this.translateService.instant('GENERAL.UNITS.G') : this.getServingUnitLabel(amount);
     }
 }
 

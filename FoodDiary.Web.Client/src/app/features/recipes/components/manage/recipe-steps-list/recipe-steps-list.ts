@@ -42,7 +42,6 @@ export class RecipeStepsListComponent {
     protected readonly focusRequest = signal<{ index: number; target: 'actions' | 'description' } | null>(null);
     public readonly steps = input.required<readonly RecipeStepListItem[]>();
     public readonly expandedSteps = input.required<ReadonlySet<number>>();
-    public readonly stepsError = input<string | null>(null);
 
     public readonly addStep = output();
     public readonly removeStep = output<number>();

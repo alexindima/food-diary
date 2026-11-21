@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent, FdUiPaginationComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { debounceTime, distinctUntilChanged, map, type Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, type Observable, of, Subject, switchMap, take } from 'rxjs';
 
 import type { FavoriteRecipe } from '../../../../shared/models/recipe.data';
 import { FavoritesPickerActions } from '../../../../shared/ui/favorites/favorites-picker-actions';
@@ -68,11 +68,22 @@ export class RecipeFavoritesPickerComponent {
 
     public constructor() {
         this.facade.load();
+        const busyChanges = toObservable(this.busy);
         this.searches
             .pipe(
                 map(value => value.trim()),
                 debounceTime(SEARCH_DEBOUNCE_MS),
                 distinctUntilChanged(),
+                // A queued search must observe the mutation that disabled the search field.
+                switchMap(search =>
+                    this.busy()
+                        ? busyChanges.pipe(
+                              filter(() => !this.busy()),
+                              take(1),
+                              map(() => search),
+                          )
+                        : of(search),
+                ),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(search => {

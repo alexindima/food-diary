@@ -99,6 +99,7 @@ export class PremiumAccessPageComponent {
     protected readonly errorMessage = signal<string | null>(null);
     protected readonly checkoutReturnState = signal<'success' | 'canceled' | null>(null);
     private readonly languageVersion = signal(0);
+    private overviewRevision = 0;
 
     protected readonly isPremium = computed(() => this.overview()?.isPremium ?? this.authService.isPremium());
     protected readonly availableProviders = computed(() => {
@@ -232,9 +233,9 @@ export class PremiumAccessPageComponent {
             if (!this.isPageActive()) {
                 return;
             }
-            this.overview.set(overview);
+            this.applyBillingChange(overview);
             void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
-            if (!(await this.refreshAccountAccessAsync()) || !this.isPageActive()) {
+            if (!(await this.refreshAccountAccessAsync(this.overviewRevision)) || !this.isPageActive()) {
                 return;
             }
             this.toastService.success(this.translateService.instant('PREMIUM_PAGE.BANNERS.TRIAL_STARTED_MESSAGE'));
@@ -273,6 +274,13 @@ export class PremiumAccessPageComponent {
 
     protected async reloadOverviewAsync(): Promise<void> {
         await this.loadOverviewAsync();
+    }
+
+    protected applyBillingChange(overview: BillingOverview): void {
+        this.overviewRevision++;
+        this.overview.set(overview);
+        this.isLoading.set(false);
+        this.errorMessage.set(null);
     }
 
     protected startPremiumTour(force = true): void {
@@ -322,39 +330,46 @@ export class PremiumAccessPageComponent {
     }
 
     private async loadOverviewAsync(): Promise<void> {
+        const revision = ++this.overviewRevision;
         this.isLoading.set(true);
         this.errorMessage.set(null);
 
+        let overview: BillingOverview;
         try {
-            const overview = await this.readBillingResponseAsync(this.billingService.getOverview());
-            if (!this.isPageActive()) {
+            overview = await this.readBillingResponseAsync(this.billingService.getOverview());
+            if (!this.isCurrentOverview(revision)) {
                 return;
             }
             this.overview.set(overview);
             if (this.isBrowser && overview.isPremium !== this.authService.isPremium()) {
-                await this.refreshAccountAccessAsync();
+                await this.refreshAccountAccessAsync(revision);
             }
         } catch (error) {
-            if (this.isPageActive()) {
+            if (this.isCurrentOverview(revision)) {
                 this.errorMessage.set(this.getErrorMessage(error));
             }
+            return;
         } finally {
-            this.isLoading.set(false);
+            if (revision === this.overviewRevision) {
+                this.isLoading.set(false);
+            }
         }
 
-        const overview = this.overview();
-        if (overview !== null && this.showPlans() && this.errorMessage() === null) {
+        if (this.isCurrentOverview(revision) && this.showPlans() && this.errorMessage() === null) {
             void this.pricing.loadPricesAsync({ ...overview, availableProviders: this.availableProviders() }, this.resolveCheckoutLocale());
         }
     }
 
-    private async refreshAccountAccessAsync(): Promise<boolean> {
+    private isCurrentOverview(revision: number): boolean {
+        return this.isPageActive() && revision === this.overviewRevision;
+    }
+
+    private async refreshAccountAccessAsync(revision: number): Promise<boolean> {
         const refreshedSession = await firstValueFrom(this.authService.refreshSession());
-        if (refreshedSession) {
-            return true;
+        if (!refreshedSession && this.isCurrentOverview(revision)) {
+            this.errorMessage.set(this.translateService.instant('PREMIUM_PAGE.ERROR_ACCESS_REFRESH'));
         }
-        this.errorMessage.set(this.translateService.instant('PREMIUM_PAGE.ERROR_ACCESS_REFRESH'));
-        return false;
+        return refreshedSession;
     }
 
     private async readBillingResponseAsync<T>(response: Observable<T>): Promise<T> {
@@ -372,11 +387,12 @@ export class PremiumAccessPageComponent {
                 if (!this.isPageActive()) {
                     return;
                 }
-                this.overview.set(overview);
                 if (overview.isPremium) {
+                    this.applyBillingChange(overview);
                     await firstValueFrom(this.authService.refreshSession());
                     return;
                 }
+                this.overview.set(overview);
 
                 await this.delayCheckoutActivationPollAsync();
             }

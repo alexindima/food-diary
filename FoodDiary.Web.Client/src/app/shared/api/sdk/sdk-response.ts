@@ -43,50 +43,37 @@ export function sdkMaybe<T, U>(value: T | null | undefined, mapper: (value: T) =
     return value === undefined ? undefined : mapper(value);
 }
 
-export type NullableSdkFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Exclude<T[P], undefined> | null };
+type NormalizedSdkFields<T, K extends keyof T, Absent extends null | undefined> = {
+    [P in K]-?: Exclude<T[P], null | undefined> | Absent;
+};
 
-export type DefinedSdkFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Exclude<T[P], null | undefined> | undefined };
+export type NullableSdkFields<T, K extends keyof T> = Omit<T, K> & NormalizedSdkFields<T, K, null>;
 
-function assertDefinedSdkFields<T extends object, K extends keyof T>(
-    value: object,
+export type DefinedSdkFields<T, K extends keyof T> = Omit<T, K> & NormalizedSdkFields<T, K, undefined>;
+
+/** Each successful definition makes the selected key an own data property. */
+function defineNormalizedSdkFields<T extends object, K extends keyof T, Absent extends null | undefined>(
+    result: object,
+    source: T,
     keys: readonly K[],
-): asserts value is DefinedSdkFields<T, K> {
+    absent: Absent,
+): asserts result is NormalizedSdkFields<T, K, Absent> {
     for (const key of keys) {
-        if (!Object.hasOwn(value, key)) {
-            throw new Error(`API optional field was not normalized: ${String(key)}.`);
-        }
+        Object.defineProperty(result, key, { value: source[key] ?? absent, enumerable: true, configurable: true, writable: true });
     }
 }
 
 /** Application optional fields use undefined for absence, preserving zero/false. */
 export function sdkDefinedFields<T extends object, K extends keyof T>(value: T, keys: readonly K[]): DefinedSdkFields<T, K> {
-    const result = { ...value };
-    for (const key of keys) {
-        Object.defineProperty(result, key, { value: value[key] ?? undefined, enumerable: true, configurable: true, writable: true });
-    }
-    assertDefinedSdkFields<T, K>(result, keys);
+    const result: Omit<T, K> = { ...value };
+    defineNormalizedSdkFields(result, value, keys, undefined);
     return result;
-}
-
-function assertNullableSdkFields<T extends object, K extends keyof T>(
-    value: object,
-    keys: readonly K[],
-): asserts value is NullableSdkFields<T, K> {
-    for (const key of keys) {
-        if (!Object.hasOwn(value, key)) {
-            throw new Error(`API nullable field was not normalized: ${String(key)}.`);
-        }
-    }
 }
 
 /** Normalize only fields whose application contract explicitly allows null. */
 export function sdkNullableFields<T extends object, K extends keyof T>(value: T, keys: readonly K[]): NullableSdkFields<T, K> {
-    const result = { ...value };
-    for (const key of keys) {
-        Object.defineProperty(result, key, { value: value[key] ?? null, enumerable: true, configurable: true, writable: true });
-    }
-    // Other properties come from T unchanged; each selected key is now present.
-    assertNullableSdkFields<T, K>(result, keys);
+    const result: Omit<T, K> = { ...value };
+    defineNormalizedSdkFields(result, value, keys, null);
     return result;
 }
 

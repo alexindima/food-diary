@@ -15,6 +15,17 @@ type SdkConstructor<T> = new (http: HttpClient, basePath: string | string[], con
 const SDK_EXTRA_HEADERS = new HttpContextToken<HttpHeaders | null>(() => null);
 type SdkConnectionOptions = Partial<Pick<HttpRequest<unknown>, 'keepalive' | 'priority' | 'withCredentials'>>;
 
+function* httpEntries(source: HttpHeaders | HttpParams | null): Iterable<readonly [key: string, values: string[]]> {
+    if (source === null) {
+        return;
+    }
+
+    for (const key of source.keys()) {
+        const values = source.getAll(key);
+        yield [key, values !== null && values.length > 0 ? values : []];
+    }
+}
+
 /** The generated client delegates to the application's existing interceptor chain. */
 export function createSdkConnection<T>(
     type: SdkConstructor<T>,
@@ -38,16 +49,16 @@ export function createSdkConnection<T>(
         handle: (request): Observable<HttpEvent<unknown>> => {
             let headers = request.headers;
             const extra = request.context.get(SDK_EXTRA_HEADERS);
-            for (const key of extra?.keys() ?? []) {
-                headers = headers.set(key, extra?.getAll(key) ?? []);
+            for (const [key, values] of httpEntries(extra)) {
+                headers = headers.set(key, values);
             }
             // ASP.NET query binding is case-insensitive. Retain the app's camel-case
             // names and ordinary decoded HttpParams while preserving repeated values.
             const decoded = new HttpParams({ fromString: request.params.toString() });
             let params = new HttpParams();
-            for (const key of decoded.keys()) {
+            for (const [key, values] of httpEntries(decoded)) {
                 const name = key.charAt(0).toLowerCase() + key.slice(1);
-                for (const value of decoded.getAll(key) ?? []) {
+                for (const value of values) {
                     params = params.append(name, value);
                 }
             }

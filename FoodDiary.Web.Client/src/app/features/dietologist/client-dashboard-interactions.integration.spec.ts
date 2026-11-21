@@ -7,6 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { filter, firstValueFrom, of, Subject, take } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
+import { nutritionMealFixture, nutritionSnapshotFixture } from '../../../testing/nutrition-details.fixtures';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import type { ClientTask, DietologistRecommendation } from '../../shared/models/dietologist.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
@@ -148,6 +149,39 @@ describe('Dietologist dashboard route interactions', () => {
         expect(header?.textContent).toContain('Женский');
         expect(header?.textContent).toContain('Умеренный');
         expect(listClients).toHaveBeenCalledOnce();
+    });
+
+    it('uses the configured fallback language for meal and serving counts until the active language changes', async () => {
+        const { listClients, loadDashboard } = setupDashboardRouter();
+        const count = 5;
+        const meal = nutritionMealFixture({
+            items: [{ id: 'soup-item', mealId: 'meal-1', amount: count, recipeId: 'shared-soup', recipeName: 'Tomato soup' }],
+        });
+        const otherMeals = Array.from({ length: count - 1 }, (_, index) => nutritionMealFixture({ id: `meal-${index + 2}` }));
+        listClients.mockReturnValueOnce(of([{ ...FIRST_CLIENT, permissions: { ...PROFILE_PERMISSIONS, shareMeals: true } }]));
+        loadDashboard.mockReturnValueOnce(of(nutritionSnapshotFixture([meal, ...otherMeals])));
+
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('ru', {
+            DIETOLOGIST: { CLIENT_DASHBOARD: { MEALS: { COUNT_MANY: '{{count}} приёмов', COUNT_OTHER: '{{count}} приёма' } } },
+            QUICK_MEAL: { SERVINGS_MANY: 'порций', SERVINGS_OTHER: 'порции' },
+        });
+        translate.setTranslation('en', {
+            DIETOLOGIST: { CLIENT_DASHBOARD: { MEALS: { COUNT_OTHER: '{{count}} meals' } } },
+            QUICK_MEAL: { SERVINGS_OTHER: 'servings' },
+        });
+        await firstValueFrom(translate.setFallbackLang('ru'));
+        expect(translate.getCurrentLang()).toBeNull();
+
+        const harness = await RouterTestingHarness.create(FIRST_DASHBOARD_URL);
+        const card = dashboardHost(harness).querySelector('fd-client-dashboard-meals-card');
+        expect(card?.querySelector('.client-dashboard__section-head .fd-ui-caption')?.textContent.trim()).toBe('5 приёмов');
+        expect(card?.querySelector('article .client-dashboard__row-text')?.textContent.trim()).toBe('Tomato soup — 5 порций');
+
+        await firstValueFrom(translate.use('en'));
+        harness.detectChanges();
+        expect(card?.querySelector('.client-dashboard__section-head .fd-ui-caption')?.textContent.trim()).toBe('5 meals');
+        expect(card?.querySelector('article .client-dashboard__row-text')?.textContent.trim()).toBe('Tomato soup — 5 servings');
     });
 });
 

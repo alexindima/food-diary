@@ -129,9 +129,13 @@ describe('MealsPreviewComponent saved drafts', () => {
         const dinnerComposer = fixture.debugElement.queryAll(By.directive(AiInputBarComponent))[1].componentInstance as AiInputBarComponent;
         dinnerComposer.mealCreateRequested.emit({ source: 'Text', recognizedAtUtc: '2026-05-17T00:00:00Z', items: [] });
         fixture.componentRef.setInput('isAiMealSaving', true);
+        expect(rows[0].isConnected).toBe(true);
+        expect(rows[0].disabled).toBe(false);
+        rows[0].click();
         fixture.detectChanges();
         expect(rows[0].disabled).toBe(true);
         rows[0].click();
+        expect(rows[0].getAttribute('aria-expanded')).toBe('false');
         expect(rows[1].getAttribute('aria-expanded')).toBe('true');
 
         fixture.componentRef.setInput('isAiMealSaving', false);

@@ -57,9 +57,13 @@ export class AppBootstrapService {
         await this.localizationService.loadApplicationTranslationsAsync();
         const user = await firstValueFrom(this.userService.getInfoSilently());
         await this.privacy.flushPendingWithdrawalAsync();
-        await this.localizationService.applyLanguagePreferenceAsync(user?.language ?? null);
+        if (user === null) {
+            return;
+        }
+
+        await this.localizationService.applyLanguagePreferenceAsync(user.language);
         await this.localizationService.loadApplicationTranslationsAsync();
-        this.themeService.syncWithUserPreferences(user?.theme, user?.uiStyle, user?.surfaceStyle);
+        this.themeService.syncWithUserPreferences(user.theme, user.uiStyle, user.surfaceStyle);
     }
 
     private async routeMiniAppAsync(hadPendingLogout: boolean): Promise<void> {

@@ -1,3 +1,4 @@
+@let loadedDetails = details();
 <fd-ui-dialog size="md" [title]="metric.labelKey | translate" [style.--nutrition-color]="metric.color">
     <div fdUiDialogHeader class="nutrition-details__header fd-stack fd-gap-sm">
         <div class="fd-row fd-justify-between fd-align-start fd-gap-sm">
@@ -14,7 +15,8 @@
                 (click)="close()"
             />
         </div>
-        @if (progress(); as progress) {
+        @if (loadedDetails !== null) {
+            @let progress = loadedDetails.progress;
             <div class="nutrition-details__summary fd-row fd-align-center fd-gap-sm">
                 @if (progress.hasGoal) {
                     <fd-ui-progress-ring
@@ -81,9 +83,9 @@
             [retryLabel]="'DASHBOARD.NUTRITION_DETAILS.RETRY' | translate"
             (retry)="facade.reload()"
         >
-            @if (progress(); as progress) {
+            @if (loadedDetails !== null) {
                 <fd-nutrition-details-sources
-                    [sources]="sources()"
+                    [sources]="loadedDetails.sources"
                     [metric]="data.metric"
                     [unitKey]="metric.unitKey"
                     [language]="language()"

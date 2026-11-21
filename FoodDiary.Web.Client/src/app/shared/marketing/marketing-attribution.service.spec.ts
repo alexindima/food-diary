@@ -511,7 +511,10 @@ describe('MarketingAttributionService historical URL privacy', () => {
         httpMock.verify();
     });
 
-    it('sanitizes historical first touch before signup and removes ambiguous historical session keys', () => {
+    it.each([
+        { format: 'ambiguous legacy', sessionCapture: '/verify-email?token=old|secret|t.me|||||' },
+        { format: 'truncated JSON', sessionCapture: '["/food-diary","t.me",' },
+    ])('preserves sanitized first touch for signup and discards a $format session capture', ({ sessionCapture }) => {
         const { service, httpMock, storage } = setup();
         storage.setJson('local', 'fd_marketing_first_touch', {
             anonymousId: 'legacy-visitor',
@@ -519,7 +522,7 @@ describe('MarketingAttributionService historical URL privacy', () => {
             landingPath: '/verify-email?%74oken=old-secret&utm_source=telegram',
             utmSource: 'telegram',
         });
-        storage.setItem('session', 'fd_marketing_session_capture', '/verify-email?token=old|secret|t.me|||||');
+        storage.setItem('session', 'fd_marketing_session_capture', sessionCapture);
 
         service.recordSignupCompleted();
 

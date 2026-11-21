@@ -13,6 +13,7 @@ import { provideTranslateTesting } from '../testing/translate-testing.module';
 import { TelegramAuthService } from './features/auth/api/telegram-auth.service';
 import { AuthComponent } from './features/auth/components/auth/auth';
 import { AuthGoogleManager } from './features/auth/components/auth/auth-lib/auth-google.manager';
+import { PublicAuthDialogService } from './features/public/lib/public-auth-dialog.service';
 import { MainComponent } from './features/public/pages/landing/main';
 import { AuthService } from './services/auth.service';
 import { publicSiteLocaleGuard } from './shared/i18n/public-site-locale.guard';
@@ -54,6 +55,89 @@ describe('Public landing account dialog ownership', () => {
         TestBed.inject(HttpTestingController).verify();
     });
 });
+
+describe('Public landing account dialog while loading', () => {
+    it('opens the latest native auth choice once while the initial dialog load is pending', async () => {
+        const harness = await renderLandingAsync();
+        const router = TestBed.inject(Router);
+        const pending = holdFirstAuthOpen();
+
+        click(landing(harness), '.hero__cta--secondary button');
+        await pending.entered;
+        expect(router.url).toBe('/?auth=login');
+        click(landing(harness), '.hero__cta--primary button');
+        await vi.waitFor(() => {
+            expect(router.url).toBe('/?auth=register');
+        });
+        expect(document.body.querySelector('fd-auth-dialog')).toBeNull();
+
+        pending.release();
+        const dialog = await openedDialogAsync(harness, '#auth-login-email, #auth-register-email');
+        expect(dialog.querySelector('#auth-register-email'), 'The latest landing choice must match the rendered form').not.toBeNull();
+        expect(document.body.querySelectorAll('fd-auth-dialog')).toHaveLength(1);
+        expect(router.url).toBe('/?auth=register');
+
+        click(dialog, 'button[aria-label="COMMON.CLOSE"]');
+        await vi.waitFor(() => {
+            expect(router.url).toBe('/');
+            expect(document.body.querySelector('fd-auth-dialog')).toBeNull();
+        });
+        TestBed.inject(HttpTestingController).verify();
+    });
+
+    it('abandons a pending dialog when the auth query is cleared and accepts a later choice', async () => {
+        const harness = await renderLandingAsync();
+        const pending = holdFirstAuthOpen();
+        const page = landing(harness);
+
+        click(page, '.hero__cta--secondary button');
+        await pending.entered;
+        await harness.navigateByUrl('/', MainComponent);
+        expect(landing(harness)).toBe(page);
+        pending.release();
+        await pending.settled;
+        harness.detectChanges();
+        expect(document.body.querySelector('fd-auth-dialog'), 'Clearing auth intent must prevent the pending overlay').toBeNull();
+
+        click(page, '.hero__cta--secondary button');
+        const dialog = await openedDialogAsync(harness, '#auth-login-email');
+        click(dialog, 'button[aria-label="COMMON.CLOSE"]');
+        await vi.waitFor(() => {
+            expect(TestBed.inject(Router).url).toBe('/');
+        });
+        TestBed.inject(HttpTestingController).verify();
+    });
+});
+
+function holdFirstAuthOpen(): { entered: Promise<void>; release: () => void; settled: Promise<void> } {
+    const service = TestBed.inject(PublicAuthDialogService);
+    const openAsync = service.openAsync.bind(service);
+    const entered = createGate();
+    const ready = createGate();
+    const settled = createGate();
+    const spy = vi.spyOn(service, 'openAsync').mockImplementationOnce(async options => {
+        entered.release();
+        await ready.wait;
+        try {
+            return await openAsync(options);
+        } finally {
+            settled.release();
+        }
+    });
+    onTestFinished(() => {
+        ready.release();
+        spy.mockRestore();
+    });
+    return { entered: entered.wait, release: ready.release, settled: settled.wait };
+}
+
+function createGate(): { wait: Promise<void>; release: () => void } {
+    let release = (): void => undefined;
+    const wait = new Promise<void>(resolve => {
+        release = resolve;
+    });
+    return { wait, release };
+}
 
 async function renderLandingAsync(): Promise<RouterTestingHarness> {
     stubScrollIntoView();

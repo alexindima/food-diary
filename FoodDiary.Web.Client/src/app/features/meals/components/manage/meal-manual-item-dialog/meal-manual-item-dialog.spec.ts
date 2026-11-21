@@ -461,33 +461,39 @@ describe('Meal item picker legacy portions', () => {
     });
 
     it.each([
-        [100, 100],
-        [0, 1],
-    ])('presents a usable amount for a product with no saved portion and base amount %s', async (baseAmount, expectedAmount) => {
-        const { fixture, dialogRef } = await setupComponentAsync();
-        const host = fixture.nativeElement as HTMLElement;
-        const picker = fixture.debugElement.query(By.directive(ItemSelectStub)).componentInstance as ItemSelectStub;
-        expect(picker.embedded()).toBe(true);
-        const product = { ...createProduct(), baseAmount, defaultPortionAmount: 0 };
-        picker.productSelected.emit(product);
-        fixture.detectChanges();
+        [0, 100, 100],
+        [-1, 100, 100],
+        [Number.NaN, 100, 100],
+        [Number.POSITIVE_INFINITY, 100, 100],
+        [0, 0, 1],
+    ])(
+        'uses a valid product amount when the saved portion is %s and the base amount is %s',
+        async (defaultPortionAmount, baseAmount, expectedAmount) => {
+            const { fixture, dialogRef } = await setupComponentAsync();
+            const host = fixture.nativeElement as HTMLElement;
+            const picker = fixture.debugElement.query(By.directive(ItemSelectStub)).componentInstance as ItemSelectStub;
+            expect(picker.embedded()).toBe(true);
+            const product = { ...createProduct(), baseAmount, defaultPortionAmount };
+            picker.productSelected.emit(product);
+            fixture.detectChanges();
 
-        expect(host.querySelector('.meal-manual-item-dialog__source-name')?.textContent).toBe(product.name);
-        expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe(String(expectedAmount));
-        const save = Array.from(host.querySelectorAll('button')).find(button =>
-            button.textContent.trim().endsWith('MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE'),
-        );
-        expect(save?.disabled).toBe(false);
-        save?.click();
+            expect(host.querySelector('.meal-manual-item-dialog__source-name')?.textContent).toBe(product.name);
+            expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe(String(expectedAmount));
+            const save = Array.from(host.querySelectorAll('button')).find(button =>
+                button.textContent.trim().endsWith('MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE'),
+            );
+            expect(save?.disabled).toBe(false);
+            save?.click();
 
-        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({
-            sourceType: MealSourceType.Product,
-            product,
-            recipe: null,
-            amount: expectedAmount,
-            recipeMass: UNKNOWN_SERVING_MASS,
-        });
-    });
+            expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({
+                sourceType: MealSourceType.Product,
+                product,
+                recipe: null,
+                amount: expectedAmount,
+                recipeMass: UNKNOWN_SERVING_MASS,
+            });
+        },
+    );
 });
 
 function embeddedPicker(fixture: ComponentFixture<MealManualItemDialogComponent>): ItemSelectStub {

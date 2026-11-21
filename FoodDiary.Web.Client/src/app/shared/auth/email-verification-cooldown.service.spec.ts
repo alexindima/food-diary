@@ -28,6 +28,18 @@ describe('EmailVerificationCooldownService', () => {
         expect(cooldown.remainingSeconds('cooldown-user')).toBe(0);
     });
 
+    it('keeps a confirmed account cooldown when a send has no account owner', () => {
+        const cooldown = TestBed.inject(EmailVerificationCooldownService);
+        cooldown.markSent('cooldown-user');
+
+        cooldown.markSent(null);
+
+        expect(cooldown.remainingSeconds('cooldown-user')).toBe(RESEND_PAUSE_SECONDS);
+        expect(cooldown.remainingSeconds(null)).toBe(0);
+        const storage = TestBed.inject(BrowserStorageService);
+        expect(storage.getItem('session', 'email-verification-cooldown:null')).toBeNull();
+    });
+
     it('keeps other accounts independent and ignores invalid stored deadlines', () => {
         const cooldown = TestBed.inject(EmailVerificationCooldownService);
         cooldown.markSent('cooldown-user');

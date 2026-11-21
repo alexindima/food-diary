@@ -28,7 +28,7 @@
             [isLoading]="isLoading()"
             [overview]="overview()"
             [plansAvailable]="showPlans()"
-            (overviewChanged)="overview.set($event)"
+            (overviewChanged)="applyBillingChange($event)"
             (manageBilling)="openPortalAsync()"
             (startTrial)="startTrialAsync()"
             (resumeSubscription)="showRenewalPlans()"

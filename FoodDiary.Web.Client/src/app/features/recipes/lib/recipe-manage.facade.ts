@@ -202,11 +202,9 @@ export class RecipeManageFacade {
                     return;
                 }
 
-                if (food === null) {
-                    return;
+                if (food !== null && food.baseAmount > 0) {
+                    addNutrition(this.calculateProductSummary(food, amount));
                 }
-
-                addNutrition(this.calculateProductSummary(food, amount));
             });
         });
 
@@ -235,8 +233,7 @@ export class RecipeManageFacade {
     }
 
     private calculateProductSummary(food: NonNullable<IngredientFormValues['food']>, amount: number): RecipeNutritionSummary {
-        const baseAmount = food.baseAmount > 0 ? food.baseAmount : 1;
-        const multiplier = amount / baseAmount;
+        const multiplier = amount / food.baseAmount;
 
         return {
             calories: food.caloriesPerBase * multiplier,

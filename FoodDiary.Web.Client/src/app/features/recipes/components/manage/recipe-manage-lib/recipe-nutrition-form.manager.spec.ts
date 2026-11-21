@@ -90,7 +90,7 @@ describe('RecipeNutritionFormManager manual mode', () => {
         expect(operations.roundNutritionValue).toHaveBeenCalled();
     });
 
-    it('distinguishes missing manual macros from explicit zero values', () => {
+    it('rejects submitted manual macros only when every value is missing or invalid', () => {
         const form = createRecipeFormState();
         form.patchValue({
             calculateNutritionAutomatically: false,
@@ -100,14 +100,22 @@ describe('RecipeNutritionFormManager manual mode', () => {
             manualCarbs: null,
             manualAlcohol: null,
         });
-        form.controls.manualProteins.markAsDirty();
         const manager = new RecipeNutritionFormManager(form, createOperations());
 
-        expect(manager.hasMacrosError()).toBe(true);
+        expect(manager.hasInvalidSubmittedMacros()).toBe(true);
 
         form.patchValue({ manualProteins: 0, manualFats: 0, manualCarbs: 0, manualAlcohol: 0 });
 
-        expect(manager.hasMacrosError()).toBe(false);
+        expect(manager.hasInvalidSubmittedMacros()).toBe(false);
+
+        form.patchValue({
+            calculateNutritionAutomatically: true,
+            manualProteins: null,
+            manualFats: null,
+            manualCarbs: null,
+            manualAlcohol: null,
+        });
+        expect(manager.hasInvalidSubmittedMacros()).toBe(false);
     });
 
     it('normalizes invalid servings to one', () => {
@@ -186,26 +194,15 @@ function createOperations(overrides: Partial<RecipeNutritionFormOperations> = {}
 function createRecipeFormState(): TestRecipeNutritionFormState {
     let value = createRecipeFormValue();
     const createControl = <Field extends keyof RecipeFormValues>(field: Field): TestRecipeNutritionControl<RecipeFormValues[Field]> => {
-        let dirty = false;
         return {
-            get dirty(): boolean {
-                return dirty;
-            },
-            get touched(): boolean {
-                return dirty;
-            },
             get value(): RecipeFormValues[Field] {
                 return value[field];
-            },
-            markAsDirty(): void {
-                dirty = true;
             },
             setValue(nextValue: RecipeFormValues[Field]): void {
                 value = {
                     ...value,
                     [field]: nextValue,
                 };
-                dirty = true;
             },
         };
     };
@@ -234,10 +231,7 @@ function createRecipeFormState(): TestRecipeNutritionFormState {
 }
 
 type TestRecipeNutritionControl<T> = {
-    readonly dirty: boolean;
-    readonly touched: boolean;
     readonly value: T;
-    markAsDirty: () => void;
     setValue: (value: T) => void;
 };
 

@@ -657,8 +657,6 @@ export class ShoppingListFacade {
 
         if (this.isSaving()) {
             this.pendingSave = true;
-            this.saveQueue.schedule();
-            return;
         }
 
         this.saveQueue.schedule();
@@ -709,7 +707,7 @@ export class ShoppingListFacade {
                     this.updateListSummary(list);
                     if (this.pendingSave) {
                         // Keep newer local edits, but adopt IDs assigned to newly persisted items.
-                        const ids = new Map(submittedItems.map((item, index) => [item.id, list.items[index]?.id ?? item.id]));
+                        const ids = new Map(submittedItems.map((item, index) => [item.id, list.items[index]?.id]));
                         this.list.set(list);
                         this.items.update(items => items.map(item => ({ ...item, id: ids.get(item.id) ?? item.id })));
                         this.pendingSave = false;

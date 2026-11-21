@@ -116,10 +116,6 @@ export class GoogleIdentityService {
     }
 
     private async loadScriptAsync(): Promise<void> {
-        if (!this.isBrowser) {
-            throw new Error('Google Identity Services are only available in the browser');
-        }
-
         if (this.scriptLoaded()) {
             return;
         }

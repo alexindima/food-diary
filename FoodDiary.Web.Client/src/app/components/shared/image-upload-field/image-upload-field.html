@@ -12,8 +12,8 @@
         [class.image-upload-field__dropzone--uploading]="isUploading()"
         [class.image-upload-field__dropzone--has-image]="!!selection().url"
         (click)="onZoneClick(fileInput)"
-        (keydown.enter)="onZoneClick(fileInput)"
-        (keydown.space)="onZoneClick(fileInput); $event.preventDefault()"
+        (keydown.enter)="onZoneKeydown($event, fileInput)"
+        (keydown.space)="onZoneKeydown($event, fileInput, true)"
         (drop)="onDrop($event)"
     >
         <input

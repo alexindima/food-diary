@@ -34,7 +34,7 @@ describe('MealPlanListFiltersComponent', () => {
         expect(filterChange).toHaveBeenCalledWith('Balanced');
     });
 
-    it('visibly marks the selected diet and emits a source change', () => {
+    it('visibly marks the selected diet and emits changes from each source button', () => {
         const fixture = createComponent('Keto');
         const element: HTMLElement = fixture.debugElement.nativeElement as HTMLElement;
         const active = element.querySelector('fd-ui-button button[aria-pressed="true"]');
@@ -42,8 +42,18 @@ describe('MealPlanListFiltersComponent', () => {
         expect(active?.classList.contains('fd-ui-button--primary')).toBe(true);
         const changed = vi.fn();
         fixture.componentInstance.sourceChange.subscribe(changed);
-        fixture.componentInstance['selectSource']('saved');
-        expect(changed).toHaveBeenCalledWith('saved');
+
+        for (const source of ['curated', 'saved', 'all']) {
+            const key = `MEAL_PLANS.SOURCE.${source.toUpperCase()}`;
+            const buttons = Array.from(element.querySelectorAll<HTMLButtonElement>('button[role="radio"]'));
+            const button = buttons.find(candidate => candidate.textContent.trim() === key);
+            if (button === undefined) {
+                throw new Error(`Expected source button ${key}`);
+            }
+            button.click();
+            fixture.detectChanges();
+        }
+        expect(changed.mock.calls).toEqual([['curated'], ['saved'], ['all']]);
     });
 });
 

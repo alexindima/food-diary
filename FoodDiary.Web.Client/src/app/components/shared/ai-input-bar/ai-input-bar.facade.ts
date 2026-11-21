@@ -58,14 +58,14 @@ export class AiInputBarFacade {
         );
     }
 
-    public calculateTextNutrition(items: FoodVisionItem[]): void {
+    private calculateTextNutrition(items: FoodVisionItem[]): void {
         this.runNutrition(this.text, items, {
             quota: 'AI_INPUT_BAR.TEXT_ERROR_QUOTA',
             generic: 'AI_INPUT_BAR.TEXT_NUTRITION_ERROR',
         });
     }
 
-    public calculatePhotoNutrition(items: FoodVisionItem[]): void {
+    private calculatePhotoNutrition(items: FoodVisionItem[]): void {
         this.runNutrition(this.photo, items, {
             quota: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
             generic: 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
@@ -158,10 +158,6 @@ export class AiInputBarFacade {
     }
 
     private runNutrition(state: AiInputBarChannelState, items: FoodVisionItem[], errorKeys: NutritionErrorKeys): void {
-        if (items.length === 0) {
-            this.setEmptyItemsError(state);
-            return;
-        }
         this.nutritionSubscriptions.get(state)?.unsubscribe();
         state.nutritionLoading.set(true);
         state.nutrition.set(null);

@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { recipeFromSdk } from '../../../../../shared/api/sdk/recipe-sdk.mapper';
 import { MealSourceType } from '../../../../../shared/models/meal.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../../shared/models/recipe.data';
@@ -105,8 +106,59 @@ describe('MealItemsListComponent rows', () => {
     });
 });
 
+describe('MealItemsListComponent recipes with incomplete nutrition', () => {
+    it.each([
+        { name: 'Soup with stored nutrition', totalCalories: 600, totalProteins: 40, caloriesLabel: '300', proteinsLabel: '20' },
+        { name: 'Soup without calculated nutrition', totalCalories: null, totalProteins: null, caloriesLabel: '0', proteinsLabel: '0' },
+    ])(
+        'renders known nutrition and preserves servings for $name',
+        async ({ name, totalCalories, totalProteins, caloriesLabel, proteinsLabel }) => {
+            const recipe = recipeFromSdk({
+                id: 'sparse-recipe',
+                name,
+                imageUrl: null,
+                servings: 4,
+                visibility: RecipeVisibility.Private,
+                usageCount: 0,
+                createdAt: '2026-04-05T10:30:00Z',
+                isOwnedByCurrentUser: true,
+                isNutritionAutoCalculated: true,
+                totalCalories,
+                totalProteins,
+                totalFats: null,
+                totalCarbs: null,
+                totalFiber: null,
+                totalAlcohol: null,
+                steps: [{ id: 'sparse-recipe-step', stepNumber: 1, instruction: 'Warm and serve', ingredients: [] }],
+            });
+            const { fixture } = await setupComponentAsync({
+                items: [createItemState({ sourceType: MealSourceType.Recipe, recipe, amount: RECIPE_TWO_SERVINGS })],
+            });
+
+            const row = (fixture.nativeElement as HTMLElement).querySelector('.meal-manage__manual-summary');
+            if (row === null) {
+                throw new Error('Expected the selected recipe row');
+            }
+            expect(row.querySelector('.meal-manage__ai-summary-name')?.textContent.trim()).toBe(name);
+            expect(row.querySelector('.meal-manage__ai-summary-amount')?.textContent.trim()).toBe(`2 ${MULTIPLE_SERVINGS_UNIT}`);
+            expect(row.querySelector('.meal-manage__ai-summary-calories span:last-child')?.textContent.trim()).toBe(
+                `${caloriesLabel} GENERAL.UNITS.KCAL`,
+            );
+            const macros = [...row.querySelectorAll('.meal-manage__ai-summary-nutrients span')];
+            expect(macros.map(macro => macro.textContent.trim())).toEqual([
+                `GENERAL.NUTRIENTS.PROTEIN: ${proteinsLabel} GENERAL.UNITS.G`,
+                'GENERAL.NUTRIENTS.FAT: 0 GENERAL.UNITS.G',
+                'GENERAL.NUTRIENTS.CARB: 0 GENERAL.UNITS.G',
+            ]);
+            expect(row.querySelector('.meal-manage__ai-summary-image img')).toBeNull();
+            expect(row.querySelector('.meal-manage__ai-summary-image fd-ui-icon')?.textContent.trim()).toBe('menu_book');
+        },
+    );
+});
+
 describe('MealItemsListComponent serving labels', () => {
     it.each([
+        { language: 'en', amount: 0, number: '0', unit: MULTIPLE_SERVINGS_UNIT },
         { language: 'en', amount: RECIPE_SINGLE_SERVING, number: '1', unit: SINGLE_SERVING_UNIT },
         { language: 'en', amount: RECIPE_TWO_SERVINGS, number: '2', unit: MULTIPLE_SERVINGS_UNIT },
         { language: 'en', amount: RECIPE_FALLBACK_SERVINGS, number: '1.5', unit: MULTIPLE_SERVINGS_UNIT },

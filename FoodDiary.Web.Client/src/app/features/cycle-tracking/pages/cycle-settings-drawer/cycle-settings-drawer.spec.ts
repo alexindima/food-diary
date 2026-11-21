@@ -87,11 +87,22 @@ describe('CycleSettingsDrawerComponent errors', () => {
 
 describe('CycleSettingsDrawerComponent pending actions', () => {
     it.each(['isSaving', 'isDeleting'] as const)('blocks dismissal while %s', operation => {
-        fixture.componentRef.setInput(operation, true);
-        fixture.detectChanges();
         const closed = vi.fn();
         fixture.componentInstance.closed.subscribe(closed);
         const element = document.body;
+        const backdrop = element.querySelector<HTMLButtonElement>('.cycle-drawer__backdrop');
+        if (backdrop === null) {
+            throw new Error('Expected the open settings drawer backdrop');
+        }
+        expect(backdrop.disabled).toBe(false);
+
+        fixture.componentRef.setInput(operation, true);
+        expect(backdrop.isConnected).toBe(true);
+        expect(backdrop.disabled).toBe(false);
+        backdrop.click();
+        expect(closed).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
         element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
         expect(closed).not.toHaveBeenCalled();
         const buttons = Array.from(element.querySelectorAll('button'));

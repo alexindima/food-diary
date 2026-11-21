@@ -33,13 +33,24 @@ describe('RecommendationThreadComponent', () => {
 
     it('posts a trimmed message and appends the confirmed response', () => {
         const fixture = createComponent();
-        fixture.componentInstance['draft'].set('  Thanks  ');
+        const host = fixture.nativeElement as HTMLElement;
+        const textarea = host.querySelector('textarea');
+        const send = Array.from(host.querySelectorAll('button')).find(
+            button => button.textContent.trim() === 'RECOMMENDATIONS.DISCUSSION.SEND',
+        );
+        if (textarea === null || send === undefined) {
+            throw new Error('Expected the recommendation comment form.');
+        }
 
-        fixture.componentInstance['submit']();
+        textarea.value = '  Thanks  ';
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        send.click();
+        fixture.detectChanges();
 
         expect(facade.createComment).toHaveBeenCalledWith('recommendation-1', { text: 'Thanks' });
-        expect(fixture.componentInstance['comments']().at(-1)?.id).toBe('new-comment');
-        expect(fixture.componentInstance['draft']()).toBe('');
+        expect(host.textContent).toContain('Thanks');
+        expect(textarea.value).toBe('');
     });
 
     it('hides the empty state on load failure and restores messages after retry', () => {

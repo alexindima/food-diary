@@ -667,7 +667,7 @@ describe('UserService privacy', () => {
         service.updatePrivacy(PrivacyConsentPurpose.HealthTracking, true, PRIVACY_NOTICE_VERSION).subscribe();
         const request = httpMock.expectOne(`${BASE_URL}/privacy`);
         expect(request.request.body).toEqual({
-            purpose: PrivacyConsentPurpose.HealthTracking,
+            purpose: 1,
             granted: true,
             noticeVersion: PRIVACY_NOTICE_VERSION,
         });

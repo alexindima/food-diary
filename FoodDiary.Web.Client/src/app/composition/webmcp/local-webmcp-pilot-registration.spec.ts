@@ -1,15 +1,22 @@
-import { HttpStatusCode } from '@angular/common/http';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
+import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen } from '../../features/meals/contracts/meal-development-tools';
 import { ProductService } from '../../features/products/api/product.service';
 import { RecipeService } from '../../features/recipes/api/recipe.service';
+import { WeightHistoryEntryDialogComponent } from '../../features/weight-history/dialogs/weight-history-entry-dialog/weight-history-entry-dialog';
+import { WeightHistoryFacade } from '../../features/weight-history/lib/weight-history.facade';
 import { AuthService } from '../../services/auth.service';
 import { DEVELOPMENT_REQUESTS } from '../../shared/development/development-tools';
+import { MeasurementSystemService } from '../../shared/measurements/measurement-system.service';
 import { createEmptyProductSnapshot, createEmptyRecipeSnapshot } from '../../shared/models/meal.data';
 import type { PageOf } from '../../shared/models/page-of.data';
 import type { Product } from '../../shared/models/product.data';
@@ -25,6 +32,7 @@ import { LocalWebmcpScreensService } from './local-webmcp-screens.service';
 const BROWSER_DIAGNOSTICS_SELECTOR = 'meta[name="fooddiary-webmcp"]';
 const CATALOG_LIMIT = 25;
 const BUILD_FINGERPRINT_LENGTH = 64;
+const GIT_REVISION_LENGTH = 40;
 const RECIPE_SERVINGS = 3;
 const DRAFT_SERVINGS = 1.5;
 const PRODUCT_CALORIES = 52;
@@ -156,6 +164,40 @@ describe('registered local WebMCP tools and account lifecycle', () => {
         expect(TestBed.inject(LocalWebmcpRequestsService).read()).toEqual([]);
         expect(tools.size).toBe(0);
         expect(registerTool).not.toHaveBeenCalled();
+    });
+});
+
+describe('registered local WebMCP build provenance', () => {
+    it('reports the task-emitted frontend source capture without inferring an API build', async () => {
+        const savedCapture = Object.getOwnPropertyDescriptor(environment, 'developmentBuild');
+        const sourceCapture = {
+            revision: 'a'.repeat(GIT_REVISION_LENGTH),
+            sourceFingerprint: 'b'.repeat(BUILD_FINGERPRINT_LENGTH),
+            capturedAtUtc: '2026-11-21T09:30:00.000Z',
+            fingerprintBasis: 'frontend-source-and-task-configuration',
+        };
+        try {
+            environment.developmentBuild = sourceCapture;
+            const { tools } = createPilot();
+            await waitForRegistrationAsync();
+
+            const result = await lookup(tools, 'fooddiary_read_screen_context').execute({});
+            expect(result).toMatchObject({
+                provenance: { apiRuntimeStatus: 'not-observed' },
+                application: {
+                    buildRevision: sourceCapture.revision,
+                    frontendBuild: { version: environment.buildVersion, availability: 'emitted', sourceCapture },
+                    apiRuntimeObservations: [],
+                    requests: [],
+                },
+            });
+        } finally {
+            if (savedCapture === undefined) {
+                delete environment.developmentBuild;
+            } else {
+                Object.defineProperty(environment, 'developmentBuild', savedCapture);
+            }
+        }
     });
 
     it('installs no development entry points from the production provider variant on loopback', async () => {
@@ -306,6 +348,64 @@ describe('registered local WebMCP catalog reads', () => {
         expect(await fill.execute({ kind: 'recipe-editor', draft: oversized })).toEqual({ ok: false, error: 'Too many ingredients.' });
         expect(fillDraft).not.toHaveBeenCalled();
         expect(products.query).not.toHaveBeenCalled();
+    });
+});
+
+describe('registered local WebMCP weight drafts', () => {
+    it('requires displayed units and preserves a rendered unsaved weight instead of overwriting it', async () => {
+        const close = vi.fn();
+        const { tools, router } = createPilot(INITIAL_USER, true, [
+            ...LOCAL_WEBMCP_PROVIDERS,
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            provideTranslateTesting(),
+            WeightHistoryFacade,
+            { provide: FdUiDialogRef, useValue: { close } },
+        ]);
+        await waitForRegistrationAsync();
+
+        const measurement = TestBed.inject(MeasurementSystemService);
+        const originalSystem = measurement.system();
+        measurement.setSystem('imperial');
+        try {
+            const dialog = TestBed.createComponent(WeightHistoryEntryDialogComponent);
+            dialog.detectChanges();
+            const host = dialog.nativeElement as HTMLElement;
+            const input = host.querySelector<HTMLInputElement>('fd-ui-input input');
+            if (input === null) {
+                throw new Error('Expected a rendered weight input');
+            }
+
+            const read = lookup(tools, 'fooddiary_read_screen_context');
+            expect(await read.execute({})).toMatchObject({ screen: { kind: 'weight-editor', dirty: false, data: { unit: 'lb' } } });
+            const fill = lookup(tools, 'fooddiary_fill_current_draft');
+            const draft = { date: '2026-06-21', value: 180, unit: 'kg' };
+            expect(await fill.execute({ kind: 'weight-editor', draft })).toMatchObject({
+                ok: false,
+                error: 'Measurement display unit does not match.',
+            });
+            dialog.detectChanges();
+            expect(input.value).toBe('');
+
+            const corrected = { ...draft, unit: 'lb' };
+            expect(await fill.execute({ kind: 'weight-editor', draft: corrected })).toMatchObject({ saved: false });
+            dialog.detectChanges();
+            expect(input.value).toBe(String(corrected.value));
+
+            input.value = '181';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            dialog.detectChanges();
+            expect(await fill.execute({ kind: 'weight-editor', draft: corrected })).toMatchObject({
+                ok: false,
+                error: 'Unsaved draft exists. Review, save or discard it in the interface first.',
+            });
+            expect(input.value).toBe('181');
+            expect(close).not.toHaveBeenCalled();
+            expect(router.navigate).not.toHaveBeenCalled();
+            TestBed.inject(HttpTestingController).verify();
+        } finally {
+            measurement.setSystem(originalSystem);
+        }
     });
 });
 

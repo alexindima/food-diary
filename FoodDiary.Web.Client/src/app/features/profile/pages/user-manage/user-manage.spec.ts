@@ -873,6 +873,34 @@ describe('UserManageComponent notification relationship refresh', () => {
 
         expect(dietologistService.getRelationship).toHaveBeenCalledTimes(1);
     });
+
+    it('keeps loading the latest relationship when a superseded notification refresh fails', async () => {
+        const invitation = dietologistRelationship('Pending');
+        await createComponentAsync(invitation);
+        const card = openDietologistCard();
+        const superseded = new Subject<DietologistRelationship | null>();
+        const latest = new Subject<DietologistRelationship | null>();
+
+        startDietologistRelationshipRefresh(superseded);
+        expect(superseded.observed).toBe(true);
+        startDietologistRelationshipRefresh(latest);
+        expect(superseded.observed).toBe(false);
+        expect(dietologistService.getRelationship).toHaveBeenCalledTimes(2);
+
+        superseded.error(new Error('Previous relationship request failed'));
+        fixture.detectChanges();
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_LOADING');
+        expect(facade.dietologistRelationship()).toEqual(invitation);
+
+        const accepted = dietologistRelationship('Accepted');
+        latest.next(accepted);
+        latest.complete();
+        fixture.detectChanges();
+
+        expect(dietologistError(card)).toBeNull();
+        expect(card.textContent).toContain('USER_MANAGE.DIETOLOGIST_CONNECTED_HINT');
+        expect(facade.dietologistRelationship()).toEqual(accepted);
+    });
 });
 
 describe('UserManageComponent browser unload protection', () => {
@@ -1184,6 +1212,38 @@ function deferProfileSave(savedFields: Partial<User>): (saved: boolean) => void 
     });
     return saved => finishSave?.(saved);
 }
+
+describe('UserManageComponent native profile draft input', () => {
+    it('keeps a name filled without an input event as a draft after blur', async () => {
+        await createComponentAsync(null, false, profileSaveUser());
+        const host = fixture.nativeElement as HTMLElement;
+        const firstName = host.querySelector<HTMLInputElement>('[data-user-field="firstName"] input');
+        if (firstName === null) {
+            throw new Error('Expected the editable profile first name');
+        }
+        expect(firstName.value).toBe('Before');
+        expect(profileSaveButton()).toBeNull();
+
+        firstName.focus();
+        expect(document.activeElement).toBe(firstName);
+        firstName.value = 'Autofilled name';
+        firstName.blur();
+        fixture.detectChanges();
+
+        const save = profileSaveButton();
+        if (save === null) {
+            throw new Error('Expected the profile save action after native blur');
+        }
+        expect(firstName.value).toBe('Autofilled name');
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
+        expect(save.disabled).toBe(false);
+
+        save.click();
+        await fixture.whenStable();
+
+        expect(facade.saveProfileAsync).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ firstName: 'Autofilled name' }));
+    });
+});
 
 describe('UserManageComponent explicit profile save feedback', () => {
     it('should prevent native profile form submit when saving now', async () => {

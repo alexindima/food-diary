@@ -12,11 +12,6 @@ import {
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
-import { ItemSelectDialogComponent } from '../../../../shared/dialogs/item-select-dialog/item-select-dialog';
-import type {
-    ItemSelectDialogData,
-    ItemSelection,
-} from '../../../../shared/dialogs/item-select-dialog/item-select-dialog-lib/item-select-dialog.types';
 import { calculateCalorieMismatchWarning, roundNutrient } from '../../../../shared/lib/nutrition-form.utils';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../../shared/models/image-upload.data';
@@ -29,7 +24,7 @@ import {
 } from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
-import { type RecipeServings, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import type { RecipeServings } from '../../../../shared/models/semantics/meal-quantity';
 import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
@@ -44,7 +39,6 @@ import { createMealItemValue } from '../../components/manage/meal-manage-lib/mea
 import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
 import { displayRecipeServings, recipeServingsFromInput, type ServingMassResult } from '../recipe-serving/recipe-display-amount';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
-import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
 
 @Service()
 export class MealManageFacade {
@@ -200,30 +194,6 @@ export class MealManageFacade {
         };
     }
 
-    public async openItemSelectionDialogAsync(initialTab: 'Product' | 'Recipe'): Promise<MealItemFormValues | null> {
-        const selection = await firstValueFrom(
-            this.fdDialogService
-                .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
-                    preset: 'list',
-                    data: { initialTab },
-                })
-                .afterClosed(),
-        );
-
-        if (selection === null || selection === undefined) {
-            return null;
-        }
-
-        if (selection.type === 'Text') {
-            return null;
-        }
-        if (selection.type === 'Product') {
-            return createMealItemValue(selection.product, null, this.resolveProductAmount(selection.product), MealSourceType.Product);
-        }
-
-        return this.prepareRecipeItemAsync(selection.recipe, recipeServingsFromStored(MEAL_MANAGE_DEFAULT_ITEM_AMOUNT));
-    }
-
     public async prepareRecipeItemAsync(recipe: Recipe, servings: RecipeServings): Promise<MealItemFormValues> {
         const mass = await firstValueFrom(this.recipeWeight.loadServingMass(recipe));
         return this.createRecipeItem(recipe, servings, mass);
@@ -273,18 +243,6 @@ export class MealManageFacade {
             fiber: this.getNumericValue(formValue.manualFiber),
             alcohol: this.getNumericValue(formValue.manualAlcohol),
         };
-    }
-
-    private resolveProductAmount(product: Product): number {
-        if (Number.isFinite(product.defaultPortionAmount) && product.defaultPortionAmount > 0) {
-            return product.defaultPortionAmount;
-        }
-
-        if (Number.isFinite(product.baseAmount) && product.baseAmount > 0) {
-            return product.baseAmount;
-        }
-
-        return MEAL_MANAGE_DEFAULT_ITEM_AMOUNT;
     }
 
     private calculateAutoNutritionTotalsFromValues(items: MealItemFormValues[], aiSessions: MealAiSessionManageDto[]): NutritionTotals {

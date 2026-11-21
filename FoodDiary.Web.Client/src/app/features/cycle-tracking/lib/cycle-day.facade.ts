@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, max, min, required, validate } from '@angular/forms/signals';
-import { filter, finalize, firstValueFrom, map, switchMap, tap } from 'rxjs';
+import { filter, finalize, firstValueFrom, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -10,7 +10,7 @@ import {
     type FertilitySignalPayload,
     type UpsertCycleDayPayload,
 } from '../../../shared/models/cycle.data';
-import { calendarDate } from '../../../shared/models/semantics/date-value';
+import { type CalendarDate, calendarDate } from '../../../shared/models/semantics/date-value';
 import type { CycleProfileId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { buildDayEditModel, buildFertilitySignalPayload, buildSymptomClearCategories, buildSymptomPayload } from './cycle-day.mapper';
@@ -30,6 +30,8 @@ export class CycleDayFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly state = inject(CycleTrackingStateFacade);
+    private readonly profileChanged = new Subject<void>();
+    private profileRevision = 0;
     private draftProfileId: CycleProfileId | null = null;
     public readonly dayModel = signal<CycleDayFormModel>(createDefaultCycleDayFormModel());
 
@@ -73,21 +75,26 @@ export class CycleDayFacade {
             return;
         }
         const { profileId, formValue, date } = draft;
+        const ownerRevision = this.profileRevision;
+        const ownsProfile = (cycle: CycleResponse | null): cycle is CycleResponse =>
+            this.profileRevision === ownerRevision && cycle?.id === profileId;
         this.state.dayError.set(null);
         this.state.isSavingDay.set(true);
         let savedToServer = false;
         try {
             const payload = this.buildDayPayload(formValue, date);
-            const day = await firstValueFrom(this.cyclesService.upsertDay(profileId, payload).pipe(takeUntilDestroyed(this.destroyRef)));
+            const day = await firstValueFrom(
+                this.cyclesService.upsertDay(profileId, payload).pipe(takeUntil(this.profileChanged), takeUntilDestroyed(this.destroyRef)),
+            );
             const current = this.state.cycle();
-            if (current?.id !== profileId) {
+            if (!ownsProfile(current)) {
                 return;
             }
             savedToServer = true;
             this.applySavedDay(current, day, payload.clearFertilitySignal === true);
-            await this.refreshPredictionsAsync(profileId);
+            await this.refreshPredictionsAsync(profileId, ownerRevision);
         } catch {
-            if (this.state.cycle()?.id !== profileId) {
+            if (!ownsProfile(this.state.cycle())) {
                 return;
             }
             if (!savedToServer) {
@@ -96,9 +103,11 @@ export class CycleDayFacade {
             }
             this.state.setRefreshError('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
         } finally {
-            this.state.isSavingDay.set(false);
+            if (this.profileRevision === ownerRevision) {
+                this.state.isSavingDay.set(false);
+            }
         }
-        if (this.state.cycle()?.id === profileId) {
+        if (ownsProfile(this.state.cycle())) {
             this.state.daySaveRevision.update(revision => revision + 1);
         }
     }
@@ -155,10 +164,17 @@ export class CycleDayFacade {
         };
     }
 
-    private async refreshPredictionsAsync(profileId: CycleProfileId): Promise<void> {
-        const refreshedCycle = await firstValueFrom(this.cyclesService.getCurrent().pipe(takeUntilDestroyed(this.destroyRef)));
+    private async refreshPredictionsAsync(profileId: CycleProfileId, revision: number): Promise<void> {
+        const read = this.state.startProfileRead();
+        const response = read.response.pipe(takeUntil(this.profileChanged), takeUntilDestroyed(this.destroyRef));
+        const refreshedCycle = await firstValueFrom(response).catch((error: unknown) => {
+            if (this.state.hasNewerFullRead(read.revision)) {
+                return null;
+            }
+            throw error;
+        });
         const current = this.state.cycle();
-        if (current?.id !== profileId) {
+        if (this.profileRevision !== revision || current?.id !== profileId || this.state.hasNewerFullRead(read.revision)) {
             return;
         }
         if (refreshedCycle?.id !== profileId) {
@@ -200,7 +216,7 @@ export class CycleDayFacade {
                       ],
         };
         this.state.editingDayDate.set(null);
-        this.state.cycle.set(updatedCycle);
+        this.state.acceptProfileWrite(updatedCycle);
         this.state.loadNutritionSummary(updatedCycle);
     }
 
@@ -261,7 +277,16 @@ export class CycleDayFacade {
         this.resetDayDraft();
     }
 
-    public resetDayDraft(): void {
+    public clearAfterProfileChange(): void {
+        this.profileRevision++;
+        this.profileChanged.next();
+        this.state.isSavingDay.set(false);
+        this.state.dayClearError.set(null);
+        this.state.periodStartError.set(null);
+        this.resetDayDraft();
+    }
+
+    private resetDayDraft(): void {
         // A reset can precede redraw. Keep the prior owner until the next draft opens.
         this.state.dayError.set(null);
         this.state.editingDayDate.set(null);
@@ -269,22 +294,18 @@ export class CycleDayFacade {
     }
 
     public clearDay(date: string): void {
-        const currentCycle = this.state.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0 || this.state.isDayMutationPending()) {
+        const target = this.resolveDayMutationTarget(date);
+        if (target === null) {
             return;
         }
 
-        const dateKey = toCycleDateKey(date);
-        if (dateKey.length === 0) {
-            return;
-        }
-
+        const { profileId, dateKey } = target;
         this.state.dayClearError.set(null);
         this.state.clearingDayDate.set(date);
-        const profileId = currentCycle.id;
         let clearedOnServer = false;
+        let refreshRevision: number | undefined;
         this.cyclesService
-            .clearDay(profileId, calendarDate(dateKey))
+            .clearDay(profileId, dateKey)
             .pipe(
                 map(() => this.state.cycle()),
                 filter((current): current is CycleResponse => current?.id === profileId),
@@ -297,19 +318,24 @@ export class CycleDayFacade {
                         symptoms: current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dateKey),
                         fertilitySignals: current.fertilitySignals.filter(entry => toCycleDateKey(entry.date) !== dateKey),
                     };
-                    this.state.cycle.set(updated);
+                    this.state.acceptProfileWrite(updated);
                     this.state.loadNutritionSummary(updated);
                 }),
-                switchMap(() => this.cyclesService.getCurrent()),
+                switchMap(() => {
+                    const read = this.state.startProfileRead();
+                    refreshRevision = read.revision;
+                    return read.response.pipe(map(cycle => ({ cycle, revision: read.revision })));
+                }),
+                takeUntil(this.profileChanged),
                 finalize(() => {
                     this.state.clearingDayDate.set(null);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
-                next: refreshedCycle => {
+                next: ({ cycle: refreshedCycle, revision }) => {
                     const current = this.state.cycle();
-                    if (current?.id !== profileId) {
+                    if (current?.id !== profileId || this.state.hasNewerFullRead(revision)) {
                         return;
                     }
                     if (refreshedCycle?.id !== profileId) {
@@ -326,7 +352,10 @@ export class CycleDayFacade {
                     this.state.setRefreshError(null);
                 },
                 error: () => {
-                    if (this.state.cycle()?.id !== profileId) {
+                    if (
+                        this.state.cycle()?.id !== profileId ||
+                        (refreshRevision !== undefined && this.state.hasNewerFullRead(refreshRevision))
+                    ) {
                         return;
                     }
                     if (clearedOnServer) {
@@ -339,22 +368,19 @@ export class CycleDayFacade {
     }
 
     public confirmPeriodStart(date: string): void {
-        const currentCycle = this.state.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0 || this.state.isDayMutationPending() || this.state.isEpisodeBusy()) {
+        const target = this.resolveDayMutationTarget(date);
+        if (target === null || this.state.isEpisodeBusy()) {
             return;
         }
 
-        const dateKey = toCycleDateKey(date);
-        if (dateKey.length === 0) {
-            return;
-        }
+        const { profileId, dateKey } = target;
         this.state.periodStartError.set(null);
         this.state.confirmingPeriodStartDate.set(date);
-        const profileId = currentCycle.id;
 
         this.cyclesService
-            .confirmPeriodStart(profileId, calendarDate(dateKey))
+            .confirmPeriodStart(profileId, dateKey)
             .pipe(
+                takeUntil(this.profileChanged),
                 finalize(() => {
                     this.state.confirmingPeriodStartDate.set(null);
                 }),
@@ -363,7 +389,7 @@ export class CycleDayFacade {
             .subscribe({
                 next: cycle => {
                     if (this.state.cycle()?.id === profileId) {
-                        this.state.cycle.set(cycle);
+                        this.state.acceptProfileWrite(cycle);
                     }
                 },
                 error: () => {
@@ -372,5 +398,15 @@ export class CycleDayFacade {
                     }
                 },
             });
+    }
+
+    private resolveDayMutationTarget(date: string): { profileId: CycleProfileId; dateKey: CalendarDate } | null {
+        const cycle = this.state.cycle();
+        if (cycle === null || cycle.id.length === 0 || this.state.isDayMutationPending()) {
+            return null;
+        }
+
+        const dateKey = toCycleDateKey(date);
+        return dateKey.length === 0 ? null : { profileId: cycle.id, dateKey: calendarDate(dateKey) };
     }
 }

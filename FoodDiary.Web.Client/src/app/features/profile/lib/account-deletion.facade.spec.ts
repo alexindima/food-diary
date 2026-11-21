@@ -10,7 +10,7 @@ import { UserService } from '../../../shared/api/user.service';
 import { SessionEventsService } from '../../../shared/auth/session-events.service';
 import { AccountDeletionFacade } from './account-deletion.facade';
 
-const users = { user: signal<{ id: string } | null>({ id: 'owner' }), deleteCurrentUser: vi.fn() };
+const users = { user: signal<{ id: string } | null>({ id: 'owner' }), deleteCurrentUser: vi.fn<UserService['deleteCurrentUser']>() };
 const auth = { onLogoutAsync: vi.fn() };
 const dialogs = { open: vi.fn() };
 const closeDialog = vi.fn();
@@ -112,4 +112,27 @@ describe('AccountDeletionFacade', () => {
         expect(users.deleteCurrentUser).not.toHaveBeenCalled();
         expect(closeDialog).toHaveBeenCalledWith(false);
     });
+});
+
+it('keeps the replacement session after an already delivered deletion succeeds for the previous session', async () => {
+    const response = new Subject<boolean>();
+    users.deleteCurrentUser.mockReturnValueOnce(response);
+    const pending = facade.confirmAsync();
+    await vi.waitFor(() => {
+        expect(users.deleteCurrentUser).toHaveBeenCalledOnce();
+        expect(response.observed).toBe(true);
+    });
+    expect(facade.busy()).toBe(true);
+
+    response.next(true);
+    expect(response.observed).toBe(false);
+    users.user.set({ id: 'replacement' });
+    sessions.notifyAuthenticated();
+    response.complete();
+    await pending;
+
+    expect(auth.onLogoutAsync).not.toHaveBeenCalled();
+    expect(users.user()?.id).toBe('replacement');
+    expect(facade.busy()).toBe(false);
+    expect(facade.failed()).toBe(false);
 });

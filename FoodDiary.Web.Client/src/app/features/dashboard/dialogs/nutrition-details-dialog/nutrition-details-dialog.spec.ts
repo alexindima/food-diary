@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { type Observable, of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { nutritionMealFixture, nutritionSnapshotFixture } from '../../../../../testing/nutrition-details.fixtures';
@@ -147,7 +148,7 @@ describe('Nutrition detail sources for a day rounded to zero', () => {
 });
 
 describe('Nutrition detail labels for recorded sources', () => {
-    it('keeps a named product contribution for a meal without a recorded slot', async () => {
+    it('keeps a named source and updates its unspecified meal label when translations change', async () => {
         const meal = nutritionMealFixture({
             mealType: null,
             items: [
@@ -162,12 +163,23 @@ describe('Nutrition detail labels for recorded sources', () => {
                 },
             ],
         });
-        const { host, close } = await setupAsync({}, vi.fn().mockReturnValue(of(nutritionSnapshotFixture([meal]))));
+        const { fixture, host, close, request } = await setupAsync({}, vi.fn().mockReturnValue(of(nutritionSnapshotFixture([meal]))));
         const sourceButton = host.querySelector<HTMLButtonElement>('.nutrition-details__sources button');
         expect(sourceButton?.querySelector('.nutrition-details__name')?.textContent.trim()).toBe('Plain skyr');
         expect(sourceButton?.textContent).toContain('MEAL_CARD.MEAL_TYPES.OTHER');
         expect(sourceButton?.textContent).toContain('100%');
         expect(host.textContent).not.toContain('DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED');
+
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('ru', { MEAL_CARD: { MEAL_TYPES: { OTHER: 'Другой приём пищи' } } });
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+        expect(sourceButton?.textContent).toContain('Другой приём пищи');
+        translate.setTranslation('ru', { MEAL_CARD: { MEAL_TYPES: { OTHER: 'Приём пищи без категории' } } }, true);
+        fixture.detectChanges();
+        expect(sourceButton?.textContent).toContain('Приём пищи без категории');
+        expect(sourceButton?.textContent).toContain('Plain skyr');
+        expect(request).toHaveBeenCalledOnce();
         sourceButton?.click();
         expect(close).toHaveBeenCalledExactlyOnceWith({ kind: 'meal', meal });
     });

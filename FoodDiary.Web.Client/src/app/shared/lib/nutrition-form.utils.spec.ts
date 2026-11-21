@@ -6,8 +6,20 @@ import {
     calculateMacroBarState,
     checkCaloriesError,
     checkMacrosError,
+    getControlNumericValue,
     roundNutrient,
 } from './nutrition-form.utils';
+
+describe('getControlNumericValue', () => {
+    it('reads the decimal amount from a localized quantity in grams', () => {
+        const expectedGrams = 1_234.5;
+        expect(getControlNumericValue({ value: '1\u202F234,5 г' })).toBe(expectedGrams);
+    });
+
+    it('treats an unfinished negative amount as zero', () => {
+        expect(getControlNumericValue({ value: '-' })).toBe(0);
+    });
+});
 
 const PROTEIN_10 = 10;
 

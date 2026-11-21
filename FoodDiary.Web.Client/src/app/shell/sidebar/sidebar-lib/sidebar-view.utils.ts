@@ -10,7 +10,13 @@ export function buildPrimarySidebarNavItems(isDietologist: boolean, isAdmin: boo
     }
 
     if (isAdmin) {
-        items.push({ id: 'admin', icon: 'admin_panel_settings', labelKey: 'SIDEBAR.ADMIN_PANEL', action: 'openAdminPanel' });
+        items.push({
+            id: 'admin',
+            icon: 'admin_panel_settings',
+            labelKey: 'SIDEBAR.ADMIN_PANEL',
+            action: 'openAdminPanel',
+            tone: 'danger',
+        });
     }
 
     return items;

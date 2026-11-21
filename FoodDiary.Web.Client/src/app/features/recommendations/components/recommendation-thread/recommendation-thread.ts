@@ -39,9 +39,7 @@ export class RecommendationThreadComponent {
         });
     }
 
-    protected updateDraft(event: Event): void {
-        const target = event.target;
-        const value = target instanceof HTMLTextAreaElement ? target.value : '';
+    protected updateDraft(value: string): void {
         this.draft.set(value.slice(0, COMMENT_MAX_LENGTH));
     }
 

@@ -38,6 +38,7 @@ type SidebarIntegrationContext = {
     fixture: ComponentFixture<SidebarComponent>;
     auth: {
         isAdmin: WritableSignal<boolean>;
+        isAuthenticated: WritableSignal<boolean>;
         isDietologist: WritableSignal<boolean>;
         isPremium: WritableSignal<boolean>;
         onLogoutAsync: ReturnType<typeof vi.fn<() => Promise<void>>>;
@@ -135,7 +136,7 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-describe('rendered sidebar navigation and account status', () => {
+describe('rendered sidebar navigation', () => {
     it('stops showing navigation as pending when the target route refuses the transition', async () => {
         const allow = new Subject<boolean>();
         const { fixture, router } = await setupSidebarAsync({ decision: allow });
@@ -186,7 +187,9 @@ describe('rendered sidebar navigation and account status', () => {
             expect(products.classList).not.toContain('is-pending');
         });
     });
+});
 
+describe('rendered sidebar account status', () => {
     it('shows role and plan updates from the signed-in account', async () => {
         const { fixture, auth, notifications } = await setupSidebarAsync();
         const role = desktopElement(fixture, '.fd-ui-sidebar__brand-subtitle');
@@ -207,7 +210,28 @@ describe('rendered sidebar navigation and account status', () => {
         notifications.unreadCount.set(1);
         fixture.detectChanges();
         expect(role.textContent).toBe('SIDEBAR.STATUS_ADMIN');
+        expect(desktopElement(fixture, 'button.fd-ui-sidebar__link--danger').textContent).toContain('SIDEBAR.ADMIN_PANEL');
         expect(desktopElement(fixture, '.fd-ui-sidebar__brand-notifications-dot').getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('stops issuing notification reads while the mounted sidebar loses its session', async () => {
+        const { fixture, auth, notifications } = await setupSidebarAsync();
+        const clearAccount = vi.spyOn(TestBed.inject(UserService), 'clearUser');
+        expect(notifications.fetchUnreadCount).toHaveBeenCalledOnce();
+        expect(notifications.ensureNotificationsLoaded).toHaveBeenCalledOnce();
+
+        auth.isAuthenticated.set(false);
+        fixture.detectChanges();
+
+        expect(clearAccount).toHaveBeenCalledOnce();
+        expect(notifications.fetchUnreadCount).toHaveBeenCalledOnce();
+        expect(notifications.ensureNotificationsLoaded).toHaveBeenCalledOnce();
+
+        auth.isAuthenticated.set(true);
+        fixture.detectChanges();
+
+        expect(notifications.fetchUnreadCount).toHaveBeenCalledTimes(2);
+        expect(notifications.ensureNotificationsLoaded).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -365,6 +389,37 @@ describe('Sidebar navigation across viewport changes', () => {
         expect(diary.classList).not.toContain('is-pending');
         expect(diary.classList).toContain('is-active');
         expect(router.url).toBe('/meals');
+    });
+});
+
+describe('Sidebar mobile sheet across viewport changes', () => {
+    it('dismisses the open mobile sheet at the desktop breakpoint and allows reopening on mobile', async () => {
+        const viewport = Object.assign(new EventTarget(), { matches: true });
+        const { fixture } = await setupSidebarAsync({ realDialogs: true, mediaQuery: viewport as unknown as MediaQueryList });
+        const host = fixture.nativeElement as HTMLElement;
+        const selector = 'button[data-mobile-sheet="body"]';
+        const openSheet = (): void => {
+            const trigger = host.querySelector<HTMLButtonElement>(selector);
+            if (trigger === null) {
+                throw new Error('Expected the mobile body navigation control');
+            }
+
+            trigger.click();
+            fixture.detectChanges();
+            expect(document.querySelector(`[role="dialog"] ${selector}`)?.getAttribute('aria-expanded')).toBe('true');
+        };
+
+        openSheet();
+        viewport.matches = false;
+        viewport.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+        expect(document.querySelector('[role="dialog"]')).toBeNull();
+
+        viewport.matches = true;
+        viewport.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+        expect(host.querySelector(selector)?.getAttribute('aria-expanded')).toBe('false');
+        openSheet();
     });
 });
 

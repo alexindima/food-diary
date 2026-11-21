@@ -67,27 +67,44 @@ export class ProfileManageFacade {
         }
         this.isRequestingBackupEmail.set(true);
         this.clearGlobalError();
+        const address = email.trim();
+        const sessionChange = merge(this.sessionEvents.authenticated$, this.sessionEvents.sessionEnded$).pipe(take(1)).subscribe();
+        const ownsView = (): boolean => !this.destroyRef.destroyed && !sessionChange.closed;
         try {
             await this.telegram.initializeAsync();
-            if (this.destroyRef.destroyed) {
+            if (!ownsView()) {
                 return;
             }
 
             const initData = this.telegram.getInitData();
             if (initData === null || initData.length === 0) {
-                await this.backupEmailFlow.startAsync(email.trim());
+                await this.backupEmailFlow.startAsync(address);
                 return;
             }
-            await firstValueFrom(this.authService.requestTelegramBackupEmail(email.trim(), initData));
-            this.backupEmailSentTo.set(email.trim());
-            this.backupEmailResendAt.set(Date.now() + BACKUP_EMAIL_RESEND_MS);
-            this.backupEmailFlow.markSent(email.trim());
+            await this.sendMiniAppBackupEmailAsync(address, initData, sessionChange);
         } catch {
-            this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_ERROR');
+            if (ownsView()) {
+                this.setGlobalError('USER_MANAGE.BACKUP_EMAIL_ERROR');
+            }
         } finally {
+            sessionChange.unsubscribe();
             this.isRequestingBackupEmail.set(false);
         }
     }
+
+    private async sendMiniAppBackupEmailAsync(address: string, initData: string, sessionChange: Subscription): Promise<void> {
+        await firstValueFrom(this.authService.requestTelegramBackupEmail(address, initData));
+        if (sessionChange.closed) {
+            return;
+        }
+        if (!this.destroyRef.destroyed) {
+            this.backupEmailSentTo.set(address);
+            this.backupEmailResendAt.set(Date.now() + BACKUP_EMAIL_RESEND_MS);
+        }
+        // Profile restores the receipt when this session returns to the page.
+        this.backupEmailFlow.markSent(address);
+    }
+
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     private readonly dietologistRelationshipState = signal<DietologistRelationship | null>(null);

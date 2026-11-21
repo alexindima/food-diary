@@ -13,7 +13,7 @@
         </div>
     }
     @if (insight(); as currentInsight) {
-        <fd-tdee-insight-card-details [insight]="currentInsight" [weightTrendFormatted]="weightTrendFormatted()" />
+        <fd-tdee-insight-card-details [insight]="currentInsight" [weightTrendKgPerWeek]="weightTrendKgPerWeek()" />
     }
     @if (hintKey() || showSuggestion()) {
         <div class="tdee-card__suggestion fd-stack fd-gap-sm">

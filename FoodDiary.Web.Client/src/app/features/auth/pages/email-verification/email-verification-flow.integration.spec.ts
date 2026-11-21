@@ -14,7 +14,6 @@ import type { TelegramDiaryGoals, TelegramDiaryPreview } from '../../../../share
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { AuthComponent } from '../../components/auth/auth';
 import { AuthFlowFacade } from '../../components/auth/auth-lib/auth-flow.facade';
-import { AuthFormManager } from '../../components/auth/auth-lib/auth-form.manager';
 import { AuthGoogleManager } from '../../components/auth/auth-lib/auth-google.manager';
 import { EmailVerificationComponent } from './email-verification';
 
@@ -123,7 +122,6 @@ async function openVerificationAsync(options: VerificationSetup = {}): Promise<V
     TestBed.overrideComponent(AuthComponent, {
         set: {
             providers: [
-                AuthFormManager,
                 {
                     provide: AuthGoogleManager,
                     useValue: { ready: signal(false), initializeAsync: vi.fn().mockResolvedValue(undefined), renderButton: vi.fn() },

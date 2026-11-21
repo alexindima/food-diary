@@ -245,9 +245,7 @@ export class NotificationRealtimeService {
         try {
             await task;
         } finally {
-            if (this.disconnectingTask === task) {
-                this.disconnectingTask = null;
-            }
+            this.disconnectingTask = null;
         }
     }
 

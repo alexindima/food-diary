@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 513,
+    "components": 510,
     "componentsWithoutDirectSpecs": 123,
-    "inputs": 1676,
+    "inputs": 1672,
     "outputs": 555,
     "apiCalls": 335,
-    "templatesWithTranslations": 372,
-    "translationKeys": 2283,
-    "consumerEdges": 1336,
+    "templatesWithTranslations": 369,
+    "translationKeys": 2271,
+    "consumerEdges": 1333,
     "consumedComponents": 326,
-    "unconsumedComponents": 186
+    "unconsumedComponents": 183
   },
   "components": [
     {
@@ -3091,8 +3091,8 @@
           "required": true
         },
         {
-          "name": "weightTrendFormatted",
-          "type": "string | null",
+          "name": "weightTrendKgPerWeek",
+          "type": "number | null",
           "required": true
         }
       ],
@@ -3200,8 +3200,8 @@
           "required": true
         },
         {
-          "name": "weightTrendFormatted",
-          "type": "string | null",
+          "name": "weightTrendKgPerWeek",
+          "type": "number | null",
           "required": true
         }
       ],
@@ -3690,25 +3690,6 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/explore/pages/explore/explore-page.spec.ts"
-    },
-    {
-      "class": "LikeButtonComponent",
-      "selector": "fd-like-button",
-      "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.scss"
-      ],
-      "inputs": [
-        {
-          "name": "recipeId",
-          "type": "string",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.spec.ts"
     },
     {
       "class": "ReportDialogComponent",
@@ -4649,25 +4630,6 @@
         }
       ],
       "specPath": null
-    },
-    {
-      "class": "FastingStatsCardComponent",
-      "selector": "fd-fasting-stats-card",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page/fasting-page.scss"
-      ],
-      "inputs": [
-        {
-          "name": "stats",
-          "type": "FastingStats | null",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.spec.ts"
     },
     {
       "class": "FdTourHostComponent",
@@ -13122,11 +13084,6 @@
           "name": "expandedSteps",
           "type": "ReadonlySet<number>",
           "required": true
-        },
-        {
-          "name": "stepsError",
-          "type": "string | null",
-          "required": false
         }
       ],
       "outputs": [
@@ -17373,25 +17330,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.spec.ts"
     },
     {
-      "class": "WeeklyCheckInStatsCardComponent",
-      "selector": "fd-weekly-check-in-stats-card",
-      "feature": "weekly-check-in",
-      "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.scss"
-      ],
-      "inputs": [
-        {
-          "name": "week",
-          "type": "WeekSummary | undefined",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.spec.ts"
-    },
-    {
       "class": "WeeklyCheckInSuggestionsCardComponent",
       "selector": "fd-weekly-check-in-suggestions-card",
       "feature": "weekly-check-in",
@@ -21099,7 +21037,7 @@
       "responseType": "TranslationDictionary",
       "urlExpression": "url",
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
-      "line": 78,
+      "line": 75,
       "publicMethod": "loadBundle",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -23416,13 +23354,6 @@
     },
     {
       "feature": "explore",
-      "path": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.html",
-      "keys": [
-        "DISABLED_HINTS.OPERATION_BUSY"
-      ]
-    },
-    {
-      "feature": "explore",
       "path": "FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.html",
       "keys": [
         "COMMON.CANCEL",
@@ -23641,23 +23572,6 @@
       "keys": [
         "FASTING.PROMPTS.DISMISS",
         "FASTING.PROMPTS.SNOOZE"
-      ]
-    },
-    {
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.html",
-      "keys": [
-        "FASTING.AVG_DURATION",
-        "FASTING.CURRENT_STREAK",
-        "FASTING.HOURS",
-        "FASTING.NO_STATS",
-        "FASTING.PERSONAL_SUMMARY.CHECK_IN_RATE",
-        "FASTING.PERSONAL_SUMMARY.COMPLETION_RATE",
-        "FASTING.PERSONAL_SUMMARY.TITLE",
-        "FASTING.PERSONAL_SUMMARY.TOP_SYMPTOM",
-        "FASTING.PERSONAL_SUMMARY.WINDOW",
-        "FASTING.STATS_TITLE",
-        "FASTING.TOTAL_COMPLETED"
       ]
     },
     {
@@ -25215,6 +25129,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html",
       "keys": [
         "DISABLED_HINTS.FORM_INVALID",
+        "DISABLED_HINTS.OPERATION_BUSY",
         "DISABLED_HINTS.STEPS_INVALID",
         "PRODUCT_MANAGE.CANCEL_BUTTON",
         "RECIPE_MANAGE.IMPORT.APPLY_BUTTON",
@@ -26440,21 +26355,6 @@
       "keys": [
         "WEARABLES.DAILY_TITLE",
         "WEARABLES.NO_DATA"
-      ]
-    },
-    {
-      "feature": "weekly-check-in",
-      "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.html",
-      "keys": [
-        "GENERAL.UNITS.G",
-        "GENERAL.UNITS.ML",
-        "WEEKLY_CHECK_IN.AVG_CALORIES",
-        "WEEKLY_CHECK_IN.AVG_PROTEIN",
-        "WEEKLY_CHECK_IN.AVG_WATER",
-        "WEEKLY_CHECK_IN.DAYS_LOGGED",
-        "WEEKLY_CHECK_IN.MEALS_LOGGED",
-        "WEEKLY_CHECK_IN.THIS_WEEK",
-        "WEEKLY_CHECK_IN.WEIGHT"
       ]
     },
     {
@@ -31584,23 +31484,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "explore",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/like-button/like-button.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "disabled",
-        "disabledReason",
-        "fill",
-        "icon",
-        "iconSize",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "explore",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -34463,18 +34346,6 @@
       "component": "FdUiCardComponent",
       "selector": "fd-ui-card",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/stats-card/fasting-stats-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "gamification",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
       "occurrences": 4,
@@ -34837,18 +34708,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
       "occurrences": 4,
       "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "weekly-check-in",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
       "outputsHandled": []
     },
     {
@@ -45661,8 +45520,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "expandedSteps",
-        "steps",
-        "stepsError"
+        "steps"
       ],
       "outputsHandled": [
         "addIngredient",
@@ -46129,7 +45987,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "insight",
-        "weightTrendFormatted"
+        "weightTrendKgPerWeek"
       ],
       "outputsHandled": []
     },
@@ -46174,7 +46032,7 @@
       "inputsUsed": [
         "insight",
         "locale",
-        "weightTrendFormatted"
+        "weightTrendKgPerWeek"
       ],
       "outputsHandled": []
     },

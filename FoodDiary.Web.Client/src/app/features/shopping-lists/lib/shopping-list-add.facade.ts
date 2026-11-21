@@ -35,8 +35,7 @@ export class ShoppingListAddFacade {
 
     public constructor() {
         this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.scopeRevision += 1;
-            this.reset();
+            this.replaceScope();
         });
         this.destroyRef.onDestroy(() => {
             this.closePicker?.();
@@ -50,8 +49,7 @@ export class ShoppingListAddFacade {
     public setScope(scope: string, name: string): void {
         if (scope !== this.scope) {
             this.scope = scope;
-            this.scopeRevision += 1;
-            this.reset();
+            this.replaceScope();
         }
         this.name = name;
     }
@@ -75,7 +73,7 @@ export class ShoppingListAddFacade {
                 this.message.set('PUBLIC_RECIPES.SHOPPING_ERROR');
             }
         } finally {
-            this.busy.set(false);
+            this.finishOperation(scopeRevision);
         }
     }
     public async addAsync(key: number, item: ShoppingListItemDto): Promise<void> {
@@ -113,7 +111,7 @@ export class ShoppingListAddFacade {
         } catch {
             this.message.update(message => (this.isCurrent(scopeRevision) ? 'PUBLIC_RECIPES.SHOPPING_ERROR' : message));
         } finally {
-            this.busy.set(false);
+            this.finishOperation(scopeRevision);
         }
     }
     private applySavedAddition(scopeRevision: number, list: ShoppingList | null, entries: ReadonlyArray<{ index: number }>): void {
@@ -180,7 +178,9 @@ export class ShoppingListAddFacade {
             this.target.set(target);
             return true;
         } finally {
-            this.closePicker = undefined;
+            if (scopeRevision === this.scopeRevision) {
+                this.closePicker = undefined;
+            }
         }
     }
     private async authenticateAsync(): Promise<void> {
@@ -194,6 +194,19 @@ export class ShoppingListAddFacade {
     private isCurrent(scopeRevision: number): boolean {
         return scopeRevision === this.scopeRevision && !this.destroyRef.destroyed && this.auth.isAuthenticated();
     }
+
+    private replaceScope(): void {
+        this.scopeRevision += 1;
+        this.reset();
+        this.busy.set(false);
+    }
+
+    private finishOperation(scopeRevision: number): void {
+        if (scopeRevision === this.scopeRevision) {
+            this.busy.set(false);
+        }
+    }
+
     private reset(): void {
         this.closePicker?.();
         this.target.set(null);

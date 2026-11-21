@@ -36,11 +36,7 @@ export class AdminConfirmationComponent {
         }
 
         const adminOrigin = new URL(adminAppUrl, this.document.location.origin);
-        const path = normalizeAdminReturnUrl(
-            this.route.snapshot.queryParamMap.get('adminReturnUrl') ?? '/',
-            adminOrigin.href,
-            adminOrigin.origin,
-        );
+        const path = normalizeAdminReturnUrl(this.route.snapshot.queryParamMap.get('adminReturnUrl') ?? '/', adminOrigin.href);
         const expectedUserId = new URLSearchParams(this.document.location.hash.slice(1)).get('account');
         await this.auth.ensureSessionReadyAsync();
         if (this.destroyRef.destroyed) {

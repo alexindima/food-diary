@@ -39,6 +39,22 @@ describe('Meal plan list route query ownership', () => {
         subscription.unsubscribe();
     });
 
+    it('keeps the newest filter when routing cancels an older filter write', async () => {
+        TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }])] });
+        const harness = await RouterTestingHarness.create();
+        const page = await harness.navigateByUrl('/meal-plans?dietType=Balanced&page=2&campaign=qa', ListRoute);
+        const savedKeto = { page: 1, dietType: 'Keto', source: 'saved' } as const;
+
+        const older = page.state.writeAsync({ page: 1, dietType: 'Balanced', source: 'curated' });
+        const current = page.state.writeAsync(savedKeto);
+
+        await expect(older).resolves.toBe(false);
+        await expect(current).resolves.toBe(true);
+        expect(page.state.current()).toEqual(savedKeto);
+        const router = TestBed.inject(Router);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ dietType: 'Keto', source: 'saved', campaign: 'qa' });
+    });
+
     it('normalizes invalid API pages and clears only its own keys when reset', async () => {
         TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'meal-plans', component: ListRoute }])] });
         const harness = await RouterTestingHarness.create();

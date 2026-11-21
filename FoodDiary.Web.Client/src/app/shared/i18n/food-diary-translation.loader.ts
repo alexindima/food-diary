@@ -11,6 +11,7 @@ import { BrowserWindowService } from '../platform/browser-window.service';
 import { SERVER_TRANSLATIONS, type TranslationBundle } from './server-translations.token';
 
 type TranslationDictionary = TranslationObject;
+type RouteTranslationBundle = Exclude<TranslationBundle, 'core'>;
 
 function makeTranslationStateKey(lang: string, bundle: TranslationBundle): StateKey<TranslationDictionary> {
     return makeStateKey<TranslationDictionary>(`fd-i18n:${lang}:${bundle}`);
@@ -28,27 +29,23 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
         const path = this.browserWindow.getPathname() ?? this.document.location.pathname;
-        return this.loadBundles(lang, this.getInitialBundles(path)).pipe(catchError(() => of({})));
+        return this.loadBundles(lang, this.getRouteBundle(path)).pipe(catchError(() => of({})));
     }
 
     public loadApplicationTranslations(lang: string): Observable<TranslationDictionary> {
-        return this.loadBundles(lang, ['core', 'app']);
+        return this.loadBundles(lang, 'app');
     }
 
     public loadRouteTranslations(lang: string, pathname: string): Observable<TranslationDictionary> {
-        return this.loadBundles(lang, this.getInitialBundles(pathname));
+        return this.loadBundles(lang, this.getRouteBundle(pathname));
     }
 
     public isPublicRoute(pathname: string): boolean {
         return this.isPublicPath(pathname);
     }
 
-    private loadBundles(lang: string, bundles: readonly TranslationBundle[]): Observable<TranslationDictionary> {
-        if (bundles.length === 0) {
-            return of({});
-        }
-
-        return forkJoin(bundles.map(bundle => this.loadBundle(lang, bundle))).pipe(map(parts => mergeTranslations(parts)));
+    private loadBundles(lang: string, routeBundle: RouteTranslationBundle): Observable<TranslationDictionary> {
+        return forkJoin([this.loadBundle(lang, 'core'), this.loadBundle(lang, routeBundle)]).pipe(map(mergeTranslations));
     }
 
     private loadBundle(lang: string, bundle: TranslationBundle): Observable<TranslationDictionary> {
@@ -91,25 +88,25 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
         return request;
     }
 
-    private getInitialBundles(pathname: string): readonly TranslationBundle[] {
+    private getRouteBundle(pathname: string): RouteTranslationBundle {
         const normalizedPath = normalizePath(pathname);
         if (this.isLandingPath(normalizedPath)) {
-            return ['core', 'landing'];
+            return 'landing';
         }
 
         if (normalizedPath === '/privacy-policy' || normalizedPath === TERMS_OF_SERVICE_PATH) {
-            return ['core', 'privacy'];
+            return 'privacy';
         }
 
         if (this.isSeoPath(normalizedPath)) {
-            return ['core', 'seo'];
+            return 'seo';
         }
 
         if (PUBLIC_INFORMATION_PAGES.some(page => normalizedPath === `/${page.path}`)) {
-            return ['core', 'seo'];
+            return 'seo';
         }
 
-        return ['core', 'app'];
+        return 'app';
     }
 
     private isPublicPath(pathname: string): boolean {

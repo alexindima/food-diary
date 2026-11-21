@@ -1,14 +1,12 @@
 import { signal } from '@angular/core';
 
-import { checkMacrosError, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
+import { isMissingOrInvalidMacroValue, scaleNutrientInput } from '../../../../../shared/lib/nutrition-form.utils';
 import type { NutrientData } from '../../../../../shared/models/charts.data';
 import type { Recipe } from '../../../../../shared/models/recipe.data';
 import type { RecipeNutritionSummary, RecipeStepsNutritionState } from '../../../lib/recipe-manage.facade';
 import type { NutritionMode, NutritionScaleMode, RecipeFormValues } from './recipe-manage.types';
 
 type RecipeNutritionControl<T> = {
-    dirty: boolean;
-    touched: boolean;
     value: T;
     setValue: (value: T) => void;
 };
@@ -90,17 +88,15 @@ export class RecipeNutritionFormManager {
         this.updateSummaryFromForm();
     }
 
-    public hasMacrosError(): boolean {
-        if (this.form.controls.calculateNutritionAutomatically.value) {
+    public hasInvalidSubmittedMacros(): boolean {
+        const controls = this.form.controls;
+        if (controls.calculateNutritionAutomatically.value) {
             return false;
         }
 
-        return checkMacrosError([
-            this.form.controls.manualProteins,
-            this.form.controls.manualFats,
-            this.form.controls.manualCarbs,
-            this.form.controls.manualAlcohol,
-        ]);
+        return [controls.manualProteins.value, controls.manualFats.value, controls.manualCarbs.value, controls.manualAlcohol.value].every(
+            isMissingOrInvalidMacroValue,
+        );
     }
 
     public updateNutrientSummary(recipeData: Recipe | null): void {

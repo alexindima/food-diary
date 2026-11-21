@@ -9,7 +9,6 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AuthComponent } from './auth';
 import { AuthFlowFacade } from './auth-lib/auth-flow.facade';
-import { AuthFormManager } from './auth-lib/auth-form.manager';
 import { AuthGoogleManager } from './auth-lib/auth-google.manager';
 
 const adminAppUrl = environment.adminAppUrl ?? '';
@@ -41,7 +40,6 @@ function createComponent(): {
         set: {
             template: '',
             providers: [
-                AuthFormManager,
                 {
                     provide: AuthGoogleManager,
                     useValue: {

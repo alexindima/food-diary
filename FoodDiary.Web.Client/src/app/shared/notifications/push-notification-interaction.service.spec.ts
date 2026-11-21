@@ -1,6 +1,7 @@
-import { signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type EnvironmentProviders, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { DefaultUrlSerializer, NavigationEnd, Router, type UrlTree } from '@angular/router';
+import { DefaultUrlSerializer, NavigationEnd, provideRouter, Router, type UrlTree } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,6 +13,14 @@ import { PushNotificationInteractionService } from './push-notification-interact
 
 const firstId = '11111111-1111-1111-1111-111111111111';
 const secondId = '22222222-2222-2222-2222-222222222222';
+const nilId = '00000000-0000-0000-0000-000000000000';
+
+@Component({
+    template: '<h1>Fasting</h1>',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class NotificationDestinationComponent {}
+
 let owner = signal<string | null>('user-a');
 let impersonating = signal(false);
 let service: PushNotificationInteractionService;
@@ -25,6 +34,21 @@ let notifications: {
 
 function configure(url = '/'): void {
     events = new Subject<NavigationEnd>();
+    configureReceiptProviders({
+        provide: Router,
+        useValue: {
+            events,
+            url,
+            parseUrl: (value: string): UrlTree => new DefaultUrlSerializer().parse(value),
+            navigateByUrl: vi.fn().mockResolvedValue(true),
+        },
+    });
+    service = TestBed.inject(PushNotificationInteractionService);
+    sessions = TestBed.inject(SessionEventsService);
+    TestBed.tick();
+}
+
+function configureReceiptProviders(router: Provider | EnvironmentProviders): void {
     TestBed.configureTestingModule({
         providers: [
             {
@@ -37,20 +61,9 @@ function configure(url = '/'): void {
                 },
             },
             { provide: NotificationService, useValue: notifications },
-            {
-                provide: Router,
-                useValue: {
-                    events,
-                    url,
-                    parseUrl: (value: string): UrlTree => new DefaultUrlSerializer().parse(value),
-                    navigateByUrl: vi.fn().mockResolvedValue(true),
-                },
-            },
+            router,
         ],
     });
-    service = TestBed.inject(PushNotificationInteractionService);
-    sessions = TestBed.inject(SessionEventsService);
-    TestBed.tick();
 }
 
 beforeEach(() => {
@@ -180,6 +193,27 @@ describe('Push notification read retries', () => {
 });
 
 describe('Push notification invalid and expired receipts', () => {
+    it('opens the linked destination without trying to acknowledge the reserved nil notification ID', async () => {
+        configureReceiptProviders(provideRouter([{ path: 'fasting', component: NotificationDestinationComponent }]));
+        TestBed.inject(PushNotificationInteractionService);
+        const destination = (id: string): string => `/fasting?intent=check-in&notificationId=${id}&notificationUserId=user-a#details`;
+        const initialUrl = destination(nilId);
+        const harness = await RouterTestingHarness.create(initialUrl);
+        await waitForAsyncTasksAsync();
+
+        expect(TestBed.inject(Router).url).toBe(initialUrl);
+        expect(harness.routeNativeElement?.textContent).toBe('Fasting');
+        expect(notifications.markAsRead).not.toHaveBeenCalled();
+        expect(notifications.fetchUnreadCount).not.toHaveBeenCalled();
+        expect(localStorage.getItem('webPushPendingReads:user-a')).toBeNull();
+
+        await harness.navigateByUrl(destination(firstId), NotificationDestinationComponent);
+        await vi.waitFor(() => {
+            expect(notifications.markAsRead).toHaveBeenCalledExactlyOnceWith(firstId);
+            expect(notifications.fetchUnreadCount).toHaveBeenCalledOnce();
+        });
+    });
+
     it('drops expired notifications while retaining retryable server errors', async () => {
         notifications.markAsRead.mockReturnValueOnce(throwError(() => ({ status: 404 })));
         configure();

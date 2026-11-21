@@ -1844,6 +1844,55 @@ describe('Shopping list rename draft during conflict recovery', () => {
     });
 });
 
+describe('Shopping list menu when autosave starts', () => {
+    it.each([
+        { action: 'SHOPPING_LIST.MERGE_TITLE', dialog: 'fd-shopping-merge-preview' },
+        { action: 'SHOPPING_LIST.CLEAR_LIST_BUTTON', dialog: 'fd-confirm-delete-dialog' },
+        { action: 'SHOPPING_LIST.DELETE_LIST_BUTTON', dialog: 'fd-confirm-delete-dialog' },
+        { action: 'SHOPPING_LIST.CLEAR_PURCHASED', dialog: 'fd-confirm-delete-dialog' },
+    ])('ignores $action from the open menu until the current save settles', async ({ action, dialog }) => {
+        const list = mergeableList();
+        const { harness, api } = await renderShoppingAsync({
+            selectedList: list,
+            lists: { items: [summary(list)], hasMore: false, nextPage: null },
+        });
+        const save = new Subject<ShoppingList>();
+        api.update.mockReturnValueOnce(save);
+        const host = page(harness);
+        const autosaveDebounceMs = 500;
+
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+        try {
+            requiredInput(host, '.shopping-list__item:nth-child(3) input[type="checkbox"]').click();
+            harness.detectChanges();
+            nativeButton(requiredElement(host, '.shopping-list__summary'), 'COMMON.MORE_ACTIONS').click();
+            harness.detectChanges();
+            const originalAction = nativeButton(requiredElement(document, '[role="menu"]'), action);
+            expect(api.update).not.toHaveBeenCalled();
+
+            vi.advanceTimersByTime(autosaveDebounceMs);
+            expect(api.update).toHaveBeenCalledOnce();
+            expect(save.observed).toBe(true);
+            expect(originalAction.isConnected).toBe(true);
+            expect(originalAction.disabled).toBe(false);
+            originalAction.click();
+            harness.detectChanges();
+            expect(document.querySelector(dialog)).toBeNull();
+            expect(api.update).toHaveBeenCalledOnce();
+
+            save.next({ ...list, revision: SAVED_REVISION, items: list.items.map((item, index) => ({ ...item, isChecked: index === 2 })) });
+            save.complete();
+        } finally {
+            vi.useRealTimers();
+        }
+
+        harness.detectChanges();
+        chooseSummaryAction(harness, action);
+        expect(document.querySelector(dialog)).not.toBeNull();
+        expect(api.update).toHaveBeenCalledOnce();
+    });
+});
+
 describe('Shopping consolidation preview', () => {
     it('offers dismissal only when no items can be combined', async () => {
         const { harness, api } = await renderShoppingAsync();
@@ -2149,6 +2198,7 @@ describe('Shopping item workspace while deleting the selected list', () => {
         const workspace = requiredElement(host, '.shopping-list__workspace');
         const name = requiredInput(workspace, '.shopping-list__quick-add-input input');
         const add = nativeButton(workspace, 'SHOPPING_LIST.ADD_ITEM_BUTTON');
+        const checkbox = requiredInput(workspace, '.shopping-list__item input[type="checkbox"]');
         const draft = 'Rice for tomorrow';
         inputText(name, draft);
         harness.detectChanges();
@@ -2158,6 +2208,8 @@ describe('Shopping item workspace while deleting the selected list', () => {
         expect(api.deleteById).toHaveBeenCalledExactlyOnceWith(GROCERIES.id);
         expect(add.isConnected && !add.matches(':disabled')).toBe(true);
         add.click();
+        expect(checkbox.isConnected && !checkbox.matches(':disabled')).toBe(true);
+        checkbox.click();
         harness.detectChanges();
         expect([name, add].every(control => control.matches(':disabled'))).toBe(true);
         expect(workspace.getAttribute('aria-busy')).toBe('true');
@@ -2167,6 +2219,7 @@ describe('Shopping item workspace while deleting the selected list', () => {
         expect(toastError).toHaveBeenCalledExactlyOnceWith('SHOPPING_LIST.DELETE_ERROR');
         expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(GROCERIES.name);
         expect(workspace.textContent).toContain(GROCERIES.items[0].name);
+        expect(requiredInput(workspace, '.shopping-list__item input[type="checkbox"]').checked).toBe(false);
         expect(name.value).toBe(draft);
         expect([name, add].every(control => !control.matches(':disabled'))).toBe(true);
         expect(workspace.getAttribute('aria-busy')).toBe('false');
@@ -2576,6 +2629,41 @@ describe('Shopping new item editor identity', () => {
     });
 });
 
+describe('Shopping removal of a new item during autosave', () => {
+    it('keeps the removed row out of the list after the server acknowledges its creation', async () => {
+        const { harness, api } = await renderShoppingAsync();
+        const initialWrite = new Subject<ShoppingList>();
+        const saved = shoppingListWithAddedItem(GROCERIES, 'server-beans', CREATED_SHOPPING_ITEM_NAME, SAVED_REVISION);
+        api.update.mockReturnValueOnce(initialWrite).mockReturnValueOnce(of({ ...GROCERIES, revision: 'c'.repeat(REVISION_LENGTH) }));
+        addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+
+        const host = page(harness);
+        nativeButton(host, `COMMON.MORE_ACTIONS: ${CREATED_SHOPPING_ITEM_NAME}`).click();
+        harness.detectChanges();
+        nativeButton(requiredElement(document, '[role="menu"]'), 'SHOPPING_LIST.REMOVE_ITEM').click();
+        harness.detectChanges();
+        expect(host.textContent).not.toContain(CREATED_SHOPPING_ITEM_NAME);
+        expect(api.update).toHaveBeenCalledOnce();
+
+        initialWrite.next(saved);
+        initialWrite.complete();
+        harness.detectChanges();
+        expect(host.textContent).not.toContain(CREATED_SHOPPING_ITEM_NAME);
+        expect(host.textContent).toContain(GROCERIES.items[0].name);
+
+        await expect(TestBed.inject(Router).navigateByUrl(HOME_URL)).resolves.toBe(true);
+        expect(api.update).toHaveBeenCalledTimes(2);
+        expect(api.update).toHaveBeenLastCalledWith(
+            GROCERIES.id,
+            expect.objectContaining({
+                expectedRevision: SAVED_REVISION,
+                items: [expect.objectContaining({ id: GROCERIES.items[0].id, name: GROCERIES.items[0].name })],
+            }),
+        );
+    });
+});
+
 describe('Shopping item editor during a queued list change', () => {
     it('closes the previous item editor when the queued list loads successfully', async () => {
         const { harness, api, editor, nextList } = await prepareItemEditorDuringListSwitchAsync();
@@ -2667,6 +2755,34 @@ it('does not open the outgoing item editor from a previously open row menu while
     });
     expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, expect.objectContaining({ expectedRevision: FIRST_REVISION }));
     expect(openedDuringLoad).toBe(false);
+});
+
+it('ignores a queued row Edit after the selected list changes before the menu redraws', async () => {
+    const { harness, api } = await renderShoppingAsync();
+    const saving = new Subject<ShoppingList>();
+    const loading = new Subject<ShoppingList | null>();
+    api.update.mockReturnValueOnce(saving);
+    api.getById.mockReturnValueOnce(loading);
+    addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
+    const host = page(harness);
+    nativeButton(host, TRAVEL.name).click();
+    await waitForShoppingAutosaveAsync(harness, api.update, 1);
+    const outgoingEdit = shoppingRowEditAction(harness, GROCERIES.items[0].name);
+
+    saving.next(shoppingListWithAddedItem(GROCERIES, 'saved-beans', CREATED_SHOPPING_ITEM_NAME, SAVED_REVISION));
+    saving.complete();
+    expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
+    loading.next(TRAVEL);
+    loading.complete();
+    expect(outgoingEdit.isConnected).toBe(true);
+    expect(outgoingEdit.disabled).toBe(false);
+    outgoingEdit.click();
+    harness.detectChanges();
+
+    expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
+    expect(host.textContent).toContain(TRAVEL.items[0].name);
+    expect(document.querySelector(SHOPPING_ITEM_EDITOR)).toBeNull();
+    expect(api.update).toHaveBeenCalledTimes(1);
 });
 
 describe('Shopping item save while another list is loading', () => {

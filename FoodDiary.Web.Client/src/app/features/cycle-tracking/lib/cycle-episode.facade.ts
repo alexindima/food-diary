@@ -17,7 +17,8 @@ export class CycleEpisodeFacade {
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly state = inject(CycleTrackingStateFacade);
-    private readonly profileDeleted = new Subject<void>();
+    private readonly profileChanged = new Subject<void>();
+    private activeEpisodeAction: symbol | null = null;
     public readonly episodeModel = signal<MenstrualEpisodeFormModel>({
         startDate: null,
         endDate: null,
@@ -73,8 +74,9 @@ export class CycleEpisodeFacade {
         this.resetMenstrualEpisodeEdit();
     }
 
-    public clearAfterProfileDeletion(): void {
-        this.profileDeleted.next();
+    public clearAfterProfileChange(): void {
+        this.clearEpisodeAction();
+        this.profileChanged.next();
         this.state.episodeError.set(null);
         this.resetMenstrualEpisodeEdit();
     }
@@ -100,7 +102,7 @@ export class CycleEpisodeFacade {
             return;
         }
 
-        this.state.episodeError.set(null);
+        const action = this.beginEpisodeAction();
         this.state.isSavingEpisode.set(true);
         try {
             const cycle = await firstValueFrom(
@@ -112,13 +114,13 @@ export class CycleEpisodeFacade {
                 ),
                 { defaultValue: null },
             );
-            if (this.applyEpisodeResponse(cycle)) {
+            if (this.applyEpisodeResponse(cycle, action)) {
                 this.resetMenstrualEpisodeEdit();
             }
         } catch {
-            this.setEpisodeErrorForProfile(currentCycle.id, 'CYCLE_TRACKING.EPISODE_SAVE_FAILED');
+            this.setEpisodeErrorForProfile(currentCycle.id, action, 'CYCLE_TRACKING.EPISODE_SAVE_FAILED');
         } finally {
-            this.state.isSavingEpisode.set(false);
+            this.finishEpisodeAction(action);
         }
     }
 
@@ -129,7 +131,7 @@ export class CycleEpisodeFacade {
             return;
         }
 
-        this.state.episodeError.set(null);
+        const action = this.beginEpisodeAction();
         this.state.excludingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
@@ -142,11 +144,11 @@ export class CycleEpisodeFacade {
                 ),
                 { defaultValue: null },
             );
-            this.applyEpisodeResponse(cycle);
+            this.applyEpisodeResponse(cycle, action);
         } catch {
-            this.setEpisodeErrorForProfile(currentCycle.id, 'CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
+            this.setEpisodeErrorForProfile(currentCycle.id, action, 'CYCLE_TRACKING.EPISODE_PREDICTION_FAILED');
         } finally {
-            this.state.excludingEpisodeId.set(null);
+            this.finishEpisodeAction(action);
         }
     }
 
@@ -156,7 +158,7 @@ export class CycleEpisodeFacade {
             return;
         }
 
-        this.state.episodeError.set(null);
+        const action = this.beginEpisodeAction();
         this.state.deletingEpisodeId.set(episodeId);
         try {
             const cycle = await firstValueFrom(
@@ -165,32 +167,56 @@ export class CycleEpisodeFacade {
                     defaultValue: null,
                 },
             );
-            if (this.applyEpisodeResponse(cycle) && this.state.editingEpisodeId() === episodeId) {
+            if (this.applyEpisodeResponse(cycle, action) && this.state.editingEpisodeId() === episodeId) {
                 this.resetMenstrualEpisodeEdit();
             }
         } catch {
-            this.setEpisodeErrorForProfile(currentCycle.id, 'CYCLE_TRACKING.EPISODE_DELETE_FAILED');
+            this.setEpisodeErrorForProfile(currentCycle.id, action, 'CYCLE_TRACKING.EPISODE_DELETE_FAILED');
         } finally {
-            this.state.deletingEpisodeId.set(null);
+            this.finishEpisodeAction(action);
         }
     }
 
-    private trackEpisodeResponse(response: Observable<CycleResponse>): Observable<CycleResponse> {
-        return response.pipe(takeUntil(this.profileDeleted), takeUntilDestroyed(this.destroyRef));
+    private beginEpisodeAction(): symbol {
+        const action = Symbol();
+        this.activeEpisodeAction = action;
+        this.state.episodeError.set(null);
+        return action;
     }
 
-    private applyEpisodeResponse(cycle: CycleResponse | null): boolean {
-        if (cycle === null || cycle.id !== this.state.cycle()?.id) {
+    private finishEpisodeAction(action: symbol): void {
+        if (this.activeEpisodeAction === action) {
+            this.clearEpisodeAction();
+        }
+    }
+
+    private clearEpisodeAction(): void {
+        this.activeEpisodeAction = null;
+        this.state.isSavingEpisode.set(false);
+        this.state.excludingEpisodeId.set(null);
+        this.state.deletingEpisodeId.set(null);
+    }
+
+    private trackEpisodeResponse(response: Observable<CycleResponse>): Observable<CycleResponse> {
+        return response.pipe(takeUntil(this.profileChanged), takeUntilDestroyed(this.destroyRef));
+    }
+
+    private applyEpisodeResponse(cycle: CycleResponse | null, action: symbol): boolean {
+        if (cycle === null || !this.isCurrentEpisodeAction(cycle.id, action)) {
             return false;
         }
         this.state.cycle.set(cycle);
         return true;
     }
 
-    private setEpisodeErrorForProfile(profileId: CycleProfileId, message: string): void {
-        if (this.state.cycle()?.id === profileId) {
+    private setEpisodeErrorForProfile(profileId: CycleProfileId, action: symbol, message: string): void {
+        if (this.isCurrentEpisodeAction(profileId, action)) {
             this.state.episodeError.set(message);
         }
+    }
+
+    private isCurrentEpisodeAction(profileId: CycleProfileId, action: symbol): boolean {
+        return this.activeEpisodeAction === action && this.state.cycle()?.id === profileId;
     }
 
     private hasPendingEpisodeAction(): boolean {

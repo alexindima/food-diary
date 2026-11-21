@@ -83,6 +83,26 @@ describe('SpeechRecognitionService', () => {
         expect(onError).not.toHaveBeenCalled();
     });
 
+    it('leaves the browser untouched when stopping before a recording or after it ends', () => {
+        const service = TestBed.inject(SpeechRecognitionService);
+        const onTranscript = vi.fn();
+        const onError = vi.fn();
+        service.stop();
+        expect(recognition.start).not.toHaveBeenCalled();
+        expect(recognition.stop).not.toHaveBeenCalled();
+        expect(service.isListening()).toBe(false);
+
+        expect(service.start('en-US', onTranscript, onError)).toBe(true);
+        recognition.onresult({ results: [[{ transcript: 'apple' }]] });
+        recognition.onend();
+        service.stop();
+
+        expect(recognition.stop).not.toHaveBeenCalled();
+        expect(service.isListening()).toBe(false);
+        expect(onTranscript).toHaveBeenCalledExactlyOnceWith('apple');
+        expect(onError).not.toHaveBeenCalled();
+    });
+
     it('can receive the final transcript after an intentional stop', () => {
         const service = TestBed.inject(SpeechRecognitionService);
         const onTranscript = vi.fn();

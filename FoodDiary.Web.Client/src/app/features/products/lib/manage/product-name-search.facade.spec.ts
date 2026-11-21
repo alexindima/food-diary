@@ -102,6 +102,29 @@ async function flushDebounceAsync(): Promise<void> {
 }
 
 describe('ProductNameSearchFacade selection', () => {
+    it('keeps a USDA suggestion selectable when an older response omits its source ID', async () => {
+        const legacy: ProductSearchSuggestion = {
+            source: 'usda',
+            name: 'Rice',
+            barcode: null,
+            imageUrl: null,
+            caloriesPer100G: 0,
+        };
+        const identified = { ...legacy, usdaFdcId: USDA_FDC_ID };
+        productService.searchSuggestions.mockReturnValueOnce(of([legacy, identified]));
+
+        facade.search(legacy.name);
+        await flushDebounceAsync();
+
+        expect(facade.options()).toMatchObject([
+            { id: 'usda:Rice', label: 'Rice', badge: 'USDA', data: legacy },
+            { id: `usda:${USDA_FDC_ID}`, label: 'Rice', badge: 'USDA', data: identified },
+        ]);
+        const [option] = facade.options();
+        facade.setSelectedSuggestion(legacy);
+        expect(facade.options()).toEqual([option]);
+    });
+
     it('sets selected suggestion as the only autocomplete option', () => {
         const suggestion: ProductSearchSuggestion = {
             source: 'openFoodFacts',

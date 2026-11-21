@@ -134,8 +134,9 @@ export class CycleTrackingFacade {
             const sameProfile = cycle?.id === profileId;
             if (profileId !== undefined && !sameProfile) {
                 this.releaseCycleDeletion();
-                this.day.resetDayDraft();
+                this.day.clearAfterProfileChange();
                 this.factor.clearAfterProfileChange();
+                this.episode.clearAfterProfileChange();
             }
             if (cycle !== null && (!sameProfile || !this.settingsForm().dirty())) {
                 this.settings.cancelSettingsEdit();
@@ -159,9 +160,9 @@ export class CycleTrackingFacade {
                 return;
             }
             this.state.clearCycle();
-            this.day.resetDayDraft();
+            this.day.clearAfterProfileChange();
             this.factor.clearAfterProfileChange();
-            this.episode.clearAfterProfileDeletion();
+            this.episode.clearAfterProfileChange();
         } catch {
             if (ownsProfile()) {
                 this.state.settingsError.set('CYCLE_TRACKING.DELETE_CYCLE_FAILED');

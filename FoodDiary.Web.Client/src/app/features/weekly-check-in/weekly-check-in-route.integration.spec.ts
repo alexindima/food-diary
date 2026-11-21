@@ -21,6 +21,7 @@ const LOCAL_SUNDAY = '2026-03-08T01:55:00';
 const CURRENT_WEEK = '2026-03-02';
 const NEXT_WEEK = '2026-03-09';
 const PREVIOUS_WEEK = '2026-02-23';
+const CLOSED_WEEK = '2026-02-16';
 const PREVIOUS_SUNDAY = '2026-03-01';
 const CURRENT_DAYS_LOGGED = 6;
 const PREVIOUS_DAYS_LOGGED = 3;
@@ -171,6 +172,51 @@ function expectDaysLogged(page: HTMLElement, days: number): void {
     expect(page.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(String(days));
 }
 
+describe('Rendered weekly review for a new diary', () => {
+    it('shows Start Logging as the only current-week insight when both weeks have no entries', async () => {
+        const { harness, http, page } = await renderWeeklyPageAsync();
+        const [report, selectedGoal, nextGoal] = expectSelectionReads(http, CURRENT_WEEK, NEXT_WEEK);
+        const emptyWeek = {
+            totalCalories: 0,
+            avgDailyCalories: 0,
+            avgProteins: 0,
+            avgFats: 0,
+            avgCarbs: 0,
+            mealsLogged: 0,
+            daysLogged: 0,
+            weightStart: null,
+            weightEnd: null,
+            waistStart: null,
+            waistEnd: null,
+            totalHydrationMl: 0,
+            avgDailyHydrationMl: 0,
+        } satisfies WeekSummaryHttpResponse;
+        report.flush({
+            thisWeek: emptyWeek,
+            lastWeek: emptyWeek,
+            trends: {
+                calorieChange: 0,
+                proteinChange: 0,
+                fatChange: 0,
+                carbChange: 0,
+                hydrationChange: 0,
+                mealsLoggedChange: 0,
+                weightChange: null,
+                waistChange: null,
+            },
+            suggestions: ['suggestion.log_more_days'],
+        } satisfies WeeklyCheckInHttpResponse);
+        selectedGoal.flush(null);
+        nextGoal.flush(null);
+        await settleAsync(harness);
+
+        expectDaysLogged(page, 0);
+        const summary = queryElement(page, '[data-tour-id="weekly-check-in-stats"]');
+        const insights = summary.querySelectorAll('.check-in__insight .fd-ui-body-sm');
+        expect(Array.from(insights, insight => insight.textContent.trim())).toEqual(['WEEKLY_CHECK_IN.INSIGHTS.START_LOGGING']);
+    });
+});
+
 describe('Rendered weekly selection and report recovery', () => {
     it('switches all three HTTP reads from the local current week to a week selected on the calendar', async () => {
         const fixture = await renderWeeklyPageAsync();
@@ -221,6 +267,68 @@ describe('Rendered weekly selection and report recovery', () => {
         expect(fixture.page.querySelector('div:not([hidden]) > fd-error-state')).toBeNull();
         expectDaysLogged(fixture.page, PREVIOUS_DAYS_LOGGED);
         expect(fixture.page.textContent).toContain('WEEKLY_CHECK_IN.SUMMARY.TITLE');
+    });
+});
+
+describe('Rendered weekly goal ownership', () => {
+    it('keeps the selected goal action busy while its report and next goal are already visible', async () => {
+        const { harness, http, page } = await renderWeeklyPageAsync();
+        const [report, selectedGoal, nextGoal] = expectSelectionReads(http, CURRENT_WEEK, NEXT_WEEK);
+        report.flush(makeReport(CURRENT_DAYS_LOGGED));
+        nextGoal.flush(makeGoal(NEXT_WEEK));
+        await settleAsync(harness);
+
+        const currentCard = queryElement(page, '[data-tour-id="weekly-check-in-current-goal"]');
+        const nextCard = queryElement(page, '[data-tour-id="weekly-check-in-suggestions"]');
+        const pendingAction = queryButton(currentCard, 'WEEKLY_CHECK_IN.GOAL.CREATE_CURRENT');
+        expect(pendingAction.disabled).toBe(true);
+        expect(pendingAction.getAttribute('aria-busy')).toBe('true');
+        expectDaysLogged(page, CURRENT_DAYS_LOGGED);
+        expect(nextCard.textContent).toContain('2 / 5');
+        expect(queryButton(nextCard, 'WEEKLY_CHECK_IN.GOAL.EDIT').disabled).toBe(false);
+        pendingAction.click();
+        expect(document.querySelector('fd-weekly-goal-dialog')).toBeNull();
+        http.expectNone(request => request.url === GOALS_URL && request.method === 'PUT');
+
+        selectedGoal.flush(makeGoal(CURRENT_WEEK, LONG_GOAL_DAYS, CURRENT_DAYS_LOGGED));
+        await settleAsync(harness);
+
+        expect(currentCard.textContent).toContain('6 / 7');
+        expect(queryButton(currentCard, 'WEEKLY_CHECK_IN.GOAL.EDIT').disabled).toBe(false);
+        expect(nextCard.textContent).toContain('2 / 5');
+    });
+
+    it.each([
+        { goal: 'selected', card: 'weekly-check-in-current-goal', label: 'WEEKLY_CHECK_IN.GOAL.CREATE_CURRENT' },
+        { goal: 'next', card: 'weekly-check-in-suggestions', label: 'WEEKLY_CHECK_IN.GOAL.CREATE_NEXT' },
+    ])('rejects the previous $goal goal action after choosing a closed week before repaint', async ({ card, label }) => {
+        const { harness, http, page } = await renderWeeklyPageAsync();
+        const [report, selectedGoal, nextGoal] = expectSelectionReads(http, CURRENT_WEEK, NEXT_WEEK);
+        report.flush(makeReport(CURRENT_DAYS_LOGGED));
+        selectedGoal.flush(null);
+        nextGoal.flush(null);
+        await settleAsync(harness);
+        const action = queryButton(queryElement(page, `[data-tour-id="${card}"]`), label);
+        const previousWeek = queryButton(page, 'WEEKLY_CHECK_IN.WEEK_PICKER.PREVIOUS');
+        const openDialog = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
+
+        previousWeek.click();
+        previousWeek.click();
+        expect(action.isConnected).toBe(true);
+        expect(action.disabled).toBe(false);
+        action.click();
+        expect(openDialog).not.toHaveBeenCalled();
+
+        redraw(harness);
+        const [closedReport, closedGoal, followingGoal] = expectSelectionReads(http, CLOSED_WEEK, PREVIOUS_WEEK);
+        closedReport.flush(makeReport(PREVIOUS_DAYS_LOGGED));
+        closedGoal.flush(null);
+        followingGoal.flush(null);
+        await settleAsync(harness);
+        expectDaysLogged(page, PREVIOUS_DAYS_LOGGED);
+        const closedCard = queryElement(page, `[data-tour-id="${card}"]`);
+        expect(queryButton(closedCard, 'WEEKLY_CHECK_IN.GOAL.CLOSED_ACTION').disabled).toBe(true);
+        expect(document.querySelector('fd-weekly-goal-dialog')).toBeNull();
     });
 });
 

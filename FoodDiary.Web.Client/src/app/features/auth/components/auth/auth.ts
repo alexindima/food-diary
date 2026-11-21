@@ -45,7 +45,7 @@ import { AuthRegisterFormComponent } from './auth-register-form/auth-register-fo
     selector: 'fd-auth',
     templateUrl: './auth.html',
     styleUrls: ['./auth.scss'],
-    providers: [AuthFormManager, AuthGoogleManager],
+    providers: [AuthGoogleManager],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
@@ -80,7 +80,17 @@ export class AuthComponent {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly dialogRef = inject(FdUiDialogRef<AuthComponent>, { optional: true });
     private readonly passwordResetCooldownSecondsDefault = inject(AUTH_PASSWORD_RESET_COOLDOWN_SECONDS);
-    private readonly formManager = inject(AuthFormManager);
+    private readonly formManager = new AuthFormManager({
+        loginAsync: async (): Promise<void> => {
+            await this.loginAsync();
+        },
+        requestPasswordResetAsync: async (): Promise<void> => {
+            await this.requestPasswordResetAsync();
+        },
+        registerAsync: async (): Promise<void> => {
+            await this.registerAsync();
+        },
+    });
     private readonly googleManager = inject(AuthGoogleManager);
     private readonly authFlowFacade = inject(AuthFlowFacade);
     private readonly browserWindow = inject(BrowserWindowService);
@@ -121,29 +131,12 @@ export class AuthComponent {
     private failedLoginValues: LoginFormValues | null = null;
 
     public constructor() {
-        this.formManager.configureSubmissionActions({
-            login: this.submitLoginFormAsync,
-            passwordReset: this.submitPasswordResetFormAsync,
-            register: this.submitRegisterFormAsync,
-        });
         this.subscribeFormChanges();
         this.registerRenderingEffects();
         void this.googleManager.initializeAsync(credential => {
             this.onGoogleCredential(credential);
         });
     }
-
-    private readonly submitLoginFormAsync = async (): Promise<void> => {
-        await this.loginAsync();
-    };
-
-    private readonly submitRegisterFormAsync = async (): Promise<void> => {
-        await this.registerAsync();
-    };
-
-    private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
-        await this.requestPasswordResetAsync();
-    };
 
     private subscribeFormChanges(): void {
         effect(() => {
@@ -519,9 +512,9 @@ export class AuthComponent {
             return null;
         }
 
-        const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl, this.document.location.origin);
+        const adminPath = normalizeAdminReturnUrl(adminReturnUrl, adminAppUrl);
         if (!this.authService.isAdmin()) {
-            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
+            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl);
         }
 
         try {
@@ -540,7 +533,7 @@ export class AuthComponent {
                     this.authService.getUserId(),
                 ).toString();
             }
-            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl, this.document.location.origin);
+            return buildAdminUnauthorizedUrl(adminPath, 'forbidden', adminAppUrl);
         }
     }
 

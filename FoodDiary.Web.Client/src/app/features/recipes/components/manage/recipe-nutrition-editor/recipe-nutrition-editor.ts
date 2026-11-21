@@ -202,10 +202,6 @@ export class RecipeNutritionEditorComponent {
     }
 
     private getFieldError(field: NutritionEditorSignalForm[keyof NutritionEditorSignalForm]): string | null {
-        if (field().errors()[0]?.kind === 'required') {
-            return null;
-        }
-
         return resolveSignalFormFieldError(field, this.validationErrors, this.translateService);
     }
 }

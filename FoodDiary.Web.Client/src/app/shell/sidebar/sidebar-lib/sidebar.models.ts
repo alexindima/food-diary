@@ -13,9 +13,7 @@ export type SidebarActionItem = {
     icon: string;
     labelKey: string;
     action: SidebarActionId;
-    variant?: 'secondary' | 'danger';
-    fill?: 'outline' | 'text';
-    className?: string;
+    tone?: 'default' | 'danger';
     badge?: number;
 };
 

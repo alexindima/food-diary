@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { createEnvironmentInjector, DestroyRef, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
@@ -498,50 +499,57 @@ describe('ProfileManageFacade saved language defaults', () => {
 });
 
 describe('ProfileManageFacade save session ownership', () => {
-    it.each(['accepted', 'rejected'] as const)('keeps the new account state when the previous account save is %s late', async result => {
-        const app = TestBed.inject(EnvironmentInjector);
-        const firstPage = createEnvironmentInjector([ProfileManageFacade], app);
-        const nextPage = createEnvironmentInjector([ProfileManageFacade], app);
-        onTestFinished(() => {
-            if (!firstPage.destroyed) {
-                firstPage.destroy();
+    it.each(['accepted', 'rejected', 'unavailable'] as const)(
+        'keeps the new account state when the previous account save is %s late',
+        async result => {
+            const app = TestBed.inject(EnvironmentInjector);
+            const firstPage = createEnvironmentInjector([ProfileManageFacade], app);
+            const nextPage = createEnvironmentInjector([ProfileManageFacade], app);
+            onTestFinished(() => {
+                if (!firstPage.destroyed) {
+                    firstPage.destroy();
+                }
+                nextPage.destroy();
+            });
+            const sessions = TestBed.inject(SessionEventsService);
+            const firstProfile = firstPage.get(ProfileManageFacade);
+            firstProfile.initialize();
+
+            const pending = new Subject<User | null>();
+            userService.update.mockReturnValueOnce(pending);
+            const saving = firstProfile.saveProfileAsync(new UpdateUserDto({ theme: 'dark' }));
+            expect(pending.observed).toBe(true);
+
+            sessions.notifySessionEnded();
+            firstPage.destroy();
+            const newUser = { ...user, id: entityId<'user'>('new-account'), language: 'en', theme: 'light' };
+            authService.getUserId.mockReturnValue(newUser.id);
+            sessions.notifyAuthenticated();
+            userService.getOverview.mockReturnValueOnce(of({ ...overview, user: newUser }));
+            const nextProfile = nextPage.get(ProfileManageFacade);
+            nextProfile.initialize();
+            expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
+            expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
+
+            expect(pending.observed).toBe(true);
+            if (result === 'unavailable') {
+                pending.error(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' }));
+            } else {
+                pending.next(result === 'accepted' ? { ...user, theme: 'dark' } : null);
+                pending.complete();
             }
-            nextPage.destroy();
-        });
-        const sessions = TestBed.inject(SessionEventsService);
-        const firstProfile = firstPage.get(ProfileManageFacade);
-        firstProfile.initialize();
+            const saved = await saving;
 
-        const pending = new Subject<User | null>();
-        userService.update.mockReturnValueOnce(pending);
-        const saving = firstProfile.saveProfileAsync(new UpdateUserDto({ theme: 'dark' }));
-        expect(pending.observed).toBe(true);
-
-        sessions.notifySessionEnded();
-        firstPage.destroy();
-        const newUser = { ...user, id: entityId<'user'>('new-account'), language: 'en', theme: 'light' };
-        authService.getUserId.mockReturnValue(newUser.id);
-        sessions.notifyAuthenticated();
-        userService.getOverview.mockReturnValueOnce(of({ ...overview, user: newUser }));
-        const nextProfile = nextPage.get(ProfileManageFacade);
-        nextProfile.initialize();
-        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
-        expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
-
-        expect(pending.observed).toBe(true);
-        pending.next(result === 'accepted' ? { ...user, theme: 'dark' } : null);
-        pending.complete();
-        const saved = await saving;
-
-        expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
-        expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
-        expect(nextProfile.user()?.id).toBe(newUser.id);
-        expect(nextProfile.globalError()).toBeNull();
-        expect(firstProfile.globalError()).toBeNull();
-        expect(firstProfile.profileSavedVersion()).toBe(0);
-        expect(firstProfile.isSavingProfile()).toBe(false);
-        expect(saved).toBe(false);
-    });
+            expect(localizationService.applyLanguagePreferenceAsync).toHaveBeenLastCalledWith('en');
+            expect(syncProfileTheme).toHaveBeenLastCalledWith('light', undefined, undefined);
+            expect(nextProfile.user()?.id).toBe(newUser.id);
+            expect(nextProfile.globalError()).toBeNull();
+            expect(firstProfile.globalError()).toBeNull();
+            expect(firstProfile.profileSavedVersion()).toBe(0);
+            expect(firstProfile.isSavingProfile()).toBe(false);
+            expect(saved).toBe(false);
+        },
+    );
 
     it('applies an accepted save after ordinary navigation within the same session', async () => {
         const page = createEnvironmentInjector([ProfileManageFacade], TestBed.inject(EnvironmentInjector));

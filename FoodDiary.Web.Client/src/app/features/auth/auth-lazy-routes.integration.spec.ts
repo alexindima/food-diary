@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angu
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { EMPTY, firstValueFrom, type Observable, of, Subject } from 'rxjs';
+import { EMPTY, firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
@@ -320,6 +320,81 @@ describe('Lazy mobile and Telegram routes', () => {
     });
 });
 
+describe('Lazy Telegram route recovery after a temporary provider failure', () => {
+    it('retries the authorization handoff from the entry screen', async () => {
+        const { telegramApi, browser, auth } = configureAuthRoutes();
+        const temporarilyUnavailable = new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable });
+        telegramApi.startOidc.mockReturnValueOnce(throwError(() => temporarilyUnavailable));
+        const harness = await RouterTestingHarness.create(TELEGRAM_ENTRY);
+
+        const startTelegram = await vi.waitFor(() => action(harness, 'AUTH.TELEGRAM.CONTINUE'));
+        startTelegram.click();
+        await vi.waitFor(() => {
+            expect(root(harness).querySelector('[role="alert"]')?.textContent).toContain('AUTH.TELEGRAM.ERROR');
+        });
+        expect(telegramApi.startOidc).toHaveBeenCalledExactlyOnceWith(false);
+        expect(browser.open).not.toHaveBeenCalled();
+        expect(auth.acceptExternalAuthentication).not.toHaveBeenCalled();
+
+        action(harness, 'AUTH.TELEGRAM.CONTINUE').click();
+        await vi.waitFor(() => {
+            expect(browser.open).toHaveBeenCalledExactlyOnceWith(TELEGRAM_PROVIDER_URL, '_self');
+            expect(root(harness).querySelector('[role="alert"]')).toBeNull();
+        });
+        expect(telegramApi.startOidc.mock.calls).toEqual([[false], [false]]);
+    });
+
+    it('retries the saved Telegram ticket without repeating the provider exchange', async () => {
+        const { auth, telegramApi, browser } = configureAuthRoutes();
+        const temporarilyUnavailable = new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable });
+        telegramApi.complete.mockReturnValueOnce(throwError(() => temporarilyUnavailable));
+        const callback = `${TELEGRAM_CALLBACK}?code=fixture-code&state=fixture-state`;
+        const harness = await RouterTestingHarness.create(callback);
+
+        const signIn = await vi.waitFor(() => action(harness, 'AUTH.TELEGRAM.SIGN_IN'));
+        signIn.click();
+        await vi.waitFor(() => {
+            expect(root(harness).querySelector('[role="alert"]')?.textContent).toContain('AUTH.TELEGRAM.ERROR');
+        });
+        expect(auth.acceptExternalAuthentication).not.toHaveBeenCalled();
+        expect(telegramApi.complete).toHaveBeenCalledExactlyOnceWith(TELEGRAM_TICKET, 'login', 'en', expect.any(String));
+
+        action(harness, 'AUTH.TELEGRAM.SIGN_IN').click();
+        await expectDashboardAsync(harness);
+
+        expect(telegramApi.exchange).toHaveBeenCalledExactlyOnceWith('fixture-code', 'fixture-state');
+        expect(telegramApi.complete).toHaveBeenCalledTimes(2);
+        expect(telegramApi.complete.mock.calls[1]).toEqual(telegramApi.complete.mock.calls[0]);
+        expect(auth.acceptExternalAuthentication).toHaveBeenCalledExactlyOnceWith({ user: signedInUser });
+        expect(browser.open).not.toHaveBeenCalled();
+    });
+});
+
+it('keeps the native Telegram entry available in a Mini App when standalone OAuth is disabled', async () => {
+    stubScrollIntoView();
+    const { telegramApi, browser } = configureAuthRoutes();
+    telegramApi.configuration.mockReturnValue(of({ loginEnabled: true, registrationEnabled: true, oidcEnabled: false }));
+    TestBed.overrideProvider(TelegramWebAppService, {
+        useValue: {
+            isMiniAppLaunch: (): boolean => true,
+            claimAutomaticSignInAsync: vi.fn<TelegramWebAppService['claimAutomaticSignInAsync']>().mockResolvedValue(false),
+        },
+    });
+    const harness = await RouterTestingHarness.create(MOBILE_LOGIN);
+    await vi.waitFor(() => {
+        expect(root(harness).querySelector('fd-telegram-entry-button')?.hasAttribute('hidden')).toBe(false);
+    });
+
+    action(harness, 'AUTH.TELEGRAM.CONTINUE').click();
+    await vi.waitFor(() => {
+        expect(TestBed.inject(Router).url).toBe(TELEGRAM_ENTRY);
+        expect(root(harness).querySelector('h1')?.textContent).toContain('AUTH.TELEGRAM.TITLE');
+    });
+    expect(telegramApi.startOidc).not.toHaveBeenCalled();
+    expect(telegramApi.complete).not.toHaveBeenCalled();
+    expect(browser.open).not.toHaveBeenCalled();
+});
+
 describe('Mobile password reset cooldown lifetime', () => {
     it('clears an expired countdown once and leaves the next route usable', async () => {
         stubScrollIntoView();
@@ -387,6 +462,38 @@ describe('Lazy verification routes', () => {
             expect(TestBed.inject(Router).url).toBe('/?auth=login');
             expect(root(harness).querySelector('h1')?.textContent).toBe('Diary login destination');
         });
+    });
+});
+
+describe('Recovery from an expired verification link', () => {
+    it.each([
+        { linkUserId: ACCOUNT, destination: '/verify-pending', title: 'AUTH.VERIFY_PENDING.TITLE' },
+        { linkUserId: 'other-fixture-account', destination: '/?auth=login', title: 'Diary login destination' },
+    ])('opens $destination for the signed-in account and link $linkUserId', async ({ linkUserId, destination, title }) => {
+        const { auth, users } = configureAuthRoutes(true);
+        auth.verifyEmail.mockReturnValueOnce(
+            throwError(() => new HttpErrorResponse({ status: HttpStatusCode.BadRequest, error: { error: 'Authentication.InvalidToken' } })),
+        );
+        users.getInfo.mockReturnValueOnce(of({ ...signedInUser, isEmailConfirmed: false }));
+        const harness = await RouterTestingHarness.create(`/verify-email?userId=${linkUserId}&token=${ONE_TIME_TOKEN}`);
+        expect(root(harness).querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY.ERROR_INVALID');
+        expect(root(harness).textContent).not.toContain('AUTH.VERIFY.RETRY');
+        expect(auth.verifyEmail).toHaveBeenCalledExactlyOnceWith(linkUserId, ONE_TIME_TOKEN);
+
+        action(harness, 'AUTH.VERIFY.REQUEST_NEW_LINK').click();
+
+        await vi.waitFor(() => {
+            expect(TestBed.inject(Router).url).toBe(destination);
+            expect(root(harness).querySelector('h1')?.textContent).toContain(title);
+        });
+        expect(auth.resendEmailVerification).not.toHaveBeenCalled();
+        if (linkUserId === ACCOUNT) {
+            action(harness, 'AUTH.VERIFY_PENDING.RESEND').click();
+            expect(auth.resendEmailVerification).toHaveBeenCalledOnce();
+            expect(root(harness).querySelector('[role="status"]')?.textContent).toContain('AUTH.VERIFY_PENDING.RESENT');
+        } else {
+            expect(users.getInfo).not.toHaveBeenCalled();
+        }
     });
 });
 

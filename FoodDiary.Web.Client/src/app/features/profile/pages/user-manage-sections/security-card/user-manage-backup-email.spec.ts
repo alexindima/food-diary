@@ -34,13 +34,30 @@ describe('UserManageBackupEmailComponent', () => {
     it('rejects invalid input and forwards a valid email without claiming verification', () => {
         const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
         fixture.detectChanges();
-        const component = fixture.componentInstance;
-        component['email'].set('invalid');
-        component['submit']();
+        const host = fixture.nativeElement as HTMLElement;
+        const field = host.querySelector('input[type="email"]');
+        const button = host.querySelector('button');
+        if (!(field instanceof HTMLInputElement) || !(button instanceof HTMLButtonElement)) {
+            throw new Error('Expected the backup email input and send action');
+        }
+
+        field.value = 'invalid';
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        button.click();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('FORM_ERRORS.EMAIL');
+
+        field.value = '';
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        button.click();
         expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
-        component['email'].set('backup@example.com');
-        component['submit']();
-        expect(facade.requestBackupEmailAsync).toHaveBeenCalledWith('backup@example.com');
+
+        field.value = 'backup@example.com';
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+        button.click();
+        expect(facade.requestBackupEmailAsync).toHaveBeenCalledExactlyOnceWith('backup@example.com');
         expect(facade.user().email).toBeNull();
     });
 

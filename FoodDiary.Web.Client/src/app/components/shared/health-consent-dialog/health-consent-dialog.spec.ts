@@ -75,10 +75,12 @@ describe('HealthConsentDialogComponent', () => {
         fixture.detectChanges();
         expect(accept.disabled).toBe(false);
         agreement.click();
-        fixture.detectChanges();
-        expect(accept.disabled).toBe(true);
+        expect(agreement.checked).toBe(false);
+        expect(accept.disabled).toBe(false);
         accept.click();
         expect(close).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(accept.disabled).toBe(true);
 
         agreement.click();
         fixture.detectChanges();

@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -9,9 +9,10 @@ import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { WebmcpScreenRegistry } from 'fd-webmcp';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { ExportService } from '../../../shared/api/export.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../../shared/development/development-tools';
@@ -41,11 +42,12 @@ import {
     type FertilitySignal,
     MENSTRUAL_EPISODE_STATUS_CONFIRMED,
     MENSTRUAL_EPISODE_STATUS_INFERRED,
+    type MenstrualEpisode,
     OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
 } from '../../../shared/models/cycle.data';
-import { calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
+import { type CalendarDate, calendarDate, utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId, type MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CurrentLocalDayService } from '../../../shared/platform/current-local-day.service';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
@@ -522,13 +524,13 @@ it('keeps an episode deletion confirmation on the profile that opened it', async
     deleteMenstrualEpisode.mockImplementation((cycleId, episodeId) => transport.deleteMenstrualEpisode(cycleId, episodeId));
     const removedNote = 'Journal entry removed before retrying Cycle history';
     const replacementNote = 'Replacement profile has its own confirmed episode';
-    const original = profileForEpisodeDeletion(
+    const original = profileWithEpisodeAndJournal(
         '00000000-0000-4000-8000-000000000016',
         '00000000-0000-4000-8000-000000000018',
         removedNote,
         '2026-08-16',
     );
-    const replacement = profileForEpisodeDeletion(
+    const replacement = profileWithEpisodeAndJournal(
         '00000000-0000-4000-8000-000000000017',
         '00000000-0000-4000-8000-000000000019',
         replacementNote,
@@ -577,7 +579,100 @@ it('keeps an episode deletion confirmation on the profile that opened it', async
     http.verify();
 });
 
-function profileForEpisodeDeletion(
+it('lets the replacement profile edit its episode while the previous save was pending', async () => {
+    const { harness, host, http, retry, previousSave } = await preparePendingEpisodeSaveWithRetryAsync();
+    const replacementNote = 'Journal entry from the replacement episode profile';
+    const replacement = profileWithEpisodeAndJournal(
+        '00000000-0000-4000-8000-000000000021',
+        '00000000-0000-4000-8000-000000000023',
+        replacementNote,
+        TODAY,
+    );
+    loadReplacementCycle(retry, replacement.profile, harness);
+    expect(cycleHistoryDayWithNote(host, replacementNote).textContent).toContain(replacementNote);
+    const replacementHistory = requiredElement(host, '[data-tour-id="cycle-tracking-episode-history"]');
+    const replacementEdit = button('CYCLE_TRACKING.EDIT_EPISODE', replacementHistory);
+    expect(replacementEdit.disabled).toBe(false);
+
+    replacementEdit.click();
+    harness.detectChanges();
+    // The next native click arrives after the earlier submission promises settle.
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    harness.detectChanges();
+    click('CYCLE_TRACKING.SAVE_EPISODE', replacementHistory);
+    const replacementSave = await vi.waitFor(() => http.expectOne(episodeUpdateRequest(replacement.profile.id, replacement.episodeId)));
+    expect(replacementSave.request.body).toEqual({ startDate: TRACKING_START, endDate: null });
+    harness.detectChanges();
+    expect(previousSave.cancelled).toBe(true);
+    expect(button('CYCLE_TRACKING.SAVE_EPISODE', replacementHistory).disabled).toBe(true);
+    expect(replacementHistory.textContent).not.toContain('CYCLE_TRACKING.EPISODE_SAVE_FAILED');
+    replacementSave.flush(replacement.profile);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(button('CYCLE_TRACKING.EDIT_EPISODE', replacementHistory).disabled).toBe(false);
+    });
+    http.verify();
+});
+
+it('keeps an episode save pending when Journal Retry still returns the same profile', async () => {
+    const { harness, host, http, previous, retry, previousSave } = await preparePendingEpisodeSaveWithRetryAsync();
+    loadReplacementCycle(retry, previous.profile, harness);
+    const history = requiredElement(host, '[data-tour-id="cycle-tracking-episode-history"]');
+
+    expect(previousSave.cancelled).toBe(false);
+    expect(button('CYCLE_TRACKING.SAVE_EPISODE', history).disabled).toBe(true);
+
+    previousSave.flush(previous.profile);
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(button('CYCLE_TRACKING.EDIT_EPISODE', history).disabled).toBe(false);
+    });
+    http.verify();
+});
+
+async function preparePendingEpisodeSaveWithRetryAsync(): Promise<{
+    harness: RouterTestingHarness;
+    host: HTMLElement;
+    http: HttpTestingController;
+    previous: { profile: CycleResponse; episodeId: MenstrualEpisodeId };
+    retry: Subject<CycleResponse>;
+    previousSave: TestRequest;
+}> {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    const http = TestBed.inject(HttpTestingController);
+    const transport = TestBed.runInInjectionContext(() => new CyclesService());
+    updateMenstrualEpisode.mockImplementation((profileId, episodeId, update) =>
+        transport.updateMenstrualEpisode(profileId, episodeId, update),
+    );
+    const removedNote = 'Journal entry removed ahead of the episode retry';
+    const previous = profileWithEpisodeAndJournal(
+        '00000000-0000-4000-8000-000000000020',
+        '00000000-0000-4000-8000-000000000022',
+        removedNote,
+        '2026-08-16',
+    );
+    const retry = new Subject<CycleResponse>();
+    getCurrent.mockReturnValueOnce(of(previous.profile)).mockReturnValueOnce(of(null)).mockReturnValueOnce(retry);
+    clearDay.mockReturnValueOnce(of(void 0));
+    const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+    const host = await retryAfterJournalRemovalAsync(harness, removedNote);
+    expect(retry.observed).toBe(true);
+
+    const history = openRoutedEpisodeHistory(harness);
+    click('CYCLE_TRACKING.EDIT_EPISODE', history);
+    harness.detectChanges();
+    click('CYCLE_TRACKING.SAVE_EPISODE', history);
+    const previousSave = await vi.waitFor(() => http.expectOne(episodeUpdateRequest(previous.profile.id, previous.episodeId)));
+    expect(previousSave.request.body).toEqual({ startDate: TRACKING_START, endDate: null });
+    expect(previousSave.cancelled).toBe(false);
+    return { harness, host, http, previous, retry, previousSave };
+}
+
+function episodeUpdateRequest(profileId: CycleResponse['id'], episodeId: MenstrualEpisodeId): { method: string; url: string } {
+    return { method: 'PUT', url: `${environment.apiUrls.cycles}/${profileId}/menstrual-episodes/${episodeId}` };
+}
+
+function profileWithEpisodeAndJournal(
     rawProfileId: string,
     rawEpisodeId: string,
     note: string,
@@ -717,6 +812,36 @@ describe('Cycle episode history', () => {
         expect(deleteMenstrualEpisode).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, EPISODE_ID);
         expect(card.textContent).toContain('CYCLE_TRACKING.EPISODE_HISTORY_EMPTY');
     });
+});
+
+it('ignores a queued episode edit when a journal refresh reports that the episode was removed elsewhere', async () => {
+    const note = 'Journal note removed before refreshing episode history';
+    const { profile } = profileWithEpisodeAndJournal(CYCLE_ID, EPISODE_ID, note, TODAY);
+    const refresh = new Subject<CycleResponse>();
+    getCurrent.mockReturnValueOnce(of(profile)).mockReturnValueOnce(refresh);
+    clearDay.mockReturnValueOnce(of(void 0));
+    await renderAsync();
+
+    requiredElement(page, 'details.cycle-tracking__details summary').click();
+    click('CYCLE_TRACKING.CLEAR_DAY', cycleHistoryDayWithNote(page, note));
+    await stabilizeAsync();
+    click('CYCLE_TRACKING.CLEAR_DAY', requiredElement(document.body, CONFIRM_DIALOG));
+    await stabilizeAsync();
+    expect(clearDay).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, TODAY);
+    expect(refresh.observed).toBe(true);
+
+    const history = requiredElement(page, '[data-tour-id="cycle-tracking-episode-history"]');
+    const oldEdit = button('CYCLE_TRACKING.EDIT_EPISODE', history);
+    refresh.next({ ...profile, dayNotes: [], menstrualEpisodes: [] });
+    refresh.complete();
+    expect(oldEdit.isConnected).toBe(true);
+    expect(oldEdit.disabled).toBe(false);
+    oldEdit.click();
+    await stabilizeAsync();
+
+    expect(history.textContent).toContain('CYCLE_TRACKING.EPISODE_HISTORY_EMPTY');
+    expect(history.querySelector('form')).toBeNull();
+    expect(updateMenstrualEpisode).not.toHaveBeenCalled();
 });
 
 describe('Cycle route dialog ownership', () => {
@@ -2046,7 +2171,7 @@ describe('Cycle history refresh after saving a journal day', () => {
     });
 });
 
-it.each(['write', 'refresh', 'error'] as const)('Cycle journal save when Retry reloads the profile ignores an old %s', async outcome => {
+it.each(['write', 'refresh', 'error'] as const)('keeps a replacement journal save independent of an old %s', async outcome => {
     const date = calendarDate(TODAY);
     const removedDate = calendarDate('2026-08-16');
     const oldNote = 'Original profile note';
@@ -2066,6 +2191,7 @@ it.each(['write', 'refresh', 'error'] as const)('Cycle journal save when Retry r
     const reload = new Subject<CycleResponse>();
     const refresh = new Subject<CycleResponse | null>();
     const write = new Subject<CycleLogDay>();
+    const replacementWrite = new Subject<CycleLogDay>();
     const savedDay = { date, cycleProfileId: CYCLE_ID, bleedingEntries: [], symptoms: [], fertilitySignal: null, notes: submittedNote };
     getCurrent
         .mockReturnValueOnce(of(original))
@@ -2073,19 +2199,12 @@ it.each(['write', 'refresh', 'error'] as const)('Cycle journal save when Retry r
         .mockReturnValueOnce(reload)
         .mockReturnValue(outcome === 'refresh' ? refresh : of(original));
     clearDay.mockReturnValueOnce(of(void 0));
-    upsertDay.mockReturnValueOnce(write);
+    upsertDay.mockReturnValueOnce(write).mockReturnValueOnce(replacementWrite);
     const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
-    const isSaving = harness.routeDebugElement?.injector.get(CycleTrackingFacade).isSavingDay;
     const host = await retryAfterJournalRemovalAsync(harness, removedNote);
     expect(reload.observed).toBe(true);
     harness.detectChanges();
-    click('CYCLE_TRACKING.EDIT_TODAY', host);
-    harness.detectChanges();
-    const notes = requiredElementOfType(document.body, '.cycle-drawer textarea', HTMLTextAreaElement);
-    expect(notes.value).toBe(oldNote);
-    input(notes, submittedNote);
-    harness.detectChanges();
-    click('CYCLE_TRACKING.UPDATE_DAY');
+    await submitTodayJournalNoteAsync(harness, host, oldNote, submittedNote);
     await vi.waitFor(() => {
         expect(upsertDay).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, expect.objectContaining({ date, notes: submittedNote }));
         expect(write.observed).toBe(true);
@@ -2102,9 +2221,188 @@ it.each(['write', 'refresh', 'error'] as const)('Cycle journal save when Retry r
     reload.complete();
     harness.detectChanges();
     expect(host.textContent).toContain(replacedNote);
-    const editorClosedOnReload = document.querySelector('#cycle-day-editor-title') === null;
+    expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
+    const newNote = 'Edit sent to the replacement profile';
+    const newDrawer = await submitTodayJournalNoteAsync(harness, host, replacedNote, newNote);
+    await vi.waitFor(() => {
+        expect(upsertDay).toHaveBeenLastCalledWith(replacement.id, expect.objectContaining({ date, notes: newNote }));
+        expect(replacementWrite.observed).toBe(true);
+    });
+    expect(upsertDay).toHaveBeenCalledTimes(2);
 
     const readsAfterReload = getCurrent.mock.calls.length;
+    settlePreviousJournalSave(outcome, write, refresh, savedDay);
+    await waitForAsyncTasksAsync();
+    harness.detectChanges();
+    expect(replacementWrite.observed).toBe(true);
+    expect(button('CYCLE_TRACKING.UPDATE_DAY', newDrawer).disabled).toBe(true);
+    expect(host.textContent).toContain(replacedNote);
+    expect(host.textContent).not.toContain(submittedNote);
+    expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+    expect(getCurrent).toHaveBeenCalledTimes(readsAfterReload);
+
+    getCurrent.mockReturnValueOnce(of(replacement));
+    replacementWrite.next({ ...savedDay, cycleProfileId: replacement.id, notes: newNote });
+    replacementWrite.complete();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(cycleHistoryDayWithNote(host, newNote).textContent).toContain(newNote);
+        expect(newDrawer.isConnected).toBe(false);
+    });
+});
+
+it.each(['write', 'prediction refresh'] as const)(
+    'keeps the replacement journal when the old %s resolves in the same fetch batch',
+    async stage => {
+        TestBed.configureTestingModule({ providers: [provideHttpClient()] });
+        const transport = TestBed.runInInjectionContext(() => new CyclesService());
+        onTestFinished(() => {
+            vi.unstubAllGlobals();
+        });
+        const date = calendarDate(TODAY);
+        const removedDate = calendarDate('2026-08-16');
+        const loadedNote = 'Current note in the original journal';
+        const removedNote = 'Earlier entry removed before retry';
+        const replacementNote = 'Current note in the replacement journal';
+        const submittedNote = 'Submitted note for the original journal';
+        const original = cycleProfile({
+            dayNotes: [
+                { date, notes: loadedNote },
+                { date: removedDate, notes: removedNote },
+            ],
+        });
+        const replacement = cycleProfile({
+            id: entityId<'cycle-profile'>('replacement-fetch-batch'),
+            trackingStartDate: date,
+            dayNotes: [{ date, notes: replacementNote }],
+            menstrualEpisodes: [],
+        });
+        const savedDay: CycleLogDay = {
+            date,
+            cycleProfileId: CYCLE_ID,
+            notes: submittedNote,
+            bleedingEntries: [],
+            symptoms: [],
+            fertilitySignal: null,
+        };
+        const refreshed = cycleProfile({
+            menstrualEpisodes: [
+                {
+                    id: EPISODE_ID,
+                    cycleProfileId: CYCLE_ID,
+                    startDate: date,
+                    endDate: null,
+                    status: MENSTRUAL_EPISODE_STATUS_CONFIRMED,
+                    excludedFromPredictions: false,
+                },
+            ],
+        });
+        const oldBody = openJournalResponseBody(stage === 'write' ? savedDay : refreshed);
+        const replacementBody = openJournalResponseBody(replacement);
+        const fetch = stubCycleJournalFetch(
+            replacementBody.response,
+            stage === 'write' ? oldBody.response : Response.json(savedDay),
+            stage === 'prediction refresh' ? oldBody.response : Response.json(refreshed),
+        );
+        getCurrent
+            .mockReturnValueOnce(of(original))
+            .mockReturnValueOnce(of(null))
+            .mockImplementation(() => transport.getCurrent());
+        clearDay.mockReturnValueOnce(of(void 0));
+        upsertDay.mockImplementation((profileId, payload) => transport.upsertDay(profileId, payload));
+        const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+        const host = await retryAfterJournalRemovalAsync(harness, removedNote);
+        await submitTodayJournalNoteAsync(harness, host, loadedNote, submittedNote);
+        const expectedNetworkCount = 2 + Number(stage === 'prediction refresh');
+        await vi.waitFor(() => {
+            expect(upsertDay).toHaveBeenCalledExactlyOnceWith(CYCLE_ID, expect.objectContaining({ date, notes: submittedNote }));
+            expect(fetch).toHaveBeenCalledTimes(expectedNetworkCount);
+        });
+
+        // FetchBackend must have read both JSON bodies before either stream reports EOF.
+        await Promise.all([oldBody.primeAsync(), replacementBody.primeAsync()]);
+        await Promise.all([oldBody.finishAsync(), replacementBody.finishAsync()]);
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(cycleHistoryDayWithNote(host, replacementNote).textContent).toContain(replacementNote);
+            expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
+        });
+        expect(fetch).toHaveBeenCalledTimes(expectedNetworkCount);
+        expect(host.textContent).not.toContain(submittedNote);
+        expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+        expect(requiredElement(host, '[data-tour-id="cycle-tracking-episode-history"]').textContent).toContain(
+            'CYCLE_TRACKING.EPISODE_HISTORY_EMPTY',
+        );
+    },
+);
+
+function openJournalResponseBody(value: CycleLogDay | CycleResponse): {
+    response: Response;
+    primeAsync: () => Promise<void>;
+    finishAsync: () => Promise<void>;
+} {
+    const stream = new TransformStream<Uint8Array, Uint8Array>();
+    const writer = stream.writable.getWriter();
+    return {
+        response: new Response(stream.readable, { headers: { 'content-type': 'application/json' } }),
+        primeAsync: async () => writer.write(new TextEncoder().encode(JSON.stringify(value))),
+        finishAsync: async () => writer.close(),
+    };
+}
+
+function stubCycleJournalFetch(replacement: Response, write: Response, refresh: Response): Mock<typeof globalThis.fetch> {
+    const currentResponses = [replacement, refresh];
+    const basePath = new URL(environment.apiUrls.cycles).pathname;
+    const fetch = vi.fn<typeof globalThis.fetch>(async (resource, init) => {
+        if (typeof resource !== 'string') {
+            throw new Error('Expected a Cycle Journal request URL.');
+        }
+        const path = new URL(resource).pathname;
+        if (init?.method === 'GET' && path === `${basePath}/current`) {
+            const response = currentResponses.shift();
+            if (response !== undefined) {
+                return new Promise<Response>(resolve => {
+                    resolve(response);
+                });
+            }
+        }
+        if (init?.method === 'PUT' && path === `${basePath}/${CYCLE_ID}/days`) {
+            return new Promise<Response>(resolve => {
+                resolve(write);
+            });
+        }
+        throw new Error(`Unexpected Cycle Journal fetch request: ${path}`);
+    });
+    vi.stubGlobal('fetch', fetch);
+    return fetch;
+}
+
+async function submitTodayJournalNoteAsync(
+    harness: RouterTestingHarness,
+    host: HTMLElement,
+    loadedNote: string,
+    note: string,
+): Promise<HTMLElement> {
+    click('CYCLE_TRACKING.EDIT_TODAY', host);
+    harness.detectChanges();
+    expect(document.querySelector('#cycle-day-editor-title'), 'The current profile journal editor opens on Edit Today').not.toBeNull();
+    const drawer = requiredElement(document.body, '.cycle-drawer');
+    const notes = requiredElementOfType(drawer, 'textarea', HTMLTextAreaElement);
+    expect(notes.value).toBe(loadedNote);
+    input(notes, note);
+    // The fresh submit is a separate native event after any prior form submission unwinds.
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    harness.detectChanges();
+    click('CYCLE_TRACKING.UPDATE_DAY', drawer);
+    return drawer;
+}
+
+function settlePreviousJournalSave(
+    outcome: 'write' | 'refresh' | 'error',
+    write: Subject<CycleLogDay>,
+    refresh: Subject<CycleResponse | null>,
+    savedDay: CycleLogDay,
+): void {
     if (outcome === 'error') {
         write.error(API_ERROR);
     } else if (outcome === 'write') {
@@ -2114,21 +2412,7 @@ it.each(['write', 'refresh', 'error'] as const)('Cycle journal save when Retry r
         refresh.next(null);
         refresh.complete();
     }
-    await vi.waitFor(() => {
-        harness.detectChanges();
-        expect(isSaving?.()).toBe(false);
-    });
-
-    expect(host.textContent).toContain(replacedNote);
-    expect(host.textContent).not.toContain(submittedNote);
-    expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
-    expect(getCurrent).toHaveBeenCalledTimes(readsAfterReload);
-    expect(editorClosedOnReload).toBe(true);
-    expect(document.querySelector('#cycle-day-editor-title')).toBeNull();
-    click('CYCLE_TRACKING.EDIT_TODAY', host);
-    harness.detectChanges();
-    expect(requiredElementOfType(document.body, '.cycle-drawer textarea', HTMLTextAreaElement).value).toBe(replacedNote);
-});
+}
 
 async function retryAfterJournalRemovalAsync(harness: RouterTestingHarness, note: string): Promise<HTMLElement> {
     const host = cycleRouteHost(harness);
@@ -2220,7 +2504,7 @@ describe('Cycle history refresh after removal', () => {
 });
 
 describe('Cycle journal removal after loading a replacement profile', () => {
-    it.each(['removal', 'refresh', 'error'] as const)('ignores an old %s response after retry loads another profile', async stage => {
+    it.each(['removal', 'refresh', 'error'] as const)('keeps a replacement clear independent of an old %s', async stage => {
         const latestDate = calendarDate('2026-08-16');
         const date = calendarDate('2026-08-15');
         const previous = cycleProfile({
@@ -2236,8 +2520,12 @@ describe('Cycle journal removal after loading a replacement profile', () => {
         });
         const removing = new Subject<void>();
         const refreshing = new Subject<CycleResponse | null>();
+        const replacementRemoval = new Subject<void>();
         const pending = stage === 'refresh' ? refreshing : removing;
-        clearDay.mockReturnValueOnce(of(void 0)).mockReturnValueOnce(stage === 'refresh' ? of(void 0) : removing);
+        clearDay
+            .mockReturnValueOnce(of(void 0))
+            .mockReturnValueOnce(stage === 'refresh' ? of(void 0) : removing)
+            .mockReturnValueOnce(replacementRemoval);
         getCurrent.mockReturnValueOnce(of(previous)).mockReturnValueOnce(of(null));
         if (stage === 'refresh') {
             getCurrent.mockReturnValueOnce(refreshing);
@@ -2265,24 +2553,58 @@ describe('Cycle journal removal after loading a replacement profile', () => {
             expect(requiredElement(host, 'fd-cycle-day-item').textContent).toContain(nextNote);
         });
 
+        const replacementRow = cycleHistoryDayWithNote(host, nextNote);
+        expect(button('CYCLE_TRACKING.CLEAR_DAY', replacementRow).disabled).toBe(false);
+        confirmJournalRemoval(harness, replacementRow);
+        await vi.waitFor(() => {
+            expect(replacementRemoval.observed).toBe(true);
+        });
+        harness.detectChanges();
+        expect(clearDay.mock.calls).toEqual([
+            [CYCLE_ID, latestDate],
+            [CYCLE_ID, date],
+            [replacement.id, date],
+        ]);
+        expect(button('CYCLE_TRACKING.CLEAR_DAY', replacementRow).disabled).toBe(true);
+
         const readsAfterRetry = getCurrent.mock.calls.length;
-        if (stage === 'error') {
-            removing.error(API_ERROR);
-        } else {
-            removing.next();
-            removing.complete();
-        }
-        refreshing.next(null);
-        refreshing.complete();
+        completePreviousJournalClear(stage, removing, refreshing);
         harness.detectChanges();
 
-        expect(host.textContent).toContain(nextNote);
         expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
         expect(host.textContent).not.toContain('CYCLE_TRACKING.CLEAR_DAY_FAILED');
-        expect(button('CYCLE_TRACKING.CLEAR_DAY', requiredElement(host, 'fd-cycle-day-item')).disabled).toBe(false);
+        expect(replacementRemoval.observed).toBe(true);
+        expect(button('CYCLE_TRACKING.CLEAR_DAY', cycleHistoryDayWithNote(host, nextNote)).disabled).toBe(true);
         expect(getCurrent).toHaveBeenCalledTimes(readsAfterRetry);
+
+        getCurrent.mockReturnValueOnce(of({ ...replacement, dayNotes: [] }));
+        replacementRemoval.next();
+        replacementRemoval.complete();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(host.textContent).not.toContain(nextNote);
+        });
+        expect(getCurrent).toHaveBeenCalledTimes(readsAfterRetry + 1);
+        expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
+        expect(host.textContent).not.toContain('CYCLE_TRACKING.CLEAR_DAY_FAILED');
     });
 });
+
+function completePreviousJournalClear(
+    stage: 'removal' | 'refresh' | 'error',
+    removing: Subject<void>,
+    refreshing: Subject<CycleResponse | null>,
+): void {
+    if (stage === 'refresh') {
+        refreshing.next(null);
+        refreshing.complete();
+    } else if (stage === 'error') {
+        removing.error(API_ERROR);
+    } else {
+        removing.next();
+        removing.complete();
+    }
+}
 
 function confirmJournalRemoval(harness: RouterTestingHarness, row: HTMLElement): void {
     click('CYCLE_TRACKING.CLEAR_DAY', row);
@@ -2463,39 +2785,15 @@ describe('Cycle history period confirmation', () => {
 });
 
 describe('Cycle period confirmation after loading a replacement profile', () => {
-    it.each(['success', 'failure'] as const)('ignores an old period confirmation %s after Retry loads another profile', async outcome => {
+    it.each(['success', 'failure'] as const)('keeps a replacement period confirmation independent of an old %s', async outcome => {
         const date = calendarDate('2026-08-16');
-        const journalDate = calendarDate(TODAY);
-        const episode = {
-            id: EPISODE_ID,
-            cycleProfileId: CYCLE_ID,
-            startDate: date,
-            endDate: null,
-            status: MENSTRUAL_EPISODE_STATUS_INFERRED,
-            excludedFromPredictions: false,
-        };
-        const original = cycleProfile({
-            dayNotes: [{ date: journalDate, notes: 'Journal entry to remove' }],
-            menstrualEpisodes: [episode],
-            bleedingEntries: [
-                {
-                    id: entityId<'bleeding-entry'>('inferred-bleeding'),
-                    cycleProfileId: CYCLE_ID,
-                    date,
-                    type: BLEEDING_TYPE_BLEEDING,
-                    flow: CYCLE_FLOW_MEDIUM,
-                },
-            ],
-        });
         const replacementNote = 'Journal entry from the replacement profile';
-        const replacement = cycleProfile({
-            id: entityId<'cycle-profile'>('replacement-cycle'),
-            dayNotes: [{ date, notes: replacementNote }],
-        });
+        const { original, replacement, episode, replacementEpisode } = periodConfirmationProfiles(date, replacementNote);
         const pending = new Subject<CycleResponse>();
+        const replacementConfirmation = new Subject<CycleResponse>();
         getCurrent.mockReturnValueOnce(of(original)).mockReturnValueOnce(of(null)).mockReturnValueOnce(of(replacement));
         clearDay.mockReturnValueOnce(of(void 0));
-        confirmPeriodStart.mockReturnValueOnce(pending);
+        confirmPeriodStart.mockReturnValueOnce(pending).mockReturnValueOnce(replacementConfirmation);
         const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
         const host = cycleRouteHost(harness);
 
@@ -2514,6 +2812,17 @@ describe('Cycle period confirmation after loading a replacement profile', () => 
             expect(requiredElement(host, 'fd-cycle-day-item').textContent).toContain(replacementNote);
         });
 
+        const row = cycleHistoryDayWithNote(host, replacementNote);
+        const replacementButton = button('CYCLE_TRACKING.CONFIRM_PERIOD_START', row);
+        expect(replacementButton.disabled).toBe(false);
+        replacementButton.click();
+        harness.detectChanges();
+        expect(replacementConfirmation.observed).toBe(true);
+        expect(confirmPeriodStart.mock.calls).toEqual([
+            [CYCLE_ID, date],
+            [replacement.id, date],
+        ]);
+
         if (outcome === 'success') {
             pending.next({ ...original, menstrualEpisodes: [{ ...episode, status: MENSTRUAL_EPISODE_STATUS_CONFIRMED }] });
             pending.complete();
@@ -2522,13 +2831,309 @@ describe('Cycle period confirmation after loading a replacement profile', () => 
         }
         harness.detectChanges();
 
-        const row = requiredElement(host, 'fd-cycle-day-item');
-        expect(row.textContent).toContain(replacementNote);
+        expect(replacementConfirmation.observed).toBe(true);
+        expect(replacementButton.disabled).toBe(true);
         expect(row.textContent).not.toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
         expect(host.textContent).not.toContain('CYCLE_TRACKING.CONFIRM_PERIOD_START_FAILED');
-        expect(button('CYCLE_TRACKING.EDIT_DAY', row).disabled).toBe(false);
+        replacementConfirmation.next({
+            ...replacement,
+            menstrualEpisodes: [{ ...replacementEpisode, status: MENSTRUAL_EPISODE_STATUS_CONFIRMED }],
+        });
+        replacementConfirmation.complete();
+        harness.detectChanges();
+        const updated = cycleHistoryDayWithNote(host, replacementNote);
+        expect(updated.textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+        expect(button('CYCLE_TRACKING.EDIT_DAY', updated).disabled).toBe(false);
     });
 });
+
+function periodConfirmationProfiles(
+    date: CalendarDate,
+    replacementNote: string,
+): {
+    original: CycleResponse;
+    replacement: CycleResponse;
+    episode: MenstrualEpisode;
+    replacementEpisode: MenstrualEpisode;
+} {
+    const episode: MenstrualEpisode = {
+        id: EPISODE_ID,
+        cycleProfileId: CYCLE_ID,
+        startDate: date,
+        endDate: null,
+        status: MENSTRUAL_EPISODE_STATUS_INFERRED,
+        excludedFromPredictions: false,
+    };
+    const original = cycleProfile({
+        dayNotes: [{ date: calendarDate(TODAY), notes: 'Journal entry to remove' }],
+        menstrualEpisodes: [episode],
+        bleedingEntries: [
+            {
+                id: entityId<'bleeding-entry'>('inferred-bleeding'),
+                cycleProfileId: CYCLE_ID,
+                date,
+                type: BLEEDING_TYPE_BLEEDING,
+                flow: CYCLE_FLOW_MEDIUM,
+            },
+        ],
+    });
+    const replacementId = entityId<'cycle-profile'>('replacement-cycle');
+    const replacementEpisode = {
+        ...episode,
+        id: entityId<'menstrual-episode'>('replacement-episode'),
+        cycleProfileId: replacementId,
+    };
+    const replacement = cycleProfile({
+        id: replacementId,
+        dayNotes: [{ date, notes: replacementNote }],
+        menstrualEpisodes: [replacementEpisode],
+        bleedingEntries: original.bleedingEntries.map(entry => ({ ...entry, cycleProfileId: replacementId })),
+    });
+    return { original, replacement, episode, replacementEpisode };
+}
+
+const currentCycleRead = { method: 'GET', url: `${environment.apiUrls.cycles}/current` };
+const sameProfilePeriodNote = 'The cycle start shown in history';
+
+describe('Same-profile cycle reads after journal changes', () => {
+    it('preserves the latest confirmed episode when an earlier journal clearance refresh returns', async () => {
+        const cycle = sameProfileOrderingFixture();
+        const route = await openCycleWithFailedJournalRefreshAsync(cycle);
+        const { harness, host, http } = route;
+        const olderRefresh = await clearJournalNoteOverHttpAsync(route, cycle.initial.id, cycle.secondNote);
+        const previous = cycleHistoryDayWithNote(host, sameProfilePeriodNote);
+        expect(previous.textContent).toContain('CYCLE_TRACKING.PERIOD_START_INFERRED');
+
+        const retry = button('CYCLE_TRACKING.RETRY_LOAD', host);
+        expect(retry.disabled).toBe(false);
+        retry.click();
+        const latest = http.expectOne(currentCycleRead);
+        latest.flush({
+            ...cycle.afterSecondClear,
+            menstrualEpisodes: [cycle.confirmedEpisode],
+        });
+        harness.detectChanges();
+        expect(cycleHistoryDayWithNote(host, sameProfilePeriodNote).textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+
+        if (!olderRefresh.cancelled) {
+            olderRefresh.flush(cycle.afterSecondClear);
+        }
+        harness.detectChanges();
+
+        const current = cycleHistoryDayWithNote(host, sameProfilePeriodNote);
+        expect(current.textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+        expect(host.textContent).not.toContain(cycle.secondNote.notes);
+    });
+
+    it('keeps a confirmed episode after Retry returns a snapshot taken before its confirmation', async () => {
+        const cycle = sameProfileOrderingFixture();
+        const { harness, host, http } = await openCycleWithFailedJournalRefreshAsync(cycle);
+        const row = cycleHistoryDayWithNote(host, sameProfilePeriodNote);
+        expect(row.textContent).toContain('CYCLE_TRACKING.PERIOD_START_INFERRED');
+        const confirm = button('CYCLE_TRACKING.CONFIRM_PERIOD_START', row);
+        expect(confirm.disabled).toBe(false);
+        confirm.click();
+        const change = http.expectOne({ method: 'PUT', url: `${environment.apiUrls.cycles}/${cycle.initial.id}/period-start` });
+        expect(change.request.body).toEqual({ date: cycle.confirmedEpisode.startDate });
+        harness.detectChanges();
+
+        const retry = button('CYCLE_TRACKING.RETRY_LOAD', host);
+        expect(retry.disabled).toBe(false);
+        retry.click();
+        const olderRefresh = http.expectOne(currentCycleRead);
+        harness.detectChanges();
+        expect(host.querySelector('fd-cycle-day-item')).toBeNull();
+
+        const acknowledged = { ...cycle.afterFirstClear, menstrualEpisodes: [cycle.confirmedEpisode] };
+        change.flush(acknowledged);
+
+        if (!olderRefresh.cancelled) {
+            olderRefresh.flush(cycle.afterFirstClear);
+        }
+        const followUp = http.match(currentCycleRead);
+        expect(followUp.length).toBeLessThanOrEqual(1);
+        for (const request of followUp) {
+            request.flush(acknowledged);
+        }
+        harness.detectChanges();
+
+        const current = cycleHistoryDayWithNote(host, sameProfilePeriodNote);
+        expect(current.textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+        expect(host.textContent).not.toContain(cycle.firstNote.notes);
+    });
+});
+
+describe('Superseded cycle journal refreshes', () => {
+    it('keeps the accepted retry and unlocks history when the older clear refresh fails', async () => {
+        const cycle = sameProfileOrderingFixture();
+        const route = await openCycleWithFailedJournalRefreshAsync(cycle);
+        const { harness, host, http } = route;
+        const lateRefresh = await clearJournalNoteOverHttpAsync(route, cycle.initial.id, cycle.secondNote);
+        const attempt = retryVisibleCycleRead(route);
+        attempt.flush({ ...cycle.afterSecondClear, menstrualEpisodes: [cycle.confirmedEpisode] });
+        harness.detectChanges();
+        const row = cycleHistoryDayWithNote(host, sameProfilePeriodNote);
+        expect(button('CYCLE_TRACKING.EDIT_DAY', row).disabled).toBe(true);
+
+        lateRefresh.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        harness.detectChanges();
+
+        expect(row.textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+        expect(host.textContent).not.toContain(cycle.secondNote.notes);
+        expect(button('CYCLE_TRACKING.EDIT_DAY', row).disabled).toBe(false);
+        expect(button('CYCLE_TRACKING.RETRY_LOAD', host).closest<HTMLElement>('fd-ui-inline-alert')?.hidden).toBe(true);
+        expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
+        http.expectNone(currentCycleRead);
+    });
+
+    it.each(['older snapshot', 'service unavailable'] as const)(
+        'keeps the saved note and confirmed episode after a superseded save refresh returns %s',
+        async outcome => {
+            const cycle = sameProfileOrderingFixture();
+            const route = await openCycleWithFailedJournalRefreshAsync(cycle);
+            const { harness, host, http } = route;
+            const preSaveRead = retryVisibleCycleRead(route);
+            harness.detectChanges();
+            const note = { date: calendarDate(TODAY), notes: 'A journal note saved while the retry was pending' };
+            const lateRefresh = await saveJournalNoteOverHttpAsync(route, cycle.initial.id, note);
+            const savedSnapshot = { ...cycle.afterFirstClear, dayNotes: [...(cycle.afterFirstClear.dayNotes ?? []), note] };
+
+            preSaveRead.flush(cycle.afterFirstClear);
+            const authoritativeRead = http.expectOne(currentCycleRead);
+            authoritativeRead.flush({ ...savedSnapshot, menstrualEpisodes: [cycle.confirmedEpisode] });
+            harness.detectChanges();
+            expect(cycleHistoryDayWithNote(host, sameProfilePeriodNote).textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+
+            if (outcome === 'older snapshot') {
+                lateRefresh.flush(savedSnapshot);
+            } else {
+                lateRefresh.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+            }
+            await waitForDrawerCloseAsync('#cycle-day-editor-title');
+
+            const current = cycleHistoryDayWithNote(host, sameProfilePeriodNote);
+            expect(current.textContent).toContain('CYCLE_TRACKING.PERIOD_START_CONFIRMED');
+            expect(cycleHistoryDayWithNote(host, note.notes).textContent).toContain(note.notes);
+            expect(button('CYCLE_TRACKING.RETRY_LOAD', host).closest<HTMLElement>('fd-ui-inline-alert')?.hidden).toBe(true);
+            expect(host.textContent).not.toContain('CYCLE_TRACKING.DAY_SAVED_REFRESH_FAILED');
+            http.expectNone(currentCycleRead);
+        },
+    );
+});
+
+function retryVisibleCycleRead({ host, http }: CycleOrderingRoute): TestRequest {
+    const retry = button('CYCLE_TRACKING.RETRY_LOAD', host);
+    expect(retry.closest<HTMLElement>('fd-ui-inline-alert')?.hidden).toBe(false);
+    expect(retry.disabled).toBe(false);
+    retry.click();
+    return http.expectOne(currentCycleRead);
+}
+
+async function saveJournalNoteOverHttpAsync(
+    { harness, host, http }: CycleOrderingRoute,
+    profileId: CycleResponse['id'],
+    note: { date: CalendarDate; notes: string },
+): Promise<TestRequest> {
+    const log = button('CYCLE_TRACKING.LOG_TODAY', host);
+    expect(log.disabled).toBe(false);
+    log.click();
+    harness.detectChanges();
+    const drawer = requiredElement(document.body, '.cycle-drawer');
+    input(requiredElementOfType(drawer, 'textarea', HTMLTextAreaElement), note.notes);
+    harness.detectChanges();
+    click('CYCLE_TRACKING.SAVE_DAY', drawer);
+
+    const saved = await vi.waitFor(() => http.expectOne({ method: 'PUT', url: `${environment.apiUrls.cycles}/${profileId}/days` }));
+    expect(saved.request.body).toMatchObject(note);
+    saved.flush({ cycleProfileId: profileId, ...note, bleedingEntries: [], symptoms: [], fertilitySignal: null } satisfies CycleLogDay);
+    return vi.waitFor(() => http.expectOne(currentCycleRead));
+}
+
+function sameProfileOrderingFixture(): {
+    initial: CycleResponse;
+    afterFirstClear: CycleResponse;
+    afterSecondClear: CycleResponse;
+    firstNote: { date: CalendarDate; notes: string };
+    secondNote: { date: CalendarDate; notes: string };
+    confirmedEpisode: MenstrualEpisode;
+} {
+    const profileId = entityId<'cycle-profile'>('d2833145-1289-4b1f-8424-7818547003c7');
+    const firstNote = { date: calendarDate('2026-08-13'), notes: 'Earlier journal note with a failed refresh after clearing' };
+    const secondNote = { date: calendarDate('2026-08-14'), notes: 'Another journal note to clear' };
+    const period = { date: calendarDate('2026-08-16'), notes: sameProfilePeriodNote };
+    const inferredEpisode: MenstrualEpisode = {
+        id: entityId<'menstrual-episode'>('c4c2ac24-3d2d-4a62-96df-50763ca2d41b'),
+        cycleProfileId: profileId,
+        startDate: period.date,
+        endDate: null,
+        status: MENSTRUAL_EPISODE_STATUS_INFERRED,
+        excludedFromPredictions: false,
+    };
+    const initial = cycleProfile({
+        id: profileId,
+        userId: entityId<'user'>('f7c74ff2-3f8c-4c4b-b66d-65af20906eb4'),
+        dayNotes: [firstNote, secondNote, period],
+        menstrualEpisodes: [inferredEpisode],
+        bleedingEntries: [
+            {
+                id: entityId<'bleeding-entry'>('9bf7c4c4-e1b3-4eab-a010-c8d37746b7d8'),
+                cycleProfileId: profileId,
+                date: period.date,
+                type: BLEEDING_TYPE_BLEEDING,
+                flow: CYCLE_FLOW_MEDIUM,
+            },
+        ],
+    });
+    return {
+        initial,
+        afterFirstClear: { ...initial, dayNotes: [secondNote, period] },
+        afterSecondClear: { ...initial, dayNotes: [period] },
+        firstNote,
+        secondNote,
+        confirmedEpisode: { ...inferredEpisode, status: MENSTRUAL_EPISODE_STATUS_CONFIRMED },
+    };
+}
+
+type CycleOrderingRoute = { harness: RouterTestingHarness; host: HTMLElement; http: HttpTestingController };
+
+async function openCycleWithFailedJournalRefreshAsync(cycle: ReturnType<typeof sameProfileOrderingFixture>): Promise<CycleOrderingRoute> {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    const transport = TestBed.runInInjectionContext(() => new CyclesService());
+    getCurrent.mockImplementation(() => transport.getCurrent());
+    clearDay.mockImplementation((profileId, date) => transport.clearDay(profileId, date));
+    upsertDay.mockImplementation((profileId, payload) => transport.upsertDay(profileId, payload));
+    confirmPeriodStart.mockImplementation((profileId, date) => transport.confirmPeriodStart(profileId, date));
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        http.verify();
+    });
+
+    const harness = await RouterTestingHarness.create(CYCLE_ROUTE);
+    http.expectOne(currentCycleRead).flush(cycle.initial);
+    harness.detectChanges();
+    const host = cycleRouteHost(harness);
+    const route = { harness, host, http };
+    const refresh = await clearJournalNoteOverHttpAsync(route, cycle.initial.id, cycle.firstNote);
+    refresh.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+    harness.detectChanges();
+    expect(host.textContent).toContain('CYCLE_TRACKING.DAY_CLEARED_REFRESH_FAILED');
+    expect(host.textContent).not.toContain(cycle.firstNote.notes);
+    return route;
+}
+
+async function clearJournalNoteOverHttpAsync(
+    { harness, host, http }: CycleOrderingRoute,
+    profileId: CycleResponse['id'],
+    note: { date: CalendarDate; notes: string },
+): Promise<TestRequest> {
+    confirmJournalRemoval(harness, cycleHistoryDayWithNote(host, note.notes));
+    const cleared = await vi.waitFor(() =>
+        http.expectOne(request => request.method === 'DELETE' && request.url === `${environment.apiUrls.cycles}/${profileId}/days`),
+    );
+    expect(cleared.request.params.get('date')).toBe(note.date);
+    cleared.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+    return http.expectOne(currentCycleRead);
+}
 
 describe('Cycle settings duration validation', () => {
     it('announces an empty duration and only saves after correcting it', async () => {
@@ -2655,6 +3260,38 @@ describe('Cycle settings after Retry changes profiles', () => {
         expect(permissionCheckbox(currentDrawer, 'CYCLE_TRACKING.CONSENT_NUTRITION').checked).toBe(false);
         expect(permissionCheckbox(currentDrawer, 'CYCLE_TRACKING.CONSENT_FERTILITY').checked).toBe(false);
     });
+});
+
+it('keeps the replacement nutrition range when Retry commits just after the settings acknowledgements', async () => {
+    const { harness, host, drawer, reload, settings, attempted, replacement, replacementNote } =
+        await submitSettingsWhileRetryPendingAsync();
+    const fertility = cycleConsent('fertility', CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS);
+    const nutrition = cycleConsent('nutrition', CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS);
+    const afterNutrition = { ...attempted, consents: [fertility, nutrition] };
+    const afterFertility = {
+        ...afterNutrition,
+        consents: [{ ...fertility, isActive: false, revokedAtUtc: utcInstant(`${TODAY}T12:00:00Z`) }, nutrition],
+    };
+    updateConsent.mockReturnValueOnce(of(afterNutrition)).mockReturnValueOnce(of(afterFertility));
+    const readsBeforeReplacement = getNutritionSummary.mock.calls.length;
+    settings.next(attempted);
+    settings.complete();
+    expect(updateConsent.mock.calls).toEqual([
+        [CYCLE_ID, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS, { granted: true }],
+        [CYCLE_ID, CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS, { granted: false }],
+    ]);
+    const replacementStart = calendarDate('2026-08-08');
+    loadReplacementCycle(reload, { ...replacement, trackingStartDate: replacementStart }, harness);
+    await waitForAsyncTasksAsync();
+    harness.detectChanges();
+
+    expect(getNutritionSummary).toHaveBeenCalledTimes(readsBeforeReplacement + 1);
+    expect(getNutritionSummary).toHaveBeenLastCalledWith(replacementStart, TODAY);
+    expect(host.textContent).toContain(replacementNote);
+    expect(drawer.isConnected).toBe(false);
+    click('CYCLE_TRACKING.SETTINGS_TITLE', host);
+    harness.detectChanges();
+    expect(settingsLength(requiredElement(document.body, '.cycle-drawer')).value).toBe(String(replacement.averageCycleLength));
 });
 
 describe('Cycle settings after Retry changes profiles during a pending request', () => {

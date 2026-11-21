@@ -9,6 +9,7 @@ import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.toke
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { AuthInterceptor } from '../../interceptor/auth.interceptor';
 import { AuthService } from '../../services/auth.service';
+import { BrowserSessionStateService } from '../auth/browser-session-state.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import type { NotificationItem } from '../models/notification.data';
 import { decodeNotificationKind } from '../models/notification-kind';
@@ -537,6 +538,34 @@ describe('NotificationService push token refresh', () => {
         service = TestBed.inject(NotificationService);
         sessionEvents = TestBed.inject(SessionEventsService);
         httpMock = TestBed.inject(HttpTestingController);
+    });
+
+    it('does not renew the current session when the old session push cleanup is rejected', async () => {
+        const priorSessionId = '2d4a73f6-bfea-4db9-88d4-7fc7b760ad74';
+        const currentSessionId = '8d076aa8-2cd0-4c14-a4fd-2c460a06e798';
+        const endpoint = 'https://push.example.com/subscriptions/account-a';
+        const pushUrl = `${baseUrl}/push/subscription`;
+        const browserSession = TestBed.inject(BrowserSessionStateService);
+        browserSession.sessionId.set(priorSessionId);
+        const cleanup = service.removeWebPushSubscription(endpoint, priorSessionId);
+
+        browserSession.sessionId.set(currentSessionId);
+        authService.getUserId.mockReturnValue('user-b');
+        sessionEvents.notifyAuthenticated();
+        const result = expect(firstValueFrom(cleanup)).rejects.toMatchObject({ status: HttpStatusCode.Unauthorized, url: pushUrl });
+        const request = httpMock.expectOne({ method: 'DELETE', url: pushUrl });
+        expect(request.request.body).toEqual({ endpoint });
+        expect(request.request.headers.get('X-FoodDiary-Session')).toBe(priorSessionId);
+        expect(request.request.headers.get('X-Requested-With')).toBe('XMLHttpRequest');
+        expect(request.request.headers.has('Authorization')).toBe(false);
+        expect(request.request.withCredentials).toBe(true);
+
+        request.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        await result;
+
+        expect(authService.refreshSession).not.toHaveBeenCalled();
+        expect(browserSession.sessionId()).toBe(currentSessionId);
+        httpMock.expectNone(pushUrl);
     });
 
     it.each(['upsert', 'remove'] as const)('refreshes an expired token and retries a normal push %s request', action => {

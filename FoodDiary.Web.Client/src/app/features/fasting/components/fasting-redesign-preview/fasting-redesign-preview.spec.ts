@@ -474,6 +474,45 @@ describe('FastingRedesignPreviewComponent active management action', () => {
     });
 });
 
+it('keeps completed daily progress while another session in the history is still active', async () => {
+    await TestBed.configureTestingModule({
+        imports: [FastingRedesignPreviewComponent],
+        providers: [provideTranslateTesting()],
+    }).compileComponents();
+
+    const active = createSession({ startedAtUtc: utcInstant(new Date(TUESDAY_AFTERNOON_START).toISOString()) });
+    const completed = createSession({
+        id: entityId<'fasting-session'>('completed-earlier'),
+        startedAtUtc: utcInstant(new Date(TUESDAY_MORNING_START).toISOString()),
+        endedAtUtc: utcInstant(new Date(TUESDAY_MORNING_END).toISOString()),
+        initialPlannedDurationHours: 1,
+        plannedDurationHours: 1,
+        protocol: 'CustomIntermittent',
+        status: 'Completed',
+        isCompleted: true,
+    });
+    const fixture = TestBed.createComponent(FastingRedesignPreviewComponent);
+    for (const [name, value] of Object.entries({
+        session: active,
+        stats: null,
+        history: [active, completed],
+        elapsedFormatted: '01:00:00',
+        remainingFormatted: '15:00:00',
+        progressPercent: TEST_PROGRESS_PERCENT,
+        now: new Date(TUESDAY_AFTERNOON),
+        selectedProtocol: SELECTED_INTERMITTENT_PROTOCOL,
+    })) {
+        fixture.componentRef.setInput(name, value);
+    }
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const today = [...host.querySelectorAll('.fasting-redesign__day')].find(day => day.textContent.includes('FASTING.REDESIGN.DAY_2'));
+    const ring = today?.querySelector<HTMLElement>('.fasting-redesign__day-ring');
+    expect(ring?.style.getPropertyValue('--fd-fasting-day-progress')).toBe('100%');
+    expect(ring?.querySelector('fd-ui-icon')).not.toBeNull();
+});
+
 function createSession(overrides: Partial<FastingSession> = {}): FastingSession {
     return {
         id: entityId<'fasting-session'>('session-1'),

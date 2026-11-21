@@ -32,13 +32,14 @@
             {{ 'RECOMMENDATIONS.DISCUSSION.MESSAGE_LABEL' | translate }}
         </label>
         <textarea
+            #commentInput
             id="recommendation-comment"
             rows="3"
             maxlength="2000"
             [disabled]="loading() || loadFailed() || saving()"
             [value]="draft()"
             [placeholder]="'RECOMMENDATIONS.DISCUSSION.MESSAGE_PLACEHOLDER' | translate"
-            (input)="updateDraft($event)"
+            (input)="updateDraft(commentInput.value)"
         ></textarea>
     </div>
     <div class="fd-row fd-justify-between fd-gap-sm">

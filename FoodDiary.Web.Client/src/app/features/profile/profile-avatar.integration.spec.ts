@@ -1,8 +1,8 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, type EnvironmentProviders, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, type Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -80,6 +80,7 @@ type ProfileReads = {
     account?: ReturnType<UserService['getOverview']>;
     measurements?: ReturnType<ProfileMeasurementsService['getLatest']>;
     locale?: 'en' | 'ru';
+    additionalRoutes?: Routes;
     providers?: Array<Provider | EnvironmentProviders>;
 };
 
@@ -106,6 +107,7 @@ async function renderProfileAsync(reads: ProfileReads = {}): Promise<ProfileFixt
             provideRouter([
                 { path: 'profile', children: profileRoutes },
                 { path: 'other', component: OtherPageComponent },
+                ...(reads.additionalRoutes ?? []),
             ]),
             provideTranslateTesting(),
             ...profileBoundaryProviders(),
@@ -1409,6 +1411,172 @@ describe('Profile backup email handoff', () => {
             }
         });
     });
+});
+
+const MINI_APP_BACKUP_EMAIL = 'profile-backup@example.test';
+const MINI_APP_INIT_DATA = 'synthetic-mini-app-proof';
+const MINI_APP_BACKUP_RECEIPT = 'fooddiary.telegram.backup-email';
+
+async function renderMiniAppBackupEmailProfileAsync(): Promise<{
+    router: RouterTestingHarness;
+    http: HttpTestingController;
+    auth: AuthService;
+}> {
+    const account = profileOverview({ email: null, isEmailConfirmed: false, hasPassword: false, hasTelegramIdentity: true });
+    vi.stubGlobal('Telegram', { WebApp: { initData: MINI_APP_INIT_DATA } });
+    onTestFinished(() => {
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+    });
+    const { router } = await renderProfileAsync({
+        account: of(account),
+        additionalRoutes: [{ path: '', component: OtherPageComponent }],
+        providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: AuthService, useClass: AuthService },
+            { provide: TelegramWebAppService, useClass: TelegramWebAppService },
+            { provide: TelegramBackupEmailFlowService, useClass: TelegramBackupEmailFlowService },
+            { provide: BrowserStorageService, useClass: BrowserStorageService },
+            {
+                provide: LocalizationService,
+                useValue: {
+                    getCurrentLanguage: (): string => 'en',
+                    applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined),
+                    clearStoredLanguage: vi.fn(),
+                },
+            },
+        ],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    const auth = TestBed.inject(AuthService);
+    http.expectOne({ method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` }).flush([]);
+    auth.acceptExternalAuthentication({ user: account.user, sessionId: 'mini-app-session', roles: ['User'] });
+    expect(auth.getUserId()).toBe(account.user.id);
+    return { router, http, auth };
+}
+
+async function expectMiniAppBackupEmailRequestAsync(http: HttpTestingController): Promise<TestRequest> {
+    const backup = await vi.waitFor(() => http.expectOne({ method: 'POST', url: `${environment.apiUrls.auth}/telegram/backup-email` }));
+    expect(backup.request.body).toEqual({ email: MINI_APP_BACKUP_EMAIL, initData: MINI_APP_INIT_DATA });
+    return backup;
+}
+
+describe('Profile Mini App backup email ownership', () => {
+    it('does not recreate the Mini App backup email receipt after sign-out and Profile teardown', async () => {
+        const { router, http, auth } = await renderMiniAppBackupEmailProfileAsync();
+        const profile = profilePage(router);
+        requestBackupEmail(router, MINI_APP_BACKUP_EMAIL);
+        const backup = await expectMiniAppBackupEmailRequestAsync(http);
+
+        const leaving = auth.onLogoutAsync(true);
+        const logout = await vi.waitFor(() => http.expectOne({ method: 'POST', url: `${environment.apiUrls.auth}/logout` }));
+        expect(auth.getUserId()).toBeNull();
+        logout.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await leaving;
+        expect(TestBed.inject(Router).url).toBe('/?auth=login');
+        expect(profile.isConnected).toBe(false);
+        expect(window.sessionStorage.getItem(MINI_APP_BACKUP_RECEIPT)).toBeNull();
+        expect(backup.cancelled).toBe(false);
+
+        backup.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await router.fixture.whenStable();
+
+        http.verify();
+        expect(window.sessionStorage.getItem(MINI_APP_BACKUP_RECEIPT)).toBeNull();
+    });
+
+    it('restores a confirmed Mini App backup email receipt after ordinary navigation in the same session', async () => {
+        const { router, http, auth } = await renderMiniAppBackupEmailProfileAsync();
+        const currentOwner = auth.getUserId();
+        requestBackupEmail(router, MINI_APP_BACKUP_EMAIL);
+        const backup = await expectMiniAppBackupEmailRequestAsync(http);
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        expect(auth.getUserId()).toBe(currentOwner);
+        backup.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await router.fixture.whenStable();
+
+        await router.navigateByUrl(PROFILE_URL);
+        http.expectOne({ method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` }).flush([]);
+        const widget = profilePage(router).querySelector<HTMLElement>('fd-user-manage-backup-email');
+        if (widget === null) {
+            throw new Error('Expected the returned backup email settings');
+        }
+        expect(accountField(widget, 'input[type="email"]').value).toBe(MINI_APP_BACKUP_EMAIL);
+        expect(widget.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.BACKUP_EMAIL_SENT');
+        http.verify();
+    });
+
+    it('keeps a remounted profile request active when the old backup email request fails', async () => {
+        const { router, http, auth } = await renderMiniAppBackupEmailProfileAsync();
+        const currentOwner = auth.getUserId();
+        const originalProfile = profilePage(router);
+        requestBackupEmail(router, MINI_APP_BACKUP_EMAIL);
+        const obsolete = await expectMiniAppBackupEmailRequestAsync(http);
+
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        await router.navigateByUrl(PROFILE_URL);
+        http.expectOne({ method: 'GET', url: `${environment.apiUrls.auth}/sessions?page=1&limit=100` }).flush([]);
+        expect(originalProfile.isConnected).toBe(false);
+        expect(auth.getUserId()).toBe(currentOwner);
+        const profile = profilePage(router);
+        const widget = profile.querySelector('fd-user-manage-backup-email');
+        if (widget === null) {
+            throw new Error('Expected the remounted backup email settings');
+        }
+        requestBackupEmail(router, MINI_APP_BACKUP_EMAIL);
+        const current = await expectMiniAppBackupEmailRequestAsync(http);
+        expect(obsolete.cancelled).toBe(false);
+
+        obsolete.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+        await router.fixture.whenStable();
+        router.detectChanges();
+
+        expect(getButton(widget, 'USER_MANAGE.BACKUP_EMAIL_SEND').getAttribute('aria-busy')).toBe('true');
+        expect(profile.querySelector('.user-manage__error [role="alert"]')).toBeNull();
+        expect(window.sessionStorage.getItem(MINI_APP_BACKUP_RECEIPT)).toBeNull();
+        expect(current.cancelled).toBe(false);
+
+        current.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await vi.waitFor(() => {
+            router.detectChanges();
+            expect(widget.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.BACKUP_EMAIL_SENT');
+        });
+        http.verify();
+    });
+});
+
+it('unlocks the Mini App backup email form after a live server failure and shows the confirmed retry', async () => {
+    const { router, http } = await renderMiniAppBackupEmailProfileAsync();
+    requestBackupEmail(router, MINI_APP_BACKUP_EMAIL);
+    const failed = await expectMiniAppBackupEmailRequestAsync(http);
+    const profile = profilePage(router);
+    const widget = profile.querySelector('fd-user-manage-backup-email');
+    if (widget === null) {
+        throw new Error('Expected the mounted backup email settings');
+    }
+    router.detectChanges();
+    const send = getButton(widget, 'USER_MANAGE.BACKUP_EMAIL_SEND');
+    expect(send.getAttribute('aria-busy')).toBe('true');
+    failed.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+    const error = '.user-manage__form > .user-manage__error [role="alert"]';
+    await vi.waitFor(() => {
+        router.detectChanges();
+        expect(profile.querySelector(error)?.textContent).toContain('USER_MANAGE.BACKUP_EMAIL_ERROR');
+    });
+    expect(send.disabled).toBe(false);
+    expect(window.sessionStorage.getItem(MINI_APP_BACKUP_RECEIPT)).toBeNull();
+
+    send.click();
+    const retry = await expectMiniAppBackupEmailRequestAsync(http);
+    retry.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+    await vi.waitFor(() => {
+        router.detectChanges();
+        expect(widget.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.BACKUP_EMAIL_SENT');
+    });
+    expect(profile.querySelector(error)).toBeNull();
+    expect(getButton(widget, 'USER_MANAGE.BACKUP_EMAIL_RESEND').disabled).toBe(true);
+    http.verify();
 });
 
 describe('Profile backup email when browser session storage is unavailable', () => {

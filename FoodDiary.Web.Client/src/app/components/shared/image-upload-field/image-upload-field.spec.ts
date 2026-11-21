@@ -141,7 +141,7 @@ describe('ImageUploadFieldComponent upload', () => {
         vi.spyOn(translateService, 'instant').mockReturnValue('Only images');
         fixture.detectChanges();
 
-        component['handleIncomingFile'](new File(['text'], 'notes.txt', { type: 'text/plain' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['text'], 'notes.txt', { type: 'text/plain' }));
         await fixture.whenStable();
 
         expect(component['error']()).toBe('Only images');
@@ -154,7 +154,7 @@ describe('ImageUploadFieldComponent upload', () => {
         component['imageChanged'].subscribe(changeSpy);
         fixture.detectChanges();
 
-        component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['image'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
         expect(imageUploadService.upload).toHaveBeenCalledOnce();
@@ -168,7 +168,7 @@ describe('ImageUploadFieldComponent upload', () => {
         fixture.componentRef.setInput('maxSizeMb', TINY_MAX_SIZE_MB);
         fixture.detectChanges();
 
-        component['handleIncomingFile'](new File(['image-data'], 'photo.png', { type: 'image/png' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['image-data'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
         expect(component['error']()).toBe('Too large');
@@ -181,7 +181,7 @@ describe('ImageUploadFieldComponent upload', () => {
         imageUploadService.upload.mockReturnValueOnce(throwError(() => new Error('upload failed')));
         fixture.detectChanges();
 
-        component['handleIncomingFile'](new File(['image'], 'photo.png', { type: 'image/png' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['image'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
 
         expect(component['error']()).toBe('Upload failed');
@@ -288,6 +288,63 @@ describe('ImageUploadFieldComponent resizing selected photos', () => {
     });
 });
 
+describe('ImageUploadFieldComponent preparation ownership and limits', () => {
+    it('stops before decoding when its owner removes the field as a batch begins', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('multiple', true);
+        fixture.componentRef.setInput('maxFiles', 2);
+        const { host, createObjectUrl } = prepareNativeResize(fixture, 'batch');
+        const added = vi.fn<(photos: ImageSelection[]) => void>();
+        const busy = vi.fn<(pending: boolean) => void>();
+        component.imagesAdded.subscribe(added);
+        component.batchUploading.subscribe(pending => {
+            busy(pending);
+            if (pending) {
+                fixture.destroy();
+            }
+        });
+
+        const first = new File(['first'], 'first.png', { type: 'image/png' });
+        const second = new File(['second'], 'second.png', { type: 'image/png' });
+        selectFiles(host, first, second);
+
+        expect(busy).toHaveBeenCalledExactlyOnceWith(true);
+        expect(createObjectUrl).not.toHaveBeenCalled();
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+        expect(added).not.toHaveBeenCalled();
+    });
+
+    it('keeps the saved photo when the resized replacement exceeds the upload limit', async () => {
+        const { fixture, component, imageUploadService } = await setupImageUploadFieldAsync();
+        const saved = imageSelection('https://example.test/saved-photo.png', 'saved-photo');
+        const failed = vi.fn();
+        component.value.set(saved);
+        component.imagePreparationFailed.subscribe(failed);
+        fixture.componentRef.setInput('maxSizeMb', 1);
+        const { host, image, revokeObjectUrl } = prepareNativeResize(fixture);
+        const bytesPerMegabyte = 1_048_576;
+        const resized = new Blob([new Uint8Array(bytesPerMegabyte + 1)], { type: 'image/png' });
+        vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as unknown as CanvasRenderingContext2D);
+        vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            callback(resized);
+        });
+
+        selectFiles(host, new File(['compressed source'], 'replacement.png', { type: 'image/png' }));
+        expect(image.src).toBe(DECODE_URL);
+        image.dispatchEvent(new Event('load'));
+
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.FILE_TOO_LARGE');
+        });
+        expect(requireElement(host, 'img.image-upload-field__preview', HTMLImageElement).src).toBe(saved.url);
+        expect(component.value()).toEqual(saved);
+        expect(failed).toHaveBeenCalledOnce();
+        expect(revokeObjectUrl.mock.calls).toEqual([[DECODE_URL], [PREVIEW_URL]]);
+        expect(imageUploadService.upload).not.toHaveBeenCalled();
+    });
+});
+
 function prepareNativeResize(
     fixture: ComponentFixture<ImageUploadFieldComponent>,
     mode: 'single' | 'batch' = 'single',
@@ -384,7 +441,7 @@ describe('ImageUploadFieldComponent upload cancellation', () => {
         const pending = new Subject<ReturnType<typeof imageSelection>>();
         imageUploadService.upload.mockReturnValueOnce(pending);
         fixture.detectChanges();
-        component['handleIncomingFile'](new File(['a'], 'old.png', { type: 'image/png' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['a'], 'old.png', { type: 'image/png' }));
         await fixture.whenStable();
         expect(pending.observed).toBe(true);
         fixture.componentRef.setInput('clearRequest', 1);
@@ -393,7 +450,7 @@ describe('ImageUploadFieldComponent upload cancellation', () => {
         pending.next(imageSelection('https://example.test/late.png', 'late'));
         expect(component.value()).toEqual(imageSelection(null, null));
         expect(component['isUploading']()).toBe(false);
-        component['handleIncomingFile'](new File(['b'], 'new.png', { type: 'image/png' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['b'], 'new.png', { type: 'image/png' }));
         await fixture.whenStable();
         expect(component.value()).toEqual(imageSelection('https://cdn.example.com/image.jpg', 'asset-1'));
     });
@@ -403,7 +460,7 @@ describe('ImageUploadFieldComponent upload cancellation', () => {
         const pending = new Subject<ReturnType<typeof imageSelection>>();
         imageUploadService.upload.mockReturnValue(pending);
         fixture.detectChanges();
-        component['handleIncomingFile'](new File(['a'], 'photo.png', { type: 'image/png' }));
+        selectFiles(fixture.nativeElement as HTMLElement, new File(['a'], 'photo.png', { type: 'image/png' }));
         await fixture.whenStable();
         expect(pending.observed).toBe(true);
         fixture.destroy();
@@ -700,6 +757,26 @@ describe('ImageUploadFieldComponent drag, drop and crop controls', () => {
     });
 });
 
+describe('ImageUploadFieldComponent preview keyboard controls', () => {
+    it.each(['REPLACE', 'REMOVE'])('leaves Space activation to the native %s button in a filled upload field', async action => {
+        const { component, fixture } = await setupImageUploadFieldAsync();
+        component.value.set(imageSelection('https://example.test/saved.jpg', 'saved-photo'));
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const control = requireElement(host, `button[aria-label="IMAGE_UPLOAD_FIELD.${action}"]`, HTMLButtonElement);
+        const fileInput = requireElement(host, 'input[type="file"]', HTMLInputElement);
+        const chooser = vi.fn();
+        fileInput.addEventListener('click', chooser);
+        expect(control.disabled).toBe(false);
+
+        const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+        control.dispatchEvent(space);
+
+        expect(space.defaultPrevented).toBe(false);
+        expect(chooser).not.toHaveBeenCalled();
+    });
+});
+
 describe('ImageUploadFieldComponent interrupted drag', () => {
     it('clears the highlighted drop target when the owner disables and re-enables it', async () => {
         const { fixture, imageUploadService } = await setupImageUploadFieldAsync();
@@ -951,18 +1028,25 @@ describe('ImageUploadFieldComponent health consent', () => {
         expect(host.querySelector('[role="alert"]')?.textContent.trim() ?? null).toBe(feedback);
     });
 
-    it('ignores a late approval after the attachment was cleared', async () => {
+    it.each(['before approval', 'while approval is being applied'])('keeps a cleared attachment local %s', async clearTiming => {
         const { fixture, imageUploadService, privacyConsent } = await setupImageUploadFieldAsync();
         const consent = new Subject<boolean>();
-        privacyConsent.ensureHealthConsentAsync.mockReturnValueOnce(firstValueFrom(consent));
+        const approval = firstValueFrom(consent);
+        privacyConsent.ensureHealthConsentAsync.mockReturnValueOnce(approval);
         fixture.componentRef.setInput('requireHealthConsent', true);
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
 
         selectFiles(host, new File(['old'], 'old.png', { type: 'image/png' }));
+        if (clearTiming === 'while approval is being applied') {
+            consent.next(true);
+            await approval;
+        }
         fixture.componentRef.setInput('clearRequest', 1);
         fixture.detectChanges();
-        consent.next(true);
+        if (clearTiming === 'before approval') {
+            consent.next(true);
+        }
         await waitForAsyncTasksAsync();
         await fixture.whenStable();
         expect(imageUploadService.upload).not.toHaveBeenCalled();
@@ -1674,7 +1758,7 @@ describe('ImageUploadFieldComponent crop preview without layout', () => {
 describe('ImageUploadFieldComponent native crop export', () => {
     beforeEach(mockNativeDialogMethods);
 
-    it.each(['context', 'resize context', 'blob'] as const)(
+    it.each(['context', 'resize context', 'blob', 'encoding exception'] as const)(
         'shows a crop error and retains the saved image after a %s failure',
         async failure => {
             const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
@@ -1690,7 +1774,10 @@ describe('ImageUploadFieldComponent native crop export', () => {
                 fixture.componentRef.setInput('cropMaxSize', cropLimit);
                 getContext.mockReturnValueOnce(ctx).mockReturnValueOnce(null);
             }
-            vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+            const encode = vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation(callback => {
+                if (failure === 'encoding exception') {
+                    throw new DOMException('Canvas export failed', 'SecurityError');
+                }
                 callback(null);
             });
             const revokePreview = vi.spyOn(URL, 'revokeObjectURL');
@@ -1699,6 +1786,9 @@ describe('ImageUploadFieldComponent native crop export', () => {
             apply.click();
             fixture.detectChanges();
 
+            if (failure === 'blob' || failure === 'encoding exception') {
+                expect(encode).toHaveBeenCalledOnce();
+            }
             const host = fixture.nativeElement as HTMLElement;
             expect(dialog.open).toBe(false);
             expect(host.querySelector('[role="alert"]')?.textContent.trim()).toBe('IMAGE_UPLOAD_FIELD.ERRORS.PROCESSING_FAILED');

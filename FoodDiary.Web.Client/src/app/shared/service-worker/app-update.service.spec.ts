@@ -203,6 +203,25 @@ describe('AppUpdateService departure protection', () => {
 });
 
 describe('AppUpdateService reload requests', () => {
+    it('keeps an update available for retry if the confirmation fails', async () => {
+        const service = TestBed.inject(AppUpdateService);
+        service.initialize();
+        ready();
+        const confirm = vi.fn<() => Promise<boolean>>().mockRejectedValueOnce(new Error('Confirmation failed')).mockResolvedValueOnce(true);
+
+        await service.reloadAsync(confirm);
+
+        expect(service.needsSave()).toBe(true);
+        expect(service.updateAvailable()).toBe(true);
+        expect(service.isReloading()).toBe(false);
+        expect(view.location.reload).not.toHaveBeenCalled();
+
+        await service.reloadAsync(confirm);
+
+        expect(service.needsSave()).toBe(false);
+        expect(view.location.reload).toHaveBeenCalledOnce();
+    });
+
     it('only asks for a reload after a downloaded version is active', async () => {
         const service = TestBed.inject(AppUpdateService);
         service.initialize();

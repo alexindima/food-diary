@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -80,12 +80,12 @@ function configureComponent(
         imports: [ItemSelectDialogComponent],
         providers: [
             provideTranslateService({ lang: 'en' }),
+            { provide: ComponentFixtureAutoDetect, useValue: false },
             { provide: FD_UI_DIALOG_DATA, useValue: options.dialogData ?? null },
             { provide: FdUiDialogService, useValue: options.dialogService ?? { open: vi.fn() } },
             ...(options.dialogRef !== undefined ? [{ provide: FdUiDialogRef, useValue: options.dialogRef }] : []),
         ],
     });
-    TestBed.overrideComponent(ItemSelectDialogComponent, { set: { template: '' } });
     return TestBed.createComponent(ItemSelectDialogComponent);
 }
 
@@ -208,16 +208,28 @@ describe('Rendered ingredient picker', () => {
         expect(picked).toHaveBeenCalledExactlyOnceWith({ type: 'Text', name: 'Dill' });
     });
 
-    it('hides recipe creation when an embedded picker is configured for existing recipes only', () => {
-        configureRenderedPicker();
+    it('selects products and existing recipes without closing the parent meal dialog', async () => {
+        const parent = { close: vi.fn() };
+        configureRenderedPicker(parent);
         const fixture = TestBed.createComponent(ItemSelectDialogComponent);
         fixture.componentRef.setInput('embedded', true);
         fixture.componentRef.setInput('allowRecipeCreation', false);
-        const picked = vi.fn<(selection: Recipe) => void>();
-        fixture.componentInstance.recipeSelected.subscribe(picked);
+        const pickedProduct = vi.fn<(selection: Product) => void>();
+        const pickedRecipe = vi.fn<(selection: Recipe) => void>();
+        fixture.componentInstance.productSelected.subscribe(pickedProduct);
+        fixture.componentInstance.recipeSelected.subscribe(pickedRecipe);
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
         expect(pickerButton(host, 'PRODUCT_LIST.ADD_PRODUCT_BUTTON').closest('[hidden]')).toBeNull();
+
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(host.querySelector('.product-select__item button')).not.toBeNull();
+        });
+        const existingProduct = requiredPickerElement(host, '.product-select__item button', HTMLButtonElement);
+        existingProduct.click();
+        expect(pickedProduct).toHaveBeenCalledExactlyOnceWith(product);
+        expect(pickedRecipe).not.toHaveBeenCalled();
 
         pickerButton(host, 'MEAL_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB').click();
         fixture.detectChanges();
@@ -225,18 +237,20 @@ describe('Rendered ingredient picker', () => {
         const existingRecipe = requiredPickerElement(host, '.recipe-select__item', HTMLButtonElement);
         expect(existingRecipe.textContent).toContain(recipe.name);
         existingRecipe.click();
-        expect(picked).toHaveBeenCalledExactlyOnceWith(recipe);
+        expect(pickedRecipe).toHaveBeenCalledExactlyOnceWith(recipe);
+        expect(parent.close).not.toHaveBeenCalled();
     });
 });
 
 describe('Rendered item picker product creation', () => {
     it('keeps the picker open when product creation is cancelled and returns the next created product', () => {
-        const openCreation = configureRenderedPicker();
+        configureRenderedPicker();
+        const openCreation = vi.fn();
         const closeCreation = vi.fn();
         openCreation
             .mockReturnValueOnce({ afterClosed: () => of(null) })
             .mockReturnValueOnce({ afterClosed: () => of(product), close: closeCreation });
-        const ref = openRenderedPicker();
+        const ref = openRenderedPicker({}, openCreation);
         const picked = vi.fn<(selection: ItemSelection | null | undefined) => void>();
         ref.afterClosed().subscribe(picked);
         const host = requiredPickerElement(document, 'fd-item-select-dialog', HTMLElement);
@@ -252,14 +266,15 @@ describe('Rendered item picker product creation', () => {
     });
 
     it('disposes pending product creation when the parent picker closes', () => {
-        const openCreation = configureRenderedPicker();
+        configureRenderedPicker();
+        const openCreation = vi.fn();
         const creation = new Subject<Product | null>();
         const closeCreation = vi.fn(() => {
             creation.next(null);
             creation.complete();
         });
         openCreation.mockReturnValue({ afterClosed: () => creation, close: closeCreation });
-        const ref = openRenderedPicker();
+        const ref = openRenderedPicker({}, openCreation);
         const picked = vi.fn<(selection: ItemSelection | null | undefined) => void>();
         ref.afterClosed().subscribe(picked);
         const host = requiredPickerElement(document, 'fd-item-select-dialog', HTMLElement);
@@ -275,8 +290,54 @@ describe('Rendered item picker product creation', () => {
     });
 });
 
-function configureRenderedPicker(): ReturnType<typeof vi.fn> {
-    const openCreation = vi.fn();
+describe('Rendered item picker recipe actions', () => {
+    it('selects an existing recipe without offering unsupported recipe creation in the standalone ingredient picker', () => {
+        configureRenderedPicker();
+        const openCreation = vi.fn();
+        const ref = openRenderedPicker({ initialTab: 'Recipe', lockInitialTab: true, allowText: true }, openCreation);
+        const picked = vi.fn<(selection: ItemSelection | null | undefined) => void>();
+        ref.afterClosed().subscribe(picked);
+        const host = requiredPickerElement(document, 'fd-item-select-dialog', HTMLElement);
+        const existingRecipe = requiredPickerElement(host, '.recipe-select__item', HTMLButtonElement);
+        expect(existingRecipe.textContent).toContain(recipe.name);
+
+        const unsupportedCreate = Array.from(host.querySelectorAll('button')).find(
+            button => button.closest('[hidden]') === null && button.textContent.includes('RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON'),
+        );
+        unsupportedCreate?.click();
+        expect(picked).not.toHaveBeenCalled();
+        expect(host.isConnected).toBe(true);
+        expect(unsupportedCreate).toBeUndefined();
+
+        existingRecipe.click();
+        expect(picked).toHaveBeenCalledExactlyOnceWith({ type: 'Recipe', recipe });
+        expect(openCreation).not.toHaveBeenCalled();
+        expect(host.isConnected).toBe(false);
+    });
+
+    it('emits the configured recipe creation request from the rendered embedded picker', () => {
+        configureRenderedPicker();
+        const openCreation = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
+        const fixture = TestBed.createComponent(ItemSelectDialogComponent);
+        fixture.componentRef.setInput('embedded', true);
+        fixture.componentRef.setInput('allowRecipeCreation', true);
+        const createRequested = vi.fn<() => void>();
+        fixture.componentInstance.createRecipeRequested.subscribe(createRequested);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+
+        pickerButton(host, 'MEAL_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB').click();
+        fixture.detectChanges();
+        const addRecipe = pickerButton(host, 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON');
+        expect(addRecipe.closest('[hidden]')).toBeNull();
+        addRecipe.click();
+
+        expect(createRequested).toHaveBeenCalledOnce();
+        expect(openCreation).not.toHaveBeenCalled();
+    });
+});
+
+function configureRenderedPicker(parent?: { close: ReturnType<typeof vi.fn> }): void {
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
     TestBed.configureTestingModule({
         imports: [ItemSelectDialogComponent],
@@ -288,6 +349,7 @@ function configureRenderedPicker(): ReturnType<typeof vi.fn> {
             { provide: QuickMealService, useValue: {} },
             { provide: ViewportService, useValue: { isMobile: signal(false) } },
             { provide: FdUiToastService, useValue: { error: vi.fn() } },
+            ...(parent === undefined ? [] : [{ provide: FdUiDialogRef, useValue: parent }]),
             {
                 provide: FavoriteProductService,
                 useValue: { getLookupPage: vi.fn<FavoriteProductService['getLookupPage']>().mockReturnValue(of([])) },
@@ -307,25 +369,25 @@ function configureRenderedPicker(): ReturnType<typeof vi.fn> {
             { provide: RecipeService, useValue: { query: vi.fn<RecipeService['query']>().mockReturnValue(of(pickerPage([recipe]))) } },
         ],
     });
-    TestBed.overrideComponent(ItemSelectDialogComponent, {
-        add: { providers: [{ provide: FdUiDialogService, useValue: { open: openCreation } }] },
-    });
     const dialogs = TestBed.inject(FdUiDialogService);
     onTestFinished(() => {
         dialogs.closeAll();
         vi.unstubAllGlobals();
     });
-    return openCreation;
 }
 
 function pickerPage<T>(data: T[]): { data: T[]; page: number; totalPages: number; totalItems: number; limit: number } {
     return { data, page: 1, totalPages: 1, totalItems: data.length, limit: data.length };
 }
 
-function openRenderedPicker(data: ItemSelectDialogData = {}): FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null> {
+function openRenderedPicker(
+    data: ItemSelectDialogData,
+    openCreation?: ReturnType<typeof vi.fn>,
+): FdUiDialogRef<ItemSelectDialogComponent, ItemSelection | null> {
+    const providers = openCreation === undefined ? [] : [{ provide: FdUiDialogService, useValue: { open: openCreation } }];
     const ref = TestBed.inject(FdUiDialogService).open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
         ItemSelectDialogComponent,
-        { data },
+        { data, providers },
     );
     TestBed.tick();
     return ref;

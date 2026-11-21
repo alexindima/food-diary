@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import type { TdeeInsight } from '../../../../../shared/models/tdee-insight.data';
-import { buildTdeeHintKey, formatTdeeWeightTrend, hasMeaningfulTdeeSuggestion } from '../../../lib/tdee-insight-view.mapper';
+import { buildTdeeHintKey, getTdeeWeightTrendKg, hasMeaningfulTdeeSuggestion } from '../../../lib/tdee-insight-view.mapper';
 import { TdeeInsightCardDetailsComponent } from '../tdee-insight-card-details/tdee-insight-card-details';
 
 @Component({
@@ -32,7 +32,7 @@ export class TdeeInsightCardContentComponent {
         const insight = this.insight();
         return insight !== null && insight.confidence !== 'none' ? `TDEE_CARD.CONFIDENCE.${insight.confidence.toUpperCase()}` : null;
     });
-    protected readonly weightTrendFormatted = computed(() => formatTdeeWeightTrend(this.insight()?.weightTrendPerWeek));
+    protected readonly weightTrendKgPerWeek = computed(() => getTdeeWeightTrendKg(this.insight()?.weightTrendPerWeek));
     protected readonly hintKey = computed(() => buildTdeeHintKey(this.insight()?.goalAdjustmentHint));
     protected readonly showSuggestion = computed(() => hasMeaningfulTdeeSuggestion(this.insight()));
 }

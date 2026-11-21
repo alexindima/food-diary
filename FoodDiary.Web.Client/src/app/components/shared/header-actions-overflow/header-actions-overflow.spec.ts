@@ -221,13 +221,17 @@ describe('Header action reactive metadata', () => {
         if (original === null) {
             throw new Error('Expected the primary action');
         }
+        const primary = (): HTMLButtonElement | null => host.querySelector('.fd-header-actions-overflow__primary button');
         original.removeAttribute('aria-label');
+        original.setAttribute('title', 'Edit details');
+        await settleHeaderActionsAsync(fixture);
+        expect(primary()?.getAttribute('aria-label')).toBe('Edit details');
+
         const text = document.createTextNode('Before');
         original.append(text);
         await settleHeaderActionsAsync(fixture);
         text.data = 'After';
         await settleHeaderActionsAsync(fixture);
-        const primary = (): HTMLButtonElement | null => host.querySelector('.fd-header-actions-overflow__primary button');
         expect(primary()?.getAttribute('aria-label')).toBe('After');
         original.setAttribute('data-fd-overflow-label', 'Translated label');
         original.setAttribute('data-fd-overflow-icon', 'add');

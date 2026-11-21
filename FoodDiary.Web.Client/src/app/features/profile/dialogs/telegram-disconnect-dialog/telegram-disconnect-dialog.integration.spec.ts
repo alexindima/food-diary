@@ -81,6 +81,11 @@ describe('Telegram disconnect with a password', () => {
         expect(submit.disabled).toBe(false);
 
         submit.click();
+        expect(pending.observed).toBe(true);
+        expect(cancel.disabled).toBe(false);
+        cancel.click();
+        expect(root.isConnected).toBe(true);
+
         await vi.waitFor(() => {
             TestBed.tick();
             expect(cancel.disabled).toBe(true);
@@ -88,7 +93,6 @@ describe('Telegram disconnect with a password', () => {
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
         TestBed.tick();
         expect(root.isConnected).toBe(true);
-        expect(pending.observed).toBe(true);
         expect(disconnect).toHaveBeenCalledExactlyOnceWith(OWNER, { password: PASSWORD });
 
         pending.error(new HttpErrorResponse({ status }));
@@ -109,6 +113,37 @@ describe('Telegram disconnect with a password', () => {
             [OWNER, { password: PASSWORD }],
         ]);
     });
+});
+
+it('leaves password confirmation usable when Google configuration is absent', async () => {
+    const previous = environment.googleClientId;
+    environment.googleClientId = undefined;
+    onTestFinished(() => {
+        environment.googleClientId = previous;
+    });
+    const { root, result } = openDisconnect({ canUsePassword: true, canUseGoogle: true });
+    await vi.waitFor(() => {
+        TestBed.tick();
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.GOOGLE_UNAVAILABLE');
+    });
+    expect(initializeGoogle).not.toHaveBeenCalled();
+    expect(renderGoogle).not.toHaveBeenCalled();
+    expect(disconnect).not.toHaveBeenCalled();
+
+    const input = root.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+    if (input === null) {
+        throw new Error('Expected password confirmation to remain available');
+    }
+    input.value = PASSWORD;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    TestBed.tick();
+    const submit = button(root, 'USER_MANAGE.TELEGRAM_UNLINK');
+    expect(submit.disabled).toBe(false);
+    submit.click();
+
+    await expect(result).resolves.toEqual(DISCONNECTED);
+    expect(disconnect).toHaveBeenCalledExactlyOnceWith(OWNER, { password: PASSWORD });
+    expect(root.isConnected).toBe(false);
 });
 
 describe('Telegram disconnect with a Google account', () => {

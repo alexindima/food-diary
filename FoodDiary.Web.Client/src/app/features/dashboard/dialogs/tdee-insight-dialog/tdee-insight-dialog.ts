@@ -11,8 +11,8 @@ import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-lang
 import {
     buildTdeeConfidenceKey,
     buildTdeeHintKey,
-    formatTdeeWeightTrend,
     getEffectiveTdee,
+    getTdeeWeightTrendKg,
     hasMeaningfulTdeeSuggestion,
 } from '../../lib/tdee-insight-view.mapper';
 import { TdeeInsightDialogFooterComponent } from './tdee-insight-dialog-footer/tdee-insight-dialog-footer';
@@ -55,7 +55,7 @@ export class TdeeInsightDialogComponent {
     protected readonly hasProfileBasis = (this.insight?.estimatedTdee ?? this.insight?.bmr ?? 0) > 0;
     protected readonly hasFoodWindow = (this.insight?.dataDaysUsed ?? 0) >= MIN_FOOD_WINDOW_DAYS || (this.insight?.adaptiveTdee ?? 0) > 0;
     protected readonly hasBodyTrend = this.hasBodyTrendValue();
-    protected readonly weightTrendFormatted = formatTdeeWeightTrend(this.insight?.weightTrendPerWeek);
+    protected readonly weightTrendKgPerWeek = getTdeeWeightTrendKg(this.insight?.weightTrendPerWeek);
     protected readonly confidenceKey = buildTdeeConfidenceKey(this.insight, 'TDEE_DIALOG.CONFIDENCE.NONE');
     protected readonly stateKey = this.buildTdeeStateKey('STATE');
     protected readonly summaryKey = this.buildTdeeStateKey('SUMMARY');

@@ -91,6 +91,7 @@ it('edits a title from the menu, trims it on blur, and restores the numbered fal
     const clearing = openTitleEditor(fixture, root);
     await fixture.whenStable();
     typeText(clearing, '');
+    expect(titles).toHaveBeenLastCalledWith('');
     clearing.blur();
     fixture.detectChanges();
     expect(titles).toHaveBeenLastCalledWith(null);

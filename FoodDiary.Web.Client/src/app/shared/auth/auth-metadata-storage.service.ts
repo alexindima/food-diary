@@ -45,11 +45,9 @@ export class AuthMetadataStorageService {
         return this.sharedOwner() !== null;
     }
 
-    public setUserId(userId: string | null): void {
+    public setUserId(userId: string): void {
         this.bindOwner(userId);
-        if (userId !== null) {
-            this.writeMetadata('userId', userId);
-        }
+        this.writeMetadata('userId', userId);
     }
 
     public setEmailConfirmed(value: boolean): void {

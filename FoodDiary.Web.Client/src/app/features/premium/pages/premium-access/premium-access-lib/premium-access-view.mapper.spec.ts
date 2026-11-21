@@ -7,7 +7,6 @@ import {
     buildPremiumOverviewCopyState,
     buildPremiumPlanCards,
     getPremiumProviderLabel,
-    getPremiumStatusLabelKey,
 } from './premium-access-view.mapper';
 
 const overview: BillingOverview = {
@@ -143,12 +142,23 @@ describe('premium plan choices', () => {
     });
 
     it('falls back for unknown statuses and keeps unknown provider labels', () => {
-        expect(getPremiumStatusLabelKey('unknown')).toBe('PREMIUM_PAGE.STATUS.NONE');
+        expect(buildPremiumOverviewBadges({ ...overview, subscriptionStatus: 'unknown' }, false).statusLabelKey).toBe(
+            'PREMIUM_PAGE.STATUS.NONE',
+        );
         expect(getPremiumProviderLabel('custom')).toBe('custom');
     });
 });
 
 describe('premium account entitlement', () => {
+    it.each([
+        { isPremium: true, label: 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' },
+        { isPremium: false, label: 'PREMIUM_PAGE.STATUS.EXPIRED' },
+    ])('shows a canceled subscription according to effective access (Premium=$isPremium)', ({ isPremium, label }) => {
+        expect(buildPremiumOverviewBadges({ ...overview, isPremium, subscriptionStatus: 'canceled' }, isPremium).statusLabelKey).toBe(
+            label,
+        );
+    });
+
     it('keeps self-service management available when payment issues remove premium access', () => {
         const result = buildPremiumOverviewCardViewModel({ ...overview, isPremium: false, subscriptionStatus: 'unpaid' }, false, true, {
             periodEnd: null,

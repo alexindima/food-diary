@@ -24,7 +24,7 @@ describe('MealNutritionSidebarComponent state', () => {
         expect(component['showManualNutritionHint']()).toBe(true);
     });
 
-    it('should expose manual nutrition max field errors in manual mode', async () => {
+    it('accepts optional calories left blank or set to zero and shows out-of-range field errors', async () => {
         const formModel = signal<MealFormValues>({
             ...createMealManageFormValue(),
             date: '2026-04-05',
@@ -40,8 +40,28 @@ describe('MealNutritionSidebarComponent state', () => {
 
         expect(component['maxCalories']).toBe(MANUAL_NUTRITION_MAX_CALORIES);
         expect(component['maxNutrient']).toBe(MANUAL_NUTRITION_MAX_NUTRIENT);
-        expect(component['nutritionFieldErrors']().calories).toContain('FORM_ERRORS.INVALID_MAX_AMOUNT');
-        expect(component['nutritionFieldErrors']().fats).toContain('FORM_ERRORS.INVALID_MAX_AMOUNT');
+        const host = fixture.nativeElement as HTMLElement;
+        const calories = host.querySelector<HTMLInputElement>('.nutrition-editor__input--calories input');
+        if (calories === null) {
+            throw new Error('Expected the manual calories input.');
+        }
+
+        const fieldErrors = (): string | undefined => host.querySelector('.nutrition-editor-messages__errors')?.textContent;
+        expect(fieldErrors()).toContain('NUTRITION_EDITOR.FIELD_LABELS.CALORIES: FORM_ERRORS.INVALID_MAX_AMOUNT');
+        expect(fieldErrors()).toContain('NUTRITION_EDITOR.FIELD_LABELS.FATS: FORM_ERRORS.INVALID_MAX_AMOUNT');
+
+        calories.value = '';
+        calories.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(mealForm.manualCalories().value()).toBeNull();
+        expect(fieldErrors()).not.toContain('NUTRITION_EDITOR.FIELD_LABELS.CALORIES');
+
+        calories.value = '0';
+        calories.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        expect(mealForm.manualCalories().value()).toBe(0);
+        expect(fieldErrors()).not.toContain('NUTRITION_EDITOR.FIELD_LABELS.CALORIES');
+        expect(fieldErrors()).toContain('NUTRITION_EDITOR.FIELD_LABELS.FATS: FORM_ERRORS.INVALID_MAX_AMOUNT');
     });
 });
 

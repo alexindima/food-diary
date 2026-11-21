@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { firstValueFrom, type Observable, ReplaySubject, Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
 import { LessonListRouteStateFacade } from './lesson-list-route-state.facade';
@@ -40,5 +41,50 @@ describe('Lesson list route query ownership', () => {
         expect(router.parseUrl(router.url).queryParams).toEqual({ difficulty: 'Advanced', campaign: 'qa' });
         expect(await page.state.writeAsync(page.state.current())).toBe(false);
         subscription.unsubscribe();
+    });
+
+    it('keeps the latest filter write pending when the Router cancels an older query change', async () => {
+        const older = { search: 'iron', entered: new Subject<void>(), decision: new Subject<boolean>() };
+        const latest = { search: 'fiber', entered: new Subject<void>(), decision: new ReplaySubject<boolean>(1) };
+        TestBed.configureTestingModule({
+            providers: [
+                provideRouter([
+                    {
+                        path: 'lessons',
+                        component: ListRoute,
+                        runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+                        canActivate: [
+                            (route): boolean | Observable<boolean> => {
+                                const pending = [older, latest].find(navigation => navigation.search === route.queryParamMap.get('search'));
+                                if (pending === undefined) {
+                                    return true;
+                                }
+                                pending.entered.next();
+                                return pending.decision;
+                            },
+                        ],
+                    },
+                ]),
+            ],
+        });
+        const harness = await RouterTestingHarness.create();
+        const page = await harness.navigateByUrl('/lessons?campaign=qa', ListRoute);
+        const router = TestBed.inject(Router);
+        const olderEntered = firstValueFrom(older.entered);
+        const latestEntered = firstValueFrom(latest.entered);
+        const firstWrite = page.state.writeAsync({ ...page.state.current(), search: older.search });
+        await olderEntered;
+
+        const latestQuery = { ...page.state.current(), search: latest.search };
+        const latestWrite = page.state.writeAsync(latestQuery);
+        await latestEntered;
+        await expect(firstWrite).resolves.toBe(false);
+        expect(page.state.current()).toEqual(latestQuery);
+        expect(router.url).toBe('/lessons?campaign=qa');
+        const duplicateWrite = page.state.writeAsync(latestQuery);
+        latest.decision.next(true);
+        await expect(duplicateWrite).resolves.toBe(false);
+        await expect(latestWrite).resolves.toBe(true);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ campaign: 'qa', search: 'fiber' });
     });
 });

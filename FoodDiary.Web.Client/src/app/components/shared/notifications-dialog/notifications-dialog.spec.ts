@@ -172,7 +172,7 @@ describe('NotificationsDialogComponent recommendations', () => {
 });
 
 describe('Notifications inbox bulk acknowledgment', () => {
-    it('retains unread rows after a failed bulk action and reflects a successful retry', () => {
+    it('deduplicates bulk acknowledgment before redraw and permits retry after a failure', () => {
         const items = [createInvitationNotification(), createRecommendationNotification()];
         const { fixture, notificationService } = setupNotificationsDialog(items);
         const host = fixture.nativeElement as HTMLElement;
@@ -181,11 +181,14 @@ describe('Notifications inbox bulk acknowledgment', () => {
         const retry = new Subject<void>();
         notificationService.markAllRead.mockReturnValueOnce(firstAttempt).mockReturnValueOnce(retry);
 
+        expect(bulkRead.disabled).toBe(false);
         bulkRead.click();
-        fixture.detectChanges();
-        expect(bulkRead.disabled).toBe(true);
+        expect(firstAttempt.observed).toBe(true);
+        expect(bulkRead.disabled).toBe(false);
         bulkRead.click();
         expect(notificationService.markAllRead).toHaveBeenCalledOnce();
+        fixture.detectChanges();
+        expect(bulkRead.disabled).toBe(true);
         firstAttempt.error(new Error('Read status unavailable'));
         fixture.detectChanges();
         expect(host.querySelector('[role="alert"]:not([hidden])')?.textContent).toContain('NOTIFICATIONS.MARK_ALL_READ_ERROR');
@@ -193,6 +196,8 @@ describe('Notifications inbox bulk acknowledgment', () => {
         expect(bulkRead.disabled).toBe(false);
 
         bulkRead.click();
+        expect(notificationService.markAllRead).toHaveBeenCalledTimes(2);
+        expect(retry.observed).toBe(true);
         fixture.detectChanges();
         expect(host.querySelector('[role="alert"]:not([hidden])')).toBeNull();
         expect(bulkRead.disabled).toBe(true);

@@ -6,7 +6,7 @@ import { FdUiAutocompleteComponent, type FdUiAutocompleteOption } from 'fd-ui-ki
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { fdUiCoerceInputTextValue, FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiMenuComponent } from 'fd-ui-kit/menu/fd-ui-menu';
 import { FdUiMenuDividerComponent } from 'fd-ui-kit/menu/fd-ui-menu-divider';
 import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
@@ -149,7 +149,7 @@ export class UserManageComparisonWidgetsComponent {
     });
 
     protected onTextFieldChange(field: 'username' | 'firstName' | 'lastName', value: string | number | null): void {
-        const nextValue = value === null ? '' : String(value);
+        const nextValue = fdUiCoerceInputTextValue(value);
         this.userFormPatch.emit({ [field]: nextValue.length > 0 ? nextValue : null });
     }
 
@@ -159,13 +159,7 @@ export class UserManageComparisonWidgetsComponent {
     }
 
     protected onHeightChange(value: string | number | null): void {
-        if (value === null || String(value).trim().length === 0) {
-            this.userFormPatch.emit({ heightCm: null });
-            return;
-        }
-
-        const parsed = Number(value);
-        this.userFormPatch.emit({ heightCm: Number.isFinite(parsed) ? parsed : null });
+        this.userFormPatch.emit({ heightCm: this.parseHeightPart(value) ?? null });
     }
 
     protected onMeasurementSystemChange(value: string | null): void {
@@ -191,7 +185,7 @@ export class UserManageComparisonWidgetsComponent {
     }
 
     protected onImperialHeightChange(part: 'feet' | 'inches', value: string | number | null): void {
-        const parsed = this.parseImperialHeightPart(value);
+        const parsed = this.parseHeightPart(value);
         if (parsed === undefined) {
             return;
         }
@@ -205,7 +199,7 @@ export class UserManageComparisonWidgetsComponent {
         this.userFormPatch.emit({ heightCm: canonicalCm });
     }
 
-    private parseImperialHeightPart(value: string | number | null): number | null | undefined {
+    private parseHeightPart(value: string | number | null): number | null | undefined {
         if (value === null || String(value).trim().length === 0) {
             return null;
         }

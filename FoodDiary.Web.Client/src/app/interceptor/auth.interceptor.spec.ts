@@ -7,6 +7,7 @@ import {
     withInterceptorsFromDi,
 } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -14,14 +15,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { environment } from '../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { SKIP_AUTH } from '../constants/http-context.tokens';
+import { MealService } from '../features/meals/api/meal.service';
 import { AuthService } from '../services/auth.service';
+import type { MealHttpResponsePagedHttpResponse } from '../shared/api/sdk/generated/model/meal-http-response-paged-http-response';
+import type { UserPrivacyState } from '../shared/api/user.service';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { PrivacyConsentFacade } from '../shared/privacy/privacy-consent.facade';
+import { PRIVACY_NOTICE_VERSION } from '../shared/privacy/privacy-notice-version';
 import { AuthInterceptor } from './auth.interceptor';
 
 const root = environment.apiUrls.auth.replace(/\/auth$/, '');
-const privacy = { state: (): null => null, ensureHealthConsentAsync: vi.fn<(forceReview: boolean) => Promise<boolean>>() };
+const privacy = {
+    state: signal<UserPrivacyState | null>(null),
+    ensureHealthConsentAsync: vi.fn<(forceReview: boolean) => Promise<boolean>>(),
+};
 let http: HttpClient;
 let requests: HttpTestingController;
 let auth: {
@@ -32,6 +40,7 @@ let auth: {
 };
 
 beforeEach(() => {
+    privacy.state.set(null);
     privacy.ensureHealthConsentAsync.mockReset();
     auth = {
         getToken: vi.fn(() => null),
@@ -222,6 +231,63 @@ describe('health consent recovery', () => {
         requests.expectNone(path);
         expect(privacy.ensureHealthConsentAsync).toHaveBeenCalledOnce();
         expect(failed).toHaveBeenCalledOnce();
+    });
+});
+
+describe('health consent recovery for diary reads', () => {
+    it.each([
+        { title: 'replays the generated diary GET after initial consent', previouslyAccepted: false, granted: true },
+        { title: 'keeps the diary GET rejected when revoked consent is declined again', previouslyAccepted: true, granted: false },
+    ])('$title', async ({ previouslyAccepted, granted }) => {
+        if (previouslyAccepted) {
+            privacy.state.set({
+                noticeVersion: PRIVACY_NOTICE_VERSION,
+                healthAcceptedAtUtc: '2026-11-20T00:00:00Z',
+                healthDeclinedAtUtc: null,
+                aiAcceptedAtUtc: null,
+                marketingAcceptedAtUtc: null,
+            });
+        }
+        let completeReview = (_allowed: boolean): void => {};
+        privacy.ensureHealthConsentAsync.mockReturnValue(
+            new Promise(resolve => {
+                completeReview = resolve;
+            }),
+        );
+        const path = environment.apiUrls.meals;
+        const rejection = { error: 'Privacy.HealthConsentRequired' };
+        const forbidden = { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' };
+        const pageNumber = 1;
+        const pageLimit = 10;
+        const meals = TestBed.inject(MealService);
+        const outcome = Promise.allSettled([
+            firstValueFrom(meals.query(pageNumber, pageLimit, { dateFrom: '2026-11-01', dateTo: '2026-11-21' })),
+        ]);
+        const read = requests.expectOne(request => request.method === 'GET' && request.url === path);
+        expect(read.request.params.get('dateFrom')).toBe('2026-11-01');
+        expect(read.request.params.get('dateTo')).toBe('2026-11-21');
+        read.flush(rejection, forbidden);
+        expect(privacy.ensureHealthConsentAsync).toHaveBeenCalledExactlyOnceWith(previouslyAccepted);
+        requests.expectNone(request => request.url === path);
+
+        completeReview(granted);
+        await waitForAsyncTasksAsync();
+        if (granted) {
+            const page = {
+                data: [],
+                page: pageNumber,
+                limit: pageLimit,
+                totalPages: 0,
+                totalItems: 0,
+            } satisfies MealHttpResponsePagedHttpResponse;
+            requests.expectOne({ method: 'GET', url: read.request.urlWithParams }).flush(page);
+            expect(await outcome).toEqual([{ status: 'fulfilled', value: page }]);
+        } else {
+            expect(await outcome).toMatchObject([{ status: 'rejected', reason: { status: forbidden.status, error: rejection } }]);
+        }
+        requests.expectNone(request => request.url === path);
+        expect(privacy.ensureHealthConsentAsync).toHaveBeenCalledOnce();
+        expect(auth.refreshSession).not.toHaveBeenCalled();
     });
 });
 

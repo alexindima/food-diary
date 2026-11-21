@@ -18,7 +18,7 @@ import { normalizeMealType } from '../../../../shared/lib/meal-type.util';
 import type { Meal } from '../../../../shared/models/meal.data';
 import { NutritionDetailsFacade } from '../../lib/nutrition-details.facade';
 import { buildNutritionSources, nutritionMetricPresentation } from '../../lib/nutrition-details.mapper';
-import type { NutritionDetailsAction, NutritionDetailsData } from '../../models/nutrition-details.types';
+import type { NutritionDetailsAction, NutritionDetailsData, NutritionSourceView } from '../../models/nutrition-details.types';
 import { NutritionDetailsSourcesComponent } from './nutrition-details-sources';
 
 const PERCENT = 100;
@@ -60,30 +60,34 @@ export class NutritionDetailsDialogComponent {
         ),
     );
     protected readonly state = computed(() => (this.facade.loading() ? 'loading' : this.facade.failed() ? 'error' : 'content'));
-    protected readonly progress = computed(() => {
-        const progress = this.facade.progress();
-        if (progress === null) {
+    protected readonly details = computed(() => {
+        const day = this.facade.day();
+        if (day === null) {
             return null;
         }
+        this.translationChange();
+        const progress = day.progress;
         const goal = progress.goal ?? 0;
         const hasGoal = goal > 0;
         return {
-            ...progress,
-            hasGoal,
-            goal: hasGoal ? goal : 0,
-            percent: hasGoal ? Math.round((progress.current / goal) * PERCENT) : 0,
-            difference: Math.abs(goal - progress.current),
-            balanceKey: progress.current > goal ? 'DASHBOARD.DAY_SUMMARY.EXCEEDED_BY' : 'DASHBOARD.DAY_SUMMARY.REMAINING',
+            progress: {
+                ...progress,
+                hasGoal,
+                goal: hasGoal ? goal : 0,
+                percent: hasGoal ? Math.round((progress.current / goal) * PERCENT) : 0,
+                difference: Math.abs(goal - progress.current),
+                balanceKey: progress.current > goal ? 'DASHBOARD.DAY_SUMMARY.EXCEEDED_BY' : 'DASHBOARD.DAY_SUMMARY.REMAINING',
+            },
+            sources: this.buildSourceViews(day.meals, progress.current),
         };
     });
-    protected readonly sources = computed(() => {
-        this.translationChange();
-        const day = this.facade.day();
-        const total = this.progress()?.current ?? 0;
-        return buildNutritionSources(day?.meals ?? [], this.data.metric, this.language()).map(source => {
+
+    private buildSourceViews(meals: readonly Meal[], total: number): NutritionSourceView[] {
+        const language = this.language();
+        return buildNutritionSources(meals, this.data.metric, language).map(source => {
             const mealType = normalizeMealType(source.meal.mealType) ?? 'OTHER';
             const mealLabel: string = this.translate.instant(`MEAL_CARD.MEAL_TYPES.${mealType}`);
-            const time = new Intl.DateTimeFormat(resolveAppLocale(this.language()), { hour: '2-digit', minute: '2-digit' }).format(
+            const time = new Intl.DateTimeFormat(resolveAppLocale(language), { hour: '2-digit', minute: '2-digit' }).format(
                 new Date(source.meal.date),
             );
             return {
@@ -93,7 +97,7 @@ export class NutritionDetailsDialogComponent {
                 share: total > 0 ? Math.min(PERCENT, (source.value / total) * PERCENT) : 0,
             };
         });
-    });
+    }
     protected openMeal(meal: Meal): void {
         this.dialogRef.close({ kind: 'meal', meal });
     }

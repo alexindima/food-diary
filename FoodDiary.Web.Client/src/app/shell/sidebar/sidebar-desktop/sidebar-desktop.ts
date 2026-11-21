@@ -123,7 +123,7 @@ export class SidebarDesktopComponent {
             label: this.translateKey(item.labelKey),
             action: item.action,
             badge: item.badge,
-            tone: item.variant === 'danger' || item.action === 'openAdminPanel' ? 'danger' : 'default',
+            tone: item.tone,
         }));
     }
 

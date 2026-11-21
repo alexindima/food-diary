@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { mealItemFromStored, MealSourceType } from '../meal.data';
+import { createEmptyProductSnapshot, mealItemFromStored, MealSourceType, type ProductMealItem } from '../meal.data';
+import { MeasurementUnit, ProductType } from '../product.data';
 import { calendarDate, optionalCalendarDate, utcInstant } from './date-value';
 import { entityId, optionalEntityId } from './entity-id';
 import { productQuantity, productQuantityFromStored, recipeServings } from './meal-quantity';
@@ -34,5 +35,28 @@ describe('semantic scalar boundaries', () => {
             sourceType: MealSourceType.Product,
         });
         expect(item).toMatchObject({ sourceType: MealSourceType.Product, amount: 0, product: null, recipe: null });
+    });
+
+    it('retains a stored product and its precise amount when no source type was recorded', () => {
+        const identity = { id: entityId<'meal-item'>('drink-item'), mealId: entityId<'meal'>('lunch') };
+        const product = {
+            ...createEmptyProductSnapshot(),
+            id: entityId<'product'>('mineral-water'),
+            name: 'Mineral water',
+            productType: ProductType.Beverage,
+            baseUnit: MeasurementUnit.ML,
+        };
+        const amount = 82.4375;
+
+        const item = mealItemFromStored(identity, amount, { product, recipe: null });
+
+        expect(item).toStrictEqual({
+            ...identity,
+            sourceType: MealSourceType.Product,
+            amount: productQuantity(amount),
+            product,
+            recipe: null,
+        } satisfies ProductMealItem);
+        expect(item.product).toBe(product);
     });
 });

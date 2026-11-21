@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, type ElementRef, signal, 
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
-import { FEATURE_CATEGORIES } from './features.config';
+import { FEATURE_CATEGORIES, type FeatureCategory } from './features.config';
 
 @Component({
     selector: 'fd-features',
@@ -15,13 +15,11 @@ export class FeaturesComponent {
     private readonly categoryTabs = viewChildren<ElementRef<HTMLButtonElement>>('categoryTab');
     protected readonly categories = FEATURE_CATEGORIES;
 
-    protected readonly activeCategoryKey = signal<string>(this.categories[0].key);
-    protected readonly activeCategory = computed(
-        () => this.categories.find(category => category.key === this.activeCategoryKey()) ?? this.categories[0],
-    );
+    protected readonly activeCategory = signal(this.categories[0]);
+    protected readonly activeCategoryKey = computed(() => this.activeCategory().key);
 
-    protected selectCategory(categoryKey: string): void {
-        this.activeCategoryKey.set(categoryKey);
+    protected selectCategory(category: FeatureCategory): void {
+        this.activeCategory.set(category);
     }
 
     protected onCategoryKeydown(index: number, event: KeyboardEvent): void {
@@ -49,7 +47,7 @@ export class FeaturesComponent {
         }
 
         event.preventDefault();
-        this.selectCategory(this.categories[nextIndex].key);
+        this.selectCategory(this.categories[nextIndex]);
         this.categoryTabs()[nextIndex]?.nativeElement.focus();
     }
 }
