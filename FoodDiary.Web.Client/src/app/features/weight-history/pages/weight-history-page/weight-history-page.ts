@@ -30,7 +30,7 @@ import { connectDevelopmentScreen } from '../../../../shared/development/develop
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
-import { measurementMonthRange, toMeasurementDateIso } from '../../../../shared/lib/measurement-date.utils';
+import { formatMeasurementDateLabel, measurementMonthRange } from '../../../../shared/lib/measurement-date.utils';
 import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightEntry } from '../../../../shared/models/weight-entry.data';
@@ -187,13 +187,7 @@ export class WeightHistoryPageComponent {
     }
 
     protected deleteEntry(entry: WeightEntry): void {
-        const dateIso = toMeasurementDateIso(entry.date);
-        const date =
-            dateIso === null
-                ? entry.date
-                : new Intl.DateTimeFormat(resolveAppLocale(this.locale()), { dateStyle: 'medium', timeZone: 'UTC' }).format(
-                      new Date(dateIso),
-                  );
+        const date = formatMeasurementDateLabel(entry.date, resolveAppLocale(this.locale()));
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('WEIGHT_HISTORY.DELETE_CONFIRM_TITLE'),
             message: this.translateService.instant('WEIGHT_HISTORY.DELETE_CONFIRM_MESSAGE', { date }),

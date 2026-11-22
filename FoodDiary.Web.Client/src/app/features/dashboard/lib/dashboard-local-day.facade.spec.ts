@@ -50,6 +50,23 @@ describe('Dashboard local day clock', () => {
         visibility.mockRestore();
     });
 
+    it('emits the new day once when a tab receives both visibility and focus on resume', () => {
+        const service = setup();
+        const doc = TestBed.inject(DOCUMENT);
+        const visibility = vi.spyOn(doc, 'visibilityState', 'get').mockReturnValue('visible');
+        const changed = vi.fn();
+        service.changes.subscribe(changed);
+
+        vi.setSystemTime(NEXT_DAY);
+        doc.dispatchEvent(new Event('visibilitychange'));
+        doc.defaultView?.dispatchEvent(new Event('focus'));
+
+        expect(service.today()).toEqual(NEXT_DAY);
+        expect(changed).toHaveBeenCalledExactlyOnceWith(NEXT_DAY);
+        expect(vi.getTimerCount()).toBe(1);
+        visibility.mockRestore();
+    });
+
     it('does not schedule browser timers on the server', () => {
         setup('server');
         expect(vi.getTimerCount()).toBe(0);

@@ -113,10 +113,8 @@ export class UserManageComponent {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly userFormElement = viewChild<ElementRef<HTMLFormElement>>('userFormElement');
     private readonly comparisonWidgets = viewChild(UserManageComparisonWidgetsComponent);
-    private lastNotificationSyncVersion = -1;
     private lastProfileSavedVersion = 0;
     private pendingProfileSave: ProfileSaveSnapshot | null = null;
-    private userFormDomListenersRegistered = false;
     private readonly pendingPasswordSetupIntent = signal(false);
 
     protected genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
@@ -199,7 +197,6 @@ export class UserManageComponent {
             }
         });
         this.buildSelectOptions();
-        this.watchUserFormElement();
         this.watchTranslations();
         this.watchPasswordSetupIntent();
         this.watchGoogleLinkResult();
@@ -233,32 +230,6 @@ export class UserManageComponent {
                 this.buildSelectOptions();
                 this.updateDietologistInviteEmailError();
             });
-    }
-
-    private watchUserFormElement(): void {
-        effect(() => {
-            const formElement = this.userFormElement()?.nativeElement;
-            if (formElement === undefined || !this.isBrowser || this.userFormDomListenersRegistered) {
-                return;
-            }
-
-            this.userFormDomListenersRegistered = true;
-            this.listenToUserFormDomEvents(formElement);
-        });
-    }
-
-    private listenToUserFormDomEvents(formElement: HTMLFormElement): void {
-        const stopInputListener = this.renderer.listen(formElement, 'input', (event: Event) => {
-            this.onUserFormInput(event);
-        });
-        const stopFocusoutListener = this.renderer.listen(formElement, 'focusout', (event: Event) => {
-            this.onUserFormInput(event);
-        });
-
-        this.destroyRef.onDestroy(() => {
-            stopInputListener();
-            stopFocusoutListener();
-        });
     }
 
     private watchPasswordSetupIntent(): void {
@@ -336,17 +307,11 @@ export class UserManageComponent {
 
     private watchNotificationRelationshipRefresh(): void {
         effect(() => {
-            const version = this.notifications.notificationsChangedVersion();
-            if (version === this.lastNotificationSyncVersion) {
-                return;
+            if (this.notifications.notificationsChangedVersion() !== 0) {
+                untracked(() => {
+                    this.loadDietologistRelationship();
+                });
             }
-
-            this.lastNotificationSyncVersion = version;
-            if (version === 0) {
-                return;
-            }
-
-            this.loadDietologistRelationship();
         });
     }
 
@@ -406,7 +371,7 @@ export class UserManageComponent {
         this.tourService.start(tour, { force });
     }
 
-    protected onUserFormInput(event?: Event): void {
+    protected onUserFormInput(event: Event): void {
         if (!this.syncUserFormInputEvent(event)) {
             return;
         }
@@ -484,9 +449,9 @@ export class UserManageComponent {
         };
     }
 
-    private syncUserFormInputEvent(event: Event | undefined): boolean {
+    private syncUserFormInputEvent(event: Event): boolean {
         const view = this.document.defaultView;
-        if (event === undefined || view === null || !this.isBrowser || !(event.target instanceof view.HTMLInputElement)) {
+        if (view === null || !this.isBrowser || !(event.target instanceof view.HTMLInputElement)) {
             return false;
         }
 
@@ -519,7 +484,7 @@ export class UserManageComponent {
         }
     }
 
-    private markUserFormChanged(): void {
+    protected markUserFormChanged(): void {
         this.facade.clearGlobalError();
         this.userFormInputVersion.update(version => version + 1);
     }

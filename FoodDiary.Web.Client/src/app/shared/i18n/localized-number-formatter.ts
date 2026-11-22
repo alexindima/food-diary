@@ -17,10 +17,8 @@ export function getLocalizedNumberFormatter(
 
     const formatter = new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits });
     if (formatters.size >= MAX_FORMATTERS) {
-        const oldestKey = formatters.keys().next().value;
-        if (oldestKey !== undefined) {
-            formatters.delete(oldestKey);
-        }
+        const [oldestKey] = formatters.keys();
+        formatters.delete(oldestKey);
     }
     formatters.set(key, formatter);
     return formatter;

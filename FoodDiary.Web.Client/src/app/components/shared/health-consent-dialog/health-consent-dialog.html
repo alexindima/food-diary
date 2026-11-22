@@ -4,7 +4,7 @@
         <p>{{ 'PRIVACY_CHOICES.WITHDRAWAL' | translate }}</p>
         <a target="_blank" rel="noopener noreferrer" [href]="policyPath()">{{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}</a>
         <div class="fd-row fd-gap-sm fd-align-start">
-            <input id="health-consent-agreement" type="checkbox" [checked]="agreed()" (change)="change($event)" />
+            <input #agreement id="health-consent-agreement" type="checkbox" [checked]="agreed()" (change)="agreed.set(agreement.checked)" />
             <label for="health-consent-agreement">{{ 'PRIVACY_CHOICES.HEALTH_AGREEMENT' | translate }}</label>
         </div>
     </div>

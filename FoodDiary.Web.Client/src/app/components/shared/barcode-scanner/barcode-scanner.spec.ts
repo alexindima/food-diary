@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { firstValueFrom, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -63,13 +63,17 @@ describe('BarcodeScannerComponent delayed camera permission', () => {
         const stop = vi.fn();
         const stream = { getTracks: () => [{ stop }] } as unknown as MediaStream;
         const requestAnimationFrame = vi.fn();
+        const getUserMediaAsync = vi.fn(async () => camera);
         const { component, fixture } = await setupBarcodeScannerAsync({
             createBarcodeDetector: () => ({ detect: vi.fn() }),
-            getUserMediaAsync: async () => camera,
+            getUserMediaAsync,
             cancelAnimationFrame: vi.fn(),
             requestAnimationFrame,
         });
         fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(getUserMediaAsync).toHaveBeenCalledOnce();
+        });
         if (action === 'close') {
             component['close']();
         } else {
@@ -77,31 +81,56 @@ describe('BarcodeScannerComponent delayed camera permission', () => {
         }
 
         resolveCamera(stream);
-        await camera;
-        await fixture.whenStable();
-
-        expect(stop).toHaveBeenCalledOnce();
+        await vi.waitFor(() => {
+            expect(stop).toHaveBeenCalledOnce();
+        });
         expect(component['stream']).toBeNull();
         expect(requestAnimationFrame).not.toHaveBeenCalled();
     });
 });
 
 describe('Barcode scanner camera setup cancellation', () => {
-    it('closes the camera after acquisition before the preview starts playing', async () => {
+    it('closes through the header and releases a camera stream returned afterward', async () => {
         const camera = createCamera();
+        const cameraResult = new Subject<MediaStream>();
+        camera.browserWindow.getUserMediaAsync.mockImplementationOnce(async () => firstValueFrom(cameraResult));
         const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
         const { host, closed } = await openScannerAsync(camera.browserWindow);
+        await vi.waitFor(() => {
+            expect(cameraResult.observed).toBe(true);
+        });
 
         closeFromHeader(host);
-        expect(camera.stop).toHaveBeenCalledOnce();
-        await new Promise<void>(resolve => {
-            setTimeout(resolve, 0);
+        cameraResult.next(camera.stream);
+        cameraResult.complete();
+        await vi.waitFor(() => {
+            expect(camera.stop).toHaveBeenCalledOnce();
         });
 
         expect(play).not.toHaveBeenCalled();
         expect(camera.browserWindow.requestAnimationFrame).not.toHaveBeenCalled();
         expect(closed).toHaveBeenCalledExactlyOnceWith(undefined);
     });
+});
+
+it('requests camera access with a rendered preview before playing an immediately available stream', async () => {
+    const camera = createCamera();
+    const previewAtRequest: Array<Element | null> = [];
+    camera.browserWindow.getUserMediaAsync.mockImplementationOnce(async () => {
+        previewAtRequest.push(document.querySelector('fd-barcode-scanner video'));
+        return firstValueFrom(of(camera.stream));
+    });
+    const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+    const { host, detectChanges } = await openScannerAsync(camera.browserWindow);
+    const preview = scannerVideo(host);
+
+    await vi.waitFor(() => {
+        detectChanges();
+        expect(play).toHaveBeenCalledOnce();
+        expect(preview.srcObject).toBe(camera.stream);
+        expect(preview.classList.contains('barcode-scanner__video--hidden')).toBe(false);
+    });
+    expect(previewAtRequest).toEqual([preview]);
 });
 
 describe('Barcode scanner camera errors', () => {
@@ -300,6 +329,10 @@ it('restores focus on Escape and keeps the reopened scanner independent of late 
     launcher.click();
     fixture.componentInstance.detectScannerChanges();
     const firstScanner = requireScannerHost(overlay);
+    await vi.waitFor(() => {
+        fixture.componentInstance.detectScannerChanges();
+        expect(currentCamera.browserWindow.getUserMediaAsync).toHaveBeenCalledOnce();
+    });
     const close = scannerCloseButton(firstScanner);
     close.focus();
     expect(document.activeElement).toBe(close);

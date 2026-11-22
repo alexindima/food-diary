@@ -65,6 +65,7 @@
     <ul class="ingredient-list">
         @for (ingredient of ingredients(); track $index) {
             @let displayName = ingredient.name ?? ('PUBLIC_RECIPES.PRIVATE_INGREDIENT' | translate) | capitalizeFirstLetter;
+            @let productId = ingredient.productId;
             <li>
                 <span>
                     @if (ingredient.recipeId) {
@@ -87,10 +88,10 @@
                         fill="text"
                         size="md"
                         icon="visibility"
-                        [style.display]="ingredient.productId ? null : 'none'"
+                        [style.display]="productId ? null : 'none'"
                         [ariaLabel]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: displayName }"
                         [fdUiHint]="'PUBLIC_RECIPES.PRODUCT_VIEW' | translate: { name: displayName }"
-                        (click)="viewProduct(ingredient)"
+                        (click)="productId && viewProduct(productId)"
                     />
                     @if (ingredient.isAvailable && ingredient.name) {
                         <fd-ui-button

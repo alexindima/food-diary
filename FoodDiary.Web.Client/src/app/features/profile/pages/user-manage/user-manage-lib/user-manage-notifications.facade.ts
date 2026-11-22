@@ -182,13 +182,15 @@ export class UserManageNotificationsFacade {
             return;
         }
 
-        this.toastService.info(
-            this.translateService.instant(
-                user.fastingPushNotificationsEnabled
-                    ? 'USER_MANAGE.NOTIFICATIONS_FASTING_ENABLED_TOAST'
-                    : 'USER_MANAGE.NOTIFICATIONS_FASTING_DISABLED_TOAST',
-            ),
-        );
+        if (this.isViewActive()) {
+            this.toastService.info(
+                this.translateService.instant(
+                    user.fastingPushNotificationsEnabled
+                        ? 'USER_MANAGE.NOTIFICATIONS_FASTING_ENABLED_TOAST'
+                        : 'USER_MANAGE.NOTIFICATIONS_FASTING_DISABLED_TOAST',
+                ),
+            );
+        }
         this.frontendObservability.recordNotificationPreferenceChanged('fasting', user.fastingPushNotificationsEnabled);
     }
 
@@ -302,13 +304,15 @@ export class UserManageNotificationsFacade {
             return;
         }
 
-        this.toastService.info(
-            this.translateService.instant(
-                user.socialPushNotificationsEnabled
-                    ? 'USER_MANAGE.NOTIFICATIONS_SOCIAL_ENABLED_TOAST'
-                    : 'USER_MANAGE.NOTIFICATIONS_SOCIAL_DISABLED_TOAST',
-            ),
-        );
+        if (this.isViewActive()) {
+            this.toastService.info(
+                this.translateService.instant(
+                    user.socialPushNotificationsEnabled
+                        ? 'USER_MANAGE.NOTIFICATIONS_SOCIAL_ENABLED_TOAST'
+                        : 'USER_MANAGE.NOTIFICATIONS_SOCIAL_DISABLED_TOAST',
+                ),
+            );
+        }
         this.frontendObservability.recordNotificationPreferenceChanged('social', user.socialPushNotificationsEnabled);
     }
 

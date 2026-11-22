@@ -307,6 +307,37 @@ describe('ProductCardComponent events', () => {
     });
 });
 
+describe('ProductCardComponent pending favorite', () => {
+    it('ignores repeat activation while saving a favorite and allows removal afterward', async () => {
+        const { component, el, fixture } = await setupProductCardAsync();
+        const toggle = vi.fn();
+        component.favoriteToggle.subscribe(toggle);
+        fixture.detectChanges();
+        const favorite = el.querySelector<HTMLButtonElement>('button[aria-label="PRODUCT_DETAIL.ADD_FAVORITE"]');
+        if (favorite === null) {
+            throw new Error('Expected the product favorite button');
+        }
+
+        favorite.click();
+        expect(toggle).toHaveBeenCalledOnce();
+        fixture.componentRef.setInput('favoriteLoading', true);
+        expect(favorite.isConnected).toBe(true);
+        expect(favorite.disabled).toBe(false);
+        favorite.click();
+        expect(toggle).toHaveBeenCalledOnce();
+        fixture.detectChanges();
+        expect(favorite.disabled).toBe(true);
+
+        fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, isFavorite: true });
+        fixture.componentRef.setInput('favoriteLoading', false);
+        fixture.detectChanges();
+        expect(favorite.getAttribute('aria-label')).toBe('PRODUCT_DETAIL.REMOVE_FAVORITE');
+        expect(favorite.disabled).toBe(false);
+        favorite.click();
+        expect(toggle).toHaveBeenCalledTimes(2);
+    });
+});
+
 describe('ProductCardComponent thumbnail', () => {
     it('should show image when imageUrl is provided', async () => {
         const { el, fixture } = await setupProductCardAsync();

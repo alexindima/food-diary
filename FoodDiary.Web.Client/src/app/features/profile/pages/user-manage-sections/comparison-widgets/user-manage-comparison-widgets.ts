@@ -16,7 +16,6 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import { injectCurrentLanguage } from '../../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../../shared/i18n/localized-number.pipe';
-import { formatDateInputValue } from '../../../../../shared/lib/local-date.utils';
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import type { ActivityLevelOption, Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
@@ -72,6 +71,7 @@ export class UserManageComparisonWidgetsComponent {
     public readonly securityExpanded = input(false);
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
+    public readonly birthDateEdited = output();
     public readonly birthDateInputInvalidChange = output<boolean>();
     public readonly heightInputInvalidChange = output<boolean>();
     protected readonly timeZoneQuery = signal<string | null>(null);
@@ -153,13 +153,8 @@ export class UserManageComparisonWidgetsComponent {
         this.userFormPatch.emit({ [field]: nextValue.length > 0 ? nextValue : null });
     }
 
-    protected onBirthDateChange(value: string | Date | null): void {
-        const nextValue = value instanceof Date ? formatDateInputValue(value) : value;
-        this.userFormPatch.emit({ birthDate: nextValue });
-    }
-
     protected onHeightChange(value: string | number | null): void {
-        this.userFormPatch.emit({ heightCm: this.parseHeightPart(value) ?? null });
+        this.userFormPatch.emit({ heightCm: this.heightPartValue(value) });
     }
 
     protected onMeasurementSystemChange(value: string | null): void {
@@ -185,10 +180,7 @@ export class UserManageComparisonWidgetsComponent {
     }
 
     protected onImperialHeightChange(part: 'feet' | 'inches', value: string | number | null): void {
-        const parsed = this.parseHeightPart(value);
-        if (parsed === undefined) {
-            return;
-        }
+        const parsed = this.heightPartValue(value);
 
         const current = this.imperialHeight();
         const feet = part === 'feet' ? parsed : current.feet;
@@ -199,12 +191,7 @@ export class UserManageComparisonWidgetsComponent {
         this.userFormPatch.emit({ heightCm: canonicalCm });
     }
 
-    private parseHeightPart(value: string | number | null): number | null | undefined {
-        if (value === null || String(value).trim().length === 0) {
-            return null;
-        }
-
-        const parsed = Number(value);
-        return Number.isFinite(parsed) ? parsed : undefined;
+    private heightPartValue(value: string | number | null): number | null {
+        return typeof value === 'number' ? value : null;
     }
 }

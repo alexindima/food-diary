@@ -4,13 +4,14 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
 import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { NAME_SEARCH_DEBOUNCE_MS } from '../../../../../config/runtime-ui.tokens';
-import type { ProductSearchSuggestion } from '../../../../../shared/models/product.data';
+import { type ProductSearchSuggestion, ProductVisibility } from '../../../../../shared/models/product.data';
 import { ProductService } from '../../../api/product.service';
 import { ProductNameSearchFacade } from '../../../lib/manage/product-name-search.facade';
 import { createProductForm } from '../product-manage-lib/product-manage-form.mapper';
@@ -68,6 +69,46 @@ it('preserves a saved product name and sends an actual catalogue selection from 
     expect(data().name).toBe(suggestion.name);
     expect(input.value).toBe(suggestion.name);
     expect(input.getAttribute('aria-expanded')).toBe('false');
+});
+
+it('keeps the visibility summary and selector in sync after a choice and a locale change', async () => {
+    const { fixture } = renderNameSearch();
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { PRODUCT_MANAGE: { VISIBILITY_OPTIONS: { PRIVATE: 'Private', PUBLIC: 'Public' } } });
+    translate.setTranslation('ru', { PRODUCT_MANAGE: { VISIBILITY_OPTIONS: { PRIVATE: 'Личный', PUBLIC: 'Публичный' } } });
+    await firstValueFrom(translate.use('en'));
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    const summary = host.querySelector<HTMLElement>('.product-manage__additional summary');
+    const select = host.querySelector<HTMLButtonElement>('.product-manage__additional button[aria-haspopup="listbox"]');
+    if (summary === null || select === null) {
+        throw new Error('Expected the product visibility summary and selector');
+    }
+    expect(summary.textContent).toContain('Private');
+    summary.click();
+    expect(summary.closest('details')?.open).toBe(true);
+    select.click();
+    fixture.detectChanges();
+    const publicOption = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="option"]')).find(
+        option => option.textContent.trim() === 'Public',
+    );
+    if (publicOption === undefined) {
+        throw new Error('Expected the public visibility option');
+    }
+    publicOption.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.draft().visibility).toBe(ProductVisibility.Public);
+    expect(summary.textContent).toContain('Public');
+    expect(select.textContent).toContain('Public');
+
+    await firstValueFrom(translate.use('ru'));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.draft().visibility).toBe(ProductVisibility.Public);
+    expect(select.textContent).toContain('Публичный');
+    summary.click();
+    expect(summary.closest('details')?.open).toBe(false);
+    expect(summary.textContent).toContain('Публичный');
 });
 
 @Component({

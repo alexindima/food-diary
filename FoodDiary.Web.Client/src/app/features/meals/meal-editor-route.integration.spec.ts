@@ -8,11 +8,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
-import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
+import { describe, expect, it, type Mock, type MockInstance, onTestFinished, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { AuthService } from '../../services/auth.service';
 import { FoodDiaryTranslationLoader } from '../../shared/i18n/food-diary-translation.loader';
+import { ImageUploadFacade } from '../../shared/lib/image-upload.facade';
+import { type ImageSelection, imageSelection } from '../../shared/models/image-upload.data';
 import {
     createEmptyProductSnapshot,
     type Meal,
@@ -31,6 +33,7 @@ import { MealService } from './api/meal.service';
 import mealsRoutes from './meals.routes';
 
 const MEALS_URL = '/meals';
+const MEAL_PHOTO_FIELD_SELECTOR = 'fd-meal-general-info fd-image-upload-field';
 const ADD_URL = '/meals/add';
 const OTHER_URL = '/home';
 const PRIVACY_URL = '/privacy-settings';
@@ -650,6 +653,205 @@ describe('Meal recognition review route ownership', () => {
         });
         expect(api.getById.mock.calls).toEqual([[MEAL_ID], [nextMealId]]);
         expect(api.update).not.toHaveBeenCalled();
+    });
+});
+
+describe('Meal editor photo upload route ownership', () => {
+    it('does not carry an in-flight photo upload into another meal', async () => {
+        const { originalUpload, nextUpload, upload, api, nextMeal, originalPhoto, nextPhoto, firstWrite, revokeUrl } =
+            setupMealPhotoUploadRoute();
+
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-manage-form');
+        const originalUploader = requireEditor(harness, MEAL_PHOTO_FIELD_SELECTOR);
+        const originalDisclosure = editor.querySelector('details.meal-manage__optional');
+        const originalFile = new File(['original photo'], 'original.png', { type: 'image/png' });
+        chooseMealEditorPhoto(editor, originalFile);
+        await vi.waitFor(() => {
+            expect(upload).toHaveBeenCalledExactlyOnceWith(originalFile);
+            expect(originalUpload.observed).toBe(true);
+        });
+        harness.detectChanges();
+        expect(nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').disabled).toBe(true);
+
+        await harness.navigateByUrl(`${MEAL_URL}?mealType=BREAKFAST`);
+        expect(requireEditor(harness, MEAL_PHOTO_FIELD_SELECTOR)).toBe(originalUploader);
+        expect(originalUpload.observed).toBe(true);
+        expect(revokeUrl).not.toHaveBeenCalled();
+
+        await harness.navigateByUrl(`/meals/${nextMeal.id}/edit`);
+        expect(requireEditor(harness, 'fd-meal-manage-form')).toBe(editor);
+        const nextUploader = requireEditor(harness, MEAL_PHOTO_FIELD_SELECTOR);
+        expect(originalUploader.isConnected).toBe(false);
+        expect(originalUpload.observed).toBe(false);
+        expect(revokeUrl).toHaveBeenCalledExactlyOnceWith('blob:meal-photo-draft');
+        const nextDisclosure = editor.querySelector<HTMLDetailsElement>('details.meal-manage__optional');
+        expect(nextDisclosure).toBe(originalDisclosure);
+        expect(nextDisclosure?.open).toBe(true);
+        expect(nextUploader.querySelector<HTMLInputElement>('input[type="file"]')?.disabled).toBe(false);
+        expect(nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').disabled).toBe(false);
+        expect(commentInput(editor).value).toBe(nextMeal.comment);
+        expect(api.getById.mock.calls).toEqual([[MEAL_ID], [nextMeal.id]]);
+        originalUpload.next(originalPhoto);
+        originalUpload.complete();
+        harness.detectChanges();
+
+        const preview = nextUploader.querySelector('img.image-upload-field__preview')?.getAttribute('src') ?? null;
+        const save = nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON');
+        expect(save.disabled).toBe(false);
+        save.click();
+        await vi.waitFor(() => {
+            expect(api.update).toHaveBeenCalledOnce();
+        });
+        const [savedId, firstPayload] = api.update.mock.calls[0];
+        expect({ savedId, preview, imageAssetId: firstPayload.imageAssetId, imageUrl: firstPayload.imageUrl }).toEqual({
+            savedId: nextMeal.id,
+            preview: null,
+            imageAssetId: undefined,
+            imageUrl: undefined,
+        });
+
+        firstWrite.error(new HttpErrorResponse({ status: 503, statusText: 'Fixture save unavailable' }));
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(save.disabled).toBe(false);
+        });
+        const nextFile = new File(['next photo'], 'next.png', { type: 'image/png' });
+        chooseMealEditorPhoto(editor, nextFile);
+        await vi.waitFor(() => {
+            expect(upload).toHaveBeenNthCalledWith(2, nextFile);
+            expect(nextUpload.observed).toBe(true);
+        });
+        nextUpload.next(nextPhoto);
+        nextUpload.complete();
+        harness.detectChanges();
+        expect(nextUploader.querySelector('img.image-upload-field__preview')?.getAttribute('src')).toBe(nextPhoto.url);
+        save.click();
+        await waitForDiaryAsync(harness);
+        expect(api.update).toHaveBeenNthCalledWith(
+            2,
+            nextMeal.id,
+            expect.objectContaining({ imageAssetId: nextPhoto.assetId, imageUrl: nextPhoto.url }),
+        );
+        expect(nextUploader.isConnected).toBe(false);
+
+        api.getById.mockReturnValueOnce(of({ ...nextMeal, imageUrl: nextPhoto.url, imageAssetId: nextPhoto.assetId }));
+        await harness.navigateByUrl(`/meals/${nextMeal.id}/edit`);
+        const reopenedUploader = requireEditor(harness, MEAL_PHOTO_FIELD_SELECTOR);
+        expect(reopenedUploader.querySelector('img.image-upload-field__preview')?.getAttribute('src')).toBe(nextPhoto.url);
+        expect(api.update).toHaveBeenCalledTimes(2);
+    });
+});
+
+type MealPhotoUploadRoute = {
+    originalUpload: Subject<ImageSelection>;
+    nextUpload: Subject<ImageSelection>;
+    upload: Mock<ImageUploadFacade['upload']>;
+    api: MealEditorApi;
+    nextMeal: Meal;
+    originalPhoto: ImageSelection;
+    nextPhoto: ImageSelection;
+    firstWrite: Subject<Meal>;
+    revokeUrl: MockInstance<typeof URL.revokeObjectURL>;
+};
+
+function setupMealPhotoUploadRoute(): MealPhotoUploadRoute {
+    const originalUpload = new Subject<ImageSelection>();
+    const nextUpload = new Subject<ImageSelection>();
+    const upload = vi.fn<ImageUploadFacade['upload']>().mockReturnValueOnce(originalUpload).mockReturnValueOnce(nextUpload);
+    TestBed.configureTestingModule({ providers: [{ provide: ImageUploadFacade, useValue: { upload } }] });
+    const api = setupEditorRoutes();
+    const nextMeal: Meal = { ...savedMeal('Next dinner'), id: entityId<'meal'>('next-dinner') };
+    api.getById.mockReturnValueOnce(of(savedMeal())).mockReturnValueOnce(of(nextMeal));
+    const originalPhoto = imageSelection('https://images.example.test/original-meal.jpg', 'original-meal-photo');
+    const nextPhoto = imageSelection('https://images.example.test/next-meal.jpg', 'next-meal-photo');
+    const firstWrite = new Subject<Meal>();
+    api.update
+        .mockReturnValueOnce(firstWrite)
+        .mockReturnValueOnce(of({ ...nextMeal, imageUrl: nextPhoto.url, imageAssetId: nextPhoto.assetId }));
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:meal-photo-draft');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    onTestFinished(() => {
+        createUrl.mockRestore();
+        revokeUrl.mockRestore();
+    });
+    return { originalUpload, nextUpload, upload, api, nextMeal, originalPhoto, nextPhoto, firstWrite, revokeUrl };
+}
+
+function chooseMealEditorPhoto(editor: HTMLElement, file: File): void {
+    const details = editor.querySelector<HTMLDetailsElement>('details.meal-manage__optional');
+    const summary = details?.querySelector('summary');
+    const input = details?.querySelector<HTMLInputElement>('fd-image-upload-field input[type="file"]');
+    if (details === null || summary === null || summary === undefined || input === null || input === undefined) {
+        throw new Error('Expected the rendered optional meal photo chooser');
+    }
+    if (!details.open) {
+        summary.click();
+    }
+    expect(details.open).toBe(true);
+    Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+describe('Saving an edited meal photo review', () => {
+    it('prevents saving an empty recognition and still saves a corrected amount after reopening', async () => {
+        const api = setupEditorRoutes({ premium: true });
+        const saved = { ...mealWithRecognition(MEAL_ID, ORIGINAL_NOTE, 'Broccoli'), items: [] };
+        api.getById.mockReturnValue(of(saved));
+        api.update.mockReturnValueOnce(of(saved));
+        const harness = await RouterTestingHarness.create(MEAL_URL);
+        const editor = requireEditor(harness, 'fd-meal-edit');
+        const edit = nativeEditorButton(editor, 'MEAL_MANAGE.ITEMS_AI_EDIT');
+        edit.click();
+        const review = await waitForRecognitionReviewAsync(harness, 'Broccoli');
+
+        nativeEditorButton(review, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        harness.detectChanges();
+        nativeEditorButton(review, 'COMMON.DELETE').click();
+        harness.detectChanges();
+        nativeEditorButton(review, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        harness.detectChanges();
+
+        const save = nativeEditorButton(review, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE');
+        save.click();
+        harness.detectChanges();
+        expect({ disabled: save.disabled, open: review.isConnected }).toEqual({ disabled: true, open: true });
+        expect(api.update).not.toHaveBeenCalled();
+        nativeEditorButton(review, 'COMMON.CANCEL').click();
+        await vi.waitFor(() => {
+            expect(review.isConnected).toBe(false);
+        });
+        expect(editor.querySelector('fd-meal-ai-sessions')?.textContent).toContain('Broccoli');
+
+        edit.click();
+        const reopened = await waitForRecognitionReviewAsync(harness, 'Broccoli');
+        nativeEditorButton(reopened, 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON').click();
+        harness.detectChanges();
+        const amount = reopened.querySelector<HTMLInputElement>('.photo-ai-dialog__edit-input--amount');
+        if (amount === null) {
+            throw new Error('Expected the photo recognition quantity input');
+        }
+        enterMealQuantity(amount, CORRECTED_AMOUNT);
+        nativeEditorButton(reopened, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        harness.detectChanges();
+        nativeEditorButton(reopened, 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE').click();
+        await vi.waitFor(() => {
+            harness.detectChanges();
+            expect(reopened.isConnected).toBe(false);
+            expect(editor.querySelector('.meal-manage__ai-summary-amount')?.textContent).toContain(String(CORRECTED_AMOUNT));
+        });
+        nativeEditorButton(editor, 'MEAL_MANAGE.SAVE_BUTTON').click();
+        await waitForDiaryAsync(harness);
+
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            MEAL_ID,
+            expect.objectContaining({
+                items: [],
+                aiSessions: [
+                    expect.objectContaining({ items: [expect.objectContaining({ nameEn: 'Broccoli', amount: CORRECTED_AMOUNT })] }),
+                ],
+            }),
+        );
     });
 });
 

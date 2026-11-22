@@ -1,9 +1,10 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -289,18 +290,59 @@ describe('Weight history page composition', () => {
     });
 });
 describe('Measurement deletion confirmation', () => {
-    it.each([true, false, undefined])('deletes a measurement only after confirmation: %s', confirmed => {
-        const { component, open } = context;
+    it.each([true, false, undefined])('deletes the dated row only after confirmation: %s', async confirmed => {
+        const { fixture, open } = context;
         const confirmation = new Subject<boolean | undefined>();
         open.mockReturnValueOnce({ afterClosed: () => confirmation });
         const remove = vi.spyOn(TestBed.inject(WeightEntriesService), 'remove');
-        component['deleteEntry'](ENTRY);
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { WEIGHT_HISTORY: { DELETE_CONFIRM_MESSAGE: 'Remove the measurement from {{date}}?' } });
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const removeButton = host.querySelector<HTMLButtonElement>(
+            'fd-weight-history-entries-card button[aria-label="WEIGHT_HISTORY.DELETE"]',
+        );
+        expect(removeButton).not.toBeNull();
+        removeButton?.click();
+
         expect(open.mock.calls[0]?.[0]).toBe(ConfirmDeleteDialogComponent);
-        expect(open.mock.calls[0]?.[1]).toMatchObject({ data: { title: 'WEIGHT_HISTORY.DELETE_CONFIRM_TITLE' } });
+        expect(open.mock.calls[0]?.[1]).toMatchObject({
+            data: { title: 'WEIGHT_HISTORY.DELETE_CONFIRM_TITLE', message: 'Remove the measurement from Jun 20, 2026?' },
+        });
         expect(remove).not.toHaveBeenCalled();
         confirmation.next(confirmed);
         confirmation.next(true);
         expect(remove).toHaveBeenCalledTimes(confirmed === true ? 1 : 0);
+    });
+
+    it('shows the original date when confirming deletion of an invalid stored measurement date', async () => {
+        const { facade, fixture, open } = context;
+        const storedDate = '2026-02-30';
+        facade.entries.set([{ ...ENTRY, date: calendarDate(storedDate) }]);
+        const confirmation = new Subject<boolean>();
+        open.mockReturnValueOnce({ afterClosed: () => confirmation });
+        const remove = vi.spyOn(TestBed.inject(WeightEntriesService), 'remove');
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { WEIGHT_HISTORY: { DELETE_CONFIRM_MESSAGE: 'Remove the measurement from {{date}}?' } });
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const removeButton = host.querySelector<HTMLButtonElement>(
+            'fd-weight-history-entries-card button[aria-label="WEIGHT_HISTORY.DELETE"]',
+        );
+        expect(removeButton).not.toBeNull();
+        removeButton?.click();
+
+        expect(open).toHaveBeenCalledExactlyOnceWith(ConfirmDeleteDialogComponent, {
+            size: 'sm',
+            data: { title: 'WEIGHT_HISTORY.DELETE_CONFIRM_TITLE', message: 'Remove the measurement from 2026-02-30?' },
+        });
+        expect(remove).not.toHaveBeenCalled();
+        confirmation.next(true);
+        expect(remove).toHaveBeenCalledExactlyOnceWith(ENTRY.id);
     });
 
     it('does not delete when the page closes before confirmation', () => {

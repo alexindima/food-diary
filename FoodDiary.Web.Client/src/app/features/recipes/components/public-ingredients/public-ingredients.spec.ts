@@ -74,6 +74,10 @@ describe('public ingredient quantities', () => {
         const element = fixture.nativeElement as HTMLElement;
         const buttons = element.querySelectorAll<HTMLButtonElement>('[aria-label="PUBLIC_RECIPES.SHOPPING_ADD"]');
         expect(buttons).toHaveLength(2);
+        const visiblePreviews = element.querySelectorAll(
+            'fd-ui-button:not([style*="display: none"]) button[aria-label="PUBLIC_RECIPES.PRODUCT_VIEW"]',
+        );
+        expect(visiblePreviews).toHaveLength(1);
         buttons[0].click();
         buttons[1].click();
         expect(added).toHaveBeenNthCalledWith(1, {

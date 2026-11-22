@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiFocusWhenDirective, FdUiIconComponent, FdUiInputComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, fdUiCoerceInputTextValue, FdUiFocusWhenDirective, FdUiIconComponent, FdUiInputComponent } from 'fd-ui-kit';
 
 import type { ShoppingListId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListPage, ShoppingListSummary } from '../../../../shared/models/shopping-list.data';
@@ -24,7 +24,7 @@ export class ShoppingListBrowserComponent {
     public readonly createRequested = output<string | void>();
     protected readonly maxNameLength = 128;
     protected readonly search = signal<string | number | null>('');
-    private readonly searchText = computed(() => String(this.search() ?? '').trim());
+    private readonly searchText = computed(() => fdUiCoerceInputTextValue(this.search()).trim());
     protected readonly createName = computed(() =>
         !this.browser.loading() && !this.browser.failed() && this.matches().length === 0 ? this.searchText() : '',
     );

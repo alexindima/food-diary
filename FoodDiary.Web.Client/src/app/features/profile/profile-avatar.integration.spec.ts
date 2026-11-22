@@ -6,6 +6,7 @@ import { provideRouter, Router, type Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastHostComponent } from 'fd-ui-kit/toast/fd-ui-toast-host';
 import { defer, firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
@@ -1217,51 +1218,78 @@ describe('Profile password submission after leaving', () => {
     });
 });
 
+type ProfileGoogleLinkFixture = {
+    credential: string;
+    pending: Subject<User>;
+    linked: User;
+    connect: Mock<AuthService['linkGoogle']>;
+    router: RouterTestingHarness;
+    update: ProfileFixture['update'];
+    profile: HTMLElement;
+    security: Element;
+    google: HTMLButtonElement;
+    http: HttpTestingController;
+    toastMessages: () => string[];
+};
+
+async function setupProfileGoogleLinkAsync(): Promise<ProfileGoogleLinkFixture> {
+    const originalClientId = environment.googleClientId;
+    environment.googleClientId = 'fixture-profile-google-client';
+    onTestFinished(() => {
+        environment.googleClientId = originalClientId;
+    });
+    const credential = 'synthetic-profile-google-response';
+    const googleLabel = 'Connect test Google account';
+    const initializeAsync = vi.fn<GoogleIdentityService['initializeAsync']>().mockResolvedValue(undefined);
+    const renderButton: GoogleIdentityService['renderButton'] = host => {
+        const link = document.createElement('button');
+        link.type = 'button';
+        link.textContent = googleLabel;
+        link.addEventListener('click', () => {
+            initializeAsync.mock.lastCall?.[0].callback(credential);
+        });
+        host.replaceChildren(link);
+    };
+    const pending = new Subject<User>();
+    const account = profileOverview({ hasGoogleIdentity: false });
+    const linked = { ...account.user, hasGoogleIdentity: true };
+    const connect = vi.fn<AuthService['linkGoogle']>().mockReturnValueOnce(pending).mockReturnValueOnce(of(linked));
+    const { router, update } = await renderProfileAsync({
+        account: of(account),
+        providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            { provide: GoogleIdentityService, useValue: { initializeAsync, renderButton } },
+            { provide: AuthService, useValue: { isAdmin: (): boolean => false, linkGoogle: connect } },
+        ],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.auth}/sessions`).flush([]);
+    const profile = profilePage(router);
+    const security = profile.querySelector('fd-user-manage-security-card');
+    const summary = security?.closest('details')?.querySelector('summary');
+    if (security === null || !(summary instanceof HTMLElement)) {
+        throw new Error('Expected the rendered profile security section');
+    }
+    summary.click();
+    const google = await vi.waitFor(() => {
+        router.detectChanges();
+        return getButton(security, googleLabel);
+    });
+
+    const toast = TestBed.createComponent(FdUiToastHostComponent);
+    const toastMessages = (): string[] => {
+        toast.detectChanges();
+        const root = toast.nativeElement as HTMLElement;
+        return Array.from(root.querySelectorAll('.fd-ui-toast-host__message'), message => message.textContent.trim());
+    };
+    return { credential, pending, linked, connect, router, update, profile, security, google, http, toastMessages };
+}
+
 describe('Profile Google connection', () => {
     it('deduplicates the open connection request and keeps the rendered Google control available for retry', async () => {
-        const originalClientId = environment.googleClientId;
-        environment.googleClientId = 'fixture-profile-google-client';
-        onTestFinished(() => {
-            environment.googleClientId = originalClientId;
-        });
-        const credential = 'synthetic-profile-google-response';
-        const googleLabel = 'Connect test Google account';
-        const initializeAsync = vi.fn<GoogleIdentityService['initializeAsync']>().mockResolvedValue(undefined);
-        const renderButton: GoogleIdentityService['renderButton'] = host => {
-            const link = document.createElement('button');
-            link.type = 'button';
-            link.textContent = googleLabel;
-            link.addEventListener('click', () => {
-                initializeAsync.mock.lastCall?.[0].callback(credential);
-            });
-            host.replaceChildren(link);
-        };
-        const pending = new Subject<User>();
-        const account = profileOverview({ hasGoogleIdentity: false });
-        const linked = { ...account.user, hasGoogleIdentity: true };
-        const connect = vi.fn<AuthService['linkGoogle']>().mockReturnValueOnce(pending).mockReturnValueOnce(of(linked));
-        const { router, update } = await renderProfileAsync({
-            account: of(account),
-            providers: [
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                { provide: GoogleIdentityService, useValue: { initializeAsync, renderButton } },
-                { provide: AuthService, useValue: { isAdmin: (): boolean => false, linkGoogle: connect } },
-            ],
-        });
-        const http = TestBed.inject(HttpTestingController);
-        http.expectOne(request => request.method === 'GET' && request.url === `${environment.apiUrls.auth}/sessions`).flush([]);
-        const profile = profilePage(router);
-        const security = profile.querySelector('fd-user-manage-security-card');
-        const summary = security?.closest('details')?.querySelector('summary');
-        if (security === null || !(summary instanceof HTMLElement)) {
-            throw new Error('Expected the rendered profile security section');
-        }
-        summary.click();
-        const google = await vi.waitFor(() => {
-            router.detectChanges();
-            return getButton(security, googleLabel);
-        });
+        const { credential, pending, connect, update, profile, router, security, google, http, toastMessages } =
+            await setupProfileGoogleLinkAsync();
 
         google.click();
         google.click();
@@ -1274,14 +1302,40 @@ describe('Profile Google connection', () => {
         expect(profile.querySelector('.user-manage__form > .user-manage__error')?.textContent).toContain('USER_MANAGE.GOOGLE_LINK_ERROR');
         expect(google.closest('[aria-busy]')?.getAttribute('aria-busy')).toBe('false');
         expect(security.textContent).toContain('USER_MANAGE.GOOGLE_NOT_CONNECTED');
+        expect(toastMessages()).toContain('USER_MANAGE.GOOGLE_LINK_ERROR');
 
         google.click();
         router.detectChanges();
         expect(connect.mock.calls).toEqual([[credential], [credential]]);
         expect(google.isConnected).toBe(false);
         expect(security.textContent).toContain('USER_MANAGE.GOOGLE_CONNECTED_AS');
+        expect(toastMessages()).toContain('USER_MANAGE.GOOGLE_LINK_SUCCESS');
         expect(profile.querySelector('.user-manage__form > .user-manage__error')).toBeNull();
         expect(update).not.toHaveBeenCalled();
+        http.verify();
+    });
+
+    it.each(['success', 'failure'] as const)('keeps a late Google link %s out of the new page', async outcome => {
+        const { credential, pending, linked, connect, router, profile, google, http, toastMessages } = await setupProfileGoogleLinkAsync();
+        expect(toastMessages()).toEqual([]);
+        google.click();
+        expect(connect).toHaveBeenCalledExactlyOnceWith(credential);
+        expect(pending.observed).toBe(true);
+
+        await router.navigateByUrl(OTHER_URL, OtherPageComponent);
+        expect(profile.isConnected).toBe(false);
+        expect(TestBed.inject(Router).url).toBe(OTHER_URL);
+        expect(pending.observed).toBe(true);
+
+        if (outcome === 'success') {
+            pending.next(linked);
+            pending.complete();
+        } else {
+            pending.error(new Error('Connection unavailable'));
+        }
+        expect(connect).toHaveBeenCalledExactlyOnceWith(credential);
+        expect(TestBed.inject(Router).url).toBe(OTHER_URL);
+        expect(toastMessages()).toEqual([]);
         http.verify();
     });
 });

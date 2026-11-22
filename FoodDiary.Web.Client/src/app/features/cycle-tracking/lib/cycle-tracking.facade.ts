@@ -2,7 +2,7 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
-import type { CycleFactorId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
+import type { CycleFactorId, CycleProfileId, MenstrualEpisodeId } from '../../../shared/models/semantics/entity-id';
 import { CyclesService } from '../api/cycles.service';
 import { CycleDayFacade } from './cycle-day.facade';
 import { CycleEpisodeFacade } from './cycle-episode.facade';
@@ -31,6 +31,8 @@ export class CycleTrackingFacade {
     public readonly isSavingSettings = this.state.isSavingSettings;
     public readonly isDeletingCycle = this.state.isDeletingCycle;
     public readonly isSavingDay = this.state.isSavingDay;
+    public readonly isDayMutationPending = this.state.isDayMutationPending;
+    public readonly isProfileMutationPending = this.state.isProfileMutationPending;
     public readonly isSavingFactor = this.state.isSavingFactor;
     public readonly isSavingEpisode = this.state.isSavingEpisode;
     public readonly excludingEpisodeId = this.state.excludingEpisodeId;
@@ -80,8 +82,8 @@ export class CycleTrackingFacade {
     public saveDay(): void {
         this.day.saveDay();
     }
-    public beginDayEntry(): void {
-        this.day.beginDayEntry();
+    public beginDayEntry(profileId: CycleProfileId): void {
+        this.day.beginDayEntry(profileId);
     }
     public editDay(date: string): void {
         this.day.editDay(date);

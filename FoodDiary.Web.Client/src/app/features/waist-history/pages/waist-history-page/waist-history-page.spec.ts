@@ -1,9 +1,10 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -295,14 +296,27 @@ describe('Waist history page composition', () => {
     });
 });
 describe('Measurement deletion confirmation', () => {
-    it.each([true, false, undefined])('deletes a measurement only after confirmation: %s', confirmed => {
-        const { component, open } = context;
+    it.each([true, false, undefined])('deletes the dated row only after confirmation: %s', async confirmed => {
+        const { fixture, open } = context;
         const confirmation = new Subject<boolean | undefined>();
         open.mockReturnValueOnce({ afterClosed: () => confirmation });
         const remove = vi.spyOn(TestBed.inject(WaistEntriesService), 'remove');
-        component['deleteEntry'](ENTRY);
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { WAIST_HISTORY: { DELETE_CONFIRM_MESSAGE: 'Remove the measurement from {{date}}?' } });
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const removeButton = host.querySelector<HTMLButtonElement>(
+            'fd-waist-history-entries-card button[aria-label="WAIST_HISTORY.DELETE"]',
+        );
+        expect(removeButton).not.toBeNull();
+        removeButton?.click();
+
         expect(open.mock.calls[0]?.[0]).toBe(ConfirmDeleteDialogComponent);
-        expect(open.mock.calls[0]?.[1]).toMatchObject({ data: { title: 'WAIST_HISTORY.DELETE_CONFIRM_TITLE' } });
+        expect(open.mock.calls[0]?.[1]).toMatchObject({
+            data: { title: 'WAIST_HISTORY.DELETE_CONFIRM_TITLE', message: 'Remove the measurement from Jun 20, 2026?' },
+        });
         expect(remove).not.toHaveBeenCalled();
         confirmation.next(confirmed);
         confirmation.next(true);

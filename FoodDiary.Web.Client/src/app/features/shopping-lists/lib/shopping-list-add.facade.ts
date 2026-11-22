@@ -91,11 +91,8 @@ export class ShoppingListAddFacade {
         this.message.set(null);
         const scopeRevision = this.scopeRevision;
         try {
-            if (!(await this.prepareAsync(scopeRevision, remaining[0].item, remaining.length, confirm)) || !this.isCurrent(scopeRevision)) {
-                return;
-            }
-            const target = this.target();
-            if (target === null) {
+            const target = await this.prepareAsync(scopeRevision, remaining[0].item, remaining.length, confirm);
+            if (target === null || !this.isCurrent(scopeRevision)) {
                 return;
             }
             const pending = remaining.filter(entry => !this.isAdded(entry.index));
@@ -127,14 +124,19 @@ export class ShoppingListAddFacade {
             ? firstValueFrom(this.api.create({ name: target.name, items: appendShoppingItems([], items) }))
             : this.appendAsync(scopeRevision, entityId<'shopping-list'>(target.id), items);
     }
-    private async prepareAsync(scopeRevision: number, item: ShoppingListItemDto, count: number, confirm: boolean): Promise<boolean> {
+    private async prepareAsync(
+        scopeRevision: number,
+        item: ShoppingListItemDto,
+        count: number,
+        confirm: boolean,
+    ): Promise<ShoppingListTarget | null> {
         await this.authenticateAsync();
         if (!this.isCurrent(scopeRevision)) {
-            return false;
+            return null;
         }
         return confirm
             ? this.chooseTargetAsync(scopeRevision, undefined, count)
-            : this.target() !== null || this.chooseTargetAsync(scopeRevision, item);
+            : (this.target() ?? this.chooseTargetAsync(scopeRevision, item));
     }
     private async appendAsync(scopeRevision: number, id: ShoppingListId, items: ShoppingListItemDto[]): Promise<ShoppingList | null> {
         const list = await firstValueFrom(this.api.getById(id));
@@ -152,11 +154,11 @@ export class ShoppingListAddFacade {
             }),
         );
     }
-    private async chooseTargetAsync(scopeRevision: number, item?: ShoppingListItemDto, count?: number): Promise<boolean> {
+    private async chooseTargetAsync(scopeRevision: number, item?: ShoppingListItemDto, count?: number): Promise<ShoppingListTarget | null> {
         const lists = await firstValueFrom(this.api.getSelectionPage());
         const { ShoppingListPickerComponent } = await import('../dialogs/shopping-list-picker/shopping-list-picker');
         if (!this.isCurrent(scopeRevision)) {
-            return false;
+            return null;
         }
         const ref = this.dialogs.open<InstanceType<typeof ShoppingListPickerComponent>, ShoppingListPickerData, ShoppingListTarget>(
             ShoppingListPickerComponent,
@@ -173,10 +175,10 @@ export class ShoppingListAddFacade {
         try {
             const target = await firstValueFrom(ref.afterClosed());
             if (target === undefined || !this.isCurrent(scopeRevision)) {
-                return false;
+                return null;
             }
             this.target.set(target);
-            return true;
+            return target;
         } finally {
             if (scopeRevision === this.scopeRevision) {
                 this.closePicker = undefined;

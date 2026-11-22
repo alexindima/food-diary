@@ -143,8 +143,8 @@ describe('FastingControlsComponent active cyclic session', () => {
         facade.currentSession.set(createCyclicSession());
         fixture.detectChanges();
 
-        component['skipCyclicDay']();
-        component['postponeCyclicDay']();
+        getNativeButtonByText(fixture, 'FASTING.SKIP_FASTING_PERIOD').click();
+        getNativeButtonByText(fixture, 'FASTING.SKIP_DAY').click();
 
         expect(dialogService.open).toHaveBeenCalledTimes(2);
         expect(facade.skipCyclicDay).toHaveBeenCalledTimes(1);

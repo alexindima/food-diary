@@ -93,11 +93,7 @@ export class ChangePasswordDialogComponent {
         this.formModel();
 
         return ERROR_FIELDS.reduce<FieldErrors>((errors, field) => {
-            if (
-                field === 'newPassword' &&
-                this.form.newPassword().getError('samePassword') !== undefined &&
-                (this.form.newPassword().dirty() || this.form.newPassword().touched())
-            ) {
+            if (field === 'newPassword' && this.form.newPassword().getError('samePassword') !== undefined) {
                 errors[field] = this.translateService.instant('USER_MANAGE.CHANGE_PASSWORD_SAME_ERROR');
                 return errors;
             }

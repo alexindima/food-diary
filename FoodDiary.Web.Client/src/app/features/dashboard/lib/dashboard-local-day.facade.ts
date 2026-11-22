@@ -18,7 +18,8 @@ export class DashboardLocalDayFacade {
     public readonly changes = this.dayChanges.asObservable();
 
     public constructor() {
-        if (!this.browserWindow.isAvailable()) {
+        const view = this.document.defaultView;
+        if (view === null || !this.browserWindow.isAvailable()) {
             return;
         }
         fromEvent(this.document, 'visibilitychange')
@@ -28,11 +29,9 @@ export class DashboardLocalDayFacade {
                     this.refresh();
                 }
             });
-        if (this.document.defaultView !== null) {
-            fromEvent(this.document.defaultView, 'focus')
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.refresh());
-        }
+        fromEvent(view, 'focus')
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.refresh());
         this.scheduleMidnight();
         this.destroyRef.onDestroy(() => {
             this.browserWindow.clearTimeout(this.midnightTimer);

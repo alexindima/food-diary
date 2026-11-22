@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiTextEnterDirective } from 'fd-ui-kit';
@@ -19,7 +19,6 @@ const SECOND_MS = 1000;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageBackupEmailComponent {
-    private readonly emailInput = viewChild(FdUiInputComponent);
     protected readonly attempted = signal(false);
     protected readonly facade = inject(ProfileManageFacade);
     protected readonly email = signal(this.facade.backupEmailSentTo() ?? '');
@@ -45,14 +44,13 @@ export class UserManageBackupEmailComponent {
         this.email.set(fdUiCoerceInputTextValue(value));
     }
 
-    protected submit(event?: Event): void {
-        event?.preventDefault();
+    protected submit(emailInput: FdUiInputComponent): void {
         this.attempted.set(true);
         if (!this.validEmail()) {
-            this.emailInput()?.focus();
+            emailInput.focus();
             return;
         }
-        if (this.validEmail() && !this.facade.isRequestingBackupEmail() && this.resendSeconds() === 0) {
+        if (!this.facade.isRequestingBackupEmail() && this.resendSeconds() === 0) {
             void this.facade.requestBackupEmailAsync(this.email());
         }
     }

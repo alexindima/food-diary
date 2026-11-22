@@ -22,7 +22,6 @@ import { BODY_TARGET_MAXIMUMS, isBodyTargetValid, isGoalNumberValid } from './go
 import { GoalsNumberInputDirective } from './goals-number-input.directive';
 
 const BODY_TARGET_FRACTION_DIGITS = 2;
-const DISPLAY_PRECISION_FACTOR = 100;
 
 @Component({
     selector: 'fd-goals-side-cards',
@@ -58,8 +57,12 @@ export class GoalsSideCardsComponent {
     protected readonly waistInvalid = computed(
         () => this.invalidBodyTargets().waist || !isBodyTargetValid('waist', this.bodyTargets().waist),
     );
-    protected readonly weightMaximum = computed(() => this.displayMaximum('weight'));
-    protected readonly waistMaximum = computed(() => this.displayMaximum('waist'));
+    protected readonly weightMaximum = computed(() =>
+        this.measurements.displayWeight(BODY_TARGET_MAXIMUMS.weight, BODY_TARGET_FRACTION_DIGITS),
+    );
+    protected readonly waistMaximum = computed(() =>
+        this.measurements.displayLength(BODY_TARGET_MAXIMUMS.waist, BODY_TARGET_FRACTION_DIGITS),
+    );
 
     public constructor() {
         afterRenderEffect({
@@ -78,18 +81,6 @@ export class GoalsSideCardsComponent {
                 field.value = value;
             }
         }
-    }
-
-    private displayMaximum(key: BodyTargetKey): number {
-        const limit = BODY_TARGET_MAXIMUMS[key];
-        const displayed =
-            key === 'weight'
-                ? this.measurements.displayWeight(limit, BODY_TARGET_FRACTION_DIGITS)
-                : this.measurements.displayLength(limit, BODY_TARGET_FRACTION_DIGITS);
-        const canonical = key === 'weight' ? this.measurements.canonicalWeight(displayed) : this.measurements.canonicalLength(displayed);
-        return canonical > limit
-            ? Math.round((displayed - 1 / DISPLAY_PRECISION_FACTOR) * DISPLAY_PRECISION_FACTOR) / DISPLAY_PRECISION_FACTOR
-            : displayed;
     }
 
     protected updateBodyTarget(key: BodyTargetKey, field: HTMLInputElement): void {

@@ -234,13 +234,8 @@ export class RecipeListComponent {
                     return;
                 }
 
-                const actionResult = result;
-                if (actionResult.action === 'FavoriteChanged') {
-                    return;
-                }
-
                 void this.recipeListFacade.handleDetailActionAsync(
-                    actionResult,
+                    result,
                     currentRecipe,
                     this.searchModel().search,
                     this.searchModel().onlyMine,

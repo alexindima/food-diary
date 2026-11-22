@@ -16,12 +16,13 @@
         } @else {
             <p>{{ 'USER_MANAGE.BACKUP_EMAIL_HINT' | translate }}</p>
             <fd-ui-input
+                #emailInput
                 type="email"
                 enterKeyHint="send"
                 [label]="'USER_MANAGE.BACKUP_EMAIL_LABEL' | translate"
                 [value]="email()"
                 [error]="attempted() && !validEmail() ? ('FORM_ERRORS.EMAIL' | translate) : null"
-                (fdUiTextEnter)="submit()"
+                (fdUiTextEnter)="submit(emailInput)"
                 (valueChange)="setEmail($event)"
             />
             <fd-ui-button
@@ -30,7 +31,7 @@
                 [loading]="facade.isRequestingBackupEmail()"
                 [disabled]="resendSeconds() > 0"
                 [disabledReason]="'USER_MANAGE.BACKUP_EMAIL_COOLDOWN' | translate: { seconds: resendSeconds() }"
-                (click)="submit()"
+                (click)="submit(emailInput)"
             >
                 {{ (facade.backupEmailSentTo() ? 'USER_MANAGE.BACKUP_EMAIL_RESEND' : 'USER_MANAGE.BACKUP_EMAIL_SEND') | translate }}
             </fd-ui-button>

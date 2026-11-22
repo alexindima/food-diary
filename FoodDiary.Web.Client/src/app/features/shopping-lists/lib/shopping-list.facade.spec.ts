@@ -670,10 +670,10 @@ describe('ShoppingListFacade autosave', () => {
         expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
         expect(facade.list()?.name).toBe('Renamed');
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
-        expect(shoppingListService.update).toHaveBeenLastCalledWith(
-            list.id,
-            expect.objectContaining({ name: 'Renamed', items: [expect.objectContaining({ name: 'Milk' })] }),
-        );
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(list.id, {
+            expectedRevision: list.revision,
+            items: [expect.objectContaining({ name: 'Milk' })],
+        });
     });
 
     it('keeps newer item edits and resumes their save when an inline rename fails', () => {
@@ -691,10 +691,10 @@ describe('ShoppingListFacade autosave', () => {
         expect(facade.list()?.name).toBe(list.name);
         expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.SAVE_ERROR');
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
-        expect(shoppingListService.update).toHaveBeenLastCalledWith(
-            list.id,
-            expect.objectContaining({ name: list.name, items: [expect.objectContaining({ name: 'Milk' })] }),
-        );
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(list.id, {
+            expectedRevision: list.revision,
+            items: [expect.objectContaining({ name: 'Milk' })],
+        });
     });
 });
 
@@ -1024,7 +1024,7 @@ describe('ShoppingListFacade conditional updates', () => {
         expect(facade.list()).toEqual(list);
     });
 
-    it('uses the renamed list revision and name when saving an item added during rename', () => {
+    it('uses the new revision without renaming again when saving an item added during rename', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
         const response = new Subject<ShoppingList>();
@@ -1035,14 +1035,10 @@ describe('ShoppingListFacade conditional updates', () => {
         expect(facade.list()?.name).toBe('First rename');
         expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
-        expect(shoppingListService.update).toHaveBeenLastCalledWith(
-            list.id,
-            expect.objectContaining({
-                expectedRevision: 'b'.repeat(REVISION_LENGTH),
-                name: 'First rename',
-                items: [expect.objectContaining({ name: 'Milk' })],
-            }),
-        );
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(list.id, {
+            expectedRevision: 'b'.repeat(REVISION_LENGTH),
+            items: [expect.objectContaining({ name: 'Milk' })],
+        });
     });
 });
 
@@ -1173,7 +1169,6 @@ describe('ShoppingListFacade conflicted mutations', () => {
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         expect(shoppingListService.update).toHaveBeenLastCalledWith(list.id, {
             expectedRevision: fresh.revision,
-            name: fresh.name,
             items: [expect.objectContaining({ name: 'Milk' })],
         });
     });

@@ -82,40 +82,43 @@ export class RequiredPasswordChangeComponent {
                 await this.navigationService.navigateToHomeAsync();
             }
         } catch (error: unknown) {
-            this.showSubmissionError(error);
+            this.showSubmissionError(error, 'AUTH.REQUIRED_PASSWORD_CHANGE.SESSION_ERROR');
         } finally {
             this.isSubmitting.set(false);
         }
     }
 
     private async persistPasswordAsync(value: RequiredPasswordChangeFormModel): Promise<string | null> {
-        const success = await firstValueFrom(
-            this.userFacade.changePassword({
-                currentPassword: value.currentPassword,
-                newPassword: value.newPassword,
-            }),
-        );
-        if (!this.isPageActive()) {
+        try {
+            const success = await firstValueFrom(
+                this.userFacade.changePassword({
+                    currentPassword: value.currentPassword,
+                    newPassword: value.newPassword,
+                }),
+            );
+            if (!this.isPageActive()) {
+                return null;
+            }
+            if (!success) {
+                this.errorMessage.set(this.translateService.instant('AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'));
+                return null;
+            }
+            this.changedPassword = value.newPassword;
+            return value.newPassword;
+        } catch (error: unknown) {
+            this.showSubmissionError(error, 'AUTH.REQUIRED_PASSWORD_CHANGE.ERROR');
             return null;
         }
-        if (!success) {
-            this.errorMessage.set(this.translateService.instant('AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'));
-            return null;
-        }
-        this.changedPassword = value.newPassword;
-        return value.newPassword;
     }
 
-    private showSubmissionError(error: unknown): void {
+    private showSubmissionError(error: unknown, fallbackKey: string): void {
         if (!this.isPageActive()) {
             return;
         }
         const key =
             error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests)
                 ? 'FORM_ERRORS.RATE_LIMITED'
-                : this.changedPassword === null
-                  ? 'AUTH.REQUIRED_PASSWORD_CHANGE.ERROR'
-                  : 'AUTH.REQUIRED_PASSWORD_CHANGE.SESSION_ERROR';
+                : fallbackKey;
         this.errorMessage.set(this.translateService.instant(key));
     }
 

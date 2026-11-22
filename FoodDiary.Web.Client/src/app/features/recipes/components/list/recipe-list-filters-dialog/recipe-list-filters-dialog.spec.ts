@@ -3,6 +3,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { RecipeListFiltersDialogComponent } from './recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogData } from './recipe-list-filters-dialog.types';
@@ -26,6 +27,7 @@ let fixture: ComponentFixture<RecipeListFiltersDialogComponent>;
 let dialogRefSpy: { close: ReturnType<typeof vi.fn> };
 
 function createComponent(data: RecipeListFiltersDialogData = DEFAULT_DIALOG_DATA): void {
+    stubScrollIntoView();
     dialogRefSpy = { close: vi.fn() };
 
     TestBed.configureTestingModule({
@@ -172,6 +174,30 @@ function filterButton(root: HTMLElement, label: string): HTMLButtonElement {
     }
     return button;
 }
+
+describe('RecipeListFiltersDialogComponent category', () => {
+    it('clears the category through Any category and retains the other filters', () => {
+        const selected: RecipeListFiltersDialogData = {
+            onlyMine: true,
+            category: 'desserts',
+            maxTotalTime: 30,
+            caloriesFrom: CALORIES_FROM,
+            caloriesTo: CALORIES_TO,
+            hasImage: true,
+        };
+        createComponent(selected);
+        const root = fixture.nativeElement as HTMLElement;
+        const category = filterButton(root, 'RECIPE_CATEGORIES.desserts');
+        category.click();
+        fixture.detectChanges();
+        filterButton(document.body, 'PUBLIC_RECIPES.ANY_CATEGORY').click();
+        fixture.detectChanges();
+
+        filterButton(root, 'RECIPE_LIST.FILTER_APPLY_BUTTON').click();
+
+        expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith({ ...selected, category: null });
+    });
+});
 
 describe('RecipeListFiltersDialogComponent calorie validation', () => {
     it.each([

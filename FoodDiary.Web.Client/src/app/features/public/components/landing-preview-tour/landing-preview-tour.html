@@ -60,7 +60,7 @@
                             class="landing-tour__card"
                             [product]="product"
                             [imageUrl]="product.imageUrl || undefined"
-                            (addToMeal)="addPreviewProduct(product)"
+                            (addToMeal)="addPreviewProduct(product, draftBlock)"
                             (open)="navigateToAuthAsync('login')"
                         />
                     }
@@ -69,7 +69,7 @@
                             class="landing-tour__card"
                             [recipe]="recipe"
                             [imageUrl]="recipe.imageUrl || undefined"
-                            (addToMeal)="addPreviewRecipe(recipe)"
+                            (addToMeal)="addPreviewRecipe(recipe, draftBlock)"
                             (open)="navigateToAuthAsync('login')"
                         />
                     }

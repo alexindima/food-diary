@@ -3,9 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective, FdUiInputComponent, FdUiLevelIndicatorComponent, FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiLevelIndicatorComponent, FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
+import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { merge, startWith } from 'rxjs';
 
@@ -96,8 +97,8 @@ export class LessonsListPageComponent {
         this.facade.resetPage();
     }
 
-    protected updateSearch(value: string | number | null): void {
-        this.searchQuery.set(typeof value === 'string' ? value : '');
+    protected updateSearch(value: FdUiInputValue): void {
+        this.searchQuery.set(fdUiCoerceInputTextValue(value));
         this.facade.resetPage();
     }
 

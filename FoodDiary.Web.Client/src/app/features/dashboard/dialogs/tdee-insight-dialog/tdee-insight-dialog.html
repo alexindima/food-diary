@@ -23,9 +23,9 @@
 
     <fd-tdee-insight-dialog-footer
         fdUiDialogFooter
-        [showSuggestion]="showSuggestion"
+        [suggestedTarget]="suggestedTarget"
         [isApplying]="isApplying()"
         (dialogClose)="close($event)"
-        (suggestionApply)="applySuggestionAsync()"
+        (suggestionApply)="applySuggestionAsync($event)"
     />
 </fd-ui-dialog>

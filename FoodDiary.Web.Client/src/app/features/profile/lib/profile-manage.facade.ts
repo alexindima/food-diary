@@ -182,11 +182,17 @@ export class ProfileManageFacade {
             )
             .subscribe({
                 next: user => {
+                    if (this.destroyRef.destroyed) {
+                        return;
+                    }
                     this.user.set(user);
                     this.clearGlobalError();
                     this.toastService.success(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_SUCCESS'));
                 },
                 error: () => {
+                    if (this.destroyRef.destroyed) {
+                        return;
+                    }
                     this.setGlobalError('USER_MANAGE.GOOGLE_LINK_ERROR');
                     this.toastService.error(this.translateService.instant('USER_MANAGE.GOOGLE_LINK_ERROR'));
                 },

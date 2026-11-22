@@ -1,4 +1,5 @@
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { GuardsCheckStart, provideRouter, type ResolveFn, ResolveStart, Router } from '@angular/router';
@@ -11,6 +12,7 @@ import { filter, firstValueFrom, isObservable, type Observable, of, Subject, thr
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
+import type { ShoppingListOverviewHttpResponse } from '../../shared/api/sdk/generated/model/shopping-list-overview-http-response';
 import { MeasurementUnit, ProductType } from '../../shared/models/product.data';
 import { utcInstant } from '../../shared/models/semantics/date-value';
 import { entityId } from '../../shared/models/semantics/entity-id';
@@ -447,7 +449,7 @@ describe('Shopping list rename while an item autosave is pending', () => {
         inputText(editor, draft);
         editor.focus();
         await waitForShoppingAutosaveAsync(harness, api.update, 1);
-        expect(api.update.mock.calls[0][1].name).toBe(GROCERIES.name);
+        expect(api.update.mock.calls[0][1]).not.toHaveProperty('name');
 
         if (finish === 'Enter') {
             editor.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
@@ -515,7 +517,6 @@ describe('Shopping item changes while a list name is saving', () => {
             () => {
                 expect(api.update).toHaveBeenNthCalledWith(2, GROCERIES.id, {
                     expectedRevision: resultingList.revision,
-                    name: resultingList.name,
                     items: [expect.objectContaining({ name: GROCERIES.items[0].name, isChecked: true })],
                 });
             },
@@ -558,14 +559,10 @@ describe('Shopping departure while a list name is saving', () => {
         const departure = router.navigateByUrl(HOME_URL);
         await waitForShoppingAutosaveAsync(harness, api.update, 2);
         expect(router.url).toBe(SHOPPING_URL);
-        expect(api.update).toHaveBeenLastCalledWith(
-            GROCERIES.id,
-            expect.objectContaining({
-                expectedRevision: SAVED_REVISION,
-                name: renamed.name,
-                items: [expect.objectContaining({ id: GROCERIES.items[0].id, isChecked: true })],
-            }),
-        );
+        expect(api.update).toHaveBeenLastCalledWith(GROCERIES.id, {
+            expectedRevision: SAVED_REVISION,
+            items: [expect.objectContaining({ id: GROCERIES.items[0].id, isChecked: true })],
+        });
         saving.next({ ...renamed, items: renamed.items.map(item => ({ ...item, isChecked: true })) });
         saving.complete();
         await expect(departure).resolves.toBe(true);
@@ -1804,7 +1801,13 @@ describe('Shopping list rename draft during conflict recovery', () => {
         inputText(editor, nameDraft);
         editor.focus();
         await waitForShoppingAutosaveAsync(harness, api.update, 1);
-        expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, expect.objectContaining({ name: GROCERIES.name }));
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, {
+            expectedRevision: FIRST_REVISION,
+            items: [
+                expect.objectContaining({ name: GROCERIES.items[0].name }),
+                expect.objectContaining({ name: CREATED_SHOPPING_ITEM_NAME }),
+            ],
+        });
 
         saving.error(new HttpErrorResponse({ status: 409 }));
         harness.detectChanges();
@@ -2430,6 +2433,115 @@ describe('Shopping operation dialogs after route departure', () => {
     });
 });
 
+it('saves a checked item when a server-accepted shopping list name trims to empty in the browser', async () => {
+    const listId = entityId<'shopping-list'>('e43f58ec-e85f-49b3-bb40-d9ad2ea58143');
+    const itemId = entityId<'shopping-list-item'>('3694b467-f893-4cdd-b367-993d5c40c31e');
+    const item = { ...GROCERIES.items[0], id: itemId, shoppingListId: listId };
+    const list = { ...GROCERIES, id: listId, name: '\uFEFF', items: [item] };
+    const response = {
+        selectedList: list,
+        lists: { items: [summary(list)], hasMore: false, nextPage: null },
+    } satisfies ShoppingListOverviewHttpResponse;
+    const overview = new Subject<ShoppingListOverview>();
+    const destination = new Subject<boolean>();
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    const { harness, api } = await renderShoppingAsync(overview, false, () => destination);
+    const transport = TestBed.runInInjectionContext(() => new ShoppingListService());
+    transport.getOverview().subscribe(overview);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.method === 'GET' && request.url.endsWith('/api/v1/shopping-lists/overview')).flush(response);
+    harness.detectChanges();
+
+    expect(requiredElement(page(harness), '.shopping-list__summary-title').textContent).toBe(list.name);
+    const saving = new Subject<void>();
+    api.update.mockImplementation((id, update) => {
+        saving.next();
+        return transport.update(id, update);
+    });
+    const checkbox = requiredInput(page(harness), 'fd-shopping-list-items-panel input[type="checkbox"]');
+    expect(checkbox.checked).toBe(false);
+    expect(checkbox.matches(':enabled')).toBe(true);
+    checkbox.click();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(requiredInput(page(harness), '.shopping-list__purchased input[type="checkbox"]').checked).toBe(true);
+    });
+
+    const router = TestBed.inject(Router);
+    const resolving = firstValueFrom(router.events.pipe(filter(event => event instanceof ResolveStart && event.url === HOME_URL)));
+    const savingStarted = firstValueFrom(saving);
+    const departure = router.navigateByUrl(HOME_URL);
+    try {
+        const firstEvent = await Promise.race([savingStarted.then(() => 'save'), resolving.then(() => 'navigation')]);
+        expect(firstEvent).toBe('save');
+        const update = http.expectOne(request => request.method === 'PATCH' && request.url.endsWith(`/api/v1/shopping-lists/${listId}`));
+        expect(update.request.body).toEqual({
+            expectedRevision: FIRST_REVISION,
+            items: [expect.objectContaining({ id: itemId, isChecked: true })],
+        });
+        update.flush({ ...list, revision: SAVED_REVISION, items: [{ ...item, isChecked: true }] });
+        await resolving;
+        harness.detectChanges();
+        expect(requiredElement(page(harness), '.shopping-list__summary-title').textContent).toBe(list.name);
+    } finally {
+        destination.next(true);
+        destination.complete();
+    }
+    await expect(departure).resolves.toBe(true);
+    http.verify();
+});
+
+describe('Shopping exits superseded during item autosave', () => {
+    it.each([true, false])('settles one autosave for both departures (saved=%s)', async saves => {
+        const { harness, api } = await renderShoppingAsync();
+        const pending = new Subject<ShoppingList>();
+        const addedName = 'Crackers for the trip';
+        const saved = shoppingListWithAddedItem(GROCERIES, 'server-crackers', addedName, SAVED_REVISION);
+        api.update.mockReturnValueOnce(pending);
+        const host = page(harness);
+        addNativeItem(harness, addedName);
+
+        const router = TestBed.inject(Router);
+        const first = router.navigateByUrl(`${HOME_URL}?source=first`);
+        await waitForShoppingAutosaveAsync(harness, api.update, 1);
+        const secondStarted = firstValueFrom(router.events.pipe(filter(event => event instanceof GuardsCheckStart)));
+        const second = router.navigateByUrl(`${HOME_URL}?source=second`);
+        await secondStarted;
+        await expect(first).resolves.toBe(false);
+
+        expect(router.url).toBe(SHOPPING_URL);
+        expect(api.update).toHaveBeenCalledExactlyOnceWith(
+            GROCERIES.id,
+            expect.objectContaining({
+                expectedRevision: FIRST_REVISION,
+                items: [expect.objectContaining({ id: GROCERIES.items[0].id }), expect.objectContaining({ id: null, name: addedName })],
+            }),
+        );
+        if (saves) {
+            pending.next(saved);
+            pending.complete();
+            await expect(second).resolves.toBe(true);
+            expect(router.url).toBe(`${HOME_URL}?source=second`);
+            expect(page(harness).querySelector('h1')?.textContent).toBe('Home');
+        } else {
+            pending.error(new Error('Item save unavailable'));
+            await expect(second).resolves.toBe(false);
+            harness.detectChanges();
+            expect(router.url).toBe(SHOPPING_URL);
+            expect(host.textContent).toContain(addedName);
+            expect(host.textContent).toContain('SHOPPING_LIST.SAVE_ERROR');
+
+            api.update.mockReturnValueOnce(of(saved));
+            nativeButton(host, 'ERRORS.RETRY').click();
+            await waitForShoppingAutosaveAsync(harness, api.update, 2);
+            expect(api.update.mock.calls[1]).toEqual(api.update.mock.calls[0]);
+            expect(host.textContent).toContain(addedName);
+            expect(host.textContent).not.toContain('SHOPPING_LIST.SAVE_ERROR');
+        }
+        expect(api.update).toHaveBeenCalledTimes(saves ? 1 : 2);
+    });
+});
+
 describe('Shopping workspace after a departure is approved', () => {
     it.each([true, false])('dismisses the purchased confirmation while the destination loads (resolves=%s)', async resolves => {
         const destination = new Subject<boolean>();
@@ -2520,14 +2632,14 @@ function openShoppingListConfirmation(harness: RouterTestingHarness, label: stri
     return requiredElement(document, 'fd-confirm-delete-dialog');
 }
 
-function shoppingRowEditAction(harness: RouterTestingHarness, name: string): HTMLButtonElement {
+function shoppingRowMenuAction(harness: RouterTestingHarness, name: string, label = 'SHOPPING_LIST.EDIT_ITEM'): HTMLButtonElement {
     nativeButton(page(harness), `COMMON.MORE_ACTIONS: ${name}`).click();
     harness.detectChanges();
-    return nativeButton(requiredElement(document, '[role="menu"]'), 'SHOPPING_LIST.EDIT_ITEM');
+    return nativeButton(requiredElement(document, '[role="menu"]'), label);
 }
 
 function openShoppingRowEditor(harness: RouterTestingHarness, name: string): HTMLElement {
-    shoppingRowEditAction(harness, name).click();
+    shoppingRowMenuAction(harness, name).click();
     harness.detectChanges();
     return requiredElement(document, SHOPPING_ITEM_EDITOR);
 }
@@ -2573,7 +2685,7 @@ describe('Shopping new item editor identity', () => {
         api.update.mockReturnValueOnce(initialWrite).mockReturnValueOnce(of(edited));
         addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
         expect(requiredInput(page(harness), '.shopping-list__quick-add-input input').value).toBe('');
-        const editWhilePending = shoppingRowEditAction(harness, CREATED_SHOPPING_ITEM_NAME);
+        const editWhilePending = shoppingRowMenuAction(harness, CREATED_SHOPPING_ITEM_NAME);
         expect(editWhilePending.disabled).toBe(true);
         editWhilePending.click();
         expect(document.querySelector(SHOPPING_ITEM_EDITOR)).toBeNull();
@@ -2724,7 +2836,7 @@ it('does not open the outgoing item editor from a previously open row menu while
     await waitForShoppingAutosaveAsync(harness, api.update, 1);
     expect(api.getById).not.toHaveBeenCalled();
     const oldName = GROCERIES.items[0].name;
-    const outgoingEdit = shoppingRowEditAction(harness, oldName);
+    const outgoingEdit = shoppingRowMenuAction(harness, oldName);
     expect(outgoingEdit.disabled).toBe(false);
 
     outgoingSave.next(saved);
@@ -2757,32 +2869,43 @@ it('does not open the outgoing item editor from a previously open row menu while
     expect(openedDuringLoad).toBe(false);
 });
 
-it('ignores a queued row Edit after the selected list changes before the menu redraws', async () => {
+it.each([
+    { action: 'Edit', menuLabel: 'SHOPPING_LIST.EDIT_ITEM' },
+    { action: 'Remove', menuLabel: 'SHOPPING_LIST.REMOVE_ITEM' },
+    { action: 'Check', menuLabel: null },
+])('ignores a queued row $action after the selected list changes before redraw', async ({ menuLabel }) => {
     const { harness, api } = await renderShoppingAsync();
     const saving = new Subject<ShoppingList>();
     const loading = new Subject<ShoppingList | null>();
-    api.update.mockReturnValueOnce(saving);
+    api.update.mockReturnValueOnce(saving).mockReturnValueOnce(of(TRAVEL));
     api.getById.mockReturnValueOnce(loading);
     addNativeItem(harness, CREATED_SHOPPING_ITEM_NAME);
     const host = page(harness);
     nativeButton(host, TRAVEL.name).click();
     await waitForShoppingAutosaveAsync(harness, api.update, 1);
-    const outgoingEdit = shoppingRowEditAction(harness, GROCERIES.items[0].name);
+    const outgoingAction =
+        menuLabel === null
+            ? requiredInput(host, '.shopping-list__item input[type="checkbox"]')
+            : shoppingRowMenuAction(harness, GROCERIES.items[0].name, menuLabel);
 
     saving.next(shoppingListWithAddedItem(GROCERIES, 'saved-beans', CREATED_SHOPPING_ITEM_NAME, SAVED_REVISION));
     saving.complete();
     expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
     loading.next(TRAVEL);
     loading.complete();
-    expect(outgoingEdit.isConnected).toBe(true);
-    expect(outgoingEdit.disabled).toBe(false);
-    outgoingEdit.click();
+    expect(outgoingAction.isConnected).toBe(true);
+    expect(outgoingAction.matches(':disabled')).toBe(false);
+    outgoingAction.click();
+    if (outgoingAction instanceof HTMLInputElement) {
+        expect(outgoingAction.checked).toBe(true);
+    }
     harness.detectChanges();
 
     expect(requiredElement(host, '.shopping-list__summary-title').textContent).toBe(TRAVEL.name);
     expect(host.textContent).toContain(TRAVEL.items[0].name);
     expect(document.querySelector(SHOPPING_ITEM_EDITOR)).toBeNull();
-    expect(api.update).toHaveBeenCalledTimes(1);
+    await expect(TestBed.inject(Router).navigateByUrl(HOME_URL)).resolves.toBe(true);
+    expect(api.update).toHaveBeenCalledExactlyOnceWith(GROCERIES.id, expect.objectContaining({ expectedRevision: FIRST_REVISION }));
 });
 
 describe('Shopping item save while another list is loading', () => {
@@ -2902,6 +3025,10 @@ describe('Shopping saved edits before selecting another list', () => {
         expect(api.getById).toHaveBeenCalledExactlyOnceWith(TRAVEL.id);
         expect(host.textContent).not.toContain(secondName);
         expect(host.textContent).toContain(TRAVEL.items[0].name);
+
+        api.update.mockReturnValueOnce(of(TRAVEL));
+        await expect(TestBed.inject(Router).navigateByUrl(HOME_URL)).resolves.toBe(true);
+        expect(api.update).toHaveBeenCalledTimes(2);
     });
 });
 

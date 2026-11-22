@@ -114,7 +114,7 @@ export class CycleDayFacade {
 
     private prepareDaySave(): { profileId: CycleProfileId; formValue: CycleDayFormModel; date: string } | null {
         const currentCycle = this.state.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0 || this.state.isDayMutationPending()) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.state.isProfileMutationPending()) {
             return null;
         }
 
@@ -245,9 +245,9 @@ export class CycleDayFacade {
         return this.state.fertilitySignals().some(fertilitySignalItem => toCycleDateKey(fertilitySignalItem.date) === editingDateKey);
     }
 
-    public beginDayEntry(): void {
+    public beginDayEntry(profileId: CycleProfileId): void {
         this.resetDayDraft();
-        this.draftProfileId = this.state.cycle()?.id ?? null;
+        this.draftProfileId = profileId;
     }
 
     public editDay(date: string): void {
@@ -369,7 +369,7 @@ export class CycleDayFacade {
 
     public confirmPeriodStart(date: string): void {
         const target = this.resolveDayMutationTarget(date);
-        if (target === null || this.state.isEpisodeBusy()) {
+        if (target === null) {
             return;
         }
 
@@ -402,7 +402,7 @@ export class CycleDayFacade {
 
     private resolveDayMutationTarget(date: string): { profileId: CycleProfileId; dateKey: CalendarDate } | null {
         const cycle = this.state.cycle();
-        if (cycle === null || cycle.id.length === 0 || this.state.isDayMutationPending()) {
+        if (cycle === null || cycle.id.length === 0 || this.state.isProfileMutationPending()) {
             return null;
         }
 

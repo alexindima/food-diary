@@ -4,8 +4,8 @@ import { inject, Service, signal } from '@angular/core';
 import { usesPublicSiteChrome } from '../../config/public-site-paths';
 import {
     APP_THEMES,
+    APP_THEMES_BY_NAME,
     type AppSurfaceStyleName,
-    type AppThemeDefinition,
     type AppThemeName,
     type AppUiStyleName,
     DEFAULT_APP_SURFACE_STYLE,
@@ -119,10 +119,11 @@ export class ThemeService {
         this.themeState.set(theme);
 
         const root = this.document.documentElement;
+        const { colorScheme, browserThemeColor } = APP_THEMES_BY_NAME[theme];
         root.setAttribute('data-theme', theme);
-        root.style.colorScheme = this.getThemeDefinition(theme).colorScheme;
+        root.style.colorScheme = colorScheme;
 
-        this.updateBrowserThemeColor(this.getThemeDefinition(theme).browserThemeColor);
+        this.updateBrowserThemeColor(browserThemeColor);
 
         if (persist) {
             this.persistThemePreference(theme);
@@ -167,10 +168,6 @@ export class ThemeService {
         }
 
         return value;
-    }
-
-    private getThemeDefinition(themeName: AppThemeName): AppThemeDefinition {
-        return APP_THEMES.find(theme => theme.name === themeName) ?? APP_THEMES[0];
     }
 
     private resolveTheme(theme: string | null | undefined): AppThemeName {

@@ -9,6 +9,7 @@ import {
     inject,
     Injector,
     input,
+    linkedSignal,
     signal,
     untracked,
 } from '@angular/core';
@@ -140,7 +141,8 @@ export class MealManageFormComponent implements UnsavedEditor {
     });
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
-    protected readonly photosUploading = signal(false);
+    protected readonly photoOwnerId = computed(() => this.meal()?.id ?? null);
+    protected readonly photosUploading = linkedSignal({ source: this.photoOwnerId, computation: () => false });
     protected readonly isLoadingRecipeAmounts = signal(false);
     protected readonly isBusy = computed(() => this.isSubmitting() || this.isLoadingRecipeAmounts());
     protected readonly isSubmitBusy = computed(() => this.isBusy() || this.photosUploading());

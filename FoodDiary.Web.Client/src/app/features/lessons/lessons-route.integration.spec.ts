@@ -84,6 +84,41 @@ describe('Lessons list route', () => {
 });
 
 describe('Lessons list controls', () => {
+    it('clears a shared search and returns to page one without losing the selected sort', async () => {
+        const api = setupLessons([SECOND_LESSON]);
+        api.getAll.mockReturnValueOnce(
+            of({ ...createPage([FIRST_LESSON]), page: 2, totalPages: 2, totalCount: PAGE_SIZE + 1, totalLessonCount: PAGE_SIZE + 1 }),
+        );
+        const harness = await RouterTestingHarness.create('/lessons?page=2&search=breakfast&sort=shortest&source=reminder');
+        await renderLessonsAsync(harness);
+        const route = requireRoute(harness);
+        const search = route.querySelector<HTMLInputElement>('input#lessons-search');
+        if (search === null) {
+            throw new Error('Missing the native lesson search field');
+        }
+        expect(search.value).toBe('breakfast');
+        expect(route.querySelector('fd-lessons-list-grid')?.textContent).toContain(FIRST_LESSON.title);
+
+        search.value = '';
+        search.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        await vi.waitFor(() => {
+            expect(api.getAll).toHaveBeenCalledTimes(2);
+        });
+        await renderLessonsAsync(harness);
+
+        expect(api.getAll.mock.calls.map(([query]) => [query.page, query.search, query.sort])).toEqual([
+            [2, 'breakfast', 'shortest'],
+            [1, undefined, 'shortest'],
+        ]);
+        const router = TestBed.inject(Router);
+        expect(router.parseUrl(router.url).queryParams).toEqual({ sort: 'shortest', source: 'reminder' });
+        expect(search.value).toBe('');
+        const grid = route.querySelector('fd-lessons-list-grid');
+        expect(grid?.textContent).toContain(SECOND_LESSON.title);
+        expect(grid?.textContent).not.toContain(FIRST_LESSON.title);
+    });
+
     it('resets the page for a difficulty change and keeps the search while changing sort and clearing difficulty', async () => {
         stubScrollIntoView();
         const api = setupLessons([FIRST_LESSON]);

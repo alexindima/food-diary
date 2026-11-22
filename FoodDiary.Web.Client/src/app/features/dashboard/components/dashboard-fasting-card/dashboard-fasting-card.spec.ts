@@ -207,6 +207,17 @@ describe('dashboard fasting timeline', () => {
     it('caps overtime at the end instead of wrapping an extended fast', () => {
         expect(buildDashboardFastingTimeline(createSession(), TWO_DAYS * MS_PER_HOUR).position).toBe(FULL);
     });
+    it('omits calendar labels when the start timestamp cannot be read', () => {
+        const session = { ...createSession(), startedAtUtc: utcInstant('') };
+
+        const timeline = buildDashboardFastingTimeline(session, TWELVE_HOURS * MS_PER_HOUR);
+
+        expect(timeline.position).toBe(HALF);
+        expect(timeline.start).toBeNull();
+        expect(timeline.boundaryDate).toBeNull();
+        expect(timeline.end).toBeNull();
+        expect(timeline.current).toBeNull();
+    });
     it('follows server fast: eat day ordering for both phases', () => {
         const session = { ...createSession(), planType: 'Cyclic' as const, cyclicFastDays: 2, cyclicEatDays: 1, cyclicPhaseDayNumber: 2 };
         expect(buildDashboardFastingCycle(session).find(day => day.current)?.day).toBe(2);

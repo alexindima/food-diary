@@ -1864,7 +1864,7 @@ async function observeMetricHeightDraftAsync(height: Locator): Promise<void> {
     });
 }
 
-test('crops a profile photo in the browser and saves the resulting asset', async ({ page, baseURL }) => {
+test('crops a profile photo in the browser and saves the resulting asset', async ({ page, baseURL }, testInfo) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     const runtimeErrors: string[] = [];
     page.on('pageerror', error => runtimeErrors.push(error.message));
@@ -1882,25 +1882,40 @@ test('crops a profile photo in the browser and saves the resulting asset', async
         }
         await route.fallback();
     });
-    const { imageUrl, uploads, profileUpdates } = await mockProfileAvatarUploadAsync(page, baseURL);
+    const { imageUrl, uploads, profileUpdates, uploadRequests } = await mockProfileAvatarUploadAsync(page, baseURL);
 
     await page.goto('/profile');
     const avatar = page.getByRole('button', { name: 'Change profile photo' });
     await expect(avatar).toBeVisible();
-    await chooseTestAvatarAsync(page, avatar);
+    const avatarPath = testInfo.outputPath('avatar.png');
+    await saveTestAvatarAsync(page, avatarPath);
+    await chooseTestAvatarAsync(page, avatar, avatarPath);
 
     const cropper = page.getByRole('dialog', { name: 'Crop image' });
     const apply = cropper.getByRole('button', { name: 'Apply' });
     await expect(apply).toBeEnabled();
+    const input = page.locator('fd-user-manage-comparison-widgets fd-image-upload-field input[type="file"]');
+    await expect(input).toHaveValue('');
+    await page.keyboard.press('Escape');
+    await expect(cropper).toBeHidden();
+    expect(uploadRequests.presigns).toBe(0);
+    expect(uploads).toHaveLength(0);
+    expect(profileUpdates).toHaveLength(0);
+
+    await chooseTestAvatarAsync(page, avatar, avatarPath);
+    await expect(apply).toBeEnabled();
+    await expect(input).toHaveValue('');
     await dragAvatarCropAsync(page, cropper.getByRole('group', { name: 'Crop image' }));
     await expectAvatarCropSurvivesResizeAsync(page, cropper);
     await expect(apply).toBeEnabled();
+    expect(uploadRequests.presigns).toBe(0);
     expect(uploads).toHaveLength(0);
 
     await apply.click();
     await expect(cropper).toBeHidden();
     const renderedAvatar = avatar.locator('img');
     await expect(renderedAvatar).toHaveAttribute('src', imageUrl);
+    expect(uploadRequests.presigns).toBe(1);
     expect(uploads).toHaveLength(1);
     await expectCroppedAvatarAsync(renderedAvatar, uploads[0]);
 
@@ -1916,13 +1931,19 @@ test('crops a profile photo in the browser and saves the resulting asset', async
 async function mockProfileAvatarUploadAsync(
     page: Page,
     baseURL: string | undefined,
-): Promise<{ imageUrl: string; uploads: Buffer[]; profileUpdates: Array<{ profileImageAssetId?: string }> }> {
+): Promise<{
+    imageUrl: string;
+    uploads: Buffer[];
+    profileUpdates: Array<{ profileImageAssetId?: string }>;
+    uploadRequests: { presigns: number };
+}> {
     const assetId = fixtureUuid('profile-avatar-crop');
     const imagePath = '/test-assets/profile-avatar.png';
     const imageUrl = new URL(imagePath, baseURL).href;
     const uploadPath = '/test-upload/profile-avatar';
     const uploads: Buffer[] = [];
     const profileUpdates: Array<{ profileImageAssetId?: string }> = [];
+    const uploadRequests = { presigns: 0 };
     let user = createUser();
 
     await page.route('**/api/v1/users/info', async route => {
@@ -1936,6 +1957,7 @@ async function mockProfileAvatarUploadAsync(
     });
     await page.route('**/api/v1/users/overview', async route => route.fulfill(jsonResponse({ ...createUserOverview(), user })));
     await page.route('**/api/v1/images/upload-url', async route => {
+        uploadRequests.presigns += 1;
         await route.fulfill(
             jsonResponse({
                 assetId,
@@ -1956,11 +1978,12 @@ async function mockProfileAvatarUploadAsync(
     });
     await page.route(`**${imagePath}`, async route => route.fulfill({ contentType: 'image/png', body: uploads[0] }));
     await page.route(`**/api/v1/images/${assetId}/confirm`, async route => route.fulfill(jsonResponse({ assetId, fileUrl: imageUrl })));
-    return { imageUrl, uploads, profileUpdates };
+    return { imageUrl, uploads, profileUpdates, uploadRequests };
 }
 
-async function chooseTestAvatarAsync(page: Page, avatar: Locator): Promise<void> {
-    const png = await page.evaluate(() => {
+async function saveTestAvatarAsync(page: Page, filePath: string): Promise<void> {
+    const avatarDownload = page.waitForEvent('download');
+    await page.evaluate(() => {
         const imageHeight = 400;
         const canvas = document.createElement('canvas');
         canvas.width = imageHeight * 2;
@@ -1973,13 +1996,21 @@ async function chooseTestAvatarAsync(page: Page, avatar: Locator): Promise<void>
         context.fillRect(0, 0, imageHeight, imageHeight);
         context.fillStyle = '#2563eb';
         context.fillRect(imageHeight, 0, imageHeight, imageHeight);
-        return canvas.toDataURL('image/png').split(',')[1];
+        const link = document.createElement('a');
+        link.download = 'avatar.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
     });
+    const download = await avatarDownload;
+    await download.saveAs(filePath);
+}
+
+async function chooseTestAvatarAsync(page: Page, avatar: Locator, filePath: string): Promise<void> {
     await avatar.click();
     const choosePhoto = page.waitForEvent('filechooser');
     await page.getByRole('menuitem', { name: 'Add photo' }).click();
     const chooser = await choosePhoto;
-    await chooser.setFiles({ name: 'avatar.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
+    await chooser.setFiles(filePath);
 }
 
 async function dragAvatarCropAsync(page: Page, selection: Locator): Promise<void> {

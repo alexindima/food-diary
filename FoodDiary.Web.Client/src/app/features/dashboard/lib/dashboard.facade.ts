@@ -145,6 +145,7 @@ export class DashboardFacade {
     private readonly initialized = signal(false);
     private readonly isHydrationUpdating = signal(false);
     private readonly isHydrationRefreshing = signal(false);
+    private readonly isHydrationMutationPending = computed(() => this.isHydrationUpdating() || this.isHydrationRefreshing());
     private readonly hydrationUndoEntries = signal<Array<{ day: string; entry: HydrationEntry }>>([]);
     private hydrationUndoToast: FdUiToastRef | null = null;
     public readonly lastHydrationUndo = computed<HydrationEntry | null>(() => {
@@ -199,7 +200,7 @@ export class DashboardFacade {
     public readonly currentFastingSession = computed<FastingSession | null>(() => this.snapshot()?.currentFastingSession ?? null);
     private readonly weightTrendPoints = computed(() => this.snapshot()?.weightTrend ?? []);
     private readonly waistTrendPoints = computed(() => this.snapshot()?.waistTrend ?? []);
-    public readonly isHydrationLoading = computed(() => this.isLoading() || this.isHydrationUpdating() || this.isHydrationRefreshing());
+    public readonly isHydrationLoading = computed(() => this.isLoading() || this.isHydrationMutationPending());
     public readonly isWeightTrendLoading = computed(() => this.isLoading());
     public readonly isWaistTrendLoading = computed(() => this.isLoading());
     public readonly isAdviceLoading = computed(() => this.isLoading());
@@ -294,7 +295,7 @@ export class DashboardFacade {
 
     public undoHydration(): void {
         const entry = this.lastHydrationUndo();
-        if (entry === null || this.isHydrationLoading()) {
+        if (entry === null || this.isHydrationMutationPending()) {
             return;
         }
         const day = formatDateInputValue(this.selectedDate());
@@ -333,13 +334,7 @@ export class DashboardFacade {
         ref.onAction()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                if (
-                    this.hydrationUndoToast === ref &&
-                    formatDateInputValue(this.selectedDate()) === day &&
-                    this.lastHydrationUndo()?.id === entry.id
-                ) {
-                    this.undoHydration();
-                }
+                this.undoHydration();
             });
     }
 
@@ -365,6 +360,9 @@ export class DashboardFacade {
         }
         if (!Number.isFinite(target) || target <= 0) {
             return false;
+        }
+        if (this.tdeeInsight()?.currentCalorieTarget === target) {
+            return true;
         }
         this.isApplyingTdeeGoal.set(true);
         this.tdeeGoalRequest = this.persistTdeeGoalAsync(target).finally(() => {

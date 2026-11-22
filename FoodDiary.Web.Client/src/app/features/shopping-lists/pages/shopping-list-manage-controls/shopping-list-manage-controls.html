@@ -88,7 +88,7 @@
                 [fdUiMenuTrigger]="listMenu"
             />
             <fd-ui-menu #listMenu="fdUiMenu">
-                <fd-ui-menu-item (itemClick)="renameList(list.id)"
+                <fd-ui-menu-item (itemClick)="startRename(list)"
                     ><fd-ui-icon name="edit" /><span>{{ 'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate }}</span></fd-ui-menu-item
                 >
                 <fd-ui-menu-item

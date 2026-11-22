@@ -139,6 +139,25 @@ describe('incomplete recognition metadata', () => {
         expect(result).toMatchObject({ notes: 'apple', comment: null, preMealSatietyLevel: null, postMealSatietyLevel: null });
     });
 
+    it('keeps a saved photo URL when no asset ID is available', () => {
+        const imageUrl = 'https://example.test/saved-photo.jpg';
+        const result = buildPhotoAiInputBarResult({
+            mealType: null,
+            recognizedAtUtc: RECOGNIZED_AT_UTC,
+            selection: imageSelection(imageUrl, null),
+            details: { date: DETAILS.date, time: DETAILS.time },
+            nutrition: createNutrition(),
+            results: [createVisionItem()],
+        });
+
+        expect(result).toMatchObject({
+            source: 'Photo',
+            imageAssetId: null,
+            imageUrl,
+            items: [expect.objectContaining({ nameEn: 'Apple', calories: CALORIES })],
+        });
+    });
+
     it('preserves the legacy asset ID when a saved photo has no URL', () => {
         const result = buildPhotoAiInputBarResult({
             mealType: null,

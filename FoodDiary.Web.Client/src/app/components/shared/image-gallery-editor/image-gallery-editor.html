@@ -1,77 +1,60 @@
-<div class="recognition-photos" [class.recognition-photos--editor]="editor()" [class.recognition-photos--compact]="compact()">
+<div class="recognition-photos recognition-photos--editor" [class.recognition-photos--compact]="compact()">
     <div class="recognition-photos__strip">
         @for (photo of photos(); track photo.assetId ?? photo.url) {
+            @let previewUrl = photoPreviews()[$index];
             <div class="recognition-photos__item" [class.recognition-photos__item--scanning]="scanning() && $first">
-                @if (editor()) {
-                    <fd-ui-button
-                        #photoTrigger
-                        class="recognition-photos__preview"
-                        fill="text"
-                        [ariaLabel]="'PRODUCT_AI_DIALOG.PHOTO_ACTIONS' | translate: { index: $index + 1 }"
-                        [fdUiMenuTrigger]="photoMenu"
+                <fd-ui-button
+                    #photoTrigger
+                    class="recognition-photos__preview"
+                    fill="text"
+                    [ariaLabel]="'PRODUCT_AI_DIALOG.PHOTO_ACTIONS' | translate: { index: $index + 1 }"
+                    [fdUiMenuTrigger]="photoMenu"
+                >
+                    <img
+                        [attr.src]="previewUrl"
+                        [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`"
+                        [hidden]="previewUrl === null"
+                    />
+                    <span aria-hidden="true" [hidden]="previewUrl !== null"><fd-ui-icon name="image" /></span>
+                </fd-ui-button>
+                <span class="recognition-photos__cover-label" [hidden]="!$first">{{ 'PRODUCT_AI_DIALOG.COVER_SELECTED' | translate }}</span>
+                <fd-ui-menu #photoMenu>
+                    <fd-ui-menu-item
+                        [disabled]="previewUrl === null"
+                        [disabledReason]="'DISABLED_HINTS.IMAGE_REQUIRED' | translate"
+                        [hidden]="previewUrl === null"
+                        (itemClick)="preview($index)"
+                        >{{ 'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate }}</fd-ui-menu-item
                     >
-                        <img [src]="photo.url" [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`" />
-                    </fd-ui-button>
-                    <span class="recognition-photos__cover-label" [hidden]="!$first">{{
-                        'PRODUCT_AI_DIALOG.COVER_SELECTED' | translate
-                    }}</span>
-                    <fd-ui-menu #photoMenu>
-                        <fd-ui-menu-item (itemClick)="preview($index)">{{ 'PRODUCT_AI_DIALOG.VIEW_PHOTO' | translate }}</fd-ui-menu-item>
-                        @if (!$first) {
-                            <fd-ui-menu-item
-                                [disabled]="disabled() || uploading()"
-                                [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                                (itemClick)="cover.set(photo)"
-                                >{{ 'PRODUCT_AI_DIALOG.CHOOSE_COVER' | translate }}</fd-ui-menu-item
-                            >
-                        }
+                    @if (!$first) {
                         <fd-ui-menu-item
-                            class="fd-ui-menu-item--danger"
                             [disabled]="disabled() || uploading()"
                             [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                            (itemClick)="remove(photo)"
-                            >{{ 'IMAGE_UPLOAD_FIELD.REMOVE' | translate }}</fd-ui-menu-item
+                            (itemClick)="cover.set(photo)"
+                            >{{ 'PRODUCT_AI_DIALOG.CHOOSE_COVER' | translate }}</fd-ui-menu-item
                         >
-                    </fd-ui-menu>
-                } @else {
-                    <img [src]="photo.url" [alt]="`${('PRODUCT_AI_DIALOG.PHOTO' | translate)} ${$index + 1}`" />
-                    <fd-ui-button
-                        type="button"
-                        fill="text"
-                        size="sm"
+                    }
+                    <fd-ui-menu-item
+                        class="fd-ui-menu-item--danger"
                         [disabled]="disabled() || uploading()"
                         [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                        (click)="cover.set(photo)"
+                        (itemClick)="remove(photo)"
+                        >{{ 'IMAGE_UPLOAD_FIELD.REMOVE' | translate }}</fd-ui-menu-item
                     >
-                        {{
-                            (cover()?.assetId === photo.assetId ? 'PRODUCT_AI_DIALOG.COVER_SELECTED' : 'PRODUCT_AI_DIALOG.CHOOSE_COVER')
-                                | translate
-                        }}
-                    </fd-ui-button>
-                    <fd-ui-button
-                        type="button"
-                        fill="text"
-                        size="sm"
-                        [disabled]="disabled() || uploading()"
-                        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                        (click)="remove(photo)"
-                    >
-                        {{ 'IMAGE_UPLOAD_FIELD.REMOVE' | translate }}
-                    </fd-ui-button>
-                }
+                </fd-ui-menu>
             </div>
         }
         @if (!reviewing() && photos().length < maxPhotos) {
             <fd-image-upload-field
                 #uploader
                 acceptedTypes="image/jpeg,image/png,image/webp"
-                [class.recognition-photos__uploader-hidden]="editor() && photos().length > 0 && !hasUploadError()"
+                [class.recognition-photos__uploader-hidden]="photos().length > 0 && !hasUploadError()"
                 [appearance]="uploadAppearance()"
                 [class.recognition-photos__add]="photos().length > 0"
                 [showRecommendation]="false"
                 [multiple]="true"
                 [maxFiles]="maxPhotos - photos().length"
-                [selectText]="editor() && photos().length ? '+' : ('PRODUCT_AI_DIALOG.ADD_PHOTOS' | translate)"
+                [selectText]="photos().length ? '+' : ('PRODUCT_AI_DIALOG.ADD_PHOTOS' | translate)"
                 [dropText]="'PRODUCT_AI_DIALOG.DROP_PHOTOS' | translate: { count: maxPhotos - photos().length }"
                 [disabled]="disabled()"
                 [cropEnabled]="false"
@@ -96,8 +79,4 @@
             }
         }
     </div>
-    <p class="fd-ui-helper-text" [hidden]="reviewing() || editor()">{{ 'PRODUCT_AI_DIALOG.PHOTOS_HINT' | translate }}</p>
-    <p class="fd-ui-helper-text" role="status" [hidden]="editor() || !photos().length">
-        {{ 'PRODUCT_AI_DIALOG.PHOTO_COUNT' | translate: { count: photos().length, max: maxPhotos } }}
-    </p>
 </div>

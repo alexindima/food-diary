@@ -1,49 +1,48 @@
-@if (draft(); as model) {
-    <div class="goals-editor" [class.goals-editor--dirty]="dirty()" [fdUiPreventUnload]="dirty() || saving()">
-        <fd-goals-summary-card data-tour-id="goals-calories" [calories]="model.calories" [macros]="macroDrafts()" />
-        <div class="goals-editor__content">
-            <fd-goals-nutrition-card
-                data-tour-id="goals-macros"
-                [calories]="model.calories"
-                [macros]="macroDrafts()"
-                [incompleteNumbers]="model.incompleteNumbers"
-                [preset]="model.preset"
-                [presetOptions]="presetOptions()"
-                (caloriesChange)="updateCalories($event)"
-                (macroChange)="updateMacro($event)"
-                (presetChange)="updatePreset($event)"
-            />
-            <div class="goals-editor__side">
-                <fd-goals-side-cards
-                    [water]="model.water"
-                    [waterIncomplete]="model.incompleteNumbers.has('water')"
-                    [bodyTargets]="model.bodyTargets"
-                    [invalidBodyTargets]="model.invalidBodyTargets"
-                    (waterChange)="updateWater($event)"
-                    (bodyTargetChange)="updateBodyTarget($event)"
-                />
-            </div>
-        </div>
-        <fd-goals-cycling-row
-            data-tour-id="goals-cycling"
-            [enabled]="model.cyclingEnabled"
-            [baseCalories]="model.calories"
-            [dayCalories]="model.dayCalories"
+@let model = draft();
+<div class="goals-editor" [class.goals-editor--dirty]="dirty()" [fdUiPreventUnload]="dirty() || saving()">
+    <fd-goals-summary-card data-tour-id="goals-calories" [calories]="model.calories" [macros]="macroDrafts()" />
+    <div class="goals-editor__content">
+        <fd-goals-nutrition-card
+            data-tour-id="goals-macros"
+            [calories]="model.calories"
+            [macros]="macroDrafts()"
             [incompleteNumbers]="model.incompleteNumbers"
-            (enabledChange)="updateCycling($event)"
-            (dayCaloriesChange)="updateDayCalories($event)"
+            [preset]="model.preset"
+            [presetOptions]="presetOptions()"
+            (caloriesChange)="updateCalories($event)"
+            (macroChange)="updateMacro($event)"
+            (presetChange)="updatePreset($event)"
         />
-        @if (dirty()) {
-            <fd-unsaved-changes-bar
-                [message]="'GOALS_PAGE.EDITOR.UNSAVED' | translate"
-                [discardLabel]="'GOALS_PAGE.EDITOR.DISCARD' | translate"
-                [saveLabel]="(saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate"
-                [saving]="saving()"
-                [saveDisabled]="!draftValid()"
-                [saveDisabledReason]="draftValid() ? null : ('GOALS_PAGE.EDITOR.INVALID_VALUES' | translate)"
-                (discard)="discard()"
-                (save)="persistAsync()"
+        <div class="goals-editor__side">
+            <fd-goals-side-cards
+                [water]="model.water"
+                [waterIncomplete]="model.incompleteNumbers.has('water')"
+                [bodyTargets]="model.bodyTargets"
+                [invalidBodyTargets]="model.invalidBodyTargets"
+                (waterChange)="updateWater($event)"
+                (bodyTargetChange)="updateBodyTarget($event)"
             />
-        }
+        </div>
     </div>
-}
+    <fd-goals-cycling-row
+        data-tour-id="goals-cycling"
+        [enabled]="model.cyclingEnabled"
+        [baseCalories]="model.calories"
+        [dayCalories]="model.dayCalories"
+        [incompleteNumbers]="model.incompleteNumbers"
+        (enabledChange)="updateCycling($event)"
+        (dayCaloriesChange)="updateDayCalories($event)"
+    />
+    @if (dirty()) {
+        <fd-unsaved-changes-bar
+            [message]="'GOALS_PAGE.EDITOR.UNSAVED' | translate"
+            [discardLabel]="'GOALS_PAGE.EDITOR.DISCARD' | translate"
+            [saveLabel]="(saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate"
+            [saving]="saving()"
+            [saveDisabled]="!draftValid()"
+            [saveDisabledReason]="draftValid() ? null : ('GOALS_PAGE.EDITOR.INVALID_VALUES' | translate)"
+            (discard)="discard()"
+            (save)="persistAsync()"
+        />
+    }
+</div>

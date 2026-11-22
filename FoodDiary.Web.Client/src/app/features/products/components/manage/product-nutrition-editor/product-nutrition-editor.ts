@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -48,7 +48,7 @@ export class ProductNutritionEditorComponent {
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
-    public readonly nutritionMode = input.required<NutritionMode>();
+    public readonly nutritionMode = model.required<NutritionMode>();
     protected readonly maxCalories = computed(() =>
         this.getAllowedNutritionMax(getProductMaxCaloriesPerBaseForUnit(this.form().baseUnit().value())),
     );
@@ -84,7 +84,6 @@ export class ProductNutritionEditorComponent {
         };
     });
 
-    public readonly nutritionModeChange = output<string>();
     public readonly openAiRecognition = output();
 
     protected caloriesError(): string | null {
@@ -99,7 +98,7 @@ export class ProductNutritionEditorComponent {
             : null;
     }
 
-    private buildNutritionModeOptions(): FdUiSegmentedToggleOption[] {
+    private buildNutritionModeOptions(): Array<FdUiSegmentedToggleOption<NutritionMode>> {
         const baseUnit = this.form().baseUnit().value();
         const amount = this.getDefaultBaseAmount(baseUnit);
         const unitLabel = this.translateService.instant(`GENERAL.UNITS.${baseUnit}`);

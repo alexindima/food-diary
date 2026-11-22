@@ -48,7 +48,6 @@ export type DashboardHydrationCardState = {
 
 export type DashboardCycleCardState = {
     cycle: CycleResponse | null;
-    startDate: string | null;
     predictions: CyclePredictions | null;
 };
 

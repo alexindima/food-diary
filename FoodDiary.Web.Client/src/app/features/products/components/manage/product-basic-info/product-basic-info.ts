@@ -11,6 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
+import type { ProductId } from '../../../../../shared/models/semantics/entity-id';
 import { ProductRecognitionPhotosComponent } from '../../../dialogs/product-ai-recognition-dialog/product-recognition-photos/product-recognition-photos';
 import {
     getProductMaxAmountForUnit,
@@ -60,6 +61,7 @@ export class ProductBasicInfoComponent {
     private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
+    public readonly photoOwnerId = input<ProductId | null>(null);
     public readonly photosUploading = output<boolean>();
     protected readonly productPhotos = computed(() => {
         const value = this.form()().value();
@@ -69,9 +71,7 @@ export class ProductBasicInfoComponent {
     protected readonly additionalOpen = computed(
         () => this.expandAdditional() || Boolean(this.fieldErrors().visibility) || Boolean(this.fieldErrors().comment),
     );
-    protected readonly selectedVisibilityLabel = computed(
-        () => this.visibilityOptions().find(option => option.value === this.form().visibility().value())?.label ?? '',
-    );
+    protected readonly selectedVisibilityLabel = computed(() => this.visibilityLabel(this.form().visibility().value()));
     public readonly nameOptions = input.required<ProductNameAutocompleteOption[]>();
     public readonly isNameSearchLoading = input.required<boolean>();
     protected readonly fieldErrors = computed<FieldErrors>(() => {
@@ -95,14 +95,9 @@ export class ProductBasicInfoComponent {
             label: this.translateService.instant(`PRODUCT_MANAGE.PRODUCT_TYPE_OPTIONS.${type.toUpperCase()}`),
         }));
     });
-    protected readonly visibilityOptions = computed<Array<FdUiSelectOption<ProductVisibility>>>(() => {
-        this.languageVersion();
-
-        return (Object.values(ProductVisibility) as ProductVisibility[]).map(option => ({
-            value: option,
-            label: this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${option.toUpperCase()}`),
-        }));
-    });
+    protected readonly visibilityOptions = computed<Array<FdUiSelectOption<ProductVisibility>>>(() =>
+        Object.values(ProductVisibility).map(value => ({ value, label: this.visibilityLabel(value) })),
+    );
 
     public readonly openBarcodeScanner = output();
     public readonly openAiRecognition = output();
@@ -148,6 +143,11 @@ export class ProductBasicInfoComponent {
         if (photo !== null) {
             this.setPhotos([photo, ...this.productPhotos().filter(image => image !== photo)]);
         }
+    }
+
+    private visibilityLabel(visibility: ProductVisibility): string {
+        this.languageVersion();
+        return this.translateService.instant(`PRODUCT_MANAGE.VISIBILITY_OPTIONS.${visibility.toUpperCase()}`);
     }
 
     private isProductNameSuggestion(value: unknown): value is ProductNameSuggestion {

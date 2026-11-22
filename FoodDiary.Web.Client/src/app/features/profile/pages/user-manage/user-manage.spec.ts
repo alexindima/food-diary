@@ -17,7 +17,7 @@ import { UnsavedChangesService } from '../../../../services/unsaved-changes.serv
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FASTING_REMINDER_PRESETS } from '../../../../shared/lib/fasting-reminder-presets';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
-import { utcInstant } from '../../../../shared/models/semantics/date-value';
+import { calendarDate, utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { Gender, type User } from '../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
@@ -159,11 +159,19 @@ describe('Profile dietologist invitation submission', () => {
             throw new Error('Expected the profile invitation controls');
         }
         summary.click();
+        fixture.detectChanges();
+        send.focus();
+        expect(document.activeElement).toBe(send);
         send.click();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(email);
+        expect(email.getAttribute('aria-invalid')).toBe('true');
+        expect(host.querySelector('fd-user-manage-dietologist-summary [role="alert"]')?.textContent).toContain('FORM_ERRORS.REQUIRED');
         expect(dietologistService.invite).not.toHaveBeenCalled();
         email.value = 'diet@example.com';
         email.dispatchEvent(new Event('input', { bubbles: true }));
         fixture.detectChanges();
+        expect(email.getAttribute('aria-invalid')).toBeNull();
         expect(send.disabled).toBe(false);
         expect(permission.disabled).toBe(false);
 
@@ -782,10 +790,14 @@ describe('Profile dietologist invitation draft controls', () => {
         email.value = 'invalid-address';
         email.dispatchEvent(new Event('input', { bubbles: true }));
         fixture.detectChanges();
-        dietologistButton(card, '.user-manage__dietologist-summary-button button').click();
+        const invite = dietologistButton(card, '.user-manage__dietologist-summary-button button');
+        invite.focus();
+        expect(document.activeElement).toBe(invite);
+        invite.click();
         fixture.detectChanges();
 
         expect(card.querySelector('[role="alert"]')?.textContent).toContain(emailErrorEn);
+        expect(email.getAttribute('aria-invalid')).toBe('true');
         expect(document.activeElement).toBe(email);
         await firstValueFrom(translate.use('ru'));
         fixture.detectChanges();
@@ -1040,6 +1052,49 @@ describe('UserManageComponent invalid navigation saves', () => {
 
         expect(TestBed.inject(UnsavedChangesService).getHandler()?.save()).toBe(false);
         expect(facade.saveProfileAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('UserManageComponent birthday calendar', () => {
+    it('recovers invalid birthday text by selecting leap day and saves that calendar date', async () => {
+        const savedBirthday = calendarDate('2000-02-28');
+        const leapDay = calendarDate('2000-02-29');
+        await createComponentAsync(null, false, { ...profileSaveUser(), birthDate: savedBirthday });
+        editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
+        const input = profileBirthDateInput();
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(facade.saveProfileAsync).not.toHaveBeenCalled();
+
+        const picker = input.closest('fd-ui-date-input')?.querySelector<HTMLButtonElement>('button[aria-haspopup="dialog"]');
+        if (picker === null || picker === undefined) {
+            throw new Error('Expected the profile birthday calendar trigger');
+        }
+        picker.focus();
+        picker.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const choice = document.querySelector<HTMLButtonElement>(`fd-ui-calendar [data-date="${leapDay}"]`);
+        if (choice === null) {
+            throw new Error('Expected leap day in the birthday calendar');
+        }
+        choice.focus();
+        choice.click();
+        fixture.detectChanges();
+
+        expect(document.querySelector('fd-ui-calendar')).toBeNull();
+        expect(document.activeElement).toBe(input);
+        expect(input.getAttribute('aria-invalid')).toBeNull();
+        expect(input.value).toBe('02/29/2000');
+        const save = profileSaveButton();
+        if (save === null) {
+            throw new Error('Expected profile save after choosing a birthday');
+        }
+        save.click();
+        await fixture.whenStable();
+
+        expect(facade.saveProfileAsync).toHaveBeenCalledExactlyOnceWith(
+            expect.objectContaining({ birthDate: new Date(`${leapDay}T00:00:00.000Z`) }),
+        );
     });
 });
 

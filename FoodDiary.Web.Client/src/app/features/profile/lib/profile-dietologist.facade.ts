@@ -80,12 +80,6 @@ export class ProfileDietologistFacade {
             return;
         }
 
-        this.dietologistForm.email().markAsTouched();
-        this.updateDietologistInviteEmailError();
-        if (this.dietologistForm().invalid()) {
-            return;
-        }
-
         this.cancelRelationshipRead();
         this.isSavingDietologistRelationshipAction.set(true);
         this.dietologistFacade
@@ -117,8 +111,9 @@ export class ProfileDietologistFacade {
 
         this.dietologistForm[controlName]().value.set(nextValue);
         this.updateDietologistPermissionsState();
-        if (this.hasDietologistRelationship()) {
-            this.persistDietologistPermissions();
+        const relationship = this.dietologistRelationship();
+        if (relationship !== null) {
+            this.persistDietologistPermissions(relationship.invitationId);
         }
     }
 
@@ -126,12 +121,7 @@ export class ProfileDietologistFacade {
         this.updateDietologistPermission(change.controlName, change.value);
     }
 
-    private persistDietologistPermissions(): void {
-        const invitationId = this.dietologistRelationship()?.invitationId;
-        if (invitationId === undefined || this.isSavingDietologistPermissions()) {
-            return;
-        }
-
+    private persistDietologistPermissions(invitationId: DietologistRelationship['invitationId']): void {
         const nextPermissions = getDietologistPermissions(this.dietologistFormModel());
         this.dietologistError.set(null);
         this.cancelRelationshipRead();
@@ -202,15 +192,15 @@ export class ProfileDietologistFacade {
             return;
         }
 
+        const invitationId = this.dietologistRelationship()?.invitationId;
         if (nextValue) {
             this.dietologistForm.shareProfile().value.set(nextValue);
-            if (this.hasDietologistRelationship()) {
-                this.persistDietologistPermissions();
+            if (invitationId !== undefined) {
+                this.persistDietologistPermissions(invitationId);
             }
             return;
         }
 
-        const invitationId = this.dietologistRelationship()?.invitationId;
         this.dialogService
             .open(FdUiConfirmDialogComponent, {
                 preset: 'confirm',
@@ -226,8 +216,8 @@ export class ProfileDietologistFacade {
             .subscribe(confirmed => {
                 if (confirmed === true && this.dietologistRelationship()?.invitationId === invitationId) {
                     this.dietologistForm.shareProfile().value.set(false);
-                    if (this.hasDietologistRelationship()) {
-                        this.persistDietologistPermissions();
+                    if (invitationId !== undefined && !this.isSavingDietologistPermissions()) {
+                        this.persistDietologistPermissions(invitationId);
                     }
                 }
             });

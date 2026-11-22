@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, type ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -39,7 +39,6 @@ export class LandingPreviewTourComponent {
     private readonly quickMealService = inject(QuickMealService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly draftBlock = viewChild<ElementRef<HTMLElement>>('draftBlock');
     private readonly browserWindow = inject(BrowserWindowService);
 
     protected isAuthenticated = this.authService.isAuthenticated;
@@ -63,14 +62,14 @@ export class LandingPreviewTourComponent {
         });
     }
 
-    protected addPreviewProduct(product: Product): void {
+    protected addPreviewProduct(product: Product, draftBlock: HTMLElement): void {
         this.quickMealService.addProduct(product);
-        this.scrollDraftIntoView();
+        this.scrollDraftIntoView(draftBlock);
     }
 
-    protected addPreviewRecipe(recipe: Recipe): void {
+    protected addPreviewRecipe(recipe: Recipe, draftBlock: HTMLElement): void {
         this.quickMealService.addRecipe(recipe);
-        this.scrollDraftIntoView();
+        this.scrollDraftIntoView(draftBlock);
     }
 
     protected async navigateToAuthAsync(mode: PublicAuthMode): Promise<void> {
@@ -93,12 +92,7 @@ export class LandingPreviewTourComponent {
         this.quickMealService.setPreviewItems(this.previewQuickItems);
     }
 
-    private scrollDraftIntoView(): void {
-        const draftBlock = this.draftBlock()?.nativeElement;
-        if (draftBlock === undefined) {
-            return;
-        }
-
+    private scrollDraftIntoView(draftBlock: HTMLElement): void {
         const reducedMotionQuery = this.browserWindow.matchMedia('(prefers-reduced-motion: reduce)');
         if (reducedMotionQuery === null) {
             return;

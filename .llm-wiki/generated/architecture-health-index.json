@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 34,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 111,
+    "selectorUnreferencedComponents": 110,
     "routedStandaloneComponents": 72,
-    "componentsWithoutDirectSpecs": 123,
+    "componentsWithoutDirectSpecs": 122,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -1059,14 +1059,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/pages/fasting-page-sections/alerts-section/fasting-alerts-section.spec.ts"
-    },
-    {
-      "class": "FastingCheckInChartDialogComponent",
-      "selector": "fd-fasting-checkin-chart-dialog",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
-      "specPath": null
     },
     {
       "class": "FastingCheckInDialogComponent",
@@ -2393,6 +2385,11 @@
           "required": false
         },
         {
+          "name": "isMutationPending",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "isRequestPending",
           "type": "",
           "required": false
@@ -3107,8 +3104,8 @@
       ],
       "inputs": [
         {
-          "name": "showSuggestion",
-          "type": "boolean",
+          "name": "suggestedTarget",
+          "type": "number | null",
           "required": true
         },
         {
@@ -3124,7 +3121,7 @@
         },
         {
           "name": "suggestionApply",
-          "type": ""
+          "type": "number"
         }
       ],
       "specPath": null
@@ -3640,19 +3637,6 @@
           "type": "number"
         }
       ],
-      "specPath": null
-    },
-    {
-      "class": "FastingCheckInChartDialogComponent",
-      "selector": "fd-fasting-checkin-chart-dialog",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
       "specPath": null
     },
     {

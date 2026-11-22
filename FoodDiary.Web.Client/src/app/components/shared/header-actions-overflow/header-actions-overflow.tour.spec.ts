@@ -162,6 +162,32 @@ describe('Responsive header tour', () => {
     });
 });
 
+describe('Responsive header tour locator recovery', () => {
+    it('skips a malformed locator and reveals the next header action without activating it', async () => {
+        setMobile(true);
+        const definition = TestBed.inject(LocalizedTourDefinitionService).build({
+            id: 'responsive-header-locator-recovery',
+            translationRoot: 'TEST',
+            steps: [
+                { id: 'malformed', target: '[data-tour-id=', titleKey: 'help', descriptionKey: 'help', placement: 'bottom' },
+                { id: 'appearance', target: 'tour-appearance', titleKey: 'appearance', descriptionKey: 'appearance', placement: 'bottom' },
+            ],
+        });
+        expect(service.start(definition, { force: true })).toBe(true);
+        await settleAsync();
+
+        expect(service.snapshot()).toMatchObject({ stepCount: 1, step: { id: 'appearance' } });
+        const action = overlay.querySelector('[role="menu"] [data-tour-id="tour-appearance"]');
+        expect(action?.contains(service.target())).toBe(true);
+        expect(fixture.componentInstance.clicks).toBe(0);
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', cancelable: true }));
+        await settleAsync();
+        expect(service.snapshot()).toBeNull();
+        expect(overlay.querySelector('[role="menu"]')).toBeNull();
+    });
+});
+
 describe('Tour launch from the overflow menu', () => {
     it('keeps a revealed first step open after selecting the tour action', async () => {
         setMobile(true);

@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { FdTourService } from 'fd-tour';
@@ -163,11 +164,6 @@ function renderFromHistory(
     state: Record<string, unknown>,
     lookupResult: Observable<OpenFoodFactsProduct | null> = of(null),
 ): RestoredProductEditor {
-    const previousState: unknown = window.history.state;
-    window.history.replaceState(state, '');
-    onTestFinished(() => {
-        window.history.replaceState(previousState, '');
-    });
     const searchByBarcode = vi.fn<ProductExternalFoodFacade['searchByBarcode']>().mockReturnValue(lookupResult);
     const submitProduct = vi.fn<ProductManageFacade['submitProductAsync']>().mockResolvedValue({ product: null, error: null });
     const confirmDiscard = vi.fn<ProductManageFacade['confirmDiscardChangesAsync']>();
@@ -188,6 +184,13 @@ function renderFromHistory(
         ],
     }).overrideComponent(ProductManageFormComponent, { remove: { providers: [ProductManageFacade] } });
 
+    const location = TestBed.inject(Location);
+    const path = location.path();
+    const previousState = location.getState();
+    location.replaceState(path, '', state);
+    onTestFinished(() => {
+        location.replaceState(path, '', previousState);
+    });
     const editor = TestBed.createComponent(ProductAddComponent);
     editor.detectChanges();
     return { editor, host: editor.nativeElement as HTMLElement, searchByBarcode, submitProduct, confirmDiscard };

@@ -11,6 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { ImageGalleryEditorComponent } from '../../../../../components/shared/image-gallery-editor/image-gallery-editor';
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import { RecipeVisibility } from '../../../../../shared/models/recipe.data';
+import type { RecipeId } from '../../../../../shared/models/semantics/entity-id';
 import { injectRecipeCategoryOptions } from '../../../lib/recipe-category-options';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 
@@ -40,23 +41,18 @@ export class RecipeBasicInfoComponent {
     private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
+    public readonly photoOwnerId = input<RecipeId | null>(null);
     public readonly photosUploading = output<boolean>();
     protected readonly categoryOptions = injectRecipeCategoryOptions();
     protected readonly photos = computed(() => {
         const value = this.form()().value();
-        return value.images ?? (value.imageUrl !== null && (value.imageUrl.url?.length ?? 0) > 0 ? [value.imageUrl] : []);
+        const cover = value.imageUrl;
+        return value.images ?? (cover !== null && (cover.kind === 'legacy-asset-only' || (cover.url?.length ?? 0) > 0) ? [cover] : []);
     });
-    protected readonly selectedVisibility = computed(
-        () => this.visibilitySelectOptions().find(option => option.value === this.form().visibility().value())?.label ?? '',
+    protected readonly selectedVisibility = computed(() => this.visibilityLabel(this.form().visibility().value()));
+    protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() =>
+        Object.values(RecipeVisibility).map(value => ({ value, label: this.visibilityLabel(value) })),
     );
-    protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() => {
-        this.languageVersion();
-
-        return Object.values(RecipeVisibility).map(option => ({
-            value: option,
-            label: this.translateService.instant(`RECIPE_VISIBILITY.${option}`),
-        }));
-    });
     protected readonly fieldErrors = computed<FieldErrors>(() => {
         this.languageVersion();
 
@@ -83,6 +79,11 @@ export class RecipeBasicInfoComponent {
         if (image !== null) {
             this.setPhotos([image, ...this.photos().filter(item => item !== image)]);
         }
+    }
+
+    private visibilityLabel(visibility: RecipeVisibility): string {
+        this.languageVersion();
+        return this.translateService.instant(`RECIPE_VISIBILITY.${visibility}`);
     }
 
     private buildFieldErrors(): FieldErrors {

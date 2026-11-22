@@ -96,9 +96,13 @@ export class CycleEpisodeFacade {
             formValue.startDate === null ||
             formValue.startDate.length === 0 ||
             this.episodeForm().invalid() ||
-            this.state.isEpisodeBusy()
+            this.state.isProfileMutationPending()
         ) {
             this.episodeForm().markAsTouched();
+            return;
+        }
+        if (!this.state.menstrualEpisodes().some(episode => episode.id === episodeId)) {
+            this.resetMenstrualEpisodeEdit();
             return;
         }
 
@@ -127,7 +131,7 @@ export class CycleEpisodeFacade {
     public async toggleMenstrualEpisodePredictionAsync(episodeId: MenstrualEpisodeId): Promise<void> {
         const currentCycle = this.state.cycle();
         const episode = this.state.menstrualEpisodes().find(item => item.id === episodeId);
-        if (currentCycle === null || episode?.status !== 1 || this.hasPendingEpisodeAction()) {
+        if (currentCycle === null || episode?.status !== 1 || this.state.isProfileMutationPending()) {
             return;
         }
 
@@ -154,7 +158,7 @@ export class CycleEpisodeFacade {
 
     public async deleteMenstrualEpisodeAsync(episodeId: MenstrualEpisodeId): Promise<void> {
         const currentCycle = this.state.cycle();
-        if (currentCycle === null || this.hasPendingEpisodeAction()) {
+        if (currentCycle === null || this.state.isProfileMutationPending()) {
             return;
         }
 
@@ -205,7 +209,7 @@ export class CycleEpisodeFacade {
         if (cycle === null || !this.isCurrentEpisodeAction(cycle.id, action)) {
             return false;
         }
-        this.state.cycle.set(cycle);
+        this.state.acceptProfileWrite(cycle);
         return true;
     }
 
@@ -217,10 +221,6 @@ export class CycleEpisodeFacade {
 
     private isCurrentEpisodeAction(profileId: CycleProfileId, action: symbol): boolean {
         return this.activeEpisodeAction === action && this.state.cycle()?.id === profileId;
-    }
-
-    private hasPendingEpisodeAction(): boolean {
-        return this.state.isEpisodeBusy();
     }
 }
 

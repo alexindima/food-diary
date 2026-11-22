@@ -1,6 +1,7 @@
 <div class="ai-input-bar__composer" [class.ai-input-bar__composer--attached]="hasAttachedResult()">
     <div class="ai-input-bar fd-row fd-gap-control" [class.ai-input-bar--speech-error]="speechErrorKey() !== null">
         <fd-image-upload-field
+            #photoUpload
             class="ai-input-bar__hidden-upload"
             appearance="hidden"
             [requireHealthConsent]="true"
@@ -41,7 +42,7 @@
                     [disabled]="isDisabled()"
                     [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
                     [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-                    (click)="onPhotoClickAsync()"
+                    (click)="onPhotoClickAsync(photoUpload)"
                 />
                 @if (isSpeechSupported) {
                     <fd-ui-button

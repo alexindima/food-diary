@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal, type WritableSignal } from '@angular/core';
 import { DeferBlockBehavior, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -355,7 +355,7 @@ function setupRouting(deferBlockBehavior = DeferBlockBehavior.Manual): RoutingFi
     TestBed.configureTestingModule({
         deferBlockBehavior,
         providers: [
-            provideRouter(routes),
+            provideRouter(routes, withComponentInputBinding()),
             provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),

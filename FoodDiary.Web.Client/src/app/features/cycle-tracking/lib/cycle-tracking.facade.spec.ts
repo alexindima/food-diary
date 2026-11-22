@@ -1,8 +1,11 @@
+import { type HttpRequest, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { submit } from '@angular/forms/signals';
 import { finalize, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../../environments/environment';
 import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import {
@@ -117,6 +120,8 @@ beforeEach(() => {
 
     TestBed.configureTestingModule({
         providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
             CycleTrackingFacade,
             CycleTrackingStateFacade,
             CycleSettingsFacade,
@@ -253,6 +258,57 @@ describe('CycleTrackingFacade nutrition range', () => {
             facade.initialize();
             expect(cyclesService.getNutritionSummary).toHaveBeenCalledWith('2025-10-02', '2026-10-02');
             expect(facade.nutritionSummary()).not.toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('waits until the first local tracking day before requesting nutrition history', () => {
+        const trackingStartDate = calendarDate('2026-10-03T00:00:00Z');
+        const firstTrackingDay = '2026-10-03';
+        const profile: CycleResponse = { ...createCycleResponse(), trackingStartDate };
+        const currentRequest = { method: 'GET', url: `${environment.apiUrls.cycles}/current` };
+        const summaryRequest = (request: HttpRequest<unknown>): boolean =>
+            request.method === 'GET' && request.url === `${currentRequest.url}/nutrition-summary`;
+        const transport = TestBed.runInInjectionContext(() => new CyclesService());
+        cyclesService.getCurrent.mockImplementation(() => transport.getCurrent());
+        cyclesService.getNutritionSummary.mockImplementation((dateFrom, dateTo) => transport.getNutritionSummary(dateFrom, dateTo));
+        const http = TestBed.inject(HttpTestingController);
+        vi.useFakeTimers({ toFake: ['Date'] });
+
+        try {
+            vi.setSystemTime(new Date('2026-10-02T23:50:00'));
+            facade.initialize();
+            http.expectOne(currentRequest).flush(profile);
+
+            expect(facade.cycle()?.trackingStartDate).toBe(trackingStartDate);
+            http.expectNone(summaryRequest, 'no nutrition period exists before tracking starts');
+            expect(facade.nutritionSummary()).toBeNull();
+            expect(facade.isLoadingNutritionSummary()).toBe(false);
+
+            vi.setSystemTime(new Date('2026-10-03T00:15:00'));
+            facade.initialize();
+            http.expectOne(currentRequest).flush(profile);
+            const summary = http.expectOne(summaryRequest);
+            expect(summary.request.params.get('dateFrom')).toBe(firstTrackingDay);
+            expect(summary.request.params.get('dateTo')).toBe(firstTrackingDay);
+            expect(summary.request.params.get('timeZoneId')).toBe(new Intl.DateTimeFormat().resolvedOptions().timeZone);
+            summary.flush({
+                dateFrom: trackingStartDate,
+                dateTo: trackingStartDate,
+                loggedCycleDays: 0,
+                daysWithMeals: 0,
+                bleedingDays: 0,
+                averageCaloriesOnBleedingDays: 0,
+                averageCaloriesOnNonBleedingCycleDays: 0,
+                averageFiberOnBleedingDays: 0,
+                averageFiberOnNonBleedingCycleDays: 0,
+                averagePainImpactOnDaysWithMeals: 0,
+                hasEnoughNutritionData: false,
+                consentRequired: true,
+            } satisfies CycleNutritionSummary);
+            expect(facade.nutritionSummary()).toMatchObject({ consentRequired: true, loggedCycleDays: 0 });
+            http.verify();
         } finally {
             vi.useRealTimers();
         }

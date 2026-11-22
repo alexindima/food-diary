@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -63,9 +63,8 @@ export class PublicRecipeDetailComponent {
     private readonly translate = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly activeAction = signal<RecipeAction | null>(null);
-    private readonly routeData = toSignal(this.route.data, { initialValue: this.route.snapshot.data });
-    protected readonly page = computed(() => readPublicRecipePage(this.routeData()['seo']));
-    protected readonly recipe = computed(() => this.page().recipe);
+    protected readonly seo = input.required<PublicRecipePageData>();
+    protected readonly recipe = computed(() => this.seo().recipe);
     protected readonly images = computed(() => {
         const recipe = this.recipe();
         return recipe === null ? [] : recipeImages(recipe);
@@ -85,7 +84,7 @@ export class PublicRecipeDetailComponent {
     protected readonly recipeLanguageKey = computed(() => (this.recipe()?.language === 'ru' ? 'RECIPE_LANGUAGE.RU' : 'RECIPE_LANGUAGE.EN'));
     protected readonly saveLabelKey = computed(() => (this.saved() ? 'PUBLIC_RECIPES.SAVED' : 'PUBLIC_RECIPES.SAVE'));
     protected readonly unavailableTitleKey = computed(() =>
-        this.page().error === 'error' ? 'PUBLIC_RECIPES.ERROR' : 'PUBLIC_RECIPES.NOT_FOUND',
+        this.seo().error === 'error' ? 'PUBLIC_RECIPES.ERROR' : 'PUBLIC_RECIPES.NOT_FOUND',
     );
     protected readonly showTimeSeparator = computed(() => {
         const recipe = this.recipe();
@@ -183,7 +182,8 @@ export class PublicRecipeDetailComponent {
     }
 
     private isCurrentRecipe(recipe: PublicRecipe): boolean {
-        return !this.destroyRef.destroyed && this.recipe() === recipe;
+        // The snapshot advances before the bound input updates on a reused route.
+        return !this.destroyRef.destroyed && this.recipe() === recipe && this.route.snapshot.data['seo'] === this.seo();
     }
 
     protected async shareAsync(): Promise<void> {
@@ -208,15 +208,4 @@ export class PublicRecipeDetailComponent {
     protected retry(): void {
         void this.router.navigateByUrl(this.router.url, { onSameUrlNavigation: 'reload' });
     }
-}
-
-function readPublicRecipePage(value: unknown): PublicRecipePageData {
-    if (isPublicRecipePage(value)) {
-        return value;
-    }
-    return { recipe: null, error: 'error' };
-}
-
-function isPublicRecipePage(value: unknown): value is PublicRecipePageData {
-    return typeof value === 'object' && value !== null && 'recipe' in value && 'error' in value;
 }

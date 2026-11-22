@@ -286,8 +286,8 @@ describe('Weight and waist measurement actions', () => {
     it.each([
         { kind: 'weight', route: '/weight-history' },
         { kind: 'length', route: '/waist-history' },
-    ] as const)('opens $kind history directly or with the add form requested', async ({ kind, route }) => {
-        const { fixture } = await setupComponentAsync({ isLoading: true });
+    ] as const)('ignores a stale $kind add button during loading and opens history when ready', async ({ kind, route }) => {
+        const { fixture } = await setupComponentAsync();
         await RouterTestingHarness.create();
         fixture.componentRef.setInput('measurementKind', kind);
         fixture.componentRef.setInput('actionRoute', route);
@@ -295,10 +295,18 @@ describe('Weight and waist measurement actions', () => {
         const host = fixture.nativeElement as HTMLElement;
         const add = host.querySelector<HTMLButtonElement>('.weight-trend-card__action button');
         const history = host.querySelector<HTMLAnchorElement>('.weight-trend-card__history-link');
+        const router = TestBed.inject(Router);
+        const navigate = vi.spyOn(router, 'navigateByUrl');
+
+        fixture.componentRef.setInput('isLoading', true);
+        expect(add?.disabled).toBe(false);
+        add?.click();
+        expect(navigate).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
         expect(add?.disabled).toBe(true);
         expect(history?.hidden).toBe(true);
         add?.click();
-        const router = TestBed.inject(Router);
         expect(router.url).toBe('/');
 
         fixture.componentRef.setInput('isLoading', false);

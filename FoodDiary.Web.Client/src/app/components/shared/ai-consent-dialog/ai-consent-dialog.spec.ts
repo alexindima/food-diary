@@ -23,22 +23,20 @@ async function setupAiConsentDialogAsync(): Promise<AiConsentDialogTestContext> 
 }
 
 describe('AiConsentDialogComponent', () => {
-    it('tracks agreement checkbox state', async () => {
-        const { component, fixture } = await setupAiConsentDialogAsync();
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.checked = true;
-        fixture.detectChanges();
-
-        component['onCheckboxChange']({ target: input } as unknown as Event);
-
-        expect(component['isAgreed']()).toBe(true);
-    });
-
-    it('closes with consent result', async () => {
+    it('tracks the rendered checkbox, accepts agreement and still closes when cancelled', async () => {
         const { component, dialogRef, fixture } = await setupAiConsentDialogAsync();
         fixture.detectChanges();
 
+        component['onAccept']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        const checkbox = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('#ai-consent-agree');
+        if (checkbox === null) {
+            throw new Error('Expected the rendered consent checkbox');
+        }
+        checkbox.click();
+        fixture.detectChanges();
+        expect(component['isAgreed']()).toBe(true);
         component['onAccept']();
         component['onCancel']();
 

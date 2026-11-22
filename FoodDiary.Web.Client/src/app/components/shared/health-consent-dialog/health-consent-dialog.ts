@@ -21,12 +21,6 @@ export class HealthConsentDialogComponent {
     private readonly language = injectCurrentLanguage();
     protected readonly policyPath = computed(() => localizedPublicPath('/privacy-policy', this.language() === 'ru' ? 'ru' : 'en'));
 
-    protected change(event: Event): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.agreed.set(event.target.checked);
-        }
-    }
-
     protected close(accepted: boolean): void {
         if (!accepted || this.agreed()) {
             this.dialog.close(accepted);

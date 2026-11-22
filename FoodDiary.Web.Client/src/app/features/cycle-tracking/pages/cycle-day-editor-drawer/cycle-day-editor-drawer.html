@@ -224,7 +224,7 @@
                         type="submit"
                         appearance="brand-action"
                         [loading]="isSaving()"
-                        [disabled]="isSaving()"
+                        [disabled]="isSaving() || isMutationPending()"
                         [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                     >
                         {{ (editingDate() ? 'CYCLE_TRACKING.UPDATE_DAY' : 'CYCLE_TRACKING.SAVE_DAY') | translate }}

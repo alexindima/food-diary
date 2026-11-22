@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { filter } from 'rxjs';
 
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { type NotificationItem, NotificationService } from '../../../shared/notifications/notification.service';
@@ -51,6 +52,15 @@ export class NotificationsDialogComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationStart),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                // Let an in-flight read finish without reopening an older destination.
+                this.navigationRevision++;
+            });
         this.notificationService.ensureNotificationsLoaded();
     }
 

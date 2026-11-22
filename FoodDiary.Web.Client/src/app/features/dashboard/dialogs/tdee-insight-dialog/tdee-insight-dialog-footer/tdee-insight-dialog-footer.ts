@@ -12,9 +12,9 @@ import type { TdeeInsightDialogAction } from '../tdee-insight-dialog-lib/tdee-in
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TdeeInsightDialogFooterComponent {
-    public readonly showSuggestion = input.required<boolean>();
+    public readonly suggestedTarget = input.required<number | null>();
     public readonly isApplying = input(false);
 
     public readonly dialogClose = output<TdeeInsightDialogAction>();
-    public readonly suggestionApply = output();
+    public readonly suggestionApply = output<number>();
 }

@@ -536,6 +536,50 @@ describe('Rendered photo annotations', () => {
     });
 });
 
+it('keeps each recognized food selectable with a readable card on a crowded portrait photo', async () => {
+    const { fixture } = await setupAiPhotoResultAsync();
+    fixture.componentRef.setInput('imageUrl', '/meal.png');
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    const image = host.querySelector('.ai-photo-result__preview');
+    if (!(image instanceof HTMLImageElement)) {
+        throw new Error('Expected the uploaded meal preview');
+    }
+    const portraitWidth = 600;
+    const portraitHeight = 1000;
+    Object.defineProperties(image, { naturalWidth: { value: portraitWidth }, naturalHeight: { value: portraitHeight } });
+    image.dispatchEvent(new Event('load'));
+
+    const foodNames = ['egg', 'bread', 'cheese', 'pear', 'tomato', 'carrot', 'cucumber', 'olive', 'apple', 'grape', 'radish'];
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- The provider returns normalized photo coordinates. */
+    const columns = [0.2, 0.5, 0.8];
+    const rows = [0.15, 0.35, 0.55, 0.75];
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- End of coordinate fixture. */
+    fixture.componentRef.setInput(
+        'results',
+        foodNames.map((nameEn, index) => ({
+            ...VISION_ITEMS[0],
+            nameEn,
+            nameLocal: null,
+            centerX: columns[index % columns.length],
+            centerY: rows[Math.floor(index / columns.length)],
+        })),
+    );
+    fixture.componentRef.setInput('nutrition', { ...NUTRITION, items: foodNames.map(name => ({ ...NUTRITION.items[0], name })) });
+    fixture.detectChanges();
+
+    expect(host.querySelectorAll('.ai-photo-result__table-row')).toHaveLength(foodNames.length);
+    const desktopMarker = '.ai-photo-result__annotation-marker.ai-photo-result__annotation-desktop';
+    expect(host.querySelectorAll(desktopMarker)).toHaveLength(foodNames.length - 1);
+    photoButton(host, `${desktopMarker}[aria-label="Radish"]`).click();
+    fixture.detectChanges();
+
+    const card = photoButton(host, '.ai-photo-result__annotation-card.ai-photo-result__annotation-desktop');
+    expect(card.getAttribute('aria-label')).toBe('Radish');
+    expect(host.querySelector('.ai-photo-result__table-row--active')?.textContent).toContain('Radish');
+    expect(Number.parseFloat(card.style.width)).toBeGreaterThan(0);
+});
+
 function photoButton(root: HTMLElement, selector: string): HTMLButtonElement {
     const button = root.querySelector(selector);
     if (!(button instanceof HTMLButtonElement)) {

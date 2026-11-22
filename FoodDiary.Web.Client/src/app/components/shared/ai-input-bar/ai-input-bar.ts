@@ -81,7 +81,6 @@ export class AiInputBarComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly speechRecognition = inject(SpeechRecognitionService);
     private readonly speechOwner = {};
-    private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
     private readonly actionsElement = viewChild.required<ElementRef<HTMLElement>>('actionsElement');
     private readonly manualActionsElement = viewChild.required<ElementRef<HTMLElement>>('manualActionsElement');
     private readonly historyElement = viewChild.required<FdUiButtonComponent, ElementRef<HTMLElement>>('historyElement', {
@@ -223,6 +222,13 @@ export class AiInputBarComponent {
     }
 
     protected onTextInput(value: string): void {
+        if (this.speechRecognition.isOwnedBy(this.speechOwner)) {
+            // An owned recording can emit a final transcript even after Stop.
+            this.recognitionActionVersion++;
+            if (this.speechRecognition.isListening()) {
+                this.speechRecognition.stop(this.speechOwner);
+            }
+        }
         this.speechErrorKey.set(null);
         this.voiceText.set(value);
     }
@@ -294,9 +300,7 @@ export class AiInputBarComponent {
     }
 
     private onSpeechError(failure: SpeechRecognitionFailure): void {
-        if (!this.destroyRef.destroyed) {
-            this.speechErrorKey.set(SPEECH_ERROR_KEYS[failure]);
-        }
+        this.speechErrorKey.set(SPEECH_ERROR_KEYS[failure]);
     }
 
     protected onTextAddToMeal(details: AiInputBarMealDetails): void {
@@ -318,7 +322,7 @@ export class AiInputBarComponent {
         );
     }
 
-    protected async onPhotoClickAsync(): Promise<void> {
+    protected async onPhotoClickAsync(photoUpload: ImageUploadFieldComponent): Promise<void> {
         if (this.isDisabled()) {
             return;
         }
@@ -327,12 +331,13 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureRecognitionConsentAsync())) {
+        const version = this.recognitionActionVersion;
+        if (!(await this.ensureRecognitionConsentAsync()) || !this.isCurrentRecognitionAction(version) || this.isDisabled()) {
             return;
         }
 
         this.dismissTextResult();
-        this.photoUploadField()?.openFilePicker();
+        photoUpload.openFilePicker();
     }
 
     protected openRecognitionHistory(): void {

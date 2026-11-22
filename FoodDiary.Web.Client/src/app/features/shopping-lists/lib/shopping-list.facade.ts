@@ -42,7 +42,6 @@ export class ShoppingListFacade {
     });
 
     private readonly lastLoadedListId = signal<ShoppingListId | null>(null);
-    private suppressAutosave = false;
     private pendingSave = false;
     private pendingSelection: ShoppingListId | null = null;
     private activeSave: Promise<boolean> | null = null;
@@ -57,21 +56,21 @@ export class ShoppingListFacade {
             return false;
         }
         while (this.activeSave !== null || this.saveQueue.hasPending()) {
-            if (this.activeSave === null) {
+            const save = this.activeSave;
+            if (save === null) {
                 if (this.isSaving() || this.isLoading()) {
                     return false;
                 }
                 this.saveQueue.flushNow();
+                continue;
             }
-            const save = this.activeSave;
-            if (save !== null) {
-                const success = await save;
-                if (this.activeSave === save) {
-                    this.activeSave = null;
-                }
-                if (!success) {
-                    return false;
-                }
+
+            const success = await save;
+            if (this.activeSave === save) {
+                this.activeSave = null;
+            }
+            if (!success) {
+                return false;
             }
         }
         return !this.isSaving();
@@ -358,13 +357,21 @@ export class ShoppingListFacade {
     }
 
     public removeItem(itemId: ShoppingListItemId): void {
-        const filtered = this.items().filter(item => item.id !== itemId);
+        const items = this.items();
+        const filtered = items.filter(item => item.id !== itemId);
+        if (filtered.length === items.length) {
+            return;
+        }
         this.items.set(rebuildShoppingListSortOrder(filtered));
         this.scheduleSave();
     }
 
     public toggleItemChecked(itemId: ShoppingListItemId, checked: boolean): void {
-        const nextItems = this.items().map(entry =>
+        const items = this.items();
+        if (!items.some(item => item.id === itemId)) {
+            return;
+        }
+        const nextItems = items.map(entry =>
             entry.id === itemId
                 ? {
                       ...entry,
@@ -457,7 +464,6 @@ export class ShoppingListFacade {
     private deleteSelectedList(current: ShoppingList): void {
         const previousItems = this.items();
         const previousSelectedListId = this.selectedListId();
-        this.suppressAutosave = true;
         this.pendingSave = false;
         this.list.set(null);
         this.items.set([]);
@@ -472,7 +478,6 @@ export class ShoppingListFacade {
                 next: () => {
                     this.discardPendingSave();
                     this.isSaving.set(false);
-                    this.suppressAutosave = false;
                     this.removeDeletedListSummary(current.id);
                     this.loadLists();
                 },
@@ -482,7 +487,6 @@ export class ShoppingListFacade {
                     this.items.set(previousItems);
                     this.lastLoadedListId.set(current.id);
                     this.selectedListId.set(previousSelectedListId);
-                    this.suppressAutosave = false;
                     this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
                 },
@@ -593,13 +597,11 @@ export class ShoppingListFacade {
 
     private applyEmptyListState(): void {
         this.saveError.set(false);
-        this.runWithAutosaveSuppressed(() => {
-            this.lists.set([]);
-            this.list.set(null);
-            this.items.set([]);
-            this.selectedListId.set(null);
-            this.lastLoadedListId.set(null);
-        });
+        this.lists.set([]);
+        this.list.set(null);
+        this.items.set([]);
+        this.selectedListId.set(null);
+        this.lastLoadedListId.set(null);
     }
 
     private applyList(list: ShoppingList): void {
@@ -608,21 +610,10 @@ export class ShoppingListFacade {
             this.upsertListSummary(list);
         }
         this.storeListCounts(list);
-        this.runWithAutosaveSuppressed(() => {
-            this.list.set(list);
-            this.items.set(rebuildShoppingListSortOrder(list.items));
-            this.selectedListId.set(list.id);
-            this.lastLoadedListId.set(list.id);
-        });
-    }
-
-    private runWithAutosaveSuppressed(action: () => void): void {
-        this.suppressAutosave = true;
-        try {
-            action();
-        } finally {
-            this.suppressAutosave = false;
-        }
+        this.list.set(list);
+        this.items.set(rebuildShoppingListSortOrder(list.items));
+        this.selectedListId.set(list.id);
+        this.lastLoadedListId.set(list.id);
     }
 
     private updateListSummary(list: ShoppingList): void {
@@ -651,10 +642,6 @@ export class ShoppingListFacade {
     }
 
     private scheduleSave(): void {
-        if (this.suppressAutosave) {
-            return;
-        }
-
         if (this.isSaving()) {
             this.pendingSave = true;
         }
@@ -680,11 +667,6 @@ export class ShoppingListFacade {
             return;
         }
 
-        const name = current.name.trim();
-        if (name.length === 0) {
-            return;
-        }
-
         this.isSaving.set(true);
         this.saveError.set(false);
         const submittedItems = this.items();
@@ -694,7 +676,6 @@ export class ShoppingListFacade {
         });
         const payload = {
             expectedRevision: current.revision,
-            name,
             items: submittedItems.map((item, index) => mapShoppingListItemToDto(item, index)),
         };
 

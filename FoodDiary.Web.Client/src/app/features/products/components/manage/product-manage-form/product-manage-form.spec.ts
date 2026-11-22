@@ -2,7 +2,11 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdTourService } from 'fd-tour';
-import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { type FdUiDialogConfig, FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import type {
+    FdUiImagePreviewDialogComponent,
+    FdUiImagePreviewDialogData,
+} from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
 
@@ -1271,6 +1275,35 @@ describe('Product editor rendered suggestion ownership', () => {
             expect.any(Function),
         );
     });
+
+    it('saves a manually entered product from a USDA suggestion without a source ID', async () => {
+        const editor = await setupComponentAsync();
+        const suggestion: ProductSearchSuggestion = { source: 'usda', name: 'Rolled oats' };
+        const saved = { ...PRODUCT, name: suggestion.name, caloriesPerBase: BASE_CALORIES };
+        editor.productManageFacade.submitProductAsync.mockImplementationOnce(async (_product, _request, _skip, afterSave) => {
+            await afterSave?.(saved);
+            return { product: saved, error: null };
+        });
+        await chooseProductSuggestionAsync(editor, suggestion);
+
+        expect(requiredProductInput(editor.el, 'fd-ui-autocomplete input').value).toBe(suggestion.name);
+        expect(editor.externalFoodFacade.getUsdaFoodDetail).not.toHaveBeenCalled();
+        const calories = requiredProductInput(editor.el, '.nutrition-editor__input--calories input');
+        expect(calories.value).toBe('');
+        enterProductValue(calories, String(BASE_CALORIES));
+        editor.fixture.detectChanges();
+        requiredFormButton(editor.el, 'button[type="submit"]').click();
+        await editor.fixture.whenStable();
+
+        expect(editor.productManageFacade.submitProductAsync).toHaveBeenCalledExactlyOnceWith(
+            null,
+            expect.objectContaining({ name: suggestion.name, caloriesPerBase: BASE_CALORIES }),
+            false,
+            expect.any(Function),
+        );
+        expect(editor.externalFoodFacade.linkUsdaProduct).not.toHaveBeenCalled();
+        expect(editor.externalFoodFacade.unlinkUsdaProduct).not.toHaveBeenCalled();
+    });
 });
 
 describe('Product editor external source handoff', () => {
@@ -1853,7 +1886,7 @@ describe('Product editor portion nutrition warning', () => {
 });
 
 describe('Product editor nutrition for a portion measured in pieces', () => {
-    it('shows two-piece nutrition and saves the edited values for one piece', async () => {
+    it('keeps edited two-piece nutrition when that mode is selected again and saves it for one piece', async () => {
         const editor = await setupComponentAsync();
         const { el, fixture, productManageFacade } = editor;
         const portionPieces = 2;
@@ -1886,6 +1919,10 @@ describe('Product editor nutrition for a portion measured in pieces', () => {
         enterProductValue(calories, String(editedPortionCalories));
         enterProductValue(proteins, String(editedPortionProtein));
         fixture.detectChanges();
+
+        selectProductPortionMode(editor);
+        expect(calories.value).toBe(String(editedPortionCalories));
+        expect(proteins.value).toBe(String(editedPortionProtein));
         requiredFormButton(el, 'button[type="submit"]').click();
         await fixture.whenStable();
 
@@ -2022,6 +2059,93 @@ describe('Product editor legacy cover actions', () => {
         expect(payload).not.toHaveProperty('imageAssetIds');
     });
 });
+
+const LEGACY_GALLERY_PHOTO_COUNT = 3;
+
+it('views the selected recognized photo without changing a saved cover that has no URL', async () => {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+    onTestFinished(() => {
+        vi.unstubAllGlobals();
+    });
+    const { el, fixture, dialogService, productManageFacade } = await setupComponentAsync();
+    const legacyAssetId = entityId<'image-asset'>('saved-cover-without-url');
+    fixture.componentRef.setInput('product', { ...PRODUCT, imageAssetId: legacyAssetId });
+    fixture.detectChanges();
+    const front = imageSelection('/product-front.jpg', 'front-photo');
+    const back = imageSelection('/product-back.jpg', 'back-photo');
+    const recognized: ProductAiRecognitionResult = {
+        name: PRODUCT.name,
+        image: null,
+        images: [front, back],
+        baseUnit: MeasurementUnit.G,
+        baseAmount: PORTION_AMOUNT,
+        caloriesPerBase: PORTION_CALORIES,
+        proteinsPerBase: 5,
+        fatsPerBase: 0,
+        carbsPerBase: 0,
+        fiberPerBase: 0,
+        alcoholPerBase: 0,
+    };
+    dialogService.open.mockReturnValueOnce({ afterClosed: () => of(recognized) });
+    requiredFormButton(el, '.product-manage__ai button').click();
+    fixture.detectChanges();
+    const realDialogs = TestBed.runInInjectionContext(() => new FdUiDialogService());
+    dialogService.open.mockImplementationOnce(
+        (component: typeof FdUiImagePreviewDialogComponent, config: FdUiDialogConfig<FdUiImagePreviewDialogData>) =>
+            realDialogs.open(component, config),
+    );
+
+    const triggers = el.querySelectorAll<HTMLButtonElement>('fd-image-gallery-editor .recognition-photos__preview button');
+    expect(triggers).toHaveLength(LEGACY_GALLERY_PHOTO_COUNT);
+    expect(triggers[1].querySelector('img')?.getAttribute('src')).toBe(front.url);
+    triggers[1].click();
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(productGalleryMenuLabels()).toContain('PRODUCT_AI_DIALOG.VIEW_PHOTO');
+    });
+    const view = Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]')).find(
+        button => button.textContent.trim() === 'PRODUCT_AI_DIALOG.VIEW_PHOTO',
+    );
+    view?.click();
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(document.querySelector('fd-ui-image-preview-dialog .fd-ui-image-preview-dialog__image')).not.toBeNull();
+    });
+    const visiblePhoto = document.querySelector('.fd-ui-image-preview-dialog__image')?.getAttribute('src');
+    const thumbnailUrls = Array.from(document.querySelectorAll('.fd-ui-image-preview-dialog__thumbnail img'), image =>
+        image.getAttribute('src'),
+    );
+    requiredFormButton(document.body, 'fd-ui-image-preview-dialog .fd-ui-dialog__close-button').click();
+    await fixture.whenStable();
+    const legacyHadImage = triggers[0].querySelector('img:not([hidden])') !== null;
+    triggers[0].click();
+    await vi.waitFor(() => {
+        fixture.detectChanges();
+        expect(productGalleryMenuLabels()).toContain('IMAGE_UPLOAD_FIELD.REMOVE');
+    });
+    const legacyActions = productGalleryMenuLabels();
+    document.querySelector('[role="menu"]')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await fixture.whenStable();
+    requiredFormButton(el, 'button[type="submit"]').click();
+    await fixture.whenStable();
+    expect(productManageFacade.submitProductAsync.mock.calls[0]?.[1]).toMatchObject({
+        imageUrl: null,
+        imageAssetId: legacyAssetId,
+        imageAssetIds: [legacyAssetId, front.assetId, back.assetId],
+    });
+    expect({ visiblePhoto, thumbnailUrls, legacyHadImage, legacyActions }).toEqual({
+        visiblePhoto: front.url,
+        thumbnailUrls: [front.url, back.url],
+        legacyHadImage: false,
+        legacyActions: ['IMAGE_UPLOAD_FIELD.REMOVE'],
+    });
+});
+
+function productGalleryMenuLabels(): string[] {
+    return Array.from(document.querySelectorAll('button[role="menuitem"]'))
+        .filter(button => button.closest('[hidden]') === null)
+        .map(button => button.textContent.trim());
+}
 
 describe('Product editor first recognized photos', () => {
     it('saves the selected cover and gallery when the existing product has no photos', async () => {

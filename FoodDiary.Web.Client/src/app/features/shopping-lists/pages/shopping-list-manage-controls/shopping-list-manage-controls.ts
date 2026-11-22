@@ -174,13 +174,9 @@ export class ShoppingListManageControlsComponent {
             });
     }
 
-    protected renameList(listId: string): void {
-        const list = this.lists().find(entry => entry.id === listId);
-        if (list === undefined) {
-            return;
-        }
-
-        this.startRename(list);
+    protected startRename(list: ShoppingListSummary): void {
+        this.editingListId.set(list.id);
+        this.renameDraft.set(list.name);
     }
 
     protected canClearListCard(list: ShoppingListSummary): boolean {
@@ -209,10 +205,5 @@ export class ShoppingListManageControlsComponent {
 
     protected cancelRename(): void {
         this.editingListId.set(null);
-    }
-
-    private startRename(list: ShoppingListSummary): void {
-        this.editingListId.set(list.id);
-        this.renameDraft.set(list.name);
     }
 }

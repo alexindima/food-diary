@@ -16,6 +16,7 @@ export class CycleDayItemComponent {
     public readonly item = input.required<CycleDayViewModel>();
     public readonly isClearing = input(false);
     public readonly isConfirming = input(false);
+    public readonly isMutationPending = input(false);
     public readonly isRequestPending = input(false);
     public readonly editDay = output<string>();
     public readonly clearDay = output<string>();

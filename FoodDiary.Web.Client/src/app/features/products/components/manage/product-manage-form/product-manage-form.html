@@ -38,6 +38,7 @@
                 <div class="product-manage__column product-manage__column--primary fd-stack">
                     <fd-product-basic-info
                         [form]="productForm"
+                        [photoOwnerId]="photoOwnerId()"
                         [expandAdditional]="!!product()?.comment?.trim()"
                         [nameOptions]="nameSearch.options()"
                         [isNameSearchLoading]="nameSearch.isLoading()"

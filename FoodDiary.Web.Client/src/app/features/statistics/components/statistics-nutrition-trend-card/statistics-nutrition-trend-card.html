@@ -19,8 +19,7 @@
                     [stackOnNarrow]="false"
                     [ariaLabel]="'STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL' | translate"
                     [options]="chartModeOptions"
-                    [selectedValue]="chartMode()"
-                    (selectedValueChange)="changeChartMode($event)"
+                    [(selectedValue)]="chartMode"
                 />
             </div>
             <fd-ui-segmented-toggle

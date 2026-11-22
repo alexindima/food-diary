@@ -1,7 +1,7 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, map, type Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, type Observable, tap } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
@@ -105,11 +105,7 @@ export class LessonListFacade {
     }
 
     private currentLoadedPage(): LessonPage | null {
-        if (!this.lessonsResource.hasValue()) {
-            return null;
-        }
-        const loaded = this.lessonsResource.value();
-        return loaded.key === this.listRequestKey(this.queryState.current(), this.getCurrentLocale()) ? loaded.page : null;
+        return this.lessonsResource.hasValue() ? this.lessonsResource.value() : null;
     }
 
     private cachedListPage(): LessonPage | null {
@@ -117,7 +113,7 @@ export class LessonListFacade {
         return loaded?.key === this.listRequestKey(this.queryState.current(), this.getCurrentLocale()) ? loaded.page : null;
     }
 
-    private loadListPage(query: LessonListQuery & { locale: string }): Observable<{ key: string; page: LessonPage }> {
+    private loadListPage(query: LessonListQuery & { locale: string }): Observable<LessonPage> {
         const key = this.listRequestKey(query, query.locale);
         return this.service
             .getAll({
@@ -128,7 +124,7 @@ export class LessonListFacade {
                 pageSize: LESSON_PAGE_SIZE,
             })
             .pipe(
-                map(page => {
+                tap(page => {
                     if (
                         !this.destroyRef.destroyed &&
                         key === this.listRequestKey(this.queryState.current(), this.getCurrentLocale()) &&
@@ -140,7 +136,6 @@ export class LessonListFacade {
                             this.writeListQuery({ ...this.queryState.current(), page: resolved }, true);
                         }
                     }
-                    return { key, page };
                 }),
             );
     }

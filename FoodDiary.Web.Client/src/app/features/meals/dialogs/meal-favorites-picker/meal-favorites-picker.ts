@@ -9,7 +9,7 @@ import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { debounceTime, distinctUntilChanged, filter, map, type Observable, of, Subject, switchMap, take } from 'rxjs';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
-import { type MealTypeOption, normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { type MealTypeOption, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import type { FavoriteMeal } from '../../../../shared/models/meal.data';
 import { FavoritesPickerActions } from '../../../../shared/ui/favorites/favorites-picker-actions';
 import { FavoriteMealRowComponent } from '../../components/favorite-meal-row/favorite-meal-row';
@@ -79,10 +79,9 @@ export class MealFavoritesPickerComponent {
 
     private readonly searches = new Subject<string>();
 
-    protected changeMealType(value: string | number | null): void {
-        const mealType = normalizeMealType(typeof value === 'string' ? value : null);
-        if (mealType !== null) {
-            this.selectedMealType.set(mealType);
+    protected changeMealType(value: MealTypeOption | null): void {
+        if (value !== null) {
+            this.selectedMealType.set(value);
         }
     }
 

@@ -343,6 +343,61 @@ function archiveButton(root: HTMLElement, name: string): HTMLButtonElement {
     return button;
 }
 
+describe('Client dashboard recommendation template response order', () => {
+    it.each(['list first', 'save first'] as const)('shows the new template once when the %s response arrives', order => {
+        const older = recommendationTemplate('older', 'Zinc foods');
+        const created = recommendationTemplate('created', 'A balanced breakfast');
+        const initialRead = new Subject<RecommendationTemplate[]>();
+        const pendingSave = new Subject<RecommendationTemplate>();
+        dietologistService.searchRecommendationTemplates.mockReturnValueOnce(initialRead);
+        dietologistService.createRecommendationTemplate.mockReturnValueOnce(pendingSave);
+        createComponent('client-1', true);
+
+        const host = fixture.nativeElement as HTMLElement;
+        const draft = host.querySelector('.client-dashboard__recommendation-form textarea');
+        if (!(draft instanceof HTMLTextAreaElement)) {
+            throw new Error('Expected the recommendation text field');
+        }
+        const name = templateNameField();
+        draft.value = created.text;
+        draft.dispatchEvent(new Event('input', { bubbles: true }));
+        name.value = created.name;
+        name.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        dashboardButton('RECOMMENDATION_TEMPLATES.SAVE').click();
+        expect(dietologistService.createRecommendationTemplate).toHaveBeenCalledExactlyOnceWith({
+            name: created.name,
+            text: created.text,
+        });
+        expect(initialRead.observed).toBe(true);
+        expect(pendingSave.observed).toBe(true);
+
+        const resolveRead = (): void => {
+            initialRead.next([created, older]);
+            initialRead.complete();
+            fixture.detectChanges();
+        };
+        const resolveSave = (): void => {
+            pendingSave.next(created);
+            pendingSave.complete();
+            fixture.detectChanges();
+        };
+        if (order === 'list first') {
+            resolveRead();
+            resolveSave();
+        } else {
+            resolveSave();
+            resolveRead();
+        }
+
+        expect(Array.from(host.querySelectorAll('.client-dashboard__template-name'), item => item.textContent.trim())).toEqual([
+            created.name,
+            older.name,
+        ]);
+        expect(name.value).toBe('');
+    });
+});
+
 describe('ClientDashboardComponent rendered help and discussions', () => {
     it('opens one recommendation discussion at a time and closes the active discussion when selected again', () => {
         const createdAtUtc = utcInstant('2026-05-23T08:00:00Z');

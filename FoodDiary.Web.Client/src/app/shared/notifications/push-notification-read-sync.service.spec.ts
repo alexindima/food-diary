@@ -103,6 +103,20 @@ describe('PushNotificationReadSyncService', () => {
         }
     });
 
+    it('keeps another account’s push when its ID appears in the read status response', async () => {
+        const otherId = entityId<'notification'>('33333333-3333-3333-3333-333333333333');
+        const otherPush = push(otherId, 'user-b');
+        displayed.push(otherPush);
+        notifications.getReadNotificationIds.mockReturnValueOnce(of([otherId, firstId]));
+
+        await startAsync();
+
+        expect(notifications.getReadNotificationIds).toHaveBeenCalledExactlyOnceWith([firstId, secondId]);
+        expect(otherPush.close).not.toHaveBeenCalled();
+        expect(displayed[0].close).toHaveBeenCalledOnce();
+        expect(displayed[1].close).not.toHaveBeenCalled();
+    });
+
     it('rechecks remote reads after realtime or polling hints even if the unread count is unchanged', async () => {
         readIds.clear();
         await startAsync();

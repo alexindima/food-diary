@@ -42,7 +42,7 @@ const IMPERIAL_WAIST = 31.5;
 const CANONICAL_WEIGHT = 70;
 const CANONICAL_WAIST = 80.01;
 const IMPERIAL_LIMIT_EXCESS = 0.02;
-const IMPERIAL_WEIGHT_INCREMENT = 0.01;
+const BODY_TARGET_INCREMENT = 0.01;
 
 type GoalsApi = {
     [Method in 'getGoalsStrict' | 'updateGoals']: Mock<GoalsService[Method]>;
@@ -493,44 +493,49 @@ describe('Routed goal preset', () => {
     });
 });
 
-describe('Routed body goals in imperial units', () => {
-    it('blocks saving a weight one hundredth of a pound above the rendered field maximum', async () => {
-        const { api } = configureGoals();
-        TestBed.inject(MeasurementSystemService).setSystem('imperial');
-        const harness = await RouterTestingHarness.create('/goals');
-        const host = page(harness);
-        const weight = requiredInput(host, '#goals-editor-weight');
-        const maximum = Number(weight.max);
-        editNumber(weight, maximum);
-        redraw(harness);
-        expect(weight.validity.rangeOverflow).toBe(false);
+describe('Routed body goal limits', () => {
+    it.each([
+        { system: 'metric', field: 'weight', maximum: 500, key: 'desiredWeightKg', canonical: 500 },
+        { system: 'metric', field: 'waist', maximum: 300, key: 'desiredWaistCm', canonical: 300 },
+        { system: 'imperial', field: 'weight', maximum: 1102.31, key: 'desiredWeightKg', canonical: 500 },
+        { system: 'imperial', field: 'waist', maximum: 118.11, key: 'desiredWaistCm', canonical: 300 },
+    ] as const)(
+        'enforces the native $system $field limit and saves the exact canonical maximum',
+        async ({ system, field, maximum, key, canonical }) => {
+            const { api } = configureGoals();
+            TestBed.inject(MeasurementSystemService).setSystem(system);
+            const harness = await RouterTestingHarness.create('/goals');
+            const host = page(harness);
+            const input = requiredInput(host, `#goals-editor-${field}`);
+            expect(Number(input.max)).toBe(maximum);
 
-        const aboveMaximum = maximum + IMPERIAL_WEIGHT_INCREMENT;
-        editNumber(weight, aboveMaximum);
-        redraw(harness);
-        expect(weight.validity.rangeOverflow).toBe(true);
-        const save = requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:last-child button');
-        save.click();
-        await harness.fixture.whenStable();
+            const aboveMaximum = maximum + BODY_TARGET_INCREMENT;
+            editNumber(input, aboveMaximum);
+            redraw(harness);
+            expect(input.validity.rangeOverflow).toBe(true);
+            const save = requiredButton(host, 'fd-unsaved-changes-bar fd-ui-button:last-child button');
+            expect(save.disabled).toBe(true);
+            save.click();
+            await harness.fixture.whenStable();
 
-        expect(api.updateGoals).not.toHaveBeenCalled();
-        expect(weight.getAttribute('aria-invalid')).toBe('true');
-        expect(weight.valueAsNumber).toBe(aboveMaximum);
-        expect(save.disabled).toBe(true);
+            expect(api.updateGoals).not.toHaveBeenCalled();
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+            expect(input.valueAsNumber).toBe(aboveMaximum);
 
-        const canonicalMaximum = 500;
-        api.updateGoals.mockReturnValueOnce(of({ ...GOALS, desiredWeightKg: canonicalMaximum }));
-        editNumber(weight, maximum);
-        redraw(harness);
-        expect(weight.validity.valid).toBe(true);
-        expect(save.disabled).toBe(false);
-        save.click();
-        await harness.fixture.whenStable();
-        redraw(harness);
-        expect(api.updateGoals).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ desiredWeightKg: canonicalMaximum }));
-        expect(weight.valueAsNumber).toBe(maximum);
-        expect(weight.getAttribute('aria-invalid')).toBe('false');
-    });
+            api.updateGoals.mockReturnValueOnce(of({ ...GOALS, [key]: canonical }));
+            editNumber(input, maximum);
+            redraw(harness);
+            expect(input.validity.valid).toBe(true);
+            expect(save.disabled).toBe(false);
+            save.click();
+            await harness.fixture.whenStable();
+            redraw(harness);
+
+            expect(api.updateGoals).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ [key]: canonical }));
+            expect(input.valueAsNumber).toBe(maximum);
+            expect(input.getAttribute('aria-invalid')).toBe('false');
+        },
+    );
 });
 
 describe('Routed out-of-range body goal editing', () => {
@@ -542,7 +547,7 @@ describe('Routed out-of-range body goal editing', () => {
         const loaded = weight.value;
         expect(loaded).toBe(String(GOALS.desiredWeightKg));
 
-        editNumber(weight, Number(weight.max) + IMPERIAL_WEIGHT_INCREMENT);
+        editNumber(weight, Number(weight.max) + BODY_TARGET_INCREMENT);
         redraw(harness);
         expect(weight.validity.rangeOverflow).toBe(true);
         expect(weight.getAttribute('aria-invalid')).toBe('true');

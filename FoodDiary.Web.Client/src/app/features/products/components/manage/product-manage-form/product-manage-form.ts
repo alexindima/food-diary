@@ -1,5 +1,17 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    output,
+    signal,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -118,7 +130,8 @@ export class ProductManageFormComponent implements UnsavedEditor {
     private appliedPrefillKey: string | null = null;
     private usdaDetailRequestId = 0;
     protected readonly isDeleting = signal(false);
-    protected readonly photosUploading = signal(false);
+    protected readonly photoOwnerId = computed(() => this.product()?.id ?? null);
+    protected readonly photosUploading = linkedSignal({ source: this.photoOwnerId, computation: () => false });
     protected readonly isSubmitting = signal(false);
 
     protected readonly productFormModel = signal<ProductFormValues>(createProductForm());
@@ -507,12 +520,8 @@ export class ProductManageFormComponent implements UnsavedEditor {
         }
     }
 
-    protected onNutritionModeChange(nextMode: string): void {
+    protected onNutritionModeChange(nextMode: NutritionMode): void {
         this.synchronizePortionNutrition();
-        const resolvedMode: NutritionMode = nextMode === 'portion' ? 'portion' : 'base';
-        if (resolvedMode === this.nutritionMode) {
-            return;
-        }
 
         const values = this.productFormModel();
         const baseAmount = getDefaultProductBaseAmount(values.baseUnit);
@@ -522,11 +531,11 @@ export class ProductManageFormComponent implements UnsavedEditor {
                 ? currentPortionAmount
                 : (this.nutritionPortionBasis ?? baseAmount);
 
-        const factor = resolvedMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
+        const factor = nextMode === 'portion' ? portionAmount / baseAmount : baseAmount / portionAmount;
         this.convertNutritionControls(factor);
 
-        this.nutritionMode = resolvedMode;
-        this.nutritionPortionBasis = resolvedMode === 'portion' ? portionAmount : null;
+        this.nutritionMode = nextMode;
+        this.nutritionPortionBasis = nextMode === 'portion' ? portionAmount : null;
     }
 
     protected startProductManageTour(force = true): void {
@@ -588,7 +597,7 @@ export class ProductManageFormComponent implements UnsavedEditor {
 
     private populateForm(product: Product): void {
         this.photoImportLimitReached.set(false);
-        this.patchProductForm(buildProductFormPatch(product));
+        this.productFormModel.set({ ...createProductForm(), ...buildProductFormPatch(product) });
         this.nutritionMode = 'base';
         this.nutritionPortionBasis = null;
     }

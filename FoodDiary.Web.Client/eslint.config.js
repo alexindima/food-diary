@@ -2122,7 +2122,6 @@ export default [
             'src/app/features/auth/pages/email-verification-pending/email-verification-pending.ts',
             'src/app/features/dashboard/lib/dashboard-layout.service.ts',
             'src/app/features/dashboard/lib/dashboard.facade.ts',
-            'src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts',
             'src/app/features/goals/pages/goals-page.ts',
             'src/app/features/premium/lib/paddle-checkout.service.ts',
             'src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts',

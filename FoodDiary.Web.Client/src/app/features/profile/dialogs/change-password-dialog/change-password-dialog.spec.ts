@@ -250,6 +250,36 @@ describe('ChangePasswordDialogComponent cancel and set password mode', () => {
 });
 
 describe('Rendered password change validation', () => {
+    it('keeps the reuse error ahead of the length error and accepts a valid correction', async () => {
+        const existingPassword = 'old';
+        const nextPassword = 'corrected-test-password';
+        writePassword('CURRENT_PASSWORD', existingPassword);
+        writePassword('NEW_PASSWORD', existingPassword);
+        writePassword('CONFIRM_NEW_PASSWORD', existingPassword);
+        expect(newPasswordError()).toBe('USER_MANAGE.CHANGE_PASSWORD_SAME_ERROR');
+        passwordButton('submit').click();
+        expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+
+        writePassword('NEW_PASSWORD', 'new');
+        writePassword('CONFIRM_NEW_PASSWORD', 'new');
+        expect(newPasswordError()).toBe('FORM_ERRORS.PASSWORD.MIN_LENGTH');
+        passwordButton('submit').click();
+        expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
+
+        writePassword('NEW_PASSWORD', nextPassword);
+        writePassword('CONFIRM_NEW_PASSWORD', nextPassword);
+        expect(newPasswordError()).toBeNull();
+        userServiceSpy.changePassword.mockReturnValueOnce(of(true));
+        passwordButton('submit').click();
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledExactlyOnceWith(true);
+        });
+        expect(userServiceSpy.changePassword).toHaveBeenCalledExactlyOnceWith({
+            currentPassword: existingPassword,
+            newPassword: nextPassword,
+        });
+    });
+
     it('rejects reusing the current password and updates the error when the language changes', async () => {
         vi.restoreAllMocks();
         translateServiceSpy.setTranslation('en', { USER_MANAGE: { CHANGE_PASSWORD_SAME_ERROR: 'Choose a different password' } });

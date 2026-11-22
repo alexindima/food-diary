@@ -7,6 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { RecipeLookupService } from '../../../../shared/api/recipe-lookup.service';
@@ -455,6 +456,54 @@ describe('Quick meal inline hunger and satiety', () => {
         );
     });
 });
+
+describe('Meal type after changing the quick draft clock', () => {
+    it.each([
+        { choice: null, expected: 'BREAKFAST' },
+        { choice: 'DINNER', expected: 'DINNER' },
+    ])('saves $expected at the new time with meal type choice $choice', async ({ choice, expected }) => {
+        const localDate = '2026-05-14';
+        const localTime = '08:30';
+        setDrawerCalendarMonth(localDate);
+        stubScrollIntoView();
+        const { fixture, createMeal } = await renderDrawerAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const type = requiredElement(
+            host.querySelector<HTMLButtonElement>('fd-ui-select button[aria-haspopup="listbox"]'),
+            'the meal type',
+        );
+        expect(type.textContent).toContain('MEAL_TYPES.LUNCH');
+        if (choice !== null) {
+            selectDraftMealType(type, choice);
+        }
+        openMealDetails(host);
+        selectQuickMealDate(host, localDate);
+        selectQuickMealTime(host, localTime);
+        expect(quickMealTimeControl(host).value).toBe(localTime);
+
+        const visibleType = type.textContent.trim();
+        draftSaveButton(host).click();
+        expect(createMeal).toHaveBeenCalledOnce();
+        const submitted = createMeal.mock.lastCall?.[0];
+        expect({ visibleType, submittedDate: submitted?.date, submittedType: submitted?.mealType }).toEqual({
+            visibleType: `MEAL_TYPES.${expected}`,
+            submittedDate: new Date(`${localDate}T${localTime}`),
+            submittedType: expected,
+        });
+    });
+});
+
+function selectDraftMealType(trigger: HTMLButtonElement, type: string): void {
+    trigger.click();
+    TestBed.tick();
+    const options = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="listbox"] button'));
+    const option = requiredElement(
+        options.find(button => button.textContent.trim() === `MEAL_TYPES.${type}`) ?? null,
+        `the ${type} option`,
+    );
+    option.click();
+    TestBed.tick();
+}
 
 describe('Quick meal local date and time', () => {
     it('submits the selected local date and time near midnight', async () => {

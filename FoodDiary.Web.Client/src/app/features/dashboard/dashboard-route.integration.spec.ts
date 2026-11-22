@@ -11,13 +11,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { FdUiToastHostComponent } from 'fd-ui-kit/toast/fd-ui-toast-host';
 import { firstValueFrom, type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import type { AiInputBarResult } from '../../components/shared/ai-input-bar/ai-input-bar.types';
 import { AuthService } from '../../services/auth.service';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
+import type { HydrationEntryHttpResponse } from '../../shared/api/sdk/generated/model/hydration-entry-http-response';
 import type { MealHttpResponse } from '../../shared/api/sdk/generated/model/meal-http-response';
 import { UserService } from '../../shared/api/user.service';
 import { DEVELOPMENT_SCREENS, type DevelopmentScreen } from '../../shared/development/development-tools';
@@ -34,6 +37,7 @@ import { PushNotificationService } from '../../shared/notifications/push-notific
 import { ViewportService } from '../../shared/platform/viewport.service';
 import { PrivacyConsentFacade } from '../../shared/privacy/privacy-consent.facade';
 import { CALORIE_GOAL_ACTIONS, type CalorieGoalActions } from '../goals/contracts/calorie-goal-actions';
+import { HydrationService } from '../hydration/api/hydration.service';
 import { HYDRATION_ACTIONS } from '../hydration/contracts/hydration-actions';
 import { AiMealCreateFacade } from '../meals/contracts/ai-meal-create';
 import { FAVORITE_MEAL_ACTIONS, MEAL_ACTIONS } from '../meals/contracts/meal-actions';
@@ -88,10 +92,17 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
+type DashboardFixtureOptions = {
+    startUrl?: string;
+    initialRead?: Observable<DashboardSnapshot | null>;
+    realMealComposer?: boolean;
+    realHydration?: boolean;
+};
+
 async function renderDashboardAsync(
     initialSnapshot: DashboardSnapshot | null = makeSnapshot(),
     cachedAccount: User | null = null,
-    options: { startUrl?: string; initialRead?: Observable<DashboardSnapshot | null>; realMealComposer?: boolean } = {},
+    options: DashboardFixtureOptions = {},
 ): Promise<DashboardFixture> {
     vi.stubGlobal(
         'matchMedia',
@@ -112,6 +123,7 @@ async function renderDashboardAsync(
             provideHttpClient(),
             provideHttpClientTesting(),
             ...dashboardBoundaryProviders(options.realMealComposer),
+            ...(options.realHydration === true ? [{ provide: HYDRATION_ACTIONS, useExisting: HydrationService }] : []),
             ...notificationBoundaryProviders(),
             { provide: CALORIE_GOAL_ACTIONS, useValue: { updateGoals: updateGoal } },
             {
@@ -642,6 +654,73 @@ describe('Dashboard snapshot recovery', () => {
     });
 });
 
+describe('Dashboard hydration undo during snapshot retry', () => {
+    it('undoes the saved water entry while retrying its dashboard snapshot', async () => {
+        useDashboardDay();
+        const initial = makeSnapshot();
+        const { harness, readSnapshot, refreshSnapshot } = await renderDashboardAsync(initial, null, { realHydration: true });
+        const toast = TestBed.createComponent(FdUiToastHostComponent);
+        const toastRoot = toast.nativeElement as HTMLElement;
+        const http = TestBed.inject(HttpTestingController);
+        onTestFinished(() => {
+            http.verify();
+        });
+        const amountMl = 250;
+        const entryId = entityId<'hydration-entry'>('00000000-0000-4000-8000-000000000002');
+        const timestampUtc = utcInstant(new Date().toISOString());
+        const hydrationUrl = environment.apiUrls.hydration;
+        const receipt = { id: entryId, timestampUtc, amountMl } satisfies HydrationEntryHttpResponse;
+        refreshSnapshot.mockReturnValueOnce(throwError(() => new Error('Dashboard snapshot unavailable')));
+        button(element(harness, HYDRATION_TILE), `+${amountMl} GENERAL.UNITS.ML`).click();
+        const adding = http.expectOne({ method: 'POST', url: hydrationUrl });
+        expect(adding.request.body).toEqual({ amountMl, timestampUtc });
+        adding.flush(receipt);
+        redraw(harness);
+        toast.detectChanges();
+
+        const retry = new Subject<DashboardSnapshot>();
+        readSnapshot.mockReturnValueOnce(retry);
+        const retryButton = button(element(harness, '.dashboard'), 'ERRORS.RETRY');
+        expect(retryButton.disabled).toBe(false);
+        retryButton.click();
+        redraw(harness);
+        expect(retry.observed).toBe(true);
+        expect(readSnapshot.mock.lastCall?.[0].date).toEqual(readSnapshot.mock.calls[0][0].date);
+        expect(element(harness, '.dashboard__refresh-overlay').getAttribute('role')).toBe('status');
+        const undo = button(toastRoot, 'HYDRATION_CARD.UNDO');
+        expect(undo.disabled).toBe(false);
+        undo.click();
+        toast.detectChanges();
+        expect(undo.disabled).toBe(true);
+
+        const deleteRequest = { method: 'DELETE', url: `${hydrationUrl}/${entryId}` };
+        const deletion = http.expectOne(deleteRequest);
+        undo.click();
+        http.expectNone(deleteRequest);
+
+        const restored = new Subject<DashboardSnapshot>();
+        refreshSnapshot.mockReturnValueOnce(restored);
+        deletion.flush(null, { status: 204, statusText: 'No Content' });
+        expect(restored.observed).toBe(true);
+        expect(refreshSnapshot).toHaveBeenCalledTimes(2);
+        expect(refreshSnapshot.mock.lastCall?.[0].date).toEqual(readSnapshot.mock.calls[0][0].date);
+        restored.next(initial);
+        restored.complete();
+        redraw(harness);
+        expect(harness.routeNativeElement?.querySelector('.dashboard__refresh-overlay')).toBeNull();
+
+        expect(retry.observed).toBe(true);
+        const staleTotal = 750;
+        retry.next({ ...initial, hydration: { dateUtc: calendarDate(DASHBOARD_DATE), totalMl: staleTotal, goalMl: 2000 } });
+        retry.complete();
+        redraw(harness);
+        toast.detectChanges();
+        expect(element(harness, `${HYDRATION_TILE} [role="progressbar"]`).getAttribute('aria-valuenow')).toBe('500');
+        http.expectNone(deleteRequest);
+        expect(toastRoot.querySelector('.fd-ui-toast-host__item:not(.is-leaving) .fd-ui-toast-host__action')).toBeNull();
+    });
+});
+
 describe('Dashboard date filter and route state', () => {
     it('publishes loading and applied period independently and rejects an invalid calendar date', async () => {
         const pending = new Subject<DashboardSnapshot>();
@@ -820,6 +899,10 @@ describe('Dashboard recognition quick add', () => {
     });
 });
 
+const DASHBOARD_AI_MEAL_NAME = 'Lentil soup';
+const DASHBOARD_AI_MEAL_AMOUNT = 200;
+const DASHBOARD_AI_MEAL_NUTRIENTS = { calories: 160, protein: 8, fat: 4, carbs: 24, fiber: 6, alcohol: 0 };
+
 describe('Dashboard independent meal recognition drafts', () => {
     it.each(['dinner', 'quick add'] as const)('clears only the submitting composer after %s saves a meal', async source => {
         useDashboardDay();
@@ -833,54 +916,20 @@ describe('Dashboard independent meal recognition drafts', () => {
             http.verify();
         });
         const quickAdd = element(harness, 'fd-dashboard-quick-add');
-        const dinner = Array.from(element(harness, 'fd-meals-preview').querySelectorAll('fd-meals-preview-entry')).find(entry =>
-            entry.textContent.includes('MEAL_CARD.MEAL_TYPES.DINNER'),
-        );
-        if (dinner === undefined) {
-            throw new Error('Expected the empty Dinner slot');
-        }
+        const dinner = dashboardMealSlot(harness, 'DINNER');
         button(dinner, 'MEALS_PREVIEW.ADD_TO_MEAL').click();
         redraw(harness);
 
         const [submitting, other] = source === 'dinner' ? [dinner, quickAdd] : [quickAdd, dinner];
         const otherDraft = 'A separate unsent meal description';
-        const mealName = 'Lentil soup';
-        const nutrients = { calories: 160, protein: 8, fat: 4, carbs: 24, fiber: 6, alcohol: 0 };
-        const amount = 200;
         typeComposerText(other, otherDraft);
-        typeComposerText(submitting, mealName);
-        redraw(harness);
 
-        button(submitting, 'AI_INPUT_BAR.ADD_ACTION').click();
-        const parsing = await vi.waitFor(() => http.expectOne(request => request.url.endsWith('/ai/food/text')));
-        expect(parsing.request.body).toEqual({ text: mealName });
-        parsing.flush({ items: [{ nameEn: mealName, amount, unit: 'g', confidence: 1 }] });
-        http.expectOne(request => request.url.endsWith('/ai/food/nutrition')).flush({
-            ...nutrients,
-            items: [{ name: mealName, amount, unit: 'g', ...nutrients }],
-        });
-        redraw(harness);
-        const review = submitting.querySelector('fd-ai-photo-result');
-        if (review === null) {
-            throw new Error('Expected the submitting composer to show its meal review');
-        }
-        expect(review.textContent).toContain(mealName);
+        const review = await reviewDashboardAiMealAsync(harness, http, submitting);
         button(review, 'MEAL_LIST.VOICE_CREATE_MEAL').click();
         const write = http.expectOne(request => request.method === 'POST' && request.url.endsWith('/meals'));
         expect(write.request.body).toMatchObject({ aiSessions: [{ source: 'Text' }] });
         expect(composerInput(other).value).toBe(otherDraft);
-        write.flush({
-            id: '32de1050-da71-4ebb-9e46-7344b563b407',
-            date: `${DASHBOARD_DATE}T12:00:00Z`,
-            totalCalories: nutrients.calories,
-            totalProteins: nutrients.protein,
-            totalFats: nutrients.fat,
-            totalCarbs: nutrients.carbs,
-            totalFiber: nutrients.fiber,
-            totalAlcohol: nutrients.alcohol,
-            isNutritionAutoCalculated: true,
-            items: [],
-        } satisfies MealHttpResponse);
+        write.flush(dashboardAiMealResponse());
         redraw(harness);
 
         expect(composerInput(other).value).toBe(otherDraft);
@@ -889,6 +938,101 @@ describe('Dashboard independent meal recognition drafts', () => {
         http.expectNone(request => request.method === 'POST' && request.url.endsWith('/meals'));
     });
 });
+
+it('keeps Breakfast open when an earlier Dinner save clears its own draft', async () => {
+    useDashboardDay();
+    const { harness } = await renderDashboardAsync(
+        makeSnapshot(),
+        { ...savedUser(), dashboardLayout: BASE_LAYOUT, aiConsentAcceptedAt: utcInstant(`${DASHBOARD_DATE}T11:00:00Z`) },
+        { realMealComposer: true },
+    );
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        http.verify();
+    });
+    const breakfast = dashboardMealSlot(harness, 'BREAKFAST');
+    const dinner = dashboardMealSlot(harness, 'DINNER');
+    const breakfastButton = button(breakfast, 'MEALS_PREVIEW.ADD_TO_MEAL');
+    const dinnerButton = button(dinner, 'MEALS_PREVIEW.ADD_TO_MEAL');
+    const breakfastDraft = 'An unsent breakfast description';
+    breakfastButton.click();
+    redraw(harness);
+    typeComposerText(breakfast, breakfastDraft);
+    const breakfastInput = composerInput(breakfast);
+    dinnerButton.click();
+    redraw(harness);
+    expect(breakfastButton.getAttribute('aria-expanded')).toBe('false');
+    const review = await reviewDashboardAiMealAsync(harness, http, dinner);
+
+    button(review, 'MEAL_LIST.VOICE_CREATE_MEAL').click();
+    const write = http.expectOne(request => request.method === 'POST' && request.url.endsWith('/meals'));
+    expect(write.request.body).toMatchObject({ mealType: 'DINNER', aiSessions: [{ source: 'Text' }] });
+    expect(breakfastButton.disabled).toBe(false);
+    breakfastButton.click();
+    redraw(harness);
+    expect(breakfastButton.getAttribute('aria-expanded')).toBe('true');
+    expect(breakfastButton.disabled).toBe(true);
+    expect(dinnerButton.getAttribute('aria-expanded')).toBe('false');
+
+    write.flush(dashboardAiMealResponse());
+    redraw(harness);
+
+    expect(breakfastButton.getAttribute('aria-expanded')).toBe('true');
+    expect(breakfastButton.disabled).toBe(false);
+    expect(composerInput(breakfast)).toBe(breakfastInput);
+    expect(breakfastInput.value).toBe(breakfastDraft);
+    expect(composerInput(dinner).value).toBe('');
+    expect(dinner.querySelector('fd-ai-photo-result')).toBeNull();
+    http.expectNone(request => request.method === 'POST' && request.url.endsWith('/meals'));
+});
+
+function dashboardMealSlot(harness: RouterTestingHarness, slot: 'BREAKFAST' | 'DINNER'): Element {
+    const entries = element(harness, 'fd-meals-preview').querySelectorAll('fd-meals-preview-entry');
+    const entry = Array.from(entries).find(item => item.textContent.includes(`MEAL_CARD.MEAL_TYPES.${slot}`));
+    if (entry === undefined) {
+        throw new Error(`Expected the empty ${slot} slot`);
+    }
+    return entry;
+}
+
+async function reviewDashboardAiMealAsync(harness: RouterTestingHarness, http: HttpTestingController, composer: Element): Promise<Element> {
+    const name = DASHBOARD_AI_MEAL_NAME;
+    const amount = DASHBOARD_AI_MEAL_AMOUNT;
+    const nutrients = DASHBOARD_AI_MEAL_NUTRIENTS;
+    typeComposerText(composer, name);
+    redraw(harness);
+    button(composer, 'AI_INPUT_BAR.ADD_ACTION').click();
+    const parsing = await vi.waitFor(() => http.expectOne(request => request.url.endsWith('/ai/food/text')));
+    expect(parsing.request.body).toEqual({ text: name });
+    parsing.flush({ items: [{ nameEn: name, amount, unit: 'g', confidence: 1 }] });
+    http.expectOne(request => request.url.endsWith('/ai/food/nutrition')).flush({
+        ...nutrients,
+        items: [{ name, amount, unit: 'g', ...nutrients }],
+    });
+    redraw(harness);
+    const review = composer.querySelector('fd-ai-photo-result');
+    if (review === null) {
+        throw new Error('Expected the submitting composer to show its meal review');
+    }
+    expect(review.textContent).toContain(name);
+    return review;
+}
+
+function dashboardAiMealResponse(): MealHttpResponse {
+    const nutrients = DASHBOARD_AI_MEAL_NUTRIENTS;
+    return {
+        id: '32de1050-da71-4ebb-9e46-7344b563b407',
+        date: `${DASHBOARD_DATE}T12:00:00Z`,
+        totalCalories: nutrients.calories,
+        totalProteins: nutrients.protein,
+        totalFats: nutrients.fat,
+        totalCarbs: nutrients.carbs,
+        totalFiber: nutrients.fiber,
+        totalAlcohol: nutrients.alcohol,
+        isNutritionAutoCalculated: true,
+        items: [],
+    };
+}
 
 function composerInput(composer: ParentNode): HTMLInputElement {
     const input = composer.querySelector('input.ai-input-bar__input');
@@ -1183,6 +1327,62 @@ describe('Dashboard TDEE goal request ownership', () => {
         });
         expect(refreshSnapshot).toHaveBeenCalledOnce();
         expect(updateGoal).toHaveBeenCalledOnce();
+    });
+});
+
+it('closes the open TDEE dialog without writing a calorie goal already saved from the card', async () => {
+    const target = 1950;
+    const apply = 'TDEE_CARD.APPLY';
+    const dialogSelector = 'fd-tdee-insight-dialog';
+    const snapshot = dashboardSnapshotWithTdee(target);
+    const insight = snapshot.tdeeInsight;
+    if (insight === null || insight === undefined) {
+        throw new Error('Expected the initial TDEE recommendation');
+    }
+    const { harness, updateGoal, refreshSnapshot } = await renderDashboardAsync(snapshot);
+    const saving = new Subject<GoalsResponse | null>();
+    updateGoal.mockReturnValueOnce(saving);
+    refreshSnapshot.mockReturnValueOnce(of({ ...snapshot, dailyGoal: target, tdeeInsight: { ...insight, currentCalorieTarget: target } }));
+
+    const card = element(harness, 'fd-dashboard-tdee-block');
+    button(card, apply).click();
+    redraw(harness);
+    expect(saving.observed).toBe(true);
+
+    button(card, 'TDEE_CARD.TITLE').click();
+    const dialog = await vi.waitFor(() => {
+        redraw(harness);
+        const mounted = document.querySelector(dialogSelector);
+        if (mounted === null) {
+            throw new Error('Expected to open the TDEE details dialog while the card saves');
+        }
+        return mounted;
+    });
+    const dialogApply = [...dialog.querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button')].find(control =>
+        control.textContent.trim().endsWith(apply),
+    );
+    if (dialogApply === undefined) {
+        throw new Error('Expected the TDEE suggestion action in the dialog footer');
+    }
+
+    saving.next({ dailyCalorieTarget: target, calorieCyclingEnabled: false });
+    saving.complete();
+    await vi.waitFor(() => {
+        redraw(harness);
+        expect(refreshSnapshot).toHaveBeenCalledOnce();
+        expect(element(harness, 'fd-dashboard-tdee-block').querySelector('.tdee-card__suggestion')).toBeNull();
+        expect(document.querySelector(dialogSelector)).toBe(dialog);
+        expect(dialogApply.disabled).toBe(false);
+    });
+    expect(saving.observed).toBe(false);
+    expect(updateGoal).toHaveBeenCalledExactlyOnceWith({ dailyCalorieTarget: target });
+
+    dialogApply.click();
+
+    expect(updateGoal).toHaveBeenCalledExactlyOnceWith({ dailyCalorieTarget: target });
+    await vi.waitFor(() => {
+        redraw(harness);
+        expect(document.querySelector(dialogSelector)).toBeNull();
     });
 });
 

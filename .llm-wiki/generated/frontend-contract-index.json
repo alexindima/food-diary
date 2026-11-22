@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 510,
-    "componentsWithoutDirectSpecs": 123,
-    "inputs": 1672,
-    "outputs": 555,
+    "components": 509,
+    "componentsWithoutDirectSpecs": 122,
+    "inputs": 1678,
+    "outputs": 556,
     "apiCalls": 335,
     "templatesWithTranslations": 369,
-    "translationKeys": 2271,
-    "consumerEdges": 1333,
+    "translationKeys": 2270,
+    "consumerEdges": 1332,
     "consumedComponents": 326,
-    "unconsumedComponents": 183
+    "unconsumedComponents": 182
   },
   "components": [
     {
@@ -1730,6 +1730,11 @@
           "required": true
         },
         {
+          "name": "isMutationPending",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "saveError",
           "type": "string | null",
           "required": false
@@ -1780,6 +1785,11 @@
         },
         {
           "name": "isConfirming",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "isMutationPending",
           "type": "",
           "required": false
         },
@@ -1843,6 +1853,11 @@
         {
           "name": "confirmingDate",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "isMutationPending",
+          "type": "",
           "required": false
         },
         {
@@ -2060,6 +2075,11 @@
           "required": true
         },
         {
+          "name": "isMutationPending",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "error",
           "type": "string | null",
           "required": false
@@ -2108,11 +2128,6 @@
         {
           "name": "cycle",
           "type": "CycleResponse | null",
-          "required": true
-        },
-        {
-          "name": "startDate",
-          "type": "string | null",
           "required": true
         },
         {
@@ -3123,8 +3138,8 @@
       ],
       "inputs": [
         {
-          "name": "showSuggestion",
-          "type": "boolean",
+          "name": "suggestedTarget",
+          "type": "number | null",
           "required": true
         },
         {
@@ -3140,7 +3155,7 @@
         },
         {
           "name": "suggestionApply",
-          "type": ""
+          "type": "number"
         }
       ],
       "specPath": null
@@ -3991,19 +4006,6 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-chart/fasting-check-in-chart.spec.ts"
-    },
-    {
-      "class": "FastingCheckInChartDialogComponent",
-      "selector": "fd-fasting-checkin-chart-dialog",
-      "feature": "fasting",
-      "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
     },
     {
       "class": "FastingCheckInDialogComponent",
@@ -9397,6 +9399,11 @@
           "name": "generalErrors",
           "type": "MealGeneralFieldErrors",
           "required": true
+        },
+        {
+          "name": "photoOwnerId",
+          "type": "MealId | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -10630,6 +10637,11 @@
           "required": true
         },
         {
+          "name": "photoOwnerId",
+          "type": "ProductId | null",
+          "required": false
+        },
+        {
           "name": "expandAdditional",
           "type": "",
           "required": false
@@ -11166,12 +11178,12 @@
       ],
       "outputs": [
         {
-          "name": "nutritionModeChange",
-          "type": "string"
-        },
-        {
           "name": "openAiRecognition",
           "type": ""
+        },
+        {
+          "name": "nutritionModeChange",
+          "type": "NutritionMode"
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.spec.ts"
@@ -11371,6 +11383,10 @@
         {
           "name": "userFormPatch",
           "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
+        },
+        {
+          "name": "birthDateEdited",
+          "type": ""
         },
         {
           "name": "birthDateInputInvalidChange",
@@ -12352,7 +12368,13 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.scss"
       ],
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "seo",
+          "type": "PublicRecipePageData",
+          "required": true
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/recipes/pages/public-detail/public-detail.spec.ts"
     },
@@ -12444,6 +12466,11 @@
           "name": "form",
           "type": "FieldTree<RecipeFormValues>",
           "required": true
+        },
+        {
+          "name": "photoOwnerId",
+          "type": "RecipeId | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -14652,11 +14679,6 @@
       "inputs": [
         {
           "name": "compact",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "editor",
           "type": "",
           "required": false
         },
@@ -24475,7 +24497,6 @@
         "COMMON.CLOSE",
         "DISABLED_HINTS.OPERATION_BUSY",
         "PRODUCT_AI_DIALOG.APPLY",
-        "PRODUCT_AI_DIALOG.APPLY_DISABLED",
         "PRODUCT_AI_DIALOG.DESCRIPTION",
         "PRODUCT_AI_DIALOG.DESCRIPTION_PLACEHOLDER",
         "PRODUCT_AI_DIALOG.DETAILS",
@@ -25690,6 +25711,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
       "keys": [
+        "DISABLED_HINTS.IMAGE_REQUIRED",
         "DISABLED_HINTS.OPERATION_BUSY",
         "IMAGE_UPLOAD_FIELD.REMOVE",
         "PRODUCT_AI_DIALOG.ADD_PHOTOS",
@@ -25698,9 +25720,7 @@
         "PRODUCT_AI_DIALOG.DROP_PHOTOS",
         "PRODUCT_AI_DIALOG.IMAGE_DESCRIPTION",
         "PRODUCT_AI_DIALOG.PHOTO",
-        "PRODUCT_AI_DIALOG.PHOTOS_HINT",
         "PRODUCT_AI_DIALOG.PHOTO_ACTIONS",
-        "PRODUCT_AI_DIALOG.PHOTO_COUNT",
         "PRODUCT_AI_DIALOG.VIEW_PHOTO"
       ]
     },
@@ -27979,6 +27999,7 @@
         "dayForm",
         "editingDate",
         "fertilityEnabled",
+        "isMutationPending",
         "isSaving",
         "ovulationTestOptions",
         "saveError"
@@ -27997,6 +28018,7 @@
       "inputsUsed": [
         "isClearing",
         "isConfirming",
+        "isMutationPending",
         "isRequestPending",
         "item"
       ],
@@ -28021,6 +28043,7 @@
         "hasMore",
         "isExpanded",
         "isLoading",
+        "isMutationPending",
         "items",
         "titleKey"
       ],
@@ -28114,6 +28137,7 @@
         "error",
         "goalOptions",
         "isDeleting",
+        "isMutationPending",
         "isSaving",
         "reproductiveStateOptions",
         "settingsForm"
@@ -28134,8 +28158,7 @@
         "cycle",
         "isLoading",
         "predictions",
-        "referenceDate",
-        "startDate"
+        "referenceDate"
       ],
       "outputsHandled": [
         "setupAction"
@@ -29099,18 +29122,6 @@
         "moodLevel",
         "notes",
         "selectedSymptoms"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FastingCheckInChartComponent",
-      "selector": "fd-fasting-check-in-chart",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-chart/fasting-check-in-chart.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "checkIns"
       ],
       "outputsHandled": []
     },
@@ -30644,14 +30655,12 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
-      "occurrences": 4,
+      "occurrences": 2,
       "inputsUsed": [
         "ariaLabel",
         "disabled",
         "disabledReason",
         "fill",
-        "size",
-        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -35821,6 +35830,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disableClose",
         "dismissible",
         "size",
         "title"
@@ -36143,20 +36153,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
       "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-check-in-dialog/fasting-check-in-dialog.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "size",
-        "subtitle",
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiDialogShellComponent",
-      "selector": "fd-ui-dialog-shell",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
-      "consumerFeature": "fasting",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "size",
@@ -37142,6 +37138,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/header-actions-overflow/header-actions-overflow.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/image-gallery-editor.html",
       "occurrences": 1,
       "inputsUsed": [
         "name"
@@ -42664,7 +42672,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "cover",
-        "editor",
         "photos"
       ],
       "outputsHandled": [
@@ -42683,7 +42690,6 @@
       "inputsUsed": [
         "cover",
         "disabled",
-        "editor",
         "photos",
         "scanning",
         "uploading"
@@ -42703,7 +42709,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "cover",
-        "editor",
         "photos"
       ],
       "outputsHandled": [
@@ -42722,7 +42727,6 @@
       "inputsUsed": [
         "compact",
         "cover",
-        "editor",
         "photos"
       ],
       "outputsHandled": [
@@ -43145,7 +43149,8 @@
       "inputsUsed": [
         "generalErrors",
         "mealForm",
-        "mealTypeSelectOptions"
+        "mealTypeSelectOptions",
+        "photoOwnerId"
       ],
       "outputsHandled": [
         "photosUploading"
@@ -44752,7 +44757,8 @@
         "expandAdditional",
         "form",
         "isNameSearchLoading",
-        "nameOptions"
+        "nameOptions",
+        "photoOwnerId"
       ],
       "outputsHandled": [
         "nameQueryChange",
@@ -45256,7 +45262,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.html",
       "occurrences": 1,
       "inputsUsed": [
-        "form"
+        "form",
+        "photoOwnerId"
       ],
       "outputsHandled": [
         "photosUploading"
@@ -46000,7 +46007,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "isApplying",
-        "showSuggestion"
+        "suggestedTarget"
       ],
       "outputsHandled": [
         "dialogClose",
@@ -46159,6 +46166,7 @@
         "userForm"
       ],
       "outputsHandled": [
+        "birthDateEdited",
         "birthDateInputInvalidChange",
         "heightInputInvalidChange",
         "userFormPatch"

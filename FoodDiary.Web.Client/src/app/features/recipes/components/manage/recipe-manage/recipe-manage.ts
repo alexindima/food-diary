@@ -1,6 +1,17 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    linkedSignal,
+    signal,
+    untracked,
+} from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, max, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -9,6 +20,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
+import { filter, takeUntil } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
@@ -100,9 +112,11 @@ export class RecipeManageComponent implements UnsavedEditor {
     private readonly stepsTouched = signal(false);
 
     public readonly recipe = input<Recipe | null>(null);
+    private readonly recipeChanges = toObservable(this.recipe);
     protected globalError = this.recipeManageFacade.globalError;
-    protected readonly stepPhotosUploading = signal(false);
-    protected readonly photosUploading = signal(false);
+    protected readonly photoOwnerId = computed(() => this.recipe()?.id ?? null);
+    protected readonly stepPhotosUploading = linkedSignal({ source: this.photoOwnerId, computation: () => false });
+    protected readonly photosUploading = linkedSignal({ source: this.photoOwnerId, computation: () => false });
     protected readonly anyPhotosUploading = computed(() => this.photosUploading() || this.stepPhotosUploading());
     protected readonly isSubmitting = computed(() => this.recipeManageFacade.isSubmitting() || this.checkingPublication());
     protected readonly isImporting = signal(false);
@@ -280,21 +294,25 @@ export class RecipeManageComponent implements UnsavedEditor {
             this.updateSummaryFromCurrentForm();
             return;
         }
-        this.recipeManageFacade.openItemSelectionDialog(itemType, this.recipe()?.id ?? null).subscribe(selection => {
-            if (selection === null) {
-                return;
-            }
-            this.recipeManageFacade.applyItemSelection(
-                {
-                    patchValue: value => {
-                        this.stepFormManager.patchIngredient({ stepIndex, ingredientIndex }, value);
+        const recipe = this.recipe();
+        this.recipeManageFacade
+            .openItemSelectionDialog(itemType, recipe?.id ?? null)
+            .pipe(takeUntil(this.recipeChanges.pipe(filter(current => current !== recipe))), takeUntilDestroyed(this.destroyRef))
+            .subscribe(selection => {
+                if (selection === null || this.recipe() !== recipe) {
+                    return;
+                }
+                this.recipeManageFacade.applyItemSelection(
+                    {
+                        patchValue: value => {
+                            this.stepFormManager.patchIngredient({ stepIndex, ingredientIndex }, value);
+                        },
                     },
-                },
-                selection,
-            );
-            this.recipeSignalForm().markAsDirty();
-            this.updateSummaryFromCurrentForm();
-        });
+                    selection,
+                );
+                this.recipeSignalForm().markAsDirty();
+                this.updateSummaryFromCurrentForm();
+            });
     }
 
     protected onIngredientTextChange(event: {
@@ -421,16 +439,18 @@ export class RecipeManageComponent implements UnsavedEditor {
     private languageAcknowledgement: { language: string; text: string } | null = null;
 
     private async confirmLanguageAndSaveAsync(data: RecipeFormSubmission, detected: string): Promise<void> {
+        const recipe = this.recipe();
         this.checkingLanguage.set(true);
         try {
             const choice = await this.recipeManageFacade.confirmRecipeLanguageAsync(detected, data.language);
-            if (choice === undefined) {
+            if (choice === undefined || this.destroyRef.destroyed) {
                 return;
             }
-            // Re-read on another save if the form changed while the dialog was open.
+            // Recheck the form and its recipe before applying a deferred language choice.
             if (
                 recipeLanguageText(this.prepareRecipeDto()) !== recipeLanguageText(data) ||
-                this.recipeFormModel().language !== data.language
+                this.recipeFormModel().language !== data.language ||
+                this.recipe() !== recipe
             ) {
                 return;
             }
@@ -448,15 +468,21 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     private async persistPublishedRecipeAsync(recipeData: RecipeDto): Promise<void> {
-        this.checkingPublication.set(true);
+        const recipe = this.recipe();
         const formVersion = JSON.stringify(this.prepareRecipeDto());
+        const isCurrent = (): boolean =>
+            !this.destroyRef.destroyed && this.recipe() === recipe && formVersion === JSON.stringify(this.prepareRecipeDto());
+
+        this.checkingPublication.set(true);
         try {
-            const prepared = await this.recipeManageFacade.preparePublicationAsync(recipeData);
-            if (prepared !== null && formVersion === JSON.stringify(this.prepareRecipeDto())) {
+            const prepared = await this.recipeManageFacade.preparePublicationAsync(recipeData, isCurrent);
+            if (prepared !== null && isCurrent()) {
                 this.savePreparedRecipe(prepared);
             }
         } catch {
-            this.recipeManageFacade.setGlobalError('RECIPE_PUBLICATION.ERROR');
+            if (isCurrent()) {
+                this.recipeManageFacade.setGlobalError('RECIPE_PUBLICATION.ERROR');
+            }
         } finally {
             this.checkingPublication.set(false);
         }
@@ -577,8 +603,9 @@ export class RecipeManageComponent implements UnsavedEditor {
     }
 
     private populateForm(recipeData: Recipe): void {
-        const formPatchValue = this.buildRecipeFormPatchValue(recipeData);
-        this.patchRecipeFormModel(formPatchValue);
+        this.nutritionFormManager.nutritionScaleMode = 'recipe';
+        const { images, ...formPatch } = buildRecipeFormPatchValue(recipeData);
+        this.recipeFormModel.update(current => ({ ...current, ...formPatch, images }));
 
         this.stepFormManager.resetSteps();
         this.stepFormManager.populateRecipeSteps(recipeData);
@@ -591,10 +618,6 @@ export class RecipeManageComponent implements UnsavedEditor {
         } else {
             this.nutritionFormManager.updateSummaryFromForm();
         }
-    }
-
-    private buildRecipeFormPatchValue(recipeData: Recipe): Partial<RecipeFormValues> {
-        return buildRecipeFormPatchValue(recipeData);
     }
 
     private hasNoRecipeNutritionTotals(recipeData: Recipe): boolean {

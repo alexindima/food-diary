@@ -594,7 +594,9 @@ export class ClientDashboardComponent {
             .subscribe({
                 next: template => {
                     this.recommendationTemplates.update(templates =>
-                        [...templates, template].sort((left, right) => left.name.localeCompare(right.name)),
+                        [...templates.filter(item => item.id !== template.id), template].sort((left, right) =>
+                            left.name.localeCompare(right.name),
+                        ),
                     );
                     this.recommendationForm().reset({ ...this.recommendationModel(), templateName: '' });
                     this.templateAttempted.set(false);

@@ -203,6 +203,60 @@ describe('RecipeCardComponent events', () => {
     });
 });
 
+describe('RecipeCardComponent interaction during updates', () => {
+    it('ignores a mounted thumbnail after a refreshed recipe removes its photos', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('recipe', { ...MOCK_RECIPE, imageUrl: '/recipe-cover.jpg' });
+        const opened = vi.fn();
+        component.open.subscribe(opened);
+        fixture.detectChanges();
+        const thumbnail = el.querySelector<HTMLElement>('.entity-card__thumb[role="button"]');
+        if (thumbnail === null) {
+            throw new Error('Expected the recipe thumbnail to be interactive');
+        }
+
+        fixture.componentRef.setInput('recipe', { ...MOCK_RECIPE, imageUrl: null });
+        expect(thumbnail.isConnected).toBe(true);
+        thumbnail.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(document.querySelector('fd-ui-image-preview-dialog')).toBeNull();
+        expect(opened).not.toHaveBeenCalled();
+        expect(el.querySelector('.entity-card__thumb[role="button"]')).toBeNull();
+        expect(el.querySelector('.entity-card__placeholder-icon')).not.toBeNull();
+    });
+
+    it('ignores a repeat favorite activation while pending and accepts it after settlement', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        const favorited = vi.fn();
+        component.favoriteToggle.subscribe(favorited);
+        fixture.detectChanges();
+        const favorite = el.querySelector<HTMLButtonElement>('.entity-card__favorite-button');
+        if (favorite === null) {
+            throw new Error('Expected the recipe favorite button');
+        }
+        favorite.click();
+        expect(favorited).toHaveBeenCalledOnce();
+
+        fixture.componentRef.setInput('favoriteLoading', true);
+        expect(favorite.isConnected).toBe(true);
+        expect(favorite.disabled).toBe(false);
+        favorite.click();
+        expect(favorited).toHaveBeenCalledOnce();
+        fixture.detectChanges();
+        expect(favorite.disabled).toBe(true);
+
+        fixture.componentRef.setInput('recipe', { ...MOCK_RECIPE, isFavorite: true });
+        fixture.componentRef.setInput('favoriteLoading', false);
+        fixture.detectChanges();
+        expect(favorite.disabled).toBe(false);
+        expect(favorite.getAttribute('aria-label')).toBe('RECIPE_DETAIL.REMOVE_FAVORITE');
+        favorite.click();
+        expect(favorited).toHaveBeenCalledTimes(2);
+    });
+});
+
 describe('RecipeCardComponent total time', () => {
     it('should calculate total time as sum of prepTime and cookTime', async () => {
         const { component, fixture } = await setupRecipeCardAsync();

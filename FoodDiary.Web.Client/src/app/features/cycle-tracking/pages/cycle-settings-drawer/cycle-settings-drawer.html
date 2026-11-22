@@ -109,7 +109,7 @@
                         type="submit"
                         appearance="brand-action"
                         [loading]="isSaving()"
-                        [disabled]="isBusy()"
+                        [disabled]="isBusy() || isMutationPending()"
                         [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                     >
                         {{ 'CYCLE_TRACKING.SAVE_SETTINGS' | translate }}

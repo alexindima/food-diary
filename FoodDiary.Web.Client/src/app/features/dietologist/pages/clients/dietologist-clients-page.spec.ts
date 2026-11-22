@@ -374,8 +374,10 @@ describe('Dietologist attention settings validation', () => {
         const latestRequest = new Subject<AttentionSignal[]>();
         dietologistService.getAttentionSignals.mockReturnValueOnce(initialRequest).mockReturnValueOnce(latestRequest);
         createComponent();
-        component['updateAttentionSetting']('inactivityDays', '2');
-        component['applyAttentionSettings']();
+        const settings = openAttentionSettings();
+        changeAttentionInput(attentionInput(settings, '#attention-inactivity'), '2');
+        clickAttentionAction(settings, 'ATTENTION.APPLY');
+        expect(dietologistService.getAttentionSignals).toHaveBeenLastCalledWith(expect.objectContaining({ inactivityDays: 2 }));
         const latestSignal: AttentionSignal = {
             id: entityId<'attention-signal'>('latest-signal'),
             clientUserId: entityId<'user'>('client-1'),
@@ -408,30 +410,80 @@ describe('Dietologist attention settings validation', () => {
     it.each(['', '0', '1.5', '31'])('does not request signals for invalid inactivity value %s', value => {
         createComponent();
         dietologistService.getAttentionSignals.mockClear();
-        component['updateAttentionSetting']('inactivityDays', value);
-        component['applyAttentionSettings']();
+        const settings = openAttentionSettings();
+        const inactivity = attentionInput(settings, '#attention-inactivity');
+        changeAttentionInput(inactivity, value);
+        clickAttentionAction(settings, 'ATTENTION.APPLY');
 
-        expect(component['invalidAttentionSettings']().has('inactivityDays')).toBe(true);
+        expect(inactivity.getAttribute('aria-invalid')).toBe('true');
+        expect(inactivity.ownerDocument.activeElement).toBe(inactivity);
         expect(dietologistService.getAttentionSignals).not.toHaveBeenCalled();
     });
 
-    it('requires all invalid settings to be corrected before requesting signals', () => {
+    it('focuses the first invalid setting and retries a failed read only after corrections', () => {
+        dietologistService.getAttentionSignals.mockReturnValueOnce(throwError(() => new Error('Attention read failed')));
         createComponent();
-        dietologistService.getAttentionSignals.mockClear();
-        component['updateAttentionSetting']('calorieDeviationPercent', '101');
-        component['updateAttentionSetting']('weightChangePercent', '0.4');
-        component['updateAttentionSetting']('calorieDeviationPercent', '100');
-        component['applyAttentionSettings']();
-        expect(dietologistService.getAttentionSignals).not.toHaveBeenCalled();
+        const settings = openAttentionSettings();
+        const calories = attentionInput(settings, '#attention-calories');
+        const weight = attentionInput(settings, '#attention-weight');
+        const host = fixture.nativeElement as HTMLElement;
+        changeAttentionInput(weight, '0.4');
+        changeAttentionInput(calories, '101');
 
-        component['updateAttentionSetting']('weightChangePercent', '0.5');
-        component['applyAttentionSettings']();
-        expect(component['invalidAttentionSettings']().size).toBe(0);
-        expect(dietologistService.getAttentionSignals).toHaveBeenCalledWith(
+        clickAttentionAction(settings, 'ATTENTION.APPLY');
+        expect(calories.ownerDocument.activeElement).toBe(calories);
+        expect(dietologistService.getAttentionSignals).toHaveBeenCalledTimes(1);
+
+        changeAttentionInput(calories, '100');
+        clickAttentionAction(host, 'DIETOLOGIST.CLIENTS.RETRY');
+        expect(weight.ownerDocument.activeElement).toBe(weight);
+        expect(dietologistService.getAttentionSignals).toHaveBeenCalledTimes(1);
+
+        changeAttentionInput(weight, '0.5');
+        clickAttentionAction(host, 'DIETOLOGIST.CLIENTS.RETRY');
+        expect(dietologistService.getAttentionSignals).toHaveBeenCalledTimes(2);
+        expect(dietologistService.getAttentionSignals).toHaveBeenLastCalledWith(
             expect.objectContaining({ calorieDeviationPercent: 100, weightChangePercent: 0.5 }),
         );
+        expect(host.textContent).not.toContain('ATTENTION.LOAD_ERROR');
+        expect(settings.querySelector('[role="alert"]')?.hasAttribute('hidden')).toBe(true);
     });
 });
+
+function openAttentionSettings(): HTMLDetailsElement {
+    const host = fixture.nativeElement as HTMLElement;
+    const settings = host.querySelector<HTMLDetailsElement>('section[aria-labelledby="attention-title"] details');
+    const summary = settings?.querySelector('summary') ?? null;
+    if (settings === null || summary === null) {
+        throw new Error('Expected the attention settings to be rendered');
+    }
+    summary.click();
+    expect(settings.open).toBe(true);
+    return settings;
+}
+
+function attentionInput(settings: HTMLDetailsElement, selector: string): HTMLInputElement {
+    const input = settings.querySelector<HTMLInputElement>(selector);
+    if (input === null) {
+        throw new Error(`Expected the attention setting ${selector}`);
+    }
+    return input;
+}
+
+function changeAttentionInput(input: HTMLInputElement, value: string): void {
+    input.value = value;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+}
+
+function clickAttentionAction(parent: HTMLElement, label: string): void {
+    const button = [...parent.querySelectorAll('button')].find(control => control.textContent.trim() === label);
+    if (button === undefined) {
+        throw new Error(`Expected the attention action ${label}`);
+    }
+    button.click();
+    fixture.detectChanges();
+}
 
 function createComponent(): void {
     TestBed.configureTestingModule({

@@ -93,17 +93,26 @@ describe('UserManageBackupEmailComponent', () => {
         expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
     });
 
-    it('retains request and resend guards even when invoked by the keyboard', () => {
+    it('ignores Enter during an active request and sends the draft once the request settles', () => {
         const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
         fixture.detectChanges();
-        const component = fixture.componentInstance;
-        component['email'].set('backup@example.com');
+        const field = (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('input[type="email"]');
+        if (field === null) {
+            throw new Error('Expected the backup email input');
+        }
+
+        field.value = 'backup@example.com';
+        field.dispatchEvent(new Event('input', { bubbles: true }));
         facade.isRequestingBackupEmail.set(true);
-        component['submit']();
-        facade.isRequestingBackupEmail.set(false);
-        facade.backupEmailResendAt.set(Date.now() + RESEND_COOLDOWN_MS);
-        component['submit']();
+        fixture.detectChanges();
+        field.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
         expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
+        expect(field.value).toBe('backup@example.com');
+
+        facade.isRequestingBackupEmail.set(false);
+        fixture.detectChanges();
+        field.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        expect(facade.requestBackupEmailAsync).toHaveBeenCalledExactlyOnceWith('backup@example.com');
     });
 });
 

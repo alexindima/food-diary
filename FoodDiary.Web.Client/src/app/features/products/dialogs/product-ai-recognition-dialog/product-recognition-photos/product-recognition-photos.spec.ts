@@ -64,16 +64,10 @@ describe('product editor photo slots', () => {
         { count: 5, empty: 0 },
     ])('keeps four secondary slots with $count photos', ({ count, empty }) => {
         const fixture = TestBed.createComponent(ProductRecognitionPhotosComponent);
-        fixture.componentRef.setInput('editor', true);
         fixture.componentRef.setInput(
             'photos',
             Array.from({ length: count }, (_, index) => photo(index)),
         );
         expect(fixture.componentInstance['emptySlots']()).toHaveLength(empty);
-    });
-    it('does not add placeholder slots to recognition', () => {
-        const fixture = TestBed.createComponent(ProductRecognitionPhotosComponent);
-        fixture.componentRef.setInput('photos', [photo(0)]);
-        expect(fixture.componentInstance['emptySlots']()).toEqual([]);
     });
 });

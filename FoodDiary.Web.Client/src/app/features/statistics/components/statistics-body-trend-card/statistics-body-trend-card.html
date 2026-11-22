@@ -12,11 +12,10 @@
                 appearance="soft"
                 size="sm"
                 [options]="metricTabs"
-                [selectedValue]="selectedMetric()"
                 [fullWidth]="true"
                 [stackOnNarrow]="false"
                 [wrapOnNarrow]="false"
-                (selectedValueChange)="selectMetric($event)"
+                [(selectedValue)]="selectedMetric"
             />
 
             @if (hasData()) {

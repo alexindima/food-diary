@@ -32,8 +32,8 @@
     >
         {{ 'TDEE_DIALOG.ACTIONS.MEAL' | translate }}
     </fd-ui-button>
-    @if (showSuggestion()) {
-        <fd-ui-button type="button" variant="primary" icon="done" [loading]="isApplying()" (click)="suggestionApply.emit()">
+    @if (suggestedTarget(); as target) {
+        <fd-ui-button type="button" variant="primary" icon="done" [loading]="isApplying()" (click)="suggestionApply.emit(target)">
             {{ 'TDEE_CARD.APPLY' | translate }}
         </fd-ui-button>
     } @else {

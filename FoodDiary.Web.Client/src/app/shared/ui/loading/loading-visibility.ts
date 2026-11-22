@@ -27,10 +27,8 @@ export class LoadingVisibility {
         }
         this.showTimer = setTimeout(() => {
             this.showTimer = null;
-            if (this.activeLoads > 0) {
-                this.visibleSince = Date.now();
-                this.isVisible.set(true);
-            }
+            this.visibleSince = Date.now();
+            this.isVisible.set(true);
         }, this.timing.showDelayMs);
     }
 

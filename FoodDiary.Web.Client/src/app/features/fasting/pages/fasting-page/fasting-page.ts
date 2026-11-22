@@ -36,10 +36,6 @@ import {
     type FastingCheckInDialogResult,
 } from '../../components/fasting-check-in-dialog/fasting-check-in-dialog';
 import {
-    FastingCheckInChartDialogComponent,
-    type FastingCheckInChartDialogData,
-} from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
-import {
     FastingEndConfirmDialogComponent,
     type FastingEndConfirmDialogData,
     type FastingEndConfirmDialogResult,
@@ -335,27 +331,6 @@ export class FastingPageComponent {
         this.facade.loadMoreHistory();
     }
 
-    protected openSessionCheckInChart(session: FastingSession): void {
-        if (!this.canViewSessionCheckInChart(session)) {
-            return;
-        }
-
-        this.dialogService.open<FastingCheckInChartDialogComponent, FastingCheckInChartDialogData, void>(
-            FastingCheckInChartDialogComponent,
-            {
-                size: 'lg',
-                width: 'var(--fd-size-dialog-chart-width)',
-                maxWidth: 'var(--fd-size-dialog-chart-width)',
-                panelClass: 'fd-ui-dialog-panel--chart',
-                data: {
-                    title: this.translateService.instant('FASTING.CHECK_IN.CHART_TITLE'),
-                    subtitle: this.getHistoryChartSubtitle(session),
-                    checkIns: this.getSessionCheckIns(session),
-                },
-            },
-        );
-    }
-
     protected getHistoryAccentColor(session: FastingSession): string {
         if (isFastingEndedEarly(session)) {
             return 'var(--fd-color-orange-500)';
@@ -463,10 +438,6 @@ export class FastingPageComponent {
 
     protected getSessionCheckInCount(session: FastingSession): number {
         return this.getSessionCheckIns(session).length;
-    }
-
-    protected canViewSessionCheckInChart(session: FastingSession): boolean {
-        return this.getSessionCheckInCount(session) > 1;
     }
 
     protected getCheckInSummary(hunger: number | null, energy: number | null, mood: number | null): string {
@@ -588,10 +559,6 @@ export class FastingPageComponent {
         const eatFastHours = session.cyclicEatDayFastHours ?? DEFAULT_CYCLIC_EAT_FAST_HOURS;
 
         return `${fastDays}:${eatDays} (${eatFastHours}:${eatWindowHours})`;
-    }
-
-    private getHistoryChartSubtitle(session: FastingSession): string {
-        return `${this.formatSessionDateLabel(session.startedAtUtc)} · ${this.getHistorySessionTypeLabel(session)} · ${this.getHistoryProtocolDisplay(session)}`;
     }
 
     private formatSessionDateLabel(value: string): string {

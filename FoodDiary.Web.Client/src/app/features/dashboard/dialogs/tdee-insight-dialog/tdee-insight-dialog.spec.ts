@@ -52,20 +52,31 @@ describe('TdeeInsightDialogComponent', () => {
         expect(component['setupItems'].map(item => item.complete)).toEqual([true, true, true]);
     });
 
-    it('closes only after the suggested goal has been persisted', async () => {
-        const { component, dialogRef, applyGoal } = await setupComponentAsync(createInsight());
+    it('closes only after the user applies the suggestion and the goal has been persisted', async () => {
+        const { fixture, dialogRef, applyGoal } = await setupComponentAsync(createInsight());
+        const save = new Subject<boolean>();
+        applyGoal.mockReturnValueOnce(firstValueFrom(save));
+        fixture.detectChanges();
+        const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button');
+        const apply = Array.from(buttons).find(button => button.textContent.trim().endsWith('TDEE_CARD.APPLY'));
+        expect(apply).toBeDefined();
 
-        await component['applySuggestionAsync']();
-
+        apply?.click();
         expect(applyGoal).toHaveBeenCalledExactlyOnceWith(SUGGESTED_TARGET);
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        save.next(true);
+        save.complete();
+        await fixture.whenStable();
         expect(dialogRef.close).toHaveBeenCalledOnce();
         expect(dialogRef.close).toHaveBeenCalledWith();
     });
 
     it('uses empty state and ignores invalid suggestion without insight', async () => {
-        const { component, dialogRef } = await setupComponentAsync(null);
-
-        await component['applySuggestionAsync']();
+        const { component, fixture, dialogRef, applyGoal } = await setupComponentAsync(null);
+        fixture.detectChanges();
+        expect(footerButton(fixture, 'TDEE_CARD.APPLY')).toBeUndefined();
+        expect(applyGoal).not.toHaveBeenCalled();
 
         expect(component['effectiveTdee']).toBeNull();
         expect(component['stateKey']).toBe('TDEE_DIALOG.STATE.EMPTY');
@@ -124,34 +135,40 @@ describe('TDEE dialog application recovery', () => {
         } else {
             applyGoal.mockResolvedValueOnce(failure);
         }
-        await component['applySuggestionAsync']();
+        fixture.detectChanges();
+        footerButton(fixture, 'TDEE_CARD.APPLY')?.click();
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(component['applyFailed']()).toBe(true);
         expect(component['isApplying']()).toBe(false);
         expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).not.toBeNull();
         expect(dialogRef.close).not.toHaveBeenCalled();
-        await component['applySuggestionAsync']();
+        footerButton(fixture, 'TDEE_CARD.APPLY')?.click();
+        await fixture.whenStable();
+        expect(applyGoal).toHaveBeenCalledTimes(2);
         expect(component['applyFailed']()).toBe(false);
         expect(dialogRef.close).toHaveBeenCalledOnce();
     });
 
     it('blocks duplicate application, dismissal and other actions until the pending save resolves', async () => {
-        const { component, fixture, dialogRef, applyGoal } = await setupComponentAsync(createInsight());
+        const { fixture, dialogRef, applyGoal } = await setupComponentAsync(createInsight());
         const pending = new Subject<boolean>();
         applyGoal.mockReturnValueOnce(firstValueFrom(pending));
-        const saving = component['applySuggestionAsync']();
+        fixture.detectChanges();
+        const apply = footerButton(fixture, 'TDEE_CARD.APPLY');
+        apply?.click();
+        apply?.click();
+        footerButton(fixture, 'TDEE_DIALOG.ACTIONS.PROFILE')?.click();
         fixture.detectChanges();
         expect(dialogRef.disableClose).toBe(true);
         const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button');
         expect(buttons).toHaveLength(FOOTER_ACTION_COUNT);
         expect(Array.from(buttons).every(button => button.disabled)).toBe(true);
-        component['close']({ type: 'profile' });
-        await component['applySuggestionAsync']();
-        expect(applyGoal).toHaveBeenCalledOnce();
+        expect(applyGoal).toHaveBeenCalledExactlyOnceWith(SUGGESTED_TARGET);
         expect(dialogRef.close).not.toHaveBeenCalled();
         pending.next(true);
         pending.complete();
-        await saving;
+        await fixture.whenStable();
         expect(dialogRef.close).toHaveBeenCalledOnce();
         expect(dialogRef.disableClose).toBe(false);
     });
@@ -173,7 +190,30 @@ describe('TDEE dialog footer actions', () => {
         expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({ type });
         expect(applyGoal).not.toHaveBeenCalled();
     });
+
+    it.each([null, 0])('offers manual goal settings when the suggested target is %s', async suggestedCalorieTarget => {
+        const { fixture, dialogRef, applyGoal } = await setupComponentAsync({ ...createInsight(), suggestedCalorieTarget });
+        fixture.detectChanges();
+        const buttons = Array.from(
+            (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button'),
+        );
+        expect(buttons.some(button => button.textContent.trim().endsWith('TDEE_CARD.APPLY'))).toBe(false);
+        const goalSettings = buttons.find(button => button.textContent.trim().endsWith('TDEE_DIALOG.ACTIONS.GOALS'));
+        expect(goalSettings).toBeDefined();
+
+        goalSettings?.click();
+
+        expect(dialogRef.close).toHaveBeenCalledExactlyOnceWith({ type: 'goals' });
+        expect(applyGoal).not.toHaveBeenCalled();
+    });
 });
+
+function footerButton(fixture: ComponentFixture<TdeeInsightDialogComponent>, label: string): HTMLButtonElement | undefined {
+    const host = fixture.nativeElement as HTMLElement;
+    return Array.from(host.querySelectorAll<HTMLButtonElement>('fd-tdee-insight-dialog-footer button')).find(button =>
+        button.textContent.trim().endsWith(label),
+    );
+}
 
 async function setupComponentAsync(
     insight: TdeeInsight | null,

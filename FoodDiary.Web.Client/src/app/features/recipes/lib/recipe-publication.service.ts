@@ -1,4 +1,4 @@
-import { type DestroyRef, inject, Service } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom } from 'rxjs';
@@ -19,7 +19,7 @@ export class RecipePublicationService {
     private readonly dialogs = inject(FdUiDialogService);
     private readonly translate = inject(TranslateService);
 
-    public async prepareAsync(data: RecipeDto, owner?: DestroyRef): Promise<RecipeDto | null> {
+    public async prepareAsync(data: RecipeDto, isCurrent: () => boolean = () => true): Promise<RecipeDto | null> {
         if (data.visibility !== RecipeVisibility.Public) {
             return data;
         }
@@ -27,7 +27,7 @@ export class RecipePublicationService {
             step.ingredients.flatMap(ingredient => (ingredient.productId !== undefined ? [ingredient.productId] : [])),
         );
         const products = await this.products.loadAsync(ids);
-        if (owner?.destroyed === true) {
+        if (!isCurrent()) {
             return null;
         }
         const privateProducts = products.filter(product => product.visibility !== ProductVisibility.Public);
@@ -48,6 +48,9 @@ export class RecipePublicationService {
                 )
                 .afterClosed(),
         );
+        if (!isCurrent()) {
+            return null;
+        }
         if (choice === 'publish') {
             await this.products.publishAsync(privateProducts);
             return data;

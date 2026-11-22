@@ -164,6 +164,7 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isSavingEpisode = this.facade.isSavingEpisode;
     protected readonly isEpisodeBusy = this.facade.isEpisodeBusy;
+    protected readonly isProfileMutationPending = this.facade.isProfileMutationPending;
     protected readonly episodeError = this.facade.episodeError;
     protected readonly excludingEpisodeId = this.facade.excludingEpisodeId;
     protected readonly deletingEpisodeId = this.facade.deletingEpisodeId;
@@ -325,8 +326,8 @@ export class CycleTrackingPageComponent {
         this.facade.initialize();
     }
 
-    protected editDay(date: string): void {
-        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
+    protected editDay(date: string, renderedProfileId: CycleProfileId): void {
+        if (!this.canOpenDayEditor(renderedProfileId)) {
             return;
         }
         this.facade.editDay(date);
@@ -342,18 +343,22 @@ export class CycleTrackingPageComponent {
         this.isDayEditorOpen.set(false);
     }
 
-    protected openDayEditor(): void {
-        if (this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
+    protected openDayEditor(renderedProfileId: CycleProfileId): void {
+        if (!this.canOpenDayEditor(renderedProfileId)) {
             return;
         }
         const today = new Date();
         if (buildCycleOverviewView(this.cycle(), this.appLocale(), today)?.hasTodayEntry === true) {
-            this.editDay(formatDateInputValue(today));
+            this.editDay(formatDateInputValue(today), renderedProfileId);
             return;
         }
-        this.facade.beginDayEntry();
+        this.facade.beginDayEntry(renderedProfileId);
         this.isSettingsOpen.set(false);
         this.isDayEditorOpen.set(true);
+    }
+
+    private canOpenDayEditor(renderedProfileId: CycleProfileId): boolean {
+        return this.cycleProfileId() === renderedProfileId && !this.facade.isDayMutationPending();
     }
 
     protected closeDayEditor(): void {
@@ -384,9 +389,8 @@ export class CycleTrackingPageComponent {
         this.isSettingsOpen.set(false);
     }
 
-    protected clearDay(date: string): void {
-        const profileId = this.cycle()?.id;
-        if (profileId === undefined || this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null) {
+    protected clearDay(date: string, renderedProfileId: CycleProfileId): void {
+        if (this.cycleProfileId() !== renderedProfileId || this.isProfileMutationPending()) {
             return;
         }
         this.openRouteDialog(FdUiConfirmDialogComponent, {
@@ -400,14 +404,16 @@ export class CycleTrackingPageComponent {
         })
             .pipe(filter((confirmed): confirmed is true => confirmed === true))
             .subscribe(() => {
-                if (this.cycle()?.id === profileId) {
+                if (this.cycleProfileId() === renderedProfileId) {
                     this.facade.clearDay(date);
                 }
             });
     }
 
-    protected confirmPeriodStart(date: string): void {
-        this.facade.confirmPeriodStart(date);
+    protected confirmPeriodStart(date: string, renderedProfileId: CycleProfileId): void {
+        if (this.cycleProfileId() === renderedProfileId) {
+            this.facade.confirmPeriodStart(date);
+        }
     }
 
     protected toggleHistory(): void {

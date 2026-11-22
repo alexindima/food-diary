@@ -48,8 +48,16 @@ const SUMMARY = {
         },
     ],
     weight: [
-        { startDate: FROM_DAY, endDate: EARLY_BUCKET_END_DAY, averageWeightKg: WEIGHT_BUCKET_BEFORE },
-        { startDate: LATE_BUCKET_START_DAY, endDate: TO_DAY, averageWeightKg: WEIGHT_BUCKET_AFTER },
+        {
+            startDate: `${FROM_DAY}T00:00:00Z`,
+            endDate: `${EARLY_BUCKET_END_DAY}T00:00:00Z`,
+            averageWeightKg: WEIGHT_BUCKET_BEFORE,
+        },
+        {
+            startDate: `${LATE_BUCKET_START_DAY}T00:00:00Z`,
+            endDate: `${TO_DAY}T00:00:00Z`,
+            averageWeightKg: WEIGHT_BUCKET_AFTER,
+        },
     ],
     waist: [],
 } satisfies StatisticsSummaryHttpResponse;

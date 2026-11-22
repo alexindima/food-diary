@@ -35,10 +35,9 @@
                 [fullWidth]="true"
                 [stackOnNarrow]="false"
                 [options]="nutritionModeOptions()"
-                [selectedValue]="nutritionMode()"
                 [fdUiHint]="'PRODUCT_MANAGE.NUTRITION_MODE.HINT' | translate"
                 [ariaLabel]="'PRODUCT_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                (selectedValueChange)="nutritionModeChange.emit($event)"
+                [(selectedValue)]="nutritionMode"
             />
         </fd-nutrition-editor>
     </div>

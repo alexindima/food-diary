@@ -83,7 +83,7 @@ export class StatisticsNutritionTrendCardComponent {
     public readonly insights = input.required<readonly StatisticsTrendInsight[]>();
 
     protected readonly chartMode = signal<StatisticsTrendChartMode>('bars');
-    protected readonly chartModeOptions: FdUiSegmentedToggleOption[] = [
+    protected readonly chartModeOptions: Array<FdUiSegmentedToggleOption<StatisticsTrendChartMode>> = [
         { value: 'bars', labelKey: 'STATISTICS.DASHBOARD.TREND.CHART_BARS' },
         { value: 'line', labelKey: 'STATISTICS.DASHBOARD.TREND.CHART_LINE' },
     ];
@@ -274,12 +274,6 @@ export class StatisticsNutritionTrendCardComponent {
 
     protected onTabChange(value: string): void {
         this.selectedTab.set(value);
-    }
-
-    protected changeChartMode(value: string): void {
-        if (value === 'bars' || value === 'line') {
-            this.chartMode.set(value);
-        }
     }
 
     protected readonly formatChartNumber = (value: number): string => this.chartNumberFormatter().format(value);

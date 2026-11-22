@@ -28,10 +28,8 @@ export class ServiceWorkerDiagnosticsService {
         this.reportedAt.delete(key);
         this.reportedAt.set(key, now);
         if (this.reportedAt.size > MAX_RECENT_FAILURES) {
-            const oldest = this.reportedAt.keys().next().value;
-            if (oldest !== undefined) {
-                this.reportedAt.delete(oldest);
-            }
+            const [oldest] = this.reportedAt.keys();
+            this.reportedAt.delete(oldest);
         }
         try {
             this.injector.get(FrontendObservabilityService).recordServiceWorkerFailure(stage, targetVersion);

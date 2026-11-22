@@ -1,11 +1,13 @@
-import { DatePipe } from '@angular/common';
+import { DATE_PIPE_DEFAULT_OPTIONS, DatePipe } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, Subject, throwError } from 'rxjs';
+import { firstValueFrom, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { ConfirmDeleteDialogComponent } from '../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import type { FavoriteMeal, Meal } from '../../../../shared/models/meal.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
@@ -78,6 +80,7 @@ beforeEach(() => {
             provideTranslateTesting(),
             MealDetailFacade,
             DatePipe,
+            { provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: { timezone: 'UTC' } },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FdUiDialogService, useValue: dialogService },
             { provide: FavoriteMealService, useValue: favoriteMealService },
@@ -183,12 +186,16 @@ describe('MealDetailFacade actions', () => {
         expect(dialogRef.close).toHaveBeenNthCalledWith(2, expect.objectContaining({ id: 'meal-1', action: 'Repeat' }));
     });
 
-    it('should close with delete action after confirmation', () => {
+    it('identifies the dated meal in the prompt before dispatching the confirmed delete', async () => {
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', { CONFIRM_DELETE: { MESSAGE: 'Delete the meal for {{name}}?' } });
+        await firstValueFrom(translate.use('en'));
         facade.initialize(meal);
 
         facade.delete(meal);
 
-        expect(dialogService.open).toHaveBeenCalled();
+        const data: unknown = expect.objectContaining({ name: '14.05.2026', message: 'Delete the meal for 14.05.2026?' });
+        expect(dialogService.open).toHaveBeenCalledExactlyOnceWith(ConfirmDeleteDialogComponent, { size: 'sm', data });
         expect(dialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: 'meal-1', action: 'Delete' }));
     });
 

@@ -13,18 +13,7 @@ import { publicSiteLocaleGuard } from './shared/i18n/public-site-locale.guard';
 import { mobileShellStartGuard } from './shared/platform/mobile-shell-start.guard';
 import { healthConsentGuard } from './shared/privacy/health-consent.guard';
 
-const healthPaths = new Set([
-    'dashboard',
-    'goals',
-    'statistics',
-    'weight-history',
-    'waist-history',
-    'cycle-tracking',
-    'fasting',
-    'hydration',
-    'weekly-check-in',
-    'recommendations',
-]);
+const healthRouteGuards = [authGuard, healthConsentGuard];
 
 const publicSeoLanding = (
     { path, titleKey, descriptionKey, baseKey, featureKeys, stepKeys, faqKeys, relatedPaths }: PublicSeoLandingRouteConfig,
@@ -95,7 +84,7 @@ const configuredRoutes: Routes = [
     ...authRoutes,
     {
         path: 'dashboard',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/dashboard/dashboard.routes'),
         data: { preload: true, seo: { titleKey: 'SEO.DASHBOARD', descriptionKey: 'SEO.DASHBOARD_DESCRIPTION', noIndex: true } },
     },
@@ -130,31 +119,31 @@ const configuredRoutes: Routes = [
     },
     {
         path: 'goals',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/goals/goals.routes'),
         data: { seo: { titleKey: 'SEO.GOALS', descriptionKey: 'SEO.GOALS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'statistics',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/statistics/statistics.routes'),
         data: { seo: { titleKey: 'SEO.STATISTICS', descriptionKey: 'SEO.STATISTICS_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'weight-history',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/weight-history/weight-history.routes'),
         data: { seo: { titleKey: 'SEO.WEIGHT_HISTORY', descriptionKey: 'SEO.WEIGHT_HISTORY_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'waist-history',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/waist-history/waist-history.routes'),
         data: { seo: { titleKey: 'SEO.WAIST_HISTORY', descriptionKey: 'SEO.WAIST_HISTORY_DESCRIPTION', noIndex: true } },
     },
     {
         path: 'cycle-tracking',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/cycle-tracking/cycle-tracking.routes'),
         data: { seo: { titleKey: 'SEO.CYCLE_TRACKING', descriptionKey: 'SEO.CYCLE_TRACKING_DESCRIPTION', noIndex: true } },
     },
@@ -166,7 +155,7 @@ const configuredRoutes: Routes = [
     },
     {
         path: 'weekly-check-in',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/weekly-check-in/weekly-check-in.routes'),
         data: { seo: { titleKey: 'SEO.WEEKLY_CHECK_IN', descriptionKey: 'SEO.WEEKLY_CHECK_IN_DESCRIPTION', noIndex: true } },
     },
@@ -184,7 +173,7 @@ const configuredRoutes: Routes = [
     },
     {
         path: 'fasting',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/fasting/fasting.routes'),
         data: { seo: { titleKey: 'SEO.FASTING', descriptionKey: 'SEO.FASTING_DESCRIPTION', noIndex: true } },
     },
@@ -215,7 +204,7 @@ const configuredRoutes: Routes = [
     },
     {
         path: 'recommendations',
-        canActivate: [authGuard],
+        canActivate: healthRouteGuards,
         loadChildren: async () => import('./features/recommendations/recommendations.routes'),
         data: { seo: { titleKey: 'RECOMMENDATIONS.TITLE', noIndex: true } },
     },
@@ -245,9 +234,4 @@ const configuredRoutes: Routes = [
     },
 ];
 
-export const routes: Routes = requireSessionForGuardedRoutes(
-    configuredRoutes.map(route =>
-        healthPaths.has(route.path ?? '') ? { ...route, canActivate: [...(route.canActivate ?? []), healthConsentGuard] } : route,
-    ),
-    [authGuard, dietologistGuard],
-);
+export const routes: Routes = requireSessionForGuardedRoutes(configuredRoutes, [authGuard, dietologistGuard]);

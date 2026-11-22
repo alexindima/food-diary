@@ -72,8 +72,8 @@
             [endActionLabelKey]="endConfirmationKeys[basicSession.planType].actionKey"
             [isUpdatingCycle]="isUpdatingCycle()"
             [isEnding]="isEnding()"
-            (skip)="skipCyclicDay()"
-            (postpone)="postponeCyclicDay()"
+            (skip)="skipCyclicDay(basicSession.id)"
+            (postpone)="postponeCyclicDay(basicSession.id)"
             (end)="endFasting(basicSession.id)"
         />
     }

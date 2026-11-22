@@ -40,7 +40,7 @@ export class DashboardFastingCardComponent {
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
     private timerInterval: ReturnType<typeof setInterval> | null = null;
     private readonly cycleList = viewChild<ElementRef<HTMLOListElement>>('cycleList');
-    private positionedCycleDay: { list: HTMLOListElement; day: number } | null = null;
+    private positionedCycleDay: Element | null = null;
 
     public readonly session = input.required<FastingSession | null>();
     protected readonly timeline = computed(() => buildDashboardFastingTimeline(this.session(), this.elapsedMs()));
@@ -116,22 +116,15 @@ export class DashboardFastingCardComponent {
     public constructor() {
         afterRenderEffect(() => {
             const list = this.cycleList()?.nativeElement;
-            const day = this.cycleDays().find(cycleDay => cycleDay.current)?.day;
-            if (
-                list === undefined ||
-                day === undefined ||
-                (this.positionedCycleDay?.list === list && this.positionedCycleDay.day === day)
-            ) {
-                return;
-            }
-            const current = list.querySelector<HTMLElement>('[aria-current="step"]');
-            if (current === null) {
+            const currentIndex = this.cycleDays().findIndex(day => day.current);
+            const current = list?.children.item(currentIndex) ?? null;
+            if (list === undefined || current === null || this.positionedCycleDay === current) {
                 return;
             }
             const listBounds = list.getBoundingClientRect();
             const currentBounds = current.getBoundingClientRect();
             list.scrollLeft += currentBounds.left - listBounds.left + (currentBounds.width - list.clientWidth) / 2;
-            this.positionedCycleDay = { list, day };
+            this.positionedCycleDay = current;
         });
         effect(() => {
             const session = this.session();

@@ -57,13 +57,11 @@ const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
 })
 export class CycleSummaryCardComponent {
     public readonly cycle = input.required<CycleResponse | null>();
-    public readonly startDate = input.required<string | null>();
     public readonly predictions = input.required<CyclePredictions | null>();
     public readonly referenceDate = input.required<Date | string | null>();
     public readonly isLoading = input.required<boolean>();
     public readonly setupAction = output();
 
-    private readonly normalizedStart = computed(() => this.normalizeDate(this.startDate()));
     private readonly normalizedReference = computed(() => this.normalizeDate(this.referenceDate()));
 
     protected readonly cycleDay = computed(() => {
@@ -100,15 +98,38 @@ export class CycleSummaryCardComponent {
         return days <= 0 ? { labelKey: 'CYCLE_CARD.NEXT_PERIOD_TODAY' } : { labelKey: 'CYCLE_CARD.NEXT_PERIOD_IN', params: { days } };
     });
 
-    protected readonly modeKey = computed(() => {
+    protected readonly metaPills = computed<CycleSummaryPill[] | null>(() => {
         const cycle = this.cycle();
-        return cycle === null ? null : this.getModeLabelKey(cycle.mode);
+        if (cycle === null || this.normalizeDate(cycle.trackingStartDate) === null) {
+            return null;
+        }
+
+        const pills: CycleSummaryPill[] = [{ id: 'mode', labelKey: this.getModeLabelKey(cycle.mode) }];
+        const confidence = this.predictions()?.confidence ?? null;
+        if (confidence !== null) {
+            pills.push({ id: 'confidence', labelKey: CONFIDENCE_LABELS[confidence] ?? 'CYCLE_CARD.CONFIDENCE_UNKNOWN' });
+        }
+
+        return [...pills, ...this.buildActiveFactorPills(cycle)];
     });
-    protected readonly confidence = computed(() => this.predictions()?.confidence ?? null);
-    protected readonly activeFactorPills = computed<CycleSummaryPill[]>(() => {
-        const cycle = this.cycle();
+    protected readonly journalLink = computed(() => (this.metaPills() !== null && !this.isLoading() ? '/cycle-tracking' : null));
+
+    protected onSetup(): void {
+        this.setupAction.emit();
+    }
+
+    private normalizeDate(value: Date | string | null | undefined): Date | null {
+        const date = parseLocalDateInputValue(value);
+        return date !== null ? normalizeStartOfUtcDay(date) : null;
+    }
+
+    private daysBetween(from: Date, to: Date): number {
+        return Math.round((to.getTime() - from.getTime()) / MS_PER_DAY);
+    }
+
+    private buildActiveFactorPills(cycle: CycleResponse): CycleSummaryPill[] {
         const reference = this.normalizedReference();
-        if (cycle === null || reference === null) {
+        if (reference === null) {
             return [];
         }
 
@@ -127,36 +148,6 @@ export class CycleSummaryCardComponent {
             .sort((a, b) => b.startDate.localeCompare(a.startDate))
             .slice(0, 2)
             .map(factor => this.buildFactorPill(factor));
-    });
-    protected readonly metaPills = computed<CycleSummaryPill[]>(() => {
-        const pills: CycleSummaryPill[] = [];
-        const modeKey = this.modeKey();
-        if (modeKey !== null) {
-            pills.push({ id: 'mode', labelKey: modeKey });
-        }
-
-        const confidence = this.confidence();
-        if (confidence !== null) {
-            pills.push({ id: 'confidence', labelKey: CONFIDENCE_LABELS[confidence] ?? 'CYCLE_CARD.CONFIDENCE_UNKNOWN' });
-        }
-
-        return [...pills, ...this.activeFactorPills()];
-    });
-    protected readonly hasMeta = computed(() => this.metaPills().length > 0);
-    protected readonly hasCycle = computed(() => this.normalizedStart() !== null);
-    protected readonly journalLink = computed(() => (this.hasCycle() && !this.isLoading() ? '/cycle-tracking' : null));
-
-    protected onSetup(): void {
-        this.setupAction.emit();
-    }
-
-    private normalizeDate(value: Date | string | null | undefined): Date | null {
-        const date = parseLocalDateInputValue(value);
-        return date !== null ? normalizeStartOfUtcDay(date) : null;
-    }
-
-    private daysBetween(from: Date, to: Date): number {
-        return Math.round((to.getTime() - from.getTime()) / MS_PER_DAY);
     }
 
     private buildFactorPill(factor: CycleFactor): CycleSummaryPill {

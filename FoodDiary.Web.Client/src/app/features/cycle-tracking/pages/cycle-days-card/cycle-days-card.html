@@ -12,6 +12,7 @@
                     [item]="item"
                     [isClearing]="clearingDate() === item.date"
                     [isConfirming]="confirmingDate() === item.date"
+                    [isMutationPending]="isMutationPending()"
                     [isRequestPending]="clearingDate() !== null || confirmingDate() !== null"
                     (editDay)="editDay.emit($event)"
                     (clearDay)="clearDay.emit($event)"

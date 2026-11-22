@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -53,11 +53,12 @@ export class GoalsEditorComponent {
     public readonly saveRequest = input.required<(request: UpdateGoalsRequest) => Promise<boolean>>();
     private pendingSave: Promise<boolean> | null = null;
 
-    protected readonly draft = signal<GoalsDraft | null>(null);
-    protected readonly dirty = signal(false);
-    protected readonly draftValid = computed(() => isGoalsDraftValid(this.requireDraft()));
+    private readonly draftOverride = signal<GoalsDraft | null>(null);
+    protected readonly draft = computed(() => this.draftOverride() ?? this.sourceDraft());
+    protected readonly dirty = computed(() => this.draftOverride() !== null);
+    protected readonly draftValid = computed(() => isGoalsDraftValid(this.draft()));
     protected readonly macroDrafts = computed(() => {
-        const { calories, macros } = this.requireDraft();
+        const { calories, macros } = this.draft();
         return this.macros().map(macro => {
             const value = macros[macro.key];
             return { ...macro, value, percent: calculateMacroPercent(macro.key, value, calories) };
@@ -65,12 +66,6 @@ export class GoalsEditorComponent {
     });
 
     public constructor() {
-        effect(() => {
-            const source = this.sourceDraft();
-            if (!untracked(this.dirty)) {
-                this.draft.set(source);
-            }
-        });
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.dirty(),
             save: this.persistAsync.bind(this),
@@ -101,7 +96,7 @@ export class GoalsEditorComponent {
     }
 
     protected updatePreset(value: MacroPresetKey): void {
-        this.replaceDraft(applyMacroPreset(this.requireDraft(), this.presets()[value]));
+        this.replaceDraft(applyMacroPreset(this.draft(), this.presets()[value]));
     }
 
     protected updateWater(value: number | null): void {
@@ -110,7 +105,7 @@ export class GoalsEditorComponent {
     }
 
     protected updateBodyTarget(change: { key: BodyTargetKey; value: number | null }): void {
-        const current = this.requireDraft();
+        const current = this.draft();
         this.updateDraft({
             bodyTargets: change.value === null ? current.bodyTargets : { ...current.bodyTargets, [change.key]: change.value },
             invalidBodyTargets: { ...current.invalidBodyTargets, [change.key]: change.value === null },
@@ -118,7 +113,7 @@ export class GoalsEditorComponent {
     }
 
     protected updateCycling(enabled: boolean): void {
-        const current = this.requireDraft();
+        const current = this.draft();
         const shouldInitializeDays = enabled && current.calories > 0 && Object.values(current.dayCalories).every(value => value === 0);
         const incompleteNumbers = new Set(current.incompleteNumbers);
         if (!enabled) {
@@ -140,15 +135,14 @@ export class GoalsEditorComponent {
     }
 
     protected discard(): void {
-        this.draft.set(this.sourceDraft());
-        this.dirty.set(false);
+        this.draftOverride.set(null);
     }
 
     protected async persistAsync(): Promise<boolean> {
         if (this.pendingSave !== null) {
             return this.pendingSave;
         }
-        const submittedDraft = this.requireDraft();
+        const submittedDraft = this.draft();
         if (!isGoalsDraftValid(submittedDraft)) {
             return false;
         }
@@ -166,16 +160,15 @@ export class GoalsEditorComponent {
     }
 
     private updateDraft(change: Partial<GoalsDraft>): void {
-        this.replaceDraft({ ...this.requireDraft(), ...change });
+        this.replaceDraft({ ...this.draft(), ...change });
     }
 
     private replaceDraft(draft: GoalsDraft): void {
-        this.draft.set(draft);
-        this.dirty.set(true);
+        this.draftOverride.set(draft);
     }
 
     private withNumberEdit(key: GoalNumberKey, value: number | null): GoalsDraft {
-        const draft = this.requireDraft();
+        const draft = this.draft();
         const incompleteNumbers = new Set(draft.incompleteNumbers);
         if (value === null) {
             incompleteNumbers.add(key);
@@ -183,10 +176,6 @@ export class GoalsEditorComponent {
             incompleteNumbers.delete(key);
         }
         return { ...draft, incompleteNumbers };
-    }
-
-    private requireDraft(): GoalsDraft {
-        return this.draft() ?? this.sourceDraft();
     }
 
     private sourceDraft(): GoalsDraft {

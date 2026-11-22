@@ -21,26 +21,28 @@ export type AppUiStyleDefinition = {
     labelKey: string;
 };
 
-export const APP_THEMES: readonly AppThemeDefinition[] = [
-    {
+export const APP_THEMES_BY_NAME: { readonly [Name in AppThemeName]: AppThemeDefinition & { name: Name } } = {
+    ocean: {
         name: 'ocean',
         labelKey: 'SIDEBAR.THEME_OCEAN',
         browserThemeColor: '#ffffff',
         colorScheme: 'light',
     },
-    {
+    leaf: {
         name: 'leaf',
         labelKey: 'SIDEBAR.THEME_LEAF',
         browserThemeColor: '#ffffff',
         colorScheme: 'light',
     },
-    {
+    dark: {
         name: 'dark',
         labelKey: 'SIDEBAR.THEME_DARK',
         browserThemeColor: '#191c21',
         colorScheme: 'dark',
     },
-] as const;
+};
+
+export const APP_THEMES: readonly AppThemeDefinition[] = Object.values(APP_THEMES_BY_NAME);
 
 export const DEFAULT_APP_THEME: AppThemeName = 'ocean';
 export const DEFAULT_APP_UI_STYLE: AppUiStyleName = 'classic';

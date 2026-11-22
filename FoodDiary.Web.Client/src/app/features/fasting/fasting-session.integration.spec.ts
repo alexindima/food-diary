@@ -163,6 +163,22 @@ function makeSession(overrides: Partial<FastingSession> = {}): FastingSession {
     };
 }
 
+function makeCyclicEatingDay(): FastingSession {
+    return makeSession({
+        planType: 'Cyclic',
+        protocol: 'Cyclic',
+        occurrenceKind: 'EatDay',
+        initialPlannedDurationHours: CYCLIC_EAT_DAY_WINDOW_HOURS,
+        plannedDurationHours: CYCLIC_EAT_DAY_WINDOW_HOURS,
+        cyclicFastDays: CYCLIC_FAST_DAYS,
+        cyclicEatDays: CYCLIC_EAT_DAYS,
+        cyclicEatDayFastHours: CYCLIC_EAT_DAY_FAST_HOURS,
+        cyclicEatDayEatingWindowHours: CYCLIC_EAT_DAY_WINDOW_HOURS,
+        cyclicPhaseDayNumber: CYCLIC_EAT_DAYS,
+        cyclicPhaseDayTotal: CYCLIC_EAT_DAYS,
+    });
+}
+
 function makeOverview(session: FastingSession | null, history = session === null ? [] : [session]): FastingOverview {
     return {
         currentSession: session,
@@ -2093,4 +2109,86 @@ describe('Fasting management confirmations when leaving the route', () => {
         expect(document.querySelector('fd-fasting-safety-dialog')).toBeNull();
         expect(api.extend).not.toHaveBeenCalled();
     });
+});
+
+describe('Rendered cyclic day actions during an overview refresh', () => {
+    it.each([
+        {
+            method: 'skipCyclicDay',
+            endpoint: 'skip-day',
+            oldAction: 'FASTING.START_FAST_NOW',
+            freshAction: 'FASTING.SKIP_FASTING_PERIOD',
+            freshMessage: 'FASTING.SKIP_FASTING_PERIOD_CONFIRM_MESSAGE',
+        },
+        {
+            method: 'postponeCyclicDay',
+            endpoint: 'postpone-day',
+            oldAction: 'FASTING.SKIP_DAY',
+            freshAction: 'FASTING.SKIP_DAY',
+            freshMessage: 'FASTING.SKIP_FAST_DAY_CONFIRM_MESSAGE',
+        },
+    ] as const)(
+        'keeps $method attached to the rendered day before confirmation',
+        async ({ method, endpoint, oldAction, freshAction, freshMessage }) => {
+            TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+            const day = makeCyclicEatingDay();
+            const replacement = {
+                ...day,
+                id: REPLACEMENT_SESSION_ID,
+                occurrenceKind: 'FastDay',
+                startedAtUtc: utcInstant(FIXTURE_TIME),
+                initialPlannedDurationHours: EXTEND_ONE_DAY_HOURS,
+                plannedDurationHours: EXTEND_ONE_DAY_HOURS,
+                cyclicPhaseDayNumber: CYCLIC_FAST_DAYS,
+                cyclicPhaseDayTotal: CYCLIC_FAST_DAYS,
+            } satisfies FastingSession;
+            const { harness, api } = await renderFastingAsync(day);
+            const transport = TestBed.runInInjectionContext(() => new FastingService());
+            const http = TestBed.inject(HttpTestingController);
+            const request = { method: 'PUT', url: `${environment.apiUrls.fasting}/current/${endpoint}` };
+            const overview = new Subject<FastingOverview>();
+            api[method].mockImplementation(() => transport[method]());
+            api.updateCheckIn.mockReturnValueOnce(of({ ...day, checkInAtUtc: utcInstant(FIXTURE_TIME), checkInNotes: SAVED_NOTE }));
+            api.getOverviewStrict.mockReturnValueOnce(overview);
+
+            submitFastingCheckInNote(harness, SAVED_NOTE);
+            expect(overview.observed).toBe(true);
+            getButton(pageRoot(harness), 'FASTING.REDESIGN.MANAGE').click();
+            redraw(harness);
+            const management = getDialog('fd-fasting-session-management-dialog');
+            const oldButton = getButton(management, oldAction);
+
+            overview.next(makeOverview(replacement));
+            overview.complete();
+            expect(oldButton.isConnected).toBe(true);
+            expect(oldButton.disabled).toBe(false);
+            oldButton.click();
+            redraw(harness);
+
+            const staleConfirmation = document.querySelector('fd-fasting-end-confirm-dialog');
+            if (staleConfirmation !== null) {
+                getButton(staleConfirmation, freshAction).click();
+                redraw(harness);
+            }
+            http.expectNone(request, 'a button rendered for the eating day cannot change the replacement fasting day');
+            expect(staleConfirmation).toBeNull();
+
+            getButton(management, freshAction).click();
+            redraw(harness);
+            const confirmation = getDialog('fd-fasting-end-confirm-dialog');
+            expect(confirmation.textContent).toContain(freshMessage);
+            getButton(confirmation, freshAction).click();
+            redraw(harness);
+            const next = {
+                ...day,
+                id: entityId<'fasting-session'>('next-eating-day'),
+                startedAtUtc: utcInstant(FIXTURE_TIME),
+            } satisfies FastingSession;
+            api.getOverviewStrict.mockReturnValueOnce(of(makeOverview(next)));
+            http.expectOne(request).flush(next);
+            redraw(harness);
+            expect(getButton(management, 'FASTING.START_FAST_NOW').disabled).toBe(false);
+            http.verify();
+        },
+    );
 });

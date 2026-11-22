@@ -108,7 +108,7 @@ export class MealPhotoRecognitionDialogComponent {
         optional: true,
     });
 
-    protected readonly canAddToMeal = computed(() => this.nutrition() !== null && !this.isLoading() && !this.isNutritionLoading());
+    protected readonly canAddToMeal = computed(() => this.sessionNutrition() !== null && !this.isLoading() && !this.isNutritionLoading());
     protected readonly isLoading = signal(false);
     protected readonly errorKey = signal<string | null>(null);
     protected readonly results = signal<FoodVisionItem[]>([]);
@@ -124,6 +124,10 @@ export class MealPhotoRecognitionDialogComponent {
     protected readonly editItems = signal<EditableAiItem[]>([]);
     protected readonly editAttempted = signal(false);
     private readonly reviewItems = signal<EditableAiItem[]>([]);
+    protected readonly sessionNutrition = computed(() => {
+        const nutrition = this.nutrition();
+        return nutrition !== null && (this.reviewItems().length > 0 || nutrition.items.length > 0) ? nutrition : null;
+    });
     private readonly sourceItems = signal<EditableAiItem[]>([]);
     protected readonly unitOptions = UNIT_OPTIONS;
     protected readonly resolutionOptions = RESOLUTION_OPTIONS;
@@ -258,7 +262,7 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private buildSessionPayload(): MealAiSessionManageDto | null {
-        const nutrition = this.nutrition();
+        const nutrition = this.sessionNutrition();
         if (nutrition === null) {
             return null;
         }

@@ -26,9 +26,19 @@ describe('explicit shopping consolidation', () => {
         expect(plan.groups[0].before).toEqual([ITEM, next]);
         expect(ITEM.amount).toBe(ORIGINAL_AMOUNT);
     });
-    it('collapses matching text quantities', () => {
-        const salt = { ...ITEM, name: 'Salt', amount: null, unit: null, note: 'по вкусу' };
-        expect(planShoppingConsolidation([salt, { ...salt, id: entityId<'shopping-list-item'>('b') }]).items).toHaveLength(1);
+    it('collapses matching text quantities while preserving whether the first row had an amount field', () => {
+        const omittedAmount: ShoppingListItem = {
+            id: ITEM.id,
+            shoppingListId: ITEM.shoppingListId,
+            name: 'Salt',
+            note: 'по вкусу',
+            isChecked: false,
+            sortOrder: 1,
+        };
+        const nullAmount = { ...omittedAmount, id: entityId<'shopping-list-item'>('b'), amount: null };
+
+        expect(planShoppingConsolidation([omittedAmount, nullAmount]).items).toStrictEqual([omittedAmount]);
+        expect(planShoppingConsolidation([nullAmount, omittedAmount]).items).toStrictEqual([nullAmount]);
     });
     it.each([
         { unit: 'G' },

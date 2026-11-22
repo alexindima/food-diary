@@ -74,14 +74,15 @@
             />
         </div>
         <div class="product-manage__image fd-row">
-            <fd-image-gallery-editor
-                [editor]="true"
-                [photos]="productPhotos()"
-                [cover]="form().imageUrl().value()"
-                (photosChange)="setPhotos($event)"
-                (coverChange)="setCover($event)"
-                (uploadingChange)="photosUploading.emit($event)"
-            />
+            @for (owner of [{ id: photoOwnerId() }]; track owner.id) {
+                <fd-image-gallery-editor
+                    [photos]="productPhotos()"
+                    [cover]="form().imageUrl().value()"
+                    (photosChange)="setPhotos($event)"
+                    (coverChange)="setCover($event)"
+                    (uploadingChange)="photosUploading.emit($event)"
+                />
+            }
         </div>
     </div>
     <div class="product-manage__basic-grid fd-grid fd-gap-lg">

@@ -121,7 +121,11 @@
             </fd-ui-card>
         } @else if (cycle(); as renderedCycle) {
             @if (overviewView(); as overview) {
-                <fd-cycle-overview-card [overview]="overview" (dateSelected)="editDay($event)" (logToday)="openDayEditor()" />
+                <fd-cycle-overview-card
+                    [overview]="overview"
+                    (dateSelected)="editDay($event, renderedCycle.id)"
+                    (logToday)="openDayEditor(renderedCycle.id)"
+                />
             }
 
             <div class="cycle-tracking__primary-grid">
@@ -216,12 +220,13 @@
                         [clearingDate]="clearingDayDate()"
                         [clearError]="dayClearError()"
                         [confirmingDate]="confirmingPeriodStartDate()"
+                        [isMutationPending]="isProfileMutationPending()"
                         [confirmationError]="periodStartError()"
                         [hasMore]="hasMoreHistory()"
                         [isExpanded]="isHistoryExpanded()"
-                        (editDay)="editDay($event)"
-                        (clearDay)="clearDay($event)"
-                        (confirmPeriodStart)="confirmPeriodStart($event)"
+                        (editDay)="editDay($event, renderedCycle.id)"
+                        (clearDay)="clearDay($event, renderedCycle.id)"
+                        (confirmPeriodStart)="confirmPeriodStart($event, renderedCycle.id)"
                         (historyToggled)="toggleHistory()"
                     />
                 </div>
@@ -289,7 +294,11 @@
                 </summary>
                 <div class="cycle-tracking__details-content fd-stack fd-gap-card-content">
                     @if (cycle(); as currentCycle) {
-                        <fd-cycle-calendar-card [cycle]="currentCycle" [locale]="appLocale()" (dateSelected)="editDay($event)" />
+                        <fd-cycle-calendar-card
+                            [cycle]="currentCycle"
+                            [locale]="appLocale()"
+                            (dateSelected)="editDay($event, renderedCycle.id)"
+                        />
                     }
 
                     <div class="cycle-tracking__details-grid">
@@ -334,8 +343,10 @@
                                     <fd-ui-button
                                         type="submit"
                                         [loading]="isSavingFactor()"
-                                        [disabled]="isSavingFactor()"
-                                        [disabledReason]="isSavingFactor() ? ('CYCLE_TRACKING.REQUEST_PENDING' | translate) : null"
+                                        [disabled]="isProfileMutationPending()"
+                                        [disabledReason]="
+                                            isProfileMutationPending() ? ('CYCLE_TRACKING.REQUEST_PENDING' | translate) : null
+                                        "
                                     >
                                         {{
                                             (editingFactorId() ? 'CYCLE_TRACKING.UPDATE_FACTOR' : 'CYCLE_TRACKING.SAVE_FACTOR') | translate
@@ -356,7 +367,7 @@
                             </form>
                             <fd-cycle-factor-list
                                 [items]="factorItems()"
-                                [isSaving]="isSavingFactor()"
+                                [isSaving]="isProfileMutationPending()"
                                 (editFactor)="editFactor($event)"
                                 (endFactor)="endFactorToday($event)"
                             />
@@ -398,7 +409,7 @@
                                                         <fd-ui-button
                                                             type="submit"
                                                             [loading]="isSavingEpisode()"
-                                                            [disabled]="isEpisodeBusy()"
+                                                            [disabled]="isProfileMutationPending()"
                                                             [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                         >
                                                             {{ 'CYCLE_TRACKING.SAVE_EPISODE' | translate }}
@@ -463,7 +474,7 @@
                                                                 variant="secondary"
                                                                 fill="text"
                                                                 [loading]="excludingEpisodeId() === episode.id"
-                                                                [disabled]="isEpisodeBusy()"
+                                                                [disabled]="isProfileMutationPending()"
                                                                 [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                                 (click)="toggleMenstrualEpisodePrediction(episode.id)"
                                                             >
@@ -480,7 +491,7 @@
                                                                 variant="danger"
                                                                 fill="text"
                                                                 [loading]="deletingEpisodeId() === episode.id"
-                                                                [disabled]="isEpisodeBusy()"
+                                                                [disabled]="isProfileMutationPending()"
                                                                 [disabledReason]="'CYCLE_TRACKING.REQUEST_PENDING' | translate"
                                                                 (click)="deleteMenstrualEpisode(episode.id, renderedCycle.id)"
                                                             >
@@ -511,6 +522,7 @@
         data-tour-id="cycle-tracking-day-log"
         [dayForm]="dayForm"
         [isSaving]="isSavingDay()"
+        [isMutationPending]="isProfileMutationPending()"
         [saveError]="dayError()"
         [editingDate]="editingDayDate()"
         [ovulationTestOptions]="ovulationTestOptions()"
@@ -525,6 +537,7 @@
         [goalOptions]="goalOptions()"
         [reproductiveStateOptions]="reproductiveStateOptions()"
         [isSaving]="isSavingSettings()"
+        [isMutationPending]="isProfileMutationPending()"
         [error]="settingsError()"
         [isDeleting]="isDeletingCycle()"
         (closed)="closeSettings()"

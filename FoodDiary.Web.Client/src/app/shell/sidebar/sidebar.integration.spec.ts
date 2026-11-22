@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, type WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -36,6 +36,7 @@ const user: User = {
 
 type SidebarIntegrationContext = {
     fixture: ComponentFixture<SidebarComponent>;
+    matchMedia: ReturnType<typeof vi.fn>;
     auth: {
         isAdmin: WritableSignal<boolean>;
         isAuthenticated: WritableSignal<boolean>;
@@ -56,7 +57,13 @@ type SidebarIntegrationContext = {
 };
 
 async function setupSidebarAsync(
-    options: { decision?: Subject<boolean>; productDecision?: Subject<boolean>; realDialogs?: boolean; mediaQuery?: MediaQueryList } = {},
+    options: {
+        decision?: Subject<boolean>;
+        productDecision?: Subject<boolean>;
+        realDialogs?: boolean;
+        mediaQuery?: MediaQueryList;
+        platformId?: 'browser' | 'server';
+    } = {},
 ): Promise<SidebarIntegrationContext> {
     const auth = {
         isAdmin: signal(false),
@@ -80,20 +87,19 @@ async function setupSidebarAsync(
         afterClosed: (): Observable<undefined> => of(undefined),
         close: vi.fn(),
     });
-    vi.stubGlobal(
-        'matchMedia',
-        vi.fn().mockReturnValue(
-            options.mediaQuery ?? {
-                matches: false,
-                addEventListener: vi.fn(),
-                removeEventListener: vi.fn(),
-            },
-        ),
+    const matchMedia = vi.fn().mockReturnValue(
+        options.mediaQuery ?? {
+            matches: false,
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+        },
     );
+    vi.stubGlobal('matchMedia', matchMedia);
     await TestBed.configureTestingModule({
         imports: [SidebarComponent],
         providers: [
             provideTranslateTesting(),
+            { provide: PLATFORM_ID, useValue: options.platformId ?? 'browser' },
             provideRouter([
                 { path: '', component: SidebarRouteFixture },
                 {
@@ -106,6 +112,7 @@ async function setupSidebarAsync(
                     component: SidebarRouteFixture,
                     canActivate: [(): boolean | Subject<boolean> => options.productDecision ?? true],
                 },
+                { path: 'fasting', component: SidebarRouteFixture },
                 { path: 'profile', component: SidebarRouteFixture },
             ]),
             { provide: AuthService, useValue: auth },
@@ -119,7 +126,7 @@ async function setupSidebarAsync(
     await router.navigateByUrl('/');
     const fixture = TestBed.createComponent(SidebarComponent);
     fixture.detectChanges();
-    return { fixture, auth, notifications, open, router };
+    return { fixture, matchMedia, auth, notifications, open, router };
 }
 
 function desktopElement(fixture: ComponentFixture<SidebarComponent>, selector: string): HTMLElement {
@@ -137,6 +144,13 @@ afterEach(() => {
 });
 
 describe('rendered sidebar navigation', () => {
+    it('renders the diary navigation on the server platform without a viewport media query', async () => {
+        const { fixture, matchMedia } = await setupSidebarAsync({ platformId: 'server' });
+
+        expect(desktopElement(fixture, 'a[href="/meals"]').textContent).toContain('SIDEBAR.FOOD_DIARY');
+        expect(matchMedia).not.toHaveBeenCalled();
+    });
+
     it('stops showing navigation as pending when the target route refuses the transition', async () => {
         const allow = new Subject<boolean>();
         const { fixture, router } = await setupSidebarAsync({ decision: allow });
@@ -325,8 +339,11 @@ describe('desktop account menu keyboard focus', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-sidebar-desktop [role="menu"]')).toBeNull();
     });
 
-    it('keeps focus on the next sidebar control when keyboard focus leaves the account menu', async () => {
+    it('keeps keyboard focus on Collapse and Expand after leaving the account menu', async () => {
         const { fixture } = await setupSidebarAsync();
+        fixture.componentInstance.collapsedToggle.subscribe(() => {
+            fixture.componentRef.setInput('isCollapsed', !fixture.componentInstance.isCollapsed());
+        });
         const trigger = desktopElement(fixture, '.sidebar__user');
         trigger.focus();
         trigger.click();
@@ -351,6 +368,17 @@ describe('desktop account menu keyboard focus', () => {
         collapse.dispatchEvent(escape);
         fixture.detectChanges();
         expect(escape.defaultPrevented).toBe(false);
+        expect(document.activeElement).toBe(collapse);
+
+        collapse.click();
+        fixture.detectChanges();
+        expect(collapse.getAttribute('aria-label')).toBe('SIDEBAR.EXPAND');
+        expect(document.activeElement).toBe(collapse);
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+        collapse.click();
+        fixture.detectChanges();
+        expect(collapse.getAttribute('aria-label')).toBe('SIDEBAR.COLLAPSE');
         expect(document.activeElement).toBe(collapse);
     });
 });
@@ -481,6 +509,57 @@ describe('Notifications from the desktop sidebar', () => {
         expect(bell.querySelector(unreadDot)).toBeNull();
         expect(reopened.querySelector('.notifications-dialog__item.is-read')).not.toBeNull();
         TestBed.inject(FdUiDialogService).closeAll();
+    });
+});
+
+describe('Sidebar inbox navigation ownership', () => {
+    it.each([
+        { name: 'keeps the newer route after a successful inbox acknowledgment', outcome: 'successful', followPush: true },
+        { name: 'keeps the newer route after a failed inbox acknowledgment', outcome: 'failed', followPush: true },
+        { name: 'follows the inbox destination after a successful acknowledgment in place', outcome: 'successful', followPush: false },
+    ] as const)('$name', async ({ outcome, followPush }) => {
+        const { fixture, notifications, router } = await setupSidebarAsync({ realDialogs: true });
+        const inboxTarget = '/profile?intent=set-password';
+        const pushTarget = '/fasting?intent=eating-window';
+        const noticeId = entityId<'notification'>('sidebar-inbox-password-reminder');
+        notifications.notifications.set([
+            {
+                id: noticeId,
+                type: decodeNotificationKind('PasswordSetupSuggested'),
+                title: 'Set a backup password',
+                body: null,
+                targetUrl: inboxTarget,
+                referenceId: null,
+                isRead: false,
+                createdAtUtc: utcInstant('2026-05-18T12:00:00Z'),
+            },
+        ]);
+        const acknowledgment = new Subject<void>();
+        notifications.markAsRead.mockReturnValueOnce(acknowledgment);
+        const bell = desktopElement(fixture, 'button[aria-label="NOTIFICATIONS.TITLE"]');
+        const inbox = await showSidebarInboxAsync(fixture, bell);
+        const card = inbox.querySelector<HTMLButtonElement>('button[aria-label="Set a backup password"]');
+        if (card === null) {
+            throw new Error('Expected the unread password reminder');
+        }
+        card.click();
+        expect(notifications.markAsRead).toHaveBeenCalledExactlyOnceWith(noticeId);
+        expect(acknowledgment.observed).toBe(true);
+        expect(router.url).toBe('/');
+
+        if (followPush) {
+            expect(await router.navigateByUrl(pushTarget)).toBe(true);
+            expect(router.url).toBe(pushTarget);
+        }
+
+        if (outcome === 'failed') {
+            acknowledgment.error(new Error('Acknowledgment unavailable'));
+        } else {
+            acknowledgment.next();
+            acknowledgment.complete();
+        }
+        await fixture.whenStable();
+        expect(router.url).toBe(followPush ? pushTarget : inboxTarget);
     });
 });
 

@@ -211,7 +211,7 @@ export class CycleSettingsFacade {
 
     private async saveSettingsAsync(): Promise<void> {
         const currentCycle = this.state.cycle();
-        if (this.state.isSettingsBusy()) {
+        if (this.state.isProfileMutationPending()) {
             return;
         }
 

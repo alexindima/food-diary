@@ -124,7 +124,7 @@
                     [latestDate]="latestBirthDate"
                     [invalidDateLabel]="'USER_MANAGE.BIRTH_DATE_INVALID' | translate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
-                    (valueChange)="onBirthDateChange($event)"
+                    (valueChange)="birthDateEdited.emit()"
                     (manualInputInvalidChange)="birthDateInputInvalidChange.emit($event)"
                 />
                 <fd-ui-select

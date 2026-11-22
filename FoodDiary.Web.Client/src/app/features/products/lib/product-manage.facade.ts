@@ -96,7 +96,9 @@ export class ProductManageFacade {
             const targetProduct = this.resolveProductForSave(product);
             const isEdit = targetProduct !== null;
             const savedProduct = isEdit
-                ? await firstValueFrom(this.productService.update(targetProduct.id, this.buildUpdateProductRequest(productData)))
+                ? await firstValueFrom(
+                      this.productService.update(targetProduct.id, this.buildUpdateProductRequest(targetProduct, productData)),
+                  )
                 : await firstValueFrom(this.productService.create(productData));
 
             this.rememberCreatedProduct(product, savedProduct);
@@ -155,7 +157,7 @@ export class ProductManageFacade {
         });
     }
 
-    private buildUpdateProductRequest(productData: CreateProductRequest): UpdateProductRequest {
+    private buildUpdateProductRequest(product: Product, productData: CreateProductRequest): UpdateProductRequest {
         return {
             ...productData,
             clearBarcode: productData.barcode === null,
@@ -164,7 +166,9 @@ export class ProductManageFacade {
             clearDescription: productData.description === null,
             clearComment: productData.comment === null,
             clearImageUrl: productData.imageUrl === null,
-            clearImageAssetId: productData.imageAssetId === null,
+            // A URL-only cover has no asset to clear. The clear flag would also remove its URL.
+            clearImageAssetId:
+                productData.imageAssetId === null && ((productData.imageUrl ?? null) === null || (product.imageAssetId ?? null) !== null),
         };
     }
 }

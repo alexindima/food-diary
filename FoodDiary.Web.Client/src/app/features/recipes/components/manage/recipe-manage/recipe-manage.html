@@ -115,28 +115,31 @@
                     <fd-recipe-basic-info
                         data-tour-id="recipe-manage-basic-info"
                         [form]="recipeSignalForm"
+                        [photoOwnerId]="photoOwnerId()"
                         (photosUploading)="photosUploading.set($event)"
                     />
 
-                    <fd-recipe-steps-list
-                        data-tour-id="recipe-manage-steps"
-                        [steps]="stepListItems()"
-                        [expandedSteps]="expandedStepsSet"
-                        (stepExpandedToggle)="toggleStepExpanded($event)"
-                        (stepDrop)="onStepDrop($event)"
-                        (addStep)="addStep()"
-                        (removeStep)="removeStep($event)"
-                        (addIngredient)="addIngredientToStep($event)"
-                        (removeIngredient)="removeIngredientFromStep($event)"
-                        (selectProduct)="onProductSelectClick($event)"
-                        (stepTitleChange)="onStepTitleChange($event)"
-                        (stepPhotosChange)="onStepPhotosChange($event)"
-                        (photosUploading)="stepPhotosUploading.set($event)"
-                        (fieldBlur)="onStepFieldBlur($event)"
-                        (stepDescriptionChange)="onStepDescriptionChange($event)"
-                        (ingredientTextChange)="onIngredientTextChange($event)"
-                        (ingredientAmountChange)="onIngredientAmountChange($event)"
-                    />
+                    @for (owner of [{ id: photoOwnerId() }]; track owner.id) {
+                        <fd-recipe-steps-list
+                            data-tour-id="recipe-manage-steps"
+                            [steps]="stepListItems()"
+                            [expandedSteps]="expandedStepsSet"
+                            (stepExpandedToggle)="toggleStepExpanded($event)"
+                            (stepDrop)="onStepDrop($event)"
+                            (addStep)="addStep()"
+                            (removeStep)="removeStep($event)"
+                            (addIngredient)="addIngredientToStep($event)"
+                            (removeIngredient)="removeIngredientFromStep($event)"
+                            (selectProduct)="onProductSelectClick($event)"
+                            (stepTitleChange)="onStepTitleChange($event)"
+                            (stepPhotosChange)="onStepPhotosChange($event)"
+                            (photosUploading)="stepPhotosUploading.set($event)"
+                            (fieldBlur)="onStepFieldBlur($event)"
+                            (stepDescriptionChange)="onStepDescriptionChange($event)"
+                            (ingredientTextChange)="onIngredientTextChange($event)"
+                            (ingredientAmountChange)="onIngredientAmountChange($event)"
+                        />
+                    }
                 </div>
 
                 <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">

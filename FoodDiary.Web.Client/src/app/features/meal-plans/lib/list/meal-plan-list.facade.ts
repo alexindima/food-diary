@@ -1,6 +1,6 @@
 import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map, type Observable } from 'rxjs';
+import { type Observable, tap } from 'rxjs';
 
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { resolvePaginationPage } from '../../../../shared/navigation/pagination-query.utils';
@@ -82,11 +82,7 @@ export class MealPlanListFacade {
     }
 
     private currentLoadedPage(): PageOf<MealPlanSummary> | null {
-        if (!this.plansResource.hasValue()) {
-            return null;
-        }
-        const loaded = this.plansResource.value();
-        return loaded.key === mealPlanListQueryKey(this.queryState.current()) ? loaded.page : null;
+        return this.plansResource.hasValue() ? this.plansResource.value() : null;
     }
 
     private cachedListPage(): PageOf<MealPlanSummary> | null {
@@ -95,11 +91,11 @@ export class MealPlanListFacade {
         return loaded?.dietType === query.dietType && loaded.source === query.source ? loaded.page : null;
     }
 
-    private loadListPage(query: MealPlanListQuery): Observable<{ key: string; page: PageOf<MealPlanSummary> }> {
+    private loadListPage(query: MealPlanListQuery): Observable<PageOf<MealPlanSummary>> {
         const key = mealPlanListQueryKey(query);
         const isCurated = query.source === 'all' ? undefined : query.source === 'curated';
         return this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize, isCurated).pipe(
-            map(page => {
+            tap(page => {
                 if (!this.destroyRef.destroyed && key === mealPlanListQueryKey(this.queryState.current())) {
                     const resolved = resolvePaginationPage(query.page, page.totalPages);
                     if (resolved !== query.page) {
@@ -107,7 +103,6 @@ export class MealPlanListFacade {
                         this.writeListQuery({ ...query, page: resolved }, true);
                     }
                 }
-                return { key, page };
             }),
         );
     }

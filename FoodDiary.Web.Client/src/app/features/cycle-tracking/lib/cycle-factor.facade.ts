@@ -57,7 +57,7 @@ export class CycleFactorFacade {
 
     private async saveFactorAsync(): Promise<void> {
         const currentCycle = this.state.cycle();
-        if (currentCycle === null || currentCycle.id.length === 0 || this.state.isSavingFactor()) {
+        if (currentCycle === null || currentCycle.id.length === 0 || this.state.isProfileMutationPending()) {
             return;
         }
 
@@ -78,7 +78,7 @@ export class CycleFactorFacade {
             if (!this.isCurrentProfile(cycle)) {
                 return;
             }
-            this.state.cycle.set(cycle);
+            this.state.acceptProfileWrite(cycle);
             this.resetFactorForm();
             this.state.loadNutritionSummary(cycle);
         } catch (error: unknown) {
@@ -169,7 +169,7 @@ export class CycleFactorFacade {
         if (
             currentCycle === null ||
             factor === undefined ||
-            this.state.isSavingFactor() ||
+            this.state.isProfileMutationPending() ||
             !getCycleFactorStatus(factor, today).canEndToday
         ) {
             return;
@@ -194,7 +194,7 @@ export class CycleFactorFacade {
             if (!this.isCurrentProfile(cycle)) {
                 return;
             }
-            this.state.cycle.set(cycle);
+            this.state.acceptProfileWrite(cycle);
             if (this.state.editingFactorId() === factorId) {
                 this.resetFactorForm();
             }

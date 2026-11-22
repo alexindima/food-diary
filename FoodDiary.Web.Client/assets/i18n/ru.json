@@ -6580,7 +6580,6 @@
             "SAVE": "Сохранить отметку",
             "SAVED_TOAST": "Отметка сохранена",
             "SUMMARY": "Голод {{hunger}}, энергия {{energy}}, настроение {{mood}}",
-            "CHART_TITLE": "График отметок",
             "CHART_TOOLTIP_SYMPTOMS": "Симптомы: {{value}}",
             "CHART_TOOLTIP_NOTES": "Комментарий: {{value}}",
             "SYMPTOMS": {

@@ -14,28 +14,32 @@ export function planShoppingConsolidation(items: readonly ShoppingListItem[]): S
     for (const item of items) {
         const key = consolidationKey(item);
         const bucket = key === null ? undefined : buckets.get(key);
-        if (bucket === undefined || !canCombine(bucket.after, item)) {
-            const after = { ...item };
-            result.push(after);
-            if (key !== null) {
-                buckets.set(key, { before: [item], after });
-            }
-        } else {
-            if (bucket.before.length === 1) {
-                groups.push(bucket);
-            }
-            bucket.before.push(item);
-            if (typeof item.amount === 'number') {
-                bucket.after.amount = (bucket.after.amount ?? 0) + item.amount;
-            }
+        if (bucket !== undefined && mergeIntoBucket(bucket, item, groups)) {
+            continue;
+        }
+        const after = { ...item };
+        result.push(after);
+        if (key !== null) {
+            buckets.set(key, { before: [item], after });
         }
     }
     return { items: result.map((item, index) => ({ ...item, sortOrder: index + 1 })), groups };
 }
 
-function canCombine(first: ShoppingListItem, second: ShoppingListItem): boolean {
-    const amount = (first.amount ?? 0) + (second.amount ?? 0);
-    return Number.isFinite(amount) && amount <= MAX_AMOUNT;
+function mergeIntoBucket(bucket: ShoppingMergeGroup, item: ShoppingListItem, groups: ShoppingMergeGroup[]): boolean {
+    const amount = (bucket.after.amount ?? 0) + (item.amount ?? 0);
+    if (!Number.isFinite(amount) || amount > MAX_AMOUNT) {
+        return false;
+    }
+
+    if (bucket.before.length === 1) {
+        groups.push(bucket);
+    }
+    bucket.before.push(item);
+    if (typeof item.amount === 'number') {
+        bucket.after.amount = amount;
+    }
+    return true;
 }
 
 function eligible(item: ShoppingListItem): boolean {

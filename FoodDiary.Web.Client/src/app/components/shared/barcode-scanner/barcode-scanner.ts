@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -18,7 +18,7 @@ export class BarcodeScannerComponent {
     private readonly dialogRef = inject(FdUiDialogRef<BarcodeScannerComponent, string | null>);
     private readonly destroyRef = inject(DestroyRef);
     private readonly browserWindow = inject(BrowserWindowService);
-    private readonly videoRef = viewChild<ElementRef<HTMLVideoElement>>('video');
+    private readonly videoRef = viewChild.required<ElementRef<HTMLVideoElement>>('video');
 
     protected readonly isCameraReady = signal(false);
     protected readonly isCameraError = signal(false);
@@ -48,7 +48,11 @@ export class BarcodeScannerComponent {
             this.isUnsupported.set(true);
             return;
         }
-        void this.startCameraAsync(detector);
+        afterNextRender({
+            read: () => {
+                void this.startCameraAsync(detector, this.videoRef().nativeElement);
+            },
+        });
         this.destroyRef.onDestroy(() => {
             this.stopCamera();
         });
@@ -59,7 +63,7 @@ export class BarcodeScannerComponent {
         this.dialogRef.close(null);
     }
 
-    private async startCameraAsync(detector: BarcodeDetector): Promise<void> {
+    private async startCameraAsync(detector: BarcodeDetector, video: HTMLVideoElement): Promise<void> {
         try {
             const stream = await this.browserWindow.getUserMediaAsync({
                 video: { facingMode: 'environment' },
@@ -71,17 +75,6 @@ export class BarcodeScannerComponent {
                 return;
             }
             this.stream = stream;
-            // Wait for next tick so viewChild is available
-            await new Promise<void>(resolve => {
-                setTimeout(resolve);
-            });
-            if (this.isInactive()) {
-                return;
-            }
-            const video = this.videoRef()?.nativeElement;
-            if (video === undefined) {
-                return;
-            }
             video.srcObject = stream;
             await video.play();
             if (this.isInactive()) {

@@ -1,8 +1,12 @@
+import { Location } from '@angular/common';
+import { type HttpRequest, HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, type Provider, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
     type CanActivateFn,
     GuardsCheckEnd,
+    NavigationEnd,
     type ParamMap,
     provideRouter,
     Router,
@@ -18,12 +22,15 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { filter, firstValueFrom, type Observable, of, Subject, tap, throwError } from 'rxjs';
 import { describe, expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { BarcodeScannerComponent } from '../../components/shared/barcode-scanner/barcode-scanner';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../config/runtime-ui.tokens';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
+import type { FavoriteProductHttpResponse } from '../../shared/api/sdk/generated/model/favorite-product-http-response';
+import type { ProductHttpResponse } from '../../shared/api/sdk/generated/model/product-http-response';
 import type { PageOf } from '../../shared/models/page-of.data';
 import {
     type FavoriteProduct,
@@ -802,6 +809,106 @@ describe('Catalog favorites picker ownership', () => {
         } finally {
             TestBed.inject(FdUiDialogService).closeAll();
         }
+    });
+});
+
+const OLIVE_OIL_FAVORITE = {
+    id: 'acdc8816-aebf-42f3-8203-4c334b9e7074',
+    productId: 'acdc8816-aebf-42f3-8203-4c334b9e7075',
+    productName: 'Olive oil',
+    createdAtUtc: '2026-05-01T00:00:00Z',
+    baseUnit: 'G',
+    defaultPortionAmount: 100,
+    preferredPortionAmount: 100,
+    caloriesPerBase: 884,
+    proteinsPerBase: 0,
+    fatsPerBase: 100,
+    carbsPerBase: 0,
+    fiberPerBase: 0,
+    alcoholPerBase: 0,
+    qualityScore: 80,
+    qualityGrade: 'green',
+    isOwnedByCurrentUser: true,
+} satisfies FavoriteProductHttpResponse;
+
+describe('Catalog favorites search and removal', () => {
+    it('keeps a removed favorite out of a search typed just before removal', async () => {
+        TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+        TestBed.overrideProvider(FavoriteProductService, { useFactory: () => new FavoriteProductService() });
+        configureFavoritesPicker();
+        const http = TestBed.inject(HttpTestingController);
+        const dialogs = TestBed.inject(FdUiDialogService);
+        onTestFinished(() => {
+            dialogs.closeAll();
+            http.verify();
+        });
+
+        const harness = await RouterTestingHarness.create('/products');
+        const picker = openFavoritesPicker(harness);
+        const url = environment.apiUrls.favoriteProducts;
+        const search = 'oil';
+        const searchDelayMs = 300;
+        const favorite = OLIVE_OIL_FAVORITE;
+        const remaining = {
+            ...favorite,
+            id: 'acdc8816-aebf-42f3-8203-4c334b9e7076',
+            productId: 'acdc8816-aebf-42f3-8203-4c334b9e7077',
+            productName: 'Sesame oil',
+        };
+        const isPage = (request: HttpRequest<unknown>, term: string): boolean =>
+            request.method === 'GET' && request.url === `${url}/page` && request.params.get('search') === term;
+        const flushPage = (request: TestRequest, entries: FavoriteProductHttpResponse[]): void => {
+            expect(request.request.params.get('page')).toBe('1');
+            expect(request.request.params.get('limit')).toBe(String(PAGE_SIZE));
+            request.flush({ data: entries, page: 1, limit: PAGE_SIZE, totalItems: entries.length, totalPages: 1 });
+        };
+        flushPage(
+            http.expectOne(request => isPage(request, '')),
+            [favorite, remaining],
+        );
+        TestBed.tick();
+
+        const input = picker.querySelector('fd-ui-input input');
+        if (!(input instanceof HTMLInputElement)) {
+            throw new Error('Expected a real favorites search input');
+        }
+        const remove = button(picker, 'fd-favorite-product-row button[aria-label="PRODUCT_DETAIL.REMOVE_FAVORITE"]');
+        expect(remove.disabled).toBe(false);
+        expect(picker.textContent).toContain(favorite.productName);
+        vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout'] });
+        onTestFinished(() => {
+            vi.useRealTimers();
+        });
+
+        input.value = search;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        remove.click();
+        const removal = http.expectOne({ method: 'DELETE', url: `${url}/${favorite.id}` });
+        TestBed.tick();
+        expect(input.disabled).toBe(true);
+
+        await vi.advanceTimersByTimeAsync(searchDelayMs);
+        const earlySearches = http.match(request => isPage(request, search));
+        for (const request of earlySearches) {
+            flushPage(request, [favorite, remaining]);
+        }
+        TestBed.tick();
+
+        removal.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        TestBed.tick();
+        await vi.advanceTimersByTimeAsync(0);
+        const releasedSearches = http.match(request => isPage(request, search));
+        for (const request of releasedSearches) {
+            flushPage(request, [remaining]);
+        }
+        TestBed.tick();
+
+        const titles = Array.from(picker.querySelectorAll('fd-favorite-product-row strong'), title => title.textContent.trim());
+        expect(titles).toEqual([remaining.productName]);
+        expect(input.value).toBe(search);
+        expect(input.disabled).toBe(false);
+        expect(earlySearches).toHaveLength(0);
+        expect(releasedSearches).toHaveLength(1);
     });
 });
 
@@ -1713,6 +1820,326 @@ describe('Nested product creation owned by the catalogue picker', () => {
         independent.close();
     });
 });
+
+it('keeps a legacy URL-only cover when saving an unrelated product edit on the real route', async () => {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.overrideProvider(ProductService, { useFactory: () => new ProductService() });
+    const success = vi.fn<FdUiToastService['success']>();
+    TestBed.overrideProvider(FdUiToastService, { useValue: { success, error: vi.fn<FdUiToastService['error']>() } });
+    const { navigateToProducts } = configureRealCatalogDialogs();
+    navigateToProducts.mockResolvedValue(undefined);
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        http.verify();
+    });
+    const productId = 'be88a541-baa1-4731-9b17-a45da75d6fb3';
+    const legacyCover = 'https://images.example.test/external-olive-oil.jpg';
+    const loaded = {
+        ...makeProduct(productId, 'Imported olive oil'),
+        productType: ProductType.Other,
+        createdAt: '2026-05-01T00:00:00Z',
+        usageCount: 0,
+        imageUrl: legacyCover,
+        imageAssetId: null,
+        images: [],
+    } satisfies ProductHttpResponse;
+    const endpoint = `${environment.apiUrls.products}/${productId}`;
+    const opening = RouterTestingHarness.create(`/products/${productId}/edit`);
+    const read = await vi.waitFor(() => http.expectOne({ method: 'GET', url: endpoint }));
+    read.flush(loaded);
+    const harness = await opening;
+    const editor = catalogRoot(harness);
+    expect(editor.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
+    const description = editor.querySelector<HTMLTextAreaElement>('.product-manage__description textarea');
+    if (description === null) {
+        throw new Error('Expected the editable product description');
+    }
+    const updatedDescription = 'Use this oil for roasting';
+    description.value = updatedDescription;
+    description.dispatchEvent(new Event('input', { bubbles: true }));
+    harness.detectChanges();
+    const submit = button(editor, 'button[type="submit"]');
+    expect(submit.disabled).toBe(false);
+    submit.click();
+
+    const update = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: endpoint }));
+    expect(update.request.body).toMatchObject({
+        description: updatedDescription,
+        imageUrl: legacyCover,
+        clearImageUrl: false,
+        imageAssetId: null,
+        clearImageAssetId: false,
+    });
+    expect(update.request.body).not.toHaveProperty('imageAssetIds');
+    update.flush({
+        ...loaded,
+        description: updatedDescription,
+        images: [{ imageAssetId: null, imageUrl: legacyCover }],
+    } satisfies ProductHttpResponse);
+    await vi.waitFor(() => {
+        expect(navigateToProducts).toHaveBeenCalledOnce();
+    });
+    harness.detectChanges();
+    expect(success).toHaveBeenCalledWith('PRODUCT_DETAIL.EDIT_SUCCESS');
+    expect(editor.querySelector('fd-image-gallery-editor img')?.getAttribute('src')).toBe(legacyCover);
+});
+
+describe('Product editor gallery ownership across browser history', () => {
+    const olderId = '29ae0147-6993-4dfa-b016-50180ea1d821';
+    const newerId = '29ae0147-6993-4dfa-b016-50180ea1d822';
+    const legacyCover = 'https://images.example.test/legacy-vinegar.jpg';
+    const newerPhotos = [
+        { imageAssetId: '0738dc5a-1ce7-45bb-bbda-d8f250296b11', imageUrl: 'https://images.example.test/oil-front.jpg' },
+        { imageAssetId: '0738dc5a-1ce7-45bb-bbda-d8f250296b12', imageUrl: 'https://images.example.test/oil-back.jpg' },
+    ];
+
+    it.each([
+        { kind: 'empty gallery', cover: null },
+        { kind: 'URL-only cover', cover: legacyCover },
+    ])('keeps the older product’s $kind when history skips the catalogue', async ({ cover }) => {
+        const { http, navigateToProducts, success } = configureProductEditorHistory();
+        const older = {
+            ...editableProductResponse(olderId, 'Rice vinegar'),
+            imageUrl: cover,
+            imageAssetId: null,
+            images: cover === null ? [] : [{ imageAssetId: null, imageUrl: cover }],
+        } satisfies ProductHttpResponse;
+        const newer = {
+            ...editableProductResponse(newerId, 'Toasted sesame oil'),
+            ...newerPhotos[0],
+            images: newerPhotos,
+        } satisfies ProductHttpResponse;
+        const router = TestBed.inject(Router);
+        router.setUpLocationChangeListener();
+        const olderUrl = `/products/${olderId}/edit`;
+        const olderEndpoint = `${environment.apiUrls.products}/${olderId}`;
+        const opening = RouterTestingHarness.create(olderUrl);
+        const initialRead = await waitForProductEditReadAsync(http, olderId);
+        initialRead.flush(older);
+        const harness = await opening;
+        const expectedImages = cover === null ? [] : [cover];
+        expect(productEditorGalleryUrls(catalogRoot(harness))).toEqual(expectedImages);
+        button(catalogRoot(harness), '.product-manage__cancel-button button').click();
+        await vi.waitFor(() => {
+            expect(router.url).toBe('/products');
+        });
+        const openingNewer = harness.navigateByUrl(`/products/${newerId}/edit`);
+        const newerRead = await waitForProductEditReadAsync(http, newerId);
+        newerRead.flush(newer);
+        await openingNewer;
+        const editor = catalogRoot(harness).querySelector('fd-product-manage-form');
+        expect(productEditorGalleryUrls(catalogRoot(harness))).toEqual(newerPhotos.map(photo => photo.imageUrl));
+
+        const returned = firstValueFrom(
+            router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === olderUrl)),
+        );
+        const historyEntriesToOlderEditor = -2;
+        TestBed.inject(Location).historyGo(historyEntriesToOlderEditor);
+        const olderRead = await waitForProductEditReadAsync(http, olderId);
+        olderRead.flush(older);
+        await returned;
+        harness.detectChanges();
+        const host = catalogRoot(harness);
+        expect(host.querySelector('fd-product-manage-form')).toBe(editor);
+        const renderedImages = productEditorGalleryUrls(host);
+        const description = host.querySelector<HTMLTextAreaElement>('.product-manage__description textarea');
+        if (description === null) {
+            throw new Error('Expected the older product’s description input');
+        }
+        const updatedDescription = 'Use this vinegar in salad dressing';
+        description.value = updatedDescription;
+        description.dispatchEvent(new Event('input', { bubbles: true }));
+        harness.detectChanges();
+        const submit = button(host, 'button[type="submit"]');
+        expect(submit.disabled).toBe(false);
+        navigateToProducts.mockResolvedValue(undefined);
+        submit.click();
+
+        const update = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: olderEndpoint }));
+        expect.soft(renderedImages).toEqual(expectedImages);
+        expect.soft(update.request.body).not.toHaveProperty('imageAssetIds');
+        expect(update.request.body).toMatchObject({ description: updatedDescription, imageUrl: cover, imageAssetId: null });
+        update.flush({ ...older, description: updatedDescription });
+        await vi.waitFor(() => {
+            expect(navigateToProducts).toHaveBeenCalledTimes(2);
+            expect(success).toHaveBeenCalledWith('PRODUCT_DETAIL.EDIT_SUCCESS');
+        });
+    });
+});
+
+function configureProductEditorHistory(): Pick<CatalogFixture, 'navigateToProducts'> & {
+    http: HttpTestingController;
+    success: Mock<FdUiToastService['success']>;
+} {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.overrideProvider(ProductService, { useFactory: () => new ProductService() });
+    const success = vi.fn<FdUiToastService['success']>();
+    TestBed.overrideProvider(FdUiToastService, { useValue: { success, error: vi.fn<FdUiToastService['error']>() } });
+    const { navigateToProducts } = configureRealCatalogDialogs();
+    vi.spyOn(TestBed.inject(ProductService), 'queryOverview').mockReturnValue(
+        of({ allProducts: page([]), recentItems: [], favoriteItems: [], favoriteTotalCount: 0 }),
+    );
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        http.verify();
+    });
+    return { http, navigateToProducts, success };
+}
+
+function editableProductResponse(id: string, name: string): ProductHttpResponse {
+    return { ...makeProduct(id, name), productType: ProductType.Other, createdAt: '2026-05-01T00:00:00Z', usageCount: 0 };
+}
+
+async function waitForProductEditReadAsync(http: HttpTestingController, id: string): Promise<TestRequest> {
+    return vi.waitFor(() => http.expectOne({ method: 'GET', url: `${environment.apiUrls.products}/${id}` }));
+}
+
+function productEditorGalleryUrls(host: HTMLElement): Array<string | null> {
+    return Array.from(host.querySelectorAll('fd-image-gallery-editor .recognition-photos__preview img'), image =>
+        image.getAttribute('src'),
+    );
+}
+
+it('keeps a photo chosen while history is resolving out of the replacement product', async () => {
+    const olderId = '20868daf-95ea-4202-b6f6-8842bcbe1b61';
+    const newerId = '20868daf-95ea-4202-b6f6-8842bcbe1b62';
+    const olderCover = { imageAssetId: '73ef62f3-4c3d-4e91-beb7-96550a1c1b61', imageUrl: 'https://images.example.test/vinegar.png' };
+    const newerCover = { imageAssetId: '73ef62f3-4c3d-4e91-beb7-96550a1c1b62', imageUrl: 'https://images.example.test/oil.png' };
+    const older = { ...editableProductResponse(olderId, 'Rice vinegar'), ...olderCover, images: [olderCover] };
+    const newer = { ...editableProductResponse(newerId, 'Sesame oil'), ...newerCover, images: [newerCover] };
+    const { http, navigateToProducts, success } = configureProductEditorHistory();
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const olderUrl = `/products/${olderId}/edit`;
+    const newerUrl = `/products/${newerId}/edit`;
+    const harness = await openProductGalleryHistoryAsync(http, router, { older, olderId, newer, newerId });
+    const editor = catalogRoot(harness).querySelector('fd-product-manage-form');
+
+    const admitted = firstValueFrom(
+        router.events.pipe(
+            filter((event): event is GuardsCheckEnd => event instanceof GuardsCheckEnd && event.urlAfterRedirects === olderUrl),
+        ),
+    );
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === olderUrl)),
+    );
+    const historyEntriesToOlderEditor = -2;
+    TestBed.inject(Location).historyGo(historyEntriesToOlderEditor);
+    const olderRead = await waitForProductEditReadAsync(http, olderId);
+    const admission = await admitted;
+    expect(admission.shouldActivate).toBe(true);
+    expect(router.url).toBe(newerUrl);
+    harness.detectChanges();
+    expect(productEditorGalleryUrls(catalogRoot(harness))).toEqual([newerCover.imageUrl]);
+    const oldPhoto = await chooseHeldProductPhotoAsync(http, catalogRoot(harness), 'oil-label');
+
+    olderRead.flush(older);
+    await returned;
+    harness.detectChanges();
+    const host = catalogRoot(harness);
+    expect(host.querySelector('fd-product-manage-form')).toBe(editor);
+    expect(productEditorGalleryUrls(host)).toEqual([olderCover.imageUrl]);
+    const cancelled = oldPhoto.confirmation.cancelled;
+    if (!cancelled) {
+        oldPhoto.confirmation.flush({ assetId: oldPhoto.assetId, fileUrl: oldPhoto.fileUrl });
+    }
+    const submit = button(host, 'button[type="submit"]');
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(submit.disabled).toBe(false);
+    });
+    const displayedAfterOldResponse = productEditorGalleryUrls(host);
+    const freshPhoto = await chooseHeldProductPhotoAsync(http, host, 'vinegar-label');
+    freshPhoto.confirmation.flush({ assetId: freshPhoto.assetId, fileUrl: freshPhoto.fileUrl });
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(productEditorGalleryUrls(host)).toContain(freshPhoto.fileUrl);
+        expect(submit.disabled).toBe(false);
+    });
+    navigateToProducts.mockResolvedValue(undefined);
+    submit.click();
+    const endpoint = `${environment.apiUrls.products}/${olderId}`;
+    const update = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: endpoint }));
+    expect({ cancelled, displayedAfterOldResponse, body: update.request.body as unknown }).toMatchObject({
+        cancelled: true,
+        displayedAfterOldResponse: [olderCover.imageUrl],
+        body: { name: older.name, imageAssetIds: [olderCover.imageAssetId, freshPhoto.assetId] },
+    });
+    update.flush({ ...older, images: [...older.images, { imageAssetId: freshPhoto.assetId, imageUrl: freshPhoto.fileUrl }] });
+    await vi.waitFor(() => {
+        expect(success).toHaveBeenCalledWith('PRODUCT_DETAIL.EDIT_SUCCESS');
+    });
+});
+
+async function openProductGalleryHistoryAsync(
+    http: HttpTestingController,
+    router: Router,
+    { older, olderId, newer, newerId }: { older: ProductHttpResponse; olderId: string; newer: ProductHttpResponse; newerId: string },
+): Promise<RouterTestingHarness> {
+    const opening = RouterTestingHarness.create(`/products/${olderId}/edit`);
+    const initialRead = await waitForProductEditReadAsync(http, olderId);
+    initialRead.flush(older);
+    const harness = await opening;
+    button(catalogRoot(harness), '.product-manage__cancel-button button').click();
+    await vi.waitFor(() => {
+        expect(router.url).toBe('/products');
+    });
+    const openingNewer = harness.navigateByUrl(`/products/${newerId}/edit`);
+    const newerRead = await waitForProductEditReadAsync(http, newerId);
+    newerRead.flush(newer);
+    await openingNewer;
+    return harness;
+}
+
+async function chooseHeldProductPhotoAsync(
+    http: HttpTestingController,
+    host: HTMLElement,
+    kind: 'oil-label' | 'vinegar-label',
+): Promise<{ confirmation: TestRequest; assetId: string; fileUrl: string }> {
+    const picker = host.querySelector<HTMLInputElement>('fd-image-gallery-editor input[type="file"]');
+    if (picker === null) {
+        throw new Error('Expected the native gallery file input');
+    }
+    const trigger = button(host, 'fd-image-gallery-editor .recognition-photos__empty button');
+    expect(trigger.disabled).toBe(false);
+    expect(trigger.closest('[inert]')).toBeNull();
+    expect(picker.disabled).toBe(false);
+    const openedPicker = vi.fn();
+    picker.addEventListener('click', openedPicker, { once: true });
+    trigger.click();
+    expect(openedPicker).toHaveBeenCalledOnce();
+
+    const decoded = document.createElement('img');
+    Object.defineProperties(decoded, { naturalWidth: { value: 1 }, naturalHeight: { value: 1 } });
+    vi.stubGlobal('Image', function createDecodedImage(): HTMLImageElement {
+        return decoded;
+    });
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValueOnce(`blob:${kind}`);
+    onTestFinished(() => {
+        createUrl.mockRestore();
+    });
+    const png = atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aB5cAAAAASUVORK5CYII=');
+    const file = new File([Uint8Array.from(png, byte => byte.codePointAt(0) ?? 0)], `${kind}.png`, { type: 'image/png' });
+    Object.defineProperty(picker, 'files', { configurable: true, value: [file] });
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+    decoded.dispatchEvent(new Event('load'));
+
+    const assetId = kind === 'oil-label' ? '26eb1991-c5ab-46c2-b171-8d8b23044101' : '26eb1991-c5ab-46c2-b171-8d8b23044102';
+    const fileUrl = `https://images.example.test/${file.name}`;
+    const uploadUrl = `https://uploads.example.test/${file.name}?signature=${kind}`;
+    const presign = await vi.waitFor(() =>
+        http.expectOne(request => request.method === 'POST' && request.url.endsWith('/images/upload-url')),
+    );
+    expect(presign.request.body).toEqual({ fileName: file.name, contentType: file.type, fileSizeBytes: file.size });
+    presign.flush({ assetId, uploadUrl, fileUrl, expiresAtUtc: '2026-11-23T10:00:00Z' });
+    const upload = await vi.waitFor(() => http.expectOne({ method: 'PUT', url: uploadUrl }));
+    expect(upload.request.body).toBe(file);
+    upload.flush('');
+    const confirmation = await vi.waitFor(() =>
+        http.expectOne(request => request.method === 'POST' && request.url.endsWith(`/images/${assetId}/confirm`)),
+    );
+    return { confirmation, assetId, fileUrl };
+}
 
 describe('Product editor deletion on the real route', () => {
     it('returns to the product list after deleting the open product', async () => {

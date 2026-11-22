@@ -27,7 +27,6 @@
                             <label for="attention-inactivity">{{ 'ATTENTION.INACTIVITY_DAYS' | translate }}</label>
                             <input
                                 #inactivityInput
-                                #attentionField
                                 required
                                 id="attention-inactivity"
                                 type="number"
@@ -43,7 +42,6 @@
                             <label for="attention-calories">{{ 'ATTENTION.CALORIE_DEVIATION' | translate }}</label>
                             <input
                                 #calorieInput
-                                #attentionField
                                 required
                                 id="attention-calories"
                                 type="number"
@@ -59,7 +57,6 @@
                             <label for="attention-weight">{{ 'ATTENTION.WEIGHT_CHANGE' | translate }}</label>
                             <input
                                 #weightInput
-                                #attentionField
                                 required
                                 id="attention-weight"
                                 type="number"
@@ -81,7 +78,12 @@
                             >
                                 {{ 'ATTENTION.INVALID_SETTINGS' | translate }}
                             </p>
-                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="applyAttentionSettings()">
+                            <fd-ui-button
+                                type="button"
+                                variant="secondary"
+                                fill="outline"
+                                (click)="applyAttentionSettings([inactivityInput, calorieInput, weightInput])"
+                            >
                                 {{ 'ATTENTION.APPLY' | translate }}
                             </fd-ui-button>
                         </div>
@@ -93,7 +95,12 @@
                 } @else if (attentionError()) {
                     <div role="alert" class="fd-stack fd-gap-sm">
                         <p class="fd-ui-body-sm">{{ 'ATTENTION.LOAD_ERROR' | translate }}</p>
-                        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="applyAttentionSettings()">
+                        <fd-ui-button
+                            type="button"
+                            variant="secondary"
+                            fill="outline"
+                            (click)="applyAttentionSettings([inactivityInput, calorieInput, weightInput])"
+                        >
                             {{ 'DIETOLOGIST.CLIENTS.RETRY' | translate }}
                         </fd-ui-button>
                     </div>

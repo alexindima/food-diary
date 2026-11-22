@@ -13,6 +13,12 @@ import { type ImageSelection, imageSelection } from '../../../shared/models/imag
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
 import { ImageGalleryEditorComponent } from './image-gallery-editor';
 
+function getRemoveMenuButton(): HTMLButtonElement | undefined {
+    return Array.from(document.querySelectorAll<HTMLButtonElement>('button[role="menuitem"]')).find(
+        button => button.textContent.trim() === 'IMAGE_UPLOAD_FIELD.REMOVE',
+    );
+}
+
 describe('ImageGalleryEditorComponent upload errors', () => {
     it('shows an invalid file and fills the last gallery slot after choosing one valid photo', async () => {
         const uploadResult = new Subject<ImageSelection>();
@@ -29,7 +35,6 @@ describe('ImageGalleryEditorComponent upload errors', () => {
         vi.spyOn(TestBed.inject(TranslateService), 'instant').mockReturnValue('Only images');
         const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
         const saved = ['front', 'back', 'label', 'side'].map(name => imageSelection(`https://example.com/${name}.png`, `photo-${name}`));
-        fixture.componentRef.setInput('editor', true);
         fixture.componentRef.setInput('photos', saved);
         fixture.detectChanges();
         const uploaderElement = fixture.debugElement.query(By.directive(ImageUploadFieldComponent));
@@ -108,7 +113,6 @@ describe('ImageGalleryEditorComponent preview focus', () => {
             ],
         });
         const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
-        fixture.componentRef.setInput('editor', true);
         fixture.componentRef.setInput('photos', [
             imageSelection('https://example.com/one.png', 'photo-1'),
             imageSelection('https://example.com/two.png', 'photo-2'),
@@ -120,5 +124,103 @@ describe('ImageGalleryEditorComponent preview focus', () => {
         fixture.componentInstance['preview'](index);
 
         expect(open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ restoreFocus: trigger }));
+    });
+});
+
+describe('Saved photo without a preview URL', () => {
+    it('retains the locked cover and removes its asset only when editing becomes available', async () => {
+        const open = vi.fn();
+        TestBed.configureTestingModule({
+            imports: [ImageGalleryEditorComponent],
+            providers: [
+                provideTranslateTesting(),
+                provideRouter([]),
+                { provide: FdUiDialogService, useValue: { open } },
+                { provide: ImageUploadFacade, useValue: { upload: vi.fn() } },
+                { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
+            ],
+        });
+        const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
+        const cover = imageSelection(null, 'saved-cover');
+        const photo = imageSelection('/gallery/photo.jpg', 'saved-photo');
+        fixture.componentRef.setInput('photos', [cover, photo]);
+        fixture.componentRef.setInput('cover', cover);
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const trigger = host.querySelector<HTMLButtonElement>('.recognition-photos__preview button');
+        expect(trigger).not.toBeNull();
+        trigger?.click();
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(getRemoveMenuButton()?.disabled).toBe(true);
+        });
+        getRemoveMenuButton()?.click();
+        expect(fixture.componentInstance.cover()).toEqual(cover);
+        expect(fixture.componentInstance.photos()).toEqual([cover, photo]);
+        expect(open).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('disabled', false);
+        fixture.detectChanges();
+        expect(getRemoveMenuButton()?.disabled).toBe(false);
+        getRemoveMenuButton()?.click();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.cover()).toBeNull();
+        expect(fixture.componentInstance.photos()).toEqual([photo]);
+        expect(host.querySelector('.recognition-photos__preview img')?.getAttribute('src')).toBe(photo.url);
+        expect(open).not.toHaveBeenCalled();
+    });
+});
+
+describe('Saved photos without asset IDs', () => {
+    it('removes only the chosen legacy photo and keeps the other photo selected as cover', async () => {
+        TestBed.configureTestingModule({
+            imports: [ImageGalleryEditorComponent],
+            providers: [
+                provideTranslateTesting(),
+                provideRouter([]),
+                { provide: ImageUploadFacade, useValue: { upload: vi.fn() } },
+                { provide: FrontendLoggerService, useValue: { warn: vi.fn() } },
+            ],
+        });
+        const fixture = TestBed.createComponent(ImageGalleryEditorComponent);
+        const cover = imageSelection('/gallery/cover.jpg', null);
+        const otherPhoto = imageSelection('/gallery/other.jpg', null);
+        fixture.componentRef.setInput('photos', [cover, otherPhoto]);
+        fixture.componentRef.setInput('cover', cover);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const previewUrls = (): Array<string | null> =>
+            Array.from(host.querySelectorAll('.recognition-photos__preview img'), image => image.getAttribute('src'));
+        const removePhotoAsync = async (index: number): Promise<void> => {
+            const trigger = Array.from(host.querySelectorAll<HTMLButtonElement>('.recognition-photos__preview button')).at(index);
+            expect(trigger).toBeDefined();
+            trigger?.click();
+            await vi.waitFor(() => {
+                fixture.detectChanges();
+                expect(getRemoveMenuButton()?.disabled).toBe(false);
+            });
+            getRemoveMenuButton()?.click();
+            await vi.waitFor(() => {
+                fixture.detectChanges();
+                expect(getRemoveMenuButton()).toBeUndefined();
+            });
+        };
+
+        expect(previewUrls()).toEqual([cover.url, otherPhoto.url]);
+        await removePhotoAsync(1);
+
+        expect(previewUrls()).toEqual([cover.url]);
+        expect(fixture.componentInstance.photos()).toEqual([cover]);
+        expect(fixture.componentInstance.cover()).toEqual(cover);
+
+        await removePhotoAsync(0);
+
+        expect(previewUrls()).toEqual([]);
+        expect(fixture.componentInstance.photos()).toEqual([]);
+        expect(fixture.componentInstance.cover()).toBeNull();
     });
 });

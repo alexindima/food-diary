@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -17,6 +18,7 @@ import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data'
 export class ProductAddComponent implements UnsavedEditor {
     private readonly editor = viewChild(ProductManageFormComponent);
     private readonly router = inject(Router);
+    private readonly location = inject(Location);
     protected readonly prefill = signal<ProductManagePrefill | null>(this.getNavigationPrefill());
 
     // eslint-disable-next-line local/prefer-protected-template-members -- Public editor departure contract used by the router and parent view queries.
@@ -24,7 +26,7 @@ export class ProductAddComponent implements UnsavedEditor {
         return this.editor()?.canLeaveAsync() ?? true;
     }
     private getNavigationPrefill(): ProductManagePrefill | null {
-        const state: unknown = this.router.currentNavigation()?.extras.state ?? (typeof history === 'undefined' ? null : history.state);
+        const state: unknown = this.router.currentNavigation()?.extras.state ?? this.location.getState();
         const offProduct = getRecordProperty(state, 'offProduct');
         const barcode = getStringProperty(state, 'barcode');
 

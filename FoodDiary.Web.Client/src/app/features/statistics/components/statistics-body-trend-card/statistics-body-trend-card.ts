@@ -9,8 +9,7 @@ import {
     FdUiLineChartComponent,
     type FdUiLineChartReferenceLine,
 } from 'fd-ui-kit';
-import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
-import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
+import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { merge, startWith } from 'rxjs';
 
 import { DashboardWidgetHeaderComponent } from '../../../../components/shared/dashboard-widget-header/dashboard-widget-header';
@@ -55,7 +54,7 @@ export class StatisticsBodyTrendCardComponent {
     public readonly data = input.required<StatisticsBodyTrendData>();
 
     protected readonly selectedMetric = signal<StatisticsBodyMetricKey>('weight');
-    protected readonly metricTabs: FdUiTab[] = [
+    protected readonly metricTabs: Array<FdUiSegmentedToggleOption<StatisticsBodyMetricKey>> = [
         { value: 'weight', labelKey: 'STATISTICS.DASHBOARD.BODY.WEIGHT' },
         { value: 'waist', labelKey: 'STATISTICS.DASHBOARD.BODY.WAIST' },
     ];
@@ -125,12 +124,6 @@ export class StatisticsBodyTrendCardComponent {
                   },
               ];
     });
-
-    protected selectMetric(value: string): void {
-        if (value === 'weight' || value === 'waist') {
-            this.selectedMetric.set(value);
-        }
-    }
 
     private displayValue(value: number | null): number | null {
         if (value === null) {

@@ -54,6 +54,7 @@ export class CycleDayEditorDrawerComponent {
 
     public readonly dayForm = input.required<FieldTree<CycleDayFormModel>>();
     public readonly isSaving = input.required<boolean>();
+    public readonly isMutationPending = input(false);
     public readonly saveError = input<string | null>(null);
     public readonly editingDate = input<string | null>(null);
     public readonly ovulationTestOptions = input.required<Array<FdUiSelectOption<OvulationTestResult>>>();

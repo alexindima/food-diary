@@ -316,6 +316,148 @@ describe('AiInputBarComponent speech recovery', () => {
     });
 });
 
+describe('AiInputBarComponent browser speech takeover', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('keeps manually typed text when its earlier recording delivers a final transcript', async () => {
+        const recognition = {
+            onresult: vi.fn<(event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void>(),
+            onend: vi.fn<() => void>(),
+            start: vi.fn(),
+            stop: vi.fn(),
+        };
+        vi.stubGlobal('SpeechRecognition', function BrowserRecognition() {
+            return recognition;
+        });
+        TestBed.overrideProvider(SpeechRecognitionService, { useFactory: () => new SpeechRecognitionService() });
+        const { fixture, aiFoodService } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+        selectRecognitionControl(fixture, 'button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]', HTMLButtonElement).click();
+        await vi.waitFor(() => {
+            expect(recognition.start).toHaveBeenCalledOnce();
+        });
+        fixture.detectChanges();
+
+        const typed = 'three eggs';
+        const input = selectRecognitionControl(fixture, '.ai-input-bar__input', HTMLInputElement);
+        expect(input.disabled).toBe(false);
+        input.value = typed;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        recognition.onresult({ results: [[{ transcript: 'old spoken draft' }]] });
+        recognition.onend();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(input.value).toBe(typed);
+        expect(aiFoodService.parseFoodText).not.toHaveBeenCalled();
+        expect(recognition.stop).toHaveBeenCalledOnce();
+
+        selectRecognitionControl(fixture, 'button[aria-label="AI_INPUT_BAR.ADD_ACTION"]', HTMLButtonElement).click();
+        await vi.waitFor(() => {
+            expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: typed });
+        });
+    });
+
+    it('keeps a replacement microphone active when the removed composer receives a late browser error', async () => {
+        const [previous, current] = Array.from({ length: 2 }, () => ({
+            onerror: vi.fn<(event: { error: string }) => void>(),
+            onend: vi.fn<() => void>(),
+            start: vi.fn(),
+            stop: vi.fn(),
+        }));
+        const construct = vi.fn<() => typeof previous>().mockReturnValueOnce(previous).mockReturnValueOnce(current);
+        vi.stubGlobal('SpeechRecognition', function BrowserRecognition() {
+            return construct();
+        });
+        TestBed.overrideProvider(SpeechRecognitionService, { useFactory: () => new SpeechRecognitionService() });
+        const { fixture } = await setupAiInputBarAsync();
+        const micSelector = 'button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]';
+        fixture.detectChanges();
+        selectRecognitionControl(fixture, micSelector, HTMLButtonElement).click();
+        await vi.waitFor(() => {
+            expect(previous.start).toHaveBeenCalledOnce();
+        });
+        fixture.destroy();
+        expect(previous.stop).toHaveBeenCalledOnce();
+
+        const replacement = TestBed.createComponent(AiInputBarComponent);
+        replacement.detectChanges();
+        const mic = selectRecognitionControl(replacement, micSelector, HTMLButtonElement);
+        mic.click();
+        await vi.waitFor(() => {
+            expect(current.start).toHaveBeenCalledOnce();
+        });
+
+        previous.onerror({ error: 'network' });
+        previous.onend();
+        replacement.detectChanges();
+        expect(mic.getAttribute('aria-pressed')).toBe('true');
+        const host = replacement.nativeElement as HTMLElement;
+        expect(host.querySelector('.ai-input-bar__speech-error')).toBeNull();
+
+        current.onerror({ error: 'audio-capture' });
+        replacement.detectChanges();
+        expect(mic.getAttribute('aria-pressed')).toBe('false');
+        expect(host.querySelector('.ai-input-bar__speech-error')?.textContent).toContain('AI_INPUT_BAR.VOICE_ERROR_MICROPHONE');
+    });
+});
+
+describe('AiInputBarComponent native microphone Stop', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it.each([
+        { typedAfterStop: false, outcome: 'accepts the final transcript without manual input' },
+        { typedAfterStop: true, outcome: 'ignores its final transcript after manual input' },
+    ])('$outcome after the user presses Stop', async ({ typedAfterStop }) => {
+        const recognition = {
+            onresult: vi.fn<(event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void>(),
+            onend: vi.fn<() => void>(),
+            start: vi.fn(),
+            stop: vi.fn(),
+        };
+        vi.stubGlobal('SpeechRecognition', function BrowserRecognition() {
+            return recognition;
+        });
+        TestBed.overrideProvider(SpeechRecognitionService, { useFactory: () => new SpeechRecognitionService() });
+        const { fixture, aiFoodService } = await setupAiInputBarAsync();
+        fixture.detectChanges();
+        const microphone = selectRecognitionControl(fixture, 'button[aria-label="MEAL_LIST.VOICE_MIC_TITLE"]', HTMLButtonElement);
+        microphone.click();
+        await vi.waitFor(() => {
+            expect(recognition.start).toHaveBeenCalledOnce();
+        });
+        fixture.detectChanges();
+        microphone.click();
+        expect(recognition.stop).toHaveBeenCalledOnce();
+
+        const input = selectRecognitionControl(fixture, '.ai-input-bar__input', HTMLInputElement);
+        const typed = 'three eggs';
+        const transcript = 'spoken breakfast';
+        if (typedAfterStop) {
+            input.value = typed;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        recognition.onresult({ results: [[{ transcript }]] });
+        recognition.onend();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(input.value).toBe(typedAfterStop ? typed : transcript);
+        expect(recognition.stop).toHaveBeenCalledOnce();
+        if (typedAfterStop) {
+            expect(aiFoodService.parseFoodText).not.toHaveBeenCalled();
+        } else {
+            expect(aiFoodService.parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: transcript });
+        }
+    });
+});
+
 describe('AiInputBarComponent speech ownership', () => {
     it('stops recording when its composer is collapsed while preserving the text draft', async () => {
         const { component, fixture, speechRecognition } = await setupAiInputBarAsync('create', { speechSupported: true });
@@ -1281,6 +1423,37 @@ describe('Recognition actions while health consent is pending', () => {
         });
 
         expect(picker).toHaveBeenCalledOnce();
+    });
+
+    it('keeps the native photo picker closed when saving starts during health consent', async () => {
+        const { fixture } = await setupAiInputBarAsync();
+        const permission = new Subject<boolean>();
+        const requestConsent = vi
+            .spyOn(TestBed.inject(PrivacyConsentFacade), 'ensureHealthConsentAsync')
+            .mockImplementationOnce(async () => firstValueFrom(permission));
+        fixture.detectChanges();
+        const photo = selectRecognitionControl(fixture, 'button[aria-label="AI_INPUT_BAR.PHOTO_TITLE"]', HTMLButtonElement);
+        const fileInput = selectRecognitionControl(fixture, 'input[type="file"]', HTMLInputElement);
+        const picker = vi.spyOn(fileInput, 'click').mockImplementation(() => {});
+
+        photo.click();
+        expect(requestConsent).toHaveBeenCalledOnce();
+        fixture.componentRef.setInput('isProcessing', true);
+        fixture.detectChanges();
+        expect(photo.disabled).toBe(true);
+        permission.next(true);
+        permission.complete();
+        await new Promise<void>(resolve => {
+            setTimeout(resolve, 0);
+        });
+
+        expect(picker).not.toHaveBeenCalled();
+        fixture.componentRef.setInput('isProcessing', false);
+        fixture.detectChanges();
+        photo.click();
+        await vi.waitFor(() => {
+            expect(picker).toHaveBeenCalledOnce();
+        });
     });
 });
 

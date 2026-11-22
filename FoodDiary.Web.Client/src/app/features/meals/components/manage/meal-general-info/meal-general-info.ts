@@ -9,6 +9,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiTimeInputComponent } from 'fd-ui-kit/time-input/fd-ui-time-input';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
+import type { MealId } from '../../../../../shared/models/semantics/entity-id';
 import type { MealFormValues } from '../meal-manage-lib/meal-manage.types';
 
 export type MealGeneralFieldErrors = {
@@ -38,5 +39,6 @@ export class MealGeneralInfoComponent {
     public readonly mealForm = input.required<FieldTree<MealFormValues>>();
     public readonly mealTypeSelectOptions = input.required<Array<FdUiSelectOption<string>>>();
     public readonly generalErrors = input.required<MealGeneralFieldErrors>();
+    public readonly photoOwnerId = input<MealId | null>(null);
     public readonly photosUploading = output<boolean>();
 }

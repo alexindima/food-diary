@@ -132,6 +132,45 @@ it('waits for the account to record AI consent before recognizing the typed meal
     expect(TestBed.inject(UserFacade).user()?.aiConsentAcceptedAt).toEqual(expect.any(String));
 });
 
+it('requires a fresh explicit agreement when the checkbox is cleared before Accept redraws', async () => {
+    const dialog = await openConsentAsync();
+    const agreement = dialog.querySelector('input[type="checkbox"]');
+    if (!(agreement instanceof HTMLInputElement)) {
+        throw new Error('Expected the rendered consent checkbox');
+    }
+    const accept = consentButton(dialog, 'AI_CONSENT.ACCEPT');
+    agreement.click();
+    TestBed.tick();
+    expect(agreement.checked).toBe(true);
+    expect(accept.disabled).toBe(false);
+
+    // Both native activations occur before Angular updates the button's disabled state.
+    agreement.click();
+    expect(agreement.checked).toBe(false);
+    expect(accept.disabled).toBe(false);
+    accept.click();
+
+    await fixture.whenStable();
+    TestBed.tick();
+    const writesWithoutAgreement = http.match({ method: 'PUT', url: CONSENT_URL });
+    expect(writesWithoutAgreement).toHaveLength(0);
+    expect(dialog.isConnected).toBe(true);
+    expect(accept.disabled).toBe(true);
+    expect(parseFoodText).not.toHaveBeenCalled();
+
+    const consent = await approveConsentAsync(dialog);
+    expect(consent.request.body).toEqual({
+        purpose: PrivacyConsentPurpose.AiProcessing,
+        granted: true,
+        noticeVersion: PRIVACY_NOTICE_VERSION,
+    });
+    expect(parseFoodText).not.toHaveBeenCalled();
+    consent.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+    await vi.waitFor(() => {
+        expect(parseFoodText).toHaveBeenCalledExactlyOnceWith({ text: DRAFT });
+    });
+});
+
 it('keeps the meal draft and sends no write or recognition when the user cancels', async () => {
     const dialog = await openConsentAsync();
     consentButton(dialog, 'AI_CONSENT.CANCEL').click();

@@ -60,6 +60,13 @@ test('closes the desktop account menu when keyboard focus moves to the page', as
     await expect(logout).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(collapse).toBeFocused();
+
+    await page.keyboard.press('Enter');
+    const expand = page.getByRole('button', { name: 'Expand navigation' });
+    await expect(expand).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(collapse).toBeFocused();
+
     await page.keyboard.press('Tab');
     await expect(viewport).toBeFocused();
 

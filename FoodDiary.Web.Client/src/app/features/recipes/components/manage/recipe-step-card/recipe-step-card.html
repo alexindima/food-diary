@@ -92,7 +92,6 @@
             <div class="recipe-step-card__content">
                 <div class="recipe-step-card__image">
                     <fd-image-gallery-editor
-                        [editor]="true"
                         [compact]="true"
                         [photos]="photos()"
                         [cover]="photos()[0] ?? null"
@@ -125,12 +124,13 @@
                     <div class="recipe-ingredient">
                         <div class="recipe-ingredient__selection">
                             <fd-ui-select
+                                #ingredientTypeControl
                                 class="recipe-ingredient__type-toggle"
                                 size="md"
                                 [options]="ingredientTypeOptions"
                                 [value]="row.itemType"
                                 [ariaLabel]="'RECIPE_MANAGE.INGREDIENT_TYPE' | translate"
-                                (valueChange)="onIngredientTypeChange(row.index, $event ?? 'Product')"
+                                (valueChange)="onIngredientTypeChange(row.index, $event ?? 'Product', ingredientTypeControl)"
                             />
                             @if (row.itemType === 'Text') {
                                 <fd-ui-input

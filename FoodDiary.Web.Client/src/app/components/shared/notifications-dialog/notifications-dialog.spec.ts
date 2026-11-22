@@ -3,7 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { firstValueFrom, of, Subject } from 'rxjs';
+import { EMPTY, firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
@@ -33,7 +33,7 @@ type NotificationsDialogTestContext = {
 
 function setupNotificationsDialog(notifications: NotificationItem[]): NotificationsDialogTestContext {
     const dialogRef = { close: vi.fn() };
-    const router = { navigateByUrl: vi.fn().mockResolvedValue(true) };
+    const router = { events: EMPTY, navigateByUrl: vi.fn().mockResolvedValue(true) };
     const notificationService = {
         notifications: signal(notifications),
         notificationsLoading: signal(false),

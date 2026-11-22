@@ -731,6 +731,40 @@ describe('cycle period metadata mapper', () => {
     });
 });
 
+it('keeps a malformed saved day in history without counting it as a consecutive bleeding day', () => {
+    const malformedDate = calendarDate('2026-04-32');
+    const latestDate = calendarDate('2026-05-02');
+    const dates = [
+        calendarDate('2026-04-24'),
+        calendarDate('2026-04-25'),
+        calendarDate('2026-04-26'),
+        calendarDate('2026-04-27'),
+        calendarDate('2026-04-28'),
+        calendarDate('2026-04-29'),
+        calendarDate('2026-04-30'),
+        malformedDate,
+        latestDate,
+    ];
+    const bleedingEntries = dates.map(date => ({
+        ...BLEEDING_ENTRY,
+        id: entityId<'bleeding-entry'>(`bleeding-${date}`),
+        date,
+        painImpact: null,
+    }));
+
+    const items = buildCycleDayItems(bleedingEntries, [], [], 'en-US');
+
+    expect(items).toHaveLength(dates.length);
+    expect(items.find(item => item.date === malformedDate)).toMatchObject({
+        dateLabel: malformedDate,
+        carePromptItems: [],
+    });
+    expect(items.find(item => item.date === latestDate)).toMatchObject({
+        dateLabel: 'May 2, 2026',
+        carePromptItems: [],
+    });
+});
+
 describe('Notes-only day history', () => {
     it('shows the note without fabricating symptoms or bleeding', () => {
         const items = buildCycleDayItems([], [], [], {

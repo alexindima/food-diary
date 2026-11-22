@@ -2,7 +2,7 @@
     <div class="ai-consent-dialog__body">
         <div class="ai-consent-dialog__text fd-ui-body-sm" [innerHTML]="'AI_CONSENT.TEXT' | translate"></div>
         <div class="ai-consent-dialog__checkbox fd-row fd-align-start fd-gap-xs">
-            <input id="ai-consent-agree" type="checkbox" [checked]="isAgreed()" (change)="onCheckboxChange($event)" />
+            <input #agreement id="ai-consent-agree" type="checkbox" [checked]="isAgreed()" (change)="isAgreed.set(agreement.checked)" />
             <label class="fd-ui-body-sm" for="ai-consent-agree">{{ 'AI_CONSENT.AGREE_LABEL' | translate }}</label>
         </div>
     </div>

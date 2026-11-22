@@ -12,8 +12,8 @@ import {
     buildTdeeConfidenceKey,
     buildTdeeHintKey,
     getEffectiveTdee,
+    getMeaningfulTdeeSuggestion,
     getTdeeWeightTrendKg,
-    hasMeaningfulTdeeSuggestion,
 } from '../../lib/tdee-insight-view.mapper';
 import { TdeeInsightDialogFooterComponent } from './tdee-insight-dialog-footer/tdee-insight-dialog-footer';
 import { TdeeInsightDialogHintComponent } from './tdee-insight-dialog-hint/tdee-insight-dialog-hint';
@@ -59,7 +59,8 @@ export class TdeeInsightDialogComponent {
     protected readonly confidenceKey = buildTdeeConfidenceKey(this.insight, 'TDEE_DIALOG.CONFIDENCE.NONE');
     protected readonly stateKey = this.buildTdeeStateKey('STATE');
     protected readonly summaryKey = this.buildTdeeStateKey('SUMMARY');
-    protected readonly showSuggestion = hasMeaningfulTdeeSuggestion(this.insight);
+    protected readonly suggestedTarget = getMeaningfulTdeeSuggestion(this.insight);
+    protected readonly showSuggestion = this.suggestedTarget !== null;
     protected readonly hintKey = buildTdeeHintKey(this.insight?.goalAdjustmentHint);
     protected readonly setupItems: readonly TdeeSetupItem[] = [
         {
@@ -91,12 +92,8 @@ export class TdeeInsightDialogComponent {
         }
     }
 
-    protected async applySuggestionAsync(): Promise<void> {
+    protected async applySuggestionAsync(target: number): Promise<void> {
         if (this.data === null || this.isApplying()) {
-            return;
-        }
-        const target = this.insight?.suggestedCalorieTarget;
-        if (target === null || target === undefined || target <= 0) {
             return;
         }
         const wasDisabled = this.dialogRef.disableClose;

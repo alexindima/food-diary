@@ -17,7 +17,6 @@ import type { FastingInsights, FastingProtocol, FastingSession, FastingStats } f
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { FastingCheckInDialogResult } from '../../components/fasting-check-in-dialog/fasting-check-in-dialog';
-import type { FastingCheckInChartDialogData } from '../../components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog';
 import { FastingEndConfirmDialogComponent } from '../../components/fasting-end-confirm-dialog/fasting-end-confirm-dialog';
 import {
     FastingHistoryDialogComponent,
@@ -523,28 +522,6 @@ describe('FastingPageComponent history labels', () => {
 describe('FastingPageComponent check-in history', () => {
     beforeEach(createComponentAsync);
 
-    it('opens chart dialog only for sessions with multiple check-ins', () => {
-        const singleCheckInSession = createHistorySession('session-1', 1);
-        const multiCheckInSession = createHistorySession('session-2', 2);
-
-        component['openSessionCheckInChart'](singleCheckInSession);
-        expect(dialogService.open).not.toHaveBeenCalled();
-        expect(component['canViewSessionCheckInChart'](singleCheckInSession)).toBe(false);
-
-        component['openSessionCheckInChart'](multiCheckInSession);
-
-        expect(component['canViewSessionCheckInChart'](multiCheckInSession)).toBe(true);
-        expect(dialogService.open).toHaveBeenCalledTimes(1);
-        const call = dialogService.open.mock.calls[0] as
-            [unknown, { size?: string; panelClass?: string; data?: FastingCheckInChartDialogData }] | undefined;
-        const options = call?.[1];
-
-        expect(options?.size).toBe('lg');
-        expect(options?.panelClass).toBe('fd-ui-dialog-panel--chart');
-        expect(options?.data?.title).toBe('FASTING.CHECK_IN.CHART_TITLE');
-        expect(options?.data?.checkIns).toEqual(multiCheckInSession.checkIns);
-    });
-
     it('tracks session check-in pagination locally', () => {
         const session = createHistorySession('session-3', SESSION_CHECK_INS_BEYOND_PAGE_SIZE);
 
@@ -557,16 +534,15 @@ describe('FastingPageComponent check-in history', () => {
         expect(component['canLoadMoreSessionCheckIns'](session)).toBe(false);
     });
 
-    it('treats sessions without check-ins as collapsed non-chartable history items', () => {
+    it('has no check-ins to display for a session without ratings', () => {
         const session = createHistorySession('session-4', 0);
 
         expect(component['hasCheckIn'](session)).toBe(false);
         expect(component['getSessionCheckInCount'](session)).toBe(0);
-        expect(component['canViewSessionCheckInChart'](session)).toBe(false);
         expect(component['getVisibleSessionCheckIns'](session)).toHaveLength(0);
     });
 
-    it('does not allow chart for single legacy summary check-in fallback', () => {
+    it('displays one check-in from the legacy summary', () => {
         const session = {
             ...createHistorySession('session-5', 0),
             checkInAtUtc: utcInstant('2026-04-12T10:00:00Z'),
@@ -579,7 +555,6 @@ describe('FastingPageComponent check-in history', () => {
 
         expect(component['hasCheckIn'](session)).toBe(true);
         expect(component['getSessionCheckInCount'](session)).toBe(1);
-        expect(component['canViewSessionCheckInChart'](session)).toBe(false);
         expect(component['getVisibleSessionCheckIns'](session)).toHaveLength(1);
     });
 });

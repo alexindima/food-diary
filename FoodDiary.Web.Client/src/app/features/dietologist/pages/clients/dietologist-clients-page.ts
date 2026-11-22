@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { Router } from '@angular/router';
@@ -86,7 +86,6 @@ export class DietologistClientsPageComponent {
     protected readonly attentionLoading = signal(true);
     protected readonly attentionError = signal(false);
     protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
-    private readonly attentionFields = viewChildren<ElementRef<HTMLInputElement>>('attentionField');
     protected readonly attentionSettings = signal<AttentionSignalSettings>({
         inactivityDays: 3,
         calorieDeviationPercent: 25,
@@ -169,11 +168,9 @@ export class DietologistClientsPageComponent {
         }
     }
 
-    protected applyAttentionSettings(): void {
+    protected applyAttentionSettings(fields: readonly HTMLInputElement[]): void {
         if (this.invalidAttentionSettings().size > 0) {
-            this.attentionFields()
-                .find(field => !field.nativeElement.validity.valid)
-                ?.nativeElement.focus();
+            fields.find(field => !field.validity.valid)?.focus();
             return;
         }
         this.loadAttentionSignals();

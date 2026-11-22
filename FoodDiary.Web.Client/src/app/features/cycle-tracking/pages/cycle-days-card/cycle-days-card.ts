@@ -21,6 +21,7 @@ export class CycleDaysCardComponent {
     public readonly clearingDate = input<string | null>(null);
     public readonly clearError = input<string | null>(null);
     public readonly confirmingDate = input<string | null>(null);
+    public readonly isMutationPending = input(false);
     public readonly confirmationError = input<string | null>(null);
     public readonly hasMore = input(false);
     public readonly isExpanded = input(false);

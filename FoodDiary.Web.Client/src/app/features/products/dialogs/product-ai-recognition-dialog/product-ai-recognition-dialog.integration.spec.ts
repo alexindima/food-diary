@@ -1,4 +1,5 @@
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -7,9 +8,12 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, Subject, throwError } from 'rxjs';
 import { expect, it, type Mock, onTestFinished, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { AuthService } from '../../../../services/auth.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { FoodRecognitionService } from '../../../../shared/api/food-recognition.service';
+import type { FoodRecognitionJobHttpResponse } from '../../../../shared/api/sdk/generated/model/food-recognition-job-http-response';
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../../shared/models/ai.data';
@@ -571,6 +575,89 @@ it.each([
     });
 });
 
+it.each(['before redraw', 'during upload'] as const)('keeps Apply from omitting a newly selected photo %s', async timing => {
+    const primary = imageSelection('https://images.example.test/oat-label.jpg', 'label-photo');
+    const additional = imageSelection('https://images.example.test/oat-ingredients.jpg', 'ingredients-photo');
+    const upload = new Subject<ImageSelection>();
+    const wizard = await openWizardAsync({ initialPhotos: [primary] });
+    wizard.uploadImage.mockReturnValue(upload);
+    wizard.analyzeFoodImage.mockReturnValue(
+        of({
+            items: [],
+            productLabel: {
+                name: 'Oat milk',
+                brand: null,
+                baseAmount: 100,
+                baseUnit: 'ml',
+                calories: 45,
+                protein: 1,
+                fat: 2,
+                carbs: 6,
+                fiber: null,
+                alcohol: null,
+                notes: null,
+            },
+        }),
+    );
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+    const apply = action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY');
+    expect(apply.disabled).toBe(false);
+
+    const image = document.createElement('img');
+    const photoSize = 320;
+    Object.defineProperties(image, { naturalWidth: { value: photoSize }, naturalHeight: { value: photoSize } });
+    vi.stubGlobal('Image', function decodeSelectedPhoto(): HTMLImageElement {
+        return image;
+    });
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:additional-label-photo');
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+    onTestFinished(() => {
+        createUrl.mockRestore();
+        revokeUrl.mockRestore();
+    });
+    const picker = requiredElement(wizard.host, 'fd-image-upload-field input[type="file"]', HTMLInputElement);
+    const openPicker = vi.spyOn(picker, 'click');
+    requiredElement(wizard.host, '.recognition-photos__empty button', HTMLButtonElement).click();
+    expect(openPicker).toHaveBeenCalled();
+    const file = new File(['oat ingredients'], 'ingredients.png', { type: 'image/png' });
+    Object.defineProperty(picker, 'files', { value: [file] });
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+    image.dispatchEvent(new Event('load'));
+
+    if (timing === 'before redraw') {
+        expect(apply.disabled).toBe(false);
+        apply.click();
+        expect(wizard.closed).not.toHaveBeenCalled();
+    }
+    await vi.waitFor(() => {
+        expect(wizard.uploadImage).toHaveBeenCalledExactlyOnceWith(file);
+        expect(upload.observed).toBe(true);
+    });
+    wizard.detectChanges();
+    expect(apply.disabled).toBe(true);
+    apply.click();
+    expect(wizard.closed).not.toHaveBeenCalled();
+
+    upload.next(additional);
+    upload.complete();
+    await vi.waitFor(() => {
+        wizard.detectChanges();
+        expect(recognitionPhotoUrls(wizard)).toEqual([primary.url, additional.url]);
+        expect(apply.isConnected).toBe(false);
+    });
+    action(wizard.host, 'PRODUCT_AI_DIALOG.ANALYZE').click();
+    wizard.detectChanges();
+    expect(wizard.analyzeFoodImage).toHaveBeenNthCalledWith(2, {
+        imageAssetId: primary.assetId,
+        additionalImageAssetIds: [additional.assetId],
+        description: null,
+        isProductLabel: true,
+    });
+    action(wizard.host, 'PRODUCT_AI_DIALOG.APPLY').click();
+    expect(wizard.closed).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ images: [primary, additional] }));
+});
+
 it('cancels a two-photo upload after the first photo finishes when the wizard closes', async () => {
     const initialPhoto = imageSelection('https://images.example.test/label.jpg', 'label-photo');
     const firstSelection = imageSelection('https://images.example.test/ingredients.jpg', 'ingredients-photo');
@@ -765,6 +852,141 @@ it('restores the saved primary and additional photos in order and forwards them 
         expect.objectContaining({ name: 'Yogurt', image: expected[0], images: expected }),
     );
 });
+
+const RECOGNITION_URL = `${environment.apiUrls.ai}/food/recognitions`;
+const RECOGNITION_POLL_DELAY_MS = 5000;
+const TEST_SHA256_BYTES = 32;
+const SAVED_LABEL_TIME = '2026-05-10T08:00:00Z';
+const SAVED_OAT_LABEL = {
+    id: 'c4286db2-ebbd-470d-8922-a2d3729e721c',
+    imageAssetId: 'c4286db2-ebbd-470d-8922-a2d3729e721d',
+    imageUrl: 'https://images.example.test/oat-label.jpg',
+    isProductLabel: true,
+    status: 'Succeeded',
+    createdOnUtc: SAVED_LABEL_TIME,
+    updatedOnUtc: SAVED_LABEL_TIME,
+    vision: { items: [], productLabel: { name: 'Oat milk', baseAmount: 100, baseUnit: 'ml', calories: 45, protein: 1 } },
+    nutrition: null,
+} satisfies FoodRecognitionJobHttpResponse;
+
+it('recovers the saved product label when another history entry is no longer available', async () => {
+    const expired = {
+        ...SAVED_OAT_LABEL,
+        id: 'c4286db2-ebbd-470d-8922-a2d3729e721e',
+        imageAssetId: 'c4286db2-ebbd-470d-8922-a2d3729e721f',
+        imageUrl: 'https://images.example.test/expired-label.jpg',
+        vision: { items: [], productLabel: { name: 'Expired label' } },
+    };
+    const { http, host, closed } = openHistoryWizardWithHttp();
+    TestBed.tick();
+    flushProductHistoryPage(http, 1, [expired], 2);
+    const openHistory = (): void => {
+        requiredElement(host, '.product-ai-dialog__history-link button', HTMLButtonElement).click();
+        TestBed.tick();
+    };
+    openHistory();
+    flushProductHistoryPage(http, RECOGNITION_PAGE_SIZE, [expired, SAVED_OAT_LABEL], 2);
+    TestBed.tick();
+    requiredElement(host, 'button.history-list__open', HTMLButtonElement).click();
+    await vi.advanceTimersByTimeAsync(0);
+    const expiredUrl = `${RECOGNITION_URL}/${expired.id}`;
+    http.expectOne({ method: 'GET', url: expiredUrl }).flush(
+        { error: 'Ai.RecognitionNotFound' },
+        { status: HttpStatusCode.NotFound, statusText: 'Not Found' },
+    );
+    TestBed.tick();
+
+    const status = (): HTMLElement => requiredElement(host, '.product-ai-dialog__status', HTMLElement);
+    expect(status().textContent).toContain('PRODUCT_AI_DIALOG.ERROR_GENERIC');
+    expect(host.querySelector('fd-product-ai-recognition-result')).toBeNull();
+    flushProductHistoryPage(http, 1, [SAVED_OAT_LABEL], 1);
+    await vi.advanceTimersByTimeAsync(RECOGNITION_POLL_DELAY_MS);
+    http.expectNone(expiredUrl);
+
+    openHistory();
+    flushProductHistoryPage(http, RECOGNITION_PAGE_SIZE, [SAVED_OAT_LABEL], 1);
+    TestBed.tick();
+    const available = requiredElement(host, 'button.history-list__open', HTMLButtonElement);
+    expect(available.textContent).toContain(SAVED_OAT_LABEL.vision.productLabel.name);
+    available.click();
+    await vi.advanceTimersByTimeAsync(0);
+    http.expectOne({ method: 'GET', url: `${RECOGNITION_URL}/${SAVED_OAT_LABEL.id}` }).flush(SAVED_OAT_LABEL);
+    await vi.advanceTimersByTimeAsync(0);
+    TestBed.tick();
+
+    expect(status().textContent).toContain('PRODUCT_AI_DIALOG.STATUS_DONE');
+    expect(status().textContent).not.toContain('PRODUCT_AI_DIALOG.ERROR_GENERIC');
+    expect(host.querySelector('.recognition-photos__preview img')?.getAttribute('src')).toBe(SAVED_OAT_LABEL.imageUrl);
+    flushProductHistoryPage(http, 1, [SAVED_OAT_LABEL], 1);
+    const apply = action(host, 'PRODUCT_AI_DIALOG.APPLY');
+    expect(apply.disabled).toBe(false);
+    apply.click();
+
+    expect(closed).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ name: 'Oat milk', caloriesPerBase: 45, baseUnit: MeasurementUnit.ML }),
+    );
+    http.expectNone(request => request.method === 'POST');
+});
+
+function openHistoryWizardWithHttp(): {
+    http: HttpTestingController;
+    host: HTMLElement;
+    closed: Mock<(result: ProductAiRecognitionResult | null | undefined) => void>;
+} {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+    const digest = vi.spyOn(crypto.subtle, 'digest').mockResolvedValue(new Uint8Array(TEST_SHA256_BYTES).buffer);
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'setTimeout', 'clearTimeout'] });
+    TestBed.configureTestingModule({
+        providers: [
+            provideHttpClient(),
+            provideHttpClientTesting(),
+            provideRouter([]),
+            provideTranslateTesting(),
+            {
+                provide: AuthService,
+                useValue: {
+                    getUserId: (): string => 'label-history-user',
+                    sessionHubUrl: (): never => {
+                        throw new Error('History polling test does not connect to SignalR');
+                    },
+                },
+            },
+        ],
+    });
+    const dialogs = TestBed.inject(FdUiDialogService);
+    const http = TestBed.inject(HttpTestingController);
+    onTestFinished(() => {
+        dialogs.closeAll();
+        vi.useRealTimers();
+        vi.unstubAllGlobals();
+        digest.mockRestore();
+        http.verify();
+    });
+    const ref = dialogs.open<ProductAiRecognitionDialogComponent, ProductAiDialogData, ProductAiRecognitionResult | null>(
+        ProductAiRecognitionDialogComponent,
+        { data: {} },
+    );
+    const component = ref.componentRef;
+    if (component === null || !(component.location.nativeElement instanceof HTMLElement)) {
+        throw new Error('Recognition dialog did not create its component');
+    }
+    const closed = vi.fn<(result: ProductAiRecognitionResult | null | undefined) => void>();
+    ref.afterClosed().subscribe(closed);
+    return { http, host: component.location.nativeElement, closed };
+}
+
+function flushProductHistoryPage(
+    http: HttpTestingController,
+    limit: number,
+    jobs: FoodRecognitionJobHttpResponse[],
+    totalItems: number,
+): void {
+    const page = http.expectOne(
+        request => request.method === 'GET' && request.url === `${RECOGNITION_URL}/page` && request.params.get('limit') === String(limit),
+    );
+    expect(page.request.params.get('isProductLabel')).toBe('true');
+    page.flush({ data: jobs, page: 1, limit, totalItems, totalPages: 1 });
+}
 
 type RecognitionWizard = {
     host: HTMLElement;

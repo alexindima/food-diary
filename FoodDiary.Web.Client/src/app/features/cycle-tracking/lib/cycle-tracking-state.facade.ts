@@ -62,13 +62,11 @@ export class CycleTrackingStateFacade {
 
     public readonly episodeError = signal<string | null>(null);
 
-    public readonly isEpisodeBusy = computed(
-        () =>
-            this.isSavingEpisode() ||
-            this.excludingEpisodeId() !== null ||
-            this.deletingEpisodeId() !== null ||
-            this.confirmingPeriodStartDate() !== null,
+    private readonly isEpisodeWritePending = computed(
+        () => this.isSavingEpisode() || this.excludingEpisodeId() !== null || this.deletingEpisodeId() !== null,
     );
+
+    public readonly isEpisodeBusy = computed(() => this.isEpisodeWritePending() || this.confirmingPeriodStartDate() !== null);
 
     public readonly isExportingCycle = signal(false);
 
@@ -94,6 +92,10 @@ export class CycleTrackingStateFacade {
 
     public readonly isDayMutationPending = computed(
         () => this.isSavingDay() || this.clearingDayDate() !== null || this.confirmingPeriodStartDate() !== null,
+    );
+
+    public readonly isProfileMutationPending = computed(
+        () => this.isSettingsBusy() || this.isDayMutationPending() || this.isSavingFactor() || this.isEpisodeWritePending(),
     );
 
     public readonly editingDayDate = signal<string | null>(null);
@@ -160,8 +162,13 @@ export class CycleTrackingStateFacade {
             return;
         }
 
-        const requestId = this.nutritionLoad.begin();
         const range = cycleNutritionRange(toCycleDateKey(cycle.trackingStartDate), formatDateInputValue(new Date()));
+        if (range.dateFrom > range.dateTo) {
+            this.nutritionLoad.reset();
+            return;
+        }
+
+        const requestId = this.nutritionLoad.begin();
         this.nutritionRead = this.cyclesService
             .getNutritionSummary(calendarDate(range.dateFrom), calendarDate(range.dateTo))
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -186,9 +193,7 @@ export class CycleTrackingStateFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: ({ cycle, revision }) => {
-                    if (!this.cycleLoad.succeed(requestId, true)) {
-                        return;
-                    }
+                    this.cycleLoad.succeed(requestId, true);
                     this.latestFullReadRevision = revision;
                     this.refreshError.set(null);
                     this.cycle.set(cycle);

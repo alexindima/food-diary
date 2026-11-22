@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpStatusCode, provideHttpClient } from '@angular/c
 import { HttpTestingController, provideHttpClientTesting, type TestRequest } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -21,7 +21,7 @@ import { PublicRecipeService } from '../../api/public-recipe.service';
 import { publicRecipeFixture } from '../../lib/public-recipe.test-helper';
 import { PublicRecipesFacade } from '../../lib/public-recipes.facade';
 import type { PublicRecipe } from '../../models/public-recipe.data';
-import { publicRecipeResolver } from '../../resolvers/public-recipe.resolver';
+import { type PublicRecipePageData, publicRecipeResolver } from '../../resolvers/public-recipe.resolver';
 import { PublicRecipeDetailComponent } from './public-detail';
 
 const SELECTED_DIARY_SERVINGS = 3;
@@ -52,19 +52,22 @@ beforeEach(() => {
     );
     TestBed.configureTestingModule({
         providers: [
-            provideRouter([
-                {
-                    path: 'explore',
-                    component: PublicRecipeDetailComponent,
-                    data: { seo: { recipe: publicRecipeFixture(), error: null } },
-                },
-                {
-                    path: 'explore/:id',
-                    component: PublicRecipeDetailComponent,
-                    resolve: { seo: publicRecipeResolver },
-                    runGuardsAndResolvers: 'always',
-                },
-            ]),
+            provideRouter(
+                [
+                    {
+                        path: 'explore',
+                        component: PublicRecipeDetailComponent,
+                        data: { seo: { recipe: publicRecipeFixture(), error: null } satisfies PublicRecipePageData },
+                    },
+                    {
+                        path: 'explore/:id',
+                        component: PublicRecipeDetailComponent,
+                        resolve: { seo: publicRecipeResolver },
+                        runGuardsAndResolvers: 'always',
+                    },
+                ],
+                withComponentInputBinding(),
+            ),
             provideTranslateTesting(),
             { provide: AuthService, useValue: { isAuthenticated: authenticated } },
             { provide: PublicAuthDialogService, useValue: dialog },
@@ -246,12 +249,14 @@ describe('Public recipe loading feedback', () => {
     it('retries an unavailable response through the same public route and renders the recovered recipe', async () => {
         getById.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable })));
         const harness = await RouterTestingHarness.create('/explore/other-recipe');
-        expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('PUBLIC_RECIPES.ERROR');
+        const detail = harness.routeNativeElement;
+        expect(detail?.querySelector('h1')?.textContent).toBe('PUBLIC_RECIPES.ERROR');
         recipeAction(harness, 'PUBLIC_RECIPES.RETRY').click();
         await harness.fixture.whenStable();
         harness.detectChanges();
 
         expect(getById.mock.calls).toEqual([['other-recipe'], ['other-recipe']]);
+        expect(harness.routeNativeElement).toBe(detail);
         expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('Stew');
         expect(harness.routeNativeElement?.querySelector('.recipe-facts')?.textContent).toContain('RECIPE_LANGUAGE.RU');
         expect(harness.routeNativeElement?.querySelector<HTMLElement>('.recipe-time-breakdown')?.hidden).toBe(true);

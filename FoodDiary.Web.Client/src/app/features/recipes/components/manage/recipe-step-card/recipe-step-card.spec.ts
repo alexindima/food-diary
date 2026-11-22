@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { describe, expect, it, vi } from 'vitest';
 
+import { stubScrollIntoView } from '../../../../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../../shared/models/product.data';
@@ -91,35 +92,47 @@ describe('RecipeStepCardComponent', () => {
 });
 
 describe('Recipe ingredient selection', () => {
-    it('keeps the committed kind while a picker is pending and permits retry after cancellation', () => {
-        const { component, fixture } = setupComponent();
-        const select = fixture.debugElement.query(By.directive(FdUiSelectComponent)).componentInstance as FdUiSelectComponent<string>;
-        const selections: Array<{ ingredientIndex: number; itemType: string }> = [];
-        component.selectProduct.subscribe(event => selections.push(event));
+    it('restores only the second row when the requested ingredient kind has not been committed', () => {
+        stubScrollIntoView();
+        const ingredients = [createRecipeIngredientValue({ textName: 'Black pepper' }), createRecipeIngredientValue()];
+        const { component, fixture } = setupComponent(createRecipeStepValue({ title: null, imageUrl: null, description: '', ingredients }));
+        const host = fixture.nativeElement as HTMLElement;
+        const selected = vi.fn();
+        component.selectProduct.subscribe(selected);
+        const controls = [...host.querySelectorAll<HTMLButtonElement>('button[aria-label="RECIPE_MANAGE.INGREDIENT_TYPE"]')];
+        const first = controls.at(0);
+        const second = controls.at(1);
+        if (first === undefined || second === undefined) {
+            throw new Error('Expected two rendered ingredient kind controls');
+        }
 
-        select.value.set('Recipe');
-        fixture.detectChanges();
-        expect(select.value()).toBe('Product');
-        expect(component['ingredientRows']()[0].itemType).toBe('Product');
-        expect(selections).toEqual([{ ingredientIndex: 0, itemType: 'Recipe' }]);
+        for (let attempt = 0; attempt < 2; attempt++) {
+            second.click();
+            fixture.detectChanges();
+            const recipe = [...document.querySelectorAll<HTMLButtonElement>('[role="option"]')].find(
+                option => option.textContent.trim() === 'MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe',
+            );
+            if (recipe === undefined) {
+                throw new Error('Expected the rendered recipe ingredient option');
+            }
+            recipe.click();
+            fixture.detectChanges();
 
-        select.value.set('Recipe');
-        fixture.detectChanges();
-        expect(select.value()).toBe('Product');
-        expect(selections).toEqual([
-            { ingredientIndex: 0, itemType: 'Recipe' },
-            { ingredientIndex: 0, itemType: 'Recipe' },
-        ]);
+            expect(first.textContent.trim()).toBe('RECIPE_MANAGE.TEXT_INGREDIENT');
+            expect(second.textContent.trim()).toBe('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product');
+        }
+        expect(selected.mock.calls).toEqual([[{ ingredientIndex: 1, itemType: 'Recipe' }], [{ ingredientIndex: 1, itemType: 'Recipe' }]]);
     });
 
     it('emits ingredient selection with requested item type', () => {
-        const { component } = setupComponent();
+        const { component, fixture } = setupComponent();
+        const select = fixture.debugElement.query(By.directive(FdUiSelectComponent)).componentInstance as FdUiSelectComponent<string>;
         const selections: Array<{ ingredientIndex: number; itemType: string }> = [];
         component['selectProduct'].subscribe(event => {
             selections.push(event);
         });
 
-        component['onIngredientTypeChange'](0, 'Recipe');
+        select.value.set('Recipe');
         component['onProductSelectClick'](0, 'Product');
 
         expect(selections).toEqual([

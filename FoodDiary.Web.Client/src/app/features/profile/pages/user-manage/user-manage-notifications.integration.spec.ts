@@ -328,6 +328,39 @@ describe('Profile notification settings', () => {
     });
 });
 
+describe('Profile category saves across route navigation', () => {
+    it.each([
+        { category: 'FASTING', key: 'fastingPushNotificationsEnabled' },
+        { category: 'SOCIAL', key: 'socialPushNotificationsEnabled' },
+    ] as const)('finishes the $category change without notifying the diary', async ({ category, key }) => {
+        const { harness, profile, account, toast } = await setupRoutedProfileAsync();
+        const pending = new Subject<NotificationPreferences>();
+        const update = { [key]: false };
+        account.updateNotificationPreferences.mockReturnValueOnce(pending);
+        const toggle = profile.querySelector<HTMLButtonElement>(
+            `button[role="switch"][aria-label="USER_MANAGE.${category}_NOTIFICATIONS"]`,
+        );
+        if (toggle === null) {
+            throw new Error(`Expected the ${category} notification switch`);
+        }
+        expect(toggle.getAttribute('aria-checked')).toBe('true');
+
+        toggle.click();
+        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith(update);
+        await harness.navigateByUrl('/diary', NotificationDepartureComponent);
+        expect(profile.isConnected).toBe(false);
+        expect(pending.observed).toBe(true);
+
+        pending.next({ ...initialPreferences, ...update });
+        pending.complete();
+        await waitForAsyncTasksAsync();
+
+        expect(harness.routeNativeElement?.textContent).toContain('Diary opened');
+        expect(account.updateNotificationPreferences).toHaveBeenCalledExactlyOnceWith(update);
+        expect(toast.info).not.toHaveBeenCalled();
+    });
+});
+
 describe('Profile notification category reactivation', () => {
     it.each([
         { category: 'FASTING', otherCategory: 'SOCIAL', field: 'fastingPushNotificationsEnabled' },

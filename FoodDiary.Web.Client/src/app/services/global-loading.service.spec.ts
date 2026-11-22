@@ -45,6 +45,22 @@ describe('GlobalLoadingService', () => {
         expect(service.isVisible()).toBe(true);
     });
 
+    it('gives the next request its full delay after earlier work completes before showing', () => {
+        const finishShortRequest = service.trackRequest();
+        vi.advanceTimersByTime(BEFORE_SHOW_DELAY_MS);
+        finishShortRequest();
+
+        const finishLongRequest = service.trackRequest();
+        vi.advanceTimersByTime(BEFORE_SHOW_DELAY_MS);
+        expect(service.isVisible()).toBe(false);
+
+        vi.advanceTimersByTime(1);
+        expect(service.isVisible()).toBe(true);
+        finishLongRequest();
+        vi.advanceTimersByTime(MIN_VISIBLE_DURATION_MS);
+        expect(service.isVisible()).toBe(false);
+    });
+
     it('should keep loader visible for minimum duration after showing', () => {
         const complete = service.trackRequest();
 

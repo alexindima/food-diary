@@ -7,18 +7,22 @@ import { NavigationEnd, provideRouter, Router, withComponentInputBinding } from 
 import { RouterTestingHarness } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
+import { provideFdUiDialogNavigation } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { WebmcpScreenRegistry } from 'fd-webmcp';
-import { filter, firstValueFrom, of, Subject, throwError } from 'rxjs';
+import { filter, firstValueFrom, NEVER, of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, expect, it, onTestFinished, vi } from 'vitest';
 
+import { environment } from '../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { stubScrollIntoView } from '../../../testing/dom-testing';
 import { provideTranslateTesting } from '../../../testing/translate-testing.module';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
+import type { FavoriteRecipeHttpResponse } from '../../shared/api/sdk/generated/model/favorite-recipe-http-response';
 import type { ProductHttpResponse } from '../../shared/api/sdk/generated/model/product-http-response';
+import type { RecipeHttpResponse } from '../../shared/api/sdk/generated/model/recipe-http-response';
 import { recipeFromSdk } from '../../shared/api/sdk/recipe-sdk.mapper';
 import { DEVELOPMENT_SCREENS } from '../../shared/development/development-tools';
 import { UserFacade } from '../../shared/lib/user.facade';
@@ -86,6 +90,7 @@ beforeEach(() => {
     }));
     TestBed.configureTestingModule({
         providers: [
+            provideFdUiDialogNavigation(),
             provideRouter([{ path: 'recipes', children: routes }], withComponentInputBinding()),
             provideHttpClient(),
             provideHttpClientTesting(),
@@ -313,7 +318,7 @@ it.each([
     expect(host.querySelectorAll('fd-recipe-step-card')).toHaveLength(originalStepCount);
     expect(apply.disabled).toBe(false);
 
-    const pendingPhoto = holdRecipeStepPhotoConfirmationAsync(input);
+    const pendingPhoto = holdRecipePhotoConfirmationAsync(input);
     expect(apply.isConnected).toBe(true);
     expect(apply.disabled).toBe(false);
     apply.click();
@@ -504,6 +509,71 @@ it('retries the chosen catalogue filter after the browser rejects its History wr
     });
     expect(loadRecipes).toHaveBeenCalledTimes(initialReads + 1);
     expect(loadRecipes.mock.lastCall?.[0]).toMatchObject({ filters: { search: 'soup', category: undefined } });
+});
+
+it('refreshes the filtered catalogue once after favoriting and closing a recipe detail', async () => {
+    const harness = await RouterTestingHarness.create('/recipes?search=soup&category=soups&campaign=bookmark');
+    const router = TestBed.inject(Router);
+    const initialUrl = router.url;
+    const dialogs = TestBed.inject(FdUiDialogService);
+    const open = vi.spyOn(dialogs, 'open');
+    const http = TestBed.inject(HttpTestingController);
+    const navigation = vi.fn();
+    const routeChanges = router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(navigation);
+    onTestFinished(() => {
+        routeChanges.unsubscribe();
+        dialogs.closeAll();
+        http.verify();
+    });
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    const addFavorite = 'button[aria-label="RECIPE_DETAIL.ADD_FAVORITE"]';
+    const removeFavorite = 'button[aria-label="RECIPE_DETAIL.REMOVE_FAVORITE"]';
+    expect(getButton(harness.routeNativeElement, `fd-recipe-list-results ${addFavorite}`).disabled).toBe(false);
+    loadRecipes.mockClear();
+
+    getButton(harness.routeNativeElement, `button[aria-label="${RECIPE.name}"]`).click();
+    const url = environment.apiUrls.favoriteRecipes;
+    const check = await vi.waitFor(() => {
+        harness.detectChanges();
+        return http.expectOne({ method: 'GET', url: `${url}/check/${RECIPE.id}` });
+    });
+    check.flush(false);
+    harness.detectChanges();
+    const detail = document.querySelector('fd-recipe-detail');
+    getButton(detail, addFavorite).click();
+    const favoriteId = entityId<'favorite-recipe'>('added-favorite');
+    const add = http.expectOne({ method: 'POST', url });
+    expect(add.request.body).toMatchObject({ recipeId: RECIPE.id });
+    add.flush({
+        id: favoriteId,
+        recipeId: RECIPE.id,
+        recipeName: RECIPE.name,
+        createdAtUtc: RECIPE.createdAt,
+        servings: RECIPE.servings,
+        ingredientCount: 0,
+    } satisfies FavoriteRecipeHttpResponse);
+    harness.detectChanges();
+    expect(getButton(detail, removeFavorite).disabled).toBe(false);
+    expect(loadRecipes).not.toHaveBeenCalled();
+
+    loadRecipes.mockReturnValueOnce(
+        of({ ...OVERVIEW, allRecipes: { ...OVERVIEW.allRecipes, data: [{ ...RECIPE, isFavorite: true, favoriteRecipeId: favoriteId }] } }),
+    );
+    getButton(detail, 'button[aria-label="COMMON.CLOSE"]').click();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(document.querySelector('fd-recipe-detail')).toBeNull();
+        expect(getButton(harness.routeNativeElement, `fd-recipe-list-results ${removeFavorite}`).disabled).toBe(false);
+    });
+
+    expect(router.url).toBe(initialUrl);
+    expect(navigation).not.toHaveBeenCalled();
+    expect(open).toHaveBeenCalledOnce();
+    expect(loadRecipes).toHaveBeenCalledOnce();
+    expect(createRecipe).not.toHaveBeenCalled();
+    expect(updateRecipe).not.toHaveBeenCalled();
+    expect(deleteRecipe).not.toHaveBeenCalled();
 });
 
 it('keeps the active catalogue filters after deleting a recipe through its detail dialog', async () => {
@@ -753,9 +823,17 @@ it('reports native recipe validation errors through the registered editor until 
 it('preserves the draft on publication cancel and converts only the private ingredient on retry', async () => {
     stubScrollIntoView();
     const { stored, privateFood, publicFood } = publicationRecipeFixture();
+    const seasoning = { textName: 'Sea salt', amountText: 'to taste', amount: 0 };
+    const recipeWithSeasoning: Recipe = {
+        ...stored,
+        steps: stored.steps.map(step => ({
+            ...step,
+            ingredients: [...step.ingredients, recipeIngredientFromStored({ id: 'seasoning', ...seasoning })],
+        })),
+    };
     const draftName = 'Tomato and yogurt soup';
-    readRecipe.mockReturnValueOnce(of(stored));
-    updateRecipe.mockReturnValueOnce(of({ ...stored, name: draftName, visibility: RecipeVisibility.Public }));
+    readRecipe.mockReturnValueOnce(of(recipeWithSeasoning));
+    updateRecipe.mockReturnValueOnce(of({ ...recipeWithSeasoning, name: draftName, visibility: RecipeVisibility.Public }));
     const http = TestBed.inject(HttpTestingController);
     const harness = await RouterTestingHarness.create(EDIT_RECIPE);
     http.expectOne(request => request.url.startsWith('./assets/i18n/en/core.json?')).flush({});
@@ -803,7 +881,99 @@ it('preserves the draft on publication cancel and converts only the private ingr
     expect(updateRecipe.mock.lastCall?.[1].steps[0]?.ingredients).toEqual([
         { textName: privateFood.name, amountText: '150.5 g', amount: 0 },
         expect.objectContaining({ productId: publicFood.id, amount: 40, publicName: publicFood.name, publicUnit: 'G' }),
+        seasoning,
     ]);
+    http.verify();
+});
+
+it.each([
+    {
+        choiceName: 'text conversion',
+        choice: 'RECIPE_PUBLICATION.TEXT',
+        servings: RECIPE.servings,
+    },
+    {
+        choiceName: 'product publishing',
+        choice: 'RECIPE_PUBLICATION.PUBLISH',
+        servings: UPDATED_SERVINGS,
+    },
+])('rejects stale recipe publication after Back ($choiceName)', async ({ choice, servings }) => {
+    stubScrollIntoView();
+    const { stored, privateFood, publicFood } = publicationRecipeFixture();
+    const current: Recipe = { ...stored, visibility: RecipeVisibility.Public };
+    const earlier: Recipe = {
+        ...current,
+        id: entityId<'recipe'>('6f8f8d4f-d8f3-4f22-8a86-251b38dcf2a1'),
+        servings,
+        steps: current.steps.map(step => ({
+            ...step,
+            id: `earlier-${step.id}`,
+            ingredients: step.ingredients.map(ingredient => ({
+                ...ingredient,
+                id: entityId<'recipe-ingredient'>(`earlier-${ingredient.id}`),
+            })),
+        })),
+    };
+    const earlierUrl = `/recipes/${earlier.id}/edit`;
+    const pendingBack = new Subject<Recipe>();
+    readRecipe.mockImplementation(id => of(id === earlier.id ? earlier : current));
+    const transport = TestBed.runInInjectionContext(() => new RecipeService());
+    updateRecipe.mockImplementation((id, data) => transport.update(id, data));
+    const http = TestBed.inject(HttpTestingController);
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const dialogs = TestBed.inject(FdUiDialogService);
+    onTestFinished(() => {
+        dialogs.closeAll();
+    });
+    const harness = await RouterTestingHarness.create(earlierUrl);
+    await harness.navigateByUrl(EDIT_RECIPE);
+    const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    readRecipe.mockClear().mockImplementation(id => (id === earlier.id ? pendingBack : of(current)));
+    TestBed.inject(Location).back();
+    await vi.waitFor(() => {
+        expect(readRecipe).toHaveBeenCalledWith(earlier.id, false);
+        expect(pendingBack.observed).toBe(true);
+    });
+
+    expect(router.url).toBe(EDIT_RECIPE);
+    getButton(harness.routeNativeElement, 'button[type="submit"]').click();
+    replyWithRecipePublicationFoods(http, [{ ...privateFood, isOwnedByCurrentUser: true }, publicFood]);
+    for (const bundle of http.match(request => request.method === 'GET' && request.url.startsWith('./assets/i18n/en/'))) {
+        bundle.flush({ PRODUCT_AMOUNT_UNITS_SHORT: { G: 'g' } });
+    }
+    const action = await recipePublicationActionAsync(harness, choice);
+
+    pendingBack.next(earlier);
+    pendingBack.complete();
+    await returned;
+    harness.detectChanges();
+    expect(router.url).toBe(earlierUrl);
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
+    const fields = Array.from(harness.routeNativeElement?.querySelectorAll('fd-recipe-basic-info fd-ui-input') ?? []);
+    const displayedServings = fields.find(field => field.textContent.includes('RECIPE_MANAGE.SERVINGS'))?.querySelector('input');
+    expect(displayedServings?.value).toBe(String(servings));
+    expect(action.isConnected).toBe(true);
+    expect(action.disabled).toBe(false);
+    expect(updateRecipe).not.toHaveBeenCalled();
+
+    action.click();
+    await waitForAsyncTasksAsync();
+    await harness.fixture.whenStable();
+    const productWrites = http.match(request => request.method === 'PATCH' && request.url.includes('/api/v1/products/'));
+    for (const request of productWrites) {
+        request.flush({ ...privateFood, isOwnedByCurrentUser: true, visibility: 'Public' });
+    }
+    await waitForAsyncTasksAsync();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+    expect(document.querySelector(PUBLICATION_DIALOG)).toBeNull();
+    const recipeWrites = http.match(request => request.method === 'PATCH' && request.url.includes('/api/v1/recipes/'));
+    expect(recipeWrites.map(({ request }) => ({ url: request.url, body: request.body as unknown }))).toEqual([]);
+    expect(productWrites.map(({ request }) => ({ url: request.url, body: request.body as unknown }))).toEqual([]);
     http.verify();
 });
 
@@ -904,6 +1074,57 @@ it.each(['Public', 'Private'] as const)('ignores a late %s ingredient after goin
     http.verify();
 });
 
+it('keeps the reused recipe editor free of a publication error from before Back', async () => {
+    const { stored, publicFood } = publicationRecipeFixture();
+    const published: Recipe = {
+        ...stored,
+        visibility: RecipeVisibility.Public,
+        steps: stored.steps.map(step => ({
+            ...step,
+            ingredients: step.ingredients.filter(ingredient => ingredient.productId === publicFood.id),
+        })),
+    };
+    const earlier = { ...confirmedRecipe(), id: entityId<'recipe'>('recipe-before-publication'), name: 'Vegetable soup' };
+    const earlierUrl = `/recipes/${earlier.id}/edit`;
+    readRecipe.mockImplementation(id => of(id === earlier.id ? earlier : published));
+    const visibilityRead = vi.spyOn(TestBed.inject(ProductPublicationService), 'loadAsync');
+    const http = TestBed.inject(HttpTestingController);
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const harness = await RouterTestingHarness.create(earlierUrl);
+    await harness.navigateByUrl(EDIT_RECIPE);
+    const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    expect(recipeName(harness).value).toBe(published.name);
+    getButton(harness.routeNativeElement, 'button[type="submit"]').click();
+    const lookup = http.expectOne(request => request.method === 'GET' && request.url.endsWith(`/api/v1/products/${publicFood.id}`));
+    for (const bundle of http.match(request => request.method === 'GET' && request.url.startsWith('./assets/i18n/en/'))) {
+        bundle.flush({});
+    }
+
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    TestBed.inject(Location).back();
+    await returned;
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
+    expect(recipeName(harness).value).toBe(earlier.name);
+
+    lookup.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Service Unavailable' });
+    await expect(visibilityRead.mock.results[0]?.value).rejects.toThrow('Cannot verify ingredient visibility');
+    await waitForAsyncTasksAsync();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(router.url).toBe(earlierUrl);
+    expect(recipeName(harness).value).toBe(earlier.name);
+    expect(harness.routeNativeElement?.querySelector('[role="alert"]')?.textContent ?? '').not.toContain('RECIPE_PUBLICATION.ERROR');
+    expect(getButton(harness.routeNativeElement, 'button[type="submit"]').disabled).toBe(false);
+    expect(document.querySelector(PUBLICATION_DIALOG)).toBeNull();
+    expect(updateRecipe).not.toHaveBeenCalled();
+    http.verify();
+});
+
 it('keeps the destination open when an already submitted recipe edit finishes after Back', async () => {
     const stored = confirmedRecipe();
     const response = new Subject<Recipe>();
@@ -934,6 +1155,80 @@ it('keeps the destination open when an already submitted recipe edit finishes af
     expect(listNavigation).not.toHaveBeenCalled();
     expect(recipeName(harness).value).toBe('');
     expect(response.observed).toBe(false);
+});
+
+it('closes the current ingredient picker when a pending browser Back opens another recipe', async () => {
+    const source = confirmedRecipe();
+    const earlierId = entityId<'recipe'>('earlier-recipe');
+    const earlierUrl = `/recipes/${earlierId}/edit`;
+    const current = {
+        ...source,
+        steps: [
+            {
+                ...source.steps[0],
+                ingredients: [recipeIngredientFromStored({ id: 'current-item', productId: 'rice', productName: 'Rice', amount: 100 })],
+            },
+        ],
+    };
+    const earlier = {
+        ...source,
+        id: earlierId,
+        name: 'Earlier recipe',
+        steps: [
+            {
+                ...source.steps[0],
+                ingredients: [recipeIngredientFromStored({ id: 'earlier-item', productId: 'basil', productName: 'Basil', amount: 100 })],
+            },
+        ],
+    };
+    const pendingBack = new Subject<Recipe>();
+    readRecipe.mockReturnValueOnce(of(earlier)).mockReturnValueOnce(of(current)).mockReturnValueOnce(pendingBack);
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const dialogService = TestBed.inject(FdUiDialogService);
+    onTestFinished(() => {
+        dialogService.closeAll();
+    });
+    const harness = await RouterTestingHarness.create(earlierUrl);
+    await harness.navigateByUrl(EDIT_RECIPE);
+    const currentEditor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    TestBed.inject(Location).back();
+    await vi.waitFor(() => {
+        expect(readRecipe).toHaveBeenLastCalledWith(earlierId, false);
+        expect(pendingBack.observed).toBe(true);
+    });
+    expect(recipeName(harness).value).toBe(current.name);
+    expect(recipeIngredientInput(harness).value).toBe('Rice');
+    const picker = openRecipeIngredientPicker(harness);
+
+    pendingBack.next(earlier);
+    pendingBack.complete();
+    await returned;
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(currentEditor);
+    expect(recipeName(harness).value).toBe(earlier.name);
+    expect({
+        pickerOpen: picker.isConnected,
+        ingredient: recipeIngredientInput(harness).value,
+    }).toEqual({ pickerOpen: false, ingredient: 'Basil' });
+
+    const replacementPicker = openRecipeIngredientPicker(harness);
+    const search = replacementPicker.querySelector('fd-product-list-dialog input');
+    if (!(search instanceof HTMLInputElement)) {
+        throw new Error('Expected the replacement recipe ingredient search');
+    }
+    typeText(search, 'Mint');
+    harness.detectChanges();
+    recipeTextButton(replacementPicker, 'RECIPE_MANAGE.USE_AS_TEXT').click();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(document.querySelector('fd-item-select-dialog')).toBeNull();
+        expect(recipeIngredientInput(harness).value).toBe('Mint');
+    });
+    expect(updateRecipe).not.toHaveBeenCalled();
 });
 
 it('keeps cover-only recipe and step photos after saving and reopening an unrelated edit', async () => {
@@ -992,6 +1287,171 @@ it('keeps cover-only recipe and step photos after saving and reopening an unrela
     expectRecipeGalleryImage(harness, galleryImage, imageUrl);
     expectRecipeGalleryImage(harness, stepGalleryImage, stepImageUrl);
     expect(stored.servings).toBe(UPDATED_SERVINGS);
+});
+
+it.each([
+    { slot: 'cover', owner: 'fd-recipe-basic-info' },
+    { slot: 'first step', owner: 'fd-recipe-step-card' },
+])('keeps an old $slot photo upload out of the recipe reached by browser Back', async ({ owner }) => {
+    const { harness, earlier, earlierUrl, cover, step, editor, target, confirmation, assetId, fileUrl } =
+        await openRecipeWithHeldGalleryUploadAsync(owner);
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl(`${EDIT_RECIPE}?from=gallery`, { replaceUrl: true });
+    harness.detectChanges();
+    expect(recipeGalleryFileInput(harness.routeNativeElement, owner)).toBe(target);
+    expect(confirmation.cancelled).toBe(false);
+    expect(editor.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    TestBed.inject(Location).back();
+    await vi.waitFor(() => {
+        expect(readRecipe).toHaveBeenLastCalledWith(earlier.id, false);
+    });
+    await returned;
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
+    expect(recipeName(harness).value).toBe(earlier.name);
+    expectRecipeGalleryImage(harness, 'fd-recipe-basic-info fd-image-gallery-editor img', cover.imageUrl);
+    expectRecipeGalleryImage(harness, 'fd-recipe-step-card fd-image-gallery-editor img', step.imageUrl);
+    const cancelled = confirmation.cancelled;
+    if (!cancelled) {
+        confirmation.flush({ assetId, fileUrl });
+    }
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(editor.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+    });
+
+    const stalePreview = editor.querySelector(`fd-image-gallery-editor img[src="${fileUrl}"]`)?.getAttribute('src') ?? null;
+    const submit = getButton(harness.routeNativeElement, 'button[type="submit"]');
+    expect(submit.disabled).toBe(false);
+    const currentInput = recipeGalleryFileInput(harness.routeNativeElement, owner);
+    expect(currentInput).not.toBe(target);
+    expect(currentInput.disabled).toBe(false);
+    const uploaded = await holdRecipePhotoConfirmationAsync(currentInput, NEXT_RECIPE_PHOTO);
+    uploaded.confirmation.flush({ assetId: uploaded.assetId, fileUrl: uploaded.fileUrl });
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expectRecipeGalleryImage(harness, `${owner} fd-image-gallery-editor img[src="${uploaded.fileUrl}"]`, uploaded.fileUrl);
+    });
+
+    submit.click();
+    const http = TestBed.inject(HttpTestingController);
+    const write = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: `${environment.apiUrls.recipes}/${earlier.id}` }));
+    expect({ stalePreview, cancelled, body: write.request.body as unknown }).toMatchObject({
+        stalePreview: null,
+        cancelled: true,
+        body: {
+            name: earlier.name,
+            imageAssetIds: owner === 'fd-recipe-basic-info' ? [cover.imageAssetId, uploaded.assetId] : [cover.imageAssetId],
+            steps: [
+                expect.objectContaining({
+                    imageAssetIds: owner === 'fd-recipe-step-card' ? [step.imageAssetId, uploaded.assetId] : [step.imageAssetId],
+                }),
+            ],
+        },
+    });
+    write.flush(earlier);
+    await vi.waitFor(() => {
+        expect(router.url).toBe(RECIPES);
+    });
+});
+
+type StoredGalleryPhoto = NonNullable<Recipe['images']>[number];
+
+type HeldRecipePhotoFixture = {
+    harness: RouterTestingHarness;
+    earlier: Recipe;
+    earlierUrl: string;
+    cover: StoredGalleryPhoto;
+    step: StoredGalleryPhoto;
+    editor: HTMLElement;
+    target: HTMLInputElement;
+    confirmation: TestRequest;
+    assetId: string;
+    fileUrl: string;
+};
+
+async function openRecipeWithHeldGalleryUploadAsync(owner: string): Promise<HeldRecipePhotoFixture> {
+    const source = confirmedRecipe();
+    const currentPhoto = {
+        imageAssetId: entityId<'image-asset'>('32510ca0-ae57-48d9-9063-a2f202600003'),
+        imageUrl: '/photos/current.jpg',
+    };
+    const current: Recipe = {
+        ...source,
+        ...currentPhoto,
+        images: [currentPhoto],
+        steps: [{ ...source.steps[0], ...currentPhoto, images: [currentPhoto] }],
+    };
+    const earlierId = entityId<'recipe'>('94c09c27-33c5-4b9a-9c60-3b5d15c05002');
+    const cover = { imageAssetId: entityId<'image-asset'>('32510ca0-ae57-48d9-9063-a2f202600001'), imageUrl: '/photos/earlier-cover.jpg' };
+    const step = { imageAssetId: entityId<'image-asset'>('32510ca0-ae57-48d9-9063-a2f202600002'), imageUrl: '/photos/earlier-step.jpg' };
+    const earlier: Recipe = {
+        ...current,
+        ...cover,
+        id: earlierId,
+        name: 'Earlier soup',
+        images: [cover],
+        steps: [{ ...current.steps[0], ...step, images: [step] }],
+    };
+    readRecipe.mockReturnValueOnce(of(earlier)).mockReturnValueOnce(of(current)).mockReturnValueOnce(of(earlier));
+    const transport = TestBed.runInInjectionContext(() => new RecipeService());
+    updateRecipe.mockImplementation((id, data) => transport.update(id, data));
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const earlierUrl = `/recipes/${earlier.id}/edit`;
+    const harness = await RouterTestingHarness.create(earlierUrl);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/core.json?')).flush({});
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/app.json?')).flush({});
+    await harness.navigateByUrl(EDIT_RECIPE);
+    const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    if (!(editor instanceof HTMLElement)) {
+        throw new Error('Expected the mounted recipe editor');
+    }
+    const target = recipeGalleryFileInput(harness.routeNativeElement, owner);
+    expect(recipeName(harness).value).toBe(current.name);
+    expectRecipeGalleryImage(harness, `${owner} fd-image-gallery-editor img`, currentPhoto.imageUrl);
+    const { confirmation, assetId, fileUrl } = await holdRecipePhotoConfirmationAsync(target);
+    harness.detectChanges();
+    expect(editor.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+    expect(updateRecipe).not.toHaveBeenCalled();
+    return { harness, earlier, earlierUrl, cover, step, editor, target, confirmation, assetId, fileUrl };
+}
+
+it('keeps an existing asset-only cover when the owner uploads an additional recipe photo', async () => {
+    const legacyAssetId = entityId<'image-asset'>('a1c759bd-70bc-4f9a-a36d-9905653f8ac6');
+    const recipe = { ...confirmedRecipe(), imageUrl: null, imageAssetId: legacyAssetId, images: [] };
+    readRecipe.mockReturnValueOnce(of(recipe));
+    updateRecipe.mockReturnValueOnce(NEVER);
+    const harness = await RouterTestingHarness.create(EDIT_RECIPE);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/core.json?')).flush({});
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/app.json?')).flush({});
+    const gallery = harness.routeNativeElement?.querySelector('fd-recipe-basic-info fd-image-gallery-editor');
+    const input = gallery?.querySelector('input[type="file"]');
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected the native recipe photo chooser');
+    }
+
+    const { confirmation, assetId, fileUrl } = await holdRecipePhotoConfirmationAsync(input);
+    confirmation.flush({ assetId, fileUrl });
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(gallery?.querySelector(`img[src="${fileUrl}"]`)).not.toBeNull();
+    });
+
+    getButton(harness.routeNativeElement, 'button[type="submit"]').click();
+    await vi.waitFor(() => {
+        expect(updateRecipe).toHaveBeenCalledOnce();
+    });
+    expect(updateRecipe).toHaveBeenCalledExactlyOnceWith(
+        recipe.id,
+        expect.objectContaining({ imageAssetId: legacyAssetId, imageAssetIds: [legacyAssetId, assetId] }),
+    );
 });
 
 it('saves reordered recipe and step galleries while preserving hydrated manual nutrition', async () => {
@@ -1328,6 +1788,196 @@ it('keeps the displayed English default for a legacy recipe with no language whe
     expect(updateRecipe.mock.lastCall?.[1].steps[0]?.description).toBe(instruction);
 });
 
+it.each([
+    { returningGallery: 'empty', coverUrl: null },
+    { returningGallery: 'legacy URL-only', coverUrl: '/recipes/earlier-legacy-cover.jpg' },
+])('restores the $returningGallery gallery and stored recipe totals on browser Back', async ({ coverUrl }) => {
+    const earlierId = '94c09c27-33c5-4b9a-9c60-3b5d15c05002';
+    const currentId = '94c09c27-33c5-4b9a-9c60-3b5d15c05001';
+    const { current, earlier } = storedRecipeGalleryFixtures(currentId, earlierId, coverUrl);
+    const transport = TestBed.runInInjectionContext(() => new RecipeService());
+    readRecipe.mockImplementation((id, includePublic) => transport.getById(id, includePublic));
+    updateRecipe.mockImplementation((id, data) => transport.update(id, data));
+    const http = TestBed.inject(HttpTestingController);
+    const readStoredRecipeAsync = async (endpoint: string): Promise<TestRequest> =>
+        vi.waitFor(() =>
+            http.expectOne(
+                request => request.method === 'GET' && request.url === endpoint && request.params.get('includePublic') === 'false',
+            ),
+        );
+    const router = TestBed.inject(Router);
+    const earlierUrl = `/recipes/${earlierId}/edit`;
+    const earlierEndpoint = `${environment.apiUrls.recipes}/${earlierId}`;
+    const opening = RouterTestingHarness.create(earlierUrl);
+    const firstRead = await readStoredRecipeAsync(earlierEndpoint);
+    firstRead.flush(earlier);
+    const harness = await opening;
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/core.json?')).flush({});
+    http.expectOne(request => request.url.startsWith('./assets/i18n/en/app.json?')).flush({});
+    expect(recipeEditorCoverUrl(harness)).toBe(coverUrl);
+    const openingCurrent = harness.navigateByUrl(`/recipes/${currentId}/edit`);
+    const currentRead = await readStoredRecipeAsync(`${environment.apiUrls.recipes}/${currentId}`);
+    currentRead.flush(current);
+    await openingCurrent;
+    const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    expect(recipeEditorCoverUrl(harness)).toBe(current.imageUrl);
+    const portionLabel = 'RECIPE_MANAGE.NUTRITION_SCALE_MODE.PORTION';
+    const recipeLabel = 'RECIPE_MANAGE.NUTRITION_SCALE_MODE.RECIPE';
+    recipeTextButton(harness.routeNativeElement, portionLabel).click();
+    harness.detectChanges();
+    expect(recipeTextButton(harness.routeNativeElement, portionLabel).getAttribute('aria-checked')).toBe('true');
+    expect(recipeNutritionInput(harness, 'calories').value).toBe('128');
+
+    router.setUpLocationChangeListener();
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    TestBed.inject(Location).back();
+    const backRead = await readStoredRecipeAsync(earlierEndpoint);
+    backRead.flush(earlier);
+    await returned;
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
+    expect(recipeName(harness).value).toBe(earlier.name);
+    const displayed = {
+        whole: recipeTextButton(harness.routeNativeElement, recipeLabel).getAttribute('aria-checked'),
+        portion: recipeTextButton(harness.routeNativeElement, portionLabel).getAttribute('aria-checked'),
+        calories: recipeNutritionInput(harness, 'calories').value,
+        proteins: recipeNutritionInput(harness, 'proteins').value,
+    };
+    const restoredCover = recipeEditorCoverUrl(harness);
+    const newName = 'Vegetable soup with herbs';
+    typeText(recipeName(harness), newName);
+    harness.detectChanges();
+    getButton(harness.routeNativeElement, 'button[type="submit"]').click();
+    const write = await vi.waitFor(() => http.expectOne({ method: 'PATCH', url: earlierEndpoint }));
+    expect(write.request.body as unknown).toMatchObject({
+        name: newName,
+        servings: earlier.servings,
+        manualCalories: 320,
+        manualProteins: 20,
+        imageUrl: coverUrl,
+        imageAssetId: null,
+        steps: [expect.objectContaining({ description: INITIAL_INSTRUCTIONS })],
+    });
+    expect(displayed).toEqual({ whole: 'true', portion: 'false', calories: '320', proteins: '20' });
+    expect({ visibleCover: restoredCover, gallerySent: Object.hasOwn(write.request.body as object, 'imageAssetIds') }).toEqual({
+        visibleCover: coverUrl,
+        gallerySent: false,
+    });
+    write.flush({ ...earlier, name: newName });
+    await vi.waitFor(() => {
+        expect(router.url).toBe(RECIPES);
+    });
+    http.verify();
+});
+
+it('keeps the previous recipe language confirmation from saving after a pending Back replaces the editor', async () => {
+    const source = confirmedRecipe();
+    const current = { ...source, languageConfirmed: false };
+    const earlier = { ...source, id: entityId<'recipe'>('earlier-language-recipe'), name: 'Earlier vegetable soup' };
+    const earlierUrl = `/recipes/${earlier.id}/edit`;
+    const pendingBack = new Subject<Recipe>();
+    readRecipe.mockImplementation(id => of(id === earlier.id ? earlier : current));
+    updateRecipe.mockReturnValue(of(earlier));
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const dialogs = TestBed.inject(FdUiDialogService);
+    onTestFinished(() => {
+        dialogs.closeAll();
+    });
+    const harness = await RouterTestingHarness.create(earlierUrl);
+    await harness.navigateByUrl(EDIT_RECIPE);
+    const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    expect(recipeName(harness).value).toBe(current.name);
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    readRecipe.mockClear().mockImplementation(id => (id === earlier.id ? pendingBack : of(current)));
+    TestBed.inject(Location).back();
+    await vi.waitFor(() => {
+        expect(readRecipe).toHaveBeenCalledWith(earlier.id, false);
+        expect(pendingBack.observed).toBe(true);
+    });
+
+    getButton(harness.routeNativeElement, 'button[type="submit"]').click();
+    const keep = await recipeLanguageActionAsync(harness, 'RECIPE_LANGUAGE.KEEP');
+    expect(keep.disabled).toBe(false);
+    expect(updateRecipe).not.toHaveBeenCalled();
+
+    pendingBack.next(earlier);
+    pendingBack.complete();
+    await returned;
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
+    expect(recipeName(harness).value).toBe(earlier.name);
+    expect(keep.isConnected).toBe(true);
+    expect(keep.disabled).toBe(false);
+    keep.click();
+    await vi.waitFor(() => {
+        harness.detectChanges();
+        expect(document.querySelector(LANGUAGE_DIALOG)).toBeNull();
+        expect(recipeName(harness).matches(':enabled')).toBe(true);
+    });
+
+    expect(updateRecipe).not.toHaveBeenCalled();
+    const name = recipeName(harness);
+    expect(name.value).toBe(earlier.name);
+    typeText(name, 'Earlier vegetable soup with basil');
+    harness.detectChanges();
+    expect(recipeName(harness).value).toBe('Earlier vegetable soup with basil');
+});
+
+it('keeps a stale language confirmation from overwriting a different recipe with the same text', async () => {
+    const source = confirmedRecipe();
+    const current = { ...source, languageConfirmed: false };
+    const earlier = { ...source, id: entityId<'recipe'>('recipe-copy-before-back'), servings: UPDATED_SERVINGS };
+    const earlierUrl = `/recipes/${earlier.id}/edit`;
+    const pendingBack = new Subject<Recipe>();
+    readRecipe.mockReturnValueOnce(of(earlier)).mockReturnValueOnce(of(current)).mockReturnValueOnce(pendingBack);
+    updateRecipe.mockReturnValue(of(earlier));
+    const router = TestBed.inject(Router);
+    router.setUpLocationChangeListener();
+    const dialogs = TestBed.inject(FdUiDialogService);
+    onTestFinished(() => {
+        dialogs.closeAll();
+    });
+    const harness = await RouterTestingHarness.create(earlierUrl);
+    await harness.navigateByUrl(EDIT_RECIPE);
+    const editor = harness.routeNativeElement?.querySelector('fd-recipe-manage');
+    const returned = firstValueFrom(
+        router.events.pipe(filter(event => event instanceof NavigationEnd && event.urlAfterRedirects === earlierUrl)),
+    );
+    TestBed.inject(Location).back();
+    await vi.waitFor(() => {
+        expect(readRecipe).toHaveBeenLastCalledWith(earlier.id, false);
+        expect(pendingBack.observed).toBe(true);
+    });
+    getButton(harness.routeNativeElement, 'button[type="submit"]').click();
+    const keep = await recipeLanguageActionAsync(harness, 'RECIPE_LANGUAGE.KEEP');
+    expect(keep.disabled).toBe(false);
+
+    pendingBack.next(earlier);
+    pendingBack.complete();
+    await returned;
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.querySelector('fd-recipe-manage')).toBe(editor);
+    expect(router.url).toBe(earlierUrl);
+    const fields = Array.from(harness.routeNativeElement?.querySelectorAll('fd-recipe-basic-info fd-ui-input') ?? []);
+    const servings = fields.find(field => field.textContent.includes('RECIPE_MANAGE.SERVINGS'))?.querySelector('input');
+    expect(servings?.value).toBe(String(UPDATED_SERVINGS));
+    expect(keep.isConnected).toBe(true);
+    expect(updateRecipe).not.toHaveBeenCalled();
+
+    keep.click();
+    await waitForAsyncTasksAsync();
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    expect(updateRecipe.mock.calls.map(([id, dto]) => ({ id, servings: dto.servings }))).toEqual([]);
+    expect(router.url).toBe(earlierUrl);
+});
+
 it('rechecks the language after rewriting a step and preserves the draft when the user goes back', async () => {
     const stored = confirmedRecipe();
     readRecipe.mockReturnValueOnce(of(stored));
@@ -1372,6 +2022,80 @@ it('rechecks the language after rewriting a step and preserves the draft when th
     });
     expect(updateRecipe.mock.lastCall?.[1].steps[0]?.description).toBe(REVISED_INSTRUCTIONS);
 });
+
+function recipeIngredientInput(harness: RouterTestingHarness): HTMLInputElement {
+    const input = harness.routeNativeElement?.querySelector('.recipe-ingredient__name input');
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected the visible recipe ingredient input');
+    }
+    return input;
+}
+
+function openRecipeIngredientPicker(harness: RouterTestingHarness): HTMLElement {
+    recipeIngredientInput(harness).click();
+    harness.detectChanges();
+    const picker = document.querySelector('fd-item-select-dialog');
+    if (!(picker instanceof HTMLElement)) {
+        throw new Error('Expected the opened recipe ingredient picker');
+    }
+    return picker;
+}
+
+function storedRecipeGalleryFixtures(
+    currentId: string,
+    earlierId: string,
+    coverUrl: string | null,
+): { current: RecipeHttpResponse; earlier: RecipeHttpResponse } {
+    const storedCover = { imageAssetId: '941c9f07-20df-44df-8cce-3534084b4a35', imageUrl: '/recipes/current-asset-cover.jpg' };
+    const currentRecipe = storedManualRecipe(currentId, 'Roasted vegetables', { servings: 2, calories: 256, proteins: 12 });
+    return {
+        current: {
+            ...currentRecipe,
+            ...storedCover,
+            images: [storedCover],
+            steps: currentRecipe.steps?.map(step => ({ ...step, instruction: REVISED_INSTRUCTIONS })),
+        },
+        earlier: {
+            ...storedManualRecipe(earlierId, 'Vegetable soup', { servings: 4, calories: 320, proteins: 20 }),
+            imageUrl: coverUrl,
+            imageAssetId: null,
+            images: [],
+        },
+    };
+}
+
+function storedManualRecipe(
+    id: string,
+    name: string,
+    { servings, calories, proteins }: { servings: number; calories: number; proteins: number },
+): RecipeHttpResponse {
+    const uuidSuffixStart = -12;
+    return {
+        id,
+        name,
+        language: 'en',
+        languageConfirmed: true,
+        category: 'main_courses',
+        visibility: RecipeVisibility.Private,
+        createdAt: RECIPE.createdAt,
+        usageCount: 0,
+        isOwnedByCurrentUser: true,
+        isNutritionAutoCalculated: false,
+        servings,
+        manualCalories: calories,
+        manualProteins: proteins,
+        totalCalories: calories,
+        totalProteins: proteins,
+        steps: [
+            {
+                id: `47f030da-8542-4376-a639-${id.slice(uuidSuffixStart)}`,
+                stepNumber: 1,
+                instruction: INITIAL_INSTRUCTIONS,
+                ingredients: [],
+            },
+        ],
+    };
+}
 
 function confirmedRecipe(): Recipe {
     return {
@@ -1449,8 +2173,30 @@ function recipeTextarea(host: ParentNode, selector: string): HTMLTextAreaElement
     return input;
 }
 
-async function holdRecipeStepPhotoConfirmationAsync(
+function recipeGalleryFileInput(host: ParentNode | null, owner: string): HTMLInputElement {
+    const input = host?.querySelector(`${owner} fd-image-gallery-editor input[type="file"]`);
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected a native recipe gallery chooser in the current recipe');
+    }
+    return input;
+}
+
+const RECIPE_PHOTO = {
+    filename: 'tomato-step.png',
+    assetId: 'fba6230e-ab99-4eb4-a8bb-7ec39ffdd560',
+    fileUrl: 'https://images.example.test/recipe-step.png',
+    uploadUrl: 'https://uploads.example.test/recipe-step.png?signature=recipe-step',
+};
+const NEXT_RECIPE_PHOTO = {
+    filename: 'fresh-soup.png',
+    assetId: '98711ff7-9910-4cfe-8ab6-61890318dff7',
+    fileUrl: 'https://images.example.test/fresh-soup.png',
+    uploadUrl: 'https://uploads.example.test/fresh-soup.png?signature=fresh-soup',
+};
+
+async function holdRecipePhotoConfirmationAsync(
     input: HTMLInputElement,
+    { filename, assetId, fileUrl, uploadUrl } = RECIPE_PHOTO,
 ): Promise<{ confirmation: TestRequest; fileUrl: string; assetId: string }> {
     // jsdom has no image decoder or native file picker. Exercise the existing upload pipeline after those browser boundaries.
     const decodedImage = document.createElement('img');
@@ -1465,14 +2211,11 @@ async function holdRecipeStepPhotoConfirmationAsync(
         http.verify();
     });
     const png = atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aB5cAAAAASUVORK5CYII=');
-    const file = new File([Uint8Array.from(png, byte => byte.codePointAt(0) ?? 0)], 'tomato-step.png', { type: 'image/png' });
+    const file = new File([Uint8Array.from(png, byte => byte.codePointAt(0) ?? 0)], filename, { type: 'image/png' });
     Object.defineProperty(input, 'files', { configurable: true, value: [file] });
     input.dispatchEvent(new Event('change', { bubbles: true }));
     decodedImage.dispatchEvent(new Event('load'));
 
-    const assetId = 'fba6230e-ab99-4eb4-a8bb-7ec39ffdd560';
-    const fileUrl = 'https://images.example.test/recipe-step.png';
-    const uploadUrl = 'https://uploads.example.test/recipe-step.png?signature=recipe-step';
     const presign = await vi.waitFor(() =>
         http.expectOne(request => request.method === 'POST' && request.url.endsWith('/images/upload-url')),
     );
@@ -1485,6 +2228,10 @@ async function holdRecipeStepPhotoConfirmationAsync(
         http.expectOne(request => request.method === 'POST' && request.url.endsWith(`/images/${assetId}/confirm`)),
     );
     return { confirmation, fileUrl, assetId };
+}
+
+function recipeEditorCoverUrl(harness: RouterTestingHarness): string | null {
+    return harness.routeNativeElement?.querySelector('fd-recipe-basic-info fd-image-gallery-editor img')?.getAttribute('src') ?? null;
 }
 
 function expectRecipeGalleryImage(harness: RouterTestingHarness, selector: string, expectedUrl: string): void {

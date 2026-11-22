@@ -74,6 +74,17 @@ export function optimizeAiPhotoAnnotationLayout(
     }
 
     const slots = createPerimeterSlots(allowCardsOutsidePhoto);
+    if (annotations.length > slots.length) {
+        // Compact preview shows one card at a time. Keep it inside the photo pane.
+        const compactSlots = createPerimeterSlots(false);
+        return annotations.map(annotation => {
+            const candidate = compactSlots
+                .map(slot => createCandidate(annotation, slot, annotations, false))
+                .reduce((best, next) => (next.baseCost < best.baseCost ? next : best));
+            return positionAnnotation(annotation, candidate);
+        });
+    }
+
     const ordered = [...annotations].sort(compareByConstraint);
     let beam: SearchState[] = [{ assignments: new Map(), occupiedSlots: new Set(), cost: 0 }];
 
@@ -104,8 +115,7 @@ export function optimizeAiPhotoAnnotationLayout(
     }
 
     const best = beam[0];
-    // The search can only be empty when the recognition response exceeds the finite slot set.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Runtime guard for oversized provider responses.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- A zero-width search can return no assignments.
     if (best === undefined) {
         return [...annotations];
     }
@@ -116,16 +126,20 @@ export function optimizeAiPhotoAnnotationLayout(
             return annotation;
         }
 
-        return {
-            ...annotation,
-            cardX: candidate.card.x,
-            cardY: candidate.card.y,
-            cardWidth: candidate.card.width,
-            cardHeight: candidate.card.height,
-            connectorPoints: candidate.connector,
-            connectorPath: candidate.connector.map(point => `${point.x},${point.y}`).join(' '),
-        };
+        return positionAnnotation(annotation, candidate);
     });
+}
+
+function positionAnnotation(annotation: AiPhotoAnnotation, candidate: LayoutCandidate): AiPhotoAnnotation {
+    return {
+        ...annotation,
+        cardX: candidate.card.x,
+        cardY: candidate.card.y,
+        cardWidth: candidate.card.width,
+        cardHeight: candidate.card.height,
+        connectorPoints: candidate.connector,
+        connectorPath: candidate.connector.map(point => `${point.x},${point.y}`).join(' '),
+    };
 }
 
 export function evaluateAiPhotoAnnotationLayout(annotations: readonly AiPhotoAnnotation[]): AiPhotoLayoutMetrics {

@@ -13,6 +13,11 @@ export function toMeasurementDateIso(value: string): string | null {
     return Number.isFinite(date.getTime()) && measurementDateInputValue(date.toISOString()) === calendarDate ? date.toISOString() : null;
 }
 
+export function formatMeasurementDateLabel(value: string, locale: string): string {
+    const dateIso = toMeasurementDateIso(value);
+    return dateIso === null ? value : new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(dateIso));
+}
+
 /** Date-picker ranges use local Date objects; stored measurement dates do not. */
 export function measurementMonthRange(value: string): { start: Date; end: Date } | null {
     const iso = toMeasurementDateIso(value);

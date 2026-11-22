@@ -146,6 +146,41 @@ it('leaves password confirmation usable when Google configuration is absent', as
     expect(root.isConnected).toBe(false);
 });
 
+it('continues with password confirmation after the configured Google provider fails to load', async () => {
+    useSyntheticGoogleConfiguration();
+    const loading = new Subject<void>();
+    initializeGoogle.mockReturnValueOnce(firstValueFrom(loading));
+    const { root, result } = openDisconnect({ canUsePassword: true, canUseGoogle: true });
+    await vi.waitFor(() => {
+        TestBed.tick();
+        expect(initializeGoogle).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ clientId: environment.googleClientId }));
+    });
+    expect(root.querySelector('[role="status"]')).toBeNull();
+
+    loading.error(new Error('Google Identity script failed to load'));
+    await vi.waitFor(() => {
+        TestBed.tick();
+        expect(root.querySelector('[role="status"]')?.textContent).toContain('USER_MANAGE.GOOGLE_UNAVAILABLE');
+    });
+    expect(renderGoogle).not.toHaveBeenCalled();
+    expect(disconnect).not.toHaveBeenCalled();
+
+    const input = root.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+    if (input === null) {
+        throw new Error('Expected password confirmation after the provider failed');
+    }
+    input.value = PASSWORD;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    TestBed.tick();
+    const submit = button(root, 'USER_MANAGE.TELEGRAM_UNLINK');
+    expect(submit.disabled).toBe(false);
+    submit.click();
+
+    await expect(result).resolves.toEqual(DISCONNECTED);
+    expect(disconnect).toHaveBeenCalledExactlyOnceWith(OWNER, { password: PASSWORD });
+    expect(root.isConnected).toBe(false);
+});
+
 describe('Telegram disconnect with a Google account', () => {
     it('ignores the provider callback and does not render its button after the dialog was cancelled', async () => {
         useSyntheticGoogleConfiguration();

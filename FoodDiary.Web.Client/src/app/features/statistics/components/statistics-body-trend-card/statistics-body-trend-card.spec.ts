@@ -118,6 +118,14 @@ describe('StatisticsBodyTrendCard empty metrics', () => {
         expect(root.querySelector('.statistics-body-trend-card__change')).toBeNull();
         expect(root.textContent).toContain('STATISTICS.DASHBOARD.BODY.EMPTY_WAIST');
         expect(root.textContent).toContain('STATISTICS.DASHBOARD.BODY.OPEN_WAIST_HISTORY');
+
+        const weight = buttonByLabel(root, 'STATISTICS.DASHBOARD.BODY.WEIGHT');
+        weight.click();
+        fixture.detectChanges();
+        expect(weight.getAttribute('aria-checked')).toBe('true');
+        expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
+        expect(root.textContent).toContain('STATISTICS.DASHBOARD.BODY.OPEN_WEIGHT_HISTORY');
+        expect(root.textContent).not.toContain('STATISTICS.DASHBOARD.BODY.EMPTY_WAIST');
     });
 });
 

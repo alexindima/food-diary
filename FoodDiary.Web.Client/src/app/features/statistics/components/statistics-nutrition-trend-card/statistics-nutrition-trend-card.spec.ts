@@ -106,7 +106,16 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         expect(fixture.componentInstance['calorieReferenceLines']()).toHaveLength(1);
 
         root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__data-toggle button')[1].click();
+        fixture.detectChanges();
         expect(tabChange).toHaveBeenCalledWith('macros');
+        expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
+        expect(chartModeButtons[1].getAttribute('aria-checked')).toBe('true');
+
+        chartModeButtons[0].click();
+        fixture.detectChanges();
+        expect(chartModeButtons[0].getAttribute('aria-checked')).toBe('true');
+        expect(root.querySelector('fd-ui-line-chart')).toBeNull();
+        expect(root.querySelector('.fd-ui-bar-chart__categorical-bar--grouped')).not.toBeNull();
     });
 });
 

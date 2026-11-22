@@ -86,17 +86,39 @@ describe('RecipeBasicInfoComponent photo edit state', () => {
 });
 
 describe('RecipeBasicInfoComponent fields', () => {
-    it('refreshes visibility labels after switching language', () => {
-        const { component, fixture } = setupComponent();
+    it('keeps the selected visibility and summary label in sync when switching language', () => {
+        const { fixture, recipeForm } = setupComponent();
         const translate = TestBed.inject(TranslateService);
         translate.setTranslation('en', { RECIPE_VISIBILITY: { Private: 'Private', Public: 'Public' } });
         translate.setTranslation('ru', { RECIPE_VISIBILITY: { Private: 'Личный', Public: 'Публичный' } });
         translate.use('en');
         fixture.detectChanges();
-        expect(component['visibilitySelectOptions']()[0].label).toBe('Private');
+
+        const host = fixture.nativeElement as HTMLElement;
+        const summary = host.querySelector('.recipe-basic-info__additional summary');
+        const label = [...host.querySelectorAll('label')].find(element => element.textContent.includes('RECIPE_MANAGE.VISIBILITY'));
+        const trigger = label?.control;
+        if (!(summary instanceof HTMLElement) || !(trigger instanceof HTMLButtonElement)) {
+            throw new Error('Expected the recipe visibility summary and control');
+        }
+        expect(summary.textContent).toContain('Private');
+        summary.click();
+        trigger.click();
+        fixture.detectChanges();
+        const options = document.querySelectorAll<HTMLButtonElement>('[role="listbox"][aria-label="RECIPE_MANAGE.VISIBILITY"] button');
+        const publicOption = [...options].find(option => option.textContent.trim() === 'Public');
+        if (publicOption === undefined) {
+            throw new Error('Expected the public recipe visibility option');
+        }
+        publicOption.click();
+        fixture.detectChanges();
+        expect(recipeForm.visibility().value()).toBe(RecipeVisibility.Public);
+        expect(summary.textContent).toContain('Public');
+
         translate.use('ru');
         fixture.detectChanges();
-        expect(component['visibilitySelectOptions']()[0].label).toBe('Личный');
+        expect(summary.textContent).toContain('Публичный');
+        expect(trigger.textContent).toContain('Публичный');
     });
     it('builds visibility options inside the component', () => {
         const { component } = setupComponent();

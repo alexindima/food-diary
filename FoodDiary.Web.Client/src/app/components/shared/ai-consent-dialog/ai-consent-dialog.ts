@@ -17,14 +17,10 @@ export class AiConsentDialogComponent {
 
     protected readonly isAgreed = signal(false);
 
-    protected onCheckboxChange(event: Event): void {
-        if (event.target instanceof HTMLInputElement) {
-            this.isAgreed.set(event.target.checked);
-        }
-    }
-
     protected onAccept(): void {
-        this.dialogRef.close(true);
+        if (this.isAgreed()) {
+            this.dialogRef.close(true);
+        }
     }
 
     protected onCancel(): void {

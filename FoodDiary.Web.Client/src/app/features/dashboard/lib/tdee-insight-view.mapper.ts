@@ -29,8 +29,12 @@ export function buildTdeeConfidenceKey(insight: TdeeInsight | null, emptyConfide
         : emptyConfidenceKey;
 }
 
-export function hasMeaningfulTdeeSuggestion(insight: TdeeInsight | null): boolean {
+export function getMeaningfulTdeeSuggestion(insight: TdeeInsight | null): number | null {
     const suggested = insight?.suggestedCalorieTarget ?? 0;
     const current = insight?.currentCalorieTarget ?? 0;
-    return suggested > 0 && current > 0 && Math.abs(suggested - current) > TDEE_SUGGESTION_DIFF_THRESHOLD;
+    return suggested > 0 && current > 0 && Math.abs(suggested - current) > TDEE_SUGGESTION_DIFF_THRESHOLD ? suggested : null;
+}
+
+export function hasMeaningfulTdeeSuggestion(insight: TdeeInsight | null): boolean {
+    return getMeaningfulTdeeSuggestion(insight) !== null;
 }

@@ -19,7 +19,8 @@ export class JwtDecoderService {
             const padLength = (BASE64_BLOCK_SIZE - (remainder === 0 ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;
             const padded = normalized.padEnd(normalized.length + padLength, '=');
             const decoded = atob(padded);
-            const bytes = Uint8Array.from(decoded, character => character.codePointAt(0) ?? 0);
+            // eslint-disable-next-line unicorn/prefer-code-point -- atob returns one code unit per byte.
+            const bytes = Uint8Array.from(decoded, character => character.charCodeAt(0));
             const payload = new TextDecoder().decode(bytes);
             const parsed: unknown = JSON.parse(payload);
             return isRecord(parsed) ? parsed : null;

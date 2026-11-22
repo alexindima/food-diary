@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 
+import type { ProductId } from '../../../../shared/models/semantics/entity-id';
 import type { ShoppingListItemDto } from '../../../../shared/models/shopping-list.data';
 import { CapitalizeFirstLetterPipe } from '../../../../shared/ui/capitalize-first-letter.pipe';
 import { PublicProductPreviewService } from '../../../products/contracts/public-product-preview';
@@ -56,15 +57,10 @@ export class PublicIngredientsComponent {
             }
         });
     }
-    protected viewProduct(ingredient: PublicRecipeIngredient): void {
-        if (ingredient.productId !== null && ingredient.productId !== undefined) {
-            void this.productPreview.openAsync(ingredient.productId);
-        }
+    protected viewProduct(productId: ProductId): void {
+        void this.productPreview.openAsync(productId);
     }
     protected add(index: number, ingredient: PublicRecipeIngredient): void {
-        if (!ingredient.isAvailable || ingredient.name === null || ingredient.name.length === 0) {
-            return;
-        }
         this.shoppingAdd.emit({ index, item: this.shoppingItem(ingredient) });
     }
     private shoppingItem(ingredient: PublicRecipeIngredient): ShoppingListItemDto {

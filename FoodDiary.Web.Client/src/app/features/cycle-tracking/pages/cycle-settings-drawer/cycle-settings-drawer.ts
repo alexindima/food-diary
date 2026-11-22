@@ -38,6 +38,7 @@ export class CycleSettingsDrawerComponent {
     public readonly goalOptions = input.required<Array<FdUiSelectOption<CycleTrackingGoal>>>();
     public readonly reproductiveStateOptions = input.required<Array<FdUiSelectOption<CycleReproductiveState>>>();
     public readonly isSaving = input.required<boolean>();
+    public readonly isMutationPending = input(false);
     public readonly error = input<string | null>(null);
     public readonly isDeleting = input.required<boolean>();
     public readonly closed = output();

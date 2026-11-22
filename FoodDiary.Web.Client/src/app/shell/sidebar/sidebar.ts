@@ -183,7 +183,7 @@ export class SidebarComponent {
     }
 
     protected toggleCollapsed(): void {
-        this.closeUserMenu();
+        this.closeUserMenu(false);
         this.collapsedToggle.emit();
     }
 

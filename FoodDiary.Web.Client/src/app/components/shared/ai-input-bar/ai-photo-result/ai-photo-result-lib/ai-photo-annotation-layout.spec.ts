@@ -181,6 +181,18 @@ describe('AI photo annotation layout', () => {
         expect(layout.some(annotation => annotation.id === activeId)).toBe(true);
     });
 });
+describe('AI photo annotation search budget', () => {
+    it('retains the existing geometry and order when no search states are requested', () => {
+        const placed = optimizeAiPhotoAnnotationLayout(createAnnotations(SCENARIOS[0]));
+        const original = structuredClone(placed);
+
+        const layout = optimizeAiPhotoAnnotationLayout(placed, false, 0);
+
+        expect(layout).toEqual(original);
+        expect(layout).not.toBe(placed);
+        expect(placed).toEqual(original);
+    });
+});
 describe('AI photo connector geometry', () => {
     /* eslint-disable @typescript-eslint/no-magic-numbers -- Planned and rendered card fixtures use percentage coordinates. */
     it.each([
@@ -215,13 +227,27 @@ describe('AI photo connector geometry', () => {
 });
 
 describe('AI photo layout capacity', () => {
-    it('keeps input labels intact when the number of products exceeds the available card slots', () => {
+    it.each([
+        ['portrait', true],
+        ['landscape', false],
+    ] as const)('positions every card within a crowded %s photo', (_orientation, allowCardsOutsidePhoto) => {
         const annotations = createOversizedAnnotations();
+        const original = structuredClone(annotations);
 
-        // The narrow search only needs one assignment path to reach the real slot limit.
-        const layout = optimizeAiPhotoAnnotationLayout(annotations, false, 1);
+        const layout = optimizeAiPhotoAnnotationLayout(annotations, allowCardsOutsidePhoto);
 
-        expect(layout).toEqual(annotations);
-        expect(layout).not.toBe(annotations);
+        expect(annotations).toEqual(original);
+        expect(layout.map(({ id, name, centerX, centerY }) => ({ id, name, centerX, centerY }))).toEqual(
+            original.map(({ id, name, centerX, centerY }) => ({ id, name, centerX, centerY })),
+        );
+        for (const card of layout) {
+            expect(card.cardWidth).toBeGreaterThan(0);
+            expect(card.cardHeight).toBeGreaterThan(0);
+            expect(card.cardX).toBeGreaterThanOrEqual(0);
+            expect(card.cardY).toBeGreaterThanOrEqual(0);
+            expect(card.cardX + card.cardWidth).toBeLessThanOrEqual(FRAME_SIZE);
+            expect(card.cardY + card.cardHeight).toBeLessThanOrEqual(FRAME_SIZE);
+            expect(card.connectorPoints[0]).toEqual({ x: card.centerX, y: card.centerY });
+        }
     });
 });

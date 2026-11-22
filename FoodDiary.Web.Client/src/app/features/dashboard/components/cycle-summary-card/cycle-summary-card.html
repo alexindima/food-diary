@@ -1,7 +1,7 @@
 <div class="cycle-summary-card fd-stack fd-gap-sm" [class.cycle-summary-card--loading]="isLoading()">
     <fd-dashboard-widget-frame iconName="autorenew" iconTone="neutral" [title]="'CYCLE_CARD.TITLE' | translate">
         <div class="cycle-summary-card__content fd-stack fd-gap-sm">
-            @if (hasCycle()) {
+            @if (metaPills(); as pills) {
                 <div class="cycle-summary-card__day fd-ui-metric-lg" [hidden]="cycleDay() === null">
                     {{ 'CYCLE_CARD.DAY_LABEL' | translate: { day: cycleDay() } }}
                 </div>
@@ -10,15 +10,13 @@
                         {{ status.labelKey | translate: status.params }}
                     </div>
                 }
-                @if (hasMeta()) {
-                    <div class="cycle-summary-card__meta fd-row fd-gap-xs">
-                        @for (pill of metaPills(); track pill.id) {
-                            <span class="cycle-summary-card__pill fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text">
-                                {{ pill.labelKey | translate: pill.params }}
-                            </span>
-                        }
-                    </div>
-                }
+                <div class="cycle-summary-card__meta fd-row fd-gap-xs">
+                    @for (pill of pills; track pill.id) {
+                        <span class="cycle-summary-card__pill fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text">
+                            {{ pill.labelKey | translate: pill.params }}
+                        </span>
+                    }
+                </div>
             } @else {
                 <div class="cycle-summary-card__setup fd-row fd-align-center fd-justify-between fd-gap-sm">
                     <div class="fd-stack fd-gap-xxs fd-min-w-0">

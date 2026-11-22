@@ -55,20 +55,16 @@ export class AiPhotoPreviewComponent {
     protected readonly desktopConnectorPaths = signal<ReadonlyMap<string, string>>(new Map());
     protected readonly mobileConnectorPaths = signal<ReadonlyMap<string, string>>(new Map());
 
-    protected readonly usesCompactAnnotations = computed(() => this.annotations().length > this.expandedAnnotationLimit);
-    protected readonly activeAnnotation = computed(
-        () => this.annotations().find(annotation => annotation.id === this.activeAnnotationId()) ?? this.annotations().at(0),
-    );
     protected readonly cardAnnotations = computed(() => {
-        if (!this.usesCompactAnnotations()) {
-            const annotations = this.annotations();
+        const annotations = this.annotations();
+        if (annotations.length <= this.expandedAnnotationLimit) {
             return evaluateAiPhotoAnnotationLayout(annotations).cardOverlaps === 0
                 ? annotations
                 : fitAiPhotoAnnotationLayout(annotations, this.activeAnnotationId());
         }
 
-        const active = this.activeAnnotation();
-        return active === undefined ? [] : [active];
+        const activeId = this.activeAnnotationId();
+        return [annotations.find(annotation => annotation.id === activeId) ?? annotations[0]];
     });
     protected readonly markerAnnotations = computed(() => {
         const cardIds = new Set(this.cardAnnotations().map(annotation => annotation.id));

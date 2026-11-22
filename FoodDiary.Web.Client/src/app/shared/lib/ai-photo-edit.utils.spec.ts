@@ -147,6 +147,18 @@ describe('ai photo edit utils', () => {
     });
 });
 
+it('keeps the current ingredient resolution when an unsupported value is supplied', () => {
+    const ingredient = createEditableItem({ resolution: 'Rejected' });
+    const otherIngredient = createEditableItem({ id: 'item-2', name: 'Pear' });
+
+    const items = [ingredient, otherIngredient];
+
+    const updated = updateAiEditableItem(items, 0, 'resolution', 'Archived');
+
+    expect(updated).toEqual(items);
+    expect(updated[0]?.resolution).toBe('Rejected');
+});
+
 it('requires a nonblank unit before a named and measured draft item can be applied', () => {
     const incomplete = createEditableItem({ unit: ' ' });
     expect(aiEditableItemError(incomplete)).toBe('unit');

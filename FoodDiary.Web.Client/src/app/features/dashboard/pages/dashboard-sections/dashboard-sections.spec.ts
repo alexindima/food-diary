@@ -22,7 +22,7 @@ const sections: Array<{ component: Type<unknown>; content: string; inputs: Recor
     {
         component: DashboardCycleBlockComponent,
         content: 'fd-cycle-summary-card',
-        inputs: { cardState: { cycle: null, startDate: null, predictions: null }, referenceDate: new Date('2026-10-29T00:00:00') },
+        inputs: { cardState: { cycle: null, predictions: null }, referenceDate: new Date('2026-10-29T00:00:00') },
     },
     {
         component: DashboardTrendBlockComponent,

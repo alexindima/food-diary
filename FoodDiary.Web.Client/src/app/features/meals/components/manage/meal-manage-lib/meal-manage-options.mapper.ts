@@ -2,11 +2,11 @@ import type { TranslateService } from '@ngx-translate/core';
 import type { FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
-import { MEAL_TYPE_OPTIONS } from '../../../../../shared/lib/meal-type.util';
+import { MEAL_TYPE_OPTIONS, type MealTypeOption } from '../../../../../shared/lib/meal-type.util';
 
 export type MealSatietyControlName = 'preMealSatietyLevel' | 'postMealSatietyLevel';
 
-export function buildMealTypeSelectOptions(translateService: TranslateService): Array<FdUiSelectOption<string>> {
+export function buildMealTypeSelectOptions(translateService: TranslateService): Array<FdUiSelectOption<MealTypeOption>> {
     return MEAL_TYPE_OPTIONS.map(option => ({
         value: option,
         label: translateService.instant(`MEAL_TYPES.${option}`),

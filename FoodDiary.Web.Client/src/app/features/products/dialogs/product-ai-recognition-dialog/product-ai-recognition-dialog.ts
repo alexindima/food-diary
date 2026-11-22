@@ -121,7 +121,9 @@ export class ProductAiRecognitionDialogComponent {
         return isProductAiRecognitionModelValid(model) ? model : null;
     });
     private readonly applicableResultModel = computed(() =>
-        this.hasResult() && !this.isBusy() && (!this.hasExistingData || this.replacementAccepted()) ? this.validResultModel() : null,
+        this.hasResult() && !this.isBusy() && !this.photoUploading() && (!this.hasExistingData || this.replacementAccepted())
+            ? this.validResultModel()
+            : null,
     );
     protected readonly isResultValid = computed(() => this.validResultModel() !== null);
     protected readonly canApply = computed(() => this.applicableResultModel() !== null);

@@ -54,7 +54,13 @@ export class QuickMealService {
     private createOperation: { fingerprint: string; key: string } | null = null;
 
     public readonly items = computed(() => this.itemsSignal());
-    public readonly details = computed(() => this.detailsSignal());
+    public readonly details = computed<QuickMealDetails>(() => {
+        const draft = this.detailsSignal();
+        return {
+            ...draft,
+            mealType: draft.mealType ?? resolveMealTypeByTime(this.mealTypeClock(draft)),
+        };
+    });
     public readonly hasItems = computed(() => this.itemsSignal().length > 0);
     public readonly isSaving = computed(() => this.isSavingSignal());
 
@@ -321,7 +327,7 @@ export class QuickMealService {
 
         return {
             date,
-            mealType: this.detailsSignal().mealType ?? resolveMealTypeByTime(date),
+            mealType: this.details().mealType,
             comment: this.resolveComment(),
             imageUrl: undefined,
             imageAssetId: undefined,
@@ -332,11 +338,14 @@ export class QuickMealService {
         };
     }
 
+    private mealTypeClock({ date, time }: QuickMealDetails): Date {
+        return isExistingMealLocalDateTime(date, time) ? new Date(`${date}T${time}`) : new Date();
+    }
+
     private createDefaultDetails(): QuickMealDetails {
         const now = new Date();
         return {
             date: getDateInputValue(now),
-            mealType: resolveMealTypeByTime(now),
             time: getTimeInputValue(now),
             comment: '',
             preMealSatietyLevel: null,

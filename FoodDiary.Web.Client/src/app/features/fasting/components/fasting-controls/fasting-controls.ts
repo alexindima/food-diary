@@ -42,6 +42,12 @@ import { FastingSetupControlsComponent } from './setup/fasting-setup-controls';
 
 const CYCLIC_PRESET_SEPARATOR = ':';
 
+type FastingConfirmationKeys = {
+    titleKey: string;
+    messageKey: string;
+    actionKey: string;
+};
+
 @Component({
     selector: 'fd-fasting-controls',
     imports: [FastingSetupControlsComponent, FastingActiveExtendedControlsComponent, FastingActiveBasicControlsComponent],
@@ -120,7 +126,7 @@ export class FastingControlsComponent {
             messageKey: 'FASTING.STOP_CYCLE_CONFIRM_MESSAGE',
             actionKey: 'FASTING.STOP_CYCLE',
         },
-    } satisfies Record<FastingSession['planType'], { titleKey: string; messageKey: string; actionKey: string }>;
+    } satisfies Record<FastingSession['planType'], FastingConfirmationKeys>;
     protected readonly canManageCurrentCyclicDay = computed(() => {
         const session = this.currentSession();
         return (
@@ -347,22 +353,28 @@ export class FastingControlsComponent {
         this.isReducePanelExpanded.update(isExpanded => !isExpanded);
     }
 
-    protected skipCyclicDay(): void {
+    protected skipCyclicDay(sessionId: FastingSession['id']): void {
         this.openCycleActionDialog(
-            this.getSkipCycleConfirmTitleKey(),
-            this.getSkipCycleConfirmMessageKey(),
-            this.skipCycleActionLabelKey(),
+            sessionId,
+            {
+                titleKey: this.getSkipCycleConfirmTitleKey(),
+                messageKey: this.getSkipCycleConfirmMessageKey(),
+                actionKey: this.skipCycleActionLabelKey(),
+            },
             () => {
                 this.facade.skipCyclicDay();
             },
         );
     }
 
-    protected postponeCyclicDay(): void {
+    protected postponeCyclicDay(sessionId: FastingSession['id']): void {
         this.openCycleActionDialog(
-            this.getPostponeCycleConfirmTitleKey(),
-            this.getPostponeCycleConfirmMessageKey(),
-            this.postponeCycleActionLabelKey(),
+            sessionId,
+            {
+                titleKey: this.getPostponeCycleConfirmTitleKey(),
+                messageKey: this.getPostponeCycleConfirmMessageKey(),
+                actionKey: this.postponeCycleActionLabelKey(),
+            },
             () => {
                 this.facade.postponeCyclicDay();
             },
@@ -479,8 +491,15 @@ export class FastingControlsComponent {
         this.facade.reduceTargetByHours(reducedHours);
     }
 
-    private openCycleActionDialog(titleKey: string, messageKey: string, confirmLabelKey: string, action: () => void): void {
-        const sessionId = this.currentSession()?.id;
+    private openCycleActionDialog(
+        sessionId: FastingSession['id'],
+        { titleKey, messageKey, actionKey }: FastingConfirmationKeys,
+        action: () => void,
+    ): void {
+        if (!this.matchesActiveSession(sessionId)) {
+            return;
+        }
+
         const dialog = this.dialogService.open<
             FastingEndConfirmDialogComponent,
             FastingEndConfirmDialogData,
@@ -490,7 +509,7 @@ export class FastingControlsComponent {
             data: {
                 title: this.translateService.instant(titleKey),
                 message: this.translateService.instant(messageKey),
-                confirmLabel: this.translateService.instant(confirmLabelKey),
+                confirmLabel: this.translateService.instant(actionKey),
                 cancelLabel: this.translateService.instant('FASTING.CANCEL_ACTION'),
             },
         });
@@ -503,7 +522,7 @@ export class FastingControlsComponent {
             });
     }
 
-    private matchesActiveSession(sessionId: FastingSession['id'] | undefined, plannedDurationHours?: number): boolean {
+    private matchesActiveSession(sessionId: FastingSession['id'], plannedDurationHours?: number): boolean {
         const session = this.currentSession();
         return (
             session !== null &&

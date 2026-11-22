@@ -420,7 +420,7 @@ export class PushNotificationService {
     }
 
     public async removeSubscriptionAsync(endpoint: string): Promise<boolean> {
-        if (endpoint.length === 0 || this.isBusy()) {
+        if (!this.canCheckBrowserSubscription || endpoint.length === 0 || this.isBusy()) {
             return false;
         }
 
@@ -625,7 +625,7 @@ export class PushNotificationService {
     }
 
     private async readCurrentSubscriptionAsync(): Promise<PushSubscription | null> {
-        return this.swPush.isEnabled ? firstValueFrom(this.swPush.subscription.pipe(take(1), timeout(PUSH_REQUEST_TIMEOUT_MS))) : null;
+        return firstValueFrom(this.swPush.subscription.pipe(take(1), timeout(PUSH_REQUEST_TIMEOUT_MS)));
     }
 
     private async runBrowserMutationAsync<T>(operation: (metadata: AuthMetadataStorageService) => Promise<T>): Promise<T> {

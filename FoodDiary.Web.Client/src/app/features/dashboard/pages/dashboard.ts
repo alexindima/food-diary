@@ -254,7 +254,6 @@ export class DashboardComponent {
 
         return {
             cycle,
-            startDate: cycle?.trackingStartDate ?? null,
             predictions: cycle?.predictions ?? null,
         };
     });

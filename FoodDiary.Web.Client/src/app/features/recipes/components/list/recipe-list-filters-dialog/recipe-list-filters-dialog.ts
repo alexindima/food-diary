@@ -80,9 +80,10 @@ export class RecipeListFiltersDialogComponent {
         if (fromError !== null || toError !== null || this.maxTotalTimeError()) {
             return;
         }
+        const category = this.categoryValue.trim();
         this.dialogRef.close({
             onlyMine: this.visibilityValue === 'mine',
-            category: this.toTextOrNull(this.categoryValue),
+            category: category.length > 0 ? category : null,
             maxTotalTime,
             caloriesFrom: from,
             caloriesTo: to,
@@ -100,11 +101,6 @@ export class RecipeListFiltersDialogComponent {
             String(this.maxTotalTimeValue).trim().length > 0 &&
             (value === null || value <= 0 || !Number.isInteger(value) || value > RECIPE_FILTER_MAX_TOTAL_TIME)
         );
-    }
-
-    private toTextOrNull(value: string | number | null): string | null {
-        const text = value === null ? '' : String(value).trim();
-        return text.length > 0 ? text : null;
     }
 
     private calorieBoundError(raw: string | number | null, parsed: number | null): string | null {

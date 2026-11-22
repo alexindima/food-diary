@@ -8,7 +8,7 @@ import {
     OVULATION_TEST_RESULT_UNKNOWN,
     type SymptomLogPayload,
 } from '../../../shared/models/cycle.data';
-import { CYCLE_SYMPTOM_FIELDS, MIN_SYMPTOM_VALUE } from './cycle-tracking.config';
+import { CYCLE_SYMPTOM_FIELDS, CYCLE_SYMPTOM_FIELDS_BY_KEY, type CycleSymptomField, MIN_SYMPTOM_VALUE } from './cycle-tracking.config';
 import type { CycleDayFormModel } from './cycle-tracking.form-models';
 import { clampCycleSymptom, toCycleDateKey, toNullableCycleNumber, toOptionalCycleText } from './cycle-tracking.mapper';
 
@@ -129,11 +129,7 @@ export function findDayNotes(bleeding: BleedingEntry | undefined, fertilitySigna
     return bleeding?.notes ?? fertilitySignal?.notes ?? null;
 }
 
-export function findSymptomIntensity(symptoms: CycleSymptomEntry[], key: (typeof CYCLE_SYMPTOM_FIELDS)[number]['key']): number {
-    const symptomField = CYCLE_SYMPTOM_FIELDS.find(item => item.key === key);
-    if (symptomField === undefined) {
-        return MIN_SYMPTOM_VALUE;
-    }
-
-    return symptoms.find(symptom => symptom.category === symptomField.category)?.intensity ?? MIN_SYMPTOM_VALUE;
+function findSymptomIntensity(symptoms: CycleSymptomEntry[], key: CycleSymptomField['key']): number {
+    const { category } = CYCLE_SYMPTOM_FIELDS_BY_KEY[key];
+    return symptoms.find(symptom => symptom.category === category)?.intensity ?? MIN_SYMPTOM_VALUE;
 }

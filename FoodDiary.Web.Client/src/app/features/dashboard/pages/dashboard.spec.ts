@@ -152,6 +152,19 @@ describe('Dashboard page composition loading', () => {
     });
 });
 
+it('renders a zero-meal summary without a snapshot and updates it when the snapshot arrives', async () => {
+    const { fixture, facade, child } = await setupAsync();
+    facade.snapshot.set(null);
+    facade.hasSnapshot.set(false);
+    fixture.detectChanges();
+    expect(child('fd-dashboard-summary-block').properties['data']).toEqual(expect.objectContaining({ mealCount: 0, dailyConsumed: 0 }));
+
+    facade.snapshot.set({ dailyGoal: CALORIE_TARGET, meals: { total: 1 } });
+    facade.hasSnapshot.set(true);
+    fixture.detectChanges();
+    expect(child('fd-dashboard-summary-block').properties['data']).toEqual(expect.objectContaining({ mealCount: 1, dailyConsumed: 0 }));
+});
+
 describe('Dashboard page actions and localization', () => {
     it('disables date editing, hides quick add and toggles cards instead of navigating in layout mode', async () => {
         const { fixture, layout, host, child, navigation, facade } = await setupAsync();
@@ -391,7 +404,7 @@ describe('Dashboard initial setup card', () => {
         expect(child('fd-dashboard-setup-card').properties['profileComplete']).toBe(true);
         child('fd-dashboard-setup-card').triggerEventHandler('primaryAction');
         expect(navigation.navigateToWeightHistoryAsync).toHaveBeenCalledOnce();
-        facade.snapshot.set({ ...facade.snapshot(), weight: { latest: { weightKg: 80 } } });
+        facade.snapshot.set({ dailyGoal: 2000, meals: { total: 0 }, weight: { latest: { weightKg: 80 } } });
         fixture.detectChanges();
         expect(host.querySelector('fd-dashboard-setup-card')?.parentElement?.hasAttribute('hidden')).toBe(true);
     });
@@ -433,7 +446,7 @@ class DashboardTestState {
     public readonly facade = {
         selectedDate: signal(new Date()),
         isTodaySelected: signal(true),
-        snapshot: signal<{ dailyGoal: number; meals: { total: number }; weight?: { latest: { weightKg: number } | null } }>({
+        snapshot: signal<{ dailyGoal: number; meals: { total: number }; weight?: { latest: { weightKg: number } | null } } | null>({
             dailyGoal: 2000,
             meals: { total: 0 },
         }),

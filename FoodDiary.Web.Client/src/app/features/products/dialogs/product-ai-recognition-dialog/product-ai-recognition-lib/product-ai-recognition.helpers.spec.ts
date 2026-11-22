@@ -1,6 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../shared/models/ai.data';
 import { imageSelection } from '../../../../../shared/models/image-upload.data';
 import { MeasurementUnit } from '../../../../../shared/models/product.data';
@@ -159,4 +160,18 @@ describe('product recognition quantities and review validation', () => {
     it.each([0, -1, NaN, Infinity])('rejects invalid quantity %s', portionAmount => {
         expect(isProductAiRecognitionModelValid({ ...createProductAiRecognitionFormModel(), name: 'Water', portionAmount })).toBe(false);
     });
+});
+
+it('keeps returned nutrition editable when recognition has no named items', () => {
+    const model = buildProductAiRecognitionModelFromNutrition([], NUTRITION);
+
+    expect(model).toMatchObject({
+        name: '',
+        baseUnit: MeasurementUnit.G,
+        portionAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
+        caloriesPerBase: NUTRITION.calories,
+        proteinsPerBase: NUTRITION.protein,
+    });
+    expect(isProductAiRecognitionModelValid(model)).toBe(false);
+    expect(isProductAiRecognitionModelValid({ ...model, name: 'Apple' })).toBe(true);
 });

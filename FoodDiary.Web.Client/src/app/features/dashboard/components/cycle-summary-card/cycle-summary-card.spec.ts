@@ -83,20 +83,16 @@ describe('CycleSummaryCard navigation', () => {
         expect(link?.tabIndex).toBe(0);
     });
 
-    it.each([{ cycle: null, startDate: null }, { isLoading: true }])(
-        'does not cover setup or loading with a journal link: %j',
-        async overrides => {
-            const { fixture } = await setupComponentAsync(overrides);
-            fixture.detectChanges();
-            expect((fixture.nativeElement as HTMLElement).querySelector('a[href="/cycle-tracking"]')).toBeNull();
-        },
-    );
+    it.each([{ cycle: null }, { isLoading: true }])('does not cover setup or loading with a journal link: %j', async overrides => {
+        const { fixture } = await setupComponentAsync(overrides);
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('a[href="/cycle-tracking"]')).toBeNull();
+    });
 });
 
 describe('CycleSummaryCardComponent', () => {
     it('calculates cycle day and next period status from inputs', async () => {
         const { component, fixture } = await setupComponentAsync({
-            startDate: '2026-05-01',
             referenceDate: '2026-05-05',
             predictions: {
                 ovulationFrom: null,
@@ -115,29 +111,33 @@ describe('CycleSummaryCardComponent', () => {
         await firstValueFrom(translate.use('en'));
         fixture.detectChanges();
 
-        expect(component['hasCycle']()).toBe(true);
         expect(component['cycleDay']()).toBe(CYCLE_DAY);
         expect(getText(fixture)).toContain(`Next period in ${DAYS_TO_PERIOD} days`);
-        expect(component['modeKey']()).toBe('CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE');
-        expect(component['confidence']()).toBe('Moderate');
-        expect(component['metaPills']()).toContainEqual({ id: 'confidence', labelKey: 'CYCLE_CARD.CONFIDENCE_MODERATE' });
-        expect(component['activeFactorPills']()).toContainEqual({
-            id: 'factor-factor-1',
-            labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
-        });
-        expect(getText(fixture)).toContain('CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE');
-        expect(getText(fixture)).toContain('CYCLE_CARD.CONFIDENCE');
-        expect(getText(fixture)).toContain('CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION');
+        const card = fixture.nativeElement as HTMLElement;
+        expect(Array.from(card.querySelectorAll('.cycle-summary-card__pill'), pill => pill.textContent.trim())).toEqual([
+            'CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE',
+            'CYCLE_CARD.CONFIDENCE_MODERATE',
+            'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
+        ]);
     });
 
-    it('emits setup action when cycle data is missing', async () => {
-        const { component } = await setupComponentAsync({ cycle: null, startDate: null, predictions: null });
+    it('replaces the configured journal with an actionable setup when the profile is removed', async () => {
+        const { component, fixture } = await setupComponentAsync();
         const setupSpy = vi.fn();
-        component['setupAction'].subscribe(setupSpy);
+        component.setupAction.subscribe(setupSpy);
+        fixture.detectChanges();
+        const card = fixture.nativeElement as HTMLElement;
+        expect(card.querySelector('a[href="/cycle-tracking"]')).not.toBeNull();
+        expect(card.querySelector('.cycle-summary-card__meta')).not.toBeNull();
 
-        expect(component['hasCycle']()).toBe(false);
-        component['onSetup']();
+        fixture.componentRef.setInput('cycle', null);
+        fixture.detectChanges();
 
+        expect(card.querySelector('a[href="/cycle-tracking"]')).toBeNull();
+        expect(card.querySelector('.cycle-summary-card__meta')).toBeNull();
+        const setup = card.querySelector<HTMLButtonElement>('.cycle-summary-card__setup button');
+        expect(setup?.textContent).toContain('CYCLE_CARD.NO_DATA_ACTION');
+        setup?.click();
         expect(setupSpy).toHaveBeenCalledOnce();
     });
 
@@ -148,14 +148,12 @@ describe('CycleSummaryCardComponent', () => {
                 trackingStartDate: calendarDate('2026-08-01'),
                 menstrualEpisodes: [{ ...EPISODE, startDate: calendarDate('2026-10-16T00:00:00Z') }],
             },
-            startDate: '2026-08-01',
             referenceDate: new Date('2026-10-18T00:00:00'),
         });
 
         fixture.detectChanges();
 
         expect(component['cycleDay']()).toBe(RECORDED_CYCLE_DAY);
-        expect(component['hasCycle']()).toBe(true);
         expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(false);
     });
 
@@ -165,7 +163,6 @@ describe('CycleSummaryCardComponent', () => {
         fixture.detectChanges();
 
         expect(component['cycleDay']()).toBeNull();
-        expect(component['hasCycle']()).toBe(true);
         expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
         expect(getText(fixture)).toContain('CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE');
         expect(getText(fixture)).not.toContain('CYCLE_CARD.NO_DATA_TITLE');
@@ -179,7 +176,6 @@ describe('CycleSummaryCardComponent', () => {
             fixture.detectChanges();
 
             expect(component['cycleDay']()).toBeNull();
-            expect(component['hasCycle']()).toBe(true);
             expect((fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.cycle-summary-card__day')?.hidden).toBe(true);
         },
     );
@@ -234,7 +230,7 @@ describe('CycleSummaryCard prediction presentation', () => {
 describe('CycleSummaryCard forecast across selected local days', () => {
     it('switches from ovulation to period without shifting cycle dates encoded at UTC midnight', async () => {
         const { fixture } = await setupComponentAsync({
-            startDate: '2026-03-01',
+            cycle: { ...CYCLE, trackingStartDate: calendarDate('2026-03-01') },
             referenceDate: new Date('2026-03-07T23:45:00'),
             predictions: {
                 ovulationFrom: calendarDate('2026-03-09T00:00:00.000Z'),
@@ -400,7 +396,6 @@ describe('Cycle summary factors on the selected day', () => {
 async function setupComponentAsync(
     overrides: Partial<{
         cycle: CycleResponse | null;
-        startDate: string | null;
         predictions: CyclePredictions | null;
         referenceDate: Date | string | null;
         isLoading: boolean;
@@ -418,7 +413,6 @@ async function setupComponentAsync(
 
     const fixture = TestBed.createComponent(CycleSummaryCardComponent);
     fixture.componentRef.setInput('cycle', 'cycle' in overrides ? overrides.cycle : CYCLE);
-    fixture.componentRef.setInput('startDate', 'startDate' in overrides ? overrides.startDate : '2026-05-01');
     fixture.componentRef.setInput('predictions', 'predictions' in overrides ? overrides.predictions : null);
     fixture.componentRef.setInput('referenceDate', 'referenceDate' in overrides ? overrides.referenceDate : '2026-05-05');
     fixture.componentRef.setInput('isLoading', overrides.isLoading ?? false);

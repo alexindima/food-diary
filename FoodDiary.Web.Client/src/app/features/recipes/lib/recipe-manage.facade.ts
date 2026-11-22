@@ -59,8 +59,8 @@ export class RecipeManageFacade {
 
     private readonly userFacade = inject(UserFacade);
     public readonly preferredLanguage = computed(() => normalizeRecipeLanguage(this.userFacade.user()?.language));
-    public async preparePublicationAsync(data: RecipeDto): Promise<RecipeDto | null> {
-        return this.publication.prepareAsync(data, this.destroyRef);
+    public async preparePublicationAsync(data: RecipeDto, isCurrent: () => boolean): Promise<RecipeDto | null> {
+        return this.publication.prepareAsync(data, isCurrent);
     }
     public async confirmRecipeLanguageAsync(detected: string, selected: string): Promise<RecipeLanguageChoice | undefined> {
         return firstValueFrom(
@@ -82,13 +82,22 @@ export class RecipeManageFacade {
         initialTab: 'Product' | 'Recipe',
         excludedRecipeId: string | null = null,
     ): Observable<ItemSelection | null> {
-        return this.dialogService
-            .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
-                size: 'lg',
-                data: { initialTab, lockInitialTab: true, excludedRecipeId, allowText: true },
-            })
-            .afterClosed()
-            .pipe(map(selection => selection ?? null));
+        const dialog = this.dialogService.open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(
+            ItemSelectDialogComponent,
+            { size: 'lg', data: { initialTab, lockInitialTab: true, excludedRecipeId, allowText: true } },
+        );
+        let closed = false;
+        return dialog.afterClosed().pipe(
+            map(selection => {
+                closed = true;
+                return selection ?? null;
+            }),
+            finalize(() => {
+                if (!closed) {
+                    dialog.close(null);
+                }
+            }),
+        );
     }
 
     public applyItemSelection(foodGroup: RecipeIngredientSelectionTarget, selection: ItemSelection): void {

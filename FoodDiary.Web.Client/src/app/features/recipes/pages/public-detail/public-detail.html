@@ -84,7 +84,7 @@
             <section class="recipe-unavailable">
                 <h1>{{ unavailableTitleKey() | translate }}</h1>
                 <p>{{ 'PUBLIC_RECIPES.UNAVAILABLE_HINT' | translate }}</p>
-                <fd-ui-button variant="outline" [hidden]="page().error !== 'error'" (click)="retry()">{{
+                <fd-ui-button variant="outline" [hidden]="seo().error !== 'error'" (click)="retry()">{{
                     'PUBLIC_RECIPES.RETRY' | translate
                 }}</fd-ui-button>
             </section>

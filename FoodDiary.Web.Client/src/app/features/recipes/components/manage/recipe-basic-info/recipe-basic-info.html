@@ -41,14 +41,15 @@
             />
         </div>
         <div class="recipe-basic-info__image">
-            <fd-image-gallery-editor
-                [editor]="true"
-                [photos]="photos()"
-                [cover]="photos()[0] ?? null"
-                (photosChange)="setPhotos($event)"
-                (coverChange)="setCover($event)"
-                (uploadingChange)="photosUploading.emit($event)"
-            />
+            @for (owner of [{ id: photoOwnerId() }]; track owner.id) {
+                <fd-image-gallery-editor
+                    [photos]="photos()"
+                    [cover]="photos()[0] ?? null"
+                    (photosChange)="setPhotos($event)"
+                    (coverChange)="setCover($event)"
+                    (uploadingChange)="photosUploading.emit($event)"
+                />
+            }
         </div>
         <fd-ui-textarea
             class="recipe-basic-info__description"

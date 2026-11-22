@@ -241,7 +241,7 @@ describe('PushNotificationService subscription support', () => {
         await expect(service.ensureSubscriptionAsync()).resolves.toBe('unsupported');
     });
 
-    it('should return unsupported when service worker push is disabled', async () => {
+    it('keeps local push operations idle when service worker push is disabled', async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             providers: [
@@ -283,6 +283,10 @@ describe('PushNotificationService subscription support', () => {
 
         const disabledService = TestBed.inject(PushNotificationService);
         await expect(disabledService.ensureSubscriptionAsync()).resolves.toBe('unsupported');
+        const endpoint = 'https://push.example.com/subscriptions/disabled-browser';
+        await expect(disabledService.removeSubscriptionAsync(endpoint)).resolves.toBe(false);
+        expect(disabledService.isBusy()).toBe(false);
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
     });
 });
 
